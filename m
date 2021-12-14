@@ -2,40 +2,40 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28A75474BA8
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 20:14:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36FE8474BB6
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 20:16:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234649AbhLNTOZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Dec 2021 14:14:25 -0500
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:36570 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232340AbhLNTOX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Dec 2021 14:14:23 -0500
-Received: by mail-oi1-f172.google.com with SMTP id t23so28525379oiw.3;
-        Tue, 14 Dec 2021 11:14:22 -0800 (PST)
+        id S237376AbhLNTQ4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Dec 2021 14:16:56 -0500
+Received: from mail-oo1-f41.google.com ([209.85.161.41]:41833 "EHLO
+        mail-oo1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232433AbhLNTQy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Dec 2021 14:16:54 -0500
+Received: by mail-oo1-f41.google.com with SMTP id a11-20020a4ad1cb000000b002c2657270a0so5190268oos.8;
+        Tue, 14 Dec 2021 11:16:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jWpO3ZY2ZJjXyj/9yda9D07WJ/IdCYOQyo9m/Lpd6cc=;
-        b=66AlI+Yq1lWJOLVtgsjFThmgBCtn0L42vZmoKZ5Zn4V+rJV+gl1IuiQaKQVVL9oj8j
-         nOaN6m1qYg1ktTiEhx377HV0hqVa/SfXMkLBncN3TDmVKzJKH4C9lrIvqEunCaeUVDrz
-         3i+PqjDU5PgcaA3DU4K8T3je+DOSULCFe+xbJ+05wEa51ydjT4rrfQQCd8dXX4Q9RmJZ
-         oAibLfdTxPbx/IY6wWLQwi+RBqHN2mUw4hypEINLbGpigSnFzuCc1AUsqfcmYX8OH9eX
-         zSkgseBbK9G9xbY6BI17s8Vvr6DUVtEHvaozE44YgJoO3KuU9VP2rsuXHTbYhMxRzVfO
-         q+zA==
-X-Gm-Message-State: AOAM532olpXLiLJ7XHksEWa2NW6AiiRECi+o0ZDOxvS1K5+XsF2HTuS+
-        X2huELoS9Rx/XCNmz25llg==
-X-Google-Smtp-Source: ABdhPJwgbIMh5siyTq0QCRyiUVnHcaDFGV5KSe35YUMIerqEIA57SUd69fvNXtBs2azIvORZLRQTQw==
-X-Received: by 2002:aca:eb02:: with SMTP id j2mr2784153oih.3.1639509262396;
-        Tue, 14 Dec 2021 11:14:22 -0800 (PST)
+        bh=89n65Un8cdRTY4y4wD+F3ML7dLYicStqDZBe3YLsEnU=;
+        b=3LDLW0Vh3XUcgyrKEsXwIVdt3SJ3946Km/cu7KtINDmL52qMjykOxTPOk0rP6N9pv7
+         dK24pHXwI/T1KxxZzDa7uaOVW0qCp3Hr4cQqSaMbX/4zo4mlKBBY4p+H9G2jl2R6sS7c
+         IuC23Nf7hZzFcdQ1ExmORpwLGjppXnObe5R6ek0pA5v/DTSWTKGQzinABd7Fmw/eWgQn
+         iwV+n+REcYRuAkYzHA8WDltqO7XDbDkOol/Gf7DfaVqrtMtel8iqEcZ+aeC3pyZY2bWC
+         YUHrcDiQLrL63coSgSNKGAQI9ZOYmKg/DVIMECxjrEvjvGStg+K/8SylpsIGDlVKBVzy
+         zV9Q==
+X-Gm-Message-State: AOAM532UdzsUnPw8juIT5mj6iN64DEp5YAfDSMBs8JKNQkFzP8H8bLdH
+        rIjwlqPSxbdsSx5TW++uBQ==
+X-Google-Smtp-Source: ABdhPJyeCEbnQ7XaJPNry6GKTjo/HWhUc4nu6pM+aJJIYgeHF6KaJ85nlYancGJ9nuUHNIqHKd9Rng==
+X-Received: by 2002:a4a:88cc:: with SMTP id q12mr4719066ooh.29.1639509413108;
+        Tue, 14 Dec 2021 11:16:53 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id v20sm126884otj.27.2021.12.14.11.14.20
+        by smtp.gmail.com with ESMTPSA id o10sm140154oom.32.2021.12.14.11.16.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 11:14:21 -0800 (PST)
-Received: (nullmailer pid 3748250 invoked by uid 1000);
-        Tue, 14 Dec 2021 19:14:20 -0000
-Date:   Tue, 14 Dec 2021 13:14:20 -0600
+        Tue, 14 Dec 2021 11:16:52 -0800 (PST)
+Received: (nullmailer pid 3751604 invoked by uid 1000);
+        Tue, 14 Dec 2021 19:16:50 -0000
+Date:   Tue, 14 Dec 2021 13:16:50 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     devicetree@vger.kernel.org,
@@ -80,143 +80,104 @@ Cc:     devicetree@vger.kernel.org,
         <linux-rtc@vger.kernel.org>,
         "open list:THERMAL" <linux-pm@vger.kernel.org>,
         "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH v3 14/15] dt-bindings: bus: Convert GISB arbiter to YAML
-Message-ID: <YbjtDEPnDyOv/AvU@robh.at.kernel.org>
+Subject: Re: [PATCH v3 15/15] dt-bindings: usb: Convert BDC to YAML
+Message-ID: <Ybjtoj8/wAllmxP5@robh.at.kernel.org>
 References: <20211208003727.3596577-1-f.fainelli@gmail.com>
- <20211208003727.3596577-15-f.fainelli@gmail.com>
+ <20211208003727.3596577-16-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211208003727.3596577-15-f.fainelli@gmail.com>
+In-Reply-To: <20211208003727.3596577-16-f.fainelli@gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 04:37:25PM -0800, Florian Fainelli wrote:
-> Convert the Broadcom STB GISB bus arbiter to YAML to help with
-> validation.
+On Tue, Dec 07, 2021 at 04:37:26PM -0800, Florian Fainelli wrote:
+> Convert the Broadcom BDC device controller Device Tree binding to YAML
+> to help with validation.
 > 
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  .../devicetree/bindings/bus/brcm,gisb-arb.txt | 34 ----------
->  .../bindings/bus/brcm,gisb-arb.yaml           | 66 +++++++++++++++++++
->  2 files changed, 66 insertions(+), 34 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
->  create mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
+>  .../devicetree/bindings/usb/brcm,bdc.txt      | 29 ------------
+>  .../devicetree/bindings/usb/brcm,bdc.yaml     | 46 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 47 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+> diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.txt b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
 > deleted file mode 100644
-> index 10f6d0a8159d..000000000000
-> --- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+> index c9f52b97cef1..000000000000
+> --- a/Documentation/devicetree/bindings/usb/brcm,bdc.txt
 > +++ /dev/null
-> @@ -1,34 +0,0 @@
-> -Broadcom GISB bus Arbiter controller
+> @@ -1,29 +0,0 @@
+> -Broadcom USB Device Controller (BDC)
+> -====================================
 > -
 > -Required properties:
 > -
-> -- compatible:
-> -    "brcm,bcm7278-gisb-arb" for V7 28nm chips
-> -    "brcm,gisb-arb" or "brcm,bcm7445-gisb-arb" for other 28nm chips
-> -    "brcm,bcm7435-gisb-arb" for newer 40nm chips
-> -    "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
-> -    "brcm,bcm7038-gisb-arb" for 130nm chips
-> -- reg: specifies the base physical address and size of the registers
-> -- interrupts: specifies the two interrupts (timeout and TEA) to be used from
-> -  the parent interrupt controller. A third optional interrupt may be specified
-> -  for breakpoints.
+> -- compatible: must be one of:
+> -                "brcm,bdc-udc-v2"
+> -                "brcm,bdc"
+> -- reg: the base register address and length
+> -- interrupts: the interrupt line for this controller
 > -
 > -Optional properties:
 > -
-> -- brcm,gisb-arb-master-mask: 32-bits wide bitmask used to specify which GISB
-> -  masters are valid at the system level
-> -- brcm,gisb-arb-master-names: string list of the litteral name of the GISB
-> -  masters. Should match the number of bits set in brcm,gisb-master-mask and
-> -  the order in which they appear
+> -On Broadcom STB platforms, these properties are required:
+> -
+> -- phys: phandle to one or two USB PHY blocks
+> -        NOTE: Some SoC's have a single phy and some have
+> -        USB 2.0 and USB 3.0 phys
+> -- clocks: phandle to the functional clock of this block
 > -
 > -Example:
 > -
-> -gisb-arb@f0400000 {
-> -	compatible = "brcm,gisb-arb";
-> -	reg = <0xf0400000 0x800>;
-> -	interrupts = <0>, <2>;
-> -	interrupt-parent = <&sun_l2_intc>;
-> -
-> -	brcm,gisb-arb-master-mask = <0x7>;
-> -	brcm,gisb-arb-master-names = "bsp_0", "scpu_0", "cpu_0";
-> -};
-> diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
+> -        bdc@f0b02000 {
+> -                compatible = "brcm,bdc-udc-v2";
+> -                reg = <0xf0b02000 0xfc4>;
+> -                interrupts = <0x0 0x60 0x0>;
+> -                phys = <&usbphy_0 0x0>;
+> -                clocks = <&sw_usbd>;
+> -        };
+> diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.yaml b/Documentation/devicetree/bindings/usb/brcm,bdc.yaml
 > new file mode 100644
-> index 000000000000..483b019275cd
+> index 000000000000..48831b62ab31
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.yaml
-> @@ -0,0 +1,66 @@
+> +++ b/Documentation/devicetree/bindings/usb/brcm,bdc.yaml
+> @@ -0,0 +1,46 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/bus/brcm,gisb-arb.yaml#
+> +$id: http://devicetree.org/schemas/usb/brcm,bdc.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Broadcom GISB bus Arbiter controller
+> +title: Broadcom USB Device Controller (BDC)
 > +
 > +maintainers:
+> +  - Al Cooper <alcooperx@gmail.com>
 > +  - Florian Fainelli <f.fainelli@gmail.com>
 > +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm7445-gisb-arb
-> +          - const: brcm,gisb-arb
-
-> +      - items:
-> +          - const: brcm,bcm7278-gisb-arb
-> +      - items:
-> +          - const: brcm,bcm7435-gisb-arb
-> +      - items:
-> +          - const: brcm,bcm7400-gisb-arb
-> +      - items:
-> +          - const: brcm,bcm7038-gisb-arb
-> +      - items:
-> +          - const: brcm,gisb-arb
-
-All these can be 1 enum.
-
+> +    items:
+> +      - enum:
+> +          - brcm,bdc-udc-v2
+> +          - brcm,bdc
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  interrupts:
-> +    minItems: 2
-> +    maxItems: 3
+> +  interrupts: true
+> +
+> +  phys:
+> +    $ref: "/schemas/types.yaml#/definitions/phandle-array"
 
-We lost what is each interrupt. Do something like this:
-
-minItems: 2
-items:
-  - description: ...
-  - description: ...
-  - description: ...
+Already has a type. And we've lost how many and what each one is.
 
 > +
-> +  brcm,gisb-arb-master-mask:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: >
-> +      32-bits wide bitmask used to specify which GISB masters are valid at the
-> +      system level
-> +
-> +  brcm,gisb-arb-master-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description: >
-> +      String list of the litteral name of the GISB masters. Should match the
-> +      number of bits set in brcm,gisb-master-mask and the order in which they
-
-LSB to MSB or ???
-
-> +      appear
-
-period         ^
-
+> +  clocks:
+> +    maxItems: 1
 > +
 > +required:
 > +  - compatible
@@ -227,14 +188,29 @@ period         ^
 > +
 > +examples:
 > +  - |
-> +    gisb-arb@f0400000 {
-> +      compatible = "brcm,gisb-arb";
-> +      reg = <0xf0400000 0x800>;
-> +      interrupts = <0>, <2>;
-> +      interrupt-parent = <&sun_l2_intc>;
-> +      brcm,gisb-arb-master-mask = <0x7>;
-> +      brcm,gisb-arb-master-names = "bsp_0", "scpu_0", "cpu_0";
-> +    };
+> +        bdc@f0b02000 {
+
+usb@...
+
+> +                compatible = "brcm,bdc-udc-v2";
+> +                reg = <0xf0b02000 0xfc4>;
+> +                interrupts = <0x0 0x60 0x0>;
+> +                phys = <&usbphy_0 0x0>;
+> +                clocks = <&sw_usbd>;
+> +        };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2109b6fe8ea3..b18c7fa42a4f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3679,7 +3679,7 @@ M:	Al Cooper <alcooperx@gmail.com>
+>  L:	linux-usb@vger.kernel.org
+>  L:	bcm-kernel-feedback-list@broadcom.com
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/usb/brcm,bdc.txt
+> +F:	Documentation/devicetree/bindings/usb/brcm,bdc.yaml
+>  F:	drivers/usb/gadget/udc/bdc/
+>  
+>  BROADCOM BMIPS CPUFREQ DRIVER
 > -- 
 > 2.25.1
 > 
