@@ -2,122 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E09AD474800
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 17:28:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 481AB4748CD
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 18:04:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231764AbhLNQ2D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Dec 2021 11:28:03 -0500
-Received: from guitar.tcltek.co.il ([84.110.109.230]:39133 "EHLO mx.tkos.co.il"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230258AbhLNQ2C (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 14 Dec 2021 11:28:02 -0500
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 7FA4B440F50;
-        Tue, 14 Dec 2021 18:27:59 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1639499279;
-        bh=rHkMOwgOi3SGGouzSwXqrVTyx8BtcP7/HjaYwhPfaF8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIY5J2w8YHz+T5gS07Uj0U96Ze1mnAiEsLgwaIKwrTrAHY4lZIlMpVfyz6B7RfSlY
-         u1ulwkaJBlFm/fU85iZFT1tv0E7yWMQMuG5ffupWPute0RDAHbLAlx7Mlz2fylCWiG
-         hN6vgRf5GoAN1cg3+epQiCfczm4k5a47DR9RdFdwzniI439+UYAClUkFivNzB2Ux07
-         k72/fc1/4K2CrxlrUYsH0O17mAoCkQnswP4jr2B+7HoLQ55+OKFck90ye/WwHmJ52r
-         qY9bLHQnaZRiVlCGKoy4M/Hzmpc+k4MHYfjGIQ+5Jwj6QlWjlI295or2YclO1YPvOz
-         +5DVQRjb9Psfw==
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Baruch Siach <baruch.siach@siklu.com>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v10 3/3] arm64: dts: ipq6018: add pwm node
-Date:   Tue, 14 Dec 2021 18:27:19 +0200
-Message-Id: <6b48e8845c0df6060feb6eca8eba97a29b577b83.1639499239.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <ab2a4c345844f66aa22a847e522b2f4ee0786d8b.1639499239.git.baruch@tkos.co.il>
-References: <ab2a4c345844f66aa22a847e522b2f4ee0786d8b.1639499239.git.baruch@tkos.co.il>
+        id S236262AbhLNREW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Dec 2021 12:04:22 -0500
+Received: from mga18.intel.com ([134.134.136.126]:41092 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236275AbhLNRES (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 14 Dec 2021 12:04:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639501458; x=1671037458;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q12ALn7cBLnaYmmzNIs5wIxKBLaZLakPjYPHrOnzFAY=;
+  b=Cf2KzK3BkrkS5ipi3UucfOdVz6QKZlyoiE6bm8St6rX4keH+lKQDRPPe
+   SYHn3r7hmlVVy26OmDe/pRQ3kykGIIzj8WX5oe+JXyZKOv2idRj0orSzJ
+   610siTq7IbKwD5Pc6onIaZC107xxm7RUVRtybh7VoSo4bOqoSUQ/iwQpS
+   j79SlQMhLNhXdClE9xcIkPU0vln8Bryrjuig0YZBosEMc0mmnqN2X+23s
+   1RDdyjZTuNITkXR1bruDPWIoahS8ZHzSEHea5PopaxvIlHFbK/qFPA8VB
+   3z4OeljuQmPiwMmi8Dj9uVnIUdk1CojVqJdOJAle1iO+43jTJ7GutbRwM
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="225883790"
+X-IronPort-AV: E=Sophos;i="5.88,205,1635231600"; 
+   d="scan'208";a="225883790"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 09:04:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,205,1635231600"; 
+   d="scan'208";a="682132569"
+Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 14 Dec 2021 09:04:14 -0800
+Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mxBDp-0000Xk-Ui; Tue, 14 Dec 2021 17:04:13 +0000
+Date:   Wed, 15 Dec 2021 01:03:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Nikita Travkin <nikita@trvn.ru>, thierry.reding@gmail.com,
+        lee.jones@linaro.org
+Cc:     kbuild-all@lists.01.org, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org, sboyd@kernel.org, linus.walleij@linaro.org,
+        masneyb@onstation.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] pwm: Add clock based PWM output driver
+Message-ID: <202112150018.zRKkwUhX-lkp@intel.com>
+References: <20211213150335.51888-3-nikita@trvn.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211213150335.51888-3-nikita@trvn.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Baruch Siach <baruch.siach@siklu.com>
+Hi Nikita,
 
-Describe the PWM block on IPQ6018.
+Thank you for the patch! Yet something to improve:
 
-The PWM is in the TCSR area. Make &tcsr "simple-mfd" compatible, and add
-&pwm as child of &tcsr.
+[auto build test ERROR on thierry-reding-pwm/for-next]
+[also build test ERROR on v5.16-rc5 next-20211213]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Add also ipq6018 specific compatible string.
+url:    https://github.com/0day-ci/linux/commits/Nikita-Travkin/Clock-based-PWM-output-driver/20211213-230628
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
+config: riscv-randconfig-c024-20211214 (https://download.01.org/0day-ci/archive/20211215/202112150018.zRKkwUhX-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/454624747f4637529777274ae1b5ab7af33fd130
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Nikita-Travkin/Clock-based-PWM-output-driver/20211213-230628
+        git checkout 454624747f4637529777274ae1b5ab7af33fd130
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=riscv SHELL=/bin/bash
 
-Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   riscv32-linux-ld: drivers/pwm/pwm-clk.o: in function `.L18':
+>> pwm-clk.c:(.text+0x86): undefined reference to `__udivdi3'
+
 ---
-v9:
-
-  Add 'ranges' property (Rob)
-
-v8:
-
-  Add size cell to 'reg' (Rob)
-
-v7:
-
-  Use 'reg' instead of 'offset' (Rob)
-
-  Add qcom,tcsr-ipq6018 (Rob)
-
-  Drop clock-names (Bjorn)
-
-v6:
-
-  Make the PWM node child of TCSR (Rob Herring)
-
-  Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
-
-v5: Use qcom,pwm-regs for TCSR phandle instead of direct regs
-
-v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 933b56103a46..6a22bb5f42f4 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -258,8 +258,21 @@ tcsr_mutex_regs: syscon@1905000 {
- 		};
- 
- 		tcsr: syscon@1937000 {
--			compatible = "syscon";
-+			compatible = "qcom,tcsr-ipq6018", "syscon", "simple-mfd";
- 			reg = <0x0 0x01937000 0x0 0x21000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x01937000 0x21000>;
-+
-+			pwm: pwm@a010 {
-+				compatible = "qcom,ipq6018-pwm";
-+				reg = <0xa010 0x20>;
-+				clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+				assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+				assigned-clock-rates = <100000000>;
-+				#pwm-cells = <2>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		blsp_dma: dma-controller@7884000 {
--- 
-2.33.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
