@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BF41475C62
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Dec 2021 16:55:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72650475D09
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Dec 2021 17:14:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244242AbhLOPzk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Dec 2021 10:55:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
+        id S244519AbhLOQMJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Dec 2021 11:12:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244245AbhLOPzj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Dec 2021 10:55:39 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB285C06173E;
-        Wed, 15 Dec 2021 07:55:38 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id a18so39013817wrn.6;
-        Wed, 15 Dec 2021 07:55:38 -0800 (PST)
+        with ESMTP id S244559AbhLOQL4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Dec 2021 11:11:56 -0500
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EEEEC061574;
+        Wed, 15 Dec 2021 08:11:56 -0800 (PST)
+Received: by mail-lj1-x233.google.com with SMTP id k2so34063666lji.4;
+        Wed, 15 Dec 2021 08:11:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R67lTnWwXbUTzFzCGUUL+WExD12deXb0Qh98T1uTW0w=;
-        b=OhHVBsH+JSjXGRjWW3dS71NC/5sbYxFPZeF0Q4crce9RPU1G+fwh5oGbAJmZOtYSDn
-         yjuE+M/vGo+HcrEQy22dlJU89eYUIQKX9sy91E3wHpbdRpvBDG7E9pqh+KnpWWxUSq9v
-         PNF4kbB9qDszar6MdLFK6vUT3qHSmSkZinyZ9tTuRpB9k8dn911giQKHsHtqs8Ub7qfH
-         d+kpMd6Mn09M8+dSrQ6c/fZrNlAwgj2PLcnx4Skskb/YzyUvtGrwTTyqbbEG/OT3HkPf
-         3zJ8bhxulq+9LmiMbMGftBQwPezCtnNWvi9+c4T4qCyJR3jP+j7uHUtw5ctkZOex5L9X
-         70hQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xVG5B7SYBr3u6P2qpHezZS1RRrCpJWiliz1cwjgXHPU=;
+        b=MfLIVsUVi+6UjKkeOfI0SWNq8AXH2YggFu7ywHP79o0QYXM9HVXCVGjCAk+oNn9NqZ
+         NYCRvxnhWtZHwZ4emtwGdoZjRamabsNU42OtclVmR/5CTOZ7sZgYPgVwywMvu+kF4mUS
+         aJNvX2mOII/VEiLV83CfHaHbwj6zorAqRfm2cjUKs1Fa9iCNQrDPXMqIzxJ3rgPWTuLX
+         GjzNF1zdf6H31DQ4DWeLg43Fa3WgXEViRaZ+gRq/t/OmoFeO32V9dbtuJpgKE5iMU6Pf
+         u+OUQIbVNgsZ6US518XBPac+7esIc24pXvcwYUUqy5ecAQ2c3jDkQxnQ1rvoMr27iyGT
+         QpgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R67lTnWwXbUTzFzCGUUL+WExD12deXb0Qh98T1uTW0w=;
-        b=sHHcAsmUjlzPDcQmpUcHYEWzDHwclvEfs/QMK4iRWxkeFCQLhMnd1hSl1pZMh8AdR2
-         YIyxH57lgz0pVB2uTGAsHgo2ihxGo9EClg6HyXl2xzPMUJcBd528Znr0OzSHg4pToYeX
-         uuQjuGDDQ/Wz0bqeiNbhQAiVOTOohfEpLbnnVx32YT3Q/txiVzXRykczoYfjVyBuZA4A
-         dIWfBUqbc8XRjntCVQx6Nx5qwnRULtZ3jF/bKQmy8fffjJFJ+/vSXjjVKtc3uEqNqBHP
-         EtRXxf/x+SdSMKnY3h9FDEsIZ94nwSAlEFakeB6oPE2+HeMDVZBYuIkz/Q1i3XxBzd4N
-         8ctA==
-X-Gm-Message-State: AOAM533EILDOO9SFdZxZP07B661BqVHsly5rnNjGK/7/BZsEOUR4MQHy
-        yZ6KtbUR4syzhdnLBo1RNh0=
-X-Google-Smtp-Source: ABdhPJxHztDvenoHWfBqOVDnmyiUgaQWSSLPpt6XX3/VYHhw8RSChI7rhoZIlA+1HRtQtKu2hou5Tg==
-X-Received: by 2002:a5d:6488:: with SMTP id o8mr5000272wri.631.1639583737576;
-        Wed, 15 Dec 2021 07:55:37 -0800 (PST)
-Received: from orome ([193.209.96.43])
-        by smtp.gmail.com with ESMTPSA id n7sm2363354wro.68.2021.12.15.07.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 07:55:36 -0800 (PST)
-Date:   Wed, 15 Dec 2021 16:55:32 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xVG5B7SYBr3u6P2qpHezZS1RRrCpJWiliz1cwjgXHPU=;
+        b=uKNOLBGUZ/EIOzKo9VB1fScpsBXW9vlmtzZaTnkq08by9RVUxmyxkKDTwZ/M5e0MY9
+         /k1nSTnFFStfzjsDHK6ZSjGTjtYr+tiYpQvwh+6GdPpe58B6UXtVl4Gr28XLygTshgxl
+         yl49crLih3PiubtOFAOWNEerELWMG0gfpGtlc8kJ+XQWzNZkPwFJWKoTgA20JLQmcS1U
+         RlH6ieVhwKfPBQ4u5CmVc849KU6JolFirO0UIFS3+NioL1P1nCL+eOW9urDE8E8FqiHS
+         SfPBnN9MnjLXYQPqKiY1AA1McIP5visiUT2nyIUd95j90nomYFfAlehBB8gN8kSmxu2q
+         ceVg==
+X-Gm-Message-State: AOAM532b8M8osTeZg2zDqifxedROQVok1dKm6UdcPj/miXuNXAWK9zZO
+        zW3W3xG9HsGdne+v5vgURL8=
+X-Google-Smtp-Source: ABdhPJyW91GoZwqnrgyCst9/kcQTSRAGzVshAjgCuHC7JMUDYihZ1zeSVLqBM/gdk2wHRVzlCGewUw==
+X-Received: by 2002:a2e:3012:: with SMTP id w18mr10494861ljw.217.1639584714625;
+        Wed, 15 Dec 2021 08:11:54 -0800 (PST)
+Received: from [192.168.2.145] (94-29-63-156.dynamic.spd-mgts.ru. [94.29.63.156])
+        by smtp.googlemail.com with ESMTPSA id l4sm503086ljg.60.2021.12.15.08.11.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Dec 2021 08:11:54 -0800 (PST)
+Subject: Re: [PATCH v16 00/40] NVIDIA Tegra power management patches for 5.17
+To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Viresh Kumar <vireshk@kernel.org>,
@@ -57,62 +57,47 @@ Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
         Peter De Schrijver <pdeschrijver@nvidia.com>,
         Mikko Perttunen <mperttunen@nvidia.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Nishanth Menon <nm@ti.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
-Subject: Re: [PATCH v16 00/40] NVIDIA Tegra power management patches for 5.17
-Message-ID: <YboP9IFMUrUnEzrU@orome>
-References: <20211130232347.950-1-digetx@gmail.com>
+References: <20211130232347.950-1-digetx@gmail.com> <YboP9IFMUrUnEzrU@orome>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6baf6013-fbb2-b42f-5b26-2d10a2ca9374@gmail.com>
+Date:   Wed, 15 Dec 2021 19:11:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HWWUr3zWZyjxMtnU"
-Content-Disposition: inline
-In-Reply-To: <20211130232347.950-1-digetx@gmail.com>
-User-Agent: Mutt/2.1.3 (987dde4c) (2021-09-10)
+In-Reply-To: <YboP9IFMUrUnEzrU@orome>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+15.12.2021 18:55, Thierry Reding пишет:
+> On Wed, Dec 01, 2021 at 02:23:07AM +0300, Dmitry Osipenko wrote:
+>> This series adds runtime PM support to Tegra drivers and enables core
+>> voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
+>>
+>> All patches in this series are interdependent and should go via Tegra tree
+>> for simplicity.
+> 
+> So these can be applied in any order without breaking anything?
 
---HWWUr3zWZyjxMtnU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please notice that the word is *inter* dependent, not *in* dependent.
 
-On Wed, Dec 01, 2021 at 02:23:07AM +0300, Dmitry Osipenko wrote:
-> This series adds runtime PM support to Tegra drivers and enables core
-> voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
->=20
-> All patches in this series are interdependent and should go via Tegra tree
-> for simplicity.
+There is a build dependency for the patches. The first two "soc/tegra"
+must be applied first.
 
-So these can be applied in any order without breaking anything?
+The "soc/tegra: pmc: Enable core domain support for Tegra20 and Tegra30"
+*must* be the last applied patch if we want to preserve bisectability.
+The core voltage scaling can be enabled only once all the drivers got
+the power management support.
 
-Thierry
-
---HWWUr3zWZyjxMtnU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmG6D/QACgkQ3SOs138+
-s6HzZw//SGRlSbxYGcf2puc+SV4jxqHgVmBVp8biQjzJoeSIatV6B+8n7NAvS0x/
-qMBw7S5I7uFy8rqsIUHNQI929PW2XNbz2H8qid5UjtDVlUo5ir1qtVgvH8HYQruX
-l+PlVayuhBblIEemscYhMNeuyKgrAMeho9ZnnJjITvMVBKRGOxGp38RUgf+Tzrpc
-lF7KIxOcm9FoYTeLxAiVFKtI6Evkt+xJbEvqxkIpaNAzo/AvX6ognGeUQCg7USWu
-v2Km4gqjV0bvZUi+HlMPnYGAFpt3X9ws5NCR5ED4huHislttMacNlkfWGpHw/KkU
-/VJlYrSnlpJkppzOio+g91qdXXlTfXpa3g5ZHSOLqsNFOPFppN9PU9K2DhwFN3Ej
-mNIVbs8Oarq/bJdCftc6dX9saiL9AdKCD1MJO+XgsJuHtQ4FkJHnxMk/p8m9KH33
-HurZ3qmVir9YQh9kyE3MVT95o3gSR+M6hpPcSDiCf4g9XjwvEfJ+sDSg7B8lmM+0
-ZYOmkLu0iLKGOLOn/gBU9Z/Zw9Kw2iW2J/glHU4E5/GI2MNgs99GQPOwyFEq6AvQ
-B4V/SN10i1F0RzeuqsFacfr25c9UGwcXUDNxJqebib27ZRhcGkwu53tEBqYWXep9
-7MAMtQ8il969lajf/1tAlUVPR6AXLiuGcKgZZTEcDUReMvR4Dqk=
-=drq6
------END PGP SIGNATURE-----
-
---HWWUr3zWZyjxMtnU--
+The rest could be applied out-of-order.
