@@ -2,143 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B385A474C6D
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Dec 2021 21:04:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BF41475C62
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Dec 2021 16:55:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237560AbhLNUEw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Dec 2021 15:04:52 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:34727 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230188AbhLNUEw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Dec 2021 15:04:52 -0500
-Received: by mail-oi1-f181.google.com with SMTP id t19so28720262oij.1;
-        Tue, 14 Dec 2021 12:04:52 -0800 (PST)
+        id S244242AbhLOPzk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Dec 2021 10:55:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244245AbhLOPzj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Dec 2021 10:55:39 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB285C06173E;
+        Wed, 15 Dec 2021 07:55:38 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id a18so39013817wrn.6;
+        Wed, 15 Dec 2021 07:55:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R67lTnWwXbUTzFzCGUUL+WExD12deXb0Qh98T1uTW0w=;
+        b=OhHVBsH+JSjXGRjWW3dS71NC/5sbYxFPZeF0Q4crce9RPU1G+fwh5oGbAJmZOtYSDn
+         yjuE+M/vGo+HcrEQy22dlJU89eYUIQKX9sy91E3wHpbdRpvBDG7E9pqh+KnpWWxUSq9v
+         PNF4kbB9qDszar6MdLFK6vUT3qHSmSkZinyZ9tTuRpB9k8dn911giQKHsHtqs8Ub7qfH
+         d+kpMd6Mn09M8+dSrQ6c/fZrNlAwgj2PLcnx4Skskb/YzyUvtGrwTTyqbbEG/OT3HkPf
+         3zJ8bhxulq+9LmiMbMGftBQwPezCtnNWvi9+c4T4qCyJR3jP+j7uHUtw5ctkZOex5L9X
+         70hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=RJqjtodrdvg+GjFlTR3WmiDMbCMbLHzHFKDDXT45/9Q=;
-        b=k+3fC2Ntwd3C0FvFBVgzKsyLANZeLh5chw1XUFCk4atO2wnl64KlbYh79kUANZ7BQ/
-         L0REUVqYwiLgxY+LMtULc+x8iTP2CzHWdhzY/z1YqxnZE2stvM5Pk5ca86wzD5ObmOA2
-         IcurzyEFMxj9uSazgS+AhZmpJZRmHfhohlFHEp2tPRIuBoCqa7I3ytb/htnMi8y/0FzY
-         zdqX0Vyd5JcRbvAQiRydpJFSXLASfdjoHmnNBTpUPV1HcjglpwMZha5Hy9wqwbUN3FkQ
-         aY5xrtNt50vV/PYWHLPrQON1HDdPkZTV1bOXEEId/6oo8MD5nSJ3LiIlmuKT1Xyi0Qab
-         /OdA==
-X-Gm-Message-State: AOAM532Fd1fzkDk3hj2WuunQyb+OZNJt6Vnrsy8NSCisNcTeyFC1f2tV
-        UGmZybSpx5QAyD9fVXmUyg==
-X-Google-Smtp-Source: ABdhPJxyuWusHlo7VZe3TYTWV8m+4S+pvP/3wRQxB6XqQu8wB10s/8LoKvS0LuyEz0e6B3WOTMaVxg==
-X-Received: by 2002:a05:6808:158d:: with SMTP id t13mr6133558oiw.31.1639512291886;
-        Tue, 14 Dec 2021 12:04:51 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id s1sm158309ooo.11.2021.12.14.12.04.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R67lTnWwXbUTzFzCGUUL+WExD12deXb0Qh98T1uTW0w=;
+        b=sHHcAsmUjlzPDcQmpUcHYEWzDHwclvEfs/QMK4iRWxkeFCQLhMnd1hSl1pZMh8AdR2
+         YIyxH57lgz0pVB2uTGAsHgo2ihxGo9EClg6HyXl2xzPMUJcBd528Znr0OzSHg4pToYeX
+         uuQjuGDDQ/Wz0bqeiNbhQAiVOTOohfEpLbnnVx32YT3Q/txiVzXRykczoYfjVyBuZA4A
+         dIWfBUqbc8XRjntCVQx6Nx5qwnRULtZ3jF/bKQmy8fffjJFJ+/vSXjjVKtc3uEqNqBHP
+         EtRXxf/x+SdSMKnY3h9FDEsIZ94nwSAlEFakeB6oPE2+HeMDVZBYuIkz/Q1i3XxBzd4N
+         8ctA==
+X-Gm-Message-State: AOAM533EILDOO9SFdZxZP07B661BqVHsly5rnNjGK/7/BZsEOUR4MQHy
+        yZ6KtbUR4syzhdnLBo1RNh0=
+X-Google-Smtp-Source: ABdhPJxHztDvenoHWfBqOVDnmyiUgaQWSSLPpt6XX3/VYHhw8RSChI7rhoZIlA+1HRtQtKu2hou5Tg==
+X-Received: by 2002:a5d:6488:: with SMTP id o8mr5000272wri.631.1639583737576;
+        Wed, 15 Dec 2021 07:55:37 -0800 (PST)
+Received: from orome ([193.209.96.43])
+        by smtp.gmail.com with ESMTPSA id n7sm2363354wro.68.2021.12.15.07.55.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 12:04:51 -0800 (PST)
-Received: (nullmailer pid 3819894 invoked by uid 1000);
-        Tue, 14 Dec 2021 20:04:50 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Baruch Siach <baruch.siach@siklu.com>,
-        Robert Marko <robert.marko@sartura.hr>,
-        devicetree@vger.kernel.org,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-In-Reply-To: <b5053b42f73e574f48cf860a8e225d6b1939d216.1639499239.git.baruch@tkos.co.il>
-References: <ab2a4c345844f66aa22a847e522b2f4ee0786d8b.1639499239.git.baruch@tkos.co.il> <b5053b42f73e574f48cf860a8e225d6b1939d216.1639499239.git.baruch@tkos.co.il>
-Subject: Re: [PATCH v10 2/3] dt-bindings: pwm: add IPQ6018 binding
-Date:   Tue, 14 Dec 2021 14:04:50 -0600
-Message-Id: <1639512290.319512.3819893.nullmailer@robh.at.kernel.org>
+        Wed, 15 Dec 2021 07:55:36 -0800 (PST)
+Date:   Wed, 15 Dec 2021 16:55:32 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
+Subject: Re: [PATCH v16 00/40] NVIDIA Tegra power management patches for 5.17
+Message-ID: <YboP9IFMUrUnEzrU@orome>
+References: <20211130232347.950-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="HWWUr3zWZyjxMtnU"
+Content-Disposition: inline
+In-Reply-To: <20211130232347.950-1-digetx@gmail.com>
+User-Agent: Mutt/2.1.3 (987dde4c) (2021-09-10)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 14 Dec 2021 18:27:18 +0200, Baruch Siach wrote:
-> From: Baruch Siach <baruch.siach@siklu.com>
-> 
-> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
-> 
-> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
-> ---
-> This series does not convert the TCSR binding documentation to YAML. As
-> a result, this commit adds new a dt_binding_check warning:
-> 
-> /example-0/syscon@1937000: failed to match any schema with compatible: ['qcom,tcsr-ipq 6018', 'syscon', 'simple-mfd']
-> 
-> If that is a blocker to IPQ6018 PWM support, so be it. Patches will wait
-> for someone else to push them further.
-> 
-> v10:
-> 
->   No change
-> 
-> v9:
-> 
->   Add 'ranges' property to example (Rob)
-> 
->   Drop label in example (Rob)
-> 
-> v8:
-> 
->   Add size cell to 'reg' (Rob)
-> 
-> v7:
-> 
->   Use 'reg' instead of 'offset' (Rob)
-> 
->   Drop 'clock-names' and 'assigned-clock*' (Bjorn)
-> 
->   Use single cell address/size in example node (Bjorn)
-> 
->   Move '#pwm-cells' lower in example node (Bjorn)
-> 
->   List 'reg' as required
-> 
-> v6:
-> 
->   Device node is child of TCSR; remove phandle (Rob Herring)
-> 
->   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
-> 
-> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
->     Andersson, Kathiravan T)
-> 
-> v4: Update the binding example node as well (Rob Herring's bot)
-> 
-> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
-> 
-> v2: Make #pwm-cells const (Rob Herring)
-> ---
->  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+--HWWUr3zWZyjxMtnU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-yamllint warnings/errors:
+On Wed, Dec 01, 2021 at 02:23:07AM +0300, Dmitry Osipenko wrote:
+> This series adds runtime PM support to Tegra drivers and enables core
+> voltage scaling for Tegra20/30 SoCs, resolving overheating troubles.
+>=20
+> All patches in this series are interdependent and should go via Tegra tree
+> for simplicity.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pwm/ipq-pwm.example.dt.yaml:0:0: /example-0/syscon@1937000: failed to match any schema with compatible: ['qcom,tcsr-ipq6018', 'syscon', 'simple-mfd']
+So these can be applied in any order without breaking anything?
 
-doc reference errors (make refcheckdocs):
+Thierry
 
-See https://patchwork.ozlabs.org/patch/1567793
+--HWWUr3zWZyjxMtnU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+-----BEGIN PGP SIGNATURE-----
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmG6D/QACgkQ3SOs138+
+s6HzZw//SGRlSbxYGcf2puc+SV4jxqHgVmBVp8biQjzJoeSIatV6B+8n7NAvS0x/
+qMBw7S5I7uFy8rqsIUHNQI929PW2XNbz2H8qid5UjtDVlUo5ir1qtVgvH8HYQruX
+l+PlVayuhBblIEemscYhMNeuyKgrAMeho9ZnnJjITvMVBKRGOxGp38RUgf+Tzrpc
+lF7KIxOcm9FoYTeLxAiVFKtI6Evkt+xJbEvqxkIpaNAzo/AvX6ognGeUQCg7USWu
+v2Km4gqjV0bvZUi+HlMPnYGAFpt3X9ws5NCR5ED4huHislttMacNlkfWGpHw/KkU
+/VJlYrSnlpJkppzOio+g91qdXXlTfXpa3g5ZHSOLqsNFOPFppN9PU9K2DhwFN3Ej
+mNIVbs8Oarq/bJdCftc6dX9saiL9AdKCD1MJO+XgsJuHtQ4FkJHnxMk/p8m9KH33
+HurZ3qmVir9YQh9kyE3MVT95o3gSR+M6hpPcSDiCf4g9XjwvEfJ+sDSg7B8lmM+0
+ZYOmkLu0iLKGOLOn/gBU9Z/Zw9Kw2iW2J/glHU4E5/GI2MNgs99GQPOwyFEq6AvQ
+B4V/SN10i1F0RzeuqsFacfr25c9UGwcXUDNxJqebib27ZRhcGkwu53tEBqYWXep9
+7MAMtQ8il969lajf/1tAlUVPR6AXLiuGcKgZZTEcDUReMvR4Dqk=
+=drq6
+-----END PGP SIGNATURE-----
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+--HWWUr3zWZyjxMtnU--
