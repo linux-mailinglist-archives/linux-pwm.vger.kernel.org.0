@@ -2,187 +2,335 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC57247A5B3
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Dec 2021 09:05:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 256CE47A7FC
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Dec 2021 11:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237814AbhLTIFW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Dec 2021 03:05:22 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:9170 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231402AbhLTIFT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Dec 2021 03:05:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1639987520; x=1671523520;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=wHnpscFXlSZVC6AWTaM4GTGTdDe5nVOTbhFzAwoeR3I=;
-  b=MNj5WIGAjaRA0T0Y/AW2kYI4HKeuybUQ4+fo/TdhBuC2VNDRgS6XZa14
-   w96XPoAikqJOTwIgtm4fDAh1CAlyJnI1WhhpSqiqgwQMByI5PR28pncyY
-   x6Dau+t7JjOYRUylm+1LxiT6F4mD6HYsDX2jDmxOAE87I5QUAj2AIQX0D
-   A5LhmiTWQj03/ds50XVCuPsqU1/mCSUkJeUHQ1uOw2SMs5kYHIPqhDvsA
-   9EFnGRKFJsKCSvK+S1OsYaFHde6uwx0AS9OacCxfa1QudGQ/LDciIlPg5
-   qi88UBlI10oLiLPv3VquPzCIb8YXwzAW2JTgXAqcMLerCCxAKM3J6pJw/
-   g==;
-IronPort-SDR: KSMuJTqJsp1pIgZMEqcypuAVclu2TmHHJkdUC7xZcDsTHZqNG0+b/Rmpw+gJCHhIE6G0MUuLeB
- coUjTcudZSUtx1MS5BWDNPpaWlgtweHqnkeD7CorBEkN9bKTMc3yQH8pzelxYYRPhls/dWWvx3
- s9L6CoHiws2Hx95uVXCrkCOjNTNGzlccSdckD3FUs0esM0DpI062JN3OD7wOSppbdXy2yIdCP6
- pqAvcmY0ZsIJkLv9bmHx5j2ZEMyI/CcxKMjiVKQh6O5c8UF9RxPlb6wSWjsTkm6JuRdm+Paz8U
- OZ5KXfUrUBHfF7pTvhw69Fz1
-X-IronPort-AV: E=Sophos;i="5.88,219,1635231600"; 
-   d="scan'208";a="142948277"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Dec 2021 01:05:18 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 20 Dec 2021 01:05:17 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
- Transport; Mon, 20 Dec 2021 01:05:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J7koHassZOrASmQ6TjoJTwfyqnRiWP/Bc1kmN5w1JsAO1idVqAvEmLOQMqfpLg+LpcJYsmW6M/hfxD0/8rzen6Svf8OnR42E2iJMjULMDvjjusxxgD2cuvDoEStSC4DCSkHo4ADP1IqTJRtYOtjuVZMbSWW3BeLcuU/7KAdwv4Rk9xsCKFk4qDImuAkxhoxDBdWIS2GhjUnNgfNwry6HrhbwchbVs2HasgWrgEXkhx2O3feIstJe/STJ47HlLelO6rcL8bGFCSSLoWaR91IdeUotOfsuW0W+49JLyU6fxzGWcu1Z5ixtywVEZaGCtRmxOI1E1zUVFILU8Z8jym1lBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wHnpscFXlSZVC6AWTaM4GTGTdDe5nVOTbhFzAwoeR3I=;
- b=NtHPQ3/M4YqoLAraUaHTJT5tCFDn8p6/VFCLLFV6/Gi5H8EWlg1mgHR+BUako3sXVNicheCYamaiY8rmzIY37DdDsYi4V9pAYS44pciSzRQa0rgUKXgEiRf7z9z0deytXa0AZCdh4+nSZuGXfsHsDRHphqIuT83U59Qi37meLsJZDjTJOFJ2mbB8mrrLgSvAlTqbUQOIGBFh2ktO9vyneFD3N/zHmuk+Cu9xbjCZHpsoQlF1abvq/xBRYudro3UkVxz+pF9mZjRQQ4QM4L5bnvLNFIITuNtoNycjYRarPKSizBJY1chVTzmUDWYOhwNiTnO6btU3sNwXQtE8CFM6bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wHnpscFXlSZVC6AWTaM4GTGTdDe5nVOTbhFzAwoeR3I=;
- b=VE/nA+/kW2hGNSybP0xIFXCxvLQhilDaKKohS0AaLjioE6jOc9KJvJWskTZSqq7KbT6NxAsUmNPAhUlx1PBM44eQwLc3C9jOjvT3+3BAph0gQnZ/DvzstuCivWGH0cRHMqzWiBD9Mz+obsUaA2yOOrtTwWIWl/0Bpt8LKvCJAu0=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:95::7)
- by MW3PR11MB4634.namprd11.prod.outlook.com (2603:10b6:303:54::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4801.15; Mon, 20 Dec
- 2021 08:05:13 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::a192:c9ae:1f83:797b]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::a192:c9ae:1f83:797b%9]) with mapi id 15.20.4801.020; Mon, 20 Dec 2021
- 08:05:13 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <broonie@kernel.org>
-CC:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>, <jassisinghbrar@gmail.com>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee.jones@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <krzysztof.kozlowski@canonical.com>,
-        <geert@linux-m68k.org>, <bin.meng@windriver.com>,
-        <heiko@sntech.de>, <Lewis.Hanly@microchip.com>,
-        <Daire.McNamara@microchip.com>, <Ivan.Griffin@microchip.com>,
-        <atish.patra@wdc.com>
-Subject: Re: [PATCH v2 10/17] dt-bindings: spi: add bindings for microchip
- mpfs spi
-Thread-Topic: [PATCH v2 10/17] dt-bindings: spi: add bindings for microchip
- mpfs spi
-Thread-Index: AQHX8ykv6sbPo1+d0UqqLmeeX2B3NKw2iOgAgAAHFACAAABvgIAEemoA
-Date:   Mon, 20 Dec 2021 08:05:13 +0000
-Message-ID: <2981d13d-13c7-f455-722e-778fb07f170f@microchip.com>
-References: <20211217093325.30612-1-conor.dooley@microchip.com>
- <20211217093325.30612-11-conor.dooley@microchip.com>
- <YbxxrlmYGC3Pg8+j@sirena.org.uk>
- <606633c8-6cd6-af3a-4d6a-bb3058a64026@microchip.com>
- <Ybx3+3QaVe2lCcQP@sirena.org.uk>
-In-Reply-To: <Ybx3+3QaVe2lCcQP@sirena.org.uk>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8ea58834-ac3c-463a-7c6c-08d9c38f7354
-x-ms-traffictypediagnostic: MW3PR11MB4634:EE_
-x-microsoft-antispam-prvs: <MW3PR11MB4634FBED18470B63A2753634987B9@MW3PR11MB4634.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:741;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i8jB2hhXBVUtTlu55DacEncdR3v8gf9L94wJ/Og+TsAjtk2TuFZCKOcU5fm91BtUIZ2PyOOBuSddh5j4wzn095mADXoICWkK9NbSyvY6sThdOmelZ44nZdOv+cLf+4n5dW0bNFkiwfLNkqELGwgE2fC+cHEqPofXW2AWcP935/ax4sY+t/H5DtsSsSFqD6BUvipHkFf00B+MdHEETgmIBnX3PEH5O/jVGfzLABrKAxIJwKD0WCaCqF8emRuzjtrNhZavqVDCb8HjYU421IyOFhd2wuDgPEJsh3vWdGBB/z6+O7LLZLefDTpFWtwa9uT7zw0CVVIb1xDxqOx0PZfO4BZfZQHRWr0Ur+DVjQ2uFHmlgGS4uS0tRdMiQ9stzSS07Q0yR1c8y4NPQBFBz6LYloJEGD3+D7uiJldm9dUzjfFiePXcS/vNwpfwK+G4XGVduHShfTkVmvVbbKFEfTgKZcbU5aP1hcdvwm8Zm6ZeUkvvWaa0Mqo1M/b5HOUnPmlmmHiTzEahzJSvfCncBk7Bz17yySOHi5AN8iVyQWFO1XVFW0QO0AIhJKUJeQJxJlk0iDzGXVe39+2OOt7ThQMWQNEfa/e6qNDmPe7qLnoTHkSBxSYsw6TTriYGzmYViI6t0Ss6kLDEER+sqJV7q8vCmQl4KowwgfpAU9XR7uwZ9yoXobhjMf1LLuien5ushEBXXqI4OXptuCuUYMLp5f5yOzGggUzn07eBRBLq38hpER6fYOxRGIy6MjzSK+oUW4SFfbIh7aQ0STB326cV3JAoEw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(26005)(4744005)(31686004)(38070700005)(86362001)(5660300002)(66556008)(66946007)(4326008)(36756003)(66446008)(76116006)(6506007)(91956017)(8676002)(186003)(53546011)(64756008)(66476007)(6486002)(6916009)(122000001)(54906003)(2616005)(8936002)(31696002)(508600001)(38100700002)(7416002)(2906002)(71200400001)(316002)(6512007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?Windows-1252?Q?sG/Z1ifRiyJgKgg4hkAfwK2/rkoePAu416Z/A9KhbYZvHImDqj5o54Oo?=
- =?Windows-1252?Q?u1FaWVSTgatc4XUz7BTeFv7af3t3A2zL46gCDLM4FIjmT4FzOXx5flvr?=
- =?Windows-1252?Q?WqdGRk/ArmtQsVjSzacDhoBykAD2cMhFJAYEzaoP/LAJaNoE50Sae69m?=
- =?Windows-1252?Q?HVPzbw1qqtdFRKuY/gtQzgZ0YDp44Lx+2m7tAQ6DHzo8xjgBahcTKceo?=
- =?Windows-1252?Q?ovwjg133YruZxKO5qk6yWgszscp+ARa1/1DjXA7wbg29LNW+f+w2/CiH?=
- =?Windows-1252?Q?5lNJEOau3t+X/Jk7q9ID5LIE0bZbO3/A1bMWC4FneMsHz9UF1qT4kE/N?=
- =?Windows-1252?Q?MmJk4lC5002OHPc5DepJiTrC9TAblKCMHrOtZArmbKKjEDd9VUZvSE0M?=
- =?Windows-1252?Q?Tj+GRMMIrGlk9nOYZgLqZf9so7hBhiHTCztbhIWuC3J/Tc+Js8E0QJ5h?=
- =?Windows-1252?Q?O2gMk7KluXFLdC9JWXv8Ckpsu94IS7hoa2PuSC2XdM+Hi5ZOkOXMDpf0?=
- =?Windows-1252?Q?MZSJcgusNTNgIDYHHMNFAxLm12rri0BSnYAl6sFvMTYJZ3FuklzP9y5Q?=
- =?Windows-1252?Q?GU2/Mj1E5iOQJdhJXPWcu0pVEJkAca6cQt4KOC/QdNfMoW+wnkdOEjTY?=
- =?Windows-1252?Q?8r/0miGWZoTo1mssbpBKrS0Ei1gJgKCTBkvNO4SM5UIUhfzvywi81sR/?=
- =?Windows-1252?Q?guwQTAqWW/DDHoktahtnUek4wlz6H2d5RtejNLOkbwvYjjPiBfAyEy1/?=
- =?Windows-1252?Q?vPRPAppj/1ORh9SjetU9PHSjAUNFgHlptXVO92oUt4hUgHAtWq4gp+Bu?=
- =?Windows-1252?Q?EcAzkR4JytciPF7rhlc4yRli5zfi2kMj1qH+xGT5kuUVnbZqdIcOzv1y?=
- =?Windows-1252?Q?P6pG+oqGDbsUJSlwjyk9aMW2WbOhLNCzVrFtEKlbNs3bhP4vpreeJz64?=
- =?Windows-1252?Q?OO9UDl/VV3UFWKKS/Xf4dUUNF/66oBOI9pSgyiAxuEdO6EMRYe83rRPd?=
- =?Windows-1252?Q?MnsH7pkf/EyAkOAkycSZZFx/dl2hLILLc81JNA+b9SsDRJVYxQOd+zRe?=
- =?Windows-1252?Q?ppF/UsZ7iOkBpBylkjzWoJqj5eeJIN6zgy3lM+bwDirNQ/fUDbH7MRM1?=
- =?Windows-1252?Q?LIFicjb+szHu1zb3CDOxI23WgKlRSUSMHcrozcvomp/YbMF/dw5vHsxt?=
- =?Windows-1252?Q?s5zB82whQavx3whZMQy5GX+bCSek7etM+Nd0lNmwjZc3hZ9c1k0u1OFT?=
- =?Windows-1252?Q?kKCey3o8LlpIJzxoNqLG+WF7LMjcuIjY9g65Y6fYbeaJriizcJg/Dai9?=
- =?Windows-1252?Q?xyglk1rFa+3pbWWszBsTrPNitS7ec5XLEN5Vnn9z4VSeSt0qgQ0dHXAt?=
- =?Windows-1252?Q?nNXAIKAR6qgzxq2rWVLXvz4Kc/PIXyFSNwfhT/6XTPpETVH2IKNjwoNi?=
- =?Windows-1252?Q?Y7vh6HKraG6V+TWwW5Rq0MWdBePrOhoQfCElUmbL5AVzcoB25jN4CIxt?=
- =?Windows-1252?Q?ox8q2FHJcYmHJfQNiwBT/u3m4ivwtJuYEW+Ypij+pVNygn4tdgtBKnOy?=
- =?Windows-1252?Q?648LE5N8ndnrj+1sFs6ejbylpFr/JMAcaHtHIVh2iKn29WYe9u48kane?=
- =?Windows-1252?Q?oIByX0JNyX4kKKtO5CNdhWH13E+qsrbZQytu8mvfL0HvJU720ICg2/FZ?=
- =?Windows-1252?Q?WEwGHPhBQ/eeOuP4lYNuP7QlyNSfFQUoI26Ju5pxepnIE+h2pRkLGGQl?=
- =?Windows-1252?Q?Or8XV53HUDvOPs9yWoFKhcxyabfDfQENHy8mXAjZ0uswNx+FkVxjJCEf?=
- =?Windows-1252?Q?h/jKDg=3D=3D?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <4719C4EB9F0F6741A01BFF335C8421B5@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S229644AbhLTK4G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Dec 2021 05:56:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229619AbhLTK4G (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Dec 2021 05:56:06 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF25C061574
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Dec 2021 02:56:05 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mzGKm-0003hV-MP; Mon, 20 Dec 2021 11:56:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mzGKl-005cCe-RY; Mon, 20 Dec 2021 11:55:59 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mzGKk-0002eg-Q1; Mon, 20 Dec 2021 11:55:58 +0100
+Date:   Mon, 20 Dec 2021 11:55:55 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Clark Wang <xiaoning.wang@nxp.com>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org, Jun Li <jun.li@nxp.com>
+Subject: Re: [PATCH V2] pwm: imx27: workaround of the pwm output bug when
+ decrease the duty cycle
+Message-ID: <20211220105555.zwq22vip7onafrck@pengutronix.de>
+References: <20211220073130.1429723-1-xiaoning.wang@nxp.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ea58834-ac3c-463a-7c6c-08d9c38f7354
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2021 08:05:13.0886
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 16SjlWGnaSDKE6kgLOsZLyD145gznsFZvjHMH92lODt08IYgDdGm3P1nBhZiAGXBzLROVlxRricbce/ghNh0bIi1etoqC0U8vlVA2vDRMRs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4634
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6yqfau2sgkcnhku7"
+Content-Disposition: inline
+In-Reply-To: <20211220073130.1429723-1-xiaoning.wang@nxp.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17/12/2021 11:43, Mark Brown wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you=20
-know the content is safe
->
-> On Fri, Dec 17, 2021 at 11:40:29AM +0000, Conor.Dooley@microchip.com=20
-wrote:
->> On 17/12/2021 11:17, Mark Brown wrote:
->>> Why do you need this property in the DT - isn't the number of chip
->>> selects in the IP a fixes property?
->>
->> Nope! It's an IP that's intended for use in FPGAs so the number of
->> selects may (and does) vary based on implementation.
->
-> That doesn't explain why the number is needed in the binding - why do
-> you need this property in the DT?
 
-Took another look at the IP core configuration & I think you're right=20
-and that property can be dropped. The register responsible for CS=20
-control will not be optimised away even if the CS is not used & the=20
-worst outcome is that nothing will happen.
+--6yqfau2sgkcnhku7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+[added Jun Li who reviewed the patch to Cc:]
+
+On Mon, Dec 20, 2021 at 03:31:30PM +0800, Clark Wang wrote:
+> This is a limited workaround for the PWM IP issue.
+>=20
+> Root cause:
+> When the SAR FIFO is empty, the new write value will be directly applied
+> to SAR even the current period is not over.
+
+
+> If the new SAR value is less than the old one, and the counter is
+> greater than the new SAR value, the current period will not filp the
+> level. This will result in a pulse with a duty cycle of 100%.
+
+I read the i.MX25 PWM chapter a few times now, and I played around a
+bit. I could confirm the issue.
+
+> Workaround:
+> Add an old value SAR write before updating the new duty cycle to SAR.
+> This will keep the new value is always in a not empty fifo, and can be wa=
+it
+> to update after a period finished.
+>=20
+> Limitation:
+> This workaround can only solve this issue when the PWM period is longer t=
+han
+> 2us(or <500KHz).
+>=20
+> Reviewed-by: Jun Li <jun.li@nxp.com>
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> ---
+> V2:
+>  Fix the warnings when built in riscv-gcc, which is reported by kernel te=
+st robot <lkp@intel.com>
+> ---
+>  drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 62 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index ea91a2f81a9f..3d9ca60e2baa 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -21,11 +21,13 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> =20
+>  #define MX3_PWMCR			0x00    /* PWM Control Register */
+>  #define MX3_PWMSR			0x04    /* PWM Status Register */
+>  #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
+>  #define MX3_PWMPR			0x10    /* PWM Period Register */
+> +#define MX3_PWMCNR			0x14    /* PWM Counter Register */
+> =20
+>  #define MX3_PWMCR_FWM			GENMASK(27, 26)
+>  #define MX3_PWMCR_STOPEN		BIT(25)
+> @@ -91,6 +93,7 @@ struct pwm_imx27_chip {
+>  	 * value to return in that case.
+>  	 */
+>  	unsigned int duty_cycle;
+> +	spinlock_t lock;
+>  };
+> =20
+>  #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip=
+, chip)
+> @@ -201,10 +204,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chi=
+p *chip,
+> =20
+>  	sr =3D readl(imx->mmio_base + MX3_PWMSR);
+>  	fifoav =3D FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+> -	if (fifoav =3D=3D MX3_PWMSR_FIFOAV_4WORDS) {
+> +	if (fifoav >=3D MX3_PWMSR_FIFOAV_3WORDS) {
+>  		period_ms =3D DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+>  					 NSEC_PER_MSEC);
+> -		msleep(period_ms);
+> +		msleep(period_ms * (fifoav - 2));
+
+This changes semantic, from "wait for at least one free FIFO slot" to
+"wait for at least two FIFO slots". Maybe a comment would be good? At
+least the comment above the caller of pwm_imx27_wait_fifo_slot() needs
+adaption.
+
+Also I wonder: If there is only a single free slot, there is no problem,
+is there?
+
+>  		sr =3D readl(imx->mmio_base + MX3_PWMSR);
+>  		if (fifoav =3D=3D FIELD_GET(MX3_PWMSR_FIFOAV, sr))
+
+The error test is wrong then. If fifoav was initially 4 and waiting only
+reduced it to 3, you don't trigger a warning.
+
+On a side note: pwm_get_period() might return a value that is too big.
+This could be improved using readl_poll_timeout.
+
+> @@ -215,13 +218,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chi=
+p *chip,
+>  static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			   const struct pwm_state *state)
+>  {
+> -	unsigned long period_cycles, duty_cycles, prescale;
+> +	unsigned long period_cycles, duty_cycles, prescale, counter_check, flag=
+s;
+>  	struct pwm_imx27_chip *imx =3D to_pwm_imx27_chip(chip);
+> +	void __iomem *reg_sar =3D imx->mmio_base + MX3_PWMSAR;
+> +	__force u32 sar_last, sar_current;
+>  	struct pwm_state cstate;
+>  	unsigned long long c;
+>  	unsigned long long clkrate;
+>  	int ret;
+> -	u32 cr;
+> +	u32 cr, timeout =3D 1000;
+> =20
+>  	pwm_get_state(pwm, &cstate);
+> =20
+> @@ -262,7 +267,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  		pwm_imx27_sw_reset(chip);
+>  	}
+> =20
+> -	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+> +	/*
+> +	 * This is a limited workaround. When the SAR FIFO is empty, the new
+> +	 * write value will be directly applied to SAR even the current period
+> +	 * is not over.
+
+	When the SAR FIFO is empty, a new SAR value will be applied directly
+	instead of waiting for the current period to complete.
+
+is grammatically better (at least with my German sense for English
+grammar) and might be better to understand.
+
+> +	 * If the new SAR value is less than the old one, and the counter is
+> +	 * greater than the new SAR value, the current period will not filp
+
+s/filp/flip/
+
+> +	 * the level. This will result in a pulse with a duty cycle of 100%.
+> +	 * So, writing the current value of the SAR to SAR here before updating
+> +	 * the new SAR value can avoid this issue.
+
+This can be expressed a bit easier (and more correct) I think:=20
+
+	If the SAR value is decreased over the counter value, there is
+	no compare event in the current period resulting in a 100%
+	period.
+
+(This is more correct because decreasing the SAR from 200 to 100 if the
+counter is already at 300 doesn't result in the problem.)
+
+> +	 * Add a spin lock and turn off the interrupt to ensure that the
+
+The usual term is "turn off interrupts" because not only the PWM irq is
+disabled, but all are. I wonder if just disabling irqs serves the same
+purpose.
+
+> +	 * real-time performance can be guaranteed as much as possible when
+
+Disabling interrupts is never good for real-time performance.
+
+Having said that I think I'd go for a solution without irq disabling.
+
+> +	 * operating the following operations.
+> +	 *
+> +	 * 1. Add a threshold of 1.5us. If the time T between the read current
+> +	 * count value CNR and the end of the cycle is less than 1.5us, wait
+> +	 * for T to be longer than 1.5us before updating the SAR register.
+> +	 * This is to avoid the situation that when the first SAR is written,
+> +	 * the current cycle just ends and the SAR FIFO that just be written
+> +	 * is emptied again.
+> +	 *
+> +	 * 2. Use __raw_writel() to minimize the interval between two writes to
+> +	 * the SAR register to increase the fastest pwm frequency supported.
+> +	 *
+> +	 * When the PWM period is longer than 2us(or <500KHz), this workaround
+> +	 * can solve this problem.
+> +	 */
+> +	if (duty_cycles < imx->duty_cycle) {
+> +		c =3D clkrate * 1500;
+> +		do_div(c, NSEC_PER_SEC);
+> +		counter_check =3D c;
+
+This needs to account for PWMCR.PRESCALER.
+
+> +		sar_last =3D (__force u32) cpu_to_le32(imx->duty_cycle);
+> +		sar_current =3D (__force u32) cpu_to_le32(duty_cycles);
+
+If endianess conversion is necessary, please apply it to the complete
+driver in a separate patch. Doing this only in one place and skipping
+several others is just irritating.
+
+> +		spin_lock_irqsave(&imx->lock, flags);
+> +		if (state->period >=3D 2000) {
+
+This checks the new period value that doesn't have to do anything with
+the hardware state yet. So this check isn't sensible, is it?
+
+> +			while ((period_cycles -
+> +				readl_relaxed(imx->mmio_base + MX3_PWMCNR))
+> +				< counter_check) {
+
+period_cycles is the new overflow value.  If the current overflow value
+is lower, the loop might terminate immediately. If however the current
+overflow value is higher than period_cycles, the subtraction might
+overflow resulting in the check to be true. In both cases there isn't
+any relation to the next overflow event.
+
+> +				if (!--timeout)
+> +					break;
+
+On a fast machine with a long period this might end in a timeout before
+the rollover.
+
+> +			};
+> +		}
+> +		if (!(MX3_PWMSR_FIFOAV &
+> +		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
+> +			__raw_writel(sar_last, reg_sar);
+
+Why not use FIELD_GET for consistency here?
+
+> +		__raw_writel(sar_current, reg_sar);
+> +		spin_unlock_irqrestore(&imx->lock, flags);
+> +	} else
+> +		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+
+This violates the coding style. If one branch of an if needs braces, all
+branches should use them.
+
+> +
+>  	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+
+Changing the period value resets the counter. So to minimize the effect
+of the mitigation (i.e. a busy loop for up to 1.5=B5s with irqs off) I
+suggest to do the wait and write SAR twice only if period doesn't change
+and SAR is actually decreased over the current counter value.
+=20
+>  	/*
+> @@ -323,6 +378,8 @@ static int pwm_imx27_probe(struct platform_device *pd=
+ev)
+>  		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
+>  				     "failed to get peripheral clock\n");
+> =20
+> +	spin_lock_init(&imx->lock);
+> +	imx->duty_cycle =3D 0;
+
+duty_cycle is already 0 here, so there is no need to initialize it.
+
+>  	imx->chip.ops =3D &pwm_imx27_ops;
+>  	imx->chip.dev =3D &pdev->dev;
+>  	imx->chip.npwm =3D 1;
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--6yqfau2sgkcnhku7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHAYTgACgkQwfwUeK3K
+7AlSigf9GYB2O8+rGvT01uvcW6nZQaPKzKyy63o7QiZgVnzEwt+ZOPzOH5r8GuwX
+6x3rE7E9VfKoJit7ufHhOHOA9B89k+Rr0dN4UZTFzf2vRrI9CI9V7s024stiCePQ
+olK/aEfUVNbuJjO/fIchzo2exkZmzVkAMF/Z0YaYgfqdFyN1c40zN2hpuOL3r/eU
+23Pva4MYTUdqtP06cBHeJ6ZvS0hKZkXqaEonKsMrIOOUsU10RFsaoFGGpEYhVYCD
+gX2b6TjmOP7R5Zd4QG5jxrrZ6leE203QXQ/WA8nhhRgCNV6I3kywh5s2DtoUk1UR
+eAy0mNsGrLGFEFweOdRsAM/4uenB4w==
+=cVev
+-----END PGP SIGNATURE-----
+
+--6yqfau2sgkcnhku7--
