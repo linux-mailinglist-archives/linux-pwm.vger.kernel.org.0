@@ -2,126 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F3747C592
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Dec 2021 18:55:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CA3A47C617
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Dec 2021 19:14:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240776AbhLURzl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Dec 2021 12:55:41 -0500
-Received: from mail-qk1-f171.google.com ([209.85.222.171]:34778 "EHLO
-        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240752AbhLURzj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Dec 2021 12:55:39 -0500
-Received: by mail-qk1-f171.google.com with SMTP id t6so13346038qkg.1;
-        Tue, 21 Dec 2021 09:55:39 -0800 (PST)
+        id S241166AbhLUSOp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Dec 2021 13:14:45 -0500
+Received: from mail-qk1-f170.google.com ([209.85.222.170]:37690 "EHLO
+        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241021AbhLUSOg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Dec 2021 13:14:36 -0500
+Received: by mail-qk1-f170.google.com with SMTP id m186so13397465qkb.4;
+        Tue, 21 Dec 2021 10:14:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4GSGA/qwtNXG0IPZ01RqeQiJyKL3VoAZk2c0sbKkobg=;
-        b=hlfjFvMtD79EiL/LGYq82Z1elOoAOubXKDaCJkEHPoftWwakQIsYns8HVhu/mnQPum
-         2k1ZiIHWFYJYRo1XuE7Ni9+1ToDmJbOMqtJ7gWazRPyS0o0OsE8mFT5ZBwB6WnAryTYt
-         0Aogzc2pbINGNJQavvaoc4eE1/WzLf4de6pG6YL8vIavMjiDgeRedqTlGlAu6zqlGrq0
-         SShn+4CUa0bAvoN/dCtNBwnxUdYSIqdBc1uEFiEuZISrUs/Py5e7HjRIDexdJxhEjwsm
-         cCDzeljhIj/Q8KnwpHOYIQeEhB1wFJx873LVBp1XCjR+mfph2ZMhX45IpiA4k23p3+Or
-         Q/Xg==
-X-Gm-Message-State: AOAM531pTbm2BROPCb0zP4FG6ljA96TPzvJtT390rerLdu1ti+w1gYAk
-        0xHaYFz1lF6FU/pEHWvjWQ==
-X-Google-Smtp-Source: ABdhPJz5vgBn1TjeZtoc2YYKvQ+HmcEPZTFsNL3qHHc8SbteC0W1UmfcNlqbGX3NnNYb5boB3sk4Pg==
-X-Received: by 2002:a05:620a:258e:: with SMTP id x14mr2824830qko.578.1640109338673;
-        Tue, 21 Dec 2021 09:55:38 -0800 (PST)
+        bh=pZh3Qpd5SvcqUEcT4y52L9C1fd8K8ht/Ht2rKQMnZjA=;
+        b=2le176EVEyP0SuNIq4HFWzj8b8PvR7z2k/GuCucaLgK4/artjHfyy5+IHJ/WNtDcoL
+         8elzBVMt6b8Q8F/u5b8+4J5y3jW85b8MLyiIVRUoqo4FmmdgyXQ7zBTocumVohT7ewJT
+         7n2pL4zVd7R/O40+7GyThIaGtrE5yv9G1yX+GrUCsOIeRTim82fsXKAy/L/KUQloR/b5
+         QO5flTyfRHlBHskLHxgG4Aztx7FIqRpfQeyFuBP94CC/fEFx4eKJGHqF2AN3p0KGDEy+
+         ybR3Wo14w0RbLEt9I2ckkiC3/7UYlMfNwhhaK3kbHFiEv6jgsv3fCLvdgELpwgz2EpEV
+         3afw==
+X-Gm-Message-State: AOAM532VkJJdu/mD/jLTZ/apyWAUQDnaiMFloy4NH4kOCWqNzpiz/l3f
+        S6YvLsImmddAUewuputLbg==
+X-Google-Smtp-Source: ABdhPJw/vwQnHfFXE5Kgv5iAOXOBqrO6DxVee4i4XIzMBK7qyJ5XdnnCecKYFFLszmdnzt2n50BYFw==
+X-Received: by 2002:a05:620a:e0e:: with SMTP id y14mr2856584qkm.760.1640110476023;
+        Tue, 21 Dec 2021 10:14:36 -0800 (PST)
 Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id bm35sm14659623qkb.86.2021.12.21.09.55.35
+        by smtp.gmail.com with ESMTPSA id e15sm325541qtq.83.2021.12.21.10.14.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Dec 2021 09:55:38 -0800 (PST)
-Received: (nullmailer pid 1495705 invoked by uid 1000);
-        Tue, 21 Dec 2021 17:55:33 -0000
-Date:   Tue, 21 Dec 2021 13:55:33 -0400
+        Tue, 21 Dec 2021 10:14:35 -0800 (PST)
+Received: (nullmailer pid 1521054 invoked by uid 1000);
+        Tue, 21 Dec 2021 18:14:32 -0000
+Date:   Tue, 21 Dec 2021 14:14:32 -0400
 From:   Rob Herring <robh@kernel.org>
-To:     conor.dooley@microchip.com
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        jassisinghbrar@gmail.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, broonie@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        krzysztof.kozlowski@canonical.com, geert@linux-m68k.org,
-        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
-        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
-        atish.patra@wdc.com
-Subject: Re: [PATCH v2 03/17] dt-bindings: soc/microchip: make
- systemcontroller a mfd
-Message-ID: <YcIVFZSqt/JSuk3J@robh.at.kernel.org>
-References: <20211217093325.30612-1-conor.dooley@microchip.com>
- <20211217093325.30612-4-conor.dooley@microchip.com>
+To:     Hammer Hsieh <hammerh0314@gmail.com>
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wells.lu@sunplus.com, Hammer Hsieh <hammer.hsieh@sunplus.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings:pwm:Add bindings doc for Sunplus SoC
+ PWM Driver
+Message-ID: <YcIZiFvyo+N4ai7r@robh.at.kernel.org>
+References: <1639741568-5846-1-git-send-email-hammer.hsieh@sunplus.com>
+ <1639741568-5846-2-git-send-email-hammer.hsieh@sunplus.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211217093325.30612-4-conor.dooley@microchip.com>
+In-Reply-To: <1639741568-5846-2-git-send-email-hammer.hsieh@sunplus.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 09:33:11AM +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Fri, Dec 17, 2021 at 07:46:07PM +0800, Hammer Hsieh wrote:
+> Add bindings doc for Sunplus SoC PWM Driver
 > 
-> Make the system controller on the Polarfire SoC
-> a "simple,mfd" so that the services can be child
-> nodes of the system controller node.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Hammer Hsieh <hammer.hsieh@sunplus.com>
+
+The author email and S-o-b must match.
+
 > ---
->  .../microchip,mpfs-sys-controller.yaml        | 33 +++++++++++++++++--
->  1 file changed, 30 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/pwm/pwm-sunplus.yaml       | 45 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  5 +++
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
-> index f699772fedf3..014cb44b8f31 100644
-> --- a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
-> +++ b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
-> @@ -13,13 +13,34 @@ description: |
->    The PolarFire SoC system controller is communicated with via a mailbox.
->    This document describes the bindings for the client portion of that mailbox.
->  
-> -
->  properties:
->    mboxes:
->      maxItems: 1
->  
->    compatible:
-> -    const: microchip,mpfs-sys-controller
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml b/Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
+> new file mode 100644
+> index 0000000..9af19df
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) Sunplus Co., Ltd. 2021
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-sunplus.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sunplus SoC PWM Controller
+> +
+> +maintainers:
+> +  - Hammer Hsieh <hammer.hsieh@sunplus.com>
+> +
+> +properties:
+> +  '#pwm-cells':
+> +    const: 2
+> +
+> +  compatible:
 > +    items:
-> +      - const: microchip,mpfs-sys-controller
-> +      - const: simple-mfd
-
-'simple-mfd' means there is zero dependency on the parent for the child 
-nodes. Isn't 'mboxes' a dependency?
-
+> +      - const: sunplus,sp7021-pwm
 > +
-> +  hwrandom:
-> +    type: object
+> +  reg:
+> +    maxItems: 1
 > +
-> +    properties:
-> +      compatible:
-> +        const: microchip,mpfs-rng
+> +  clocks:
+> +    maxItems: 1
 > +
-> +    required:
-> +      - compatible
+> +  resets:
+> +    maxItems: 1
 > +
-> +  sysserv:
-> +    type: object
+> +required:
+> +  - '#pwm-cells'
+> +  - compatible
+> +  - reg
+> +  - clocks
 > +
-> +    properties:
-> +      compatible:
-> +        const: microchip,mpfs-generic-service
+> +additionalProperties: false
 > +
-> +    required:
-> +      - compatible
-
-There's not really any need to have child nodes which have no resources. 
-The driver for microchip,mpfs-sys-controller can create child devices.
-
-Rob
+> +examples:
+> +  - |
+> +    pwm: pwm@9c007a00 {
+> +      #pwm-cells = <2>;
+> +      compatible = "sunplus,sp7021-pwm";
+> +      reg = <0x9c007a00 0x80>;
+> +      clocks = <&clkc 0xa2>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 13f9a84..721ed79 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18242,6 +18242,11 @@ L:	netdev@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/net/ethernet/dlink/sundance.c
+>  
+> +SUNPLUS PWM DRIVER
+> +M:	Hammer Hsieh <hammer.hsieh@sunplus.com>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
+> +
+>  SUPERH
+>  M:	Yoshinori Sato <ysato@users.sourceforge.jp>
+>  M:	Rich Felker <dalias@libc.org>
+> -- 
+> 2.7.4
+> 
+> 
