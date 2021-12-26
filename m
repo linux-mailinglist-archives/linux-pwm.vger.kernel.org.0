@@ -2,126 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5BD047E725
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Dec 2021 18:36:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3103D47F64F
+	for <lists+linux-pwm@lfdr.de>; Sun, 26 Dec 2021 10:43:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbhLWRgZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 23 Dec 2021 12:36:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232927AbhLWRgY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 23 Dec 2021 12:36:24 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888CBC061401
-        for <linux-pwm@vger.kernel.org>; Thu, 23 Dec 2021 09:36:24 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id j6-20020a17090a588600b001a78a5ce46aso9402652pji.0
-        for <linux-pwm@vger.kernel.org>; Thu, 23 Dec 2021 09:36:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dPYUZWC+77UBrBLBUUxU9fHb6AxVTt9UdaUWIxpei+o=;
-        b=L0sjRUzYInvoF3lTrWwfgbrnXNR7T+eXsaPmPTag7OLNZPysAOAy+7D/eWdc8Y8pWa
-         ZYd8pC2fEDwzZy3dX8MHG6cokMq+LvNvhyVHt7n4Ot4zwmRwldtutxXO3oyyhccGcTGj
-         6HqoZZOHqzyqhn2YiN2yvj0pdcsduMD2RNXRxGoK6VCf9RFwFffI4Bcz668E4CDGnHCe
-         W9InkcEY0CD9FxjiRL4s4xROMFQ19FlU2EzPctV1dHFiCYC2qFsXNDzh4+eMW8ZOMg0i
-         GvYkYHgDSayVhkayneoGjmk9tIMU7TKP2/FjiXoGEbnsbQKYI7gPlGu5VC6SGmmrwTQd
-         Q6mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=dPYUZWC+77UBrBLBUUxU9fHb6AxVTt9UdaUWIxpei+o=;
-        b=AmzIQmrVw7eCaFQd8weK7qISmTW0Z1SFW+yiuZ3uiUla2jSfMICvKkL5G7SBARnp7M
-         TbE7dNaVKo4PKpqBM+X3P/pvihC7hdi2y0uOCm1z0G4s49pZPikEslDmAYpsLbJsYOPo
-         jqEHMb7ACmwwPUUH7kg8ED2iIQchOs5fjrlcxLZcs2JwmoEbgqTGyE01rgLQNfoLcHdz
-         9FgZhIQkwk7okrn13Yng3EvoKyWCG66Ctkz630jnoqHssGF9CaU93fxifzDUayWcLHk3
-         6HMfqAOq00Os3mozHj9KlVFBfuXsBfljUWB7JJEPs3xamOnXJBf57tjdI0ZIb7NBeCvH
-         8ZzQ==
-X-Gm-Message-State: AOAM5339637yC/iLE3B9ZfJsD47LVKwLQRnGj7kThAM8h+3YCanjgjeq
-        ggfRqdQ18FCCnXblXVJ8IlnyBQ==
-X-Google-Smtp-Source: ABdhPJypoRaM/7mbkBhlfvlUN6kGHVEF9KQ22b8kXscmQCQL7JNkF0LVo3y3phgMBogpBLz4jmYGaw==
-X-Received: by 2002:a17:90b:4d07:: with SMTP id mw7mr3712671pjb.69.1640280983976;
-        Thu, 23 Dec 2021 09:36:23 -0800 (PST)
-Received: from localhost ([12.163.77.120])
-        by smtp.gmail.com with ESMTPSA id g6sm7407727pfj.156.2021.12.23.09.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Dec 2021 09:36:23 -0800 (PST)
-Date:   Thu, 23 Dec 2021 09:36:23 -0800 (PST)
-X-Google-Original-Date: Thu, 23 Dec 2021 09:36:07 PST (-0800)
-Subject:     Re: [PATCH v2 17/17] MAINTAINERS: update riscv/microchip entry
-In-Reply-To: <05d6a273-19f6-2147-75ba-1fff726a0f70@microchip.com>
-CC:     krzysztof.kozlowski@canonical.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, broonie@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        geert@linux-m68k.org, bin.meng@windriver.com, heiko@sntech.de,
-        Lewis.Hanly@microchip.com, Daire.McNamara@microchip.com,
-        Ivan.Griffin@microchip.com, Atish Patra <atishp@rivosinc.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Conor.Dooley@microchip.com
-Message-ID: <mhng-0e4cde83-cfa1-4bf6-9f2c-611d9a4ddb5f@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S233208AbhLZJnC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 26 Dec 2021 04:43:02 -0500
+Received: from slot0.jllresort.com ([62.197.136.5]:47354 "EHLO
+        slot0.jllresort.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233199AbhLZJnA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Dec 2021 04:43:00 -0500
+X-Greylist: delayed 741 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Dec 2021 04:43:00 EST
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=jllresort.com;
+ h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; i=ele.mon@jllresort.com;
+ bh=cYwaTMXSx3x8M83UybK0xlazxdg=;
+ b=iuuxBczaiIxg0ofoYWtTKb3xJxlQQvel24mDLps8qkt7Pb5Ce1mAK/Y4u6i2F4iq25etD/PifVte
+   4RiBfzIauXqJRolUCXcfU3+sDTsQXK0+iyyTEMu2Ler84eaUG+8dEtmogKpHmQ4hgGSM+XTrh4Xr
+   eyDs1MdL4DMVOj0R58iJqgfOsN6Po49OpNZJc+ek23BHn/VVhRjzIRRt+CIKGoYP9AL70n4VTTW/
+   0sPlc5aoFTLZsd79t5gr5vrvvM1gMO3U25a6Sb5dYXV8DI5LbyP/PJbqF4pyt7Wd8WLUFVZuRM+y
+   KwAii14IJmwGhtORhR+5vPhApq6uM9o8MUzWIw==
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=jllresort.com;
+ b=SWVcGGDdfmDzAUkGFTQ19BIYwZpm8GM25HddrO32jTl7zN0DlTqUSOm0UDLeog7DUUEbkdC4py9k
+   fucA2bKiNrjkWLSeU0s8JoUunYLDw18WuVV+078XMQ+Sh1MmWEwtqr2C06TRPP26s5kEiMojlFQh
+   nia6HKYxKRu6Mb+Okd3rchAR6A8oKvPwH5vcYH2DUbH2DfunsSZVdXN7CQ10VDwVWbB3xN+vrG1T
+   a1/weSu/4mwNasBo5M66J05ziLCdG1kOdxvyW5AosETnLOhKbYkH6Ce+V6le5bNpOlmzpbMoTrC4
+   s1Es9j1L4CJE9CUWAh+JZjzXzFUcQsiM1VxrDw==;
+Reply-To: mustafa.ayvaz@ayvazburosu.com
+From:   ele.mon@jllresort.com
+To:     linux-pwm@vger.kernel.org
+Subject: Happy Weekend:
+Date:   26 Dec 2021 10:29:34 +0100
+Message-ID: <20211226102855.B68AAA50B5CDBA1F@jllresort.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 23 Dec 2021 06:56:45 PST (-0800), Conor.Dooley@microchip.com wrote:
-> On 17/12/2021 15:09, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->> 
->> On 17/12/2021 10:33, conor.dooley@microchip.com wrote:
->>> From: Conor Dooley <conor.dooley@microchip.com>
->>>
->>> Update the RISC-V/Microchip entry by adding the microchip dts
->>> directory and myself as maintainer
->>>
->>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->>> ---
->>>   MAINTAINERS | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 7a2345ce8521..3b1d6be7bd56 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -16348,8 +16348,10 @@ K:   riscv
->>>
->>>   RISC-V/MICROCHIP POLARFIRE SOC SUPPORT
->>>   M:   Lewis Hanly <lewis.hanly@microchip.com>
->>> +M:   Conor Dooley <conor.dooley@microchip.com>
->>>   L:   linux-riscv@lists.infradead.org
->>>   S:   Supported
->>> +F:   arch/riscv/boot/dts/microchip/
->>>   F:   drivers/mailbox/mailbox-mpfs.c
->>>   F:   drivers/soc/microchip/
->>>   F:   include/soc/microchip/mpfs.h
->>>
->> 
->> Good to have the DTS covered, so FWIW:
->> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
->> 
->> You still should get Lewis' ack (unless he merges it)
-> Aye, it'll be an ack. We don't currently have a tree & would rather do 
-> this via risc-v than the at91/sam arm soc tree.
+Greetings to you linux-pwm,
 
-WFM.  I'll be awaiting the ack.  I don't see any fundamental issues from 
-my end, as long is it's got all the acks/reviews then I'm generally fine 
-with this sort of stuff.  I'll take a look before merging it, I'm kind 
-of buried right now.  Sorry!
+I was wondering if you got my previous email? I have been trying=20
+to reach you by email linux-pwm@vger.kernel.org, kindly get back=20
+to me swiftly, it is very important and urgent.
 
->> 
->> Best regards,
->> Krzysztof
->> 
-> 
+Thanks
+Mustafa Ayvaz
+Email: mustafa.ayvaz@ayvazburosu.com
