@@ -2,47 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7AF0482631
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Jan 2022 01:18:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 098E0482EF2
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Jan 2022 09:17:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230263AbiAAASw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 31 Dec 2021 19:18:52 -0500
-Received: from mail.osorio.rs.gov.br ([177.73.0.123]:40051 "EHLO
-        mail.osorio.rs.gov.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiAAASv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 31 Dec 2021 19:18:51 -0500
-Received: by mail.osorio.rs.gov.br (Postfix, from userid 999)
-        id 86CD048A9657; Fri, 31 Dec 2021 16:19:10 -0200 (BRST)
-Received: from localhost (nac.osorio.rs.gov.br [127.0.0.1])
-        by nac (Postfix) with SMTP id 3BA064879670;
-        Fri, 31 Dec 2021 15:26:19 -0200 (BRST)
-Received: from User (unknown [84.38.132.16])
-        by mail.osorio.rs.gov.br (Postfix) with ESMTP id 54C49488CF15;
-        Fri, 31 Dec 2021 13:16:01 -0200 (BRST)
-Reply-To: <andbaill228@mail2world.com>
-From:   "Ads" <projetos@gov.br>
-Subject: Very Importante Notice
-Date:   Fri, 31 Dec 2021 16:31:24 +0200
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20211231151601.54C49488CF15@mail.osorio.rs.gov.br>
-To:     undisclosed-recipients:;
+        id S230464AbiACIRi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 3 Jan 2022 03:17:38 -0500
+Received: from mga01.intel.com ([192.55.52.88]:16903 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230459AbiACIRh (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 3 Jan 2022 03:17:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641197857; x=1672733857;
+  h=from:to:cc:subject:date:message-id;
+  bh=4kBz/E2aseGMI8WyjQQwPLH8B10PXb/8bIJq1HQzaVw=;
+  b=hdBXYMja2VVoKKSyczceJbX2F3VArOLujiUHAEUFjQM2F85SgyGQc/18
+   IizJOucpWmwWoQPljaJeQGVZEKGyXQ8NshLIduPBxkS5Vhb7aUF09NYVv
+   +4wdWN1btJgABFRw7U1z5O/82Mk3qH5t1LUwki7k68dskAsMQSsVNZyNV
+   VeXADpESd9l5lLbpOWbnIBFb5vMkQb5kAqt9d4rj3BUUouRN4dw4D04+s
+   n3AnTaecewbOnFJMWjgKmVNMg4jlP/Rvbr50ExJZp4kq0En3vKmBeA6Q3
+   nT1Y+UCUad8XKqwmnrj5DRE3SbsNn+wZ5N1IgVzJwPe0mVCotqJbLzHHE
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10215"; a="266290039"
+X-IronPort-AV: E=Sophos;i="5.88,257,1635231600"; 
+   d="scan'208";a="266290039"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 00:17:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,257,1635231600"; 
+   d="scan'208";a="471581448"
+Received: from inlubt0246.iind.intel.com ([10.67.198.165])
+  by orsmga006.jf.intel.com with ESMTP; 03 Jan 2022 00:17:31 -0800
+From:   vishakha.joshi@intel.com
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
+        vijayakannan.ayyathurai@intel.com, bala.senthil@intel.com,
+        tamal.saha@intel.com, lakshmi.bai.raja.subramanian@intel.com,
+        vishakha.joshi@intel.com
+Subject: [PATCH v1 0/2] pwm: Add count to sysfs for Intel PWM driver
+Date:   Mon,  3 Jan 2022 13:46:08 +0530
+Message-Id: <20220103081610.6656-1-vishakha.joshi@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Sir/Madam,
+From: Vishakha Joshi <vishakha.joshi@intel.com>
 
-Good day to you.
+Hi,
 
-I am Dr.Gertjan Vlieghe personal Secretary to Andrew Bailey who double as the Governor, Bank of England (https://en.wikipedia.org/wiki/Andrew_Bailey_%28banker%29). We have an inheritance of a deceased client, who bear the same name  with your surname. kindly contact Andrew Bailey through his personal email (andbaill228@mail2world.com) with your details for more information.
+The patch 1 adds the count for PWM waveform to sysfs interface.
+The patch 2 updates the count in the KeemBay PWM driver.
 
-Thank you.
+Please help to review these patches.
 
-Dr.Gertjan Vlieghe
+Thanks,
+Vishakha Joshi
+
+Vishakha Joshi (2):
+  pwm: Add count to sysfs for Intel PWM driver
+  pwm: Update the REPEAT_COUNT value
+
+ Documentation/ABI/testing/sysfs-class-pwm |  8 ++++++
+ drivers/pwm/pwm-keembay.c                 |  9 ++++--
+ drivers/pwm/sysfs.c                       | 34 +++++++++++++++++++++++
+ include/linux/pwm.h                       |  2 ++
+ 4 files changed, 50 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
