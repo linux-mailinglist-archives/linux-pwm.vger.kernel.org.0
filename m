@@ -2,16 +2,16 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE3BA48EDE5
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jan 2022 17:18:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4059748EE39
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jan 2022 17:35:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239095AbiANQSy convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 14 Jan 2022 11:18:54 -0500
-Received: from mail-4018.proton.ch ([185.70.40.18]:50365 "EHLO
-        mail-4018.proton.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243243AbiANQSx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jan 2022 11:18:53 -0500
-Date:   Fri, 14 Jan 2022 16:18:50 +0000
+        id S243402AbiANQfQ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 14 Jan 2022 11:35:16 -0500
+Received: from mail-4022.proton.ch ([185.70.40.22]:59549 "EHLO
+        mail-4022.proton.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243398AbiANQfP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jan 2022 11:35:15 -0500
+Date:   Fri, 14 Jan 2022 16:35:10 +0000
 Authentication-Results: mail-4018.proton.ch; dkim=none
 To:     conor.dooley@microchip.com
 From:   conor dooley <mail@conchuod.ie>
@@ -32,10 +32,10 @@ Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
         atishp@rivosinc.com
 Reply-To: conor dooley <mail@conchuod.ie>
-Subject: Re: [PATCH v3 01/15] dt-bindings: soc/microchip: update syscontroller compatibles
-Message-ID: <nK7Z7oZFnoE0yhMjColrEPJvSFc7SpHv54Ftu3PJzQjpLA0s1F0Rwa3P5qEQrcFhJVbcUvY3TOFppyaIAS9QX09qg5nPMiilhvOO_W0fmHQ=@conchuod.ie>
-In-Reply-To: <20220114151727.2319915-2-conor.dooley@microchip.com>
-References: <20220114151727.2319915-1-conor.dooley@microchip.com> <20220114151727.2319915-2-conor.dooley@microchip.com>
+Subject: Re: [PATCH v3 14/15] riscv: dts: microchip: add new peripherals to icicle kit device tree
+Message-ID: <6vH-XrwcUvrBsf_iYIhoEE2BQluly7BTbPn097cV0fh2zo4xKmjsmf8__RoEQWL4XWXOddP8K9kPwpsqbHHPTqhrZbpQw4pl7DXp88MlQqI=@conchuod.ie>
+In-Reply-To: <20220114151727.2319915-15-conor.dooley@microchip.com>
+References: <20220114151727.2319915-1-conor.dooley@microchip.com> <20220114151727.2319915-15-conor.dooley@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
@@ -49,57 +49,16 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 > From: Conor Dooley <conor.dooley@microchip.com>
 >
-> The Polarfire SoC is currently using two different compatible string
-> prefixes. Fix this by changing "polarfire-soc-*" strings to "mpfs-*" in
-> its system controller in order to match the compatible string used in
-> the soc binding and device tree
+> Add new peripherals to the MPFS, and enable them in the Icicle kit
+> device tree:
 >
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> 2x SPI, QSPI, 3x GPIO, 2x I2C, Real Time Counter, PCIE controller,
+> USB host & system controller.
+>
 > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
->  ...larfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} | 6 +++---
->  ...s-controller.yaml => microchip,mpfs-sys-controller.yaml} | 6 +++---
->  2 files changed, 6 insertions(+), 6 deletions(-)
->  rename Documentation/devicetree/bindings/mailbox/{microchip,polarfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} (82%)
->  rename Documentation/devicetree/bindings/soc/microchip/{microchip,polarfire-soc-sys-controller.yaml => microchip,mpfs-sys-controller.yaml} (75%)
+>  .../microchip/microchip-mpfs-icicle-kit.dts   |  53 ++++++
+>  .../boot/dts/microchip/microchip-mpfs.dtsi    | 168 ++++++++++++++++++
+>  2 files changed, 221 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/mailbox/microchip,polarfire-soc-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/microchip,mpfs-mailbox.yaml
-> similarity index 82%
-> rename from Documentation/devicetree/bindings/mailbox/microchip,polarfire-soc-mailbox.yaml
-> rename to Documentation/devicetree/bindings/mailbox/microchip,mpfs-mailbox.yaml
-> index bbb173ea483c..9251c2218c68 100644
-> --- a/Documentation/devicetree/bindings/mailbox/microchip,polarfire-soc-mailbox.yaml
-> +++ b/Documentation/devicetree/bindings/mailbox/microchip,mpfs-mailbox.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: "http://devicetree.org/schemas/mailbox/microchip,polarfire-soc-mailbox.yaml#"
-> +$id: "http://devicetree.org/schemas/mailbox/microchip,mpfs-mailbox.yaml#"
->  $schema: "http://devicetree.org/meta-schemas/core.yaml#"
->
->  title: Microchip PolarFire SoC (MPFS) MSS (microprocessor subsystem) mailbox controller
-> @@ -11,7 +11,7 @@ maintainers:
->
->  properties:
->    compatible:
-> -    const: microchip,polarfire-soc-mailbox
-> +    const: microchip,mpfs-mailbox
->
->    reg:
->      items:
-> @@ -38,7 +38,7 @@ examples:
->        #address-cells = <2>;
->        #size-cells = <2>;
->        mbox: mailbox@37020000 {
-> -        compatible = "microchip,polarfire-soc-mailbox";
-> +        compatible = "mpfs-mailbox";
-
-Example is wrong, should read "microchip,mpfs-mailbox".
-
-Will resubmit Monday.
-
->          reg = <0x0 0x37020000 0x0 0x1000>, <0x0 0x2000318c 0x0 0x40>;
->          interrupt-parent = <&L1>;
->          interrupts = <96>;
-
+realised i forgot to run checkpatch, will fix the trailing whitespace
