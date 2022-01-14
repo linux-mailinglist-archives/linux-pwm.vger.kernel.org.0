@@ -2,107 +2,148 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C12D448E86E
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jan 2022 11:42:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 567ED48E93C
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Jan 2022 12:34:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239660AbiANKlC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Jan 2022 05:41:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240455AbiANKlC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jan 2022 05:41:02 -0500
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18475C06161C
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Jan 2022 02:41:02 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id i68so8131448ybg.7
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Jan 2022 02:41:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=08UG9ldMiIKdmS2iZih9on1+nM9rLQX/zKMslKeCB3s=;
-        b=aHjdnLxz/QWUYFmxumDSX+IoQOOQjPY3oampwvWsBO/SeymheTfbRcvia3W9k3Lhn5
-         FDh3UwXKjIkVu7B1g0IBIr4/4CmNYEEV5eFTuANkxqP26hDDLZkTTw1OeDnm4NJuFBB5
-         YKTpq2WZX5Ql2+ojPiwuXnF3MkjTY7jOQnq7A0+9tsX/i8qfRNCazrg2TtP4UhXI+pWp
-         RU1twqp97RmLnh+KYRp4Bz2zhux8v8wGmrTRWyUok0icq8I8h05KucyYUyxFFT796Rjk
-         qVE15uz08w7pFIyxCOIlC8nznOKxYJRM68CHHxF6JMQGQtfUJ+/1oLyEtJSa1mCdXgQh
-         ILdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=08UG9ldMiIKdmS2iZih9on1+nM9rLQX/zKMslKeCB3s=;
-        b=NAFK6NRV03j8Fl2zzlF5O1La/IA+yjuZvSg3xKxUZFt4IWVwOjxIhx26T0tnGz+iKi
-         pyaXmJEOzYNTeNUgQts/eZLWUSC6+rMDrEyCUJFjd7KSOozLgEaGifJkZLslAj8QwP44
-         RBQgdmtV4GEjT3mIVtWKN75T6Lo6M4Q4sfd2ghjLiPVw8BmWxWLGRbazj/r0EOxV+yNn
-         kU4VC8GcipXbWIEj1+yVfak+0j1EtfNbOU6iuwHGT+qI2WM8mleyWDwG0bKmYmnoPu9x
-         4+Xef2npMTsJO+ZXRGsuJI8oSMqJFHwLohmSg/eas7wTUrsZPWKnTreksjOH0GAYyrHN
-         NohA==
-X-Gm-Message-State: AOAM531GmiJl9Nl6ZCRRmz+SO+Z/uWcb7fvThN73J2I/9OG0kdW6ncc4
-        sPbAZ39PMq2CLee18SxjjRDmn2hISp4ozOZBjpc=
-X-Google-Smtp-Source: ABdhPJybVjpc+vYJ0jG8Wj3Zx+6QaxwKBQQWY7TNUOdm4GEDdhxEZsVAl5u+kqbJapsnSa82lKL4b3YvG08kjVY5XJg=
-X-Received: by 2002:a25:c8c3:: with SMTP id y186mr11668332ybf.20.1642156861342;
- Fri, 14 Jan 2022 02:41:01 -0800 (PST)
+        id S240861AbiANLe2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Jan 2022 06:34:28 -0500
+Received: from mxout01.lancloud.ru ([45.84.86.81]:56428 "EHLO
+        mxout01.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236513AbiANLe0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Jan 2022 06:34:26 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout01.lancloud.ru 0230320DD201
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
+ to platform_get_irq_silent()
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+To:     Mark Brown <broonie@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        <netdev@vger.kernel.org>
+References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+ <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
+ <YeA7CjOyJFkpuhz/@sirena.org.uk>
+ <20220113194358.xnnbhsoyetihterb@pengutronix.de>
+ <YeCI47ltlWzjzjYy@sirena.org.uk>
+ <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <fba81d0d-c7e3-394d-5929-1706ac9ef5b7@omp.ru>
+Date:   Fri, 14 Jan 2022 14:34:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Received: by 2002:a05:7000:7e42:0:0:0:0 with HTTP; Fri, 14 Jan 2022 02:41:00
- -0800 (PST)
-Reply-To: fahham.abuahmad1971@aol.com
-From:   "Mr. Amir Aziz" <imfbenin16@gmail.com>
-Date:   Fri, 14 Jan 2022 11:41:00 +0100
-Message-ID: <CAE0dybEMXgQS2_zkQP=rPQuBaERC_6xY4SbQBRDazoYeDhCNuQ@mail.gmail.com>
-Subject: Dear friend Contact my secretary
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dear friend Contact my secretary
+On 1/13/22 11:57 PM, Sergey Shtylyov wrote:
 
+>>> The subsystems regulator, clk and gpio have the concept of a dummy
+>>> resource. For regulator, clk and gpio there is a semantic difference
+>>> between the regular _get() function and the _get_optional() variant.
+>>> (One might return the dummy resource, the other won't. Unfortunately
+>>> which one implements which isn't the same for these three.) The
+>>> difference between platform_get_irq() and platform_get_irq_optional() is
+>>> only that the former might emit an error message and the later won't.
+> 
+>    This is only a current difference but I'm still going to return 0 ISO
+> -ENXIO from latform_get_irq_optional(), no way I'd leave that -ENXIO there
 
-I am sorry to tell you about my successes getting the fund remitted
-through a co-operation of new business partner from U-Emirates I tried
-my possible best to involves you=E2=80=99re in Gold and Diamond business,
-Almighty decided whole conditions I am presently in Bangladesh for
-project/investments with my owner percentage share of total fund sum
+   platform.
 
-I don=E2=80=99t forget you past attempts/effort for assists me in remittanc=
-e
-of the fund despite that it=E2=80=99s failed us that period time
+> alone... :-)
+> 
+>> Reviewed-by: Mark Brown <broonie@kernel.org>
+> 
+>    Hm... I'm seeing a tag bit not seeing the patch itself...
 
-You should contact my secretary in Burkina Faso his Name. Mr. fahham
-abuahmad and his Email.  fahham.abuahmad1971@aol.com
+   Grr, my mail server tossed it into the spam folder... :-(
 
-Tell/advice him to send you ATM Visa Card sum of (USD $2,500,000) I
-kept for your compensations in all past attempts/effort you made for
-assist me in past I so much appreciated your assist/effort during the
-period time so feel free get in touch with my secretary his name Mr.
-fahham abuahmad instructs him where to send the ATM Visa Card worth of
-(USD $2,500,000) to you.
-
-This amount is me and my new partner contributed it to offered you
-amount (USD $1,500,000) is from my own percentage share then my new
-partner offered you (USD $1,000,000) from his own percentage share
-because I explained everything to him that you are the first person I
-contacted who assisting me but you couldn=E2=80=99t make it he says okay
-there=E2=80=99s no problem
-
-Now you should keep everything secret/confidential for my successfully
-because I know that it was only you knew how I made this money in life
-so kept everything secret/confidential, I hope you understood reason
-why this big amount of money was kept for you??
-
-Please du inform me immediately you received the ATM Visa Card sum of
-(USD $2,500,000) so that we will share our joys after all suffering at
-past time period, am here because I and my new partner having big
-investment projects at hands now
-
-You should remembered that I have forward instructions to the
-secretary on your behalf to send the ATM Visa Card to you immediately,
-so feel free to contact my secretary so that he will send the ATM Visa
-Card sum of Two Million Five-Hundred Thousand United State Dollars
-(USD $2,500,000) to you immediately without delay.
-
-Yours faithfully
-Mr. Amir Aziz
+MBR, Sergey
