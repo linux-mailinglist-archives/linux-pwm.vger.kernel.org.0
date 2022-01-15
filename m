@@ -2,103 +2,230 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6834748F84B
-	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jan 2022 18:22:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E322F48F8CA
+	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jan 2022 19:38:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233352AbiAORWr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 15 Jan 2022 12:22:47 -0500
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:37721 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233321AbiAORWn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jan 2022 12:22:43 -0500
-Received: by mail-ot1-f41.google.com with SMTP id i7-20020a9d68c7000000b0059396529af8so7452794oto.4;
-        Sat, 15 Jan 2022 09:22:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=CYssEdn4U+D0DKxBFx9coxO44MoyGtGFbzFuFgNIr2E=;
-        b=CCTfC01GdzyJC37rJMmrClsZ2vrBV5MvcluOVANBOWa6N4sBJKGUHn4DeenEM7jOvY
-         nzx13joZ7XzSg3a4MNNbVVOHXxX7l1o4fDeiIyaMjWE1FievrEwgvRaQFnEc8Y2ACl8K
-         gPmmo4gm7ve8co5dVP7eB0x13sk9MA7hNXIdIxHB9YlUOokhgbN8qmgX6PBbER3Jvf94
-         QWmsN1Q7R9eF2/Ynsgv5qp7l+/JbW71FjNxroBy3L/8kBYmil1KWY8LZL5OmASpGvNbR
-         BlAC+AnTyJsZb/813yJ2kTrSCtQOQqjcIZC+dj2DE0irrKa3G23b6DLeUFlpLpA1fJR+
-         C3uQ==
-X-Gm-Message-State: AOAM533IACwg1GhlTyCaOrLY/OGl5Fo7EYIXWxiO5ujOwfBLagST1oPm
-        MWuHbQ5MO8cFtrlsJDlvTw==
-X-Google-Smtp-Source: ABdhPJxa0Y95SAgsnFgvzW2QXkzA/LkZ4mlEhY1BKNnbCRyfZlp+mRbzX6AfmWmwF/mz5bmb22E9Bg==
-X-Received: by 2002:a05:6830:4393:: with SMTP id s19mr10668275otv.272.1642267362255;
-        Sat, 15 Jan 2022 09:22:42 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id n26sm3426650ooc.48.2022.01.15.09.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Jan 2022 09:22:41 -0800 (PST)
-Received: (nullmailer pid 119892 invoked by uid 1000);
-        Sat, 15 Jan 2022 17:22:30 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     conor.dooley@microchip.com
-Cc:     heiko@sntech.de, daire.mcnamara@microchip.com, palmer@dabbelt.com,
-        bgolaszewski@baylibre.com, alexandre.belloni@bootlin.com,
-        linux-pwm@vger.kernel.org, bin.meng@windriver.com,
-        linux-riscv@lists.infradead.org, robh+dt@kernel.org,
-        atishp@rivosinc.com, broonie@kernel.org, lee.jones@linaro.org,
-        linux-gpio@vger.kernel.org, thierry.reding@gmail.com,
-        linux-spi@vger.kernel.org, ivan.griffin@microchip.com,
-        gregkh@linuxfoundation.org, linux-crypto@vger.kernel.org,
-        lewis.hanly@microchip.com, u.kleine-koenig@pengutronix.de,
-        jassisinghbrar@gmail.com, krzysztof.kozlowski@canonical.com,
-        a.zummo@towertech.it, linux-usb@vger.kernel.org,
-        paul.walmsley@sifive.com, linux-rtc@vger.kernel.org,
-        geert@linux-m68k.org, linus.walleij@linaro.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        aou@eecs.berkeley.edu, devicetree@vger.kernel.org
-In-Reply-To: <20220114151727.2319915-10-conor.dooley@microchip.com>
-References: <20220114151727.2319915-1-conor.dooley@microchip.com> <20220114151727.2319915-10-conor.dooley@microchip.com>
-Subject: Re: [PATCH v3 09/15] dt-bindings: pwm: add microchip corepwm binding
-Date:   Sat, 15 Jan 2022 11:22:30 -0600
-Message-Id: <1642267350.939328.119891.nullmailer@robh.at.kernel.org>
+        id S233286AbiAOSiL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 15 Jan 2022 13:38:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233224AbiAOSiJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jan 2022 13:38:09 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2805C061574
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Jan 2022 10:38:08 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1n8nvA-0003Jj-3l; Sat, 15 Jan 2022 19:37:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1n8nux-00AUOf-7m; Sat, 15 Jan 2022 19:36:46 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1n8nuv-0005gB-Q6; Sat, 15 Jan 2022 19:36:45 +0100
+Date:   Sat, 15 Jan 2022 19:36:43 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Robert Richter <rric@kernel.org>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+ (summary)
+Message-ID: <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="j6ppxzwmobiijznr"
+Content-Disposition: inline
+In-Reply-To: <20220110195449.12448-2-s.shtylyov@omp.ru>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 14 Jan 2022 15:17:21 +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Add device tree bindings for the Microchip fpga fabric based "core" PWM controller.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+--j6ppxzwmobiijznr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-yamllint warnings/errors:
+Hello,
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pwm/microchip,corepwm.example.dts:19:18: fatal error: dt-bindings/clock/microchip,mpfs-clock.h: No such file or directory
-   19 |         #include "dt-bindings/clock/microchip,mpfs-clock.h"
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.lib:373: Documentation/devicetree/bindings/pwm/microchip,corepwm.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1413: dt_binding_check] Error 2
+I'm trying to objectively summarize the discussions in this thread in
+the hope this helps finding a way that most people can live with.
 
-doc reference errors (make refcheckdocs):
+First a description of the status quo:
 
-See https://patchwork.ozlabs.org/patch/1580131
+There are several function pairs *get() and *get_optional() that however
+are different in various aspects. Their relevant properties are listes
+in the following table. Ideally each line had only identical entries.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+					| clk_get		| gpiod_get		| platform_get_irq	| regulator_get		|
+	return value			|			|			|			|			|
+	on not-found			| ERR_PTR(-ENOENT)	| ERR_PTR(-ENOENT)	| -ENXIO		| dummy[1]	=
+	|
+	(plain get)			|			|			|			|			|
+					|			|			|			|			|
+	return value			|			|			|			|			|
+	on not-found			| dummy[1]		| dummy[1]		| -ENXIO		| ERR_PTR(-ENOENT)	|
+	(get_optional)			|			|			|			|			|
+					|			|			|			|			|
+	emits an error message		|			|			|			|			|
+	on error (including 		| no			| no			| yes[2]		| no			|
+	not-found)			|			|			|			|			|
+					|			|			|			|			|
+	get_optional emits an error	|			|			|			|			|
+	message on error (including	| no			| no			| no			| no			|
+	not-found)			|			|			|			|			|
+					|			|			|			|			|
+	summary:			| returning a dummy	| returning a dummy	| doesn't emit an	| ret=
+urning error code	|
+	*_get_optional() differs from	| on not-found		| on not-found		| error mess=
+age		| on not-found		|
+	*_get by:			|			|			|			|			|
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
 
-pip3 install dtschema --upgrade
+	[1] the dummy value is a valid resource descriptor, the API functions
+	    are a noop for this dummy value. This dummy value is NULL for
+	    all three subsystems.
+	[2] no error is printed for -EPROBE_DEFER.
 
-Please check and re-submit.
+The inversion between clk+gpio vs. regulator is unforunate, swaping one
+or the other would be good for consistency, but this isn't the topic of
+this thread. Only so much: It's not agreed upon which variant is the
+better one and the difference is of historical origin.
 
+There are now different suggestions to improve the situation regarding
+platform_get_irq() compared to the other functions:
+
+a) by Sergey
+   platform_get_irq_optional() is changed to return 0 on not-found.
+
+b) by Uwe
+   rename platform_get_irq_optional() to platform_get_irq_silent()
+
+The argument pro a) is:
+
+	platform_get_irq_optional() is aligned to clk_get() and
+	gpiod_get() by returning 0 on not-found.
+
+The argument contra a)=20
+
+	The return value 0 for platform_get_irq() is only syntactically
+	nearer to the dummy value of clk_get() and gpiod_get(). A dummy
+	value isn't available and probably not sensible to introduce for
+	irq because most drivers have to check for the not-found
+	situation anyhow to setup polling.=20
+
+The argument pro b) is:
+
+	The relevant difference between platform_get_irq() and its
+	optional variant is that the latter is silent. This is a
+	different concept for the meaning of optional compared to the
+	other *_get_optional().
+
+The argument contra b) is:
+
+	The chosen name is bad, because driver authors might wonder what
+	a silent irq is.
+
+---- end of summary
+=09
+A possible compromise: We can have both. We rename
+platform_get_irq_optional() to platform_get_irq_silent() (or
+platform_get_irq_silently() if this is preferred) and once all users are
+are changed (which can be done mechanically), we reintroduce a
+platform_get_irq_optional() with Sergey's suggested semantic (i.e.
+return 0 on not-found, no error message printking).
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--j6ppxzwmobiijznr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHjFDcACgkQwfwUeK3K
+7Al8ywf+IeUGmQ++ZSqrHA1sy8iG93DkE7XqgEI+/OYaQABSzKpE6w55cBp0EbHJ
+TXkVcUUkd5e6eFtr5FwZEgzO1/vKIlB6IkuD5jbuqXJy0oRz9whaVLAJvpYN/mmy
+KTHzmFssgA4mbUBx8XRteoVSNn6k9z0UF6EGrb0Vyfu70Q4yTdZKDP2mznyAnLee
+rw1Oj2UCu2Jn5QrSTg0jNrPqGbHrmEeadE08d3oZRpL/ZcO1Er30Oj3aYFDiiE1V
+p0J5fzDs0GZN4r/mwNSUDyq2edsIF3F2/ILOt05pf6AsFudhufarTMh2VWIu/mz7
+mMHkAm6dYTtw1VKd1mp/RwSpxhhJSw==
+=6uea
+-----END PGP SIGNATURE-----
+
+--j6ppxzwmobiijznr--
