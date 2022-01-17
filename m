@@ -2,47 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6B53490BFE
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jan 2022 16:58:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB9BA490F25
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jan 2022 18:16:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232951AbiAQP6q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Jan 2022 10:58:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
+        id S239361AbiAQRQO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 17 Jan 2022 12:16:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240664AbiAQP6p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jan 2022 10:58:45 -0500
+        with ESMTP id S244207AbiAQROq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jan 2022 12:14:46 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB64C06161C
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jan 2022 07:58:45 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E9AC08ED69
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Jan 2022 09:08:35 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1n9UOz-00082y-3w; Mon, 17 Jan 2022 16:58:37 +0100
+        id 1n9VSt-0007f8-E9; Mon, 17 Jan 2022 18:06:43 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1n9UOu-00AqhN-Uz; Mon, 17 Jan 2022 16:58:32 +0100
+        id 1n9VSk-00Ar9W-EE; Mon, 17 Jan 2022 18:06:33 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1n9UOt-0007Hq-G6; Mon, 17 Jan 2022 16:58:31 +0100
-Date:   Mon, 17 Jan 2022 16:58:17 +0100
+        id 1n9VSj-0002dO-9e; Mon, 17 Jan 2022 18:06:33 +0100
+Date:   Mon, 17 Jan 2022 18:06:09 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nikita Travkin <nikita@trvn.ru>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        sboyd@kernel.org, linus.walleij@linaro.org, masneyb@onstation.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v2 2/2] pwm: Add clock based PWM output driver
-Message-ID: <20220117155817.4bu2zwpjijtwlfvi@pengutronix.de>
-References: <20211213150335.51888-1-nikita@trvn.ru>
- <20211213150335.51888-3-nikita@trvn.ru>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-phy@lists.infradead.org,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        openipmi-developer@lists.sourceforge.net,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+Message-ID: <20220117170609.yxaamvqdkivs56ju@pengutronix.de>
+References: <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
+ <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
+ <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
+ <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+ <c9026f17-2b3f-ee94-0ea3-5630f981fbc1@omp.ru>
+ <CAMuHMdXVbRudGs69f9ZzaP1PXhteDNZiXA658eMFAwP4nr9r3w@mail.gmail.com>
+ <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
+ <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
+ <20220117114923.d5vajgitxneec7j7@pengutronix.de>
+ <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ja5m322vwhkhunoy"
+        protocol="application/pgp-signature"; boundary="aw3dtkiiyid6id5x"
 Content-Disposition: inline
-In-Reply-To: <20211213150335.51888-3-nikita@trvn.ru>
+In-Reply-To: <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -52,204 +128,355 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---ja5m322vwhkhunoy
+--aw3dtkiiyid6id5x
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Mon, Dec 13, 2021 at 08:03:35PM +0500, Nikita Travkin wrote:
-> Some systems have clocks exposed to external devices. If the clock
-> controller supports duty-cycle configuration, such clocks can be used as
-> pwm outputs. In fact PWM and CLK subsystems are interfaced with in a
-> similar way and an "opposite" driver already exists (clk-pwm). Add a
-> driver that would enable pwm devices to be used via clk subsystem.
+On Mon, Jan 17, 2022 at 02:08:19PM +0100, Geert Uytterhoeven wrote:
+> Hi Uwe,
 >=20
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> --
+> On Mon, Jan 17, 2022 at 12:49 PM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Mon, Jan 17, 2022 at 11:35:52AM +0100, Geert Uytterhoeven wrote:
+> > > On Mon, Jan 17, 2022 at 10:24 AM Uwe Kleine-K=F6nig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Mon, Jan 17, 2022 at 09:41:42AM +0100, Geert Uytterhoeven wrote:
+> > > > > On Sat, Jan 15, 2022 at 9:22 PM Sergey Shtylyov <s.shtylyov@omp.r=
+u> wrote:
+> > > > > > On 1/14/22 11:22 PM, Uwe Kleine-K=F6nig wrote:
+> > > > > > > You have to understand that for clk (and regulator and gpiod)=
+ NULL is a
+> > > > > > > valid descriptor that can actually be used, it just has no ef=
+fect. So
+> > > > > > > this is a convenience value for the case "If the clk/regulato=
+r/gpiod in
+> > > > > > > question isn't available, there is nothing to do". This is wh=
+at makes
+> > > > > > > clk_get_optional() and the others really useful and justifies=
+ their
+> > > > > > > existence. This doesn't apply to platform_get_irq_optional().
+> > > > > >
+> > > > > >    I do understand that. However, IRQs are a different beast wi=
+th their
+> > > > > > own justifications...
+> > > > >
+> > > > > > > clk_get_optional() is sane and sensible for cases where the c=
+lk might be
+> > > > > > > absent and it helps you because you don't have to differentia=
+te between
+> > > > > > > "not found" and "there is an actual resource".
+> > > > > > >
+> > > > > > > The reason for platform_get_irq_optional()'s existence is jus=
+t that
+> > > > > > > platform_get_irq() emits an error message which is wrong or s=
+uboptimal
+> > > > > >
+> > > > > >    I think you are very wrong here. The real reason is to simpl=
+ify the
+> > > > > > callers.
+> > > > >
+> > > > > Indeed.
+> > > >
+> > > > The commit that introduced platform_get_irq_optional() said:
+> > > >
+> > > >         Introduce a new platform_get_irq_optional() that works much=
+ like
+> > > >         platform_get_irq() but does not output an error on failure =
+to
+> > > >         find the interrupt.
+> > > >
+> > > > So the author of 8973ea47901c81a1912bd05f1577bed9b5b52506 failed to
+> > > > mention the real reason? Or look at
+> > > > 31a8d8fa84c51d3ab00bf059158d5de6178cf890:
+> > > >
+> > > >         [...] use platform_get_irq_optional() to get second/third I=
+RQ
+> > > >         which are optional to avoid below error message during prob=
+e:
+> > > >         [...]
+> > > >
+> > > > Look through the output of
+> > > >
+> > > >         git log -Splatform_get_irq_optional
+> > > >
+> > > > to find several more of these.
+> > >
+> > > Commit 8973ea47901c81a1 ("driver core: platform: Introduce
+> > > platform_get_irq_optional()") and the various fixups fixed the ugly
+> > > printing of error messages that were not applicable.
+> > > In hindsight, probably commit 7723f4c5ecdb8d83 ("driver core:
+> > > platform: Add an error message to platform_get_irq*()") should have
+> > > been reverted instead, until a platform_get_irq_optional() with proper
+> > > semantics was introduced.
+> >
+> > ack.
+> >
+> > > But as we were all in a hurry to kill the non-applicable error
+> > > message, we went for the quick and dirty fix.
+> > >
+> > > > Also I fail to see how a caller of (today's) platform_get_irq_optio=
+nal()
+> > > > is simpler than a caller of platform_get_irq() given that there is =
+no
+> > > > semantic difference between the two. Please show me a single
+> > > > conversion from platform_get_irq to platform_get_irq_optional that
+> > > > yielded a simplification.
+> > >
+> > > That's exactly why we want to change the latter to return 0 ;-)
+> >
+> > OK. So you agree to my statement "The reason for
+> > platform_get_irq_optional()'s existence is just that platform_get_irq()
+> > emits an error message [...]". Actually you don't want to oppose but
+> > say: It's unfortunate that the silent variant of platform_get_irq() took
+> > the obvious name of a function that could have an improved return code
+> > semantic.
+> >
+> > So my suggestion to rename todays platform_get_irq_optional() to
+> > platform_get_irq_silently() and then introducing
+> > platform_get_irq_optional() with your suggested semantic seems
+> > intriguing and straigt forward to me.
 >=20
-> Changes in v2:
->  - Address Uwe's review comments:
->    - Round set clk rate up
->    - Add a description with limitations of the driver
->    - Disable and unprepare clock before removing pwmchip
-> ---
->  drivers/pwm/Kconfig   |  10 +++
->  drivers/pwm/Makefile  |   1 +
->  drivers/pwm/pwm-clk.c | 143 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 154 insertions(+)
->  create mode 100644 drivers/pwm/pwm-clk.c
+> I don't really see the point of needing platform_get_irq_silently(),
+> unless as an intermediary step, where it's going to be removed again
+> once the conversion has completed.
+
+We agree that one of the two functions is enough, just differ in which
+of the two we want to have. :-)
+
+If you think platform_get_irq_silently() is a good intermediate step for
+your goal, then we agree to rename platform_get_irq_optional(). So I
+suggest you ack my patch.
+
+> Still, the rename would touch all users at once anyway.
+
+It would be more easy to keep the conversion regression-free however. A
+plain rename is simple to verify. And then converting to the new
+platform_get_irq_optional() can be done individually and without the
+need to do everything in a single step.
+
+> > Another thought: platform_get_irq emits an error message for all
+> > problems. Wouldn't it be consistent to let platform_get_irq_optional()
+> > emit an error message for all problems but "not found"?
+> > Alternatively remove the error printk from platform_get_irq().
 >=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 21e3b05a5153..daa2491a4054 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -140,6 +140,16 @@ config PWM_BRCMSTB
->  	  To compile this driver as a module, choose M Here: the module
->  	  will be called pwm-brcmstb.c.
-> =20
-> +config PWM_CLK
-> +	tristate "Clock based PWM support"
-> +	depends on HAVE_CLK || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for outputs that can be
-> +	  muxed to clocks.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-clk.
-> +
->  config PWM_CLPS711X
->  	tristate "CLPS711X PWM support"
->  	depends on ARCH_CLPS711X || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 708840b7fba8..4a860103c470 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_PWM_BCM_KONA)	+=3D pwm-bcm-kona.o
->  obj-$(CONFIG_PWM_BCM2835)	+=3D pwm-bcm2835.o
->  obj-$(CONFIG_PWM_BERLIN)	+=3D pwm-berlin.o
->  obj-$(CONFIG_PWM_BRCMSTB)	+=3D pwm-brcmstb.o
-> +obj-$(CONFIG_PWM_CLK)		+=3D pwm-clk.o
->  obj-$(CONFIG_PWM_CLPS711X)	+=3D pwm-clps711x.o
->  obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
->  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
-> diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
-> new file mode 100644
-> index 000000000000..55fd320b9c19
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-clk.c
-> @@ -0,0 +1,143 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Clock based PWM controller
-> + *
-> + * Copyright (c) 2021 Nikita Travkin <nikita@trvn.ru>
-> + *
-> + * This is an "adapter" driver that allows PWM consumers to use
-> + * system clocks with duty cycle control as PWM outputs.
-> + *
-> + * Limitations:
-> + * - There is no way to atomically set both clock rate and
-> + *   duty-cycle so glitches are possible when new pwm state
-> + *   is applied.
-> + * - Period depends on the underlying clock driver and,
-> + *   in general, not guaranteed.
-> + * - Underlying clock may not be able to give 100%
-> + *   duty cycle (constant on) and only set the closest
-> + *   possible duty cycle. (e.g. 99.9%)
+> Yes, all problems but not found are real errors.
 
-What about 0%?
+If you want to make platform_get_irq and its optional variant more
+similar to the others, dropping the error message is the way to go.
 
- - Periods are not completed on changes in general.
- - Behaviour on disable depends on the underlaying clk, don't assume it
-   to provide the inactive level.
+> > > > So you need some more effort to convince me of your POV.
+> > > >
+> > > > > Even for clocks, you cannot assume that you can always blindly use
+> > > > > the returned dummy (actually a NULL pointer) to call into the clk
+> > > > > API.  While this works fine for simple use cases, where you just
+> > > > > want to enable/disable an optional clock (clk_prepare_enable() and
+> > > > > clk_disable_unprepare()), it does not work for more complex use c=
+ases.
+> > > >
+> > > > Agreed. But for clks and gpiods and regulators the simple case is q=
+uite
+> > > > usual. For irqs it isn't.
+> > >
+> > > It is for devices that can have either separate interrupts, or a sing=
+le
+> > > multiplexed interrupt.
+> > >
+> > > The logic in e.g. drivers/tty/serial/sh-sci.c and
+> > > drivers/spi/spi-rspi.c could be simplified and improved (currently
+> > > it doesn't handle deferred probe) if platform_get_irq_optional()
+> > > would return 0 instead of -ENXIO.
+> >
+> > Looking at sh-sci.c the irq handling logic could be improved even
+> > without a changed platform_get_irq_optional():
+> >
+> > diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+> > index 968967d722d4..c7dc9fb84844 100644
+> > --- a/drivers/tty/serial/sh-sci.c
+> > +++ b/drivers/tty/serial/sh-sci.c
+> > @@ -2873,11 +2873,13 @@ static int sci_init_single(struct platform_devi=
+ce *dev,
+> >          * interrupt ID numbers, or muxed together with another interru=
+pt.
+> >          */
+> >         if (sci_port->irqs[0] < 0)
+> > -               return -ENXIO;
+> > +               return sci_port->irqs[0];
+> >
+> > -       if (sci_port->irqs[1] < 0)
+> > +       if (sci_port->irqs[1] =3D=3D -ENXIO)
+> >                 for (i =3D 1; i < ARRAY_SIZE(sci_port->irqs); i++)
+> >                         sci_port->irqs[i] =3D sci_port->irqs[0];
+> > +       else if (sci_port->irqs[1] < 0)
+> > +               return sci_port->irqs[1];
+> >
+> >         sci_port->params =3D sci_probe_regmap(p);
+> >         if (unlikely(sci_port->params =3D=3D NULL))
+> >
+> > And then the code flow is actively irritating. sci_init_single() copies
+> > irqs[0] to all other irqs[i] and then sci_request_irq() loops over the
+> > already requested irqs and checks for duplicates. A single place that
+> > identifies the exact set of required irqs would already help a lot.
+>=20
+> Yeah, it's ugly and convoluted, like the wide set of hardware the
+> driver supports.
+>=20
+> > Also for spi-rspi.c I don't see how platform_get_irq_byname_optional()
+> > returning 0 instead of -ENXIO would help. Please talk in patches.
+>=20
+> --- a/drivers/spi/spi-rspi.c
+> +++ b/drivers/spi/spi-rspi.c
+> @@ -1420,17 +1420,25 @@ static int rspi_probe(struct platform_device *pde=
+v)
+>         ctlr->max_native_cs =3D rspi->ops->num_hw_ss;
+>=20
+>         ret =3D platform_get_irq_byname_optional(pdev, "rx");
+> -       if (ret < 0) {
+> +       if (ret < 0)
+> +               goto error2;
+> +
+> +       if (!ret) {
+>                 ret =3D platform_get_irq_byname_optional(pdev, "mux");
+> -               if (ret < 0)
+> +               if (!ret)
+>                         ret =3D platform_get_irq(pdev, 0);
+> +               if (ret < 0)
+> +                       goto error2;
+> +
+>                 if (ret >=3D 0)
+>                         rspi->rx_irq =3D rspi->tx_irq =3D ret;
+>         } else {
+>                 rspi->rx_irq =3D ret;
+>                 ret =3D platform_get_irq_byname(pdev, "tx");
+> -               if (ret >=3D 0)
+> -                       rspi->tx_irq =3D ret;
+> +               if (ret < 0)
+> +                       goto error2;
+> +
+> +               rspi->tx_irq =3D ret;
+>         }
+>=20
+>         if (rspi->rx_irq =3D=3D rspi->tx_irq) {
 
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +
-> +struct pwm_clk_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	bool clk_enabled;
-> +};
-> +
-> +#define to_pwm_clk_chip(_chip) container_of(_chip, struct pwm_clk_chip, =
-chip)
-> +
-> +static int pwm_clk_apply(struct pwm_chip *pwm_chip, struct pwm_device *p=
-wm,
-> +			 const struct pwm_state *state)
-> +{
-> +	struct pwm_clk_chip *chip =3D to_pwm_clk_chip(pwm_chip);
-> +	int ret;
-> +	u32 rate;
-> +	u64 period =3D state->period;
-> +	u64 duty_cycle =3D state->duty_cycle;
-> +
-> +	if (!state->enabled) {
-> +		if (pwm->state.enabled) {
-> +			clk_disable(chip->clk);
-> +			chip->clk_enabled =3D false;
-> +		}
-> +		return 0;
-> +	} else if (!pwm->state.enabled) {
-> +		ret =3D clk_enable(chip->clk);
-> +		chip->clk_enabled =3D true;
-> +		if (ret)
-> +			return ret;
+This is not a simplification, just looking at the line count and the
+added gotos. That's because it also improves error handling and so the
+effect isn't easily spotted.
 
-if clk_enable() failed better don't set chip->clk_enabled =3D true;
+> I like it when the "if (ret < ) ..." error handling is the first check to=
+ do.
 
-> +	}
-> +
-> +	rate =3D DIV_ROUND_UP(NSEC_PER_SEC, period);
-> +	ret =3D clk_set_rate(chip->clk, rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		duty_cycle =3D period - duty_cycle;
-> +
-> +	ret =3D clk_set_duty_cycle(chip->clk, duty_cycle, period);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
+That's a relevant difference between us.
 
-This can be simplified to
+> With -ENXIO, it becomes more convoluted. and looks less nice (IMHO).
+>=20
+> > Preferably first simplify in-driver logic to make the conversion to the
+> > new platform_get_irq_optional() actually reviewable.
+>=20
+> So I have to choose between
+>=20
+>     if (ret < 0 && ret !=3D -ENXIO)
+>             return ret;
+>=20
+>     if (ret) {
+>             ...
+>     }
+>=20
+> and
+>=20
+>     if (ret =3D=3D -ENXIO) {
+>             ...
+>     } else if (ret < 0)
+>             return ret;
+>     }
 
-	return clk_set_duty_cycle(chip->clk, duty_cycle, period);
+I would do the latter, then it's in the normal order for error handling
 
-> +}
-> +
-> +static const struct pwm_ops pwm_clk_ops =3D {
-> +	.apply =3D pwm_clk_apply,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int pwm_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_clk_chip *chip;
-> +	int ret;
-> +
-> +	chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	chip->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(chip->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(chip->clk), "Failed to get cl=
-ock\n");
-> +
-> +	chip->chip.dev =3D &pdev->dev;
-> +	chip->chip.ops =3D &pwm_clk_ops;
-> +	chip->chip.of_xlate =3D of_pwm_xlate_with_flags;
-> +	chip->chip.of_pwm_n_cells =3D 2;
+	handle some specific errors;
+	forward unhandled errors up the stack;
+	handle success;
 
-I'd just skip those two assignments. These are the default, anyhow.
-(Assuming you have #pwm-cells =3D <2> in the device tree.)
+but it seems you prefer to not call "not found" an error. Actually I
+think it's an advantage that the driver has to mention -ENXIO, feels
+like proper error handling to me. I guess we won't agree about that
+though.
 
-> +	chip->chip.npwm =3D 1;
-> +
-> +	ret =3D clk_prepare(chip->clk);
-> +	if (ret < 0)
-> +		dev_err_probe(&pdev->dev, ret, "Failed to prepare clock\n");
-> +
-> +	ret =3D pwmchip_add(&chip->chip);
-> +	if (ret < 0)
-> +		dev_err_probe(&pdev->dev, ret, "Failed to add pwm chip\n");
-> +
-> +	platform_set_drvdata(pdev, chip);
-> +	return 0;
-> +}
+What about the following idea (in pythonic pseudo code for simplicity):
+
+	# the rspi device either has two irqs, one for rx and one for
+	# tx, or a single one for both together.
+
+	def muxed_hander(irq):
+		status =3D readl(STATUS)
+		if status & IF_RX:
+			rx_handler()
+		if status & IF_TX:
+			tx_handler()
+
+	def probe_muxed_irq():
+		irq =3D platform_get_irq_by_name("mux")
+		if irq < 0:
+			return irq;
+
+		request_irq(irq, muxed_handler)
+
+	def probe_separate_irqs():
+		txirq =3D platform_get_irq_by_name("tx")
+		if txirq < 0:
+			return txirq
+
+		rxirq =3D platform_get_irq_by_name("rx")
+		if rxirq < 0:
+			return rxirq
+
+		request_irq(txirq, tx_handler)
+		request_irq(rxirq, rx_handler)
+
+	def probe():
+		ret =3D probe_separate_irqs()
+		if ret =3D=3D -ENXIO:
+			ret =3D probe_muxed_irq()
+
+		if ret < 0:
+			return ret
+
+looks clean (to me that is) and allows to skip the demuxing in
+tx_handler and rx_handler (which might or might not yield improved
+runtime behaviour). Maybe a bit more verbose, but simpler to grasp for a
+human, isn't it?
+
+> with the final target being
+>=20
+>     if (ret < 0)
+>             return ret;
+>=20
+>     if (ret) {
+>             ...
+>     }
+>=20
+> So the first option means the final change is smaller, but it looks less
+> nice than the second option (IMHO).
+> But the second option means more churn.
+>=20
+> > > So there are three reasons: because the absence of an optional IRQ
+> > > is not an error, and thus that should not cause (a) an error code
+> > > to be returned, and (b) an error message to be printed, and (c)
+> > > because it can simplify the logic in device drivers.
+> >
+> > I don't agree to (a). If the value signaling not-found is -ENXIO or 0
+> > (or -ENODEV) doesn't matter much. I wouldn't deviate from the return
+> > code semantics of platform_get_irq() just for having to check against 0
+> > instead of -ENXIO. Zero is then just another magic value.
+>=20
+> Zero is a natural magic value (also for pointers).
+> Errors are always negative.
+> Positive values are cookies (or pointers) associated with success.
+
+Yeah, the issue where we don't agree is if "not-found" is special enough
+to deserve the natural magic value. For me -ENXIO is magic enough to
+handle the absence of an irq line. I consider it even the better magic
+value.
+
+> > (c) still has to be proven, see above.
 
 Best regards
 Uwe
@@ -258,19 +485,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ja5m322vwhkhunoy
+--aw3dtkiiyid6id5x
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHlkhYACgkQwfwUeK3K
-7AmFvwf/V2onUpPqmPGzN4xLkicgCoA5Y68pvwsYlMrJMFgMu5TZ/QrzR19wZn9h
-ieyMD/btl6I4ohcahjMF443vXCS0jIamf68RPof/CPZzgi34buJwU8it9SxM5Nze
-QuLd583Ih1N1W3t3mWri4pvl1X6HlrwJFL7yOVG2nxKNCb1b+WAAIboDBePyfqX9
-HCOoU8Q4MxHTqbA7Kfg1jcvm2okLB0j7vRxKrFTIJ8R+T2ZL2s1/Pji5c/yo7nCH
-xDwXU21OQRww6uXFUVH6eUR2i11lRsi3qJUhMS1IjwhsYqT9YkyQyfxYwwCu7j9g
-BsvJ1nB0jmkOkxF84dJWD/a50WxaeQ==
-=qG5i
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHlof4ACgkQwfwUeK3K
+7Aniewf+MoaFo3EYfzYPpJGODkMHLkkxMbHUg8vSMqRQM6WJsf8c9vxwcsWAL4ve
+Et7WTI1iMsw9uc3Wiag0LUt2KFm0pxr+OCAyIEsfQ/5exnZOmiPovOmrt8eNPe8c
+hTXRJzXnsS9aZP/mJjPEqSZKaBTA/0WYUaKJUQsHq0cxBBtQCeUlMtXmCgCcRUFZ
+NK/trtp/5N3W9bLhTFaZ+tCe0aYS5iQAihlnquEZNjJjeTyuZfN/pCbeiAZdDFv1
+S85HGZU7QsH9jV00tdrlAze2aLGJ11VXdnibbL3l5ITXHpJKBdpBFZHGazA0P5iG
+b1PnP722liY900ec+sr8AE7Gyb3swA==
+=kGnZ
 -----END PGP SIGNATURE-----
 
---ja5m322vwhkhunoy--
+--aw3dtkiiyid6id5x--
