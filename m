@@ -2,128 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2FBD493902
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jan 2022 11:56:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8221A493984
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jan 2022 12:31:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353470AbiASK4X (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 19 Jan 2022 05:56:23 -0500
-Received: from mxout04.lancloud.ru ([45.84.86.114]:57474 "EHLO
-        mxout04.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240254AbiASK4V (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jan 2022 05:56:21 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout04.lancloud.ru A771820D27E6
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
- (summary)
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        "Guenter Roeck" <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Tony Luck" <tony.luck@intel.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-serial@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <platform-driver-x86@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        "Saravanan Sekar" <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>, <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "John Garry" <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        <openipmi-developer@lists.sourceforge.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>,
-        "Richard Weinberger" <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        "Hans de Goede" <hdegoede@redhat.com>, <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20220110195449.12448-1-s.shtylyov@omp.ru>
- <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de> <YeQpWu2sUVOSaT9I@kroah.com>
- <20220118091819.zzxpffrxbckoxiys@pengutronix.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <b6038ec2-da4a-de92-b845-cac2be0efcd1@omp.ru>
-Date:   Wed, 19 Jan 2022 13:56:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S1354135AbiASLbb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 19 Jan 2022 06:31:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354064AbiASLbb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jan 2022 06:31:31 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B275C061574;
+        Wed, 19 Jan 2022 03:31:31 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id c2so4830733wml.1;
+        Wed, 19 Jan 2022 03:31:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B184jFapKUoaCmeCoLa/RY1yl2o5xLb5T8mZ+GEtvMc=;
+        b=kUJFN1kFYOr2PB86f3ofbWNuzAWIiKt4CKNBAuTjmwOxQ1X9fi8QrmX4DatmvxKL1a
+         eUJ2A8WsGvpPrtlbPPvHr08Z5pM7UGogwF6UHWa75ijA3H6Ujp2FpZ4qi8bikWY4urlt
+         qEQOLREVOYlF/fjPCN88aeKmFGwDjEZkTbuIR4BiyTBVAXqHGv+H+3R9Mjt8JBwPtUoP
+         s1dhuGhdOe2l2yz/+JPu2W6sD3MYRzlKCHH/Y+qXjH+Aruz8AiDkuGROnkYoyFwjEr6v
+         1wdX6SUeW59NCRGD/WnZHmOPxfkcjwayBjKTIchKBBLtT+P6/iADFFPYnx4//nG0db+j
+         GtKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B184jFapKUoaCmeCoLa/RY1yl2o5xLb5T8mZ+GEtvMc=;
+        b=ZICkMVceimrlF0SnZVk6cMbkuyRUrxvCkoo1ElC5Kl2D/EogSHXWAW+Rnz3+R+noC6
+         KECifiOgEJwhscbzNF0g/80v4FIirZqkrRw+PNtdpWkzowNJSOl2lwxrLFkZhH5gtFkh
+         tF0oGkr5ARRDJQksM+/hY760p7qMkrT2AtBGDFM/WIqADFd3o0eHlk/YmrvFs1HUwfIq
+         USlPzipwxqeLEnS7QrQLozLTIglwjrJEmu9+NgXFIfqc8NRcsfnuJZh+UCUPtdEqnt3v
+         9IXrSG7sNJobna6RPV/6JQztgQDtJSrYbIf9d+8J79f8lcDk/j2sEdtM69Le2I/NGUxJ
+         uf3g==
+X-Gm-Message-State: AOAM532xUFLu3resCI7gMBtpaf0i5mDIZX9wyRiwCqiztm7G9SI2YbNI
+        EOmKz7C3YTg/8nqjdJJilrrQa7nCOnq/vA==
+X-Google-Smtp-Source: ABdhPJyoASqFatmoRBFJhD6xsJLll7K5Y++9lZk9wFHgaVQ3B0ZBvKxlt3zqwehgaWMNAUDMO645EA==
+X-Received: by 2002:a1c:4c11:: with SMTP id z17mr409412wmf.0.1642591889196;
+        Wed, 19 Jan 2022 03:31:29 -0800 (PST)
+Received: from localhost ([193.209.96.43])
+        by smtp.gmail.com with ESMTPSA id a20sm4778049wmb.27.2022.01.19.03.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jan 2022 03:31:28 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Changes for v5.17-rc1
+Date:   Wed, 19 Jan 2022 12:31:26 +0100
+Message-Id: <20220119113126.1244615-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <20220118091819.zzxpffrxbckoxiys@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
- LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 1/18/22 12:18 PM, Uwe Kleine-König wrote:
-> On Sun, Jan 16, 2022 at 03:19:06PM +0100, Greg Kroah-Hartman wrote:
->> On Sat, Jan 15, 2022 at 07:36:43PM +0100, Uwe Kleine-König wrote:
->>> A possible compromise: We can have both. We rename
->>> platform_get_irq_optional() to platform_get_irq_silent() (or
->>> platform_get_irq_silently() if this is preferred) and once all users are
->>> are changed (which can be done mechanically), we reintroduce a
->>> platform_get_irq_optional() with Sergey's suggested semantic (i.e.
->>> return 0 on not-found, no error message printking).
->>
->> Please do not do that as anyone trying to forward-port an old driver
->> will miss the abi change of functionality and get confused.  Make
->> build-breaking changes, if the way a function currently works is
->> changed in order to give people a chance.
-> 
-> Fine for me. I assume this is a Nack for Sergey's patch?
+Hi Linus,
 
-   Which patch do you mean? I'm starting to get really muddled... :-(
+The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
 
-> Best regards
-> Uwe
+  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
 
-MBR, Sergey
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.17-rc1
+
+for you to fetch changes up to 3f0565451cc0c5158513af0bc4e91aa8fb0b5e75:
+
+  dt-bindings: pwm: Avoid selecting schema on node name match (2021-12-09 18:17:02 +0100)
+
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Changes for v5.17-rc1
+
+This contains a number of nice cleanups and improvements for the core
+and various drivers as well as a minor tweak to the json-schema device
+tree bindings.
+
+----------------------------------------------------------------
+Thierry Reding (1):
+      dt-bindings: pwm: Avoid selecting schema on node name match
+
+Uwe Kleine-KÃ¶nig (7):
+      pwm: Move legacy driver handling into a dedicated function
+      pwm: Prevent a glitch for legacy drivers
+      pwm: Restore initial state if a legacy callback fails
+      pwm: twl: Implement .apply() callback
+      pwm: img: Implement .apply() callback
+      pwm: vt8500: Implement .apply() callback
+      pwm: img: Use only a single idiom to get a runtime PM reference
+
+ Documentation/devicetree/bindings/pwm/pwm.yaml |   2 +
+ drivers/pwm/core.c                             | 139 ++++++++++++++-----------
+ drivers/pwm/pwm-img.c                          |  35 +++++--
+ drivers/pwm/pwm-twl.c                          |  62 +++++++++--
+ drivers/pwm/pwm-vt8500.c                       |  57 ++++++++--
+ 5 files changed, 213 insertions(+), 82 deletions(-)
