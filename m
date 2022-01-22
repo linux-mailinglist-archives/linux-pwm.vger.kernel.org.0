@@ -2,141 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9FE4496BA1
-	for <lists+linux-pwm@lfdr.de>; Sat, 22 Jan 2022 11:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BC69496C93
+	for <lists+linux-pwm@lfdr.de>; Sat, 22 Jan 2022 14:27:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbiAVKNu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 22 Jan 2022 05:13:50 -0500
-Received: from mail-ej1-f54.google.com ([209.85.218.54]:39658 "EHLO
-        mail-ej1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbiAVKNu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 22 Jan 2022 05:13:50 -0500
-Received: by mail-ej1-f54.google.com with SMTP id j2so6903679ejk.6;
-        Sat, 22 Jan 2022 02:13:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=DIuoxmImX3ZeY9PJQqgDGkmXrn4z24wj9WF4HsBhY6w=;
-        b=x65zhLwIqu1Pj0WCVFX5B7l/2e7zT1jr24FgxVbPjwZ/S1l3ABa0IVfXGg4aQTk8Yt
-         O8qkBlcd2gC7ha7LFtjNsgv3Vpgzosix9Z0HwJ/GFBAMdFrCDxnETMUuPRkgNlyIW7pP
-         2FWX7PhRlowzMWc6EW47qUS6UiVi9VcqPoeqhSEFcdZ7XxDgXhEKjF8USocFYEwNAfe8
-         aNbPCcpytihqjSY4725fRA/RnF5fvYV/sv2ipTd20ML+9hzGblWe81lZrge6qYnBW7/y
-         ANtZGHNM3+v8TCAnVfNphVLk+CIpeX1Ohn4XWHEoYe0Qqrn/lw/NWjJfWrHj4rJS3MuL
-         qmtg==
-X-Gm-Message-State: AOAM530Bc/+Kq6bIPtPViZ1GDG+uVymI8AQ4b/HKiIfraIVE5uR8LRlt
-        ojksIKXm18UBC52jBurNYsfXo3yArLo=
-X-Google-Smtp-Source: ABdhPJzy+cPJb9cgiD/lSovp0TOxQp7TR34VfGNj5NLaYwdESknaaDnFbKcR7SqJiMMbYXaUrsOi2Q==
-X-Received: by 2002:a17:906:314f:: with SMTP id e15mr6311196eje.658.1642846428834;
-        Sat, 22 Jan 2022 02:13:48 -0800 (PST)
-Received: from [192.168.0.51] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.googlemail.com with ESMTPSA id oz18sm2754282ejb.106.2022.01.22.02.13.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Jan 2022 02:13:47 -0800 (PST)
-Message-ID: <062bd1a9-e89c-cac4-de6e-0934c2d844ff@kernel.org>
-Date:   Sat, 22 Jan 2022 11:13:46 +0100
+        id S233532AbiAVN14 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 22 Jan 2022 08:27:56 -0500
+Received: from mail.pqgruber.com ([52.59.78.55]:37468 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233097AbiAVN1z (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 22 Jan 2022 08:27:55 -0500
+X-Greylist: delayed 511 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Jan 2022 08:27:55 EST
+Received: from workstation (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 0104EC761B2;
+        Sat, 22 Jan 2022 14:19:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1642857562;
+        bh=mo/iXRjVQjaw/Siv2eQFTsooZeilkHT2tSxV1V8c66c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GMqqUgTHNEsp1j7D2JIt6IuU5/j0afVqgsxJzEEuYAp4vnxPycyBTQAPTJOKaIHIM
+         3hxi185anKXw2n821X3/GKrbgS/sH4b1akdfs4BQDyhL/KD8QV0bfGBew4ZTKo+Bf3
+         UJJer2sIX9/DHzPmZu2BqY01LVT5IjQ2pzcNwRCE=
+Date:   Sat, 22 Jan 2022 14:19:20 +0100
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     Lionel Vitte <lionel.vitte@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com
+Subject: Re: [PATCH] pwm: pca9685: Set ALL_LED_OFF_L to POR value
+Message-ID: <YewEWDGWhXiqPCvT@workstation>
+References: <20220122065819.69150-1-lionel.vitte@free.fr>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 2/3] dt-bindings: pwm: Document clk based PWM
- controller
-Content-Language: en-US
-To:     Sean Anderson <sean.anderson@seco.com>,
-        Nikita Travkin <nikita@trvn.ru>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
-        sboyd@kernel.org, linus.walleij@linaro.org, masneyb@onstation.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20220120161442.140800-1-nikita@trvn.ru>
- <20220120161442.140800-3-nikita@trvn.ru>
- <CAJKOXPc249vbZZwjXxfg+mEgqQe0P8uhf1GTg8Db9sBeMY3+tA@mail.gmail.com>
- <1d9b1db0-981d-f77a-063a-69c8a4d53343@seco.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <1d9b1db0-981d-f77a-063a-69c8a4d53343@seco.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220122065819.69150-1-lionel.vitte@free.fr>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 21/01/2022 22:34, Sean Anderson wrote:
+On Sat, Jan 22, 2022 at 07:58:19AM +0100, Lionel Vitte wrote:
+> During the driver probe, registers are not set to their POR value.
 > 
+> Signed-off-by: Lionel Vitte <lionel.vitte@free.fr>
+> ---
+>  drivers/pwm/pwm-pca9685.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> On 1/21/22 2:34 AM, Krzysztof Kozlowski wrote:
->> On Thu, 20 Jan 2022 at 17:15, Nikita Travkin <nikita@trvn.ru> wrote:
->>>
->>> Add YAML devicetree binding for clk based PWM controller
->>>
->>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
->>> --
->>> Changes in v2:
->>>  - fix the file name.
->>> ---
->>>  .../devicetree/bindings/pwm/clk-pwm.yaml      | 45 +++++++++++++++++++
->>>  1 file changed, 45 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pwm/clk-pwm.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/clk-pwm.yaml b/Documentation/devicetree/bindings/pwm/clk-pwm.yaml
->>> new file mode 100644
->>> index 000000000000..4fb2c1baaad4
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pwm/clk-pwm.yaml
->>> @@ -0,0 +1,45 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pwm/clk-pwm.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Clock based PWM controller
->>> +
->>> +maintainers:
->>> +  - Nikita Travkin <nikita@trvn.ru>
->>> +
->>> +description: |
->>> +  Some systems have clocks that can be exposed to external devices.
->>> +  (e.g. by muxing them to GPIO pins)
->>> +  It's often possible to control duty-cycle of such clocks which makes them
->>> +  suitable for generating PWM signal.
->>> +
->>> +allOf:
->>> +  - $ref: pwm.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: clk-pwm
->>> +
->>> +  clocks:
->>> +    description: Clock used to generate the signal.
->>> +    maxItems: 1
->>> +
->>> +  "#pwm-cells":
->>> +    const: 2
->>> +
->>> +unevaluatedProperties: false
->>> +
->>> +required:
->>> +  - clocks
->>> +
->>> +examples:
->>> +  - |
->>> +    pwm-flash {
->>
->> Node names should be generic (see devicetree specification), so just "pwm".
-> 
-> And then what will you do if you have two clock-based pwms?
+> diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+> index c56001a790d0..c91fa7f9e33d 100644
+> --- a/drivers/pwm/pwm-pca9685.c
+> +++ b/drivers/pwm/pwm-pca9685.c
+> @@ -560,10 +560,10 @@ static int pca9685_pwm_probe(struct i2c_client *client,
+>  	pca9685_write_reg(pca, PCA9685_MODE1, reg);
+>  
+>  	/* Reset OFF/ON registers to POR default */
+> -	pca9685_write_reg(pca, PCA9685_ALL_LED_OFF_L, LED_FULL);
+> +	pca9685_write_reg(pca, PCA9685_ALL_LED_OFF_L, 0);
+>  	pca9685_write_reg(pca, PCA9685_ALL_LED_OFF_H, LED_FULL);
+>  	pca9685_write_reg(pca, PCA9685_ALL_LED_ON_L, 0);
+> -	pca9685_write_reg(pca, PCA9685_ALL_LED_ON_H, 0);
+> +	pca9685_write_reg(pca, PCA9685_ALL_LED_ON_H, LED_FULL);
+>  
+>  	pca->chip.ops = &pca9685_pwm_ops;
+>  	/* Add an extra channel for ALL_LED */
+> -- 
+> 2.34.1
+>
 
-The same as we do with fixed clocks, keys and so on:
-pwm-0
-pwm-1
-pwm-2
+Good catch! Resetting the ON registers to 0 is no longer necessary and
+the ALL_LED_OFF_L write with LED_FULL was a mistake.
 
-A descriptive suffix also appears, but there is no justification to use
-it here. There is only one node in the example.
+Maybe you could have chosen another subject as you are not only fixing
+the ALL_LED_OFF_L mistake. Maybe ".. Fix OFF/ON register reset to POR"
+or something similar.
 
+Other than that:
 
-Best regards,
-Krzysztof
+Acked-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+
+Regards,
+Clemens
