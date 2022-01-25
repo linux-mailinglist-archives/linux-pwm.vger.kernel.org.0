@@ -2,268 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A7F349B5BC
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jan 2022 15:09:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 974FD49B674
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jan 2022 15:37:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385797AbiAYOI4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jan 2022 09:08:56 -0500
-Received: from mga01.intel.com ([192.55.52.88]:34131 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1384953AbiAYOFM (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
-        Tue, 25 Jan 2022 09:05:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643119511; x=1674655511;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=z6iO4goP/6mOntNu6iUnXj156J2xRO3zDzNJWbq5fzg=;
-  b=DlV+ovpEXn8N+TNyiZrsmwlK+kX+rXtW7PAPhXl/8FCqQabAj+873dU5
-   pXSJM6lOWgJei1+yLNHVWY+4sFX61lEV3Nym8AT3WP8b0dm7JZ2PkDB66
-   5X5WhhbXJOHbeBRwxYI4U3/i6+/cpN0sO3VmQyZPic00XxInOsPtTA40t
-   nPtu9vk/aVvpzaVrTbK9HJIUAt3Fm5iGENPSgJKUd55XROVXbPOJIWKle
-   S6yVXTKYrakaUWXGMy6T+ZNHjY9lbBcFfZ/LO9X7KDyZWKp9/8/ciG9pU
-   MH63qlKkPdcnkfO2EO6h+bh6tWlg8Vxe6QgUimUhf8l/VfvMzSPQOJ4MN
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10237"; a="270750702"
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="270750702"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 06:02:45 -0800
-X-IronPort-AV: E=Sophos;i="5.88,315,1635231600"; 
-   d="scan'208";a="695840276"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 06:02:27 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nCMNp-00EGb4-Aj;
-        Tue, 25 Jan 2022 16:01:17 +0200
-Date:   Tue, 25 Jan 2022 16:01:17 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, Jiri Slaby <jirislaby@kernel.org>,
-        openipmi-developer@lists.sourceforge.net,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        platform-driver-x86@vger.kernel.org,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, netdev@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] driver core: platform: Rename
- platform_get_irq_optional() to platform_get_irq_silent()
-Message-ID: <YfACrffZCCeleOjK@smile.fi.intel.com>
-References: <YeA7CjOyJFkpuhz/@sirena.org.uk>
- <20220113194358.xnnbhsoyetihterb@pengutronix.de>
- <YeF05vBOzkN+xYCq@smile.fi.intel.com>
- <20220115154539.j3tsz5ioqexq2yuu@pengutronix.de>
- <YehdsUPiOTwgZywq@smile.fi.intel.com>
- <20220120075718.5qtrpc543kkykaow@pengutronix.de>
- <Ye6/NgfxsZnpXE09@smile.fi.intel.com>
- <15796e57-f7d4-9c66-3b53-0b026eaf31d8@omp.ru>
- <CAMuHMdXouECKa43OwUgQ6dA+gNeOqEZHZgOmQzqknzYiA924YA@mail.gmail.com>
- <33e55c4c0a637b23d76db5d33872378ad04121bd.camel@ew.tq-group.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33e55c4c0a637b23d76db5d33872378ad04121bd.camel@ew.tq-group.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1387633AbiAYOgA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jan 2022 09:36:00 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:42736 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1456362AbiAYOZ4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jan 2022 09:25:56 -0500
+Received: by mail-ot1-f41.google.com with SMTP id z25-20020a0568301db900b005946f536d85so26549331oti.9;
+        Tue, 25 Jan 2022 06:25:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=NMoUwM8BBTLBkP04dan9yDTmthaJAHLTUf/g9SYldSI=;
+        b=enMUSqCfkA/E/zBBODy6o8IUEol4jV1ZxAoivSJITSRLe0x8oWShxhLmxkIWmdM4W4
+         srpwe4/O0ekJ9pIvUYJoJ2XHVff6fC7UX/Li40xOSWRvrUnL3RE0vs43WzgOXUU1kVs5
+         JGMbKkmQ2VSk24l5fJZyIZLqpo3hcvwC2nBqFDj5Uhujcn5TVWw7D++xc1W1BZImgZkb
+         /F0QBFNBqnlkPsgC/hYV7TTGKyPU3x6qVXjZmldY+hE7kOOPwZ6nDs8UYYxhpKfFhbuJ
+         +OAffvASeX66ctJnMYzRAji44jdEfd3v4iiRyem7lb1a/y1u7czAW6hCbnSeo2tbfAnL
+         NwIg==
+X-Gm-Message-State: AOAM5337PeYgw7Dd7korJxclcl7pHLIvg9ifLlUGZ+3SNDlpzzXNlCHL
+        nLGCina++XlNArjGOTomDQsAAlCRtw==
+X-Google-Smtp-Source: ABdhPJxveN4LXBKKxibvyNYmSzU78gq0mvteAN1tf7rCNGjcPC2TMHGSYosKrHGixpsyOyIWv1AzSA==
+X-Received: by 2002:a05:6830:2b22:: with SMTP id l34mr15697377otv.316.1643120751480;
+        Tue, 25 Jan 2022 06:25:51 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id v26sm3536393ooq.20.2022.01.25.06.25.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 06:25:50 -0800 (PST)
+Received: (nullmailer pid 2216641 invoked by uid 1000);
+        Tue, 25 Jan 2022 14:25:49 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     sven@svenschwermer.de
+Cc:     devicetree@vger.kernel.org, thierry.reding@gmail.com,
+        dmurphy@ti.com,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, pavel@ucw.cz
+In-Reply-To: <20220125092239.2006333-2-sven@svenschwermer.de>
+References: <20220125092239.2006333-1-sven@svenschwermer.de> <20220125092239.2006333-2-sven@svenschwermer.de>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: leds: Add multicolor PWM LED bindings
+Date:   Tue, 25 Jan 2022 08:25:49 -0600
+Message-Id: <1643120749.752659.2216640.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 01:56:05PM +0100, Matthias Schiffer wrote:
-> On Tue, 2022-01-25 at 09:25 +0100, Geert Uytterhoeven wrote:
-> > On Mon, Jan 24, 2022 at 10:02 PM Sergey Shtylyov <s.shtylyov@omp.ru>
-> > wrote:
-> > > On 1/24/22 6:01 PM, Andy Shevchenko wrote:
-
-...
-
-> > > > > > 2. The vIRQ0 handling: a) WARN() followed by b) returned
-> > > > > > value 0
-> > > > > 
-> > > > > I'm happy with the vIRQ0 handling. Today platform_get_irq() and
-> > > > > it's
-> > > > > silent variant returns either a valid and usuable irq number or
-> > > > > a
-> > > > > negative error value. That's totally fine.
-> > > > 
-> > > > It might return 0.
-> > > > Actually it seems that the WARN() can only be issued in two
-> > > > cases:
-> > > > - SPARC with vIRQ0 in one of the array member
-> > > > - fallback to ACPI for GPIO IRQ resource with index 0
-> > > 
-> > >    You have probably missed the recent discovery that
-> > > arch/sh/boards/board-aps4*.c
-> > > causes IRQ0 to be passed as a direct IRQ resource?
-> > 
-> > So far no one reported seeing the big fat warning ;-)
+On Tue, 25 Jan 2022 10:22:38 +0100, sven@svenschwermer.de wrote:
+> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
 > 
-> FWIW, we had a similar issue with an IRQ resource passed from the
-> tqmx86 MFD driver do the GPIO driver, which we noticed due to this
-> warning, and which was fixed
-> in a946506c48f3bd09363c9d2b0a178e55733bcbb6
-> and 9b87f43537acfa24b95c236beba0f45901356eb2.
-
-No, it's not, unfortunately :-( You just band aided the warning issue, but the
-root cause is the WARN() and possibility to see valid (v)IRQ0 in the resources.
-See below.
-
-> I believe these changes are what promted this whole discussion and led
-> to my "Reported-by" on the patch?
+> This allows to group multiple PWM-connected monochrome LEDs into
+> multicolor LEDs, e.g. RGB LEDs.
 > 
-> It is not entirely clear to me when IRQ 0 is valid and when it isn't,
-> but the warning seems useful to me. Maybe it would make more sense to
-> warn when such an IRQ resource is registered for a platform device, and
-> not when it is looked up?
+> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> ---
+>  .../bindings/leds/leds-pwm-multicolor.yaml    | 73 +++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
 > 
-> My opinion is that it would be very confusing if there are any places
-> in the kernel (on some platforms) where IRQ 0 is valid,
 
-And those places are board files like yours :( They have to be fixed
-eventually. Ideally by using IRQ domains. At least that's how it's
-done elsewhere.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> but for
-> platform_get_irq() it would suddenly mean "not found". Keeping a
-> negative return value seems preferable to me for this reason.
+yamllint warnings/errors:
 
-IRQ 0 is valid, vIRQ0 (or read it as cookie) is not.
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml: properties:compatible: 'pwm-leds-multicolor' is not of type 'object', 'boolean'
+	from schema $id: http://json-schema.org/draft-07/schema#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml: ignoring, error in schema: properties: compatible
+Documentation/devicetree/bindings/leds/leds-pwm-multicolor.example.dts:24.25-43.15: Warning (unit_address_vs_reg): /example-0/rgb-led/multi-led@0: node has a unit name, but no reg or ranges property
+Documentation/devicetree/bindings/leds/leds-pwm-multicolor.example.dt.yaml:0:0: /example-0/rgb-led: failed to match any schema with compatible: ['pwm-leds-multicolor']
 
-Now, the problem in your case is that you are talking about board files, while
-ACPI and DT never gives resource with vIRQ0. For board files some (legacy) code
-decides that it's fine to supply HW IRQ, while the de facto case is that
-platform_get_resource() returns whatever is in the resource, while
-platform_get_irq() should return a cookie.
+doc reference errors (make refcheckdocs):
 
-> (An alternative, more involved idea would be to add 1 to all IRQ
-> "cookies", so IRQ 0 would return 1, leaving 0 as a special value. I
-> have absolutely no idea how big the API surface is that would need
-> changes, and it is likely not worth the effort at all.)
+See https://patchwork.ozlabs.org/patch/1583948
 
-This is what IRQ domains do, they start vIRQs from 1.
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-> > > > The bottom line here is the SPARC case. Anybody familiar with the
-> > > > platform
-> > > > can shed a light on this. If there is no such case, we may remove
-> > > > warning
-> > > > along with ret = 0 case from platfrom_get_irq().
-> > > 
-> > >    I'm afraid you're too fast here... :-)
-> > >    We'll have a really hard time if we continue to allow IRQ0 to be
-> > > returned by
-> > > platform_get_irq() -- we'll have oto fileter it out in the callers
-> > > then...
-> > 
-> > So far no one reported seeing the big fat warning?
-> > 
-> > > > > > 3. The specific cookie for "IRQ not found, while no error
-> > > > > > happened" case
-> > > > > 
-> > > > > Not sure what you mean here. I have no problem that a situation
-> > > > > I can
-> > > > > cope with is called an error for the query function. I just do
-> > > > > error
-> > > > > handling and continue happily. So the part "while no error
-> > > > > happened" is
-> > > > > irrelevant to me.
-> > > > 
-> > > > I meant that instead of using special error code, 0 is very much
-> > > > good for
-> > > > the cases when IRQ is not found. It allows to distinguish -ENXIO
-> > > > from the
-> > > > low layer from -ENXIO with this magic meaning.
-> > > 
-> > >    I don't see how -ENXIO can trickle from the lower layers,
-> > > frankly...
-> > 
-> > It might one day, leading to very hard to track bugs.
-> 
-> As gregkh noted, changing the return value without also making the
-> compile fail will be a huge PITA whenever driver patches are back- or
-> forward-ported, as it would require subtle changes in error paths,
-> which can easily slip through unnoticed, in particular with half-
-> automated stable backports.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Let's not modify kernel at all then, because in many cases it is a PITA
-for back- or forward-porting :-)
+pip3 install dtschema --upgrade
 
-> Even if another return value like -ENODEV might be better aligned with
-> ...regulator_get_optional() and similar functions, or we even find a
-> way to make 0 usable for this, none of the proposed changes strike me
-> as big enough a win to outweigh the churn caused by making such a
-> change at all.
-
-Yeah, let's continue to suffer from ugly interface and see more band aids
-landing around...
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Please check and re-submit.
 
