@@ -2,100 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5BDF49B6C8
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jan 2022 15:50:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7346B49B764
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jan 2022 16:16:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1389174AbiAYOqd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jan 2022 09:46:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1580236AbiAYOoE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jan 2022 09:44:04 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C55FC061401
-        for <linux-pwm@vger.kernel.org>; Tue, 25 Jan 2022 06:44:03 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nCN3B-0000ct-3n; Tue, 25 Jan 2022 15:44:01 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nCN3A-00CMRg-As; Tue, 25 Jan 2022 15:43:59 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nCN39-001Jns-0U; Tue, 25 Jan 2022 15:43:59 +0100
-Date:   Tue, 25 Jan 2022 15:43:56 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        andrey@lebedev.lt, stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] pwm-sun4i: convert "next_period" to local variable
-Message-ID: <20220125144356.zofft3jd4ov564gd@pengutronix.de>
-References: <20220125123429.3490883-1-max.kellermann@gmail.com>
- <20220125143158.qbelqvr5mjq33zay@pengutronix.de>
- <YfALlLgo3MAcbFrZ@swift.blarg.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2tr2cnvnwymsukbg"
-Content-Disposition: inline
-In-Reply-To: <YfALlLgo3MAcbFrZ@swift.blarg.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        id S1346140AbiAYPPL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jan 2022 10:15:11 -0500
+Received: from mail.schwermer.no ([49.12.228.226]:55532 "EHLO
+        mail.schwermer.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1581762AbiAYPNJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jan 2022 10:13:09 -0500
+From:   sven@svenschwermer.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=svenschwermer.de;
+        s=mail; t=1643123560;
+        bh=jM8o6eM64PjURR0dUNF3xHtDmhDJyXpH8YKgGvCyKyA=;
+        h=From:To:Cc:Subject;
+        b=MdoSkdqo1OcmJOtay8dx8WFtFari6GCxFeKJJ8Qi5DevpDXmEfltxhYTA2y757XsH
+         WUsgs26GQK95nswaWDEyAJmvMx4OuzSHQ9aVDq1+xZlL/vvnE2zohBohfOmn8919g0
+         +0BWAVTe7QaEYyQpxCrBgwtmZ+9EE7goMB7kRP+m/YS4B/PyapzHTUT//zDQKlYv81
+         Sk85na8T/XCeNQZyInW2pP7wQ9u1pTs66q52nCIKzyRieFb37v9wkZ8xy7Uod+yzCh
+         05fP8KwhRjlnhB6E+/Bo8uruPAlXE6q+1UNkvRVdlv+SGhpCLNZJIQpJ4uAa9GBq7R
+         Zso3K5euMaNlA==
+To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, post@lespocky.de
+Subject: [RFC PATCH v2 0/2] Multicolor PWM LED support
+Date:   Tue, 25 Jan 2022 16:12:24 +0100
+Message-Id: <20220125151226.31049-1-sven@svenschwermer.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
 
---2tr2cnvnwymsukbg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Tue, Jan 25, 2022 at 03:39:16PM +0100, Max Kellermann wrote:
-> On 2022/01/25 15:31, Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> =
-wrote:
-> > I think I'd drop this. This isn't a fix worth on it's own to be
-> > backported and if this is needed for one of the next patches, the stable
-> > maintainers will notice themselves (and it might be worth to shuffle
-> > this series to make the fixes come first).
->=20
-> The first two patches are preparation for the third patch, which fixes
-> the actual bug.
->=20
-> Of course, I could have done everything in one patch, but I thought
-> splitting the first two out makes review easier.  This way, every step
-> is almost trivial.
->=20
-> If you want me to fold the three patches into one, I can do that.  But
-> I can't reorder them (or backport only the bug fix to stable).
+As previously discussed [1] on the linux-leds list I am missing
+multicolor PWM LED support. In the mean time I have put together a
+working prototype for such a driver. This is my first Linux driver
+so I'm hoping for some feedback. Here are some questions that came up
+while putting this thing together:
 
-That sounds fine. Note my statement "I'd drop this" only refers to the
-Cc: stable line.
+  1. Currently, the max-brightness property is expected as a property to
+     the multi-led node. That seems consistent with the existing
+     multicolor class code, but I'm wondering whether it would make
+     sense to have a max-brigthness for the individual LEDs as well?
+  2. The current multi-led node definition calls for a node index which
+     would in turn require the reg property to be set within the node.
+     In this context, that doesn't seem to make sense. Should this
+     requirement be lifted from leds-class-multicolor.yaml?
+  3. I'm not currently reusing any leds-pwm code because there aren't
+     too many overlaps. Does anyone have suggestions what could be
+     factored out into a common source file?
 
-Best regards
-Uwe
+I would appreciate if anyone would test this code. It runs on my
+i.MX6ULL-based hardware.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Best regards,
+Sven
 
---2tr2cnvnwymsukbg
-Content-Type: application/pgp-signature; name="signature.asc"
+[1]: https://www.spinics.net/lists/linux-leds/msg19988.html
 
------BEGIN PGP SIGNATURE-----
+Sven Schwermer (2):
+  dt-bindings: leds: Add multicolor PWM LED bindings
+  leds: Add PWM multicolor driver
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHwDKkACgkQwfwUeK3K
-7An5GggAgauWhA0u9+PUGQow7LIjuLcOmmqR5fZWPNxeM+6iNujkn9jpHGaIcx60
-Ibf7pV4uAB05bXJz08LRNocUBDqvsGk0/o1SpqixiRuZ5l9NOvc1SEwpoiePfzjx
-XmYvy+rjk1DjrAt4f2+jQyEmj7GT/lGkldHBZQXHvP6FQSBvxQbu0rTMYEAjR378
-85qnSKiNKf1R8gixkqTljnLYKjM9KeDyh7H4EkFByLP6e0vbNoysslHxiVGVudpy
-8W+s84Xf08JwoE3EW0vvT4yKXjeSb8x8kZT+MV383F0qQBQh8Fx19baBqUCRb5mk
-8haO/OWNH2t1MDpkmJzYCKr4995mmA==
-=FZEp
------END PGP SIGNATURE-----
+ .../bindings/leds/leds-pwm-multicolor.yaml    |  76 ++++++++
+ drivers/leds/Kconfig                          |   8 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-pwm-multicolor.c            | 184 ++++++++++++++++++
+ 4 files changed, 269 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+ create mode 100644 drivers/leds/leds-pwm-multicolor.c
 
---2tr2cnvnwymsukbg--
+Interdiff against v1:
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+index 8552a5498bdd..b82b26f2e140 100644
+--- a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
++++ b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+@@ -14,7 +14,8 @@ description: |
+   LED using the multicolor LED class.
+ 
+ properties:
+-  compatible: pwm-leds-multicolor
++  compatible:
++    const: pwm-leds-multicolor
+ 
+ patternProperties:
+   '^multi-led@[0-9a-f]$':
+@@ -34,10 +35,12 @@ patternProperties:
+           color:
+             $ref: common.yaml#/properties/color
+ 
++        required:
++          - pwms
++          - color
++
+ required:
+   - compatible
+-  - pwms
+-  - color
+ 
+ additionalProperties: false
+ 
+-- 
+2.35.0
+
