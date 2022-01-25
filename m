@@ -2,95 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F29E49B205
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jan 2022 11:45:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4C3949B413
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jan 2022 13:38:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346144AbiAYKeR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jan 2022 05:34:17 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:32956 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345277AbiAYKVR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jan 2022 05:21:17 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A8A4361645;
-        Tue, 25 Jan 2022 10:21:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85412C340E0;
-        Tue, 25 Jan 2022 10:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643106071;
-        bh=dDZYgGbA0BHGN18HiUB3PXb8Mel6TNqbFMOFcstIxX0=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=Dk+O+jx9RNfAIRNl+G5yibdxkkq8aTGXmW91f6mxjLCST3oy+fJt+u4/SRVhCxwpw
-         V4COe9T6WaXtk7IlXR17mBCgwBp4NdpQVxrZVQBMRo4fukpDBetZZE/3AhUipDYJfZ
-         xDjnOl5awl586lrBjMlr+/CxVsQxyeLRfUN/t+E2n5TSLam4ejfcYmGSP8J+81pjOo
-         E1JEbrV6QM5bmj7eTrXB6ABpB8aUHr/6lJay6YVAuVOwXsam2ucGeIdLB6MC6PKHJh
-         rs61dpnbb/ib/qZXwyOem11DRLndWGy6AorM4XzUTNqRuyGvWbZ7/xy4q12565R+d4
-         GBF9r1mIDxWGQ==
-From:   Mark Brown <broonie@kernel.org>
-To:     devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linus.walleij@linaro.org, conor.dooley@microchip.com,
-        linux-kernel@vger.kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, aou@eecs.berkeley.edu,
-        lee.jones@linaro.org, jassisinghbrar@gmail.com,
-        linux-usb@vger.kernel.org, thierry.reding@gmail.com,
-        palmer@dabbelt.com, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, gregkh@linuxfoundation.org,
-        bgolaszewski@baylibre.com, linux-crypto@vger.kernel.org,
-        robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-i2c@vger.kernel.org, paul.walmsley@sifive.com
-Cc:     geert@linux-m68k.org, bin.meng@windriver.com,
-        lewis.hanly@microchip.com, ivan.griffin@microchip.com,
-        krzysztof.kozlowski@canonical.com, heiko@sntech.de,
-        atishp@rivosinc.com, daire.mcnamara@microchip.com
-In-Reply-To: <20220117110755.3433142-1-conor.dooley@microchip.com>
-References: <20220117110755.3433142-1-conor.dooley@microchip.com>
-Subject: Re: (subset) [PATCH v4 00/14] Update the Icicle Kit device tree
-Message-Id: <164310606421.75071.15666469655719890555.b4-ty@kernel.org>
-Date:   Tue, 25 Jan 2022 10:21:04 +0000
+        id S1383529AbiAYMit (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jan 2022 07:38:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1451351AbiAYMej (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jan 2022 07:34:39 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB32C061769;
+        Tue, 25 Jan 2022 04:34:38 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id e8so17835987wrc.0;
+        Tue, 25 Jan 2022 04:34:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XU7BD3ZCwSatg7jSB64inzSJiC7IsFXIbFfu4ywKzMU=;
+        b=HFRXWbjFZwTAqv/NjKXo/nKLZ86h7hbHRecQhkPDbgdfezb/qA9aC4UDfkmKy57f8H
+         CalqE9+XDJ8YD0fjFFKvf8A1RfN5lztuEJjhG/g8kTF5AEnKY01G9C90Iy87d27FIYNQ
+         EZG1ow5Hx5BX9tZMD4E61TUONqjDmrKqIqdblTAeySBNSgHkVorBvHt9CD70TyfPgHXI
+         J2a7ONxPEGi5LMdQ4Od3vi6jYexeQ+jeR26tKNA3CDk+7GNtjERlagGM+6o6rpaa/y+n
+         CAhPNdiQO4qt+zH3V3bX+JAMYOtiaI0Wl44j9YKAVchnOYVSmm7r/gGrFnRYwB7Xg71l
+         r+rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XU7BD3ZCwSatg7jSB64inzSJiC7IsFXIbFfu4ywKzMU=;
+        b=pH9lE6dS+tbxt55YvcloUv991cmNY9QJHC1exhI+2vl1Gx1vaJWiVL6Mh+guvroky4
+         njTv0mqF7NN8vfY0JcTIu6zicVxeNmE4J8MtMeWpVyum6xLAQiwiAGmdxGCi4YNFXDSc
+         WFDQjDKmjrOY1ptA18kE9aL2WXjkNmx2ieNwwaNCk4IncN/XefrNj6z1vrqr4GrmoAkq
+         QJqVDfEVArlRIrihELCgns8cAG2YXF5/U+MYNSAtGmwiN55WaiIUysYfgl1ZIn+FzBPE
+         Rl/BnKW+zW/XqeFANEbQJE38DRzBUxYSCsK6yoVP78zAE2CxVDNWRl/+Tppf+R0LjsIy
+         o4CA==
+X-Gm-Message-State: AOAM530emckiLjVt29pq/2OXxdt0VH7A74+ox7sv3fhFwcK57Mc4mOcP
+        cCkQLEkN36Wx+WlMIvqZdiUpSWZOA6Y=
+X-Google-Smtp-Source: ABdhPJwtJj3Putd2RYBejOhKxuX/HNBAXLYwr58mXSXw8ALxLch+seyPNA09653LY7qWWg4gUtuIBg==
+X-Received: by 2002:adf:fc8e:: with SMTP id g14mr18057287wrr.260.1643114077318;
+        Tue, 25 Jan 2022 04:34:37 -0800 (PST)
+Received: from heron.intern.cm-ag (p200300dc6f046a000000000000000fd2.dip0.t-ipconnect.de. [2003:dc:6f04:6a00::fd2])
+        by smtp.gmail.com with ESMTPSA id e10sm1558633wrq.53.2022.01.25.04.34.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 04:34:36 -0800 (PST)
+From:   Max Kellermann <max.kellermann@gmail.com>
+To:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, andrey@lebedev.lt,
+        Max Kellermann <max.kellermann@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH 1/3] pwm-sun4i: convert "next_period" to local variable
+Date:   Tue, 25 Jan 2022 13:34:27 +0100
+Message-Id: <20220125123429.3490883-1-max.kellermann@gmail.com>
+X-Mailer: git-send-email 2.34.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 17 Jan 2022 11:07:41 +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> This series updates the Microchip Icicle Kit device tree by adding a
-> host of peripherals, and some updates to the memory map. In addition,
-> the device tree has been split into a third part, which contains "soft"
-> peripherals that are in the fpga fabric.
-> 
-> [...]
+Its value is calculated in sun4i_pwm_apply() and is used only there.
 
-Applied to
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Kellermann <max.kellermann@gmail.com>
+---
+ drivers/pwm/pwm-sun4i.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index 91ca67651abd..c7c564a6bf36 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -89,7 +89,6 @@ struct sun4i_pwm_chip {
+ 	void __iomem *base;
+ 	spinlock_t ctrl_lock;
+ 	const struct sun4i_pwm_data *data;
+-	unsigned long next_period[2];
+ };
+ 
+ static inline struct sun4i_pwm_chip *to_sun4i_pwm_chip(struct pwm_chip *chip)
+@@ -237,6 +236,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	int ret;
+ 	unsigned int delay_us, prescaler = 0;
+ 	unsigned long now;
++	unsigned long next_period;
+ 	bool bypass;
+ 
+ 	pwm_get_state(pwm, &cstate);
+@@ -284,7 +284,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
+ 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
+-	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
++	next_period = jiffies +
+ 		nsecs_to_jiffies(cstate.period + 1000);
+ 
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+@@ -306,9 +306,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	/* We need a full period to elapse before disabling the channel. */
+ 	now = jiffies;
+-	if (time_before(now, sun4i_pwm->next_period[pwm->hwpwm])) {
+-		delay_us = jiffies_to_usecs(sun4i_pwm->next_period[pwm->hwpwm] -
+-					   now);
++	if (time_before(now, next_period)) {
++		delay_us = jiffies_to_usecs(next_period - now);
+ 		if ((delay_us / 500) > MAX_UDELAY_MS)
+ 			msleep(delay_us / 1000 + 1);
+ 		else
+-- 
+2.34.0
 
-Thanks!
-
-[06/14] dt-bindings: spi: add bindings for microchip mpfs spi
-        commit: 2da187304e556ac59cf2dacb323cc78ded988169
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
