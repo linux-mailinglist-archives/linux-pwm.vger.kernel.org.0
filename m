@@ -2,89 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AB0549C21A
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jan 2022 04:29:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 787FB49C4BE
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jan 2022 08:51:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237183AbiAZD3V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jan 2022 22:29:21 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:34731 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbiAZD3V (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jan 2022 22:29:21 -0500
-Received: by mail-oi1-f175.google.com with SMTP id bb37so35112516oib.1;
-        Tue, 25 Jan 2022 19:29:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=1yb1SzZkawQnAeWOCob2jXUUyagIMae11h2jfoANoA0=;
-        b=DrQxn9z+VFKXGqAQmxHIHFq2xzGdITCum9TJY3vZ+vs8MMmKAN9EP6gGsQ2nUwatUs
-         SWv0nzLcJunjsCuGUOV0mpEM+ZH2orI63cFK5ezL0tt7OJIKYSy7a+i/EatacGRzIuNI
-         zm+QrWFbg3HIEoRAnrQwmt7RUjTxY2ShP8bm+a6RNLaVpnBWNTb51YUygheDMzc3bus7
-         bkPn1NWGXJH6a9lOpaX2toYHT8B1YrN2HNetF0XTDjJ54yTVOIn5ZNUVwdXGC9Q8u854
-         yufQHki9n4002yDHZrhmSUlxivu7Xb28kiIcDgqs2U01+BnOgslU6gtsqzVdea4xIqWd
-         /mxw==
-X-Gm-Message-State: AOAM530gRlA1sYZv2La0ijifpPpPOCmOFW7C8ikHw5aUU+W5UGGIFNQ7
-        3/y8OaHfy8yETQIzhjYNjA==
-X-Google-Smtp-Source: ABdhPJwP4tM66M9iDxYnOP75qTdNeHfxBQaB4FW32sVcvKc0AOQ7DeD9lCZvn5l7FWX2DZoS7oNC3A==
-X-Received: by 2002:aca:eb53:: with SMTP id j80mr2664122oih.33.1643167760634;
-        Tue, 25 Jan 2022 19:29:20 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id q3sm3620121oom.9.2022.01.25.19.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jan 2022 19:29:20 -0800 (PST)
-Received: (nullmailer pid 3724353 invoked by uid 1000);
-        Wed, 26 Jan 2022 03:29:18 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     sven@svenschwermer.de
-Cc:     dmurphy@ti.com, lee.jones@linaro.org, post@lespocky.de,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-        pavel@ucw.cz, u.kleine-koenig@pengutronix.de,
-        thierry.reding@gmail.com
-In-Reply-To: <20220125151226.31049-2-sven@svenschwermer.de>
-References: <20220125151226.31049-1-sven@svenschwermer.de> <20220125151226.31049-2-sven@svenschwermer.de>
-Subject: Re: [RFC PATCH v2 1/2] dt-bindings: leds: Add multicolor PWM LED bindings
-Date:   Tue, 25 Jan 2022 21:29:18 -0600
-Message-Id: <1643167758.829977.3724352.nullmailer@robh.at.kernel.org>
+        id S238059AbiAZHvw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Jan 2022 02:51:52 -0500
+Received: from mail.schwermer.no ([49.12.228.226]:58530 "EHLO
+        mail.schwermer.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229840AbiAZHvv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Jan 2022 02:51:51 -0500
+Message-ID: <70bfabe5-7f53-5c80-e1de-dc73e85232de@svenschwermer.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=svenschwermer.de;
+        s=mail; t=1643183509;
+        bh=NAlmCNdCH1/UFtP8H5NSWDyddCGO81hUnbM+LYXGqKk=;
+        h=Subject:To:Cc:References:From:In-Reply-To;
+        b=qkbO6V0RwIb0ZRjpz32tIjSubsa5LTEc3ST/NBNHXpXVOw1hlubhgmLOWbD0F1h52
+         3dodQ7EB5BPmUuSDkxmQgiTfscN3J8yFEcBJxlek7Yl4QJnNJ/ATz3O7YHpUENJfT3
+         zDsniWeT8WSgA7eGRMG1k2//34BCI2JNHROOu52Zc1y8A9K3mi3C9ktVxOMU3/iGXM
+         YFp2rMb8P+ejHn3eStvmFTP1zY/XHORNFDMMZJt0Pnct8nhAo/zy9v3OyJS4QrBASh
+         jPjbzzxRcKiQHKwHEudb+e0gk2YQ8ZxW9iQ9ocD1vXTx2aS5d7T/9Uyv3nRNX+luuZ
+         f1B8Ko5MSeuIw==
+Date:   Wed, 26 Jan 2022 08:51:48 +0100
+Mime-Version: 1.0
+Subject: Re: [RFC PATCH 0/2] Multicolor PWM LED support
+Content-Language: en-US
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        pavel@ucw.cz, robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
+References: <20220125092239.2006333-1-sven@svenschwermer.de>
+ <a147897a-2823-ad45-d727-0b96f48b4da3@gmail.com>
+From:   Sven Schwermer <sven@svenschwermer.de>
+In-Reply-To: <a147897a-2823-ad45-d727-0b96f48b4da3@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 25 Jan 2022 16:12:25 +0100, sven@svenschwermer.de wrote:
-> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+Hi Jacek,
+
+Thank you for your feedback!
+
+On 1/25/22 23:31, Jacek Anaszewski wrote:
+
+>>    1. Currently, the max-brightness property is expected as a property to
+>>       the multi-led node. That seems consistent with the existing
+>>       multicolor class code, but I'm wondering whether it would make
+>>       sense to have a max-brigthness for the individual LEDs as well?
 > 
-> This allows to group multiple PWM-connected monochrome LEDs into
-> multicolor LEDs, e.g. RGB LEDs.
+> For the proper mixed color calculation all sub-leds should have
+> the same max_brightness as the global max_brightness.
 > 
-> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-> ---
->  .../bindings/leds/leds-pwm-multicolor.yaml    | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> Look at how sub-led intensities are calculated in
+> led_mc_calc_color_components().
 > 
+> See also [0] and [1].
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+OK, thanks. That makes sense.
 
-yamllint warnings/errors:
+>>    2. The current multi-led node definition calls for a node index which
+>>       would in turn require the reg property to be set within the node.
+>>       In this context, that doesn't seem to make sense. Should this
+>>       requirement be lifted from leds-class-multicolor.yaml?
+> 
+> reg is required for all DT nodes with address unit in the name.
+> If you skipped the address unit, then reg would be also not required.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/leds/leds-pwm-multicolor.example.dts:24.25-43.15: Warning (unit_address_vs_reg): /example-0/rgb-led/multi-led@0: node has a unit name, but no reg or ranges property
+Yes, I realize this. However, leds-class-multicolor.yaml [0] requires 
+the address unit: "^multi-led@([0-9a-f])$"
 
-doc reference errors (make refcheckdocs):
+Best regards,
+Sven
 
-See https://patchwork.ozlabs.org/patch/1584106
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+[0] Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
