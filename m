@@ -2,123 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 237244A0438
-	for <lists+linux-pwm@lfdr.de>; Sat, 29 Jan 2022 00:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C43424A2AAB
+	for <lists+linux-pwm@lfdr.de>; Sat, 29 Jan 2022 01:50:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344912AbiA1X0o (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Jan 2022 18:26:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
+        id S232089AbiA2Aus (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Jan 2022 19:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233182AbiA1X0n (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jan 2022 18:26:43 -0500
-Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0922BC061714;
-        Fri, 28 Jan 2022 15:26:43 -0800 (PST)
-Received: from thinkpad (unknown [172.20.6.87])
-        by mail.nic.cz (Postfix) with ESMTPSA id 77675140E6F;
-        Sat, 29 Jan 2022 00:26:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1643412400; bh=J0xeuUES33SqJ2xHXF/aPhmUmmfVXvoJpgE1mXvIjxA=;
-        h=Date:From:To;
-        b=i4DuCY2XH24UnVJbBDeWfVj8fQ/o5TQ9wWjAYGvyP7IXbA7cMKW0a3HIvDgVrlLbK
-         53TfsAH0mEkXKEa+u+ENiMbNuXOifofCiJcEEyymGf8DkFpvXwELTpmHbyL5tCrtvh
-         RsSNnnfjrusIO3VPG5Yg9ks3pBvrlrktySGZT80Y=
-Date:   Sat, 29 Jan 2022 00:26:39 +0100
-From:   Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz
-Cc:     sven@svenschwermer.de, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-        robh+dt@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        post@lespocky.de
-Subject: Re: [PATCH v3 1/2] dt-bindings: leds: Add multicolor PWM LED
- bindings
-Message-ID: <20220129002639.33c7d4c0@thinkpad>
-In-Reply-To: <09b46d05-5dd0-a585-2ca3-0bc04e613343@gmail.com>
-References: <20220126104844.246068-1-sven@svenschwermer.de>
-        <20220126104844.246068-2-sven@svenschwermer.de>
-        <00d8de09-360e-4e0f-1496-642ba1cbf863@gmail.com>
-        <20220128213609.7a60e9fe@thinkpad>
-        <09b46d05-5dd0-a585-2ca3-0bc04e613343@gmail.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S241536AbiA2Aur (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jan 2022 19:50:47 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D10C061748
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Jan 2022 16:50:47 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id p203so15523199oih.10
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Jan 2022 16:50:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wP9GUemZjobVvElhar7UqvhZ43XmUSMFie0l7uhdp34=;
+        b=mMl9H0qw9/VE5m1aO1VI4YZPm4cSdMe0mM3Q2l4V1XUz9/eB0ZKNP/bYFFaNoTXCCq
+         Gb2+GZx14nkjburIhdiga039yksG29/Xqy+EMFyFBXbTb9brMIhyntvWRT2RFU8KMwak
+         axohOsIVOumItT87Cf3fDnf7as+Xc/uKUaVRIXY6Jd/4Qajcb2OZzn9bVS05p9zHNv7w
+         O2gTlJblQuIQbtM0FSf9QnHWBfKzr1rHLNB5nbr7kGfX6jPyNR+0ZWoKB6hXAM3axWnx
+         1BB+IGZcE38YeWzvHZtY3adbMruKepDbVCuRUscZ2zLiqpxHsy3U2wBsA7vm0861LeO6
+         RNbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wP9GUemZjobVvElhar7UqvhZ43XmUSMFie0l7uhdp34=;
+        b=W8RNGzy5+ujOp7qh3gjeEHwzg3w3vJWEheoWlLyAfas8MI242CbtFGXhyEnFQRWueU
+         pPQaL8lFa5jA/wNNWAaHLq1StPPcu+JOZ4kDdG8OEIx28oRswfytTQIsi8WqUi6uB883
+         TAMIS8rTnGX3Rr8c7MNlSBSY46YBVMz3VpnIRKDVYZuRP2yKW2dUBbxhDobSSi1O3r3v
+         i5s3U95Fnsf1rGEf+889iBF6W2z/6AaZbmDdEngAC+Yc91F0Ia9gjnSqhgFp8MJ+xbS5
+         dWEiz0UA/C7zgy7tgrElZkk1R9BzO4whHfUvLGGAyTFl2Ky66U9gf3OKDz+FWlLPkgpU
+         fMnA==
+X-Gm-Message-State: AOAM531bkg8YMwFUi8G99Nu1+neISpxDkucqwuMyVQ0Z2qVPBIAfudUp
+        DvX/7OrpeW3Bsmh2QafqAV6nMQ==
+X-Google-Smtp-Source: ABdhPJwERBnVifrHrrzYgx92kUQsmMqDK5Gg8Dx7QIQWHze+WTQMcJMbFY9jNW6BAwUh2FHD5fgivA==
+X-Received: by 2002:aca:100c:: with SMTP id 12mr7528496oiq.147.1643417446535;
+        Fri, 28 Jan 2022 16:50:46 -0800 (PST)
+Received: from yoga ([2600:1700:a0:3dc8:5c39:baff:fe03:898d])
+        by smtp.gmail.com with ESMTPSA id c26sm3619496otn.34.2022.01.28.16.50.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jan 2022 16:50:45 -0800 (PST)
+Date:   Fri, 28 Jan 2022 18:50:42 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Marijn Suijten <marijn.suijten@somainline.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH v10 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <YfSPYkbTXMOUGKkG@yoga>
+References: <20211010043912.136640-1-bjorn.andersson@linaro.org>
+ <20211010043912.136640-2-bjorn.andersson@linaro.org>
+ <YXL0DyyPkS4/wfB7@ripper>
+ <20211027211928.tjybwy2lokj6eoun@SoMainline.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-100.0 required=5.9 tests=SHORTCIRCUIT,URIBL_BLOCKED,
-        USER_IN_WELCOMELIST,USER_IN_WHITELIST shortcircuit=ham
-        autolearn=disabled version=3.4.2
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.nic.cz
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211027211928.tjybwy2lokj6eoun@SoMainline.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, 29 Jan 2022 00:04:01 +0100
-Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+On Wed 27 Oct 16:19 CDT 2021, Marijn Suijten wrote:
 
-> On 1/28/22 9:36 PM, Marek Beh=C3=BAn wrote:
-> > On Thu, 27 Jan 2022 22:24:21 +0100
-> > Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
-> >  =20
-> >> Hi Sven,
-> >>
-> >> On 1/26/22 11:48 AM, sven@svenschwermer.de wrote: =20
-> >>> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-> >>>
-> >>> This allows to group multiple PWM-connected monochrome LEDs into
-> >>> multicolor LEDs, e.g. RGB LEDs.
-> >>>
-> >>> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies=
-.com>
-> >>> --- =20
-> >> [...] =20
-> >>> +
-> >>> +additionalProperties: false
-> >>> +
-> >>> +examples:
-> >>> +  - |
-> >>> +    #include <dt-bindings/leds/common.h>
-> >>> +
-> >>> +    rgb-led {
-> >>> +        compatible =3D "pwm-leds-multicolor";
-> >>> +
-> >>> +        multi-led {
-> >>> +          color =3D <LED_COLOR_ID_RGB>;
-> >>> +          function =3D LED_FUNCTION_INDICATOR;
-> >>> +          max-brightness =3D <65535>; =20
-> >>
-> >> It doesn't make much sense to have such a big resolution of global
-> >> multi color brightness. 255 will be sufficient. =20
-> >=20
-> > If the PWM supports it, why not?
-> > On Omnia the default is 255, and since it is PWM, the change from 0/255
-> > to 1/255 is much bigger then from, say, 15/255 to 16/255. So if 1/255
-> > is too bright, you are then unable to set it less bright. I think 1024
-> > or ever 65535 makes sense with PWMs. =20
->=20
-> With values other than 255 we will not achieve 24-bit RGB, which is one
-> problem, and the other one is non-linear brightness that can be achieved
-> with PWM. So probably we would need to add an additional note in the
-> documentation [0], saying that changing global brightness allows to
-> preserve combined LED hue only when all sub-leds are linear, and that it
-> will not be the case for PWM LEDs.
->=20
-> And I propose to change multi-led 'color' DT property value from
-> LED_COLOR_ID_RGB to LED_COLOR_ID_MULTI to avoid the impression that it
-> will work as traditional 24-bit RGB.
->=20
-> [0] Documentation/leds/leds-class-multicolor.rst
+> Hi Bjorn,
+> 
+> On 2021-10-22 10:25:35, Bjorn Andersson wrote:
+> > On Sat 09 Oct 21:39 PDT 2021, Bjorn Andersson wrote:
+> > 
+> > > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> > > PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
+> > > with their output being routed to various other components, such as
+> > > current sinks or GPIOs.
+> > > 
+> > > Each LPG instance can operate on fixed parameters or based on a shared
+> > > lookup-table, altering the duty cycle over time. This provides the means
+> > > for hardware assisted transitions of LED brightness.
+> > > 
+> > > A typical use case for the fixed parameter mode is to drive a PWM
+> > > backlight control signal, the driver therefor allows each LPG instance
+> > > to be exposed to the kernel either through the LED framework or the PWM
+> > > framework.
+> > > 
+> > > A typical use case for the LED configuration is to drive RGB LEDs in
+> > > smartphones etc, for which the driver support multiple channels to be
+> > > ganged up to a MULTICOLOR LED. In this configuration the pattern
+> > > generators will be synchronized, to allow for multi-color patterns.
+> > > 
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > 
+> > Any feedback on this?
+> 
+> I asked in #linux-msm whether anything is wrong with the patterns,
+> since my Sony Discovery (sdm630 with a pm660l) blinks way quicker on a
+> pattern that's supposed to stay on for 1s and off for 1s:
+> 
+>     echo "0 1000 255 1000" > /sys/class/leds/rgb\:status/hw_pattern
+> 
+> It however seems to be broken in the same way on an older version now
+> (this might be v9 or v8) which I don't remember to be the case.  Can you
+> double-check if this is all working fine on your side?  If so, I'll have
+> to find some time to debug it on my end.
+> 
 
-I know that color curves were being discussed at the time multicolor
-was being introduced, and AFAIK Pavel didn't like it, but I don't
-remember the reasons anymore.
+I had missed the fact that LPG_RAMP_DURATION_REG is two registers for
+msg and lsb, for a total of 9 bits of duration. So what you saw was
+probably ticking at 232ms.
 
-As far as I understand it though, for PWM LEDs there is an equation for
-gamma correction. So either we need to rename this LED to MULTI, or the
-driver needs to do gamma correction so that the LED behaves RGB.
+Note though that the pattern uses the last time as "high pause", so I
+expect that you should have seen 232 ms of off, followed by 464ms of
+light.
 
-Pavel, what is your opinion on this?
+I've fixed this for v11, both rejecting invalid input and writing out
+all 9 bits.
 
-Marek
+Thanks for spotting this!
+Bjorn
