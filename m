@@ -2,66 +2,148 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B71E44A33E7
-	for <lists+linux-pwm@lfdr.de>; Sun, 30 Jan 2022 05:28:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D264A3E14
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 08:10:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354266AbiA3E2o (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 29 Jan 2022 23:28:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354224AbiA3E2a (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 29 Jan 2022 23:28:30 -0500
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67298C06177B
-        for <linux-pwm@vger.kernel.org>; Sat, 29 Jan 2022 20:28:25 -0800 (PST)
-Received: by mail-oo1-xc35.google.com with SMTP id b15-20020a4a878f000000b002dccc412166so2402521ooi.11
-        for <linux-pwm@vger.kernel.org>; Sat, 29 Jan 2022 20:28:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=B5teSI3NqSzeGu7ngV/22RiyR60khzQ8THYZDZ9DX3Q=;
-        b=QI2firgHOSt+2ZiRAEUqBnRqfCndbuygIyUz1kdYlPzS6AXkdk+mfMubksdM+6U8hJ
-         A4UbXdfo0bhasYFmsw5ceBBj4ub2bgaEqkI+Cp5foQd/M11l9HiEax3hX9+hB29fNDF1
-         4XtAbOKK0Jrn48roHo8mUNvKaz7FG0Csy4DWdnw8Q+/oXs7GbWFZBjN+ifwhy6Rfe8k0
-         Pzhs5uXUX+5v6iQyGpPCJWV84GisQUz+5cfOraMc3PalgV6vYI9t2Z4JMkhIMshepKV2
-         BM+Zj3o1QTUTRt1Kxwo+5vz+cvvR7n44irHUjPq0LbDCW52O0lwQK7qPtMHxw7vn0Id9
-         5U2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=B5teSI3NqSzeGu7ngV/22RiyR60khzQ8THYZDZ9DX3Q=;
-        b=2a3VfaXnvhqYGgbqBhjRSWBRBGA9t6be0gnzBxrKJitRAtTswPPnJoiqXxyJtzGXvr
-         7s0UL7UA//yo53gvnRpcxvwqSp+t1d7327P2muoMNuMIRtsPE/FE7DAoWsNK9ruZJcu9
-         C5AWXgSSNBwuZ/p0oDhciRoGpoOYgchBOreEnC6vj0tNBlsfK1YdNuRLr2wjaoIp+DZv
-         R0HAuwwpKd4KSZH613KcNIyJPHwFuYL8GjLXRjeGnEFfk4WThbw1hPE11Hpp0MKxGTDE
-         bdR4KwxAnX2bbm40pAdR1SZBMJlVK4CBQnLQ9TAxv50D6GhvgEWGJ8JIjbtvT+T3W6LV
-         rG4A==
-X-Gm-Message-State: AOAM532Tai0Q+BfhqkDj4SVWLIVtz66Ke6oemrub7nbsQ7d+GkHSf8Ba
-        UYiinYeP6FhSUh/nelXSEtH54+AfvUlXLYl4WbF7/yriQ0g=
-X-Google-Smtp-Source: ABdhPJz3bgso8viJFkNwiW8XigzdjL6JZBPDE3NfxKOCgEqvWjdU/qagorQKM5joSRLXylFmq9/zlHP85rUYuZ5fTGQ=
-X-Received: by 2002:a25:6d45:: with SMTP id i66mr23246397ybc.352.1643516893721;
- Sat, 29 Jan 2022 20:28:13 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a05:7010:2312:b0:201:cd76:102e with HTTP; Sat, 29 Jan 2022
- 20:28:13 -0800 (PST)
-Reply-To: mrs.bill.chantalone01@gmail.com
-From:   "Mrs.Bill.Chantal" <grassroot309@gmail.com>
-Date:   Sun, 30 Jan 2022 05:28:13 +0100
-Message-ID: <CAO3iUMDzg_ZovNWXtuQhU6sDXk7LsNwvNc2pOb7zvX7pPCdMAw@mail.gmail.com>
-Subject: Hello....
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S240389AbiAaHK0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jan 2022 02:10:26 -0500
+Received: from mail.thorsis.com ([92.198.35.195]:39398 "EHLO mail.thorsis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233543AbiAaHKZ (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Mon, 31 Jan 2022 02:10:25 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 3914B3554;
+        Mon, 31 Jan 2022 08:10:24 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id gGoWGySXr6xZ; Mon, 31 Jan 2022 08:10:24 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id B6D1A19C0; Mon, 31 Jan 2022 08:10:23 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.0 required=5.0 tests=NO_RECEIVED,NO_RELAYS,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.2
+X-Spam-Report: *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: hackaday.com]
+        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
+        * -0.0 NO_RECEIVED Informational: message has no Received headers
+Date:   Mon, 31 Jan 2022 08:10:07 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz,
+        sven@svenschwermer.de, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        post@lespocky.de
+Subject: Re: [PATCH v3 1/2] dt-bindings: leds: Add multicolor PWM LED bindings
+Message-ID: <YfeLTxVAmwjU6PFr@ada-deb-carambola.ifak-system.com>
+Mail-Followup-To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz,
+        sven@svenschwermer.de, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        post@lespocky.de
+References: <20220126104844.246068-1-sven@svenschwermer.de>
+ <20220126104844.246068-2-sven@svenschwermer.de>
+ <00d8de09-360e-4e0f-1496-642ba1cbf863@gmail.com>
+ <20220128213609.7a60e9fe@thinkpad>
+ <09b46d05-5dd0-a585-2ca3-0bc04e613343@gmail.com>
+ <20220129002639.33c7d4c0@thinkpad>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220129002639.33c7d4c0@thinkpad>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-You have been compensated with the sum of 9.5 million dollars in this
-united nation the payment will be issue into atm visa  card and send
-to you from the santander bank we need your address and your
-Whatsapp number  + 1 6465853907  this my email.ID
-( mrs.bill.chantal.roland@gmail.com )  contact  me
+Hello,
 
-Thanks my
+Am Sat, Jan 29, 2022 at 12:26:39AM +0100 schrieb Marek Behún:
+> On Sat, 29 Jan 2022 00:04:01 +0100
+> Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+> 
+> > On 1/28/22 9:36 PM, Marek Behún wrote:
+> > > On Thu, 27 Jan 2022 22:24:21 +0100
+> > > Jacek Anaszewski <jacek.anaszewski@gmail.com> wrote:
+> > >   
+> > >> Hi Sven,
+> > >>
+> > >> On 1/26/22 11:48 AM, sven@svenschwermer.de wrote:  
+> > >>> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> > >>>
+> > >>> This allows to group multiple PWM-connected monochrome LEDs into
+> > >>> multicolor LEDs, e.g. RGB LEDs.
+> > >>>
+> > >>> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> > >>> ---  
+> > >> [...]  
+> > >>> +
+> > >>> +additionalProperties: false
+> > >>> +
+> > >>> +examples:
+> > >>> +  - |
+> > >>> +    #include <dt-bindings/leds/common.h>
+> > >>> +
+> > >>> +    rgb-led {
+> > >>> +        compatible = "pwm-leds-multicolor";
+> > >>> +
+> > >>> +        multi-led {
+> > >>> +          color = <LED_COLOR_ID_RGB>;
+> > >>> +          function = LED_FUNCTION_INDICATOR;
+> > >>> +          max-brightness = <65535>;  
+> > >>
+> > >> It doesn't make much sense to have such a big resolution of global
+> > >> multi color brightness. 255 will be sufficient.  
+> > > 
+> > > If the PWM supports it, why not?
+> > > On Omnia the default is 255, and since it is PWM, the change from 0/255
+> > > to 1/255 is much bigger then from, say, 15/255 to 16/255. So if 1/255
+> > > is too bright, you are then unable to set it less bright. I think 1024
+> > > or ever 65535 makes sense with PWMs.  
+> > 
+> > With values other than 255 we will not achieve 24-bit RGB, which is one
+> > problem, and the other one is non-linear brightness that can be achieved
+> > with PWM. So probably we would need to add an additional note in the
+> > documentation [0], saying that changing global brightness allows to
+> > preserve combined LED hue only when all sub-leds are linear, and that it
+> > will not be the case for PWM LEDs.
+> > 
+> > And I propose to change multi-led 'color' DT property value from
+> > LED_COLOR_ID_RGB to LED_COLOR_ID_MULTI to avoid the impression that it
+> > will work as traditional 24-bit RGB.
+> > 
+> > [0] Documentation/leds/leds-class-multicolor.rst
+> 
+> I know that color curves were being discussed at the time multicolor
+> was being introduced, and AFAIK Pavel didn't like it, but I don't
+> remember the reasons anymore.
+> 
+> As far as I understand it though, for PWM LEDs there is an equation for
+> gamma correction. 
 
-mrs bill chantal
+That's right, and it gets a little more complicated if you have RGB
+instead of a single LED.  A start for reading might be this:
+
+https://hackaday.com/2016/08/23/rgb-leds-how-to-master-gamma-and-hue-for-perfect-brightness/
+
+(I had bookmarked that back when I was hacking on firmware for an 8bit
+microcontroller controlling an RGB LED through soft PWM few years
+ago.  A very simple solution is a precalculated static lookup table.)
+
+> So either we need to rename this LED to MULTI, or the
+> driver needs to do gamma correction so that the LED behaves RGB.
+
+Do those devices marked as RGB currently, have that gamma correction
+integrated on chip? Examples?
+
+Greets
+Alex
+
