@@ -2,98 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E8074A463A
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 12:51:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D21E4A47A4
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 13:57:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376642AbiAaLvM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Jan 2022 06:51:12 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:63242 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376700AbiAaLqi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 06:46:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1643629598; x=1675165598;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+uRMhA1+KXMC9lDrbzc/2dceALsFfl6ymRO67+ImIZ8=;
-  b=F179MNUPZM2fsMy5wjNEUABHHyk8l1i7vZOkKZP4N2dv46T4fWPPGkZu
-   m07rVP01/Fge5zDNHM/xXev3pNGRX2fxSU+21/wgutxOd167eCq4lGG8c
-   MYVQaFJ9WF50K6gpK2yG3LXMYBdbsMexa9eLE9TSDOLzRT4AnO6n+//K7
-   7tW4Dq/8lT9Wjc+DksQ1k5QIl7ZO/hy+gGGE3gROsmeQZ1MP6F3X9Mgvr
-   Qvm3kHtggkj97RRF/HgSokb5K4LFoRqXajNLtD03chdBOhAmqb4Y+PPPB
-   cMdJmyEyRsmoILDMyQGCiJ/xMV4zo5oYAUtUOq2L8wl/jhUREFMPbg7UN
-   A==;
-IronPort-SDR: eajPSZH4pSMNBX4KdOiq8o1PyCBQHxIJ2eFvu6iAjHVHssM7If3nsVEHy5O4csYUG1ycv9gwsu
- 3GjRxfWiQGnALyTTWJk2Kt1TKcVE9qKOxuC4UiDqeOelPKvogG53n01YMBIvBX5ZyXfCoB0jBi
- d93t6wVH4MHczqlfJwi+Hxpk/6/XjjhJ9Z/vEuqMob0IbGRKrkhXqjiYmFmtGfjxUBvuzBWiDJ
- vDN8nS8rTTkRY4+DMYVdRRqGRSMf0Elvg1AxO+XG0T9zqlGoas/D2641PfwOJGRrMbEs5sA1Ch
- TJEJVYB8u1pm/qg/7CPC0k5U
-X-IronPort-AV: E=Sophos;i="5.88,330,1635231600"; 
-   d="scan'208";a="151966756"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jan 2022 04:46:37 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 31 Jan 2022 04:46:36 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Mon, 31 Jan 2022 04:46:31 -0700
-From:   <conor.dooley@microchip.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
-        <jassisinghbrar@gmail.com>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <lee.jones@linaro.org>,
-        <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <geert@linux-m68k.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-CC:     <krzysztof.kozlowski@canonical.com>, <bin.meng@windriver.com>,
-        <heiko@sntech.de>, <lewis.hanly@microchip.com>,
-        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
-        <ivan.griffin@microchip.com>, <atishp@rivosinc.com>
-Subject: [PATCH v5 12/12] MAINTAINERS: update riscv/microchip entry
-Date:   Mon, 31 Jan 2022 11:47:27 +0000
-Message-ID: <20220131114726.973690-13-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.35.0
-In-Reply-To: <20220131114726.973690-1-conor.dooley@microchip.com>
-References: <20220131114726.973690-1-conor.dooley@microchip.com>
+        id S1378297AbiAaM5d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jan 2022 07:57:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1378327AbiAaM5b (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 07:57:31 -0500
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17198C06173B
+        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 04:57:31 -0800 (PST)
+Received: by mail-vs1-xe2d.google.com with SMTP id a19so11640945vsi.2
+        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 04:57:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Rbf16twz9E2vQcds9ElwMC4NaHHcAIWkmNblQF1s7dE=;
+        b=oVFUKsTxctFJ9Ff3uaNasrGMTC7Ugev6jQKgxQC1ggyS7wkwIyGdayyO7IhmmWev2F
+         VKYf7yIUis+IAgHuCVyEibDIOWaAuA5qSXvMmTIOreMq+6wd+6nLpcrobYzpqv9uxPpm
+         JLuQARSUk86hyBVzWLLXeIatzjkZoaLjlZVW3SaKTECTcEW5qMAV/6XuI1JE3yKWVscv
+         hN+OdQ92V+bh3A7jf6kYjct/BC22qgZDNeB2OP/cT3Yb1EUCPUZP6flG4QdPZLjOhOfH
+         TQSuonGfNfuGKSXHRy77tMlC6NRRZOnnThqgZbJDHLITv/Xk52AotmttIF6OQ8T046Wu
+         07lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Rbf16twz9E2vQcds9ElwMC4NaHHcAIWkmNblQF1s7dE=;
+        b=grrm78YdeAvMRA+LLWNtea3H+LkB+ih2FPPsv5kz9XSvyUfY5y9Fzx+21bsmEEV2HJ
+         w88cWBAlczGEHC7wWAwRXRKwjo0RK+yIVeJVUQSQuT+pL/H7JwLn4+DXXkCiUeAZexzW
+         d7qLw98kBva3KeAt3/4+47SSzSIcmtZ2CTigW48hutIOPYcAyiruzhhRTtEzSX1ZjGWp
+         0E/DnVr/t+qyIbyUP6RkdwB2DHHyknoejTjUJwk/R6AlPfLJuzvcbUt8bnxs+f52lihu
+         qEAfZfLQ7PSPX2mZio2j+/HCcGAQShu580TCNVrvHz2oLTQsYRcva5CB71nEb6U2IAG8
+         +WBQ==
+X-Gm-Message-State: AOAM531+5qSe+eqsgesa2HodL5b8jiBWVgcbms0VXsDHtraAT7U/+WQE
+        9MubRjHvflraNUOOuucsg3+QV+VSlJ70Atkq3KM=
+X-Google-Smtp-Source: ABdhPJyHGA3UHEJc73bJ1Z50AXXiF1vX0bY0qTVSZkMndyXvRiQIVUJkeLS16jnuPSzU1ye3M1L7KnvtJb4NlnsgIt8=
+X-Received: by 2002:a05:6102:c47:: with SMTP id y7mr5928253vss.20.1643633850001;
+ Mon, 31 Jan 2022 04:57:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Received: by 2002:a05:612c:228b:b0:271:b221:8e62 with HTTP; Mon, 31 Jan 2022
+ 04:57:29 -0800 (PST)
+Reply-To: docamr8@gmail.com
+From:   Dominic Amar <docamr326@gmail.com>
+Date:   Mon, 31 Jan 2022 04:57:29 -0800
+Message-ID: <CALNEt4UnSyOv0w6qFPwNUpLJ3KqKvBDZph3p8-7tLqAonsx0GA@mail.gmail.com>
+Subject: Fund released
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+Dear Friend,
 
-Update the RISC-V/Microchip entry by adding the microchip dts
-directory and myself as maintainer
+I am Mr. Dominic Amar. A computer scientist with UBA Bank. I am 28
+years old, just started work with UBA Bank. I came across your file
+which was marked X and your released Disk painted RED, I took time to
+study it and found out that you have paid VIRTUALLY all fees and
+certificate but the fund has not been release to you. The most
+annoying thing is that they cannot tell you the truth that on no
+account will they ever release the fund to you, Please this is like a
+Mafia setting in Benin Republic; you may not understand it because you
+are not from this country.
 
-Reviewed-by: Lewis Hanly <lewis.hanly@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+The only thing I will need to release this fund to you is a special
+HARD DISK we call it HD120 GIG. I will buy two of it, recopy your
+information, destroy the previous one, and punch the computer to
+reflect in your bank within 24 banking hours. I will clean up the
+tracer and destroy your old file, after which I will run away from
+Benin Republic to meet with you.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea3e6c914384..779a550dc95b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16575,8 +16575,10 @@ K:	riscv
- 
- RISC-V/MICROCHIP POLARFIRE SOC SUPPORT
- M:	Lewis Hanly <lewis.hanly@microchip.com>
-+M:	Conor Dooley <conor.dooley@microchip.com>
- L:	linux-riscv@lists.infradead.org
- S:	Supported
-+F:	arch/riscv/boot/dts/microchip/
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/soc/microchip/
- F:	include/soc/microchip/mpfs.h
--- 
-2.35.0
+If you are interested kindly get in touch with me immediately, You
+should send to me your convenient phone numbers for easy communication
+and also re-confirm your banking details, so that there won't be any
+mistake.
 
+Regards,
+Mr. Dominic Amar.
