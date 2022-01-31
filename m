@@ -2,74 +2,141 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B96114A5048
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 21:39:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36B714A504C
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 21:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348770AbiAaUjR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Jan 2022 15:39:17 -0500
-Received: from mail-4317.proton.ch ([185.70.43.17]:46841 "EHLO
-        mail-4317.proton.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343872AbiAaUjQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 15:39:16 -0500
-Date:   Mon, 31 Jan 2022 20:39:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
-        s=protonmail2; t=1643661555;
-        bh=dH3eoDiuTRG4LwvARMrzyrTqGWXyQvd60RD429UU8hQ=;
-        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
-         References:From:To:Cc;
-        b=fE0JQgRX7dCh1naqGopEHMcsQGpTnAZlBzyIh0sE+hfsRw7JPzXdEPCJfTjO5rY/W
-         BWOHtLX6MI5SbrtO/pV2Rqk9qwsz3gR2kF6LUhSjRIDg/tLy6g6N4C3VmWJgsHBPd3
-         3AqwXxVzfEef4fWRrW7B3T7br6+Fqq+vYALWDSD/AZMv7DrHn8z3idAkW1TV0yPqL1
-         qD5A6hoT6S/byW/UAbi7KoESB4Rj2p0F7VKO0tCxaIVialEbbCQbSB5sTDp738oDf8
-         LOZHIg5loU2mjwp0d1N+GWmtHP357U/9gBEODn3ZeYsXbf9hz7AMGjUkKpRNI7GhcF
-         zpvoSvZn74xKA==
-To:     Javier Martinez Canillas <javierm@redhat.com>
-From:   Simon Ser <contact@emersion.fr>
-Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>
-Reply-To: Simon Ser <contact@emersion.fr>
-Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED displays
-Message-ID: <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
-In-Reply-To: <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
-References: <20220131201225.2324984-1-javierm@redhat.com> <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
+        id S1376681AbiAaUji (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jan 2022 15:39:38 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:37656 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343999AbiAaUjh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 15:39:37 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D4412614C2;
+        Mon, 31 Jan 2022 20:39:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D95C340E8;
+        Mon, 31 Jan 2022 20:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643661576;
+        bh=LlCWcmjo9XBLXtkZjmaUu+sQAjNy8t3wD356RhDm6+8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dbIvvaZtUtglyEdPJeUXqJeRCSK+nQ6All4q5LCLeHNekPbJGzAd5HBkBDMUdPyEX
+         aLGoz9yVDcpb77joBuHGnfcQ20RTksmJJA8Y7SrJ9Rew6tW4rcMIZRXV5cttCSPQ0D
+         HkEINXYQFrsUCNmd3iD1ToriUf9adNj2trOKs5EHQpQh2ZgYg2jkD+SsyjO4qmwmJU
+         upmD5OlqmrXdrSY7oYrS3dOZxgV98KvJJ3JFZxzIEf0AVbUnMz0iuLBk8UlKNXkBOk
+         lpi4tu/p3npuGwGoPD/pO37vgzqDNONpZMMhn8MfAwiO9zjbATlOiIceIevlZ9aNye
+         Lvr+4f0EY7Kbg==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nEdSX-004Ugn-LI; Mon, 31 Jan 2022 20:39:33 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,T_SCC_BODY_TEXT_LINE
-        shortcircuit=no autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+Date:   Mon, 31 Jan 2022 20:39:33 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?Q?U?= =?UTF-8?Q?we_Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
+Subject: Re: [PATCH v16 08/40] gpu: host1x: Add initial runtime PM and OPP
+ support
+In-Reply-To: <40983f6e-92ee-40d4-861f-06faea0113fc@gmail.com>
+References: <20211130232347.950-1-digetx@gmail.com>
+ <20211130232347.950-9-digetx@gmail.com>
+ <21212ddb-205f-71d6-0199-d75768eaf32c@nvidia.com>
+ <41edc53b-5ed1-d524-2546-c3d1ee6cdea4@gmail.com>
+ <6652ac84-36f5-0e43-65fa-04786f384f21@nvidia.com>
+ <56dce9c7-397d-75b0-b5b8-18ce1084e72b@nvidia.com>
+ <6dbc8205-5669-8b08-16b8-fe5e1acdd06f@gmail.com>
+ <796eb3f7-80e2-bc55-fd52-43e76220f8c2@nvidia.com>
+ <40983f6e-92ee-40d4-861f-06faea0113fc@gmail.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <6adda63b4de6b55d11426ecbb08d6c51@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: digetx@gmail.com, jonathanh@nvidia.com, thierry.reding@gmail.com, ulf.hansson@linaro.org, vireshk@kernel.org, sboyd@kernel.org, pdeschrijver@nvidia.com, mperttunen@nvidia.com, lee.jones@linaro.org, u.kleine-koenig@pengutronix.de, nm@ti.com, adrian.hunter@intel.com, mturquette@baylibre.com, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org, linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, david@ixit.cz
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Monday, January 31st, 2022 at 21:36, Simon Ser <contact@emersion.fr> wro=
-te:
+Hi all,
 
-> This driver only advertises XRGB8888 in ssd1307_formats. It would be nice=
- to
-> expose R8 as well so that user-space can directly produce suitable buffer=
-s.
-> It would also be nice to have some kind of preferred format, so that user=
--space
-> knows R8 is preferred over XRGB8888.
+On 2021-12-22 19:31, Dmitry Osipenko wrote:
+> 22.12.2021 22:30, Jon Hunter пишет:
+>> 
+>> On 22/12/2021 19:01, Dmitry Osipenko wrote:
+>> 
+>> ...
+>> 
+>>> diff --git a/drivers/gpu/host1x/syncpt.c 
+>>> b/drivers/gpu/host1x/syncpt.c
+>>> index e08e331e46ae..8194826c9ce3 100644
+>>> --- a/drivers/gpu/host1x/syncpt.c
+>>> +++ b/drivers/gpu/host1x/syncpt.c
+>>> @@ -137,6 +137,15 @@ void host1x_syncpt_restore(struct host1x *host)
+>>>       struct host1x_syncpt *sp_base = host->syncpt;
+>>>       unsigned int i;
+>>> 
+>>> +    for (i = 0; i < host->info->nb_pts; i++) {
+>>> +        /*
+>>> +         * Unassign syncpt from channels for purposes of Tegra186
+>>> +         * syncpoint protection. This prevents any channel from
+>>> +         * accessing it until it is reassigned.
+>>> +         */
+>>> +        host1x_hw_syncpt_assign_to_channel(host, sp_base + i, NULL);
+>>> +    }
+>>> +
+>>>       for (i = 0; i < host1x_syncpt_nb_pts(host); i++)
+>>>           host1x_hw_syncpt_restore(host, sp_base + i);
+>>> 
+>>> @@ -352,13 +361,6 @@ int host1x_syncpt_init(struct host1x *host)
+>>>       for (i = 0; i < host->info->nb_pts; i++) {
+>>>           syncpt[i].id = i;
+>>>           syncpt[i].host = host;
+>>> -
+>>> -        /*
+>>> -         * Unassign syncpt from channels for purposes of Tegra186
+>>> -         * syncpoint protection. This prevents any channel from
+>>> -         * accessing it until it is reassigned.
+>>> -         */
+>>> -        host1x_hw_syncpt_assign_to_channel(host, &syncpt[i], NULL);
+>>>       }
+>>> 
+>>>       for (i = 0; i < host->info->nb_bases; i++)
+>>> 
+>> 
+>> 
+>> Thanks! This fixed it!
+> 
+> I'll prepare proper patch with yours t-b, thank you.
 
-Hm, since the format used by the hw is actually R1, adding that to drm_four=
-cc.h
-would be even better.
+The fix has been in -next for some time now, but it still hasn't
+made it into Linus' tree (at least not in -rc2).
 
-Let me know if you want me to type up any of the user-space bits.
+Any hope for this to land -rc3?
+
+Thanks,
+
+      M.
+-- 
+Jazz is not dead. It just smells funny...
