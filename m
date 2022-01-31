@@ -2,83 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D21E4A47A4
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 13:57:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B82404A4856
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 14:38:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378297AbiAaM5d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Jan 2022 07:57:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378327AbiAaM5b (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 07:57:31 -0500
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17198C06173B
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 04:57:31 -0800 (PST)
-Received: by mail-vs1-xe2d.google.com with SMTP id a19so11640945vsi.2
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 04:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Rbf16twz9E2vQcds9ElwMC4NaHHcAIWkmNblQF1s7dE=;
-        b=oVFUKsTxctFJ9Ff3uaNasrGMTC7Ugev6jQKgxQC1ggyS7wkwIyGdayyO7IhmmWev2F
-         VKYf7yIUis+IAgHuCVyEibDIOWaAuA5qSXvMmTIOreMq+6wd+6nLpcrobYzpqv9uxPpm
-         JLuQARSUk86hyBVzWLLXeIatzjkZoaLjlZVW3SaKTECTcEW5qMAV/6XuI1JE3yKWVscv
-         hN+OdQ92V+bh3A7jf6kYjct/BC22qgZDNeB2OP/cT3Yb1EUCPUZP6flG4QdPZLjOhOfH
-         TQSuonGfNfuGKSXHRy77tMlC6NRRZOnnThqgZbJDHLITv/Xk52AotmttIF6OQ8T046Wu
-         07lw==
+        id S1379080AbiAaNiN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jan 2022 08:38:13 -0500
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:39583 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1378954AbiAaNho (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 08:37:44 -0500
+Received: by mail-oi1-f169.google.com with SMTP id e81so26662029oia.6;
+        Mon, 31 Jan 2022 05:37:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Rbf16twz9E2vQcds9ElwMC4NaHHcAIWkmNblQF1s7dE=;
-        b=grrm78YdeAvMRA+LLWNtea3H+LkB+ih2FPPsv5kz9XSvyUfY5y9Fzx+21bsmEEV2HJ
-         w88cWBAlczGEHC7wWAwRXRKwjo0RK+yIVeJVUQSQuT+pL/H7JwLn4+DXXkCiUeAZexzW
-         d7qLw98kBva3KeAt3/4+47SSzSIcmtZ2CTigW48hutIOPYcAyiruzhhRTtEzSX1ZjGWp
-         0E/DnVr/t+qyIbyUP6RkdwB2DHHyknoejTjUJwk/R6AlPfLJuzvcbUt8bnxs+f52lihu
-         qEAfZfLQ7PSPX2mZio2j+/HCcGAQShu580TCNVrvHz2oLTQsYRcva5CB71nEb6U2IAG8
-         +WBQ==
-X-Gm-Message-State: AOAM531+5qSe+eqsgesa2HodL5b8jiBWVgcbms0VXsDHtraAT7U/+WQE
-        9MubRjHvflraNUOOuucsg3+QV+VSlJ70Atkq3KM=
-X-Google-Smtp-Source: ABdhPJyHGA3UHEJc73bJ1Z50AXXiF1vX0bY0qTVSZkMndyXvRiQIVUJkeLS16jnuPSzU1ye3M1L7KnvtJb4NlnsgIt8=
-X-Received: by 2002:a05:6102:c47:: with SMTP id y7mr5928253vss.20.1643633850001;
- Mon, 31 Jan 2022 04:57:30 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a05:612c:228b:b0:271:b221:8e62 with HTTP; Mon, 31 Jan 2022
- 04:57:29 -0800 (PST)
-Reply-To: docamr8@gmail.com
-From:   Dominic Amar <docamr326@gmail.com>
-Date:   Mon, 31 Jan 2022 04:57:29 -0800
-Message-ID: <CALNEt4UnSyOv0w6qFPwNUpLJ3KqKvBDZph3p8-7tLqAonsx0GA@mail.gmail.com>
-Subject: Fund released
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=dRJYxYg6M513ADX19fELFRfGgMGqN9dmswwNJo+15eU=;
+        b=AV2IqK4xRs/rT7tPWZqMx2P8lA4si+tnHS2yLGGezrs7BAuFH+2pB19ePT2Ja5uflH
+         OscYP3X3WIig6k4WNZgU+b56cW27zhwZk7ZRaCg0w09+e60vdSMJVN6Vpbepg1pvzX52
+         UhTtgLeXkCqpduRh9UIYIANTFwMr26epVJBH9eDBD0gHazods54GU/M4CqezLuCWKhOx
+         aiwI1AzH/sNvl4NimEVrFsXokgdbD8WgiKOyMqSZtHUJqG3qkK8frXnLjYWLO590G8C7
+         OyMpmvscUR5sYJvCGA7h5ACS5/khD7TZ6MHbImpWsB5ZcTJvrHNWrvUVIF3YinktcwAx
+         J3Mw==
+X-Gm-Message-State: AOAM533qM2fB1I8JPZ2e1xm1OGeXv80SmJMbq69gaPmrgNYI/sRiweJn
+        BA733UEkOi2hll12t9k4mw==
+X-Google-Smtp-Source: ABdhPJxf7xEF6ASgsS22KYFq2drQaTLC9zin7gpaq+t/OkVYsMOveK/Vxr4nFYjFUepMzMyIvAUqNw==
+X-Received: by 2002:a05:6808:168e:: with SMTP id bb14mr17517593oib.106.1643636259228;
+        Mon, 31 Jan 2022 05:37:39 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id n66sm14639502oif.35.2022.01.31.05.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Jan 2022 05:37:38 -0800 (PST)
+Received: (nullmailer pid 140173 invoked by uid 1000);
+        Mon, 31 Jan 2022 13:37:31 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     conor.dooley@microchip.com
+Cc:     linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
+        atishp@rivosinc.com, heiko@sntech.de, jassisinghbrar@gmail.com,
+        thierry.reding@gmail.com, linux-i2c@vger.kernel.org,
+        robh+dt@kernel.org, daire.mcnamara@microchip.com,
+        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
+        brgl@bgdev.pl, geert@linux-m68k.org, aou@eecs.berkeley.edu,
+        linux-rtc@vger.kernel.org, palmer@dabbelt.com,
+        lee.jones@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bin.meng@windriver.com,
+        a.zummo@towertech.it, krzysztof.kozlowski@canonical.com,
+        linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
+        ivan.griffin@microchip.com, linux-pwm@vger.kernel.org,
+        lewis.hanly@microchip.com
+In-Reply-To: <20220131114726.973690-7-conor.dooley@microchip.com>
+References: <20220131114726.973690-1-conor.dooley@microchip.com> <20220131114726.973690-7-conor.dooley@microchip.com>
+Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
+Date:   Mon, 31 Jan 2022 07:37:31 -0600
+Message-Id: <1643636251.124352.140172.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dear Friend,
+On Mon, 31 Jan 2022 11:47:21 +0000, conor.dooley@microchip.com wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Add device tree bindings for the Microchip fpga fabric based "core" PWM
+> controller.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+> 
 
-I am Mr. Dominic Amar. A computer scientist with UBA Bank. I am 28
-years old, just started work with UBA Bank. I came across your file
-which was marked X and your released Disk painted RED, I took time to
-study it and found out that you have paid VIRTUALLY all fees and
-certificate but the fund has not been release to you. The most
-annoying thing is that they cannot tell you the truth that on no
-account will they ever release the fund to you, Please this is like a
-Mafia setting in Benin Republic; you may not understand it because you
-are not from this country.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-The only thing I will need to release this fund to you is a special
-HARD DISK we call it HD120 GIG. I will buy two of it, recopy your
-information, destroy the previous one, and punch the computer to
-reflect in your bank within 24 banking hours. I will clean up the
-tracer and destroy your old file, after which I will run away from
-Benin Republic to meet with you.
+yamllint warnings/errors:
 
-If you are interested kindly get in touch with me immediately, You
-should send to me your convenient phone numbers for easy communication
-and also re-confirm your banking details, so that there won't be any
-mistake.
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pwm/microchip,corepwm.example.dts:19:18: fatal error: dt-bindings/clock/microchip,mpfs-clock.h: No such file or directory
+   19 |         #include "dt-bindings/clock/microchip,mpfs-clock.h"
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:378: Documentation/devicetree/bindings/pwm/microchip,corepwm.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1398: dt_binding_check] Error 2
 
-Regards,
-Mr. Dominic Amar.
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1586680
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
