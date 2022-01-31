@@ -2,90 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69D8D4A51B9
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jan 2022 22:41:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C00F4A531C
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 00:21:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381225AbiAaVk7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Jan 2022 16:40:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381246AbiAaViw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 16:38:52 -0500
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7678C061772
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 13:38:20 -0800 (PST)
-Received: by mail-oi1-x243.google.com with SMTP id x193so29525021oix.0
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 13:38:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
-        b=dEuqzCa7Zlz6s4mRGbRbRWXXanD59qsT+xmKk7tBbCVL8shmNgt9pnuL3r3GZQALql
-         Y63DqHUGCnZO0yzAtzp7ZNS2CuC8pMKUMaMtNqE3s9gB45FDt9/C7CdeYDqwmv7HZJbj
-         h6fZit5aG7dGp8FvXKTscfcGshyIKAGZl/Y4NFvWe+GDkg5MDDBzPsbgzyvzZ7B1mfX4
-         ltlQ0tRJrdsWlCdvxMPpvS+PhwNDM1Zp7MYHnfnHzWMTP4bbhrhxbQSB0Xw9LPR0gSp/
-         L2Vas/DZH4ZiZyplfhihUfOHaOD2GjtH1tg3ZI6lVgxDcwRnl8d4U3qCI5tj+07J/ZXk
-         SzvA==
+        id S238123AbiAaXVr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jan 2022 18:21:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36555 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237951AbiAaXVr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jan 2022 18:21:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643671306;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PrT+G3tPg9tF+5XuIAQ32IRnOTQfqMCqOg72JDwqGHg=;
+        b=az5rQSicjcNnkTP+5PCfY0d/hlIeIXcmwsiHxr7eKNMPJLB4Bd/QAE4NpiczzZvNwAYdSA
+        CPp11YGb0aiMdAQOD/no0or3IZ14ouGX8cFTXB6rrSKrnA8WBks3dQM0yYMRMGnpI8tx2U
+        gLzqD1QJv37GPvpOAmjbE37eWDze8O0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-597-GcYU7kXzOpqIrMq2QCJ-ZA-1; Mon, 31 Jan 2022 18:21:44 -0500
+X-MC-Unique: GcYU7kXzOpqIrMq2QCJ-ZA-1
+Received: by mail-wr1-f72.google.com with SMTP id b3-20020a5d4b83000000b001d676462248so5334090wrt.17
+        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 15:21:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
-        b=hp7dt3/ZqI//pL3sMfQP7x3mIP56FpSUDxOEgKEnZS1XYukmrJ7j6jauGbjcHYxE/b
-         6vGiohpiz+YvagJ85IHOxLaXXgi+bwYAm6qAqDXA74HtnQsajYpVaQRLzK1igLcPH5HI
-         Jh6tDGa6Pjlpx1hwk5JsuDLDWbjfDpcvSHLLypGoc/IrOgbm5llLdhm77lxEwCyekhRI
-         KH3/6kVrOf03yQpvt4NkTpTlBC5h1h6nN4/y52EhSkQJoYFGAHc/NEs9lXzreinUG/j4
-         /cfrxgyj89bsmqbWWd4PJUYr6KAefd16+2xpLSwADufNw8Wil8s+DKVnheGZ+5mKBMg8
-         6rlQ==
-X-Gm-Message-State: AOAM533M9J8qZ0cQ2V0SnLv8UXY2eVZlZTqbZET9keOsVpv3Vyi4gVBk
-        8qYexi9JLaNjuRdgFwxklLf2IO1NKOtswycbZ3AyUanFcvqhww==
-X-Google-Smtp-Source: ABdhPJzjG4nHBnpm1YeRsvfpKVsM6nmNJIeFJaztEJrNHMe+iyJctx1iGavTAT23A2IhS4j6LtYbunRiUquAn1xj08o=
-X-Received: by 2002:a54:4490:: with SMTP id v16mr14818764oiv.157.1643665089421;
- Mon, 31 Jan 2022 13:38:09 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=PrT+G3tPg9tF+5XuIAQ32IRnOTQfqMCqOg72JDwqGHg=;
+        b=FkY0V+huQHwM4Ucy+RBKo+zDbLlYvKHGn9bLyKny6bZjScBee7MgX7GOHDRiR06QUy
+         PUmBNKpRULxIvmzJZEVNeP7yLEfaLTzTN4M/2RDZRjyKxXb54EquX33H3XoSQRTp2Odl
+         +8naCoaL9I38KkeYtHcCjlXbBv+67zVm9FO7I/FHl6Rv5YYsHQkbYEoaX6VBfn4ZKp3A
+         0V35oKAe2KFEgqYnvYzdVZwM87AwrKL+wKOxOVTAUlx615WJjsZZOqYXyNfKU9TrO2Oo
+         9ncOsMnB8TgBSv/bagAbNAvynOqDRmYhWdICFECY+wHeDTFEb4K+QJYJXIui4BrRrnaS
+         uXCQ==
+X-Gm-Message-State: AOAM532BpRcV0zAn3PAfzWsEfBHDzzX+BbCIvdIVwK3UGVUFjVRJz5+d
+        WMefqmGFv4rGiO8/p0GFpNcvNzLYgp0/Rhq3B6UxSh+topxwMX1dGkhznFAPfI0mUX/hNXovk8/
+        JFsQwI0FpmkJSP1X3eDlV
+X-Received: by 2002:a7b:c44d:: with SMTP id l13mr28332789wmi.46.1643671303290;
+        Mon, 31 Jan 2022 15:21:43 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz+5Kta65CM2LqtBZ8N7f7NRu724ZDFebRcaJ9B9wuQH3sMcUBfk67n6fa4xazee4fo9ruHBg==
+X-Received: by 2002:a7b:c44d:: with SMTP id l13mr28332767wmi.46.1643671303032;
+        Mon, 31 Jan 2022 15:21:43 -0800 (PST)
+Received: from [192.168.1.102] ([92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id p3sm515814wmq.40.2022.01.31.15.21.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jan 2022 15:21:42 -0800 (PST)
+Message-ID: <c7818782-ab41-b526-9e81-e769259baa52@redhat.com>
+Date:   Tue, 1 Feb 2022 00:21:41 +0100
 MIME-Version: 1.0
-Received: by 2002:a4a:c30d:0:0:0:0:0 with HTTP; Mon, 31 Jan 2022 13:38:09
- -0800 (PST)
-Reply-To: westerunion909@gmail.com
-From:   "Antonia Lloyd." <anthonylloydatmxxx04@gmail.com>
-Date:   Mon, 31 Jan 2022 13:38:09 -0800
-Message-ID: <CAExPwBBpihjV-rv_-+hYqb1WD3wpSWx81B_Q3ES15U3TXSPsyw@mail.gmail.com>
-Subject: Dear Email ID Owner.(USD$4000 IMF COMPENSATION FUND TO PICK UP TODAY).
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
+ displays
+Content-Language: en-US
+To:     Simon Ser <contact@emersion.fr>
+Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>
+References: <20220131201225.2324984-1-javierm@redhat.com>
+ <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
+ <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+In-Reply-To: <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dear Email ID Owner.
+Hello Simon,
 
-The IMF is compensating all the email address that was funds as one of
-the ward win Victims and your email address and your name is among the
-listed one of approved to pay the sum of $3.6 million U.S Dollars. We
-have concluded to effect your own payment through Western Union Money
-Transfer for easy pick-up of those funds in good condition,$4000 twice
-daily,till the $3.6 million is completely transferred to you.We now
-need your information where we will be sending the funds,such
-as;Receiver name(Your full Name)address and phone number.Contact
-Western Union agent with this Email: ( westerunion995@gmail.com  ) for
-your payment fund.
+Thanks for your feedback.
 
-Ms.Maria Zatto
-E-mail:westerunion995@gmail.com
-Telephone: +229 682 97 169
+On 1/31/22 21:39, Simon Ser wrote:
+> On Monday, January 31st, 2022 at 21:36, Simon Ser <contact@emersion.fr> wrote:
+> 
+>> This driver only advertises XRGB8888 in ssd1307_formats. It would be nice to
+>> expose R8 as well so that user-space can directly produce suitable buffers.
+>> It would also be nice to have some kind of preferred format, so that user-space
+>> knows R8 is preferred over XRGB8888.
+> 
+> Hm, since the format used by the hw is actually R1, adding that to drm_fourcc.h
+> would be even better.
+> 
 
-Contact Ms.Maria,immediately you get this mail through western union
-email address above to enable her speed-up.your payment and release
-the $4000 dollars MTCN today for you to pick up the payment OK.
+Yes, agreed that would be nice. We discussed this already with Thomas and my
+suggestion was to land the driver as is, advertising XRGB8888. Which is also
+what the other driver using monochrome does (drivers/gpu/drm/tiny/repaper.c):
 
-You are expected to provide us with the details as prescribed below to
-enable safe and easy release of your funds today.
+https://www.spinics.net/lists/dri-devel/msg331328.html
 
-(1)Your Full name:
-(2)Your Phone number:
-(3)Your Country:
-(4)Your Age:
+As a follow-up we can wire up al the needed bits to have a DRM/KMS driver that
+could expose a R1 format.
 
-Thank you,
-Dr.Antonia Lloyd.
-Contact Dir.Western Union Money Transfer,
-Cotonou-Benin Republic.
+> Let me know if you want me to type up any of the user-space bits.
+> 
+
+Thanks! I also could help to add the needed support in the user-space stack.
+
+Best reagards,
+-- 
+Javier Martinez Canillas
+Linux Engineering
+Red Hat
+
