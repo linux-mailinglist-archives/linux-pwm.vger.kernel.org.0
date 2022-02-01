@@ -2,54 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE08D4A582A
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 08:58:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C08CD4A5868
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 09:19:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235264AbiBAH6x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 02:58:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
+        id S235369AbiBAITS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 03:19:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234881AbiBAH6u (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 02:58:50 -0500
+        with ESMTP id S233178AbiBAITS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 03:19:18 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A08C061714
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jan 2022 23:58:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A6CC061714
+        for <linux-pwm@vger.kernel.org>; Tue,  1 Feb 2022 00:19:18 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nEo3e-00046y-6s; Tue, 01 Feb 2022 08:58:34 +0100
+        id 1nEoNf-0005zp-8K; Tue, 01 Feb 2022 09:19:15 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nEo3V-00Dmxz-QK; Tue, 01 Feb 2022 08:58:25 +0100
+        id 1nEoNe-00DnNP-9I; Tue, 01 Feb 2022 09:19:13 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nEo3U-002kWK-5c; Tue, 01 Feb 2022 08:58:24 +0100
-Date:   Tue, 1 Feb 2022 08:58:24 +0100
+        id 1nEoNc-002kwL-Pe; Tue, 01 Feb 2022 09:19:12 +0100
+Date:   Tue, 1 Feb 2022 09:19:12 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     conor.dooley@microchip.com
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
-        lee.jones@linaro.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, krzysztof.kozlowski@canonical.com,
-        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
-        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
-        atishp@rivosinc.com, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
-Message-ID: <20220201075824.aixrvkvmjde2ihxx@pengutronix.de>
-References: <20220131114726.973690-1-conor.dooley@microchip.com>
- <20220131114726.973690-7-conor.dooley@microchip.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        kernel@pengutronix.de, Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/3] pwm: lpc18xx-sct: Initialize driver data and
+ hardware before pwmchip_add()
+Message-ID: <20220201081912.wl44iqrpfbe6gzlz@pengutronix.de>
+References: <20211110084950.1053426-1-u.kleine-koenig@pengutronix.de>
+ <YfjljnMC1AfJCNvA@orome>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pqylyjr6p2p3xcpl"
+        protocol="application/pgp-signature"; boundary="32dosboc3um7si33"
 Content-Disposition: inline
-In-Reply-To: <20220131114726.973690-7-conor.dooley@microchip.com>
+In-Reply-To: <YfjljnMC1AfJCNvA@orome>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -59,129 +50,174 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---pqylyjr6p2p3xcpl
+--32dosboc3um7si33
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 31, 2022 at 11:47:21AM +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Tue, Feb 01, 2022 at 08:47:26AM +0100, Thierry Reding wrote:
+> On Wed, Nov 10, 2021 at 09:49:48AM +0100, Uwe Kleine-K=F6nig wrote:
+> > When a driver calls pwmchip_add() it has to be prepared to immediately
+> > get its callbacks called. So move allocation of driver data and hardware
+> > initialization before the call to pwmchip_add().
+> >=20
+> > This fixes a potential NULL pointer exception and a race condition on
+> > register writes.
+> >=20
+> > Fixes: 841e6f90bb78 ("pwm: NXP LPC18xx PWM/SCT driver")
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/pwm/pwm-lpc18xx-sct.c | 20 +++++++++-----------
+> >  1 file changed, 9 insertions(+), 11 deletions(-)
+> >=20
+> > diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sc=
+t.c
+> > index 8e461f3baa05..8cc8ae16553c 100644
+> > --- a/drivers/pwm/pwm-lpc18xx-sct.c
+> > +++ b/drivers/pwm/pwm-lpc18xx-sct.c
+> > @@ -395,12 +395,6 @@ static int lpc18xx_pwm_probe(struct platform_devic=
+e *pdev)
+> >  	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_LIMIT,
+> >  			   BIT(lpc18xx_pwm->period_event));
+> > =20
+> > -	ret =3D pwmchip_add(&lpc18xx_pwm->chip);
+> > -	if (ret < 0) {
+> > -		dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
+> > -		goto disable_pwmclk;
+> > -	}
+> > -
+> >  	for (i =3D 0; i < lpc18xx_pwm->chip.npwm; i++) {
+> >  		struct lpc18xx_pwm_data *data;
+> > =20
+> > @@ -410,14 +404,12 @@ static int lpc18xx_pwm_probe(struct platform_devi=
+ce *pdev)
+> >  				    GFP_KERNEL);
+> >  		if (!data) {
+> >  			ret =3D -ENOMEM;
+> > -			goto remove_pwmchip;
+> > +			goto disable_pwmclk;
+> >  		}
+> > =20
+> >  		pwm_set_chip_data(pwm, data);
+> >  	}
+> > =20
+> > -	platform_set_drvdata(pdev, lpc18xx_pwm);
+> > -
+> >  	val =3D lpc18xx_pwm_readl(lpc18xx_pwm, LPC18XX_PWM_CTRL);
+> >  	val &=3D ~LPC18XX_PWM_BIDIR;
+> >  	val &=3D ~LPC18XX_PWM_CTRL_HALT;
+> > @@ -425,10 +417,16 @@ static int lpc18xx_pwm_probe(struct platform_devi=
+ce *pdev)
+> >  	val |=3D LPC18XX_PWM_PRE(0);
+> >  	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_CTRL, val);
+> > =20
+> > +	ret =3D pwmchip_add(&lpc18xx_pwm->chip);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
+> > +		goto disable_pwmclk;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, lpc18xx_pwm);
 >=20
-> Add device tree bindings for the Microchip fpga fabric based "core" PWM
-> controller.
+> Is there any particular reason why this needs to move? The driver only
+> call platform_get_drvdata() from the ->remove() implementation at this
+> point, so this should be fine, but it's possible that it would at some
+> future point try to access this data from some code path that may get
+> called as part of pwmchip_add(), so doing this prior to chip addition
+> may be a better option.
 >=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
->=20
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corep=
-wm.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml=
- b/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
-> new file mode 100644
-> index 000000000000..26a77cde2465
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/microchip,corepwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip ip core PWM controller bindings
-> +
-> +maintainers:
-> +  - Conor Dooley <conor.dooley@microchip.com>
-> +
-> +description: |
-> +  corePWM is an 16 channel pulse width modulator FPGA IP
-> +
-> +  https://www.microsemi.com/existing-parts/parts/152118
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: microchip,corepwm-rtl-v4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +  microchip,sync-update:
-> +    description: |
-> +      In synchronous mode, all channels are updated at the beginning of =
-the PWM period.
-> +      Asynchronous mode is relevant to applications such as LED control,=
- where
-> +      synchronous updates are not required. Asynchronous mode lowers the=
- area size,
-> +      reducing shadow register requirements. This can be set at run time=
-, provided
-> +      SHADOW_REG_EN is asserted. SHADOW_REG_EN is set by the FPGA bitstr=
-eam programmed
-> +      to the device.
-> +      Each bit corresponds to a PWM channel & represents whether synchro=
-nous mode is
-> +      possible for the PWM channel.
-> +
-> +    $ref: /schemas/types.yaml#/definitions/uint16
-> +    default: 0
+> No need to resend, I can fix that up as I apply if there are no strong
+> reasons to keep this after pwmchip_add().
 
-I'm not sure I understand this correctly. This is a soft-core and you
-can synthesize it either with or without the ability to do synchronous
-updates or not, right? All 16 channels share the same period length and
-in the simple implementation changing the duty cycle is done at once
-(maybe introducing a glitch) and in the more expensive implementation
-there is a register to implement both variants?
+What I actually did was:
+
+ 	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_LIMIT,
+ 			   BIT(lpc18xx_pwm->period_event));
+=20
++	for (i =3D 0; i < lpc18xx_pwm->chip.npwm; i++) {
++		struct lpc18xx_pwm_data *data;
++
++		pwm =3D &lpc18xx_pwm->chip.pwms[i];
++
++		data =3D devm_kzalloc(lpc18xx_pwm->dev, sizeof(*data),
++				    GFP_KERNEL);
++		if (!data) {
++			ret =3D -ENOMEM;
++			goto disable_pwmclk;
++		}
++
++		pwm_set_chip_data(pwm, data);
++	}
++
++	val =3D lpc18xx_pwm_readl(lpc18xx_pwm, LPC18XX_PWM_CTRL);
++	val &=3D ~LPC18XX_PWM_BIDIR;
++	val &=3D ~LPC18XX_PWM_CTRL_HALT;
++	val &=3D ~LPC18XX_PWM_PRE_MASK;
++	val |=3D LPC18XX_PWM_PRE(0);
++	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_CTRL, val);
++
+ 	ret =3D pwmchip_add(&lpc18xx_pwm->chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
+ 		goto disable_pwmclk;
+ 	}
+=20
+-	for (i =3D 0; i < lpc18xx_pwm->chip.npwm; i++) {
+-		struct lpc18xx_pwm_data *data;
+-
+-		pwm =3D &lpc18xx_pwm->chip.pwms[i];
+-
+-		data =3D devm_kzalloc(lpc18xx_pwm->dev, sizeof(*data),
+-				    GFP_KERNEL);
+-		if (!data) {
+-			ret =3D -ENOMEM;
+-			goto remove_pwmchip;
+-		}
+-
+-		pwm_set_chip_data(pwm, data);
+-	}
+-
+ 	platform_set_drvdata(pdev, lpc18xx_pwm);
+=20
+-	val =3D lpc18xx_pwm_readl(lpc18xx_pwm, LPC18XX_PWM_CTRL);
+-	val &=3D ~LPC18XX_PWM_BIDIR;
+-	val &=3D ~LPC18XX_PWM_CTRL_HALT;
+-	val &=3D ~LPC18XX_PWM_PRE_MASK;
+-	val |=3D LPC18XX_PWM_PRE(0);
+-	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_CTRL, val);
+-
+ 	return 0;
+=20
+-remove_pwmchip:
+-	pwmchip_remove(&lpc18xx_pwm->chip);
+ disable_pwmclk:
+ 	clk_disable_unprepare(lpc18xx_pwm->pwm_clk);
+ 	return ret;
+ }
 
 
-> +  microchip,dac-mode:
-> +    description: |
-> +      Optional, per-channel Low Ripple DAC mode is possible on this IP c=
-ore. It creates
-> +      a minimum period pulse train whose High/Low average is that of the=
- chosen duty
-> +      cycle. This "DAC" will have far better bandwidth and ripple perfor=
-mance than the
-> +      standard PWM algorithm can achieve.
-> +      Each bit corresponds to a PWM channel & represents whether dac mod=
-e is enabled
-> +      that PWM channel.
-
-In the last sentence a "for" is missing?
-
-These two properties are not detectable in software?
+and git simplified that making it look as if platform_set_drvdata was
+moved.
 
 Best regards
 Uwe
-
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---pqylyjr6p2p3xcpl
+--32dosboc3um7si33
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmH46B0ACgkQwfwUeK3K
-7Am3Sgf/UTtQSsIPttdHYyNUxSYZF6fH8Mu324npdIKQ+39Z6OX/+MjR27kWtIP9
-PnRVaiT3ysheX8NpDwOr4mFokpvxx6yswleZStNKVh+xzGfPDwvGMbCElcf/RL7P
-UdSovN/QCVE/X+dCUDz+sZtlbnXMW3+mJmDr2Qs1xh0/R+wuHwIwetY/8jW8t1Hy
-AkxUBTyiszRkAlXctrW+k+NaoXvtJnLLS3oCyp/vuHXvsCuwzp5GwHjL7alf89uE
-h/EMEzivdI/Bks9p9w9jDMg6GNp3KoL4RYeQwCWz4DkO3kezyhIwIgbMRLF57IqZ
-HYcnZow7dopjm+dWBk/s32mz7/prow==
-=622s
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmH47P0ACgkQwfwUeK3K
+7AnfkAf/S8xnU8Ggdh9GHbPerfbULmF1B3ILVGZ6grxe9yAjxP7si+gGBUEtY/b2
+7Yxk7QZo3kLwSYo9z3OcqtVbTVh7LjomPfCQlxyIbnCaVY31bIewAMLIV3KTi0AL
+ti/KKL9VqXKaDBTfDRBL3Udut5+4UoZN2Tn7U5u6yCf2Z8VHqDEFYDbSgc5FNGQX
+WiPmLrdYJyVdR3aIf0hELdStr/mytxHkTE6u7VWDU1h0pw2icdO/JBpOS61LSnhP
+WuHYryXy1mIl2Z9o7/RqNqBxP0l+s0XL0Kj9qS0/aNh4c5g3kuQReQV7PCDxPvAR
+19yI/UWDsWsgyA0Rgznjw6qH45mseA==
+=hcme
 -----END PGP SIGNATURE-----
 
---pqylyjr6p2p3xcpl--
+--32dosboc3um7si33--
