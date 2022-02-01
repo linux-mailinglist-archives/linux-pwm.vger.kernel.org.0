@@ -2,122 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9A2B4A58B9
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 09:44:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BF454A592B
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 10:27:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235703AbiBAIoL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 03:44:11 -0500
-Received: from mail-vs1-f49.google.com ([209.85.217.49]:40806 "EHLO
-        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235792AbiBAIoE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 03:44:04 -0500
-Received: by mail-vs1-f49.google.com with SMTP id g23so15132528vsf.7;
-        Tue, 01 Feb 2022 00:44:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=raT8Y/Y+3uKWPsdtZjNjvpSo+gn1Wm+Os229uVdckR0=;
-        b=7qkMOrBhM3geLvg4FRhArosAP6YdRd1YeKT3qFFsYC1kjlsLa6rFgUUt+Vqwou7YQb
-         CzwdMbhEcRMv9XVM+DC6O2tTuW970AU0HYb0yyOhkAaRglWJTWFxxeyr2waPLDg4knh7
-         9yQh2oU0MNIcYtAz5F2mksY2/91OHEAUaOMYVVk4/VcOc/i0gPPoTwXMvtAULU48UcFs
-         zH0PukTwE859SZSSEqBxVfEinNeh2c8opqyErVLMlVb0W9AoJjyS5iCxgC7enwIkx2vE
-         4vb2yYGQfgZ1vDLi7x93PIFKoHazk8P+AgpPZK0aO/bM1gyWH91kXmLkHCjwH5yzYspr
-         zo6Q==
-X-Gm-Message-State: AOAM530xUnZ4/RuJu3Il0qIPdVim8D5AKSL6eIXhKP/o/pqlHFwJvrhP
-        o7ZCD69ARq3qubyPjBAZStvjmSi9hocfSw==
-X-Google-Smtp-Source: ABdhPJxNV8EM4hWf7/DxTFP/+xk0PZwkvwJMEZlme2nAg38dwxCggIhiaok8d2c0oL0XWBNQokmtgw==
-X-Received: by 2002:a67:ec4c:: with SMTP id z12mr9987220vso.41.1643705043184;
-        Tue, 01 Feb 2022 00:44:03 -0800 (PST)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id q69sm4570447vka.21.2022.02.01.00.44.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 00:44:02 -0800 (PST)
-Received: by mail-vk1-f173.google.com with SMTP id v192so9960248vkv.4;
-        Tue, 01 Feb 2022 00:44:01 -0800 (PST)
-X-Received: by 2002:a1f:5d84:: with SMTP id r126mr9423475vkb.33.1643705041310;
- Tue, 01 Feb 2022 00:44:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20220131201225.2324984-1-javierm@redhat.com>
-In-Reply-To: <20220131201225.2324984-1-javierm@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Feb 2022 09:43:49 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
-Message-ID: <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED displays
-To:     Javier Martinez Canillas <javierm@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S234437AbiBAJ1Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 04:27:16 -0500
+Received: from mail-0301.mail-europe.com ([188.165.51.139]:58819 "EHLO
+        mail-0301.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235956AbiBAJ1P (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 04:27:15 -0500
+Date:   Tue, 01 Feb 2022 09:27:09 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
+        s=protonmail2; t=1643707632;
+        bh=+2uWf9UcTSR/4vvg3PtafoJ+NVCgHeC107J37zjRulA=;
+        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
+         References:From:To:Cc;
+        b=Y0Y1+ad8uEfmUqJMBEcm/DxKnTKzc8w+TsPzUnwM7iDeV9frOGDKlS9yjM1gCzu00
+         qiHn2n2xP+M8Y5SLDbZvpRlEcKXvBPb7kPiTOJIBDzCgYVZ37VH0ss345F8nsIHmVL
+         zgVoZndkLKuZi9ksnBzCGNxQLrSqXqm7AVVhhmAr3TzLboobsy4ei2qt2xS3+8gPoK
+         TeDs52GoaC+BzhFh7QMFC7g4iHW1kFJRVZcIIzH8oRSE7A2ZxjJ5WIN/N8lXseFnbQ
+         3cDt89/maaKcSSW5Pv0yrB7ZMmkPORTrzpU7cR0ZLPbybazxaJWEOXUxtdtTZV7yeS
+         iT0n+gc8PNS8g==
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+From:   Simon Ser <contact@emersion.fr>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
         Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>
+Reply-To: Simon Ser <contact@emersion.fr>
+Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED displays
+Message-ID: <8vOr78Nu7IEcITxWHXWTru7vu_VE9g-5v_8eotyLeJjbI-czksMS57WV2knv6sd3cMMaJSYrnPAOfnHQkj7iK-R_YYHfOvJjCCkE48dW_qQ=@emersion.fr>
+In-Reply-To: <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
+References: <20220131201225.2324984-1-javierm@redhat.com> <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,T_SCC_BODY_TEXT_LINE
+        shortcircuit=no autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        mailout.protonmail.ch
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Javier,
+On Tuesday, February 1st, 2022 at 09:43, Geert Uytterhoeven <geert@linux-m6=
+8k.org> wrote:
 
-On Mon, Jan 31, 2022 at 9:12 PM Javier Martinez Canillas
-<javierm@redhat.com> wrote:
-> This patch series adds a DRM driver for the Solomon OLED SSD1305, SSD1306,
-> SSD1307 and SSD1309 displays. It is a port of the ssd1307fb fbdev driver.
+> Does there exist another simple test program for showing something
+> using the DRM API?
 
-Thanks for your series!
+If you're fine with going low-level, there's tentative [1] which can apply =
+an
+arbitrary KMS state. See for instance [2] for basic mode-setting.
 
-I'll give it a try on an Adafruit FeatherWing 128x32 OLED, connected
-to an OrangeCrab ECP5 FPGA board running a 64 MHz VexRiscv RISC-V
-softcore.
-
-> Using the DRM fb emulation, all the tests from Geert Uytterhoeven's fbtest
-> (https://git.kernel.org/pub/scm/linux/kernel/git/geert/fbtest.git) passes:
->
->      ./fbtest -f /dev/fb1
->     Using drawops cfb32 (32 bpp packed pixels)
->     Available visuals:
->       Monochrome
->       Grayscale 256
->       Truecolor 8:8:8:0
-
-Oh, fake 32-bpp truecolor ;-)
-
-Does it run modetest, too?
-
-I'm trying to get modetest working on my atari DRM driver.
-Comparing to the cirrus driver doesn't help much, as modetest doesn't
-seem to work with the cirrus driver (modified to not do hardware
-access, as I don't have cirrus hardware):
-
-    # modetest -M cirrus -s 31:1024x768-60Hz
-    setting mode 1024x768-60.00Hz on connectors 31, crtc 34
-    failed to set gamma: Function not implemented
-
-Does there exist another simple test program for showing something
-using the DRM API?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1]: https://git.sr.ht/~emersion/tentative
+[2]: https://git.sr.ht/~emersion/tentative/tree/master/item/examples/modese=
+t
