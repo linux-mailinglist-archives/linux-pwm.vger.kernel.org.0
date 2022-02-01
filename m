@@ -2,164 +2,169 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28B6D4A59C9
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 11:17:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 964264A5A1C
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 11:36:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236468AbiBAKR3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 05:17:29 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:39988 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236455AbiBAKR2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 05:17:28 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D1AA01F380;
-        Tue,  1 Feb 2022 10:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643710646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        id S236679AbiBAKgx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 05:36:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60601 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236675AbiBAKgw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 05:36:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643711812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lN5Bj4ODW/k5Aex5ROPL2/y1svMh2OVOB2Q/9nurJMU=;
-        b=wnl4XfayhbfWy2iFg5JKTxtnOybGU9t1WDqp60+c7ViF0rxoBJPcdjLKxiYEpW1M2zxK7D
-        zixcg1TRf9itNipVWSWscehaLvIySwt8pe1SShLlOWzIwZnxOPlTRze8U4mIuGstSrzooI
-        28lHIXwulZO6I4Pw0jEmga+uNPF6Wr8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643710646;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lN5Bj4ODW/k5Aex5ROPL2/y1svMh2OVOB2Q/9nurJMU=;
-        b=4PRexQKBgM/A1jyK/4nwGqBPhMr/d6So7KLk3bfYRXLk5SaAtsBT51BNaBwxtfUy7vBmHe
-        GHx79BNj8JbZzFDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7A34E13B3D;
-        Tue,  1 Feb 2022 10:17:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id BP+eHLYI+WF/CgAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Tue, 01 Feb 2022 10:17:26 +0000
-Message-ID: <561104af-33c5-f9af-1047-ecef4fe01189@suse.de>
-Date:   Tue, 1 Feb 2022 11:17:25 +0100
+        bh=kaqBrIFOHvMLEnJtoyzrnK2gwLgrZ2ScPtfEFGlgxAY=;
+        b=UTlJo8OdsCAk5giON9iSJqA41YHNOkiVF7bKoCiHubF1VzcstSpz0D7EEtkoELp1Y6PoIb
+        CtbcVuXlP+ZjcpWhIibsFG1MgCjoBuiET1ZZyX3iv7v58tTetPnmAnQRe54hehO4MYepap
+        J6oy1UaNMJ1Svs8CEgE8Rx6aXnle3iM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-336-IgU-Ckm2NVmAyjW-PC98TQ-1; Tue, 01 Feb 2022 05:36:51 -0500
+X-MC-Unique: IgU-Ckm2NVmAyjW-PC98TQ-1
+Received: by mail-wr1-f70.google.com with SMTP id e15-20020adf9bcf000000b001de055937d4so5796789wrc.13
+        for <linux-pwm@vger.kernel.org>; Tue, 01 Feb 2022 02:36:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=kaqBrIFOHvMLEnJtoyzrnK2gwLgrZ2ScPtfEFGlgxAY=;
+        b=BGA/DLnXq5MqjllRyTF/AhWTr6whmAhpEyl3H3wwlu/5EGa08raVkUYQUCAcWR+/3C
+         /6N+qWroOxbepkXSn7MvjruIR0kXj4Sgo4o7Cd5Vw6iC8SiNzK2sIfDQznQ7wljJFSQq
+         Lnb0cWlzmzhsk5ilHnUyqy+dzTSpLpRtM8OSwt0Cm93tSHkINgLcpwyt5Ddt8qJ4klmz
+         erb7mBi/SlckmL1dnEJU44apgEwZcND6lHRVmz2VJqY3xdTxPOnakwjrksHzSkWE/zpF
+         tc7SzmUwct7YD/zSkpYnjMsS7tbOSGV88iHh/ES50xbqxKfitsqgtdYc02ZNg2ZqBLaf
+         ppOg==
+X-Gm-Message-State: AOAM533heNg/cjVGDOWSDmQXZufienNOkgPEb8E9pRVHRrUhy51nEMMI
+        PTyYHHxnrjcJvs21c/4mY1zEYpRXfFwhl+rHF5eMSuPjhTUEY8QQXq7SYEtbZq584O5bJ+KW6wJ
+        GUH2whXxa3FcdmpEyfaFQ
+X-Received: by 2002:a7b:c44e:: with SMTP id l14mr1191956wmi.185.1643711810161;
+        Tue, 01 Feb 2022 02:36:50 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwIelI3cz+7Zacd+5ZQQgX/8LYNpRzY3LsR8zgGmcKlb1QIdL+Q4hi84F8M/23d0R26+66jvw==
+X-Received: by 2002:a7b:c44e:: with SMTP id l14mr1191934wmi.185.1643711809893;
+        Tue, 01 Feb 2022 02:36:49 -0800 (PST)
+Received: from [192.168.1.102] ([92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id k25sm1751285wms.23.2022.02.01.02.36.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Feb 2022 02:36:49 -0800 (PST)
+Message-ID: <1a49a91a-1f6d-51c0-561b-5e5a519f3b49@redhat.com>
+Date:   Tue, 1 Feb 2022 11:36:48 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
  displays
 Content-Language: en-US
-To:     Simon Ser <contact@emersion.fr>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Maxime Ripard <maxime@cerno.tech>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
         Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Linux PWM List <linux-pwm@vger.kernel.org>
 References: <20220131201225.2324984-1-javierm@redhat.com>
- <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
- <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
- <CAMuHMdXKZ=BkvVqdpiNPNJgxm9SzQ3Z0n4SqV2-4oPRveybd6g@mail.gmail.com>
- <qmhzv6kqs6QdAOP3bNB39glOpc8eeJ6flgjfjcaBniT-shDKZkxo5uB71weGOUKxPE6dq_WBhtHmY5vMmuYwqMoHgtMWnX0ESE5R1Y5g5F8=@emersion.fr>
- <CAMuHMdUHhUkPhq8M0d=p5EgH8bBz6EtH4drajKtQHE0121V1uQ@mail.gmail.com>
- <ce283de9-7412-472e-f72c-cb6a35ede426@suse.de>
- <csqnu2U_Kr-XE5p7ObjXsYbWDrfxh-j9CQE60lMJSxK0tF0SjlbZQkdjmAWpPRKYJoRLOCKtBgY-0AeIGdbr-SKjuyDKUTOTcI_PPV_bsWk=@emersion.fr>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <csqnu2U_Kr-XE5p7ObjXsYbWDrfxh-j9CQE60lMJSxK0tF0SjlbZQkdjmAWpPRKYJoRLOCKtBgY-0AeIGdbr-SKjuyDKUTOTcI_PPV_bsWk=@emersion.fr>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ux3AJwUqXAdtHOzuRSJy9fxH"
+ <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+In-Reply-To: <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ux3AJwUqXAdtHOzuRSJy9fxH
-Content-Type: multipart/mixed; boundary="------------EqnCunEa0tneKEUu8EEBCQtD";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Simon Ser <contact@emersion.fr>
-Cc: Linux PWM List <linux-pwm@vger.kernel.org>,
- Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@ffwll.ch>,
- Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- DRI Development <dri-devel@lists.freedesktop.org>,
- Javier Martinez Canillas <javierm@redhat.com>,
- =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Maxime Ripard
- <maxime@cerno.tech>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?=
- <u.kleine-koenig@pengutronix.de>, Thierry Reding <thierry.reding@gmail.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Lee Jones <lee.jones@linaro.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <561104af-33c5-f9af-1047-ecef4fe01189@suse.de>
-Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
- displays
-References: <20220131201225.2324984-1-javierm@redhat.com>
- <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
- <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
- <CAMuHMdXKZ=BkvVqdpiNPNJgxm9SzQ3Z0n4SqV2-4oPRveybd6g@mail.gmail.com>
- <qmhzv6kqs6QdAOP3bNB39glOpc8eeJ6flgjfjcaBniT-shDKZkxo5uB71weGOUKxPE6dq_WBhtHmY5vMmuYwqMoHgtMWnX0ESE5R1Y5g5F8=@emersion.fr>
- <CAMuHMdUHhUkPhq8M0d=p5EgH8bBz6EtH4drajKtQHE0121V1uQ@mail.gmail.com>
- <ce283de9-7412-472e-f72c-cb6a35ede426@suse.de>
- <csqnu2U_Kr-XE5p7ObjXsYbWDrfxh-j9CQE60lMJSxK0tF0SjlbZQkdjmAWpPRKYJoRLOCKtBgY-0AeIGdbr-SKjuyDKUTOTcI_PPV_bsWk=@emersion.fr>
-In-Reply-To: <csqnu2U_Kr-XE5p7ObjXsYbWDrfxh-j9CQE60lMJSxK0tF0SjlbZQkdjmAWpPRKYJoRLOCKtBgY-0AeIGdbr-SKjuyDKUTOTcI_PPV_bsWk=@emersion.fr>
+Hello Geert,
 
---------------EqnCunEa0tneKEUu8EEBCQtD
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On 2/1/22 09:43, Geert Uytterhoeven wrote:
+> Hi Javier,
+> 
+> On Mon, Jan 31, 2022 at 9:12 PM Javier Martinez Canillas
+> <javierm@redhat.com> wrote:
+>> This patch series adds a DRM driver for the Solomon OLED SSD1305, SSD1306,
+>> SSD1307 and SSD1309 displays. It is a port of the ssd1307fb fbdev driver.
+> 
+> Thanks for your series!
+> 
+> I'll give it a try on an Adafruit FeatherWing 128x32 OLED, connected
+> to an OrangeCrab ECP5 FPGA board running a 64 MHz VexRiscv RISC-V
+> softcore.
+>
 
-SGkNCg0KQW0gMDEuMDIuMjIgdW0gMTE6MTEgc2NocmllYiBTaW1vbiBTZXI6DQo+IE9uIFR1
-ZXNkYXksIEZlYnJ1YXJ5IDFzdCwgMjAyMiBhdCAxMTowOCwgVGhvbWFzIFppbW1lcm1hbm4g
-PHR6aW1tZXJtYW5uQHN1c2UuZGU+IHdyb3RlOg0KPiANCj4+IEFtIDAxLjAyLjIyIHVtIDA5
-OjM2IHNjaHJpZWIgR2VlcnQgVXl0dGVyaG9ldmVuOg0KPj4NCj4+PiBJJ2QgZXhwZWN0IDgt
-Yml0IGdyYXlzY2FsZSB0byBiZSBZOCBpbnN0ZWFkLg0KPj4NCj4+IEkgbGlrZSB0aGlzIG5h
-bWluZywgYnV0IERSTV9GT1JNQVRfUjggaXMgdWFwaSBhbHJlYWR5LiA6LyBJZiBhbnl0aGlu
-ZywNCj4+IHdlIGNvdWxkIGFkZCBZbiBmb3JtYXRzIGluIGFkZGl0aW9uIHRvIGV4aXN0aW5n
-IFJuIGZvcm1hdHMuDQo+IA0KPiBOZWVkIHRvIGJlIGEgYml0IGNhcmVmdWwsIGUuZy4gWTIx
-MCBleGlzdHMgYW5kIGlzbid0IGEgZ3JheXNjYWxlIGZvcm1hdC4NCj4gVGhpcyBjb3VsZCBi
-ZSBjb25mdXNpbmcuDQoNCldlbGwsIG9rLiAgSG93IGFib3V0ICdJJyBhcyBpbiAnaW50ZW5z
-aXR5Jz8gVGhlcmUgYXJlbid0IHRvbyBtYW55IA0KZHJpdmVycyBzdXBwb3J0aW5nIHRoaXMg
-eWV0LiBTbyBpZiB3ZSB3YW50IHRvIGZpbmQgYSBiZXR0ZXIgbmFtZSwgbm93J3MgDQp0aGUg
-dGltZS4NCg0KQmVzdCByZWdhcmRzDQpUaG9tYXMNCg0KDQotLSANClRob21hcyBaaW1tZXJt
-YW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9u
-cyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFu
-eQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2VzY2jDpGZ0c2bDvGhyZXI6IEl2byBU
-b3Rldg0K
+Awesome! let me know if you have any issues. I keep an update-to-date version
+at https://github.com/martinezjavier/linux/tree/ssd1307
 
---------------EqnCunEa0tneKEUu8EEBCQtD--
+>> Using the DRM fb emulation, all the tests from Geert Uytterhoeven's fbtest
+>> (https://git.kernel.org/pub/scm/linux/kernel/git/geert/fbtest.git) passes:
+>>
+>>      ./fbtest -f /dev/fb1
+>>     Using drawops cfb32 (32 bpp packed pixels)
+>>     Available visuals:
+>>       Monochrome
+>>       Grayscale 256
+>>       Truecolor 8:8:8:0
+> 
+> Oh, fake 32-bpp truecolor ;-)
+>
 
---------------ux3AJwUqXAdtHOzuRSJy9fxH
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+Yes :) that's what the repaper drivers does to have maximum compatibility
+with existing user-space and I followed the same.
+ 
+> Does it run modetest, too?
+>
 
------BEGIN PGP SIGNATURE-----
+It does, yes. And for example `modetest -M ssd1307` will print all the
+info about encoders, connectors, CRTs, etc.
+ 
+> I'm trying to get modetest working on my atari DRM driver.
+> Comparing to the cirrus driver doesn't help much, as modetest doesn't
+> seem to work with the cirrus driver (modified to not do hardware
+> access, as I don't have cirrus hardware):
+> 
+>     # modetest -M cirrus -s 31:1024x768-60Hz
+>     setting mode 1024x768-60.00Hz on connectors 31, crtc 34
+>     failed to set gamma: Function not implemented
+>
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmH5CLUFAwAAAAAACgkQlh/E3EQov+Cu
-LRAAgjI1gDkkO+vJTYvGJwx9f9mWQJRiaH2vRAa1o9EcsC3D9dpdSUkCI86AVJA8dKvQwEeVC0Zt
-TTuXsQ9rh3iCItU0DedMKddlfFE4PVR1mduxjegwVzzSQR1wxQDx6bpHZ7MEgpo6WN52P9miAzYk
-GTva9Q3dX1HM9KxFSjHP9JqqGWGaO1Il8qGCPhCZSwPi46UHe+ZUjy4+Z4kGqwBfymTaOviNAvlY
-lVOUlP1oe1QtMEQkmXjlNaCM5Mke3ddLffQC9B8ek1hOBJJnfsf5hnlReT3ZVoUh04jCyu4Uccg2
-jHNswjxktkHpIu9i0tQ6DFTxh3VpI5Ivfdynxm5HpU4xgKyQdmY83SYTXjiH2D42ncc2wt652vBK
-LLUpGxvVqyzb3UlKSWaVydC83UEahsO6eURXDqn/HZqOVmXMQrEZ7WrmtPjT56rd1MTVn/eMihLQ
-L9RJRJAvnfhA3MaBV2SuP+Uxbpog7ax8/VWRljp3BtPSZxL2AtHv9VVBYPlhlMMioyX9VXVGSe6y
-KDsR5HkIjbojhujFUcf2gemkfdkoXAIog7TUIRHoDB0w4Hwsc2zkKrqlyCvEB6TtY0jPyVZJs646
-w2Zfbt0eDpdA2HLBQntgab+zLKDQtIldL6IslJhB9FD8XluUE8WqD67FLKT/SbGhJ4nLHqikQTar
-3lQ=
-=hIZq
------END PGP SIGNATURE-----
+# modetest -M ssd1307 -c -s 31:128x64-0.12Hz
+...
+setting mode 128x64-0.12Hz on connectors 31, crtc 33
+failed to set gamma: Function not implemented
 
---------------ux3AJwUqXAdtHOzuRSJy9fxH--
+this seems to be a bug in modetest. I found a patch posted some time ago
+but never landed: https://www.spinics.net/lists/dri-devel/msg251356.html
+ 
+> Does there exist another simple test program for showing something
+> using the DRM API?
+>
+
+I tested with plymouth and gdm that make use of the DRM API, they do
+start and I see something on the screen but don't really handle that
+well the fact that's a 128x64 resolution.
+
+I didn't test with more DRM programs because was mostly interested in
+making sure that the fbdev emulation was working correctly.
+
+Noticed that Simon shared some simple examples, I'll give them a try. 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Linux Engineering
+Red Hat
+
