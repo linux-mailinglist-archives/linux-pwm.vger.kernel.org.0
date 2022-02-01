@@ -2,72 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BF454A592B
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 10:27:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00CB44A5956
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 10:38:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234437AbiBAJ1Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 04:27:16 -0500
-Received: from mail-0301.mail-europe.com ([188.165.51.139]:58819 "EHLO
-        mail-0301.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235956AbiBAJ1P (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 04:27:15 -0500
-Date:   Tue, 01 Feb 2022 09:27:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
-        s=protonmail2; t=1643707632;
-        bh=+2uWf9UcTSR/4vvg3PtafoJ+NVCgHeC107J37zjRulA=;
-        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
-         References:From:To:Cc;
-        b=Y0Y1+ad8uEfmUqJMBEcm/DxKnTKzc8w+TsPzUnwM7iDeV9frOGDKlS9yjM1gCzu00
-         qiHn2n2xP+M8Y5SLDbZvpRlEcKXvBPb7kPiTOJIBDzCgYVZ37VH0ss345F8nsIHmVL
-         zgVoZndkLKuZi9ksnBzCGNxQLrSqXqm7AVVhhmAr3TzLboobsy4ei2qt2xS3+8gPoK
-         TeDs52GoaC+BzhFh7QMFC7g4iHW1kFJRVZcIIzH8oRSE7A2ZxjJ5WIN/N8lXseFnbQ
-         3cDt89/maaKcSSW5Pv0yrB7ZMmkPORTrzpU7cR0ZLPbybazxaJWEOXUxtdtTZV7yeS
-         iT0n+gc8PNS8g==
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-From:   Simon Ser <contact@emersion.fr>
+        id S236076AbiBAJil (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 04:38:41 -0500
+Received: from mga14.intel.com ([192.55.52.115]:39147 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234230AbiBAJil (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Tue, 1 Feb 2022 04:38:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643708321; x=1675244321;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v3bwci/IZNUC13Df1rGNpVJ3VxQmJjDUPftTWX/BcSA=;
+  b=G/Zia9t7o73BaYYOjSUpQDG1Cbpot4IVTD8/y/dwMNNuCIdfLQoyeG/8
+   heIU88gow6vzqXv8ggjXvpIj6iFvTm56X0nICYMsrmATSEyWPya5/rvBP
+   7gT9ZXyTZcTV3d9KPIQdwVIcauixH/BNNvsEZGEPvZhZaE+x/vyppuazr
+   ueTjClCZntpzfjFzzWJ+H3zkazqJ0EOTYwBREtaQha3IJDVYR0JyQuVeq
+   2bzpZmCy1IFwazsJuo+VsuGLnMwdQTuCGckQPMg1cPPk2GIJ+QQDd8Je1
+   LWe8TMG3UCIhH2kIXjvClvgKi9YHRUclTwwsWrENN4s0HZ5AzthQM1dBv
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="247873037"
+X-IronPort-AV: E=Sophos;i="5.88,333,1635231600"; 
+   d="scan'208";a="247873037"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 01:38:40 -0800
+X-IronPort-AV: E=Sophos;i="5.88,333,1635231600"; 
+   d="scan'208";a="565540154"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 01:38:36 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nEpbR-00HFPS-0n;
+        Tue, 01 Feb 2022 11:37:33 +0200
+Date:   Tue, 1 Feb 2022 11:37:32 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
         Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
         Liam Girdwood <lgirdwood@gmail.com>,
-        =?utf-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Maxime Ripard <maxime@cerno.tech>,
-        =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>
-Reply-To: Simon Ser <contact@emersion.fr>
-Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED displays
-Message-ID: <8vOr78Nu7IEcITxWHXWTru7vu_VE9g-5v_8eotyLeJjbI-czksMS57WV2knv6sd3cMMaJSYrnPAOfnHQkj7iK-R_YYHfOvJjCCkE48dW_qQ=@emersion.fr>
-In-Reply-To: <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
-References: <20220131201225.2324984-1-javierm@redhat.com> <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
+ displays
+Message-ID: <Yfj/XGRRDNABsLPm@smile.fi.intel.com>
+References: <20220131201225.2324984-1-javierm@redhat.com>
+ <YfhM97cVH3+lJKg0@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,T_SCC_BODY_TEXT_LINE
-        shortcircuit=no autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YfhM97cVH3+lJKg0@ravnborg.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tuesday, February 1st, 2022 at 09:43, Geert Uytterhoeven <geert@linux-m6=
-8k.org> wrote:
+On Mon, Jan 31, 2022 at 09:56:23PM +0100, Sam Ravnborg wrote:
+> On Mon, Jan 31, 2022 at 09:12:20PM +0100, Javier Martinez Canillas wrote:
 
-> Does there exist another simple test program for showing something
-> using the DRM API?
+...
 
-If you're fine with going low-level, there's tentative [1] which can apply =
-an
-arbitrary KMS state. See for instance [2] for basic mode-setting.
+> > Patch #3 adds the driver. The name ssd1307 was used instead of ssd130x
+> > (which would be more accurate) to avoid confusion for users who want to
+> > migrate from the existing ssd1307fb fbdev driver.
+> Looking forward the name ssd130x would make more sense. There is only so
+> many existing users and a potential of much more new users.
+> So in my color of the world the naming that benefits the most users
+> wins.
 
-[1]: https://git.sr.ht/~emersion/tentative
-[2]: https://git.sr.ht/~emersion/tentative/tree/master/item/examples/modese=
-t
+It depends if the binding is going to be preserved. Also this series doesn't
+answer to the question what to do with the old driver.
+
+If you leave it, I would expect the backward compatibility, otherwise the
+series misses removal of the old driver.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
