@@ -2,169 +2,232 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 964264A5A1C
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 11:36:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 002124A5A40
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 11:42:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236679AbiBAKgx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 05:36:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60601 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236675AbiBAKgw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 05:36:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643711812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kaqBrIFOHvMLEnJtoyzrnK2gwLgrZ2ScPtfEFGlgxAY=;
-        b=UTlJo8OdsCAk5giON9iSJqA41YHNOkiVF7bKoCiHubF1VzcstSpz0D7EEtkoELp1Y6PoIb
-        CtbcVuXlP+ZjcpWhIibsFG1MgCjoBuiET1ZZyX3iv7v58tTetPnmAnQRe54hehO4MYepap
-        J6oy1UaNMJ1Svs8CEgE8Rx6aXnle3iM=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-336-IgU-Ckm2NVmAyjW-PC98TQ-1; Tue, 01 Feb 2022 05:36:51 -0500
-X-MC-Unique: IgU-Ckm2NVmAyjW-PC98TQ-1
-Received: by mail-wr1-f70.google.com with SMTP id e15-20020adf9bcf000000b001de055937d4so5796789wrc.13
-        for <linux-pwm@vger.kernel.org>; Tue, 01 Feb 2022 02:36:51 -0800 (PST)
+        id S230391AbiBAKmP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 05:42:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229752AbiBAKmO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 05:42:14 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20CC5C061714;
+        Tue,  1 Feb 2022 02:42:14 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id i34so12574441lfv.2;
+        Tue, 01 Feb 2022 02:42:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version;
+        bh=NfgyCFDAeK3WhiTxa0pFdQjhu2x7hx0LuMmE0ZH5CP8=;
+        b=cf9B6QwBtjcxGtBI7AtuY4I7GEhh0IJAHhBv7V0OQfk96rX4WAS71GdQl0zY8m58St
+         +goLrnFY9rd8zWo4ke8oLJQMKuVxNY/Sejh90ToP3xL7wkltc/IoKAk5StKbr8beS2uC
+         nb9sesuHsSWPmaymVtV+Ewa+rkoRVzZRbiDjAE1Y3XJC8IzjAl9o175kWWZrk/QN8oFj
+         7EgY+CnT/6cOxXqhXs2mhSue1xo3FEtYFYWwes6FyRDPWLKCO4gqGRUPi4nCG6qeOUdp
+         IOVdkDuHzKgKmVV/7EmlD3u84l1dSAneOvOJbj86Z1GuPyfTruahHAlpUjUgjufHlE7w
+         p5Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=kaqBrIFOHvMLEnJtoyzrnK2gwLgrZ2ScPtfEFGlgxAY=;
-        b=BGA/DLnXq5MqjllRyTF/AhWTr6whmAhpEyl3H3wwlu/5EGa08raVkUYQUCAcWR+/3C
-         /6N+qWroOxbepkXSn7MvjruIR0kXj4Sgo4o7Cd5Vw6iC8SiNzK2sIfDQznQ7wljJFSQq
-         Lnb0cWlzmzhsk5ilHnUyqy+dzTSpLpRtM8OSwt0Cm93tSHkINgLcpwyt5Ddt8qJ4klmz
-         erb7mBi/SlckmL1dnEJU44apgEwZcND6lHRVmz2VJqY3xdTxPOnakwjrksHzSkWE/zpF
-         tc7SzmUwct7YD/zSkpYnjMsS7tbOSGV88iHh/ES50xbqxKfitsqgtdYc02ZNg2ZqBLaf
-         ppOg==
-X-Gm-Message-State: AOAM533heNg/cjVGDOWSDmQXZufienNOkgPEb8E9pRVHRrUhy51nEMMI
-        PTyYHHxnrjcJvs21c/4mY1zEYpRXfFwhl+rHF5eMSuPjhTUEY8QQXq7SYEtbZq584O5bJ+KW6wJ
-        GUH2whXxa3FcdmpEyfaFQ
-X-Received: by 2002:a7b:c44e:: with SMTP id l14mr1191956wmi.185.1643711810161;
-        Tue, 01 Feb 2022 02:36:50 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwIelI3cz+7Zacd+5ZQQgX/8LYNpRzY3LsR8zgGmcKlb1QIdL+Q4hi84F8M/23d0R26+66jvw==
-X-Received: by 2002:a7b:c44e:: with SMTP id l14mr1191934wmi.185.1643711809893;
-        Tue, 01 Feb 2022 02:36:49 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id k25sm1751285wms.23.2022.02.01.02.36.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 02:36:49 -0800 (PST)
-Message-ID: <1a49a91a-1f6d-51c0-561b-5e5a519f3b49@redhat.com>
-Date:   Tue, 1 Feb 2022 11:36:48 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version;
+        bh=NfgyCFDAeK3WhiTxa0pFdQjhu2x7hx0LuMmE0ZH5CP8=;
+        b=TGJV7+4oAfcpQ7AjyvB0Sa4ymBmk9jWaHQl5QzukoNltHdiKabdcQQisdqMGfwNK9c
+         ibGNCA14NRTbn0miiwNVNVWCjVJR4r9WpqAogRbQLsDF26eqdje03oC2zVBFP5xv3elK
+         DwrDiP4Lt8KvsAjhAHeyr4jC9Qt7irTx2sy6dQw3667yr6bDa9RTQKPghqiJ1nFyxf0L
+         03efEPf1AFv9KxDwxiGP6zvBhntOOOmt8iwlyYwkintR/lSc48zECw7YMXCIA++XNY5Q
+         egQva7P/gTKkHaYNECvYyQDWW/E3VjEtPEMZiZgeSdynIjEibjHviN2uMy2kVm/7W3j0
+         JzKw==
+X-Gm-Message-State: AOAM532K787y6ty+nNmfTVXWjWwChkcZZSLYFTMJv0bVi4SsYZffvm0Z
+        TcRPYIAdrhZjvGkBLf+3G6w=
+X-Google-Smtp-Source: ABdhPJwwKjPurKGXxcuYSvTBMCWOu2f+u6c+35tZD+1zP/+Hz905wxI2CDdpZtM0O2PZBJrjv0sjig==
+X-Received: by 2002:ac2:5e7b:: with SMTP id a27mr18758785lfr.417.1643712132165;
+        Tue, 01 Feb 2022 02:42:12 -0800 (PST)
+Received: from eldfell ([194.136.85.206])
+        by smtp.gmail.com with ESMTPSA id o7sm3291960lfu.37.2022.02.01.02.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 02:42:11 -0800 (PST)
+Date:   Tue, 1 Feb 2022 12:42:08 +0200
+From:   Pekka Paalanen <ppaalanen@gmail.com>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Simon Ser <contact@emersion.fr>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Noralf =?UTF-8?B?VHLDuG5uZXM=?= <noralf@tronnes.org>,
+        David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
  displays
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>
+Message-ID: <20220201124208.39c31e59@eldfell>
+In-Reply-To: <b0788b3d-9c77-0e96-0969-380d21663909@redhat.com>
 References: <20220131201225.2324984-1-javierm@redhat.com>
- <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <CAMuHMdXMayLLRavAJJujmPqT+Vd11dPfycqXie3w_pOkS8i9eA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
+        <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
+        <CAMuHMdXKZ=BkvVqdpiNPNJgxm9SzQ3Z0n4SqV2-4oPRveybd6g@mail.gmail.com>
+        <qmhzv6kqs6QdAOP3bNB39glOpc8eeJ6flgjfjcaBniT-shDKZkxo5uB71weGOUKxPE6dq_WBhtHmY5vMmuYwqMoHgtMWnX0ESE5R1Y5g5F8=@emersion.fr>
+        <CAKMK7uGPuhrDf8fdDgfuPt5rzO30Rm54T7GvWb203NRbVoVDgw@mail.gmail.com>
+        <b0788b3d-9c77-0e96-0969-380d21663909@redhat.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Sxz7U9Ufs9HWN7B5No+lEp2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Geert,
+--Sig_/Sxz7U9Ufs9HWN7B5No+lEp2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2/1/22 09:43, Geert Uytterhoeven wrote:
-> Hi Javier,
-> 
-> On Mon, Jan 31, 2022 at 9:12 PM Javier Martinez Canillas
-> <javierm@redhat.com> wrote:
->> This patch series adds a DRM driver for the Solomon OLED SSD1305, SSD1306,
->> SSD1307 and SSD1309 displays. It is a port of the ssd1307fb fbdev driver.
-> 
-> Thanks for your series!
-> 
-> I'll give it a try on an Adafruit FeatherWing 128x32 OLED, connected
-> to an OrangeCrab ECP5 FPGA board running a 64 MHz VexRiscv RISC-V
-> softcore.
->
+On Tue, 1 Feb 2022 10:49:03 +0100
+Javier Martinez Canillas <javierm@redhat.com> wrote:
 
-Awesome! let me know if you have any issues. I keep an update-to-date version
-at https://github.com/martinezjavier/linux/tree/ssd1307
+> On 2/1/22 09:38, Daniel Vetter wrote:
+> > On Tue, Feb 1, 2022 at 9:34 AM Simon Ser <contact@emersion.fr> wrote: =
+=20
+> >>
+> >> On Tuesday, February 1st, 2022 at 09:26, Geert Uytterhoeven <geert@lin=
+ux-m68k.org> wrote:
+> >> =20
+> >>> What's the story with the Rn formats?
+> >>>
+> >>> The comments say "n bpp Red", while this is a monochrome (even
+> >>> inverted) display? =20
+> >>
+> >> I don't think the color matters that much. "Red" was picked just becau=
+se it was
+> >> an arbitrary color, to make the difference with e.g. C8. Or am I mista=
+ken? =20
+> >=20
+> > The red comes from gl, where with shaders it really doesn't matter
+> > what meaning you attach to channels, but really just how many you
+> > have. So 2-channel formats are called RxGx, 3-channel RxGxBx,
+> > 4-channel RxGxBxAx and single-channel Rx. And we use drm_fourcc for
+> > interop in general, hence why these exist.
+> >=20
+> > We should probably make a comment that this really isn't a red channel
+> > when used for display it's a greyscale/intensity format. Aside from
+> > that documentation gap I think reusing Rx formats for
+> > greyscale/intensity for display makes perfect sense.
+> > -Daniel =20
+>=20
+> To sump up the conversation in the #dri-devel channel, these drivers
+> should support the following formats:
+>=20
+> 1) Dx (Daniel suggested that for darkness, but inverted mono)
 
->> Using the DRM fb emulation, all the tests from Geert Uytterhoeven's fbtest
->> (https://git.kernel.org/pub/scm/linux/kernel/git/geert/fbtest.git) passes:
->>
->>      ./fbtest -f /dev/fb1
->>     Using drawops cfb32 (32 bpp packed pixels)
->>     Available visuals:
->>       Monochrome
->>       Grayscale 256
->>       Truecolor 8:8:8:0
-> 
-> Oh, fake 32-bpp truecolor ;-)
->
+Did you consider format C1 instead?
 
-Yes :) that's what the repaper drivers does to have maximum compatibility
-with existing user-space and I followed the same.
- 
-> Does it run modetest, too?
->
+To my understanding, the C formats are paletted, which would also fit
+very nicely semantically. You have an enumerated list of pixel values
+and each of them produces some arbitrary color on screen. This would
+fit e.g. blue/white LCD panels nicely.
 
-It does, yes. And for example `modetest -M ssd1307` will print all the
-info about encoders, connectors, CRTs, etc.
- 
-> I'm trying to get modetest working on my atari DRM driver.
-> Comparing to the cirrus driver doesn't help much, as modetest doesn't
-> seem to work with the cirrus driver (modified to not do hardware
-> access, as I don't have cirrus hardware):
-> 
->     # modetest -M cirrus -s 31:1024x768-60Hz
->     setting mode 1024x768-60.00Hz on connectors 31, crtc 34
->     failed to set gamma: Function not implemented
->
+The little problem there is the palette.
 
-# modetest -M ssd1307 -c -s 31:128x64-0.12Hz
-...
-setting mode 128x64-0.12Hz on connectors 31, crtc 33
-failed to set gamma: Function not implemented
+C8 format is traditionally translated to RGB triplets through GAMMA LUT.
+Therefore the display itself is still three-channel, it's just the
+framebuffer format that is single-channel. But now, we are dealing
+with truly paletted displays. Furthermore, the palette is fixed,
+ingrained in the panel hardware.
 
-this seems to be a bug in modetest. I found a patch posted some time ago
-but never landed: https://www.spinics.net/lists/dri-devel/msg251356.html
- 
-> Does there exist another simple test program for showing something
-> using the DRM API?
->
+So we would probably need a new KMS property for the fixed palette of
+the panel. What would it be called? Would it be a connector property?
 
-I tested with plymouth and gdm that make use of the DRM API, they do
-start and I see something on the screen but don't really handle that
-well the fact that's a 128x64 resolution.
+The property would be a read-only blob, an array that maps Cx values to
+"colors". How do we represent "colors"? How do we accommodate C1, C2,
+C4 and C8 with the same blob?
 
-I didn't test with more DRM programs because was mostly interested in
-making sure that the fbdev emulation was working correctly.
+Since the blob is a mapping from color index to "color", and the array
+in the blob has N entries, we could simply say that Cx integer value is
+the color index. If the Cx you use does not go up to N, then you miss
+some colors. If the Cx you use can go higher than N, then Cx values >=3D
+N will clamp to N-1, for example. Of course, if your panel palette has
+only 4 entries, you can expose C1 and C2 and have no reason to expose
+C4 or C8, avoiding the Cx >=3D N issue.
 
-Noticed that Simon shared some simple examples, I'll give them a try. 
+How do we define the array contents then, the "colors"... plain old RGB
+triplets do not mean much[1], but that would be better than nothing. I
+also suppose that people would not be keen on seeing something like CIE
+1931 XYZ or Lab values, even though those would probably have the most
+useful definition. Coming up with those values properly would require a
+colorimeter. As a compromise, maybe we could use an RGB triplet, and
+assume sRGB SDR color space and transfer function, just like we do with
+all displays whether they are that or not. If someone needs to know
+better, then they can profile the display. sRGB triplets would likely
+give enough intuition to what color the indices result in, that it
+could be used in automated color conversions or quantizations from
+larger color spaces like sRGB with some rough degree of color
+similarity.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+It is a lot of hassle, but it would have a clear benefit: userspace
+would know very well how the display behaves (what colors it shows,
+roughly), and you could use Cx formats to drive a panel in its "native"
+format.
 
+Possible problems are around interactions with the old GAMMA property,
+which is traditionally used for the C8 palette. But if you have a
+fixed-palette panel, then maybe you wouldn't expose GAMMA property on
+the CRTC at all?
+
+I have no idea how this would map to fbdev API though.
+
+
+[1] https://gitlab.freedesktop.org/pq/color-and-hdr/-/blob/main/doc/pixels_=
+color.md
+
+Thanks,
+pq
+
+
+> 2) Rx (single-channel for grayscale)
+> 3) RxGxBxAx (4-channel fake 32-bpp truecolor)
+>=20
+> The format preference will be in that order, so if user-space is able
+> to use Dx then there won't be a need for any conversion and just the
+> native format will be used.
+>=20
+> If using Rx then only a Rx -> Dx conversion will happen and the last
+> format will require the less performant RxGxBxAx -> Rx -> Dx path.
+>=20
+> But we still need RxGxBxAx as a fallback for compatibility with the
+> existing user-space, so all this could be done as a follow-up as an
+> optimization and shouldn't block monochromatic panel drivers IMO.
+>=20
+> Best regards,
+
+
+--Sig_/Sxz7U9Ufs9HWN7B5No+lEp2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmH5DoAACgkQI1/ltBGq
+qqdQHRAAsEi+6XySVlxhsY0CtJOqClHhuaE+2ObdFY28PqLOtmpM6sHJgP/3kn0b
+kROfNch8c/Bxv28Jg3EMdcBav3oLC/hNotHK9OiUxm7C2NFMNCyulX/jv/0VerNY
+pC5r9V9AeENihHmY1mzxn+D9MbCyL7nkWc1zcnZ0ga/4hmUr7GQqdC08FmnO8vXz
+aeRBY2TG5sNePTxby7cM3yCFtVAqaIU8zx8uMPC0A+KFmVTLh2gaE0EjX6I0kfRQ
+Qj09BIMMwNMYLfn5J7wLs+qbUSNBEx2Ro5YBYky/cXfjQNqL217zjmXkL6bHS7hF
+mUGvwr88PVcsGL9g8TEuc6sXgdh3ut59gdXNAswhrBqbPPqqwgSkxn7U5Ep02Crm
+HppqDcoD5PXcASJ/5X9YXlq9IFI9tzub/aW6DEPImx+5scJnxBk8VNVOa69tirKF
+XkuUFvD7oDxenr9hV/ZmyVHy3pjO/Bi0+zatoNTBqPCzyheVGKAqPHy4z0cji5aD
+mz8c6n7T5DOTFLHS2Yk8jZn2PD0oxNDVtTTkWgk1ocptwWRtCYKtfpbf62wFtFcn
+PO+/UiHWwA+6OUounMjQfQqWRpDIH/WGvEWmh1r+j8e+ApjSRGeM202VGnBvffyW
+4yDqnjMBJSzS2QxRT0yp9Fg4qAIk4tpz6K0MgATgFrkgghBkEs4=
+=PuLM
+-----END PGP SIGNATURE-----
+
+--Sig_/Sxz7U9Ufs9HWN7B5No+lEp2--
