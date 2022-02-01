@@ -2,79 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0C884A5977
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 10:49:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0B584A599E
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 11:08:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236186AbiBAJtJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 04:49:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:51484 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236182AbiBAJtJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 04:49:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643708948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        id S236287AbiBAKI0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 05:08:26 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:46210 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236272AbiBAKIZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 05:08:25 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 5B8F821114;
+        Tue,  1 Feb 2022 10:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1643710104; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tgw5tIdcmG3vshG+0+gBxrtdGFyTyK1rBRl6JhXtTTs=;
-        b=CDasu3YFgKoJx4v04y+EeQRz+sLf0NV+FzbZzkE4K1RNn2Zm+F7uTtyTtYhizLbVFSVbkA
-        TxyMy+HtpAkWQrtfTGnc8zvvl3hMpQ45UMpTvM2Sp/OMX8xhFq+seMDVtDM8j19BQ5RoIA
-        W2Yqf+q+9j5Kn9wlN5APYGf7cMFyL0U=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-235-hEePALQCMMi8eHprspZqnw-1; Tue, 01 Feb 2022 04:49:06 -0500
-X-MC-Unique: hEePALQCMMi8eHprspZqnw-1
-Received: by mail-wm1-f71.google.com with SMTP id bg23-20020a05600c3c9700b0034bb19dfdc0so3535210wmb.1
-        for <linux-pwm@vger.kernel.org>; Tue, 01 Feb 2022 01:49:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=tgw5tIdcmG3vshG+0+gBxrtdGFyTyK1rBRl6JhXtTTs=;
-        b=5GH28gi8MQGJkq4loKCdP/DKM9kN7Ba5tYrytTvHEBI+YnScxvOdRwOKeXM6HwPNHD
-         mvboTokQULx3vIq6C8zmJ03ZosaB1EFlOBgyaC1zCGlxp5L5IfpulG7xqQIKchabRPK4
-         ViW5eLh5SBjO5KvnoSfX0NvDobXEgYxSbNSsPMivfMwKieXpefEGTzW5BoivxlkRK4RR
-         zdkNFsNfY+Pw72oMbTuks/ujYEM5umqzGOOKcQJo5rFrM+1c5wtv5F5HqMB3SiTyNJDb
-         0U/MwW+VXcq+m2R9xh9sY58yKZn89QXnbJnDUozWQsal5aC2azK4x7CeNLD+3i9NHjes
-         2FRw==
-X-Gm-Message-State: AOAM530uy2+/yYX2DxofGGJMs0uMEdV3w5QOf3mtP0P2A5g8agdSG+X9
-        PrmzbYfZTdjxzKk4miSR+bW3TykA1MAbUEcMmYo2QJqjsioycOsUUg5Yu3QBXwNPn4rDlNy9I3h
-        tpUUHZBdgOvhAMiVHsHWj
-X-Received: by 2002:a05:600c:3b11:: with SMTP id m17mr1026416wms.192.1643708945623;
-        Tue, 01 Feb 2022 01:49:05 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxhdmeA5uA8GuAXm+vPaWNlMLqtSa4TRUAHzW7ciPujCzAtcTIso4F/n2y/BPseeK89sy1Vtw==
-X-Received: by 2002:a05:600c:3b11:: with SMTP id m17mr1026395wms.192.1643708945346;
-        Tue, 01 Feb 2022 01:49:05 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id n10sm17584320wrf.96.2022.02.01.01.49.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 01:49:04 -0800 (PST)
-Message-ID: <b0788b3d-9c77-0e96-0969-380d21663909@redhat.com>
-Date:   Tue, 1 Feb 2022 10:49:03 +0100
+        bh=DCA+JZm9s4Y+NL2l66Ugb6RicCc4duY6MT2ld79kHUk=;
+        b=XqaksSA/uQnO0VhdLSfdZHpryRJ8prc/2icV8vVanQh+9nNBiJbv5ZU2/nESDUprEPIW0a
+        7NAqlMiSkca22eChfKW8OcdrhUWWQopv9YfxO5dxOtXGnEJbKzf4r7Rfvic3HKtzg95R7R
+        17V4TLJ/yAdZ4QcNUjtg9ZwjNgIRqK8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1643710104;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DCA+JZm9s4Y+NL2l66Ugb6RicCc4duY6MT2ld79kHUk=;
+        b=VuS6Vzzju9PFruLAp3ocbwHKoI4+IxsNPMSTrAExDT13FYeory9AOmnEEZDMImUSHyPKdz
+        y3FAIT4422WAVQCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F18B013B3D;
+        Tue,  1 Feb 2022 10:08:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 6/+BOZcG+WEgBQAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Tue, 01 Feb 2022 10:08:23 +0000
+Message-ID: <ce283de9-7412-472e-f72c-cb6a35ede426@suse.de>
+Date:   Tue, 1 Feb 2022 11:08:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
  displays
 Content-Language: en-US
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Simon Ser <contact@emersion.fr>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
         Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Mark Brown <broonie@kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
         =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Maxime Ripard <maxime@cerno.tech>,
         =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Lee Jones <lee.jones@linaro.org>
 References: <20220131201225.2324984-1-javierm@redhat.com>
@@ -82,61 +73,97 @@ References: <20220131201225.2324984-1-javierm@redhat.com>
  <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
  <CAMuHMdXKZ=BkvVqdpiNPNJgxm9SzQ3Z0n4SqV2-4oPRveybd6g@mail.gmail.com>
  <qmhzv6kqs6QdAOP3bNB39glOpc8eeJ6flgjfjcaBniT-shDKZkxo5uB71weGOUKxPE6dq_WBhtHmY5vMmuYwqMoHgtMWnX0ESE5R1Y5g5F8=@emersion.fr>
- <CAKMK7uGPuhrDf8fdDgfuPt5rzO30Rm54T7GvWb203NRbVoVDgw@mail.gmail.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <CAKMK7uGPuhrDf8fdDgfuPt5rzO30Rm54T7GvWb203NRbVoVDgw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <CAMuHMdUHhUkPhq8M0d=p5EgH8bBz6EtH4drajKtQHE0121V1uQ@mail.gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <CAMuHMdUHhUkPhq8M0d=p5EgH8bBz6EtH4drajKtQHE0121V1uQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------kkmck2qcm4CR4C2hZrjhoXfZ"
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2/1/22 09:38, Daniel Vetter wrote:
-> On Tue, Feb 1, 2022 at 9:34 AM Simon Ser <contact@emersion.fr> wrote:
->>
->> On Tuesday, February 1st, 2022 at 09:26, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>
->>> What's the story with the Rn formats?
->>>
->>> The comments say "n bpp Red", while this is a monochrome (even
->>> inverted) display?
->>
->> I don't think the color matters that much. "Red" was picked just because it was
->> an arbitrary color, to make the difference with e.g. C8. Or am I mistaken?
-> 
-> The red comes from gl, where with shaders it really doesn't matter
-> what meaning you attach to channels, but really just how many you
-> have. So 2-channel formats are called RxGx, 3-channel RxGxBx,
-> 4-channel RxGxBxAx and single-channel Rx. And we use drm_fourcc for
-> interop in general, hence why these exist.
-> 
-> We should probably make a comment that this really isn't a red channel
-> when used for display it's a greyscale/intensity format. Aside from
-> that documentation gap I think reusing Rx formats for
-> greyscale/intensity for display makes perfect sense.
-> -Daniel
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------kkmck2qcm4CR4C2hZrjhoXfZ
+Content-Type: multipart/mixed; boundary="------------RFHxz4jZDwnaz9HrrasPkvDS";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Ser <contact@emersion.fr>
+Cc: Linux PWM List <linux-pwm@vger.kernel.org>,
+ Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+ =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, David Airlie <airlied@linux.ie>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ DRI Development <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+ Maxime Ripard <maxime@cerno.tech>,
+ =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Lee Jones <lee.jones@linaro.org>
+Message-ID: <ce283de9-7412-472e-f72c-cb6a35ede426@suse.de>
+Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
+ displays
+References: <20220131201225.2324984-1-javierm@redhat.com>
+ <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
+ <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
+ <CAMuHMdXKZ=BkvVqdpiNPNJgxm9SzQ3Z0n4SqV2-4oPRveybd6g@mail.gmail.com>
+ <qmhzv6kqs6QdAOP3bNB39glOpc8eeJ6flgjfjcaBniT-shDKZkxo5uB71weGOUKxPE6dq_WBhtHmY5vMmuYwqMoHgtMWnX0ESE5R1Y5g5F8=@emersion.fr>
+ <CAMuHMdUHhUkPhq8M0d=p5EgH8bBz6EtH4drajKtQHE0121V1uQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUHhUkPhq8M0d=p5EgH8bBz6EtH4drajKtQHE0121V1uQ@mail.gmail.com>
 
-To sump up the conversation in the #dri-devel channel, these drivers
-should support the following formats:
+--------------RFHxz4jZDwnaz9HrrasPkvDS
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-1) Dx (Daniel suggested that for darkness, but inverted mono)
-2) Rx (single-channel for grayscale)
-3) RxGxBxAx (4-channel fake 32-bpp truecolor)
+SGkNCg0KQW0gMDEuMDIuMjIgdW0gMDk6MzYgc2NocmllYiBHZWVydCBVeXR0ZXJob2V2ZW46
+DQo+IEhpIFNpbW9uLA0KPiANCj4gT24gVHVlLCBGZWIgMSwgMjAyMiBhdCA5OjM0IEFNIFNp
+bW9uIFNlciA8Y29udGFjdEBlbWVyc2lvbi5mcj4gd3JvdGU6DQo+PiBPbiBUdWVzZGF5LCBG
+ZWJydWFyeSAxc3QsIDIwMjIgYXQgMDk6MjYsIEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRA
+bGludXgtbTY4ay5vcmc+IHdyb3RlOg0KPj4+IFdoYXQncyB0aGUgc3Rvcnkgd2l0aCB0aGUg
+Um4gZm9ybWF0cz8NCj4+Pg0KPj4+IFRoZSBjb21tZW50cyBzYXkgIm4gYnBwIFJlZCIsIHdo
+aWxlIHRoaXMgaXMgYSBtb25vY2hyb21lIChldmVuDQo+Pj4gaW52ZXJ0ZWQpIGRpc3BsYXk/
+DQo+Pg0KPj4gSSBkb24ndCB0aGluayB0aGUgY29sb3IgbWF0dGVycyB0aGF0IG11Y2guICJS
+ZWQiIHdhcyBwaWNrZWQganVzdCBiZWNhdXNlIGl0IHdhcw0KPj4gYW4gYXJiaXRyYXJ5IGNv
+bG9yLCB0byBtYWtlIHRoZSBkaWZmZXJlbmNlIHdpdGggZS5nLiBDOC4gT3IgYW0gSSBtaXN0
+YWtlbj8NCj4gDQo+IEknZCBleHBlY3QgOC1iaXQgZ3JheXNjYWxlIHRvIGJlIFk4IGluc3Rl
+YWQuDQoNCkkgbGlrZSB0aGlzIG5hbWluZywgYnV0IERSTV9GT1JNQVRfUjggaXMgdWFwaSBh
+bHJlYWR5LiA6LyBJZiBhbnl0aGluZywgDQp3ZSBjb3VsZCBhZGQgWW4gZm9ybWF0cyBpbiBh
+ZGRpdGlvbiB0byBleGlzdGluZyBSbiBmb3JtYXRzLg0KDQpCZXN0IHJlZ2FyZHMNClRob21h
+cw0KDQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJl
+J3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0K
+PiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUs
+IEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpv
+dXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRo
+YXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZh
+bGRzDQoNCi0tIA0KVGhvbWFzIFppbW1lcm1hbm4NCkdyYXBoaWNzIERyaXZlciBEZXZlbG9w
+ZXINClNVU0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21iSA0KTWF4ZmVsZHN0ci4g
+NSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55DQooSFJCIDM2ODA5LCBBRyBOw7xybmJlcmcp
+DQpHZXNjaMOkZnRzZsO8aHJlcjogSXZvIFRvdGV2DQo=
 
-The format preference will be in that order, so if user-space is able
-to use Dx then there won't be a need for any conversion and just the
-native format will be used.
+--------------RFHxz4jZDwnaz9HrrasPkvDS--
 
-If using Rx then only a Rx -> Dx conversion will happen and the last
-format will require the less performant RxGxBxAx -> Rx -> Dx path.
+--------------kkmck2qcm4CR4C2hZrjhoXfZ
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-But we still need RxGxBxAx as a fallback for compatibility with the
-existing user-space, so all this could be done as a follow-up as an
-optimization and shouldn't block monochromatic panel drivers IMO.
+-----BEGIN PGP SIGNATURE-----
 
-Best regards,
--- 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmH5BpcFAwAAAAAACgkQlh/E3EQov+Bk
+GQ//T1ahtrQidsFFYc8qj2Z41/7hEKgM/FKi2/2++8j/TQnA7uQZof4nRc8C5ugGLT8ICH5DP87J
+voya1mlsEMvLp4YQq5BhFWh4JgON4R5z06HKD9k5jMHy4zBotqJ7c1SXOIQk1SzA8chlChPKbyuy
+S4Nk2IH2nP8dPhOysAPiyA7tQMijJ+ZQI0UTwFcXUIxGArjAs0SxtewzrMlN8vRvH0ZITOwo3CkU
+qEcOqdD2QcCGBn6amYLqFXBMu54L81HOJg5KqVh3xAUyHRTN+SLgXh3tGErYoavrhvceLHskC6yz
+DPabj7sQ49VNFcNp9JrUxGWgg+ynRnE5sM7Ly6uUE2ITL48scmS2dMZRQHJUTKN5ZqBltxy6bPFV
+rap9fi+uX8wVhmOtMoRsbW5woDjEZSd9YnrBmwFm+WmAnHr122xBcv3vn0tJ+Bst7qWPWhSKW4Wm
++VWSIFFJZs/Hi7ob4bmY9J6DVyuuIu4NJIjBrIJzWPvQSSRmAuknD3HjcjUS/fhqm0zrmZoKJpJV
+6BXuXrvb2FzYicMemy2ukUTASxGTXysDHJNbEZ7Rdbsc8fO7Rspt3hoUgUUp8BqId9kRpKgfhp/V
+osvxuMi1tIQcNitHw+BynitGtbEpduQgwlwz09r9QbcYQQkp4hsMBQXGa/aaDFh2dDcIVgEeEhir
+l88=
+=KK8i
+-----END PGP SIGNATURE-----
 
+--------------kkmck2qcm4CR4C2hZrjhoXfZ--
