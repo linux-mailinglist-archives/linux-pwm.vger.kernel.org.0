@@ -2,154 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5011B4A5ADA
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 12:07:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4A6D4A5B32
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Feb 2022 12:31:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237069AbiBALHX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Feb 2022 06:07:23 -0500
-Received: from mail-vs1-f53.google.com ([209.85.217.53]:45975 "EHLO
-        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235963AbiBALHW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 06:07:22 -0500
-Received: by mail-vs1-f53.google.com with SMTP id t20so15551652vsq.12;
-        Tue, 01 Feb 2022 03:07:22 -0800 (PST)
+        id S237254AbiBALbt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Feb 2022 06:31:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48319 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235403AbiBALbs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Feb 2022 06:31:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643715108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XGRcgirIP4zYqgSlhOvvY2QNMhMYpFLin8cREeYj74w=;
+        b=d2B9ItjQsMP7Kln2iapAxILEP/4/XmqojpX/mIKKlfxPz1drqkLv+wfMXz6L4OlhAYsKki
+        uBrQdoVWCC1gp0baKxMmrqe7kPT3s/nsGUtNNkhUE2D03EoRW6J03KAVMgMIizGEfeYMAv
+        knaHGD3cs/lTxy6BSiFXHJ13oXElDic=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-650-ma26ifoFNnSb9IErUp4Bkg-1; Tue, 01 Feb 2022 06:31:47 -0500
+X-MC-Unique: ma26ifoFNnSb9IErUp4Bkg-1
+Received: by mail-wm1-f71.google.com with SMTP id q71-20020a1ca74a000000b003507f38e330so1416516wme.9
+        for <linux-pwm@vger.kernel.org>; Tue, 01 Feb 2022 03:31:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UFAIMQcU3dCvJZn8Zuan8C8Op7u0lxfrOEd/qthi1mk=;
-        b=ucvHtK9PqGQQfJX0hCsx68e3hYRn3gZ/T+h/5DS3mFb11EECKG1kBxk5RTBuA04Dgu
-         nyQY5aGyHEHRKel1UOP42r/bCBPAskWGjuGojQlC+8uLm55d0mlT9elnr1wJ6RqDp8sR
-         DTqkeo4qA1z5gQeUR5o74ayGCYotZpO849nnpVE+4KgB+zD2T+2iaxkR42KlGVijl8rF
-         blh5inicg4psEm3HUeij3DyPZdOPXDYA1sJLGuA6u52FXIK799HshG8K9VSg6+mp5s/Z
-         j+HFvPKwONsNQhakKlqFWEpw8yvUq0ONi60PVxlG1Gx+NQHdfDU1mbpD0HzQJpA33uqE
-         3scw==
-X-Gm-Message-State: AOAM530ToXK0xyR1Xf/ofbTFZMePPRLKWrKktDbu1060cn/3Ovsa9him
-        LjXhlnCMb8NUycWjNH0tv12DP93fLJvuyDG6
-X-Google-Smtp-Source: ABdhPJx+xkNm7hytdvBRIhna3Z7B6rmrGIs08GfKfcPgilpnOmLHrXk4lNL8qq9Uby9pumW5uyD/9g==
-X-Received: by 2002:a67:ee01:: with SMTP id f1mr9737221vsp.0.1643713642079;
-        Tue, 01 Feb 2022 03:07:22 -0800 (PST)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id p2sm4993584uao.1.2022.02.01.03.07.19
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=XGRcgirIP4zYqgSlhOvvY2QNMhMYpFLin8cREeYj74w=;
+        b=BPiCNoYYMKC3DcSPxxGKcBLk8Jf+Ki5IPqmKzYKYHxjvIIBzxdDFoKU/o2N8MZMPh6
+         fp/oXVlz8Sloig9SiVjvBjvd0FsTpFbWSVv/SK9CH6WdKwqmi9vAz3UWOfM7DQdf3z6B
+         iZTBCvLq20dH30Y2gAl6OU8dIfUIHH4z46WLZ52PiobQ3Uix4AYLlkcFa8LZIV5TQwMM
+         oy1Vt5emLyrqo0XdBUqt7AC4hy5VWZKjN3HshnphNSqux+EGW8UK0SeIwIeQTpT70tQY
+         Wi0DNoMoFMehyaZglx5j0JMlfijusWO9LcSXsNr5o2cbASkgc0dn+qQi/9wlk/3MsSbK
+         JSaA==
+X-Gm-Message-State: AOAM532tYznBz1aC9wIAQSbdIbB6Cbvtnj9uLgYfEGMxzqh+UWp2Q7Ww
+        YMYxD3ywu/CI8UQeUIyxpJlLHj2JZMstiNTYLQtNLrRGkYdMSrU2bJ6XaEje+T6VBNRV0E3NgWp
+        8HfBvD8rWGDpE+8DQP4b5
+X-Received: by 2002:a05:600c:4618:: with SMTP id m24mr1382111wmo.16.1643715106046;
+        Tue, 01 Feb 2022 03:31:46 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy9dtgfmrio2wkiWGZX/AXacBC0IvydqtGX9/B6UswdRdmI3taa4PHdBSJzQZpcsZ/B5jNs5A==
+X-Received: by 2002:a05:600c:4618:: with SMTP id m24mr1382099wmo.16.1643715105832;
+        Tue, 01 Feb 2022 03:31:45 -0800 (PST)
+Received: from [192.168.1.102] ([92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id n13sm1866913wms.8.2022.02.01.03.31.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 03:07:20 -0800 (PST)
-Received: by mail-vs1-f50.google.com with SMTP id g10so15552702vss.1;
-        Tue, 01 Feb 2022 03:07:19 -0800 (PST)
-X-Received: by 2002:a67:b00e:: with SMTP id z14mr9303063vse.57.1643713639387;
- Tue, 01 Feb 2022 03:07:19 -0800 (PST)
+        Tue, 01 Feb 2022 03:31:45 -0800 (PST)
+Message-ID: <f8d71acb-5c8b-ac4e-0c32-38eb66af04c3@redhat.com>
+Date:   Tue, 1 Feb 2022 12:31:44 +0100
 MIME-Version: 1.0
-References: <20220131201225.2324984-1-javierm@redhat.com> <tIMIWqepcZGntnez-1ss4Kn4K8btXnzDRL7EWd19-745WK90YIC19E_4di9RNvB3gtx-PzWEjBEGQLPNJE_x0T1yyyaWFCoFcCiG4StR9RU=@emersion.fr>
- <wuXPJN-K-rvjoV51c4EBmTBScov8rcJTPoYmlfHe04_-4wD1khVxo9HnUsP7UFd5m4AkzGSw2hXe_c77jbSRhjEJ0JZIYwuvuIkcv_KsR-Y=@emersion.fr>
- <CAMuHMdXKZ=BkvVqdpiNPNJgxm9SzQ3Z0n4SqV2-4oPRveybd6g@mail.gmail.com>
- <qmhzv6kqs6QdAOP3bNB39glOpc8eeJ6flgjfjcaBniT-shDKZkxo5uB71weGOUKxPE6dq_WBhtHmY5vMmuYwqMoHgtMWnX0ESE5R1Y5g5F8=@emersion.fr>
- <CAKMK7uGPuhrDf8fdDgfuPt5rzO30Rm54T7GvWb203NRbVoVDgw@mail.gmail.com>
- <b0788b3d-9c77-0e96-0969-380d21663909@redhat.com> <20220201124208.39c31e59@eldfell>
-In-Reply-To: <20220201124208.39c31e59@eldfell>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Feb 2022 12:07:07 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX_uyEznHy5vYwS8Q=+bBKPddeJa41KTWi4Fwh3tjX+zQ@mail.gmail.com>
-Message-ID: <CAMuHMdX_uyEznHy5vYwS8Q=+bBKPddeJa41KTWi4Fwh3tjX+zQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED displays
-To:     Pekka Paalanen <ppaalanen@gmail.com>
-Cc:     Javier Martinez Canillas <javierm@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
+ displays
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org,
         Thomas Zimmermann <tzimmermann@suse.de>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Lee Jones <lee.jones@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20220131201225.2324984-1-javierm@redhat.com>
+ <YfhM97cVH3+lJKg0@ravnborg.org> <Yfj/XGRRDNABsLPm@smile.fi.intel.com>
+From:   Javier Martinez Canillas <javierm@redhat.com>
+In-Reply-To: <Yfj/XGRRDNABsLPm@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Pekka,
-
-On Tue, Feb 1, 2022 at 11:42 AM Pekka Paalanen <ppaalanen@gmail.com> wrote:
-> On Tue, 1 Feb 2022 10:49:03 +0100
-> Javier Martinez Canillas <javierm@redhat.com> wrote:
-> > On 2/1/22 09:38, Daniel Vetter wrote:
-> > > On Tue, Feb 1, 2022 at 9:34 AM Simon Ser <contact@emersion.fr> wrote:
-> > >> On Tuesday, February 1st, 2022 at 09:26, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > >>> What's the story with the Rn formats?
-> > >>>
-> > >>> The comments say "n bpp Red", while this is a monochrome (even
-> > >>> inverted) display?
-> > >>
-> > >> I don't think the color matters that much. "Red" was picked just because it was
-> > >> an arbitrary color, to make the difference with e.g. C8. Or am I mistaken?
-> > >
-> > > The red comes from gl, where with shaders it really doesn't matter
-> > > what meaning you attach to channels, but really just how many you
-> > > have. So 2-channel formats are called RxGx, 3-channel RxGxBx,
-> > > 4-channel RxGxBxAx and single-channel Rx. And we use drm_fourcc for
-> > > interop in general, hence why these exist.
-> > >
-> > > We should probably make a comment that this really isn't a red channel
-> > > when used for display it's a greyscale/intensity format. Aside from
-> > > that documentation gap I think reusing Rx formats for
-> > > greyscale/intensity for display makes perfect sense.
-> > > -Daniel
-> >
-> > To sump up the conversation in the #dri-devel channel, these drivers
-> > should support the following formats:
-> >
-> > 1) Dx (Daniel suggested that for darkness, but inverted mono)
+On 2/1/22 10:37, Andy Shevchenko wrote:
+> On Mon, Jan 31, 2022 at 09:56:23PM +0100, Sam Ravnborg wrote:
+>> On Mon, Jan 31, 2022 at 09:12:20PM +0100, Javier Martinez Canillas wrote:
+> 
+> ...
+> 
+>>> Patch #3 adds the driver. The name ssd1307 was used instead of ssd130x
+>>> (which would be more accurate) to avoid confusion for users who want to
+>>> migrate from the existing ssd1307fb fbdev driver.
+>> Looking forward the name ssd130x would make more sense. There is only so
+>> many existing users and a potential of much more new users.
+>> So in my color of the world the naming that benefits the most users
+>> wins.
+> 
+> It depends if the binding is going to be preserved. Also this series doesn't
+> answer to the question what to do with the old driver.
 >
-> Did you consider format C1 instead?
 
-That would be a 2-color display, which is not necessarily black
-and white. Cfr. Amiga or Atari bit planes with bpp=1.
-That's why fbdev has separate visuals for monochrome.
+I don't plan to remove the old driver (yet). My goal here is to have an answer
+for Fedora users that might complain that we disabled all the fbdev drivers.
 
-> I have no idea how this would map to fbdev API though.
+So I wanted to understand the effort involved in porting a fbdev driver to DRM.
 
-    #define FB_VISUAL_MONO01                0       /* Monochr.
-1=Black 0=White */
-    #define FB_VISUAL_MONO10                1       /* Monochr.
-1=White 0=Black */
-    #define FB_VISUAL_TRUECOLOR             2       /* True color   */
+> If you leave it, I would expect the backward compatibility, otherwise the
+> series misses removal of the old driver.
+> 
 
-The above is RGB (or grayscale, see below).
+I don't see how those two are correlated. You just need different compatible
+strings to match the new and old drivers. That what was usually done for DRM
+drivers that were ported. To give an example, the "omapfb" vs "omapdrm".
 
-    #define FB_VISUAL_PSEUDOCOLOR           3       /* Pseudo color
-(like atari) */
+Since the current binding has a compatible "ssd1305fb-i2c", we could make the
+new one "ssd1305drm-i2c" or better, just "ssd1305-i2c".
 
-Palette
+Best regards,
+-- 
+Javier Martinez Canillas
+Linux Engineering
+Red Hat
 
-    #define FB_VISUAL_DIRECTCOLOR           4       /* Direct color */
-
-Usually used as RGB with gamma correction, but the actual hardware
-is more flexible.
-
-    #define FB_VISUAL_STATIC_PSEUDOCOLOR    5       /* Pseudo color readonly */
-
-Fixed palette
-
-And:
-
-    struct fb_var_screeninfo {
-            ...
-            __u32 grayscale;                /* 0 = color, 1 = grayscale,    */
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
