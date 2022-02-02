@@ -2,1130 +2,2150 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D3044A75CC
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Feb 2022 17:29:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D8034A7647
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Feb 2022 17:57:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345843AbiBBQ3u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Feb 2022 11:29:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240502AbiBBQ3u (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Feb 2022 11:29:50 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E4EC061714
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Feb 2022 08:29:50 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nFIVj-0008Nn-Of; Wed, 02 Feb 2022 17:29:35 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nFIVh-00E57C-Dd; Wed, 02 Feb 2022 17:29:32 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nFIVf-004Lll-RJ; Wed, 02 Feb 2022 17:29:31 +0100
-Date:   Wed, 2 Feb 2022 17:29:30 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>,
+        id S1346030AbiBBQ44 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Feb 2022 11:56:56 -0500
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:3912 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231706AbiBBQ4w (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Feb 2022 11:56:52 -0500
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 212F3qWV015167;
+        Wed, 2 Feb 2022 16:54:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references; s=pps0720;
+ bh=FTz6OT6WOyHNxpUzwanoedf6Bw/zPVKiPG+q2GqAiIM=;
+ b=fhrN725VdC3tDs5BjsvVB3C82WBAVlZSZh4S9n24BQiqppAkZWWrP7C9qkSUaPm5gLOB
+ UwAsoujmhMkE3fr4p1/gDbUPNj5vzDrPVEL7ngqud06tp4iViLK0Ru8p97v7aLH9V/b4
+ QVR5yig+HTJbQKn9WpEKlEqwV9FskpQDzkfjEIeLeau4BI3XTVtwpteZt+2DYQCQy+p6
+ Dn2FzW71ibCTJMpn0yov6HDLg8ViCGZZrZIdcCiz+hV11vGvlQ4udcEWxS0hTpdM9Ohc
+ avETfGk3NQ4349SMCLmEN3UC0J/UFSJT7x/4o+D547Z7xolE2bgiqE0LniCKab5fB4Y8 ag== 
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3dytjp20km-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Feb 2022 16:54:58 +0000
+Received: from hpe.com (unknown [16.100.173.53])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 04CE55E;
+        Wed,  2 Feb 2022 16:54:54 +0000 (UTC)
+From:   nick.hawkins@hpe.com
+To:     verdun@hpe.com
+Cc:     nick.hawkins@hpe.com, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Corey Minyard <minyard@acm.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Satya Priya Kakitapalli <c_skakit@qti.qualcomm.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v11 2/2] leds: Add driver for Qualcomm LPG
-Message-ID: <20220202162930.24zcediw44t2jzqf@pengutronix.de>
-References: <20220129005429.754727-1-bjorn.andersson@linaro.org>
- <20220129005429.754727-2-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ildntntw4xt2zq7v"
-Content-Disposition: inline
-In-Reply-To: <20220129005429.754727-2-bjorn.andersson@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Stanislav Jakubek <stano.jakubek@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Hao Fang <fanghao11@huawei.com>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Wang Kefeng <wangkefeng.wang@huawei.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] HPE BMC GXP SUPPORT
+Date:   Wed,  2 Feb 2022 10:52:50 -0600
+Message-Id: <20220202165315.18282-1-nick.hawkins@hpe.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <nick.hawkins@hpe.com>
+References: <nick.hawkins@hpe.com>
+X-Proofpoint-GUID: iXWnoQ1XEdkFDu_4bws0tBfEV33_Bqqx
+X-Proofpoint-ORIG-GUID: iXWnoQ1XEdkFDu_4bws0tBfEV33_Bqqx
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-02_08,2022-02-01_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 clxscore=1011 mlxscore=0 suspectscore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202020094
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Nick Hawkins <nick.hawkins@hpe.com>
 
---ildntntw4xt2zq7v
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+GXP is the name of the HPE SoC.
+This SoC is used to implement BMC features of HPE servers
+(all ProLiant, Synergy, and many Apollo, and Superdome machines)
+It does support many features including:
+	ARMv7 architecture, and it is based on a Cortex A9 core
+	Use an AXI bus to which
+		a memory controller is attached, as well as
+                 multiple SPI interfaces to connect boot flash,
+                 and ROM flash, a 10/100/1000 Mac engine which
+                 supports SGMII (2 ports) and RMII
+		Multiple I2C engines to drive connectivity with a host infrastructure
+		A video engine which support VGA and DP, as well as
+                 an hardware video encoder
+		Multiple PCIe ports
+		A PECI interface, and LPC eSPI
+		Multiple UART for debug purpose, and Virtual UART for host connectivity
+		A GPIO engine
+This Patch Includes:
+	Documentation for device tree bindings
+	Device Tree Bindings
+	GXP Timer Support
+	GXP Architecture Support
 
-Hello,
+Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
+---
+ .../bindings/display/hpe,gxp-thumbnail.txt    |  21 +
+ .../devicetree/bindings/gpio/hpe,gxp-gpio.txt |  16 +
+ .../devicetree/bindings/i2c/hpe,gxp-i2c.txt   |  19 +
+ .../bindings/ipmi/hpegxp-kcs-bmc-cfg.txt      |  13 +
+ .../bindings/ipmi/hpegxp-kcs-bmc.txt          |  21 +
+ .../memory-controllers/hpe,gxp-srom.txt       |  13 +
+ .../devicetree/bindings/mtd/hpe,gxp.txt       |  16 +
+ .../bindings/net/hpe,gxp-umac-mdio.txt        |  21 +
+ .../devicetree/bindings/net/hpe,gxp-umac.txt  |  20 +
+ .../devicetree/bindings/pwm/hpe,gxp-fan.txt   |  15 +
+ .../bindings/serial/hpe,gxp-vuart-cfg.txt     |  17 +
+ .../bindings/serial/hpe,gxp-vuart.txt         |  23 +
+ .../bindings/soc/hpe/hpe,gxp-chif.txt         |  16 +
+ .../bindings/soc/hpe/hpe,gxp-csm.txt          |  14 +
+ .../bindings/soc/hpe/hpe,gxp-dbg.txt          |  18 +
+ .../bindings/soc/hpe/hpe,gxp-fn2.txt          |  20 +
+ .../bindings/soc/hpe/hpe,gxp-xreg.txt         |  19 +
+ .../devicetree/bindings/spi/hpe,gxp-spifi.txt |  76 +++
+ .../bindings/thermal/hpe,gxp-coretemp.txt     |  14 +
+ .../bindings/timer/hpe,gxp-timer.txt          |  18 +
+ .../devicetree/bindings/usb/hpe,gxp-udc.txt   |  21 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   4 +-
+ .../bindings/watchdog/hpe,gxp-wdt.txt         |  11 +
+ MAINTAINERS                                   |  14 +
+ arch/arm/Kconfig                              |   2 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/hpe-bmc-dl360gen10.dts      | 207 +++++++
+ arch/arm/boot/dts/hpe-gxp.dtsi                | 555 ++++++++++++++++++
+ arch/arm/configs/gxp_defconfig                | 243 ++++++++
+ arch/arm/mach-hpe/Kconfig                     |  21 +
+ arch/arm/mach-hpe/Makefile                    |   1 +
+ arch/arm/mach-hpe/gxp.c                       |  62 ++
+ drivers/clocksource/Kconfig                   |   8 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/gxp_timer.c               | 158 +++++
+ 35 files changed, 1719 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/display/hpe,gxp-thumbnail.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/hpe,gxp-i2c.txt
+ create mode 100644 Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc-cfg.txt
+ create mode 100644 Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/hpe,gxp-srom.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/hpe,gxp.txt
+ create mode 100644 Documentation/devicetree/bindings/net/hpe,gxp-umac-mdio.txt
+ create mode 100644 Documentation/devicetree/bindings/net/hpe,gxp-umac.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/hpe,gxp-fan.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/hpe,gxp-vuart-cfg.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/hpe,gxp-vuart.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/hpe/hpe,gxp-chif.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/hpe/hpe,gxp-csm.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/hpe/hpe,gxp-dbg.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/hpe/hpe,gxp-fn2.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/hpe/hpe,gxp-xreg.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/hpe,gxp-spifi.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/hpe,gxp-coretemp.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/hpe,gxp-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/hpe,gxp-udc.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/hpe,gxp-wdt.txt
+ create mode 100644 arch/arm/boot/dts/hpe-bmc-dl360gen10.dts
+ create mode 100644 arch/arm/boot/dts/hpe-gxp.dtsi
+ create mode 100644 arch/arm/configs/gxp_defconfig
+ create mode 100644 arch/arm/mach-hpe/Kconfig
+ create mode 100644 arch/arm/mach-hpe/Makefile
+ create mode 100644 arch/arm/mach-hpe/gxp.c
+ create mode 100644 drivers/clocksource/gxp_timer.c
 
-did you consider my earlier feedback "It would also be good if the PWM
-code could live in drivers/pwm"?
-(https://lore.kernel.org/r/20210505051958.e5lvwfxuo2skdu2q@pengutronix.de)
+diff --git a/Documentation/devicetree/bindings/display/hpe,gxp-thumbnail.txt b/Documentation/devicetree/bindings/display/hpe,gxp-thumbnail.txt
+new file mode 100644
+index 000000000000..e6d37ecce72b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/hpe,gxp-thumbnail.txt
+@@ -0,0 +1,21 @@
++* GXP HPE VIDEO THUMBNAIL DRIVER
++
++Required properties:
++- compatible: Must be "hpe,gxp-thumbnail".
++- reg       : Physical base address and length of the controller's registers.
++- clocks    : phandle + clock specifier pair of the FB reference clock.
++- bits-per-pixel: Bits per pixel, must be 32.
++- width: Width in pixels, must be 800.
++- height: Height in pixels, must be 600.
++
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
++
++Example:
++	thumbnail: thumbnail@c0000500 {
++		compatible = "hpe,gxp-thumbnail";
++		reg = <0xc0000500 0x20>;
++		bits-per-pixel = <32>;
++		width = <800>;
++		height = <600>;
++	};
+diff --git a/Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.txt b/Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.txt
+new file mode 100644
+index 000000000000..568d26d785d2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/hpe,gxp-gpio.txt
+@@ -0,0 +1,16 @@
++*HPE GXP GPIO INTERFACE
++
++Required properties:
++- compatible: Must be "hpe,gxp-gpio".
++- #gpio-cells: The number of cells to describe a GPIO, this should be 2.
++- csm: Phandle to the GXP PCI CSM Controller.
++- vuch0_handle:	Phandle to the Virtual USB Hub Controller (VUHC).
++
++Example of gpio-controller nodes for a MPC8347 SoC:
++
++	gpio: gpio {
++		compatible = "hpe,gxp-gpio";
++		#gpio-cells = <2>;
++		csm_handle = <&csm>;
++		vuhc0_handle = <&vuhc0>;
++	};
+diff --git a/Documentation/devicetree/bindings/i2c/hpe,gxp-i2c.txt b/Documentation/devicetree/bindings/i2c/hpe,gxp-i2c.txt
+new file mode 100644
+index 000000000000..cdca203f8c3b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/hpe,gxp-i2c.txt
+@@ -0,0 +1,19 @@
++* HPE GXP I2C Interface
++
++Required Properties:
++
++  - compatible: Must be "hpe,gxp-i2c"
++  - reg: The I2C address of the device.
++  - interrupts: The interrupt number.
++  - interrupt-parent: Interrupt controller to which the I2C bus is reporting
++  - i2cg-handle: I2C Global interrupt status register handler
++
++Example:
++
++	i2c0: i2c@c0002000 {
++		compatible = "hpe,gxp-i2c";
++		reg = <0xc0002000 0x70>;
++		interrupts = <9>;
++		interrupt-parent = <&vic0>;
++		i2cg-handle = <&i2cg>;
++	};
+diff --git a/Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc-cfg.txt b/Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc-cfg.txt
+new file mode 100644
+index 000000000000..20deef7a6be2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc-cfg.txt
+@@ -0,0 +1,13 @@
++* HPE GXP KCS IPMI DRIVER
++
++Required properties:
++- compatible : Must contain "hpe,gxp-kcs-bmc-cfg", "simple-mfd", "syscon".
++- reg : Specifies base physical address and size of the configuration registers.
++
++Example:
++
++	kcs_conf: kcs_conf@80fc0430 {
++			compatible = "hpe,gxp-kcs-bmc-cfg", "simple-mfd", "syscon";
++			reg = <0x80fc0430 0x100>;
++	};
++
+diff --git a/Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc.txt b/Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc.txt
+new file mode 100644
+index 000000000000..137411243f3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ipmi/hpegxp-kcs-bmc.txt
+@@ -0,0 +1,21 @@
++* HPE GXP KCS IPMI DRIVER
++
++Required properties:
++- compatible : Must contain "hpe,gxp-kcs-bmc".
++- interrupts : The interrupt number.
++- reg : Specifies base physical address and size of the control registers.
++- kcs_chan : The KCS channel number in the controller.
++- status: The status signal from the controller.
++- kcs-bmc-cfg = Phandle to the KCS Configuration registers.
++
++Example:
++
++	kcs_reg: kcs_reg@80fd0400 {
++		compatible = "hpe,gxp-kcs-bmc";
++		reg = <0x80fd0400 0x8>;
++		interrupts = <6>;
++		interrupt-parent = <&vic1>;
++		kcs_chan = <1>;
++		status = "okay";
++		kcs-bmc-cfg = <&kcs_conf>;
++	};
+diff --git a/Documentation/devicetree/bindings/memory-controllers/hpe,gxp-srom.txt b/Documentation/devicetree/bindings/memory-controllers/hpe,gxp-srom.txt
+new file mode 100644
+index 000000000000..027cb6fbc93c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/hpe,gxp-srom.txt
+@@ -0,0 +1,13 @@
++* HPE GXP SROM CONTROLLER
++
++Required properties:
++
++- compatible: Must be one of "hpe,gxp-srom", "simple-mfd", "syscon".
++- reg: Specifies base physical address and size of the control registers.
++
++Example:
++
++	srom@80fc0000 {
++		compatible = "hpe,gxp-srom", "simple-mfd", "syscon";
++		reg = <0x80fc0000 0x100>;
++	};
+diff --git a/Documentation/devicetree/bindings/mtd/hpe,gxp.txt b/Documentation/devicetree/bindings/mtd/hpe,gxp.txt
+new file mode 100644
+index 000000000000..8c6f54af0260
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/hpe,gxp.txt
+@@ -0,0 +1,16 @@
++
++* HPE GXP BMC
++
++HPE GXP SoC definition
++
++Required properties:
++  - compatible : Must contain: "HPE,GXP"
++
++Example:
++/ {
++	model = "Hewlett Packard Enterprise GXP BMC";
++	compatible = "HPE,GXP";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++}
+diff --git a/Documentation/devicetree/bindings/net/hpe,gxp-umac-mdio.txt b/Documentation/devicetree/bindings/net/hpe,gxp-umac-mdio.txt
+new file mode 100644
+index 000000000000..fa48ecb22c92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/hpe,gxp-umac-mdio.txt
+@@ -0,0 +1,21 @@
++* HPE GXP UMAC MDIO Interface Controller
++
++Required properties:
++- compatible: Must contain "hpe,gxp-umac-mdio".
++- reg:  Specifies base physical address and size of the registers.
++- interrupts: The interrupt number.
++- Cells which are configuring the external phy interfaces. Numbered through relative addressing each phy is compatible with a standard ethernet-phy-ieee802.3 phy.
++
++Example:
++
++	mdio0: mdio@c0004080 {
++		compatible = "hpe,gxp-umac-mdio";
++		reg = <0xc0004080 0x10>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ext_phy0: ethernt-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			phy-mode = "sgmii";
++			reg = <0>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/net/hpe,gxp-umac.txt b/Documentation/devicetree/bindings/net/hpe,gxp-umac.txt
+new file mode 100644
+index 000000000000..3a620b4ad999
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/hpe,gxp-umac.txt
+@@ -0,0 +1,20 @@
++* HPE GXP UMAC Controller
++
++Required properties:
++- compatible: Must contain "hpe,gxp-umac".
++- reg:  Specifies base physical address and size of the registers.
++- interrupts: The interrupt number.
++- interrupt-parent: specify main interrupt controller handler
++- phy-handle: Phandle to a PHY on the MDIO bus.
++- int-phy-handle: Phandle to PHY interrupt handler.
++
++Example:
++
++	umac0: umac@c0004000 {
++		compatible = "hpe,gxp-umac";
++		reg = <0xc0004000 0x80>;
++		interrupts = <10>;
++		interrupt-parent = <&vic0>;
++		phy-handle = <&ext_phy0>;
++		int-phy-handle = <&int_phy0>;
++	};
+diff --git a/Documentation/devicetree/bindings/pwm/hpe,gxp-fan.txt b/Documentation/devicetree/bindings/pwm/hpe,gxp-fan.txt
+new file mode 100644
+index 000000000000..21446b7cafd9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/hpe,gxp-fan.txt
+@@ -0,0 +1,15 @@
++* HPE GXP Fan Controller
++
++Required properties:
++- compatible: Must contain "hpe,gxp-fan-ctrl".
++- reg: Physical base address and length of the controller's registers.
++- xreg_handle: Phandle to the xregister controller for fan control.
++- fn2_handle: Phandle to the FN2 interface.
++
++Example:
++	fanctrl: fanctrl@c1000c00 {
++			compatible = "hpe,gxp-fan-ctrl";
++			reg = <0xc1000c00 0x200>;
++			xreg_handle = <&xreg>;
++			fn2_handle = <&fn2>;
++	};
+diff --git a/Documentation/devicetree/bindings/serial/hpe,gxp-vuart-cfg.txt b/Documentation/devicetree/bindings/serial/hpe,gxp-vuart-cfg.txt
+new file mode 100644
+index 000000000000..8bad8c39d044
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/hpe,gxp-vuart-cfg.txt
+@@ -0,0 +1,17 @@
++*HPE Virtual UART Controller CONFIGURATION
++
++This controller is used to forward host serial to BMC chip
++
++Required properties:
++
++- compatible : Must contain "hpe,gxp-vuarta_cfg", "simple-mfd", "syscon".
++- reg : Specifies base physical address and size of the configuration register.
++- reg-io-width: io register width in bytes, must be 1.
++
++Example:
++
++	vuart_a_cfg: vuarta_cfg@80fc0230 {
++		compatible = "hpe,gxp-vuarta_cfg", "simple-mfd", "syscon";
++		reg = <0x80fc0230 0x100>;
++		reg-io-width = <1>;
++	};
+diff --git a/Documentation/devicetree/bindings/serial/hpe,gxp-vuart.txt b/Documentation/devicetree/bindings/serial/hpe,gxp-vuart.txt
+new file mode 100644
+index 000000000000..9c5cc14d9474
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/hpe,gxp-vuart.txt
+@@ -0,0 +1,23 @@
++*HPE VUART Controller port
++
++Required properties:
++
++- compatible :  Must contain "hpe,gxp-vuart".
++- reg        :  Specifies base physical address and size of the registers.
++- interrupts :  The interrupt number.
++- clock-frequency: The frequency of the clock input to the UART in Hz.
++- status: The status signal from the controller.
++
++Example:
++
++	vuart_a: vuart_a@80fd0200 {
++		compatible = "hpe,gxp-vuart";
++		reg = <0x80fd0200 0x100>;
++		interrupts = <2>;
++		interrupt-parent = <&vic1>;
++		clock-frequency = <1846153>;
++		reg-shift = <0>;
++		status = "okay";
++		serial-line = <3>;
++		vuart_cfg = <&vuart_a_cfg>;
++	};
+diff --git a/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-chif.txt b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-chif.txt
+new file mode 100644
+index 000000000000..9d5a8763ca22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-chif.txt
+@@ -0,0 +1,16 @@
++* HPE GXP CHIF INTERFACE
++
++Define the basic CHannel InterFace (CHIF) communication path between BMC and Host through PCI.
++Interrupts are handled through PCI function 2
++
++Required parent device properties:
++- compatible : Should be "hpe,gxp-chif".
++- interrupts : The interrupt number.
++
++Example:
++
++	chif {
++			compatible = "hpe,gxp-chif";
++			interrupts = <12>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-csm.txt b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-csm.txt
+new file mode 100644
+index 000000000000..8d28fd1ec46a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-csm.txt
+@@ -0,0 +1,14 @@
++* HPE GXP PCI CSM INTERFACE
++
++Required parent device properties:
++- compatible : Should be "hpe,gxp-csm", "simple-mfd", "syscon".
++- reg : Specifies base physical address and size of control registers.
++
++Example:
++
++	csm: csm@8000005c {
++		compatible = "hpe,gxp-csm", "simple-mfd", "syscon";
++		reg = <0x8000005c 0x2>, <0x800000de 0x1>, <0x800000e7 0x1>;
++	};
++
++
+diff --git a/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-dbg.txt b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-dbg.txt
+new file mode 100644
+index 000000000000..39e3ed68a34d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-dbg.txt
+@@ -0,0 +1,18 @@
++* HPE GXP DBG INTERFACE
++
++Specify host debug interface. Used presently to report ROM POST code during host initialization phases
++
++Required parent device properties:
++- compatible : Should be "hpe,gxp-dbg".
++- reg : Specifies base physical address and size of the control/data registers.
++- interrupts: The interrupt number.
++- interrupt-parent: The interrupt controller to which the interface is wired to
++
++Example:
++
++	post@800000a0 {
++		compatible = "hpe,gxp-dbg";
++		reg = <0x800000a0 0x20>;
++		interrupts = <10>;
++		interrupt-parent = <&vic1>;
++	};
+diff --git a/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-fn2.txt b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-fn2.txt
+new file mode 100644
+index 000000000000..eb8328f59eda
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-fn2.txt
+@@ -0,0 +1,20 @@
++* HPE GXP PCI FN2 INTERFACE CONTROLLER
++
++Required parent device properties:
++- compatible : Should be "hpe,gxp-fn2", "simple-mfd", "syscon".
++- reg : Specifies base physical address and size of the control/data/memory mapped registers.
++- xreg_handle : Phandle to the xregister controller interface.
++- #gpio-cells : The number of cells to describe a GPIO, this should be 2.
++- interrupts : interrupt number to which PCI FN2 is connected to
++- interrupt-parets : interrupt controller to which PCI FN2 is connected to
++
++Example:
++
++	fn2: fn2@80200000 {
++		compatible = "hpe,gxp-fn2", "simple-mfd", "syscon";
++		reg = <0x80200000 0x100000>;
++		xreg_handle = <&xreg>;
++		interrupts = <0>;
++		interrupt-parent = <&vic1>;
++		#gpio-cells = <2>;
++	};
+diff --git a/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-xreg.txt b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-xreg.txt
+new file mode 100644
+index 000000000000..3ec86a478302
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/hpe/hpe,gxp-xreg.txt
+@@ -0,0 +1,19 @@
++* HPE GXP XREG INTERFACE
++
++Required parent device properties:
++- compatible : Should be "hpe,gxp-fn2", "simple-mfd", "syscon".
++- reg : Specifies base physical address and size of the control registers.
++- interrupts: The interrupt number.
++- interrupt-parent: main interrupt controller to which xreg is connected to
++- #gpio-cells : The number of cells to describe a GPIO, this should be 2.
++
++Example:
++
++	xreg: xreg@d1000300 {
++		compatible = "hpe,gxp-xreg", "simple-mfd", "syscon";
++		reg = <0xd1000300 0xFF>;
++		interrupts = <26>;
++		interrupt-parent = <&vic0>;
++		#gpio-cells = <2>;
++	};
++
+diff --git a/Documentation/devicetree/bindings/spi/hpe,gxp-spifi.txt b/Documentation/devicetree/bindings/spi/hpe,gxp-spifi.txt
+new file mode 100644
+index 000000000000..78eac0ac82f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/hpe,gxp-spifi.txt
+@@ -0,0 +1,76 @@
++* HPE GXP SPI FLASH INTERFACE
++
++Required properties:
++  - compatible : Must contain: "hpe,gxp-spifi"
++  - reg : the first contains the control register location and length,
++          the second contains the memory window mapping address and length,
++		  the third contains the configuration register location and length
++  - interrupts: The interrupt number.
++  - #address-cells : must be 1 corresponding to chip select child binding
++  - #size-cells : must be 0 corresponding to chip select child binding
++
++The child nodes are the SPI flash modules which must have a compatible
++property as specified in bindings/mtd/jedec,spi-nor.txt
++
++Example:
++	spifi0: spifi@c0000200 {
++		compatible = "hpe,gxp-spifi";
++		reg = <0xc0000200 0x80>, <0xc000c000 0x100>, <0xf8000000 0x8000000>;
++		interrupts = <20>;
++		interrupt-parent = <&vic0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			partitions {
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				u-boot@0 {
++					label = "u-boot";
++					reg = <0x0 0x60000>;
++				};
++				u-boot-env@60000 {
++					label = "u-boot-env";
++					reg = <0x60000 0x20000>;
++				};
++				kernel@80000 {
++					label = "kernel";
++					reg = <0x80000 0x4c0000>;
++				};
++				rofs@540000 {
++					label = "rofs";
++					reg = <0x540000 0x1740000>;
++				};
++				rwfs@1c80000 {
++					label = "rwfs";
++					reg = <0x1c80000 0x250000>;
++				};
++				section@1edf000{
++					label = "section";
++					reg = <0x1ed0000 0x130000>;
++				};
++			};
++		};
++
++		flash@1 {
++			compatible = "jedec,spi-nor";
++			reg = <1>;
++			partitions {
++				compatible = "fixed-partitions";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				host-prime@0 {
++					label = "host-prime";
++					reg = <0x0 0x02000000>;
++				};
++				host-second@2000000 {
++					label = "host-second";
++					reg = <0x02000000 0x02000000>;
++				};
++			};
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/thermal/hpe,gxp-coretemp.txt b/Documentation/devicetree/bindings/thermal/hpe,gxp-coretemp.txt
+new file mode 100644
+index 000000000000..bc83db03166a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/hpe,gxp-coretemp.txt
+@@ -0,0 +1,14 @@
++* HPE GXP CORETEMP INTERFACE
++
++Required parent device properties:
++- compatible : Should be "hpe,gxp-coretemp".
++- reg : Specifies base physical address and size of the control register.
++
++Example:
++
++	coretemp: coretemp@c0000130 {
++		compatible = "hpe,gxp-coretemp";
++		reg = <0xc0000130 0x8>;
++	};
++
++
+diff --git a/Documentation/devicetree/bindings/timer/hpe,gxp-timer.txt b/Documentation/devicetree/bindings/timer/hpe,gxp-timer.txt
+new file mode 100644
+index 000000000000..3e491b8ea740
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/hpe,gxp-timer.txt
+@@ -0,0 +1,18 @@
++*HPE GXP TIMER
++
++Required properties:
++
++- compatible : Must be "hpe,gxp-timer"
++- reg : The GXP Timer Control Registers (Addresses + size) tuples list.
++- interrupts : The interrupt number.
++- clock-frequency : The frequency of the clock that drives the counter, in Hz.
++
++Example:
++
++	timer0: timer@c0000080 {
++		compatible = "hpe,gxp-timer";
++		reg = <0xc0000080 0x1>, <0xc0000094 0x01>, <0xc0000088 0x08>;
++		interrupts = <0>;
++		interrupt-parent = <&vic0>;
++		clock-frequency = <400000000>;
++	};
+diff --git a/Documentation/devicetree/bindings/usb/hpe,gxp-udc.txt b/Documentation/devicetree/bindings/usb/hpe,gxp-udc.txt
+new file mode 100644
+index 000000000000..ed764d64a169
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/hpe,gxp-udc.txt
+@@ -0,0 +1,21 @@
++* HPE USB Device Port Controller
++
++Required properties:
++- compatible: Must be "hpe,gxp-udc".
++- reg: Specifies base physical address and size of the registers.
++- interrupts: The interrupt number.
++- vdevnum: The particular usb device controller port.
++- fepnum: The particular usb device controller options.
++- udcg-handle: The usb device controller hub.
++
++Example:
++
++	udc0: udc@80401000 {
++		compatible = "hpe,gxp-udc";
++		reg = <0x80401000 0x1000>;
++		interrupts = <13>;
++		interrupt-parent = <&vic1>;
++		vdevnum = <0>;
++		fepnum = <7>;
++		udcg-handle = <&udcg>;
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 294093d45a23..913f722a6b8d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -514,7 +514,9 @@ patternProperties:
+   "^hoperun,.*":
+     description: Jiangsu HopeRun Software Co., Ltd.
+   "^hp,.*":
+-    description: Hewlett Packard
++    description: Hewlett Packard Inc.
++  "^hpe,.*":
++    description: Hewlett Packard Enterprise
+   "^hsg,.*":
+     description: HannStar Display Co.
+   "^holtek,.*":
+diff --git a/Documentation/devicetree/bindings/watchdog/hpe,gxp-wdt.txt b/Documentation/devicetree/bindings/watchdog/hpe,gxp-wdt.txt
+new file mode 100644
+index 000000000000..3f17c1a00a5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/hpe,gxp-wdt.txt
+@@ -0,0 +1,11 @@
++* HPE GXP Controlled Watchdog
++
++Required Properties:
++- compatible: Should contain "hpe,gxp-wdt".
++- reg: The GXP Watchdog Control Registers (Addresses + size) tuples list.
++
++Example:
++	watchdog: watchdog@c0000090 {
++		compatible = "hpe,gxp-wdt";
++		reg = <0xc0000090 0x02>, <0xc0000096 0x01>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f41088418aae..2a4fcfff0104 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8385,6 +8385,20 @@ L:	linux-efi@vger.kernel.org
+ S:	Maintained
+ F:	block/partitions/efi.*
+ 
++GXP ARCHITECTURE
++M:	Jean-Marie Verdun <verdun@hpe.com>
++M:	Nick Hawkins <nick.hawkins@hpe.com>
++S:	Maintained
++F:	arch/arm/boot/dts/gxp.dts
++F:	arch/arm/configs/gxp_defconfig
++F:	arch/arm/mach-hpe/gxp.c
++
++GXP TIMER
++M:	Jean-Marie Verdun <verdun@hpe.com>
++M:	Nick Hawkins <nick.hawkins@hpe.com>
++S:	Maintained
++F:	drivers/clocksource/gxp_timer.c
++
+ H8/300 ARCHITECTURE
+ M:	Yoshinori Sato <ysato@users.sourceforge.jp>
+ L:	uclinux-h8-devel@lists.sourceforge.jp (moderated for non-subscribers)
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 4c97cb40eebb..6998b5b5f59e 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -618,6 +618,8 @@ source "arch/arm/mach-highbank/Kconfig"
+ 
+ source "arch/arm/mach-hisi/Kconfig"
+ 
++source "arch/arm/mach-hpe/Kconfig"
++
+ source "arch/arm/mach-imx/Kconfig"
+ 
+ source "arch/arm/mach-integrator/Kconfig"
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 235ad559acb2..a96b4d5b7f68 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1549,3 +1549,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-vegman-n110.dtb \
+ 	aspeed-bmc-vegman-rx20.dtb \
+ 	aspeed-bmc-vegman-sx20.dtb
++dtb-$(CONFIG_ARCH_HPE_GXP) += \
++	hpe-bmc-dl360gen10.dtb
+diff --git a/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts b/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts
+new file mode 100644
+index 000000000000..278bf2bca2c8
+--- /dev/null
++++ b/arch/arm/boot/dts/hpe-bmc-dl360gen10.dts
+@@ -0,0 +1,207 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree file for HPE DL360Gen10
++ */
++
++/include/ "hpe-gxp.dtsi"
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "hpe,gxp";
++	model = "Hewlett Packard Enterprise ProLiant dl360 Gen10";
++
++	chosen {
++		bootargs = "earlyprintk console=ttyS0,115200 user_debug=31";
++	};
++
++	aliases {
++		ethernet0 = &umac0;
++		ethernet1 = &umac1;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x40000000 0x20000000>;
++	};
++
++	ahb {
++		umac0: umac@c0004000 {
++			mac-address = [94 18 82 16 04 d8];
++		};
++
++		umac1: umac@c0005000 {
++			mac-address = [94 18 82 16 04 d9];
++		};
++
++		udc0: udc@80401000 {
++			compatible = "hpe,gxp-udc";
++			reg = <0x80401000 0x1000>;
++			interrupts = <13>;
++			interrupt-parent = <&vic1>;
++			vdevnum = <0>;
++			fepnum = <7>;
++			udcg-handle = <&udcg>;
++		};
++
++		udc1: udc@80402000 {
++			compatible = "hpe,gxp-udc";
++			reg = <0x80402000 0x1000>;
++			interrupts = <13>;
++			interrupt-parent = <&vic1>;
++			vdevnum = <1>;
++			fepnum = <7>;
++			udcg-handle = <&udcg>;
++		};
++
++		udc2: udc@80403000 {
++			compatible = "hpe,gxp-udc";
++			reg = <0x80403000 0x1000>;
++			interrupts = <13>;
++			interrupt-parent = <&vic1>;
++			vdevnum = <2>;
++			fepnum = <4>;
++			udcg-handle = <&udcg>;
++		};
++
++		fn2: fn2@80200000 {
++			gpio-line-names =
++				"POWER_OUT", "PS_PWROK", "PCIERST", "POST_COMPLETE", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "",
++				"", "", "", "";
++		};
++
++		xreg: xreg@d1000300 {
++			gpio-line-names =
++				"", "", "", "", "", "", "POWER", "HEARTBEAT", "FAN1_INST",
++				"FAN2_INST","FAN3_INST", "FAN4_INST", "FAN5_INST",
++				"FAN6_INST", "FAN7_INST", "FAN8_INST", "FAN9_INST",
++				"FAN10_INST", "FAN11_INST", "FAN12_INST","FAN13_INST",
++				"FAN14_INST", "FAN15_INST", "FAN16_INST", "FAN1_FAIL",
++				"FAN2_FAIL", "FAN3_FAIL", "FAN4_FAIL", "FAN5_FAIL",
++				"FAN6_FAIL", "FAN7_FAIL", "FAN8_FAIL", "FAN9_FAIL",
++				"FAN10_FAIL", "FAN11_FAIL", "FAN12_FAIL", "FAN13_FAIL",
++				"FAN14_FAIL", "FAN15_FAIL", "FAN16_FAIL","", "", "", "",
++				"", "", "", "", "", "", "", "", "", "", "", "", "IDENTIFY",
++				"HEALTH_RED", "HEALTH_AMBER", "POWER_BUTTON", "",
++				"SIO_POWER_GOOD", "NMI_BUTTON", "RESET_BUTTON", "SIO_S5",
++				"SIO_ONCONTROL", "", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "", "", "", "", "",
++				"", "", "", "", "", "", "", "", "", "";
++		};
++
++		i2c2: i2c@c0002200 {
++			24c02@50 {
++				compatible = "atmel,24c02";
++				pagesize = <8>;
++				reg = <0x50>;
++			};
++		};
++	};
++
++	vuhc: vuhc {
++		compatible = "gpio-keys-polled";
++		poll-interval = <100>;
++
++		PortOwner0 {
++			label = "Port Owner";
++			linux,code = <200>;
++			gpios = <&gpio 250 1>;
++		};
++
++		PortOwner1 {
++			label = "Port Owner";
++			linux,code = <201>;
++			gpios = <&gpio 251 1>;
++		};
++
++		PortOwner2 {
++			label = "Port Owner";
++			linux,code = <202>;
++			gpios = <&gpio 252 1>;
++		};
++	};
++
++	gpio: gpio {
++		gpio-line-names =
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "RESET_OUT", "NMI_OUT", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "",
++			"", "", "", "", "", "", "", "", "", "";
++	};
++
++	xreg_keys: xreg_keys {
++		compatible = "gpio-keys-polled";
++		poll-interval = <100>;
++
++		IdButton {
++			label = "ID Button";
++			linux,code = <200>;
++			gpios = <&xreg 60 1>;
++		};
++	};
++
++	leds: leds {
++		compatible = "gpio-leds";
++
++		power {
++			gpios = <&xreg 6 0>;
++			default-state = "off";
++		};
++
++		heartbeat {
++			gpios = <&xreg 7 0>;
++			default-state = "off";
++		};
++
++		identify {
++			gpios = <&xreg 56 0>;
++			default-state = "off";
++		};
++
++		health_red {
++			gpios = <&xreg 57 0>;
++			default-state = "off";
++		};
++
++		health_amber {
++			gpios = <&xreg 58 0>;
++			default-state = "off";
++		};
++	};
++
++};
+diff --git a/arch/arm/boot/dts/hpe-gxp.dtsi b/arch/arm/boot/dts/hpe-gxp.dtsi
+new file mode 100644
+index 000000000000..1a16840bb72f
+--- /dev/null
++++ b/arch/arm/boot/dts/hpe-gxp.dtsi
+@@ -0,0 +1,555 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree file for HPE GXP
++ */
++
++/dts-v1/;
++/ {
++	model = "Hewlett Packard Enterprise GXP BMC";
++	compatible = "hpe,gxp";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,armv7";
++			device_type = "cpu";
++			reg = <0>;
++		};
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x40000000 0x20000000>;
++	};
++
++	ahb {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		device_type = "soc";
++		ranges;
++
++		vic0: interrupt-controller@ceff0000 {
++			compatible = "arm,pl192-vic";
++			#address-cells = <1>;
++			interrupt-controller;
++			reg = <0xceff0000 0x1000>;
++			#interrupt-cells = <1>;
++		};
++
++		vic1: vic@80f00000 {
++			compatible = "arm,pl192-vic";
++			#address-cells = <1>;
++			interrupt-controller;
++			reg = <0x80f00000 0x1000>;
++			#interrupt-cells = <1>;
++		};
++
++		timer0: timer@c0000080 {
++			compatible = "hpe,gxp-timer";
++			reg = <0xc0000080 0x1>, <0xc0000094 0x01>, <0xc0000088 0x08>;
++			interrupts = <0>;
++			interrupt-parent = <&vic0>;
++			clock-frequency = <400000000>;
++		};
++
++		watchdog: watchdog@c0000090 {
++			compatible = "hpe,gxp-wdt";
++			reg = <0xc0000090 0x02>, <0xc0000096 0x01>;
++		};
++
++		uartc: serial@c00000f0 {
++			compatible = "ns16550a";
++			reg = <0xc00000f0 0x8>;
++			interrupts = <19>;
++			interrupt-parent = <&vic0>;
++			clock-frequency = <1846153>;
++			reg-shift = <0>;
++		};
++
++		uarta: serial@c00000e0 {
++			compatible = "ns16550a";
++			reg = <0xc00000e0 0x8>;
++			interrupts = <17>;
++			interrupt-parent = <&vic0>;
++			clock-frequency = <1846153>;
++			reg-shift = <0>;
++		};
++
++		uartb: serial@c00000e8 {
++			compatible = "ns16550a";
++			reg = <0xc00000e8 0x8>;
++			interrupts = <18>;
++			interrupt-parent = <&vic0>;
++			clock-frequency = <1846153>;
++			reg-shift = <0>;
++		};
++
++		vuart_a_cfg: vuarta_cfg@80fc0230 {
++			compatible = "hpe,gxp-vuarta_cfg", "simple-mfd", "syscon";
++			reg = <0x80fc0230 0x100>;
++			reg-io-width = <1>;
++		};
++
++		vuart_a: vuart_a@80fd0200 {
++			compatible = "hpe,gxp-vuart";
++			reg = <0x80fd0200 0x100>;
++			interrupts = <2>;
++			interrupt-parent = <&vic1>;
++			clock-frequency = <1846153>;
++			reg-shift = <0>;
++			status = "okay";
++			serial-line = <3>;
++			vuart_cfg = <&vuart_a_cfg>;
++		};
++
++		usb0: ehci@cefe0000 {
++			compatible = "generic-ehci";
++			reg = <0xcefe0000 0x100>;
++			interrupts = <7>;
++			interrupt-parent = <&vic0>;
++		};
++
++		usb1: ohci@cefe0100 {
++			compatible = "generic-ohci";
++			reg = <0xcefe0100 0x110>;
++			interrupts = <6>;
++			interrupt-parent = <&vic0>;
++		};
++
++		spifi0: spifi@c0000200 {
++			compatible = "hpe,gxp-spifi";
++			reg = <0xc0000200 0x80>, <0xc000c000 0x100>, <0xf8000000 0x8000000>;
++			interrupts = <20>;
++			interrupt-parent = <&vic0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			flash@0 {
++				compatible = "jedec,spi-nor";
++				reg = <0>;
++				partitions {
++					compatible = "fixed-partitions";
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					u-boot@0 {
++						label = "u-boot";
++						reg = <0x0 0x60000>;
++					};
++					u-boot-env@60000 {
++						label = "u-boot-env";
++						reg = <0x60000 0x20000>;
++					};
++					kernel@80000 {
++						label = "kernel";
++						reg = <0x80000 0x4c0000>;
++					};
++					rofs@540000 {
++						label = "rofs";
++						reg = <0x540000 0x1740000>;
++					};
++					rwfs@1c80000 {
++						label = "rwfs";
++						reg = <0x1c80000 0x250000>;
++					};
++					section@1edf000{
++						label = "section";
++						reg = <0x1ed0000 0x130000>;
++					};
++				};
++			};
++
++			flash@1 {
++				compatible = "jedec,spi-nor";
++				reg = <1>;
++				partitions {
++					compatible = "fixed-partitions";
++					#address-cells = <1>;
++					#size-cells = <1>;
++					host-prime@0 {
++						label = "host-prime";
++						reg = <0x0 0x02000000>;
++					};
++					host-second@2000000 {
++						label = "host-second";
++						reg = <0x02000000 0x02000000>;
++					};
++				};
++			};
++		};
++
++		sram@d0000000 {
++			compatible = "mtd-ram";
++			reg = <0xd0000000 0x80000>;
++			bank-width = <1>;
++			erase-size =<1>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			partition@0 {
++				label = "host-reserved";
++				reg = <0x0 0x10000>;
++			};
++			partition@10000 {
++				label = "nvram";
++				reg = <0x10000 0x70000>;
++			};
++		};
++
++		srom@80fc0000 {
++			compatible = "hpe,gxp-srom", "simple-mfd", "syscon";
++			reg = <0x80fc0000 0x100>;
++		};
++
++		vrom@58000000 {
++			compatible = "mtd-ram";
++			bank-width = <4>;
++			reg = <0x58000000 0x4000000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			partition@0 {
++				label = "vrom-prime";
++				reg = <0x0 0x2000000>;
++			};
++			partition@2000000 {
++				label = "vrom-second";
++				reg = <0x2000000 0x2000000>;
++			};
++		};
++
++		i2cg: i2cg@c00000f8 {
++			compatible = "syscon";
++			reg = <0xc00000f8 0x08>;
++		};
++
++		i2c0: i2c@c0002000 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002000 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c1: i2c@c0002100 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002100 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2: i2c@c0002200 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002200 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c3: i2c@c0002300 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002300 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c4: i2c@c0002400 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002400 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c5: i2c@c0002500 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002500 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++		};
++
++		i2c6: i2c@c0002600 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002600 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c7: i2c@c0002700 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002700 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c8: i2c@c0002800 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002800 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c9: i2c@c0002900 {
++			compatible = "hpe,gxp-i2c";
++			reg = <0xc0002900 0x70>;
++			interrupts = <9>;
++			interrupt-parent = <&vic0>;
++			i2cg-handle = <&i2cg>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2cmux@d1000074 {
++			compatible = "i2c-mux-reg";
++			i2c-parent = <&i2c4>;
++			reg = <0xd1000074 1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			i2c4@1 {
++				reg = <1>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c4@2 {
++				reg = <2>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c4@3 {
++				reg = <3>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c4@4 {
++				reg = <4>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		i2cmux@d1000076 {
++			compatible = "i2c-mux-reg";
++			i2c-parent = <&i2c6>;
++			reg = <0xd1000076 1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			i2c6@1 {
++				reg = <1>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c6@2 {
++				reg = <2>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c6@3 {
++				reg = <3>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c6@4 {
++				reg = <4>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			i2c6@5 {
++				reg = <5>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		mdio0: mdio@c0004080 {
++			compatible = "hpe,gxp-umac-mdio";
++			reg = <0xc0004080 0x10>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			ext_phy0: ethernt-phy@0 {
++				compatible = "ethernet-phy-ieee802.3-c22";
++				phy-mode = "sgmii";
++				reg = <0>;
++			};
++		};
++
++		mdio1: mdio@c0005080 {
++			compatible = "hpe,gxp-umac-mdio";
++			reg = <0xc0005080 0x10>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			int_phy0: ethernt-phy@0 {
++				compatible = "ethernet-phy-ieee802.3-c22";
++				phy-mode = "gmii";
++				reg = <0>;
++			};
++
++			int_phy1: ethernt-phy@1 {
++				compatible = "ethernet-phy-ieee802.3-c22";
++				phy-mode = "gmii";
++				reg = <1>;
++			};
++		};
++
++		umac0: umac@c0004000 {
++			compatible = "hpe,gxp-umac";
++			reg = <0xc0004000 0x80>;
++			interrupts = <10>;
++			interrupt-parent = <&vic0>;
++			phy-handle = <&ext_phy0>;
++			int-phy-handle = <&int_phy0>;
++		};
++
++		umac1: umac@c0005000 {
++			compatible = "hpe,gxp-umac";
++			use-ncsi;
++			reg = <0xc0005000 0x80>;
++			interrupts = <11>;
++			interrupt-parent = <&vic0>;
++			phy-handle = <&int_phy1>;
++		};
++
++		kcs_conf: kcs_conf@80fc0430 {
++			compatible = "hpe,gxp-kcs-bmc-cfg", "simple-mfd", "syscon";
++			reg = <0x80fc0430 0x100>;
++		};
++
++		kcs_reg: kcs_reg@80fd0400 {
++			compatible = "hpe,gxp-kcs-bmc";
++			reg = <0x80fd0400 0x8>;
++			interrupts = <6>;
++			interrupt-parent = <&vic1>;
++			kcs_chan = <1>;
++			status = "okay";
++			kcs-bmc-cfg = <&kcs_conf>;
++		};
++
++		thumbnail: thumbnail@c0000500 {
++			compatible = "hpe,gxp-thumbnail";
++			reg = <0xc0000500 0x20>;
++			bits-per-pixel = <32>;
++			width = <800>;
++			height = <600>;
++		};
++
++		fanctrl: fanctrl@c1000c00 {
++			compatible = "hpe,gxp-fan-ctrl";
++			reg = <0xc1000c00 0x200>;
++			xreg_handle = <&xreg>;
++			fn2_handle = <&fn2>;
++		};
++
++		fn2: fn2@80200000 {
++			compatible = "hpe,gxp-fn2", "simple-mfd", "syscon";
++			reg = <0x80200000 0x100000>;
++			xreg_handle = <&xreg>;
++			interrupts = <0>;
++			interrupt-parent = <&vic1>;
++			#gpio-cells = <2>;
++			chif {
++				compatible = "hpe,gxp-chif";
++				interrupts = <12>;
++			};
++		};
++
++		xreg: xreg@d1000300 {
++			compatible = "hpe,gxp-xreg", "simple-mfd", "syscon";
++			reg = <0xd1000300 0xFF>;
++			interrupts = <26>;
++			interrupt-parent = <&vic0>;
++			#gpio-cells = <2>;
++		};
++
++		csm: csm@8000005c {
++			compatible = "hpe,gxp-csm", "simple-mfd", "syscon";
++			reg = <0x8000005c 0x2>, <0x800000de 0x1>, <0x800000e7 0x1>;
++		};
++
++		vuhc0: vuhc@80400000 {
++			compatible = "syscon";
++			reg = <0x80400000 0x80>;
++		};
++
++		udcg: udcg@80400800 {
++			compatible = "syscon";
++			reg = <0x80400800 0x200>;
++		};
++
++		post@800000a0 {
++			compatible = "hpe,gxp-dbg";
++			reg = <0x800000a0 0x20>;
++			interrupts = <10>;
++			interrupt-parent = <&vic1>;
++		};
++
++		coretemp: coretemp@c0000130 {
++			compatible = "hpe,gxp-coretemp";
++			reg = <0xc0000130 0x8>;
++		};
++	};
++
++	gpio: gpio {
++		compatible = "hpe,gxp-gpio";
++		#gpio-cells = <2>;
++		csm_handle = <&csm>;
++		vuhc0_handle = <&vuhc0>;
++	};
++
++	clocks {
++		osc: osc {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-output-names = "osc";
++			clock-frequency = <33333333>;
++		};
++
++		iopclk: iopclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clocks = <&osc>;
++			clock-out-put-names = "iopclk";
++			clock-frequency = <400000000>;
++		};
++
++		memclk: memclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clocks = <&osc>;
++			clock-out-put-names = "memclk";
++			clock-frequency = <800000000>;
++		};
++	};
++};
+diff --git a/arch/arm/configs/gxp_defconfig b/arch/arm/configs/gxp_defconfig
+new file mode 100644
+index 000000000000..f37c6630e06d
+--- /dev/null
++++ b/arch/arm/configs/gxp_defconfig
+@@ -0,0 +1,243 @@
++CONFIG_KERNEL_XZ=y
++CONFIG_DEFAULT_HOSTNAME="gxp"
++CONFIG_SYSVIPC=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
++CONFIG_LOG_BUF_SHIFT=18
++CONFIG_CFS_BANDWIDTH=y
++CONFIG_RT_GROUP_SCHED=y
++CONFIG_CGROUP_FREEZER=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_NAMESPACES=y
++CONFIG_SCHED_AUTOGROUP=y
++CONFIG_RELAY=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++CONFIG_KALLSYMS_ALL=y
++CONFIG_EMBEDDED=y
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLAB=y
++CONFIG_ARCH_MULTI_V6=y
++CONFIG_ARCH_HPE=y
++CONFIG_ARCH_HPE_GXP=y
++CONFIG_SECCOMP=y
++# CONFIG_ATAGS is not set
++CONFIG_ZBOOT_ROM_TEXT=0x0
++CONFIG_ZBOOT_ROM_BSS=0x0
++# CONFIG_SUSPEND is not set
++CONFIG_JUMP_LABEL=y
++# CONFIG_STRICT_KERNEL_RWX is not set
++# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
++CONFIG_KSM=y
++CONFIG_CLEANCACHE=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_PACKET_DIAG=y
++CONFIG_UNIX=y
++CONFIG_UNIX_DIAG=y
++CONFIG_XFRM_USER=y
++CONFIG_XFRM_STATISTICS=y
++CONFIG_INET=y
++CONFIG_VLAN_8021Q=y
++CONFIG_NETLINK_DIAG=y
++CONFIG_NET_NCSI=y
++# CONFIG_WIRELESS is not set
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_STANDALONE is not set
++CONFIG_MTD=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_PHYSMAP=y
++CONFIG_MTD_PHYSMAP_OF=y
++CONFIG_MTD_PLATRAM=y
++CONFIG_MTD_SPI_NOR=y
++CONFIG_SPI_GXP_SPIFI=y
++CONFIG_BLK_DEV_NULL_BLK=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_NBD=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_EEPROM_AT24=y
++CONFIG_SCSI=y
++CONFIG_BLK_DEV_SD=y
++# CONFIG_SCSI_LOWLEVEL is not set
++CONFIG_NETDEVICES=y
++# CONFIG_NET_VENDOR_ALACRITECH is not set
++# CONFIG_NET_VENDOR_AMAZON is not set
++# CONFIG_NET_VENDOR_AQUANTIA is not set
++# CONFIG_NET_VENDOR_ARC is not set
++# CONFIG_NET_VENDOR_AURORA is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CADENCE is not set
++# CONFIG_NET_VENDOR_CAVIUM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_CORTINA is not set
++# CONFIG_NET_VENDOR_EZCHIP is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_GOOGLE is not set
++# CONFIG_NET_VENDOR_HISILICON is not set
++# CONFIG_NET_VENDOR_HUAWEI is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MELLANOX is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_MICROCHIP is not set
++# CONFIG_NET_VENDOR_MICROSEMI is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_NETRONOME is not set
++# CONFIG_NET_VENDOR_NI is not set
++# CONFIG_NET_VENDOR_QUALCOMM is not set
++# CONFIG_NET_VENDOR_RENESAS is not set
++# CONFIG_NET_VENDOR_ROCKER is not set
++# CONFIG_NET_VENDOR_SAMSUNG is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SOLARFLARE is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++# CONFIG_NET_VENDOR_SOCIONEXT is not set
++# CONFIG_NET_VENDOR_STMICRO is not set
++# CONFIG_NET_VENDOR_SYNOPSYS is not set
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++# CONFIG_NET_VENDOR_XILINX is not set
++CONFIG_UMAC=y
++# CONFIG_USB_NET_DRIVERS is not set
++# CONFIG_WLAN is not set
++# CONFIG_INPUT_LEDS is not set
++CONFIG_INPUT_EVDEV=y
++# CONFIG_KEYBOARD_ATKBD is not set
++CONFIG_KEYBOARD_GPIO=y
++CONFIG_KEYBOARD_GPIO_POLLED=y
++# CONFIG_INPUT_MOUSE is not set
++CONFIG_SERIO_LIBPS2=y
++CONFIG_VT_HW_CONSOLE_BINDING=y
++# CONFIG_LEGACY_PTYS is not set
++CONFIG_SERIAL_8250=y
++# CONFIG_SERIAL_8250_DEPRECATED_OPTIONS is not set
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_NR_UARTS=6
++CONFIG_SERIAL_8250_RUNTIME_UARTS=6
++CONFIG_SERIAL_8250_EXTENDED=y
++CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_GXP_VUART=y
++CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_TTY_PRINTK=y
++CONFIG_IPMI_HANDLER=y
++CONFIG_IPMI_DEVICE_INTERFACE=y
++CONFIG_IPMI_SI=y
++CONFIG_IPMI_SSIF=y
++CONFIG_HPE_KCS_IPMI_BMC=y
++CONFIG_HW_RANDOM_TIMERIOMEM=y
++CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_GXP=y
++CONFIG_I2C_SLAVE=y
++CONFIG_I2C_SLAVE_EEPROM=y
++CONFIG_SPI=y
++CONFIG_GPIOLIB=y
++CONFIG_GPIO_SYSFS=y
++CONFIG_GPIO_GXP=y
++CONFIG_SENSORS_EMC1403=y
++CONFIG_SENSORS_GXP_FAN_CTRL=y
++CONFIG_SENSORS_GXP_CORETEMP=y
++CONFIG_SENSORS_GXP_PSU=y
++CONFIG_SENSORS_GXP_POWER=y
++CONFIG_WATCHDOG=y
++CONFIG_GXP_WATCHDOG=y
++CONFIG_MFD_SYSCON=y
++CONFIG_FB=y
++CONFIG_FB_THUMBNAIL=y
++CONFIG_FB_SIMPLE=y
++CONFIG_USB=y
++CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
++CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_EHCI_ROOT_HUB_TT=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_USB_OHCI_HCD_PLATFORM=y
++CONFIG_USB_STORAGE=y
++CONFIG_USB_GADGET=y
++CONFIG_USB_GXP_UDC=y
++CONFIG_USB_CONFIGFS=y
++CONFIG_USB_CONFIGFS_SERIAL=y
++CONFIG_USB_CONFIGFS_ACM=y
++CONFIG_USB_CONFIGFS_OBEX=y
++CONFIG_USB_CONFIGFS_NCM=y
++CONFIG_USB_CONFIGFS_ECM=y
++CONFIG_USB_CONFIGFS_ECM_SUBSET=y
++CONFIG_USB_CONFIGFS_RNDIS=y
++CONFIG_USB_CONFIGFS_EEM=y
++CONFIG_USB_CONFIGFS_MASS_STORAGE=y
++CONFIG_USB_CONFIGFS_F_LB_SS=y
++CONFIG_USB_CONFIGFS_F_FS=y
++CONFIG_USB_CONFIGFS_F_HID=y
++CONFIG_USB_CONFIGFS_F_PRINTER=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_TIMER=y
++CONFIG_LEDS_TRIGGER_ONESHOT=y
++CONFIG_LEDS_TRIGGER_MTD=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
++CONFIG_LEDS_TRIGGER_CPU=y
++CONFIG_LEDS_TRIGGER_GPIO=y
++CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
++CONFIG_LEDS_TRIGGER_TRANSIENT=y
++CONFIG_LEDS_TRIGGER_PANIC=y
++# CONFIG_VIRTIO_MENU is not set
++# CONFIG_IOMMU_SUPPORT is not set
++CONFIG_HPE_GXP_XREG=y
++CONFIG_HPE_GXP_FN2=y
++CONFIG_HPE_GXP_CSM=y
++CONFIG_HPE_GXP_SROM=y
++CONFIG_FANOTIFY=y
++CONFIG_OVERLAY_FS=y
++CONFIG_OVERLAY_FS_REDIRECT_DIR=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_JFFS2_FS=y
++# CONFIG_JFFS2_FS_WRITEBUFFER is not set
++CONFIG_JFFS2_SUMMARY=y
++CONFIG_JFFS2_FS_XATTR=y
++# CONFIG_JFFS2_FS_POSIX_ACL is not set
++# CONFIG_JFFS2_FS_SECURITY is not set
++CONFIG_SQUASHFS=y
++CONFIG_SQUASHFS_XZ=y
++CONFIG_SQUASHFS_4K_DEVBLK_SIZE=y
++# CONFIG_NETWORK_FILESYSTEMS is not set
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_ASCII=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
++CONFIG_CRYPTO_CCM=y
++CONFIG_CRYPTO_GCM=y
++CONFIG_CRYPTO_CRC32C=y
++CONFIG_CRYPTO_ARC4=y
++CONFIG_CRYPTO_DEFLATE=y
++CONFIG_CRYPTO_LZO=y
++CONFIG_CRYPTO_ZSTD=y
++CONFIG_CRYPTO_USER_API_HASH=y
++# CONFIG_CRYPTO_HW is not set
++CONFIG_CRC16=y
++# CONFIG_XZ_DEC_ARM is not set
++# CONFIG_XZ_DEC_ARMTHUMB is not set
++CONFIG_DMA_API_DEBUG=y
++CONFIG_PRINTK_TIME=y
++CONFIG_BOOT_PRINTK_DELAY=y
++CONFIG_DYNAMIC_DEBUG=y
++CONFIG_DEBUG_INFO=y
++# CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_PANIC_ON_OOPS=y
++CONFIG_FUNCTION_PROFILER=y
++CONFIG_STACK_TRACER=y
++CONFIG_SCHED_TRACER=y
++CONFIG_STRICT_DEVMEM=y
++CONFIG_DEBUG_USER=y
++CONFIG_DEBUG_LL=y
++CONFIG_DEBUG_LL_UART_8250=y
++CONFIG_DEBUG_UART_PHYS=0xC00000F0
++CONFIG_DEBUG_UART_VIRT=0xF00000F0
++CONFIG_DEBUG_UART_8250_SHIFT=0
++CONFIG_EARLY_PRINTK=y
++CONFIG_TEST_KSTRTOX=y
+diff --git a/arch/arm/mach-hpe/Kconfig b/arch/arm/mach-hpe/Kconfig
+new file mode 100644
+index 000000000000..cc63f2be6c9c
+--- /dev/null
++++ b/arch/arm/mach-hpe/Kconfig
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0-only
++menuconfig ARCH_HPE
++	bool "HPE SoC support"
++	help
++	  This enables support for HPE ARM based SoC chips
++if ARCH_HPE
++
++config ARCH_HPE_GXP
++	bool "HPE GXP SoC"
++	select ARM_VIC
++	select PINCTRL
++	select IRQ_DOMAIN
++	select GENERIC_IRQ_CHIP
++	select MULTI_IRQ_HANDLER
++	select SPARSE_IRQ
++	select CLKSRC_MMIO
++	depends on ARCH_MULTI_V7
++	help
++	  Support for GXP SoCs
++
++endif
+diff --git a/arch/arm/mach-hpe/Makefile b/arch/arm/mach-hpe/Makefile
+new file mode 100644
+index 000000000000..8b0a91234df4
+--- /dev/null
++++ b/arch/arm/mach-hpe/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_ARCH_HPE_GXP) += gxp.o
+diff --git a/arch/arm/mach-hpe/gxp.c b/arch/arm/mach-hpe/gxp.c
+new file mode 100644
+index 000000000000..a37838247948
+--- /dev/null
++++ b/arch/arm/mach-hpe/gxp.c
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2022 Hewlett-Packard Enterprise Development Company, L.P.
++ *
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++
++#include <linux/init.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/map.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/clk-provider.h>
++#include <linux/clocksource.h>
++
++#define IOP_REGS_PHYS_BASE 0xc0000000
++#define IOP_REGS_VIRT_BASE 0xf0000000
++#define IOP_REGS_SIZE (240*SZ_1M)
++
++#define IOP_EHCI_USBCMD 0x0efe0010
++
++static struct map_desc gxp_io_desc[] __initdata = {
++	{
++	.virtual	= (unsigned long)IOP_REGS_VIRT_BASE,
++	.pfn		= __phys_to_pfn(IOP_REGS_PHYS_BASE),
++	.length		= IOP_REGS_SIZE,
++	.type		= MT_DEVICE,
++	},
++};
++
++void __init gxp_map_io(void)
++{
++	iotable_init(gxp_io_desc, ARRAY_SIZE(gxp_io_desc));
++}
++
++static void __init gxp_dt_init(void)
++{
++	/*reset EHCI host controller for clear start*/
++	__raw_writel(0x00080002,
++		(void __iomem *)(IOP_REGS_VIRT_BASE + IOP_EHCI_USBCMD));
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++}
++
++static void gxp_restart(enum reboot_mode mode, const char *cmd)
++{
++	__raw_writel(1, (void __iomem *) IOP_REGS_VIRT_BASE);
++}
++
++static const char * const gxp_board_dt_compat[] = {
++	"HPE,GXP",
++	NULL,
++};
++
++DT_MACHINE_START(GXP_DT, "HPE GXP")
++	.init_machine	= gxp_dt_init,
++	.map_io		= gxp_map_io,
++	.restart	= gxp_restart,
++	.dt_compat	= gxp_board_dt_compat,
++MACHINE_END
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index cfb8ea0df3b1..5916dade7608 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -617,6 +617,14 @@ config CLKSRC_ST_LPC
+ 	  Enable this option to use the Low Power controller timer
+ 	  as clocksource.
+ 
++config GXP_TIMER
++	bool "GXP timer driver"
++	depends on ARCH_HPE
++	default y
++	help
++	  Provides a driver for the timer control found on HPE
++	  GXP SOCs. This is required for all GXP SOCs.
++
+ config ATCPIT100_TIMER
+ 	bool "ATCPIT100 timer driver"
+ 	depends on NDS32 || COMPILE_TEST
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index fa5f624eadb6..ffca09ec34de 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -89,3 +89,4 @@ obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
+ obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
+ obj-$(CONFIG_MICROCHIP_PIT64B)		+= timer-microchip-pit64b.o
+ obj-$(CONFIG_MSC313E_TIMER)		+= timer-msc313e.o
++obj-$(CONFIG_GXP_TIMER)			+= gxp_timer.o
+diff --git a/drivers/clocksource/gxp_timer.c b/drivers/clocksource/gxp_timer.c
+new file mode 100644
+index 000000000000..e3c617036e0d
+--- /dev/null
++++ b/drivers/clocksource/gxp_timer.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2022 Hewlett-Packard Enterprise Development Company, L.P.
++ *
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/bitops.h>
++#include <linux/clockchips.h>
++#include <linux/clocksource.h>
++#include <linux/interrupt.h>
++#include <linux/irqreturn.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/sched_clock.h>
++
++#include <asm/irq.h>
++
++#define TIMER0_FREQ 1000000
++#define TIMER1_FREQ 1000000
++
++#define MASK_TCS_ENABLE		0x01
++#define MASK_TCS_PERIOD		0x02
++#define MASK_TCS_RELOAD		0x04
++#define MASK_TCS_TC		0x80
++
++struct gxp_timer {
++	void __iomem *counter;
++	void __iomem *control;
++	struct clock_event_device evt;
++};
++
++static void __iomem *system_clock __read_mostly;
++
++static u64 notrace gxp_sched_read(void)
++{
++	return readl_relaxed(system_clock);
++}
++
++static int gxp_time_set_next_event(unsigned long event,
++					struct clock_event_device *evt_dev)
++{
++	struct gxp_timer *timer = container_of(evt_dev, struct gxp_timer, evt);
++	/*clear TC by write 1 and disable timer int and counting*/
++	writeb_relaxed(MASK_TCS_TC, timer->control);
++	/*update counter value*/
++	writel_relaxed(event, timer->counter);
++	/*enable timer counting and int*/
++	writeb_relaxed(MASK_TCS_TC|MASK_TCS_ENABLE, timer->control);
++
++	return 0;
++}
++
++static irqreturn_t gxp_time_interrupt(int irq, void *dev_id)
++{
++	struct gxp_timer *timer = dev_id;
++	void (*event_handler)(struct clock_event_device *timer);
++
++
++	if (readb_relaxed(timer->control) & MASK_TCS_TC) {
++		writeb_relaxed(MASK_TCS_TC, timer->control);
++
++		event_handler = READ_ONCE(timer->evt.event_handler);
++		if (event_handler)
++			event_handler(&timer->evt);
++		return IRQ_HANDLED;
++	} else {
++		return IRQ_NONE;
++	}
++}
++
++static int __init gxp_timer_init(struct device_node *node)
++{
++	void __iomem *base_counter;
++	void __iomem *base_control;
++	u32 freq;
++	int ret, irq;
++	struct gxp_timer *gxp_timer;
++
++	base_counter = of_iomap(node, 0);
++	if (!base_counter) {
++		pr_err("Can't remap counter registers");
++		return -ENXIO;
++	}
++
++	base_control = of_iomap(node, 1);
++	if (!base_control) {
++		pr_err("Can't remap control registers");
++		return -ENXIO;
++	}
++
++	system_clock = of_iomap(node, 2);
++	if (!system_clock) {
++		pr_err("Can't remap control registers");
++		return -ENXIO;
++	}
++
++	if (of_property_read_u32(node, "clock-frequency", &freq)) {
++		pr_err("Can't read clock-frequency\n");
++		goto err_iounmap;
++	}
++
++	sched_clock_register(gxp_sched_read, 32, freq);
++	clocksource_mmio_init(system_clock, node->name, freq,
++				300, 32, clocksource_mmio_readl_up);
++
++	irq = irq_of_parse_and_map(node, 0);
++	if (irq <= 0) {
++		ret = -EINVAL;
++		pr_err("GXP Timer Can't parse IRQ %d", irq);
++		goto err_iounmap;
++	}
++
++	gxp_timer = kzalloc(sizeof(*gxp_timer), GFP_KERNEL);
++	if (!gxp_timer) {
++		ret = -ENOMEM;
++		goto err_iounmap;
++	}
++
++	gxp_timer->counter = base_counter;
++	gxp_timer->control = base_control;
++	gxp_timer->evt.name = node->name;
++	gxp_timer->evt.rating = 300;
++	gxp_timer->evt.features = CLOCK_EVT_FEAT_ONESHOT;
++	gxp_timer->evt.set_next_event = gxp_time_set_next_event;
++	gxp_timer->evt.cpumask = cpumask_of(0);
++
++	if (request_irq(irq, gxp_time_interrupt, IRQF_TIMER | IRQF_SHARED,
++		node->name, gxp_timer)) {
++		pr_err("%s: request_irq() failed\n", "GXP Timer Tick");
++		goto err_timer_free;
++	}
++
++	clockevents_config_and_register(&gxp_timer->evt, TIMER0_FREQ,
++					0xf, 0xffffffff);
++
++	pr_info("gxp: system timer (irq = %d)\n", irq);
++	return 0;
++
++
++err_timer_free:
++	kfree(gxp_timer);
++
++err_iounmap:
++	iounmap(system_clock);
++	iounmap(base_control);
++	iounmap(base_counter);
++	return ret;
++}
++
++TIMER_OF_DECLARE(gxp, "hpe,gxp-timer", gxp_timer_init);
+-- 
+2.17.1
 
-At least splitting in two patches would be good IMHO.
-
-On Fri, Jan 28, 2022 at 04:54:29PM -0800, Bjorn Andersson wrote:
-> The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
-> PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
-> with their output being routed to various other components, such as
-> current sinks or GPIOs.
->=20
-> Each LPG instance can operate on fixed parameters or based on a shared
-> lookup-table, altering the duty cycle over time. This provides the means
-> for hardware assisted transitions of LED brightness.
->=20
-> A typical use case for the fixed parameter mode is to drive a PWM
-> backlight control signal, the driver therefor allows each LPG instance
-> to be exposed to the kernel either through the LED framework or the PWM
-> framework.
->=20
-> A typical use case for the LED configuration is to drive RGB LEDs in
-> smartphones etc, for which the driver support multiple channels to be
-> ganged up to a MULTICOLOR LED. In this configuration the pattern
-> generators will be synchronized, to allow for multi-color patterns.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->=20
-> Changes since v10:
-> - Check for and reject pattern.delta_t greater than 9 bits
-> - Write all 9 bits of LPG_RAMP_DURATION_REG
->=20
->  drivers/leds/Kconfig             |    3 +
->  drivers/leds/Makefile            |    3 +
->  drivers/leds/rgb/Kconfig         |   13 +
->  drivers/leds/rgb/Makefile        |    3 +
->  drivers/leds/rgb/leds-qcom-lpg.c | 1306 ++++++++++++++++++++++++++++++
->  5 files changed, 1328 insertions(+)
->  create mode 100644 drivers/leds/rgb/Kconfig
->  create mode 100644 drivers/leds/rgb/Makefile
->  create mode 100644 drivers/leds/rgb/leds-qcom-lpg.c
->=20
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 6090e647daee..a49979f41eee 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -869,6 +869,9 @@ source "drivers/leds/blink/Kconfig"
->  comment "Flash and Torch LED drivers"
->  source "drivers/leds/flash/Kconfig"
-> =20
-> +comment "RGB LED drivers"
-> +source "drivers/leds/rgb/Kconfig"
-> +
->  comment "LED Triggers"
->  source "drivers/leds/trigger/Kconfig"
-> =20
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index e58ecb36360f..4fd2f92cd198 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -99,6 +99,9 @@ obj-$(CONFIG_LEDS_USER)			+=3D uleds.o
->  # Flash and Torch LED Drivers
->  obj-$(CONFIG_LEDS_CLASS_FLASH)		+=3D flash/
-> =20
-> +# RGB LED Drivers
-> +obj-$(CONFIG_LEDS_CLASS_MULTICOLOR)	+=3D rgb/
-> +
->  # LED Triggers
->  obj-$(CONFIG_LEDS_TRIGGERS)		+=3D trigger/
-> =20
-> diff --git a/drivers/leds/rgb/Kconfig b/drivers/leds/rgb/Kconfig
-> new file mode 100644
-> index 000000000000..20be3e11fe4a
-> --- /dev/null
-> +++ b/drivers/leds/rgb/Kconfig
-> @@ -0,0 +1,13 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +if LEDS_CLASS_MULTICOLOR
-> +
-> +config LEDS_QCOM_LPG
-> +	tristate "LED support for Qualcomm LPG"
-> +	depends on OF
-> +	depends on SPMI
-> +	help
-> +	  This option enables support for the Light Pulse Generator found in a
-> +	  wide variety of Qualcomm PMICs.
-> +
-> +endif # LEDS_CLASS_MULTICOLOR
-> diff --git a/drivers/leds/rgb/Makefile b/drivers/leds/rgb/Makefile
-> new file mode 100644
-> index 000000000000..83114f44c4ea
-> --- /dev/null
-> +++ b/drivers/leds/rgb/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-$(CONFIG_LEDS_QCOM_LPG)	+=3D leds-qcom-lpg.o
-> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qco=
-m-lpg.c
-> new file mode 100644
-> index 000000000000..06d5fca1d4b5
-> --- /dev/null
-> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
-> @@ -0,0 +1,1306 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2017-2022 Linaro Ltd
-> + * Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
-> + */
-> +#include <linux/bits.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define LPG_PATTERN_CONFIG_REG	0x40
-> +#define LPG_SIZE_CLK_REG	0x41
-> +#define LPG_PREDIV_CLK_REG	0x42
-> +#define PWM_TYPE_CONFIG_REG	0x43
-> +#define PWM_VALUE_REG		0x44
-> +#define PWM_ENABLE_CONTROL_REG	0x46
-> +#define PWM_SYNC_REG		0x47
-> +#define LPG_RAMP_DURATION_REG	0x50
-> +#define LPG_HI_PAUSE_REG	0x52
-> +#define LPG_LO_PAUSE_REG	0x54
-> +#define LPG_HI_IDX_REG		0x56
-> +#define LPG_LO_IDX_REG		0x57
-> +#define PWM_SEC_ACCESS_REG	0xd0
-> +#define PWM_DTEST_REG(x)	(0xe2 + (x) - 1)
-> +
-> +#define TRI_LED_SRC_SEL		0x45
-> +#define TRI_LED_EN_CTL		0x46
-> +#define TRI_LED_ATC_CTL		0x47
-> +
-> +#define LPG_LUT_REG(x)		(0x40 + (x) * 2)
-> +#define RAMP_CONTROL_REG	0xc8
-> +
-> +#define LPG_RESOLUTION		512
-> +#define LPG_MAX_M		7
-> +
-> +struct lpg_channel;
-> +struct lpg_data;
-> +
-> +/**
-> + * struct lpg - LPG device context
-> + * @dev:	struct device for LPG device
-> + * @map:	regmap for register access
-> + * @pwm:	PWM-chip object, if operating in PWM mode
-> + * @data:	reference to version specific data
-> + * @lut_base:	base address of the LUT block (optional)
-> + * @lut_size:	number of entries in the LUT block
-> + * @lut_bitmap:	allocation bitmap for LUT entries
-> + * @triled_base: base address of the TRILED block (optional)
-> + * @triled_src:	power-source for the TRILED
-> + * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
-> + * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
-> + * @channels:	list of PWM channels
-> + * @num_channels: number of @channels
-> + */
-> +struct lpg {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +
-> +	struct pwm_chip pwm;
-> +
-> +	const struct lpg_data *data;
-> +
-> +	u32 lut_base;
-> +	u32 lut_size;
-> +	unsigned long *lut_bitmap;
-> +
-> +	u32 triled_base;
-> +	u32 triled_src;
-> +	bool triled_has_atc_ctl;
-> +	bool triled_has_src_sel;
-> +
-> +	struct lpg_channel *channels;
-> +	unsigned int num_channels;
-> +};
-> +
-> +/**
-> + * struct lpg_channel - per channel data
-> + * @lpg:	reference to parent lpg
-> + * @base:	base address of the PWM channel
-> + * @triled_mask: mask in TRILED to enable this channel
-> + * @lut_mask:	mask in LUT to start pattern generator for this channel
-> + * @in_use:	channel is exposed to LED framework
-> + * @color:	color of the LED attached to this channel
-> + * @dtest_line:	DTEST line for output, or 0 if disabled
-> + * @dtest_value: DTEST line configuration
-> + * @pwm_value:	duty (in microseconds) of the generated pulses, overridde=
-n by LUT
-> + * @enabled:	output enabled?
-> + * @period:	period (in nanoseconds) of the generated pulses
-> + * @clk:	base frequency of the clock generator
-> + * @pre_div:	divider of @clk
-> + * @pre_div_exp: exponential divider of @clk
-> + * @ramp_enabled: duty cycle is driven by iterating over lookup table
-> + * @ramp_ping_pong: reverse through pattern, rather than wrapping to sta=
-rt
-> + * @ramp_oneshot: perform only a single pass over the pattern
-> + * @ramp_reverse: iterate over pattern backwards
-> + * @ramp_tick_ms: length (in milliseconds) of one step in the pattern
-> + * @ramp_lo_pause_ms: pause (in milliseconds) before iterating over patt=
-ern
-> + * @ramp_hi_pause_ms: pause (in milliseconds) after iterating over patte=
-rn
-> + * @pattern_lo_idx: start index of associated pattern
-> + * @pattern_hi_idx: last index of associated pattern
-> + */
-> +struct lpg_channel {
-> +	struct lpg *lpg;
-> +
-> +	u32 base;
-> +	unsigned int triled_mask;
-> +	unsigned int lut_mask;
-> +
-> +	bool in_use;
-> +
-> +	int color;
-> +
-> +	u32 dtest_line;
-> +	u32 dtest_value;
-> +
-> +	u16 pwm_value;
-> +	bool enabled;
-> +
-> +	u64 period;
-> +	unsigned int clk;
-> +	unsigned int pre_div;
-> +	unsigned int pre_div_exp;
-> +
-> +	bool ramp_enabled;
-> +	bool ramp_ping_pong;
-> +	bool ramp_oneshot;
-> +	bool ramp_reverse;
-> +	unsigned short ramp_tick_ms;
-> +	unsigned long ramp_lo_pause_ms;
-> +	unsigned long ramp_hi_pause_ms;
-> +
-> +	unsigned int pattern_lo_idx;
-> +	unsigned int pattern_hi_idx;
-> +};
-> +
-> +/**
-> + * struct lpg_led - logical LED object
-> + * @lpg:		lpg context reference
-> + * @cdev:		LED class device
-> + * @mcdev:		Multicolor LED class device
-> + * @num_channels:	number of @channels
-> + * @channels:		list of channels associated with the LED
-> + */
-> +struct lpg_led {
-> +	struct lpg *lpg;
-> +
-> +	struct led_classdev cdev;
-> +	struct led_classdev_mc mcdev;
-> +
-> +	unsigned int num_channels;
-> +	struct lpg_channel *channels[];
-> +};
-> +
-> +/**
-> + * struct lpg_channel_data - per channel initialization data
-> + * @base:		base address for PWM channel registers
-> + * @triled_mask:	bitmask for controlling this channel in TRILED
-> + */
-> +struct lpg_channel_data {
-> +	unsigned int base;
-> +	u8 triled_mask;
-> +};
-> +
-> +/**
-> + * struct lpg_data - initialization data
-> + * @lut_base:		base address of LUT block
-> + * @lut_size:		number of entries in LUT
-> + * @triled_base:	base address of TRILED
-> + * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
-> + * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
-> + * @pwm_9bit_mask:	bitmask for switching from 6bit to 9bit pwm
-> + * @num_channels:	number of channels in LPG
-> + * @channels:		list of channel initialization data
-> + */
-> +struct lpg_data {
-> +	unsigned int lut_base;
-> +	unsigned int lut_size;
-> +	unsigned int triled_base;
-> +	bool triled_has_atc_ctl;
-> +	bool triled_has_src_sel;
-> +	unsigned int pwm_9bit_mask;
-> +	int num_channels;
-> +	const struct lpg_channel_data *channels;
-> +};
-> +
-> +static int triled_set(struct lpg *lpg, unsigned int mask, unsigned int e=
-nable)
-> +{
-> +	/* Skip if we don't have a triled block */
-> +	if (!lpg->triled_base)
-> +		return 0;
-> +
-> +	return regmap_update_bits(lpg->map, lpg->triled_base + TRI_LED_EN_CTL,
-> +				  mask, enable);
-> +}
-> +
-> +static int lpg_lut_store(struct lpg *lpg, struct led_pattern *pattern,
-> +			 size_t len, unsigned int *lo_idx, unsigned int *hi_idx)
-> +{
-> +	unsigned int idx;
-> +	u16 val;
-> +	int i;
-> +
-> +	/* Hardware does not behave when LO_IDX =3D=3D HI_IDX */
-> +	if (len =3D=3D 1)
-> +		return -EINVAL;
-> +
-> +	idx =3D bitmap_find_next_zero_area(lpg->lut_bitmap, lpg->lut_size,
-> +					 0, len, 0);
-> +	if (idx >=3D lpg->lut_size)
-> +		return -ENOMEM;
-> +
-> +	for (i =3D 0; i < len; i++) {
-> +		val =3D pattern[i].brightness;
-> +
-> +		regmap_bulk_write(lpg->map, lpg->lut_base + LPG_LUT_REG(idx + i),
-> +				  &val, sizeof(val));
-> +	}
-> +
-> +	bitmap_set(lpg->lut_bitmap, idx, len);
-> +
-> +	*lo_idx =3D idx;
-> +	*hi_idx =3D idx + len - 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static void lpg_lut_free(struct lpg *lpg, unsigned int lo_idx, unsigned =
-int hi_idx)
-> +{
-> +	int len;
-> +
-> +	if (lo_idx =3D=3D hi_idx)
-> +		return;
-> +
-> +	len =3D hi_idx - lo_idx + 1;
-> +	bitmap_clear(lpg->lut_bitmap, lo_idx, len);
-> +}
-> +
-> +static int lpg_lut_sync(struct lpg *lpg, unsigned int mask)
-> +{
-> +	return regmap_write(lpg->map, lpg->lut_base + RAMP_CONTROL_REG, mask);
-> +}
-> +
-> +static const unsigned int lpg_clk_rates[] =3D {1024, 32768, 19200000};
-> +static const unsigned int lpg_pre_divs[] =3D {1, 3, 5, 6};
-> +
-> +static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
-> +{
-> +	unsigned int clk, best_clk =3D 0;
-> +	unsigned int div, best_div =3D 0;
-> +	unsigned int m, best_m =3D 0;
-> +	unsigned int error;
-> +	unsigned int best_err =3D UINT_MAX;
-> +	u64 best_period =3D 0;
-> +
-> +	/*
-> +	 * The PWM period is determined by:
-> +	 *
-> +	 *          resolution * pre_div * 2^M
-> +	 * period =3D --------------------------
-> +	 *                   refclk
-> +	 *
-> +	 * With resolution fixed at 2^9 bits, pre_div =3D {1, 3, 5, 6} and
-> +	 * M =3D [0..7].
-> +	 *
-> +	 * This allows for periods between 27uS and 384s, as the PWM framework
-> +	 * wants a period of equal or lower length than requested, reject
-> +	 * anything below 27uS.
-> +	 */
-> +	if (period <=3D (u64)NSEC_PER_SEC * LPG_RESOLUTION / 19200000)
-
-u64 divisions must not be done by / in the kernel. Also I wonder if the
-following would be more correct (though with the same semantic):
-
-	if (period < DIV64_U64_ROUND_UP((u64)NSEC_PER_SEC * LPG_RESOLUTION, 192000=
-00))
-
-
-> +		return -EINVAL;
-> +
-> +	/* Limit period to largest possible value, to avoid overflows */
-> +	if (period > (u64)NSEC_PER_SEC * LPG_RESOLUTION * 6 * (1 << LPG_MAX_M) =
-/ 1024)
-> +		period =3D (u64)NSEC_PER_SEC * LPG_RESOLUTION * 6 * (1 << LPG_MAX_M) /=
- 2014;
-> +
-> +	/*
-> +	 * Search for the pre_div, clk and M by solving the rewritten formula
-> +	 * for each clk and pre_div value:
-> +	 *
-> +	 *                       period * clk
-> +	 * M =3D log2 -------------------------------------
-> +	 *           NSEC_PER_SEC * pre_div * resolution
-> +	 */
-> +	for (clk =3D 0; clk < ARRAY_SIZE(lpg_clk_rates); clk++) {
-> +		u64 nom =3D period * lpg_clk_rates[clk];
-> +
-> +		for (div =3D 0; div < ARRAY_SIZE(lpg_pre_divs); div++) {
-> +			u64 denom =3D (u64)NSEC_PER_SEC * lpg_pre_divs[div] * (1 << 9);
-> +			u64 actual;
-> +			u64 ratio;
-> +
-> +			if (nom < denom)
-> +				continue;
-> +
-> +			ratio =3D div64_u64(nom, denom);
-> +			m =3D ilog2(ratio);
-> +			if (m > LPG_MAX_M)
-> +				m =3D LPG_MAX_M;
-> +
-> +			actual =3D DIV_ROUND_UP_ULL(denom * (1 << m), lpg_clk_rates[clk]);
-> +
-> +			error =3D period - actual;
-
-This looks good, though I didn't revalidate the calculation (e.g. to
-convince myself that error is always >=3D 0)
-
-> +			if (error < best_err) {
-> +				best_err =3D error;
-> +
-> +				best_div =3D div;
-> +				best_m =3D m;
-> +				best_clk =3D clk;
-> +				best_period =3D actual;
-> +			}
-> +		}
-> +	}
-> +
-> +	chan->clk =3D best_clk;
-> +	chan->pre_div =3D best_div;
-> +	chan->pre_div_exp =3D best_m;
-> +	chan->period =3D best_period;
-> +
-> +	return 0;
-> +}
-> +
-> +static void lpg_calc_duty(struct lpg_channel *chan, uint64_t duty)
-> +{
-> +	unsigned int max =3D LPG_RESOLUTION - 1;
-> +	unsigned int val;
-> +
-> +	val =3D div64_u64(duty * lpg_clk_rates[chan->clk],
-> +			(u64)NSEC_PER_SEC * lpg_pre_divs[chan->pre_div] * (1 << chan->pre_div=
-_exp));
-> +
-> +	chan->pwm_value =3D min(val, max);
-> +}
-> +
-> +static void lpg_apply_freq(struct lpg_channel *chan)
-> +{
-> +	unsigned long val;
-> +	struct lpg *lpg =3D chan->lpg;
-> +
-> +	if (!chan->enabled)
-> +		return;
-> +
-> +	/* Clock register values are off-by-one from lpg_clk_table */
-> +	val =3D chan->clk + 1;
-> +
-> +	/* Enable 9bit resolution */
-> +	val |=3D lpg->data->pwm_9bit_mask;
-> +
-> +	regmap_write(lpg->map, chan->base + LPG_SIZE_CLK_REG, val);
-> +
-> +	val =3D chan->pre_div << 5 | chan->pre_div_exp;
-> +	regmap_write(lpg->map, chan->base + LPG_PREDIV_CLK_REG, val);
-> +}
-> +
-> +#define LPG_ENABLE_GLITCH_REMOVAL	BIT(5)
-> +
-> +static void lpg_enable_glitch(struct lpg_channel *chan)
-> +{
-> +	struct lpg *lpg =3D chan->lpg;
-> +
-> +	regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
-> +			   LPG_ENABLE_GLITCH_REMOVAL, 0);
-> +}
-> +
-> +static void lpg_disable_glitch(struct lpg_channel *chan)
-> +{
-> +	struct lpg *lpg =3D chan->lpg;
-> +
-> +	regmap_update_bits(lpg->map, chan->base + PWM_TYPE_CONFIG_REG,
-> +			   LPG_ENABLE_GLITCH_REMOVAL,
-> +			   LPG_ENABLE_GLITCH_REMOVAL);
-> +}
-> +
-> +static void lpg_apply_pwm_value(struct lpg_channel *chan)
-> +{
-> +	struct lpg *lpg =3D chan->lpg;
-> +	u16 val =3D chan->pwm_value;
-> +
-> +	if (!chan->enabled)
-> +		return;
-> +
-> +	regmap_bulk_write(lpg->map, chan->base + PWM_VALUE_REG, &val, sizeof(va=
-l));
-> +}
-> +
-> +#define LPG_PATTERN_CONFIG_LO_TO_HI	BIT(4)
-> +#define LPG_PATTERN_CONFIG_REPEAT	BIT(3)
-> +#define LPG_PATTERN_CONFIG_TOGGLE	BIT(2)
-> +#define LPG_PATTERN_CONFIG_PAUSE_HI	BIT(1)
-> +#define LPG_PATTERN_CONFIG_PAUSE_LO	BIT(0)
-> +
-> +static void lpg_apply_lut_control(struct lpg_channel *chan)
-> +{
-> +	struct lpg *lpg =3D chan->lpg;
-> +	unsigned int hi_pause;
-> +	unsigned int lo_pause;
-> +	unsigned int conf =3D 0;
-> +	unsigned int lo_idx =3D chan->pattern_lo_idx;
-> +	unsigned int hi_idx =3D chan->pattern_hi_idx;
-> +	u16 step =3D chan->ramp_tick_ms;
-> +
-> +	if (!chan->ramp_enabled || chan->pattern_lo_idx =3D=3D chan->pattern_hi=
-_idx)
-> +		return;
-> +
-> +	hi_pause =3D DIV_ROUND_UP(chan->ramp_hi_pause_ms, step);
-> +	lo_pause =3D DIV_ROUND_UP(chan->ramp_lo_pause_ms, step);
-> +
-> +	if (!chan->ramp_reverse)
-> +		conf |=3D LPG_PATTERN_CONFIG_LO_TO_HI;
-> +	if (!chan->ramp_oneshot)
-> +		conf |=3D LPG_PATTERN_CONFIG_REPEAT;
-> +	if (chan->ramp_ping_pong)
-> +		conf |=3D LPG_PATTERN_CONFIG_TOGGLE;
-> +	if (chan->ramp_hi_pause_ms)
-> +		conf |=3D LPG_PATTERN_CONFIG_PAUSE_HI;
-> +	if (chan->ramp_lo_pause_ms)
-> +		conf |=3D LPG_PATTERN_CONFIG_PAUSE_LO;
-> +
-> +	regmap_write(lpg->map, chan->base + LPG_PATTERN_CONFIG_REG, conf);
-> +	regmap_write(lpg->map, chan->base + LPG_HI_IDX_REG, hi_idx);
-> +	regmap_write(lpg->map, chan->base + LPG_LO_IDX_REG, lo_idx);
-> +
-> +	regmap_bulk_write(lpg->map, chan->base + LPG_RAMP_DURATION_REG, &step, =
-sizeof(step));
-> +	regmap_write(lpg->map, chan->base + LPG_HI_PAUSE_REG, hi_pause);
-> +	regmap_write(lpg->map, chan->base + LPG_LO_PAUSE_REG, lo_pause);
-> +}
-> +
-> +#define LPG_ENABLE_CONTROL_OUTPUT		BIT(7)
-> +#define LPG_ENABLE_CONTROL_BUFFER_TRISTATE	BIT(5)
-> +#define LPG_ENABLE_CONTROL_SRC_PWM		BIT(2)
-> +#define LPG_ENABLE_CONTROL_RAMP_GEN		BIT(1)
-> +
-> +static void lpg_apply_control(struct lpg_channel *chan)
-> +{
-> +	unsigned int ctrl;
-> +	struct lpg *lpg =3D chan->lpg;
-> +
-> +	ctrl =3D LPG_ENABLE_CONTROL_BUFFER_TRISTATE;
-> +
-> +	if (chan->enabled)
-> +		ctrl |=3D LPG_ENABLE_CONTROL_OUTPUT;
-> +
-> +	if (chan->pattern_lo_idx !=3D chan->pattern_hi_idx)
-> +		ctrl |=3D LPG_ENABLE_CONTROL_RAMP_GEN;
-> +	else
-> +		ctrl |=3D LPG_ENABLE_CONTROL_SRC_PWM;
-> +
-> +	regmap_write(lpg->map, chan->base + PWM_ENABLE_CONTROL_REG, ctrl);
-> +
-> +	/*
-> +	 * Due to LPG hardware bug, in the PWM mode, having enabled PWM,
-> +	 * We have to write PWM values one more time.
-> +	 */
-> +	if (chan->enabled)
-> +		lpg_apply_pwm_value(chan);
-> +}
-> +
-> +#define LPG_SYNC_PWM	BIT(0)
-> +
-> +static void lpg_apply_sync(struct lpg_channel *chan)
-> +{
-> +	struct lpg *lpg =3D chan->lpg;
-> +
-> +	regmap_write(lpg->map, chan->base + PWM_SYNC_REG, LPG_SYNC_PWM);
-> +}
-> +
-> +static int lpg_parse_dtest(struct lpg *lpg)
-> +{
-> +	struct lpg_channel *chan;
-> +	struct device_node *np =3D lpg->dev->of_node;
-> +	int count;
-> +	int ret;
-> +	int i;
-> +
-> +	count =3D of_property_count_u32_elems(np, "qcom,dtest");
-> +	if (count =3D=3D -EINVAL) {
-> +		return 0;
-> +	} else if (count < 0) {
-> +		ret =3D count;
-> +		goto err_malformed;
-> +	} else if (count !=3D lpg->data->num_channels * 2) {
-> +		dev_err(lpg->dev, "qcom,dtest needs to be %d items\n",
-> +			lpg->data->num_channels * 2);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i =3D 0; i < lpg->data->num_channels; i++) {
-> +		chan =3D &lpg->channels[i];
-> +
-> +		ret =3D of_property_read_u32_index(np, "qcom,dtest", i * 2,
-> +						 &chan->dtest_line);
-> +		if (ret)
-> +			goto err_malformed;
-> +
-> +		ret =3D of_property_read_u32_index(np, "qcom,dtest", i * 2 + 1,
-> +						 &chan->dtest_value);
-> +		if (ret)
-> +			goto err_malformed;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_malformed:
-> +	dev_err(lpg->dev, "malformed qcom,dtest\n");
-> +	return ret;
-> +}
-> +
-> +static void lpg_apply_dtest(struct lpg_channel *chan)
-> +{
-> +	struct lpg *lpg =3D chan->lpg;
-> +
-> +	if (!chan->dtest_line)
-> +		return;
-> +
-> +	regmap_write(lpg->map, chan->base + PWM_SEC_ACCESS_REG, 0xa5);
-> +	regmap_write(lpg->map, chan->base + PWM_DTEST_REG(chan->dtest_line),
-> +		     chan->dtest_value);
-> +}
-> +
-> +static void lpg_apply(struct lpg_channel *chan)
-> +{
-> +	lpg_disable_glitch(chan);
-> +	lpg_apply_freq(chan);
-> +	lpg_apply_pwm_value(chan);
-> +	lpg_apply_control(chan);
-> +	lpg_apply_sync(chan);
-> +	lpg_apply_lut_control(chan);
-> +	lpg_enable_glitch(chan);
-> +}
-> +
-> +static void lpg_brightness_set(struct lpg_led *led, struct led_classdev =
-*cdev,
-> +			       struct mc_subled *subleds)
-> +{
-> +	enum led_brightness brightness;
-> +	struct lpg_channel *chan;
-> +	unsigned int triled_enabled =3D 0;
-> +	unsigned int triled_mask =3D 0;
-> +	unsigned int lut_mask =3D 0;
-> +	unsigned int duty;
-> +	struct lpg *lpg =3D led->lpg;
-> +	int i;
-> +
-> +	for (i =3D 0; i < led->num_channels; i++) {
-> +		chan =3D led->channels[i];
-> +		brightness =3D subleds[i].brightness;
-> +
-> +		if (brightness =3D=3D LED_OFF) {
-> +			chan->enabled =3D false;
-> +			chan->ramp_enabled =3D false;
-> +		} else if (chan->pattern_lo_idx !=3D chan->pattern_hi_idx) {
-> +			lpg_calc_freq(chan, NSEC_PER_MSEC);
-> +
-> +			chan->enabled =3D true;
-> +			chan->ramp_enabled =3D true;
-> +
-> +			lut_mask |=3D chan->lut_mask;
-> +			triled_enabled |=3D chan->triled_mask;
-> +		} else {
-> +			lpg_calc_freq(chan, NSEC_PER_MSEC);
-> +
-> +			duty =3D div_u64(brightness * chan->period, cdev->max_brightness);
-> +			lpg_calc_duty(chan, duty);
-> +			chan->enabled =3D true;
-> +			chan->ramp_enabled =3D false;
-> +
-> +			triled_enabled |=3D chan->triled_mask;
-> +		}
-> +
-> +		triled_mask |=3D chan->triled_mask;
-> +
-> +		lpg_apply(chan);
-> +	}
-> +
-> +	/* Toggle triled lines */
-> +	if (triled_mask)
-> +		triled_set(lpg, triled_mask, triled_enabled);
-> +
-> +	/* Trigger start of ramp generator(s) */
-> +	if (lut_mask)
-> +		lpg_lut_sync(lpg, lut_mask);
-> +}
-> +
-> +static void lpg_brightness_single_set(struct led_classdev *cdev,
-> +				      enum led_brightness value)
-> +{
-> +	struct lpg_led *led =3D container_of(cdev, struct lpg_led, cdev);
-> +	struct mc_subled info;
-> +
-> +	info.brightness =3D value;
-> +	lpg_brightness_set(led, cdev, &info);
-> +}
-> +
-> +static void lpg_brightness_mc_set(struct led_classdev *cdev,
-> +				  enum led_brightness value)
-> +{
-> +	struct led_classdev_mc *mc =3D lcdev_to_mccdev(cdev);
-> +	struct lpg_led *led =3D container_of(mc, struct lpg_led, mcdev);
-> +
-> +	led_mc_calc_color_components(mc, value);
-> +	lpg_brightness_set(led, cdev, mc->subled_info);
-> +}
-> +
-> +static int lpg_blink_set(struct lpg_led *led,
-> +			 unsigned long *delay_on, unsigned long *delay_off)
-> +{
-> +	struct lpg_channel *chan;
-> +	unsigned int period;
-> +	unsigned int triled_mask =3D 0;
-> +	struct lpg *lpg =3D led->lpg;
-> +	u64 duty;
-> +	int i;
-> +
-> +	if (!*delay_on && !*delay_off) {
-> +		*delay_on =3D 500;
-> +		*delay_off =3D 500;
-> +	}
-> +
-> +	duty =3D *delay_on * NSEC_PER_MSEC;
-> +	period =3D (*delay_on + *delay_off) * NSEC_PER_MSEC;
-> +
-> +	for (i =3D 0; i < led->num_channels; i++) {
-> +		chan =3D led->channels[i];
-> +
-> +		lpg_calc_freq(chan, period);
-> +		lpg_calc_duty(chan, duty);
-> +
-> +		chan->enabled =3D true;
-> +		chan->ramp_enabled =3D false;
-> +
-> +		triled_mask |=3D chan->triled_mask;
-> +
-> +		lpg_apply(chan);
-> +	}
-> +
-> +	/* Enable triled lines */
-> +	triled_set(lpg, triled_mask, triled_mask);
-> +
-> +	chan =3D led->channels[0];
-> +	duty =3D div_u64(chan->pwm_value * chan->period, LPG_RESOLUTION);
-> +	*delay_on =3D div_u64(duty, NSEC_PER_MSEC);
-> +	*delay_off =3D div_u64(chan->period - duty, NSEC_PER_MSEC);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpg_blink_single_set(struct led_classdev *cdev,
-> +				unsigned long *delay_on, unsigned long *delay_off)
-> +{
-> +	struct lpg_led *led =3D container_of(cdev, struct lpg_led, cdev);
-> +
-> +	return lpg_blink_set(led, delay_on, delay_off);
-> +}
-> +
-> +static int lpg_blink_mc_set(struct led_classdev *cdev,
-> +			    unsigned long *delay_on, unsigned long *delay_off)
-> +{
-> +	struct led_classdev_mc *mc =3D lcdev_to_mccdev(cdev);
-> +	struct lpg_led *led =3D container_of(mc, struct lpg_led, mcdev);
-> +
-> +	return lpg_blink_set(led, delay_on, delay_off);
-> +}
-> +
-> +static int lpg_pattern_set(struct lpg_led *led, struct led_pattern *patt=
-ern,
-> +			   u32 len, int repeat)
-> +{
-> +	struct lpg_channel *chan;
-> +	struct lpg *lpg =3D led->lpg;
-> +	unsigned int hi_pause;
-> +	unsigned int lo_pause;
-> +	unsigned int lo_idx;
-> +	unsigned int hi_idx;
-> +	bool ping_pong =3D true;
-> +	int brightness_a;
-> +	int brightness_b;
-> +	int ret;
-> +	int i;
-> +
-> +	/* Only support oneshot or indefinite loops, due to limited pattern spa=
-ce */
-> +	if (repeat !=3D -1 && repeat !=3D 1)
-> +		return -EINVAL;
-> +
-> +	/* LPG_RAMP_DURATION_REG is 9 bit */
-> +	if (pattern[0].delta_t >=3D 512)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * The LPG plays patterns with at a fixed pace, a "low pause" can be
-> +	 * performed before the pattern and a "high pause" after. In order to
-> +	 * save space the pattern can be played in "ping pong" mode, in which
-> +	 * the pattern is first played forward, then "high pause" is applied,
-> +	 * then the pattern is played backwards and finally the "low pause" is
-> +	 * applied.
-> +	 *
-> +	 * The delta_t of the first entry is used to determine the pace of the
-> +	 * pattern.
-> +	 *
-> +	 * If the specified pattern is a palindrome the ping pong mode is
-> +	 * enabled. In this scenario the delta_t of the last entry determines
-> +	 * the "low pause" time and the delta_t of the middle entry (i.e. the
-> +	 * last in the programmed pattern) determines the "high pause". If the
-> +	 * pattern consists of an odd number of values, no "high pause" is
-> +	 * used.
-> +	 *
-> +	 * When ping pong mode is not selected, the delta_t of the last entry
-> +	 * is used as "high pause". No "low pause" is used.
-> +	 *
-> +	 * delta_t of any other members of the pattern is ignored.
-> +	 */
-> +
-> +	/* Detect palindromes and use "ping pong" to reduce LUT usage */
-> +	for (i =3D 0; i < len / 2; i++) {
-> +		brightness_a =3D pattern[i].brightness;
-> +		brightness_b =3D pattern[len - i - 1].brightness;
-> +
-> +		if (brightness_a !=3D brightness_b) {
-> +			ping_pong =3D false;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (ping_pong) {
-> +		if (len % 2)
-> +			hi_pause =3D 0;
-> +		else
-> +			hi_pause =3D pattern[(len + 1) / 2].delta_t;
-> +		lo_pause =3D pattern[len - 1].delta_t;
-> +
-> +		len =3D (len + 1) / 2;
-> +	} else {
-> +		hi_pause =3D pattern[len - 1].delta_t;
-> +		lo_pause =3D 0;
-> +	}
-> +
-> +	ret =3D lpg_lut_store(lpg, pattern, len, &lo_idx, &hi_idx);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (i =3D 0; i < led->num_channels; i++) {
-> +		chan =3D led->channels[i];
-> +
-> +		chan->ramp_tick_ms =3D pattern[0].delta_t;
-> +		chan->ramp_ping_pong =3D ping_pong;
-> +		chan->ramp_oneshot =3D repeat !=3D -1;
-> +
-> +		chan->ramp_lo_pause_ms =3D lo_pause;
-> +		chan->ramp_hi_pause_ms =3D hi_pause;
-> +
-> +		chan->pattern_lo_idx =3D lo_idx;
-> +		chan->pattern_hi_idx =3D hi_idx;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpg_pattern_single_set(struct led_classdev *cdev,
-> +				  struct led_pattern *pattern, u32 len,
-> +				  int repeat)
-> +{
-> +	struct lpg_led *led =3D container_of(cdev, struct lpg_led, cdev);
-> +	int ret;
-> +
-> +	ret =3D lpg_pattern_set(led, pattern, len, repeat);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	lpg_brightness_single_set(cdev, LED_FULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpg_pattern_mc_set(struct led_classdev *cdev,
-> +			      struct led_pattern *pattern, u32 len,
-> +			      int repeat)
-> +{
-> +	struct led_classdev_mc *mc =3D lcdev_to_mccdev(cdev);
-> +	struct lpg_led *led =3D container_of(mc, struct lpg_led, mcdev);
-> +	int ret;
-> +
-> +	ret =3D lpg_pattern_set(led, pattern, len, repeat);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	led_mc_calc_color_components(mc, LED_FULL);
-> +	lpg_brightness_set(led, cdev, mc->subled_info);
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpg_pattern_clear(struct lpg_led *led)
-> +{
-> +	struct lpg_channel *chan;
-> +	struct lpg *lpg =3D led->lpg;
-> +	int i;
-> +
-> +	chan =3D led->channels[0];
-> +	lpg_lut_free(lpg, chan->pattern_lo_idx, chan->pattern_hi_idx);
-> +
-> +	for (i =3D 0; i < led->num_channels; i++) {
-> +		chan =3D led->channels[i];
-> +		chan->pattern_lo_idx =3D 0;
-> +		chan->pattern_hi_idx =3D 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpg_pattern_single_clear(struct led_classdev *cdev)
-> +{
-> +	struct lpg_led *led =3D container_of(cdev, struct lpg_led, cdev);
-> +
-> +	return lpg_pattern_clear(led);
-> +}
-> +
-> +static int lpg_pattern_mc_clear(struct led_classdev *cdev)
-> +{
-> +	struct led_classdev_mc *mc =3D lcdev_to_mccdev(cdev);
-> +	struct lpg_led *led =3D container_of(mc, struct lpg_led, mcdev);
-> +
-> +	return lpg_pattern_clear(led);
-> +}
-> +
-> +static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct lpg *lpg =3D container_of(chip, struct lpg, pwm);
-> +	struct lpg_channel *chan =3D &lpg->channels[pwm->hwpwm];
-> +
-> +	return chan->in_use ? -EBUSY : 0;
-> +}
-> +
-> +/*
-> + * Limitations:
-> + * - Updating both duty and period is not done atomically, so the output=
- signal
-> + *   will momentarily be a mix of the settings.
-
-Is the PWM well-behaved? (i.e. does it emit the inactive level when
-disabled?) Does it complete a period before switching to the new
-setting?
-
-Did you test with PWM_DEBUG enabled?
-
-> + */
-> +static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 const struct pwm_state *state)
-> +{
-> +	struct lpg *lpg =3D container_of(chip, struct lpg, pwm);
-> +	struct lpg_channel *chan =3D &lpg->channels[pwm->hwpwm];
-> +	int ret;
-> +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +		return -EINVAL;
-> +
-> +	ret =3D lpg_calc_freq(chan, state->period);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	lpg_calc_duty(chan, state->duty_cycle);
-> +	chan->enabled =3D state->enabled;
-> +
-> +	lpg_apply(chan);
-> +
-> +	triled_set(lpg, chan->triled_mask, chan->enabled ? chan->triled_mask : =
-0);
-> +
-> +	return 0;
-
-Would it make sense to skip the calculation if state->enabled is false?
-
-> +}
-> +
-> +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			      struct pwm_state *state)
-> +{
-> +	struct lpg *lpg =3D container_of(chip, struct lpg, pwm);
-> +	struct lpg_channel *chan =3D &lpg->channels[pwm->hwpwm];
-> +	u64 duty =3D DIV_ROUND_UP_ULL(chan->pwm_value * chan->period, LPG_RESOL=
-UTION - 1);
-> +
-> +	state->period =3D chan->period;
-> +	state->duty_cycle =3D duty;
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +	state->enabled =3D chan->enabled;
-
-This doesn't work if .get_state() is called before .apply() was called,
-does it?
-
-> +}
-> +
-> +static const struct pwm_ops lpg_pwm_ops =3D {
-> +	.request =3D lpg_pwm_request,
-> +	.apply =3D lpg_pwm_apply,
-> +	.get_state =3D lpg_pwm_get_state,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int lpg_add_pwm(struct lpg *lpg)
-> +{
-> +	int ret;
-> +
-> +	lpg->pwm.base =3D -1;
-
-I already asked in May to drop this ...
-
-> +	lpg->pwm.dev =3D lpg->dev;
-> +	lpg->pwm.npwm =3D lpg->num_channels;
-> +	lpg->pwm.ops =3D &lpg_pwm_ops;
-> +
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ildntntw4xt2zq7v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmH6sWcACgkQwfwUeK3K
-7AkZsQf/ekSHHPPUe+0XE/zxXrwezddJ5QzyFn1R7wwYvowi7wja5/3lWUtIMyHh
-UzwhUXC3ZM4glUnRxg1rNc13OwXjwpXa5EVQm/LuI32vTrQ09WzmfHiDsNCW9u5y
-5pB4rdLSEdbS5rDiI4VxD31NHQK70p2Pivje6SIEiPoQYE0I+jiDj6+ajfHjYs1f
-0fu0gix3Y1eBfVNDJenhX5AVcod06lKcE8lxiZUjh9SqJCXMhtSF4JbN2UBhXrNl
-82AmXSp6/p7tS+kJpnaRBuJrvobU4byHBf9ly744a08Mpy98TAwNgBo0VYdeSd16
-VRtIwN+/UpZO2qBD0q7BrHxoG9qG0w==
-=lmRT
------END PGP SIGNATURE-----
-
---ildntntw4xt2zq7v--
