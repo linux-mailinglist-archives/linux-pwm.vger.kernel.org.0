@@ -2,166 +2,376 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63F784A7B09
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Feb 2022 23:23:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80B344A7A92
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Feb 2022 22:40:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239155AbiBBWXa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Feb 2022 17:23:30 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:60067 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232942AbiBBWX2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Feb 2022 17:23:28 -0500
-Received: from mail-ej1-f51.google.com ([209.85.218.51]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MnItm-1mYepm17R6-00jFOg; Wed, 02 Feb 2022 23:23:26 +0100
-Received: by mail-ej1-f51.google.com with SMTP id ah7so1728899ejc.4;
-        Wed, 02 Feb 2022 14:23:26 -0800 (PST)
-X-Gm-Message-State: AOAM532G35q5il8XjWGIpZYJt2sFuru+4dhzT3lf99/ws3d5dB3ijosO
-        Drh5+mwdNb7HxNk68qN/0BYjt63q19GzptWkr4U=
-X-Google-Smtp-Source: ABdhPJyS0pXYjoI1KSj8v4HS5DRpiR5z8Z+MmivHV59Rfz0qHTXBAOHLhOORnhnqrVG7qMP59ls3cQTx3h8P+oStNX4=
-X-Received: by 2002:a05:6000:3c6:: with SMTP id b6mr26662700wrg.12.1643836901999;
- Wed, 02 Feb 2022 13:21:41 -0800 (PST)
-MIME-Version: 1.0
-References: <nick.hawkins@hpe.com> <20220202165315.18282-1-nick.hawkins@hpe.com>
- <20220202175635.GC2091156@minyard.net> <3E9905F2-1576-4826-ADC2-85796DE0F4DB@hpe.com>
-In-Reply-To: <3E9905F2-1576-4826-ADC2-85796DE0F4DB@hpe.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 2 Feb 2022 22:21:25 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3itj=nshdRCoFQQh5fg-RsEaqj1PdBxfeN2-TzqmoPpQ@mail.gmail.com>
-Message-ID: <CAK8P3a3itj=nshdRCoFQQh5fg-RsEaqj1PdBxfeN2-TzqmoPpQ@mail.gmail.com>
-Subject: Re: [PATCH] HPE BMC GXP SUPPORT
-To:     "Verdun, Jean-Marie" <verdun@hpe.com>
-Cc:     "minyard@acm.org" <minyard@acm.org>,
-        "Hawkins, Nick" <nick.hawkins@hpe.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
+        id S1347672AbiBBVkG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Feb 2022 16:40:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347618AbiBBVkF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Feb 2022 16:40:05 -0500
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81870C06173E
+        for <linux-pwm@vger.kernel.org>; Wed,  2 Feb 2022 13:40:05 -0800 (PST)
+Received: by mail-ot1-x333.google.com with SMTP id p3-20020a0568301d4300b005a7a702f921so724597oth.9
+        for <linux-pwm@vger.kernel.org>; Wed, 02 Feb 2022 13:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=tMJm7rUkBaw98tkeDjYJTHlP89IJwdWSqnzx8mCujK8=;
+        b=CgWPPdoUoa+gTuGv8BwsjRnqlcCWz12gRIWvBZJvc6rvJ+tuVRMwXF1hXPTtSM6wRz
+         LiH1co14vC/fBKTFJdixlesrEtnTnftmpkfTy+voAXpvTmG7oRNQFff1PcFzwcpLaTCj
+         IBtJLNyORc0We2Nsq/sEAvjXmqF6vQFCfJ71+mHBketjDirnGfeh7pzZ5SMRHql5q3Pi
+         fmSlX3gTpR3noouKDayh5KJTrBGSckVwvSPy/vZU5JHAKh6cwP2IMFpx1JrRRGK677P/
+         oUbkpkHR11kf+cc4DdobC9WtivPKlnd7NULKYVR0x3zZlHzG8dklNTJcfPcTojCr5C2I
+         ZGLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=tMJm7rUkBaw98tkeDjYJTHlP89IJwdWSqnzx8mCujK8=;
+        b=i1D51aSLUWsm5gToShBQgKcZLAFu+ATfCVwr9LbZQoTcP7Ug29Mur5/gCBErh65eJm
+         j8adbxTPl4fEElZsmXi3d6qVksQvijcyGWoMtw66dRUP0Wvgl3EVvKnq62vV+Exz/Vto
+         HxW1Y9/xS7EKs26BNZCqULzQbmaFHT0278GutOYWiQ/jNJUyuTRFZVp+TBEm+gnUxCau
+         4u3ssQd+B8jN7sCNgLagQK0K2NY+V49accHI+26LnjIUOKx1/AoO/TKHUwHS0l/2ja0l
+         TVxl42rGasBXm6e/wKXMLDWtbPdIz3FPUg5saYj5e+ysrSJC9g7SwOPX4mv8DpN8uN/x
+         pjzw==
+X-Gm-Message-State: AOAM533OaFxdylh25YHNiudyK+5pu6k0GBGt8b1bm27ymwDv2j/Md7Eu
+        Qdfvhjvp3s2bEywd2hSjRw5fQw==
+X-Google-Smtp-Source: ABdhPJwvUGXQQBFJHRuewTxDd+tZJ8n0xjnlmdLs40wK8QaHygFkxIL2nvV0PegNjtDMPAkg9o/Bkg==
+X-Received: by 2002:a9d:58c8:: with SMTP id s8mr878984oth.294.1643838004310;
+        Wed, 02 Feb 2022 13:40:04 -0800 (PST)
+Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id ay42sm4488798oib.5.2022.02.02.13.40.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 13:40:03 -0800 (PST)
+Date:   Wed, 2 Feb 2022 13:40:21 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>
+Cc:     Pavel Machek <pavel@ucw.cz>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        "soc@kernel.org" <soc@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Stanislav Jakubek <stano.jakubek@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Hao Fang <fanghao11@huawei.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Wang Kefeng <wangkefeng.wang@huawei.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:eHZ+/p82ioH8uVkEKDxI8wmvf5/VFWaDWr4RRIk/y6sIysPpszd
- wGlRCsc9m/dJ0xxE9RWBvVW32bGcJ0diIECHUYZVFt4SH/TLkdohXbnOre3nFphAblpa2Ul
- Ui/0u4ekH1YnFaHpkAyNL7wltP2xNo8XYiCGi4RLRoEA58Om6p79KS3zzlxNy58H9MvN9E2
- o1pkdVW6gSK6OQiDScZoQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:X5EY0W3ufyQ=:DlIXCv0bRUN/weL9WzbSdm
- A+3vSRl8O1hLqdIb9jklxlxAMI8foeI5osuJByX0WoVIBj1iQq6vEjKqyGkO78ofeP3adxDn7
- xGbL9Nu7gg/uSY+eVir2/+RGiu44j7Sv6q8bIdx+bPAVx/GmW6oFKErWxFS5oaPMLpkwqzlbx
- d36PeXSrjJGxuPwIE4FPvfJsWGvx9yfs6nx9x7w+CWYzwHNZ2ZcJP3P80S0N2Ny9DxC51nlkj
- CmI0rKTDH1BusAllcB/OEJjUxL+1h9CM+B9SvyAKWLjTbUtVZy6kFZzg3tXa1KDbJLucZAcZd
- f2DPIOFqb4f1SaBDINsrRRYrgaBTt3O3x/HzcuxE5BGCi274TSy4GKFOYSRyqqwyLn+HhNd/M
- 6UKUEzozHDRyumUe7OEL14vq7NqcyqD7Mvd+up+hCTjfToTNvztqFpPCgM6ir9Nt5ieGPuEWn
- q0wTv/5xlSvwMDM00hyzpBVw+/mcRVNLJG8hfO7C7Hp4xtlQ/j+3r3w33HZJA7tsh7wMr8iFz
- z4YKhWQ9L/LEuT0C+5PhOPYRMRyPkJ4vbhEQOoVc2FPgeh557jX1fJHqWBW1gLFdnCa10qOjj
- 343uTyhDrDVi6F9q54OF/OUbb1OnKEl9iK0Lr94ovD0l/+cAfEIlQKor6v1yUQFUTNRd1qwDV
- AF8Vdib5YXTIx4jMQvOiHIsRucVFESPexorGwCmR/DyuOSdFKE6Nd9gtFqDob5Z8oloayj577
- swErGVWR/tZk2dU4EeEhqvLUHGwo1FU9aP6khQUWHV16YDRWGS6qSTeEux/rK+ycJWuv40Jzu
- GUZp0ajxVPRPdvTjvZY07gmDw8ILY3COlw6RpyE/PhfEs6SGl0=
+        Lee Jones <lee.jones@linaro.org>,
+        Satya Priya Kakitapalli <c_skakit@qti.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v11 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <Yfr6RQwJMZY5RZGr@ripper>
+References: <20220129005429.754727-1-bjorn.andersson@linaro.org>
+ <20220129005429.754727-2-bjorn.andersson@linaro.org>
+ <20220202162930.24zcediw44t2jzqf@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220202162930.24zcediw44t2jzqf@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 7:14 PM Verdun, Jean-Marie <verdun@hpe.com> wrote:
->
-> > This is far too big for a single patch.  It needs to be broken into
-> > functional chunks that can be reviewed individually.  Each driver and
-> > each device tree change along with it's accompanying code need to be
-> > done in individual patches.  The way it is it can't be reviewed in any
-> > sane manner.
->
-> > -corey
->
-> Thanks for your feedback. We are getting a little bit lost here, as our plan was to submit initial
->
-> - bindings
-> - dts for SoC and 1 board
-> - initial platform init code
->
-> Then drivers code avoiding to send many dts updates which might complexify the
-> review. We wanted to send all drivers code to relevant reviewers by tomorrow.
->
-> So, what you are asking ( do not worry I am not trying to negotiate, I just want
-> to avoid English misunderstandings as I am French) is to send per driver
->
-> - binding
-> - dts update
-> - driver code
->
-> For each driver through different submission (with each of them containing the
-> 3 associated parts) ?
->
-> What shall be the initial one in our case as we are introducing a platform ?
-> An empty dts infrastructure and then we make it grow one step at a time ?
+On Wed 02 Feb 08:29 PST 2022, Uwe Kleine-K?nig wrote:
 
-Ideally, what I prefer to see is a series of patches for all "essential" drivers
-and the platform code that includes:
+> Hello,
+> 
+> did you consider my earlier feedback "It would also be good if the PWM
+> code could live in drivers/pwm"?
+> (https://lore.kernel.org/r/20210505051958.e5lvwfxuo2skdu2q@pengutronix.de)
+> 
 
-- one patch for each new binding
-- one patch for each new driver
-- one patch that hooks up arch/arm/mach-hpe/, MAINTAINERS
-  and any other changes to arch/arm/ other than dts
-- one patch that adds the initial .dts and .dtsi files, with all the
-  devices added that have a valid binding, no need to split this
-  up any further
+Yes, I did consider this. Because the downstream driver is (at least was
+when I looked at it originally) split like that.
 
-This should include everything you need to boot into an initramfs
-shell, typically cpu, serial, timer, clk, pinctrl,  gpio, irqchip. We will
-merge these as a git branch in the soc tree.
 
-In parallel, you can work with subsystem maintainers for the
-"non-essential" drivers to review any other driver and binding,
-e.g. drm/kms, network, i2c, pci, usb, etc. The patches for
-the corresponding .dts additions also go through the soc tree,
-but to make things simpler, you can send those in for a later
-release.
+We have a number of different Qualcomm PMICs containing the LPG modules,
+which consists of N PWM channels, a pattern lookup table and a set of
+current sinks.
 
-          Arnd
+Each PWM channel can either be used as a traditional PWM, a LED or be
+grouped together with other channels to form a multicolor LED. So we
+need a design that allows different boards using a particular PMIC to
+freely use the N channels according to one of these three operational
+modes.
+
+The pattern lookup table is a shared resource containing duty cycle
+values and each of the PWM channels can be configured to have their duty
+cycle modified from the lookup table on some configured cadence.
+
+In the even that multiple PWM channels are ganged together to form a
+multicolor LED, which is driven by a pattern, the pattern generator for
+the relevant channels needs to be synchronized.
+
+
+If we consider the PWM channel to be the basic primitive we need some
+mechanism to configure the pattern properties for each of the channels
+and we need some mechanism to synchronize the pattern generators for
+some subset of the PWM channels.
+
+
+In other words we need some custom API between the LED driver part and
+the PWM driver, to configure these properties. This was the design
+of the downstream driver when I started looking at this driver.
+
+
+Another alternative that has been considered is to create two
+independent drivers - for the same hardware. This would allow the system
+integrator to pick the right driver for each of the channels.
+
+One problem with this strategy is that the DeviceTree description of the
+LPG hardware will have to be modified depending on the use case. In
+particular this prevents me from writing a platform dtsi describing the
+LPG hardware and then describe the LEDs and pwm channels in a board dts.
+
+And we can't express the individual channels, because the multicolor
+definition needs to span multiple channels.
+
+
+So among all the options, implementing the pwm_chip in the LED driver
+makes it possible for us to describe the LPG as one entity, with
+board-specific LEDs and a set of PWM channels.
+
+> At least splitting in two patches would be good IMHO.
+> 
+
+I guess I can split out the parts related to the pwmchip in a separate
+patch. Seems to be a rather small portion of the code though. Is that
+what you have in mind?
+
+> On Fri, Jan 28, 2022 at 04:54:29PM -0800, Bjorn Andersson wrote:
+> > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> > PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
+> > with their output being routed to various other components, such as
+> > current sinks or GPIOs.
+> > 
+> > Each LPG instance can operate on fixed parameters or based on a shared
+> > lookup-table, altering the duty cycle over time. This provides the means
+> > for hardware assisted transitions of LED brightness.
+> > 
+> > A typical use case for the fixed parameter mode is to drive a PWM
+> > backlight control signal, the driver therefor allows each LPG instance
+> > to be exposed to the kernel either through the LED framework or the PWM
+> > framework.
+> > 
+> > A typical use case for the LED configuration is to drive RGB LEDs in
+> > smartphones etc, for which the driver support multiple channels to be
+> > ganged up to a MULTICOLOR LED. In this configuration the pattern
+> > generators will be synchronized, to allow for multi-color patterns.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+[..]
+> > diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+[..]
+> > +static int lpg_calc_freq(struct lpg_channel *chan, uint64_t period)
+> > +{
+> > +	unsigned int clk, best_clk = 0;
+> > +	unsigned int div, best_div = 0;
+> > +	unsigned int m, best_m = 0;
+> > +	unsigned int error;
+> > +	unsigned int best_err = UINT_MAX;
+> > +	u64 best_period = 0;
+> > +
+> > +	/*
+> > +	 * The PWM period is determined by:
+> > +	 *
+> > +	 *          resolution * pre_div * 2^M
+> > +	 * period = --------------------------
+> > +	 *                   refclk
+> > +	 *
+> > +	 * With resolution fixed at 2^9 bits, pre_div = {1, 3, 5, 6} and
+> > +	 * M = [0..7].
+> > +	 *
+> > +	 * This allows for periods between 27uS and 384s, as the PWM framework
+> > +	 * wants a period of equal or lower length than requested, reject
+> > +	 * anything below 27uS.
+> > +	 */
+> > +	if (period <= (u64)NSEC_PER_SEC * LPG_RESOLUTION / 19200000)
+> 
+> u64 divisions must not be done by / in the kernel. Also I wonder if the
+> following would be more correct (though with the same semantic):
+> 
+> 	if (period < DIV64_U64_ROUND_UP((u64)NSEC_PER_SEC * LPG_RESOLUTION, 19200000))
+> 
+
+Thanks for spotting that.
+
+> 
+> > +		return -EINVAL;
+> > +
+> > +	/* Limit period to largest possible value, to avoid overflows */
+> > +	if (period > (u64)NSEC_PER_SEC * LPG_RESOLUTION * 6 * (1 << LPG_MAX_M) / 1024)
+> > +		period = (u64)NSEC_PER_SEC * LPG_RESOLUTION * 6 * (1 << LPG_MAX_M) / 2014;
+> > +
+> > +	/*
+> > +	 * Search for the pre_div, clk and M by solving the rewritten formula
+> > +	 * for each clk and pre_div value:
+> > +	 *
+> > +	 *                       period * clk
+> > +	 * M = log2 -------------------------------------
+> > +	 *           NSEC_PER_SEC * pre_div * resolution
+> > +	 */
+> > +	for (clk = 0; clk < ARRAY_SIZE(lpg_clk_rates); clk++) {
+> > +		u64 nom = period * lpg_clk_rates[clk];
+> > +
+> > +		for (div = 0; div < ARRAY_SIZE(lpg_pre_divs); div++) {
+> > +			u64 denom = (u64)NSEC_PER_SEC * lpg_pre_divs[div] * (1 << 9);
+> > +			u64 actual;
+> > +			u64 ratio;
+> > +
+> > +			if (nom < denom)
+> > +				continue;
+> > +
+> > +			ratio = div64_u64(nom, denom);
+> > +			m = ilog2(ratio);
+> > +			if (m > LPG_MAX_M)
+> > +				m = LPG_MAX_M;
+> > +
+> > +			actual = DIV_ROUND_UP_ULL(denom * (1 << m), lpg_clk_rates[clk]);
+> > +
+> > +			error = period - actual;
+> 
+> This looks good, though I didn't revalidate the calculation (e.g. to
+> convince myself that error is always >= 0)
+> 
+
+We spent considerable time going through this last time, so I hope we're
+good :)
+
+> > +			if (error < best_err) {
+> > +				best_err = error;
+> > +
+> > +				best_div = div;
+> > +				best_m = m;
+> > +				best_clk = clk;
+> > +				best_period = actual;
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	chan->clk = best_clk;
+> > +	chan->pre_div = best_div;
+> > +	chan->pre_div_exp = best_m;
+> > +	chan->period = best_period;
+> > +
+> > +	return 0;
+> > +}
+[..]
+> > +static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> > +{
+> > +	struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> > +	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> > +
+> > +	return chan->in_use ? -EBUSY : 0;
+> > +}
+> > +
+> > +/*
+> > + * Limitations:
+> > + * - Updating both duty and period is not done atomically, so the output signal
+> > + *   will momentarily be a mix of the settings.
+> 
+> Is the PWM well-behaved? (i.e. does it emit the inactive level when
+> disabled?)
+
+Yes, a disabled channel outputs a logical 0.
+
+> Does it complete a period before switching to the new
+> setting?
+> 
+
+I see nothing indicating the answer to this, in either direction...
+
+> Did you test with PWM_DEBUG enabled?
+> 
+
+For previous iterations of the patch yes, v11 didn't touch any of that
+so I omitted that step... Will enable it again as I respin v12.
+
+> > + */
+> > +static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +			 const struct pwm_state *state)
+> > +{
+> > +	struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> > +	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> > +	int ret;
+> > +
+> > +	if (state->polarity != PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;
+> > +
+> > +	ret = lpg_calc_freq(chan, state->period);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	lpg_calc_duty(chan, state->duty_cycle);
+> > +	chan->enabled = state->enabled;
+> > +
+> > +	lpg_apply(chan);
+> > +
+> > +	triled_set(lpg, chan->triled_mask, chan->enabled ? chan->triled_mask : 0);
+> > +
+> > +	return 0;
+> 
+> Would it make sense to skip the calculation if state->enabled is false?
+> 
+
+Yes.
+
+> > +}
+> > +
+> > +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +			      struct pwm_state *state)
+> > +{
+> > +	struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> > +	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> > +	u64 duty = DIV_ROUND_UP_ULL(chan->pwm_value * chan->period, LPG_RESOLUTION - 1);
+> > +
+> > +	state->period = chan->period;
+> > +	state->duty_cycle = duty;
+> > +	state->polarity = PWM_POLARITY_NORMAL;
+> > +	state->enabled = chan->enabled;
+> 
+> This doesn't work if .get_state() is called before .apply() was called,
+> does it?
+> 
+
+You mean that I would return some bogus state and not the actual
+hardware state?
+
+> > +}
+> > +
+> > +static const struct pwm_ops lpg_pwm_ops = {
+> > +	.request = lpg_pwm_request,
+> > +	.apply = lpg_pwm_apply,
+> > +	.get_state = lpg_pwm_get_state,
+> > +	.owner = THIS_MODULE,
+> > +};
+> > +
+> > +static int lpg_add_pwm(struct lpg *lpg)
+> > +{
+> > +	int ret;
+> > +
+> > +	lpg->pwm.base = -1;
+> 
+> I already asked in May to drop this ...
+> 
+
+Sorry about that, thought I had resolved that already.
+
+Thanks,
+Bjorn
+
+> > +	lpg->pwm.dev = lpg->dev;
+> > +	lpg->pwm.npwm = lpg->num_channels;
+> > +	lpg->pwm.ops = &lpg_pwm_ops;
+> > +
+> 
+> Best regards
+> Uwe
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+
