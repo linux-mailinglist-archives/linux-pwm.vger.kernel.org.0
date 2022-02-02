@@ -2,65 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 051294A705D
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Feb 2022 12:54:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A3E74A70A4
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Feb 2022 13:22:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344021AbiBBLyh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Feb 2022 06:54:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:30958 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231839AbiBBLyg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Feb 2022 06:54:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643802876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bL5rgnJNtTCmd2esmcO6OG/N+9v3ttozfnd4SZakfGQ=;
-        b=hcaa9dCAp+0ejVhy5Si3NvBgyZAOq3Yq7JwkNYlaEUnEcJ0B0cFGKL+0X+qKFT0jMmqYr/
-        9CRRXeSTTiIWCQp2RDx8U65N6TLrQgm712aZ7hzzEQNhRIZAhI1nFbG8ZRq0mxmyWq9i2/
-        NR1gv90BlL150MxQnr9KRJaf2kUnWoY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-225-4Uoq02A8P1Ojm6hJje50kg-1; Wed, 02 Feb 2022 06:54:35 -0500
-X-MC-Unique: 4Uoq02A8P1Ojm6hJje50kg-1
-Received: by mail-wm1-f71.google.com with SMTP id n7-20020a1c7207000000b0034ec3d8ce0aso2382552wmc.8
-        for <linux-pwm@vger.kernel.org>; Wed, 02 Feb 2022 03:54:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=bL5rgnJNtTCmd2esmcO6OG/N+9v3ttozfnd4SZakfGQ=;
-        b=2z2mf4Tg+5sV+kH7C9RPR8odp309tPUJgXJdZ1pwnnUNKfej3L5wpzBqxYHrJinawD
-         PABGIbeVRx2F/71zxDYQNUh4xHDTnE44R80GFY6MUwk/uW7XsH4Jl/1O7BHpBDhpFJY1
-         gsUxCp3nOTRc4mlLELUnXj4FBpr0250mKgp27VuZGlhDOwk7ZXG5/yR/+Pe5o9bQVusW
-         aS1IGc+c3VpKOYoLt2AWW5/CuoxqXcfFzq6iFwwqHLaMDQ/ghMQda26zROvivsHFuHUL
-         sFrrJxWNlzbENy5Gi0kn8kj2YX20RCuVIy+CPO2kvQIO80p8iIrlv2ABxdktUGfBPr2l
-         NqWA==
-X-Gm-Message-State: AOAM530eq5tWl5re3IK5cmr6xGpwd22VpesCaMRtKm93ZyagdaQpCAOv
-        7dgb8/qkmyHHLP79QMHGhQ0a7rZGe0egHIPVGBjnN0+N8mQNoOtIYpeEqQA1RbvvWpz0qXZ2CUR
-        TykRTSZsPzENuiyahk3Lh
-X-Received: by 2002:a05:6000:2aa:: with SMTP id l10mr1969719wry.191.1643802874129;
-        Wed, 02 Feb 2022 03:54:34 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy9uaj1noGIyEUrpXHbn9QwweYL02b/7HPtTFauTRqXOp7zTH9jXowWwcKexaK5dPFtRxWRqw==
-X-Received: by 2002:a05:6000:2aa:: with SMTP id l10mr1969689wry.191.1643802873900;
-        Wed, 02 Feb 2022 03:54:33 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id j5sm1444854wrq.31.2022.02.02.03.54.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Feb 2022 03:54:33 -0800 (PST)
-Message-ID: <a3a06362-ab9f-e29b-4f03-968e3f1865ba@redhat.com>
-Date:   Wed, 2 Feb 2022 12:54:32 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
- displays
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1344113AbiBBMWw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Feb 2022 07:22:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:10273 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239210AbiBBMWv (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Wed, 2 Feb 2022 07:22:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643804571; x=1675340571;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eamKrK/VTEauZLd9AACZ72hNNHTYn1T5iAicwAio230=;
+  b=GITnRpK9130xyXR6PtzxXp7wj6RFv50b3RAkAaZOcL1v3pFF+fShFric
+   0l2OYxF+aAz2nH+99lsivsxxoEgLP2Q1DiQaU2y7y4tJvNwtjbjcb6Q/a
+   0H9OBIWFK+XOoZOX0bNEOoZTP6YORBFrBRbyy3L6HOHKRxJxCdMUqw/6g
+   9KuZ9ICNQUs7UpLNTQQrK21+8yyIAXxETWDwNe+gZ7YFD6eFen0OTnv/j
+   sJMlhvB5YCWWK9AaHHzoeCUaSfea6UoWcuIpARd9SHs8J8jxaigWgzo6a
+   YeR6p3mOy+Up+tfkawlThqfl+l5B6tFNHSmM7eWjm6tdKFVWWc52zBltg
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="308633227"
+X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
+   d="scan'208";a="308633227"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 04:22:51 -0800
+X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
+   d="scan'208";a="565970219"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 04:22:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nFEds-0004d4-Dd;
+        Wed, 02 Feb 2022 14:21:44 +0200
+Date:   Wed, 2 Feb 2022 14:21:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Javier Martinez Canillas <javierm@redhat.com>
 Cc:     Sam Ravnborg <sam@ravnborg.org>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -72,15 +51,17 @@ Cc:     Sam Ravnborg <sam@ravnborg.org>,
         Mark Brown <broonie@kernel.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
         Maxime Ripard <maxime@cerno.tech>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Peter Robinson <pbrobinson@gmail.com>
-References: <Yfj/XGRRDNABsLPm@smile.fi.intel.com>
- <f8d71acb-5c8b-ac4e-0c32-38eb66af04c3@redhat.com>
- <CAMuHMdVP6ER119r2KAegjZes1a=KWZ47z6j=kgQ0oNx1oeUJ+w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
+ displays
+Message-ID: <Yfp3WL8JMlSP19MI@smile.fi.intel.com>
+References: <CAMuHMdVP6ER119r2KAegjZes1a=KWZ47z6j=kgQ0oNx1oeUJ+w@mail.gmail.com>
  <51f54519-bb8b-f108-1c1e-4fed101ca5ef@redhat.com>
  <CAMuHMdVwUfv7pXhPazsgG6t=X=aVtDQkFUk_=mUuFH8Fscx8wg@mail.gmail.com>
  <abf63995-a529-1e80-18c3-df473a3e7a9c@redhat.com>
@@ -89,30 +70,30 @@ References: <Yfj/XGRRDNABsLPm@smile.fi.intel.com>
  <YfploeCM6C5y3Imj@smile.fi.intel.com>
  <2f149fef-b991-9e34-98cb-426e561192ff@redhat.com>
  <YfpwGtjj5hGkN7A4@smile.fi.intel.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <YfpwGtjj5hGkN7A4@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <a3a06362-ab9f-e29b-4f03-968e3f1865ba@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3a06362-ab9f-e29b-4f03-968e3f1865ba@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2/2/22 12:50, Andy Shevchenko wrote:
-
-[snip]
-
->> What's your suggestion then to solve the issue mentioned above ? With my distro
->> maintainer hat I don't care that much, since the fbdev drivers will be disabled.
+On Wed, Feb 02, 2022 at 12:54:32PM +0100, Javier Martinez Canillas wrote:
+> On 2/2/22 12:50, Andy Shevchenko wrote:
+> >> What's your suggestion then to solve the issue mentioned above ? With my distro
+> >> maintainer hat I don't care that much, since the fbdev drivers will be disabled.
+> > 
+> > I think both of them can work together. If user doesn't care, the first one wins.
 > 
-> I think both of them can work together. If user doesn't care, the first one wins.
-> 
+> I don't think this is a good idea but as mentioned I don't really care that much
+> since we will disable all fbdev drivers anyway. So I'm happy to allow them both.
 
-I don't think this is a good idea but as mentioned I don't really care that much
-since we will disable all fbdev drivers anyway. So I'm happy to allow them both.
+Thanks!
 
-Best regards,
 -- 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+With Best Regards,
+Andy Shevchenko
+
 
