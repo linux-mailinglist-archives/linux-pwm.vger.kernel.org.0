@@ -2,231 +2,166 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A41A4A8F80
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Feb 2022 22:05:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A787C4A910A
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Feb 2022 00:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346884AbiBCVFM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Feb 2022 16:05:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244965AbiBCVFM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Feb 2022 16:05:12 -0500
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDDA3C06173D
-        for <linux-pwm@vger.kernel.org>; Thu,  3 Feb 2022 13:05:11 -0800 (PST)
-Received: by mail-ot1-x329.google.com with SMTP id q14-20020a05683022ce00b005a6162a1620so3684784otc.0
-        for <linux-pwm@vger.kernel.org>; Thu, 03 Feb 2022 13:05:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=JIQab/pEjY3vFOs5pXgNHPVknEkSvqZGfjjhX/hLUOo=;
-        b=xSCdzm5EnuKl3ZoM3+c87lnVtUIOgZ7c+ovyU9zAFV6WqW3tBUvExNw0NLRZ+DBquX
-         c/RNFy2ry0bUoTf6xVUiEDn6JzdWR0o+ScVdYUDq0bJwWVJDoZm3KQ8ih01nyUFl5Uky
-         myrPF3O5ztAiWsVT74JEO/8JKXYSqSbwSdi5KDcBOzoya9LhRv/LRdF8tinq6a59A2/f
-         4bxywJaUvIV4mcQzl+DVQ/cFgsNnCn7GfrefKqQ6ULLVBCCVKT4ogaLGSpO+Odne0J3T
-         m2M2X7SOjl6mHzWORxS3GBZZWpueTjJIFniPkwK2niTNb9ecnZMRLrTHxGoQXvqfQx7/
-         uQWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=JIQab/pEjY3vFOs5pXgNHPVknEkSvqZGfjjhX/hLUOo=;
-        b=MB5veo6Rz/jwZdZAuSpdJ9dUKfGZnsJWPDMWC/iYxLg/KzI4SF5xem4XLEghLvKiPS
-         V0aatjHtvGvc3pKBc/Ppl/UDRMWK83yV6ceBAjNWbgm5Ss38DPMK/ZJvLbaf91zevYfu
-         AvDc4rdKD00JWir7nV4fZduTMNT77Z2zhhK5FiIH9RPKCciXUy1A6puQUfxTbvdR0mEc
-         Ypt1MBd3uuumBb63zNjZsXPZ2r+VpXM+uz2jLiL5ZUh/E5bfceu9lBRAer69zJkLOTs+
-         r8RBju3JgDxJn++IKLVl/Df0txpG+13Ziepm9h9E5PJomCmOohgBxM3sn/RCqu0EcUFN
-         zwbw==
-X-Gm-Message-State: AOAM533ObSWYLvPrwax7Myz3aQnwn/iLZUNRq5vtRdVKjigOmPCOqpX1
-        BkhqSPGSssyfLmowleLvdg/xNw==
-X-Google-Smtp-Source: ABdhPJxp79xScEgykiDP0CxkSHeSRrntqdGoY37VUMEoTQ1Em4KDKgfzrkEoN0Lbi1cuK4egRfspXw==
-X-Received: by 2002:a9d:2781:: with SMTP id c1mr16656514otb.267.1643922311223;
-        Thu, 03 Feb 2022 13:05:11 -0800 (PST)
-Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id t16sm4031otc.29.2022.02.03.13.05.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 13:05:10 -0800 (PST)
-Date:   Thu, 3 Feb 2022 13:05:27 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>
-Cc:     Pavel Machek <pavel@ucw.cz>,
+        id S231451AbiBCXN6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Feb 2022 18:13:58 -0500
+Received: from relay06.th.seeweb.it ([5.144.164.167]:52997 "EHLO
+        relay06.th.seeweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1355941AbiBCXN6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Feb 2022 18:13:58 -0500
+Received: from SoMainline.org (94-209-165-62.cable.dynamic.v4.ziggo.nl [94.209.165.62])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 9CE603F7A0;
+        Fri,  4 Feb 2022 00:13:56 +0100 (CET)
+Date:   Fri, 4 Feb 2022 00:13:55 +0100
+From:   Marijn Suijten <marijn.suijten@somainline.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Satya Priya Kakitapalli <c_skakit@qti.qualcomm.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v11 2/2] leds: Add driver for Qualcomm LPG
-Message-ID: <YfxDlxvuMt2jXd6z@ripper>
-References: <20220129005429.754727-1-bjorn.andersson@linaro.org>
- <20220129005429.754727-2-bjorn.andersson@linaro.org>
- <20220202162930.24zcediw44t2jzqf@pengutronix.de>
- <Yfr6RQwJMZY5RZGr@ripper>
- <20220203083103.mqwkjxkgy22jaies@pengutronix.de>
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        Luca Weiss <luca@z3ntu.xyz>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH v10 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <20220203231355.i2hasweo7db74rfm@SoMainline.org>
+References: <20211010043912.136640-1-bjorn.andersson@linaro.org>
+ <20211010043912.136640-2-bjorn.andersson@linaro.org>
+ <YXL0DyyPkS4/wfB7@ripper>
+ <20211027211928.tjybwy2lokj6eoun@SoMainline.org>
+ <YfSPYkbTXMOUGKkG@yoga>
+ <20220202110305.gbow3e3stolb67v5@SoMainline.org>
+ <Yfr9+jvGIyB2ynMS@ripper>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220203083103.mqwkjxkgy22jaies@pengutronix.de>
+In-Reply-To: <Yfr9+jvGIyB2ynMS@ripper>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu 03 Feb 00:31 PST 2022, Uwe Kleine-K?nig wrote:
-
-> Hello Bjorn,
+On 2022-02-02 13:56:10, Bjorn Andersson wrote:
+> On Wed 02 Feb 03:03 PST 2022, Marijn Suijten wrote:
 > 
-> On Wed, Feb 02, 2022 at 01:40:21PM -0800, Bjorn Andersson wrote:
-> > On Wed 02 Feb 08:29 PST 2022, Uwe Kleine-K?nig wrote:
-> > > did you consider my earlier feedback "It would also be good if the PWM
-> > > code could live in drivers/pwm"?
-> > > (https://lore.kernel.org/r/20210505051958.e5lvwfxuo2skdu2q@pengutronix.de)
-> > 
-> > Yes, I did consider this. Because the downstream driver is (at least was
-> > when I looked at it originally) split like that.
-> > 
-> > We have a number of different Qualcomm PMICs containing the LPG modules,
-> > which consists of N PWM channels, a pattern lookup table and a set of
-> > current sinks.
-> > 
-> > Each PWM channel can either be used as a traditional PWM, a LED or be
-> > grouped together with other channels to form a multicolor LED. So we
-> > need a design that allows different boards using a particular PMIC to
-> > freely use the N channels according to one of these three operational
-> > modes.
-> > 
-> > The pattern lookup table is a shared resource containing duty cycle
-> > values and each of the PWM channels can be configured to have their duty
-> > cycle modified from the lookup table on some configured cadence.
-> > 
-> > In the even that multiple PWM channels are ganged together to form a
-> > multicolor LED, which is driven by a pattern, the pattern generator for
-> > the relevant channels needs to be synchronized.
-> 
-> Is this some material for the commit log to motivate the design
-> decision?
-> 
-
-Sounds reasonable. I'll try to capture some of this background in the
-commit message, for future reference.
-
-> > If we consider the PWM channel to be the basic primitive we need some
-> > mechanism to configure the pattern properties for each of the channels
-> > and we need some mechanism to synchronize the pattern generators for
-> > some subset of the PWM channels.
-> > 
-> > 
-> > In other words we need some custom API between the LED driver part and
-> > the PWM driver, to configure these properties. This was the design
-> > of the downstream driver when I started looking at this driver.
-> > 
-> > 
-> > Another alternative that has been considered is to create two
-> > independent drivers - for the same hardware. This would allow the system
-> > integrator to pick the right driver for each of the channels.
-> > 
-> > One problem with this strategy is that the DeviceTree description of the
-> > LPG hardware will have to be modified depending on the use case. In
-> > particular this prevents me from writing a platform dtsi describing the
-> > LPG hardware and then describe the LEDs and pwm channels in a board dts.
-> > 
-> > And we can't express the individual channels, because the multicolor
-> > definition needs to span multiple channels.
-> > 
-> > 
-> > So among all the options, implementing the pwm_chip in the LED driver
-> > makes it possible for us to describe the LPG as one entity, with
-> > board-specific LEDs and a set of PWM channels.
-> 
-> ok.
-> 
-> > > At least splitting in two patches would be good IMHO.
-> > 
-> > I guess I can split out the parts related to the pwmchip in a separate
-> > patch. Seems to be a rather small portion of the code though. Is that
-> > what you have in mind?
-> 
-> I didn't try to understand the pattern part. I know that for PWMs there
-> is no pattern support, wasn't aware it's a thing for LEDs.
-> 
-
-It allow you to have the hardware adjust the duty cycle over time, to
-implement things such as fading or pulsing light effects - without
-having to use the CPU.
-
-> Anyhow, not a hard requirement to split from my side.
-> 
-
-Okay, cool.
-
-> > > > +/*
-> > > > + * Limitations:
-> > > > + * - Updating both duty and period is not done atomically, so the output signal
-> > > > + *   will momentarily be a mix of the settings.
+> > On 2022-01-28 18:50:42, Bjorn Andersson wrote:
+> > > On Wed 27 Oct 16:19 CDT 2021, Marijn Suijten wrote:
 > > > 
-> > > Is the PWM well-behaved? (i.e. does it emit the inactive level when
-> > > disabled?)
-> > 
-> > Yes, a disabled channel outputs a logical 0.
-> 
-> Please add this to the Limitations section. It's not actually a
-> limitation, but still this is a good place to put this information.
-> 
-> > > Does it complete a period before switching to the new
-> > > setting?
-> > 
-> > I see nothing indicating the answer to this, in either direction...
-> 
-> Can you test that? It's as easy as configuring a long period with 0%
-> relative duty cycle and then immediately a 100% relative duty cycle.
-> 
-
-I will give it a try and see what I can deduce, and update the comment
-accordingly.
-
-> > > > +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > > +			      struct pwm_state *state)
-> > > > +{
-> > > > +	struct lpg *lpg = container_of(chip, struct lpg, pwm);
-> > > > +	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
-> > > > +	u64 duty = DIV_ROUND_UP_ULL(chan->pwm_value * chan->period, LPG_RESOLUTION - 1);
-> > > > +
-> > > > +	state->period = chan->period;
-> > > > +	state->duty_cycle = duty;
-> > > > +	state->polarity = PWM_POLARITY_NORMAL;
-> > > > +	state->enabled = chan->enabled;
+> > > > Hi Bjorn,
+> > > > 
+> > > > On 2021-10-22 10:25:35, Bjorn Andersson wrote:
+> > > > > On Sat 09 Oct 21:39 PDT 2021, Bjorn Andersson wrote:
+> > > > > 
+> > > > > > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> > > > > > PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
+> > > > > > with their output being routed to various other components, such as
+> > > > > > current sinks or GPIOs.
+> > > > > > 
+> > > > > > Each LPG instance can operate on fixed parameters or based on a shared
+> > > > > > lookup-table, altering the duty cycle over time. This provides the means
+> > > > > > for hardware assisted transitions of LED brightness.
+> > > > > > 
+> > > > > > A typical use case for the fixed parameter mode is to drive a PWM
+> > > > > > backlight control signal, the driver therefor allows each LPG instance
+> > > > > > to be exposed to the kernel either through the LED framework or the PWM
+> > > > > > framework.
+> > > > > > 
+> > > > > > A typical use case for the LED configuration is to drive RGB LEDs in
+> > > > > > smartphones etc, for which the driver support multiple channels to be
+> > > > > > ganged up to a MULTICOLOR LED. In this configuration the pattern
+> > > > > > generators will be synchronized, to allow for multi-color patterns.
+> > > > > > 
+> > > > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > > > > ---
+> > > > > 
+> > > > > Any feedback on this?
+> > > > 
+> > > > I asked in #linux-msm whether anything is wrong with the patterns,
+> > > > since my Sony Discovery (sdm630 with a pm660l) blinks way quicker on a
+> > > > pattern that's supposed to stay on for 1s and off for 1s:
+> > > > 
+> > > >     echo "0 1000 255 1000" > /sys/class/leds/rgb\:status/hw_pattern
+> > > > 
+> > > > It however seems to be broken in the same way on an older version now
+> > > > (this might be v9 or v8) which I don't remember to be the case.  Can you
+> > > > double-check if this is all working fine on your side?  If so, I'll have
+> > > > to find some time to debug it on my end.
+> > > > 
 > > > 
-> > > This doesn't work if .get_state() is called before .apply() was called,
-> > > does it?
+> > > I had missed the fact that LPG_RAMP_DURATION_REG is two registers for
+> > > msg and lsb, for a total of 9 bits of duration. So what you saw was
+> > > probably ticking at 232ms.
 > > > 
+> > > Note though that the pattern uses the last time as "high pause", so I
+> > > expect that you should have seen 232 ms of off, followed by 464ms of
+> > > light.
 > > 
-> > You mean that I would return some bogus state and not the actual
-> > hardware state?
+> > Visual inspection seems to confirm those numbers indeed!
+> > 
+> > > I've fixed this for v11, both rejecting invalid input and writing out
+> > > all 9 bits.
+> > 
+> > Doesn't that 512ms limit, together with using only the last value for
+> > hi_pause (and not the first value for lo_pause) force users to write
+> > patterns in a certain way which is not easily conveyed to the caller
+> > except by reading the comment in the driver?  I'd guess lo_pause can be
+> > used even if not in ping-pong mode, it should just hold at the first
+> > value for the given duration?
+> > 
+> > (That said hw_pattern is anyway already riddled with device-specific
+> > information, such as only having one `delta_t` which functions as the
+> > step size for every entry, and with the change above would need to be
+> > sourced from another step that's not the first.)
+> > 
 > 
-> Yes. At least I only found lpg_calc_freq() assigning chan->period and
-> chan->enabled. And unless I missed something this isn't called before
-> the pwm core calls .get_state().
+> Perhaps we should clarify the single delta_t by requiring all those
+> delta_t to be the same, rather than ignoring their value.
 > 
-
-Right, with a freshly probed driver I would return period = 0,
-duty_cycle = 0/511 and enabled = 0.
-
-Am I expected to instead return the hardware state, e.g. to recover
-hardware initialization provided by the bootloader?
-
-Thanks,
-Bjorn
-
-> > > > +}
+> I.e. we make the ping-pong pattern:
 > 
-> Best regards
-> Uwe
+> <value> <lopause+t> ... <value[N/2-1]> <t> <value[N/2]> <hipause+t> <value[N/2-1]> <t> ... <value> <t>
 > 
-> -- 
-> Pengutronix e.K.                           | Uwe Kleine-König            |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> And for non-ping-pong:
+> 
+> <value> <lopause+t> <value> <t> ... <value> <t> <value> <hipause + t>
+> 
+> 
+> What do you think?
 
+Seems like a good idea, though we'll have to be careful to communicate
+this lopause+t value for the first entry and hipause+t for the
+middle/last (through a dev_err I suppose) in case we reject values that
+don't strictly adhere to this math.
 
+> > Bit of a stretch, but perhaps worth noting anyway: should this be
+> > written in documentation somewhere, together with pattern examples and
+> > their desired outcome to function as testcases too?
+> > 
+> 
+> There's a comment in lpg_pattern_set() where I tried to capture this.
+> 
+> I don't think it's worth documenting the behavior/structure away from
+> the driver. But let's make sure it's captured properly there.
+
+I've seen two other dirvers document the hw_pattern sysfs property under
+Documentation/leds/.  Should be easier to find than a comment inside the
+respective function deep in the kernel source tree I presume?
+
+Quoting Documentation/ABI/testing/sysfs-class-led-trigger-pattern for
+this sysfs property:
+
+    Since different LED hardware can have different semantics of
+    hardware patterns, each driver is expected to provide its own
+    description for the hardware patterns in their documentation
+    file at Documentation/leds/.
+
+Doesn't need to be anything long, copying your inline comment would be a
+great start.  Thanks!
+
+- Marijn
