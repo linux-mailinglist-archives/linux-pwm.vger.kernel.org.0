@@ -2,166 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A787C4A910A
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Feb 2022 00:13:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CC554A9118
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Feb 2022 00:20:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231451AbiBCXN6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Feb 2022 18:13:58 -0500
-Received: from relay06.th.seeweb.it ([5.144.164.167]:52997 "EHLO
-        relay06.th.seeweb.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355941AbiBCXN6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Feb 2022 18:13:58 -0500
+        id S242747AbiBCXUD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Feb 2022 18:20:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233188AbiBCXUD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Feb 2022 18:20:03 -0500
+Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [IPv6:2001:4b7a:2000:18::171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5932DC061714;
+        Thu,  3 Feb 2022 15:20:03 -0800 (PST)
 Received: from SoMainline.org (94-209-165-62.cable.dynamic.v4.ziggo.nl [94.209.165.62])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 9CE603F7A0;
-        Fri,  4 Feb 2022 00:13:56 +0100 (CET)
-Date:   Fri, 4 Feb 2022 00:13:55 +0100
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id AC3A83F710;
+        Fri,  4 Feb 2022 00:20:01 +0100 (CET)
+Date:   Fri, 4 Feb 2022 00:20:00 +0100
 From:   Marijn Suijten <marijn.suijten@somainline.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
+Cc:     Pavel Machek <pavel@ucw.cz>,
         Thierry Reding <thierry.reding@gmail.com>,
         Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH v10 2/2] leds: Add driver for Qualcomm LPG
-Message-ID: <20220203231355.i2hasweo7db74rfm@SoMainline.org>
-References: <20211010043912.136640-1-bjorn.andersson@linaro.org>
- <20211010043912.136640-2-bjorn.andersson@linaro.org>
- <YXL0DyyPkS4/wfB7@ripper>
- <20211027211928.tjybwy2lokj6eoun@SoMainline.org>
- <YfSPYkbTXMOUGKkG@yoga>
- <20220202110305.gbow3e3stolb67v5@SoMainline.org>
- <Yfr9+jvGIyB2ynMS@ripper>
+        Lee Jones <lee.jones@linaro.org>,
+        Satya Priya Kakitapalli <c_skakit@qti.qualcomm.com>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v11 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <20220203232000.btb2qt7t6rmmnayw@SoMainline.org>
+References: <20220129005429.754727-1-bjorn.andersson@linaro.org>
+ <20220129005429.754727-2-bjorn.andersson@linaro.org>
+ <20220202111833.ibeq3udj37dkfv6l@SoMainline.org>
+ <Yfrj7DnXET6fT3BX@ripper>
+ <CAOCOHw7LS=NALXzHMN6LauEqrjDk2y27VoQtaT4tkHJiYxM7MQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yfr9+jvGIyB2ynMS@ripper>
+In-Reply-To: <CAOCOHw7LS=NALXzHMN6LauEqrjDk2y27VoQtaT4tkHJiYxM7MQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2022-02-02 13:56:10, Bjorn Andersson wrote:
-> On Wed 02 Feb 03:03 PST 2022, Marijn Suijten wrote:
-> 
-> > On 2022-01-28 18:50:42, Bjorn Andersson wrote:
-> > > On Wed 27 Oct 16:19 CDT 2021, Marijn Suijten wrote:
-> > > 
-> > > > Hi Bjorn,
-> > > > 
-> > > > On 2021-10-22 10:25:35, Bjorn Andersson wrote:
-> > > > > On Sat 09 Oct 21:39 PDT 2021, Bjorn Andersson wrote:
-> > > > > 
-> > > > > > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
-> > > > > > PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
-> > > > > > with their output being routed to various other components, such as
-> > > > > > current sinks or GPIOs.
-> > > > > > 
-> > > > > > Each LPG instance can operate on fixed parameters or based on a shared
-> > > > > > lookup-table, altering the duty cycle over time. This provides the means
-> > > > > > for hardware assisted transitions of LED brightness.
-> > > > > > 
-> > > > > > A typical use case for the fixed parameter mode is to drive a PWM
-> > > > > > backlight control signal, the driver therefor allows each LPG instance
-> > > > > > to be exposed to the kernel either through the LED framework or the PWM
-> > > > > > framework.
-> > > > > > 
-> > > > > > A typical use case for the LED configuration is to drive RGB LEDs in
-> > > > > > smartphones etc, for which the driver support multiple channels to be
-> > > > > > ganged up to a MULTICOLOR LED. In this configuration the pattern
-> > > > > > generators will be synchronized, to allow for multi-color patterns.
-> > > > > > 
-> > > > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > > > ---
-> > > > > 
-> > > > > Any feedback on this?
-> > > > 
-> > > > I asked in #linux-msm whether anything is wrong with the patterns,
-> > > > since my Sony Discovery (sdm630 with a pm660l) blinks way quicker on a
-> > > > pattern that's supposed to stay on for 1s and off for 1s:
-> > > > 
-> > > >     echo "0 1000 255 1000" > /sys/class/leds/rgb\:status/hw_pattern
-> > > > 
-> > > > It however seems to be broken in the same way on an older version now
-> > > > (this might be v9 or v8) which I don't remember to be the case.  Can you
-> > > > double-check if this is all working fine on your side?  If so, I'll have
-> > > > to find some time to debug it on my end.
-> > > > 
-> > > 
-> > > I had missed the fact that LPG_RAMP_DURATION_REG is two registers for
-> > > msg and lsb, for a total of 9 bits of duration. So what you saw was
-> > > probably ticking at 232ms.
-> > > 
-> > > Note though that the pattern uses the last time as "high pause", so I
-> > > expect that you should have seen 232 ms of off, followed by 464ms of
-> > > light.
-> > 
-> > Visual inspection seems to confirm those numbers indeed!
-> > 
-> > > I've fixed this for v11, both rejecting invalid input and writing out
-> > > all 9 bits.
-> > 
-> > Doesn't that 512ms limit, together with using only the last value for
-> > hi_pause (and not the first value for lo_pause) force users to write
-> > patterns in a certain way which is not easily conveyed to the caller
-> > except by reading the comment in the driver?  I'd guess lo_pause can be
-> > used even if not in ping-pong mode, it should just hold at the first
-> > value for the given duration?
-> > 
-> > (That said hw_pattern is anyway already riddled with device-specific
-> > information, such as only having one `delta_t` which functions as the
-> > step size for every entry, and with the change above would need to be
-> > sourced from another step that's not the first.)
-> > 
-> 
-> Perhaps we should clarify the single delta_t by requiring all those
-> delta_t to be the same, rather than ignoring their value.
-> 
-> I.e. we make the ping-pong pattern:
-> 
-> <value> <lopause+t> ... <value[N/2-1]> <t> <value[N/2]> <hipause+t> <value[N/2-1]> <t> ... <value> <t>
-> 
-> And for non-ping-pong:
-> 
-> <value> <lopause+t> <value> <t> ... <value> <t> <value> <hipause + t>
-> 
-> 
-> What do you think?
+On 2022-02-02 16:08:29, Bjorn Andersson wrote:
+> On Wed, Feb 2, 2022 at 2:04 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Wed 02 Feb 03:18 PST 2022, Marijn Suijten wrote:
+> >
+> > > On 2022-01-28 16:54:29, Bjorn Andersson wrote:
+> > > > The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> > > > PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
+> > > > with their output being routed to various other components, such as
+> > > > current sinks or GPIOs.
+> > > >
+> > > > Each LPG instance can operate on fixed parameters or based on a shared
+> > > > lookup-table, altering the duty cycle over time. This provides the means
+> > > > for hardware assisted transitions of LED brightness.
+> > > >
+> > > > A typical use case for the fixed parameter mode is to drive a PWM
+> > > > backlight control signal, the driver therefor allows each LPG instance
+> > > > to be exposed to the kernel either through the LED framework or the PWM
+> > > > framework.
+> > > >
+> > > > A typical use case for the LED configuration is to drive RGB LEDs in
+> > > > smartphones etc, for which the driver support multiple channels to be
+> > > > ganged up to a MULTICOLOR LED. In this configuration the pattern
+> > > > generators will be synchronized, to allow for multi-color patterns.
+> > > >
+> > > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > > Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+> > >
+> > > There may still be some things to improve based on whether lo_pause
+> > > works in non-ping-pong mode - to alleviate the requirement for the first
+> > > delta_t to be at most 512ms - but this patch should not be delayed much
+> > > longer and that's perhaps for a followup patch.  Same for my request for
+> > > documentation and examples which at the same time serve as some form of
+> > > tests to see if everything works as desired.
+> > >
+> >
+> > I've been considering lopause to be the value before we start the
+> > pattern, but I think you're right in that it denotes how long we should
+> > hold the first value.
+> >
+> > So I think it might make sense in the predefined "<value> <delay> <value>
+> > <delay>" scheme to use first <delay> as to calculate lo-pause. I think
+> > it has to be calculated, because the first value will iiuc be held
+> > for (lopause + 1) * delay ms.
 
-Seems like a good idea, though we'll have to be careful to communicate
-this lopause+t value for the first entry and hipause+t for the
-middle/last (through a dev_err I suppose) in case we reject values that
-don't strictly adhere to this math.
+As mentioned in v10 that seems like a great idea, as long as we can
+carefully validate and communicate these numbers to the user; both
+through documentation and kernel error messages when values are
+ultimately rejected.
 
-> > Bit of a stretch, but perhaps worth noting anyway: should this be
-> > written in documentation somewhere, together with pattern examples and
-> > their desired outcome to function as testcases too?
-> > 
+Again, perhaps it might be better to postpone this to a separate
+patchset as to not block the use of LPG for backlights which is arguably
+more important than some fancy phone notification led patterns.
+
+> > > I also vaguely remember other (downstream) drivers to support more than
+> > > 512ms per step by (drastically?) changing PWM period, but not sure how
+> > > that worked again nor if it was reliable.
+> > >
+> >
+> > Thinking about it again, while 512 is the 9th bit, we should be able to
+> > represent [0..1023] with 9 bits...
+> >
 > 
-> There's a comment in lpg_pattern_set() where I tried to capture this.
-> 
-> I don't think it's worth documenting the behavior/structure away from
-> the driver. But let's make sure it's captured properly there.
+> Sorry, my mind was elsewhere as I wrote that. [0..511] is what we got.
 
-I've seen two other dirvers document the hw_pattern sysfs property under
-Documentation/leds/.  Should be easier to find than a comment inside the
-respective function deep in the kernel source tree I presume?
-
-Quoting Documentation/ABI/testing/sysfs-class-led-trigger-pattern for
-this sysfs property:
-
-    Since different LED hardware can have different semantics of
-    hardware patterns, each driver is expected to provide its own
-    description for the hardware patterns in their documentation
-    file at Documentation/leds/.
-
-Doesn't need to be anything long, copying your inline comment would be a
-great start.  Thanks!
+Yes, 9 bits in total and BIT(8) being the highest settable ^^
 
 - Marijn
