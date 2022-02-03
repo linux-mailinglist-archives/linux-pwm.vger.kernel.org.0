@@ -2,123 +2,231 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E5F34A8AF0
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Feb 2022 18:53:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A41A4A8F80
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Feb 2022 22:05:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353427AbiBCRwz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Feb 2022 12:52:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
+        id S1346884AbiBCVFM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Feb 2022 16:05:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344584AbiBCRvl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Feb 2022 12:51:41 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB4DC061753;
-        Thu,  3 Feb 2022 09:51:10 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id k13so7571908lfg.9;
-        Thu, 03 Feb 2022 09:51:09 -0800 (PST)
+        with ESMTP id S244965AbiBCVFM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Feb 2022 16:05:12 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDDA3C06173D
+        for <linux-pwm@vger.kernel.org>; Thu,  3 Feb 2022 13:05:11 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id q14-20020a05683022ce00b005a6162a1620so3684784otc.0
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Feb 2022 13:05:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c40bPrHQjIbgf0eWeT2zwsJ4RQU/yT+6ZwMVByjiTgI=;
-        b=VlXK0AMpTH0qhx6en1xgTax8rQm7INYcf+/H+QO1D3+gRrPsazrMxrDydLT42k13jh
-         nUCmQqMtGq8RLgBi06k6w/dUnZR19gpmfZXQSlch7P780eb9z/F+o96bsjDR+6NiJivn
-         FckpEcHjELx1VWq8lM3kw3MKLKlPhZ5IaqC5tNxySysLzAFvekO26FbtyWF8lWov9kYM
-         G/+yq3y98JuD/oxPlc3GQ8QE2XbzxD9k4shlm75Fobkqk1JgCiP+WAlKyVNv6edgsacp
-         BUknqEdlETyXIkqSGsDSU+9/iectZv7PRWhPqNfd/rfvkEimlfDB9WyFAj8MWAcRb1/Q
-         lFeg==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JIQab/pEjY3vFOs5pXgNHPVknEkSvqZGfjjhX/hLUOo=;
+        b=xSCdzm5EnuKl3ZoM3+c87lnVtUIOgZ7c+ovyU9zAFV6WqW3tBUvExNw0NLRZ+DBquX
+         c/RNFy2ry0bUoTf6xVUiEDn6JzdWR0o+ScVdYUDq0bJwWVJDoZm3KQ8ih01nyUFl5Uky
+         myrPF3O5ztAiWsVT74JEO/8JKXYSqSbwSdi5KDcBOzoya9LhRv/LRdF8tinq6a59A2/f
+         4bxywJaUvIV4mcQzl+DVQ/cFgsNnCn7GfrefKqQ6ULLVBCCVKT4ogaLGSpO+Odne0J3T
+         m2M2X7SOjl6mHzWORxS3GBZZWpueTjJIFniPkwK2niTNb9ecnZMRLrTHxGoQXvqfQx7/
+         uQWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c40bPrHQjIbgf0eWeT2zwsJ4RQU/yT+6ZwMVByjiTgI=;
-        b=bJ/57GxL0zxsgEj9H66RG5WgN0fNaxOFgjVj7lHxQtqT5JwChj//Kdl0FN0sGjnJee
-         7tPCIjUvw/CZNtPFY+XdW0UB8iFkIRxlccNaYCr+wWu+xdxNIFZB1dCw6SXihABvtSHu
-         3wliWMMHfqkM4Lr4O54mJauk+MFsAV3NLeKEm5zh6ZGBLZrinXyjB0DzWlbXEGgT3rYX
-         4VIFSn0RIWQrlv2wKIz9TYMFlRJ4DIwcP8MIge4t53p2BwWlB0b2tle49G+DFrVG56K+
-         5aV8WV4tiSEUg7QopIjVrJnCNVg260m84IKAlenTUiEByC0djPaGSgXkXmv8iuwLNATH
-         m4Lg==
-X-Gm-Message-State: AOAM531s1LhmLgM0ZD+pDQ/SICCes3zBS+/H8MnMoUSC8P4ltC4csUfv
-        9NlP57hKf0lyNQffxNTUEaI=
-X-Google-Smtp-Source: ABdhPJyi9FtMW5FIeWes6Fh5+v4jj6jJF+9c4Bne95ATRab6MsvPKb383kpap7zsh4dEvWwcd9dsBg==
-X-Received: by 2002:a05:6512:68e:: with SMTP id t14mr28263542lfe.366.1643910668248;
-        Thu, 03 Feb 2022 09:51:08 -0800 (PST)
-Received: from orome ([193.209.96.43])
-        by smtp.gmail.com with ESMTPSA id 8sm3857623lfq.200.2022.02.03.09.51.06
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JIQab/pEjY3vFOs5pXgNHPVknEkSvqZGfjjhX/hLUOo=;
+        b=MB5veo6Rz/jwZdZAuSpdJ9dUKfGZnsJWPDMWC/iYxLg/KzI4SF5xem4XLEghLvKiPS
+         V0aatjHtvGvc3pKBc/Ppl/UDRMWK83yV6ceBAjNWbgm5Ss38DPMK/ZJvLbaf91zevYfu
+         AvDc4rdKD00JWir7nV4fZduTMNT77Z2zhhK5FiIH9RPKCciXUy1A6puQUfxTbvdR0mEc
+         Ypt1MBd3uuumBb63zNjZsXPZ2r+VpXM+uz2jLiL5ZUh/E5bfceu9lBRAer69zJkLOTs+
+         r8RBju3JgDxJn++IKLVl/Df0txpG+13Ziepm9h9E5PJomCmOohgBxM3sn/RCqu0EcUFN
+         zwbw==
+X-Gm-Message-State: AOAM533ObSWYLvPrwax7Myz3aQnwn/iLZUNRq5vtRdVKjigOmPCOqpX1
+        BkhqSPGSssyfLmowleLvdg/xNw==
+X-Google-Smtp-Source: ABdhPJxp79xScEgykiDP0CxkSHeSRrntqdGoY37VUMEoTQ1Em4KDKgfzrkEoN0Lbi1cuK4egRfspXw==
+X-Received: by 2002:a9d:2781:: with SMTP id c1mr16656514otb.267.1643922311223;
+        Thu, 03 Feb 2022 13:05:11 -0800 (PST)
+Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id t16sm4031otc.29.2022.02.03.13.05.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Feb 2022 09:51:07 -0800 (PST)
-Date:   Thu, 3 Feb 2022 18:51:04 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
+        Thu, 03 Feb 2022 13:05:10 -0800 (PST)
+Date:   Thu, 3 Feb 2022 13:05:27 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mmc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, David Heidelberg <david@ixit.cz>
-Subject: Re: [PATCH v16 33/40] soc/tegra: pmc: Enable core domain support for
- Tegra20 and Tegra30
-Message-ID: <YfwWCBzuN5q0JGm8@orome>
-References: <20211130232347.950-1-digetx@gmail.com>
- <20211130232347.950-34-digetx@gmail.com>
+        Satya Priya Kakitapalli <c_skakit@qti.qualcomm.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v11 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <YfxDlxvuMt2jXd6z@ripper>
+References: <20220129005429.754727-1-bjorn.andersson@linaro.org>
+ <20220129005429.754727-2-bjorn.andersson@linaro.org>
+ <20220202162930.24zcediw44t2jzqf@pengutronix.de>
+ <Yfr6RQwJMZY5RZGr@ripper>
+ <20220203083103.mqwkjxkgy22jaies@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8ffx5k3tX5AIfR+/"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20211130232347.950-34-digetx@gmail.com>
-User-Agent: Mutt/2.1.5 (31b18ae9) (2021-12-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220203083103.mqwkjxkgy22jaies@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu 03 Feb 00:31 PST 2022, Uwe Kleine-K?nig wrote:
 
---8ffx5k3tX5AIfR+/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hello Bjorn,
+> 
+> On Wed, Feb 02, 2022 at 01:40:21PM -0800, Bjorn Andersson wrote:
+> > On Wed 02 Feb 08:29 PST 2022, Uwe Kleine-K?nig wrote:
+> > > did you consider my earlier feedback "It would also be good if the PWM
+> > > code could live in drivers/pwm"?
+> > > (https://lore.kernel.org/r/20210505051958.e5lvwfxuo2skdu2q@pengutronix.de)
+> > 
+> > Yes, I did consider this. Because the downstream driver is (at least was
+> > when I looked at it originally) split like that.
+> > 
+> > We have a number of different Qualcomm PMICs containing the LPG modules,
+> > which consists of N PWM channels, a pattern lookup table and a set of
+> > current sinks.
+> > 
+> > Each PWM channel can either be used as a traditional PWM, a LED or be
+> > grouped together with other channels to form a multicolor LED. So we
+> > need a design that allows different boards using a particular PMIC to
+> > freely use the N channels according to one of these three operational
+> > modes.
+> > 
+> > The pattern lookup table is a shared resource containing duty cycle
+> > values and each of the PWM channels can be configured to have their duty
+> > cycle modified from the lookup table on some configured cadence.
+> > 
+> > In the even that multiple PWM channels are ganged together to form a
+> > multicolor LED, which is driven by a pattern, the pattern generator for
+> > the relevant channels needs to be synchronized.
+> 
+> Is this some material for the commit log to motivate the design
+> decision?
+> 
 
-On Wed, Dec 01, 2021 at 02:23:40AM +0300, Dmitry Osipenko wrote:
-> All device drivers got runtime PM and OPP support. Flip the core domain
-> support status for Tegra20 and Tegra30 SoCs.
->=20
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/soc/tegra/pmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Sounds reasonable. I'll try to capture some of this background in the
+commit message, for future reference.
 
-Applied now. I'll give it a few days in linux-next and will then send a
-PR with this for ARM SoC.
+> > If we consider the PWM channel to be the basic primitive we need some
+> > mechanism to configure the pattern properties for each of the channels
+> > and we need some mechanism to synchronize the pattern generators for
+> > some subset of the PWM channels.
+> > 
+> > 
+> > In other words we need some custom API between the LED driver part and
+> > the PWM driver, to configure these properties. This was the design
+> > of the downstream driver when I started looking at this driver.
+> > 
+> > 
+> > Another alternative that has been considered is to create two
+> > independent drivers - for the same hardware. This would allow the system
+> > integrator to pick the right driver for each of the channels.
+> > 
+> > One problem with this strategy is that the DeviceTree description of the
+> > LPG hardware will have to be modified depending on the use case. In
+> > particular this prevents me from writing a platform dtsi describing the
+> > LPG hardware and then describe the LEDs and pwm channels in a board dts.
+> > 
+> > And we can't express the individual channels, because the multicolor
+> > definition needs to span multiple channels.
+> > 
+> > 
+> > So among all the options, implementing the pwm_chip in the LED driver
+> > makes it possible for us to describe the LPG as one entity, with
+> > board-specific LEDs and a set of PWM channels.
+> 
+> ok.
+> 
+> > > At least splitting in two patches would be good IMHO.
+> > 
+> > I guess I can split out the parts related to the pwmchip in a separate
+> > patch. Seems to be a rather small portion of the code though. Is that
+> > what you have in mind?
+> 
+> I didn't try to understand the pattern part. I know that for PWMs there
+> is no pattern support, wasn't aware it's a thing for LEDs.
+> 
 
-Thierry
+It allow you to have the hardware adjust the duty cycle over time, to
+implement things such as fading or pulsing light effects - without
+having to use the CPU.
 
---8ffx5k3tX5AIfR+/
-Content-Type: application/pgp-signature; name="signature.asc"
+> Anyhow, not a hard requirement to split from my side.
+> 
 
------BEGIN PGP SIGNATURE-----
+Okay, cool.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmH8FggACgkQ3SOs138+
-s6FO5w//cPW87rvUKeQQiBIG3MKYHivxZPlxXlkfRG5W+Y9oMFE5HyfE03v28G1S
-qcGQX+fjbKaISc+4hOem3NaDKKlpItUVQUD8akNUSHoZLX3SYrNQ/v4ZNqRKjrGg
-bkZTolF7BsabsFq84dlnpUJN6JPIdHaaaPiq2btwqSf1ubAW9JgA613VYHlG/+me
-mVkYI84z2K2kvOevWtk44pubJmfPPea53g4MP2TFtXYtK7NvdX+VWpG89ZazJmUq
-cGJpNrtIDmjL/aYbmxWi0nQvv3JKp4aO2MvjMvV4ZEcl25VccIP4a9NuJXj3kCe3
-P62k+Yv1DJWkTOpSXx7NfzAl3iTkx7hTx6WlNBZDD9uanine+ZGmRZNR17q84zN/
-CJstSdhkyfhWtddP8JV/SEODRUXk936eAk8cQTNPUDtvCGu1Xr43QoYXCFGxpeD6
-MUUeRYyVQDuCo2UmeVqNNXS/5kvyTlE/Qr4xKmw+hLe0fZOVSAUt9o8kqRV6NkMq
-wqremWTw1FmAYzJnsgfDRnY5SlPeCJFBPxH+LkXDzEOsAmIMYeYi0qykqGGkwPQA
-BYOWaXKMggviplovauBvfRKTVCsKnnxgeRDbcwNX8Dn/uwwH4tHHQjzB7A7domEB
-RJkbnuYFInpC7nNrtcT1QedT+G7nVsDLwqW3f682nUcDnq9DYxs=
-=IVU8
------END PGP SIGNATURE-----
+> > > > +/*
+> > > > + * Limitations:
+> > > > + * - Updating both duty and period is not done atomically, so the output signal
+> > > > + *   will momentarily be a mix of the settings.
+> > > 
+> > > Is the PWM well-behaved? (i.e. does it emit the inactive level when
+> > > disabled?)
+> > 
+> > Yes, a disabled channel outputs a logical 0.
+> 
+> Please add this to the Limitations section. It's not actually a
+> limitation, but still this is a good place to put this information.
+> 
+> > > Does it complete a period before switching to the new
+> > > setting?
+> > 
+> > I see nothing indicating the answer to this, in either direction...
+> 
+> Can you test that? It's as easy as configuring a long period with 0%
+> relative duty cycle and then immediately a 100% relative duty cycle.
+> 
 
---8ffx5k3tX5AIfR+/--
+I will give it a try and see what I can deduce, and update the comment
+accordingly.
+
+> > > > +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > +			      struct pwm_state *state)
+> > > > +{
+> > > > +	struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> > > > +	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> > > > +	u64 duty = DIV_ROUND_UP_ULL(chan->pwm_value * chan->period, LPG_RESOLUTION - 1);
+> > > > +
+> > > > +	state->period = chan->period;
+> > > > +	state->duty_cycle = duty;
+> > > > +	state->polarity = PWM_POLARITY_NORMAL;
+> > > > +	state->enabled = chan->enabled;
+> > > 
+> > > This doesn't work if .get_state() is called before .apply() was called,
+> > > does it?
+> > > 
+> > 
+> > You mean that I would return some bogus state and not the actual
+> > hardware state?
+> 
+> Yes. At least I only found lpg_calc_freq() assigning chan->period and
+> chan->enabled. And unless I missed something this isn't called before
+> the pwm core calls .get_state().
+> 
+
+Right, with a freshly probed driver I would return period = 0,
+duty_cycle = 0/511 and enabled = 0.
+
+Am I expected to instead return the hardware state, e.g. to recover
+hardware initialization provided by the bootloader?
+
+Thanks,
+Bjorn
+
+> > > > +}
+> 
+> Best regards
+> Uwe
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+
