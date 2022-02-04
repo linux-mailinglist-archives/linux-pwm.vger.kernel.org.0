@@ -2,56 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F397F4A9EAB
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Feb 2022 19:09:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 114284A9F76
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Feb 2022 19:47:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377387AbiBDSJt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Feb 2022 13:09:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41744 "EHLO
+        id S1377741AbiBDSry (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Feb 2022 13:47:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231759AbiBDSJt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Feb 2022 13:09:49 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB0DC061714
-        for <linux-pwm@vger.kernel.org>; Fri,  4 Feb 2022 10:09:49 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id q63so6350213pja.1
-        for <linux-pwm@vger.kernel.org>; Fri, 04 Feb 2022 10:09:49 -0800 (PST)
+        with ESMTP id S1377734AbiBDSry (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Feb 2022 13:47:54 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED16CC061744
+        for <linux-pwm@vger.kernel.org>; Fri,  4 Feb 2022 10:47:53 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id r17so3915773wrr.6
+        for <linux-pwm@vger.kernel.org>; Fri, 04 Feb 2022 10:47:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5GJVqdK9AZJLVzh5THjIdv7Tb4wUElki413J5iZNmTM=;
-        b=HX/d5JdjvzattE8CDmmyZ7MPKQWBzw6CS4rweJoHjNvR26Mi/E3AeSnf2Qdi4PBkxe
-         F/YpYZWCkAbovrkgsEghglG/A9KpdOiXRXrJwHsc1oR+R8IwHBCzYBjdQIW2lsDwugye
-         /cpAQ3UJxW5aNIBFAVcbCmefpO4ofSixhKAFBt6jl/bOsRo5XW+bD8R/ML814CRWS+Jk
-         IAn4IkIOCEImsV64jEiMr2DLsIsWasuZMKldqSrEEwT1eI9PsHmu9+C96nMPh9/3aiXZ
-         4vJ88Mo3+fxokgxrL8bm/VaUuu3z3qC8MaDGS0p577cBt809JXVnwQDVslOiXlSLHOvu
-         y5iw==
+        d=conchuod-ie.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=/FXf1cpHah2vNgyPqX7qSvfT47H3XqIl9lhW99Uh6Zg=;
+        b=gdWY6AsY87ioUhnUZ7mUhldlGrZUqt7skinL0OJM9wbR11tcWkEb7TNlWlPlRBM/el
+         O8hrFtLwwaLpgvTWzAw+OYf5ntp8Oxs6rqDsqBwvlbIHfu/cLKLM0ncE67oN1n6uMzBh
+         oKFxIEUF2vX9MnZFkPLqqi7hHBa0ZEW6heyY+DTDeEJe1FPUZj+QMoo8y0ANmNW+sW3M
+         vbTkZvhtDZO40U2AcA2rlYQzRihrYsAb+GozKsdq8BfFeXKjYRQO5e9U7VSrswlm3VDo
+         AGdMO2dTrlgMajsUDNDiT4wogUYJEKi9tbdnE2Ut77OUW4APjG2/l/9Fg4EwinemWaoy
+         TeCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=5GJVqdK9AZJLVzh5THjIdv7Tb4wUElki413J5iZNmTM=;
-        b=76MohpmXuGpD73/7o1iR2fO099nmGXzMg6mEbX228Fg+TTINJZKvR9z2txJC9qkEzP
-         JtLs7sUlQMV6Jj9l7fh3m8ESlY7GxugV1Yy0IS4qvXW2UXecQRitDRon3s7TbBaChqSI
-         eIJpW+1KrqsrFqD53e0mPXmeVlsFnIPdcd3RAPNBPZJEHcjYC8z1iZ8H9GyiLEI4WBMb
-         +qYvRhvBqTHuiMrQCcmCOB/+KBMf0zu+3RA8B6qankc8j9Kkiayef5IXKq2Rk5b19hvJ
-         3tDwhWEIuzLygGHCMwkQo+Ep0Rqdu+l5Eg1YOS1lQAd8HKg2tJoBs/KBAz/Ge/moLPdE
-         Kr4w==
-X-Gm-Message-State: AOAM5316GaS9QVwHniuNrkOVn1KJIpXEDyjUv2/WwLD7D6kEqe9GmndM
-        kSKS9xwhlqBd0xh0hkLW+0X+TA==
-X-Google-Smtp-Source: ABdhPJwq5eAXGJ3elIXn36dtCEJkNMZyb4zlD13QPFCAjEzIcC3itN/YiwwtnCDGtGpB44AxXeb1hw==
-X-Received: by 2002:a17:902:8c84:: with SMTP id t4mr4327588plo.78.1643998188528;
-        Fri, 04 Feb 2022 10:09:48 -0800 (PST)
-Received: from localhost ([12.3.194.138])
-        by smtp.gmail.com with ESMTPSA id kx11sm2720754pjb.1.2022.02.04.10.09.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Feb 2022 10:09:47 -0800 (PST)
-Date:   Fri, 04 Feb 2022 10:09:47 -0800 (PST)
-X-Google-Original-Date: Fri, 04 Feb 2022 10:09:09 PST (-0800)
-Subject:     Re: [PATCH v5 00/12] Update the Icicle Kit device tree
-In-Reply-To: <20220131114726.973690-1-conor.dooley@microchip.com>
-CC:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/FXf1cpHah2vNgyPqX7qSvfT47H3XqIl9lhW99Uh6Zg=;
+        b=5rmBJAaG8FrIeH9SGhcfWXpEWj/fqw9ohhIr6d4MyKq+84QcsOMWprjfRGleEwwwNi
+         JAPhd0ZUofQyUX4VDe7ohVC+hmeTwSxmgG7xXUazrABag6bdZbo8gBtR0sJft/D0YVWq
+         hqzLkqpYx/uI+zBE8a7jbYFPezmIG0p2mRgAuzpeEnrC96mEB1nDDvgj7FOHGdn0gtbv
+         2oE8XsP65AgV8e85OeyYSCLzUND61kV/fRpNp5vYoUsqaik9/pQ69CJKUvosuMSCNj4b
+         SYSZoyRv5M6rdqseMI+oht/TxF0YxzXxEbLtV4I/olOP3TRQ3PQ+xqeopu+QYhJTIYAe
+         XAdg==
+X-Gm-Message-State: AOAM532/SSUJZCwl6tPKIIEFTXi7r+MjEtNEz6kPbySOirYBz8zDQoMm
+        XDfVIW2Z8Bizu8LA3G1IQzjI2A==
+X-Google-Smtp-Source: ABdhPJxnmuuY3lnz4VvgizExRa+6gf19qnjUUQPH5Eht2f/FLLQxG40kaSWgQoDrbzb3/jNcfFxtEA==
+X-Received: by 2002:a05:6000:178b:: with SMTP id e11mr206334wrg.634.1644000472142;
+        Fri, 04 Feb 2022 10:47:52 -0800 (PST)
+Received: from [192.168.2.116] ([109.78.72.167])
+        by smtp.gmail.com with ESMTPSA id y7sm2461881wrr.74.2022.02.04.10.47.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Feb 2022 10:47:51 -0800 (PST)
+Message-ID: <3edb8e95-8be4-5e9f-d66a-5a8a92eafcf0@conchuod.ie>
+Date:   Fri, 4 Feb 2022 18:47:49 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v5 00/12] Update the Icicle Kit device tree
+Content-Language: en-US
+To:     Palmer Dabbelt <palmer@dabbelt.com>, conor.dooley@microchip.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
         jassisinghbrar@gmail.com, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
         a.zummo@towertech.it, alexandre.belloni@bootlin.com,
@@ -62,111 +67,65 @@ CC:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
         linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
         linux-riscv@lists.infradead.org, krzysztof.kozlowski@canonical.com,
         bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
-        conor.dooley@microchip.com, daire.mcnamara@microchip.com,
-        ivan.griffin@microchip.com, Atish Patra <atishp@rivosinc.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     conor.dooley@microchip.com
-Message-ID: <mhng-2b6f8784-4c0c-432f-a6e7-97052ab900e7@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        Atish Patra <atishp@rivosinc.com>
+References: <mhng-2b6f8784-4c0c-432f-a6e7-97052ab900e7@palmer-ri-x1c9>
+From:   Conor Dooley <mail@conchuod.ie>
+In-Reply-To: <mhng-2b6f8784-4c0c-432f-a6e7-97052ab900e7@palmer-ri-x1c9>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 31 Jan 2022 03:47:15 PST (-0800), conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> This series updates the Microchip Icicle Kit device tree by adding a
-> host of peripherals, and some updates to the memory map. In addition,
-> the device tree has been split into a third part, which contains "soft"
-> peripherals that are in the fpga fabric.
->
-> Several of the entries are for peripherals that have not get had their
-> drivers upstreamed, so in those cases the dt bindings are included where
-> appropriate in order to avoid the many "DT compatible string <x> appears
-> un-documented" errors.
->
-> Depends on mpfs clock driver binding (on clk/next) to provide
-> dt-bindings/clock/microchip,mpfs-clock.h
-> and on the other changes to the icicle/mpfs device tree from geert
-> that are already in linux/riscv/for-next.
->
-> Additionally, the interrupt-extended warnings on the plic/clint are
-> cleared by [1] & [2].
->
-> [1] https://lore.kernel.org/linux-riscv/cover.1639744468.git.geert@linux-m68k.org/
-> [2] https://lore.kernel.org/linux-riscv/cover.1639744106.git.geert@linux-m68k.org/
->
-> Changes from v4:
-> - dont include icicle_kit_defconfig, accidentally added in v3
-> - drop prescaler from mpfs-rtc & calculate the value instead
-> - use corei2c as a fallback device for mpfs-i2c
-> - drop spi dt-binding (on spi-next)
->   commit 2da187304e556ac59cf2dacb323cc78ded988169
-> - drop usb dt-binding (on usb-next)
->
-> Changes from v3:
-> - drop "mailbox: change mailbox-mpfs compatible string", already upstream:
->   commit f10b1fc0161cd99e ("mailbox: change mailbox-mpfs compatible string")
-> - fix copy paste error in microchip,mpfs-mailbox dt-binding
-> - remove whitespace in syscontroller dt entry
->
-> Changes from v2:
-> - dropped plic int header & corresponding defines in dts{,i}
-> - use $ref to drmode in mpfs-musb binding
-> - split changes to dts{,i} again: functional changes to existing
->   elements now are in a new patch
-> - drop num-cs property in mpfs-spi binding
-> - dont make the system controller a simple-mfd
-> - move the separate bindings for rng/generic system services into the
->   system controller binding
-> - added an instance corei2c as i2c2 in the fabric dtsi
-> - add version numbering to corepwm and corei2c compat string (-rtl-vN)
->
-> Conor Dooley (12):
->   dt-bindings: soc/microchip: update syscontroller compatibles
->   dt-bindings: soc/microchip: add services as children of sys ctrlr
->   dt-bindings: i2c: add bindings for microchip mpfs i2c
->   dt-bindings: rtc: add bindings for microchip mpfs rtc
->   dt-bindings: gpio: add bindings for microchip mpfs gpio
->   dt-bindings: pwm: add microchip corepwm binding
->   riscv: dts: microchip: use clk defines for icicle kit
->   riscv: dts: microchip: add fpga fabric section to icicle kit
->   riscv: dts: microchip: refactor icicle kit device tree
->   riscv: dts: microchip: update peripherals in icicle kit device tree
->   riscv: dts: microchip: add new peripherals to icicle kit device tree
->   MAINTAINERS: update riscv/microchip entry
->
->  .../bindings/gpio/microchip,mpfs-gpio.yaml    |  80 ++++++
->  .../bindings/i2c/microchip,mpfs-i2c.yaml      |  57 ++++
->  ...ilbox.yaml => microchip,mpfs-mailbox.yaml} |   6 +-
->  .../bindings/pwm/microchip,corepwm.yaml       |  75 +++++
->  .../bindings/rtc/microchip,mfps-rtc.yaml      |  58 ++++
->  .../microchip,mpfs-sys-controller.yaml        |  72 +++++
->  ...icrochip,polarfire-soc-sys-controller.yaml |  35 ---
->  MAINTAINERS                                   |   2 +
->  .../dts/microchip/microchip-mpfs-fabric.dtsi  |  25 ++
->  .../microchip/microchip-mpfs-icicle-kit.dts   | 115 ++++++--
->  .../boot/dts/microchip/microchip-mpfs.dtsi    | 262 +++++++++++++++---
->  11 files changed, 683 insertions(+), 104 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
->  create mode 100644 Documentation/devicetree/bindings/i2c/microchip,mpfs-i2c.yaml
->  rename Documentation/devicetree/bindings/mailbox/{microchip,polarfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} (82%)
->  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
->  create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
->  create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
->  delete mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,polarfire-soc-sys-controller.yaml
->  create mode 100644 arch/riscv/boot/dts/microchip/microchip-mpfs-fabric.dtsi
 
-Looks like Rob still has some feedback that still needs to be addressed.  
-I'm happy to take these via the RISC-V tree when the bindings are set 
-(assuming the DTs match whatever gets agreed upons), but also fine if 
-someone else wants to take it so
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+On 04/02/2022 18:09, Palmer Dabbelt wrote:
+> On Mon, 31 Jan 2022 03:47:15 PST (-0800), conor.dooley@microchip.com wrote:
+>> From: Conor Dooley <conor.dooley@microchip.com>
+>>
+>> This series updates the Microchip Icicle Kit device tree by adding a
+>> host of peripherals, and some updates to the memory map. In addition,
+>> the device tree has been split into a third part, which contains "soft"
+>> peripherals that are in the fpga fabric.
+>>
+>> Several of the entries are for peripherals that have not get had their
+>> drivers upstreamed, so in those cases the dt bindings are included where
+>> appropriate in order to avoid the many "DT compatible string <x> appears
+>> un-documented" errors.
+>>
+>> Depends on mpfs clock driver binding (on clk/next) to provide
+>> dt-bindings/clock/microchip,mpfs-clock.h
+>> and on the other changes to the icicle/mpfs device tree from geert
+>> that are already in linux/riscv/for-next.
+>>
+>> Additionally, the interrupt-extended warnings on the plic/clint are
+>> cleared by [1] & [2].
+>>
+>> [1] 
+>> https://lore.kernel.org/linux-riscv/cover.1639744468.git.geert@linux-m68k.org/ 
+>>
+>> [2] 
+>> https://lore.kernel.org/linux-riscv/cover.1639744106.git.geert@linux-m68k.org/ 
+>>
+>>
+<snip>
+> 
+> Looks like Rob still has some feedback that still needs to be addressed. 
 
-Either way, I'm going to drop this (and the v4, which was at the top of 
-my inbox) as it looks like there'll be at least a v6.
+Still not passing Rob's bot as it depends on a binding in clk-next & I 
+also need to reword the descriptions in the PWM binding.
 
-Thanks!
+> I'm happy to take these via the RISC-V tree when the bindings are set 
+
+Great
+
+> (assuming the DTs match whatever gets agreed upons), but also fine if 
+> someone else wants to take it > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> 
+> Either way, I'm going to drop this (and the v4, which was at the top of 
+> my inbox) as it looks like there'll be at least a v6.
+Yup, hopefully v6 on Monday
+
+Thanks,
+Conor.
