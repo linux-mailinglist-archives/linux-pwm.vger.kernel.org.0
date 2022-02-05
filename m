@@ -2,216 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D3844AA8D1
-	for <lists+linux-pwm@lfdr.de>; Sat,  5 Feb 2022 13:48:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40F154AA8F8
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Feb 2022 14:05:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377682AbiBEMsJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 5 Feb 2022 07:48:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379808AbiBEMsI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 5 Feb 2022 07:48:08 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFCEC06109E
-        for <linux-pwm@vger.kernel.org>; Sat,  5 Feb 2022 04:48:07 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id m126-20020a1ca384000000b0037bb8e379feso86927wme.5
-        for <linux-pwm@vger.kernel.org>; Sat, 05 Feb 2022 04:48:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod-ie.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+LPvcJ2sd5T7CufgUritnA87r/Y5fUmsfeCEUXpPT6E=;
-        b=ef9uwCGIArsx4B0HtycPruLj7UAWV4CigNy4UIbrAY3TClE0iuhryFmiNJKx4dleOg
-         yyA8XqUKF5FM5R0ZmQ30vYByA8DSGJmY1TsX6/zSWJZFfk0llkoBeDYYfGosdLSfS1Qk
-         ehwqDZwKdRwafW/+lg86kz2XUanNm8jZ2g1Tq7SHg0v14EVQKAHRJo/skJ8OeVrzD+qe
-         INtz/+NvmVRRRwzbvAvsNRauN2oObdpKRtrpXXNHFSpmjS9UzLj2X4Y5eLvobCaKL1lB
-         pNd8r5wOZfbFPBEjDbWF5O1+0RDhRc7+e1YfuhSc0UOQQWl8ouLqrtx+n2EqpOuOXDST
-         UQ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+LPvcJ2sd5T7CufgUritnA87r/Y5fUmsfeCEUXpPT6E=;
-        b=BeiVQ/eD2c+TbcottXRlId16n76vsHBk8/RCURqG/IEPkakxncfO5PgxiFhi0Z9hHR
-         ovM7XrMXL8nGrnofikLCVrq+A0wbXJMEFGPoMOR26h+OVI0V5ZO2q0+2nCqEzfZLawTT
-         NICcpwPX6pxXKlNfBiAHoiLFMYuvElwkPdvb55gTLuHsmGAQ9Ds93UQ0+6j0vouNwxSb
-         l4SSPMNH8HssIhtLqWyKAoA+BCji4wKNrZBFd3pADuFo0UmXelGBZIMp/lV/wDRP+omU
-         jRHlySJy3zYntZd80559RSwbB/SQzyxOM7iC08qeqg5iUiT7Lg07iWwgRzM7kZjxI7Ao
-         3lmw==
-X-Gm-Message-State: AOAM531/reqfX+NOz2n1m28/oRsOzRp9A3aWm7vckirWe/axSRgIeolK
-        5miPDnMOVENMn+VMAwccM3uP+g==
-X-Google-Smtp-Source: ABdhPJxpq/DFWpEEyQIsjuuaVvilLjogf6JlPr9dXqoGfRGP3jRw+knIrG8WTJYlwwMgH5tU0Wc1Vw==
-X-Received: by 2002:a05:600c:3217:: with SMTP id r23mr2998357wmp.159.1644065284763;
-        Sat, 05 Feb 2022 04:48:04 -0800 (PST)
-Received: from [192.168.2.116] ([109.78.72.167])
-        by smtp.gmail.com with ESMTPSA id m8sm4429538wrn.106.2022.02.05.04.48.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Feb 2022 04:48:04 -0800 (PST)
-Message-ID: <c610ce52-e1ef-393c-0948-57a4c6f07d72@conchuod.ie>
-Date:   Sat, 5 Feb 2022 12:48:02 +0000
+        id S1379891AbiBENF3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 5 Feb 2022 08:05:29 -0500
+Received: from mga03.intel.com ([134.134.136.65]:8073 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346507AbiBENF2 (ORCPT <rfc822;linux-pwm@vger.kernel.org>);
+        Sat, 5 Feb 2022 08:05:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644066328; x=1675602328;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=P8ih86m6G0IyyDLA73dvPC4Mr4i85BIOOZC9rN0gCSw=;
+  b=WTQkS3qMbTkm+Qt1PmmEmNVZCcs1z1vSGuJRqN2tKBHqZAIYxC2fdj/v
+   T4qLLwAOh8fxwnyVq49WdN3maHvSh63ophR5FgfBpnS7zdl1jfagjbUQO
+   62gRi0npht6pwzNOFY9FRryRU/l8rkxFWU6sm6RBRcU11z8Tloa7GE5AW
+   7qxgpPfTLRwJh/E0X828tSDbRxirL82egkfuUuDhFNg47+Po5PpRanjGI
+   6FFjOi2QgT33tOWfdvCIPdy/s7Pr9++2y3TNUmuu8Lyclk3QPMIJ3ks08
+   5fBK9hyNQzb5zCgPgfCmhVUqw3pf1m/Jztogpq+PONZvJ3/Qaj+ugPyNZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="248459692"
+X-IronPort-AV: E=Sophos;i="5.88,345,1635231600"; 
+   d="scan'208";a="248459692"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2022 05:05:27 -0800
+X-IronPort-AV: E=Sophos;i="5.88,345,1635231600"; 
+   d="scan'208";a="567007845"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2022 05:05:23 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nGKjm-001GmE-8z;
+        Sat, 05 Feb 2022 15:04:22 +0200
+Date:   Sat, 5 Feb 2022 15:04:22 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-fbdev@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] drm/tiny: Add driver for Solomon SSD130X OLED
+ displays
+Message-ID: <Yf511hhojzIXcNXp@smile.fi.intel.com>
+References: <20220204134347.1187749-1-javierm@redhat.com>
+ <20220204134347.1187749-3-javierm@redhat.com>
+ <Yf03sCSuQwHKvgA9@smile.fi.intel.com>
+ <d4e8c16c-5586-3233-0b99-be15a4c0f7aa@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
-Content-Language: en-US
-To:     Conor.Dooley@microchip.com, geert@linux-m68k.org,
-        u.kleine-koenig@pengutronix.de
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        aou@eecs.berkeley.edu, atishp@rivosinc.com, bin.meng@windriver.com,
-        brgl@bgdev.pl, Daire.McNamara@microchip.com,
-        devicetree@vger.kernel.org, heiko@sntech.de,
-        Ivan.Griffin@microchip.com, jassisinghbrar@gmail.com,
-        krzysztof.kozlowski@canonical.com, lee.jones@linaro.org,
-        Lewis.Hanly@microchip.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
-        robh@kernel.org, thierry.reding@gmail.com
-References: <20220201075824.aixrvkvmjde2ihxx@pengutronix.de>
- <20220202123542.3721512-1-conor.dooley@microchip.com>
- <CAMuHMdWrmuY7pwY8U0t9LumEvUTBEA06uV7hNyKFAPMQtE98_A@mail.gmail.com>
- <3862e358-901c-e848-71af-01eceed26f74@microchip.com>
- <CAMuHMdXvw9cNNzBhp-sSMTXxP2eALhB=fD78Wgx-kks7wr6oiQ@mail.gmail.com>
- <fa747594-a112-d313-5de3-2330bf5ddc8a@microchip.com>
-From:   Conor Dooley <mail@conchuod.ie>
-In-Reply-To: <fa747594-a112-d313-5de3-2330bf5ddc8a@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4e8c16c-5586-3233-0b99-be15a4c0f7aa@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Geert, Uwe,
+On Fri, Feb 04, 2022 at 08:19:12PM +0100, Javier Martinez Canillas wrote:
+> On 2/4/22 15:26, Andy Shevchenko wrote:
+> > On Fri, Feb 04, 2022 at 02:43:45PM +0100, Javier Martinez Canillas wrote:
 
-Hopefully the following does a better job of explaining the two parameters?
+...
 
-Thanks,
-Conor.
+> >> +struct ssd130x_device {
+> >> +	struct drm_device drm;
+> >> +	struct drm_simple_display_pipe pipe;
+> >> +	struct drm_display_mode mode;
+> >> +	struct drm_connector connector;
+> > 
+> > 
+> >> +	struct i2c_client *client;
+> > 
+> > Can we logically separate hw protocol vs hw interface from day 1, please?
+> > This will allow to add SPI support for this panel much easier.
+> > 
+> > Technically I would like to see here
+> > 
+> > 	struct device *dev;
+> >
+> > and probably (I haven't looked into design)
+> > 
+> > 	struct ssd130x_ops *ops;
+> > 
+> > or something alike.
+> 
+> Sure. I wanted to keep the driver simple, making the writes bus agnostic and
+> adding a level of indirection would make it more complex. But I agree that
+> it will also make easier to add more buses later. I will do that for v3.
 
-microchip,sync-update-mask:
-   description: |
-     Depending on how the IP is instantiated, there are two modes of
-     operation. In synchronous mode, all channels are updated at the
-     beginning of the PWM period, and in asynchronous mode updates
-     happen as the control registers are written. A 16 bit wide
-     "SHADOW_REG_EN" parameter of the IP core controls whether
-     synchronous mode is possible for each channel, and is set by the
-     bitstream programmed to the FPGA. If the IP core is instantiated
-     with SHADOW_REG_ENx=1, both registers that control the duty cycle
-     for channel x have a second "shadow"/buffer reg synthesised.
-     At runtime a bit wide register exposed to APB can be used to toggle
-     on/off synchronised mode for all channels it has been synthesised
-     for.
-     Each bit corresponds to a PWM channel & represents whether
-     synchronous mode is possible for that channel.
+I have SSD1306 display with SPI interface and I'm not able to test your series.
+With the above it at least gives me a point to consider helping (coding and
+testing)  with SPI one.
 
-   $ref: /schemas/types.yaml#/definitions/uint32
-   default: 0
+...
 
-microchip,dac-mode-mask:
-   description: |
-     Optional, per-channel Low Ripple DAC mode is possible on this IP
-     core. It creates a minimum period pulse train whose High/Low
-     average is that of the chosen duty cycle. This "DAC" will have far
-     better bandwidth and ripple performance than the standard PWM
-     algorithm can achieve. A 16 bit DAC_MODE module parameter of the IP
-     core, set at instantiation and by the bitstream programmed to the
-     FPGA, determines whether a given channel operates in regular PWM or
-     DAC mode.
-     Each bit corresponds to a PWM channel & represents whether DAC mode
-     is enabled for that channel.
+> >> +	if (!fb)
+> >> +		return;
+> > 
+> > Can it happen?
+> 
+> I don't know, but saw that the handler of other drivers checked for this so
+> preferred to play safe and do the same.
 
-   $ref: /schemas/types.yaml#/definitions/uint32
-   default: 0
+So, either cargo-cult or indeed it may happen. Somebody may conduct a research
+on this...
 
-On 02/02/2022 14:37, Conor.Dooley@microchip.com wrote:
-> On 02/02/2022 14:02, Geert Uytterhoeven wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->> On Wed, Feb 2, 2022 at 2:46 PM <Conor.Dooley@microchip.com> wrote:
->>> On 02/02/2022 13:28, Geert Uytterhoeven wrote:
->>>> On Wed, Feb 2, 2022 at 1:33 PM <conor.dooley@microchip.com> wrote:
->>>>>> On 01/02/2022 07:58, Uwe Kleine-König wrote:
->>>>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>>>>>> On Mon, Jan 31, 2022 at 11:47:21AM +0000, conor.dooley@microchip.com wrote:
->>>>>>> From: Conor Dooley <conor.dooley@microchip.com>
->>>>>>>
->>>>>>> Add device tree bindings for the Microchip fpga fabric based "core" PWM
->>>>>>> controller.
->>>>>>>
->>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>>>
->>>>>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->>>>>>> ---
->>>>>>> .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
->>>>
->>>>>>> +  microchip,sync-update:
->>>>>>> +    description: |
->>>>>>> +      In synchronous mode, all channels are updated at the beginning of the PWM period.
->>>>>>> +      Asynchronous mode is relevant to applications such as LED control, where
->>>>>>> +      synchronous updates are not required. Asynchronous mode lowers the area size,
->>>>>>> +      reducing shadow register requirements. This can be set at run time, provided
->>>>>>> +      SHADOW_REG_EN is asserted. SHADOW_REG_EN is set by the FPGA bitstream programmed
->>>>>>> +      to the device.
->>>>>>> +      Each bit corresponds to a PWM channel & represents whether synchronous mode is
->>>>>>> +      possible for the PWM channel.
->>>>>>> +
->>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint16
->>>>>>> +    default: 0
->>>>>>
->>>>>> I'm not sure I understand this correctly. This is a soft-core and you
->>>>>> can synthesize it either with or without the ability to do synchronous
->>>>>> updates or not, right? All 16 channels share the same period length and
->>>>>> in the simple implementation changing the duty cycle is done at once
->>>>>> (maybe introducing a glitch) and in the more expensive implementation
->>>>>> there is a register to implement both variants?
->>>>>
->>>>> Correct. If the IP is instantiated with SHADOW_REG_ENx=1, both
->>>>> registers that control the duty cycle for channel x have a second
->>>>> "shadow reg" synthesised. At runtime a bit wide register exposed to
->>>>> APB can be used to toggle on/off synchronised mode for all channels
->>>>> it has been synthesised for.
->>>>>
->>>>> I will reword this description since it is not clear.
->>>>
->>>> Shouldn't it use a different compatible value instead?
->>>> Differentiation by properties is not recommended, as it's easy to
->>>> miss a difference.
->>>
->>> Either you have something in mind that I've not thought of, or I've done
->>> a bad job of explaining again. The buffer/"shadow" registers are
->>> synthesised on a per channel basis, so any combination of the 16
->>> channels may have this capability. The same applies to the DAC mode, per
->>> channel there too.
->>
->> Oops, hadn't noticed this is per channel. Indeed, then a different
->> compatible value is futile.
->> So since "microchip,sync-update" is a bitmask, perhaps it should be
->> called "microchip,sync-update-mask"?
->> Same for "microchip,dac-mode" -> "microchip,dac-mode-mask"?
+...
+
+> >> +	drm_mode_probed_add(connector, mode);
+> >> +	drm_set_preferred_mode(connector, mode->hdisplay, mode->vdisplay);
+> >> +
+> >> +	return 1;
+> > 
+> > Positive code, what is the meaning of it?
 > 
-> Adding -mask sounds good to me.
-> 
->> Also, using different integer sizes than uint32 is frowned upon, unless
->> there is a very good reason to do so. I can imagine a future version
->> would support more channels, and then uint16 becomes a limitation.
-> 
-> Sure, uint32 it is.
-> 
->> For both: Rob?
-> 
-> Both of these properties fall under the "DO attempt to make bindings
-> complete even if a driver doesn’t support some features" category, so I
-> am perfectly happy to change these properties to whatever is convention
-> (or ultimately drop them for the sake of the remainder of the series).
-> 
-> Thanks,
-> Conor.
-> 
+> It's the number of connector modes. The driver only supports 1.
+
+A comment then?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
