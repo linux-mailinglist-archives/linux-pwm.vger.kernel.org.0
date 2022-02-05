@@ -2,153 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A17634AA36A
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Feb 2022 23:46:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DD24AA757
+	for <lists+linux-pwm@lfdr.de>; Sat,  5 Feb 2022 08:40:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351555AbiBDWqr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Feb 2022 17:46:47 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:34653 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234792AbiBDWqq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Feb 2022 17:46:46 -0500
-Received: by mail-oi1-f181.google.com with SMTP id i5so10272044oih.1;
-        Fri, 04 Feb 2022 14:46:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L8b72xGfF9umAJJg7tsHu1AkAehHlvUS7fj1GSuG6R0=;
-        b=SsmQdf125ZC7D7bi5po4392pweglzD3wfDKfWzcCv2vI8/ax1/BW8zQDr5ebUnErBi
-         PBq1O/oaFCoskp6eAMSCc4Q9NgVicvHEEer2IjK6eL0L+cEbdCe3bT6mQ9vD7a2LfT5A
-         4XP0IIitkTeslRv+CyGUf4v4nTYSgv7X9NChbVTUyLsQNiPDRKDZ3wWjpFteRUObC0Dz
-         kFk1VGIbyMXQvfP1i1sXiaRFq5YAfTu9VzzvBjZoRQt58WvXkczNVM3eo3F5FrS32SkB
-         3JPtts0YMY+mUcgyA5oXCmO+vXa2aTwCv4sTmbNmRACHcFirfNdmupB7mfoUO2Hk3TOR
-         372A==
-X-Gm-Message-State: AOAM532ucfgIb+p7QszOXiJB9HT6UBEfMzruTiccOXfq5KbaHWuND8sV
-        QcPAG51saYiR3z6dDCCNscU6p5sbyQ==
-X-Google-Smtp-Source: ABdhPJwxV7g+49b86KSwvPAvbdlz385/Vu9mnW4I2sV9P9k4qH3MueJC6HWx5Bhq3KvuLey/MH/2Zw==
-X-Received: by 2002:a05:6808:1981:: with SMTP id bj1mr2364232oib.213.1644014806196;
-        Fri, 04 Feb 2022 14:46:46 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id m7sm1268743ots.32.2022.02.04.14.46.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Feb 2022 14:46:45 -0800 (PST)
-Received: (nullmailer pid 3324348 invoked by uid 1000);
-        Fri, 04 Feb 2022 22:46:43 -0000
-Date:   Fri, 4 Feb 2022 16:46:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     conor.dooley@microchip.com
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, jassisinghbrar@gmail.com,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, krzysztof.kozlowski@canonical.com,
-        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
-        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
-        atishp@rivosinc.com
-Subject: Re: [PATCH v5 04/12] dt-bindings: rtc: add bindings for microchip
- mpfs rtc
-Message-ID: <Yf2s0w4Yi6rcxukj@robh.at.kernel.org>
-References: <20220131114726.973690-1-conor.dooley@microchip.com>
- <20220131114726.973690-5-conor.dooley@microchip.com>
+        id S1379594AbiBEHkx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 5 Feb 2022 02:40:53 -0500
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:56516 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1379592AbiBEHkw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 5 Feb 2022 02:40:52 -0500
+Received: from pop-os.home ([90.126.236.122])
+        by smtp.orange.fr with ESMTPA
+        id GFggn1Io9IQAdGFggnd94L; Sat, 05 Feb 2022 08:40:51 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sat, 05 Feb 2022 08:40:51 +0100
+X-ME-IP: 90.126.236.122
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Subject: [PATCH] backlight: pwm_bl: Avoid open coded arithmetic in memory allocation
+Date:   Sat,  5 Feb 2022 08:40:48 +0100
+Message-Id: <bd3d74acfa58d59f6f5f81fc5a9fb409edb8d747.1644046817.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220131114726.973690-5-conor.dooley@microchip.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 11:47:19AM +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Add device tree bindings for the real time clock on
-> the Microchip PolarFire SoC.
-> 
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../bindings/rtc/microchip,mfps-rtc.yaml      | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml b/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
-> new file mode 100644
-> index 000000000000..f35cca4e8656
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rtc/microchip,mfps-rtc.yaml#
-> +
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip PolarFire Soc (MPFS) RTC Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: rtc.yaml#
-> +
-> +maintainers:
-> +  - Daire McNamara <daire.mcnamara@microchip.com>
-> +  - Lewis Hanly <lewis.hanly@microchip.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,mpfs-rtc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: |
-> +      The RTC on the PolarFire SoC has a pair of interrupts. The first is the
-> +      RTC_WAKEUP interrupt. The second, RTC_MATCH, is asserted when the
-> +      content of the Alarm register is equal to that of the RTC's count.
-> +    maxItems: 2
+kmalloc_array()/kcalloc() should be used to avoid potential overflow when
+a multiplication is needed to compute the size of the requested memory.
 
-Rework something like this:
+So turn a kzalloc()+explicit size computation into an equivalent kcalloc().
 
-items:
-  - description: RTC_WAKEUP interrupt
-  - description: RTC_MATCH, is asserted when the content of the Alarm 
-      register is equal to that of the RTC's count.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/video/backlight/pwm_bl.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: rtc
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/microchip,mpfs-clock.h>
-> +    rtc@20124000 {
-> +        compatible = "microchip,mpfs-rtc";
-> +        reg = <0x20124000 0x1000>;
-> +        clocks = <&clkcfg CLK_RTC>;
-> +        clock-names = "rtc";
-> +        interrupts = <80>, <81>;
-> +    };
-> +...
-> -- 
-> 2.35.0
-> 
-> 
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 8d8959a70e44..c0523a0269ee 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -263,9 +263,8 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 
+ 	/* read brightness levels from DT property */
+ 	if (num_levels > 0) {
+-		size_t size = sizeof(*data->levels) * num_levels;
+-
+-		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
++		data->levels = devm_kcalloc(dev, num_levels,
++					    sizeof(*data->levels), GFP_KERNEL);
+ 		if (!data->levels)
+ 			return -ENOMEM;
+ 
+@@ -320,8 +319,8 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 			 * Create a new table of brightness levels with all the
+ 			 * interpolated steps.
+ 			 */
+-			size = sizeof(*table) * num_levels;
+-			table = devm_kzalloc(dev, size, GFP_KERNEL);
++			table = devm_kcalloc(dev, num_levels, sizeof(*table),
++					     GFP_KERNEL);
+ 			if (!table)
+ 				return -ENOMEM;
+ 			/*
+-- 
+2.32.0
+
