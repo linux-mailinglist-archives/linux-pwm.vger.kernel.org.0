@@ -2,141 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E62C4AAD32
-	for <lists+linux-pwm@lfdr.de>; Sun,  6 Feb 2022 01:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A00D4AAE8A
+	for <lists+linux-pwm@lfdr.de>; Sun,  6 Feb 2022 10:25:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381474AbiBFAal (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 5 Feb 2022 19:30:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        id S232327AbiBFJZh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 6 Feb 2022 04:25:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378470AbiBFAak (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 5 Feb 2022 19:30:40 -0500
-X-Greylist: delayed 66838 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 05 Feb 2022 16:30:39 PST
-Received: from mx2.smtp.larsendata.com (mx2.smtp.larsendata.com [91.221.196.228])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1C4C061348
-        for <linux-pwm@vger.kernel.org>; Sat,  5 Feb 2022 16:30:38 -0800 (PST)
-Received: from mail01.mxhotel.dk (mail01.mxhotel.dk [91.221.196.236])
-        by mx2.smtp.larsendata.com (Halon) with ESMTPS
-        id 12f502cb-8454-11ec-ac19-0050568cd888;
-        Wed, 02 Feb 2022 18:15:17 +0000 (UTC)
-Received: from ravnborg.org (80-162-45-141-cable.dk.customer.tdc.net [80.162.45.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sam@ravnborg.org)
-        by mail01.mxhotel.dk (Postfix) with ESMTPSA id 67A6F194BFA;
-        Wed,  2 Feb 2022 19:14:11 +0100 (CET)
-Date:   Wed, 2 Feb 2022 19:14:08 +0100
-X-Report-Abuse-To: abuse@mxhotel.dk
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     nick.hawkins@hpe.com
-Cc:     verdun@hpe.com, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Corey Minyard <minyard@acm.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
+        with ESMTP id S229929AbiBFJZh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 6 Feb 2022 04:25:37 -0500
+X-Greylist: delayed 461 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 01:25:36 PST
+Received: from mail.schwermer.no (mail.schwermer.no [49.12.228.226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EAE1C06173B;
+        Sun,  6 Feb 2022 01:25:36 -0800 (PST)
+Message-ID: <20f95cfd-a851-af4f-1c60-45f2ca238e10@svenschwermer.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=svenschwermer.de;
+        s=mail; t=1644139072;
+        bh=wx9jXfQkpX2qiu62RfHuY8OkrDmcTGVyOARl1nXmt54=;
+        h=Subject:To:Cc:References:From:In-Reply-To;
+        b=h/yQco5Eg7EF/lfhW6KxQq2zt31ZAQvu3P0Mr7SyrrHL+F/0uMuY4aANB6QL0BHAj
+         Qn13hkT8XnMMk2p6781Zdb3xO8wC64EOx8rYqrio+mCJz8kP0/tCdenn/F+abIBtfC
+         QI/zzsUUC3YhlSewHc/F3K/P5Rb4rtEmyXcJK0JyCtWLkBoBw8OB1IAzrhrd7EBesU
+         CDXn88RxqqTrVksSR61uewCJ5ov4Y+XSgGaEOXQFJxMT8vG6zhK/OoDr9MZ+qDRe9p
+         oHUI9ofMPAmO1RjpW+l3v4moCEY3S9LfFZT18LSvds7LLeniblFbLBPR7JKqdD6sDL
+         CrRrOT0gyWipg==
+Date:   Sun, 6 Feb 2022 10:17:51 +0100
+Mime-Version: 1.0
+Subject: Re: [PATCH v3 2/2] leds: Add PWM multicolor driver
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Stanislav Jakubek <stano.jakubek@gmail.com>,
-        Hao Fang <fanghao11@huawei.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Wang Kefeng <wangkefeng.wang@huawei.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] HPE BMC GXP SUPPORT
-Message-ID: <YfrJ8JWjyH9ptV4z@ravnborg.org>
-References: <nick.hawkins@hpe.com>
- <20220202165315.18282-1-nick.hawkins@hpe.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220202165315.18282-1-nick.hawkins@hpe.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,SUBJ_ALL_CAPS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, post@lespocky.de
+References: <20220126104844.246068-1-sven@svenschwermer.de>
+ <20220126104844.246068-3-sven@svenschwermer.de>
+ <CAHp75VfMTCvgib__PhnfB_g7xLhyNws5TDRyMVyzuAkT1ydY_w@mail.gmail.com>
+From:   Sven Schwermer <sven@svenschwermer.de>
+In-Reply-To: <CAHp75VfMTCvgib__PhnfB_g7xLhyNws5TDRyMVyzuAkT1ydY_w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Nick,
+Hi Andy,
 
-good to see all this stuff coming mainline,
+Thanks for looking through my patch. I have a couple of follow-up 
+questions about your feedback:
 
-On Wed, Feb 02, 2022 at 10:52:50AM -0600, nick.hawkins@hpe.com wrote:
-> From: Nick Hawkins <nick.hawkins@hpe.com>
+On 2/2/22 13:33, Andy Shevchenko wrote:
+>> +                       ret = PTR_ERR(pwmled->pwm);
+>> +                       dev_err(&pdev->dev, "unable to request PWM: %d\n", ret);
+>> +                       fwnode_handle_put(fwnode);
+>> +                       goto destroy_mutex;
 > 
-> GXP is the name of the HPE SoC.
-> This SoC is used to implement BMC features of HPE servers
-> (all ProLiant, Synergy, and many Apollo, and Superdome machines)
-> It does support many features including:
-> 	ARMv7 architecture, and it is based on a Cortex A9 core
-> 	Use an AXI bus to which
-> 		a memory controller is attached, as well as
->                  multiple SPI interfaces to connect boot flash,
->                  and ROM flash, a 10/100/1000 Mac engine which
->                  supports SGMII (2 ports) and RMII
-> 		Multiple I2C engines to drive connectivity with a host infrastructure
-> 		A video engine which support VGA and DP, as well as
->                  an hardware video encoder
-> 		Multiple PCIe ports
-> 		A PECI interface, and LPC eSPI
-> 		Multiple UART for debug purpose, and Virtual UART for host connectivity
-> 		A GPIO engine
-> This Patch Includes:
-> 	Documentation for device tree bindings
-> 	Device Tree Bindings
-> 	GXP Timer Support
-> 	GXP Architecture Support
+> fwnode_handle_put();
+> return dev_err_probe(...);
+This would skip the destruction of the mutex and releasing of mcnode. 
+Isn't that problematic? The same goes for all of your comments of this kind.
+
+>> +destroy_mutex:
+>> +       mutex_destroy(&priv->lock);
 > 
-> Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
-> ---
->  .../bindings/display/hpe,gxp-thumbnail.txt    |  21 +
->  .../devicetree/bindings/gpio/hpe,gxp-gpio.txt |  16 +
-...
+> Wrong ordering here and in ->remove().
+> 
+> Don't mix devm_* with non-devm_* calls.
+What do you mean by this?
 
-All new bindings must be in the DT-schema format (yaml files).
-This enables a lot of syntax checks and validation.
-
-We are slowly migrating away from the .txt based bindings.
-
-Also, for new bindings please follow the guide lines listed in
-Documentation/devicetree/bindings/submitting-patches.rst
-
-Consider including the bindings with the drivers using the bindings so
-things have a more natural split.
-
-	Sam
+Best regards,
+Sven
