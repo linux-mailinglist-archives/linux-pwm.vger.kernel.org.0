@@ -2,130 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40ECE4AB7D9
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 10:41:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 451014AB7AF
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 10:41:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbiBGJkE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Feb 2022 04:40:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
+        id S231394AbiBGJjP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Feb 2022 04:39:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352862AbiBGJim (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 04:38:42 -0500
-Received: from mx.tkos.co.il (guitar.tcltek.co.il [84.110.109.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E4DC0401C0;
-        Mon,  7 Feb 2022 01:38:40 -0800 (PST)
-Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 4065A4409ED;
-        Mon,  7 Feb 2022 11:30:38 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1644226238;
-        bh=Kd4KB7a0IuAHNoAFfdMAc3/6q6mBt1QnffvQOUL1hCQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLYQTmZwAI35PLILedReLiOLWqqwYeZ6PrJVwvNyh+0cqdyI1dspGQL7N5l9fpHgn
-         NqFTwIASdoV6ghUVc9qN0yy4rAuyHCy890rchFaRczeZ4s1Ul3JLaHOMxDFXKCKNem
-         BVuWd0jN70fuGsTGr255julMy5/yqE2ogy+kmgOwIA79f0MxMKvnUiY5oANiqDNSNr
-         0oVNTNroptYTK3DV9+eEyLvWUJPAKs1vdx+WWRTp70uhe3V6fAwQdPSjjRLhxRnllP
-         iwlbae/vnwN2tiiRl3HJulay8YOX4o7JYrBGoHYR6q7JLEcUGysscN1PUCGzNVk8uH
-         Gf4Rzo0ut9VXg==
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Baruch Siach <baruch.siach@siklu.com>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] arm64: dts: ipq6018: add pwm node
-Date:   Mon,  7 Feb 2022 11:30:45 +0200
-Message-Id: <989c681a730f38b1a5f09dbb31552d9b974e400e.1644226245.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
-References: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
+        with ESMTP id S1354787AbiBGJbI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 04:31:08 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DEDC043185
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Feb 2022 01:31:03 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id k18so23532354wrg.11
+        for <linux-pwm@vger.kernel.org>; Mon, 07 Feb 2022 01:31:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=e71qr5cQmHNfaTvqFdZSatwMnOkMecpoZmeynQAfXfU=;
+        b=IipD0Md8PLGqTRc8YbhUGW9RZUZYMQMHks4wT414D4MJkTvXaIaxCLgX7q7EqqZkkE
+         RniraUcxZGQqnV/BLhI8fR3OhKUqDYUBLkiKkwsuJN/ZNCuhQa9etjVpPPbBQ9jyOrwx
+         MGb+BBECiHqPAOCpL/b5+NFypnEjgPgL0Rb5qKUiTSwuyDcdtYMjQxjnCr4gVMsnv1db
+         4Li8Ccoityy3n7nCqgyhw562KdbA+9+AlCO3h6k33jebIUk0d7GU1cLOM5H73yN+w4Xf
+         YMhAHQA5StGpYsrAUVc3HUB89o5DXP0IdN5Syh15D5UZS0wH6QYVpbsbWtyqGxNwNZ4L
+         OgFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=e71qr5cQmHNfaTvqFdZSatwMnOkMecpoZmeynQAfXfU=;
+        b=mBgMJHdiNa6hu2+GOaSvCrURg99DrCLAE/QyGtK2iFj9BOG+KWFICfvSFX6p98+0EV
+         xXdYpLxpHVOBt9J6aIA8iQWDePl/YZX1eZB7cNU8d22jJiMsqSE4EZMp122RK2SmC4P+
+         TboO4OWu1L8HAnR/HKF5XbLcVI6+6ttgO7ye7vzqn6SXn0BB2mO019OD2/XL/udpzNCi
+         objB9V8tXSIMcVtGb0abyYXZtL+4uQU94RwYsBBkgkBRt6OSNJqwxB3oy4xwdQuqYRJm
+         Y2aXZ/BRBYR9hH5PqwBaLOSAQtTTl1iTtLpFJ080Ijgkl+H04LaZ0CwVtoQAF4EYJ5SG
+         PefQ==
+X-Gm-Message-State: AOAM532bTZ2yMHXzHX7Bd0x9K9dTK2S12t8wzvHV6sA4/gB6ZyOR64wM
+        /xHJ1VeW1ZsyL1rzdOkJAoQb8w==
+X-Google-Smtp-Source: ABdhPJxyfEhDPaQTrpIwF3s8f+P5EuB6O3syjtuhYC4gv/uXtG6GnEb8OsVA43hN5ymF4KDaQpvKuQ==
+X-Received: by 2002:a05:6000:385:: with SMTP id u5mr3350003wrf.105.1644226262555;
+        Mon, 07 Feb 2022 01:31:02 -0800 (PST)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id n15sm10497806wrf.37.2022.02.07.01.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Feb 2022 01:31:01 -0800 (PST)
+Date:   Mon, 7 Feb 2022 09:31:00 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid open coded arithmetic in memory
+ allocation
+Message-ID: <YgDm1FWtlneMLCTS@google.com>
+References: <bd3d74acfa58d59f6f5f81fc5a9fb409edb8d747.1644046817.git.christophe.jaillet@wanadoo.fr>
+ <20220207080128.xmvommcddjfgz7ey@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220207080128.xmvommcddjfgz7ey@pengutronix.de>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Baruch Siach <baruch.siach@siklu.com>
+On Mon, 07 Feb 2022, Uwe Kleine-König wrote:
 
-Describe the PWM block on IPQ6018.
+> On Sat, Feb 05, 2022 at 08:40:48AM +0100, Christophe JAILLET wrote:
+> > kmalloc_array()/kcalloc() should be used to avoid potential overflow when
+> > a multiplication is needed to compute the size of the requested memory.
+> > 
+> > So turn a kzalloc()+explicit size computation into an equivalent kcalloc().
+> > 
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> 
+> LGTM
+> 
+> Acked-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> 
+> Thanks
+> Uwe
 
-The PWM is in the TCSR area. Make &tcsr "simple-mfd" compatible, and add
-&pwm as child of &tcsr.
+I am totally confused!
 
-Add also ipq6018 specific compatible string.
-
-Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
----
-v9:
-
-  Add 'ranges' property (Rob)
-
-v8:
-
-  Add size cell to 'reg' (Rob)
-
-v7:
-
-  Use 'reg' instead of 'offset' (Rob)
-
-  Add qcom,tcsr-ipq6018 (Rob)
-
-  Drop clock-names (Bjorn)
-
-v6:
-
-  Make the PWM node child of TCSR (Rob Herring)
-
-  Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
-
-v5: Use qcom,pwm-regs for TCSR phandle instead of direct regs
-
-v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
----
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 66ec5615651d..a717fc17523d 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -258,8 +258,21 @@ tcsr_mutex_regs: syscon@1905000 {
- 		};
- 
- 		tcsr: syscon@1937000 {
--			compatible = "syscon";
-+			compatible = "qcom,tcsr-ipq6018", "syscon", "simple-mfd";
- 			reg = <0x0 0x01937000 0x0 0x21000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x01937000 0x21000>;
-+
-+			pwm: pwm@a010 {
-+				compatible = "qcom,ipq6018-pwm";
-+				reg = <0xa010 0x20>;
-+				clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+				assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+				assigned-clock-rates = <100000000>;
-+				#pwm-cells = <2>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		blsp_dma: dma-controller@7884000 {
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
