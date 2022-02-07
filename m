@@ -2,69 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D264ACA58
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 21:26:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C330F4ACAA7
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 21:48:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234368AbiBGU0b (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Feb 2022 15:26:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49414 "EHLO
+        id S233921AbiBGUr4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Feb 2022 15:47:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241539AbiBGUX6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 15:23:58 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584DAC0401DA
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Feb 2022 12:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644265437; x=1675801437;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WX/QWphywdX4X9SXBJw5KgJQb2HOEeFXMw5MNbnu9eA=;
-  b=FosN/GgcKr8JtklP1Uu0X/2fIuexT8zVD4uywguUkeQjXgcKcykociF0
-   UKskSiTrTm2Oi7ngeAaX6ZYqzDK38z1Di1RrzjqQ8O6WlvGMRCljs9EjG
-   vmvjFbAGBpBvrrhOeyicBMunVwBLveHS6XWmsfb16cVrIU6G/Af4TtcDt
-   8b/tIApBO25BkF6x4zIL38BdKIUebBLDp1teDKJ9igPqF63SUrcT1OmVt
-   qy9CJ0ztYQ3AVdRcG+fughlas8Z5Iq1y8rF6yA1O/YbZllgE7YPr1j7Hr
-   C6JHse58PcvWlmBeQ+HlNftfINITnLZrh1rttZhwHUB9DIl7buxH+oO0Z
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10251"; a="273325529"
-X-IronPort-AV: E=Sophos;i="5.88,350,1635231600"; 
-   d="scan'208";a="273325529"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 12:23:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,350,1635231600"; 
-   d="scan'208";a="632597119"
-Received: from lkp-server01.sh.intel.com (HELO 9dd77a123018) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 07 Feb 2022 12:23:53 -0800
-Received: from kbuild by 9dd77a123018 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nHAYC-0000w4-Um; Mon, 07 Feb 2022 20:23:52 +0000
-Date:   Tue, 8 Feb 2022 04:22:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Baruch Siach <baruch@tkos.co.il>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Baruch Siach <baruch.siach@siklu.com>,
-        Balaji Prakash J <bjagadee@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <kathirav@codeaurora.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/3] pwm: driver for qualcomm ipq6018 pwm block
-Message-ID: <202202080410.R0qwqtXx-lkp@intel.com>
-References: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
+        with ESMTP id S240549AbiBGUcv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 15:32:51 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A036BC0401DA
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Feb 2022 12:32:48 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id k1so10411211wrd.8
+        for <linux-pwm@vger.kernel.org>; Mon, 07 Feb 2022 12:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=conchuod-ie.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=lInl3v4291y96qRj5SmrtyZWxmX1JQwpyT8w4NZCIwE=;
+        b=pZIbLbD2z5lCj7TnELtOL5EzoxwY+lBVxsw2GZfWwQfoK6YNhj3asWV4g24WsrMUDE
+         Pc+FJHzk1Vwb1BcSpFfE0vnjX6h1xVtFhGSNFLyr3y/cTOKmdEePr+06n3Mz+WC3/mou
+         J0mx4mjkkjxyu+eFle3FufFVo+vGPTRZhg5T5jQJ48QVvrT3A0n7LcYlyg2H/OCEMVaY
+         BHT2Ifq4ujfMhMkTM0aqvNDcquf+yoJ9VFmdwFRw2RZHH8edWFGZNs69BbhMWPjcKkVn
+         c9XLjQf3kynVd22B2/eWeltNLSu9E35+DnSu7D8cQx+vXVd+jI/IW0YoL7wlOaXz//Kt
+         lNYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=lInl3v4291y96qRj5SmrtyZWxmX1JQwpyT8w4NZCIwE=;
+        b=1SmeUv2wzqsKo/Kdv04hc1YUQxWw+1lqe46DjCV1BNlDhhSnHm/95iSb4LTedxUiIt
+         K9cGaoQatijSF5VZOhDnEqp9dn88FJfzcmbQ9HnY6To/ja2JjOE0kpFo+9pZGTXictdm
+         fH1KRwHN0/Q2cxBXMvb7iIcqY6TMEDkUX4JIkcandsTnnDHksQFxU8ts6eDaf5+WWPFJ
+         Ewr/PpgL3jU5qmI6SPlWIvgMrT5WY9mikbst/tKRV/ezm/P8Pj8az6SaywyCMo6qLxZK
+         KVUXkQXV1rb9N2m9HEEvqLlKNa03980mnlrq7O1v622aNwY0YecJPtcDOElDnt5BFJuh
+         FEvg==
+X-Gm-Message-State: AOAM533SrE63y3zR6IEIqt4OrTsthg0g2UkUTED2aA7wlhqwgQSzhrmh
+        u+LsG3Dw7uhu3p9TGcjlfqkfMg==
+X-Google-Smtp-Source: ABdhPJxli8C56VbUUZpTG/k9gYuJnfVphrd7Cnfcv2luFPINoxa1eE5dK6Blkudp0C9VSCUYzi1P8w==
+X-Received: by 2002:a5d:518f:: with SMTP id k15mr898486wrv.249.1644265966959;
+        Mon, 07 Feb 2022 12:32:46 -0800 (PST)
+Received: from [192.168.2.116] ([109.78.72.167])
+        by smtp.gmail.com with ESMTPSA id t4sm10594105wro.71.2022.02.07.12.32.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Feb 2022 12:32:46 -0800 (PST)
+Message-ID: <1cce8adf-1f49-b908-ee6e-f7c2ff6b5218@conchuod.ie>
+Date:   Mon, 7 Feb 2022 20:32:44 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v6 02/12] dt-bindings: soc/microchip: add services as sub
+ devs of sys ctrlr
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>, conor.dooley@microchip.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, jassisinghbrar@gmail.com,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Palmer Dabbelt <palmer@rivosinc.com>
+References: <20220207162637.1658677-1-conor.dooley@microchip.com>
+ <20220207162637.1658677-3-conor.dooley@microchip.com>
+ <YgF8G/Eed03xn9iI@robh.at.kernel.org>
+From:   Conor Dooley <mail@conchuod.ie>
+In-Reply-To: <YgF8G/Eed03xn9iI@robh.at.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,128 +85,108 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Baruch,
+On 07/02/2022 20:07, Rob Herring wrote:
+> On Mon, Feb 07, 2022 at 04:26:28PM +0000, conor.dooley@microchip.com wrote:
+>> From: Conor Dooley <conor.dooley@microchip.com>
+>>
+>> Document mpfs-rng and mpfs-generic-service as subdevices of the system
+>> controller.
+>>
+>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+>> ---
+>>   .../microchip,mpfs-sys-controller.yaml        | 35 +++++++++++++++++--
+>>   1 file changed, 33 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+>> index f699772fedf3..b02c8bd72605 100644
+>> --- a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+>> +++ b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+>> @@ -13,7 +13,6 @@ description: |
+>>     The PolarFire SoC system controller is communicated with via a mailbox.
+>>     This document describes the bindings for the client portion of that mailbox.
+>>   
+>> -
+>>   properties:
+>>     mboxes:
+>>       maxItems: 1
+>> @@ -21,6 +20,38 @@ properties:
+>>     compatible:
+>>       const: microchip,mpfs-sys-controller
+>>   
+>> +  rng:
+>> +    type: object
+>> +
+>> +    description: |
+>> +      The hardware random number generator on the Polarfire SoC is
+>> +      accessed via the mailbox interface provided by the system controller
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        const: microchip,mpfs-rng
+>> +
+>> +    required:
+>> +      - compatible
+>> +
+>> +  sysserv:
+>> +    type: object
+>> +
+>> +    description: |
+>> +      The PolarFire SoC system controller is communicated with via a mailbox.
+>> +      This binding represents several of the functions provided by the system
+>> +      controller which do not belong in a specific subsystem, such as reading
+>> +      the fpga device certificate, all of which follow the same format:
+>> +        - a command + optional payload sent to the sys controller
+>> +        - a status + a payload returned to Linux
+>> +
+>> +    properties:
+>> +      compatible:
+>> +        const: microchip,mpfs-generic-service
+>> +
+>> +    required:
+>> +      - compatible
+>> +
+>>   required:
+>>     - compatible
+>>     - mboxes
+>> @@ -29,7 +60,7 @@ additionalProperties: false
+>>   
+>>   examples:
+>>     - |
+>> -    syscontroller: syscontroller {
+>> +    syscontroller {
+>>         compatible = "microchip,mpfs-sys-controller";
+>>         mboxes = <&mbox 0>;
+> 
+> Removing the child nodes in the example doesn't address my comment. You
+> still have them in the schema. IOW, this patch should be dropped unless
+> you have reasons for child nodes other than I want to partition the OS
+> drivers a certain way and creating DT nodes instantiates them for me.
+> 
+Obviously dropping this patch doesn't prevent me from instantiating the 
+sub devices since it's not going to be done via DT anymore. Would you 
+rather I replaced this patch with one adding a link to the online 
+documentation [0] for them in the main description? I had left them in 
+as I wasn't sure if you wanted the descriptions dropped entirely or not.
 
-I love your patch! Perhaps something to improve:
+And yes, partition of the services is why I had originally gone for 
+different drivers for the different aspects. Some of the services, like 
+the RNG or reprogramming the FPGA from Linux have obvious subsystems to 
+put them under, if it was just the eclectic mix of Microchip FPGA 
+specific items I'd have not bothered with the partitioning.
 
-[auto build test WARNING on thierry-reding-pwm/for-next]
-[also build test WARNING on robh/for-next v5.17-rc3 next-20220207]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Cheers,
+Conor.
 
-url:    https://github.com/0day-ci/linux/commits/Baruch-Siach/pwm-driver-for-qualcomm-ipq6018-pwm-block/20220207-175605
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20220208/202202080410.R0qwqtXx-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 0d8850ae2cae85d49bea6ae0799fa41c7202c05c)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/71e449eb6d19b141b4527caae529e16c52bcfeea
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Baruch-Siach/pwm-driver-for-qualcomm-ipq6018-pwm-block/20220207-175605
-        git checkout 71e449eb6d19b141b4527caae529e16c52bcfeea
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/pwm/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pwm/pwm-ipq.c:122:11: warning: result of comparison of constant 16000000000 with expression of type 'unsigned long' is always false [-Wtautological-constant-out-of-range-compare]
-           if (rate > 16ULL * GIGA)
-               ~~~~ ^ ~~~~~~~~~~~~
-   1 warning generated.
-
-
-vim +122 drivers/pwm/pwm-ipq.c
-
-    99	
-   100	static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-   101				 const struct pwm_state *state)
-   102	{
-   103		struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(chip);
-   104		unsigned int pre_div, pwm_div, best_pre_div, best_pwm_div;
-   105		unsigned long rate = clk_get_rate(ipq_chip->clk);
-   106		u64 period_ns, duty_ns, period_rate;
-   107		u64 min_diff;
-   108	
-   109		if (state->polarity != PWM_POLARITY_NORMAL)
-   110			return -EINVAL;
-   111	
-   112		if (state->period < DIV64_U64_ROUND_UP(NSEC_PER_SEC, rate))
-   113			return -ERANGE;
-   114	
-   115		period_ns = min(state->period, IPQ_PWM_MAX_PERIOD_NS);
-   116		duty_ns = min(state->duty_cycle, period_ns);
-   117	
-   118		/*
-   119		 * period_ns is 1G or less. As long as rate is less than 16 GHz,
-   120		 * period_rate does not overflow. Make that explicit.
-   121		 */
- > 122		if (rate > 16ULL * GIGA)
-   123			return -EINVAL;
-   124		period_rate = period_ns * rate;
-   125		best_pre_div = IPQ_PWM_MAX_DIV;
-   126		best_pwm_div = IPQ_PWM_MAX_DIV;
-   127		/*
-   128		 * We don't need to consider pre_div values smaller than
-   129		 *
-   130		 *                              period_rate
-   131		 *  pre_div_min := ------------------------------------
-   132		 *                 NSEC_PER_SEC * (IPQ_PWM_MAX_DIV + 1)
-   133		 *
-   134		 * because pre_div = pre_div_min results in a better
-   135		 * approximation.
-   136		 */
-   137		pre_div = div64_u64(period_rate,
-   138				(u64)NSEC_PER_SEC * (IPQ_PWM_MAX_DIV + 1));
-   139		min_diff = period_rate;
-   140	
-   141		for (; pre_div <= IPQ_PWM_MAX_DIV; pre_div++) {
-   142			u64 remainder;
-   143	
-   144			pwm_div = div64_u64_rem(period_rate,
-   145					(u64)NSEC_PER_SEC * (pre_div + 1), &remainder);
-   146			/* pwm_div is unsigned; the check below catches underflow */
-   147			pwm_div--;
-   148	
-   149			/*
-   150			 * Swapping values for pre_div and pwm_div produces the same
-   151			 * period length. So we can skip all settings with pre_div >
-   152			 * pwm_div which results in bigger constraints for selecting
-   153			 * the duty_cycle than with the two values swapped.
-   154			 */
-   155			if (pre_div > pwm_div)
-   156				break;
-   157	
-   158			/*
-   159			 * Make sure we can do 100% duty cycle where
-   160			 * hi_dur == pwm_div + 1
-   161			 */
-   162			if (pwm_div > IPQ_PWM_MAX_DIV - 1)
-   163				continue;
-   164	
-   165			if (remainder < min_diff) {
-   166				best_pre_div = pre_div;
-   167				best_pwm_div = pwm_div;
-   168				min_diff = remainder;
-   169	
-   170				if (min_diff == 0) /* bingo */
-   171					break;
-   172			}
-   173		}
-   174	
-   175		/* config divider values for the closest possible frequency */
-   176		config_div_and_duty(pwm, best_pre_div, best_pwm_div,
-   177				    rate, duty_ns, state->enabled);
-   178	
-   179		return 0;
-   180	}
-   181	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+[0] 
+https://onlinedocs.microchip.com/pr/GUID-1409CF11-8EF9-4C24-A94E-70979A688632-en-US-1/index.html
+>>       };
+>> -- 
+>> 2.35.1
+>>
+>>
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
