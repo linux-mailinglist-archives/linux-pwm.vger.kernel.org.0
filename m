@@ -2,55 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 191664ABFD5
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 14:49:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC3C84AC613
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 17:39:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232424AbiBGNdF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Feb 2022 08:33:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
+        id S1358175AbiBGQdU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Feb 2022 11:33:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239487AbiBGMwN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 07:52:13 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD65C043181
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Feb 2022 04:52:12 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nH3V0-0001kT-Ap; Mon, 07 Feb 2022 13:52:06 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nH3Ux-00F6BR-1a; Mon, 07 Feb 2022 13:52:02 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nH3Uv-00Acnk-Fe; Mon, 07 Feb 2022 13:52:01 +0100
-Date:   Mon, 7 Feb 2022 13:51:58 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Allen-KH Cheng <allen-kh.cheng@mediatek.com>
+        with ESMTP id S1345044AbiBGQVN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 11:21:13 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79641C0401CF
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Feb 2022 08:21:11 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id s18so25766404wrv.7
+        for <linux-pwm@vger.kernel.org>; Mon, 07 Feb 2022 08:21:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Np4LH/PHz6uNkDpTZmQ/zoxgwDp96GbmnvDa2V7nWjk=;
+        b=QgufGM+1w3bsYZSJ9xlKRmy3+TsigV3ZsM/lqCkrk+2PFrRq2qAxjaRIcbaZ6XTMpd
+         dHN3csVfUdJlhnr4ISuVdfwWYthqcjlVkwEKaIzb9ohnAgPPPEnUh8ZXbwWBB4FE5VTD
+         v4qiUp1+V61ZK9GFt06cQBjo9kwCIXouNxnx1dWjOOpSi6rvXPFsU0oBn2JtQQ8qDYSE
+         JTzdjg3Q550FQW+DQ/yUhMrzvS9yoNZmt/a2M2/z7siYRPqcfv6jjVIuNkLoSpWuQ8d/
+         sOwBN4knqfQHkxWpOzloC+DeoSvsFYb63wY9gAxv2vVkHqYOCumGB9afLCGKIFbX2MJ5
+         xl2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Np4LH/PHz6uNkDpTZmQ/zoxgwDp96GbmnvDa2V7nWjk=;
+        b=4WGVIQy+c5pYPN3R/W78jRBrPJgzgi+M+wdtbpVQiSlPy2ikWZOsASe9pknvdtrBac
+         LlWTPwDCthLvdmaRl1F0go/QKDD5np8/jDmhCeKKh9gaH+ne3u4jRT7nN9MSWmchIfA1
+         j+i9BRu7ZhDttqcj3FEKaheuk2IcuNVYPb3u8mO8O1cQ2aNblK+7j2g/oyc1seS9BPoe
+         AjiueVWiMptpFlf5XJMK3e6Uhv0UEvhaFygkKZmO5KHFvPMAqhyOpFYzlXeZQbY48z7P
+         Iy1kQBHb0EmnvwM6Uo0seVZDxDyb8wF/A25EFAISz0R7WvHmVs7k53G8dtacxR3mJgqM
+         +TMg==
+X-Gm-Message-State: AOAM531KIUNdiBLaFUerYq06sBgOLWdhTd7zw+h7kt8gPkXcFCAa7H+d
+        S2szITY7uSkBz4J10+M8ZYS3FQ==
+X-Google-Smtp-Source: ABdhPJx9cikXNjt/6MFPqIqkMx5U5Ng8Uv5wYgVhdvs4xghr+YQWYDB7vr7F/zL+84q9GXPE6QDA6w==
+X-Received: by 2002:a5d:50c2:: with SMTP id f2mr173218wrt.694.1644250870003;
+        Mon, 07 Feb 2022 08:21:10 -0800 (PST)
+Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id k9sm9789271wrv.81.2022.02.07.08.21.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Feb 2022 08:21:09 -0800 (PST)
+Date:   Mon, 7 Feb 2022 16:21:07 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH] dt-bindings: pwm: mtk-disp: add compatible string for
- MT8183 SoC
-Message-ID: <20220207125158.t5362u2dddccdmsq@pengutronix.de>
-References: <20220207112657.18246-1-allen-kh.cheng@mediatek.com>
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid open coded arithmetic in memory
+ allocation
+Message-ID: <20220207162107.eblu6rxyhkuyyqnf@maple.lan>
+References: <bd3d74acfa58d59f6f5f81fc5a9fb409edb8d747.1644046817.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="d3yuhoeyfgyvlc6b"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220207112657.18246-1-allen-kh.cheng@mediatek.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+In-Reply-To: <bd3d74acfa58d59f6f5f81fc5a9fb409edb8d747.1644046817.git.christophe.jaillet@wanadoo.fr>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -59,62 +75,15 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sat, Feb 05, 2022 at 08:40:48AM +0100, Christophe JAILLET wrote:
+> kmalloc_array()/kcalloc() should be used to avoid potential overflow when
+> a multiplication is needed to compute the size of the requested memory.
+> 
+> So turn a kzalloc()+explicit size computation into an equivalent kcalloc().
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
---d3yuhoeyfgyvlc6b
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-Hello,
 
-On Mon, Feb 07, 2022 at 07:26:57PM +0800, Allen-KH Cheng wrote:
-> From: Allen-KH Cheng <Allen-KH.Cheng@mediatek.com>
->=20
-> Add compatible string for MT8183 SoC in device tree binding.
->=20
-> Signed-off-by: Allen-KH Cheng <Allen-KH.Cheng@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt b/Doc=
-umentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> index 902b271891ae..691e58b6c223 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> @@ -6,6 +6,7 @@ Required properties:
->     - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
->     - "mediatek,mt8167-disp-pwm", "mediatek,mt8173-disp-pwm": found on mt=
-8167 SoC.
->     - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-> +   - "mediatek,mt8183-disp-pwm": found on mt8183 SoC.$
-
-The patch looks good in principle. I'd like to see the .txt file
-converted to .yaml though. Would you care for that please?
-
-Also it would be good if you'd care that sender email address and author
-address match.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---d3yuhoeyfgyvlc6b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIBFesACgkQwfwUeK3K
-7AkkAgf/fg+txDjzVkyHwJVZPCvspksFhmKCPBL43pn/2PuKFzuMBGET5zqIESSD
-g/bRy5VJ3sPbOB2IiRqL8e+5uBRpyjErA9hDuBXAeE0j51fonbIeKx5tLMn0CmCm
-QqngjwSvxBZin6oHjUsmeJ4DmTltc159yQlZJ4OA+0Ur5cSR2ygGBVf/PhNwD1sr
-o6MlZ+PpgNZyD0emGImlgYyEzLlssbqHvcEexQ4Edy+Ia+x+WkKL2PijTSOsPpki
-yh42NYdOPlPgvyLf5iAk2tyeb3b3+Z5z8olSGSLpnKmy/o6KFVLdPRmcF/GRvxKd
-iGe2/E5kAx/Jh8ObG42MHTmx3NUprg==
-=ZzWa
------END PGP SIGNATURE-----
-
---d3yuhoeyfgyvlc6b--
+Daniel.
