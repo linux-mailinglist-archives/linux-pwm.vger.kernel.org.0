@@ -2,104 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 287B14AD465
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 10:10:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E75224AD750
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 12:33:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245617AbiBHJKt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Feb 2022 04:10:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55184 "EHLO
+        id S1356841AbiBHLch (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Feb 2022 06:32:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243661AbiBHJKs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 04:10:48 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F5AC0401F0
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Feb 2022 01:10:47 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nHMWB-00066l-R3; Tue, 08 Feb 2022 10:10:35 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nHMW9-00FGoZ-RX; Tue, 08 Feb 2022 10:10:33 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nHMW8-00BiId-Hq; Tue, 08 Feb 2022 10:10:32 +0100
-Date:   Tue, 8 Feb 2022 10:10:29 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "allen-kh.cheng" <allen-kh.cheng@mediatek.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH] dt-bindings: pwm: mtk-disp: add compatible string for
- MT8183 SoC
-Message-ID: <20220208091029.iwnepc343djtcvq5@pengutronix.de>
-References: <20220207112657.18246-1-allen-kh.cheng@mediatek.com>
- <20220207125158.t5362u2dddccdmsq@pengutronix.de>
- <f6633fc82c4fa899c7f4ca27d9751d9e61fb90ac.camel@mediatek.com>
+        with ESMTP id S1356847AbiBHLJh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 06:09:37 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FC5C03FEC8
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Feb 2022 03:09:36 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id s7so10040112edd.3
+        for <linux-pwm@vger.kernel.org>; Tue, 08 Feb 2022 03:09:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KQBVfVDlvCSrk6Sswzhkfx8sEJDxZvcBw31v7IjCtFQ=;
+        b=Zcfv+t1DGD3EB3HP5kz6zWh1pByYKpIDp3Q8enYRVXu63AQLAzCQugZ4SoXjF7MtVL
+         wPoRzOO0w7TcQorumE2LF1RehZcto52dZVQic+Oml3gV3bdUn5exQP5qlieY7VK772IB
+         899VBZDJodq3ijB1E4fvyfVsqH5Yv4Wvfw9r+FwTxvKuN0Gv9NsxgyWrCWSqhTgUcvlA
+         SsUtmMsqfSbJdRCSSPqUcEhsTh85nK2hsyj/xSZL1PKB+kbu1sc+t0jMHQvCn4lcflc5
+         LXdfZb+JZrjoX0m2iXKT7sAVVRTIwqpSlqCbqvYB+7glzzi2eSDHj+aHnj1g5e8Z9v1g
+         LvJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KQBVfVDlvCSrk6Sswzhkfx8sEJDxZvcBw31v7IjCtFQ=;
+        b=eEZlhR29Sw2qFTMqhqeEvhUkZp+CR3tltBQCjFgMOkxQXkUEgUEV1TokXZGicPK+tM
+         dV/Wxdkbx7Gy+pTTNFwrUSMzc2a91NUPExBuGjbmZFiZQ0LQ/M5Gz2DMbecY1m9vuIn0
+         Q1vdpXqcA9wFr2vZekK/yTOTIoDat4oBbNGL5jNyX2qD+jK2PvU+kNKXRFQOfiaEAODw
+         xAVtvduwhvB15VBiwaIXSnGG2+E0n67f3JbKllhuwzPWwXeZ4H9atJqXZZaFYxlFNJXM
+         FBMbRUOdBY9+HI4rCRs7Ah3zwfHHMlycixR52sLcdn+2EmTOt88Ok8FULbu06zx3PUou
+         xS+A==
+X-Gm-Message-State: AOAM531p6ERdZHxK+Q2vcKQ49g+0dheQupEyuHEANk0cHHVY4jjEXsQw
+        DdCGcJozseoAxxaamNKPB0ZmYON4v75utEOtQppQhw==
+X-Google-Smtp-Source: ABdhPJzNCw/cioLcKrAYx5rbKSd05oiNHfv+p2Mg5ic+HSw2d1l/HVOQ3hTWmd+vsyuosiASrLQGqbIOMPkET3fjF+c=
+X-Received: by 2002:a05:6402:5189:: with SMTP id q9mr3959045edd.314.1644318575241;
+ Tue, 08 Feb 2022 03:09:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ocriqvydtskbnony"
-Content-Disposition: inline
-In-Reply-To: <f6633fc82c4fa899c7f4ca27d9751d9e61fb90ac.camel@mediatek.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220207162637.1658677-1-conor.dooley@microchip.com> <20220207162637.1658677-6-conor.dooley@microchip.com>
+In-Reply-To: <20220207162637.1658677-6-conor.dooley@microchip.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 8 Feb 2022 12:09:24 +0100
+Message-ID: <CAMRc=Mc0CYCgiGqQgmCQArv=1P0M5dxCw53H+KQ92d=yX=BY4Q@mail.gmail.com>
+Subject: Re: [PATCH v6 05/12] dt-bindings: gpio: add bindings for microchip
+ mpfs gpio
+To:     conor.dooley@microchip.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-riscv@lists.infradead.org,
+        bin.meng@windriver.com, Heiko Stuebner <heiko@sntech.de>,
+        lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
+        ivan.griffin@microchip.com, atishp@rivosinc.com,
+        Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Feb 7, 2022 at 5:24 PM <conor.dooley@microchip.com> wrote:
+>
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> Add device tree bindings for the gpio controller on
+> the Microchip PolarFire SoC.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> ---
 
---ocriqvydtskbnony
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good.
 
-Hello,
-
-On Tue, Feb 08, 2022 at 12:28:23PM +0800, allen-kh.cheng wrote:
-> Thank you for your suggestions.
-> We will send another patch for .yaml format.
->=20
-> About the last reminder, sorry, I don=E2=80=99t get that.=20
-> Do you mean upper/lower case letters in an email address?
-
-exactly. I don't know how picky Thierry (who is responsible to pick up
-this patch or not) is, but a 100% match is the safe bet.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ocriqvydtskbnony
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmICM4IACgkQwfwUeK3K
-7AkomwgAjyvexLDj4KWf4AnFi96ZKatrTB7IwOyT7pD0vBcRoKsvunPSnHJsjIIP
-dK9UYjAorC9HvWd0TkFBxdELweyiX2jalzEFQqmrNh09L7JMyslk0VKeikzxT9kr
-/V4YccfXY11ip6iE5zjF2Rr8qQHfHPWzIni3+RFN8S87sR55P3UInnYfq6WFzPwV
-in2gAhYdOL0/Wfx+t9CxB7ayyywSMjl/clmr3Bv1gdI9okfu53zF9RTShzLe9Hug
-FktAFjXQoUoe/kU6Qll2eKiFSJkIP88amXjOGvPhdekZ14i7qsGRNseyl4pAHTvB
-1x+gQ4/a0uoQdNQGr0Rt7TVG7T/VxA==
-=FP1F
------END PGP SIGNATURE-----
-
---ocriqvydtskbnony--
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
