@@ -2,103 +2,125 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E75224AD750
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 12:33:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23A804AD8B4
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 14:15:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356841AbiBHLch (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Feb 2022 06:32:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
+        id S244907AbiBHNPi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Feb 2022 08:15:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356847AbiBHLJh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 06:09:37 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9FC5C03FEC8
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Feb 2022 03:09:36 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id s7so10040112edd.3
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Feb 2022 03:09:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KQBVfVDlvCSrk6Sswzhkfx8sEJDxZvcBw31v7IjCtFQ=;
-        b=Zcfv+t1DGD3EB3HP5kz6zWh1pByYKpIDp3Q8enYRVXu63AQLAzCQugZ4SoXjF7MtVL
-         wPoRzOO0w7TcQorumE2LF1RehZcto52dZVQic+Oml3gV3bdUn5exQP5qlieY7VK772IB
-         899VBZDJodq3ijB1E4fvyfVsqH5Yv4Wvfw9r+FwTxvKuN0Gv9NsxgyWrCWSqhTgUcvlA
-         SsUtmMsqfSbJdRCSSPqUcEhsTh85nK2hsyj/xSZL1PKB+kbu1sc+t0jMHQvCn4lcflc5
-         LXdfZb+JZrjoX0m2iXKT7sAVVRTIwqpSlqCbqvYB+7glzzi2eSDHj+aHnj1g5e8Z9v1g
-         LvJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KQBVfVDlvCSrk6Sswzhkfx8sEJDxZvcBw31v7IjCtFQ=;
-        b=eEZlhR29Sw2qFTMqhqeEvhUkZp+CR3tltBQCjFgMOkxQXkUEgUEV1TokXZGicPK+tM
-         dV/Wxdkbx7Gy+pTTNFwrUSMzc2a91NUPExBuGjbmZFiZQ0LQ/M5Gz2DMbecY1m9vuIn0
-         Q1vdpXqcA9wFr2vZekK/yTOTIoDat4oBbNGL5jNyX2qD+jK2PvU+kNKXRFQOfiaEAODw
-         xAVtvduwhvB15VBiwaIXSnGG2+E0n67f3JbKllhuwzPWwXeZ4H9atJqXZZaFYxlFNJXM
-         FBMbRUOdBY9+HI4rCRs7Ah3zwfHHMlycixR52sLcdn+2EmTOt88Ok8FULbu06zx3PUou
-         xS+A==
-X-Gm-Message-State: AOAM531p6ERdZHxK+Q2vcKQ49g+0dheQupEyuHEANk0cHHVY4jjEXsQw
-        DdCGcJozseoAxxaamNKPB0ZmYON4v75utEOtQppQhw==
-X-Google-Smtp-Source: ABdhPJzNCw/cioLcKrAYx5rbKSd05oiNHfv+p2Mg5ic+HSw2d1l/HVOQ3hTWmd+vsyuosiASrLQGqbIOMPkET3fjF+c=
-X-Received: by 2002:a05:6402:5189:: with SMTP id q9mr3959045edd.314.1644318575241;
- Tue, 08 Feb 2022 03:09:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20220207162637.1658677-1-conor.dooley@microchip.com> <20220207162637.1658677-6-conor.dooley@microchip.com>
-In-Reply-To: <20220207162637.1658677-6-conor.dooley@microchip.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Feb 2022 12:09:24 +0100
-Message-ID: <CAMRc=Mc0CYCgiGqQgmCQArv=1P0M5dxCw53H+KQ92d=yX=BY4Q@mail.gmail.com>
-Subject: Re: [PATCH v6 05/12] dt-bindings: gpio: add bindings for microchip
- mpfs gpio
+        with ESMTP id S1350409AbiBHMSf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 07:18:35 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6D2C03FEC0;
+        Tue,  8 Feb 2022 04:18:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B073B61572;
+        Tue,  8 Feb 2022 12:18:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58648C340E9;
+        Tue,  8 Feb 2022 12:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644322714;
+        bh=+jhBmsQwTJRGwAwlQW6FTGpVyZorlTh6XXyLTNZaKtM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jGFn+QhLelOPYfhz2FlG8XDs13dxBkoE4Sze6DbEgt+XrSfcByVQnWMlOj75yGkhi
+         3yPz6zATvF1nsQbiYOJx9JZa2NZ5oH9zkLywt6bbgEiZb+iH3nDH4YfdjnAGdwVNIf
+         BbsdjCtUVoGVyuXLer7OHfpeFRRx1A4ktMyRfNKQ8Ru0eEEcLfs5JvY94yhUP4G6Qr
+         au2zYAK55xnxMVNnfI/MFnvs5YceUHT17Jq0jB9WZb5gFKtUruw4i8fnZNNWgLPBxp
+         6Xo6/B0qhxeh0wgKvEX9chUI+ldjJ1TDtT4wxmeAgjCGuRG+wmItthm/7gIaYe9OpV
+         gBy8l5vbATDMA==
+Date:   Tue, 8 Feb 2022 13:18:31 +0100
+From:   Wolfram Sang <wsa@kernel.org>
 To:     conor.dooley@microchip.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-riscv@lists.infradead.org,
-        bin.meng@windriver.com, Heiko Stuebner <heiko@sntech.de>,
-        lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
-        ivan.griffin@microchip.com, atishp@rivosinc.com,
-        Rob Herring <robh@kernel.org>,
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Rob Herring <robh@kernel.org>,
         Palmer Dabbelt <palmer@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Subject: Re: [PATCH v6 03/12] dt-bindings: i2c: add bindings for microchip
+ mpfs i2c
+Message-ID: <YgJfl5CmepRMb5He@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, conor.dooley@microchip.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        geert@linux-m68k.org, krzysztof.kozlowski@canonical.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, bin.meng@windriver.com,
+        heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+References: <20220207162637.1658677-1-conor.dooley@microchip.com>
+ <20220207162637.1658677-4-conor.dooley@microchip.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sdYSIm6VkoPV0MiH"
+Content-Disposition: inline
+In-Reply-To: <20220207162637.1658677-4-conor.dooley@microchip.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Feb 7, 2022 at 5:24 PM <conor.dooley@microchip.com> wrote:
->
+
+--sdYSIm6VkoPV0MiH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 07, 2022 at 04:26:29PM +0000, conor.dooley@microchip.com wrote:
 > From: Conor Dooley <conor.dooley@microchip.com>
->
-> Add device tree bindings for the gpio controller on
+>=20
+> Add device tree bindings for the i2c controller on
 > the Microchip PolarFire SoC.
->
+>=20
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 > Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> ---
 
-Looks good.
+Shall this go via DT (Rob) or I2C (me) or some riscv tree?
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+
+--sdYSIm6VkoPV0MiH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmICX5MACgkQFA3kzBSg
+KbZzxhAArSdMKMsyP4zt6H3heN8FNENRNOKYegpVuGgnCzbtLbitNEQvjx0Z9HdF
+BUbaytztYIVoDstV1SxiWczUikuOQ7pQ2TB585jhzhF7FATjt0zqIr22/ATEBmN5
+nUNlnWMt5s05zgcppQyksrVddYYvgs+HqtTCNXCk6LOz0qC54dxze8766ageQYPz
+1gBy5cDmJrUMJ+X8JnveuPgKv4BrZgGKZsrNgHy5dOAdF0B0WyI4i/uv2YTq2y+o
+XIOA/B60tgZtIWkWWcFNPIE+TQQIDVY93O2R3i4gAvCfwYVqyRdtG5i5p3eK74RM
+LwpTEv6SJE5KJ0pxYmo5SP4AKsMaN7Z6ePga6LQz2tPETjhKNZixntc/KsoIPXQJ
+sQ025iG+3stSKxpnpWg/VjqM6ugoDQOX+VvsxFe34KjtmbgRYTROfxHY173+TfVb
+hZb+CYNHbDxl7/gGHkXlsbcNC6sSZq7qvu0ZeCXPvq4nzk1V0KwKPGLocQaTrGVo
+qNHIjEnA5CeIu8y5fF7r26769safY0B9chLwsxXWujW3WSHY3FYPmRDMtX89sVhr
+WxlPZDxBvIv16LQjg4lXWLrTsgkUaVU2xiHe8gd+gulSVMgKeeePSkiU4fKgonRj
++KJRlq7MvI0G5Mdb0F3PNIHoq4R/P8FYBNmGgRmjvIxBNzggd2M=
+=TDLj
+-----END PGP SIGNATURE-----
+
+--sdYSIm6VkoPV0MiH--
