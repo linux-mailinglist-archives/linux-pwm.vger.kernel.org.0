@@ -2,154 +2,177 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67F9B4ACB7C
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Feb 2022 22:43:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7646E4AD1E5
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 08:05:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241729AbiBGVn0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Feb 2022 16:43:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58676 "EHLO
+        id S236172AbiBHHFA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Feb 2022 02:05:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235505AbiBGVn0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Feb 2022 16:43:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FC3C06109E;
-        Mon,  7 Feb 2022 13:43:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S230332AbiBHHE5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 02:04:57 -0500
+Received: from mx.tkos.co.il (guitar.tcltek.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A69C0401EF
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Feb 2022 23:04:55 -0800 (PST)
+Received: from tarshish (unknown [10.0.8.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57083615B7;
-        Mon,  7 Feb 2022 21:43:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E81C340F3;
-        Mon,  7 Feb 2022 21:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644270204;
-        bh=yyFH/BpoYHmQ85gjKtjby1VQY1sqjcuc6iOstBz9Jx4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kwb1L9xrSn5kL2hY9sY7qNakeNjhY9Ksx1I36Olfj0OEPOPiea9JlNiO0iOnSJog/
-         xatZeUzZ4pPfXErzmecsszDgiw5zueee7UiTJTIftvZ9azx6ECvfzF+NBfYY5U3Mck
-         EnMhF/cIb/ICwH8/n/uEq83WMbZWZr8yovoz1pkVSpEJnISkGiO6PM8QlIn0TPC6tI
-         eXU4ob463XtxT+ddLme6Ve714JrwWFKaP7/O5iCCMKBnWNM4xcVIdlGrXNcrhO4OOR
-         wcmPMRruX2wFNzwncP5oxsNWxVom77KG1S2yoxLK8AcWx9P6Ne1otWK0nK+cSl1Am9
-         x/5w6vIIkPK4Q==
-Received: by mail-ej1-f44.google.com with SMTP id p24so8396589ejo.1;
-        Mon, 07 Feb 2022 13:43:24 -0800 (PST)
-X-Gm-Message-State: AOAM531sAnhi4tcHHzbeYfrcaP5wj0OYd1tLyc371Ji6x5UzP/R2ZFPI
-        BGL6z6yq8edb/iIFO8xIgfPWLBscmp2kRLqbFA==
-X-Google-Smtp-Source: ABdhPJwcTPTS5lN9kjeNU1UmmKYcelai/6b2Bz1+DUYaA+p4ouzWvIVpvotfk1mDa/IkiXJ42SEJ9tHfZEUWLQ0itJU=
-X-Received: by 2002:a17:906:c14e:: with SMTP id dp14mr1298826ejc.325.1644270203029;
- Mon, 07 Feb 2022 13:43:23 -0800 (PST)
+        by mx.tkos.co.il (Postfix) with ESMTPS id D4955440F82;
+        Tue,  8 Feb 2022 09:04:29 +0200 (IST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1644303870;
+        bh=CoMpoM4K1lZgIZZ/gT4uGOcMYzm4yu3oXE6YWk7Pl3E=;
+        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+        b=iuQ/CUexAXl4o9mo57d2MTUi6AjojpLmZvL5XX9otbayEhRWQNIfkFbt0jRjjXMMj
+         +xHUsWbFYc1Sw5vD+0krknkTYdyJ/xl4IPW0vgIP/bPsIR12j8lTgrC6Xzi1z0neZ+
+         WlIKKmv83YCdDwvxGFnQTq4VvOl+cw9o1c+m39r1wJBIWKnfQPDegSRkP3sZSqZs4y
+         1p6ZkuOUN4GQesMTzqoZdoOorf79tOtm22lQ4NQ85U93vAh1EOgsaBmcuQFI/R+YR7
+         esKK/LbJGgeMRImEg7aTKt4PrkeAbdCoJyKpy5M7++6JDyxj/9Q2dT/JAjnGsL93tt
+         9sP3cctqL/8qw==
+References: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
+ <202202080410.R0qwqtXx-lkp@intel.com>
+User-agent: mu4e 1.6.10; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 1/3] pwm: driver for qualcomm ipq6018 pwm block
+Date:   Tue, 08 Feb 2022 08:51:40 +0200
+In-reply-to: <202202080410.R0qwqtXx-lkp@intel.com>
+Message-ID: <87ee4ddejv.fsf@tarshish>
 MIME-Version: 1.0
-References: <20220207100326.426940-1-sven@svenschwermer.de>
- <20220207100326.426940-2-sven@svenschwermer.de> <YgF/TfKCxXJNdypY@robh.at.kernel.org>
- <1e4e8efe-1fdf-ca9c-7c5a-9903ef4a7fce@svenschwermer.de>
-In-Reply-To: <1e4e8efe-1fdf-ca9c-7c5a-9903ef4a7fce@svenschwermer.de>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 7 Feb 2022 15:43:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLTnwnAT2S0f+0ckz+s8-cEUbwXFiytd4w83y-yn0C-+w@mail.gmail.com>
-Message-ID: <CAL_JsqLTnwnAT2S0f+0ckz+s8-cEUbwXFiytd4w83y-yn0C-+w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: leds: Add multicolor PWM LED bindings
-To:     Sven Schwermer <sven@svenschwermer.de>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Alexander Dahl <post@lespocky.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Feb 7, 2022 at 2:44 PM Sven Schwermer <sven@svenschwermer.de> wrote:
->
-> Hi Rob,
->
-> Thanks for your comments.
->
-> On 2/7/22 21:21, Rob Herring wrote:
-> >> +properties:
-> >> +  compatible:
-> >> +    const: pwm-leds-multicolor
-> >> +
-> >> +  multi-led:
-> >> +    type: object
-> >> +    allOf:
-> >> +      - $ref: leds-class-multicolor.yaml#
-> >
-> > This schema says 'multi-led' here should have a child called
-> > "^multi-led@([0-9a-f])$". You are off a level.
->
-> So it should have been?
->
-> properties:
->    compatible:
->      const: pwm-leds-multicolor
->    allOf:
->      - $ref: leds-class-multicolor.yaml#
+Hi test robot,
 
-Not quite. DT property names and json-schema vocab names should never
-be at the same level. So allOf should be at the root level.
+Thanks for testing and reporting.
 
-> This would imply that the multi-led node requires a unit address (reg
-> property). That doesn't make sense in this case. How should we resolve this?
+On Tue, Feb 08 2022, kernel test robot wrote:
 
-I meant to mention that. Update the regex pattern to allow just
-'multi-led': "^multi-led(@[0-9a-f])?$"
+[snip]
 
+>>> drivers/pwm/pwm-ipq.c:122:11: warning: result of comparison of constant 16000000000 with expression of type 'unsigned long' is always false [-Wtautological-constant-out-of-range-compare]
+>            if (rate > 16ULL * GIGA)
+>                ~~~~ ^ ~~~~~~~~~~~~
+>    1 warning generated.
 
-> >> +    patternProperties:
-> >> +      "^led-[0-9a-z]+$":
-> >> +        type: object
-> >
-> >             $ref: common.yaml#
-> >             additionalProperties: false
+This clang warning is only enabled with W=1 (see commit
+afe956c577b). Not sure how to avoid it.
+
+Is there a way to express this condition without making clang warn on
+platforms where ULONG_MAX == 2^32? Maybe cast to unsigned long long? Or
+should we just ignore this W=1 warning?
+
+baruch
+
+> vim +122 drivers/pwm/pwm-ipq.c
 >
-> Sounds good.
+>     99	
+>    100	static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>    101				 const struct pwm_state *state)
+>    102	{
+>    103		struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(chip);
+>    104		unsigned int pre_div, pwm_div, best_pre_div, best_pwm_div;
+>    105		unsigned long rate = clk_get_rate(ipq_chip->clk);
+>    106		u64 period_ns, duty_ns, period_rate;
+>    107		u64 min_diff;
+>    108	
+>    109		if (state->polarity != PWM_POLARITY_NORMAL)
+>    110			return -EINVAL;
+>    111	
+>    112		if (state->period < DIV64_U64_ROUND_UP(NSEC_PER_SEC, rate))
+>    113			return -ERANGE;
+>    114	
+>    115		period_ns = min(state->period, IPQ_PWM_MAX_PERIOD_NS);
+>    116		duty_ns = min(state->duty_cycle, period_ns);
+>    117	
+>    118		/*
+>    119		 * period_ns is 1G or less. As long as rate is less than 16 GHz,
+>    120		 * period_rate does not overflow. Make that explicit.
+>    121		 */
+>  > 122		if (rate > 16ULL * GIGA)
+>    123			return -EINVAL;
+>    124		period_rate = period_ns * rate;
+>    125		best_pre_div = IPQ_PWM_MAX_DIV;
+>    126		best_pwm_div = IPQ_PWM_MAX_DIV;
+>    127		/*
+>    128		 * We don't need to consider pre_div values smaller than
+>    129		 *
+>    130		 *                              period_rate
+>    131		 *  pre_div_min := ------------------------------------
+>    132		 *                 NSEC_PER_SEC * (IPQ_PWM_MAX_DIV + 1)
+>    133		 *
+>    134		 * because pre_div = pre_div_min results in a better
+>    135		 * approximation.
+>    136		 */
+>    137		pre_div = div64_u64(period_rate,
+>    138				(u64)NSEC_PER_SEC * (IPQ_PWM_MAX_DIV + 1));
+>    139		min_diff = period_rate;
+>    140	
+>    141		for (; pre_div <= IPQ_PWM_MAX_DIV; pre_div++) {
+>    142			u64 remainder;
+>    143	
+>    144			pwm_div = div64_u64_rem(period_rate,
+>    145					(u64)NSEC_PER_SEC * (pre_div + 1), &remainder);
+>    146			/* pwm_div is unsigned; the check below catches underflow */
+>    147			pwm_div--;
+>    148	
+>    149			/*
+>    150			 * Swapping values for pre_div and pwm_div produces the same
+>    151			 * period length. So we can skip all settings with pre_div >
+>    152			 * pwm_div which results in bigger constraints for selecting
+>    153			 * the duty_cycle than with the two values swapped.
+>    154			 */
+>    155			if (pre_div > pwm_div)
+>    156				break;
+>    157	
+>    158			/*
+>    159			 * Make sure we can do 100% duty cycle where
+>    160			 * hi_dur == pwm_div + 1
+>    161			 */
+>    162			if (pwm_div > IPQ_PWM_MAX_DIV - 1)
+>    163				continue;
+>    164	
+>    165			if (remainder < min_diff) {
+>    166				best_pre_div = pre_div;
+>    167				best_pwm_div = pwm_div;
+>    168				min_diff = remainder;
+>    169	
+>    170				if (min_diff == 0) /* bingo */
+>    171					break;
+>    172			}
+>    173		}
+>    174	
+>    175		/* config divider values for the closest possible frequency */
+>    176		config_div_and_duty(pwm, best_pre_div, best_pwm_div,
+>    177				    rate, duty_ns, state->enabled);
+>    178	
+>    179		return 0;
+>    180	}
+>    181	
 >
-> >> +        properties:
-> >> +          pwms:
-> >> +            maxItems: 1
-> >> +
-> >> +          pwm-names: true
-> >> +
-> >> +          color:
-> >> +            $ref: common.yaml#/properties/color
-> >
-> > And then drop this ref.
->
-> Curiosity question: why? Should I refer to an unsigned integer type instead?
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-Generally we want schemas to apply to nodes rather than individual
-properties. Think of each node as a class and nodes can be 1 or more
-subclasses. It's more important when using 'unevaluatedProperties' in
-combination with refs.
 
-'color: true' is all you need here. So it's less duplication. Not so
-much here since it is just 1 property, but in general.
-
->
-> >> +    rgb-led {
-> >> +        compatible = "pwm-leds-multicolor";
-> >> +
-> >> +        multi-led {
-> >
-> > Can't this be collapsed into 1 level? I don't see "pwm-leds-multicolor"
-> > having other child nodes.
->
-> It could. The reason I added the multi-led level is because the
-> leds-class-multicolor.yaml schema calls for it. Perhaps I missed the
-> intention of that schema but isn't it there to create a uniform binding
-> schema structure across drivers?
-
-Yeah, I guess that's a good enough reason.
-
-Rob
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
