@@ -2,93 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F00414ADCB4
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 16:32:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AC3A4ADD18
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Feb 2022 16:41:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380446AbiBHPcS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Feb 2022 10:32:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45248 "EHLO
+        id S1381209AbiBHPkU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Feb 2022 10:40:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380472AbiBHPcR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 10:32:17 -0500
+        with ESMTP id S1381355AbiBHPkT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Feb 2022 10:40:19 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 10EEAC061576
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Feb 2022 07:32:16 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DC076C0612BB
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Feb 2022 07:40:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644334336;
+        s=mimecast20190719; t=1644334816;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QnfSnxFE1VYyOfFPEeAqSReRud2yqkNu5yv4OL4UGFM=;
-        b=U0gvUZvQO6wdw8yTV1RHTdoEDVFJ8AViCdUWjPRqNXtZF4N1uuiFfVAhCQSVeWb8QwDIK+
-        AvkqwQ3azYGgcCtt9a2nTc5s0tmFO+irMDCXy9VPyXNh7RA8nwmE/pVf8UdPKFS6naKI5d
-        Q1EIpE1d3fIb870u3eolcfJHkzPJMgI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=R3+ygx7WT3LgjARaNLFe1zhALwKjcISILkzjd4t3g78=;
+        b=QrBnP80borMCiE9iMIYH0/RL+5dFSfYpD2wxs02qMZFaeCYJRgeAuHDrlEpf8YzRGS2Y0T
+        +jgpSyp+MOifsvLvBjyA+TvQCSoSjXRkKHGPvFMUNEGDrGXTiVsONPs/yz7yChXnMvjEAS
+        9nF+157J6zhEEr8TrSh2SjNhn0OF0z0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-138-ECvgb94OO1G8O_v5c4K-zw-1; Tue, 08 Feb 2022 10:32:14 -0500
-X-MC-Unique: ECvgb94OO1G8O_v5c4K-zw-1
-Received: by mail-wr1-f71.google.com with SMTP id g6-20020adfbc86000000b001a2d62be244so6196455wrh.23
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Feb 2022 07:32:14 -0800 (PST)
+ us-mta-540-jx8Spqh7MvCwhjYSt3_oEQ-1; Tue, 08 Feb 2022 10:40:15 -0500
+X-MC-Unique: jx8Spqh7MvCwhjYSt3_oEQ-1
+Received: by mail-wm1-f72.google.com with SMTP id l20-20020a05600c1d1400b0035153bf34c3so1200729wms.2
+        for <linux-pwm@vger.kernel.org>; Tue, 08 Feb 2022 07:40:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=QnfSnxFE1VYyOfFPEeAqSReRud2yqkNu5yv4OL4UGFM=;
-        b=4aNijp5bsOYjDdjaFuuWsl7YuYVMsWVyOJdhRMW6sYMosKdamdhhUV+cgFr/6a5eDG
-         6h6wmXROtsu+wl43D/XJWVZ0eT5bvDy5V+hKWJjHZoaf94L/lWoSpn75Z5Yd01od8mzd
-         /uW0gLwdV2UM8TWYbLW/jrcDGU6hkgppj4D+M9otezvi41mBQWxR2CBgFz8mdF2QG3af
-         1awF4C2VGYpTQCFpiBzwsm22qRyC0KIc51wEFAEOicpG29xIeNGdNWMui1R1XoieEejV
-         5mBL6Zhyb9doojssxM9D5o53H4zzxQGQEYcYh2iOeDAAeDIKAiX7AJtex/uP02Aia6HK
-         zEIQ==
-X-Gm-Message-State: AOAM531tO59nar61sv/fDQkX5UpLqIwuykxPehZvQo5zkykSZnrsojGa
-        3gSX3hldQBNBoXfqeenmWF3jbRLaKWDM8/xsAqhFRUDkHX2evOWkuwIsTTeM+yV9CTzP2GfkJ80
-        2Ty4DEp+TJdnotOF8sQzk
-X-Received: by 2002:a05:6000:178d:: with SMTP id e13mr4078658wrg.199.1644334333062;
-        Tue, 08 Feb 2022 07:32:13 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx0uZ5F9GLuLEaXgNHD2jfvev/PazPYbXR3QUr3Uxy791l+CRAyYCO27d+KNpiT1o2GaLqxrQ==
-X-Received: by 2002:a05:6000:178d:: with SMTP id e13mr4078640wrg.199.1644334332831;
-        Tue, 08 Feb 2022 07:32:12 -0800 (PST)
+        bh=R3+ygx7WT3LgjARaNLFe1zhALwKjcISILkzjd4t3g78=;
+        b=xh5MojUYKNTVo44vUbV/6LLhizop1IFQjnCzVxvrjQ7Pe+fONeedxZ9RMXdn3vh7Lf
+         IA1O5zxWsZaKvMkJiP62KdKs7MxOlJW3PFD6luR4Cxvd0UjmHj0HY+ZVJsdYQtQlQVSu
+         2LJQihN9e3AADwGCYaETu56cfYeLzqD6cfB9XmSPQ+chvk9GFGfv9OVbZOZOg0AEVvtI
+         iD/A/vTsElh8KD7kFuTJaxwISbad6jwlFwofrF5TvFIxUFAgWQ80F/d9dVHCw0sBAfqp
+         IEIeGUvLWtL6VBlTow+t0vhCVCgjZAV9fsPs0hfqGhkU0EV01m19x9GtY3m70cnmu50Y
+         PCNw==
+X-Gm-Message-State: AOAM531H29elOcfO9gmr4thP60ZjEXg2weaWMY701mGQIW18Pwf/JKIF
+        lLe1EgPUo/CJlhLFvgkaCDuNRO2ETLz8XDmInAAt4EaCRclNcU6FxlbAv70mO5p7H9TDRwqpwPK
+        XFeJk1SVT8ygn2v8iRNmV
+X-Received: by 2002:a5d:588e:: with SMTP id n14mr4244923wrf.45.1644334814512;
+        Tue, 08 Feb 2022 07:40:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwgsRW+lrC/D9yn6NeNRRQqunCaYEb9CMC26g+Mn3KPfiRrXRhLKFGC8C3j1dq2BkDZsEKSLg==
+X-Received: by 2002:a5d:588e:: with SMTP id n14mr4244901wrf.45.1644334814281;
+        Tue, 08 Feb 2022 07:40:14 -0800 (PST)
 Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id z17sm2451298wml.38.2022.02.08.07.32.11
+        by smtp.gmail.com with ESMTPSA id v18sm9972089wrm.105.2022.02.08.07.40.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Feb 2022 07:32:12 -0800 (PST)
-Message-ID: <10e06ad6-e8bd-a6de-3334-c682125e7753@redhat.com>
-Date:   Tue, 8 Feb 2022 16:32:10 +0100
+        Tue, 08 Feb 2022 07:40:14 -0800 (PST)
+Message-ID: <02d5b225-e1a8-77f6-7e4e-18d6a1df5e48@redhat.com>
+Date:   Tue, 8 Feb 2022 16:40:12 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Subject: Re: [PATCH v2 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
  displays
 Content-Language: en-US
-To:     Mark Brown <broonie@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
         Linux PWM List <linux-pwm@vger.kernel.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Maxime Ripard <maxime@cerno.tech>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>
+        Sam Ravnborg <sam@ravnborg.org>
 References: <20220204134347.1187749-1-javierm@redhat.com>
  <CAMuHMdVTVX7LFay-rfv=oW96dMA24duMUVGRE62jQSNkrKtyMg@mail.gmail.com>
  <f178de92-7cb1-dcc5-1f60-9ccfc56bc0a4@redhat.com>
- <YgKJtjoFMSzxNiiI@sirena.org.uk>
+ <CAMuHMdWvrJip+W6ZZoO2ZURLc5CYmFno3=Sa2mL4xJE8gMzFqg@mail.gmail.com>
 From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <YgKJtjoFMSzxNiiI@sirena.org.uk>
+In-Reply-To: <CAMuHMdWvrJip+W6ZZoO2ZURLc5CYmFno3=Sa2mL4xJE8gMzFqg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -101,36 +101,41 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Mark,
+On 2/8/22 16:23, Geert Uytterhoeven wrote:
 
-On 2/8/22 16:18, Mark Brown wrote:
-> On Tue, Feb 08, 2022 at 04:10:49PM +0100, Javier Martinez Canillas wrote:
->> On 2/8/22 15:19, Geert Uytterhoeven wrote:
-> 
->>>   - "time ls" on the serial console (no files in the current directory,
->>>     so nothing to print) increases from 0.86s to 1.92s, so the system is
->>>     more loaded.  As ssd1307fb relied on deferred I/O too, the slowdown
->>>     might be (partly) due to redrawing of the visual artefacts
->>>     mentioned above.
-> 
->> I was trying to first have the driver and then figure out how to optimize
->> it. For v3 I'm using regmap to access instead of the I2C layer directly.
-> 
->> I noticed that this is even slower but it makes the driver more clean and
->> allows to support both I2C and SPI (untested but will include it as a WIP).
-> 
-> I wouldn't have expected regmap to add huge overhead relative to I2C,
-> partly predicated on I2C being rather slow itself.  There will be some
-> overhead for concurrency protection and data marshalling but for I2C
-> clocked at normal speeds it's surprising.
+[snip]
 
-Thanks for chiming in. That's good to know, I'll investigate more then.
+>>>   - The logo (I have a custom monochrome logo enabled) is no longer shown.
+>>
+>> I was able to display your tux monochrome with ./fbtest -f /dev/fb1 test004
+> 
+> I meant the kernel's logo (FB_LOGO_*),. Obviously you need to enable
+> a smaller one, as the default 80x80 logo is too large, and thus can't
+> be drawn on your 128x64 or my 128x32 display.
+>
 
-Probably I was wrongly blaming regmap while it was another change that
-is causing the display to be refreshed at a slower rate than before.
+That makes sense.
+ 
+>>>   - The screen is empty, with a (very very slow) flashing cursor in the
+>>>     middle of the screen, with a bogus long line next to it, which I can
+>>>     see being redrawn.
+>>>   - Writing text (e.g. hello) to /dev/tty0, I first see the text,
+>>>     followed by an enlargement of some of the characters.
+>>
+>> So far I was mostly testing using your fbtest repo tests and all of them
+>> (modulo test009 that says "Screen size too small for this test").
+>>
+>> But I've tried now using as a VT and I see the same visual artifacts. I
+>> wonder what's the difference between fbcon and the way your tests use
+>> the fbdev API.
+> 
+> Fbcon does small writes to the shadow frame buffer, while fbtest
+> writes to the mmap()ed /dev/fbX, causing a full page to be updated.
+>
 
-Best regards,
--- 
+I see. Thanks for the information.
+
+Best regards, -- 
 Javier Martinez Canillas
 Linux Engineering
 Red Hat
