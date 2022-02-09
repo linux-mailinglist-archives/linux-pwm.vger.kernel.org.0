@@ -2,145 +2,179 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4352C4AF1DE
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 13:38:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82A984AF24A
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 14:04:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233284AbiBIMhz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Feb 2022 07:37:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37114 "EHLO
+        id S231794AbiBINEq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Feb 2022 08:04:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229996AbiBIMhy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 07:37:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB707C05CBB0
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Feb 2022 04:37:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644410275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yv06k0qcIVzfebmQao0F8lU/DvXpAPuqfxT+fivD3r4=;
-        b=ZZlWb2bWOJA/YRe6waWsCNKNEeE0XUgDMxeO6QzMqjDa/E9IseV8snOkWI8cR7uGQZFcvP
-        MnZAyS9LzOW7JOsDGS71a+zKanbTRmokx4BvGHpdPjX6d937Z8EKeTCN71tZBCOLyxpPBx
-        GSvlmkaEAaFWc2B0HD2RaO0I333MbKs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-392-lC8sNWhGPRucbDPoBrDQog-1; Wed, 09 Feb 2022 07:37:54 -0500
-X-MC-Unique: lC8sNWhGPRucbDPoBrDQog-1
-Received: by mail-wm1-f69.google.com with SMTP id u14-20020a05600c210e00b0037bddd0562eso454032wml.1
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Feb 2022 04:37:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=yv06k0qcIVzfebmQao0F8lU/DvXpAPuqfxT+fivD3r4=;
-        b=c05ow6jHMcfJdmcNZcXXfqCDDk7g/NvQquKmS8TLz6xu6X8tLik5mriE3+leZ/BmOE
-         muDvwbkcYrAIlw+D+dw0qJaZQW3DDfkBvPJdO00KWJYmZfqS0XvY8OLgopE2/vW5rrqK
-         8nllnHps/y9Ja6LgGWyWJbfOApkN7tZ+1wYvgS5hcnGHfgbiLpUWVXpjtGGudDfJyTSg
-         4TDMxgWceIB9vxdQTYDd64bp0LipmrEInESbtHNg2KcR/wCntgMo1AzRu8bmBUrYAONC
-         X+V8WSlqx65TTCccFwObezTLj3PVqmPEsT9FV/D/U+whTtpl/s9eiGaZfNi6ygP1XHD3
-         bgAQ==
-X-Gm-Message-State: AOAM532JOP1gSQkOhnb2NHUkNLZ2EKaSPGRMcP5uQO/n/5HhVHVnEmm/
-        nmGw2KWyge8fU6adoRtRkXNHAvSXNOS3pSJUXRSqf7Oizzb5ttPte2AObMC33FVL68kK3epqq3E
-        QpYd69xLLhkZhV1XvJXso
-X-Received: by 2002:a05:600c:4fc2:: with SMTP id o2mr1884062wmq.145.1644410273539;
-        Wed, 09 Feb 2022 04:37:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzmjpeXcKAGK2lwWC20JlgA2fV6RbEkugJVOCgWV8vBNqH8VPABqTYOsxX7qWXxzkqn+qGm5A==
-X-Received: by 2002:a05:600c:4fc2:: with SMTP id o2mr1884035wmq.145.1644410273273;
-        Wed, 09 Feb 2022 04:37:53 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id l28sm14096444wrz.90.2022.02.09.04.37.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Feb 2022 04:37:52 -0800 (PST)
-Message-ID: <58ebacd2-d44d-c7e9-e752-de7815dd4cc1@redhat.com>
-Date:   Wed, 9 Feb 2022 13:37:51 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 0/7] drm: Add driver for Solomon SSD130X OLED displays
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-References: <20220209090314.2511959-1-javierm@redhat.com>
- <CAMuHMdVs750iE=kP1vabwgsGOb8sHc8aC5k=HwCU32CURnYktw@mail.gmail.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <CAMuHMdVs750iE=kP1vabwgsGOb8sHc8aC5k=HwCU32CURnYktw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S233826AbiBINEp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 08:04:45 -0500
+X-Greylist: delayed 4200 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Feb 2022 05:04:49 PST
+Received: from mail.thorsis.com (mail.thorsis.com [92.198.35.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CEB8C05CB9A
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Feb 2022 05:04:49 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 42B5A1A7A;
+        Wed,  9 Feb 2022 10:17:25 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TcYIS0UTs6_D; Wed,  9 Feb 2022 10:17:25 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id 4830C3578; Wed,  9 Feb 2022 10:17:23 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
+Date:   Wed, 9 Feb 2022 10:17:06 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     sven@svenschwermer.de
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        pavel@ucw.cz, robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        post@lespocky.de, andy.shevchenko@gmail.com, robh@kernel.org
+Subject: Re: [PATCH v6 2/3] dt-bindings: leds: Add multicolor PWM LED bindings
+Message-ID: <YgOGksA8kruvFLY2@ada-deb-carambola.ifak-system.com>
+Mail-Followup-To: sven@svenschwermer.de, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        pavel@ucw.cz, robh+dt@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        post@lespocky.de, andy.shevchenko@gmail.com, robh@kernel.org
+References: <20220208191236.660172-1-sven@svenschwermer.de>
+ <20220208191236.660172-2-sven@svenschwermer.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220208191236.660172-2-sven@svenschwermer.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Geert,
+Hello Sven,
 
-On 2/9/22 13:19, Geert Uytterhoeven wrote:
-> Hi Javier,
+Am Tue, Feb 08, 2022 at 08:12:35PM +0100 schrieb sven@svenschwermer.de:
+> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
 > 
-> On Wed, Feb 9, 2022 at 10:03 AM Javier Martinez Canillas
-> <javierm@redhat.com> wrote:
->> This patch series adds a DRM driver for the Solomon OLED SSD1305, SSD1306,
->> SSD1307 and SSD1309 displays. It is a port of the ssd1307fb fbdev driver.
+> This allows to group multiple PWM-connected monochrome LEDs into
+> multicolor LEDs, e.g. RGB LEDs.
 > 
-> [...]
+> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> ---
 > 
->> - Fix a bug when doing partial updates (Geert Uytterhoeven)
+> Notes:
+>     Changes in v6:
+>     * Fix device tree binding schema
+>     
+>     Changes in v5:
+>     * (no changes)
+>     
+>     Changes in v4:
+>     * (no changes)
+>     
+>     Changes in v3:
+>     * Remove multi-led unit name
 > 
-> Thanks, the text console is now more or less working as expected.
+>  .../bindings/leds/leds-pwm-multicolor.yaml    | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> new file mode 100644
+> index 000000000000..f7ce29c8ae63
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-pwm-multicolor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Multi-color LEDs connected to PWM
+> +
+> +maintainers:
+> +  - Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> +
+> +description: |
+> +  This driver combines several monochrome PWM LEDs into one multi-color
+> +  LED using the multicolor LED class.
+> +
+> +properties:
+> +  compatible:
+> +    const: pwm-leds-multicolor
+> +  multi-led:
+> +    type: object
+> +    patternProperties:
+> +      "^led-[0-9a-z]+$":
+> +        type: object
+> +        $ref: common.yaml#
+> +        properties:
+> +          pwms:
+> +            maxItems: 1
+> +          pwm-names: true
+> +          color: true
+> +        required:
+> +          - pwms
+> +          - color
+> +        additionalProperties: false
+> +required:
+> +  - compatible
+> +allOf:
+> +  - $ref: leds-class-multicolor.yaml#
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    rgb-led {
 
-Thanks for giving it a try to this version too! Glad to know that
-is working better now.
+I think this should be 'led-controller'. See
+Documentation/devicetree/bindings/leds/common.yaml for reference.
 
-> There is still an issue with the cursor, though.
-> After doing "echo hello > /dev/tty0", the text appears, but the cursor
-> is gone. "clear > /dev/tty0" brings it back.
->
+> +        compatible = "pwm-leds-multicolor";
+> +
+> +        multi-led {
+> +          color = <LED_COLOR_ID_RGB>;
+> +          function = LED_FUNCTION_INDICATOR;
+> +          max-brightness = <65535>;
+> +
+> +          led-red {
+> +              pwms = <&pwm1 0 1000000>;
+> +              color = <LED_COLOR_ID_RED>;
+> +          };
+> +
+> +          led-green {
+> +              pwms = <&pwm2 0 1000000>;
+> +              color = <LED_COLOR_ID_GREEN>;
+> +          };
+> +
+> +          led-blue {
+> +              pwms = <&pwm3 0 1000000>;
+> +              color = <LED_COLOR_ID_BLUE>;
+> +          };
 
-Hmm, I was able to reproduce this too. Thanks for pointing it out,
-I'll investigate what the problem is.
- 
-> The execution time of "time ls" has improved. It now takes 1.21s
-> (0.86s with ssd1306fb).
->
+Not sure if those node names should be more generic like led-0, led-1
+etc.?  At least the color information is redundant here.  This would
+make it more similar to bindings of other LED drivers.
 
-Yes, I believe that was due the bug I mentioned that partial updates
-weren't done but a full screen update instead.
- 
-> The logo is not shown, even when I create a 16-color or 224-color
-> version of the small monochrome logo I'm using.
->
+And how is it supposed to be named if you have multiple
+"multi-led"s, e.g. one on three PWM channels, and another one on three
+different PWM channels?
 
-I'll also dig into this.
+Greets
+Alex
 
-Best regards,
--- 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
-
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.35.1
+> 
