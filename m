@@ -2,121 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E72104AF530
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 16:27:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 970284AF54F
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 16:33:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235701AbiBIP0P (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Feb 2022 10:26:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43328 "EHLO
+        id S235884AbiBIPdZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Feb 2022 10:33:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234749AbiBIP0O (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 10:26:14 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1170AC0613C9
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Feb 2022 07:26:18 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nHorH-0002pa-8O; Wed, 09 Feb 2022 16:26:15 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nHorF-00FX3B-A2; Wed, 09 Feb 2022 16:26:12 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nHorD-00DMQZ-N3; Wed, 09 Feb 2022 16:26:11 +0100
-Date:   Wed, 9 Feb 2022 16:26:09 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Qing Wang <wangqing@vivo.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: use div64_u64() instead of do_div()
-Message-ID: <20220209152609.gqeivcehkuzgz3sk@pengutronix.de>
-References: <1644395998-4397-1-git-send-email-wangqing@vivo.com>
+        with ESMTP id S231329AbiBIPdZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 10:33:25 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C07C0613C9;
+        Wed,  9 Feb 2022 07:33:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644420808; x=1675956808;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/42HF8Fl+ZC1zv3DJFoHRFzFvjgFJQkv4Tte+gzujnA=;
+  b=QNcQgmPqBZkj1kTrnPjFuFb6Sn1TP6G2lhfh6qnpwfhI7vZcE+pKEJRA
+   aJ+sNT4KX+5teCNO1v78O6kBfkRVtovR2kkanwDPLylO4tEkOg8hF+r3R
+   ksD8XtpoAxpn8NFDllJghVCYuvFVwRZkKIwJLjyj83C8DwkSDBxIJZPQ4
+   sKJQV2W7tmQcr+h+53lZbNaIUupW2xiJehAH4Y9jUOepPdjmLo8HqEfdj
+   sxxP/o+r+I9wG08blP3BNPqugMk11SUotJQ6EeKR1S1zfVzLqFwBp/m54
+   YgYVBiCA6E/ywudORKlGwIEenI0OeF4H65ForIGMV06bphqIYpqQg1Cwy
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="232793615"
+X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
+   d="scan'208";a="232793615"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 07:33:19 -0800
+X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
+   d="scan'208";a="585596858"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 07:33:14 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nHox5-002em2-RY;
+        Wed, 09 Feb 2022 17:32:15 +0200
+Date:   Wed, 9 Feb 2022 17:32:15 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v2 0/4] drm/tiny: Add driver for Solomon SSD1307 OLED
+ displays
+Message-ID: <YgPef3s5+AMqWpSH@smile.fi.intel.com>
+References: <20220204134347.1187749-1-javierm@redhat.com>
+ <CAMuHMdVTVX7LFay-rfv=oW96dMA24duMUVGRE62jQSNkrKtyMg@mail.gmail.com>
+ <f178de92-7cb1-dcc5-1f60-9ccfc56bc0a4@redhat.com>
+ <YgPF1cBMsd9973Dx@smile.fi.intel.com>
+ <CAMuHMdXQdL_Do8Hjay1egfmd9H05R7BjNeKfLGq67mU4bQNVZA@mail.gmail.com>
+ <f58b2608-0d51-3209-ae11-18bdac19dd66@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hakboj7n3cnu24o3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1644395998-4397-1-git-send-email-wangqing@vivo.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <f58b2608-0d51-3209-ae11-18bdac19dd66@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, Feb 09, 2022 at 03:42:16PM +0100, Javier Martinez Canillas wrote:
+> On 2/9/22 15:27, Geert Uytterhoeven wrote:
 
---hakboj7n3cnu24o3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hello,
+> Now, this is a reason why I mentioned that the old fbdev driver shouldn't
+> be removed yet.
 
-On Wed, Feb 09, 2022 at 12:39:58AM -0800, Qing Wang wrote:
-> From: Wang Qing <wangqing@vivo.com>
->=20
-> do_div() does a 64-by-32 division.
-> When the divisor is u64, do_div() truncates it to 32 bits, this means it
-> can test non-zero and be truncated to zero for division.
->=20
-> fix do_div.cocci warning:
-> do_div() does a 64-by-32 division, please consider using div64_u64 instea=
-d.
->=20
-> Signed-off-by: Wang Qing <wangqing@vivo.com>
-> ---
->  drivers/pwm/pwm-berlin.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-berlin.c b/drivers/pwm/pwm-berlin.c
-> index e157273..15b10cb3
-> --- a/drivers/pwm/pwm-berlin.c
-> +++ b/drivers/pwm/pwm-berlin.c
-> @@ -109,7 +109,7 @@ static int berlin_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
-> =20
->  	period =3D cycles;
->  	cycles *=3D duty_ns;
-> -	do_div(cycles, period_ns);
-> +	div64_u64(cycles, period_ns);
+I agree on this conclusion.
 
-This is wrong, div64_u64() has a different calling convention than do_div().
+I think based on the fbtft resurrection discussion I can send a new version
+to unorphan it, route via fbdev, and leave under staging, so it will be a
+compromise between all stakeholders.
 
-The issue however is real. Please add=20
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Fixes: 30dffb42fcd4 ("pwm: berlin: Implement .apply() callback")
 
-to your v2.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---hakboj7n3cnu24o3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmID3Q4ACgkQwfwUeK3K
-7AllnAf+O+1frxj5epv4nRAEt/Fq5cqM1lXqY1SLK9WFn7QzGqaDSdxFZX8HQJJB
-1Ab3fUkZ3DCm9Wy4gEz7Hf5k43iiv+ZG5MvPKQgsoB2R40ru6RcOxftrdh2vYh5U
-yhG8sklLkgM0U1Q2X65IMPXi8Vz4tB6FRK2pR+vrPl/Ae+loTkU337pN7ccCk5ur
-IuIzZ4lkynjhX/1eU/ORevpZSvSp3HxyqBxFPx9oRSJ2J30gl2ElEWNYgnh+E8Vq
-92RITLFwDGoZ1VYiZaGgFxI6vLSjGt1WxyCCMZv1vn+e4c4fw94328Vc2K/kzY5E
-+S+u966W1vF4Z4ZTnt97oQUFJ01wPQ==
-=Wd2L
------END PGP SIGNATURE-----
-
---hakboj7n3cnu24o3--
