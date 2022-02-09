@@ -2,57 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4004AEF3A
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 11:25:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68D8E4AEF3B
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 11:25:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229450AbiBIKYQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Feb 2022 05:24:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55978 "EHLO
+        id S229553AbiBIKZT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Feb 2022 05:25:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230368AbiBIKYP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 05:24:15 -0500
+        with ESMTP id S229535AbiBIKZS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 05:25:18 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 883FCE090CFB
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Feb 2022 02:17:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A9F46E1295F6
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Feb 2022 02:18:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644401760;
+        s=mimecast20190719; t=1644401769;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=4eeYHOMbfBp5aJX22HSUQ/DkBidHbSNtGBPohb4rodE=;
-        b=eDWze+CvkOp6XrPFWwQ7mmn6w2i+w4KnJlug6CCUF7g96l/XHgDtz6aSybYzlYCOdtW29x
-        s62l5IZr9zurgFE3xp30Cu5wLIV5o3o/FLirgoqnc3pwnQQjWSIaH0Hpy0YagZD5VCs5gy
-        bPJHB4c0WaKQ0Rx53j2IyVKcxnSly5A=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r1b7Bf0CVql46bfS8nFUUPEriioGV0kBypsdQVsEfh4=;
+        b=OQVzL6OH+nPLEn3wVHM05AYW4BL38EXWin5U08JqeokWA7lO3m+fymitV8ar+DDocnUqje
+        2crkHY4fQ6a1aBpDB4Eri/AYV40Aqr2x6Jr3oYLLmdn20dMkkhdbnTXyjg6eVuJC1TzZ/w
+        NRiGUcVrdmnp0EB2jHdEhwSsoNHZz9U=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-91-Y3K3RcIYORSp_CrMef_GVw-1; Wed, 09 Feb 2022 04:03:27 -0500
-X-MC-Unique: Y3K3RcIYORSp_CrMef_GVw-1
-Received: by mail-wm1-f70.google.com with SMTP id c7-20020a1c3507000000b0034a0dfc86aaso2337429wma.6
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Feb 2022 01:03:26 -0800 (PST)
+ us-mta-213-lc6YQ-qpPpiu0BBtYoc14A-1; Wed, 09 Feb 2022 04:03:32 -0500
+X-MC-Unique: lc6YQ-qpPpiu0BBtYoc14A-1
+Received: by mail-wm1-f71.google.com with SMTP id g22-20020a1c4e16000000b0037bc7a977b3so108904wmh.5
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Feb 2022 01:03:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4eeYHOMbfBp5aJX22HSUQ/DkBidHbSNtGBPohb4rodE=;
-        b=iQcL/rDrplgvHZvEWaLfE6XI7lPYD3Qk4VcCj8+BEB8WdN0dtM5G8IyrVJak0bS+c7
-         XaLZab2Vm0sswmRfUgygvC8rmBtHuZPlW2cpeiTormPKyvWTVMk+Cpfdp0Z1/2b7RISS
-         5KqBkUO8BpvOgqkY7+rxWOAMbJUfNpNJ4+oI5cSnhOJ3FVimGX1GD8zSKP1D/uPZqamP
-         MMpDYESSNEfzchwuoCEggq1eSNHnabeLhpBQA6kF7utY5gwph13xRaQejjYb+6+wcP8Z
-         jisyUftNvjAw9G7PwDU6TPx9vSfxOC5Vdlhplz5XE1vb1zH1iGjlclAume8+tgyeKbij
-         1kDg==
-X-Gm-Message-State: AOAM531jy/OqpsdwGo3FzYDH/+aFJPD7Lfrw/Fmp3Do2VAqMHs5J6IJP
-        8PjWRpB/QQRbefXRYGxiku7/LjwiFmqcVisE4aqNLNK61JpB2hOWCfEPsbVTgbHs7TCp89IZbb/
-        1MSSW7Z8VJPwe3N3XcYJT
-X-Received: by 2002:adf:e94c:: with SMTP id m12mr1188870wrn.383.1644397404833;
-        Wed, 09 Feb 2022 01:03:24 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyGce9tpVO3qLOEdvm/oHaTzszOq6dg27pXCBKFJe+wFhoSKZTbcd2S+PJ9oFnd0L2GTF8TAA==
-X-Received: by 2002:adf:e94c:: with SMTP id m12mr1188836wrn.383.1644397404569;
-        Wed, 09 Feb 2022 01:03:24 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=r1b7Bf0CVql46bfS8nFUUPEriioGV0kBypsdQVsEfh4=;
+        b=LKXnSIZrTq1KUzA9Pqi0wwiW+as6A4Fpx/Qwnp1LdZpGvSS0HHJPsGxvYlwGs8y18o
+         5pwIwk9WPJs4KACZnon6qzdXhHV9WwNjIuPp4i8eDCe4sFhHCRjJrcbZPtWT/ki1VsLX
+         QXVz7YRMTuKYMs6qPgME23Z/DmeY8CVU2VoyAfD7J1uyUxXNUBnyMiSH7lVV4EZyagni
+         E20jTj/b8mAISAhiTCERwacZvmSQq/XyXMPmAaenWnOeb55bAE3yqyaHInFr/fo1pUqn
+         /QsqQInE7Sjn4n2gzj08Q8E9Qq3UpOKIFB5VH9EnV6Skfw6OZb5ynPU/BBjt0RZTy6FP
+         MM+A==
+X-Gm-Message-State: AOAM532G+glp+fPaiNG8ltngZtru18Q6M/deF/dmJNECKBz5R3PnQ4uE
+        VvAbbMcTgZJTQK1N4riYzZbK2BqYw8LhxVXNea4ORr3OIWeZeX+TbhFEn8xDaHlX5udcjgxIRwd
+        MVS/FT7/oHS8VpOc6PVcB
+X-Received: by 2002:a5d:5985:: with SMTP id n5mr1297990wri.238.1644397409536;
+        Wed, 09 Feb 2022 01:03:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwAHnrZmcBzwCz4xzqz4k4l60NnNnoiIBc8I5MrcUIhoaVtBSyy0tFerkmoa7MjLKxbwyFrnQ==
+X-Received: by 2002:a5d:5985:: with SMTP id n5mr1297949wri.238.1644397409064;
+        Wed, 09 Feb 2022 01:03:29 -0800 (PST)
 Received: from minerva.home ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id z1sm4058866wmk.32.2022.02.09.01.03.23
+        by smtp.gmail.com with ESMTPSA id z1sm4058866wmk.32.2022.02.09.01.03.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 01:03:24 -0800 (PST)
+        Wed, 09 Feb 2022 01:03:28 -0800 (PST)
 From:   Javier Martinez Canillas <javierm@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -72,17 +73,16 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH v3 0/7] drm: Add driver for Solomon SSD130X OLED displays
-Date:   Wed,  9 Feb 2022 10:03:07 +0100
-Message-Id: <20220209090314.2511959-1-javierm@redhat.com>
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
+Subject: [PATCH v3 3/7] drm: Add driver for Solomon SSD130X OLED displays
+Date:   Wed,  9 Feb 2022 10:03:10 +0100
+Message-Id: <20220209090314.2511959-4-javierm@redhat.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220209090314.2511959-1-javierm@redhat.com>
+References: <20220209090314.2511959-1-javierm@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
@@ -94,45 +94,16 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch series adds a DRM driver for the Solomon OLED SSD1305, SSD1306,
-SSD1307 and SSD1309 displays. It is a port of the ssd1307fb fbdev driver.
+This adds a DRM driver for SSD1305, SSD1306, SSD1307 and SSD1309 Solomon
+OLED display controllers.
 
-Using the DRM fb emulation, all the tests from Geert Uytterhoeven's fbtest
-(https://git.kernel.org/pub/scm/linux/kernel/git/geert/fbtest.git) passes.
+It's only the core part of the driver and a bus specific driver is needed
+for each transport interface supported by the display controllers.
 
-I've also tested it using the display as a VT output and even though fbcon
-seems to work, it is mostly unusable on a 128x64 SSD1306 display.
-
-This is a v3 that addresses all the issues pointed in v2. Thanks a lot
-to everyone that gave me feedback and reviews.
-
-Patch #1 splits per-line conversion logic in drm_fb_xrgb8888_to_gray8() to
-a separate drm_fb_xrgb8888_to_gray8_line() helper function.
-
-Patch #2 adds two new helpers, drm_fb_gray8_to_mono_reversed() to convert
-from grayscale to monochrome and a drm_fb_xrgb8888_to_mono_reversed() to
-convert from XR24 to monochrome. The latter internally converts each line
-first to gray8 and then to reversed monochrome.
-
-Patch #3 adds the driver. This only has the core support but doesn't have
-any bus specific code, separate drivers are needed for the transport used.
-
-Patch #4 adds a driver to use the I2C bus to communicate with the device
-and patch #5 adds a similar driver for SPI. This one is a WIP and wasn't
-tested. I'm including for people to test and modify for their displays.
-
-Patch #6 just adds a MAINTAINERS entry for the DRM driver and patch #7
-adds myself as a co-maintainer of the existing Device Tree binding for
-ssd1307fb, since the same is shared between the fbdev and DRM drivers.
-
-Best regards,
-Javier
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+---
 
 Changes in v3:
-- Add a drm_fb_xrgb8888_to_gray8_line() helper function (Thomas Zimmermann)
-- Also add a drm_fb_xrgb8888_to_mono_reversed() helper (Thomas Zimmermann)
-- Split lines copy to drm_fb_gray8_to_mono_reversed_line() (Thomas Zimmermann)
-- Handle case where the source buffer is not aligned to 8 (Thomas Zimmermann)
 - Move driver from tiny sub-dir to drivers/gpu/drm/solomon (Sam Ravnborg)
 - Split driver in a bus agnostic core and bus specific (Andy Shevchenko)
 - Use regmap to access the chip registers (Andy Shevchenko)
@@ -148,9 +119,6 @@ Changes in v3:
 - Use dev_err_probe() to prevent spam logs on probe deferral (Andy Shevchenko)
 - Remove ',' after sentinel terminator in array (Andy Shevchenko)
 - Fix a bug when doing partial updates (Geert Uytterhoeven)
-- Add a separate driver for SSD130X chips I2C support (Andy Shevchenko)
-- Add a separate driver for SSD130X chips SPI support (Andy Shevchenko)
-- Adapt MAINTAINERS entry to point to the new drivers/gpu/drm/solomon directory.
 
 Changes in v2:
 - Drop patch that was adding a DRM_MODE_CONNECTOR_I2C type.
@@ -177,38 +145,977 @@ Changes in v2:
 - Reorganize code in probe to make it more legible (Thomas Zimmermann)
 - ssd130x_write_cmd() uses varargs to simplify I2C code (Thomas Zimmermann)
 - Move regulator/pwm init logic to display pipe enable callback.
-- Add Sam Ravnborg's acked-by to patch adding a MAINTAINERS entry (Sam Ravnborg)
-- Add myself as co-maintainer of the ssd1370fb DT binding (Sam Ravnborg).
 
-Javier Martinez Canillas (7):
-  drm/format-helper: Add drm_fb_xrgb8888_to_gray8_line()
-  drm/format-helper: Add drm_fb_{xrgb8888,gray8}_to_mono_reversed()
-  drm: Add driver for Solomon SSD130X OLED displays
-  drm/solomon: Add SSD130X OLED displays I2C support
-  (WIP) drm/solomon: Add SSD130X OLED displays SPI support
-  MAINTAINERS: Add entry for Solomon SSD130X OLED displays DRM driver
-  dt-bindings: display: ssd1307fb: Add myself as binding co-maintainer
-
- .../bindings/display/solomon,ssd1307fb.yaml   |   1 +
- MAINTAINERS                                   |   7 +
- drivers/gpu/drm/Kconfig                       |   2 +
- drivers/gpu/drm/Makefile                      |   1 +
- drivers/gpu/drm/drm_format_helper.c           | 188 +++-
- drivers/gpu/drm/solomon/Kconfig               |  30 +
- drivers/gpu/drm/solomon/Makefile              |   3 +
- drivers/gpu/drm/solomon/ssd130x-i2c.c         | 117 +++
- drivers/gpu/drm/solomon/ssd130x-spi.c         | 114 +++
- drivers/gpu/drm/solomon/ssd130x.c             | 823 ++++++++++++++++++
- drivers/gpu/drm/solomon/ssd130x.h             |  76 ++
- include/drm/drm_format_helper.h               |   8 +
- 12 files changed, 1358 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/Kconfig           |   2 +
+ drivers/gpu/drm/Makefile          |   1 +
+ drivers/gpu/drm/solomon/Kconfig   |  12 +
+ drivers/gpu/drm/solomon/Makefile  |   1 +
+ drivers/gpu/drm/solomon/ssd130x.c | 823 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/solomon/ssd130x.h |  76 +++
+ 6 files changed, 915 insertions(+)
  create mode 100644 drivers/gpu/drm/solomon/Kconfig
  create mode 100644 drivers/gpu/drm/solomon/Makefile
- create mode 100644 drivers/gpu/drm/solomon/ssd130x-i2c.c
- create mode 100644 drivers/gpu/drm/solomon/ssd130x-spi.c
  create mode 100644 drivers/gpu/drm/solomon/ssd130x.c
  create mode 100644 drivers/gpu/drm/solomon/ssd130x.h
 
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index dfdd3ec5f793..c423c920c027 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -405,6 +405,8 @@ source "drivers/gpu/drm/gud/Kconfig"
+ 
+ source "drivers/gpu/drm/sprd/Kconfig"
+ 
++source "drivers/gpu/drm/solomon/Kconfig"
++
+ config DRM_HYPERV
+ 	tristate "DRM Support for Hyper-V synthetic video device"
+ 	depends on DRM && PCI && MMU && HYPERV
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 8675c2af7ae1..a07b777e778a 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -133,3 +133,4 @@ obj-y			+= xlnx/
+ obj-y			+= gud/
+ obj-$(CONFIG_DRM_HYPERV) += hyperv/
+ obj-$(CONFIG_DRM_SPRD) += sprd/
++obj-y			+= solomon/
+diff --git a/drivers/gpu/drm/solomon/Kconfig b/drivers/gpu/drm/solomon/Kconfig
+new file mode 100644
+index 000000000000..c969c358a4a7
+--- /dev/null
++++ b/drivers/gpu/drm/solomon/Kconfig
+@@ -0,0 +1,12 @@
++config DRM_SSD130X
++	tristate "DRM support for Solomon SSD130X OLED displays"
++	depends on DRM
++	select BACKLIGHT_CLASS_DEVICE
++	select DRM_GEM_SHMEM_HELPER
++	select DRM_KMS_HELPER
++	help
++	  DRM driver for the SSD1305, SSD1306, SSD1307 and SSD1309 Solomon
++	  OLED controllers. This is only for the core driver, a driver for
++	  the appropriate bus transport in your chip also must be selected.
++
++	  If M is selected the module will be called ssd130x.
+diff --git a/drivers/gpu/drm/solomon/Makefile b/drivers/gpu/drm/solomon/Makefile
+new file mode 100644
+index 000000000000..f685addb19fe
+--- /dev/null
++++ b/drivers/gpu/drm/solomon/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_DRM_SSD130X)	+= ssd130x.o
+diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
+new file mode 100644
+index 000000000000..79943f2e73a2
+--- /dev/null
++++ b/drivers/gpu/drm/solomon/ssd130x.c
+@@ -0,0 +1,823 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * DRM driver for Solomon SSD130X OLED displays
++ *
++ * Copyright 2022 Red Hat Inc.
++ * Authors: Javier Martinez Canillas <javierm@redhat.com>
++ *
++ * Based on drivers/video/fbdev/ssd1307fb.c
++ * Copyright 2012 Free Electrons
++ */
++
++#include <linux/backlight.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/property.h>
++#include <linux/pwm.h>
++#include <linux/regulator/consumer.h>
++
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_damage_helper.h>
++#include <drm/drm_fb_cma_helper.h>
++#include <drm/drm_fb_helper.h>
++#include <drm/drm_format_helper.h>
++#include <drm/drm_gem_atomic_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
++#include <drm/drm_gem_shmem_helper.h>
++#include <drm/drm_managed.h>
++#include <drm/drm_modes.h>
++#include <drm/drm_rect.h>
++#include <drm/drm_probe_helper.h>
++
++#include "ssd130x.h"
++
++#define DRIVER_NAME	"ssd130x"
++#define DRIVER_DESC	"DRM driver for Solomon SSD130X OLED displays"
++#define DRIVER_DATE	"20220131"
++#define DRIVER_MAJOR	1
++#define DRIVER_MINOR	0
++
++#define SSD130X_DATA				0x40
++#define SSD130X_COMMAND				0x80
++
++#define SSD130X_SET_ADDRESS_MODE		0x20
++#define SSD130X_SET_ADDRESS_MODE_HORIZONTAL	(0x00)
++#define SSD130X_SET_ADDRESS_MODE_VERTICAL	(0x01)
++#define SSD130X_SET_ADDRESS_MODE_PAGE		(0x02)
++#define SSD130X_SET_COL_RANGE			0x21
++#define SSD130X_SET_PAGE_RANGE			0x22
++#define SSD130X_CONTRAST			0x81
++#define SSD130X_SET_LOOKUP_TABLE		0x91
++#define SSD130X_CHARGE_PUMP			0x8d
++#define SSD130X_SEG_REMAP_ON			0xa1
++#define SSD130X_DISPLAY_OFF			0xae
++#define SSD130X_SET_MULTIPLEX_RATIO		0xa8
++#define SSD130X_DISPLAY_ON			0xaf
++#define SSD130X_START_PAGE_ADDRESS		0xb0
++#define SSD130X_SET_DISPLAY_OFFSET		0xd3
++#define SSD130X_SET_CLOCK_FREQ			0xd5
++#define SSD130X_SET_AREA_COLOR_MODE		0xd8
++#define SSD130X_SET_PRECHARGE_PERIOD		0xd9
++#define SSD130X_SET_COM_PINS_CONFIG		0xda
++#define SSD130X_SET_VCOMH			0xdb
++
++#define MAX_CONTRAST 255
++
++static inline struct ssd130x_device *drm_to_ssd130x(struct drm_device *drm)
++{
++	return container_of(drm, struct ssd130x_device, drm);
++}
++
++/*
++ * Helper to write data (SSD130X_DATA) to the device.
++ */
++static int ssd130x_write_data(struct ssd130x_device *ssd130x, u8 *values, int count)
++{
++	int ret;
++
++	ret = regmap_bulk_write(ssd130x->regmap, SSD130X_DATA, values, count);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++/*
++ * Helper to write command (SSD130X_COMMAND). The fist variadic argument
++ * is the command to write and the following are the command options.
++ */
++static int ssd130x_write_cmd(struct ssd130x_device *ssd130x, int count,
++				    /* u8 cmd, u8 option, ... */...)
++{
++	va_list ap;
++	u8 value;
++	int ret;
++
++	va_start(ap, count);
++
++	do {
++		value = va_arg(ap, int);
++		ret = regmap_write(ssd130x->regmap, SSD130X_COMMAND, (u8)value);
++		if (ret)
++			goto out_end;
++	} while (--count);
++
++out_end:
++	va_end(ap);
++
++	return ret;
++}
++
++static int ssd130x_set_col_range(struct ssd130x_device *ssd130x,
++				 u8 col_start, u8 cols)
++{
++	u8 col_end = col_start + cols - 1;
++	int ret;
++
++	if (col_start == ssd130x->col_start && col_end == ssd130x->col_end)
++		return 0;
++
++	ret = ssd130x_write_cmd(ssd130x, 3, SSD130X_SET_COL_RANGE, col_start, col_end);
++	if (ret < 0)
++		return ret;
++
++	ssd130x->col_start = col_start;
++	ssd130x->col_end = col_end;
++	return 0;
++}
++
++static int ssd130x_set_page_range(struct ssd130x_device *ssd130x,
++				  u8 page_start, u8 pages)
++{
++	u8 page_end = page_start + pages - 1;
++	int ret;
++
++	if (page_start == ssd130x->page_start && page_end == ssd130x->page_end)
++		return 0;
++
++	ret = ssd130x_write_cmd(ssd130x, 3, SSD130X_SET_PAGE_RANGE, page_start, page_end);
++	if (ret < 0)
++		return ret;
++
++	ssd130x->page_start = page_start;
++	ssd130x->page_end = page_end;
++	return 0;
++}
++
++static int ssd130x_pwm_enable(struct ssd130x_device *ssd130x)
++{
++	struct device *dev = ssd130x->dev;
++	struct pwm_state pwmstate;
++
++	ssd130x->pwm = pwm_get(dev, NULL);
++	if (IS_ERR(ssd130x->pwm)) {
++		dev_err(dev, "Could not get PWM from firmware description!\n");
++		return PTR_ERR(ssd130x->pwm);
++	}
++
++	pwm_init_state(ssd130x->pwm, &pwmstate);
++	pwm_set_relative_duty_cycle(&pwmstate, 50, 100);
++	pwm_apply_state(ssd130x->pwm, &pwmstate);
++
++	/* Enable the PWM */
++	pwm_enable(ssd130x->pwm);
++
++	dev_dbg(dev, "Using PWM%d with a %lluns period.\n",
++		ssd130x->pwm->pwm, pwm_get_period(ssd130x->pwm));
++
++	return 0;
++}
++
++static void ssd130x_reset(struct ssd130x_device *ssd130x)
++{
++	/* Reset the screen */
++	gpiod_set_value_cansleep(ssd130x->reset, 1);
++	udelay(4);
++	gpiod_set_value_cansleep(ssd130x->reset, 0);
++	udelay(4);
++}
++
++static int ssd130x_power_on(struct ssd130x_device *ssd130x)
++{
++	struct device *dev = ssd130x->dev;
++	int ret;
++
++	if (ssd130x->reset)
++		ssd130x_reset(ssd130x);
++
++	if (ssd130x->vbat_reg) {
++		ret = regulator_enable(ssd130x->vbat_reg);
++		if (ret) {
++			dev_err(dev, "Failed to enable VBAT: %d\n", ret);
++			return ret;
++		}
++	}
++
++	if (ssd130x->device_info->need_pwm) {
++		ret = ssd130x_pwm_enable(ssd130x);
++		if (ret) {
++			dev_err(dev, "Failed to enable PWM: %d\n", ret);
++			if (ssd130x->vbat_reg)
++				regulator_disable(ssd130x->vbat_reg);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static void ssd130x_power_off(struct ssd130x_device *ssd130x)
++{
++	if (ssd130x->device_info->need_pwm) {
++		pwm_disable(ssd130x->pwm);
++		pwm_put(ssd130x->pwm);
++	}
++
++	if (ssd130x->vbat_reg)
++		regulator_disable(ssd130x->vbat_reg);
++}
++
++static int ssd130x_init(struct ssd130x_device *ssd130x)
++{
++	u32 precharge, dclk, com_invdir, compins, chargepump;
++	int ret;
++
++	/* Set initial contrast */
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_CONTRAST, ssd130x->contrast);
++	if (ret < 0)
++		return ret;
++
++	/* Set segment re-map */
++	if (ssd130x->seg_remap) {
++		ret = ssd130x_write_cmd(ssd130x, 1, SSD130X_SEG_REMAP_ON);
++		if (ret < 0)
++			return ret;
++	}
++
++	/* Set COM direction */
++	com_invdir = 0xc0 | ssd130x->com_invdir << 3;
++	ret = ssd130x_write_cmd(ssd130x,  1, com_invdir);
++	if (ret < 0)
++		return ret;
++
++	/* Set multiplex ratio value */
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_MULTIPLEX_RATIO, ssd130x->height - 1);
++	if (ret < 0)
++		return ret;
++
++	/* set display offset value */
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_DISPLAY_OFFSET, ssd130x->com_offset);
++	if (ret < 0)
++		return ret;
++
++	/* Set clock frequency */
++	dclk = ((ssd130x->dclk_div - 1) & 0xf) | (ssd130x->dclk_frq & 0xf) << 4;
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_CLOCK_FREQ, dclk);
++	if (ret < 0)
++		return ret;
++
++	/* Set Area Color Mode ON/OFF & Low Power Display Mode */
++	if (ssd130x->area_color_enable || ssd130x->low_power) {
++		u32 mode = ((ssd130x->area_color_enable ? 0x30 : 0) |
++			    (ssd130x->low_power ? 5 : 0));
++
++		ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_AREA_COLOR_MODE, mode);
++		if (ret < 0)
++			return ret;
++	}
++
++	/* Set precharge period in number of ticks from the internal clock */
++	precharge = (ssd130x->prechargep1 & 0xf) | (ssd130x->prechargep2 & 0xf) << 4;
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_PRECHARGE_PERIOD, precharge);
++	if (ret < 0)
++		return ret;
++
++	/* Set COM pins configuration */
++	compins = 0x02 | !ssd130x->com_seq << 4 | ssd130x->com_lrremap << 5;
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_COM_PINS_CONFIG, compins);
++	if (ret < 0)
++		return ret;
++
++
++	/* Set VCOMH */
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_VCOMH, ssd130x->vcomh);
++	if (ret < 0)
++		return ret;
++
++	/* Turn on the DC-DC Charge Pump */
++	chargepump = BIT(4) | (ssd130x->device_info->need_chargepump ? BIT(2) : 0);
++	ret = ssd130x_write_cmd(ssd130x, 2, SSD130X_CHARGE_PUMP, chargepump);
++	if (ret < 0)
++		return ret;
++
++	/* Set lookup table */
++	if (ssd130x->lookup_table_set) {
++		int i;
++
++		ret = ssd130x_write_cmd(ssd130x, 1, SSD130X_SET_LOOKUP_TABLE);
++		if (ret < 0)
++			return ret;
++
++		for (i = 0; i < ARRAY_SIZE(ssd130x->lookup_table); ++i) {
++			u8 val = ssd130x->lookup_table[i];
++
++			if (val < 31 || val > 63)
++				dev_warn(ssd130x->dev,
++					 "lookup table index %d value out of range 31 <= %d <= 63\n",
++					 i, val);
++			ret = ssd130x_write_cmd(ssd130x, 1, val);
++			if (ret < 0)
++				return ret;
++		}
++	}
++
++	/* Switch to horizontal addressing mode */
++	return ssd130x_write_cmd(ssd130x, 2, SSD130X_SET_ADDRESS_MODE,
++				 SSD130X_SET_ADDRESS_MODE_HORIZONTAL);
++}
++
++static int ssd130x_update_rect(struct ssd130x_device *ssd130x, u8 *buf,
++			       struct drm_rect *rect)
++{
++	unsigned int x = rect->x1;
++	unsigned int y = rect->y1;
++	unsigned int width = drm_rect_width(rect);
++	unsigned int height = drm_rect_height(rect);
++	unsigned int line_length = DIV_ROUND_UP(width, 8);
++	unsigned int pages = DIV_ROUND_UP(y % 8 + height, 8);
++	u32 array_idx = 0;
++	int ret, i, j, k;
++	u8 *data_array = NULL;
++
++	data_array = kcalloc(width, pages, GFP_KERNEL);
++	if (!data_array)
++		return -ENOMEM;
++
++	/*
++	 * The screen is divided in pages, each having a height of 8
++	 * pixels, and the width of the screen. When sending a byte of
++	 * data to the controller, it gives the 8 bits for the current
++	 * column. I.e, the first byte are the 8 bits of the first
++	 * column, then the 8 bits for the second column, etc.
++	 *
++	 *
++	 * Representation of the screen, assuming it is 5 bits
++	 * wide. Each letter-number combination is a bit that controls
++	 * one pixel.
++	 *
++	 * A0 A1 A2 A3 A4
++	 * B0 B1 B2 B3 B4
++	 * C0 C1 C2 C3 C4
++	 * D0 D1 D2 D3 D4
++	 * E0 E1 E2 E3 E4
++	 * F0 F1 F2 F3 F4
++	 * G0 G1 G2 G3 G4
++	 * H0 H1 H2 H3 H4
++	 *
++	 * If you want to update this screen, you need to send 5 bytes:
++	 *  (1) A0 B0 C0 D0 E0 F0 G0 H0
++	 *  (2) A1 B1 C1 D1 E1 F1 G1 H1
++	 *  (3) A2 B2 C2 D2 E2 F2 G2 H2
++	 *  (4) A3 B3 C3 D3 E3 F3 G3 H3
++	 *  (5) A4 B4 C4 D4 E4 F4 G4 H4
++	 */
++
++	ret = ssd130x_set_col_range(ssd130x, ssd130x->col_offset + x, width);
++	if (ret < 0)
++		goto out_free;
++
++	ret = ssd130x_set_page_range(ssd130x, ssd130x->page_offset + y / 8, pages);
++	if (ret < 0)
++		goto out_free;
++
++	for (i = y / 8; i < y / 8 + pages; i++) {
++		int m = 8;
++
++		/* Last page may be partial */
++		if (8 * (i + 1) > ssd130x->height)
++			m = ssd130x->height % 8;
++		for (j = x; j < x + width; j++) {
++			u8 data = 0;
++
++			for (k = 0; k < m; k++) {
++				u8 byte = buf[(8 * i + k) * line_length + j / 8];
++				u8 bit = (byte >> (j % 8)) & 1;
++
++				data |= bit << k;
++			}
++			data_array[array_idx++] = data;
++		}
++	}
++
++	ret = ssd130x_write_data(ssd130x, data_array, width * pages);
++
++out_free:
++	kfree(data_array);
++	return ret;
++}
++
++static void ssd130x_clear_screen(struct ssd130x_device *ssd130x)
++{
++	u8 *buf = NULL;
++
++	struct drm_rect fullscreen = {
++		.x1 = 0,
++		.x2 = ssd130x->width,
++		.y1 = 0,
++		.y2 = ssd130x->height,
++	};
++
++	buf = kcalloc(ssd130x->width, ssd130x->height, GFP_KERNEL);
++	if (!buf)
++		return;
++
++	ssd130x_update_rect(ssd130x, buf, &fullscreen);
++
++	kfree(buf);
++}
++
++static int ssd130x_fb_blit_rect(struct drm_framebuffer *fb, const struct dma_buf_map *map,
++				struct drm_rect *rect)
++{
++	struct ssd130x_device *ssd130x = drm_to_ssd130x(fb->dev);
++	void *vmap = map->vaddr; /* TODO: Use mapping abstraction properly */
++	int ret = 0;
++	u8 *buf = NULL;
++
++	buf = kcalloc(fb->width, fb->height, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	drm_fb_xrgb8888_to_mono_reversed(buf, 0, vmap, fb, rect);
++
++	ssd130x_update_rect(ssd130x, buf, rect);
++
++	kfree(buf);
++
++	return ret;
++}
++
++static int ssd130x_display_pipe_mode_valid(struct drm_simple_display_pipe *pipe,
++					   const struct drm_display_mode *mode)
++{
++	struct ssd130x_device *ssd130x = drm_to_ssd130x(pipe->crtc.dev);
++
++	if (mode->hdisplay != ssd130x->mode.hdisplay &&
++	    mode->vdisplay != ssd130x->mode.vdisplay)
++		return MODE_ONE_SIZE;
++
++	if (mode->hdisplay != ssd130x->mode.hdisplay)
++		return MODE_ONE_WIDTH;
++
++	if (mode->vdisplay != ssd130x->mode.vdisplay)
++		return MODE_ONE_HEIGHT;
++
++	return MODE_OK;
++}
++
++static void ssd130x_display_pipe_enable(struct drm_simple_display_pipe *pipe,
++					struct drm_crtc_state *crtc_state,
++					struct drm_plane_state *plane_state)
++{
++	struct ssd130x_device *ssd130x = drm_to_ssd130x(pipe->crtc.dev);
++	struct drm_device *drm = &ssd130x->drm;
++	int idx, ret;
++
++	ret = ssd130x_power_on(ssd130x);
++	if (ret)
++		return;
++
++	ret = ssd130x_init(ssd130x);
++	if (ret)
++		goto power_off;
++
++	if (!drm_dev_enter(drm, &idx))
++		goto power_off;
++
++	ssd130x_clear_screen(ssd130x);
++
++	ssd130x_write_cmd(ssd130x, 1, SSD130X_DISPLAY_ON);
++
++	backlight_enable(ssd130x->bl_dev);
++
++	drm_dev_exit(idx);
++
++	return;
++power_off:
++	ssd130x_power_off(ssd130x);
++}
++
++static void ssd130x_display_pipe_disable(struct drm_simple_display_pipe *pipe)
++{
++	struct ssd130x_device *ssd130x = drm_to_ssd130x(pipe->crtc.dev);
++	struct drm_device *drm = &ssd130x->drm;
++	int idx;
++
++	if (!drm_dev_enter(drm, &idx))
++		return;
++
++	ssd130x_clear_screen(ssd130x);
++
++	backlight_disable(ssd130x->bl_dev);
++
++	ssd130x_write_cmd(ssd130x, 1, SSD130X_DISPLAY_OFF);
++
++	ssd130x_power_off(ssd130x);
++
++	drm_dev_exit(idx);
++}
++
++static void ssd130x_display_pipe_update(struct drm_simple_display_pipe *pipe,
++					struct drm_plane_state *old_plane_state)
++{
++	struct ssd130x_device *ssd130x = drm_to_ssd130x(pipe->crtc.dev);
++	struct drm_plane_state *plane_state = pipe->plane.state;
++	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
++	struct drm_framebuffer *fb = plane_state->fb;
++	struct drm_device *drm = &ssd130x->drm;
++	struct drm_rect src_clip, dst_clip;
++	int idx;
++
++	if (!fb)
++		return;
++
++	if (!pipe->crtc.state->active)
++		return;
++
++	if (!drm_atomic_helper_damage_merged(old_plane_state, plane_state, &src_clip))
++		return;
++
++	dst_clip = plane_state->dst;
++	if (!drm_rect_intersect(&dst_clip, &src_clip))
++		return;
++
++	if (!drm_dev_enter(drm, &idx))
++		return;
++
++	ssd130x_fb_blit_rect(plane_state->fb, &shadow_plane_state->data[0], &dst_clip);
++
++	drm_dev_exit(idx);
++}
++
++static const struct drm_simple_display_pipe_funcs ssd130x_pipe_funcs = {
++	.mode_valid = ssd130x_display_pipe_mode_valid,
++	.enable = ssd130x_display_pipe_enable,
++	.disable = ssd130x_display_pipe_disable,
++	.update = ssd130x_display_pipe_update,
++	DRM_GEM_SIMPLE_DISPLAY_PIPE_SHADOW_PLANE_FUNCS,
++};
++
++static int ssd130x_connector_get_modes(struct drm_connector *connector)
++{
++	struct ssd130x_device *ssd130x = drm_to_ssd130x(connector->dev);
++	struct drm_display_mode *mode = &ssd130x->mode;
++	struct device *dev = ssd130x->dev;
++
++	mode = drm_mode_duplicate(connector->dev, &ssd130x->mode);
++	if (!mode) {
++		dev_err(dev, "Failed to duplicated mode\n");
++		return 0;
++	}
++
++	drm_mode_probed_add(connector, mode);
++	drm_set_preferred_mode(connector, mode->hdisplay, mode->vdisplay);
++
++	/* There is only a single mode */
++	return 1;
++}
++
++static const struct drm_connector_helper_funcs ssd130x_connector_helper_funcs = {
++	.get_modes = ssd130x_connector_get_modes,
++};
++
++static const struct drm_connector_funcs ssd130x_connector_funcs = {
++	.reset = drm_atomic_helper_connector_reset,
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.destroy = drm_connector_cleanup,
++	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++};
++
++static const struct drm_mode_config_funcs ssd130x_mode_config_funcs = {
++	.fb_create = drm_gem_fb_create_with_dirty,
++	.atomic_check = drm_atomic_helper_check,
++	.atomic_commit = drm_atomic_helper_commit,
++};
++
++static const uint32_t ssd130x_formats[] = {
++	DRM_FORMAT_XRGB8888,
++};
++
++DEFINE_DRM_GEM_FOPS(ssd130x_fops);
++
++static const struct drm_driver ssd130x_drm_driver = {
++	DRM_GEM_SHMEM_DRIVER_OPS,
++	.name			= DRIVER_NAME,
++	.desc			= DRIVER_DESC,
++	.date			= DRIVER_DATE,
++	.major			= DRIVER_MAJOR,
++	.minor			= DRIVER_MINOR,
++	.driver_features	= DRIVER_ATOMIC | DRIVER_GEM | DRIVER_MODESET,
++	.fops			= &ssd130x_fops,
++};
++
++static int ssd130x_update_bl(struct backlight_device *bdev)
++{
++	struct ssd130x_device *ssd130x = bl_get_data(bdev);
++	int brightness = backlight_get_brightness(bdev);
++	int ret;
++
++	ssd130x->contrast = brightness;
++
++	ret = ssd130x_write_cmd(ssd130x, 1, SSD130X_CONTRAST);
++	if (ret < 0)
++		return ret;
++
++	ret = ssd130x_write_cmd(ssd130x, 1, ssd130x->contrast);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static const struct backlight_ops ssd130xfb_bl_ops = {
++	.update_status	= ssd130x_update_bl,
++};
++
++static void ssd130x_parse_properties(struct ssd130x_device *ssd130x)
++{
++	struct device *dev = ssd130x->dev;
++
++	if (device_property_read_u32(dev, "solomon,width", &ssd130x->width))
++		ssd130x->width = 96;
++
++	if (device_property_read_u32(dev, "solomon,height", &ssd130x->height))
++		ssd130x->height = 16;
++
++	if (device_property_read_u32(dev, "solomon,page-offset", &ssd130x->page_offset))
++		ssd130x->page_offset = 1;
++
++	if (device_property_read_u32(dev, "solomon,col-offset", &ssd130x->col_offset))
++		ssd130x->col_offset = 0;
++
++	if (device_property_read_u32(dev, "solomon,com-offset", &ssd130x->com_offset))
++		ssd130x->com_offset = 0;
++
++	if (device_property_read_u32(dev, "solomon,prechargep1", &ssd130x->prechargep1))
++		ssd130x->prechargep1 = 2;
++
++	if (device_property_read_u32(dev, "solomon,prechargep2", &ssd130x->prechargep2))
++		ssd130x->prechargep2 = 2;
++
++	if (!device_property_read_u8_array(dev, "solomon,lookup-table",
++					   ssd130x->lookup_table,
++					   ARRAY_SIZE(ssd130x->lookup_table)))
++		ssd130x->lookup_table_set = 1;
++
++	ssd130x->seg_remap = !device_property_read_bool(dev, "solomon,segment-no-remap");
++	ssd130x->com_seq = device_property_read_bool(dev, "solomon,com-seq");
++	ssd130x->com_lrremap = device_property_read_bool(dev, "solomon,com-lrremap");
++	ssd130x->com_invdir = device_property_read_bool(dev, "solomon,com-invdir");
++	ssd130x->area_color_enable =
++		device_property_read_bool(dev, "solomon,area-color-enable");
++	ssd130x->low_power = device_property_read_bool(dev, "solomon,low-power");
++
++	ssd130x->contrast = 127;
++	ssd130x->vcomh = ssd130x->device_info->default_vcomh;
++
++	/* Setup display timing */
++	if (device_property_read_u32(dev, "solomon,dclk-div", &ssd130x->dclk_div))
++		ssd130x->dclk_div = ssd130x->device_info->default_dclk_div;
++	if (device_property_read_u32(dev, "solomon,dclk-frq", &ssd130x->dclk_frq))
++		ssd130x->dclk_frq = ssd130x->device_info->default_dclk_frq;
++}
++
++static int ssd130x_init_modeset(struct ssd130x_device *ssd130x)
++{
++	struct drm_display_mode *mode = &ssd130x->mode;
++	struct device *dev = ssd130x->dev;
++	struct drm_device *drm = &ssd130x->drm;
++	unsigned long max_width, max_height;
++	int ret;
++
++	ret = drmm_mode_config_init(drm);
++	if (ret) {
++		dev_err(dev, "DRM mode config init failed: %d\n", ret);
++		return ret;
++	}
++
++	mode->type = DRM_MODE_TYPE_DRIVER;
++	mode->clock = 1;
++	mode->hdisplay = mode->htotal = ssd130x->width;
++	mode->hsync_start = mode->hsync_end = ssd130x->width;
++	mode->vdisplay = mode->vtotal = ssd130x->height;
++	mode->vsync_start = mode->vsync_end = ssd130x->height;
++	mode->width_mm = 27;
++	mode->height_mm = 27;
++
++	max_width = max_t(unsigned long, mode->hdisplay, DRM_SHADOW_PLANE_MAX_WIDTH);
++	max_height = max_t(unsigned long, mode->vdisplay, DRM_SHADOW_PLANE_MAX_HEIGHT);
++
++	drm->mode_config.min_width = mode->hdisplay;
++	drm->mode_config.max_width = max_width;
++	drm->mode_config.min_height = mode->vdisplay;
++	drm->mode_config.max_height = max_height;
++	drm->mode_config.preferred_depth = 32;
++	drm->mode_config.funcs = &ssd130x_mode_config_funcs;
++
++	ret = drm_connector_init(drm, &ssd130x->connector, &ssd130x_connector_funcs,
++				 DRM_MODE_CONNECTOR_Unknown);
++	if (ret) {
++		dev_err(dev, "DRM connector init failed: %d\n", ret);
++		return ret;
++	}
++
++	drm_connector_helper_add(&ssd130x->connector, &ssd130x_connector_helper_funcs);
++
++	ret = drm_simple_display_pipe_init(drm, &ssd130x->pipe, &ssd130x_pipe_funcs,
++					   ssd130x_formats, ARRAY_SIZE(ssd130x_formats),
++					   NULL, &ssd130x->connector);
++	if (ret) {
++		dev_err(dev, "DRM simple display pipeline init failed: %d\n", ret);
++		return ret;
++	}
++
++	drm_plane_enable_fb_damage_clips(&ssd130x->pipe.plane);
++
++	drm_mode_config_reset(drm);
++
++	return 0;
++}
++
++static int ssd130x_get_resources(struct ssd130x_device *ssd130x)
++{
++	struct device *dev = ssd130x->dev;
++	int ret;
++
++	ssd130x->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(ssd130x->reset))
++		return dev_err_probe(dev, PTR_ERR(ssd130x->reset), "Failed to get reset gpio\n");
++
++	ssd130x->vbat_reg = devm_regulator_get_optional(dev, "vbat");
++	if (IS_ERR(ssd130x->vbat_reg)) {
++		ret = PTR_ERR(ssd130x->vbat_reg);
++		if (ret == -ENODEV)
++			ssd130x->vbat_reg = NULL;
++		else
++			return dev_err_probe(dev, ret, "Failed to get VBAT regulator\n");
++	}
++
++	return 0;
++}
++
++struct ssd130x_device *ssd130x_probe(struct device *dev, struct regmap *regmap)
++{
++	struct ssd130x_device *ssd130x;
++	struct backlight_device *bl;
++	struct drm_device *drm;
++	int ret;
++
++	ssd130x = devm_drm_dev_alloc(dev, &ssd130x_drm_driver,
++				     struct ssd130x_device, drm);
++	if (IS_ERR(ssd130x)) {
++		dev_err(dev, "Failed to allocate DRM device: %d\n", ret);
++		return ssd130x;
++	}
++
++	drm = &ssd130x->drm;
++
++	ssd130x->dev = dev;
++	ssd130x->regmap = regmap;
++	ssd130x->device_info = device_get_match_data(dev);
++
++	ssd130x_parse_properties(ssd130x);
++
++	ret = ssd130x_get_resources(ssd130x);
++	if (ret)
++		return ERR_PTR(ret);
++
++	bl = devm_backlight_device_register(dev, dev_name(dev), dev, ssd130x,
++					    &ssd130xfb_bl_ops, NULL);
++	if (IS_ERR(bl)) {
++		ret = PTR_ERR(bl);
++		dev_err(dev, "Unable to register backlight device: %d\n", ret);
++		return ERR_PTR(ret);
++	}
++
++	bl->props.brightness = ssd130x->contrast;
++	bl->props.max_brightness = MAX_CONTRAST;
++	ssd130x->bl_dev = bl;
++
++	ret = ssd130x_init_modeset(ssd130x);
++	if (ret)
++		return ERR_PTR(ret);
++
++	ret = drm_dev_register(drm, 0);
++	if (ret) {
++		dev_err(dev, "DRM device register failed: %d\n", ret);
++		return ERR_PTR(ret);
++	}
++
++	drm_fbdev_generic_setup(drm, 0);
++
++	return ssd130x;
++}
++EXPORT_SYMBOL_GPL(ssd130x_probe);
++
++int ssd130x_remove(struct ssd130x_device *ssd130x)
++{
++	drm_dev_unplug(&ssd130x->drm);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ssd130x_remove);
++
++void ssd130x_shutdown(struct ssd130x_device *ssd130x)
++{
++	drm_atomic_helper_shutdown(&ssd130x->drm);
++}
++EXPORT_SYMBOL_GPL(ssd130x_shutdown);
++
++MODULE_DESCRIPTION(DRIVER_DESC);
++MODULE_AUTHOR("Javier Martinez Canillas <javierm@redhat.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/solomon/ssd130x.h b/drivers/gpu/drm/solomon/ssd130x.h
+new file mode 100644
+index 000000000000..bc760fdf0dfe
+--- /dev/null
++++ b/drivers/gpu/drm/solomon/ssd130x.h
+@@ -0,0 +1,76 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Header file for:
++ * DRM driver for Solomon SSD130X OLED displays
++ *
++ * Copyright 2022 Red Hat Inc.
++ * Authors: Javier Martinez Canillas <javierm@redhat.com>
++ *
++ * Based on drivers/video/fbdev/ssd1307fb.c
++ * Copyright 2012 Free Electrons
++ */
++
++#ifndef __SSD1307X_H__
++#define __SSD1307X_H__
++
++#include <drm/drm_drv.h>
++#include <drm/drm_simple_kms_helper.h>
++
++#include <linux/regmap.h>
++
++struct ssd130x_deviceinfo {
++	u32 default_vcomh;
++	u32 default_dclk_div;
++	u32 default_dclk_frq;
++	int need_pwm;
++	int need_chargepump;
++};
++
++struct ssd130x_device {
++	struct drm_device drm;
++	struct device *dev;
++	struct drm_simple_display_pipe pipe;
++	struct drm_display_mode mode;
++	struct drm_connector connector;
++	struct i2c_client *client;
++
++	struct regmap *regmap;
++
++	const struct ssd130x_deviceinfo *device_info;
++
++	unsigned area_color_enable : 1;
++	unsigned com_invdir : 1;
++	unsigned com_lrremap : 1;
++	unsigned com_seq : 1;
++	unsigned lookup_table_set : 1;
++	unsigned low_power : 1;
++	unsigned seg_remap : 1;
++	u32 com_offset;
++	u32 contrast;
++	u32 dclk_div;
++	u32 dclk_frq;
++	u32 height;
++	u8 lookup_table[4];
++	u32 page_offset;
++	u32 col_offset;
++	u32 prechargep1;
++	u32 prechargep2;
++
++	struct backlight_device *bl_dev;
++	struct pwm_device *pwm;
++	struct gpio_desc *reset;
++	struct regulator *vbat_reg;
++	u32 vcomh;
++	u32 width;
++	/* Cached address ranges */
++	u8 col_start;
++	u8 col_end;
++	u8 page_start;
++	u8 page_end;
++};
++
++struct ssd130x_device *ssd130x_probe(struct device *dev, struct regmap *regmap);
++int ssd130x_remove(struct ssd130x_device *ssd130x);
++void ssd130x_shutdown(struct ssd130x_device *ssd130x);
++
++#endif /* __SSD1307X_H__ */
 -- 
 2.34.1
 
