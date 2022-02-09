@@ -2,101 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FC414AF722
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 17:46:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 309C44AFA3F
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 19:36:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237529AbiBIQqB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Feb 2022 11:46:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53294 "EHLO
+        id S239523AbiBISfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Feb 2022 13:35:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237434AbiBIQpv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 11:45:51 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF1EC0613C9;
-        Wed,  9 Feb 2022 08:45:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644425155; x=1675961155;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6o8PBrt2dlQLXaGpgRDUe/a5h6z2Gt3tbLxke74fXBE=;
-  b=BoSiNaTaF/ZWlX6FT9MpJh1o9hUj+W+lIbsOOUGqG7euOLcji5tj6Fu4
-   bSQoirC+Mb2TVVpHF9E7mLbPFcD8XFL/uQdTEvPcSBWQF/Rb9z+7KJOJx
-   P1VNPt+WjHBWdLq04+4XTXkQSca56hNn/e/Me/qUej0VaVAbDyJ27XXiy
-   0dcJbJ2yAsLeAQGindItOWWIUI2czD/ghMe/lf5cSM6qdiLEy5nJsqIr/
-   R6ly69qsJfUzTQY4lVXl7E8aothRRmi1K9HGFSDaZ+OhvLWGJ1IzHdbMv
-   B+vKY0O98ntPNwIlxl7s30LrxfCZP+prCtmnitvyMpsHkdFBWFYrECWT+
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="312540860"
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="312540860"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 08:45:54 -0800
-X-IronPort-AV: E=Sophos;i="5.88,356,1635231600"; 
-   d="scan'208";a="633276717"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 08:45:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nHq5K-002g8V-C9;
-        Wed, 09 Feb 2022 18:44:50 +0200
-Date:   Wed, 9 Feb 2022 18:44:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Javier Martinez Canillas <javierm@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-fbdev@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] drm: Add driver for Solomon SSD130X OLED displays
-Message-ID: <YgPvgtQ7ANd540Ht@smile.fi.intel.com>
-References: <20220209090314.2511959-1-javierm@redhat.com>
- <20220209090314.2511959-4-javierm@redhat.com>
- <YgPZ3W0e7N7JQ1dT@smile.fi.intel.com>
- <e29eaccc-863a-21d4-e669-0b708604d723@redhat.com>
- <YgPnE0yj0Y0OJxq6@smile.fi.intel.com>
- <406152d8-13e4-de8a-9542-bf1d96dbab0a@redhat.com>
+        with ESMTP id S239565AbiBISfh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 13:35:37 -0500
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816F5C05CBA9;
+        Wed,  9 Feb 2022 10:35:40 -0800 (PST)
+Received: by mail-oo1-f45.google.com with SMTP id o192-20020a4a2cc9000000b00300af40d795so3436364ooo.13;
+        Wed, 09 Feb 2022 10:35:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+RsWfmq0F6wX1G1e+RM/xgkrQK09rJkHkHiAa0GU9Cw=;
+        b=i3F1VYAnVnrlJSdKC53s3ltKr54Mi6fmRw/oeG8ndk1u6uMR/1ISAyp8hXKu4EXKTu
+         rO197/EHfhPKWG7nsRr6j/EGL844ZeDgNXHmcPo6kEWyPEloaXx6FGhMuvkyGiqzxCg6
+         nw2QN61UYsI5c2tehMLQrFgYMXsAUodycFS0RzP/L163WV1DaVo1srzjG2yrhFI+nE6x
+         zo+C/LB73hqx18Zosx10pHuihWiFbvso2G7zDI7ITkV8pYfs5GmiM8/42uyTtJGkUuVl
+         dd1sZ86hhjni78i61bT888lFUkstVvvH1ZrR/pvq4QkfauIyVt+jbXIrLlhrL3uZh6gU
+         nrbQ==
+X-Gm-Message-State: AOAM531WQj1NSL8lZkvCdTdJ9NMRJFyEC3YKnblr8BIFRkAaayZqFzJC
+        10TtvaI8Pq4v/9i+RSTDlg==
+X-Google-Smtp-Source: ABdhPJz4vuvJMQycGpuhKo8F5FyYxYz+DXI3An7uVJ0o3p4z4D1w0b7P9DinkaIMcDzez15Qjv8kQQ==
+X-Received: by 2002:a05:6870:b1d1:: with SMTP id x17mr1416431oak.158.1644431739832;
+        Wed, 09 Feb 2022 10:35:39 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id z4sm6826911ota.7.2022.02.09.10.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 10:35:38 -0800 (PST)
+Received: (nullmailer pid 659221 invoked by uid 1000);
+        Wed, 09 Feb 2022 18:35:37 -0000
+Date:   Wed, 9 Feb 2022 12:35:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     sven@svenschwermer.de
+Cc:     linux-pwm@vger.kernel.org, post@lespocky.de,
+        linux-leds@vger.kernel.org, andy.shevchenko@gmail.com,
+        devicetree@vger.kernel.org, thierry.reding@gmail.com, pavel@ucw.cz,
+        u.kleine-koenig@pengutronix.de,
+        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+        robh+dt@kernel.org, lee.jones@linaro.org
+Subject: Re: [PATCH v6 1/3] dt-bindings: leds: Optional multi-led unit address
+Message-ID: <YgQJeXKnQrWjjzcI@robh.at.kernel.org>
+References: <20220208191236.660172-1-sven@svenschwermer.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <406152d8-13e4-de8a-9542-bf1d96dbab0a@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220208191236.660172-1-sven@svenschwermer.de>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Feb 09, 2022 at 05:26:00PM +0100, Javier Martinez Canillas wrote:
-> On 2/9/22 17:08, Andy Shevchenko wrote:
+On Tue, 08 Feb 2022 20:12:34 +0100, sven@svenschwermer.de wrote:
+> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> 
+> The unit address does not make sense in all cases the multi-led node is
+> used, e.g. for the upcoming PWM multi-color LED driver.
+> 
+> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+> ---
+> 
+> Notes:
+>     Added in v6
+> 
+>  .../devicetree/bindings/leds/leds-class-multicolor.yaml         | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-...
-
-> On that topic, I even typed a SPI driver because of your feedback :)
-
-Much appreciated, makes me much easier to test.
-
-Thank you for doing all this!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
