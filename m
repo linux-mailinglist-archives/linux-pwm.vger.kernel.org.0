@@ -2,179 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82A984AF24A
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 14:04:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 577BD4AF325
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Feb 2022 14:43:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231794AbiBINEq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Feb 2022 08:04:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42342 "EHLO
+        id S234381AbiBINnU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Feb 2022 08:43:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233826AbiBINEp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 08:04:45 -0500
-X-Greylist: delayed 4200 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Feb 2022 05:04:49 PST
-Received: from mail.thorsis.com (mail.thorsis.com [92.198.35.195])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CEB8C05CB9A
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Feb 2022 05:04:49 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id 42B5A1A7A;
-        Wed,  9 Feb 2022 10:17:25 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TcYIS0UTs6_D; Wed,  9 Feb 2022 10:17:25 +0100 (CET)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id 4830C3578; Wed,  9 Feb 2022 10:17:23 +0100 (CET)
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
-Date:   Wed, 9 Feb 2022 10:17:06 +0100
-From:   Alexander Dahl <ada@thorsis.com>
-To:     sven@svenschwermer.de
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-        pavel@ucw.cz, robh+dt@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        post@lespocky.de, andy.shevchenko@gmail.com, robh@kernel.org
-Subject: Re: [PATCH v6 2/3] dt-bindings: leds: Add multicolor PWM LED bindings
-Message-ID: <YgOGksA8kruvFLY2@ada-deb-carambola.ifak-system.com>
-Mail-Followup-To: sven@svenschwermer.de, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-        pavel@ucw.cz, robh+dt@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        post@lespocky.de, andy.shevchenko@gmail.com, robh@kernel.org
-References: <20220208191236.660172-1-sven@svenschwermer.de>
- <20220208191236.660172-2-sven@svenschwermer.de>
-Content-Type: text/plain; charset=us-ascii
+        with ESMTP id S233245AbiBINnT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Feb 2022 08:43:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2957DC061355;
+        Wed,  9 Feb 2022 05:43:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CC202B821A0;
+        Wed,  9 Feb 2022 13:43:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CEF5C340E7;
+        Wed,  9 Feb 2022 13:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644414200;
+        bh=37OR1ffupD9w9dKrsD/tXWDzbP9itwcwvYTx3uXtOps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fUge2DMeusx+jhrGmSAodUdP1Qlf9acOZcs8TjQf49xFNLNknrvgg4CY0s7fVgCF8
+         Cix15WePuCE8YLeekKTb76Y/rXKbN1SD+6r0LxYI3H0d/imAIpMAl6lJgmm/jNVjzA
+         WVB148FwaqUS5h6YKprZT6lPNyNuX5vPGeT9sQsgVI6BSEAJ4IQISslWPIRma9Al4A
+         lAP9PBsiTlNG9LvPNdqJ/cdlV9LQad+75PzzcBLAgtfl1lKk9+d9kbJDxHLGVt79qY
+         AWui1oqCXtrqDGBpfykYd4GAzGL+a/BPqHb5kqhe2BYye1Vu+IpQlkWBJ40Wul6tk1
+         Pxlei95pitoIQ==
+Date:   Wed, 9 Feb 2022 13:43:13 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-fbdev@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] drm: Add driver for Solomon SSD130X OLED displays
+Message-ID: <YgPE8Z7HxU2wv7J/@sirena.org.uk>
+References: <20220209090314.2511959-1-javierm@redhat.com>
+ <20220209090314.2511959-4-javierm@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hG/Egg4kkWequsOJ"
 Content-Disposition: inline
-In-Reply-To: <20220208191236.660172-2-sven@svenschwermer.de>
+In-Reply-To: <20220209090314.2511959-4-javierm@redhat.com>
+X-Cookie: Disc space -- the final frontier!
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Sven,
 
-Am Tue, Feb 08, 2022 at 08:12:35PM +0100 schrieb sven@svenschwermer.de:
-> From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-> 
-> This allows to group multiple PWM-connected monochrome LEDs into
-> multicolor LEDs, e.g. RGB LEDs.
-> 
-> Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-> ---
-> 
-> Notes:
->     Changes in v6:
->     * Fix device tree binding schema
->     
->     Changes in v5:
->     * (no changes)
->     
->     Changes in v4:
->     * (no changes)
->     
->     Changes in v3:
->     * Remove multi-led unit name
-> 
->  .../bindings/leds/leds-pwm-multicolor.yaml    | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
-> new file mode 100644
-> index 000000000000..f7ce29c8ae63
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-pwm-multicolor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Multi-color LEDs connected to PWM
-> +
-> +maintainers:
-> +  - Sven Schwermer <sven.schwermer@disruptive-technologies.com>
-> +
-> +description: |
-> +  This driver combines several monochrome PWM LEDs into one multi-color
-> +  LED using the multicolor LED class.
-> +
-> +properties:
-> +  compatible:
-> +    const: pwm-leds-multicolor
-> +  multi-led:
-> +    type: object
-> +    patternProperties:
-> +      "^led-[0-9a-z]+$":
-> +        type: object
-> +        $ref: common.yaml#
-> +        properties:
-> +          pwms:
-> +            maxItems: 1
-> +          pwm-names: true
-> +          color: true
-> +        required:
-> +          - pwms
-> +          - color
-> +        additionalProperties: false
-> +required:
-> +  - compatible
-> +allOf:
-> +  - $ref: leds-class-multicolor.yaml#
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    rgb-led {
+--hG/Egg4kkWequsOJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think this should be 'led-controller'. See
-Documentation/devicetree/bindings/leds/common.yaml for reference.
+On Wed, Feb 09, 2022 at 10:03:10AM +0100, Javier Martinez Canillas wrote:
 
-> +        compatible = "pwm-leds-multicolor";
-> +
-> +        multi-led {
-> +          color = <LED_COLOR_ID_RGB>;
-> +          function = LED_FUNCTION_INDICATOR;
-> +          max-brightness = <65535>;
-> +
-> +          led-red {
-> +              pwms = <&pwm1 0 1000000>;
-> +              color = <LED_COLOR_ID_RED>;
-> +          };
-> +
-> +          led-green {
-> +              pwms = <&pwm2 0 1000000>;
-> +              color = <LED_COLOR_ID_GREEN>;
-> +          };
-> +
-> +          led-blue {
-> +              pwms = <&pwm3 0 1000000>;
-> +              color = <LED_COLOR_ID_BLUE>;
-> +          };
+> +	if (ssd130x->vbat_reg) {
+> +		ret = regulator_enable(ssd130x->vbat_reg);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to enable VBAT: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
 
-Not sure if those node names should be more generic like led-0, led-1
-etc.?  At least the color information is redundant here.  This would
-make it more similar to bindings of other LED drivers.
+Unless the device supports power being physically omitted regulator
+usage should not be optional, it's just more code and a recipie for poor
+error handling.
 
-And how is it supposed to be named if you have multiple
-"multi-led"s, e.g. one on three PWM channels, and another one on three
-different PWM channels?
+--hG/Egg4kkWequsOJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Greets
-Alex
+-----BEGIN PGP SIGNATURE-----
 
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.35.1
-> 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmIDxPAACgkQJNaLcl1U
+h9BlsAf8DXkDpBzNae52DdUZC+O3yzYIWFFywhEjjDbPX9wmJ4924EI/wjD/igl6
+YeYnHYx0kj0SLfHYbpBFUehzykJQ/puIGOnDJ6FpE0SEtcl6fRWcLyKOuhvl+bHr
+2vaJbS/pQ53i53EbMU5Zg5PXsZ18GkuDd+9zgz3aC3wSJAOr4LkPIpLe8sQpfSUM
+O6QgrmffoUFahtVadrpjAd+We/dGDUuLvcJCrO184AWXoi3pHtpnzhI0k2/GHBfm
+qJghua+CfAPUdSthNyVYVZ/YAB+QLAS5NLfW+QX2Ot0XctA6Lk006jjJ+H8LxFWM
+BoGgjBzeIw+303F+wx4Ep1mBFYA2DA==
+=MgLt
+-----END PGP SIGNATURE-----
+
+--hG/Egg4kkWequsOJ--
