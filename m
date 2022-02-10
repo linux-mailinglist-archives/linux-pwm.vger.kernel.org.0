@@ -2,128 +2,199 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E44B14B0913
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Feb 2022 10:03:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A98834B0992
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Feb 2022 10:33:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238179AbiBJJDf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Feb 2022 04:03:35 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38400 "EHLO
+        id S238627AbiBJJdY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Feb 2022 04:33:24 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238175AbiBJJDe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Feb 2022 04:03:34 -0500
-X-Greylist: delayed 222 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Feb 2022 01:03:34 PST
-Received: from 189.cn (ptr.189.cn [183.61.185.103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0778AD94;
-        Thu, 10 Feb 2022 01:03:33 -0800 (PST)
-HMM_SOURCE_IP: 10.64.8.43:38980.470878939
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-123.150.8.43 (unknown [10.64.8.43])
-        by 189.cn (HERMES) with SMTP id 44247100211;
-        Thu, 10 Feb 2022 16:59:47 +0800 (CST)
-Received: from  ([172.27.8.53])
-        by gateway-151646-dep-b7fbf7d79-vjdjk with ESMTP id 4bfb3f56604f41b0af19343159f75bff for johan@kernel.org;
-        Thu, 10 Feb 2022 16:59:50 CST
-X-Transaction-ID: 4bfb3f56604f41b0af19343159f75bff
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 172.27.8.53
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-From:   Song Chen <chensong_2000@189.cn>
-To:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        with ESMTP id S232153AbiBJJdV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Feb 2022 04:33:21 -0500
+Received: from mail.thorsis.com (mail.thorsis.com [92.198.35.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE16C64;
+        Thu, 10 Feb 2022 01:33:21 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 579222985;
+        Thu, 10 Feb 2022 10:33:20 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Jpe8GPq-IVlo; Thu, 10 Feb 2022 10:33:20 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id DD8193562; Thu, 10 Feb 2022 10:33:19 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Date:   Thu, 10 Feb 2022 10:33:06 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Sven Schwermer <sven@svenschwermer.de>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, pavel@ucw.cz, robh+dt@kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, greybus-dev@lists.linaro.org,
-        linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Song Chen <chensong_2000@189.cn>
-Subject: [PATCH] staging: greybus: introduce pwm_ops::apply
-Date:   Thu, 10 Feb 2022 17:05:02 +0800
-Message-Id: <1644483902-9200-1-git-send-email-chensong_2000@189.cn>
-X-Mailer: git-send-email 2.7.4
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        lee.jones@linaro.org, post@lespocky.de, andy.shevchenko@gmail.com,
+        robh@kernel.org
+Subject: Re: [PATCH v6 2/3] dt-bindings: leds: Add multicolor PWM LED bindings
+Message-ID: <YgTb0sRSaO1EPsOW@ada-deb-carambola.ifak-system.com>
+Mail-Followup-To: Sven Schwermer <sven@svenschwermer.de>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, pavel@ucw.cz, robh+dt@kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, post@lespocky.de, andy.shevchenko@gmail.com,
+        robh@kernel.org
+References: <20220208191236.660172-1-sven@svenschwermer.de>
+ <20220208191236.660172-2-sven@svenschwermer.de>
+ <YgOGksA8kruvFLY2@ada-deb-carambola.ifak-system.com>
+ <2bf7a4c4-1661-d800-51d3-6e6287b5c6fc@svenschwermer.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2bf7a4c4-1661-d800-51d3-6e6287b5c6fc@svenschwermer.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Introduce apply in pwm_ops to replace legacy operations,
-like enable, disable, config and set_polarity.
+Hei hei,
 
-Signed-off-by: Song Chen <chensong_2000@189.cn>
----
- drivers/staging/greybus/pwm.c | 46 +++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+Am Thu, Feb 10, 2022 at 08:55:07AM +0100 schrieb Sven Schwermer:
+> Hi Alex,
+> 
+> On 2/9/22 10:17, Alexander Dahl wrote:
+> > > +    rgb-led {
+> > 
+> > I think this should be 'led-controller'. See
+> > Documentation/devicetree/bindings/leds/common.yaml for reference.
+> 
+> Sure, I don't have a preference.
+> 
+> > > +        multi-led {
+> > > +          color = <LED_COLOR_ID_RGB>;
+> > > +          function = LED_FUNCTION_INDICATOR;
+> > > +          max-brightness = <65535>;
+> > > +
+> > > +          led-red {
+> > > +              pwms = <&pwm1 0 1000000>;
+> > > +              color = <LED_COLOR_ID_RED>;
+> > > +          };
+> > > +
+> > > +          led-green {
+> > > +              pwms = <&pwm2 0 1000000>;
+> > > +              color = <LED_COLOR_ID_GREEN>;
+> > > +          };
+> > > +
+> > > +          led-blue {
+> > > +              pwms = <&pwm3 0 1000000>;
+> > > +              color = <LED_COLOR_ID_BLUE>;
+> > > +          };
+> > 
+> > Not sure if those node names should be more generic like led-0, led-1
+> > etc.?  At least the color information is redundant here.  This would
+> > make it more similar to bindings of other LED drivers.
+> 
+> I don't see how naming them led-{0,1,2} would be better in any way, please
+> elaborate.
 
-diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-index 891a6a672378..e1889cf979b2 100644
---- a/drivers/staging/greybus/pwm.c
-+++ b/drivers/staging/greybus/pwm.c
-@@ -204,43 +204,35 @@ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
- }
- 
--static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			 int duty_ns, int period_ns)
--{
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
--
--	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
--};
--
--static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
--			       enum pwm_polarity polarity)
-+static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			const struct pwm_state *state)
- {
-+	int ret;
- 	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 
--	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
--};
--
--static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
-+	/* set period and duty cycle*/
-+	ret = gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle, state->period);
-+	if (ret)
-+		return ret;
- 
--	return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
--};
-+	/* set polarity */
-+	ret = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
-+	if (ret)
-+		return ret;
- 
--static void gb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
-+	/* enable/disable */
-+	if (state->enabled)
-+		ret = gb_pwm_enable_operation(pwmc, pwm->hwpwm);
-+	else
-+		ret = gb_pwm_disable_operation(pwmc, pwm->hwpwm);
- 
--	gb_pwm_disable_operation(pwmc, pwm->hwpwm);
--};
-+	return ret;
-+}
- 
- static const struct pwm_ops gb_pwm_ops = {
- 	.request = gb_pwm_request,
- 	.free = gb_pwm_free,
--	.config = gb_pwm_config,
--	.set_polarity = gb_pwm_set_polarity,
--	.enable = gb_pwm_enable,
--	.disable = gb_pwm_disable,
-+	.apply = gb_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
--- 
-2.25.1
+- consistency with other LED driver bindings
+- spot the number of "sub"-LEDs more easily
+- prevent all kinds of different names people will come up with, if
+  all is allowed instead of a clear scheme
+
+The color is in the color property anyways.
+
+> > And how is it supposed to be named if you have multiple
+> > "multi-led"s, e.g. one on three PWM channels, and another one on three
+> > different PWM channels?
+> 
+> I'm not 100% sure what you mean. If you want multiple instances of these
+> multi-color PWM LEDs, you'd do something like this:
+> 
+> indicator-led-controller {
+>     compatible = "pwm-leds-multicolor";
+>     multi-led {
+>       color = <LED_COLOR_ID_RGB>;
+>       function = LED_FUNCTION_INDICATOR;
+>       max-brightness = <65535>;
+>       led-red {
+>           pwms = <&pwm1 0 1000000>;
+>           color = <LED_COLOR_ID_RED>;
+>       };
+>       led-green {
+>           pwms = <&pwm2 0 1000000>;
+>           color = <LED_COLOR_ID_GREEN>;
+>       };
+>       led-blue {
+>           pwms = <&pwm3 0 1000000>;
+>           color = <LED_COLOR_ID_BLUE>;
+>       };
+>     };
+> };
+> status-led-controller {
+>     compatible = "pwm-leds-multicolor";
+>     multi-led {
+>       color = <LED_COLOR_ID_MULTI>;
+>       function = LED_FUNCTION_STATUS;
+>       max-brightness = <255>;
+>       led-red {
+>           pwms = <&pwm4 0 1000000>;
+>           color = <LED_COLOR_ID_RED>;
+>       };
+>       led-amber {
+>           pwms = <&pwm5 0 1000000>;
+>           color = <LED_COLOR_ID_AMBER>;
+>       };
+>     };
+> };
+
+I would have expected something like this:
+
+  led-controller-0 {
+      compatible = "pwm-leds-multicolor";
+
+      multi-led-0 {
+        color = <LED_COLOR_ID_RGB>;
+        function = LED_FUNCTION_INDICATOR;
+        max-brightness = <65535>;
+
+        led-0 {
+            pwms = <&pwm1 0 1000000>;
+            color = <LED_COLOR_ID_RED>;
+        };
+
+        led-1 {
+            pwms = <&pwm2 0 1000000>;
+            color = <LED_COLOR_ID_GREEN>;
+        };
+
+        led-2 {
+            pwms = <&pwm3 0 1000000>;
+            color = <LED_COLOR_ID_BLUE>;
+        };
+      };
+
+      multi-led-1 {
+        color = <LED_COLOR_ID_RGB>;
+        function = LED_FUNCTION_INDICATOR;
+        max-brightness = <65535>;
+
+        led-0 {
+            pwms = <&pwm1 0 1000000>;
+            color = <LED_COLOR_ID_RED>;
+        };
+
+        led-1 {
+            pwms = <&pwm2 0 1000000>;
+            color = <LED_COLOR_ID_GREEN>;
+        };
+
+        led-2 {
+            pwms = <&pwm3 0 1000000>;
+            color = <LED_COLOR_ID_BLUE>;
+        };
+      };
+  };
+
+Greets
+Alex
 
