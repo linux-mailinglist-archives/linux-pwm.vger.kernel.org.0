@@ -2,52 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DAE74B1F2B
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Feb 2022 08:16:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 564634B1F84
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Feb 2022 08:44:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344297AbiBKHQZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 11 Feb 2022 02:16:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38344 "EHLO
+        id S238097AbiBKHo0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 11 Feb 2022 02:44:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235800AbiBKHQW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Feb 2022 02:16:22 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DB41111
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Feb 2022 23:16:21 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nIQA4-00080h-L9; Fri, 11 Feb 2022 08:16:08 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nIQA2-00FsF7-41; Fri, 11 Feb 2022 08:16:05 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nIQA0-00FVX2-Hx; Fri, 11 Feb 2022 08:16:04 +0100
-Date:   Fri, 11 Feb 2022 08:16:01 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Song Chen <chensong_2000@189.cn>
-Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, lee.jones@linaro.org,
-        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: introduce pwm_ops::apply
-Message-ID: <20220211071601.4rpfbkit6c6dre2o@pengutronix.de>
-References: <1644483902-9200-1-git-send-email-chensong_2000@189.cn>
- <20220210100342.q2t4ykgyymjzr3fj@pengutronix.de>
- <6acc4f74-31a1-75b2-f7e8-610aac7b0ec8@189.cn>
+        with ESMTP id S236856AbiBKHo0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Feb 2022 02:44:26 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF492BF
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Feb 2022 23:44:25 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id k18so13669603wrg.11
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Feb 2022 23:44:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=2zIZDV0bKIX2QsFrkmLscCD6kTgXyjPR9dmVtO2M2fE=;
+        b=XcoWqxMy/x9ja5hrGMU3f1pHYvIIcFRqX+ZUUDE+uD4CGKEbfrLfcQB+TSW0AAn48g
+         SyYPA+a2hKlzSojd9STXvCm1wmJvme+GgoDHUf5aNhNDSmbbcePPhg7ow7Il3LWrBlxD
+         J1PfEpqR2Ax3wP9bbEFxr8kNkajwd9RVy2p87+GFls//jBGjQCcIo/9z3TIQmUOL2zbF
+         RixcpOLJEw3aup8hkj24P1J9UiBuhv3la+GbGm2FEwud/CO6ApttrTVhbZlH6erCLFdG
+         Egr0/RbI/yrd27Q6V+dqFWDaMVXqWylLUEb4oUZcfiAaM5Vc5V25ATxKTJkdJGPIMWHE
+         dJWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2zIZDV0bKIX2QsFrkmLscCD6kTgXyjPR9dmVtO2M2fE=;
+        b=xQ7gwPKdPbSTNAPsD55DEhJN2tBfQPh1rZgvBEo87Zbhv+BXreN49Ml2UTWSktd084
+         2z+umj0HXbAOGYLzEWTPp/cplh5hNGZxDiRMc9yb0tuFaL48Bq1ksoXDHUnlvmx7pcHo
+         GPPbpLRhEwhLvyrlAhd106RCXY4zuNeaReS02G8aTXuBrSy8RnbFXh4fh1qP4ZQwszqp
+         8tHHboHcDdKevL6Qr3qdz5u4AaNqFpbwj7TPD67Y5EYXkOc97i6PTRebuXNZseWOQIo3
+         ZQDXnZFbqP2OC6LYJhqaUHhfGHVeB7adQlsRfoD+ELFxpDooMyPj/hVMOBI/x193UCRB
+         1dsw==
+X-Gm-Message-State: AOAM532rGqohijENoYFbURNXFzEbMkNEnASSaj78qo+I8LweK5I2MjJO
+        f/iJk0aHt+52X4v69r6Bb82/6gyBAPlcPQ==
+X-Google-Smtp-Source: ABdhPJxHxXAEXIqCeoPqDRtAW18R2Px4F7QEqZoWsMkAMXpokVOinqvobizbHID1OX0gAQ5Is98Nlw==
+X-Received: by 2002:adf:f4d1:: with SMTP id h17mr299563wrp.111.1644565464063;
+        Thu, 10 Feb 2022 23:44:24 -0800 (PST)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id t11sm8107696wrs.66.2022.02.10.23.44.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 23:44:23 -0800 (PST)
+Date:   Fri, 11 Feb 2022 07:44:21 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     =?utf-8?B?6LW15pmT?= <zhaoxiao@uniontech.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "thierry.reding" <thierry.reding@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pwm: vt8500: Rename variable pointing to driver private
+ data
+Message-ID: <YgYT1YQyE9xRvW7I@google.com>
+References: <20220209064755.7287-1-zhaoxiao@uniontech.com>
+ <20220210074046.vxskduecvgiehvnl@pengutronix.de>
+ <tencent_5115CB3B0563B582409DF902@qq.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4uvzh3zwoqsfhh25"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6acc4f74-31a1-75b2-f7e8-610aac7b0ec8@189.cn>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <tencent_5115CB3B0563B582409DF902@qq.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,177 +78,55 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, 11 Feb 2022, 赵晓 wrote:
 
---4uvzh3zwoqsfhh25
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Thanks for you suggestion. I modified the patch following your instructions and commit the v2 version.&nbsp;
+> &nbsp;
 
-Hello ,
+Would you be kind enough to turn HTML off in your browser please.
 
-On Fri, Feb 11, 2022 at 11:06:33AM +0800, Song Chen wrote:
-> =E5=9C=A8 2022/2/10 18:03, Uwe Kleine-K=C3=B6nig =E5=86=99=E9=81=93:
-> > On Thu, Feb 10, 2022 at 05:05:02PM +0800, Song Chen wrote:
-> > > Introduce apply in pwm_ops to replace legacy operations,
-> > > like enable, disable, config and set_polarity.
-> > >=20
-> > > Signed-off-by: Song Chen <chensong_2000@189.cn>
-> > > ---
-> > >   drivers/staging/greybus/pwm.c | 46 +++++++++++++++-----------------=
----
-> > >   1 file changed, 19 insertions(+), 27 deletions(-)
-> > >=20
-> > > diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/=
-pwm.c
-> > > index 891a6a672378..e1889cf979b2 100644
-> > > --- a/drivers/staging/greybus/pwm.c
-> > > +++ b/drivers/staging/greybus/pwm.c
-> > > @@ -204,43 +204,35 @@ static void gb_pwm_free(struct pwm_chip *chip, =
-struct pwm_device *pwm)
-> > >   	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
-> > >   }
-> > > -static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> > > -			 int duty_ns, int period_ns)
-> > > -{
-> > > -	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
-> > > -
-> > > -	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns=
-);
-> > > -};
-> > > -
-> > > -static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_dev=
-ice *pwm,
-> > > -			       enum pwm_polarity polarity)
-> > > +static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> > > +			const struct pwm_state *state)
-> > >   {
-> > > +	int ret;
-> > >   	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
-> > > -	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
-> > > -};
-> > > -
-> > > -static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *p=
-wm)
-> > > -{
-> > > -	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
-> > > +	/* set period and duty cycle*/
-> > > +	ret =3D gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle=
-, state->period);
-> >=20
-> > gb_pwm_config_operation's 3rd parameter is an u32, so you're loosing
-> > bits here as state->duty_cycle is a u64. Ditto for period.
->=20
-> originally, pwm_apply_state --> pwm_apply_legacy --> gb_pwm_config -->
-> gb_pwm_config_operation is also loosing bits, does it mean greybus can li=
-ve
-> with that?
+Also, please refrain from top-posting.
 
-This is true, I tried to address that, but Thierry had concerns.
-(https://lore.kernel.org/all/20210312212119.1342666-1-u.kleine-koenig@pengu=
-tronix.de/
-was the patch I suggested.)
+Replies should be inline (like this).
 
-> Or redefine gb_pwm_config_request, switch duty and period to __le64?
+> ------------------&nbsp;Original&nbsp;------------------
+> From: &nbsp;"Uwe&nbsp;Kleine-König"<u.kleine-koenig@pengutronix.de&gt;;
+> Date: &nbsp;Thu, Feb 10, 2022 03:40 PM
+> To: &nbsp;"zhaoxiao"<zhaoxiao@uniontech.com&gt;; 
+> Cc: &nbsp;"thierry.reding"<thierry.reding@gmail.com&gt;; "lee.jones"<lee.jones@linaro.org&gt;; "linux-arm-kernel"<linux-arm-kernel@lists.infradead.org&gt;; "linux-pwm"<linux-pwm@vger.kernel.org&gt;; "linux-kernel"<linux-kernel@vger.kernel.org&gt;; 
+> Subject: &nbsp;Re: [PATCH] pwm: vt8500: Rename variable pointing to driver private data
 
-Don't use __le64, this is only for representing (little endian) register
-values. u64 would be the right one.
+Please configure your mailer to strip mail headers from the body.
 
-> > Also it would be nice if you go from
-> >=20
-> > 	.duty_cycle =3D A, .period =3D B, .enabled =3D 1
-> >=20
-> > to
-> >=20
-> > 	.duty_cycle =3D C, .period =3D D, .enabled =3D 0
-> >=20
-> > that C/D wasn't visible on the output pin. So please disable earlier
-> > (but keep enable at the end).
->=20
-> sorry, i don't quite understand this part,
+> &nbsp;
+> 
+> On Wed, Feb 09, 2022 at 02:47:55PM +0800, zhaoxiao wrote:
+> &gt; Status quo is that variables of type struct vt8500_chip * are named
+> &gt; "pwm", "chip" or "pc". The two formers are all not optimal because
+> 
+> There are no variables named "pwm" or "pc".
+> 
+> &gt; usually only struct pwm_device * variables are named "pwm" and "chip" is
+> &gt; usually used for variabled of type struct pwm_chip *.
+> &gt; 
+> &gt; So consistently use the same and non-conflicting name "pc".
+> 
+> The intention is fine, but you missed a few instances that are named
+> "vt8500". The statistic in mainline looks as follows:
+> 
+> 	$ git grep -o -h -E 'struct vt8500_chip \*[a-zA-Z0-9_]*' linus/master drivers/pwm/pwm-vt8500.c | sort | uniq -c
+> 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2 struct vt8500_chip *chip
+> 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 struct vt8500_chip *vt8500
+> 
+> (So there 2 variabled named "chip" (that you renamed to "pc") and 5 that
+> are named "vt8500". I prefer to rename the "chip"s to "vt8500".
+> 
+> Best regards
+> Uwe
+> 
 
-To reexplain: If your hardware is configured for
-
-	.duty_cycle =3D A, .period =3D B, .enabled =3D 1
-
-and pwm_apply is called with
-
-	.duty_cycle =3D C, .period =3D D, .enabled =3D 0
-
-you configured the registers for .duty_cycle and .period first and only
-then disable the PWM. This usually results in glitches because the
-hardware shortly runs with
-
-	.duty_cycle =3D C, .period =3D D, .enabled =3D 1
-
-=2E So the idea is, to disable before configuring duty and period if the
-eventual goal is a disabled state.
-
-> but is below code looking good to
-> you?
->=20
-> static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> 			const struct pwm_state *state)
-> {
-> 	int err;
-> 	bool enabled =3D pwm->state.enabled;
-> 	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
->=20
-> 	/* set polarity */
-> 	if (state->polarity !=3D pwm->state.polarity) {
-> 		if (enabled) {
-> 			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
-> 			enabled =3D false;
-> 		}
-> 		err =3D gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity=
-);
-> 		if (err)
-> 			return err;
-> 	}
->=20
-> 	if (!state->enabled) {
-> 		if (enabled)
-> 			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
-> 		return 0;
-> 	}
->=20
-> 	/* set period and duty cycle*/
-> 	err =3D gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle, sta=
-te->period);
-> 	if (err)
-> 		return err;
->=20
-> 	/* enable/disable */
-> 	if (!enabled)
-> 		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
->=20
-> 	return 0;
-> }
-
-This looks good.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4uvzh3zwoqsfhh25
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIGDS4ACgkQwfwUeK3K
-7Am4Swf/fRC0YxhvtfvXu7F5wTiw0DISARXIcUo+WNZjzbRrdqiuyMU0kdINclS6
-DGgUPllv8eP6rdbHPnWw7VAxLroCiLbTgcc4VadCHTQ8q7iO5g4UAAt7GF9e+/b7
-77fxEoYnUioiTchIRtFIX3mPK4v68L/StS302zWzBAp9SzaWae1gQ2Ud81yziVw0
-Upcds7jfVzJZo2VRsls+1TbHoS+dZwSOjSMMLDi/rT86/GFKffmJnO6jGCB5Q+VM
-M1f2diC81YMoMVu3gWQwWo+ywWrowzzZfLf1GN8OAx1zcUroi6u1Xo8NKxNfe7lN
-oRL+5rwSAg0EQTe3mzBujOaMH0wScQ==
-=TkTq
------END PGP SIGNATURE-----
-
---4uvzh3zwoqsfhh25--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
