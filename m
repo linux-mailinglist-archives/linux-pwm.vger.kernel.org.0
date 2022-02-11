@@ -2,149 +2,167 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E91F24B1CAA
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Feb 2022 03:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C27ED4B1CCD
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Feb 2022 04:07:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347601AbiBKCiO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Feb 2022 21:38:14 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59744 "EHLO
+        id S235301AbiBKDGy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Feb 2022 22:06:54 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347581AbiBKCiL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Feb 2022 21:38:11 -0500
-X-Greylist: delayed 157786 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Feb 2022 18:38:10 PST
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9391355A0
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Feb 2022 18:38:10 -0800 (PST)
-X-QQ-mid: bizesmtp35t1644547068t7uhb17w
-Received: from localhost.localdomain (unknown [123.114.60.34])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 11 Feb 2022 10:37:46 +0800 (CST)
-X-QQ-SSF: 01400000000000B0L000000A0000000
-X-QQ-FEAT: ssdqv2V8ieI4r0S/p/YIMoSud1356wu151e25RfpCyjzft2pptpo8AIv5mrI4
-        Sz02K8iYTa8le6LOEpsZDZ4D68OqmW1R+ji4QFcTTcMOwgyou/aJtEJdMYQkBvNuIEZEfQ4
-        JBH8JtMoiX3Ty12FxOMHQoV4I/cpNxYCvFfr5lCrhGYHr2QBSBxRTW7pXNd/1OlXRTXLifR
-        DOmy8sC8Bt/lwoFA1FHSULOrmbWX/cQRiG5hLK1UFMvwv3UuT3IdHAxMRcvG0Ux0vulkGDx
-        NvcrA45edZnwni8P50Eto5c4WKfZaDkWNSrJJGSrxM5qVcDgEv7wqWVUj1hQ6srF2k3MI5C
-        MXucQWSbw/f7uz/6OAh8OZJBdkp4w==
-X-QQ-GoodBg: 1
-From:   zhaoxiao <zhaoxiao@uniontech.com>
-To:     thierry.reding@gmail.com, lee.jones@linaro.org
-Cc:     u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhaoxiao <zhaoxiao@uniontech.com>
-Subject: [PATCH v2] pwm: vt8500: Rename variable pointing to driver private data
-Date:   Fri, 11 Feb 2022 10:37:41 +0800
-Message-Id: <20220211023741.24061-1-zhaoxiao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S232948AbiBKDGl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Feb 2022 22:06:41 -0500
+Received: from 189.cn (ptr.189.cn [183.61.185.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A8622647;
+        Thu, 10 Feb 2022 19:06:40 -0800 (PST)
+HMM_SOURCE_IP: 10.64.8.31:49220.1910361997
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-123.150.8.42 (unknown [10.64.8.31])
+        by 189.cn (HERMES) with SMTP id 99CBF1002B4;
+        Fri, 11 Feb 2022 11:06:36 +0800 (CST)
+Received: from  ([123.150.8.42])
+        by gateway-153622-dep-749df8664c-cv9r2 with ESMTP id 4ae6a8bd32514b71bf2478f1bf333233 for u.kleine-koenig@pengutronix.de;
+        Fri, 11 Feb 2022 11:06:38 CST
+X-Transaction-ID: 4ae6a8bd32514b71bf2478f1bf333233
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+Message-ID: <6acc4f74-31a1-75b2-f7e8-610aac7b0ec8@189.cn>
+Date:   Fri, 11 Feb 2022 11:06:33 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] staging: greybus: introduce pwm_ops::apply
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <1644483902-9200-1-git-send-email-chensong_2000@189.cn>
+ <20220210100342.q2t4ykgyymjzr3fj@pengutronix.de>
+From:   Song Chen <chensong_2000@189.cn>
+In-Reply-To: <20220210100342.q2t4ykgyymjzr3fj@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybgforeign:qybgforeign5
-X-QQ-Bgrelay: 1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Status quo is that variables of type struct vt8500_chip * are named
-"vt8500", "chip". Because usually only struct pwm_device * variables
-are named "pwm" and "chip" is usually used for variabled of type
-struct pwm_chip *.
-
-So consistently use the same and non-conflicting name "vt8500".
-
-Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
----
- v2: Rename the "chip" to "vt8500" for variable of type struct vt8500_chip *.
- drivers/pwm/pwm-vt8500.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
-index 7170a315535b..f1ff9940b37c 100644
---- a/drivers/pwm/pwm-vt8500.c
-+++ b/drivers/pwm/pwm-vt8500.c
-@@ -235,7 +235,7 @@ MODULE_DEVICE_TABLE(of, vt8500_pwm_dt_ids);
- 
- static int vt8500_pwm_probe(struct platform_device *pdev)
- {
--	struct vt8500_chip *chip;
-+	struct vt8500_chip *vt8500;
- 	struct device_node *np = pdev->dev.of_node;
- 	int ret;
- 
-@@ -244,48 +244,48 @@ static int vt8500_pwm_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
--	if (chip == NULL)
-+	vt8500 = devm_kzalloc(&pdev->dev, sizeof(*vt8500), GFP_KERNEL);
-+	if (vt8500 == NULL)
- 		return -ENOMEM;
- 
--	chip->chip.dev = &pdev->dev;
--	chip->chip.ops = &vt8500_pwm_ops;
--	chip->chip.npwm = VT8500_NR_PWMS;
-+	vt8500->chip.dev = &pdev->dev;
-+	vt8500->chip.ops = &vt8500_pwm_ops;
-+	vt8500->chip.npwm = VT8500_NR_PWMS;
- 
--	chip->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(chip->clk)) {
-+	vt8500->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(vt8500->clk)) {
- 		dev_err(&pdev->dev, "clock source not specified\n");
--		return PTR_ERR(chip->clk);
-+		return PTR_ERR(vt8500->clk);
- 	}
- 
--	chip->base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(chip->base))
--		return PTR_ERR(chip->base);
-+	vt8500->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(vt8500->base))
-+		return PTR_ERR(vt8500->base);
- 
--	ret = clk_prepare(chip->clk);
-+	ret = clk_prepare(vt8500->clk);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to prepare clock\n");
- 		return ret;
- 	}
- 
--	ret = pwmchip_add(&chip->chip);
-+	ret = pwmchip_add(&vt8500->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to add PWM chip\n");
--		clk_unprepare(chip->clk);
-+		clk_unprepare(vt8500->clk);
- 		return ret;
- 	}
- 
--	platform_set_drvdata(pdev, chip);
-+	platform_set_drvdata(pdev, vt8500);
- 	return ret;
- }
- 
- static int vt8500_pwm_remove(struct platform_device *pdev)
- {
--	struct vt8500_chip *chip = platform_get_drvdata(pdev);
-+	struct vt8500_chip *vt8500 = platform_get_drvdata(pdev);
- 
--	pwmchip_remove(&chip->chip);
-+	pwmchip_remove(&vt8500->chip);
- 
--	clk_unprepare(chip->clk);
-+	clk_unprepare(vt8500->clk);
- 
- 	return 0;
- }
--- 
-2.20.1
 
 
+在 2022/2/10 18:03, Uwe Kleine-König 写道:
+> On Thu, Feb 10, 2022 at 05:05:02PM +0800, Song Chen wrote:
+>> Introduce apply in pwm_ops to replace legacy operations,
+>> like enable, disable, config and set_polarity.
+>>
+>> Signed-off-by: Song Chen <chensong_2000@189.cn>
+>> ---
+>>   drivers/staging/greybus/pwm.c | 46 +++++++++++++++--------------------
+>>   1 file changed, 19 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+>> index 891a6a672378..e1889cf979b2 100644
+>> --- a/drivers/staging/greybus/pwm.c
+>> +++ b/drivers/staging/greybus/pwm.c
+>> @@ -204,43 +204,35 @@ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>>   	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
+>>   }
+>>   
+>> -static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>> -			 int duty_ns, int period_ns)
+>> -{
+>> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+>> -
+>> -	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
+>> -};
+>> -
+>> -static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+>> -			       enum pwm_polarity polarity)
+>> +static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +			const struct pwm_state *state)
+>>   {
+>> +	int ret;
+>>   	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+>>   
+>> -	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
+>> -};
+>> -
+>> -static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+>> -{
+>> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+>> +	/* set period and duty cycle*/
+>> +	ret = gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle, state->period);
+> 
+> gb_pwm_config_operation's 3rd parameter is an u32, so you're loosing
+> bits here as state->duty_cycle is a u64. Ditto for period.
 
+originally, pwm_apply_state --> pwm_apply_legacy --> gb_pwm_config --> 
+gb_pwm_config_operation is also loosing bits, does it mean greybus can 
+live with that?
+
+Or redefine gb_pwm_config_request, switch duty and period to __le64?
+
+> 
+> Also it would be nice if you go from
+> 
+> 	.duty_cycle = A, .period = B, .enabled = 1
+> 
+> to
+> 
+> 	.duty_cycle = C, .period = D, .enabled = 0
+> 
+> that C/D wasn't visible on the output pin. So please disable earlier
+> (but keep enable at the end).
+
+sorry, i don't quite understand this part, but is below code looking 
+good to you?
+
+static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+			const struct pwm_state *state)
+{
+	int err;
+	bool enabled = pwm->state.enabled;
+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+
+	/* set polarity */
+	if (state->polarity != pwm->state.polarity) {
+		if (enabled) {
+			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+			enabled = false;
+		}
+		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
+		if (err)
+			return err;
+	}
+
+	if (!state->enabled) {
+		if (enabled)
+			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+		return 0;
+	}
+
+	/* set period and duty cycle*/
+	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle, 
+state->period);
+	if (err)
+		return err;
+
+	/* enable/disable */
+	if (!enabled)
+		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+
+	return 0;
+}
+
+> 
+> Best regards
+> Uwe
+> 
