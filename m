@@ -2,208 +2,125 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8684B1F98
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Feb 2022 08:49:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 405964B207F
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Feb 2022 09:46:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347818AbiBKHtI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 11 Feb 2022 02:49:08 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54688 "EHLO
+        id S238142AbiBKIqH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 11 Feb 2022 03:46:07 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbiBKHtH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Feb 2022 02:49:07 -0500
-Received: from 189.cn (ptr.189.cn [183.61.185.102])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3DF02B34;
-        Thu, 10 Feb 2022 23:49:05 -0800 (PST)
-HMM_SOURCE_IP: 10.64.8.41:55972.1094766472
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-123.150.8.42 (unknown [10.64.8.41])
-        by 189.cn (HERMES) with SMTP id 42DA81002BB;
-        Fri, 11 Feb 2022 15:48:54 +0800 (CST)
-Received: from  ([123.150.8.42])
-        by gateway-153622-dep-749df8664c-mvcg4 with ESMTP id 819b285c682142cca55d4309680e17f0 for u.kleine-koenig@pengutronix.de;
-        Fri, 11 Feb 2022 15:49:04 CST
-X-Transaction-ID: 819b285c682142cca55d4309680e17f0
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 123.150.8.42
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-Message-ID: <2a74f279-9fed-ac3e-da7d-521b3197c321@189.cn>
-Date:   Fri, 11 Feb 2022 15:48:53 +0800
+        with ESMTP id S1348119AbiBKIqD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Feb 2022 03:46:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4FA86E6B
+        for <linux-pwm@vger.kernel.org>; Fri, 11 Feb 2022 00:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644569162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yhiejNdZNc9V7Q57Z4FGfEE9W4EtgIkRByXMCdx4jhQ=;
+        b=QQthY9Z01DtZyRfq6+MV1tFj/6MbscuxBuhbgOWM8w/ZiGe/m9zReSgRVTLwC/NPLlFOfM
+        5+xekPTz/wgx/zILbFfbkPoFob+ZpNobNOUBIcRUE5AKXidLc+DHubGU8hduT+UH2fh3Xd
+        XPwOQ/EjrU0hq3421jODK8WekWoAN8A=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-160-Hlv9em7mNymlsnYbbWD7Qg-1; Fri, 11 Feb 2022 03:45:55 -0500
+X-MC-Unique: Hlv9em7mNymlsnYbbWD7Qg-1
+Received: by mail-wm1-f71.google.com with SMTP id p24-20020a05600c1d9800b0037be98d03a1so5008655wms.0
+        for <linux-pwm@vger.kernel.org>; Fri, 11 Feb 2022 00:45:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=yhiejNdZNc9V7Q57Z4FGfEE9W4EtgIkRByXMCdx4jhQ=;
+        b=DkrG6/1kbiRwihE29ocYOkT/aDQKGWpg/kKMYyXfodk0JtmUTnF5nGeJvts8453dTV
+         almCvt4TcN475fevuXWoFl/ZjCzD/PVfyjTjYLy0LYRAMSptN2h8k7n3Qdl45/XQ7Y9E
+         r7DlH8+nVSP7BEYshvRHo+ny5MkB+7laRpFPnuvI81V2VNwP9frmy3avOWDZU5+QHvYO
+         wEAFe0y+abR6MCpLTIMfyaM70OTUze2bbfCPAL3dtN3bq7va62eRhL71kxBUfUJ55DJW
+         owVmTU1qxuoZXFod/fbS8GtJHg+/lFg0G0aBh3y3Hoi45CVrqXHes/HGHTJM+Xj3EZTm
+         kz2Q==
+X-Gm-Message-State: AOAM531PMQgs7xTuXpuU8eWEViV6vC6mYA16EBFVx54KiVXQLy1lYPew
+        nVs8YxlHdImeinShuG+LcgJ+hCBAj5DLAzuXQmOk6h1wDq45MsyVZFCUdaFkxUlaaql4XsuxYpv
+        HpzwPc+yWJysWBUSVAFcJ
+X-Received: by 2002:adf:edc9:: with SMTP id v9mr470919wro.135.1644569154550;
+        Fri, 11 Feb 2022 00:45:54 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJydD7roXdtXZjQWp72Wo5fcJQ6eNKNYHlSPNx2dupK8zLBlB9eyylPxhSvKDBOJgfjPqx/X3w==
+X-Received: by 2002:adf:edc9:: with SMTP id v9mr470898wro.135.1644569154333;
+        Fri, 11 Feb 2022 00:45:54 -0800 (PST)
+Received: from [192.168.1.102] ([92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id az21sm3460772wmb.11.2022.02.11.00.45.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Feb 2022 00:45:53 -0800 (PST)
+Message-ID: <9ee28446-2dda-7015-1a0a-44dc8385002e@redhat.com>
+Date:   Fri, 11 Feb 2022 09:45:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] staging: greybus: introduce pwm_ops::apply
+Subject: Re: [PATCH v3 0/7] drm: Add driver for Solomon SSD130X OLED displays
 Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, lee.jones@linaro.org,
-        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <1644483902-9200-1-git-send-email-chensong_2000@189.cn>
- <20220210100342.q2t4ykgyymjzr3fj@pengutronix.de>
- <6acc4f74-31a1-75b2-f7e8-610aac7b0ec8@189.cn>
- <20220211071601.4rpfbkit6c6dre2o@pengutronix.de>
-From:   Song Chen <chensong_2000@189.cn>
-In-Reply-To: <20220211071601.4rpfbkit6c6dre2o@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+References: <20220209090314.2511959-1-javierm@redhat.com>
+ <CAMuHMdVs750iE=kP1vabwgsGOb8sHc8aC5k=HwCU32CURnYktw@mail.gmail.com>
+ <58ebacd2-d44d-c7e9-e752-de7815dd4cc1@redhat.com>
+In-Reply-To: <58ebacd2-d44d-c7e9-e752-de7815dd4cc1@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Uwe,
+On 2/9/22 13:37, Javier Martinez Canillas wrote:
 
-Thanks for the explain, now i can understand it better.
-
-So, if redefining period and duty as u64 in gb_pwm_config_request is an 
-acceptable solution, i will send patch v2.
-
-BR
-
-Song
-
-在 2022/2/11 15:16, Uwe Kleine-König 写道:
-> Hello ,
-> 
-> On Fri, Feb 11, 2022 at 11:06:33AM +0800, Song Chen wrote:
->> 在 2022/2/10 18:03, Uwe Kleine-König 写道:
->>> On Thu, Feb 10, 2022 at 05:05:02PM +0800, Song Chen wrote:
->>>> Introduce apply in pwm_ops to replace legacy operations,
->>>> like enable, disable, config and set_polarity.
->>>>
->>>> Signed-off-by: Song Chen <chensong_2000@189.cn>
->>>> ---
->>>>    drivers/staging/greybus/pwm.c | 46 +++++++++++++++--------------------
->>>>    1 file changed, 19 insertions(+), 27 deletions(-)
->>>>
->>>> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
->>>> index 891a6a672378..e1889cf979b2 100644
->>>> --- a/drivers/staging/greybus/pwm.c
->>>> +++ b/drivers/staging/greybus/pwm.c
->>>> @@ -204,43 +204,35 @@ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
->>>>    	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
->>>>    }
->>>> -static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->>>> -			 int duty_ns, int period_ns)
->>>> -{
->>>> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
->>>> -
->>>> -	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
->>>> -};
->>>> -
->>>> -static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
->>>> -			       enum pwm_polarity polarity)
->>>> +static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>>> +			const struct pwm_state *state)
->>>>    {
->>>> +	int ret;
->>>>    	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
->>>> -	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
->>>> -};
->>>> -
->>>> -static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->>>> -{
->>>> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
->>>> +	/* set period and duty cycle*/
->>>> +	ret = gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle, state->period);
->>>
->>> gb_pwm_config_operation's 3rd parameter is an u32, so you're loosing
->>> bits here as state->duty_cycle is a u64. Ditto for period.
->>
->> originally, pwm_apply_state --> pwm_apply_legacy --> gb_pwm_config -->
->> gb_pwm_config_operation is also loosing bits, does it mean greybus can live
->> with that?
-> 
-> This is true, I tried to address that, but Thierry had concerns.
-> (https://lore.kernel.org/all/20210312212119.1342666-1-u.kleine-koenig@pengutronix.de/
-> was the patch I suggested.)
-> 
->> Or redefine gb_pwm_config_request, switch duty and period to __le64?
-> 
-> Don't use __le64, this is only for representing (little endian) register
-> values. u64 would be the right one.
-> 
->>> Also it would be nice if you go from
->>>
->>> 	.duty_cycle = A, .period = B, .enabled = 1
->>>
->>> to
->>>
->>> 	.duty_cycle = C, .period = D, .enabled = 0
->>>
->>> that C/D wasn't visible on the output pin. So please disable earlier
->>> (but keep enable at the end).
->>
->> sorry, i don't quite understand this part,
-> 
-> To reexplain: If your hardware is configured for
-> 
-> 	.duty_cycle = A, .period = B, .enabled = 1
-> 
-> and pwm_apply is called with
-> 
-> 	.duty_cycle = C, .period = D, .enabled = 0
-> 
-> you configured the registers for .duty_cycle and .period first and only
-> then disable the PWM. This usually results in glitches because the
-> hardware shortly runs with
-> 
-> 	.duty_cycle = C, .period = D, .enabled = 1
-> 
-> . So the idea is, to disable before configuring duty and period if the
-> eventual goal is a disabled state.
-
-understood, thanks.
+[snip]
 
 > 
->> but is below code looking good to
->> you?
+>> There is still an issue with the cursor, though.
+>> After doing "echo hello > /dev/tty0", the text appears, but the cursor
+>> is gone. "clear > /dev/tty0" brings it back.
 >>
->> static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->> 			const struct pwm_state *state)
->> {
->> 	int err;
->> 	bool enabled = pwm->state.enabled;
->> 	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
->>
->> 	/* set polarity */
->> 	if (state->polarity != pwm->state.polarity) {
->> 		if (enabled) {
->> 			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
->> 			enabled = false;
->> 		}
->> 		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
->> 		if (err)
->> 			return err;
->> 	}
->>
->> 	if (!state->enabled) {
->> 		if (enabled)
->> 			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
->> 		return 0;
->> 	}
->>
->> 	/* set period and duty cycle*/
->> 	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, state->duty_cycle, state->period);
->> 	if (err)
->> 		return err;
->>
->> 	/* enable/disable */
->> 	if (!enabled)
->> 		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
->>
->> 	return 0;
->> }
 > 
-> This looks good.
-> 
-> Best regards
-> Uwe
-> 
+> Hmm, I was able to reproduce this too. Thanks for pointing it out,
+> I'll investigate what the problem is.
+>
+
+I still didn't have time to dig on this for v4. But I think that the
+driver works well enough to be merged and we can then fix the issues
+that are still present in the fbdev emulation and fbcon interaction
+as a follow-up.
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Linux Engineering
+Red Hat
+
