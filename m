@@ -2,115 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D4184B34DA
-	for <lists+linux-pwm@lfdr.de>; Sat, 12 Feb 2022 13:00:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD7CD4B34D2
+	for <lists+linux-pwm@lfdr.de>; Sat, 12 Feb 2022 13:00:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbiBLMAu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 12 Feb 2022 07:00:50 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52416 "EHLO
+        id S234330AbiBLMAH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 12 Feb 2022 07:00:07 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234711AbiBLMAu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 12 Feb 2022 07:00:50 -0500
-X-Greylist: delayed 366 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 12 Feb 2022 04:00:47 PST
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491082613A
-        for <linux-pwm@vger.kernel.org>; Sat, 12 Feb 2022 04:00:47 -0800 (PST)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id BB8191C0B7A; Sat, 12 Feb 2022 12:54:39 +0100 (CET)
-Date:   Sat, 12 Feb 2022 12:54:38 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        sven@svenschwermer.de, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-        robh+dt@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        post@lespocky.de
-Subject: Re: [PATCH v3 1/2] dt-bindings: leds: Add multicolor PWM LED bindings
-Message-ID: <20220212115438.GG20866@duo.ucw.cz>
-References: <20220126104844.246068-1-sven@svenschwermer.de>
- <20220126104844.246068-2-sven@svenschwermer.de>
- <00d8de09-360e-4e0f-1496-642ba1cbf863@gmail.com>
- <20220128213609.7a60e9fe@thinkpad>
- <09b46d05-5dd0-a585-2ca3-0bc04e613343@gmail.com>
+        with ESMTP id S234268AbiBLMAG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 12 Feb 2022 07:00:06 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD25426573
+        for <linux-pwm@vger.kernel.org>; Sat, 12 Feb 2022 04:00:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644667202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jK813oefzdJ0/6NSnx2Rn+uJkfooQvk/5JjGhJEhjG4=;
+        b=M5cSn+lbzAwUUNA3X6M13PUh/jnYhepGRkA+ttNY2lxgINVLH3yg8r2U1KUP5SwVTiqR8i
+        zL+GZdyLUpvidUzgtq+Gi93FZOgOI6qrLiUs4LHAN8HkxxXrt0nwXmXgl5ZK5Bg4z3tke6
+        V6L5+LqTQLj0LN0HN3LVnmehDhoQeCM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-489-ZhCxrvnuNFKPsFfKjbVbwQ-1; Sat, 12 Feb 2022 07:00:00 -0500
+X-MC-Unique: ZhCxrvnuNFKPsFfKjbVbwQ-1
+Received: by mail-wm1-f70.google.com with SMTP id p24-20020a05600c1d9800b0037be98d03a1so6914179wms.0
+        for <linux-pwm@vger.kernel.org>; Sat, 12 Feb 2022 04:00:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=jK813oefzdJ0/6NSnx2Rn+uJkfooQvk/5JjGhJEhjG4=;
+        b=OWNaU0lGIIVm4XObPcLIFhrW2fvuVZGDJFoNxQTNy1v5e2OjRXHZBdPOPKTMtj+O3f
+         SjkfoDU8O29cL/nEQ3/bC7ZXuqVgrdnvmgOG1qFr7LZKe+lPsMjeZP3MjYDyAJmp2VB3
+         EzeweHexulLg0do8EU1iH/DDTD8exAS1pNXKe9yNlkhCZ+ARuxtds8Vx6rKyJOkmXSio
+         fnlRv6TclPxYJYOqU5cGiRUK97V159+yUOr/vWvbdI+Y7J/TRXLIw9Kofbjd09uT5dBq
+         oNstnUjHpxGi3FUZK4cerVMEj24QrDiTlTFGj7FG7TAsU1argracBl2smsGvaZdw0JvG
+         v0TA==
+X-Gm-Message-State: AOAM533nQeg7todxzpoIepv3Kf9lSMbWZo5xE47KnXJeUoCbmoGPgP2x
+        kkF9r9MTJT3k7AtNp6g0YuaDEkNyhzmYDp+8St1K1PbQuwZrIaIe4glIcG+VvKlBzP0SNu1RS0D
+        AOg2aZJYa24CiSNELWU5O
+X-Received: by 2002:a1c:f719:: with SMTP id v25mr4009104wmh.76.1644667199563;
+        Sat, 12 Feb 2022 03:59:59 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxqcd4dGlKYOI049Do/ZHhERD6/7Hy1dVWu5MU99kNymZnm7xY+hxKOCJB2SsFLPO7HLwF65A==
+X-Received: by 2002:a1c:f719:: with SMTP id v25mr4009079wmh.76.1644667199249;
+        Sat, 12 Feb 2022 03:59:59 -0800 (PST)
+Received: from [192.168.1.102] ([92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id m6sm27501060wrw.54.2022.02.12.03.59.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 12 Feb 2022 03:59:58 -0800 (PST)
+Message-ID: <3e749d3b-a307-2c9e-be0a-2d2fc4647dd5@redhat.com>
+Date:   Sat, 12 Feb 2022 12:59:56 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
-Content-Disposition: inline
-In-Reply-To: <09b46d05-5dd0-a585-2ca3-0bc04e613343@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v5 3/6] drm: Add driver for Solomon SSD130x OLED displays
+Content-Language: en-US
+From:   Javier Martinez Canillas <javierm@redhat.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-fbdev@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        dri-devel@lists.freedesktop.org,
+        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org
+References: <20220211143358.3112958-1-javierm@redhat.com>
+ <20220211143358.3112958-4-javierm@redhat.com>
+ <YgaLGDVscXlANxcZ@smile.fi.intel.com>
+ <001ee392-d457-31e5-0087-272ef82afd12@redhat.com>
+In-Reply-To: <001ee392-d457-31e5-0087-272ef82afd12@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 2/11/22 20:19, Javier Martinez Canillas wrote:
 
---RMedoP2+Pr6Rq0N2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[snip]
 
-Hi!
+>> I would put GENMASK() directly into FIELD(), but it's up to you
+>> (and I haven't checked the use of *_MASK anyway).
+>>
+> 
+> Same. I also considered just using GENMASK() directly, but since I was
+> already reworking these, I thought that having the _MASK constant macros
+> would make the code more explicit about these being masks and what for.
+>
 
-> > > > Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologi=
-es.com>
-> > > > ---
-> > > [...]
-> > > > +
-> > > > +additionalProperties: false
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/leds/common.h>
-> > > > +
-> > > > +    rgb-led {
-> > > > +        compatible =3D "pwm-leds-multicolor";
-> > > > +
-> > > > +        multi-led {
-> > > > +          color =3D <LED_COLOR_ID_RGB>;
-> > > > +          function =3D LED_FUNCTION_INDICATOR;
-> > > > +          max-brightness =3D <65535>;
-> > >=20
-> > > It doesn't make much sense to have such a big resolution of global
-> > > multi color brightness. 255 will be sufficient.
-> >=20
-> > If the PWM supports it, why not?
-> > On Omnia the default is 255, and since it is PWM, the change from 0/255
-> > to 1/255 is much bigger then from, say, 15/255 to 16/255. So if 1/255
-> > is too bright, you are then unable to set it less bright. I think 1024
-> > or ever 65535 makes sense with PWMs.
->=20
-> With values other than 255 we will not achieve 24-bit RGB, which is one
-> problem, and the other one is non-linear brightness that can be achieved
-> with PWM. So probably we would need to add an additional note in the
-> documentation [0], saying that changing global brightness allows to
-> preserve combined LED hue only when all sub-leds are linear, and that it
-> will not be the case for PWM LEDs.
+Just to make clear, I prefer to keep the GENMASK(n, n) and *_MASK here.
 
-I have yet to see a LED that was anything but linear. If we'll want to
-match colorspace of RGB displays, we'll need to do more work. (Often,
-255/255/255 is not white with RGB LEDs, for example).
+[snip]
 
-So 16-bit pwm makes sense to me.
+>>
+>>> +	bl = devm_backlight_device_register(dev, dev_name(dev), dev, ssd130x,
+>>> +					    &ssd130xfb_bl_ops, NULL);
+>>> +	if (IS_ERR(bl))
+>>> +		return ERR_PTR(dev_err_probe(dev, PTR_ERR(bl),
+>>> +					     "Unable to register backlight device\n"));
+>>
+>> Can be consistent with this then.
+>>
+> 
+> Yes. I meant to change it everywhere but seems that one slipped it through.
+> 
+> It's not worth to send a v6 just for the changes you mentioned but I can do
+> them before pushing the patches to drm-misc (once I get ack for this patch).
+> 
+
+Another option is to post a v6 only for patch 3/6 instead of all the patch-set.
+Let me know what you prefer.
 
 Best regards,
-								Pavel
---=20
-http://www.livejournal.com/~pavelmachek
+-- 
+Javier Martinez Canillas
+Linux Engineering
+Red Hat
 
---RMedoP2+Pr6Rq0N2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYgef/gAKCRAw5/Bqldv6
-8mxaAJ9Huuordp8TZqDmLJtJHl/NWt/PIwCgvwg5KEPKBErrbU2khVMFNF0MsCc=
-=oYPN
------END PGP SIGNATURE-----
-
---RMedoP2+Pr6Rq0N2--
