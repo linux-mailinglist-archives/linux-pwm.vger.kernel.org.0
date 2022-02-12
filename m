@@ -2,140 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD7CD4B34D2
-	for <lists+linux-pwm@lfdr.de>; Sat, 12 Feb 2022 13:00:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D102A4B3666
+	for <lists+linux-pwm@lfdr.de>; Sat, 12 Feb 2022 17:30:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234330AbiBLMAH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 12 Feb 2022 07:00:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51902 "EHLO
+        id S237264AbiBLQaX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 12 Feb 2022 11:30:23 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234268AbiBLMAG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 12 Feb 2022 07:00:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD25426573
-        for <linux-pwm@vger.kernel.org>; Sat, 12 Feb 2022 04:00:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644667202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jK813oefzdJ0/6NSnx2Rn+uJkfooQvk/5JjGhJEhjG4=;
-        b=M5cSn+lbzAwUUNA3X6M13PUh/jnYhepGRkA+ttNY2lxgINVLH3yg8r2U1KUP5SwVTiqR8i
-        zL+GZdyLUpvidUzgtq+Gi93FZOgOI6qrLiUs4LHAN8HkxxXrt0nwXmXgl5ZK5Bg4z3tke6
-        V6L5+LqTQLj0LN0HN3LVnmehDhoQeCM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-489-ZhCxrvnuNFKPsFfKjbVbwQ-1; Sat, 12 Feb 2022 07:00:00 -0500
-X-MC-Unique: ZhCxrvnuNFKPsFfKjbVbwQ-1
-Received: by mail-wm1-f70.google.com with SMTP id p24-20020a05600c1d9800b0037be98d03a1so6914179wms.0
-        for <linux-pwm@vger.kernel.org>; Sat, 12 Feb 2022 04:00:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=jK813oefzdJ0/6NSnx2Rn+uJkfooQvk/5JjGhJEhjG4=;
-        b=OWNaU0lGIIVm4XObPcLIFhrW2fvuVZGDJFoNxQTNy1v5e2OjRXHZBdPOPKTMtj+O3f
-         SjkfoDU8O29cL/nEQ3/bC7ZXuqVgrdnvmgOG1qFr7LZKe+lPsMjeZP3MjYDyAJmp2VB3
-         EzeweHexulLg0do8EU1iH/DDTD8exAS1pNXKe9yNlkhCZ+ARuxtds8Vx6rKyJOkmXSio
-         fnlRv6TclPxYJYOqU5cGiRUK97V159+yUOr/vWvbdI+Y7J/TRXLIw9Kofbjd09uT5dBq
-         oNstnUjHpxGi3FUZK4cerVMEj24QrDiTlTFGj7FG7TAsU1argracBl2smsGvaZdw0JvG
-         v0TA==
-X-Gm-Message-State: AOAM533nQeg7todxzpoIepv3Kf9lSMbWZo5xE47KnXJeUoCbmoGPgP2x
-        kkF9r9MTJT3k7AtNp6g0YuaDEkNyhzmYDp+8St1K1PbQuwZrIaIe4glIcG+VvKlBzP0SNu1RS0D
-        AOg2aZJYa24CiSNELWU5O
-X-Received: by 2002:a1c:f719:: with SMTP id v25mr4009104wmh.76.1644667199563;
-        Sat, 12 Feb 2022 03:59:59 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxqcd4dGlKYOI049Do/ZHhERD6/7Hy1dVWu5MU99kNymZnm7xY+hxKOCJB2SsFLPO7HLwF65A==
-X-Received: by 2002:a1c:f719:: with SMTP id v25mr4009079wmh.76.1644667199249;
-        Sat, 12 Feb 2022 03:59:59 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id m6sm27501060wrw.54.2022.02.12.03.59.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Feb 2022 03:59:58 -0800 (PST)
-Message-ID: <3e749d3b-a307-2c9e-be0a-2d2fc4647dd5@redhat.com>
-Date:   Sat, 12 Feb 2022 12:59:56 +0100
+        with ESMTP id S229623AbiBLQaW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 12 Feb 2022 11:30:22 -0500
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5B120E;
+        Sat, 12 Feb 2022 08:30:18 -0800 (PST)
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by box.trvn.ru (Postfix) with ESMTPSA id 22B6741943;
+        Sat, 12 Feb 2022 21:24:02 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+        t=1644683044; bh=RYG3U4X1RX8dzJiS04Tlw7Pm9vtzFCEy33FGibNApDg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GSqSqWPsMWdBhbSKO9SE3O6xHw+WuWH/4iDolmnPLmI8Y0Y9FYGcZHI3A2bYEOBap
+         q/BrvOs7mHANuppeZ01maSt1zk2rG+eTM7ufH593pmnyYfuHRhwKkOx/HTilZ/qIY3
+         y9SS2fMWUrAKBk1guVyNO+WlpHjHeJ1VMK6d1BV7btBdCnMPORrYaJDWx5hYoTZkMd
+         j454DXb7jPJE6dPcl+0+3ItXfE2jYL4rExZcA3fGVDCH4N2Iax1MBZ38WMHNkshToC
+         gl/hbot1NbqlzbqN2TECglK8WBPob8XiqZu5nLqVqfdHo4PmdLJsrht33CHO4Rt57f
+         6JsCSGUG2G9zg==
+From:   Nikita Travkin <nikita@trvn.ru>
+To:     thierry.reding@gmail.com, lee.jones@linaro.org
+Cc:     u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        sboyd@kernel.org, krzk@kernel.org, linus.walleij@linaro.org,
+        masneyb@onstation.org, sean.anderson@seco.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Nikita Travkin <nikita@trvn.ru>
+Subject: [PATCH v5 0/2] Clock based PWM output driver
+Date:   Sat, 12 Feb 2022 21:23:40 +0500
+Message-Id: <20220212162342.72646-1-nikita@trvn.ru>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v5 3/6] drm: Add driver for Solomon SSD130x OLED displays
-Content-Language: en-US
-From:   Javier Martinez Canillas <javierm@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        linux-fbdev@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        dri-devel@lists.freedesktop.org,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-pwm@vger.kernel.org
-References: <20220211143358.3112958-1-javierm@redhat.com>
- <20220211143358.3112958-4-javierm@redhat.com>
- <YgaLGDVscXlANxcZ@smile.fi.intel.com>
- <001ee392-d457-31e5-0087-272ef82afd12@redhat.com>
-In-Reply-To: <001ee392-d457-31e5-0087-272ef82afd12@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 2/11/22 20:19, Javier Martinez Canillas wrote:
+This series introduces an "adapter" driver that allows PWM consumers
+to control clock outputs with duty-cycle control.
 
-[snip]
+Some platforms (e.g. some Qualcomm chipsets) have "General Purpose"
+clocks that can be muxed to GPIO outputs and used as PWM outputs.
+Those outputs may be connected to various peripherals such as
+leds in display backlight or haptic feedback motor driver.
 
->> I would put GENMASK() directly into FIELD(), but it's up to you
->> (and I haven't checked the use of *_MASK anyway).
->>
-> 
-> Same. I also considered just using GENMASK() directly, but since I was
-> already reworking these, I thought that having the _MASK constant macros
-> would make the code more explicit about these being masks and what for.
->
+To avoid re-implementing every single PWM consumer driver with clk
+support (like in [1]) and don't put the burden of providing the PWM
+sources on the clock drivers (as was proposed in [2]), clk based
+pwm controller driver is introduced.
 
-Just to make clear, I prefer to keep the GENMASK(n, n) and *_MASK here.
+There is an existing driver that provides the opposite function
+in drivers/clk/clk-pwm.c with a compatible "pwm-clock" so the new
+driver uses the opposite naming scheme: drivers/pwm/pwm-clk.c
+and compatible "clk-pwm".
 
-[snip]
+Changes in v2:
+ - Fix filename in the DT schema.
+ - Address Uwe's review comments.
+Changes in v3:
+ - Fix node pattern in the core pwm schema.
+ - Address Uwe's review comments.
+Changes in v4:
+ - Drop the (incorrect) pwm schema change.
+ - Use generic node name in the dt bindings example.
+Changes in v5:
+ - Correct required properties.
+ - add missed returns.
 
->>
->>> +	bl = devm_backlight_device_register(dev, dev_name(dev), dev, ssd130x,
->>> +					    &ssd130xfb_bl_ops, NULL);
->>> +	if (IS_ERR(bl))
->>> +		return ERR_PTR(dev_err_probe(dev, PTR_ERR(bl),
->>> +					     "Unable to register backlight device\n"));
->>
->> Can be consistent with this then.
->>
-> 
-> Yes. I meant to change it everywhere but seems that one slipped it through.
-> 
-> It's not worth to send a v6 just for the changes you mentioned but I can do
-> them before pushing the patches to drm-misc (once I get ack for this patch).
-> 
+Nikita Travkin (2):
+  dt-bindings: pwm: Document clk based PWM controller
+  pwm: Add clock based PWM output driver
 
-Another option is to post a v6 only for patch 3/6 instead of all the patch-set.
-Let me know what you prefer.
+ .../devicetree/bindings/pwm/clk-pwm.yaml      |  46 ++++++
+ drivers/pwm/Kconfig                           |  10 ++
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-clk.c                         | 139 ++++++++++++++++++
+ 4 files changed, 196 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/clk-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-clk.c
 
-Best regards,
 -- 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
+2.34.1
 
