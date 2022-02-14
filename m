@@ -2,73 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9309C4B5259
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 14:57:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5E4B4B52A2
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 15:02:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354797AbiBNN5v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 08:57:51 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37588 "EHLO
+        id S1354817AbiBNOB7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 09:01:59 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354666AbiBNN5W (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 08:57:22 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3197C4A90B;
-        Mon, 14 Feb 2022 05:57:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1644847029; x=1676383029;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MUwu9Fdq/MRDAHV6UL3afCTA6/6dxR2I/gfuI0/01w0=;
-  b=WmQHAx+COFzzHioV+l5+6P6XvNaC9cb1e+KnDS4oQyJC40mWGONOPhkn
-   4ut2Np2fRbmr/UIFS1uLbX6unAn8gbebD7quu+AxXdqvnXSQFmA4G3l/r
-   9JqeJlFAB2RM/NEGIgDvbNeXVNyfALBWQOgo+uz41Fwr1HZWRJY14Sq9O
-   4+P3yUwV1x1sA7RYN1wrj8zAquvt3SZIPXrL0TcsB7aJ1QXZNCGvZiApc
-   l5gxAaQt7BLtJ8Ch2YzgJ5r0LL1sV/blTTpj7uvzD72NyXifXYgCnFKUZ
-   LCpc8nURzSV0EmrrndMsuIY/ou9GEXnWhGjvcH2p4pahZ9GrxJk3v3NzS
-   Q==;
-IronPort-SDR: kdqWLspQOOwf9G7rdt6GXhstA0tSrtetAQSQuUrB+kVWOTXjZ1u4sreZnGJiur6ujtgNfNlRWO
- ylnJnPTm8+Rj8P/JZ+VrZlCPwryivA9NBVMi17O/ZDaXZCssECByaiB/KhUb+wydCiekXzb1fh
- oR6zXRx1+NdZrvDMfCqXTb6g8s+ApLr8e5PloqnFMvlC7fKHXZLKqRm6vC1EpKqgHH7rJWSjPP
- wLmS46L8/NtCIzQHPeFEIp/BnLi/Gs4OzsUzuTuPnGA7b4gDgmnrtPVYNb/hKxFsqLwu23eTXt
- kpN2CztfMqj/piID4UfB5nY4
-X-IronPort-AV: E=Sophos;i="5.88,368,1635231600"; 
-   d="scan'208";a="152982610"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Feb 2022 06:57:08 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 14 Feb 2022 06:57:07 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Mon, 14 Feb 2022 06:57:02 -0700
-From:   <conor.dooley@microchip.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
-        <jassisinghbrar@gmail.com>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <lee.jones@linaro.org>,
-        <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <geert@linux-m68k.org>,
-        <krzysztof.kozlowski@canonical.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-CC:     <lewis.hanly@microchip.com>, <conor.dooley@microchip.com>,
-        <daire.mcnamara@microchip.com>, <ivan.griffin@microchip.com>,
-        <atishp@rivosinc.com>, Palmer Dabbelt <palmer@rivosinc.com>
-Subject: [PATCH v7 11/11] MAINTAINERS: update riscv/microchip entry
-Date:   Mon, 14 Feb 2022 13:58:41 +0000
-Message-ID: <20220214135840.168236-12-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220214135840.168236-1-conor.dooley@microchip.com>
-References: <20220214135840.168236-1-conor.dooley@microchip.com>
+        with ESMTP id S1354805AbiBNOB6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 09:01:58 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8488BCBF
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 06:01:50 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJbu2-0007Aw-Jd; Mon, 14 Feb 2022 15:00:30 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJbu1-00GYgZ-R1; Mon, 14 Feb 2022 15:00:29 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJbu0-0038OM-4h; Mon, 14 Feb 2022 15:00:28 +0100
+Date:   Mon, 14 Feb 2022 15:00:27 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, kvm@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-phy@lists.infradead.org,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Eric Auger <eric.auger@redhat.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        openipmi-developer@lists.sourceforge.net,
+        Jaroslav Kysela <perex@perex.cz>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Brian Norris <computersforpeace@gmail.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] platform: make platform_get_irq_optional()
+ optional
+Message-ID: <20220214140027.npw6ddrxklarb6wp@pengutronix.de>
+References: <20220212201631.12648-1-s.shtylyov@omp.ru>
+ <20220212201631.12648-2-s.shtylyov@omp.ru>
+ <20220214071351.pcvstrzkwqyrg536@pengutronix.de>
+ <CAMuHMdWi8gno_FBbc=AwsdRtDJik8_bANjQrrRtUOOBRjFN=KA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mxy3a336cmbyaspi"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWi8gno_FBbc=AwsdRtDJik8_bANjQrrRtUOOBRjFN=KA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,33 +110,51 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-Update the RISC-V/Microchip entry by adding the microchip dts
-directory and myself as maintainer
+--mxy3a336cmbyaspi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Lewis Hanly <lewis.hanly@microchip.com>
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Hello Geert,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ea3e6c914384..779a550dc95b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16575,8 +16575,10 @@ K:	riscv
- 
- RISC-V/MICROCHIP POLARFIRE SOC SUPPORT
- M:	Lewis Hanly <lewis.hanly@microchip.com>
-+M:	Conor Dooley <conor.dooley@microchip.com>
- L:	linux-riscv@lists.infradead.org
- S:	Supported
-+F:	arch/riscv/boot/dts/microchip/
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/soc/microchip/
- F:	include/soc/microchip/mpfs.h
--- 
-2.35.1
+On Mon, Feb 14, 2022 at 10:01:14AM +0100, Geert Uytterhoeven wrote:
+> Also IMHO, the dummy value handling is a red herring.  Contrary to
+> optional clocks and resets, a missing optional interrupt does not
+> always mean there is nothing to do: in case of polling, something
+> else must definitely be done.=20
 
+Note this is exactly why I don't like this change. I'd even go so far
+and claim that "a missing optional interrupt hardly ever means there is
+nothing to do".
+
+> So even if request_irq() would accept a dummy interrupt zero and just
+> do nothing, it would give the false impression that that is all there
+> is to do, while an actual check for zero with polling code handling
+> may still need to be present, thus leading to more not less bugs.
+
+Yes, a dummy irq value will just not be possible.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mxy3a336cmbyaspi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKYHgACgkQwfwUeK3K
+7AkfUwf+PjHT71nPQKjE5hOrUJs08gV3dPyFE+Lky6h3jHjtzp+VwX3waHB3n4Iy
+r1fdR+06wiK9BWaTD2PdT8FdEYo9n0yQlTx+03PQXtLFnutK7QSb0fBMQs7sVAfa
+nxp4CK8a1wlf0mzj1zSaeiGm6BYTsoJxoblrZ8hWbpbiVfhF6Eo5zXr0toHMI0WF
+QOhqgWNpQjHlpU+2paIvbOnBpNxJaXj3cycd6036NHAFQvZN5xrDdqHa+By0jeU0
+bm8NmjRjwHCqvhBpRYUglt+KhyRYWWTC/83WFKviLwnPV7tnkh5ZhJE50aUUp1Lr
+hyNbZjQKG8NIOTLNKMgY4nM0uni8jg==
+=vr2/
+-----END PGP SIGNATURE-----
+
+--mxy3a336cmbyaspi--
