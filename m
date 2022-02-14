@@ -2,46 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23A524B59FD
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 19:35:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 052874B5A28
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 19:45:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357499AbiBNSfO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 13:35:14 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41566 "EHLO
+        id S229602AbiBNSpb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 13:45:31 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:39142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357482AbiBNSfO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 13:35:14 -0500
+        with ESMTP id S229536AbiBNSpa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 13:45:30 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E50652E4
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 10:35:06 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 156F66E7BB
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 10:45:13 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nJgBj-0007Cd-Ad; Mon, 14 Feb 2022 19:35:03 +0100
+        id 1nJgJt-0000Dt-0j; Mon, 14 Feb 2022 19:43:29 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nJgBi-00GbF7-7e; Mon, 14 Feb 2022 19:35:01 +0100
+        id 1nJgJo-00GbG4-PO; Mon, 14 Feb 2022 19:43:24 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nJgBg-003BFG-RK; Mon, 14 Feb 2022 19:35:00 +0100
-Date:   Mon, 14 Feb 2022 19:34:57 +0100
+        id 1nJgJn-003BGl-Fa; Mon, 14 Feb 2022 19:43:23 +0100
+Date:   Mon, 14 Feb 2022 19:43:20 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] pwm: brcmstb: Some cleanups
-Message-ID: <20220214183457.fdio34lhxe2umpll@pengutronix.de>
-References: <20220214082354.295451-1-u.kleine-koenig@pengutronix.de>
- <83f9a9b2-4a01-1f98-4783-d221cc3adf4f@gmail.com>
+To:     Nikita Travkin <nikita@trvn.ru>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
+        sboyd@kernel.org, krzk@kernel.org, linus.walleij@linaro.org,
+        masneyb@onstation.org, sean.anderson@seco.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v5 2/2] pwm: Add clock based PWM output driver
+Message-ID: <20220214184320.ym36pfvozwdp5nbb@pengutronix.de>
+References: <20220212162342.72646-1-nikita@trvn.ru>
+ <20220212162342.72646-3-nikita@trvn.ru>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gb2cregpe7fmpny5"
+        protocol="application/pgp-signature"; boundary="oska7kglsa25a3vo"
 Content-Disposition: inline
-In-Reply-To: <83f9a9b2-4a01-1f98-4783-d221cc3adf4f@gmail.com>
+In-Reply-To: <20220212162342.72646-3-nikita@trvn.ru>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -56,63 +57,193 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---gb2cregpe7fmpny5
+--oska7kglsa25a3vo
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 14, 2022 at 09:18:49AM -0800, Florian Fainelli wrote:
-> On 2/14/22 12:23 AM, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > here are a few cleanups for the brcmstb PWM driver. There are a few
-> > issues left with it, that I'm not addressing for now. Just mention it in
-> > case someone wants to work on this driver:
-> >=20
-> >  - There is no .get_state() callback
-> >    (That needs to be implemented by some with hardware and
-> >    documentation)
-
-Assuming you have access to documentation, can you confirm, that the
-registers that define the PWM's behaviour are readable? If I knew that I
-could come up with an implementation for .get_state().
-
-> >  - There are a few places where an overflow can happen in
-> >    brcmstb_pwm_config() that are not handled
-> >=20
-> >  - The loop in brcmstb_pwm_config() to calculate cword is ineffective,
-> >    cword could be calculated ad hoc.
-> >=20
-> >  - I don't understand
-> >=20
-> >                 /*
-> >                  * We can be called with separate duty and period updat=
-es,
-> >                  * so do not reject dc =3D=3D 0 right away
-> >                  */
-> >                 if (pc =3D=3D PWM_PERIOD_MIN || (dc < PWM_ON_MIN && dut=
-y_ns))
-> >                         return -EINVAL;
-> >=20
-> >    The usual policy is "With the selected period, pick the biggest
-> >    possible duty_cycle that isn't bigger thatn the requested duty_cycle.
-> >    So should this case be handled using dc =3D 0 instead?
-> >    But as I don't understand the real issue here (is this about changing
-> >    period and duty at the same time?), I don't want to touch that.
+On Sat, Feb 12, 2022 at 09:23:42PM +0500, Nikita Travkin wrote:
+> Some systems have clocks exposed to external devices. If the clock
+> controller supports duty-cycle configuration, such clocks can be used as
+> pwm outputs. In fact PWM and CLK subsystems are interfaced with in a
+> similar way and an "opposite" driver already exists (clk-pwm). Add a
+> driver that would enable pwm devices to be used via clk subsystem.
 >=20
-> IIRC, I was testing using a shell script that would exercise corner
-> cases by modifying the /sys/class/pwm/*/{period,duty_cycle} separately
-> was able to run into that. Let me see if I can dig up that script.
+> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> --
+>=20
+> Changes in v2:
+>  - Address Uwe's review comments:
+>    - Round set clk rate up
+>    - Add a description with limitations of the driver
+>    - Disable and unprepare clock before removing pwmchip
+> Changes in v3:
+>  - Use 64bit version of div round up
+>  - Address Uwe's review comments:
+>    - Reword the limitations to avoid incorrect claims
+>    - Move the clk_enabled flag assignment
+>    - Drop unnecessary statements
+> Changes in v5:
+>  - add missed returns
+> ---
+>  drivers/pwm/Kconfig   |  10 +++
+>  drivers/pwm/Makefile  |   1 +
+>  drivers/pwm/pwm-clk.c | 139 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 150 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-clk.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 21e3b05a5153..daa2491a4054 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -140,6 +140,16 @@ config PWM_BRCMSTB
+>  	  To compile this driver as a module, choose M Here: the module
+>  	  will be called pwm-brcmstb.c.
+> =20
+> +config PWM_CLK
+> +	tristate "Clock based PWM support"
+> +	depends on HAVE_CLK || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for outputs that can be
+> +	  muxed to clocks.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-clk.
+> +
+>  config PWM_CLPS711X
+>  	tristate "CLPS711X PWM support"
+>  	depends on ARCH_CLPS711X || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 708840b7fba8..4a860103c470 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_PWM_BCM_KONA)	+=3D pwm-bcm-kona.o
+>  obj-$(CONFIG_PWM_BCM2835)	+=3D pwm-bcm2835.o
+>  obj-$(CONFIG_PWM_BERLIN)	+=3D pwm-berlin.o
+>  obj-$(CONFIG_PWM_BRCMSTB)	+=3D pwm-brcmstb.o
+> +obj-$(CONFIG_PWM_CLK)		+=3D pwm-clk.o
+>  obj-$(CONFIG_PWM_CLPS711X)	+=3D pwm-clps711x.o
+>  obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
+>  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
+> diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
+> new file mode 100644
+> index 000000000000..e503337ad055
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-clk.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Clock based PWM controller
+> + *
+> + * Copyright (c) 2021 Nikita Travkin <nikita@trvn.ru>
+> + *
+> + * This is an "adapter" driver that allows PWM consumers to use
+> + * system clocks with duty cycle control as PWM outputs.
+> + *
+> + * Limitations:
+> + * - Glitches are possible when new pwm state is applied.
+> + * - Due to the fact that exact behavior depends on the underlying
+> + *   clock driver, various limitations are possible.
+> + * - Period depends on the clock and, in general, not guaranteed.
 
-When you find it, it would be great to document the problem in a way
-that it's still understandable some time later.
+This sentence is broken.
 
-> Can you give me a day or two to make sure your changes work properly? I
-> need to locate a board with an exposed PWM header so I can put a scope
-> on it. Thanks!
+> + * - Underlying clock may not be able to give 0% or 100% duty cycle
+> + *   (constant off or on), exact behavior will depend on the clock.
+> + * - When the PWM is disabled, the clock will be disabled as well,
+> + *   line state will depend on the clock.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/math64.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/pwm.h>
+> +
+> +struct pwm_clk_chip {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	bool clk_enabled;
+> +};
+> +
+> +#define to_pwm_clk_chip(_chip) container_of(_chip, struct pwm_clk_chip, =
+chip)
+> +
+> +static int pwm_clk_apply(struct pwm_chip *pwm_chip, struct pwm_device *p=
+wm,
+> +			 const struct pwm_state *state)
+> +{
+> +	struct pwm_clk_chip *chip =3D to_pwm_clk_chip(pwm_chip);
+> +	int ret;
+> +	u32 rate;
+> +	u64 period =3D state->period;
+> +	u64 duty_cycle =3D state->duty_cycle;
+> +
+> +	if (!state->enabled) {
+> +		if (pwm->state.enabled) {
+> +			clk_disable(chip->clk);
+> +			chip->clk_enabled =3D false;
+> +		}
+> +		return 0;
+> +	} else if (!pwm->state.enabled) {
+> +		ret =3D clk_enable(chip->clk);
+> +		if (ret)
+> +			return ret;
+> +		chip->clk_enabled =3D true;
+> +	}
+> +
+> +	rate =3D DIV64_U64_ROUND_UP(NSEC_PER_SEC, period);
+> +	ret =3D clk_set_rate(chip->clk, rate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		duty_cycle =3D period - duty_cycle;
+> +
+> +	return clk_set_duty_cycle(chip->clk, duty_cycle, period);
+> +}
+> +
+> +static const struct pwm_ops pwm_clk_ops =3D {
+> +	.apply =3D pwm_clk_apply,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int pwm_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct pwm_clk_chip *chip;
+> +	int ret;
+> +
+> +	chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+> +	if (!chip)
+> +		return -ENOMEM;
+> +
+> +	chip->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(chip->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(chip->clk),
+> +				     "Failed to get clock\n");
+> +
+> +	chip->chip.dev =3D &pdev->dev;
+> +	chip->chip.ops =3D &pwm_clk_ops;
+> +	chip->chip.npwm =3D 1;
+> +
+> +	ret =3D clk_prepare(chip->clk);
+> +	if (ret < 0)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to prepare clock\n");
+> +
+> +	ret =3D pwmchip_add(&chip->chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to add pwm chip\n");
 
-Sure, in my experience it takes longer than two days on average until
-Thierry picks up PWM patches. Thanks for your willingness to test!
+As was already pointed out, here is some error cleanup necessary.
+
+> +	platform_set_drvdata(pdev, chip);
+> +	return 0;
+> +}
+
+Otherwise looks good.
 
 Best regards
 Uwe
@@ -121,19 +252,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---gb2cregpe7fmpny5
+--oska7kglsa25a3vo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKoM4ACgkQwfwUeK3K
-7An3wQf+Kvn4s9Tv/9oQmCJNr8INWBesU8uLZhFjSZp7Xl4IlaDiOnq6nk//Estb
-pummx4EFeBthmTLJcUpTZ1LLyOSg+n47Vd+jGqUOkLHeblIWl7jwAjLdwMLT4AxP
-eUH85JpY6x6k/3rBmtjgfA9RNfuUkwFxk6wp6DJxhEOTetfJU37BYhFsZUar03rH
-3Gv/SDdTMHmz6OcuclRpil0a+6REJwzP2WrunrsToMn8zGoXr1mU3OWGEaR1vB9p
-3+LQJFscQL3CMy1VDzNqZwyl1kSM5/hCNnylEab1qIspBRhTEos/Kqv5HFx4Wiv8
-vCYjhUHSZb2OKt7GL+UK4x6yC8gFqA==
-=aWKk
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKosUACgkQwfwUeK3K
+7AmYjgf/QyMex4Vn/8dRLpTyWsyiiXn4rHVJBG96J3lzrH5SxPAL8iZFFJeBWw21
+6Hyap0eLJnmlh/6HShJd9i8kq6Z4KYCt3WknRoD7uZlkVko6mEXMawpxj5MbCFZF
+urBUc27FGCiM1QnvegSzNtALGlC8tA5Y1hTQIAKHyqlc06RJC4DpTZ4NZWpXlOXJ
+vcaz/MEjPh/HOdcABbZPh5k0XiAdQlqPC1gElHrXEAIuhRPfrVig2Avu7/O+XHHT
+1zEUAjF7JZS0iaYz6eqSl2+ghRVzGkZJIdRWKOHh/BvHYPbOm8NJzsXKjapaRcNt
+7otd9hxkn/SNxPy4nwwt1/QyRHv0yg==
+=uPXu
 -----END PGP SIGNATURE-----
 
---gb2cregpe7fmpny5--
+--oska7kglsa25a3vo--
