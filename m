@@ -2,269 +2,144 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 052874B5A28
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 19:45:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDFD94B5A5D
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 20:05:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiBNSpb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 13:45:31 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:39142 "EHLO
+        id S230050AbiBNTEj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 14:04:39 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:50690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbiBNSpa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 13:45:30 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 156F66E7BB
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 10:45:13 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJgJt-0000Dt-0j; Mon, 14 Feb 2022 19:43:29 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJgJo-00GbG4-PO; Mon, 14 Feb 2022 19:43:24 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJgJn-003BGl-Fa; Mon, 14 Feb 2022 19:43:23 +0100
-Date:   Mon, 14 Feb 2022 19:43:20 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nikita Travkin <nikita@trvn.ru>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        sboyd@kernel.org, krzk@kernel.org, linus.walleij@linaro.org,
-        masneyb@onstation.org, sean.anderson@seco.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v5 2/2] pwm: Add clock based PWM output driver
-Message-ID: <20220214184320.ym36pfvozwdp5nbb@pengutronix.de>
-References: <20220212162342.72646-1-nikita@trvn.ru>
- <20220212162342.72646-3-nikita@trvn.ru>
+        with ESMTP id S229661AbiBNTEM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 14:04:12 -0500
+Received: from mail-oo1-xc2c.google.com (mail-oo1-xc2c.google.com [IPv6:2607:f8b0:4864:20::c2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCAEF8C49B
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 11:03:53 -0800 (PST)
+Received: by mail-oo1-xc2c.google.com with SMTP id u25-20020a4ad0d9000000b002e8d4370689so20404027oor.12
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 11:03:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gjQfj41R5KVn7YKo4DlzGShePFVyEOei8SEk/9EmLAI=;
+        b=JWxKgRZPQooVudM1lEX0C2gFiV74Mw/cJLutzo/Ym7EoOblEWnSCpVllQXBUo64G+h
+         D7RYWOINarGqASyPel6JlXdEP60GYyBbYMoCRBFdSH6ZLaxIc4bfACm70e/mwxdg4VMT
+         EL0V/AZgXDmf3Bg3/kn9+uLvH4xRJ7TleI+7onnfON9bdYi4WNp1/Y91HxRz70JIZi/m
+         QO7gHIhzpkDtWvjSmK/3Ni4bu5MGcwzRDgbvM7uqDUP9lmqOGjEMdfBf/hWyEUHPGEK7
+         0JlDu3uqgUifuGqpWPsFBdQ76Y9FSth1QXzwqkY0qLhZPjtc3FUZ70nax4tzI9tNbW3A
+         yFtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gjQfj41R5KVn7YKo4DlzGShePFVyEOei8SEk/9EmLAI=;
+        b=q1eSHP3DIFxz1Cc/U15gnroqF710MPEo6kWD6G4/Kah8WbGa58cVdDukof9oLKhNhX
+         E1F4gT6C5wsyycDjGlLWuftyAH8FOSvqX9ffpvjZ5+P/+3QyxVIfzTGLmodcVS6uJodC
+         04dvG8eBETv/z3p8j0OpS8qktCIGOgTRAc177Bk8rw3EiLlWo630xVwRYUMUl83l7nIN
+         3eR6DqyJ+eQ2DtvPuCjGDFdUqbV+RXSk673pAo9sp2BoQCkdMB+e2Bx/5nKUpQ+RC7pb
+         UgIejMpZAvN228rNiMgRrGQeZn06LOJ2iqEW91BmKZGSMY3lgqs+dq5cbBEYsYc9qwiW
+         Ib9Q==
+X-Gm-Message-State: AOAM5306Lq7FYheArApjjKFHstqExRCHM6d65ZnNrvgm7Jp9gnGJO6d2
+        MNrWob/idGAjOEvM/6pGdZxxRuyYStI=
+X-Google-Smtp-Source: ABdhPJykSq61dMPnIx945LOJUTiawPCDARsPuq8KCRDCM2TCPHZWpGJlmBA2U7jcXo5fXrq7tSBQOw==
+X-Received: by 2002:a17:90a:8804:: with SMTP id s4mr52873pjn.129.1644864688136;
+        Mon, 14 Feb 2022 10:51:28 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id 6sm275948pgx.36.2022.02.14.10.51.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Feb 2022 10:51:27 -0800 (PST)
+Subject: Re: [PATCH 0/2] pwm: brcmstb: Some cleanups
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org
+References: <20220214082354.295451-1-u.kleine-koenig@pengutronix.de>
+ <83f9a9b2-4a01-1f98-4783-d221cc3adf4f@gmail.com>
+ <20220214183457.fdio34lhxe2umpll@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <ed40ee0d-d4ed-5995-5933-0d4ae0115b39@gmail.com>
+Date:   Mon, 14 Feb 2022 10:51:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oska7kglsa25a3vo"
-Content-Disposition: inline
-In-Reply-To: <20220212162342.72646-3-nikita@trvn.ru>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220214183457.fdio34lhxe2umpll@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 2/14/22 10:34 AM, Uwe Kleine-König wrote:
+> On Mon, Feb 14, 2022 at 09:18:49AM -0800, Florian Fainelli wrote:
+>> On 2/14/22 12:23 AM, Uwe Kleine-König wrote:
+>>> Hello,
+>>>
+>>> here are a few cleanups for the brcmstb PWM driver. There are a few
+>>> issues left with it, that I'm not addressing for now. Just mention it in
+>>> case someone wants to work on this driver:
+>>>
+>>>  - There is no .get_state() callback
+>>>    (That needs to be implemented by some with hardware and
+>>>    documentation)
+> 
+> Assuming you have access to documentation, can you confirm, that the
+> registers that define the PWM's behaviour are readable? If I knew that I
+> could come up with an implementation for .get_state().
 
---oska7kglsa25a3vo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, the registers are read/write with no side effects, so this is going
+to be working.
 
-On Sat, Feb 12, 2022 at 09:23:42PM +0500, Nikita Travkin wrote:
-> Some systems have clocks exposed to external devices. If the clock
-> controller supports duty-cycle configuration, such clocks can be used as
-> pwm outputs. In fact PWM and CLK subsystems are interfaced with in a
-> similar way and an "opposite" driver already exists (clk-pwm). Add a
-> driver that would enable pwm devices to be used via clk subsystem.
->=20
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> --
->=20
-> Changes in v2:
->  - Address Uwe's review comments:
->    - Round set clk rate up
->    - Add a description with limitations of the driver
->    - Disable and unprepare clock before removing pwmchip
-> Changes in v3:
->  - Use 64bit version of div round up
->  - Address Uwe's review comments:
->    - Reword the limitations to avoid incorrect claims
->    - Move the clk_enabled flag assignment
->    - Drop unnecessary statements
-> Changes in v5:
->  - add missed returns
-> ---
->  drivers/pwm/Kconfig   |  10 +++
->  drivers/pwm/Makefile  |   1 +
->  drivers/pwm/pwm-clk.c | 139 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 drivers/pwm/pwm-clk.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 21e3b05a5153..daa2491a4054 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -140,6 +140,16 @@ config PWM_BRCMSTB
->  	  To compile this driver as a module, choose M Here: the module
->  	  will be called pwm-brcmstb.c.
-> =20
-> +config PWM_CLK
-> +	tristate "Clock based PWM support"
-> +	depends on HAVE_CLK || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for outputs that can be
-> +	  muxed to clocks.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-clk.
-> +
->  config PWM_CLPS711X
->  	tristate "CLPS711X PWM support"
->  	depends on ARCH_CLPS711X || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 708840b7fba8..4a860103c470 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -10,6 +10,7 @@ obj-$(CONFIG_PWM_BCM_KONA)	+=3D pwm-bcm-kona.o
->  obj-$(CONFIG_PWM_BCM2835)	+=3D pwm-bcm2835.o
->  obj-$(CONFIG_PWM_BERLIN)	+=3D pwm-berlin.o
->  obj-$(CONFIG_PWM_BRCMSTB)	+=3D pwm-brcmstb.o
-> +obj-$(CONFIG_PWM_CLK)		+=3D pwm-clk.o
->  obj-$(CONFIG_PWM_CLPS711X)	+=3D pwm-clps711x.o
->  obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
->  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
-> diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
-> new file mode 100644
-> index 000000000000..e503337ad055
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-clk.c
-> @@ -0,0 +1,139 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Clock based PWM controller
-> + *
-> + * Copyright (c) 2021 Nikita Travkin <nikita@trvn.ru>
-> + *
-> + * This is an "adapter" driver that allows PWM consumers to use
-> + * system clocks with duty cycle control as PWM outputs.
-> + *
-> + * Limitations:
-> + * - Glitches are possible when new pwm state is applied.
-> + * - Due to the fact that exact behavior depends on the underlying
-> + *   clock driver, various limitations are possible.
-> + * - Period depends on the clock and, in general, not guaranteed.
+> 
+>>>  - There are a few places where an overflow can happen in
+>>>    brcmstb_pwm_config() that are not handled
+>>>
+>>>  - The loop in brcmstb_pwm_config() to calculate cword is ineffective,
+>>>    cword could be calculated ad hoc.
+>>>
+>>>  - I don't understand
+>>>
+>>>                 /*
+>>>                  * We can be called with separate duty and period updates,
+>>>                  * so do not reject dc == 0 right away
+>>>                  */
+>>>                 if (pc == PWM_PERIOD_MIN || (dc < PWM_ON_MIN && duty_ns))
+>>>                         return -EINVAL;
+>>>
+>>>    The usual policy is "With the selected period, pick the biggest
+>>>    possible duty_cycle that isn't bigger thatn the requested duty_cycle.
+>>>    So should this case be handled using dc = 0 instead?
+>>>    But as I don't understand the real issue here (is this about changing
+>>>    period and duty at the same time?), I don't want to touch that.
+>>
+>> IIRC, I was testing using a shell script that would exercise corner
+>> cases by modifying the /sys/class/pwm/*/{period,duty_cycle} separately
+>> was able to run into that. Let me see if I can dig up that script.
+> 
+> When you find it, it would be great to document the problem in a way
+> that it's still understandable some time later.
+> 
+>> Can you give me a day or two to make sure your changes work properly? I
+>> need to locate a board with an exposed PWM header so I can put a scope
+>> on it. Thanks!
+> 
+> Sure, in my experience it takes longer than two days on average until
+> Thierry picks up PWM patches. Thanks for your willingness to test!
 
-This sentence is broken.
+The least I can do, short of doing the conversion myself ;) With that
+said, I just tested your two patches and things still worked just fine:
 
-> + * - Underlying clock may not be able to give 0% or 100% duty cycle
-> + *   (constant off or on), exact behavior will depend on the clock.
-> + * - When the PWM is disabled, the clock will be disabled as well,
-> + *   line state will depend on the clock.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/math64.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/pwm.h>
-> +
-> +struct pwm_clk_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	bool clk_enabled;
-> +};
-> +
-> +#define to_pwm_clk_chip(_chip) container_of(_chip, struct pwm_clk_chip, =
-chip)
-> +
-> +static int pwm_clk_apply(struct pwm_chip *pwm_chip, struct pwm_device *p=
-wm,
-> +			 const struct pwm_state *state)
-> +{
-> +	struct pwm_clk_chip *chip =3D to_pwm_clk_chip(pwm_chip);
-> +	int ret;
-> +	u32 rate;
-> +	u64 period =3D state->period;
-> +	u64 duty_cycle =3D state->duty_cycle;
-> +
-> +	if (!state->enabled) {
-> +		if (pwm->state.enabled) {
-> +			clk_disable(chip->clk);
-> +			chip->clk_enabled =3D false;
-> +		}
-> +		return 0;
-> +	} else if (!pwm->state.enabled) {
-> +		ret =3D clk_enable(chip->clk);
-> +		if (ret)
-> +			return ret;
-> +		chip->clk_enabled =3D true;
-> +	}
-> +
-> +	rate =3D DIV64_U64_ROUND_UP(NSEC_PER_SEC, period);
-> +	ret =3D clk_set_rate(chip->clk, rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		duty_cycle =3D period - duty_cycle;
-> +
-> +	return clk_set_duty_cycle(chip->clk, duty_cycle, period);
-> +}
-> +
-> +static const struct pwm_ops pwm_clk_ops =3D {
-> +	.apply =3D pwm_clk_apply,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int pwm_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct pwm_clk_chip *chip;
-> +	int ret;
-> +
-> +	chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-> +	if (!chip)
-> +		return -ENOMEM;
-> +
-> +	chip->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(chip->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(chip->clk),
-> +				     "Failed to get clock\n");
-> +
-> +	chip->chip.dev =3D &pdev->dev;
-> +	chip->chip.ops =3D &pwm_clk_ops;
-> +	chip->chip.npwm =3D 1;
-> +
-> +	ret =3D clk_prepare(chip->clk);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to prepare clock\n");
-> +
-> +	ret =3D pwmchip_add(&chip->chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "Failed to add pwm chip\n");
+Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-As was already pointed out, here is some error cleanup necessary.
-
-> +	platform_set_drvdata(pdev, chip);
-> +	return 0;
-> +}
-
-Otherwise looks good.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---oska7kglsa25a3vo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKosUACgkQwfwUeK3K
-7AmYjgf/QyMex4Vn/8dRLpTyWsyiiXn4rHVJBG96J3lzrH5SxPAL8iZFFJeBWw21
-6Hyap0eLJnmlh/6HShJd9i8kq6Z4KYCt3WknRoD7uZlkVko6mEXMawpxj5MbCFZF
-urBUc27FGCiM1QnvegSzNtALGlC8tA5Y1hTQIAKHyqlc06RJC4DpTZ4NZWpXlOXJ
-vcaz/MEjPh/HOdcABbZPh5k0XiAdQlqPC1gElHrXEAIuhRPfrVig2Avu7/O+XHHT
-1zEUAjF7JZS0iaYz6eqSl2+ghRVzGkZJIdRWKOHh/BvHYPbOm8NJzsXKjapaRcNt
-7otd9hxkn/SNxPy4nwwt1/QyRHv0yg==
-=uPXu
------END PGP SIGNATURE-----
-
---oska7kglsa25a3vo--
+Thanks a lot Uwe!
+-- 
+Florian
