@@ -2,104 +2,188 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AE4A4B5604
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 17:22:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3B14B5838
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 18:13:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236579AbiBNQWl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 11:22:41 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34780 "EHLO
+        id S1356945AbiBNRNQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 12:13:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233335AbiBNQWk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 11:22:40 -0500
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E7B5FF0B
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:22:33 -0800 (PST)
-Received: by mail-io1-xd2a.google.com with SMTP id q204so20471320iod.8
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:22:32 -0800 (PST)
+        with ESMTP id S231450AbiBNRNO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 12:13:14 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB28F4C43C;
+        Mon, 14 Feb 2022 09:13:05 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id qk11so18481492ejb.2;
+        Mon, 14 Feb 2022 09:13:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JskXaZJX9EqtyU9nDYwhDYopK1GYBeF5QAk0Zlst3K8=;
-        b=WFoQIvGxJEbg8UOaiV70tS6PGdyf3qjcG0fNJQKbyHSfj48VnWpT1uPRsHkSjKp4oI
-         VyXEAHc0fq+QePjMo/XUxaUdqQMw6JpndQdJRAM+wSSoz81Cj3PoON8L3Dmir1bNHNxO
-         JLMBAFjfwqf69spTV2mC/gqt6Gw5T35QWKhp0=
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=3Fk8twNCDj+wvRPPnauS0r1tDhPrGepWuPsXEFLTKTk=;
+        b=NDAe7fCLf6sA/zxhNxQ77owR34T8UGjUGbAzZikk4FcorqiCJK7lWuW/PEigNr6TDZ
+         tT+BBY45s4+cKDEYBWfD61KxSAsdIsalAEo26xD37BJMrWH8ichvKOaVbNtpNSG3e+O1
+         OFP+uRStpbszEyHXQH4E7zmSB5F1o/g9/1OcJ1LJVXVSMwfpJC+Z7QdB7457m+aeGtss
+         eVwivFzm1n31yfxocGOGwnuiv73LrZIksNQx/Ko+HDM3JZihJpE08XV1/n7RXrZzlXG2
+         2RZ0Gc0PSH9UXf5IY4wI7xqoRzyIs1C6YZXHdi7T1aQs2LLpwFGUkRVN5dA09LDjTVQJ
+         7gVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JskXaZJX9EqtyU9nDYwhDYopK1GYBeF5QAk0Zlst3K8=;
-        b=R3OnWn4SSNuxrX/JUiJNKyvlGnLG3Ijtd5TfrVrhiRU2c8mrEDYE6ndMvtLDJnCYM6
-         MEVwIbQLc/Gz864zamxaugjaIU01ZbEwDMjNFaeZp9yslLGmaHVbvKyFdGp/xCBCJPaP
-         32XjZPMsL2n8EPGRTZ0H5Vi6oYtcPa/YA/l0fkAHuFVsd7/5xWLbF0rO3jXYYcMru6hK
-         8GGQyFw6MgIsqrLsu/4dMWMNoIUijpEzoZzOUrd4q/icO5EblNklF6TfxOXrrNq8SlG7
-         0CM216QKwhyE9OjShLQBMbRWheNUM8eZGwfCCm0vRGDCCwA7Pn+Q/TvNf/qDyAfc8Swk
-         oI1w==
-X-Gm-Message-State: AOAM532OlAx9RQvFAO5wMeN2EXi9saPnJw25JpFL0YPffm7RFxD4NR/w
-        ybzkpqW3Vv+cXIvBNPp0BfY+/m38Y3F2/Q==
-X-Google-Smtp-Source: ABdhPJyeY7owF5EcLs9QDtgxkk34BVOkK4k353r38mD90pHNN30Pq6R9m8dAtdXg/JpbeUPNtAYQJA==
-X-Received: by 2002:a05:6602:2c0d:: with SMTP id w13mr329181iov.184.1644855752256;
-        Mon, 14 Feb 2022 08:22:32 -0800 (PST)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id q2sm14563580ilt.33.2022.02.14.08.22.29
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Feb 2022 08:22:30 -0800 (PST)
-Received: by mail-io1-f44.google.com with SMTP id w7so20508368ioj.5
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:22:29 -0800 (PST)
-X-Received: by 2002:a02:3b67:: with SMTP id i39mr299652jaf.50.1644855749283;
- Mon, 14 Feb 2022 08:22:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com> <20220214081916.162014-5-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220214081916.162014-5-krzysztof.kozlowski@canonical.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 14 Feb 2022 08:22:18 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Wzr=ra=_mt63Uj2p6PSNoEF1F=zN0-0yg5rcWkBFYkZw@mail.gmail.com>
-Message-ID: <CAD=FV=Wzr=ra=_mt63Uj2p6PSNoEF1F=zN0-0yg5rcWkBFYkZw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: rk3399: align Google CROS EC PWM node
- name with dtschema
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3Fk8twNCDj+wvRPPnauS0r1tDhPrGepWuPsXEFLTKTk=;
+        b=mmJfe2Efw3IQnpfuF4CRcQxbupONM2YBkmpyz7WHfVDdNAksv5fNAUGaeQrgPmcnfg
+         9yBKWt0uKJ1Y1MnsrGraTvFIjh6naRkPEmlPegM3Jw5VW8G6Y3h9N3fK1pF/Sp6REYED
+         aUSLe2saoXf6iSQQfNjNORdw+cCnG+HCz2LpEa+YRgMnfjGIXbEp//FNrnTog/iwn8aP
+         TadmX3c8MGtGbG516NtJNNi5p/7XXPAhUI4r9xyusVNcsuaFc1TGNS8yWJfo5oWgtoAg
+         ftxJYTl0fA4d5IriI2pM1f4fkXcZ7WnhXziIvko95q76TFb9pzLgSsAdencRibXg8oPv
+         Dldg==
+X-Gm-Message-State: AOAM533nEVoDfWgxhpVPibIcUmnCrnOwXU3NselTXojEeUP9QXL89SJc
+        xmMz4XSueYsb/TxRdmJCXLY=
+X-Google-Smtp-Source: ABdhPJzg4slRDT/mw7ZOBMAOQzMQYAcNt8auS9xTWhsl5NDb/5V8h4eVpjx6YXnsY8ve32KgLbEa+A==
+X-Received: by 2002:a17:907:a428:: with SMTP id sg40mr512036ejc.128.1644858784198;
+        Mon, 14 Feb 2022 09:13:04 -0800 (PST)
+Received: from kista.localnet (cpe-86-58-32-107.static.triera.net. [86.58.32.107])
+        by smtp.gmail.com with ESMTPSA id 23sm2427068ejg.209.2022.02.14.09.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Feb 2022 09:13:03 -0800 (PST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
         Heiko Stuebner <heiko@sntech.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, chrome-platform@lists.linux.dev,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-pwm <linux-pwm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>,
+        Rahul Tanwar <rtanwar@maxlinear.com>,
+        Jeff LaBundy <jeff@labundy.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Vignesh R <vigneshr@ti.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 01/15] dt-bindings: pwm: allwinner,sun4i-a10: include generic pwm schema
+Date:   Mon, 14 Feb 2022 18:13:01 +0100
+Message-ID: <3485219.R56niFO833@kista>
+In-Reply-To: <20220214081605.161394-1-krzysztof.kozlowski@canonical.com>
+References: <20220214081605.161394-1-krzysztof.kozlowski@canonical.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
-
-On Mon, Feb 14, 2022 at 12:20 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> dtschema expects PWM node name to be a generic "pwm".  This also matches
-> Devicetree specification requirements about generic node names.
->
+Dne ponedeljek, 14. februar 2022 ob 09:15:51 CET je Krzysztof Kozlowski 
+napisal(a):
+> Include generic pwm.yaml schema, which enforces PWM node naming and
+> brings pwm-cells requirement.
+> 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Best regards,
+Jernej
+
+> ---
+>  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 53 ++++++++++---------
+>  1 file changed, 28 insertions(+), 25 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-
+pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> index 800d511502c4..e93e935564fb 100644
+> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> @@ -52,33 +52,36 @@ properties:
+>    resets:
+>      maxItems: 1
+>  
+> -if:
+> -  properties:
+> -    compatible:
+> -      contains:
+> -        const: allwinner,sun50i-h6-pwm
+> -
+> -then:
+> -  properties:
+> -    clocks:
+> -      maxItems: 2
+> -
+> -    clock-names:
+> -      items:
+> -        - const: mod
+> -        - const: bus
+> -
+> -  required:
+> -    - clock-names
+> -    - resets
+> -
+> -else:
+> -  properties:
+> -    clocks:
+> -      maxItems: 1
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun50i-h6-pwm
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 2
+> +
+> +        clock-names:
+> +          items:
+> +            - const: mod
+> +            - const: bus
+> +
+> +      required:
+> +        - clock-names
+> +        - resets
+> +
+> +    else:
+> +      properties:
+> +        clocks:
+> +          maxItems: 1
+>  
+>  required:
+> -  - "#pwm-cells"
+>    - compatible
+>    - reg
+>    - clocks
+> -- 
+> 2.32.0
+> 
+> 
+
+
