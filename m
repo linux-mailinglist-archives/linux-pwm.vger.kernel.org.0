@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FB214B43CF
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 09:17:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6560A4B43B5
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 09:17:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241728AbiBNIRI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 03:17:08 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44036 "EHLO
+        id S241859AbiBNIRa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 03:17:30 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241786AbiBNIRE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 03:17:04 -0500
+        with ESMTP id S241862AbiBNIRU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 03:17:20 -0500
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5C14EA14
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:16:58 -0800 (PST)
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DB35FF1A
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:17:09 -0800 (PST)
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com [209.85.167.72])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A92A540567
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:16:56 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C4311402DF
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1644826616;
-        bh=7rHD29slkZOFSJhahaVYXmLu64XBgMMbFm+fpWjAlF0=;
+        s=20210705; t=1644826628;
+        bh=l15FonF8uQEq+4XEYAwpRwWSHHnXgwOoYp02FVF3qnI=;
         h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
          MIME-Version;
-        b=e3s4GUYV+YZW3mOa8Xkb1yTi80q2HYVIB5laHRiWYig8Bxi975rXePggNVLg9KE+3
-         zI7U5R7xV7XhVZLAWZuSqUvs5ICh6yI5JX5X7LydTdVnNU20ONUiTpQ81FtSwc0qIG
-         uUuJm1ImnfYi525Xev4LRb7T8qsci4I7sk7OBHeZYq5crR71aYO2wnlkFYWQ82lfp2
-         wfYNPxeIIDF6qGMo3VZLDmxmzIvIoXrBFX6s55DYN4/05PGCABvQ3IpET1DASvLLgQ
-         qpqDGgez5Gb5wpAJXt10gDz8RsrTmDYV51y1UiJ8Bxl+5FNmDn1jA9CxGyM7ZeEGhS
-         JxHLydSrXOgYg==
-Received: by mail-ej1-f69.google.com with SMTP id 13-20020a170906328d00b006982d0888a4so5438881ejw.9
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:16:56 -0800 (PST)
+        b=QSg8zLL2pUEMr9LQX8hkx1a0zd8rGWBaF0mo0oJrh8myim0yQ0j3aFURCJawyhqsH
+         P8rIDS/anz2bAujK7AHasW+VDdU0D5AxgjHHXH5oRngWzKGy0WcNk3slqf1hyikRFl
+         z/ni8P2cD86CjB6dUalIlcPjzK4mdQ8NqmLSodyVWdFE4wiD8tzxau4VHHYTfK/k2w
+         c8PbaJbxFK6iS1OliNc1yBtuPtZjDes/2Lyp40+ZRca8ufho5+kqo7HY0vdROa14W1
+         wOW18X5EQmvTkDB4hep5t0YBgwnPep1twaOAJOAC3xUhUWfmJa9/V1rTmPDgFwXy2Y
+         6EvK59mOd8JhQ==
+Received: by mail-lf1-f72.google.com with SMTP id o25-20020ac24e99000000b004421aff5064so4978820lfr.7
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:17:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7rHD29slkZOFSJhahaVYXmLu64XBgMMbFm+fpWjAlF0=;
-        b=69k4o9W5mWRbVS3GVwhwSnNpA0PMezwW5UxUNubRkZ/5uZfJ6azXBQOzrygD/kq3zj
-         3hvV1UT5IKIXJVjmrhhs2qFmSyBSJP6HApvwqzkeAseDs+uqxGVggYuR+mWeEZGl0Jdf
-         RYvVHV/Inb/RAE9oUktKVWGOJLtj0Ys9JJaFDVvtGqnlTyyLTbVnvlLT71/yzJJM8IIJ
-         JYWK2YHcCtZ4n+ef8r4/uCnjB++GLb0jkxFrP6Ut0W1HIl9MUy7veF8e1ALXdP3PZjWT
-         oQxmqXAbEWhQ3wSR45YG9EAWNlAWrQSUK5Wiq8FnY7yNOg634JqWU3RHevyWw/7bZRPS
-         Ba4A==
-X-Gm-Message-State: AOAM532bqWxINsNBZXtjZQpEB4ndGdQLWt0s6PgebFUDxG+LkzBSj9X4
-        xDGP07CoNG1wQOWQCuFT6aRENcdzziWLkIxDpWHxHJmp8q0BY1NwVppYEXFikU4HO0+UeAPUIQv
-        I4m7sfCQQSD0A1eym4dhy/MFP5eZJolA0BS0YEA==
-X-Received: by 2002:a17:906:6496:: with SMTP id e22mr10192490ejm.263.1644826615556;
-        Mon, 14 Feb 2022 00:16:55 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzpvkONiH4FS0uQPH9alYGubO9/o9pYJXoAtA309TiungpCh9WYv1lWlRgqPAUTIAinl39jGQ==
-X-Received: by 2002:a17:906:6496:: with SMTP id e22mr10192484ejm.263.1644826615405;
-        Mon, 14 Feb 2022 00:16:55 -0800 (PST)
+        bh=l15FonF8uQEq+4XEYAwpRwWSHHnXgwOoYp02FVF3qnI=;
+        b=IOcS+qoV7qz2shTBUTQgmIL+bgtXz/0Saw2OCUbMtcsLrplGndCu5W5WHr9SB5Xhy+
+         HQ35UlhWGzcqgD+4Jou3Y+k8FTRKJe5F+fiEf5xH6eYtnOLktwnWQ/JD0NEkPTQ3oL0D
+         1npLC8JPsIKOKJSjPhXQ4ncTgxryIsr9PdWrkaASDpdSmOwi/sXEKPk1f1YiYhtbnczH
+         Dul/n6Q1IFZNZ3KDKH71Psy4SDN+bb4yT6rs/7SOwK8egy+OlOvVxBcr9TFDSPaLn4Oi
+         GanVrSU+Y8BkB6b03r2dexDaYjy0egjT76QWhV8Tk7hUmCqiXAe4Vyhzz1lyMSTDqKr4
+         C3ow==
+X-Gm-Message-State: AOAM5304JKlKKgXBjxgk2oYxmvoh0h+vpVsP4bWwt1cEUNu78c9T1JD5
+        B+xJUBqYrH8hmPbUGEDafR7yfCddiovcCR8Fi+sLmmDDANoJe3vZAsQUk13s+6HabT1QTq2plpd
+        6Es+Hr/t1LbCdNGAe5YirckhS6dhVFTJx59U6vQ==
+X-Received: by 2002:a17:907:1692:: with SMTP id hc18mr1264361ejc.558.1644826617896;
+        Mon, 14 Feb 2022 00:16:57 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz7ZFaKPSqzJB7EzZe96ipyX590XuNxFjp7kl2szJXL0JpWvoFuFlVeLyW48x6LMwjXS7gpuA==
+X-Received: by 2002:a17:907:1692:: with SMTP id hc18mr1264323ejc.558.1644826617720;
+        Mon, 14 Feb 2022 00:16:57 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id t21sm3363642edd.74.2022.02.14.00.16.53
+        by smtp.gmail.com with ESMTPSA id t21sm3363642edd.74.2022.02.14.00.16.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Feb 2022 00:16:54 -0800 (PST)
+        Mon, 14 Feb 2022 00:16:57 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -90,9 +90,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH 10/15] dt-bindings: pwm: brcm,bcm7038: do not require pwm-cells
-Date:   Mon, 14 Feb 2022 09:16:00 +0100
-Message-Id: <20220214081605.161394-10-krzysztof.kozlowski@canonical.com>
+Subject: [PATCH 11/15] dt-bindings: pwm: intel,keembay: do not require pwm-cells
+Date:   Mon, 14 Feb 2022 09:16:01 +0100
+Message-Id: <20220214081605.161394-11-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220214081605.161394-1-krzysztof.kozlowski@canonical.com>
 References: <20220214081605.161394-1-krzysztof.kozlowski@canonical.com>
@@ -112,21 +112,21 @@ pwm-cells are already required by pwm.yaml schema.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 ---
- Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml | 1 -
+ Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
-index 4080e098f746..119de3d7f9dd 100644
---- a/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/brcm,bcm7038-pwm.yaml
-@@ -28,7 +28,6 @@ properties:
- required:
+diff --git a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+index ff6880a02ce6..ec9f6bab798c 100644
+--- a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+@@ -31,7 +31,6 @@ required:
    - compatible
    - reg
--  - "#pwm-cells"
    - clocks
+-  - '#pwm-cells'
  
  additionalProperties: false
+ 
 -- 
 2.32.0
 
