@@ -2,51 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B11F4B52AB
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 15:04:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34A604B52D8
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 15:11:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354858AbiBNOD5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 09:03:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43094 "EHLO
+        id S235609AbiBNOLU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 09:11:20 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354856AbiBNODz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 09:03:55 -0500
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E21B4A3C3;
-        Mon, 14 Feb 2022 06:03:48 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: kholk11)
-        with ESMTPSA id 6C8D31F437D8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1644847427;
-        bh=wFNgkqGiONoneW7J7GAtmcWU3v7pj9r5c0V0Os6wFU0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUG+pRD5LFzg0JNUMPwO8D3H1M9GSWqUTPtDByjaPj95ISZWa4Pvs4Fd0wkQWzBcF
-         dgJ9fdDzLdJWCXfJpfvfH2uipWAipJtTSKdsA1t6BXNN57RCoE1+ixwBUXhBtR89Bx
-         d6hz0MguCsVR07zG1aERD8kW7FKTrABhs41a7UPhKe+3IdEkWw74KtSXTsuK3Dqsfr
-         HLz0KaN1BN25jpW0Wz2QihHbm2uHudnjZ45SCZX7g3TzIcsGBI+M93VuT7/Q+HMv70
-         YV2qBURT/u4kLKpL9GGXBcF5PW6mL1hGoRoxkh3OItUGA2hF9Kzvwz2L+ENRnV/dKo
-         i2hKFQGJ7l7Jg==
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-To:     thierry.reding@gmail.com
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        with ESMTP id S231779AbiBNOLU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 09:11:20 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAA4AE65
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 06:11:12 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJc4H-0000Vq-VR; Mon, 14 Feb 2022 15:11:06 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJc4H-00GZ4x-4p; Mon, 14 Feb 2022 15:11:04 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJc4F-0038n2-Ee; Mon, 14 Feb 2022 15:11:03 +0100
+Date:   Mon, 14 Feb 2022 15:11:03 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     xinlei.lee@mediatek.com
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
         matthias.bgg@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel@collabora.com,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2 3/3] pwm: pwm-mediatek: Beautify error messages text
-Date:   Mon, 14 Feb 2022 15:03:39 +0100
-Message-Id: <20220214140339.112500-3-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20220214140339.112500-1-angelogioacchino.delregno@collabora.com>
-References: <20220214140339.112500-1-angelogioacchino.delregno@collabora.com>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [1/1] dt-bindings: pwm:Convert pwm-mtk-disp.txt format file to
+ pwm-mtk-disp.yaml format file
+Message-ID: <20220214141103.74fdqqfixq3jnoyc@pengutronix.de>
+References: <1644847276-27622-1-git-send-email-xinlei.lee@mediatek.com>
+ <1644847276-27622-2-git-send-email-xinlei.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="at4uj2znseres3nl"
+Content-Disposition: inline
+In-Reply-To: <1644847276-27622-2-git-send-email-xinlei.lee@mediatek.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,55 +57,120 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-As a cherry-on-top cleanup, make error messages clearer to read
-by changing instances of "clock: XXXX failed" to a more readable
-"Failed to get XXXX clock". Also add "of" to unsupported period
-error.
 
-This is purely a cosmetic change; no "real" functional changes.
+--at4uj2znseres3nl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/pwm/pwm-mediatek.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hello,
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 6b39f3d69e41..568b13a48717 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -146,7 +146,7 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	if (clkdiv > PWM_CLK_DIV_MAX) {
- 		pwm_mediatek_clk_disable(chip, pwm);
--		dev_err(chip->dev, "period %d not supported\n", period_ns);
-+		dev_err(chip->dev, "period of %d ns not supported\n", period_ns);
- 		return -EINVAL;
- 	}
- 
-@@ -229,12 +229,12 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
- 	pc->clk_top = devm_clk_get(&pdev->dev, "top");
- 	if (IS_ERR(pc->clk_top))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk_top),
--				     "clock: top failed\n");
-+				     "Failed to get top clock\n");
- 
- 	pc->clk_main = devm_clk_get(&pdev->dev, "main");
- 	if (IS_ERR(pc->clk_main))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk_main),
--				     "clock: main failed\n");
-+				     "Failed to get main clock\n");
- 
- 	for (i = 0; i < pc->soc->num_pwms; i++) {
- 		char name[8];
-@@ -244,7 +244,7 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
- 		pc->clk_pwms[i] = devm_clk_get(&pdev->dev, name);
- 		if (IS_ERR(pc->clk_pwms[i]))
- 			return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk_pwms[i]),
--					     "clock: %s failed\n", name);
-+					     "Failed to get %s clock\n", name);
- 	}
- 
- 	pc->chip.dev = &pdev->dev;
--- 
-2.33.1
+On Mon, Feb 14, 2022 at 10:01:16PM +0800, xinlei.lee@mediatek.com wrote:
+> From: xinlei lee <xinlei.lee@mediatek.com>
+>=20
+> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-mtk-disp.yaml      | 60 ++++++++++++++++=
+++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.ya=
+ml
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml b/Do=
+cumentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml
+> new file mode 100644
+> index 0000000..2f1183e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-mtk-disp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: mediatek PWM Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Rob Herring <robh+dt@kernel.org>
 
+I would have expected some mediatek people here instead of the PWM and
+dt maintainers.
+
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt2701-disp-pwm
+> +      - mediatek,mt6595-disp-pwm
+> +      - mediatek,mt8173-disp-pwm
+> +      - mediatek,mt8183-disp-pwm
+> +      - mediatek,mt8186-disp-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Main Clock
+> +      - description: Mm Clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: main
+> +      - const: mm
+> +required:
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/mt8186-clk.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    disp_pwm: disp_pwm0@1100e000 {
+> +        compatible =3D "mediatek,mt8183-disp-pwm";
+> +        reg =3D <0x1100e000 0x1000>;
+> +        interrupts =3D <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks =3D <&topckgen CLK_TOP_DISP_PWM>,
+> +                 <&infracfg_ao CLK_INFRA_AO_DISP_PWM>;
+> +        clock-names =3D "main", "mm";
+> +        status =3D "okay";
+> +    };
+> \ No newline at end of file
+
+Please add this newline at EOF.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--at4uj2znseres3nl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKYvQACgkQwfwUeK3K
+7AmL6wf/arB/fkjjL+4DNJ9y4wa0AkBwDsowLOO78FRZ0tP4Hx4tq0Gat6GCVTrG
+3JPyJxbc+sNvxH41ZkzQGTpaWjMl+TGqXZbyLlX97oqXQoEbT+VkkJntsQBRnZWj
+v42uTTI9CyM49zJDtfw/oUVaczEIs6bHQm+jqq5c4mxLMXjbZRZdZsdY9jH+GVfR
+lZJ8nPEUowlLTcev0WvcE0oU5g2YlzyXAgOWui7VbTqo+cr1BmPu8WZ847adr6pV
+TtD6iS+9d0nqGyxvEZAKeRKRyNfejsbQb6onm08rgucbzl8Cwq2HZEbaHrei9Inb
+y+FHrtgw0wHzEZ3dP6qrP7tlOJ3y5Q==
+=DN6s
+-----END PGP SIGNATURE-----
+
+--at4uj2znseres3nl--
