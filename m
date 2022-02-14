@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85BBD4B5C9D
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 22:27:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4EF4B5CAE
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 22:27:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231171AbiBNVWr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 16:22:47 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50218 "EHLO
+        id S231133AbiBNVWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 16:22:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbiBNVWm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 16:22:42 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341A413CED4
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:22 -0800 (PST)
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com [209.85.208.200])
+        with ESMTP id S231201AbiBNVWo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 16:22:44 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5BA13CEE7
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:23 -0800 (PST)
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id B6E04407C1
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 21:22:20 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D1C6A40339
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 21:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1644873740;
-        bh=fcG/L5ODzpr+LI/EAJmGBh5z8kctn/2OPAueI4k16fY=;
+        s=20210705; t=1644873741;
+        bh=2POCSk/6TwWTazpis9hGbBMQ4KYz1OTALCTDWqaBti4=;
         h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
          MIME-Version;
-        b=d2NrFa7pCk8oDt8A3j2SSxGICj3FO0EiERSp9iHRJcmrwVGwo+rbhF9saB0ajDV3y
-         f2xWzaM2vMGpHpBtUifdPneLjxHkPJOv3eBJsqdAZ6uIjgvj3D2+Skt6e7HI+5P3ig
-         oLSieB1XU8Wu31uC0WxVlQSo23BfE0rOFIX20524IUs3ownX0ipY15vl+o5kDSS7sZ
-         p41PYVgziRB7Hnbv9RRrtckNG7OmiEbC1YyR9VHZdYWnAwRDWidrYjj/4vfdZai3Ci
-         KbhK5WVCkMkjnFTsV3Z+miEerL2Ff871PPZLRo5XmQQ6qCHZsq657Cd+6BiWnMz9Lw
-         juASSIlxJJZ8w==
-Received: by mail-lj1-f200.google.com with SMTP id c21-20020a2ebf15000000b00244de1e4d37so320871ljr.5
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:20 -0800 (PST)
+        b=RXovt6HrcpFR5hHqdjoHA/en21EYH6vuzGG4P856h6109O2ya5EALOxoiV2n7BuEV
+         osMTKLyzG9w7N9a+NtENATIJuCVzIJ2KuYZlWgVJOqJiwLssgL1GH+q5M39ndeXbB5
+         KxsJ3h4lZrIW7MSY0RqONOKVWkP6I/0wGH6ljSO6Ew8/X+klu4Q3uLUuDcO6nRkpBT
+         rHWqw5TkXYvO3we8kUX3KDNAuQrfOtf4x2E/9zfjAqWed4TLLEIeHE027dcYsXIVgZ
+         knQ/5ej87vaqwMHQpWC2yUvbUYDNxDs8V7AAzX/HNkl/F0a50WR5MNmmC3iqrnDhJI
+         vnKFIWRqiM/sg==
+Received: by mail-wr1-f70.google.com with SMTP id g17-20020adfa591000000b001da86c91c22so7408156wrc.5
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fcG/L5ODzpr+LI/EAJmGBh5z8kctn/2OPAueI4k16fY=;
-        b=Vsu5RsY+Erx7YLQBFO+GD8mdyWyfg1z8zjmn9U5G6FaXVbZFJ2HYwpXtHldxGXgodZ
-         0F3OE8RpYkNKCXcoJzb011z01KeGeI6BHrvO7LQY/wUrypzFV8Cu69FDWwCH3RMUX75w
-         NBL1pkd5tqaMDCIFdPcbC3pRt4gfkBS6y8TrLHnmq5fybNpO1vTpoW6h3LE9jrsbzoHC
-         hD9pm9O4kmfaM6IxFElq5RFCzfD5Y0RkXCB9L/aulaJ6mdXUxb5oAgIzZgL6Eevraf/T
-         dju9UC8gojfUG4dxMCp/J4u1b2f9xJbOs/qhMgJmoS+VZB6n5uBtMIY2s3JGs/XJoVlI
-         MXfQ==
-X-Gm-Message-State: AOAM531xw2Tatk7gfAXKF8zB+anrCd8Cj5uqsjRSOoc2PpSMHe6+r5wU
-        7IHyz926tl2Ldud1bCXiOTWnq3EhUTOmMfecMwv7Ay4rkIycugX3LOHMBnHxpoa05UMfKQMNfrr
-        XohyVJI6R1TI5Q535HtCgQAyR5gb36IP6ARMNdQ==
-X-Received: by 2002:a17:907:1b24:: with SMTP id mp36mr543853ejc.519.1644873729720;
-        Mon, 14 Feb 2022 13:22:09 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzl9EVISrmS6C69YAe5K0Xxu1OTn1NN475W1VUcNCLsva3N5oY9yHZqeVlKnpSoM0+sjZgNNQ==
-X-Received: by 2002:a17:907:1b24:: with SMTP id mp36mr543835ejc.519.1644873729549;
-        Mon, 14 Feb 2022 13:22:09 -0800 (PST)
+        bh=2POCSk/6TwWTazpis9hGbBMQ4KYz1OTALCTDWqaBti4=;
+        b=EgYNfcsnfI63reSkcr9ECLrERjna7vujLH7EPn2EeK3ELBB1BdLWxq4thBHLUdnvoO
+         YTDEipsmrZ59tz6Abh1/t7L8tZYdMgNclbdhd7Qf/OJdw5TvSuU+KYw7K2X8GS3R9GaK
+         qFr4juAXEwx2FN9z4wjZbsp6aZ3a4B9R6SRkiRHud8LlApGi2gq/Q2y+LT1b+/vyBjgg
+         IrDR8LfwOX14MXkbLQ1iW354kHYA5U86JZmBGnfwq6pS2TDdN2KhOc16YsTF9dffSOtR
+         C+J2+Zzmop4whp4kb+94dmFsWjJ3GgwjC/y+BEchlLfbkbokSd7i6Z62AdATXysUIYsi
+         J0Aw==
+X-Gm-Message-State: AOAM533fmWAFCcVW87isNfDgag1QyfF32YrgblBCMszUXqlBSmFN4IHr
+        +8lDtwsevAoCnIra9NqJCd++eFGvH9BppRjoL/3L+EKcWtVIzWkQf6wf1qW7OHSOjgNM1gF+vvR
+        YS6uQYWnD2K4WQ3pGhrb43DDIhhraC4hMgKrLOw==
+X-Received: by 2002:a17:907:6091:: with SMTP id ht17mr542189ejc.607.1644873731288;
+        Mon, 14 Feb 2022 13:22:11 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwORNXxcION04IJzU5Gu/UfUyFurARbus6zd7xUK4wKOMUXzkjvihbjj39qrz7zMUkHFrH18A==
+X-Received: by 2002:a17:907:6091:: with SMTP id ht17mr542177ejc.607.1644873731059;
+        Mon, 14 Feb 2022 13:22:11 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id v24sm2327203ejf.7.2022.02.14.13.22.07
+        by smtp.gmail.com with ESMTPSA id v24sm2327203ejf.7.2022.02.14.13.22.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Feb 2022 13:22:09 -0800 (PST)
+        Mon, 14 Feb 2022 13:22:10 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -90,9 +90,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH v2 06/15] dt-bindings: pwm: rockchip: Include generic pwm schema
-Date:   Mon, 14 Feb 2022 22:21:45 +0100
-Message-Id: <20220214212154.8853-7-krzysztof.kozlowski@canonical.com>
+Subject: [PATCH v2 07/15] dt-bindings: pwm: sifive: Include generic pwm schema
+Date:   Mon, 14 Feb 2022 22:21:46 +0100
+Message-Id: <20220214212154.8853-8-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
 References: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
@@ -112,96 +112,32 @@ Include generic pwm.yaml schema, which enforces PWM node naming and
 brings pwm-cells requirement.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 ---
- .../devicetree/bindings/pwm/pwm-rockchip.yaml | 74 ++++++++++---------
- 1 file changed, 38 insertions(+), 36 deletions(-)
+ Documentation/devicetree/bindings/pwm/pwm-sifive.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-index 81a54a4e8e3e..a336ff9364a9 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-@@ -51,42 +51,44 @@ properties:
- required:
-   - compatible
-   - reg
--  - "#pwm-cells"
--
--if:
--  properties:
--    compatible:
--      contains:
--        enum:
--          - rockchip,rk3328-pwm
--          - rockchip,rv1108-pwm
--
--then:
--  properties:
--    clocks:
--      items:
--        - description: Used to derive the functional clock for the device.
--        - description: Used as the APB bus clock.
--
--    clock-names:
--      items:
--        - const: pwm
--        - const: pclk
--
--  required:
--    - clocks
--    - clock-names
--
--else:
--  properties:
--    clocks:
--      maxItems: 1
--      description:
--        Used both to derive the functional clock
--        for the device and as the bus clock.
--
--  required:
--    - clocks
-+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+index 84e66913d042..676b2160bada 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+@@ -22,6 +22,9 @@ description:
+ 
+   https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
+ 
 +allOf:
 +  - $ref: pwm.yaml#
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,rk3328-pwm
-+              - rockchip,rv1108-pwm
-+
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: Used to derive the functional clock for the device.
-+            - description: Used as the APB bus clock.
-+
-+        clock-names:
-+          items:
-+            - const: pwm
-+            - const: pclk
-+
-+      required:
-+        - clocks
-+        - clock-names
-+
-+    else:
-+      properties:
-+        clocks:
-+          maxItems: 1
-+          description:
-+            Used both to derive the functional clock
-+            for the device and as the bus clock.
-+
-+      required:
-+        - clocks
+ properties:
+   compatible:
+     items:
+@@ -55,7 +58,6 @@ required:
+   - compatible
+   - reg
+   - clocks
+-  - "#pwm-cells"
+   - interrupts
  
  additionalProperties: false
- 
 -- 
 2.32.0
 
