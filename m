@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD5A94B43F2
+	by mail.lfdr.de (Postfix) with ESMTP id 469114B43F0
 	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 09:20:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241939AbiBNIUH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 03:20:07 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48166 "EHLO
+        id S241940AbiBNIUI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 03:20:08 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241904AbiBNIUF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 03:20:05 -0500
+        with ESMTP id S241829AbiBNIUG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 03:20:06 -0500
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F4E25C44
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B9125C4C
         for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:19:58 -0800 (PST)
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id CC75A407EA
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:19:55 +0000 (UTC)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id B1D5B407EB
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 08:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1644826795;
-        bh=23CQAl/07AaN2dxN1TfTdDj5so/NCdWTbjb57ZtNLwo=;
+        s=20210705; t=1644826796;
+        bh=EbCeV0x/sMs+Jsxt5g9p8vtgK7tOVPzaf7TxkPV9Qwo=;
         h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
          MIME-Version;
-        b=Ah1UupAoINeRCa+UtdPXztTePkYfs2ooX5tQRF6YqDHLCj4fOsLrLszYyo1SzXCyq
-         axMRDOzHIudG+Pqc0ec6ebKh4zmyKcerOvHSWvpFsbPW1YBYwnjGWpY7zVcRZHWhNe
-         OaNIWiFdGgZPeE5n3cjNx1f3goxIl7Fp2KpN8B9BniBYhXMv4Ferp1VQhCznIrLVdy
-         LE2uktIzvLNe2G04mkiN0IDujzL7SkBspAqMUePvKEv2g0zqb9XiwMEpvmQDavRPyO
-         +4WpWvTRdL15qFsiBc1D+9I87h2YPFqisEBAeWqc7GlVwK6qDLc1rhee4/NHUBylnn
-         nRJ1FYkb1mKAg==
-Received: by mail-ed1-f71.google.com with SMTP id m4-20020a50cc04000000b0040edb9d147cso9776298edi.15
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:19:55 -0800 (PST)
+        b=YTGyysoi7/EX7GpmevTv0P8buQzccWWhfkjSPdPniMpIkcE2k8RwHNfykd9dkJOl4
+         tDlfIYvNYvPwW70swf6k4QWdIDkNcmrRPFQ2vppOAWmpUqU/VtUlB4o+xRqvTWyJFh
+         O8A18uh8Y5W7ncBcjwxLXoaswF6HOd/iWQENOGIe14tw0DVHTN4MlxwzPGxRc9TsWr
+         j3RKCuh/IKICi9QSogGh1ZUEYQHTmN9eQ0IfVOC8rpz23iohSuchUuDE7iGCWiqHNX
+         3bspGZ0FxumDA8yGOqCinvyxskYo1Wtv6DAbKB/o4UYLNDur2+gujgTXlO+RHtkeTr
+         BbD/QDO4YqwFQ==
+Received: by mail-ed1-f69.google.com with SMTP id g3-20020a056402424300b004107aa941ffso5242079edb.14
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 00:19:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=23CQAl/07AaN2dxN1TfTdDj5so/NCdWTbjb57ZtNLwo=;
-        b=eCtt0h4+qHIHPne3mBnwlF9o3ThKdRhbpb25EtWuZUKBj2NkgLXPczzqrF9ycLNedl
-         8W7XVtzYRadm6JcqM9q6gpmNkN4sCWv83cSd2WZuYGQasrVnPVcYudWzgV06NwHEjzVB
-         w46Ve8xJh8tJwK8bbqB9byBSi2FHdEO4s8AdG6XaFP90+ZCln2g4nUiA3VpmY/L9NhgY
-         SUxZ4VOAIHhhi1Ph3me6g1IALlJJ5przwsugpPRHTsmN8n9RbxhXk8GQ4/tklgQkKIOF
-         6NFYG0cvV0ebbv4WQO6C9zllGV7bnz7Gol2jz+uHa3nWW1lOZoQiBNYlZfD8/8lHXom3
-         q8QQ==
-X-Gm-Message-State: AOAM532KVFqMfh0QfgeaOOs2GEMn89bUXfvk7KpD2wVWuquOGAli0fYu
-        HhDaKdv+o1VxfsK7lwcnqalXJZk1uEN+ecSl+575P0I4i+dTinYLV88OGAGM/ogI+UfIEzxKexE
-        U1PJBV6OheqhD4g11AJA/VM5cPDyMIvvnurVMuA==
-X-Received: by 2002:a17:907:3d01:: with SMTP id gm1mr10671205ejc.695.1644826795046;
-        Mon, 14 Feb 2022 00:19:55 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyduVMGZqiqcBn+5NbYVmKbo23S2Kx2GnaG0uOcebe1lzeD4dxVvKdv5SiQHDzJAeAj67dMnw==
-X-Received: by 2002:a17:907:3d01:: with SMTP id gm1mr10671188ejc.695.1644826794896;
-        Mon, 14 Feb 2022 00:19:54 -0800 (PST)
+        bh=EbCeV0x/sMs+Jsxt5g9p8vtgK7tOVPzaf7TxkPV9Qwo=;
+        b=wUPSlxiccF8Wbr36VMJM/mkNxPR3Ygh9XKDhJTFztcE2JVP1N3/hhCcdgk+6eoWicA
+         S2I5BPrLcpscLQ368ZAZSWFaz+nnvkkIg8gb9mK8tkJ7QNL5qPD6nucqp0FtKwfs9qi7
+         le0cbZpRBPZajFI7qbbzNrbQBlOhwHLUmx1UFuI+85Zt2oUKLQROamBAye2vdtb4sMW8
+         qGTfCtm1cvNPJhnFGa+9I8q90QeUyZ+SbXO1gzLpfpKU/41JorVpLPH0R66/HtdM0yCI
+         16rYZ9OhyXTKDFXUroU0k2j3BONTGr77rCE3+kITGuykABnQyiGUekfJQV8KDGQuDoZe
+         wNxQ==
+X-Gm-Message-State: AOAM532inxF5Hmv6L8KpMCFed3gt+kSsBB+KoZqrWuPpln/nfod9a3X0
+        pagE5MoGWz6k/vC44NoZcEb71t0p3BCQhLZ1qxfOxFBBjb8inSOI4bOyYz3h57FlEx0XixAF3pf
+        LnbHjWI4o9nSzSkvdd6fKF+hSdTFHdvxxz4eQVA==
+X-Received: by 2002:a17:907:608f:: with SMTP id ht15mr10447790ejc.498.1644826796191;
+        Mon, 14 Feb 2022 00:19:56 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxuUtAFxe/AINzxrq5NNy+IKE6ovx3e9DkEU19VgsoD3pIeaS61uCEwn2sfqcNpphQUr0Ojgw==
+X-Received: by 2002:a17:907:608f:: with SMTP id ht15mr10447762ejc.498.1644826796018;
+        Mon, 14 Feb 2022 00:19:56 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id b20sm2022941ede.23.2022.02.14.00.19.53
+        by smtp.gmail.com with ESMTPSA id b20sm2022941ede.23.2022.02.14.00.19.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Feb 2022 00:19:54 -0800 (PST)
+        Mon, 14 Feb 2022 00:19:55 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
@@ -74,9 +74,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
         linux-rockchip@lists.infradead.org
-Subject: [PATCH 2/4] arm64: dts: mt8183: align Google CROS EC PWM node name with dtschema
-Date:   Mon, 14 Feb 2022 09:19:14 +0100
-Message-Id: <20220214081916.162014-3-krzysztof.kozlowski@canonical.com>
+Subject: [PATCH 3/4] arm64: dts: qcom: align Google CROS EC PWM node name with dtschema
+Date:   Mon, 14 Feb 2022 09:19:15 +0100
+Message-Id: <20220214081916.162014-4-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
 References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
@@ -97,22 +97,78 @@ Devicetree specification requirements about generic node names.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi               | 2 +-
+ arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts | 2 +-
+ arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi             | 2 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi             | 2 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi                 | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-index 8f7bf33f607d..2d7a193272ae 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-@@ -92,7 +92,7 @@ volume_up {
- };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+index 78296ed6fd29..732e1181af48 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+@@ -637,7 +637,7 @@ cros_ec: ec@0 {
+ 		pinctrl-0 = <&ap_ec_int_l>;
+ 		spi-max-frequency = <3000000>;
  
- &cros_ec {
--	cros_ec_pwm: ec-pwm {
-+	cros_ec_pwm: pwm {
- 		compatible = "google,cros-ec-pwm";
- 		#pwm-cells = <1>;
- 		status = "disabled";
+-		cros_ec_pwm: ec-pwm {
++		cros_ec_pwm: pwm {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts b/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts
+index af46a60b4b98..1779d96c30f6 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts
++++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts
+@@ -705,7 +705,7 @@ cros_ec: ec@0 {
+ 		pinctrl-0 = <&ap_ec_int_l>;
+ 		spi-max-frequency = <3000000>;
+ 
+-		cros_ec_pwm: ec-pwm {
++		cros_ec_pwm: pwm {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+index 7c22f0b062be..dc17f2079695 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+@@ -421,7 +421,7 @@ cros_ec: ec@0 {
+ 		pinctrl-0 = <&ap_ec_int_l>;
+ 		spi-max-frequency = <3000000>;
+ 
+-		cros_ec_pwm: ec-pwm {
++		cros_ec_pwm: pwm {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi
+index 0896a6151817..a7c346aa3b02 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi
+@@ -20,7 +20,7 @@ cros_ec: ec@0 {
+ 		pinctrl-0 = <&ap_ec_int_l>;
+ 		spi-max-frequency = <3000000>;
+ 
+-		cros_ec_pwm: ec-pwm {
++		cros_ec_pwm: pwm {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 4a6285a25f77..e7e4cc5936aa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -708,7 +708,7 @@ cros_ec: ec@0 {
+ 		pinctrl-0 = <&ec_ap_int_l>;
+ 		spi-max-frequency = <3000000>;
+ 
+-		cros_ec_pwm: ec-pwm {
++		cros_ec_pwm: pwm {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
+ 		};
 -- 
 2.32.0
 
