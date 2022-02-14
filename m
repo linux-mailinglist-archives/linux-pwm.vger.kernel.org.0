@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF4EF4B5CAE
-	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 22:27:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 168684B5CAF
+	for <lists+linux-pwm@lfdr.de>; Mon, 14 Feb 2022 22:27:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbiBNVWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 14 Feb 2022 16:22:49 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50178 "EHLO
+        id S231301AbiBNVWw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 14 Feb 2022 16:22:52 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbiBNVWo (ORCPT
+        with ESMTP id S231216AbiBNVWo (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Mon, 14 Feb 2022 16:22:44 -0500
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5BA13CEE7
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:23 -0800 (PST)
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94EC13D564
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:25 -0800 (PST)
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com [209.85.208.197])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D1C6A40339
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 21:22:21 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 60A2540340
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 21:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1644873741;
-        bh=2POCSk/6TwWTazpis9hGbBMQ4KYz1OTALCTDWqaBti4=;
+        s=20210705; t=1644873744;
+        bh=rXTrjGyqcJ3i7iMn5DJq5QR/kPtoX00uoKdkO1EvWnA=;
         h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
          MIME-Version;
-        b=RXovt6HrcpFR5hHqdjoHA/en21EYH6vuzGG4P856h6109O2ya5EALOxoiV2n7BuEV
-         osMTKLyzG9w7N9a+NtENATIJuCVzIJ2KuYZlWgVJOqJiwLssgL1GH+q5M39ndeXbB5
-         KxsJ3h4lZrIW7MSY0RqONOKVWkP6I/0wGH6ljSO6Ew8/X+klu4Q3uLUuDcO6nRkpBT
-         rHWqw5TkXYvO3we8kUX3KDNAuQrfOtf4x2E/9zfjAqWed4TLLEIeHE027dcYsXIVgZ
-         knQ/5ej87vaqwMHQpWC2yUvbUYDNxDs8V7AAzX/HNkl/F0a50WR5MNmmC3iqrnDhJI
-         vnKFIWRqiM/sg==
-Received: by mail-wr1-f70.google.com with SMTP id g17-20020adfa591000000b001da86c91c22so7408156wrc.5
-        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:21 -0800 (PST)
+        b=Zqz7MgTVbdVyNvbnsoHSas4wE7LTxrPVTViPN3I/zc7QTZgQnG9v4sUc99M5ySEWZ
+         ty+Vtmt0MdCZdFHgxW8TOswMj7j7pd+iNgAwRjcAwpJKUEvW4kvQD/2D45Zv1uxd8s
+         HMEG5aDaS4NpYmY0ai83+ZGhZ4Cx3idQ8g3DNn/pZOe3giVge3XOtv2notWPL+yAvD
+         CIqurwcLO4qU5sU9atPEszqydUdzpL5eP1aU+9rK8dkxQSRwgqVs5a5Vkf6QkEdFdD
+         yCxH8IlCRV1lxXon+6cC0mWeymap/OWtHXAnftVGGmI31VI5rm8NlnPtZKTCre+dpN
+         WDLNmV5FtXWxg==
+Received: by mail-lj1-f197.google.com with SMTP id v1-20020a2e9601000000b002446a7310a1so6244247ljh.3
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 13:22:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2POCSk/6TwWTazpis9hGbBMQ4KYz1OTALCTDWqaBti4=;
-        b=EgYNfcsnfI63reSkcr9ECLrERjna7vujLH7EPn2EeK3ELBB1BdLWxq4thBHLUdnvoO
-         YTDEipsmrZ59tz6Abh1/t7L8tZYdMgNclbdhd7Qf/OJdw5TvSuU+KYw7K2X8GS3R9GaK
-         qFr4juAXEwx2FN9z4wjZbsp6aZ3a4B9R6SRkiRHud8LlApGi2gq/Q2y+LT1b+/vyBjgg
-         IrDR8LfwOX14MXkbLQ1iW354kHYA5U86JZmBGnfwq6pS2TDdN2KhOc16YsTF9dffSOtR
-         C+J2+Zzmop4whp4kb+94dmFsWjJ3GgwjC/y+BEchlLfbkbokSd7i6Z62AdATXysUIYsi
-         J0Aw==
-X-Gm-Message-State: AOAM533fmWAFCcVW87isNfDgag1QyfF32YrgblBCMszUXqlBSmFN4IHr
-        +8lDtwsevAoCnIra9NqJCd++eFGvH9BppRjoL/3L+EKcWtVIzWkQf6wf1qW7OHSOjgNM1gF+vvR
-        YS6uQYWnD2K4WQ3pGhrb43DDIhhraC4hMgKrLOw==
-X-Received: by 2002:a17:907:6091:: with SMTP id ht17mr542189ejc.607.1644873731288;
-        Mon, 14 Feb 2022 13:22:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwORNXxcION04IJzU5Gu/UfUyFurARbus6zd7xUK4wKOMUXzkjvihbjj39qrz7zMUkHFrH18A==
-X-Received: by 2002:a17:907:6091:: with SMTP id ht17mr542177ejc.607.1644873731059;
-        Mon, 14 Feb 2022 13:22:11 -0800 (PST)
+        bh=rXTrjGyqcJ3i7iMn5DJq5QR/kPtoX00uoKdkO1EvWnA=;
+        b=KIstM/nskWTYq9yQlwG36E2RQogvhFgL6qh4w/fNLqbdN8YmUGziMH/gq6uWaiELA9
+         lH47wPlLeli7KzmEqYfFDpguzW2c1pGhr86ljWVQ8kmkzmBYNv4tPZiJ5qGZo739siZt
+         uKuSHnQ5NQjjCN98XZ2cbgSPe4w6VhD8wn7RunNoHLyoXBfualy5ZjH/ZWWH9QDCz2YB
+         dpObgR8h1ttw8Bn4gpQGMvhEoUxHzdMMZwNXoSOw7qDs4nMvlmzMNaPw3eOBnZMu+3Dy
+         r6f7hhEon+igO3RMhg1QW0TPq+roixS9EihZ/osJSCb9bsi/y40THt1zcmAEWBRS6M6Z
+         9AbQ==
+X-Gm-Message-State: AOAM530h6O+sCIF0Qsawjk0pEQVOI++q51O5Ygy0sR9YJFobKwnRYmmP
+        3Fryt7qJT7H9208FAiZwZQUriq+5IJgUJipbYK2Aonb0+JBZSVP1mF7zz8CpUUw74Z3+4o6zCHw
+        SLubDIQ0dr4+cTz9Dej2ZlEZtLQbv6GJ9KwneLQ==
+X-Received: by 2002:a05:6402:34c7:: with SMTP id w7mr750385edc.397.1644873733097;
+        Mon, 14 Feb 2022 13:22:13 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxhpmbRreV1af3l7NRnMOVACbyZVoBFnimePwQQgpSt+JN3lhtVVBwqSExQGXUXAJA1H+Jnfw==
+X-Received: by 2002:a05:6402:34c7:: with SMTP id w7mr750338edc.397.1644873732938;
+        Mon, 14 Feb 2022 13:22:12 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id v24sm2327203ejf.7.2022.02.14.13.22.09
+        by smtp.gmail.com with ESMTPSA id v24sm2327203ejf.7.2022.02.14.13.22.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Feb 2022 13:22:10 -0800 (PST)
+        Mon, 14 Feb 2022 13:22:12 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -90,9 +90,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH v2 07/15] dt-bindings: pwm: sifive: Include generic pwm schema
-Date:   Mon, 14 Feb 2022 22:21:46 +0100
-Message-Id: <20220214212154.8853-8-krzysztof.kozlowski@canonical.com>
+Subject: [PATCH v2 08/15] dt-bindings: pwm: renesas,pwm: Include generic pwm schema
+Date:   Mon, 14 Feb 2022 22:21:47 +0100
+Message-Id: <20220214212154.8853-9-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
 References: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
@@ -113,31 +113,49 @@ brings pwm-cells requirement.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 ---
- Documentation/devicetree/bindings/pwm/pwm-sifive.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../bindings/pwm/renesas,pwm-rcar.yaml        | 26 ++++++++++---------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-index 84e66913d042..676b2160bada 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-@@ -22,6 +22,9 @@ description:
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+index 7ea1070b4b3a..1c94acbc2b4a 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
++++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+@@ -59,21 +59,23 @@ properties:
+ required:
+   - compatible
+   - reg
+-  - '#pwm-cells'
+   - clocks
+   - power-domains
  
-   https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
- 
+-if:
+-  not:
+-    properties:
+-      compatible:
+-        contains:
+-          enum:
+-            - renesas,pwm-r8a7778
+-            - renesas,pwm-r8a7779
+-then:
+-  required:
+-    - resets
 +allOf:
 +  - $ref: pwm.yaml#
 +
- properties:
-   compatible:
-     items:
-@@ -55,7 +58,6 @@ required:
-   - compatible
-   - reg
-   - clocks
--  - "#pwm-cells"
-   - interrupts
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              enum:
++                - renesas,pwm-r8a7778
++                - renesas,pwm-r8a7779
++    then:
++      required:
++        - resets
  
  additionalProperties: false
+ 
 -- 
 2.32.0
 
