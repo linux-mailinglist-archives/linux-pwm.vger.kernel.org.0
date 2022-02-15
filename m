@@ -2,62 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCD334B63C2
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Feb 2022 07:47:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CD934B648D
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Feb 2022 08:41:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233411AbiBOGry (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Feb 2022 01:47:54 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59208 "EHLO
+        id S231211AbiBOHlN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Feb 2022 02:41:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233062AbiBOGrx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Feb 2022 01:47:53 -0500
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A49B13CEE;
-        Mon, 14 Feb 2022 22:47:40 -0800 (PST)
-X-UUID: 8a680551181e4ef6b1965dea329c6ddb-20220215
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:CC:To:Subject; bh=kuUSzsUy0IuHIHRMUuXKTprsK0rJaAS42u2oTlh7Ol8=;
-        b=OJhY4hfE2+qlkc8EqiQSQwioKPD3SBJNwOOb+2qzg9XOfb0IUkU6TewnTs3rpqm1WvSrHqQH1jmeEfg5hi+KpnBI7DKj74uVlXAP2Qmh9QzVbd5eWBfGRG5vUbrTyDb4B1SKGhOS2hb6ZNX3svoa/6wkVzZpppSjtElDMueLPTM=;
-X-UUID: 8a680551181e4ef6b1965dea329c6ddb-20220215
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-        (envelope-from <macpaul.lin@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 2058819367; Tue, 15 Feb 2022 14:47:34 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 15 Feb 2022 14:47:33 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 15 Feb 2022 14:47:33 +0800
-Subject: Re: [PATCH v2 3/3] pwm: pwm-mediatek: Beautify error messages text
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-CC:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-References: <20220214140339.112500-1-angelogioacchino.delregno@collabora.com>
- <20220214140339.112500-3-angelogioacchino.delregno@collabora.com>
-From:   Macpaul Lin <macpaul.lin@mediatek.com>
-Message-ID: <e3222caa-ec69-2e90-ef81-666b03da656d@mediatek.com>
-Date:   Tue, 15 Feb 2022 14:47:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S230210AbiBOHlM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Feb 2022 02:41:12 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23A59119856
+        for <linux-pwm@vger.kernel.org>; Mon, 14 Feb 2022 23:41:03 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJsS0-0006FP-9s; Tue, 15 Feb 2022 08:40:40 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJsRu-00GhwB-EV; Tue, 15 Feb 2022 08:40:33 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJsRt-003I1A-4j; Tue, 15 Feb 2022 08:40:33 +0100
+Date:   Tue, 15 Feb 2022 08:40:30 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>,
+        Rahul Tanwar <rtanwar@maxlinear.com>,
+        Jeff LaBundy <jeff@labundy.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Vignesh R <vigneshr@ti.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 00/15] pwm: dt-bindings: Include generic pwm schema
+Message-ID: <20220215074030.3nugwproxjh3lwhl@pengutronix.de>
+References: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20220214140339.112500-3-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="iso-2022-jp"; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="75mhjvzsa3tznmbu"
+Content-Disposition: inline
+In-Reply-To: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,56 +79,63 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-T24gMi8xNC8yMiAxMDowMyBQTSwgQW5nZWxvR2lvYWNjaGlubyBEZWwgUmVnbm8gd3JvdGU6DQo+
-IEFzIGEgY2hlcnJ5LW9uLXRvcCBjbGVhbnVwLCBtYWtlIGVycm9yIG1lc3NhZ2VzIGNsZWFyZXIg
-dG8gcmVhZA0KPiBieSBjaGFuZ2luZyBpbnN0YW5jZXMgb2YgImNsb2NrOiBYWFhYIGZhaWxlZCIg
-dG8gYSBtb3JlIHJlYWRhYmxlDQo+ICJGYWlsZWQgdG8gZ2V0IFhYWFggY2xvY2siLiBBbHNvIGFk
-ZCAib2YiIHRvIHVuc3VwcG9ydGVkIHBlcmlvZA0KPiBlcnJvci4NCj4gDQo+IFRoaXMgaXMgcHVy
-ZWx5IGEgY29zbWV0aWMgY2hhbmdlOyBubyAicmVhbCIgZnVuY3Rpb25hbCBjaGFuZ2VzLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogQW5nZWxvR2lvYWNjaGlubyBEZWwgUmVnbm8gPGFuZ2Vsb2dpb2Fj
-Y2hpbm8uZGVscmVnbm9AY29sbGFib3JhLmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9wd20vcHdt
-LW1lZGlhdGVrLmMgfCA4ICsrKystLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
-cygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9wd20t
-bWVkaWF0ZWsuYyBiL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5jDQo+IGluZGV4IDZiMzlmM2Q2
-OWU0MS4uNTY4YjEzYTQ4NzE3IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3B3bS9wd20tbWVkaWF0
-ZWsuYw0KPiArKysgYi9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYw0KPiBAQCAtMTQ2LDcgKzE0
-Niw3IEBAIHN0YXRpYyBpbnQgcHdtX21lZGlhdGVrX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNo
-aXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20sDQo+ICAgDQo+ICAgCWlmIChjbGtkaXYgPiBQV01f
-Q0xLX0RJVl9NQVgpIHsNCj4gICAJCXB3bV9tZWRpYXRla19jbGtfZGlzYWJsZShjaGlwLCBwd20p
-Ow0KPiAtCQlkZXZfZXJyKGNoaXAtPmRldiwgInBlcmlvZCAlZCBub3Qgc3VwcG9ydGVkXG4iLCBw
-ZXJpb2RfbnMpOw0KPiArCQlkZXZfZXJyKGNoaXAtPmRldiwgInBlcmlvZCBvZiAlZCBucyBub3Qg
-c3VwcG9ydGVkXG4iLCBwZXJpb2RfbnMpOw0KPiAgIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICAgCX0N
-Cj4gICANCj4gQEAgLTIyOSwxMiArMjI5LDEyIEBAIHN0YXRpYyBpbnQgcHdtX21lZGlhdGVrX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCXBjLT5jbGtfdG9wID0gZGV2
-bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJ0b3AiKTsNCj4gICAJaWYgKElTX0VSUihwYy0+Y2xrX3Rv
-cCkpDQo+ICAgCQlyZXR1cm4gZGV2X2Vycl9wcm9iZSgmcGRldi0+ZGV2LCBQVFJfRVJSKHBjLT5j
-bGtfdG9wKSwNCj4gLQkJCQkgICAgICJjbG9jazogdG9wIGZhaWxlZFxuIik7DQo+ICsJCQkJICAg
-ICAiRmFpbGVkIHRvIGdldCB0b3AgY2xvY2tcbiIpOw0KPiAgIA0KPiAgIAlwYy0+Y2xrX21haW4g
-PSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgIm1haW4iKTsNCj4gICAJaWYgKElTX0VSUihwYy0+
-Y2xrX21haW4pKQ0KPiAgIAkJcmV0dXJuIGRldl9lcnJfcHJvYmUoJnBkZXYtPmRldiwgUFRSX0VS
-UihwYy0+Y2xrX21haW4pLA0KPiAtCQkJCSAgICAgImNsb2NrOiBtYWluIGZhaWxlZFxuIik7DQo+
-ICsJCQkJICAgICAiRmFpbGVkIHRvIGdldCBtYWluIGNsb2NrXG4iKTsNCj4gICANCj4gICAJZm9y
-IChpID0gMDsgaSA8IHBjLT5zb2MtPm51bV9wd21zOyBpKyspIHsNCj4gICAJCWNoYXIgbmFtZVs4
-XTsNCj4gQEAgLTI0NCw3ICsyNDQsNyBAQCBzdGF0aWMgaW50IHB3bV9tZWRpYXRla19wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAkJcGMtPmNsa19wd21zW2ldID0gZGV2
-bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIG5hbWUpOw0KPiAgIAkJaWYgKElTX0VSUihwYy0+Y2xrX3B3
-bXNbaV0pKQ0KPiAgIAkJCXJldHVybiBkZXZfZXJyX3Byb2JlKCZwZGV2LT5kZXYsIFBUUl9FUlIo
-cGMtPmNsa19wd21zW2ldKSwNCj4gLQkJCQkJICAgICAiY2xvY2s6ICVzIGZhaWxlZFxuIiwgbmFt
-ZSk7DQo+ICsJCQkJCSAgICAgIkZhaWxlZCB0byBnZXQgJXMgY2xvY2tcbiIsIG5hbWUpOw0KPiAg
-IAl9DQo+ICAgDQo+ICAgCXBjLT5jaGlwLmRldiA9ICZwZGV2LT5kZXY7DQo+IA0KDQpUaGUgZm9y
-bWF0IG9mIHRoZXNlIGRlYnVnIG1lc3NhZ2VzICJjbG9jazogdG9wIiBvciAiY2xvY2s6IG1haW4i
-IGlzICANCm1lYW50IHRvIGtlZXAgYm90aCBodW1hbiBhbmQgbWFjaGluZSdzIHJlYWRhYmlsaXR5
-IGF0IHRoZSBzYW1lIHRpbWUuDQpUaGlzIGtpbmQgb2YgZm9ybWF0IGlzIG11Y2ggbW9yZSBlYXNp
-ZXIgdG8gcGFyc2UgYnkgc2NyaXB0cywgd2hpY2ggdGhlICANCmRyaXZlcidzIGNhdGVnb3J5IGFu
-ZCBzdWIgbm9kZXMgYXJlIHNlcGFyYXRlZCBieSBkZWxpbWl0ZXJzIC4gSWYgYSBmYWlsICANCmxv
-ZyBoYXMgYmVlbiBwcm92aWRlZCwgdGhlIHNjcmlwdCBjb3VsZCBpbmRpY2F0ZWQgd2hlcmUgdGhl
-IGlzc3VlIG1pZ2h0ICANCmV4aXN0cyBwcm9iYWJseS4gRGV2aWNlIHZlbmRlciwgZmllbGQgYXBw
-bGljYXRpb24gZW5naW5lZXIsIGFuZCBkcml2ZXIgIA0KbWFpbnRhaW5lciBjb3VsZCBiZSBhYmxl
-IHRvIHdyaXRlIGFuZCB1c2UgdGhlIGVycm9yIGxvZyBwYXJzZXIgYmVmb3JlICANCmRlYnVnZ2lu
-Zy4NCg0KSSdtIG5vdCBzdXJlIGlmIHRoaXMga2luZCBvZiBmb3JtYXQgd2lsbCBiZSBiZXR0ZXIu
-IExpa2UsICJGYWlsZWQgdG8gZ2V0ICANCmNsb2NrOiAlcyIuDQoNCklmIG1vc3QgcGVvcGxlIGxp
-a2UgdGhpcyBraW5kIG9mIHNvbHV0aW9uICgiRmFpbGVkIHRvIGdldCBjbG9jazogJXNcbiIpLCAg
-DQp0aGVuIHlvdSBjYW4gaGF2ZSB0aGUgcmV2aWV3ZWQtYnkgdGFnLg0KVGhhbmtzIQ0KDQpSZXZp
-ZXdlZC1ieTogTWFjcGF1bCBMaW4gPG1hY3BhdWwubGluQG1lZGlhdGVrLmNvbT4NCg0KUmVnYXJk
-cywgOikNCk1hY3BhdWwgTGlu
 
+--75mhjvzsa3tznmbu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+[dropped Anson Huang and Yash Shah from Cc: which were not reachable for
+my last mail]
+
+On Mon, Feb 14, 2022 at 10:21:39PM +0100, Krzysztof Kozlowski wrote:
+> Hi,
+>=20
+> Changes since v1:
+> 1. Add tags.
+> 2. Adjust subject (Uwe).
+
+However you only took a part of my suggestion ...
+
+> Krzysztof Kozlowski (15):
+>   dt-bindings: pwm: allwinner,sun4i-a10: Include generic pwm schema
+>   dt-bindings: pwm: imx: Include generic pwm schema
+>   dt-bindings: pwm: intel,lgm: Include generic pwm schema
+>   dt-bindings: pwm: iqs620a: Include generic pwm schema
+>   dt-bindings: pwm: mxs: Include generic pwm schema
+>   dt-bindings: pwm: rockchip: Include generic pwm schema
+>   dt-bindings: pwm: sifive: Include generic pwm schema
+>   dt-bindings: pwm: renesas,pwm: Include generic pwm schema
+>   dt-bindings: pwm: toshiba,visconti: Include generic pwm schema
+>   dt-bindings: pwm: brcm,bcm7038: Do not require pwm-cells twice
+>   dt-bindings: pwm: intel,keembay: Do not require pwm-cells twice
+
+=2E.. The actual patch has a space after the comma, I like this variant
+without comma better as this is a compatible string. Also a # before
+pwm-cells would be nice.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--75mhjvzsa3tznmbu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmILWOsACgkQwfwUeK3K
+7An9UAf/fphlT382o9/FKqwTAw/JDCNvTPyXDeOLfHI7s5jElS2X/z6Ev+qvlRbO
+c69X0dIeX0m3ZG2Aqq9zXkzrEjLiv5BUPTnaA/EsPCkU8TWyTQa/cd+y7kAnqVxx
+63Vj1JFt9TxNaAR/+EebmDui9nLX3D/hUYNaJn+JbAZlLGGdzcmbovc5YmB1lw/M
+qByp61tL/ib3x+KV8tA4Rccvu1uxZTmU7VUf15xsHOdY1LXDeu/ZCbWIWOy0AeNa
+dlLq2yiogwbckiquxxHnHm3yVPt1ncclAYeUT3VY9VeHvU6OQkNvJgtdmsGkEFfn
+ZVt42/xmkq2p4d6tMsSkQzJGnR6DRA==
+=6jay
+-----END PGP SIGNATURE-----
+
+--75mhjvzsa3tznmbu--
