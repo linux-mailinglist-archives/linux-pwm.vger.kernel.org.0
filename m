@@ -2,33 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6068B4B69BD
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Feb 2022 11:50:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AA974B6C3C
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Feb 2022 13:41:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236674AbiBOKuc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Feb 2022 05:50:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60232 "EHLO
+        id S237694AbiBOMlv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Feb 2022 07:41:51 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236683AbiBOKuc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Feb 2022 05:50:32 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3171FD1D6E
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Feb 2022 02:50:22 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJvPE-0000Mj-FZ; Tue, 15 Feb 2022 11:50:00 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJvP7-00GjUe-Ml; Tue, 15 Feb 2022 11:49:52 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJvP6-003Jg7-77; Tue, 15 Feb 2022 11:49:52 +0100
-Date:   Tue, 15 Feb 2022 11:49:52 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+        with ESMTP id S237759AbiBOMlv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Feb 2022 07:41:51 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D17513E1B
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Feb 2022 04:41:35 -0800 (PST)
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id C729740259
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Feb 2022 12:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1644928893;
+        bh=QbUWVDT9IJnNp0UgiXgiKB5Xmj3424bun3vMscrN3aE=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=TFPtg0WJBrYSJ2P15fg/xN9D1E5lxKdg1tIibrsFIefaXqW0YeHuDZQ9XzBxoHAVQ
+         EtdJTSUvSGvV/8VbDFJU0WT5noPpuHs7XfXsDjp2lZMrfToeqO6ybqlAe5gVJIfNjc
+         GAhoKYBeE5oZPU5Qae7hZcRrBTDkd3/2C4G9feBiaVfHD1wLQ4J7APrGZVw+Uwb+PY
+         yL7ubUkT0MutH05lkeerixqm+tunyla0+5dfsgsy3kh0I5zKr7SW7MI4pWeN+9KBxA
+         jlzspvRnyaRfSNKHX2wZ9tftMCHuKk+B9eXSxcr+CLLPNTkmU+wogtMR+hE7cTLJge
+         NIHp+/wm8/AbA==
+Received: by mail-ej1-f69.google.com with SMTP id ga31-20020a1709070c1f00b006cec400422fso2277890ejc.22
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Feb 2022 04:41:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QbUWVDT9IJnNp0UgiXgiKB5Xmj3424bun3vMscrN3aE=;
+        b=rWcx7wztGy+LHOWbCuRliR+nQz2QMZlZ7ynhwIOH7QB3OoXiDnFFZLFnnh9f7hLv0g
+         lYbV1ir63VTEdbZgiQm5Pc7NR86Kf95RBBjnMhbG4po6H8idNwMwWXCqsmmZeLmU/nps
+         8nR1a0fWOC4SPtfpDwDSnkLlTovk0lzan/55xCYcNoioJ52/8TyLwOqn5DfG2oSpIEtK
+         Awn1RNdJSWJolWjBlZUqEy+3LIcgAUmQpXw6mMXbf6lYMV4jRuTpFZPFTpEFofq+XmxK
+         LLexp2wNo/n7zAVq/rNnJLCDxBk/+MQ8E9gt+3DARjDpEdXIaWZw17FvMT9wr30eHNvU
+         fbJA==
+X-Gm-Message-State: AOAM533E4e/f+pJDjplIF3yZUTYDDR1VDP5RLSwliSfpAhV9thBn/3Kv
+        NfqjUOakN45wvQd8ThzC2m0SyLX+eWg0r07B9lCtECMQFoDrP+Iu4WpxJzycjalnThai9vTx1eF
+        CNTW587vA4lYp8KJ8rrkaBo6A7aj7PjxIS4jdkw==
+X-Received: by 2002:adf:f58f:: with SMTP id f15mr3170181wro.192.1644928882832;
+        Tue, 15 Feb 2022 04:41:22 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJynosHfXmu54wEOehuRxyBrBBX/omTI+7jbTvJMV3zxiDGYGIyyPYwfwd8vXYZelAX0aR/OBQ==
+X-Received: by 2002:adf:f58f:: with SMTP id f15mr3170158wro.192.1644928882614;
+        Tue, 15 Feb 2022 04:41:22 -0800 (PST)
+Received: from [192.168.0.106] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
+        by smtp.gmail.com with ESMTPSA id u15sm37548631wrs.18.2022.02.15.04.41.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Feb 2022 04:41:21 -0800 (PST)
+Message-ID: <d042abb2-e5df-42b9-824a-6fc3b9c6df6c@canonical.com>
+Date:   Tue, 15 Feb 2022 13:41:20 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v2 00/15] pwm: dt-bindings: Include generic pwm schema
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
         Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>,
@@ -56,124 +92,94 @@ Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 00/15] pwm: dt-bindings: Include generic pwm schema
-Message-ID: <20220215104952.3z7y2t5udwab64kh@pengutronix.de>
 References: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
  <20220215074030.3nugwproxjh3lwhl@pengutronix.de>
  <CA+Eumj42Hojp1m4deuWnqMOaaNaupTSkzPaNbL_0eyBL-aDi_g@mail.gmail.com>
  <7df71f8d-cdc3-4b2e-cf0a-7112eff28142@canonical.com>
  <20220215094106.k35pmoxt2nk44dsj@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6ik55s7cffiwjwpg"
-Content-Disposition: inline
-In-Reply-To: <20220215094106.k35pmoxt2nk44dsj@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20220215104952.3z7y2t5udwab64kh@pengutronix.de>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220215104952.3z7y2t5udwab64kh@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 15/02/2022 11:49, Uwe Kleine-König wrote:
+> On Tue, Feb 15, 2022 at 10:41:06AM +0100, Uwe Kleine-König wrote:
+>> On Tue, Feb 15, 2022 at 09:02:25AM +0100, Krzysztof Kozlowski wrote:
+>>> On 15/02/2022 08:59, Krzysztof Kozlowski wrote:
+>>>> On Tue, 15 Feb 2022 at 08:40, Uwe Kleine-König
+>>>> <u.kleine-koenig@pengutronix.de> wrote:
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> [dropped Anson Huang and Yash Shah from Cc: which were not reachable for
+>>>>> my last mail]
+>>>>>
+>>>>> On Mon, Feb 14, 2022 at 10:21:39PM +0100, Krzysztof Kozlowski wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> Changes since v1:
+>>>>>> 1. Add tags.
+>>>>>> 2. Adjust subject (Uwe).
+>>>>>
+>>>>> However you only took a part of my suggestion ...
+>>>>>
+>>>>>> Krzysztof Kozlowski (15):
+>>>>>>   dt-bindings: pwm: allwinner,sun4i-a10: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: imx: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: intel,lgm: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: iqs620a: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: mxs: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: rockchip: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: sifive: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: renesas,pwm: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: toshiba,visconti: Include generic pwm schema
+>>>>>>   dt-bindings: pwm: brcm,bcm7038: Do not require pwm-cells twice
+>>>>>>   dt-bindings: pwm: intel,keembay: Do not require pwm-cells twice
+>>>>>
+>>>>> ... The actual patch has a space after the comma, I like this variant
+>>>>> without comma better as this is a compatible string.
+>>>>
+>>>> I am confused. My patch does not have comma after space. Your reply
+>>>> had such in the subject, but not in the proposed new subject you wrote
+>>>> in msg, so I left it as is. Without comma. If you still see comma, it
+>>>> is something with your mail client.
+>>>>
+>>>> See:
+>>>> https://lore.kernel.org/linux-devicetree/20220214212154.8853-12-krzysztof.kozlowski@canonical.com/T/#u
+>>>>
+>>>> Also reply from Vijayakannan does not have comma:
+>>>> https://lore.kernel.org/linux-devicetree/20220214081605.161394-11-krzysztof.kozlowski@canonical.com/T/#m80af695f2c751341bc971114aefa00ccc929a3ec
+>>
+>> Strange: I have this mail four times in my mailboxes (via
+>> linux-arm-kernel, linux-pwm, kernel@pengutronix.de and directly). In the
+>> two latter the Subject line is broken in two:
+> 
+> I was wrong. The ones to kernel@pengutronix.de and the linux-arm-kernel
+> one are the ones with the linebreak.
+> 
+> Hmm,
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/717310.html
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/717304.html
+> 
+> has the linebreaks, too. Still I wonder what is different between
+> kernel@pengutronix.de and u.kleine-koenig@pengutronix.de.
 
---6ik55s7cffiwjwpg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Other threads - not only mine - are also affected:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/714311.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/714316.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/714364.html
 
-On Tue, Feb 15, 2022 at 10:41:06AM +0100, Uwe Kleine-K=F6nig wrote:
-> On Tue, Feb 15, 2022 at 09:02:25AM +0100, Krzysztof Kozlowski wrote:
-> > On 15/02/2022 08:59, Krzysztof Kozlowski wrote:
-> > > On Tue, 15 Feb 2022 at 08:40, Uwe Kleine-K=F6nig
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > >>
-> > >> Hello,
-> > >>
-> > >> [dropped Anson Huang and Yash Shah from Cc: which were not reachable=
- for
-> > >> my last mail]
-> > >>
-> > >> On Mon, Feb 14, 2022 at 10:21:39PM +0100, Krzysztof Kozlowski wrote:
-> > >>> Hi,
-> > >>>
-> > >>> Changes since v1:
-> > >>> 1. Add tags.
-> > >>> 2. Adjust subject (Uwe).
-> > >>
-> > >> However you only took a part of my suggestion ...
-> > >>
-> > >>> Krzysztof Kozlowski (15):
-> > >>>   dt-bindings: pwm: allwinner,sun4i-a10: Include generic pwm schema
-> > >>>   dt-bindings: pwm: imx: Include generic pwm schema
-> > >>>   dt-bindings: pwm: intel,lgm: Include generic pwm schema
-> > >>>   dt-bindings: pwm: iqs620a: Include generic pwm schema
-> > >>>   dt-bindings: pwm: mxs: Include generic pwm schema
-> > >>>   dt-bindings: pwm: rockchip: Include generic pwm schema
-> > >>>   dt-bindings: pwm: sifive: Include generic pwm schema
-> > >>>   dt-bindings: pwm: renesas,pwm: Include generic pwm schema
-> > >>>   dt-bindings: pwm: toshiba,visconti: Include generic pwm schema
-> > >>>   dt-bindings: pwm: brcm,bcm7038: Do not require pwm-cells twice
-> > >>>   dt-bindings: pwm: intel,keembay: Do not require pwm-cells twice
-> > >>
-> > >> ... The actual patch has a space after the comma, I like this variant
-> > >> without comma better as this is a compatible string.
-> > >=20
-> > > I am confused. My patch does not have comma after space. Your reply
-> > > had such in the subject, but not in the proposed new subject you wrote
-> > > in msg, so I left it as is. Without comma. If you still see comma, it
-> > > is something with your mail client.
-> > >=20
-> > > See:
-> > > https://lore.kernel.org/linux-devicetree/20220214212154.8853-12-krzys=
-ztof.kozlowski@canonical.com/T/#u
-> > >=20
-> > > Also reply from Vijayakannan does not have comma:
-> > > https://lore.kernel.org/linux-devicetree/20220214081605.161394-11-krz=
-ysztof.kozlowski@canonical.com/T/#m80af695f2c751341bc971114aefa00ccc929a3ec
->=20
-> Strange: I have this mail four times in my mailboxes (via
-> linux-arm-kernel, linux-pwm, kernel@pengutronix.de and directly). In the
-> two latter the Subject line is broken in two:
 
-I was wrong. The ones to kernel@pengutronix.de and the linux-arm-kernel
-one are the ones with the linebreak.
-
-Hmm,
-
-http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/717310.=
-html
-http://lists.infradead.org/pipermail/linux-arm-kernel/2022-February/717304.=
-html
-
-has the linebreaks, too. Still I wonder what is different between
-kernel@pengutronix.de and u.kleine-koenig@pengutronix.de.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---6ik55s7cffiwjwpg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmILhU0ACgkQwfwUeK3K
-7Ak2jwf/YTZ2xphcIavG03zlKIE2aHmvTuLH2QJWSh+YE/vZDTs5qA96uHK4qJqE
-X5r25Qqby7C8Tb1gyOYSZJDoaiVnoe2XNyzDJeCG0QZnqYsj7bFKez3mmdKv7c/8
-7K4TeGdcWrOhVv6QFW+v8RrPWx5WkvSJT9PQ0CTgpmknr/9wX0YgO5yEGZcP3IYk
-265zktNZnG3rg+p1qb+qt98fkLQWvy+wtaGH2Sd9kzVM82ukJ0neX0fQxndvOHWW
-SbbXcy+HJWwBbUKiST0AvQCjqeo+O1LR5qn8+sLfNAADN6sjmZW09vX2rxC+DNXs
-G7dnLE2XCT/BaFyxHPQanXfYkZxb3w==
-=Rrce
------END PGP SIGNATURE-----
-
---6ik55s7cffiwjwpg--
+Best regards,
+Krzysztof
