@@ -2,89 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5DFD4B7ABD
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Feb 2022 23:54:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E45D4B7F16
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Feb 2022 05:06:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244257AbiBOWyu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Feb 2022 17:54:50 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60588 "EHLO
+        id S239898AbiBPEGh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Feb 2022 23:06:37 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235253AbiBOWyu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Feb 2022 17:54:50 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADD490FCD;
-        Tue, 15 Feb 2022 14:54:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 049F5B81C23;
-        Tue, 15 Feb 2022 22:54:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC332C340EB;
-        Tue, 15 Feb 2022 22:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644965676;
-        bh=vp0AA5rWNWbwH+h7RrfOW+1FW77YNO31CyLQUGfkQek=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K3AFijseqC8GbeefAxP32BuWuyj0dYJ4Ia8GwqQo5txlC7d37OSdcvqOOFYVv0m9d
-         p9c7lXNewgA3CMClmpJMlhEs3ny9AIOz4VjKR9B/mdBdLVIM/oLm6kEPK6pgdzyDBL
-         zM8oPb/ZUR89LdED7edEt+40xGFeFzBCdW/hXy5yGi8DaxCTd5Au6JmMSpXguLl4aO
-         FyaLJyh1Fe3S1hAah9W6rQ/PH1UjVuDraKPwXavoOLlVmA3T6EKGdxWkIS/7xeMRdT
-         ad0bYkM0C6ws46CuOa+fN0IXMoMux61pGYcI8tyf/ShRV6XYeySDAQP4tzm+UUo9lL
-         +towKOuOi7cng==
-Received: by mail-ed1-f54.google.com with SMTP id h18so760971edb.7;
-        Tue, 15 Feb 2022 14:54:36 -0800 (PST)
-X-Gm-Message-State: AOAM532kvvFMEpjTGmhV9lf2Rd3KzR3qSNGkQDdJqcz3k9ohqVARLoqP
-        WuQFeyuIqjPkpxI//nQ7+FlWNhqTHmkuHL+Rww==
-X-Google-Smtp-Source: ABdhPJwIhjgFezkhGh/JThuKg8ThIEnytIpHYE2ZFs4zMkn1bSCelwpeUJLERmuj2x6h/ToJGmqArMx73XuAI+0Vol0=
-X-Received: by 2002:a05:6402:5242:b0:40f:6a4f:ff33 with SMTP id
- t2-20020a056402524200b0040f6a4fff33mr126833edd.30.1644965675039; Tue, 15 Feb
- 2022 14:54:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 15 Feb 2022 16:54:23 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+bfr=csxzKN3T=tBY7bZ6Gny+sm5xtMP8nmyiD3joNFg@mail.gmail.com>
-Message-ID: <CAL_Jsq+bfr=csxzKN3T=tBY7bZ6Gny+sm5xtMP8nmyiD3joNFg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/15] pwm: dt-bindings: Include generic pwm schema
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Jeff LaBundy <jeff@labundy.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Vignesh R <vigneshr@ti.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@lists.linux.dev,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S239345AbiBPEGg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Feb 2022 23:06:36 -0500
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292D3326;
+        Tue, 15 Feb 2022 20:06:24 -0800 (PST)
+Received: by mail-io1-f42.google.com with SMTP id x13so901138iop.4;
+        Tue, 15 Feb 2022 20:06:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=+FhN6H4sJdFIwAxrGa45xsxIVEXRnp64Rx9ILQ4TAu4=;
+        b=z5hoQlzp9CmZl/p5Kmt40zWi8Wy5lwbj89y/I6oaGs1ioqxBfedzW7HrFdcxB3dT1M
+         L5T7hbwA2eWl+EiL0AyorUFnsbBLZklZoqAE+108pk8rVCq8/eGH4BBlJw+DpKS2Rjt6
+         JA8NJQuE2Ykui7BcXzBIAbeLOUWpG2861lpt74drquML6Bd03xG7YezWDhC7ASWAUiPC
+         UW1YRf9Ev7Y8wLuuaQedJFjD/3E4L/vWOdX6Ta4qQUQceNeQOSs+gs3h4h8EJesJK67+
+         FHEfKhBgncJ2LDcp9XOKdhD9NdXStFy5lESvSmOAAqwVbmLHwPr4JTxNUX1Rv0ykJ3+E
+         9g0g==
+X-Gm-Message-State: AOAM5312c6a5LIZf1KUZoeeDWyf1M4eAzjl6UKvpTFEYfh9PmTkVh/Tu
+        Gdb039joiMfSowsTIrrPwA==
+X-Google-Smtp-Source: ABdhPJyJENO8J9J/BgMWhhP/uor8Gq356mJ2fVFAnZn6K8d9RLQjrlR5CKBvS9G6tzeoxnb0cijV7w==
+X-Received: by 2002:a05:6638:1409:b0:30f:843:f953 with SMTP id k9-20020a056638140900b0030f0843f953mr586132jad.22.1644984383486;
+        Tue, 15 Feb 2022 20:06:23 -0800 (PST)
+Received: from robh.at.kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id g19sm3023031iox.39.2022.02.15.20.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Feb 2022 20:06:22 -0800 (PST)
+Received: (nullmailer pid 298289 invoked by uid 1000);
+        Wed, 16 Feb 2022 04:06:20 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     xinlei.lee@mediatek.com
+Cc:     u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        matthias.bgg@gmail.com
+In-Reply-To: <1644847276-27622-2-git-send-email-xinlei.lee@mediatek.com>
+References: <1644847276-27622-1-git-send-email-xinlei.lee@mediatek.com> <1644847276-27622-2-git-send-email-xinlei.lee@mediatek.com>
+Subject: Re: [1/1] dt-bindings: pwm:Convert pwm-mtk-disp.txt format file to pwm-mtk-disp.yaml format file
+Date:   Tue, 15 Feb 2022 22:06:20 -0600
+Message-Id: <1644984380.781456.298288.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -92,35 +63,43 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 3:22 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> Hi,
->
-> Changes since v1:
-> 1. Add tags.
-> 2. Adjust subject (Uwe).
->
-> Best regards,
-> Krzysztof
->
-> Krzysztof Kozlowski (15):
->   dt-bindings: pwm: allwinner,sun4i-a10: Include generic pwm schema
->   dt-bindings: pwm: imx: Include generic pwm schema
->   dt-bindings: pwm: intel,lgm: Include generic pwm schema
->   dt-bindings: pwm: iqs620a: Include generic pwm schema
->   dt-bindings: pwm: mxs: Include generic pwm schema
->   dt-bindings: pwm: rockchip: Include generic pwm schema
->   dt-bindings: pwm: sifive: Include generic pwm schema
->   dt-bindings: pwm: renesas,pwm: Include generic pwm schema
->   dt-bindings: pwm: toshiba,visconti: Include generic pwm schema
->   dt-bindings: pwm: brcm,bcm7038: Do not require pwm-cells twice
->   dt-bindings: pwm: intel,keembay: Do not require pwm-cells twice
->   dt-bindings: pwm: samsung: Do not require pwm-cells twice
->   dt-bindings: pwm: tiecap: Do not require pwm-cells twice
->   dt-bindings: pwm: tiehrpwm: Do not require pwm-cells twice
->   dt-bindings: pwm: renesas,tpu: Do not require pwm-cells twice
+On Mon, 14 Feb 2022 22:01:16 +0800, xinlei.lee@mediatek.com wrote:
+> From: xinlei lee <xinlei.lee@mediatek.com>
+> 
+> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-mtk-disp.yaml      | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml
+> 
 
-For the series:
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pwm/pwm-mtk-disp.yaml:60:7: [error] no new line character at the end of file (new-line-at-end-of-file)
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pwm/pwm-mtk-disp.example.dts:20:18: fatal error: dt-bindings/clock/mt8186-clk.h: No such file or directory
+   20 |         #include <dt-bindings/clock/mt8186-clk.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:378: Documentation/devicetree/bindings/pwm/pwm-mtk-disp.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1398: dt_binding_check] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1592602
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
