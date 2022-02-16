@@ -2,127 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5BCD4B8424
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Feb 2022 10:26:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58D8B4B8471
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Feb 2022 10:36:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231980AbiBPJRN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Feb 2022 04:17:13 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:47194 "EHLO
+        id S232239AbiBPJdP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Feb 2022 04:33:15 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:57146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231889AbiBPJRL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Feb 2022 04:17:11 -0500
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A09424F2C;
-        Wed, 16 Feb 2022 01:16:58 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 7E01F2B00253;
-        Wed, 16 Feb 2022 04:16:56 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 16 Feb 2022 04:16:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; bh=VFcoWbDd0osHHRdxqMFsT3iCNYCwOPPti/8jLz
-        0l9Fo=; b=gMmOOb/cy5q0qSaypHszjYTjRp6mkgE1E0X5SVN8+LXilm9VlD0ba1
-        Yd8PELTECnV/WyTPCMail7BPOLOYKq1tAebPOXRlsKA+qJIHylIXmJnxN4krzX14
-        zAlujRe7EgJUfLQpIykKB1KsBZLntJau8WMyIwV1XRVWuzIUvbVGEWUBKWHT5b8w
-        JXXrByFWuX3J9LAmv/uA5EtJL8Bif2JJctSida7kqBFxSjOrZdW1Rohr6TIbxIlD
-        CblAX9rIGsHM7ZtB278F1Ay8hIT8Y8C95EBMXUMJijsKQ/MLlusP5UznKk3vd+4p
-        rRTPG/ExpDLqyjUfCdJAeif3lOtng1EA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=VFcoWbDd0osHHRdxq
-        MFsT3iCNYCwOPPti/8jLz0l9Fo=; b=IXl7IynA7aSHcbw2X5veDZ+sxmlfQELXT
-        Cgc9KsGlF+bvXOFhUPAA3u4MdbxSWWZcY5RQmagwPYuqffx+DMYgKQLP3nCHvdt1
-        qgonZdjyft9ogfyrkG9yuGI/ZNawD9Q2Z1mI8nbpwxFgV7+ylTuFI2TJt0bsLxUa
-        zcd/LKt87aeF5dAMZoTbGsI2vP7EjK4pa0OfOxY6HD4pdzOi/B/30ejWrB6HYCsy
-        V5tVep0oUQNgXFxgEk70yewB+dpLYyb7X+H0tB5I2t1LRQRh9WJ6meSKCH+6kB7V
-        HR7QA7pOzNdASHqgtZfWq3LdrfUp1ZHd8G5NGs02G/cNGOcIrkRXw==
-X-ME-Sender: <xms:B8EMYor_nJ2EwWClDvHiGDOFmF0E3m8geN51vi_QkUSziqAogEeI2w>
-    <xme:B8EMYurlnLBi0qOL9gdN7KmjGGwWX7r4ViNW_LuBOz7n-7EVUUMRU2YDRVX_bgHBt
-    dDHWMMprnHFleh28KQ>
-X-ME-Received: <xmr:B8EMYtN4dgBqIQG91gBB25tHlJK2gMGKlF-6mj1_vtQEkyMf92u_rPi9Pk7NA9Nj7JRZGL0mAF0t00SGY-CkK7p-Ekufa5zI5PSzw9A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjeeiucetufdoteggodetrfdotffvucfrrh
-    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
-    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
-    epfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhmvgcutfhi
-    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvghrnh
-    epleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieehgedunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimh
-    gvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:B8EMYv5vZkT1aAUs0S3c6j5KBtiLTwkHNtRNjO3skOmQls_SoB0KmA>
-    <xmx:B8EMYn6np-ZrPxvWORcnBRLIx5Le66ffTjOCicE84kdv5WTw4tJwqg>
-    <xmx:B8EMYvgg7ALN5zKooKRP9DzO6DrTjIljNCG-ZzY6zG7Hrhi1dCK1ag>
-    <xmx:CMEMYmq50CeVW0SbdTcwY0zwZ1u5cWDvwJwGOWw9giYRkOvdCC7RJre6xOM>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Feb 2022 04:16:55 -0500 (EST)
-Date:   Wed, 16 Feb 2022 10:16:54 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Javier Martinez Canillas <javierm@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org,
-        Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
-Message-ID: <20220216091654.vwscevn6g7igzaau@houat>
-References: <20220214133710.3278506-1-javierm@redhat.com>
- <20220214133710.3278506-4-javierm@redhat.com>
+        with ESMTP id S232237AbiBPJdO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Feb 2022 04:33:14 -0500
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5279BBAC;
+        Wed, 16 Feb 2022 01:33:01 -0800 (PST)
+X-UUID: e9b621d16e57461ab887785c7ec15e67-20220216
+X-UUID: e9b621d16e57461ab887785c7ec15e67-20220216
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <xinlei.lee@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 537994735; Wed, 16 Feb 2022 17:32:58 +0800
+Received: from MTKMBS34N1.mediatek.inc (172.27.4.172) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Wed, 16 Feb 2022 17:32:57 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS34N1.mediatek.inc
+ (172.27.4.172) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Feb
+ 2022 17:32:56 +0800
+Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Wed, 16 Feb 2022 17:32:55 +0800
+From:   <xinlei.lee@mediatek.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <jitao.shi@mediatek.com>
+CC:     <allen-kh.cheng@mediatek.com>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
+Subject: [v2,0/4] Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml format
+Date:   Wed, 16 Feb 2022 17:32:47 +0800
+Message-ID: <1645003971-16908-1-git-send-email-xinlei.lee@mediatek.com>
+X-Mailer: git-send-email 2.6.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iis3uqkiq2yj5fqd"
-Content-Disposition: inline
-In-Reply-To: <20220214133710.3278506-4-javierm@redhat.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
 
---iis3uqkiq2yj5fqd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v1:
+1. Fixed formatting issues mentioned in the v1.
+2. Delete pwm-mtk-disp.txt.
+3. Add mtk_pwm dt_maintainers.
+4. Add "#pwm-cells" & power-domains properties.
+5. Make dt_checking successful.
 
-On Mon, Feb 14, 2022 at 02:37:07PM +0100, Javier Martinez Canillas wrote:
-> This adds a DRM driver for SSD1305, SSD1306, SSD1307 and SSD1309 Solomon
-> OLED display controllers.
->=20
-> It's only the core part of the driver and a bus specific driver is needed
-> for each transport interface supported by the display controllers.
->=20
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Xinlei Lee (4):
+  dt-bindings: pwm: Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml
+    format
+  dt-bindings: pwm: Add compatible for MediaTek MT8192
+  dt-bindings: pwm: Add compatible for MediaTek MT8195
+  dt-bindings: pwm: Add compatible for MediaTek MT8186
 
-Reviewed-by: Maxime Ripard <maxime@cerno.tech>
+ .../bindings/pwm/mediatek,pwm-disp.yaml       | 74 +++++++++++++++++++
+ .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 44 -----------
+ 2 files changed, 74 insertions(+), 44 deletions(-)
+ create mode 100755 Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
 
-Maxime
+-- 
+2.18.0
 
---iis3uqkiq2yj5fqd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYgzBBgAKCRDj7w1vZxhR
-xeISAQCFHDmKrRlVBHnHyZrWxgNiHdImv6H7xoVHC1ZcIWMEagEA6owxEBS0b4vI
-R0QEr6UuhEyRwL/GPyIajKEHVfWqHAY=
-=+M1k
------END PGP SIGNATURE-----
-
---iis3uqkiq2yj5fqd--
