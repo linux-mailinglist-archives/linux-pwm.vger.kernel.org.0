@@ -2,67 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F194F4BBD18
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Feb 2022 17:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76C724BBDDF
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Feb 2022 17:56:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235282AbiBRQL0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Feb 2022 11:11:26 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49150 "EHLO
+        id S238115AbiBRQ4R (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Feb 2022 11:56:17 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237446AbiBRQLY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Feb 2022 11:11:24 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4629F2B3AFA
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Feb 2022 08:11:06 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id gb39so16194659ejc.1
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Feb 2022 08:11:06 -0800 (PST)
+        with ESMTP id S238109AbiBRQ4P (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Feb 2022 11:56:15 -0500
+Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E479125AE7A
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Feb 2022 08:55:57 -0800 (PST)
+Received: by mail-oo1-xc36.google.com with SMTP id r41-20020a4a966c000000b0031bf85a4124so4240680ooi.0
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Feb 2022 08:55:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A2OloDpJvsjdWi7wGdly9G9Fl4hNwVdVhIAytmuuXRs=;
-        b=EkJRBZvSnj9R4IxbhdruXGy1aYW2yS2ue39KyFuXYWoUHS8yMXNEtcICUEj45dcK7D
-         Ju1waEUm5V22tInwgU0e5alziJzVuCyDNowFFx/G8WGjFod0Jk+kODbiGWAn11xCkIY6
-         Nb4cJq6//pZhbOaTWDt3uiAOK54AuW1bKNcUE=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pInuhqCUKlyUoEXuWgKg1Wujz7TDTU39Sy2l1F/hTtA=;
+        b=tGMO/mIvCDGbcTb9cGMz11xTh7itxXS7A61+zRdHHfGkwSvgMKZFG21gFAWetvbnZ1
+         H4bw6eg7/5ZzhaBpDRHoc3nlq1CRQJKgagvK74uAoeHWDDB4PzmwUAfXXEYfMp3lCZdr
+         wbqQtOUtgx3GFlT10yrWbUD3w+oVZWsmqMNZvmJPevYtneBMhxNEFdtDyCDD5L4k6Qrd
+         1oR6nCDA/xl+K/3EhSi3fDIkSABdaGL9AHY8uJJVRDVE2X1TMyDXNguJ7VmEUWzyReZw
+         pbIl/RGCSJupHY11jktZoCTTDx1y2zABB+9f3bMGIAPErILsRUiqgvXFSZ4otQ+Weboh
+         iGNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A2OloDpJvsjdWi7wGdly9G9Fl4hNwVdVhIAytmuuXRs=;
-        b=pXxtanXdfLXG2kDMg0YAco/7ThijZ4/qg1wAYZSFcU8CtnwRcHawi4lp6gaPtmdkUM
-         joF8Pxv8hwioRxseelE6V+Zfq2xk1zu32iGr2CCR3xrHMIOFA7F1sM3WIigifaT0rI9D
-         b3tHPneyZS7YUtBrmEVh3SUwiviX2WL6DTVp5N/M8mmOmRUbItrXUQtnIXZCRhyz0kOF
-         FBr0kxt4DJKbUOF1Wr3vKhatxNAX5Be168HZk6wYxROIFhfyuzSUUFMiy4yanEk4jjQQ
-         Q7bUOmk248cKHD4utzuRnsBl37ogB1im8PuzriXyiJqDBdFdHvJX4euRM+jE8NELqd39
-         2BIA==
-X-Gm-Message-State: AOAM533wuCntddKjpTPtrmORLbtLDqMHJfmtZze0Sr+tbCmUywwt7uaM
-        1QuGsYhYZk+vrlvNsRqe6znzB77lCNCX5kEqP/c=
-X-Google-Smtp-Source: ABdhPJyFZ2QvE7q4v8OxqPntMKKIjNyXd/iE4BkgdKBj6eJu4uKQKCP0k0IczwF3mvL0z+cwHx7Usw==
-X-Received: by 2002:a17:906:65d0:b0:6ce:29b2:bdbe with SMTP id z16-20020a17090665d000b006ce29b2bdbemr6741507ejn.572.1645200664498;
-        Fri, 18 Feb 2022 08:11:04 -0800 (PST)
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com. [209.85.221.50])
-        by smtp.gmail.com with ESMTPSA id w4sm4960481edc.73.2022.02.18.08.11.03
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Feb 2022 08:11:04 -0800 (PST)
-Received: by mail-wr1-f50.google.com with SMTP id u2so14248860wrw.1
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Feb 2022 08:11:03 -0800 (PST)
-X-Received: by 2002:adf:ef07:0:b0:1e3:333f:a101 with SMTP id
- e7-20020adfef07000000b001e3333fa101mr6712804wro.301.1645200663316; Fri, 18
- Feb 2022 08:11:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20220216045620.1716537-1-bjorn.andersson@linaro.org> <20220216045620.1716537-2-bjorn.andersson@linaro.org>
-In-Reply-To: <20220216045620.1716537-2-bjorn.andersson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 18 Feb 2022 08:10:50 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Xj5k7JROP1PFY9tmXxLY7FRJNdr-+UmkCW_YGqpDkFew@mail.gmail.com>
-Message-ID: <CAD=FV=Xj5k7JROP1PFY9tmXxLY7FRJNdr-+UmkCW_YGqpDkFew@mail.gmail.com>
-Subject: Re: [PATCH v12 2/2] leds: Add driver for Qualcomm LPG
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pInuhqCUKlyUoEXuWgKg1Wujz7TDTU39Sy2l1F/hTtA=;
+        b=liVIFtsdcT3wD886mH8xtRutgIDDPLPhsWq3QckHYGCgx6c+6LTU5wjQYevhLmU6rm
+         cu7uVZSSg5bfvFKnyVxUjhHLQSiPyfkFPdbXYY0+ed7iYbhbC9anNkKAXh437TmbjM4W
+         TRnitcJKEGYVZfTuyhfua73CaVKDfThzEjM9xluO9/ggHnEAEP3Ru6Z5ukFMu8DLJSOK
+         XYEYGpSr2YX/oJ7atirF19WLDVDgerAVO56jsBo7Lp2B5CH4YEvScEEdraSQ9LIJ6uCy
+         iKiqVaS2P1FRaa9W7ustM+HjokTnz7PPrtwaQxEkNnzXKF9+Pnd6FfDR7jRsfX29IoRm
+         AXQw==
+X-Gm-Message-State: AOAM532FWaz9hcVXfPx2JAMd0hEo/PWJbPLAWho5X27Hrb6F2YvFYE7o
+        9f8oSb4Sm1nGd1KnRKR3VK6qQDFnIBxyPg==
+X-Google-Smtp-Source: ABdhPJwMdNlDq+QHL5mKNt87mqwiHbkMztRqQza/VJNIKkYfdAwMNP8R1T6Q3XW6mpT4o1PdTGlfdg==
+X-Received: by 2002:a05:6870:b003:b0:d1:3804:aee2 with SMTP id y3-20020a056870b00300b000d13804aee2mr2889956oae.155.1645203357235;
+        Fri, 18 Feb 2022 08:55:57 -0800 (PST)
+Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id el40sm22088082oab.22.2022.02.18.08.55.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Feb 2022 08:55:56 -0800 (PST)
+Date:   Fri, 18 Feb 2022 08:58:02 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
 Cc:     Pavel Machek <pavel@ucw.cz>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
         Satya Priya Kakitapalli <c_skakit@qti.qualcomm.com>,
         Marijn Suijten <marijn.suijten@somainline.org>,
         Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
@@ -70,10 +61,18 @@ Cc:     Pavel Machek <pavel@ucw.cz>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
         linux-pwm <linux-pwm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Subject: Re: [PATCH v12 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <Yg/QGqQhYZY6KaqJ@ripper>
+References: <20220216045620.1716537-1-bjorn.andersson@linaro.org>
+ <20220216045620.1716537-2-bjorn.andersson@linaro.org>
+ <CAD=FV=Xj5k7JROP1PFY9tmXxLY7FRJNdr-+UmkCW_YGqpDkFew@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Xj5k7JROP1PFY9tmXxLY7FRJNdr-+UmkCW_YGqpDkFew@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,56 +80,71 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+On Fri 18 Feb 08:10 PST 2022, Doug Anderson wrote:
 
-On Tue, Feb 15, 2022 at 8:54 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> +static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +                        const struct pwm_state *state)
-> +{
-> +       struct lpg *lpg = container_of(chip, struct lpg, pwm);
-> +       struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
-> +       int ret;
-> +
-> +       if (state->polarity != PWM_POLARITY_NORMAL)
-> +               return -EINVAL;
-> +
-> +       mutex_lock(&lpg->lock);
-> +
-> +       if (state->enabled) {
-> +               ret = lpg_calc_freq(chan, state->period);
-> +               if (ret < 0)
-> +                       goto out_unlock;
-> +
-> +               lpg_calc_duty(chan, state->duty_cycle);
-> +       }
-> +       chan->enabled = state->enabled;
-> +
-> +       lpg_apply(chan);
-> +
-> +       triled_set(lpg, chan->triled_mask, chan->enabled ? chan->triled_mask : 0);
-> +
-> +out_unlock:
-> +       mutex_unlock(&lpg->lock);
-> +
-> +       return ret;
-> +}
+> Hi,
+> 
+> On Tue, Feb 15, 2022 at 8:54 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > +static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +                        const struct pwm_state *state)
+> > +{
+> > +       struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> > +       struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> > +       int ret;
+> > +
+> > +       if (state->polarity != PWM_POLARITY_NORMAL)
+> > +               return -EINVAL;
+> > +
+> > +       mutex_lock(&lpg->lock);
+> > +
+> > +       if (state->enabled) {
+> > +               ret = lpg_calc_freq(chan, state->period);
+> > +               if (ret < 0)
+> > +                       goto out_unlock;
+> > +
+> > +               lpg_calc_duty(chan, state->duty_cycle);
+> > +       }
+> > +       chan->enabled = state->enabled;
+> > +
+> > +       lpg_apply(chan);
+> > +
+> > +       triled_set(lpg, chan->triled_mask, chan->enabled ? chan->triled_mask : 0);
+> > +
+> > +out_unlock:
+> > +       mutex_unlock(&lpg->lock);
+> > +
+> > +       return ret;
+> > +}
+> 
+> My compiler (correctly) yelled that `ret` is returned uninitialized if
+> `state->enabled` is false.
 
-My compiler (correctly) yelled that `ret` is returned uninitialized if
-`state->enabled` is false. I initialized `ret` to 0 and the problem
-went away. I assume that the patch will need to spin to fix that
-unless everything else looks great and a maintainer wants to fix that
-when applying.
+You're absolutely correct. I am however not able to figure out how to
+get my compiler (aarc64 gcc 11.2.0) to give me a warning about this.
 
-With that fix, I was able to use Bjorn's patch along with Satya's
-patches adding pm8350c support (removing the now defunct
-"pwm_9bit_mask" property) to make the PWM on my board work. Thus, once
-the error my compiler complained about is fixed I'm happy with my
-`Tested-by` being added.
+If anyone have any suggestions I'd be very happy.
 
-For now I haven't actually reviewed the code here, but if folks feel
-like it needs an extra pair of eyes then please yell and I'll find
-some time to do it.
+> I initialized `ret` to 0 and the problem
+> went away. I assume that the patch will need to spin to fix that
+> unless everything else looks great and a maintainer wants to fix that
+> when applying.
+> 
+> With that fix, I was able to use Bjorn's patch along with Satya's
+> patches adding pm8350c support (removing the now defunct
+> "pwm_9bit_mask" property) to make the PWM on my board work. Thus, once
+> the error my compiler complained about is fixed I'm happy with my
+> `Tested-by` being added.
+> 
 
--Doug
+Thanks! I will initialize ret and send out v13 including your T-b.
+
+Regards,
+Bjorn
+
+> For now I haven't actually reviewed the code here, but if folks feel
+> like it needs an extra pair of eyes then please yell and I'll find
+> some time to do it.
+> 
+> -Doug
