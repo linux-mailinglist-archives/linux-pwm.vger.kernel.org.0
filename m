@@ -2,120 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1316A4BC795
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Feb 2022 11:21:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FEA84BC8C1
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Feb 2022 14:54:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235395AbiBSKLe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 19 Feb 2022 05:11:34 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52948 "EHLO
+        id S242358AbiBSNzI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 19 Feb 2022 08:55:08 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232178AbiBSKLd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Feb 2022 05:11:33 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C009B17CC5B
-        for <linux-pwm@vger.kernel.org>; Sat, 19 Feb 2022 02:11:14 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nLMhf-0007Mh-RX; Sat, 19 Feb 2022 11:10:59 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nLMha-00HaZX-Eg; Sat, 19 Feb 2022 11:10:53 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nLMhY-004Ay5-5B; Sat, 19 Feb 2022 11:10:52 +0100
-Date:   Sat, 19 Feb 2022 11:10:49 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Nikita Travkin <nikita@trvn.ru>
+        with ESMTP id S231447AbiBSNzI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Feb 2022 08:55:08 -0500
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723FA1A2774;
+        Sat, 19 Feb 2022 05:54:46 -0800 (PST)
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by box.trvn.ru (Postfix) with ESMTPSA id E4BF5403F2;
+        Sat, 19 Feb 2022 18:54:40 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+        t=1645278882; bh=FkC6NFqmywpOwa4XAmaTo8rLxho52gFHok8cO4GwSY0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KaICIyvngb7glnGwaBDP4yreBTZ7ftfx5XJp96kbpNn09hgHxsT1kt4fKmTTHkJBF
+         pqLzi/afSBxzlRGp/NjJNqaC1Uo0RJMHANu9g6lK1vwTbSC25r1dSzCcospOTa25EI
+         QnODySW/YWJ6e8Q6fiWX51TL2+2BPe2ZDLZ3e1sIf/nfbxwpKNaP9ESnBUDKcSyufD
+         rMkan0Wm6joaScvpJApWG+IF3/nBzbBsVEkTSl6wLxcvc3UBLT+212e2RsBS5WNJvH
+         +2D1ivNq7SFJguxdNFVY3GmSIRQV5ZL98+PzOmmqgvAqd/+cJlBK56bBe52euq7Zaw
+         3MfWrQeRksZ7g==
+MIME-Version: 1.0
+Date:   Sat, 19 Feb 2022 18:54:40 +0500
+From:   Nikita Travkin <nikita@trvn.ru>
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
         sboyd@kernel.org, krzk@kernel.org, linus.walleij@linaro.org,
         masneyb@onstation.org, sean.anderson@seco.com,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
 Subject: Re: [PATCH v5 2/2] pwm: Add clock based PWM output driver
-Message-ID: <20220219101049.erwzy5mpmsfgcwjy@pengutronix.de>
+In-Reply-To: <20220219101049.erwzy5mpmsfgcwjy@pengutronix.de>
 References: <20220212162342.72646-1-nikita@trvn.ru>
  <20220212162342.72646-3-nikita@trvn.ru>
  <20220214184320.ym36pfvozwdp5nbb@pengutronix.de>
  <425691dbe49115f04dbe89c158bf6d1c@trvn.ru>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xcsfojf673wfhfx3"
-Content-Disposition: inline
-In-Reply-To: <425691dbe49115f04dbe89c158bf6d1c@trvn.ru>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20220219101049.erwzy5mpmsfgcwjy@pengutronix.de>
+Message-ID: <086f021bd11b7a730445250db2af01e8@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Uwe Kleine-König писал(а) 19.02.2022 15:10:
+> Hello,
+> 
+> On Sat, Feb 19, 2022 at 11:46:31AM +0500, Nikita Travkin wrote:
+>> Uwe Kleine-König писал(а) 14.02.2022 23:43:
+>> > On Sat, Feb 12, 2022 at 09:23:42PM +0500, Nikita Travkin wrote:
+>> >> + * Limitations:
+>> >> + * - Glitches are possible when new pwm state is applied.
+>> >> + * - Due to the fact that exact behavior depends on the underlying
+>> >> + *   clock driver, various limitations are possible.
+>> >> + * - Period depends on the clock and, in general, not guaranteed.
+>> >
+>> > This sentence is broken.
+>> >
+>>
+>> Here what I mean is that the clock driver might e.g. have a lookup table
+>> for some rates and will only set one close to the requested ones.
+>> (Extreme scenario is that only one rate is allowed in the lookup table,
+>> which is a real possibility for some platforms that I think this driver
+>> will be used with, the lookup may need to be changed for those clocks)
+>>
+>> I will reword this like:
+>>
+>>   Some clock drivers may only pick the closest available rate
+>>   and not the exact requested one. Because of this, exact period
+>>   is not guaranteed.
+> 
+> That there is no exact match is quite normal also for dedicated PWM
+> HW blocks. So I think the second item in your list is good enough to
+> cover the non-existing guaranteed for period and glitches.
+> 
 
---xcsfojf673wfhfx3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, I will just drop the 1 (glitches) and 3 (period) then.
+Thanks for explaining!
 
-Hello,
+Nikita
 
-On Sat, Feb 19, 2022 at 11:46:31AM +0500, Nikita Travkin wrote:
-> Uwe Kleine-K=C3=B6nig =D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0) 14.02.2022 2=
-3:43:
-> > On Sat, Feb 12, 2022 at 09:23:42PM +0500, Nikita Travkin wrote:
-> >> + * Limitations:
-> >> + * - Glitches are possible when new pwm state is applied.
-> >> + * - Due to the fact that exact behavior depends on the underlying
-> >> + *   clock driver, various limitations are possible.
-> >> + * - Period depends on the clock and, in general, not guaranteed.
-> >=20
-> > This sentence is broken.
-> >=20
->=20
-> Here what I mean is that the clock driver might e.g. have a lookup table
-> for some rates and will only set one close to the requested ones.
-> (Extreme scenario is that only one rate is allowed in the lookup table,
-> which is a real possibility for some platforms that I think this driver
-> will be used with, the lookup may need to be changed for those clocks)
->=20
-> I will reword this like:
->=20
->   Some clock drivers may only pick the closest available rate
->   and not the exact requested one. Because of this, exact period
->   is not guaranteed.
-
-That there is no exact match is quite normal also for dedicated PWM
-HW blocks. So I think the second item in your list is good enough to
-cover the non-existing guaranteed for period and glitches.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xcsfojf673wfhfx3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIQwiYACgkQwfwUeK3K
-7AmwDAgAh+qJOwueaEP6U+zrcuXsruNi3EYhzJmSWcoigyYJK42AI4f0mcayA/JP
-GASsrgIrdfvaAnR5uz13Fm3Bd+OClTe9vHP2w7CmzABoXjS6ML4HTkT2oCn4/8Ss
-lowe8NdBANsNW2JCi2ELw0k7504L2uGVMCipMR83L/1RVRimDdPtGinsW1bG6yG4
-jt/hS50vcEqknViWuzk+MXcPN+rvCaPZK1Mjisdf95+dPVqJUN4g2Bh57Q4vsBN5
-68tz9E9FruwEW0yf7EuJdlxEdBTOY5igm7ZPr7+uB5LePHjfG0pthex3pbwkepp6
-HDYaqxlQYdQhL6+yMKkiIDCvYgq0tg==
-=eD3B
------END PGP SIGNATURE-----
-
---xcsfojf673wfhfx3--
+> Best regards
+> Uwe
