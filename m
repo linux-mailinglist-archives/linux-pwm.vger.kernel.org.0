@@ -2,116 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B87744BC611
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Feb 2022 07:48:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1316A4BC795
+	for <lists+linux-pwm@lfdr.de>; Sat, 19 Feb 2022 11:21:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235395AbiBSGtM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 19 Feb 2022 01:49:12 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39856 "EHLO
+        id S235395AbiBSKLe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 19 Feb 2022 05:11:34 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:52948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230412AbiBSGtM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Feb 2022 01:49:12 -0500
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407C4554A7;
-        Fri, 18 Feb 2022 22:48:54 -0800 (PST)
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by box.trvn.ru (Postfix) with ESMTPSA id B061F403DB;
-        Sat, 19 Feb 2022 11:48:51 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-        t=1645253331; bh=YIrVnRmJ544cu++/OMC8gdl68QikrV9a5SSu5la/2dE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=m1tE1zl7XEKGRvNpwcoNOCvz8CUTKI7vxhkNrMQJRGU4zFf3IANsJqb/d86yOeiro
-         qtPHxBED251MYRxp4qjxte8GwBFhcnLdVkVwvuIoLDFRDFsnlYtESqOiWC0WWl+ABL
-         TJ/xlocxFmriQDUM8zmByIPzEEtRt5JWZHD2eViOXqL/fxPE9VxDR1/xzH8F2XQjhi
-         m0KBYnGRO8B0YCErGUUb9BTkd6BV9fkNDjpZHuJvbVRwNA0cP1qpTbkdf8x7xTk5up
-         f9zjQaFqgJsg54QfuBO9kFWGEBrnD1xWLSr/9BToLfxrci7SzFvh8V2voUDwTFcMAe
-         x5Q780DsTfJmw==
-MIME-Version: 1.0
-Date:   Sat, 19 Feb 2022 11:48:50 +0500
-From:   Nikita Travkin <nikita@trvn.ru>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
-        sboyd@kernel.org, linus.walleij@linaro.org, masneyb@onstation.org,
-        sean.anderson@seco.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
+        with ESMTP id S232178AbiBSKLd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Feb 2022 05:11:33 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C009B17CC5B
+        for <linux-pwm@vger.kernel.org>; Sat, 19 Feb 2022 02:11:14 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nLMhf-0007Mh-RX; Sat, 19 Feb 2022 11:10:59 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nLMha-00HaZX-Eg; Sat, 19 Feb 2022 11:10:53 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nLMhY-004Ay5-5B; Sat, 19 Feb 2022 11:10:52 +0100
+Date:   Sat, 19 Feb 2022 11:10:49 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Nikita Travkin <nikita@trvn.ru>
+Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
+        sboyd@kernel.org, krzk@kernel.org, linus.walleij@linaro.org,
+        masneyb@onstation.org, sean.anderson@seco.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
 Subject: Re: [PATCH v5 2/2] pwm: Add clock based PWM output driver
-In-Reply-To: <e1f2f9c4-a597-2c8f-df0c-4ae30a5ad594@canonical.com>
+Message-ID: <20220219101049.erwzy5mpmsfgcwjy@pengutronix.de>
 References: <20220212162342.72646-1-nikita@trvn.ru>
  <20220212162342.72646-3-nikita@trvn.ru>
- <e1f2f9c4-a597-2c8f-df0c-4ae30a5ad594@canonical.com>
-Message-ID: <170305a686280ed44a5d3e49dee3176f@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+ <20220214184320.ym36pfvozwdp5nbb@pengutronix.de>
+ <425691dbe49115f04dbe89c158bf6d1c@trvn.ru>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xcsfojf673wfhfx3"
+Content-Disposition: inline
+In-Reply-To: <425691dbe49115f04dbe89c158bf6d1c@trvn.ru>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
 
-Krzysztof Kozlowski писал(а) 14.02.2022 16:19:
-> On 12/02/2022 17:23, Nikita Travkin wrote:
->> Some systems have clocks exposed to external devices. If the clock
->> controller supports duty-cycle configuration, such clocks can be used as
->> pwm outputs. In fact PWM and CLK subsystems are interfaced with in a
->> similar way and an "opposite" driver already exists (clk-pwm). Add a
->> driver that would enable pwm devices to be used via clk subsystem.
->>
->> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
->> --
->>
-> 
-> (...)
-> 
->> +
->> +static int pwm_clk_probe(struct platform_device *pdev)
->> +{
->> +	struct pwm_clk_chip *chip;
->> +	int ret;
->> +
->> +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
->> +	if (!chip)
->> +		return -ENOMEM;
->> +
->> +	chip->clk = devm_clk_get(&pdev->dev, NULL);
->> +	if (IS_ERR(chip->clk))
->> +		return dev_err_probe(&pdev->dev, PTR_ERR(chip->clk),
->> +				     "Failed to get clock\n");
->> +
->> +	chip->chip.dev = &pdev->dev;
->> +	chip->chip.ops = &pwm_clk_ops;
->> +	chip->chip.npwm = 1;
->> +
->> +	ret = clk_prepare(chip->clk);
->> +	if (ret < 0)
->> +		return dev_err_probe(&pdev->dev, ret, "Failed to prepare clock\n");
->> +
->> +	ret = pwmchip_add(&chip->chip);
->> +	if (ret < 0)
->> +		return dev_err_probe(&pdev->dev, ret, "Failed to add pwm chip\n");
-> 
-> You need to cleanup - unprepare the clock.
-> 
+--xcsfojf673wfhfx3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Oops, I will add unprepare in v6, Thanks!
+Hello,
 
-Nikita
+On Sat, Feb 19, 2022 at 11:46:31AM +0500, Nikita Travkin wrote:
+> Uwe Kleine-K=C3=B6nig =D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0) 14.02.2022 2=
+3:43:
+> > On Sat, Feb 12, 2022 at 09:23:42PM +0500, Nikita Travkin wrote:
+> >> + * Limitations:
+> >> + * - Glitches are possible when new pwm state is applied.
+> >> + * - Due to the fact that exact behavior depends on the underlying
+> >> + *   clock driver, various limitations are possible.
+> >> + * - Period depends on the clock and, in general, not guaranteed.
+> >=20
+> > This sentence is broken.
+> >=20
+>=20
+> Here what I mean is that the clock driver might e.g. have a lookup table
+> for some rates and will only set one close to the requested ones.
+> (Extreme scenario is that only one rate is allowed in the lookup table,
+> which is a real possibility for some platforms that I think this driver
+> will be used with, the lookup may need to be changed for those clocks)
+>=20
+> I will reword this like:
+>=20
+>   Some clock drivers may only pick the closest available rate
+>   and not the exact requested one. Because of this, exact period
+>   is not guaranteed.
 
->> +
->> +	platform_set_drvdata(pdev, chip);
->> +	return 0;
->> +}
->> +
-> 
-> 
-> Best regards,
-> Krzysztof
+That there is no exact match is quite normal also for dedicated PWM
+HW blocks. So I think the second item in your list is good enough to
+cover the non-existing guaranteed for period and glitches.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xcsfojf673wfhfx3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIQwiYACgkQwfwUeK3K
+7AmwDAgAh+qJOwueaEP6U+zrcuXsruNi3EYhzJmSWcoigyYJK42AI4f0mcayA/JP
+GASsrgIrdfvaAnR5uz13Fm3Bd+OClTe9vHP2w7CmzABoXjS6ML4HTkT2oCn4/8Ss
+lowe8NdBANsNW2JCi2ELw0k7504L2uGVMCipMR83L/1RVRimDdPtGinsW1bG6yG4
+jt/hS50vcEqknViWuzk+MXcPN+rvCaPZK1Mjisdf95+dPVqJUN4g2Bh57Q4vsBN5
+68tz9E9FruwEW0yf7EuJdlxEdBTOY5igm7ZPr7+uB5LePHjfG0pthex3pbwkepp6
+HDYaqxlQYdQhL6+yMKkiIDCvYgq0tg==
+=eD3B
+-----END PGP SIGNATURE-----
+
+--xcsfojf673wfhfx3--
