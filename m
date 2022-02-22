@@ -2,88 +2,90 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 091E44C039F
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Feb 2022 22:15:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5DE94C03F5
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Feb 2022 22:39:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235708AbiBVVQI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Feb 2022 16:16:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42086 "EHLO
+        id S235801AbiBVVkN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Feb 2022 16:40:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235700AbiBVVQI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Feb 2022 16:16:08 -0500
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB65B106605;
-        Tue, 22 Feb 2022 13:15:42 -0800 (PST)
-Received: by mail-oo1-f43.google.com with SMTP id p206-20020a4a2fd7000000b0031bfec11983so19424429oop.13;
-        Tue, 22 Feb 2022 13:15:42 -0800 (PST)
+        with ESMTP id S235766AbiBVVkM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Feb 2022 16:40:12 -0500
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677DB139106;
+        Tue, 22 Feb 2022 13:39:46 -0800 (PST)
+Received: by mail-oi1-f176.google.com with SMTP id q5so16107767oij.6;
+        Tue, 22 Feb 2022 13:39:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LxgusODP2GOfUh+GrU/i/NsPSEgZvwaQGFPVZgBGVG0=;
-        b=AT3ouWFNn74ONhDYiPT5L2XbAfJ9d55I8+ipNLvhHRcRVwHfou8ps/jDMQKMtP/B9t
-         gjlKfTA2nR7XgJGZlXPH2NYoVcim5BFhb2ZA1bRDT/yaADS+rOSTnqt3VS32q3E8cTu1
-         IcIMp7DzSkw5aJNqUia5GH44Bmm1p4dRJclkvz9MYhXkmm6e/8V197D1+M/YovBxFRj2
-         L8Z3moihtUvLf426a1kHDHxzDHKoIrgGw4SVc02dDsAPseiDiqowYbfm8Dg43ScuXzKn
-         QgjqBISX2t6JxwnEN1Vp/Q+1XxO2lvy33XBnD2THnXl4b2Klj/AcFTkZz14iYBjU8E6T
-         f/SQ==
-X-Gm-Message-State: AOAM533NDYqSS6g8u+6JtnD6Uy7VqSF2TWbY2Joaom493QI7CL+1iJJ4
-        X//b26rVlujtVas1bUXN+w==
-X-Google-Smtp-Source: ABdhPJweZeM8YTKjHsA/asTQIGx8MLwhI9nfrImLfLJ2q3s2S6hi4sAwCA3bD7eX2mY/mlV4k5EL+Q==
-X-Received: by 2002:a05:6870:961a:b0:d2:858c:ea4 with SMTP id d26-20020a056870961a00b000d2858c0ea4mr2549999oaq.186.1645564542158;
-        Tue, 22 Feb 2022 13:15:42 -0800 (PST)
+        bh=e2psfHnwZs5xWnyvc67xSSoWa8E4e5UoRm7fPOvRG2k=;
+        b=J5LoT6ypVfOemIi4NpchuGpJjYJB1piKyMQZsit8PbdadJFbRNMLVdgn5JaBZRKhNJ
+         yL+32IwQD9iNaa6ta3hxZoBm90J227tNBrB/4lOh+Kl2Gh5g7FjzYDjEdFhk3a1xe2SR
+         Ijn+QHCDbZoFTfeD6tCF/b/u0swpNWONMKWCt6LaWCgk4dPZ2RW9TdTdkon3v592aqnY
+         JOV7ty/KlMPFE21iuQNtCeTLTlXeEcT1TPGNS5qjwBPEB9CnruQiPKZaCCrz8bZsBHG7
+         8DqjLoiU0WRMWOgLhRBjT7itpkX1bXchaJ8yE3oJ3E37E7L0L4UEDvU6h/Xd85/pCu8z
+         QkRg==
+X-Gm-Message-State: AOAM533qpZ8qsq0loBdYlIE5PjofVC9f9weUFKJAVjF5MVyRRiYUFraH
+        gsHTNdcZcN8Hl49cNJHaoQ==
+X-Google-Smtp-Source: ABdhPJzrwJuwkbQEPG+nVIKFTN4wDkORO0vQxGqMkcJcmKTnAAfMQGUYwq+TDGVA6kTamSiXcfTrIw==
+X-Received: by 2002:a05:6808:202a:b0:2d4:df36:68a4 with SMTP id q42-20020a056808202a00b002d4df3668a4mr2997913oiw.16.1645565985765;
+        Tue, 22 Feb 2022 13:39:45 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id f1sm3477355oov.45.2022.02.22.13.15.40
+        by smtp.gmail.com with ESMTPSA id r36sm9663847oiw.40.2022.02.22.13.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Feb 2022 13:15:41 -0800 (PST)
-Received: (nullmailer pid 3600555 invoked by uid 1000);
-        Tue, 22 Feb 2022 21:15:40 -0000
-Date:   Tue, 22 Feb 2022 15:15:40 -0600
+        Tue, 22 Feb 2022 13:39:44 -0800 (PST)
+Received: (nullmailer pid 3634892 invoked by uid 1000);
+        Tue, 22 Feb 2022 21:39:43 -0000
+Date:   Tue, 22 Feb 2022 15:39:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: sifive: drop Yash Shah
-Message-ID: <YhVSfKZbnGcGJGFH@robh.at.kernel.org>
-References: <20220214082349.162973-1-krzysztof.kozlowski@canonical.com>
+To:     conor.dooley@microchip.com
+Cc:     linux-gpio@vger.kernel.org, atishp@rivosinc.com,
+        a.zummo@towertech.it, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.walmsley@sifive.com, lee.jones@linaro.org,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        ivan.griffin@microchip.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, daire.mcnamara@microchip.com,
+        jassisinghbrar@gmail.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        aou@eecs.berkeley.edu, krzysztof.kozlowski@canonical.com,
+        palmer@dabbelt.com, geert@linux-m68k.org,
+        lewis.hanly@microchip.com, thierry.reding@gmail.com,
+        alexandre.belloni@bootlin.com
+Subject: Re: [PATCH v7 02/11] dt-bindings: soc/microchip: add info about
+ services to mpfs sysctrl
+Message-ID: <YhVYH6vf+b9jKeB3@robh.at.kernel.org>
+References: <20220214135840.168236-1-conor.dooley@microchip.com>
+ <20220214135840.168236-3-conor.dooley@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220214082349.162973-1-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220214135840.168236-3-conor.dooley@microchip.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 14 Feb 2022 09:23:49 +0100, Krzysztof Kozlowski wrote:
-> Emails to Yash Shah bounce with "The email account that you tried to
-> reach does not exist.", so drop him from all maintainer entries.
+On Mon, 14 Feb 2022 13:58:32 +0000, conor.dooley@microchip.com wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> The services actually provided by the system controller are not
+> documented so add some words about what the system controller can
+> actually do. Add a link to the oneline documentation with the specific
+> details of each individual service.
+> Also, drop the unneeded label from the example.
+> 
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
->  Documentation/devicetree/bindings/gpio/sifive,gpio.yaml     | 1 -
->  Documentation/devicetree/bindings/pwm/pwm-sifive.yaml       | 1 -
->  .../devicetree/bindings/riscv/sifive-l2-cache.yaml          | 1 -
->  MAINTAINERS                                                 | 6 ------
->  4 files changed, 9 deletions(-)
+>  .../soc/microchip/microchip,mpfs-sys-controller.yaml  | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 > 
 
-Applied, thanks!
+Reviewed-by: Rob Herring <robh@kernel.org>
