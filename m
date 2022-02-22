@@ -2,70 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5DE94C03F5
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Feb 2022 22:39:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 832C34C0554
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 00:27:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235801AbiBVVkN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Feb 2022 16:40:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        id S236244AbiBVX1u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Feb 2022 18:27:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235766AbiBVVkM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Feb 2022 16:40:12 -0500
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677DB139106;
-        Tue, 22 Feb 2022 13:39:46 -0800 (PST)
-Received: by mail-oi1-f176.google.com with SMTP id q5so16107767oij.6;
-        Tue, 22 Feb 2022 13:39:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=e2psfHnwZs5xWnyvc67xSSoWa8E4e5UoRm7fPOvRG2k=;
-        b=J5LoT6ypVfOemIi4NpchuGpJjYJB1piKyMQZsit8PbdadJFbRNMLVdgn5JaBZRKhNJ
-         yL+32IwQD9iNaa6ta3hxZoBm90J227tNBrB/4lOh+Kl2Gh5g7FjzYDjEdFhk3a1xe2SR
-         Ijn+QHCDbZoFTfeD6tCF/b/u0swpNWONMKWCt6LaWCgk4dPZ2RW9TdTdkon3v592aqnY
-         JOV7ty/KlMPFE21iuQNtCeTLTlXeEcT1TPGNS5qjwBPEB9CnruQiPKZaCCrz8bZsBHG7
-         8DqjLoiU0WRMWOgLhRBjT7itpkX1bXchaJ8yE3oJ3E37E7L0L4UEDvU6h/Xd85/pCu8z
-         QkRg==
-X-Gm-Message-State: AOAM533qpZ8qsq0loBdYlIE5PjofVC9f9weUFKJAVjF5MVyRRiYUFraH
-        gsHTNdcZcN8Hl49cNJHaoQ==
-X-Google-Smtp-Source: ABdhPJzrwJuwkbQEPG+nVIKFTN4wDkORO0vQxGqMkcJcmKTnAAfMQGUYwq+TDGVA6kTamSiXcfTrIw==
-X-Received: by 2002:a05:6808:202a:b0:2d4:df36:68a4 with SMTP id q42-20020a056808202a00b002d4df3668a4mr2997913oiw.16.1645565985765;
-        Tue, 22 Feb 2022 13:39:45 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id r36sm9663847oiw.40.2022.02.22.13.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Feb 2022 13:39:44 -0800 (PST)
-Received: (nullmailer pid 3634892 invoked by uid 1000);
-        Tue, 22 Feb 2022 21:39:43 -0000
-Date:   Tue, 22 Feb 2022 15:39:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     conor.dooley@microchip.com
-Cc:     linux-gpio@vger.kernel.org, atishp@rivosinc.com,
-        a.zummo@towertech.it, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.walmsley@sifive.com, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        ivan.griffin@microchip.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, daire.mcnamara@microchip.com,
-        jassisinghbrar@gmail.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        aou@eecs.berkeley.edu, krzysztof.kozlowski@canonical.com,
-        palmer@dabbelt.com, geert@linux-m68k.org,
-        lewis.hanly@microchip.com, thierry.reding@gmail.com,
-        alexandre.belloni@bootlin.com
-Subject: Re: [PATCH v7 02/11] dt-bindings: soc/microchip: add info about
- services to mpfs sysctrl
-Message-ID: <YhVYH6vf+b9jKeB3@robh.at.kernel.org>
-References: <20220214135840.168236-1-conor.dooley@microchip.com>
- <20220214135840.168236-3-conor.dooley@microchip.com>
+        with ESMTP id S236261AbiBVX1t (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Feb 2022 18:27:49 -0500
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D4292D01;
+        Tue, 22 Feb 2022 15:27:22 -0800 (PST)
+Received: from [185.156.123.69] (helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1nMeYp-0006wl-RD; Wed, 23 Feb 2022 00:27:11 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-mediatek@lists.infradead.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-msm@vger.kernel.org, chrome-platform@lists.linux.dev,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Heiko Stuebner <heiko@sntech.de>
+Subject: Re: (subset) [PATCH 0/4] mfd/pwm: dt-bindings: google, cros-ec: include generic pwm schema
+Date:   Wed, 23 Feb 2022 00:27:08 +0100
+Message-Id: <164557235424.1264579.14486504733557463529.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
+References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220214135840.168236-3-conor.dooley@microchip.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,19 +56,26 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 14 Feb 2022 13:58:32 +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Mon, 14 Feb 2022 09:19:12 +0100, Krzysztof Kozlowski wrote:
+> DTS patches are independent. Not tested, but I really hope no downstream kernel
+> depends on pwm node naming... If it does, please change it to compatible. :)
 > 
-> The services actually provided by the system controller are not
-> documented so add some words about what the system controller can
-> actually do. Add a link to the oneline documentation with the specific
-> details of each individual service.
-> Also, drop the unneeded label from the example.
+> Best regards,
+> Krzysztof
 > 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../soc/microchip/microchip,mpfs-sys-controller.yaml  | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> Krzysztof Kozlowski (4):
+>   dt-bindings: pwm: google,cros-ec: include generic pwm schema
+>   arm64: dts: mt8183: align Google CROS EC PWM node name with dtschema
+>   arm64: dts: qcom: align Google CROS EC PWM node name with dtschema
+>   arm64: dts: rk3399: align Google CROS EC PWM node name with dtschema
 > 
+> [...]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
+
+[4/4] arm64: dts: rk3399: align Google CROS EC PWM node name with dtschema
+      commit: 474a84be692d893f45a54b405dcbc137cbf77949
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
