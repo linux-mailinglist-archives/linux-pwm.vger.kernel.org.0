@@ -2,77 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1006D4C0E87
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 09:53:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 133474C0EDE
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 10:09:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239057AbiBWIxn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Feb 2022 03:53:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33210 "EHLO
+        id S239181AbiBWJJj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Feb 2022 04:09:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232440AbiBWIxn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Feb 2022 03:53:43 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CBD65780;
-        Wed, 23 Feb 2022 00:53:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1645606396; x=1677142396;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Gf7fLnuz2/+PWrNrtqGk1PKFdI0hQYHsrfCkNF3N2OE=;
-  b=wfa74g05p79C6sjxL3xJ82DiO5q4vDUA2aprhaAcKbq0sipbcQXCuCJV
-   UDz7Xo4806bIa+1v5X9/tdXNYEaROAPRUZR+eXa1ePKaA1OAhubZpKYP1
-   purYunz0Zl500zH4BtKtISVV7cRteONTGkwwVO2JbFmg07PPSdVZXA0pf
-   4FGkpPbi0k0eEValV5eQDH+9khs4ZH2XnSMbHsdodl3G69hkH02q4PDji
-   J9Wj3A3JLktAqqQrDiXRyleiSpmFCVwbkl9PHMh1PmxYFyzpj+t2j0lnW
-   Q8dZXQDI5xIU3dQrtkaQI0OAX9ieIE8SVZC9OaL8lLLUV3hgFTMGwQu4+
-   A==;
-X-IronPort-AV: E=Sophos;i="5.88,390,1635231600"; 
-   d="scan'208";a="149703384"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Feb 2022 01:53:14 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Wed, 23 Feb 2022 01:53:14 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Wed, 23 Feb 2022 01:53:09 -0700
-From:   <conor.dooley@microchip.com>
-To:     <u.kleine-koenig@pengutronix.de>,
-        <krzysztof.kozlowski@canonical.com>
-CC:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <aou@eecs.berkeley.edu>, <atishp@rivosinc.com>, <brgl@bgdev.pl>,
-        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
-        <devicetree@vger.kernel.org>, <geert@linux-m68k.org>,
-        <ivan.griffin@microchip.com>, <jassisinghbrar@gmail.com>,
-        <lee.jones@linaro.org>, <lewis.hanly@microchip.com>,
-        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-rtc@vger.kernel.org>,
-        <palmer@dabbelt.com>, <palmer@rivosinc.com>,
-        <paul.walmsley@sifive.com>, <robh+dt@kernel.org>,
-        <robh@kernel.org>, <thierry.reding@gmail.com>
+        with ESMTP id S238634AbiBWJJj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Feb 2022 04:09:39 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37578021F
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:09:10 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id s13so9898953wrb.6
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:09:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uhQ2XTHzgwwh3IfSpyyiABP4apEdC3n0uRKIA365nw8=;
+        b=yX7IDc6xgr2DIKYR1fbQdrsvoUEjEPM1JMICqwirtbbhG6Kkujf20LxovE/4LyHp86
+         WRTevNNne+t4clDGmaDCAoCdMUC/M3I8wEtIhi1huBATspu/YvOfPPGXKES+9IlrA65w
+         EXoVM6ESTjP9rO5vMWBYxQCFnWTAruvdxZNUDQFmuPR8eRcRdAQK2GehMRaXRZvx8lHL
+         X7scUpwu7mdXWM8MWFPjsjQB5ji6ERhWdJFnQOMjEa0/CW6aB/A8Z+0X/UK+apIoPao5
+         sfMnODhvNAUrgOqsX08SWAqSFTPhm3wk6PxcYF5Xl9lSSE2zpYYEzi6qZd0hSRnIBSjm
+         6oaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uhQ2XTHzgwwh3IfSpyyiABP4apEdC3n0uRKIA365nw8=;
+        b=BEoHBKMXjhd1mYLQ6VLyA2d+69JY7sxV3Uz9mV3cUkHOF1YDV0Kb65oCLok/WoYolJ
+         wExmhThbwS5msFHhFndr0dtaZGe/pm4RAdRcHg1/hLMEQ4qRaAG6BU4cbQjWyOmG5FfB
+         PzgUHdU1bihvG4bUvbhtFEMUn4jziWE8JJKwcRaCjoTVAyNRTJWpsKTVRD6Fbm2rIUXX
+         7e/7Qo2pMUOR5GiiFqTo8/ttSqK1gW1H718zsNYJoLy47j4/Fcd0g1FT02ODl7oBzM31
+         PLrODKMe2wRnj3GRfpkZ4N1wo9YsJphOypNdP2XNpbCZI4Fb/t3wi2p2n8reDFM7QVLy
+         0mIw==
+X-Gm-Message-State: AOAM532iTwGvnses0kIaCvQYHhSOCnTd0E12LE+qcjLvOfdx7ol+DLzr
+        vDr2tCmp7jJYJRVoLArhFfLW/g==
+X-Google-Smtp-Source: ABdhPJz4aTObHNoB5pQsllecyuXgnwlJz4HBUpJXFkjadBwKL0W5K/YET+9QFNOJiVbsLvUssTBxUA==
+X-Received: by 2002:a5d:4b4c:0:b0:1dc:f34a:548 with SMTP id w12-20020a5d4b4c000000b001dcf34a0548mr22346654wrs.554.1645607349429;
+        Wed, 23 Feb 2022 01:09:09 -0800 (PST)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id x2-20020a7bc762000000b00380fd1ba4ebsm526819wmk.9.2022.02.23.01.09.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 01:09:08 -0800 (PST)
+Date:   Wed, 23 Feb 2022 09:09:06 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        conor.dooley@microchip.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org, jassisinghbrar@gmail.com,
+        thierry.reding@gmail.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
+        ivan.griffin@microchip.com, atishp@rivosinc.com,
+        Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
 Subject: Re: [PATCH v7 05/11] dt-bindings: pwm: add microchip corepwm binding
-Date:   Wed, 23 Feb 2022 08:55:10 +0000
-Message-ID: <20220223085509.3664942-1-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
-References: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
+Message-ID: <YhX5suBeOgHKqcVa@google.com>
+References: <20220214135840.168236-1-conor.dooley@microchip.com>
+ <20220214135840.168236-6-conor.dooley@microchip.com>
+ <20220223062018.nbgidqxgh2soz625@pengutronix.de>
+ <65edc257-82ec-e100-7a44-5c510aba51ce@canonical.com>
+ <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 23/02/2022 08:20, Uwe Kleine-König wrote:
+On Wed, 23 Feb 2022, Uwe Kleine-König wrote:
+
 > On Wed, Feb 23, 2022 at 08:12:49AM +0100, Krzysztof Kozlowski wrote:
 > > On 23/02/2022 07:20, Uwe Kleine-König wrote:
 > > > On Mon, Feb 14, 2022 at 01:58:35PM +0000, conor.dooley@microchip.com wrote:
@@ -109,13 +125,16 @@ On 23/02/2022 08:20, Uwe Kleine-König wrote:
 > (Modified the tags on purpose to not interfere with b4's tag pickup, I
 > guess you humans still get the point.)
 
-I had put the acks after the S-o-B for patches I hadn't changed since the ack,
-but I think that may have been a misinterpretation of what was meant by Rob
-when he said tags should be in chronological order. Won't do it this way in
-the future.
+I tend to like *-by tags to appear chronologically.
 
-If the remaining patch gets a maintainer ack, the order will be fine I guess
-since it'll be Palmer taking it anyway. If there's a v8, I will fix the order.
+  Suggested              (suggested-by)
+  Authored               (signed-off-by)
+  Co-Authored            (signed-off-by/co-developed-by)
+  Reviewed/Acked/Tested  (reviewed-by/acked-by/tested-by)
+  Committed              (signed-off-by)
 
-Thanks,
-Conor
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
