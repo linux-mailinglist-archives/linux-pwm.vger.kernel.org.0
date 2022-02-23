@@ -2,81 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 133474C0EDE
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 10:09:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C43934C0EF5
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 10:16:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239181AbiBWJJj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Feb 2022 04:09:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
+        id S239232AbiBWJQe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Feb 2022 04:16:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238634AbiBWJJj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Feb 2022 04:09:39 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37578021F
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:09:10 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id s13so9898953wrb.6
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:09:10 -0800 (PST)
+        with ESMTP id S239209AbiBWJQd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Feb 2022 04:16:33 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173BA811BD
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:16:06 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id bg16-20020a05600c3c9000b00380f6f473b0so620655wmb.1
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:16:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=uhQ2XTHzgwwh3IfSpyyiABP4apEdC3n0uRKIA365nw8=;
-        b=yX7IDc6xgr2DIKYR1fbQdrsvoUEjEPM1JMICqwirtbbhG6Kkujf20LxovE/4LyHp86
-         WRTevNNne+t4clDGmaDCAoCdMUC/M3I8wEtIhi1huBATspu/YvOfPPGXKES+9IlrA65w
-         EXoVM6ESTjP9rO5vMWBYxQCFnWTAruvdxZNUDQFmuPR8eRcRdAQK2GehMRaXRZvx8lHL
-         X7scUpwu7mdXWM8MWFPjsjQB5ji6ERhWdJFnQOMjEa0/CW6aB/A8Z+0X/UK+apIoPao5
-         sfMnODhvNAUrgOqsX08SWAqSFTPhm3wk6PxcYF5Xl9lSSE2zpYYEzi6qZd0hSRnIBSjm
-         6oaQ==
+        bh=ZUexAi7XZpt/IXnr6iWEdkKC6eoohAZnCV7GkbV1MDk=;
+        b=UPs30jYkSROqMLjG9j1ccaDvuvFBZ5GNgJvTkAHoPWEguU9vkan3wlqp8w4RRC+sNC
+         d6HpX1ZOmhxyb28eXxfPplk+OaEdgK7CK1LlCHbScbnKriOWRk9o0nkk8CQL+j3M8rIz
+         uHYHshSSLKD9qppDHOPTFPQo1j2TB4mGO6JJt26ND9E5k+LQJNTi3Unm4yssGvV8rK6F
+         csNHqtqJuoSDtXq/kTvRq/JNzMut6/oIOrWqxA9Q1fFh92hTdcaLmwyedYdGhRCd/nC8
+         Pi6oTFPTmPvKaXDd5PQ2t8SSGOPBjkBgPW7AROQg92nxlhgTUSXDbHq6ozZVhTRGR6WO
+         yPjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=uhQ2XTHzgwwh3IfSpyyiABP4apEdC3n0uRKIA365nw8=;
-        b=BEoHBKMXjhd1mYLQ6VLyA2d+69JY7sxV3Uz9mV3cUkHOF1YDV0Kb65oCLok/WoYolJ
-         wExmhThbwS5msFHhFndr0dtaZGe/pm4RAdRcHg1/hLMEQ4qRaAG6BU4cbQjWyOmG5FfB
-         PzgUHdU1bihvG4bUvbhtFEMUn4jziWE8JJKwcRaCjoTVAyNRTJWpsKTVRD6Fbm2rIUXX
-         7e/7Qo2pMUOR5GiiFqTo8/ttSqK1gW1H718zsNYJoLy47j4/Fcd0g1FT02ODl7oBzM31
-         PLrODKMe2wRnj3GRfpkZ4N1wo9YsJphOypNdP2XNpbCZI4Fb/t3wi2p2n8reDFM7QVLy
-         0mIw==
-X-Gm-Message-State: AOAM532iTwGvnses0kIaCvQYHhSOCnTd0E12LE+qcjLvOfdx7ol+DLzr
-        vDr2tCmp7jJYJRVoLArhFfLW/g==
-X-Google-Smtp-Source: ABdhPJz4aTObHNoB5pQsllecyuXgnwlJz4HBUpJXFkjadBwKL0W5K/YET+9QFNOJiVbsLvUssTBxUA==
-X-Received: by 2002:a5d:4b4c:0:b0:1dc:f34a:548 with SMTP id w12-20020a5d4b4c000000b001dcf34a0548mr22346654wrs.554.1645607349429;
-        Wed, 23 Feb 2022 01:09:09 -0800 (PST)
+        bh=ZUexAi7XZpt/IXnr6iWEdkKC6eoohAZnCV7GkbV1MDk=;
+        b=AK0XopXLKpGf5/JxMasfzr26s2j7xEKgYnM7jTo7CJimTJt8RLwTwpC9ZPql6pxCD1
+         qunAtIJ7ODK+WcHEodzI9OOPe8f5JKUNK3mASwoC9t/y1nVhA6V942qSHDp7VSZ5RT/P
+         8ZhYcLy3D1i8olTqidU+g7qHh4mteyjU/RhVCG4nDMQ2MLEniZzClaB6Wq+ZBIjdc0Wc
+         X3VnbV1k2qnStuZNwq7vc7DI/GchhmiHvARjZesn1Hj+hObBTHE1Ie3kKeJscslrKxH+
+         P2HtX62RswR/DnayrAgoHevSSVHlE1/0se0wvd9wQfj0p/F3ytDjxZS2cLtqd++sYLGT
+         FP4Q==
+X-Gm-Message-State: AOAM533342Xm0s7FCPf/OZrcLop56AnTTgZFLiuVoQdKWCdKAtHZtWpF
+        yKT9vgnY6m0qjot2y1lj3Pzvsw==
+X-Google-Smtp-Source: ABdhPJwE97ajBq4XbB7MA2j4GjW5Zdm1JD/pIlevtg+JNehqxG7yZMbVnQQYKJW2cgh7nNAlFO7JGg==
+X-Received: by 2002:a05:600c:cf:b0:380:f85a:1cd8 with SMTP id u15-20020a05600c00cf00b00380f85a1cd8mr1239350wmm.1.1645607764646;
+        Wed, 23 Feb 2022 01:16:04 -0800 (PST)
 Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id x2-20020a7bc762000000b00380fd1ba4ebsm526819wmk.9.2022.02.23.01.09.08
+        by smtp.gmail.com with ESMTPSA id m5sm2565403wrb.13.2022.02.23.01.16.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 01:09:08 -0800 (PST)
-Date:   Wed, 23 Feb 2022 09:09:06 +0000
+        Wed, 23 Feb 2022 01:16:04 -0800 (PST)
+Date:   Wed, 23 Feb 2022 09:16:01 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        conor.dooley@microchip.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        thierry.reding@gmail.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
-        ivan.griffin@microchip.com, atishp@rivosinc.com,
-        Rob Herring <robh@kernel.org>,
-        Palmer Dabbelt <palmer@rivosinc.com>
-Subject: Re: [PATCH v7 05/11] dt-bindings: pwm: add microchip corepwm binding
-Message-ID: <YhX5suBeOgHKqcVa@google.com>
-References: <20220214135840.168236-1-conor.dooley@microchip.com>
- <20220214135840.168236-6-conor.dooley@microchip.com>
- <20220223062018.nbgidqxgh2soz625@pengutronix.de>
- <65edc257-82ec-e100-7a44-5c510aba51ce@canonical.com>
- <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/4] dt-bindings: pwm: google,cros-ec: include generic
+ pwm schema
+Message-ID: <YhX7UZSDaqNyD1rV@google.com>
+References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
+ <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
+In-Reply-To: <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -87,51 +87,19 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 23 Feb 2022, Uwe Kleine-König wrote:
+On Mon, 14 Feb 2022, Krzysztof Kozlowski wrote:
 
-> On Wed, Feb 23, 2022 at 08:12:49AM +0100, Krzysztof Kozlowski wrote:
-> > On 23/02/2022 07:20, Uwe Kleine-König wrote:
-> > > On Mon, Feb 14, 2022 at 01:58:35PM +0000, conor.dooley@microchip.com wrote:
-> > >> From: Conor Dooley <conor.dooley@microchip.com>
-> > >>
-> > >> Add device tree bindings for the Microchip fpga fabric based "core" PWM
-> > >> controller.
-> > >>
-> > >> Reviewed-by: Rob Herring <robh@kernel.org>
-> > >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> > >> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> > > 
-> > > I like it:
-> > > 
-> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > 
-> > > nitpick: Put your S-o-b last in the commit log. (This doesn't justify a
-> > > resend IMHO)
-> > 
-> > It should be the opposite - the first. First author signs the patch,
-> > then comes review and finally an ack. Putting SoB at then suggests that
-> > tags were accumulated before sending patch, out of mailing list.
+> Include generic pwm.yaml schema, which enforces PWM node naming.  Keep
+> the old name in bindings as deprecated.
 > 
-> well, or in an earlier revision of this patch as is the case here. One
-> of the ideas of S-o-b is that the order shows the flow of the patch
-> states and if this patch ends in git with:
-> 
-> 	Referred-by: Rob Herring <robh@kernel.org>
-> 	Singed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> 	Backed-by: Palmer Dabbelt <palmer@rivosinc.com>
-> 	Singed-off-by: Peter Maintainer <pm@example.com>
-> 
-> I'd expect that Backed-by was added by Peter, not Conor.
-> (Modified the tags on purpose to not interfere with b4's tag pickup, I
-> guess you humans still get the point.)
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml    | 4 ++++
 
-I tend to like *-by tags to appear chronologically.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-  Suggested              (suggested-by)
-  Authored               (signed-off-by)
-  Co-Authored            (signed-off-by/co-developed-by)
-  Reviewed/Acked/Tested  (reviewed-by/acked-by/tested-by)
-  Committed              (signed-off-by)
+>  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml          | 5 ++++-
+>  2 files changed, 8 insertions(+), 1 deletion(-)
 
 -- 
 Lee Jones [李琼斯]
