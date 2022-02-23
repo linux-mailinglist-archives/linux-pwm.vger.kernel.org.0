@@ -2,107 +2,161 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C43934C0EF5
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 10:16:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23DC04C1794
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Feb 2022 16:46:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239232AbiBWJQe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Feb 2022 04:16:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
+        id S238702AbiBWPq7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Feb 2022 10:46:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239209AbiBWJQd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Feb 2022 04:16:33 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173BA811BD
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:16:06 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id bg16-20020a05600c3c9000b00380f6f473b0so620655wmb.1
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Feb 2022 01:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZUexAi7XZpt/IXnr6iWEdkKC6eoohAZnCV7GkbV1MDk=;
-        b=UPs30jYkSROqMLjG9j1ccaDvuvFBZ5GNgJvTkAHoPWEguU9vkan3wlqp8w4RRC+sNC
-         d6HpX1ZOmhxyb28eXxfPplk+OaEdgK7CK1LlCHbScbnKriOWRk9o0nkk8CQL+j3M8rIz
-         uHYHshSSLKD9qppDHOPTFPQo1j2TB4mGO6JJt26ND9E5k+LQJNTi3Unm4yssGvV8rK6F
-         csNHqtqJuoSDtXq/kTvRq/JNzMut6/oIOrWqxA9Q1fFh92hTdcaLmwyedYdGhRCd/nC8
-         Pi6oTFPTmPvKaXDd5PQ2t8SSGOPBjkBgPW7AROQg92nxlhgTUSXDbHq6ozZVhTRGR6WO
-         yPjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZUexAi7XZpt/IXnr6iWEdkKC6eoohAZnCV7GkbV1MDk=;
-        b=AK0XopXLKpGf5/JxMasfzr26s2j7xEKgYnM7jTo7CJimTJt8RLwTwpC9ZPql6pxCD1
-         qunAtIJ7ODK+WcHEodzI9OOPe8f5JKUNK3mASwoC9t/y1nVhA6V942qSHDp7VSZ5RT/P
-         8ZhYcLy3D1i8olTqidU+g7qHh4mteyjU/RhVCG4nDMQ2MLEniZzClaB6Wq+ZBIjdc0Wc
-         X3VnbV1k2qnStuZNwq7vc7DI/GchhmiHvARjZesn1Hj+hObBTHE1Ie3kKeJscslrKxH+
-         P2HtX62RswR/DnayrAgoHevSSVHlE1/0se0wvd9wQfj0p/F3ytDjxZS2cLtqd++sYLGT
-         FP4Q==
-X-Gm-Message-State: AOAM533342Xm0s7FCPf/OZrcLop56AnTTgZFLiuVoQdKWCdKAtHZtWpF
-        yKT9vgnY6m0qjot2y1lj3Pzvsw==
-X-Google-Smtp-Source: ABdhPJwE97ajBq4XbB7MA2j4GjW5Zdm1JD/pIlevtg+JNehqxG7yZMbVnQQYKJW2cgh7nNAlFO7JGg==
-X-Received: by 2002:a05:600c:cf:b0:380:f85a:1cd8 with SMTP id u15-20020a05600c00cf00b00380f85a1cd8mr1239350wmm.1.1645607764646;
-        Wed, 23 Feb 2022 01:16:04 -0800 (PST)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id m5sm2565403wrb.13.2022.02.23.01.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 01:16:04 -0800 (PST)
-Date:   Wed, 23 Feb 2022 09:16:01 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: pwm: google,cros-ec: include generic
- pwm schema
-Message-ID: <YhX7UZSDaqNyD1rV@google.com>
-References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
- <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
+        with ESMTP id S233481AbiBWPq6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Feb 2022 10:46:58 -0500
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE806C087B;
+        Wed, 23 Feb 2022 07:46:28 -0800 (PST)
+Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 64A0CC5DDA;
+        Wed, 23 Feb 2022 15:18:42 +0000 (UTC)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id E89AAC000A;
+        Wed, 23 Feb 2022 15:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1645629516;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=L8WJ1C1Tx3aKKa3O4w4oElLz8XE2ctzr9MgK1/YUoCU=;
+        b=oc+Jes6pQdZo1kzhSYkAkXsvE4s+RVTUPbPWDmF1a35hrX82st5TluCAV2C15w0eMkA6I5
+        nP4Q+Q12KrmS/7Sss8FFkJroL31r78SoKt2sw/bLzZGFDhtudEOtKMfhmDS+/0qjJ+B7yL
+        J2/IS+Z4W/TYryGG1X8Dz/Y49ypWY9CsE22lqqkz4jV2WVnpyPb9JDrEiHzzf2yyFa3jOd
+        R0ubzG96gMcXnRbrpvcpOyppNxeAFUVC0LPXkmZwmq0wqfUPITlJbx8HtOmcK+ntjSCVm5
+        lVxdfAzaWpUBonEOa73WxiVLJABsIPWjte8zqb/7KK1JEox5Lbi/c0jsv1EyAw==
+Date:   Wed, 23 Feb 2022 16:18:30 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Conor.Dooley@microchip.com
+Cc:     a.zummo@towertech.it, Lewis.Hanly@microchip.com,
+        Daire.McNamara@microchip.com, Ivan.Griffin@microchip.com,
+        atishp@rivosinc.com, palmer@rivosinc.com, robh@kernel.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 03/11] dt-bindings: rtc: add bindings for microchip
+ mpfs rtc
+Message-ID: <YhZQRqHib2+GR7Ma@piout.net>
+References: <20220214135840.168236-1-conor.dooley@microchip.com>
+ <20220214135840.168236-4-conor.dooley@microchip.com>
+ <5b0681a0-ff46-7eb4-3644-0d1173c1f0d4@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <5b0681a0-ff46-7eb4-3644-0d1173c1f0d4@microchip.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 14 Feb 2022, Krzysztof Kozlowski wrote:
+On 23/02/2022 07:41:27+0000, Conor.Dooley@microchip.com wrote:
+> Hi Alessandro, Alexandre,
+> If one of you could take a look at this, that'd be great.
 
-> Include generic pwm.yaml schema, which enforces PWM node naming.  Keep
-> the old name in bindings as deprecated.
+I actually expected someone else to apply this, what is your plan?
+
+> Thanks,
+> Conor.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml    | 4 ++++
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
->  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml          | 5 ++++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
+> On 14/02/2022 13:58, conor.dooley@microchip.com wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> > 
+> > Add device tree bindings for the real time clock on
+> > the Microchip PolarFire SoC.
+> > 
+> > Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >   .../bindings/rtc/microchip,mfps-rtc.yaml      | 58 +++++++++++++++++++
+> >   1 file changed, 58 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml b/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+> > new file mode 100644
+> > index 000000000000..a2e984ea3553
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+> > @@ -0,0 +1,58 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/rtc/microchip,mfps-rtc.yaml#
+> > +
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Microchip PolarFire Soc (MPFS) RTC Device Tree Bindings
+> > +
+> > +allOf:
+> > +  - $ref: rtc.yaml#
+> > +
+> > +maintainers:
+> > +  - Daire McNamara <daire.mcnamara@microchip.com>
+> > +  - Lewis Hanly <lewis.hanly@microchip.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - microchip,mpfs-rtc
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: |
+> > +          RTC_WAKEUP interrupt
+> > +      - description: |
+> > +          RTC_MATCH, asserted when the content of the Alarm register is equal
+> > +          to that of the RTC's count register.
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: rtc
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    rtc@20124000 {
+> > +        compatible = "microchip,mpfs-rtc";
+> > +        reg = <0x20124000 0x1000>;
+> > +        clocks = <&clkcfg 21>;
+> > +        clock-names = "rtc";
+> > +        interrupts = <80>, <81>;
+> > +    };
+> > +...
+> 
 
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
