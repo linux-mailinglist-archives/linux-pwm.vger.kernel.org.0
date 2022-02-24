@@ -2,56 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87F6C4C331E
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 18:04:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A59154C361D
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 20:48:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231920AbiBXRDy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Feb 2022 12:03:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53222 "EHLO
+        id S233190AbiBXTt0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Feb 2022 14:49:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232600AbiBXRDT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 12:03:19 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54131EC9A7
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 09:00:37 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nNHSx-0002ML-Er; Thu, 24 Feb 2022 17:59:43 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nNHSv-00139d-Ma; Thu, 24 Feb 2022 17:59:40 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nNHSt-005Go7-SU; Thu, 24 Feb 2022 17:59:39 +0100
-Date:   Thu, 24 Feb 2022 17:59:39 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S231497AbiBXTtZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 14:49:25 -0500
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A035254543
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 11:48:54 -0800 (PST)
+Received: by mail-oi1-x22f.google.com with SMTP id j24so4510034oii.11
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 11:48:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=YpCPN12fmyvtZ3VxGfCIknwO/QSMW1ppj6lyaT35Vx4=;
+        b=pK19w9BTReh2iS/hVdIV2GaNUrOGpjc4L69qtRJOPPfr/BiDh2FLe64nCxdJqhA8Wu
+         3/Adks73h/3ybVh6pMLtOj5Rlt5pkOUUj3YA1vj2HGImylA0gbGBg5aPYXJFKqQo6yun
+         EMrxE65v/RHEZ0fOMJa8J2HlmBFKD9hSfbe46xWK13a69K2oRfMQGCAeTWXl57MqXn/p
+         A6BVUdxy++vBh04rxe72suQaBVkTEM04uVxQoZUGmXKWA+Y49Q6YHXt5g8DhGAyMUgFi
+         D/Vayc8QHg4BCz24ntf1vLT+/aaHIj68xC1KNZq99Z3CaklVCKLNNfwOnFXlc+4jmfln
+         J9bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=YpCPN12fmyvtZ3VxGfCIknwO/QSMW1ppj6lyaT35Vx4=;
+        b=zW2UcNjFQ9qnLj387rHAwwhtGkKRMkNLxD71nCa4LBVwpPXjo3H6R+Q9kc0TSFOyMB
+         ASLxqG1Pe+7GjJMAxFjosP4ozm8th4C+3k1DHsCNW+NLVUGxSqcNGZauQau5y/R+aCvM
+         JZp8kI3sfJFsFtQ1J2KP++JTBcdW4LnRc8y3kgJirH6eAZUKR1vg4bbHLrcZCjYlJcrh
+         tLe3y+XZFMnSKfU/UywpaFRmHkFjI5u+xnCFOKVknfrfVOYQVp72mBmxJBPXtj24sse4
+         xYcQt9+AWqYDk06NZW7VA+aybwuVwYLNAfaOd1SCtiIfufLfNasirVcJ27At9Qrmw4mp
+         c0Yw==
+X-Gm-Message-State: AOAM532oRuLuodr719CQiPFcrBQ8BsVjT35fqy6UNQapzz5cuTvVcuUk
+        ZQbK0n3t/RH7mAM6o20qUHkCrg==
+X-Google-Smtp-Source: ABdhPJzKeCMq10+IjJPvyVIa2uOMWEU2rndAS06yEdTPF6U16PF6kORu+SzOAcMwVifHKbtDyUiFTA==
+X-Received: by 2002:a05:6870:2418:b0:d3:1052:aac0 with SMTP id n24-20020a056870241800b000d31052aac0mr1919223oap.80.1645732133566;
+        Thu, 24 Feb 2022 11:48:53 -0800 (PST)
+Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
+        by smtp.gmail.com with ESMTPSA id bl16-20020a056808309000b002d43b28a8bdsm241679oib.14.2022.02.24.11.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 11:48:53 -0800 (PST)
+Date:   Thu, 24 Feb 2022 13:48:51 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Baruch Siach <baruch@tkos.co.il>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Andy Gross <agross@kernel.org>,
+        Baruch Siach <baruch.siach@siklu.com>,
+        Balaji Prakash J <bjagadee@codeaurora.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>,
-        Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v13 2/2] leds: Add driver for Qualcomm LPG
-Message-ID: <20220224165939.4275x7mzp7qpl2kj@pengutronix.de>
-References: <20220218183116.2261770-1-bjorn.andersson@linaro.org>
- <20220218183116.2261770-2-bjorn.andersson@linaro.org>
+        Robert Marko <robert.marko@sartura.hr>,
+        Kathiravan T <kathirav@codeaurora.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/3] dt-bindings: pwm: add IPQ6018 binding
+Message-ID: <YhfhIyRKwl1bJObC@builder.lan>
+References: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
+ <dee024e7add1b2c919b23472c90391239a0a2572.1644226245.git.baruch@tkos.co.il>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vypeaeqkhphwiwzw"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20220218183116.2261770-2-bjorn.andersson@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dee024e7add1b2c919b23472c90391239a0a2572.1644226245.git.baruch@tkos.co.il>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,182 +80,132 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon 07 Feb 03:30 CST 2022, Baruch Siach wrote:
 
---vypeaeqkhphwiwzw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Baruch Siach <baruch.siach@siklu.com>
+> 
+> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+> 
+> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 
-On Fri, Feb 18, 2022 at 10:31:16AM -0800, Bjorn Andersson wrote:
-> The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
-> PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
-> with their output being routed to various other components, such as
-> current sinks or GPIOs.
->=20
-> Each LPG instance can operate on fixed parameters or based on a shared
-> lookup-table, altering the duty cycle over time. This provides the means
-> for hardware assisted transitions of LED brightness.
->=20
-> A typical use case for the fixed parameter mode is to drive a PWM
-> backlight control signal, the driver therefor allows each LPG instance
-> to be exposed to the kernel either through the LED framework or the PWM
-> framework.
->=20
-> A typical use case for the LED configuration is to drive RGB LEDs in
-> smartphones etc, for which the driver supports multiple channels to be
-> ganged up to a MULTICOLOR LED. In this configuration the pattern
-> generators will be synchronized, to allow for multi-color patterns.
->=20
-> The idea of modelling this as a LED driver ontop of a PWM driver was
-> considered, but setting the properties related to patterns does not fit
-> in the PWM API. Similarly the idea of just duplicating the lower bits in
-> a PWM and LED driver separately was considered, but this would not allow
-> the PWM channels and LEDs to be configured on a per-board basis. The
-> driver implements the more complex LED interface, and provides a PWM
-> interface on the side of that, in the same driver.
->=20
-> Tested-by: Luca Weiss <luca@z3ntu.xyz>
-> Tested-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
 > ---
-> Changes since v12:
-> - Initialize ret in lpg_pwm_apply()
->=20
-> Changes since v11:
-> - Extended commit message to cover decision to put pwm_chip in the LED dr=
-iver
-> - Added Documentation, in particular for the hw_pattern format
-> - Added a lock to synchronize requests from LED and PWM frameworks
-> - Turned out that the 9bit selector differs per channel in some PMICs, so
->   replaced bitmask in lpg_data with lookup based on QPNP SUBTYPE
-> - Fixed kerneldoc for the struct device pointer in struct lpg
-> - Rewrote conditional in lut_free() to make it easier to read
-> - Corrected and deduplicated max_period expression in lpg_calc_freq()
-> - Extended nom/dom to numerator/denominator in lpg_calc_freq()
-> - Replaced 1 << 9 with LPG_RESOLUTION in one more place in lpg_calc_freq()
-> - Use FIELD_PREP() in lpg_apply_freq() as masks was introduced for readin=
-g the
->   same in get_state()
-> - Cleaned up the pattern format, to allow specifying both low and high pa=
-use
->   with and without pingpong mode.
-> - Only update frequency and pwm_value if PWM channel is enabled in lpg_pw=
-m_apply
-> - Make lpg_pwm_get_state() read the hardware state, in order to pick up e=
-=2Eg.
->   bootloader backlight configuration
-> - Use devm_bitmap_zalloc() to allocate the lut_bitmap
-> - Use dev_err_probe() in lpg_probe()
-> - Extended Kconfig help text to mention module name and satisfy checkpatch
->=20
->  Documentation/leds/leds-qcom-lpg.rst |   76 ++
->  drivers/leds/Kconfig                 |    3 +
->  drivers/leds/Makefile                |    3 +
->  drivers/leds/rgb/Kconfig             |   18 +
->  drivers/leds/rgb/Makefile            |    3 +
->  drivers/leds/rgb/leds-qcom-lpg.c     | 1401 ++++++++++++++++++++++++++
->  6 files changed, 1504 insertions(+)
->  create mode 100644 Documentation/leds/leds-qcom-lpg.rst
->  create mode 100644 drivers/leds/rgb/Kconfig
->  create mode 100644 drivers/leds/rgb/Makefile
->  create mode 100644 drivers/leds/rgb/leds-qcom-lpg.c
->=20
-> diff --git a/Documentation/leds/leds-qcom-lpg.rst b/Documentation/leds/le=
-ds-qcom-lpg.rst
+> This series does not convert the TCSR binding documentation to YAML. As
+> a result, this commit adds a new dt_binding_check warning:
+> 
+> /example-0/syscon@1937000: failed to match any schema with compatible: ['qcom,tcsr-ipq 6018', 'syscon', 'simple-mfd']
+> 
+> If that is a blocker to IPQ6018 PWM support, so be it. Patches will wait
+> for someone else to push them further.
+> 
+> v10:
+> 
+>   No change
+> 
+> v9:
+> 
+>   Add 'ranges' property to example (Rob)
+> 
+>   Drop label in example (Rob)
+> 
+> v8:
+> 
+>   Add size cell to 'reg' (Rob)
+> 
+> v7:
+> 
+>   Use 'reg' instead of 'offset' (Rob)
+> 
+>   Drop 'clock-names' and 'assigned-clock*' (Bjorn)
+> 
+>   Use single cell address/size in example node (Bjorn)
+> 
+>   Move '#pwm-cells' lower in example node (Bjorn)
+> 
+>   List 'reg' as required
+> 
+> v6:
+> 
+>   Device node is child of TCSR; remove phandle (Rob Herring)
+> 
+>   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
+> 
+> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+>     Andersson, Kathiravan T)
+> 
+> v4: Update the binding example node as well (Rob Herring's bot)
+> 
+> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+> 
+> v2: Make #pwm-cells const (Rob Herring)
+> ---
+>  .../devicetree/bindings/pwm/ipq-pwm.yaml      | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
 > new file mode 100644
-> index 000000000000..d4825a289888
+> index 000000000000..857086ad539e
 > --- /dev/null
-> +++ b/Documentation/leds/leds-qcom-lpg.rst
-> @@ -0,0 +1,76 @@
-> +.. SPDX-License-Identifier: GPL-2.0
+> +++ b/Documentation/devicetree/bindings/pwm/ipq-pwm.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/ipq-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> +Kernel driver for Qualcomm LPG
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
+> +title: Qualcomm IPQ6018 PWM controller
 > +
-> +Description
-> +-----------
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
 > +
-> +The Qualcomm LPG can be found in a variety of Qualcomm PMICs and consist=
-s of a
-> +number of PWM channels, a programmable pattern lookup table and a RGB LED
-> +current sink.
+> +properties:
+> +  "#pwm-cells":
+> +    const: 2
 > +
-> +To facilitate the various use cases, the LPG channels can be exposed as
-> +individual LEDs, grouped together as RGB LEDs or otherwise be accessed a=
-s PWM
-> +channels. The output of each PWM channel is routed to other hardware
-> +blocks, such as the RGB current sink, GPIO pins etc.
+> +  compatible:
+> +    const: qcom,ipq6018-pwm
 > +
-> +The each PWM channel can operate with a period between 27us and 384 seco=
-nds and
-> +has a 9 bit resolution of the duty cycle.
+> +  reg:
+> +    description: Offset of PWM register in the TCSR block.
+> +    maxItems: 1
 > +
-> +In order to provide support for status notifications with the CPU subsys=
-tem in
-> +deeper idle states the LPG provides pattern support. This consists of a =
-shared
-> +lookup table of brightness values and per channel properties to select t=
-he
-> +range within the table to use, the rate and if the pattern should repeat.
+> +  clocks:
+> +    maxItems: 1
 > +
-> +The pattern for a channel can be programmed using the "pattern" trigger,=
- using
-> +the hw_pattern attribute.
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#pwm-cells"
 > +
-> +/sys/class/leds/<led>/hw_pattern
-> +--------------------------------
+> +additionalProperties: false
 > +
-> +Specify a hardware pattern for a Qualcomm LPG LED.
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
 > +
-> +The pattern is a series of brightness and hold-time pairs, with the hold=
--time
-> +expressed in milliseconds. The hold time is a property of the pattern an=
-d must
-> +therefor be identical for each element in the pattern (except for the pa=
-uses
-> +described below).
+> +    syscon@1937000 {
+> +        compatible = "qcom,tcsr-ipq6018", "syscon", "simple-mfd";
+> +        reg = <0x01937000 0x21000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0 0x1937000 0x21000>;
 > +
-> +Simple pattern::
-> +
-> +    "255 500 0 500"
-> +
-> +        ^
-> +        |
-> +    255 +----+    +----+
-> +	|    |    |    |      ...
-> +      0 |    +----+    +----
-> +        +---------------------->
-> +	0    5   10   15     time (100ms)
-
-you're mixing tabs and spaces here, I suggest to use spaces only. Not
-sure you want to respin for that.
-
-(I didn't look into the rest of the driver, but assume it's fine.)
-
-Best regards
-Uwe
-
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---vypeaeqkhphwiwzw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIXuXcACgkQwfwUeK3K
-7Ams5wf+MyshgmoyVbFd/VtoEJNG+8bLx/KFx6APd8Kl+8oj/EFWOfBDYU9GDKLw
-EsQrVAoJ0gQg/K6hMTUAsN/gwhInmrb4aDHy3Ot1GWBNMoTXiADdF84G6X9avKoF
-Qii16MnMTN95w6CbsDf41DIwjWv+RgIISVztXKjFBWvuL8EaLeMVgcpEIKw/j7JH
-/0BBSbAZmY0039nhyPeVSJhW8IAX0eAhlwN4pTHvbXZ99P5TIFSuOZu9mEROr2FV
-1VbQfq1KRCbxCpKwPiLyKKBsmVHve6nSH6EDOycwu+twmgAiJMk8u4wKpysRClFw
-eKlrJ+QUoNrzwBxmbDphCRvapeddng==
-=X7KB
------END PGP SIGNATURE-----
-
---vypeaeqkhphwiwzw--
+> +        pwm: pwm@a010 {
+> +            compatible = "qcom,ipq6018-pwm";
+> +            reg = <0xa010 0x20>;
+> +            clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +            assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +            assigned-clock-rates = <100000000>;
+> +            #pwm-cells = <2>;
+> +        };
+> +    };
+> -- 
+> 2.34.1
+> 
