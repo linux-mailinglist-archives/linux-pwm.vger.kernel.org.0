@@ -2,81 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B334C3718
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 21:54:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58EE54C377F
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 22:19:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbiBXUyp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Feb 2022 15:54:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35028 "EHLO
+        id S232839AbiBXVUN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Feb 2022 16:20:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233752AbiBXUyp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 15:54:45 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8C51C6ED8
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 12:54:14 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id a7-20020a9d5c87000000b005ad1467cb59so2208329oti.5
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 12:54:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=w7kYYicECLFYqJJp06iUhZt+dZdvmlULZGafsy+TJYY=;
-        b=jZEz+rzkZ3qSK3QIGheoWaMmA3vav7COKy6XwkN2b1xZlR8w8uHw9DU+hsfVrKT2A1
-         U+nJo9oYUOhKL2bluBtJc7uA2lL279nyzDvXpMQrF6jfqgRTzBzicWt8M5L7O24AeScr
-         c3tANUX7ruj1tgsLIYaMxWfWfMHGFsBUoBh3oTqvs+HCxFWt0HI6kAvxv59aVIEjm5qB
-         DHNii3B4lT65JyRyop8S4Ye+rYq8DgmRA7P6XT51vRvnKyAkiODRXBDabFIs6jRMkJ4R
-         /Dzfvtw98dOOGyzT0mdluTBhkcSOBAFD5TjzwdK2k/Xz3Fluj/VsS40oZVY+YfhRh8J7
-         CwLw==
+        with ESMTP id S231464AbiBXVUM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 16:20:12 -0500
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EB12763F3;
+        Thu, 24 Feb 2022 13:19:42 -0800 (PST)
+Received: by mail-oi1-f171.google.com with SMTP id x193so5146699oix.0;
+        Thu, 24 Feb 2022 13:19:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w7kYYicECLFYqJJp06iUhZt+dZdvmlULZGafsy+TJYY=;
-        b=L/b4x+CeMYK1o6MEFT7hdg7WXIQ8RUesvXAojZXUEbU0eBnw8WDn6dQeLLsLfylala
-         EBJWIPO6tg1lK59lEUXNEOJnofqZzgFe5RnAivMrUATZ143kHkPNDv8QAz++T81dhjY/
-         Ere7ty4QLYnYY53dG/ZVu1K44la/IJRlyY2/WphLIzKI/oxziZjW38GBbwaMw1CE3aDb
-         m94tHx/xuskspyIdN/U+CHBM9eA6F2Lc7E2+p4GjJZ4tH/KDrzwZCRu6iXXlCAnaucMU
-         INeYzUI+ik6/Yp0/Tv0N9nbqkyxmzZh85uRxs39WNeU2AK3B2TP9NsUbRr3UKeriM66k
-         7hLg==
-X-Gm-Message-State: AOAM530ARBgEc/lY44+c3weiTIiWgPoHoFb7K9qdllaYSkDpZVypRzFu
-        LPuSkOfNgV9CY6yF3BOgfsvkpg==
-X-Google-Smtp-Source: ABdhPJwqpinof7vCzpo3JsDgvR8WPsKLX9v8AOxpnybjdBazfy5rwg4vCIHUvilq1nJfyHr4S8hplQ==
-X-Received: by 2002:a05:6830:1098:b0:5af:a452:2f17 with SMTP id y24-20020a056830109800b005afa4522f17mr1620669oto.175.1645736053623;
-        Thu, 24 Feb 2022 12:54:13 -0800 (PST)
-Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
-        by smtp.gmail.com with ESMTPSA id c8-20020a4ad788000000b0031ce69b1640sm191259oou.10.2022.02.24.12.54.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=P6QnJiv1rMIaign9iD0tkUPqz3xHrGrktiGAlyZNFsI=;
+        b=B1WcRGmxaOazFS/vbV9s351dGm18Tv2LbOyX9sggrsl30k3pDEhsumjg75TALEzTrg
+         9QPNI0foyR4h/usKbz0RQZmfLJ0tysZ7NGGFIlCkIbupLiDin5rN4gl7zQ+0FCTGJ4a7
+         Xjz2No4UTsWoXuyUox64dLjsm60M+OVoiaITqAM4UILpoa5+4XQjXge39j+P9PONqnIF
+         J25H4XATQYX3enbPk/g1DKT+IzbJCseIU54ZQ6FmXiZp6hAu6X1A4VObFp0Fu/T7kcKW
+         7ciLONAfuYvrUO2NtnQSY0D4veN/7LkgVeOULXWlp1JQ0bBZPFx1M3IsIe0srLUHLUfo
+         XxwQ==
+X-Gm-Message-State: AOAM532Ej0mHphw2FLoYgFufEQvO//OnY+Gkejrjgdj2AZQkhpQJc5iB
+        QHPb2WR2dtcZv6kuqHZ9lA==
+X-Google-Smtp-Source: ABdhPJzlgmL4Mdb2h4dOX1lcM83XGfZginiIrhciEV3qmI1oyjIGjejhSg9GcmdUZj0IZYs9PECzEg==
+X-Received: by 2002:a05:6870:f80d:b0:d3:12c8:d6bf with SMTP id fr13-20020a056870f80d00b000d312c8d6bfmr11660oab.270.1645737581477;
+        Thu, 24 Feb 2022 13:19:41 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id g2-20020a9d5f82000000b005af678c9cfdsm254665oti.41.2022.02.24.13.19.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 12:54:13 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     linux-rockchip@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
+        Thu, 24 Feb 2022 13:19:40 -0800 (PST)
+Received: (nullmailer pid 3607370 invoked by uid 1000);
+        Thu, 24 Feb 2022 21:19:39 -0000
+Date:   Thu, 24 Feb 2022 15:19:39 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     xinlei.lee@mediatek.com
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, matthias.bgg@gmail.com,
+        jitao.shi@mediatek.com, allen-kh.cheng@mediatek.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Benson Leung <bleung@chromium.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-msm@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: (subset) [PATCH 3/4] arm64: dts: qcom: align Google CROS EC PWM node name with dtschema
-Date:   Thu, 24 Feb 2022 14:54:00 -0600
-Message-Id: <164573604161.1471031.3877884989605040071.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220214081916.162014-4-krzysztof.kozlowski@canonical.com>
-References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com> <20220214081916.162014-4-krzysztof.kozlowski@canonical.com>
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
+Subject: Re: [v2,4/4] dt-bindings: pwm: Add compatible for MediaTek MT8186
+Message-ID: <Yhf2a/h6H1/9sN6b@robh.at.kernel.org>
+References: <1645003971-16908-1-git-send-email-xinlei.lee@mediatek.com>
+ <1645003971-16908-5-git-send-email-xinlei.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1645003971-16908-5-git-send-email-xinlei.lee@mediatek.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,17 +68,31 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 14 Feb 2022 09:19:15 +0100, Krzysztof Kozlowski wrote:
-> dtschema expects PWM node name to be a generic "pwm".  This also matches
-> Devicetree specification requirements about generic node names.
+On Wed, Feb 16, 2022 at 05:32:51PM +0800, xinlei.lee@mediatek.com wrote:
+> From: Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
 > 
+> Add dt-binding documentation of pwm for MediaTek MT8186 SoC.
 > 
+> Signed-off-by: Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> index 768ab04d3764..1f45b1b8c3d4 100755
+> --- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> @@ -17,6 +17,7 @@ properties:
+>        - mediatek,mt6595-disp-pwm
+>        - mediatek,mt8173-disp-pwm
+>        - mediatek,mt8183-disp-pwm
+> +      - mediatek,mt8186-disp-pwm
+>        - mediatek,mt8192-disp-pwm
+>        - mediatek,mt8195-disp-pwm
 
-Applied, thanks!
+It seems unlikely that every SoC has a different version of h/w for 
+something as simple as a PWM. There's not an appropriate fallback? The 
+first version from an SoC that has all the features and would work with 
+existing driver unchanged?
 
-[3/4] arm64: dts: qcom: align Google CROS EC PWM node name with dtschema
-      commit: 1e49defb863638cde53e48805747271f80f9abec
-
-Best regards,
--- 
-Bjorn Andersson <bjorn.andersson@linaro.org>
+Rob
