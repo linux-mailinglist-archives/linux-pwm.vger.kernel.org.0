@@ -2,110 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2EF74C2C28
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 13:52:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3BC4C2C38
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 13:54:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234527AbiBXMwd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Feb 2022 07:52:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
+        id S231776AbiBXMzQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Feb 2022 07:55:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234541AbiBXMwc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 07:52:32 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95EF20C195
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 04:52:01 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id n25-20020a05600c3b9900b00380f41e51e6so1199568wms.2
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 04:52:01 -0800 (PST)
+        with ESMTP id S229986AbiBXMzP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 07:55:15 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC594214F89;
+        Thu, 24 Feb 2022 04:54:44 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id z22so2719966edd.1;
+        Thu, 24 Feb 2022 04:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=1y26t3z5KmogzVzaRXh0xZ8+wk/glRrMhjsYhZ6NNpI=;
-        b=l2A1dmVsQ69rlhJLpwmjB2fa5bCE62/fs+1myFe5KswaVzqgXHDHZY7BxwuN52LfTn
-         ymTtWt2+ah81VG9+r5VUl5lNt2WVOVR6Tq11NsK8KqEpv9JqtUt2MDK5I/tWDCl9RnPj
-         vdgtWMbOrNX+Mmjry8sGIgAq5kCtZ+cnHNaZTQXMvjzd5SYbmelX7LpVgIgWahuqvk4D
-         RHlYhGzcC/oZ/IaL80XYnes0EJhMDujLWZPB1eKIAS4TjUxGK9P8pOwIMdElCbMzRA0k
-         ZFCpcCz0AgM4QtJKVREFOeObRlFPS6X3vG+EaQs7fne0jrOwx6In2PQ01gHTP9i4ro4X
-         /FrA==
+         :content-disposition:in-reply-to:user-agent;
+        bh=os8ySsUHGCfn4fSlhWcW0LoCtu+dFeeC1o4LuexdWlg=;
+        b=hm0rq7ksIh2akap62WKEH05uGR9TSmZ7MqlrmAX5a72L7/3fsPEduRbJXSubJlErtb
+         rIIm3V2IoJacRZsoBc+ZwSNw5CqmnWpp3eUeuthEjiY/sSrhdPkl4W7+vNFmTZxtv8gx
+         vw/nLDi6WAlbR3AcgO9deqeahb2xmHpmQSflae5bjVICUtz5ifAehGhOtPEu2fhPds/S
+         TmTtx1GLljufg4N6ivv2XqJcaWqR31pLlszavn9Tk6/HrzABAI9jD1PbVLt7wqL+9/Mu
+         Ku1aau5xmiYZEXskSUHMhq0CQhrCK+J9KqFIKTmBZOvIoh7k0/2EQeaFyoV5xoYjrzCe
+         oN8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1y26t3z5KmogzVzaRXh0xZ8+wk/glRrMhjsYhZ6NNpI=;
-        b=mC/ilm8IS93tRxTPJfTL+/ab2RiJ7XnTyPVkVjUQhUcnL8NolQSSDjQtcqib1elLCp
-         lx0kJp5jGOK9Lfu18Eu4KHkFNeQFqHT/F0gtz/wrArr+lkVsJpzdeWh4rm1ywwmdtofM
-         HV1hUu1+/AJXH2k4XSefSuNyEjVMz4DgyOto6UnQi+Mf9J/ZKZ7oYS8dKsBg6Nf3NpRr
-         B+Pg7UnGKlNdG+NTkLcxGEsWZsW5kGlMrXgewqsZSiCDXm3wxZSyennYiaE3X+z98Flc
-         Pnf+JglVZ93hUvvftcDtS/9E9OxXCSPOuX2T3kbKCpOSRqYNaQGZ/h+umth+1Zt/CnxR
-         8gLg==
-X-Gm-Message-State: AOAM531qn2c97m/hxKnBKA2ltAQvCg6AU2+fL/hLwkfnsLKHVb0qJJPQ
-        lYRaA2UBFLQZ39uid8aT2jYRlw==
-X-Google-Smtp-Source: ABdhPJxx0eBVNp8nFphGUFZsIuvZMVUId0v9AZP4IrgzocOtHXpv/ScIaresc8g3bEGwUO/d7+aBPg==
-X-Received: by 2002:a05:600c:4f83:b0:37c:d057:3efe with SMTP id n3-20020a05600c4f8300b0037cd0573efemr11320753wmq.143.1645707120272;
-        Thu, 24 Feb 2022 04:52:00 -0800 (PST)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id c6sm2538733wmb.25.2022.02.24.04.51.59
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=os8ySsUHGCfn4fSlhWcW0LoCtu+dFeeC1o4LuexdWlg=;
+        b=l8SgCCs4nVQ7yYOw6mza+yX+84TVu9i3D+sEQPzKf730dNtBcmgkGVmon4GlC+SjIH
+         UtksLVBX4Gdq542s3u72PyrNgkTT2T4uD66rRZlB989cSDnQz66xi4iZ3/PUJH2f1rnF
+         gYl227Jo4j+ArDJuA6uL4Di8oAqRKYusvIAsDgws/y0n4hH1R6EbPNn182Cn645/OUhU
+         hOXjlDjd84mjsEpZiATPrgt/IxEUgvKB58VueMH7pYTv9sk1Muztl1DxE3ISN0HwgtOd
+         TVMeDqBNhaBC1APHetdWK0AMt97LBCAVwe2c1QYIdUwRt5kKLba2rYqk+g3TLgAOaGrv
+         JTBQ==
+X-Gm-Message-State: AOAM530aXLlRyoxjbb+Kz9+tu6zfnG0SarsQ7dQ/qrrNYlkEYXoyfOqX
+        0NSIBDWOjmATFHmASbU9bvg=
+X-Google-Smtp-Source: ABdhPJzQfeK3AEEbh7/kguzo/xuQtlKBLxOyQQ2N+KhzxVRgsqzAxPz1XnXA04R6/H0fgLR2EyU6Fw==
+X-Received: by 2002:a05:6402:438e:b0:410:a8bd:fee0 with SMTP id o14-20020a056402438e00b00410a8bdfee0mr2176280edc.426.1645707283299;
+        Thu, 24 Feb 2022 04:54:43 -0800 (PST)
+Received: from orome (p200300e41f0a6900000000000000043a.dip0.t-ipconnect.de. [2003:e4:1f0a:6900::43a])
+        by smtp.gmail.com with ESMTPSA id hp7sm1342998ejc.144.2022.02.24.04.54.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 04:51:59 -0800 (PST)
-Date:   Thu, 24 Feb 2022 12:51:57 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 1/4] dt-bindings: pwm: google,cros-ec: include generic
- pwm schema
-Message-ID: <Yhd/bXqehm98C/Jo@google.com>
-References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
- <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
- <Yhd9CjAbI7MJu56L@orome>
+        Thu, 24 Feb 2022 04:54:42 -0800 (PST)
+Date:   Thu, 24 Feb 2022 13:54:37 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Colin Ian King <colin.i.king@gmail.com>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: atmel: remove redundant initialization of variable
+ timeout
+Message-ID: <YheADZELg0XyEk9j@orome>
+References: <20211210002250.639251-1-colin.i.king@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LbvGMTIkSSxx+Jrr"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yhd9CjAbI7MJu56L@orome>
+In-Reply-To: <20211210002250.639251-1-colin.i.king@gmail.com>
+User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 24 Feb 2022, Thierry Reding wrote:
 
-> On Mon, Feb 14, 2022 at 09:19:13AM +0100, Krzysztof Kozlowski wrote:
-> > Include generic pwm.yaml schema, which enforces PWM node naming.  Keep
-> > the old name in bindings as deprecated.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml    | 4 ++++
-> >  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml          | 5 ++++-
-> >  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> Applied, thanks.
+--LbvGMTIkSSxx+Jrr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Super, thanks T.
+On Fri, Dec 10, 2021 at 12:22:50AM +0000, Colin Ian King wrote:
+> The variable timeout is being initialized with a value that is never
+> read, it is being re-assigned the same value later on. Remove the
+> redundant initialization and keep the latter assignment because it's
+> closer to the use of the variable.
+>=20
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/pwm/pwm-atmel.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
--- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Applied, thanks.
+
+Thierry
+
+--LbvGMTIkSSxx+Jrr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXgAoACgkQ3SOs138+
+s6GEChAApw2d+UIzuiHhq4rQmZHAlZMsL5OyuRWo14Kq7CZcPcBQuTf8PYVmtYak
+ei6u0+ug6g3LOhG+R7rYvS/x0eV0sO4uydIWlhTJhGEtdxbOuSDWKQxo1odhrvcW
+asIHs5gC1kpNzlHUMiIlHjzQ8+d7auwSRS3qO7us8BgtaAV+cKY6XvfSMm6A+/6k
+0VU+I0SFPVGy3jncmvip2Oa1kkyG6oWt+sY8a29q0C2DZ69jWLecBgibPrNOwzf2
+8T7EzBew6k/qguvpKgu7WitUENSn0WWJ38UW8IHcsJtC64DZv77hc62QZ4ZAgQu1
+OQ/Gz5aMXmA9HLQ2rJy7I33DbP81a+OePo2evwFH9XxuBJ4ANLT48vMLb31UHQLu
+dGclitZls+dE6YzdQW/Wy80RCCfNTBIVNYi42LgewkZiUUfdPYBPon1VF39PDZ+Q
+RhyiaM64czzaM276bqpHOmI6HKOXpFlDte7/LXbNdWWvCSy89/T9BHNfJpVIBzVw
+iSHzNCYXntFGu5lY4MnF1mhOwqPSJk4GBgCdyQoQTCIwq2Jp35Tm2rIwrZNbh9vp
+qDc11NoTsAOpOmMyZfdArlICNkUWDp9pJpV2iZiYxWiT4XimEHknSuL2cDNmmI1N
+Rx1f69kehNDWK2fJJe1SwbfP6E/fn5YT5lflhtsJ6wbhyjjyzXM=
+=pYZZ
+-----END PGP SIGNATURE-----
+
+--LbvGMTIkSSxx+Jrr--
