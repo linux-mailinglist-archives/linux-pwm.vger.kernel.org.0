@@ -2,69 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AA464C2D9F
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 14:54:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F31684C2DA8
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 14:56:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235257AbiBXNxz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Feb 2022 08:53:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44138 "EHLO
+        id S229594AbiBXN5L (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Feb 2022 08:57:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbiBXNxy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 08:53:54 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3B51592AB;
-        Thu, 24 Feb 2022 05:53:24 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id h15so2934493edv.7;
-        Thu, 24 Feb 2022 05:53:24 -0800 (PST)
+        with ESMTP id S232132AbiBXN5K (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 08:57:10 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3FA193E4;
+        Thu, 24 Feb 2022 05:56:39 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id p15so4514334ejc.7;
+        Thu, 24 Feb 2022 05:56:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=nHQBWT7bMR5wypBGm4JCUtTL/BMR7BEQzX7N2vOiRk0=;
-        b=MHyCpqm7LhNeCcxt7BnxbZIoCSpP08dDsWnxcgDlnQ8t3BQ/qTq1vIiuiJdh88bHoc
-         tPdXdvmcNj0qunMPd6T9f+SuT80LI58qO2hxrTqt0IdSNZ2rxfd2mnA12G8QAdEPtczi
-         FGxpnVBiWAGm5XzNJox1k0S8z8qKhPjX1YTGTker3+lamzvsLDqcDWY1cnQjlvY92M5c
-         5/6jTWs64KKuTmnELTP2Og1U6gTfxKFwfEGBX7q4P2fAOqsbb2rOKKiQUY1+3IC2kJVc
-         Pp7SqJPDlNW1RfJYxxpFK0uMZeAFyIjslsasUsEZF5qIdAlAmCyKqtu1KL1/tffmfwQk
-         yELA==
+        bh=JvjC8tOWTk4ODYODZzdMtmR/l6m49ciAB7j3vCNUEKE=;
+        b=lpE8irlSiGXh7sX+ApcfCqZMcLOWT3BV2SoJuR6yoXxjVTbN376LudqUY4cYo09a2j
+         GVClT6gnbnZMTdWUU362FYpLM7X/akhmv1w0kXzn0RL7IDN7EQCsSEmHzQRFou8Dfv9t
+         9KMsc3FGy3cINoFy54zRgtm/iIMXmzcIlFmtTwTbBdevlLFq3Sr607iFQjfs+wVp5/Ly
+         D443ODWNO651n/FuG+UPxNMSAsxLCFLghLca9u2tp1YjdBW0+slOzNEElUG+1ZFR30rU
+         lThoClN3B0e1+XuEoARAN0+9N2i/bxmQDKfj7EjghBO8KpLIM6cV46RB+H5urVrlgE7J
+         0MNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nHQBWT7bMR5wypBGm4JCUtTL/BMR7BEQzX7N2vOiRk0=;
-        b=H0ti8jfoYjEmgDtkkcLV33PIisjVmUmd0uOPWodUury7EBfjR41j7tgO5E2GMzLLMi
-         QtpJzNJkqHs3MfHQefRbqKVfWSr6oG9rPqpib5VG27WSv7gN3bt2ClWse0/CFJTzf0CF
-         iCzc3qFirZl67Rl1cv7pe8DL/bE+EVkTKH2t14c3jvVw7bGlPjBbqAfHSj0YYbh3jiTQ
-         fOoY2YuI4aypiTU3q/Ie9e2PDFAouzCL7SqzfOJliRSPi2tBt3G9LHWrdfaShKkp+Xwb
-         aqRIE9aD9GvtIROYpj1sWSi6WuHJlpY6asbAOLjGqy+9xs3RbX8DKJ71iaLIJbTMRD6E
-         DGGQ==
-X-Gm-Message-State: AOAM532ebD5rNvHYupVzItBb2byPzoGpYpr5Xp9koNVHAAoCgAA3+M4S
-        S0rLF5E8Fba8c6Tt8gO4LJA=
-X-Google-Smtp-Source: ABdhPJxO6b1Qr2Vfnt0T48wlIO/dpQickLsxM8qwxaA/5Ymic1hJ3VfNTRMVwTwNXSfyQsmfdnPDFQ==
-X-Received: by 2002:a05:6402:b37:b0:400:500f:f26 with SMTP id bo23-20020a0564020b3700b00400500f0f26mr2339621edb.301.1645710803013;
-        Thu, 24 Feb 2022 05:53:23 -0800 (PST)
+        bh=JvjC8tOWTk4ODYODZzdMtmR/l6m49ciAB7j3vCNUEKE=;
+        b=tilmnfImERi1WC39ZfjWhfzAo/ltKAilCvvEid87/F33GxLL5ajWCs5kWgO8c2ZfPN
+         FFPcNw8436QgKy+1SbLWRIA9Tna0Q95AGOYfChrjIepfMQz1d3TAvvJU0/gl0uD/xJsU
+         EEzKD/Bwvm4DWjENSNoZhwOTDsrUyXOhk8l2plrsIyJ+glxIcS/8z6BelxueWFdpjV4P
+         8ZRqDwTA3IUHWjVOotNiOS3NBM5O+ws/mCYxPtlUFOb31md1lognfxarkEltwxKkdLx8
+         cTKmWsUEUhT5i+GjlnnFdrWFFqgrQTDt+7WSYrm2zCb3NpvCqEU0542ErShilFsNpY/H
+         utUw==
+X-Gm-Message-State: AOAM532ODMtesKUyt7H7a8AwYfcw4MwrFnSEQjC5dia/JdBraeBRvNvt
+        /ZTJZSY+qTJCREoZRWpYYd8=
+X-Google-Smtp-Source: ABdhPJzNOQ43PD6/sw6hM1w1ZVcS0jJ7lCKae7Uwa2cuV0H3vipEiMdyluuTU7eaIA4cQC1Ipng/IQ==
+X-Received: by 2002:a17:906:6716:b0:6cc:7d95:90af with SMTP id a22-20020a170906671600b006cc7d9590afmr2333918ejp.442.1645710998117;
+        Thu, 24 Feb 2022 05:56:38 -0800 (PST)
 Received: from orome (p200300e41f0a6900000000000000043a.dip0.t-ipconnect.de. [2003:e4:1f0a:6900::43a])
-        by smtp.gmail.com with ESMTPSA id a10sm814444edf.14.2022.02.24.05.53.21
+        by smtp.gmail.com with ESMTPSA id l12sm1450564edt.1.2022.02.24.05.56.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 05:53:22 -0800 (PST)
-Date:   Thu, 24 Feb 2022 14:53:20 +0100
+        Thu, 24 Feb 2022 05:56:36 -0800 (PST)
+Date:   Thu, 24 Feb 2022 14:56:35 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        matthias.bgg@gmail.com, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 2/3] pwm: pwm-mediatek: Allocate clk_pwms with
- devm_kmalloc_array
-Message-ID: <YheN0IM8IhkMODU4@orome>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>
+Cc:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Subject: Re: [PATCH v2 3/3] pwm: pwm-mediatek: Beautify error messages text
+Message-ID: <YheOk3emaxePPBdr@orome>
 References: <20220214140339.112500-1-angelogioacchino.delregno@collabora.com>
- <20220214140339.112500-2-angelogioacchino.delregno@collabora.com>
+ <20220214140339.112500-3-angelogioacchino.delregno@collabora.com>
+ <e3222caa-ec69-2e90-ef81-666b03da656d@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="abg3CG3+/zIlkHwK"
+        protocol="application/pgp-signature"; boundary="hLgd3YADIvX8W0Kp"
 Content-Disposition: inline
-In-Reply-To: <20220214140339.112500-2-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <e3222caa-ec69-2e90-ef81-666b03da656d@mediatek.com>
 User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -77,44 +84,112 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---abg3CG3+/zIlkHwK
+--hLgd3YADIvX8W0Kp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 14, 2022 at 03:03:38PM +0100, AngeloGioacchino Del Regno wrote:
-> Switch from devm_kcalloc to devm_kmalloc_array when allocating clk_pwms,
-> as this structure is being filled right after allocating it, hence
-> there is no need to zero it out beforehand.
+On Tue, Feb 15, 2022 at 02:47:33PM +0800, Macpaul Lin wrote:
+> On 2/14/22 10:03 PM, AngeloGioacchino Del Regno wrote:
+> > As a cherry-on-top cleanup, make error messages clearer to read
+> > by changing instances of "clock: XXXX failed" to a more readable
+> > "Failed to get XXXX clock". Also add "of" to unsupported period
+> > error.
+> >=20
+> > This is purely a cosmetic change; no "real" functional changes.
+> >=20
+> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@co=
+llabora.com>
+> > ---
+> >   drivers/pwm/pwm-mediatek.c | 8 ++++----
+> >   1 file changed, 4 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> > index 6b39f3d69e41..568b13a48717 100644
+> > --- a/drivers/pwm/pwm-mediatek.c
+> > +++ b/drivers/pwm/pwm-mediatek.c
+> > @@ -146,7 +146,7 @@ static int pwm_mediatek_config(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
+> >   	if (clkdiv > PWM_CLK_DIV_MAX) {
+> >   		pwm_mediatek_clk_disable(chip, pwm);
+> > -		dev_err(chip->dev, "period %d not supported\n", period_ns);
+> > +		dev_err(chip->dev, "period of %d ns not supported\n", period_ns);
+> >   		return -EINVAL;
+> >   	}
+> > @@ -229,12 +229,12 @@ static int pwm_mediatek_probe(struct platform_dev=
+ice *pdev)
+> >   	pc->clk_top =3D devm_clk_get(&pdev->dev, "top");
+> >   	if (IS_ERR(pc->clk_top))
+> >   		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk_top),
+> > -				     "clock: top failed\n");
+> > +				     "Failed to get top clock\n");
+> >   	pc->clk_main =3D devm_clk_get(&pdev->dev, "main");
+> >   	if (IS_ERR(pc->clk_main))
+> >   		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk_main),
+> > -				     "clock: main failed\n");
+> > +				     "Failed to get main clock\n");
+> >   	for (i =3D 0; i < pc->soc->num_pwms; i++) {
+> >   		char name[8];
+> > @@ -244,7 +244,7 @@ static int pwm_mediatek_probe(struct platform_devic=
+e *pdev)
+> >   		pc->clk_pwms[i] =3D devm_clk_get(&pdev->dev, name);
+> >   		if (IS_ERR(pc->clk_pwms[i]))
+> >   			return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk_pwms[i]),
+> > -					     "clock: %s failed\n", name);
+> > +					     "Failed to get %s clock\n", name);
+> >   	}
+> >   	pc->chip.dev =3D &pdev->dev;
+> >=20
 >=20
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  drivers/pwm/pwm-mediatek.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The format of these debug messages "clock: top" or "clock: main" is meant=
+ to
+> keep both human and machine's readability at the same time.
+> This kind of format is much more easier to parse by scripts, which the
+> driver's category and sub nodes are separated by delimiters . If a fail l=
+og
+> has been provided, the script could indicated where the issue might exists
+> probably. Device vender, field application engineer, and driver maintainer
+> could be able to write and use the error log parser before debugging.
 
-Applied, thanks.
+Does such a script truly exist? Given that most error messages don't
+follow this format, I would expect it to be only very marginally useful.
+Typically the prefix that the dev_printk() variants add is enough
+information to deduct where the error happens, at which point it's back
+to good old grep to find the matching string to localize exactly.
+
+> I'm not sure if this kind of format will be better. Like, "Failed to get
+> clock: %s".
+>=20
+> If most people like this kind of solution ("Failed to get clock: %s\n"),
+> then you can have the reviewed-by tag.
+> Thanks!
+>=20
+> Reviewed-by: Macpaul Lin <macpaul.lin@mediatek.com>
+
+I'm going to assume that the scriptability is a theoretical argument, so
+I'll take this. Let me know if you do rely on the exact format and I can
+drop this again.
 
 Thierry
 
---abg3CG3+/zIlkHwK
+--hLgd3YADIvX8W0Kp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXjdAACgkQ3SOs138+
-s6E1sRAAu21195xMimQ2VWJzDrxG2ALsrIkkP1uWHyhSlzDSXfiCuUVHy7Fc5Gwd
-cJTyXtpyIKLbS/5IPW4KbZvT6OSiUS34LD+pmutmhCOGs/xJ1Xp/+MR5cEBjMAWE
-yVEovbAfpH36HARFwmypOPzi1jfgoj1TU7HF5ZXCdpRtzCxw1Yfq6d/9Z5p3ojN0
-BoahKlQMja9vI8DkCNVWKOnMaKdIMuoEUHJIZTO0PEPyRfMm6FWWwTdEu4iEM4VZ
-PJR0LIaYixQzvnr7XYaQfiY5YQWTiYDJpXI9zQEhpc5XA/m/RXdRqfmKFH9WedMy
-odT//Yi5Ul+AmqU03cd5pBO6yB6fpAI3dv4X/LXifru394Penpr5rpT6Ds9fpyBX
-x+phot/Vrw4Gbfk1OsQi7hDnWe4+rTC6O1dNPcMw+AKLZ2M5jQva3Pg9HBPqFq7u
-a0RB+bPGoCmE5uBFpl/ra6D8SXDpioKbcF2WDUjgiUq+n9OZv7KCP3mowu46n1/Y
-fCNi+27JRKDoScNTFzTujSFiDYBchRx212tkG2/FYQMFCed6xli6UEnHFGZuXuEY
-uObog37ey7eGC2xI0+lU14PIpaUwo9DDpvfzdKFbiZ6N/ikm+TebMaLvphGkQfyH
-uUt+cLuHT0OIOvNujBAwQDcd49ux+1qeIgV4O282f1CN4OtZeRY=
-=t7QL
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXjpMACgkQ3SOs138+
+s6FoBg/+NpTmPhqKdcsDVyDY31nGjMYlEUy6Nw5EhAVdvlZLargR9lpl9mfNPc3O
+Xg7RzdL6W2GGqPy938wLzqWZbjoaBV0Z0DUUn3sJg6qNE+fgov4dNLt2oQis0VpP
+/hhDVm//BRgVCm0iuQLmNDxAGkPCBcDilqEY3a+wpta9KCf4SDnAyRMeY52tDW0p
+AzpQXZd6WG8l7lezkEdebof6ZCUf4qO0MS/KlEpQaV/QgtVDjSLetrPBNhex3wG+
+JCO928Bmx5kHdX2pRSUSFgZOY9KkqOHWbjcUudNj4sFpL4HtON/p/r0rRtL43eTs
+ReFrgnvwP1Xv1ZuXqmjVrztBbUy2n79oFO/Ok+gVUChqw97V5rOSlKNDFzEKtHn2
+mDdQIeW/Uvj4QcPzszw4LqdixtjD4ZXCm0evqAVuxpyL+G0eCW7oR4yqFsDwKmxb
+RGDjQcvb/8fOeO3gmzmHr1jkdzM+2EUKDAKg5HMpXWLdTYNgemndNkFkF6NUF37e
+2SdQhQHp7lUwOTgUr3bxCYZfz+mr6X2eI7bW7udizQs4SdqHUq4aMvtsnn9edzs0
+0J8D+C32TQlN9z/bLrZoyQ7TWG23moIMaC4w/1XThI+fldS0WALdqwOs6i2FwTle
+ShFCQanNvWwpqc4ijB8a7BNYxmTL76DbiMuB0odKBHZ8+FlvWZc=
+=GvaV
 -----END PGP SIGNATURE-----
 
---abg3CG3+/zIlkHwK--
+--hLgd3YADIvX8W0Kp--
