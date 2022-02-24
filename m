@@ -2,71 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7096F4C2F89
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 16:25:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26EAC4C31F6
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 17:51:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236070AbiBXPZp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 24 Feb 2022 10:25:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
+        id S230523AbiBXQuc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Feb 2022 11:50:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236107AbiBXPZo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 10:25:44 -0500
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D7322A284;
-        Thu, 24 Feb 2022 07:25:13 -0800 (PST)
-Date:   Thu, 24 Feb 2022 15:25:01 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/2] pwm: jz4740: Add support for X1000 SoC
+        with ESMTP id S231237AbiBXQu0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 11:50:26 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395DD1E2FFF
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 08:49:23 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nNHIu-0000ql-Hk; Thu, 24 Feb 2022 17:49:20 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nNHIu-00138R-1I; Thu, 24 Feb 2022 17:49:19 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nNHIs-005Gmk-Jb; Thu, 24 Feb 2022 17:49:18 +0100
+Date:   Thu, 24 Feb 2022 17:49:18 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <PTET7R.D6X3F4XL0K3E1@crapouillou.net>
-In-Reply-To: <YheK4+t9w5IeHiDT@orome>
-References: <20220209231141.20184-1-aidanmacdonald.0x0@gmail.com>
-        <20220209231141.20184-2-aidanmacdonald.0x0@gmail.com>
-        <2SMA7R.9OBQWV0ONR102@crapouillou.net> <YheK4+t9w5IeHiDT@orome>
+Cc:     Max Kellermann <max.kellermann@gmail.com>,
+        linux-pwm@vger.kernel.org, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org, andrey@lebedev.lt,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] pwm-sun4i: convert "next_period" to local variable
+Message-ID: <20220224164918.ycdjmfsqqasehzks@pengutronix.de>
+References: <20220125123429.3490883-1-max.kellermann@gmail.com>
+ <20220125143158.qbelqvr5mjq33zay@pengutronix.de>
+ <YheCV0RKJcB/ppCn@orome>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qlqvaaqanoepdo5f"
+Content-Disposition: inline
+In-Reply-To: <YheCV0RKJcB/ppCn@orome>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
 
-Le jeu., févr. 24 2022 at 14:40:51 +0100, Thierry Reding 
-<thierry.reding@gmail.com> a écrit :
-> On Mon, Feb 14, 2022 at 12:02:26PM +0000, Paul Cercueil wrote:
->>  Hi Aidan,
->> 
->>  Le mer., févr. 9 2022 at 23:11:42 +0000, Aidan MacDonald
->>  <aidanmacdonald.0x0@gmail.com> a écrit :
->>  > The X1000 has the same TCU / PWM hardware as other Ingenic SoCs,
->>  > but it has only 5 channels.
->>  >
->>  > Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
->>  > ---
->>  >  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
->>  >  drivers/pwm/pwm-jz4740.c              |  5 +++++
->> 
->>  Please put the driver and device tree changes into separate patches.
-> 
-> Seemed a shame not to take this, so I've manually removed the DTS
-> changes and applied this to the PWM tree.
-> 
-> Aidan, probably best to resend the DTS snippet as a separate patch,
-> unless Paul also wants to apply this manually.
+--qlqvaaqanoepdo5f
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am not the arch/mips/ maintainer, so a separate patch would be needed 
-anyway, yes.
+On Thu, Feb 24, 2022 at 02:04:23PM +0100, Thierry Reding wrote:
+> On Tue, Jan 25, 2022 at 03:31:58PM +0100, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > On Tue, Jan 25, 2022 at 01:34:27PM +0100, Max Kellermann wrote:
+> > > Its value is calculated in sun4i_pwm_apply() and is used only there.
+> > >=20
+> > > Cc: stable@vger.kernel.org
+> >=20
+> > I think I'd drop this. This isn't a fix worth on it's own to be
+> > backported and if this is needed for one of the next patches, the stable
+> > maintainers will notice themselves (and it might be worth to shuffle
+> > this series to make the fixes come first).
+> >=20
+> > > Signed-off-by: Max Kellermann <max.kellermann@gmail.com>
+> >=20
+> > Other than that, LGTM:
+> >=20
+> > Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> Does that apply to patches 2 & 3 as well?
 
-Cheers,
--Paul
+No, at that time I only looked at patch 1.
 
+I just looked at 2 and 3 and will reply to them individually.
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qlqvaaqanoepdo5f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIXtwsACgkQwfwUeK3K
+7AnapAgAg+SjkyiP1o2sdudhtyt/I8k3O97+iBe5pyPY0TLq1NP5yp3vZhqf7NMz
+DTGcIrQxmSbQa4/NKXhBbP/78Rc+5PIYJhYYxUBk50IX98DHegOIYP1IqMv8X4DF
+mlNGshVaFj+kbUnSVoLYqjrbCcV9DD2XLJRt4E7F5qGQuLSES4uzpud03Pa9XkzU
+E+U9m045ILyAxjXXbS1Que16WcYxvo1cdDo4cvQM9lhGQKCY7iobmSykBTR3SVhW
+F5XCQb+0TZ9lBSGlzeE5FHKpRP8387mMfYA97G03pUGx+n409affOSB5sWS5uBBY
+oG5GnrIdRe2evQEXH+xwLz+6S7LN7A==
+=vqBF
+-----END PGP SIGNATURE-----
+
+--qlqvaaqanoepdo5f--
