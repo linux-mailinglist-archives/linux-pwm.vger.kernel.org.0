@@ -2,58 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B29794C2BFA
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 13:42:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2EF74C2C28
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Feb 2022 13:52:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234199AbiBXMmX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Feb 2022 07:42:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47128 "EHLO
+        id S234527AbiBXMwd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Feb 2022 07:52:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232520AbiBXMmX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 07:42:23 -0500
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F4A7EDAA;
-        Thu, 24 Feb 2022 04:41:52 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id u11so2656131lju.4;
-        Thu, 24 Feb 2022 04:41:52 -0800 (PST)
+        with ESMTP id S234541AbiBXMwc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Feb 2022 07:52:32 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95EF20C195
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 04:52:01 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id n25-20020a05600c3b9900b00380f41e51e6so1199568wms.2
+        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 04:52:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E5f8dBX9uhibFNXc6Mel3BGvbrzQlLZqBC/+F9B6bsQ=;
-        b=CBBYk42iKlTLvyHt5Xq2ne+Y0e3NUaMKxkDJol/Ow7dWi+5ZYXMcvM9MdQK73/NORp
-         T+BOY3vS9a2hi11zs635mbkkRppxjdt/dg+Bdg9ArhX4+rU77Jw9pFIV2ibqQ8USy9xS
-         qtiT3jgd3eiMwgJX6quH+RmSRvAsKwkwZhs4PIMdZD+YyF1QrR9Ky5rv0NUwHvdIiPue
-         ZCKE5eJ2gef7FuFM2Aw9+xympbHTikCZezopD/yoeQXNC/8o+KtjhRY3tHYrMZ9AxR8e
-         EdfiaPKqmc2vVfOm0GsHJyw54yC8x1uBleNJRyfRsWIbsQ0UO1+VXpZaul59L01GAWfP
-         +45A==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1y26t3z5KmogzVzaRXh0xZ8+wk/glRrMhjsYhZ6NNpI=;
+        b=l2A1dmVsQ69rlhJLpwmjB2fa5bCE62/fs+1myFe5KswaVzqgXHDHZY7BxwuN52LfTn
+         ymTtWt2+ah81VG9+r5VUl5lNt2WVOVR6Tq11NsK8KqEpv9JqtUt2MDK5I/tWDCl9RnPj
+         vdgtWMbOrNX+Mmjry8sGIgAq5kCtZ+cnHNaZTQXMvjzd5SYbmelX7LpVgIgWahuqvk4D
+         RHlYhGzcC/oZ/IaL80XYnes0EJhMDujLWZPB1eKIAS4TjUxGK9P8pOwIMdElCbMzRA0k
+         ZFCpcCz0AgM4QtJKVREFOeObRlFPS6X3vG+EaQs7fne0jrOwx6In2PQ01gHTP9i4ro4X
+         /FrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E5f8dBX9uhibFNXc6Mel3BGvbrzQlLZqBC/+F9B6bsQ=;
-        b=m7PHEYmJSnYkIgIirsIij5zi9kiDH41b3t47j9/2LzmNmmIbr6Q5+Y8xGKOxlJN1+j
-         O20WtY/E8f07qEs2Sag/XEnmOoneFdUzfkvoTAfo6UHyznkwVU1cLNVDEacd+e+UeVje
-         2d25LYvCYC/3ZIz87tkKYhjM7H40ucz882IorIAbikQDp0N38PFlhlRf+G81kDIOgU+z
-         9r1grSJSX/njwyqdkbrAk0KGmFX+MkAEnmrBC1eSLpKHGVPv9pRrZgf2fsMueF+4Z0Zx
-         Y5s/YQloURUSrpRJ51Dwrfkp3Yk9lz2QjH0cr4u+Y452IvY8kw2cdZGOqiuA52DpdEbe
-         hLvg==
-X-Gm-Message-State: AOAM532uW930Qt0LEGgXM1gwgXQ5L72PLlpPhaEP4fbrvPm9uuJMriVf
-        vfY9/O51DjNh7ojPSdkBHmw=
-X-Google-Smtp-Source: ABdhPJyCMH/RlCAdlrNo3h6tSANXMSZcYbwRf4yH6eMeEeqgfqSEBkyLJXNTX8aJ9hmjt8Se3GKG3A==
-X-Received: by 2002:a2e:8795:0:b0:246:485b:9a2f with SMTP id n21-20020a2e8795000000b00246485b9a2fmr1882695lji.283.1645706510643;
-        Thu, 24 Feb 2022 04:41:50 -0800 (PST)
-Received: from orome (p200300e41f0a6900000000000000043a.dip0.t-ipconnect.de. [2003:e4:1f0a:6900::43a])
-        by smtp.gmail.com with ESMTPSA id p3sm199599lfr.179.2022.02.24.04.41.48
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1y26t3z5KmogzVzaRXh0xZ8+wk/glRrMhjsYhZ6NNpI=;
+        b=mC/ilm8IS93tRxTPJfTL+/ab2RiJ7XnTyPVkVjUQhUcnL8NolQSSDjQtcqib1elLCp
+         lx0kJp5jGOK9Lfu18Eu4KHkFNeQFqHT/F0gtz/wrArr+lkVsJpzdeWh4rm1ywwmdtofM
+         HV1hUu1+/AJXH2k4XSefSuNyEjVMz4DgyOto6UnQi+Mf9J/ZKZ7oYS8dKsBg6Nf3NpRr
+         B+Pg7UnGKlNdG+NTkLcxGEsWZsW5kGlMrXgewqsZSiCDXm3wxZSyennYiaE3X+z98Flc
+         Pnf+JglVZ93hUvvftcDtS/9E9OxXCSPOuX2T3kbKCpOSRqYNaQGZ/h+umth+1Zt/CnxR
+         8gLg==
+X-Gm-Message-State: AOAM531qn2c97m/hxKnBKA2ltAQvCg6AU2+fL/hLwkfnsLKHVb0qJJPQ
+        lYRaA2UBFLQZ39uid8aT2jYRlw==
+X-Google-Smtp-Source: ABdhPJxx0eBVNp8nFphGUFZsIuvZMVUId0v9AZP4IrgzocOtHXpv/ScIaresc8g3bEGwUO/d7+aBPg==
+X-Received: by 2002:a05:600c:4f83:b0:37c:d057:3efe with SMTP id n3-20020a05600c4f8300b0037cd0573efemr11320753wmq.143.1645707120272;
+        Thu, 24 Feb 2022 04:52:00 -0800 (PST)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id c6sm2538733wmb.25.2022.02.24.04.51.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 04:41:49 -0800 (PST)
-Date:   Thu, 24 Feb 2022 13:41:46 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 24 Feb 2022 04:51:59 -0800 (PST)
+Date:   Thu, 24 Feb 2022 12:51:57 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Benson Leung <bleung@chromium.org>,
         Guenter Roeck <groeck@chromium.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Andy Gross <agross@kernel.org>,
@@ -67,63 +69,43 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-rockchip@lists.infradead.org
 Subject: Re: [PATCH 1/4] dt-bindings: pwm: google,cros-ec: include generic
  pwm schema
-Message-ID: <Yhd9CjAbI7MJu56L@orome>
+Message-ID: <Yhd/bXqehm98C/Jo@google.com>
 References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
  <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
+ <Yhd9CjAbI7MJu56L@orome>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QoKhDQpat5OJfaIh"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220214081916.162014-2-krzysztof.kozlowski@canonical.com>
-User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yhd9CjAbI7MJu56L@orome>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, 24 Feb 2022, Thierry Reding wrote:
 
---QoKhDQpat5OJfaIh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Mon, Feb 14, 2022 at 09:19:13AM +0100, Krzysztof Kozlowski wrote:
+> > Include generic pwm.yaml schema, which enforces PWM node naming.  Keep
+> > the old name in bindings as deprecated.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml    | 4 ++++
+> >  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml          | 5 ++++-
+> >  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> Applied, thanks.
 
-On Mon, Feb 14, 2022 at 09:19:13AM +0100, Krzysztof Kozlowski wrote:
-> Include generic pwm.yaml schema, which enforces PWM node naming.  Keep
-> the old name in bindings as deprecated.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  Documentation/devicetree/bindings/mfd/google,cros-ec.yaml    | 4 ++++
->  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml          | 5 ++++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
+Super, thanks T.
 
-Applied, thanks.
-
-Thierry
-
---QoKhDQpat5OJfaIh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXfQoACgkQ3SOs138+
-s6Hy0hAAjDWtz6200YMgIRd4aeQNFbETpimnMUmcjdEmd6wj3sRaVpeNuUPuL+Fw
-gSyLLpv9GSqgrr6JxAAMgULmUciu+l1+mC1DePxqw/xUOvY8pR5fCugKBDFT42ie
-7A1D7I+5hGVgNihA/IV9Ia29GcjEA3Hwb1v9JOtuzYZw8ds/G9SDXUyAUCaIlOJk
-9Rfk2JKCcq8/eKE/SM5NWUPWncIekGnmovibZ8JlcwyrOkkyRZp5nZ+NgK7u17SJ
-Ybo2hJX5g/ZxWxGNu707jCsIoSrfwexKVWBDYVwTFGHKzsT05N75Z28pTbpmsPoj
-ZYsck1jN1rYmBVLoW9kYy0+kb7Hx3982BTQv8f0Yt72fy1ijwCLfYaXcekCw3sge
-IvBrZIaIzyy+bjKNFJwmdXY03rang2bbeBUmCNtWu+EP+Z3TkIyk3ZoTD6RQs/Pr
-9KP7XPRAhqk7Ch0xpLxmFfNarAy14ydyz9vDKxAd4f2Dt9qhTYV0k1OV2CMEARbh
-g9hCdAAF0OaOkUEa1G58nkKeS4mcQfLN3mR1OsGijYdkgqXw9WMn1KCmblrHfQAj
-12siFOxkWcjU3sQRpnBpiHm7qnxShKST6Rgb6t2IrsMizUaP6es8my0rrFAMy81Y
-748NAi0Oyz39/Vft51iRggSYY5G4d1c/NiPzuAro4LSKVgY/q6s=
-=jFME
------END PGP SIGNATURE-----
-
---QoKhDQpat5OJfaIh--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
