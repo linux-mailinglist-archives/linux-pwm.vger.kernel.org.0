@@ -2,265 +2,161 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7381F4C3EEA
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Feb 2022 08:22:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF10C4C40F7
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Feb 2022 10:10:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238094AbiBYHWw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 25 Feb 2022 02:22:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        id S235505AbiBYJK4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 25 Feb 2022 04:10:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238088AbiBYHWw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 25 Feb 2022 02:22:52 -0500
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9131417776B
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 23:22:20 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id b35so4120126ybi.13
-        for <linux-pwm@vger.kernel.org>; Thu, 24 Feb 2022 23:22:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FWYmZ6WIjg2jo6WNcY1+u9OGEF/N9ruyttQksT1HyTU=;
-        b=WCTVovxV7gpWKeqZa30rH3AdvsFE0pz5JrOLAJ5sS7fIPymCjYDrgxHRTLtu/Arcs5
-         qUJIIt9V+gB3/IUuFBHr6JaoPi2RIh8FhBrHiSakff9rMZ/ltsYHZDvZxDqDf8iwNtUJ
-         lgdJtK7X3KW2WcjiXwRTTa+LaZuo6H2y7xcPE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FWYmZ6WIjg2jo6WNcY1+u9OGEF/N9ruyttQksT1HyTU=;
-        b=lLuwWJl2WaFiQFitoE8RqugRx5xsOiSnh0rF1fbIJoUSlhLAE/WxOEGDGHBPa+h7nw
-         iQJ3YWraseDLuCV9ANG5RI5h10K0+5BSKju9GuSILXqHQ+x+J4pv53IbQP35n7WC2aw8
-         ezxmCvBB0z1nQTRAs9X+nEZf4RnuWYpAzqHMpy0f9rxGoyWSJNWk4Unfy+x6Kg45XKQ9
-         Btkd6ORvInHpSZ/W5HYTy9XCWan8uPBhJcGRpv7Dwqraji+y7hVW/mky+Ucazx1m3rP2
-         i3x2lbtxyb6YoaHp48uhcO+xWbL9Gb066BnWLTXT7quflCeFP1ockqT6tTEmVVrBItdw
-         LFOw==
-X-Gm-Message-State: AOAM530nSH4Nfu0pYYP9ICxsuZzlIrX0JhirvWXpjpwiKtDUgM5BAYhr
-        JkTYTWzBLS9Hb/JuiAAS7Aug5PrZMNmB/GH/JEP5Og==
-X-Google-Smtp-Source: ABdhPJwzOnRfdqM+58QOWSe8nXD7NFaX3j6qD2xFZzi1OJLGUsY+hoQnD+tnv9AuSdv6jmKa5AQYZcGhI9Gx/oxfQFo=
-X-Received: by 2002:a25:2393:0:b0:61d:f1c0:a779 with SMTP id
- j141-20020a252393000000b0061df1c0a779mr5620398ybj.461.1645773739760; Thu, 24
- Feb 2022 23:22:19 -0800 (PST)
-MIME-Version: 1.0
-References: <1645003971-16908-1-git-send-email-xinlei.lee@mediatek.com>
- <1645003971-16908-2-git-send-email-xinlei.lee@mediatek.com>
- <CAGXv+5EQ5SzzHm9r0wPuE2+J=V4s8f5AopC0xFK1Eaqx_MzyhQ@mail.gmail.com> <918bfe38f716c2e1ca411ae42a5a9ab0bf810692.camel@mediatek.com>
-In-Reply-To: <918bfe38f716c2e1ca411ae42a5a9ab0bf810692.camel@mediatek.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Fri, 25 Feb 2022 15:22:08 +0800
-Message-ID: <CAGXv+5G3EOdTF_=y9JrR8RU6o5psJrfep=qz0te9ERqJ=zWC1w@mail.gmail.com>
-Subject: Re: [v2, 1/4] dt-bindings: pwm: Convert pwm-mtk-disp.txt to mediatek,
- pwm-disp.yaml format
-To:     "xinlei.lee" <xinlei.lee@mediatek.com>
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com,
-        jitao.shi@mediatek.com, allen-kh.cheng@mediatek.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S236156AbiBYJK4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 25 Feb 2022 04:10:56 -0500
+Received: from 189.cn (ptr.189.cn [183.61.185.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BD2A252917;
+        Fri, 25 Feb 2022 01:10:23 -0800 (PST)
+HMM_SOURCE_IP: 10.64.8.43:41026.848260822
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-123.150.8.43 (unknown [10.64.8.43])
+        by 189.cn (HERMES) with SMTP id 387FD1001B5;
+        Fri, 25 Feb 2022 17:10:21 +0800 (CST)
+Received: from  ([123.150.8.43])
+        by gateway-153622-dep-749df8664c-nmrf6 with ESMTP id 75c1cd44fa064a4c95e0a92083346293 for johan@kernel.org;
+        Fri, 25 Feb 2022 17:10:22 CST
+X-Transaction-ID: 75c1cd44fa064a4c95e0a92083346293
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.43
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+From:   Song Chen <chensong_2000@189.cn>
+To:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, greybus-dev@lists.linaro.org,
+        linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, elder@ieee.org
+Cc:     Song Chen <chensong_2000@189.cn>
+Subject: [PATCH v3] staging: greybus: introduce pwm_ops::apply
+Date:   Fri, 25 Feb 2022 17:16:01 +0800
+Message-Id: <1645780561-18481-1-git-send-email-chensong_2000@189.cn>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 3:19 PM xinlei.lee <xinlei.lee@mediatek.com> wrote:
->
-> On Fri, 2022-02-25 at 14:24 +0800, Chen-Yu Tsai wrote:
-> > On Wed, Feb 16, 2022 at 5:43 PM <xinlei.lee@mediatek.com> wrote:
-> > >
-> > > From: Xinlei Lee <xinlei.lee@mediatek.corp-partner.google.com>
-> > >
-> > > Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml format as
-> > > suggested by maintainer
-> > >
-> > > Signed-off-by: Xinlei Lee <
-> > > xinlei.lee@mediatek.corp-partner.google.com>
-> > > ---
-> > >  .../bindings/pwm/mediatek,pwm-disp.yaml       | 71
-> > > +++++++++++++++++++
-> > >  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 44 ------------
-> > >  2 files changed, 71 insertions(+), 44 deletions(-)
-> > >  create mode 100755
-> > > Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-
-> > > disp.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-
-> > > disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-
-> > > disp.yaml
-> > > new file mode 100755
-> > > index 000000000000..edf2a2e9ea72
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> > > @@ -0,0 +1,71 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pwm/mediatek,pwm-disp.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Mediatek PWM Controller Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Jitao Shi <jitao.shi@mediatek.com>
-> > > +  - Xinlei Lee <xinlei.lee@mediatek.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - mediatek,mt2701-disp-pwm
-> > > +      - mediatek,mt6595-disp-pwm
-> > > +      - mediatek,mt8173-disp-pwm
-> > > +      - mediatek,mt8183-disp-pwm
-> >
-> > mt8183 was not in the original text file binding. Please split this
-> > out.
-> > Also, the combination "mediatek,mt8167-disp-pwm", "mediatek,mt8173-
-> > disp-pwm"
-> > is missing.
-> >
-> > ChenYu
-> >
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  power-domains:
-> > > +    maxItems: 1
-> > > +
-> > > +  "#pwm-cells":
-> > > +    description:
-> > > +      Number of cells in a PWM specifier.
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: Main Clock
-> > > +      - description: Mm Clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: main
-> > > +      - const: mm
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - power-domains
-> > > +  - "#pwm-cells"
-> > > +  - clocks
-> > > +  - clock-names
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +    #include <dt-bindings/clock/mt8183-clk.h>
-> > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > +    #include <dt-bindings/power/mt8183-power.h>
-> > > +
-> > > +    pwm: pwm@1100e000 {
-> > > +        compatible = "mediatek,mt8183-disp-pwm";
-> > > +        reg = <0x1100e000 0x1000>;
-> > > +        interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_LOW>;
-> > > +        power-domains = <&spm MT8183_POWER_DOMAIN_DISP>;
-> > > +        #pwm-cells = <2>;
-> > > +        clocks = <&topckgen CLK_TOP_MUX_DISP_PWM>,
-> > > +                 <&infracfg CLK_INFRA_DISP_PWM>;
-> > > +        clock-names = "main", "mm";
-> > > +    };
-> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> > > b/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> > > deleted file mode 100644
-> > > index 902b271891ae..000000000000
-> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
-> > > +++ /dev/null
-> > > @@ -1,44 +0,0 @@
-> > > -MediaTek display PWM controller
-> > > -
-> > > -Required properties:
-> > > - - compatible: should be "mediatek,<name>-disp-pwm":
-> > > -   - "mediatek,mt2701-disp-pwm": found on mt2701 SoC.
-> > > -   - "mediatek,mt6595-disp-pwm": found on mt6595 SoC.
-> > > -   - "mediatek,mt8167-disp-pwm", "mediatek,mt8173-disp-pwm": found
-> > > on mt8167 SoC.
-> > > -   - "mediatek,mt8173-disp-pwm": found on mt8173 SoC.
-> > > - - reg: physical base address and length of the controller's
-> > > registers.
-> > > - - #pwm-cells: must be 2. See pwm.yaml in this directory for a
-> > > description of
-> > > -   the cell format.
-> > > - - clocks: phandle and clock specifier of the PWM reference clock.
-> > > - - clock-names: must contain the following:
-> > > -   - "main": clock used to generate PWM signals.
-> > > -   - "mm": sync signals from the modules of mmsys.
-> > > - - pinctrl-names: Must contain a "default" entry.
-> > > - - pinctrl-0: One property must exist for each entry in pinctrl-
-> > > names.
-> > > -   See pinctrl/pinctrl-bindings.txt for details of the property
-> > > values.
-> > > -
-> > > -Example:
-> > > -       pwm0: pwm@1401e000 {
-> > > -               compatible = "mediatek,mt8173-disp-pwm",
-> > > -                            "mediatek,mt6595-disp-pwm";
-> > > -               reg = <0 0x1401e000 0 0x1000>;
-> > > -               #pwm-cells = <2>;
-> > > -               clocks = <&mmsys CLK_MM_DISP_PWM026M>,
-> > > -                        <&mmsys CLK_MM_DISP_PWM0MM>;
-> > > -               clock-names = "main", "mm";
-> > > -               pinctrl-names = "default";
-> > > -               pinctrl-0 = <&disp_pwm0_pins>;
-> > > -       };
-> > > -
-> > > -       backlight_lcd: backlight_lcd {
-> > > -               compatible = "pwm-backlight";
-> > > -               pwms = <&pwm0 0 1000000>;
-> > > -               brightness-levels = <
-> > > -                         0  16  32  48  64  80  96 112
-> > > -                       128 144 160 176 192 208 224 240
-> > > -                       255
-> > > -               >;
-> > > -               default-brightness-level = <9>;
-> > > -               power-supply = <&mt6397_vio18_reg>;
-> > > -               enable-gpios = <&pio 95 GPIO_ACTIVE_HIGH>;
-> > > -       };
-> > > --
-> > > 2.18.0
-> > >
-> > >
-> > > _______________________________________________
-> > > Linux-mediatek mailing list
-> > > Linux-mediatek@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
->
-> Hi chenyu:
->
-> Thanks for your suggestion!
-> If you think there is no 8183 in the original .txt file, I can put it
-> in another patch similar to 8192/8186 operation.
+Introduce apply in pwm_ops to replace legacy operations,
+like enable, disable, config and set_polarity.
 
-Yes, you should add it in another patch, not in the conversion patch.
+Signed-off-by: Song Chen <chensong_2000@189.cn>
 
-> In the latest pwm-mtk-disp.c I didn't find 8167 related compatiable, do
-> I still need to add it to the new .yaml file?
+---
+v2:
+1, define duty_cycle and period as u64 in gb_pwm_config_operation.
+2, define duty and period as u64 in gb_pwm_config_request.
+3, disable before configuring duty and period if the eventual goal
+   is a disabled state.
 
-It was in the original binding, so yes you need to preserve it when you
-convert the binding. Otherwise you would have changed things when doing
-the conversion.
+v3:
+Regarding duty_cycle and period, I read more discussion in this thread,
+min, warn or -EINVAL, seems no perfect way acceptable for everyone.
+How about we limit their value to INT_MAX and throw a warning at the
+same time when they are wrong?
+---
+ drivers/staging/greybus/pwm.c | 66 +++++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 26 deletions(-)
 
-The driver doesn't have it because it is falling back to the mt8173 one.
+diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+index 891a6a672378..3ec5bc54d616 100644
+--- a/drivers/staging/greybus/pwm.c
++++ b/drivers/staging/greybus/pwm.c
+@@ -204,43 +204,57 @@ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
+ }
+ 
+-static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+-			 int duty_ns, int period_ns)
++static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			const struct pwm_state *state)
+ {
++	int err;
++	bool enabled = pwm->state.enabled;
++	u64 period = state->period;
++	u64 duty_cycle = state->duty_cycle;
+ 	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 
+-	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
+-};
+-
+-static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+-			       enum pwm_polarity polarity)
+-{
+-	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+-
+-	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
+-};
++	/* set polarity */
++	if (state->polarity != pwm->state.polarity) {
++		if (enabled) {
++			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
++			enabled = false;
++		}
++		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
++		if (err)
++			return err;
++	}
+ 
+-static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
++	if (!state->enabled) {
++		if (enabled)
++			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
++		return 0;
++	}
+ 
+-	return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+-};
++	/* set period and duty cycle*/
++	if (period > INT_MAX) {
++		period = INT_MAX;
++		dev_warn(chip->dev, "period is %llu ns, out of range\n", state->period);
++	}
++	if (duty_cycle > INT_MAX) {
++		duty_cycle = INT_MAX;
++		dev_warn(chip->dev,
++			 "duty cycle is %llu ns, out of range\n", state->duty_cycle);
++	}
++	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_cycle, period);
++	if (err)
++		return err;
+ 
+-static void gb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
++	/* enable/disable */
++	if (!enabled)
++		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+ 
+-	gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+-};
++	return 0;
++}
+ 
+ static const struct pwm_ops gb_pwm_ops = {
+ 	.request = gb_pwm_request,
+ 	.free = gb_pwm_free,
+-	.config = gb_pwm_config,
+-	.set_polarity = gb_pwm_set_polarity,
+-	.enable = gb_pwm_enable,
+-	.disable = gb_pwm_disable,
++	.apply = gb_pwm_apply,
+ 	.owner = THIS_MODULE,
+ };
+ 
+-- 
+2.25.1
 
-ChenYu
