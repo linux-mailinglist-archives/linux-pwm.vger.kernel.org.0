@@ -2,108 +2,222 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F7E74C7E3F
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Mar 2022 00:24:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 796844C980F
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Mar 2022 22:57:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbiB1XZW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Feb 2022 18:25:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37812 "EHLO
+        id S237985AbiCAV6G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Mar 2022 16:58:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiB1XZV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Feb 2022 18:25:21 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB02BC3311;
-        Mon, 28 Feb 2022 15:24:41 -0800 (PST)
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3B22F478;
-        Tue,  1 Mar 2022 00:24:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1646090679;
-        bh=GequZV5BwVjpKPb+Q/rQWeSXyCGPG/WT/t2NCTE3e44=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Xi4ptyLzFjcJ0ffGr6xtQG2NQb6Tbk4Id3luptcVQKUalOnq7cbUIgwJlty9rVGMd
-         TevFoHW2bEgBDHUj46YHrjIPfOEZY5t5NTiAEOz//i69Gtnx9P0eytbjrV05xq5ocC
-         MbG5jVP6lmrsARn2BaUJRbkXne/VCRmLhDAR3bOw=
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229664AbiCAV6B (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Mar 2022 16:58:01 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32D05F4DD
+        for <linux-pwm@vger.kernel.org>; Tue,  1 Mar 2022 13:57:19 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nPAUT-000784-AN; Tue, 01 Mar 2022 22:57:05 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nPAUO-0025cA-NW; Tue, 01 Mar 2022 22:57:00 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nPAUN-006MiB-Cs; Tue, 01 Mar 2022 22:56:59 +0100
+Date:   Tue, 1 Mar 2022 22:56:59 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Song Chen <chensong_2000@189.cn>
+Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        elder@ieee.org
+Subject: Re: [PATCH v3] staging: greybus: introduce pwm_ops::apply
+Message-ID: <20220301215659.kj2wwrijkdmkmces@pengutronix.de>
+References: <1645780561-18481-1-git-send-email-chensong_2000@189.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20220228183955.25508-1-jose.exposito89@gmail.com>
-References: <20220228183955.25508-1-jose.exposito89@gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: switch to devm_drm_of_get_bridge
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     linux-pwm@vger.kernel.org, jonas@kwiboo.se, airlied@linux.ie,
-        robert.foss@linaro.org, dri-devel@lists.freedesktop.org,
-        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
-        jernej.skrabec@gmail.com, thierry.reding@gmail.com,
-        Laurent.pinchart@ideasonboard.com, u.kleine-koenig@pengutronix.de,
-        =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>,
-        lee.jones@linaro.org, maxime@cerno.tech
-To:     =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>,
-        andrzej.hajda@intel.com
-Date:   Mon, 28 Feb 2022 23:24:36 +0000
-Message-ID: <164609067646.2361501.15747139249939190799@Monstersaurus>
-User-Agent: alot/0.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="r726a4xrd7fvdsa6"
+Content-Disposition: inline
+In-Reply-To: <1645780561-18481-1-git-send-email-chensong_2000@189.cn>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Jos=C3=A9
 
-Quoting Jos=C3=A9 Exp=C3=B3sito (2022-02-28 18:39:54)
-> The function "drm_of_find_panel_or_bridge" has been deprecated in
-> favor of "devm_drm_of_get_bridge".
+--r726a4xrd7fvdsa6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+On Fri, Feb 25, 2022 at 05:16:01PM +0800, Song Chen wrote:
+> Introduce apply in pwm_ops to replace legacy operations,
+> like enable, disable, config and set_polarity.
 >=20
-> Switch to the new function and reduce boilerplate.
+> Signed-off-by: Song Chen <chensong_2000@189.cn>
 >=20
-> Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
 > ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+> v2:
+> 1, define duty_cycle and period as u64 in gb_pwm_config_operation.
+> 2, define duty and period as u64 in gb_pwm_config_request.
+> 3, disable before configuring duty and period if the eventual goal
+>    is a disabled state.
 >=20
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index dab8f76618f3..fb8e16ed7e90 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -1232,15 +1232,9 @@ static int ti_sn_bridge_probe(struct auxiliary_dev=
-ice *adev,
->  {
->         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.parent);
->         struct device_node *np =3D pdata->dev->of_node;
-> -       struct drm_panel *panel;
->         int ret;
+> v3:
+> Regarding duty_cycle and period, I read more discussion in this thread,
+> min, warn or -EINVAL, seems no perfect way acceptable for everyone.
+> How about we limit their value to INT_MAX and throw a warning at the
+> same time when they are wrong?
+
+My position is that the driver should implement the biggest possible
+period not bigger than the requested period. That's how all new drivers
+behave since I care for reviewing PWM stuff. So capping to U32_MAX as is
+(nearly) done below is good in my book.
+
+> ---
+>  drivers/staging/greybus/pwm.c | 66 +++++++++++++++++++++--------------
+>  1 file changed, 40 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+> index 891a6a672378..3ec5bc54d616 100644
+> --- a/drivers/staging/greybus/pwm.c
+> +++ b/drivers/staging/greybus/pwm.c
+> @@ -204,43 +204,57 @@ static void gb_pwm_free(struct pwm_chip *chip, stru=
+ct pwm_device *pwm)
+>  	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
+>  }
 > =20
-> -       ret =3D drm_of_find_panel_or_bridge(np, 1, 0, &panel, NULL);
-> -       if (ret)
-> -               return dev_err_probe(&adev->dev, ret,
-> -                                    "could not find any panel node\n");
+> -static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> -			 int duty_ns, int period_ns)
+> +static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			const struct pwm_state *state)
+>  {
+> +	int err;
+> +	bool enabled =3D pwm->state.enabled;
+> +	u64 period =3D state->period;
+> +	u64 duty_cycle =3D state->duty_cycle;
+>  	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
+> =20
+> -	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
+> -};
 > -
-> -       pdata->next_bridge =3D devm_drm_panel_bridge_add(pdata->dev, pane=
-l);
-> +       pdata->next_bridge =3D devm_drm_of_get_bridge(pdata->dev, np, 1, =
-0);
+> -static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> -			       enum pwm_polarity polarity)
+> -{
+> -	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
+> -
+> -	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
+> -};
+> +	/* set polarity */
+> +	if (state->polarity !=3D pwm->state.polarity) {
+> +		if (enabled) {
+> +			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
 
-Yikes, I was about to rely on this panel variable to determine if the
-device is a panel or a display port connector. (Well, I am relying on
-it, and patches are hoping to be reposted this week).
+So polarity can only be switched with the PWM off?
 
-Is there expected to be another way to identify if the next connection
-is a panel or a bridge?
+> +			enabled =3D false;
+> +		}
+> +		err =3D gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarit=
+y);
+> +		if (err)
+> +			return err;
+> +	}
+> =20
+> -static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
+> +	if (!state->enabled) {
+> +		if (enabled)
+> +			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+> +		return 0;
+> +	}
+> =20
+> -	return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+> -};
+> +	/* set period and duty cycle*/
+> +	if (period > INT_MAX) {
 
-Regards
+Given that in gb_pwm_config_operation the parameters are u32, I suggest
+to use U32_MAX here instead of INT_MAX.
 
---
-Kieran
+> +		period =3D INT_MAX;
+> +		dev_warn(chip->dev, "period is %llu ns, out of range\n", state->period=
+);
 
+Please drop this warning. That's a bad one because it can be triggered
+=66rom userspace.
 
->         if (IS_ERR(pdata->next_bridge)) {
->                 DRM_ERROR("failed to create panel bridge\n");
->                 return PTR_ERR(pdata->next_bridge);
-> --=20
-> 2.25.1
->
+> +	}
+> +	if (duty_cycle > INT_MAX) {
+> +		duty_cycle =3D INT_MAX;
+> +		dev_warn(chip->dev,
+> +			 "duty cycle is %llu ns, out of range\n", state->duty_cycle);
+> +	}
+> +	err =3D gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_cycle, period);
+
+Is it clear how gb_pwm_config_operation rounds? If yes, please document
+this. I also wonder if you could implement (in a separate change)
+=2Eget_state().
+
+> +	if (err)
+> +		return err;
+> =20
+> -static void gb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct gb_pwm_chip *pwmc =3D pwm_chip_to_gb_pwm_chip(chip);
+> +	/* enable/disable */
+> +	if (!enabled)
+> +		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+> =20
+> -	gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+> -};
+> +	return 0;
+> +}
+> =20
+>  static const struct pwm_ops gb_pwm_ops =3D {
+>  	.request =3D gb_pwm_request,
+>  	.free =3D gb_pwm_free,
+> -	.config =3D gb_pwm_config,
+> -	.set_polarity =3D gb_pwm_set_polarity,
+> -	.enable =3D gb_pwm_enable,
+> -	.disable =3D gb_pwm_disable,
+> +	.apply =3D gb_pwm_apply,
+>  	.owner =3D THIS_MODULE,
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--r726a4xrd7fvdsa6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIelqYACgkQwfwUeK3K
+7Alwdgf8D5edHsZr1Jb77yd52CbV7Xj8gYkfrZr+ooB/WCOoZuP+kcZstYUzHHsR
+C2j7TfDQf5nr+GPyklBi58xyR9UcKazNRi4nxDWApeUauJLnuVfxog0jLv6XuBau
+QhAWJcd7tCgMbXb8/Ca8VcKHWD5xpUqveGomRHfN2tqw/FbCJeHK35JGnOyazXmR
+f1AwLvDaumNGCM4KgizkSmji6v3HWihpm5DbW89feVCSARufNky3BWBmH3xapBH8
+FmZlabb4V+YgP5Je+4+VIX0R1ch425hktZiBFLuo7jMkF/NNtaTahQSad+gITwDH
+TtV0UMkiwvIGGReYUY3qL5be4/BRDw==
+=mFjh
+-----END PGP SIGNATURE-----
+
+--r726a4xrd7fvdsa6--
