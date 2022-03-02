@@ -2,85 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2311F4C9D66
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Mar 2022 06:32:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 256944CA7B7
+	for <lists+linux-pwm@lfdr.de>; Wed,  2 Mar 2022 15:14:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239647AbiCBFdA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Mar 2022 00:33:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56614 "EHLO
+        id S242118AbiCBOPk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Mar 2022 09:15:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239635AbiCBFc4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Mar 2022 00:32:56 -0500
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D62DB1538;
-        Tue,  1 Mar 2022 21:32:12 -0800 (PST)
-X-UUID: ad7a7b86cc1d4c2da224f08beceac12e-20220302
-X-UUID: ad7a7b86cc1d4c2da224f08beceac12e-20220302
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-        (envelope-from <xinlei.lee@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 567894442; Wed, 02 Mar 2022 13:32:08 +0800
-Received: from MTKMBS34N1.mediatek.inc (172.27.4.172) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 2 Mar 2022 13:32:07 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS34N1.mediatek.inc
- (172.27.4.172) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 2 Mar
- 2022 13:32:06 +0800
-Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Wed, 2 Mar 2022 13:32:05 +0800
-From:   <xinlei.lee@mediatek.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>
-CC:     <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        <jitao.shi@mediatek.com>, <allen-kh.cheng@mediatek.com>,
-        <rex-bc.chen@mediatek.com>, Xinlei Lee <xinlei.lee@mediatek.com>
-Subject: [PATCH v3,6/6] dt-bindings: pwm: Add compatible for MediaTek MT8186
-Date:   Wed, 2 Mar 2022 13:31:46 +0800
-Message-ID: <1646199106-26879-7-git-send-email-xinlei.lee@mediatek.com>
-X-Mailer: git-send-email 2.6.4
-In-Reply-To: <1646199106-26879-1-git-send-email-xinlei.lee@mediatek.com>
-References: <1646199106-26879-1-git-send-email-xinlei.lee@mediatek.com>
+        with ESMTP id S229518AbiCBOPj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Mar 2022 09:15:39 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6AC0A88AC;
+        Wed,  2 Mar 2022 06:14:54 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: kholk11)
+        with ESMTPSA id DB7F41F44672
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1646230493;
+        bh=qicDU8a/aQVHGR0OpxT7GfZuyLBKrh3Al3E4YeEHPCE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=T2p8R/VWCXLp4Dv4iLMWAy3MUHP0IEHakz4Cjt9R78gLbThc41i6lpjfFEr58iMRX
+         Be/s4JcpcxtFzA8rPsm7mzE5GVromwEzO2Sbxj2WLFw6w4T8Kz/u8Q16ni87D2lLKV
+         gMXMoD0hVqUeG3YJjJfmWEG/s4FMlN0ybHe2jyWUXzwK09UYtqIp9NcNtGF408IE1s
+         jRYe8iqLdkjC+1j6KejSqMjAc0pyiVTzhudzBZp7/w1lp0BEk/qLNI3XtTVxgr5n0w
+         ikOctsoFKKV4euH2B3em0DHCat6NN15MLK1xJ1k68slXvjZLTc5rmu8RhRA7UGhVk2
+         lZ4w7Yu3zTalA==
+Message-ID: <b5d3d996-9c4c-b245-ad59-4fb2218dac1f@collabora.com>
+Date:   Wed, 2 Mar 2022 15:14:49 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH v3,6/6] dt-bindings: pwm: Add compatible for MediaTek
+ MT8186
+Content-Language: en-US
+To:     xinlei.lee@mediatek.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        robh+dt@kernel.org, matthias.bgg@gmail.com
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        jitao.shi@mediatek.com, allen-kh.cheng@mediatek.com,
+        rex-bc.chen@mediatek.com
+References: <1646199106-26879-1-git-send-email-xinlei.lee@mediatek.com>
+ <1646199106-26879-7-git-send-email-xinlei.lee@mediatek.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <1646199106-26879-7-git-send-email-xinlei.lee@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Xinlei Lee <xinlei.lee@mediatek.com>
+Il 02/03/22 06:31, xinlei.lee@mediatek.com ha scritto:
+> From: Xinlei Lee <xinlei.lee@mediatek.com>
+> 
+> Add dt-binding documentation of pwm for MediaTek MT8186 SoC.
+> 
+> Signed-off-by: Xinlei Lee <xinlei.lee@mediatek.com>
+> ---
+>   Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> index 3a5d1cfed94d..053805846cfe 100644
+> --- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> @@ -21,6 +21,9 @@ properties:
+>             - mediatek,mt6595-disp-pwm
+>             - mediatek,mt8173-disp-pwm
+>             - mediatek,mt8183-disp-pwm
+> +      - items:
+> +          - const: mediatek,mt8186-disp-pwm
+> +          - const: mediatek,mt8183-disp-pwm
+>         - items:
+>             - const: mediatek,mt8192-disp-pwm
+>             - const: mediatek,mt8183-disp-pwm
+> 
 
-Add dt-binding documentation of pwm for MediaTek MT8186 SoC.
 
-Signed-off-by: Xinlei Lee <xinlei.lee@mediatek.com>
----
- Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+Hello Xinlei,
 
-diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-index 3a5d1cfed94d..053805846cfe 100644
---- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-+++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-@@ -21,6 +21,9 @@ properties:
-           - mediatek,mt6595-disp-pwm
-           - mediatek,mt8173-disp-pwm
-           - mediatek,mt8183-disp-pwm
-+      - items:
-+          - const: mediatek,mt8186-disp-pwm
-+          - const: mediatek,mt8183-disp-pwm
-       - items:
-           - const: mediatek,mt8192-disp-pwm
-           - const: mediatek,mt8183-disp-pwm
--- 
-2.18.0
+even though repeating these items may not give you errors, this is not really
+the best way to do this.
+I've done something similar here:
+https://lore.kernel.org/linux-arm-kernel/20220217095242.13761-1-angelogioacchino.delregno@collabora.com/
 
+So, for the compatibles needing mediatek,mt8183-disp-pwm it should be looking
+similar to this:
+
+- items:
+     - enum:
+         - mediatek,mt8186-disp-pwm
+         - mediatek,mt8192-disp-pwm
+         - mediatek,mt8195-disp-pwm
+     - const: mediatek,mt8183-disp-pwm
+
+Regards,
+Angelo
