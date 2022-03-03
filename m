@@ -2,114 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0FB74CAE3E
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Mar 2022 20:06:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3569B4CB336
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 01:34:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239242AbiCBTHV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Mar 2022 14:07:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
+        id S229956AbiCCAEX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Mar 2022 19:04:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233516AbiCBTHV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Mar 2022 14:07:21 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE1A0CE913
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Mar 2022 11:06:37 -0800 (PST)
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 085973F5F3
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Mar 2022 19:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646247993;
-        bh=m6ojeTgtogrdSSitR1acR3iefkQ9OYzxbBDb1IxSxtI=;
-        h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-         In-Reply-To:Content-Type;
-        b=X+EEE3qMq/w0NKio3LuzmquQDk3sYpRkro9Z/iEAg5GapOGFv2QL6TfbcoR0KzjaS
-         vfC80vDfMo/dcISoA6CjZV4/9BWz2BNdB7zrmNlPLleb2MxOQZbjaqC82dn4Cf54RG
-         dJFmz2d7RiiD1zZKHvL+iwBSHUZlGMlEW6KJhoilfZU2uvaOJTsOeARpXv97JkssUp
-         4gPzeah8OOb0kfgFevBUu26fsh9ZkoAu0PL68/zO5n5ICsg2yNR1teQ8dCiDxbii3C
-         ptPgFJ2Ke87f0NmJzuxWmee9uZcZ2I8aL9q6UUfDv74gqivsMhNeRdisCX7WF30Qv7
-         LKjuYJSdqLhhQ==
-Received: by mail-ed1-f69.google.com with SMTP id r9-20020a05640251c900b00412d54ea618so1521249edd.3
-        for <linux-pwm@vger.kernel.org>; Wed, 02 Mar 2022 11:06:33 -0800 (PST)
+        with ESMTP id S229945AbiCCAEV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Mar 2022 19:04:21 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E5018B
+        for <linux-pwm@vger.kernel.org>; Wed,  2 Mar 2022 16:03:31 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id w4so1931563edc.7
+        for <linux-pwm@vger.kernel.org>; Wed, 02 Mar 2022 16:03:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=712s7UNzasxlj0dwsyjRXVd8K8/HcJjmlNagNGk3tak=;
+        b=ED9WDqjaIvY/PNhXMFZcJHPNR7h/tTUuq7WLYZ1ylEvNffoEcxKxybLHrav42m9Cnn
+         RVEvb/IBLv+PhIPTpr690rtY8c24fbS5byCNqvx9Uwev3vYjz8sAMB11j/c+q3crVNAP
+         sIZB594RAxB9rrrDgiPoWjkncYFw0ihals3NI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=m6ojeTgtogrdSSitR1acR3iefkQ9OYzxbBDb1IxSxtI=;
-        b=3dcfvfM7mf80JFN9lafI4d1N8212EJcI4T5ADndCC/sUAZ71lO2dmkDwp9XXmfIY0y
-         Y0EwjbiADs9UiTz6CXL2CDdGwizQOH4vX4lPehdCU/2ebC4RTQalqeC8nO4fSjcnGhhk
-         vEqLxb9kVQHFP+dE3w6GdFPG3vW703dTUZFG8i9X7WvzHrymofaRhqeiCNKexUVP/MbF
-         FtVO1EDnLrD+Se0HxFO1a02l8k338yoBugib0RozoeUlhyeK7SzMbtIMSsRFUYtP1fO0
-         be47CsVIragvCcY/RH8AZL/Ssdr0vPuyao8IIWhdDHR7w5LZM+j6URtOEDLbybTI9bWF
-         Q9TQ==
-X-Gm-Message-State: AOAM5328K+wrf41H+WNVjzuRcQEmdf6Rdkk9fA9HUJLBMKvSpGKxgMUU
-        xRJ0FHhRKoe3Gqhd9lcGJVYPb3B4CfM2Q/BsBUeRLhFFwfjYAt4Lp7D4JuMbC8D9FQzlg7wrvE1
-        csvE4CjLGhUBcRBVHkj+0y9+nbbxL3sPjD4tFjw==
-X-Received: by 2002:a17:906:6a0f:b0:6d7:1021:2bd2 with SMTP id qw15-20020a1709066a0f00b006d710212bd2mr6424430ejc.395.1646247992485;
-        Wed, 02 Mar 2022 11:06:32 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxeQrZWG2Oxg6RE7q9wIPUX3Z/sjjW6CdMRyOa97Yz1CbhreGcjtKJUbps/xbBHdxqhb0/UQQ==
-X-Received: by 2002:a17:906:6a0f:b0:6d7:1021:2bd2 with SMTP id qw15-20020a1709066a0f00b006d710212bd2mr6424403ejc.395.1646247992278;
-        Wed, 02 Mar 2022 11:06:32 -0800 (PST)
-Received: from [192.168.0.137] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id cy1-20020a0564021c8100b003e359e4f54asm8827529edb.43.2022.03.02.11.06.30
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=712s7UNzasxlj0dwsyjRXVd8K8/HcJjmlNagNGk3tak=;
+        b=VhLjJ6mb08ioMMlbFd7STo8l0GFM5cG5Y/WneoBPAl68Ye8kLFutB1Ugi7I2f2MoBN
+         JukMA6jvjw+mAh6ty9uSRczYVwxEG/wxI0xk/C9ey7XcLEOWoJgoqEkWOHR2I+mpLgJY
+         +FMrCiXpu2/zF666oRSUxBP6PL2vugIsS6r40nMXDIg7j3mO1uf7ZzuyObL7PlYctjzU
+         +V9oK5GFdk/67KMSMJVe9emaiW4fPv3jcYJlneIrALVeMrHaJ+qKPZiScxbT/2AyxZEz
+         QrAx0xr/qUoKUXjMN1qp+2BYx12f3O2Tbtj4DIRvE/cdfsUdSrwPikgdWIAl5m2yCbPt
+         AbIg==
+X-Gm-Message-State: AOAM532CqBfgniPxP+2H0KnMZUDHgG6jtVAW0vpGk21v316yiEvCy7QK
+        7305bGVPF/umRMt83FaRfg5p1YMi7u4dpcWL
+X-Google-Smtp-Source: ABdhPJy6WnIc+rrQIbXIb6th2IZHIACGoRnntqR7hZbDz6zI0bzsyaU6TpMGZ4odckTafnmPDZVfnA==
+X-Received: by 2002:a05:6402:4396:b0:412:b131:fca6 with SMTP id o22-20020a056402439600b00412b131fca6mr31551914edc.133.1646265810011;
+        Wed, 02 Mar 2022 16:03:30 -0800 (PST)
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
+        by smtp.gmail.com with ESMTPSA id cc20-20020a0564021b9400b00412f2502469sm158054edb.23.2022.03.02.16.03.28
+        for <linux-pwm@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Mar 2022 11:06:31 -0800 (PST)
-Message-ID: <77fd3853-25b2-f9f7-6081-969ec54aa6a9@canonical.com>
-Date:   Wed, 2 Mar 2022 20:06:30 +0100
+        Wed, 02 Mar 2022 16:03:28 -0800 (PST)
+Received: by mail-wm1-f47.google.com with SMTP id bg31-20020a05600c3c9f00b00381590dbb33so2253189wmb.3
+        for <linux-pwm@vger.kernel.org>; Wed, 02 Mar 2022 16:03:28 -0800 (PST)
+X-Received: by 2002:a05:600c:190d:b0:381:6ea1:8cc with SMTP id
+ j13-20020a05600c190d00b003816ea108ccmr1737073wmq.118.1646265807989; Wed, 02
+ Mar 2022 16:03:27 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 2/4] arm64: dts: mt8183: align Google CROS EC PWM node
- name with dtschema
-Content-Language: en-US
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
- <20220214081916.162014-3-krzysztof.kozlowski@canonical.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-mediatek@lists.infradead.org,
-        Benson Leung <bleung@chromium.org>,
+References: <20220218183116.2261770-1-bjorn.andersson@linaro.org> <20220218183116.2261770-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20220218183116.2261770-2-bjorn.andersson@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 2 Mar 2022 16:03:15 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UOLcu5xycimDsYTO1spwf=CMRPUSU3o0qRRC+a+zuRTQ@mail.gmail.com>
+Message-ID: <CAD=FV=UOLcu5xycimDsYTO1spwf=CMRPUSU3o0qRRC+a+zuRTQ@mail.gmail.com>
+Subject: Re: [PATCH v13 2/2] leds: Add driver for Qualcomm LPG
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220214081916.162014-3-krzysztof.kozlowski@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Luca Weiss <luca@z3ntu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 14/02/2022 09:19, Krzysztof Kozlowski wrote:
-> dtschema expects PWM node name to be a generic "pwm".  This also matches
-> Devicetree specification requirements about generic node names.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hi,
 
-Hi Matthias,
+On Fri, Feb 18, 2022 at 10:29 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +                             struct pwm_state *state)
+> +{
+> +       struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> +       struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> +       unsigned int pre_div;
+> +       unsigned int refclk;
+> +       unsigned int val;
+> +       unsigned int m;
+> +       u16 pwm_value;
+> +       int ret;
+> +
+> +       ret = regmap_read(lpg->map, chan->base + LPG_SIZE_CLK_REG, &val);
+> +       if (ret)
+> +               return;
+> +
+> +       refclk = lpg_clk_rates[(val & PWM_CLK_SELECT_MASK) - 1];
 
-Any comments on this patch?
+I don't know why I didn't notice it before (maybe I was accidentally
+not building with KASAN?), but in my recent boots I'm getting a KASAN
+error pointing at the line above.
 
-Best regards,
-Krzysztof
+Sure enough, the above looks a bit on the unsafe side. If (val & 0x3)
+is 0 then the "-1" will not be so wonderful. I put some printouts and,
+indeed, it's not so great.
+
+[    7.201635] DOUG: val is 0x00000004
+
+Amazingly my `refclk` ends up as 0 and I guess somehow this doesn't
+cause a divide by 0.
+
+
+-Doug
