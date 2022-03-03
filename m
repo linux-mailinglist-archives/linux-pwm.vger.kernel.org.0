@@ -2,127 +2,167 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A809E4CC873
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 22:59:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53A6E4CC8A0
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 23:11:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236523AbiCCWAT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Mar 2022 17:00:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41504 "EHLO
+        id S231395AbiCCWLs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Mar 2022 17:11:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231630AbiCCWAT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 17:00:19 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA96DFDC;
-        Thu,  3 Mar 2022 13:59:32 -0800 (PST)
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F0346101E;
-        Thu,  3 Mar 2022 22:59:29 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1646344770;
-        bh=tu4nl7oMY6soz2c3whO1qbqCHUSafi/7e+F/6CMnMlM=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=cWq/k33atmYXJ1snfvtAEUqdVLrTAn7ydpWd8WSMQ3r0ARmExthG9Pj9fyi5pKbFZ
-         Zw9bMbWPKPh5XSo3uwY4cYrD020QmAlCtCbjkOOxx1Qep+TMUootcnM/aHvdyXCJkO
-         9QJt7pDmZpoYDR2nitPTMIgaRYrm3j56sEWUFuN4=
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S236519AbiCCWLs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 17:11:48 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F183E5D8
+        for <linux-pwm@vger.kernel.org>; Thu,  3 Mar 2022 14:11:01 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id dr20so13602929ejc.6
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Mar 2022 14:11:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O15QTD4cJWZUCrV53Q7o/AL5EB1oKwJTXEHaA5LT8Z8=;
+        b=LArKsEtR2mGirSRnS4QPB7n7g9uLcdhGS2kHqFIb8XMf4LzumrX1fTUWS3uLd0WvY7
+         WLmzhRTfJFRSwidr8ido80GjMNVcP71/BhUV6EopxiDenC4YhqBj6Dwh6h95iQIK1orX
+         IVEDLOvBMjjsnhO237DselDbca8Q8omBwAy+0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O15QTD4cJWZUCrV53Q7o/AL5EB1oKwJTXEHaA5LT8Z8=;
+        b=3DODOXx5KMxWt4vKcjkn5iXiAhfvWmNjFHjq9l3HtTeZo8uXKerwoTXRRjS+kW4wMx
+         WBvhhDN/bdJNdjDtaQpYB0vn6tA29a1X1R54ZNwy9A9PF+/om/SQTBPqDoGIW8Xg+wl5
+         pb9McOhXxL8gHuGVvbKj4UdEkuMaLLY9Fxj8ERak62skHB1utQHgdMXarcjanS7ysMLD
+         kec9ZbJKhjPQmNYf0BmGXA129KpPDjpVifFAX/qR4jcCc8xuAId9qwMkQDiQWBDpoMgm
+         SqOJkutHdz7i3dIllyZBhJwjKDNZYUYiUN3zP9zRMLUcPO7DRkBpV9UNaimlFFTgowt7
+         BSUQ==
+X-Gm-Message-State: AOAM530I3tt56y5mHuhIY41pEmUI5xo4VxMHNQBkVq68KB6GH9kULP66
+        t8+BM5YMnyIYEPB7+oaCVhJfp9R3OwHbZg==
+X-Google-Smtp-Source: ABdhPJzpCKihX5QEhuQfHxd0XyDXtKagp008+7ewd2+ce5722HQFdJ845L5X+YYBFBEofNjQC9w6BQ==
+X-Received: by 2002:a17:906:69ce:b0:6a7:8c03:3caa with SMTP id g14-20020a17090669ce00b006a78c033caamr28870195ejs.335.1646345459630;
+        Thu, 03 Mar 2022 14:10:59 -0800 (PST)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
+        by smtp.gmail.com with ESMTPSA id cf17-20020a170906b2d100b006daa59af421sm532601ejb.149.2022.03.03.14.10.57
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Mar 2022 14:10:58 -0800 (PST)
+Received: by mail-wm1-f42.google.com with SMTP id v2-20020a7bcb42000000b0037b9d960079so6166687wmj.0
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Mar 2022 14:10:57 -0800 (PST)
+X-Received: by 2002:a7b:c0c1:0:b0:385:be1b:e6a with SMTP id
+ s1-20020a7bc0c1000000b00385be1b0e6amr5367480wmh.73.1646345456912; Thu, 03 Mar
+ 2022 14:10:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20220303183720.GA334969@elementary>
-References: <20220228183955.25508-1-jose.exposito89@gmail.com> <164609067646.2361501.15747139249939190799@Monstersaurus> <20220303183720.GA334969@elementary>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: switch to devm_drm_of_get_bridge
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     andrzej.hajda@intel.com, linux-pwm@vger.kernel.org,
-        jonas@kwiboo.se, airlied@linux.ie, robert.foss@linaro.org,
-        dri-devel@lists.freedesktop.org, narmstrong@baylibre.com,
-        linux-kernel@vger.kernel.org, jernej.skrabec@gmail.com,
-        thierry.reding@gmail.com, Laurent.pinchart@ideasonboard.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        maxime@cerno.tech
-To:     =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Date:   Thu, 03 Mar 2022 21:59:26 +0000
-Message-ID: <164634476693.3683041.3124143336848085499@Monstersaurus>
-User-Agent: alot/0.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220303214300.59468-1-bjorn.andersson@linaro.org> <20220303214300.59468-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20220303214300.59468-2-bjorn.andersson@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 3 Mar 2022 14:10:44 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WkgcJA6-niUh0L5_jLNSS=Hv0xrR5QZghPmNriekH7XA@mail.gmail.com>
+Message-ID: <CAD=FV=WkgcJA6-niUh0L5_jLNSS=Hv0xrR5QZghPmNriekH7XA@mail.gmail.com>
+Subject: Re: [PATCH v14 2/2] leds: Add driver for Qualcomm LPG
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Luca Weiss <luca@z3ntu.xyz>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Quoting Jos=C3=A9 Exp=C3=B3sito (2022-03-03 18:37:20)
-> On Mon, Feb 28, 2022 at 11:24:36PM +0000, Kieran Bingham wrote:
-> > Hi Jos=C3=A9
-> >=20
-> > Quoting Jos=C3=A9 Exp=C3=B3sito (2022-02-28 18:39:54)
-> > > The function "drm_of_find_panel_or_bridge" has been deprecated in
-> > > favor of "devm_drm_of_get_bridge".
-> > >=20
-> > > Switch to the new function and reduce boilerplate.
-> > >=20
-> > > Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 8 +-------
-> > >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > >=20
-> > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/=
-bridge/ti-sn65dsi86.c
-> > > index dab8f76618f3..fb8e16ed7e90 100644
-> > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > @@ -1232,15 +1232,9 @@ static int ti_sn_bridge_probe(struct auxiliary=
-_device *adev,
-> > >  {
-> > >         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.pare=
-nt);
-> > >         struct device_node *np =3D pdata->dev->of_node;
-> > > -       struct drm_panel *panel;
-> > >         int ret;
-> > > =20
-> > > -       ret =3D drm_of_find_panel_or_bridge(np, 1, 0, &panel, NULL);
-> > > -       if (ret)
-> > > -               return dev_err_probe(&adev->dev, ret,
-> > > -                                    "could not find any panel node\n=
-");
-> > > -
-> > > -       pdata->next_bridge =3D devm_drm_panel_bridge_add(pdata->dev, =
-panel);
-> > > +       pdata->next_bridge =3D devm_drm_of_get_bridge(pdata->dev, np,=
- 1, 0);
-> >=20
-> > Yikes, I was about to rely on this panel variable to determine if the
-> > device is a panel or a display port connector. (Well, I am relying on
-> > it, and patches are hoping to be reposted this week).
-> >=20
-> > Is there expected to be another way to identify if the next connection
-> > is a panel or a bridge?
-> >=20
-> > Regards
->=20
-> Hi Kieran,
->=20
-> I'm getting started in the DRM subsystem. I couldn't tell if there is a
-> good way to access the panel pointer... I didn't manage to find it, but
-> hopefully someone with more experience can point us to a solution.
->=20
-> Since you mentioned display port, I'm not sure if in your case checking
-> "pdata->next_bridge->type" could be good enough.
->=20
-> Anyway, if this patch causes you problems, please go ahead and ignore it.
-> I'm sure the series you are working on are more important than removing
-> a deprecated function :)
+Hi,
 
-If it's deprecated, I don't want to block it's removal. Hopefully I can
-resume my work on this tomorrow so I can check to see what I can parse.
-Thanks for the lead on the bridge type, I'm sure I've seen that around
-too so hopefully that's enough. If it is, I'll rebase my work on top of
-your patch and retest.
+On Thu, Mar 3, 2022 at 1:41 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The Light Pulse Generator (LPG) is a PWM-block found in a wide range of
+> PMICs from Qualcomm. These PMICs typically comes with 1-8 LPG instances,
+> with their output being routed to various other components, such as
+> current sinks or GPIOs.
+>
+> Each LPG instance can operate on fixed parameters or based on a shared
+> lookup-table, altering the duty cycle over time. This provides the means
+> for hardware assisted transitions of LED brightness.
+>
+> A typical use case for the fixed parameter mode is to drive a PWM
+> backlight control signal, the driver therefor allows each LPG instance
+> to be exposed to the kernel either through the LED framework or the PWM
+> framework.
+>
+> A typical use case for the LED configuration is to drive RGB LEDs in
+> smartphones etc, for which the driver supports multiple channels to be
+> ganged up to a MULTICOLOR LED. In this configuration the pattern
+> generators will be synchronized, to allow for multi-color patterns.
+>
+> The idea of modelling this as a LED driver ontop of a PWM driver was
+> considered, but setting the properties related to patterns does not fit
+> in the PWM API. Similarly the idea of just duplicating the lower bits in
+> a PWM and LED driver separately was considered, but this would not allow
+> the PWM channels and LEDs to be configured on a per-board basis. The
+> driver implements the more complex LED interface, and provides a PWM
+> interface on the side of that, in the same driver.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>
+> Changes since v13:
+> - Fixed mixed space/tab indentation in documentation
+> - Added 0 as to lpg_clk_rates[] to match the hardware state, to avoid + 1 in
+>   lpg_apply_freq() and - 1 in lpg_pwm_get_state()
+> - Don't divide with 0 if current clock is 0 in lpg_pwm_get_state(), just return
+>   period = duty = 0 in this case
+> - Renamed "clk" in struct lpg_channel to clk_sel
+> - Renamed "pre_div" in struct lpg_channel to pre_div_sel
+>
+> Changes since v12:
+> - Initialize ret in lpg_pwm_apply()
+>
+> Changes since v11:
+> - Extended commit message to cover decision to put pwm_chip in the LED driver
+> - Added Documentation, in particular for the hw_pattern format
+> - Added a lock to synchronize requests from LED and PWM frameworks
+> - Turned out that the 9bit selector differs per channel in some PMICs, so
+>   replaced bitmask in lpg_data with lookup based on QPNP SUBTYPE
+> - Fixed kerneldoc for the struct device pointer in struct lpg
+> - Rewrote conditional in lut_free() to make it easier to read
+> - Corrected and deduplicated max_period expression in lpg_calc_freq()
+> - Extended nom/dom to numerator/denominator in lpg_calc_freq()
+> - Replaced 1 << 9 with LPG_RESOLUTION in one more place in lpg_calc_freq()
+> - Use FIELD_PREP() in lpg_apply_freq() as masks was introduced for reading the
+>   same in get_state()
+> - Cleaned up the pattern format, to allow specifying both low and high pause
+>   with and without pingpong mode.
+> - Only update frequency and pwm_value if PWM channel is enabled in lpg_pwm_apply
+> - Make lpg_pwm_get_state() read the hardware state, in order to pick up e.g.
+>   bootloader backlight configuration
+> - Use devm_bitmap_zalloc() to allocate the lut_bitmap
+> - Use dev_err_probe() in lpg_probe()
+> - Extended Kconfig help text to mention module name and satisfy checkpatch
+>
+>  Documentation/leds/leds-qcom-lpg.rst |   76 ++
+>  drivers/leds/Kconfig                 |    3 +
+>  drivers/leds/Makefile                |    3 +
+>  drivers/leds/rgb/Kconfig             |   18 +
+>  drivers/leds/rgb/Makefile            |    3 +
+>  drivers/leds/rgb/leds-qcom-lpg.c     | 1405 ++++++++++++++++++++++++++
+>  6 files changed, 1508 insertions(+)
 
---
-Kieran
+Gets rid of the KASAN error and PWM still works for me, so happy to add back:
 
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
->=20
-> Best wishes,
-> Jose
+I haven't done a full review of the driver but I did a once-over of
+the changes between v12 and v13 and they look good to me.
+
+-Doug
