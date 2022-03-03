@@ -2,74 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 449C74CB720
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 07:42:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DCA44CC309
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 17:41:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbiCCGm7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Mar 2022 01:42:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48066 "EHLO
+        id S235101AbiCCQmf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Mar 2022 11:42:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbiCCGm6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 01:42:58 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAB71688FF
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Mar 2022 22:42:13 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nPf9i-0000cS-G5; Thu, 03 Mar 2022 07:41:42 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nPf9a-002MQZ-Jb; Thu, 03 Mar 2022 07:41:33 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nPf9Z-006eej-4Z; Thu, 03 Mar 2022 07:41:33 +0100
-Date:   Thu, 3 Mar 2022 07:41:30 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
-        Vijayakannan Ayyathurai <vijayakannan.ayyathurai@intel.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-riscv@lists.infradead.org, Vignesh R <vigneshr@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Jeff LaBundy <jeff@labundy.com>, linux-sunxi@lists.linux.dev,
-        linux-pwm@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 00/15] pwm: dt-bindings: Include generic pwm schema
-Message-ID: <20220303064130.lzvptbq3hpny74ke@pengutronix.de>
-References: <20220214212154.8853-1-krzysztof.kozlowski@canonical.com>
- <211b3d35-1d8d-b71c-996a-b185324815f7@canonical.com>
+        with ESMTP id S235094AbiCCQmf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 11:42:35 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A1419D631
+        for <linux-pwm@vger.kernel.org>; Thu,  3 Mar 2022 08:41:49 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id f8so7353757edf.10
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Mar 2022 08:41:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jxP+Xw6wPB8ZIhMnioV3Otj/1gb/UWZW6hrVr3vPJh4=;
+        b=JJ4qQXPFXhyPdRQ0jQQAs/7g/HtEmcuxjknmziNouLk2APczDb9gNerpsCYvxKiJ5K
+         aWtbVRqTo7FT+DLr5vQPqTPdNSTiNewBOYpdsd8k5Sc4NHxlaezItfTgp9QvsXaG6ncg
+         QHuppgQ5OWsYYaz4dlXR+Tra8Yi3baP/LcF58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jxP+Xw6wPB8ZIhMnioV3Otj/1gb/UWZW6hrVr3vPJh4=;
+        b=CQySYyWRaoG5tEClex/cyUv1T17UYdpm+zzBfqbwR+Sm0oiXbeKeLtbuU1cp4dP4Aw
+         2Ge+6sMUjuHQ9/4T399XSi4RFDFROd1w4q9VD+sQYCuufkfGpWWu3ckY+JZ2ExcYB90L
+         SaukH04NdNoPsclJYtzPvSSjW5cQaQs3fdQjThPNI1wM1XKZnF5ozna7qG8PxZiQNt18
+         Q48MCvUCbYkHb9UNiMxfoG+4ce5G22KDXu3WzRVA9MVWN9NGlQhTO+pdV2SR1q/BA5du
+         D1pge2UuD/qZqb6KBvd3zx6pKnQZWby2Xlpo+Kg+SzgxMgZbYOHAu8ilISMtha3aljsG
+         4P3A==
+X-Gm-Message-State: AOAM531topWzDPcGfd4TWhApqKwiYxwMCeI9/Zdl+df3kql5a/BE/xuW
+        DyOH0dtUEO1Cr23pLCKU5fzuIy63Fw5RbhiJ
+X-Google-Smtp-Source: ABdhPJw+LmvbBXLJvPUx+Ez63X7DtZpM0gvS80tQ1wujnb4ebujv5/0qFsPRNQkomhEWEER9w1n51Q==
+X-Received: by 2002:a05:6402:484:b0:415:d931:cb2f with SMTP id k4-20020a056402048400b00415d931cb2fmr4175319edv.287.1646325707746;
+        Thu, 03 Mar 2022 08:41:47 -0800 (PST)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id b15-20020a50cccf000000b0040f74c6abedsm1025931edj.77.2022.03.03.08.41.45
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Mar 2022 08:41:46 -0800 (PST)
+Received: by mail-wm1-f50.google.com with SMTP id bg16-20020a05600c3c9000b00380f6f473b0so5678332wmb.1
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Mar 2022 08:41:45 -0800 (PST)
+X-Received: by 2002:a7b:c0c1:0:b0:385:be1b:e6a with SMTP id
+ s1-20020a7bc0c1000000b00385be1b0e6amr4453828wmh.73.1646325705202; Thu, 03 Mar
+ 2022 08:41:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="szkcsdi5ha36tvvv"
-Content-Disposition: inline
-In-Reply-To: <211b3d35-1d8d-b71c-996a-b185324815f7@canonical.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20220218183116.2261770-1-bjorn.andersson@linaro.org>
+ <20220218183116.2261770-2-bjorn.andersson@linaro.org> <CAD=FV=UOLcu5xycimDsYTO1spwf=CMRPUSU3o0qRRC+a+zuRTQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=UOLcu5xycimDsYTO1spwf=CMRPUSU3o0qRRC+a+zuRTQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 3 Mar 2022 08:41:33 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=We4Lv25h2XF6BsdYhMbYu4716LBuhAjH5N0s_HHt_Xcw@mail.gmail.com>
+Message-ID: <CAD=FV=We4Lv25h2XF6BsdYhMbYu4716LBuhAjH5N0s_HHt_Xcw@mail.gmail.com>
+Subject: Re: [PATCH v13 2/2] leds: Add driver for Qualcomm LPG
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Luca Weiss <luca@z3ntu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,63 +83,59 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi,
 
---szkcsdi5ha36tvvv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 2, 2022 at 4:03 PM Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Fri, Feb 18, 2022 at 10:29 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +                             struct pwm_state *state)
+> > +{
+> > +       struct lpg *lpg = container_of(chip, struct lpg, pwm);
+> > +       struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+> > +       unsigned int pre_div;
+> > +       unsigned int refclk;
+> > +       unsigned int val;
+> > +       unsigned int m;
+> > +       u16 pwm_value;
+> > +       int ret;
+> > +
+> > +       ret = regmap_read(lpg->map, chan->base + LPG_SIZE_CLK_REG, &val);
+> > +       if (ret)
+> > +               return;
+> > +
+> > +       refclk = lpg_clk_rates[(val & PWM_CLK_SELECT_MASK) - 1];
+>
+> I don't know why I didn't notice it before (maybe I was accidentally
+> not building with KASAN?), but in my recent boots I'm getting a KASAN
+> error pointing at the line above.
+>
+> Sure enough, the above looks a bit on the unsafe side. If (val & 0x3)
+> is 0 then the "-1" will not be so wonderful. I put some printouts and,
+> indeed, it's not so great.
+>
+> [    7.201635] DOUG: val is 0x00000004
+>
+> Amazingly my `refclk` ends up as 0 and I guess somehow this doesn't
+> cause a divide by 0.
 
-Hello,
+I dug a little more and found a document that talks about this
+register. I guess the answer here is that at boot time on my device
+the PWM is disabled and has never been enabled. That explains why, at
+boot time, the "clk_select" is 0 AKA "no clock". So we do an invalid
+memory access here and that's not so great, but it doesn't _truly_
+cause any harm. All we need is something like this right before the
+array dereference:
 
-(dropped Anson Huang and Yash Shah from Cc, their addresses bounced last
-time I used them.)
+if ((val & PWM_CLK_SELECT_MASK) == 0)
+  return;
 
-On Wed, Mar 02, 2022 at 08:04:45PM +0100, Krzysztof Kozlowski wrote:
-> On 14/02/2022 22:21, Krzysztof Kozlowski wrote:
-> > Hi,
-> >=20
-> > Changes since v1:
-> > 1. Add tags.
-> > 2. Adjust subject (Uwe).
-> >=20
->=20
-> Hi Thierry, Uwe and Lee,
->=20
-> Any comments here? Rob acked all these, so these are clear to go via PWM
-> tree.
+I'm still pretty interested in seeing this patch series land and, if
+it helps it land sooner, I wouldn't object to the above getting fixed
+in a followup patch.
 
-They are fine from my side:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-It's Thierry who is reponsible to pick these up and it seems he marked
-the series as accepted:
-	https://patchwork.ozlabs.org/project/linux-pwm/list/?series=3D286150&state=
-=3D*
-
-So I would expect that it turns up in next after Thierry is done with
-his testing.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---szkcsdi5ha36tvvv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIgYxYACgkQwfwUeK3K
-7AlLnwf/RtAHP6ySxnXSdGI6h/ICx3Q7FjK5zy2WDgciveSQhO92SP1TrQR8Ll0H
-CN5ftiC6uc/PqFXfnzno/ZKrQ+yhwuL3GNWl/tK070bXLkZS9rtZoo62p2DxK6/U
-V9GQpUSATRqU19pMkuje+qfbL5o5gTzehAAtQq/aQLEUqn0R46gk4DnYVuFK9ezV
-KLe6HD8NoNbclEkJwJ6NKZKgwxIck0g3HFqTwHD7PEHb1i1R1teL4M3lacIflRMB
-dNw2LCVgIFw/Su/sZWL/sj2vilOrKUQD+R+O4vOzxqEO7TrSOZgHitAHOWs2uBI6
-NeJ60SyXxmDSYCmuEiZVL1Fax6Dldg==
-=/r9+
------END PGP SIGNATURE-----
-
---szkcsdi5ha36tvvv--
+-Doug
