@@ -2,136 +2,276 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C6F4CC54D
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 19:37:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC1A4CC837
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 22:41:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232818AbiCCSiV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Mar 2022 13:38:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50606 "EHLO
+        id S231585AbiCCVl7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Mar 2022 16:41:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbiCCSiU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 13:38:20 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A6A5FEE;
-        Thu,  3 Mar 2022 10:37:29 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id t11so9212943wrm.5;
-        Thu, 03 Mar 2022 10:37:29 -0800 (PST)
+        with ESMTP id S236540AbiCCVl6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 16:41:58 -0500
+Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0388D6542C
+        for <linux-pwm@vger.kernel.org>; Thu,  3 Mar 2022 13:41:12 -0800 (PST)
+Received: by mail-oo1-xc2d.google.com with SMTP id y15-20020a4a650f000000b0031c19e9fe9dso7287808ooc.12
+        for <linux-pwm@vger.kernel.org>; Thu, 03 Mar 2022 13:41:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=iSOufd9ic1803HCWAH+W7ntFYx5gsFQTYNvfwFP0ik4=;
-        b=YiMadP6uZKPzcyP76Q2KxDNwFs/Z8YSwtb1uMBid1e3j1lR2+sV5UNA7ySTsPlEPa6
-         C1aMxdOsTHW7fsKa+gvtloWlRQZJaF4jbRB6Kc7PtbgpWcSEVHIgCF3a8LQCkAIFI+fb
-         3LSXip7RPOdTSFkorFptD2us/lq9wOO1a6i0dJiTsGaWi8MAUreLKqbuyX43wMVfBqSj
-         M4Zj7YJ9LzJeog/2z+BY0dP1C5mr5bBzu9nITUwgJLIfaNQUzgCZUAkB/poGI4c/OtHI
-         Yh5wzTmcdjwkeo311rnQ6qitGUsjab9UJDixlaMS3HkYku+msrhPOtHGRlKsER0y2uzh
-         96KQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TtDQVLQ7nb5Bmd2MMrd+NyabJBjG4ePHT9sF5OIJ/t8=;
+        b=qo/i5i2K3xta5aEm817tE2oCay+rfJV+rjQTJyABc2sTIj69m4v7d3LLEVT5tj6/m5
+         DBqLOsFDX1c419do3v63Y5HHwNQc1gxK7UcozkG8PGGTnxSMpsCZTPdDdjyZVCk2f7gp
+         +SBZGIj637ve1djD/F8APngCkWqb9MuPfqVPKiDdSBiFDitsmtpTdcZsi7624LWakVSD
+         XRq7yz3S50mRk9LqZviPIMbHT+MnIINXIUm9kYr77pqQQ+LtkV48E3xZIN+CZvsfORkx
+         /ChBniO1TEbNdqdhgBYgAma7N1F3fGaiK/Xcqk/ZbPHelEZSaoyB2TLGTB55qeAgX8uu
+         4hbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=iSOufd9ic1803HCWAH+W7ntFYx5gsFQTYNvfwFP0ik4=;
-        b=PxySSCAGojmQk7AEFTdAHIE1M2TGav3oGDpDStERx3fhv7f0qdrwlien7hP8sCdyVY
-         yyhLgujjd5B0hrQoi0u/q8Zaga99aQ3j4usz7Z4Yn0X8FBdn3zSk0EUhRl66YvQj0Xbr
-         G8/K1K29uHS2SbKQuZbI+gqxKALyOZGTna9eKDsqUcDttG2GaTg1AHKfrrDE3zEIYKt/
-         30n/7EFolekmyq2xNCPMMJTCTOdlPZfwi6N5u/Tp3EJyLggf5SdOfHCv3/eH5HKIKmDO
-         Fuf/YiUU/Z63pIUVZgjDT7ZohA4vJ+0KusxJ9KTPq6SSDWju3vJXo2Bh4ZWKErgM6kZk
-         /h9g==
-X-Gm-Message-State: AOAM533BZPe9cqMeJUQLsi9GE/QJdVOdZV3ybsvYVeBLCTbuiHXupCTM
-        ky68opFLY9+g2M3FeaWHjIk=
-X-Google-Smtp-Source: ABdhPJxJmuSgwDYVvAuBt2EhvnNE5kA/TFpFNW4rcxri3y3JhzZ7POFeroEiibl2R+FTZ9mNhfi1Gg==
-X-Received: by 2002:a5d:64a5:0:b0:1f0:6041:159 with SMTP id m5-20020a5d64a5000000b001f060410159mr2527698wrp.703.1646332647523;
-        Thu, 03 Mar 2022 10:37:27 -0800 (PST)
-Received: from elementary ([94.73.33.246])
-        by smtp.gmail.com with ESMTPSA id b9-20020a5d45c9000000b001ef9200b856sm2533507wrs.115.2022.03.03.10.37.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TtDQVLQ7nb5Bmd2MMrd+NyabJBjG4ePHT9sF5OIJ/t8=;
+        b=ugZuzn5qTqpmrf+xPFtr/Vm0ik0T2Gzd6htEAJKZ/2Utt7fQEiNfW6BstupcVq9Rk+
+         FObb5nnnsUEnpPXg5tswKq77Gg3Aiu5RwlqIK+VeyTmNsk8HERbQDq+oxEqudanNvaV4
+         f893ZQWEGsW1qzbkTjbv8tZ7iT07C4IjU1ARaNqFhHqzp7fiaZps6/IKWxyUJogq8z0B
+         nnIlwv7U6fOb0/RILrLXq2eoezzJHL9bXbn4UekrXXRsmFjimFTQQ/NIIhAcZw03BlfR
+         alA2TBhigLN0t6uM4NsOrJYs9P89ublIWKO29mPprOwz4XUu6N8n+qd84bOzLu8swMDT
+         sgrQ==
+X-Gm-Message-State: AOAM5327gvEfDjx0xFAGaRgKyUqatRZMrQUYZ7/Fu4P2EoS1x9heWu7J
+        mUpJwp+Dg5fKZr4ZP9CVu6Mrcw==
+X-Google-Smtp-Source: ABdhPJwcxGz4gjhhn2rFVtt5t92g8JnslTbsLNkoGF2bKWGqaAt9jKJPR5dqIlEJa7kXMGTomUYLKw==
+X-Received: by 2002:a4a:a801:0:b0:31d:3bf7:992b with SMTP id o1-20020a4aa801000000b0031d3bf7992bmr17098255oom.84.1646343670940;
+        Thu, 03 Mar 2022 13:41:10 -0800 (PST)
+Received: from ripper.. ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id 42-20020a9d0d2d000000b005a3c7373d57sm1452955oti.52.2022.03.03.13.41.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 10:37:27 -0800 (PST)
-Date:   Thu, 3 Mar 2022 19:37:20 +0100
-From:   =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     andrzej.hajda@intel.com, linux-pwm@vger.kernel.org,
-        jonas@kwiboo.se, airlied@linux.ie, robert.foss@linaro.org,
-        dri-devel@lists.freedesktop.org, narmstrong@baylibre.com,
-        linux-kernel@vger.kernel.org, jernej.skrabec@gmail.com,
-        thierry.reding@gmail.com, Laurent.pinchart@ideasonboard.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        maxime@cerno.tech
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: switch to
- devm_drm_of_get_bridge
-Message-ID: <20220303183720.GA334969@elementary>
-References: <20220228183955.25508-1-jose.exposito89@gmail.com>
- <164609067646.2361501.15747139249939190799@Monstersaurus>
+        Thu, 03 Mar 2022 13:41:10 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v14 1/2] dt-bindings: leds: Add Qualcomm Light Pulse Generator binding
+Date:   Thu,  3 Mar 2022 13:42:59 -0800
+Message-Id: <20220303214300.59468-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <164609067646.2361501.15747139249939190799@Monstersaurus>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 11:24:36PM +0000, Kieran Bingham wrote:
-> Hi José
-> 
-> Quoting José Expósito (2022-02-28 18:39:54)
-> > The function "drm_of_find_panel_or_bridge" has been deprecated in
-> > favor of "devm_drm_of_get_bridge".
-> > 
-> > Switch to the new function and reduce boilerplate.
-> > 
-> > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> > ---
-> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 8 +-------
-> >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > index dab8f76618f3..fb8e16ed7e90 100644
-> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > @@ -1232,15 +1232,9 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
-> >  {
-> >         struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
-> >         struct device_node *np = pdata->dev->of_node;
-> > -       struct drm_panel *panel;
-> >         int ret;
-> >  
-> > -       ret = drm_of_find_panel_or_bridge(np, 1, 0, &panel, NULL);
-> > -       if (ret)
-> > -               return dev_err_probe(&adev->dev, ret,
-> > -                                    "could not find any panel node\n");
-> > -
-> > -       pdata->next_bridge = devm_drm_panel_bridge_add(pdata->dev, panel);
-> > +       pdata->next_bridge = devm_drm_of_get_bridge(pdata->dev, np, 1, 0);
-> 
-> Yikes, I was about to rely on this panel variable to determine if the
-> device is a panel or a display port connector. (Well, I am relying on
-> it, and patches are hoping to be reposted this week).
-> 
-> Is there expected to be another way to identify if the next connection
-> is a panel or a bridge?
-> 
-> Regards
+This adds the binding document describing the three hardware blocks
+related to the Light Pulse Generator found in a wide range of Qualcomm
+PMICs.
 
-Hi Kieran,
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-I'm getting started in the DRM subsystem. I couldn't tell if there is a
-good way to access the panel pointer... I didn't manage to find it, but
-hopefully someone with more experience can point us to a solution.
+Changes since v13:
+- None
 
-Since you mentioned display port, I'm not sure if in your case checking
-"pdata->next_bridge->type" could be good enough.
+Changes since v12:
+- None
 
-Anyway, if this patch causes you problems, please go ahead and ignore it.
-I'm sure the series you are working on are more important than removing
-a deprecated function :)
+ .../bindings/leds/leds-qcom-lpg.yaml          | 173 ++++++++++++++++++
+ 1 file changed, 173 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
 
-Best wishes,
-Jose
+diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+new file mode 100644
+index 000000000000..336bd8e10efd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+@@ -0,0 +1,173 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-qcom-lpg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Light Pulse Generator
++
++maintainers:
++  - Bjorn Andersson <bjorn.andersson@linaro.org>
++
++description: >
++  The Qualcomm Light Pulse Generator consists of three different hardware blocks;
++  a ramp generator with lookup table, the light pulse generator and a three
++  channel current sink. These blocks are found in a wide range of Qualcomm PMICs.
++
++properties:
++  compatible:
++    enum:
++      - qcom,pm8150b-lpg
++      - qcom,pm8150l-lpg
++      - qcom,pm8916-pwm
++      - qcom,pm8941-lpg
++      - qcom,pm8994-lpg
++      - qcom,pmc8180c-lpg
++      - qcom,pmi8994-lpg
++      - qcom,pmi8998-lpg
++
++  "#pwm-cells":
++    const: 2
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  qcom,power-source:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      power-source used to drive the output, as defined in the datasheet.
++      Should be specified if the TRILED block is present
++    enum: [0, 1, 3]
++
++  qcom,dtest:
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    description: >
++      A list of integer pairs, where each pair represent the dtest line the
++      particular channel should be connected to and the flags denoting how the
++      value should be outputed, as defined in the datasheet. The number of
++      pairs should be the same as the number of channels.
++    items:
++      items:
++        - description: dtest line to attach
++        - description: flags for the attachment
++
++  multi-led:
++    type: object
++    $ref: leds-class-multicolor.yaml#
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    patternProperties:
++      "^led@[0-9a-f]$":
++        type: object
++        $ref: common.yaml#
++
++patternProperties:
++  "^led@[0-9a-f]$":
++    type: object
++    $ref: common.yaml#
++
++    properties:
++      reg: true
++
++    required:
++      - reg
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    led-controller {
++      compatible = "qcom,pmi8994-lpg";
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      qcom,power-source = <1>;
++
++      qcom,dtest = <0 0>,
++                   <0 0>,
++                   <0 0>,
++                   <4 1>;
++
++      led@1 {
++        reg = <1>;
++        color = <LED_COLOR_ID_GREEN>;
++        function = LED_FUNCTION_INDICATOR;
++        function-enumerator = <1>;
++      };
++
++      led@2 {
++        reg = <2>;
++        color = <LED_COLOR_ID_GREEN>;
++        function = LED_FUNCTION_INDICATOR;
++        function-enumerator = <0>;
++        default-state = "on";
++      };
++
++      led@3 {
++        reg = <3>;
++        color = <LED_COLOR_ID_GREEN>;
++        function = LED_FUNCTION_INDICATOR;
++        function-enumerator = <2>;
++      };
++
++      led@4 {
++        reg = <4>;
++        color = <LED_COLOR_ID_GREEN>;
++        function = LED_FUNCTION_INDICATOR;
++        function-enumerator = <3>;
++      };
++    };
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    led-controller {
++      compatible = "qcom,pmi8994-lpg";
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      qcom,power-source = <1>;
++
++      multi-led {
++        color = <LED_COLOR_ID_RGB>;
++        function = LED_FUNCTION_STATUS;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        led@1 {
++          reg = <1>;
++          color = <LED_COLOR_ID_RED>;
++        };
++
++        led@2 {
++          reg = <2>;
++          color = <LED_COLOR_ID_GREEN>;
++        };
++
++        led@3 {
++          reg = <3>;
++          color = <LED_COLOR_ID_BLUE>;
++        };
++      };
++    };
++  - |
++    pwm-controller {
++      compatible = "qcom,pm8916-pwm";
++      #pwm-cells = <2>;
++    };
++...
+-- 
+2.33.1
+
