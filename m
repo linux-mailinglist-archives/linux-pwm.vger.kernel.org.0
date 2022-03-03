@@ -2,78 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 060DA4CC3B0
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 18:26:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A309E4CC463
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Mar 2022 18:51:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235336AbiCCR1K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Mar 2022 12:27:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37612 "EHLO
+        id S229778AbiCCRwZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Mar 2022 12:52:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235333AbiCCR1J (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 12:27:09 -0500
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC1719E08B
-        for <linux-pwm@vger.kernel.org>; Thu,  3 Mar 2022 09:26:22 -0800 (PST)
-Received: by mail-oo1-xc32.google.com with SMTP id n5-20020a4a9545000000b0031d45a442feso6534701ooi.3
-        for <linux-pwm@vger.kernel.org>; Thu, 03 Mar 2022 09:26:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hi+eKfkvL+1ELz8vCd2J8tALPiN2Yeq81v7WF2HdAvA=;
-        b=ST/Z+X1lhcPRR3gkR9suvwoVxqwduRsMYavBHcuzH6MEWvRTvI8XehW5GVLJKxx+FC
-         NE7DS70gcRfuBP+bWOto18cMXOIZPLk609iw8smuy/WxCEcWYm/+G+iCdIlMCCWpSINZ
-         +DfLXoHb7999QY5ssTrZRl7n0KNUX8O58zRTFoWlx3ttRtJXmbbewgi9suaOM+NiV36v
-         NmeOZAmFGzTuS00K7V5if14XLORNd3xksz9NN+wJMfw08Eh1bK23PFyL0ckhuwl0BCpJ
-         0VrqKXWYsDnU5ViWauFzYYUT0AyGj/KfqWwXDxN3Hn0HNlf+Zxf4qRSEUTD/zgtZ55wd
-         vatw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hi+eKfkvL+1ELz8vCd2J8tALPiN2Yeq81v7WF2HdAvA=;
-        b=RPuDuQqoqnw5TqsHa4o/amUd6bWWftb+hDlgl4rR868vfze3WOd85hLxod3DgRPy7M
-         On8N1L858fwfVSWuNDLZCx5eHsnzhwMkN6mvIk2WErLD5hwWWTQSazQlYXpWPWtf4J+e
-         aDeJBWb1ewMkg4nDuDEeiie/nfbeeYSTORn7LC2r55ZfJid3ysRtUKLnU9QldnwvY1IU
-         I6WlWMI+urc9slIqxPtS2FiQWTbTL0k8nDoMoig/pwe9D4svzF1EfFz4OnckdAY0Fc67
-         x0aoyBWcLuRX+EKFnvqIN2wB4qdcBSdfKSwkhZdrX3nWq4q/FBvTxNNHRoeZHYwBgByg
-         P2pA==
-X-Gm-Message-State: AOAM531/+HF3aZLiFixvB5hd//53WtM5oj2VSM3dmJBN4EBLKNizQKql
-        T/v28KMlIJR/6rdHc639NHdS2g==
-X-Google-Smtp-Source: ABdhPJwv1sxGTZF0niRgbP0qtUDDm24paYlb1odjA9ejm9/YPSBr9Tb4EAnKGNswbr1L/KDB331RZA==
-X-Received: by 2002:a05:6870:a1a0:b0:d9:b198:4cfa with SMTP id a32-20020a056870a1a000b000d9b1984cfamr3722424oaf.159.1646328381877;
-        Thu, 03 Mar 2022 09:26:21 -0800 (PST)
-Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id c26-20020a4ae25a000000b0031c268c5436sm1195619oot.16.2022.03.03.09.26.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 09:26:21 -0800 (PST)
-Date:   Thu, 3 Mar 2022 09:28:10 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S229496AbiCCRwY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Mar 2022 12:52:24 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E93C1A1C6B
+        for <linux-pwm@vger.kernel.org>; Thu,  3 Mar 2022 09:51:37 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nPpbz-0006WA-E1; Thu, 03 Mar 2022 18:51:35 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nPpby-002SG9-LD; Thu, 03 Mar 2022 18:51:33 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nPpbx-006kwO-0s; Thu, 03 Mar 2022 18:51:33 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-pwm <linux-pwm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Luca Weiss <luca@z3ntu.xyz>
-Subject: Re: [PATCH v13 2/2] leds: Add driver for Qualcomm LPG
-Message-ID: <YiD6qrLC9B4A8sNz@ripper>
-References: <20220218183116.2261770-1-bjorn.andersson@linaro.org>
- <20220218183116.2261770-2-bjorn.andersson@linaro.org>
- <CAD=FV=UOLcu5xycimDsYTO1spwf=CMRPUSU3o0qRRC+a+zuRTQ@mail.gmail.com>
- <CAD=FV=We4Lv25h2XF6BsdYhMbYu4716LBuhAjH5N0s_HHt_Xcw@mail.gmail.com>
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] pwm: tegra: Optimize period calculation
+Date:   Thu,  3 Mar 2022 18:50:12 +0100
+Message-Id: <20220303175012.358613-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=We4Lv25h2XF6BsdYhMbYu4716LBuhAjH5N0s_HHt_Xcw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2744; h=from:subject; bh=g0VDo2ZTwl5abWqLJlDJgWxv6PzZwMxPfrKBw55rvTA=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiIP/QaamitcKfZEryPLRMlFNY7JjYB7J4xU1Umz45 B8fLnJ6JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYiD/0AAKCRDB/BR4rcrsCUZNB/ 9P4MYim6PxAN9CTWyOeh7VgK0wxFh4CSeyOcK+r3ze3L17nYP0dVrK6RzHhKvsqxrgtH+//37nTRmB 0UjzmnZgBJHV9lo/gO7d8uh9DNuv7NmS7nFSS7aW6iSBcqWuoy0YMZGvvd+ExEC98fsF23x/CASyup mZYJE3QhmSxlOs88U/NiFl+81hUq0YgoCRfixHEEWZvFiNeuuQJmdI4NxjYxkgz6SJONKpWPBmw+fM xapB4qk7CcLwY+2TXe2hNUSQzj3qGBkvBLp1DGrAPkwc74VKlGWtyYXhP+30cynTs/FBcQdo3443T9 8djFAl7dYdl+x8OtFMXFYkWnQirGrg
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,73 +55,78 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu 03 Mar 08:41 PST 2022, Doug Anderson wrote:
+Dividing by the result of a division looses precision because the result is
+rounded twice. E.g. with clk_rate = 48000000 and period = 32760033 the
+following numbers result:
 
-> Hi,
-> 
-> On Wed, Mar 2, 2022 at 4:03 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Fri, Feb 18, 2022 at 10:29 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > +static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > +                             struct pwm_state *state)
-> > > +{
-> > > +       struct lpg *lpg = container_of(chip, struct lpg, pwm);
-> > > +       struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
-> > > +       unsigned int pre_div;
-> > > +       unsigned int refclk;
-> > > +       unsigned int val;
-> > > +       unsigned int m;
-> > > +       u16 pwm_value;
-> > > +       int ret;
-> > > +
-> > > +       ret = regmap_read(lpg->map, chan->base + LPG_SIZE_CLK_REG, &val);
-> > > +       if (ret)
-> > > +               return;
-> > > +
-> > > +       refclk = lpg_clk_rates[(val & PWM_CLK_SELECT_MASK) - 1];
-> >
-> > I don't know why I didn't notice it before (maybe I was accidentally
-> > not building with KASAN?), but in my recent boots I'm getting a KASAN
-> > error pointing at the line above.
-> >
-> > Sure enough, the above looks a bit on the unsafe side. If (val & 0x3)
-> > is 0 then the "-1" will not be so wonderful. I put some printouts and,
-> > indeed, it's not so great.
-> >
-> > [    7.201635] DOUG: val is 0x00000004
-> >
-> > Amazingly my `refclk` ends up as 0 and I guess somehow this doesn't
-> > cause a divide by 0.
-> 
-> I dug a little more and found a document that talks about this
-> register. I guess the answer here is that at boot time on my device
-> the PWM is disabled and has never been enabled. That explains why, at
-> boot time, the "clk_select" is 0 AKA "no clock". So we do an invalid
-> memory access here and that's not so great, but it doesn't _truly_
-> cause any harm. All we need is something like this right before the
-> array dereference:
-> 
-> if ((val & PWM_CLK_SELECT_MASK) == 0)
->   return;
-> 
+	rate = pc->clk_rate >> PWM_DUTY_WIDTH = 187500
+	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns) = 3052
+	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz) = 6144
 
-Thanks for spotting and digging that up. I can confirm that the
-documentation has 0 as "no clock" and I think it would be nice if
-lpg_clk_rates[] reflected the possible hardware values. That way we can
-also get rid of the + 1 in lpg_apply_freq().
+The exact result would be 6142.5061875 and (apart from rounding) this is
+found by using a single division. As a side effect is also a tad
+cheaper to calculate.
 
-I will fix this up, as well as fix up the indentation issue spotted by
-Uwe in the documentation and repost.
+Also using clk_rate >> PWM_DUTY_WIDTH looses precision. Consider for
+example clk_rate = 47999999 and period = 106667:
 
-Regards,
-Bjorn
+	mul_u64_u64_div_u64(pc->clk_rate >> PWM_DUTY_WIDTH, period_ns,
+			    NSEC_PER_SEC) = 19
 
-> I'm still pretty interested in seeing this patch series land and, if
-> it helps it land sooner, I wouldn't object to the above getting fixed
-> in a followup patch.
-> 
-> -Doug
+	mul_u64_u64_div_u64(pc->clk_rate, period_ns,
+			    NSEC_PER_SEC << PWM_DUTY_WIDTH) = 20
+
+(The exact result is 20.000062083332033.)
+
+With this optimizations also switch from round-closest to round-down. Given
+that the calculations were non-optimal for quite some time now which
+nobody reported as a problem, this is the opportunity to align the driver's
+behavior to the requirements of new drivers. (Note however that the
+duty_cycle calculation isn't aligned yet.)
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-tegra.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+index e5a9ffef4a71..7fc03a9ec154 100644
+--- a/drivers/pwm/pwm-tegra.c
++++ b/drivers/pwm/pwm-tegra.c
+@@ -99,7 +99,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			    int duty_ns, int period_ns)
+ {
+ 	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+-	unsigned long long c = duty_ns, hz;
++	unsigned long long c = duty_ns;
+ 	unsigned long rate, required_clk_rate;
+ 	u32 val = 0;
+ 	int err;
+@@ -156,11 +156,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		pc->clk_rate = clk_get_rate(pc->clk);
+ 	}
+ 
+-	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
+-
+ 	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+-	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+-	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
++	rate = mul_u64_u64_div_u64(pc->clk_rate, period_ns,
++				   (u64)NSEC_PER_SEC << PWM_DUTY_WIDTH);
+ 
+ 	/*
+ 	 * Since the actual PWM divider is the register's frequency divider
+@@ -169,6 +167,8 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 */
+ 	if (rate > 0)
+ 		rate--;
++	else
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Make sure that the rate will fit in the register's frequency
+
+base-commit: ed14d36498c8d15be098df4af9ca324f96e9de74
+-- 
+2.34.1
+
