@@ -2,141 +2,172 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45B394CD416
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Mar 2022 13:13:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 982894CD703
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Mar 2022 16:01:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbiCDMNq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Mar 2022 07:13:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59152 "EHLO
+        id S240005AbiCDPC3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Mar 2022 10:02:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbiCDMNq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Mar 2022 07:13:46 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C92A3B2AF;
-        Fri,  4 Mar 2022 04:12:58 -0800 (PST)
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B6C5251C;
-        Fri,  4 Mar 2022 13:12:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1646395976;
-        bh=0Ulm78IQ0WXBqQD9qfvvyKGf5lync0xz6SO1lXZndQQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=kcs23ykDS1LqFUxt6PZxX2YN5fQJNWZz2WZPOq9eCqnl4NCZW3wWseOD0lTQ+Wiaj
-         A0dibgbN+hsKH8y0e9xg/E2ipZIKPuSv5jerXiYCaJ+Flg1nc+f/oXR2YueW0MF0/z
-         xjuie+Nrd2UqVtJ8Uw+qprnCo+99KUmf8wR/BWyI=
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229934AbiCDPC2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Mar 2022 10:02:28 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03C661BD9B2
+        for <linux-pwm@vger.kernel.org>; Fri,  4 Mar 2022 07:01:41 -0800 (PST)
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id BB7143F4C1
+        for <linux-pwm@vger.kernel.org>; Fri,  4 Mar 2022 15:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1646406099;
+        bh=veW4gKIbKo9jmCs1Wuv5XKB6ixDrTo7kj8IuMc2L6jg=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=bNbuZu7ajGxRnI2zD0k7do++qOxwoXPlCAvITsMHchHJWkhAfPtBD51YbW27pKLXQ
+         GC7/AiTmei3VTkWda7lp/GCGF8IRovOWTc+wB0893Qt2IJXhfKNuQkgHUbSufe2Dsk
+         PAlTCwN5raHd7Mhh16fdohGzjuthSiJocJEreokn3hQ6ICJ/MUfzQSAgcfLxLHWFHY
+         3u0tPG2CKfmKudxQbycplB+B7wWRn1qwXGaDv5OJnO/dHroLSL8VhEECte+SctVq9y
+         Tm5BuKWeszVVaADkGOWv46iqJ6cN2/o1a59kwNeEwhVa1NFhtNNLu2n6DUGVmWcpMN
+         ySFgt7QEODUAA==
+Received: by mail-ej1-f70.google.com with SMTP id r18-20020a17090609d200b006a6e943d09eso4512220eje.20
+        for <linux-pwm@vger.kernel.org>; Fri, 04 Mar 2022 07:01:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=veW4gKIbKo9jmCs1Wuv5XKB6ixDrTo7kj8IuMc2L6jg=;
+        b=xR8c2u2u4H9eAOBeXR628gfIexCsCuM8UyO9IrAPUhktBORhxog6pcFLPqWSdo5X/n
+         ykMF+98J4ljf0GWzRerHPNRlWOSkl/x35leR3V045tc3OPC6KWq+5MLNunnOhHhNmg1B
+         ews0ns9od0HNXLmEF7fnCKFgrLL5IKcsK72lNNcNYU5cwPj+WNl6mKpqcHG+Wv0j2s3B
+         EhK7ENAN3NXE7Xd4veOIQBeJu0rQxJ25KaIqDlcs17dCkheyJkYdPiZ+Xvg3JsTnzKxa
+         lHYU0cbeVRteilY03/h5wVIzihlo1iOuYyg+A8K6pwiq8LQGtphuPX/2nyfUw7S1coaC
+         G2zQ==
+X-Gm-Message-State: AOAM533dwydpfmZm4KjTYSNCobMZXRhk3dUyFLQptloSaoPLnni3nJ6n
+        o7sEA7e+2BAooC/Akh22K8q4iY9PlKwU4McXaZNHMWJDAJ64fXG0kqWSuKCFc9W1cQOfRAti+y1
+        EIiuUvytpK4vE7xrxinsO77I0Y6SVNRqUwXqQlA==
+X-Received: by 2002:a05:6402:3489:b0:415:bc37:a81f with SMTP id v9-20020a056402348900b00415bc37a81fmr12512643edc.354.1646406099204;
+        Fri, 04 Mar 2022 07:01:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxgaVeX2hMApbdyglZkusLEVifJ+zoAKzqcXR0aV/1vWe1MjVa35U8Tzx/bcGq+skX2sVwWTA==
+X-Received: by 2002:a05:6402:3489:b0:415:bc37:a81f with SMTP id v9-20020a056402348900b00415bc37a81fmr12512608edc.354.1646406098927;
+        Fri, 04 Mar 2022 07:01:38 -0800 (PST)
+Received: from [192.168.0.139] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
+        by smtp.gmail.com with ESMTPSA id k3-20020a05640212c300b0041605b2d9c1sm603615edx.58.2022.03.04.07.01.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Mar 2022 07:01:37 -0800 (PST)
+Message-ID: <9113e319-58a2-fd90-6887-fb32eb21fd18@canonical.com>
+Date:   Fri, 4 Mar 2022 16:01:36 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <164634476693.3683041.3124143336848085499@Monstersaurus>
-References: <20220228183955.25508-1-jose.exposito89@gmail.com> <164609067646.2361501.15747139249939190799@Monstersaurus> <20220303183720.GA334969@elementary> <164634476693.3683041.3124143336848085499@Monstersaurus>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: switch to devm_drm_of_get_bridge
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     andrzej.hajda@intel.com, linux-pwm@vger.kernel.org,
-        jonas@kwiboo.se, airlied@linux.ie, robert.foss@linaro.org,
-        dri-devel@lists.freedesktop.org, narmstrong@baylibre.com,
-        linux-kernel@vger.kernel.org, jernej.skrabec@gmail.com,
-        thierry.reding@gmail.com, Laurent.pinchart@ideasonboard.com,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v2 1/2] dt-bindings:pwm:Add bindings doc for Sunplus SoC
+ PWM Driver
+Content-Language: en-US
+To:     Hammer Hsieh <hammerh0314@gmail.com>, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        maxime@cerno.tech
-To:     =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Date:   Fri, 04 Mar 2022 12:12:54 +0000
-Message-ID: <164639597452.3492470.16590890112062103735@Monstersaurus>
-User-Agent: alot/0.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     wells.lu@sunplus.com, hammer.hsieh@sunplus.com
+References: <1646374812-2988-1-git-send-email-hammerh0314@gmail.com>
+ <1646374812-2988-2-git-send-email-hammerh0314@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <1646374812-2988-2-git-send-email-hammerh0314@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Jos=C3=A9
+On 04/03/2022 07:20, Hammer Hsieh wrote:
+> Add bindings doc for Sunplus SoC PWM Driver
 
-Quoting Kieran Bingham (2022-03-03 21:59:26)
-> Quoting Jos=C3=A9 Exp=C3=B3sito (2022-03-03 18:37:20)
-> > On Mon, Feb 28, 2022 at 11:24:36PM +0000, Kieran Bingham wrote:
-> > > Hi Jos=C3=A9
-> > >=20
-> > > Quoting Jos=C3=A9 Exp=C3=B3sito (2022-02-28 18:39:54)
-> > > > The function "drm_of_find_panel_or_bridge" has been deprecated in
-> > > > favor of "devm_drm_of_get_bridge".
-> > > >=20
-> > > > Switch to the new function and reduce boilerplate.
-> > > >=20
-> > > > Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-> > > > ---
-> > > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 8 +-------
-> > > >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/dr=
-m/bridge/ti-sn65dsi86.c
-> > > > index dab8f76618f3..fb8e16ed7e90 100644
-> > > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > @@ -1232,15 +1232,9 @@ static int ti_sn_bridge_probe(struct auxilia=
-ry_device *adev,
-> > > >  {
-> > > >         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.pa=
-rent);
-> > > >         struct device_node *np =3D pdata->dev->of_node;
-> > > > -       struct drm_panel *panel;
-> > > >         int ret;
-> > > > =20
-> > > > -       ret =3D drm_of_find_panel_or_bridge(np, 1, 0, &panel, NULL);
-> > > > -       if (ret)
-> > > > -               return dev_err_probe(&adev->dev, ret,
-> > > > -                                    "could not find any panel node=
-\n");
-> > > > -
-> > > > -       pdata->next_bridge =3D devm_drm_panel_bridge_add(pdata->dev=
-, panel);
-> > > > +       pdata->next_bridge =3D devm_drm_of_get_bridge(pdata->dev, n=
-p, 1, 0);
-> > >=20
-> > > Yikes, I was about to rely on this panel variable to determine if the
-> > > device is a panel or a display port connector. (Well, I am relying on
-> > > it, and patches are hoping to be reposted this week).
-> > >=20
-> > > Is there expected to be another way to identify if the next connection
-> > > is a panel or a bridge?
-> > >=20
-> > > Regards
-> >=20
-> > Hi Kieran,
-> >=20
-> > I'm getting started in the DRM subsystem. I couldn't tell if there is a
-> > good way to access the panel pointer... I didn't manage to find it, but
-> > hopefully someone with more experience can point us to a solution.
-> >=20
-> > Since you mentioned display port, I'm not sure if in your case checking
-> > "pdata->next_bridge->type" could be good enough.
+You miss spaces in the subject.
 
-Actually, it is. And I think this is actually cleaner (both here, and in
-the series I'm working on).
+> 
+> Signed-off-by: Hammer Hsieh <hammerh0314@gmail.com>
+> ---
+> Changes in v2:
+>  - Addressed all comments from Rob Herring.
+>    modify author's mail match Signed-off-by.
+>  - rebase kernel to 5.17 rc5
+> 
+>  .../devicetree/bindings/pwm/pwm-sunplus.yaml       | 40 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  5 +++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml b/Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
+> new file mode 100644
+> index 0000000..19fe5d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sunplus.yaml
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) Sunplus Co., Ltd. 2021
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-sunplus.yaml#
 
-> > Anyway, if this patch causes you problems, please go ahead and ignore i=
-t.
-> > I'm sure the series you are working on are more important than removing
-> > a deprecated function :)
->=20
-> If it's deprecated, I don't want to block it's removal. Hopefully I can
-> resume my work on this tomorrow so I can check to see what I can parse.
-> Thanks for the lead on the bridge type, I'm sure I've seen that around
-> too so hopefully that's enough. If it is, I'll rebase my work on top of
-> your patch and retest.
+Is it going to be one binding for all Sunplus SoCs? Existing and future?
 
-So - my series is now working with a bit of adaptation to run on top of
-your patch, and I think the overall result is better. So:
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sunplus SoC PWM Controller
+> +
+> +maintainers:
+> +  - Hammer Hsieh <hammerh0314@gmail.com>
+> +
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+allOf with pwm.yaml
+Then unevaluatedProperties instead of additionalProperties.
 
 
->=20
-> --
-> Kieran
->=20
->=20
-> >=20
-> > Best wishes,
-> > Jose
+> +properties:
+> +  '#pwm-cells':
+> +    const: 2
+> +
+> +  compatible:
+
+Commpatible goes first. Rest of properties you could order
+alphabetically. Similar approach in required.
+
+
+> +    items:
+> +      - const: sunplus,sp7021-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+
+compatible
+
+> +  - reg
+> +  - clocks
+
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwm: pwm@9c007a00 {
+> +      #pwm-cells = <2>;
+> +      compatible = "sunplus,sp7021-pwm";
+
+compatible goes first, then reg.
+
+
+Best regards,
+Krzysztof
