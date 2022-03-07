@@ -2,108 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 405FB4D042B
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Mar 2022 17:30:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89E324D06D5
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Mar 2022 19:48:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239207AbiCGQa5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Mar 2022 11:30:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
+        id S237023AbiCGSs6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Mar 2022 13:48:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244200AbiCGQa4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Mar 2022 11:30:56 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6B16E543
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Mar 2022 08:30:02 -0800 (PST)
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 275703F605
-        for <linux-pwm@vger.kernel.org>; Mon,  7 Mar 2022 16:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646670601;
-        bh=lYugkCjRW/OhfdxdR0LUXG4Uici1AcMBOSNAUfInjq4=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=wOmVZkfMuWL1iY4g3iTPppUsCa2Pq57QUAIAYRIqN2waEG7YVELm5+XEM7X8D47SA
-         CYrUI3T2Y4V+Um4Bgy4z6jOSqv0NKSTc+ZTXkghVXcwdU0i0jIrBume03CrXainxRW
-         S/C+Dz3VmNTP0NarC1cPmAiH4NhKkMRLh9UXD1XLaHhYIpehRLGTffNJb0UYAPROfc
-         qZJYMCuw4D/NV1Q6cyQb0W2ZttbxBJnUiZLsBwO0O/H4ulLZx2o8kO/9W7oEd6RmA/
-         6D/bc4Ul2WrlWi5Raj4u4ieFJ2WnzDd5zJRwqZqo7cCB9kFBqTmSHyowFKq/KT19ZX
-         95NkTdcWQvwoA==
-Received: by mail-ed1-f71.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso8907634edt.20
-        for <linux-pwm@vger.kernel.org>; Mon, 07 Mar 2022 08:30:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lYugkCjRW/OhfdxdR0LUXG4Uici1AcMBOSNAUfInjq4=;
-        b=cySf+TMF0ExXw3ydKXCt8fbAHRyComt5FQGLbjdb533blH3wXQYzOTk2g+PY5By/rw
-         foWFFn2MEHG2JKzMcsS0x7dEX2DIG+KXs/qrjrPx5bqL6zBppypCsIwsRVh5vSKr3+vE
-         gu4Bm73p0DNzNQRZq8dd+x73ZvzWUp8mHNpjAnauZ5VlKMCzt1gR2DejhMZOnbgJvOS1
-         /pODyiPBxPGpUtluebxUiYURIbtU1enoDtRhCKyC0mBy4yJSRBfkTesrBBZAh8oDWV7q
-         7wWYkgdkWYJApr9ZTy9qkO/TPYcCC4AU7VP8bOrAd30vN49LsvWIqvldEPNL4VXKNe+z
-         p2oA==
-X-Gm-Message-State: AOAM532Gnxx1uaKDa/tzvHsjW1L88/j2Isrxr6cQenBFm5hO/MN5Pznn
-        fDtyPlFPMGa+Q4rkIQs1pJkv9J8TajAGnrR+SXt8Ir9r/7qozbN+0woZh9tR45uAZV/3884p/J5
-        oZnDVtLeSao5cDZ+UYB5zGFi95cxUp5ki73wePw==
-X-Received: by 2002:a50:9505:0:b0:416:4496:5ec4 with SMTP id u5-20020a509505000000b0041644965ec4mr6260004eda.309.1646670600298;
-        Mon, 07 Mar 2022 08:30:00 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzgIDIfs4Uv+2hCWR8xkLdqKgfR0rTZ1uyE2m99wgR5h8pk++5/Mn+yekJDhNMAqpMU4JEJbA==
-X-Received: by 2002:a50:9505:0:b0:416:4496:5ec4 with SMTP id u5-20020a509505000000b0041644965ec4mr6259981eda.309.1646670600102;
-        Mon, 07 Mar 2022 08:30:00 -0800 (PST)
-Received: from [192.168.0.142] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
-        by smtp.gmail.com with ESMTPSA id dz10-20020a0564021d4a00b0041665989a9csm148646edb.41.2022.03.07.08.29.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Mar 2022 08:29:59 -0800 (PST)
-Message-ID: <c2d56288-a134-21a4-75f3-d25b050da6a0@canonical.com>
-Date:   Mon, 7 Mar 2022 17:29:58 +0100
+        with ESMTP id S234052AbiCGSs5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Mar 2022 13:48:57 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9169D4BFE3
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Mar 2022 10:48:02 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nRIOm-0007c1-Bi; Mon, 07 Mar 2022 19:48:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nRIOl-003Hm4-BB; Mon, 07 Mar 2022 19:47:58 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nRIOj-007d8T-Mz; Mon, 07 Mar 2022 19:47:57 +0100
+Date:   Mon, 7 Mar 2022 19:47:50 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/2] pwm: brcmstb: Some cleanups
+Message-ID: <20220307184750.qkbueadgqohbvv2g@pengutronix.de>
+References: <20220214082354.295451-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: convert atmel pwm to json-schema
-Content-Language: en-US
-To:     Sergiu Moga <sergiu.moga@microchip.com>,
-        claudiu.beznea@microchip.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        robh+dt@kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220307153656.177589-1-sergiu.moga@microchip.com>
- <20220307153656.177589-2-sergiu.moga@microchip.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220307153656.177589-2-sergiu.moga@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="awn2454gjkedxgqt"
+Content-Disposition: inline
+In-Reply-To: <20220214082354.295451-1-u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 07/03/2022 16:36, Sergiu Moga wrote:
-> Convert PWM binding for Atmel/Microchip SoCs to Device Tree Schema
-> format.
-> 
-> Signed-off-by: Sergiu Moga <sergiu.moga@microchip.com>
-> ---
->  .../bindings/pwm/atmel,at91sam-pwm.yaml       | 42 +++++++++++++++++++
->  .../devicetree/bindings/pwm/atmel-pwm.txt     | 35 ----------------
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 43 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-> 
 
+--awn2454gjkedxgqt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Hello Florian,
 
+I have a few questions here looking in more detail into the brcmstb
+driver:
 
-Best regards,
-Krzysztof
+ - What happens on PWM_ON(channel) =3D 0?
+   I guess it just emits a flat inactive line, and refusing a small
+   duty_cycle that results in PWM_ON(channel) =3D 0 is just artificial?
+
+ - There is a line describing:
+
+   	W =3D cword, if cword < 2 ^ 15 else 16-bit 2's complement of cword
+
+   The driver only considers powers of two <=3D 2^15 for cword. Is the
+   implementation just lazy, or is the comment misleading?
+   At least s/</<=3D/ ?
+   There is no sense in using a value > 2^15 as for each such value
+   there is a smaller value with the same result, right?
+
+ - clk_get_rate(p->clk) is expected to return 27 MHz, right?
+   (Just for my understanding, not about to hardcode this in the code)
+
+ - The explanation about period in the comment is:
+
+   	The period is: (period + 1) / Fv
+
+   so I would have expected:
+
+   	pc =3D (period_ns * clkrate * cword / (NSEC_PER_SEC << 16)) - 1
+
+   (assuming no overflows). However the -1 isn't in the code.
+
+ - Duty-cycle calculation is unclear, the docs say:
+
+ 	"on" time is on / (period + 1)
+
+   I suspect on time is $on / Fv though?
+   But even with that I don't understand the +1 in
+
+ 	dc =3D mul_u64_u64_div_u64(duty_ns + 1, rate, NSEC_PER_SEC);
+
+Can you enlighten me?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--awn2454gjkedxgqt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmImUysACgkQwfwUeK3K
+7AmZDgf7B5qXcFsqaJjpxAxupVAA9oHnn0N580ci6BcEar/KPAWeMzycla/xXc98
+8m5e28RRYM2vgo6S9FHQquFSrvvt7NHt6BNecM+5XJGgF1QFznS1MQEB1vcxi4sG
+/Lz13oDYgBvYXCVWe+puZAgPcpY/zKmLMdVc2x//nZthcJb9Wb7eMmjzBi9B9HMY
+PRdhG3mi0JZ7HJl0n7hJceBV0pcPzrLc+C0+vs+yVm+Tb41IgAnrOtn+tQvmxE/D
+UCEnJlOSvnAjFSWW/rlRISeEGA8hIHXXNhdfvoxd4OK8HjRBoI8Dxk7DN7kw3wY+
+6VVmeB5ayi5GeMS3G18hUOqjikvI9g==
+=BcEX
+-----END PGP SIGNATURE-----
+
+--awn2454gjkedxgqt--
