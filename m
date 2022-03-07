@@ -2,104 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1DE4D031F
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Mar 2022 16:41:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 405FB4D042B
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Mar 2022 17:30:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240881AbiCGPmW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Mar 2022 10:42:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41512 "EHLO
+        id S239207AbiCGQa5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Mar 2022 11:30:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbiCGPmT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Mar 2022 10:42:19 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D504F73076;
-        Mon,  7 Mar 2022 07:41:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1646667686; x=1678203686;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XlQwsZSDIaDfWV/087cdbqswb5XX5+Ou9ZV0yaZmxrE=;
-  b=UGBYK5svF3juTh1kCxlXM2GkpmbRt4hnsFKtsk3Y3k5OD3JdhPKO1yA0
-   Ywn+QKRAlU475INVtJAD4ZNU0LasuvFsJZNbCgmUHsdwPuUe0mDtkbdQA
-   uvkQ/hfFFOej12EY3qAxI8FS+yJQnGpltBJaW89zItrmzQM4flP4QpoR6
-   rC0gKhE6Ihcf0hqv1vPjyVq+8+YyzUEh6V2NI5TfsEB5euCa5SLQh/NT8
-   VaXgULSMuh2o/a3il/6nlzT9Gg1LHP1TNBjHk45NN9NVJ3YDViMSF7TqR
-   0rNb63r0YZDyeq6IwSRmt+QDOglIwClIolI2Hq68mGdUiROw6kfwr2xfk
-   A==;
-X-IronPort-AV: E=Sophos;i="5.90,162,1643698800"; 
-   d="scan'208";a="155514444"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Mar 2022 08:41:25 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Mon, 7 Mar 2022 08:41:23 -0700
-Received: from ROB-ULT-M68701.amer.actel.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2375.17 via Frontend Transport; Mon, 7 Mar 2022 08:41:19 -0700
-From:   Sergiu Moga <sergiu.moga@microchip.com>
-To:     <claudiu.beznea@microchip.com>, <thierry.reding@gmail.com>,
-        <u.kleine-koenig@pengutronix.de>, <lee.jones@linaro.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski@canonical.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Sergiu Moga <sergiu.moga@microchip.com>
-Subject: [PATCH v3 2/2] dt-bindings: pwm: at91: Add SAMA7G5 compatible strings list
-Date:   Mon, 7 Mar 2022 17:36:56 +0200
-Message-ID: <20220307153656.177589-3-sergiu.moga@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220307153656.177589-1-sergiu.moga@microchip.com>
-References: <20220307153656.177589-1-sergiu.moga@microchip.com>
+        with ESMTP id S244200AbiCGQa4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Mar 2022 11:30:56 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6B16E543
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Mar 2022 08:30:02 -0800 (PST)
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 275703F605
+        for <linux-pwm@vger.kernel.org>; Mon,  7 Mar 2022 16:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1646670601;
+        bh=lYugkCjRW/OhfdxdR0LUXG4Uici1AcMBOSNAUfInjq4=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=wOmVZkfMuWL1iY4g3iTPppUsCa2Pq57QUAIAYRIqN2waEG7YVELm5+XEM7X8D47SA
+         CYrUI3T2Y4V+Um4Bgy4z6jOSqv0NKSTc+ZTXkghVXcwdU0i0jIrBume03CrXainxRW
+         S/C+Dz3VmNTP0NarC1cPmAiH4NhKkMRLh9UXD1XLaHhYIpehRLGTffNJb0UYAPROfc
+         qZJYMCuw4D/NV1Q6cyQb0W2ZttbxBJnUiZLsBwO0O/H4ulLZx2o8kO/9W7oEd6RmA/
+         6D/bc4Ul2WrlWi5Raj4u4ieFJ2WnzDd5zJRwqZqo7cCB9kFBqTmSHyowFKq/KT19ZX
+         95NkTdcWQvwoA==
+Received: by mail-ed1-f71.google.com with SMTP id l14-20020aa7cace000000b003f7f8e1cbbdso8907634edt.20
+        for <linux-pwm@vger.kernel.org>; Mon, 07 Mar 2022 08:30:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=lYugkCjRW/OhfdxdR0LUXG4Uici1AcMBOSNAUfInjq4=;
+        b=cySf+TMF0ExXw3ydKXCt8fbAHRyComt5FQGLbjdb533blH3wXQYzOTk2g+PY5By/rw
+         foWFFn2MEHG2JKzMcsS0x7dEX2DIG+KXs/qrjrPx5bqL6zBppypCsIwsRVh5vSKr3+vE
+         gu4Bm73p0DNzNQRZq8dd+x73ZvzWUp8mHNpjAnauZ5VlKMCzt1gR2DejhMZOnbgJvOS1
+         /pODyiPBxPGpUtluebxUiYURIbtU1enoDtRhCKyC0mBy4yJSRBfkTesrBBZAh8oDWV7q
+         7wWYkgdkWYJApr9ZTy9qkO/TPYcCC4AU7VP8bOrAd30vN49LsvWIqvldEPNL4VXKNe+z
+         p2oA==
+X-Gm-Message-State: AOAM532Gnxx1uaKDa/tzvHsjW1L88/j2Isrxr6cQenBFm5hO/MN5Pznn
+        fDtyPlFPMGa+Q4rkIQs1pJkv9J8TajAGnrR+SXt8Ir9r/7qozbN+0woZh9tR45uAZV/3884p/J5
+        oZnDVtLeSao5cDZ+UYB5zGFi95cxUp5ki73wePw==
+X-Received: by 2002:a50:9505:0:b0:416:4496:5ec4 with SMTP id u5-20020a509505000000b0041644965ec4mr6260004eda.309.1646670600298;
+        Mon, 07 Mar 2022 08:30:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzgIDIfs4Uv+2hCWR8xkLdqKgfR0rTZ1uyE2m99wgR5h8pk++5/Mn+yekJDhNMAqpMU4JEJbA==
+X-Received: by 2002:a50:9505:0:b0:416:4496:5ec4 with SMTP id u5-20020a509505000000b0041644965ec4mr6259981eda.309.1646670600102;
+        Mon, 07 Mar 2022 08:30:00 -0800 (PST)
+Received: from [192.168.0.142] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
+        by smtp.gmail.com with ESMTPSA id dz10-20020a0564021d4a00b0041665989a9csm148646edb.41.2022.03.07.08.29.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Mar 2022 08:29:59 -0800 (PST)
+Message-ID: <c2d56288-a134-21a4-75f3-d25b050da6a0@canonical.com>
+Date:   Mon, 7 Mar 2022 17:29:58 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: convert atmel pwm to json-schema
+Content-Language: en-US
+To:     Sergiu Moga <sergiu.moga@microchip.com>,
+        claudiu.beznea@microchip.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        robh+dt@kernel.org, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220307153656.177589-1-sergiu.moga@microchip.com>
+ <20220307153656.177589-2-sergiu.moga@microchip.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220307153656.177589-2-sergiu.moga@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add compatible strings list for SAMA7G5.
+On 07/03/2022 16:36, Sergiu Moga wrote:
+> Convert PWM binding for Atmel/Microchip SoCs to Device Tree Schema
+> format.
+> 
+> Signed-off-by: Sergiu Moga <sergiu.moga@microchip.com>
+> ---
+>  .../bindings/pwm/atmel,at91sam-pwm.yaml       | 42 +++++++++++++++++++
+>  .../devicetree/bindings/pwm/atmel-pwm.txt     | 35 ----------------
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 43 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+> 
 
-Signed-off-by: Sergiu Moga <sergiu.moga@microchip.com>
+
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
----
- .../bindings/pwm/atmel,at91sam-pwm.yaml           | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
-index 5e8bb5a8095d..ab45df80345d 100644
---- a/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
-@@ -15,11 +15,16 @@ allOf:
- 
- properties:
-   compatible:
--    enum:
--      - atmel,at91sam9rl-pwm
--      - atmel,sama5d3-pwm
--      - atmel,sama5d2-pwm
--      - microchip,sam9x60-pwm
-+    oneOf:
-+      - items:
-+          - enum:
-+              - atmel,at91sam9rl-pwm
-+              - atmel,sama5d3-pwm
-+              - atmel,sama5d2-pwm
-+              - microchip,sam9x60-pwm
-+      - items:
-+          - const: microchip,sama7g5-pwm
-+          - const: atmel,sama5d2-pwm
- 
-   reg:
-     maxItems: 1
--- 
-2.25.1
 
+Best regards,
+Krzysztof
