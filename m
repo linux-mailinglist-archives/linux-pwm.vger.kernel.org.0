@@ -2,113 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B1724D1C2B
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Mar 2022 16:44:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DE494D1D32
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Mar 2022 17:31:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239843AbiCHPpn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Mar 2022 10:45:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
+        id S1346611AbiCHQcK convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 8 Mar 2022 11:32:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236232AbiCHPpm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Mar 2022 10:45:42 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F294EA10
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Mar 2022 07:44:46 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nRc0q-0003S5-KN; Tue, 08 Mar 2022 16:44:36 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nRc0p-003TO2-5V; Tue, 08 Mar 2022 16:44:34 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nRc0n-007pR8-GD; Tue, 08 Mar 2022 16:44:33 +0100
-Date:   Tue, 8 Mar 2022 16:44:29 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     hammer hsieh <hammerh0314@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, wells.lu@sunplus.com,
-        devicetree@vger.kernel.org,
-        "hammer.hsieh" <hammer.hsieh@sunplus.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        thierry.reding@gmail.com, kernel@pengutronix.de,
-        lee.jones@linaro.org
-Subject: Re: [PATCH v2 2/2] pwm:sunplus-pwm:Add Sunplus SoC PWM Driver
-Message-ID: <20220308154429.ztv3l42euu2hf3ye@pengutronix.de>
-References: <1646374812-2988-1-git-send-email-hammerh0314@gmail.com>
- <1646374812-2988-3-git-send-email-hammerh0314@gmail.com>
- <20220304185702.i6csx2r3mokfmr6o@pengutronix.de>
- <CAOX-t56cycXMga_grJcpmSG68ve5-RuTsbtaEQi9Ui0A+5uhSg@mail.gmail.com>
- <20220307131018.6wrdsiixmgdtnodt@pengutronix.de>
- <CAOX-t56F2u_1=tA4N4Wvicw-e9J4ksN__J70QZtjZwJRjgesUQ@mail.gmail.com>
+        with ESMTP id S233477AbiCHQcJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Mar 2022 11:32:09 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6556750447;
+        Tue,  8 Mar 2022 08:31:13 -0800 (PST)
+Received: by mail-qt1-f174.google.com with SMTP id o22so6941220qta.8;
+        Tue, 08 Mar 2022 08:31:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HwPCO4dFtjlzDdsvWKkUtYlqbyqtlLf5x449OlOiOMg=;
+        b=flF4EFmiN6adgDdN95mu9drNHiRQIyXgbOzZlocqbpQbqi4F2M6WXZre09p/UNIKat
+         z/rzYzw//insFZC+/BgV4qLD3aBSuE84URQo8ws6gj5IyAeSQ3YCWYjm5Nd9dMnjFGrD
+         +FkRDxN/FhkKqdJep0MknipOAHos34vEinlfXM1CmkfBTFZFbFGcngoSNxxNE3LPIzRF
+         4h2pBC0iFxCgjkuBjdinsQBtd6jDrfb0L3WXu9nZ/sBao7KScnDoMh3byEUdMIirRoQM
+         V/MafWVwoJQNZ3Ud4v5XLG+U4Qg+CBohuIcQuuJ0vCa82GNEwIdg1WjFOE9c1kH0ywxK
+         nPHg==
+X-Gm-Message-State: AOAM532XUoDliExzBtpz2yvK6ABPLu/qJWwEfsMLULSB4SmbHrPDa+FV
+        rJpbgNLM08nqh2qVGXDy1DDJd+d9RvIXCA==
+X-Google-Smtp-Source: ABdhPJzpZGj+QXiThFtPfMH59R0Yms1F8RA5FP+ZWIT61/2ysdWDLgFlpjoLinr0xhe5sw9U6mNIUg==
+X-Received: by 2002:a05:622a:40a:b0:2e0:7235:f7a9 with SMTP id n10-20020a05622a040a00b002e07235f7a9mr2493108qtx.500.1646757071301;
+        Tue, 08 Mar 2022 08:31:11 -0800 (PST)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id i192-20020a379fc9000000b0067b314c0ff3sm2724148qke.43.2022.03.08.08.31.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Mar 2022 08:31:10 -0800 (PST)
+Received: by mail-yb1-f175.google.com with SMTP id g26so38813742ybj.10;
+        Tue, 08 Mar 2022 08:31:10 -0800 (PST)
+X-Received: by 2002:a25:8486:0:b0:619:9fba:895e with SMTP id
+ v6-20020a258486000000b006199fba895emr12806820ybk.342.1646757069990; Tue, 08
+ Mar 2022 08:31:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6f3hgpz5jb2dmeu5"
-Content-Disposition: inline
-In-Reply-To: <CAOX-t56F2u_1=tA4N4Wvicw-e9J4ksN__J70QZtjZwJRjgesUQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220214133710.3278506-1-javierm@redhat.com> <20220214133710.3278506-4-javierm@redhat.com>
+In-Reply-To: <20220214133710.3278506-4-javierm@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 8 Mar 2022 17:30:58 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU+29x4ZHLAiPiReyLKw_VYBCCLw0bCoQmw9s6sQ4Bxcw@mail.gmail.com>
+Message-ID: <CAMuHMdU+29x4ZHLAiPiReyLKw_VYBCCLw0bCoQmw9s6sQ4Bxcw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Javier,
 
---6f3hgpz5jb2dmeu5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Feb 14, 2022 at 2:37 PM Javier Martinez Canillas
+<javierm@redhat.com> wrote:
+> This adds a DRM driver for SSD1305, SSD1306, SSD1307 and SSD1309 Solomon
+> OLED display controllers.
+>
+> It's only the core part of the driver and a bus specific driver is needed
+> for each transport interface supported by the display controllers.
+>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 
-Hello,
+Thanks for your patch, which is now commit a61732e808672cfa ("drm:
+Add driver for Solomon SSD130x OLED displays") in drm/drm-next
 
-On Tue, Mar 08, 2022 at 08:03:55PM +0800, hammer hsieh wrote:
-> > IMHO yes. (Though the most likely error -ENOMEM, in this case no error
-> > message should be emitted.)
-> >
->=20
->  ok, will add error message like below.
->         if (ret < 0) {
->                 dev_err(dev, "failed to release clock: %d\n", ret);
->                 return ret;
->         }
-> or should i modify like
->         if (ret < 0) {
->                 dev_err(dev, "failed to release clock: %d\n", ret);
->                 return ERR_PTR(ret);
->         }
-> i didn't find reference code for it, not sure which one is better?
+Sorry for the delay, but finally I gave it a try on my Adafruit
+FeatherWing 128x32 OLED.
+Some of the weird issues (cursor disappears after printing some text,
+more text also doesn't appear until I clear the display) are still there.
+Unfortunately a regression was introduced since your v3: printed
+text is mirrored upside-down. I.e. "E" is rendered correctly, but "L"
+turns into "Γ" (Greek Gamma).
+I suspect something went wrong with the display initialization
+sequence.
 
-It depends if you return a pointer or an int. Also please make use of
-%pe instead of %d for error codes to make it easier to understand.
+Gr{oetje,eeting}s,
 
-Best regards
-Uwe
+                        Geert
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---6f3hgpz5jb2dmeu5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmInedoACgkQwfwUeK3K
-7AkJKQgAhvEhvRse9Q9dBf2kr2xCcHcFD66QcDDAt8vq4hxZNJPKwmx19iZRE+En
-TbbFIYldZshOH3eQvl6C9eEGtO5xiW3MKWgWRxjy0dngINIO3UqyxmmwnlY4FgWF
-69sWMjvx0yB3zw14/zU+UgPsc7j03yb8DwpLGFWCgKgzzLb1n+nCLrupYe33Ph1n
-BJWMD2Y97/GYlH4Q8OKsO3IyYr6qkoNB4jYVupb40JHI046EBjWQ1u2xUxGsuKcn
-cCylifL66UXWsVs8Cl6n9hpiwg0jKM04H1Jwqz99ak2hz2OKcrbYGjdPtxYL3LzN
-VIVavWS6prPerd+iJD+vDMd2B4fm7A==
-=4RJz
------END PGP SIGNATURE-----
-
---6f3hgpz5jb2dmeu5--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
