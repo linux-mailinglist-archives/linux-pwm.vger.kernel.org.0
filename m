@@ -2,168 +2,239 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C59EE4D3095
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Mar 2022 14:53:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 398434D3AD2
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Mar 2022 21:09:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbiCINyn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Mar 2022 08:54:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
+        id S234661AbiCIUKu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Mar 2022 15:10:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231553AbiCINyl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Mar 2022 08:54:41 -0500
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0420B3E70
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Mar 2022 05:53:41 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id t14so2020100pgr.3
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Mar 2022 05:53:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ovut23uayW/dOdtWDs48IgggZZNTYQQls77E5j7ziJo=;
-        b=VIbYQAPb5RgoGgeAmm6IcIn34FSd/45TsQD5QpOmlspgU2+VrP96K3dsSWJP8m9JuD
-         UxUWdVtN6W+s0x7ONlSzJMnYdQknafc4EYiVvCwGbT85eGhBU3gk7EfC3hghMWzVns8D
-         p2JVOEiIgLCFslyAuFCU0ftqrzhHjuFIQzjrC/xzSf/40+ITXctmK1RiQDf0515ROaOp
-         K520bIOqwp3w/xIO4U7iMcJhcs6czKueeCQ15Rvl4bIXe5B/ILWxW6J2vB8pHQr2/5mJ
-         qeerGdcPbZdA9ESvHdjgZqdkBErURJuwmnD36r0wApRiYNrh4MxRPER65QzEUwhH4ZAf
-         43Lg==
+        with ESMTP id S231898AbiCIUKr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Mar 2022 15:10:47 -0500
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF4EA1473;
+        Wed,  9 Mar 2022 12:09:48 -0800 (PST)
+Received: by mail-ot1-f46.google.com with SMTP id j3-20020a9d7683000000b005aeed94f4e9so2565033otl.6;
+        Wed, 09 Mar 2022 12:09:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ovut23uayW/dOdtWDs48IgggZZNTYQQls77E5j7ziJo=;
-        b=hVlDNru5M3K86clNeSqhhtY0yipbunwiT8du5q38slteN3wuiLq7MFR/syGIeu/YYG
-         OAQ7dYZH+2lJyfy/L74CHSzWUWRpMqy3ZsdmdoqNyxFYtI0BMUHTbpDQpC+bsL29TumK
-         0LQU2h0m1PwdBlYR5mgdGBEEkyI5FkkJNTZs/jl+jKI6G898fUO2eg2zqLYgt6mYf2Nt
-         NVanJdCJu8AE3Vvp4S+pYmjKVuUJuXppOsbALQu0IgF+JBSfTA8BdvH+LNVsSrGHHC7+
-         PsOabqVjNCiV8lodJG1mhHl81DRZtEzCGkeGX1B1yELmFPR1aU5WjMkUEIMfLQGPn60L
-         jZLg==
-X-Gm-Message-State: AOAM5315NPG6NaerLct4Q4iuaZd8H2cCN1cEIHKjzF0X2iyrFt6tahhp
-        OVxpdkG5aRNl8C+Fdj1ZrXNAmJEVi8EwdiQkhSvy0A==
-X-Google-Smtp-Source: ABdhPJyjDkbzTtT/IWdlit5fMgUxFD/5gMRctZhnTrPtEVnm6o5Bd+AYivSovav9lczEHpwiGcWbWq4H/k4r+8kqHVI=
-X-Received: by 2002:a05:6a00:24cf:b0:4f7:38ea:9fd5 with SMTP id
- d15-20020a056a0024cf00b004f738ea9fd5mr6810052pfv.0.1646834021278; Wed, 09 Mar
- 2022 05:53:41 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=l/Y0orG9IQYI6xXeORs6dX5FqeH3cCXmO8RJhBrMe4c=;
+        b=KzUcXG+M1geM2fDorFpsleyafRdyPW9hPdY/aRSipPM2CgE6Bjqz8bj8ZOPSCsfFBH
+         1MkMLhs6QHFtHLuVQFSnNV6O9iNflRUF8W/0NbC4wMsjh+zd2lnMNhKjGmDzwnTlnB9B
+         TORq9vvIUdbCFpExeZ2onIxiHI0hviqutChGmEURminZUS1UmClgPwPlx8+mnm/Mk60A
+         /lIusYWZX1WwbVqxf8YCP5djfaJLpSfcDpBOik8+sp2qyg8Qk1DOC45iC5yfeSCAdOtl
+         CpslrTI0Mm9jlnorG7ps9+ST1hw9E3V2SE8qF3UvABj5klytmo0gG+trwbLBB6Y9bYml
+         lBHg==
+X-Gm-Message-State: AOAM533ZRSVz/qGNAtgHrHxBLvEvQXJhNyfBLIka3tpTKm9TbsZrNIYJ
+        1mOgVDV4PFQi6aGczPHhhBJhFEVbzTUUtQ==
+X-Google-Smtp-Source: ABdhPJyJEsLNSasJ9qqPtlIyypXG3n1yKrUAcLPuryL9NkiSTkSEhaobT5U8PGjK8szlTjMGsq8TkA==
+X-Received: by 2002:a05:6830:1ac4:b0:5b2:319a:8c3 with SMTP id r4-20020a0568301ac400b005b2319a08c3mr799214otc.203.1646856587411;
+        Wed, 09 Mar 2022 12:09:47 -0800 (PST)
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com. [209.85.210.45])
+        by smtp.gmail.com with ESMTPSA id l3-20020a056830268300b005b21c30a3c5sm1526742otu.29.2022.03.09.12.09.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Mar 2022 12:09:47 -0800 (PST)
+Received: by mail-ot1-f45.google.com with SMTP id k9-20020a056830242900b005ad25f8ebfdso2563225ots.7;
+        Wed, 09 Mar 2022 12:09:47 -0800 (PST)
+X-Received: by 2002:a81:618b:0:b0:2db:d952:8a39 with SMTP id
+ v133-20020a81618b000000b002dbd9528a39mr1323277ywb.132.1646856254887; Wed, 09
+ Mar 2022 12:04:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20220228183955.25508-1-jose.exposito89@gmail.com>
- <164609067646.2361501.15747139249939190799@Monstersaurus> <20220303183720.GA334969@elementary>
- <164634476693.3683041.3124143336848085499@Monstersaurus> <164639597452.3492470.16590890112062103735@Monstersaurus>
-In-Reply-To: <164639597452.3492470.16590890112062103735@Monstersaurus>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Wed, 9 Mar 2022 14:53:30 +0100
-Message-ID: <CAG3jFytLEHbzOHoGSoTk3WSHUBDns64aZWPwUFmhrUrQzncXGg@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: switch to devm_drm_of_get_bridge
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        andrzej.hajda@intel.com, linux-pwm@vger.kernel.org,
-        jonas@kwiboo.se, airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
-        jernej.skrabec@gmail.com, thierry.reding@gmail.com,
-        laurent.pinchart@ideasonboard.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, maxime@cerno.tech
+References: <20220214133710.3278506-1-javierm@redhat.com> <20220214133710.3278506-4-javierm@redhat.com>
+In-Reply-To: <20220214133710.3278506-4-javierm@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 9 Mar 2022 21:04:03 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUuTAsqpx4=WnosfyjLo-t9ryQPQMaE1OeMBk4Ws9DTpQ@mail.gmail.com>
+Message-ID: <CAMuHMdUuTAsqpx4=WnosfyjLo-t9ryQPQMaE1OeMBk4Ws9DTpQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
+To:     Javier Martinez Canillas <javierm@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux PWM List <linux-pwm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 4 Mar 2022 at 13:12, Kieran Bingham
-<kieran.bingham@ideasonboard.com> wrote:
->
-> Hi Jos=C3=A9
->
-> Quoting Kieran Bingham (2022-03-03 21:59:26)
-> > Quoting Jos=C3=A9 Exp=C3=B3sito (2022-03-03 18:37:20)
-> > > On Mon, Feb 28, 2022 at 11:24:36PM +0000, Kieran Bingham wrote:
-> > > > Hi Jos=C3=A9
-> > > >
-> > > > Quoting Jos=C3=A9 Exp=C3=B3sito (2022-02-28 18:39:54)
-> > > > > The function "drm_of_find_panel_or_bridge" has been deprecated in
-> > > > > favor of "devm_drm_of_get_bridge".
-> > > > >
-> > > > > Switch to the new function and reduce boilerplate.
-> > > > >
-> > > > > Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com=
->
-> > > > > ---
-> > > > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 8 +-------
-> > > > >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/=
-drm/bridge/ti-sn65dsi86.c
-> > > > > index dab8f76618f3..fb8e16ed7e90 100644
-> > > > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > > > > @@ -1232,15 +1232,9 @@ static int ti_sn_bridge_probe(struct auxil=
-iary_device *adev,
-> > > > >  {
-> > > > >         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.=
-parent);
-> > > > >         struct device_node *np =3D pdata->dev->of_node;
-> > > > > -       struct drm_panel *panel;
-> > > > >         int ret;
-> > > > >
-> > > > > -       ret =3D drm_of_find_panel_or_bridge(np, 1, 0, &panel, NUL=
-L);
-> > > > > -       if (ret)
-> > > > > -               return dev_err_probe(&adev->dev, ret,
-> > > > > -                                    "could not find any panel no=
-de\n");
-> > > > > -
-> > > > > -       pdata->next_bridge =3D devm_drm_panel_bridge_add(pdata->d=
-ev, panel);
-> > > > > +       pdata->next_bridge =3D devm_drm_of_get_bridge(pdata->dev,=
- np, 1, 0);
-> > > >
-> > > > Yikes, I was about to rely on this panel variable to determine if t=
-he
-> > > > device is a panel or a display port connector. (Well, I am relying =
-on
-> > > > it, and patches are hoping to be reposted this week).
-> > > >
-> > > > Is there expected to be another way to identify if the next connect=
-ion
-> > > > is a panel or a bridge?
-> > > >
-> > > > Regards
-> > >
-> > > Hi Kieran,
-> > >
-> > > I'm getting started in the DRM subsystem. I couldn't tell if there is=
- a
-> > > good way to access the panel pointer... I didn't manage to find it, b=
-ut
-> > > hopefully someone with more experience can point us to a solution.
-> > >
-> > > Since you mentioned display port, I'm not sure if in your case checki=
-ng
-> > > "pdata->next_bridge->type" could be good enough.
->
-> Actually, it is. And I think this is actually cleaner (both here, and in
-> the series I'm working on).
->
-> > > Anyway, if this patch causes you problems, please go ahead and ignore=
- it.
-> > > I'm sure the series you are working on are more important than removi=
-ng
-> > > a deprecated function :)
-> >
-> > If it's deprecated, I don't want to block it's removal. Hopefully I can
-> > resume my work on this tomorrow so I can check to see what I can parse.
-> > Thanks for the lead on the bridge type, I'm sure I've seen that around
-> > too so hopefully that's enough. If it is, I'll rebase my work on top of
-> > your patch and retest.
->
-> So - my series is now working with a bit of adaptation to run on top of
-> your patch, and I think the overall result is better. So:
->
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->
+Hi Javier,
 
-Applied to drm-misc-next.
+On Mon, Feb 14, 2022 at 2:37 PM Javier Martinez Canillas
+<javierm@redhat.com> wrote:
+> This adds a DRM driver for SSD1305, SSD1306, SSD1307 and SSD1309 Solomon
+> OLED display controllers.
+>
+> It's only the core part of the driver and a bus specific driver is needed
+> for each transport interface supported by the display controllers.
+>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+
+> --- /dev/null
+> +++ b/drivers/gpu/drm/solomon/ssd130x.c
+
+> +static int ssd130x_update_rect(struct ssd130x_device *ssd130x, u8 *buf,
+> +                              struct drm_rect *rect)
+> +{
+> +       unsigned int x = rect->x1;
+> +       unsigned int y = rect->y1;
+> +       unsigned int width = drm_rect_width(rect);
+> +       unsigned int height = drm_rect_height(rect);
+> +       unsigned int line_length = DIV_ROUND_UP(width, 8);
+> +       unsigned int pages = DIV_ROUND_UP(y % 8 + height, 8);
+> +       u32 array_idx = 0;
+> +       int ret, i, j, k;
+> +       u8 *data_array = NULL;
+> +
+> +       data_array = kcalloc(width, pages, GFP_KERNEL);
+> +       if (!data_array)
+> +               return -ENOMEM;
+> +
+> +       /*
+> +        * The screen is divided in pages, each having a height of 8
+> +        * pixels, and the width of the screen. When sending a byte of
+> +        * data to the controller, it gives the 8 bits for the current
+> +        * column. I.e, the first byte are the 8 bits of the first
+> +        * column, then the 8 bits for the second column, etc.
+> +        *
+> +        *
+> +        * Representation of the screen, assuming it is 5 bits
+> +        * wide. Each letter-number combination is a bit that controls
+> +        * one pixel.
+> +        *
+> +        * A0 A1 A2 A3 A4
+> +        * B0 B1 B2 B3 B4
+> +        * C0 C1 C2 C3 C4
+> +        * D0 D1 D2 D3 D4
+> +        * E0 E1 E2 E3 E4
+> +        * F0 F1 F2 F3 F4
+> +        * G0 G1 G2 G3 G4
+> +        * H0 H1 H2 H3 H4
+> +        *
+> +        * If you want to update this screen, you need to send 5 bytes:
+> +        *  (1) A0 B0 C0 D0 E0 F0 G0 H0
+> +        *  (2) A1 B1 C1 D1 E1 F1 G1 H1
+> +        *  (3) A2 B2 C2 D2 E2 F2 G2 H2
+> +        *  (4) A3 B3 C3 D3 E3 F3 G3 H3
+> +        *  (5) A4 B4 C4 D4 E4 F4 G4 H4
+> +        */
+> +
+> +       ret = ssd130x_set_col_range(ssd130x, ssd130x->col_offset + x, width);
+> +       if (ret < 0)
+> +               goto out_free;
+> +
+> +       ret = ssd130x_set_page_range(ssd130x, ssd130x->page_offset + y / 8, pages);
+> +       if (ret < 0)
+> +               goto out_free;
+> +
+> +       for (i = y / 8; i < y / 8 + pages; i++) {
+> +               int m = 8;
+> +
+> +               /* Last page may be partial */
+> +               if (8 * (i + 1) > ssd130x->height)
+> +                       m = ssd130x->height % 8;
+> +               for (j = x; j < x + width; j++) {
+> +                       u8 data = 0;
+> +
+> +                       for (k = 0; k < m; k++) {
+> +                               u8 byte = buf[(8 * i + k) * line_length + j / 8];
+
+As buf does not point to (0, 0), the above is not correct if rect.x1 !=
+0 or rect.y1 != 0.  After fixing that, writing more than one text line
+to the console works, but I still see an issue with updates where the
+rectangle size and/or position are not aligned to 8 pixels horizontally.
+Will do more investigation, and send fixes...
+
+> +                               u8 bit = (byte >> (j % 8)) & 1;
+> +
+> +                               data |= bit << k;
+> +                       }
+> +                       data_array[array_idx++] = data;
+> +               }
+> +       }
+> +
+> +       ret = ssd130x_write_data(ssd130x, data_array, width * pages);
+> +
+> +out_free:
+> +       kfree(data_array);
+> +       return ret;
+> +}
+> +
+> +static void ssd130x_clear_screen(struct ssd130x_device *ssd130x)
+> +{
+> +       u8 *buf = NULL;
+> +       struct drm_rect fullscreen = {
+> +               .x1 = 0,
+> +               .x2 = ssd130x->width,
+> +               .y1 = 0,
+> +               .y2 = ssd130x->height,
+> +       };
+> +
+> +       buf = kcalloc(ssd130x->width, ssd130x->height, GFP_KERNEL);
+
+This buffer is larger than needed. Will send a fix.
+
+> +       if (!buf)
+> +               return;
+> +
+> +       ssd130x_update_rect(ssd130x, buf, &fullscreen);
+> +
+> +       kfree(buf);
+> +}
+> +
+> +static int ssd130x_fb_blit_rect(struct drm_framebuffer *fb, const struct dma_buf_map *map,
+> +                               struct drm_rect *rect)
+> +{
+> +       struct ssd130x_device *ssd130x = drm_to_ssd130x(fb->dev);
+> +       void *vmap = map->vaddr; /* TODO: Use mapping abstraction properly */
+> +       int ret = 0;
+> +       u8 *buf = NULL;
+> +
+> +       buf = kcalloc(fb->width, fb->height, GFP_KERNEL);
+
+This buffer is much larger than needed. Will send a fix.
+
+> +       if (!buf)
+> +               return -ENOMEM;
+> +
+> +       drm_fb_xrgb8888_to_mono_reversed(buf, 0, vmap, fb, rect);
+> +
+> +       ssd130x_update_rect(ssd130x, buf, rect);
+> +
+> +       kfree(buf);
+> +
+> +       return ret;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
