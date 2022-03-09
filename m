@@ -2,136 +2,168 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C6F4D302D
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Mar 2022 14:44:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C59EE4D3095
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Mar 2022 14:53:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233176AbiCINok (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Mar 2022 08:44:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33596 "EHLO
+        id S232452AbiCINyn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Mar 2022 08:54:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233306AbiCINoY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Mar 2022 08:44:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CE233123434
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Mar 2022 05:43:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646833404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DNwPCyT8wmbEfZK8P/i6Q32UvGlt9pDVFx+4Sf2sAjk=;
-        b=SH+j8ZaidiY3ujgsXtr1hUOwLlbG1ilNMfkWt2oplXs8A4tnxU70cGauNWR9id/n+CY/AM
-        0SVweOq2iaCKG8MQxkBL0yXO3fMG9U0Rd2jtt62ZRUcwMZcJRmpCwT3a1LXgGS/KxZhP7t
-        01x2wptcVEhYji33bs04m+ZrtsCJ1OA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-111-7a5wco_WNiOxcLiGpza6qQ-1; Wed, 09 Mar 2022 08:43:23 -0500
-X-MC-Unique: 7a5wco_WNiOxcLiGpza6qQ-1
-Received: by mail-wm1-f69.google.com with SMTP id h131-20020a1c2189000000b003898de01de4so803211wmh.7
-        for <linux-pwm@vger.kernel.org>; Wed, 09 Mar 2022 05:43:23 -0800 (PST)
+        with ESMTP id S231553AbiCINyl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Mar 2022 08:54:41 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0420B3E70
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Mar 2022 05:53:41 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id t14so2020100pgr.3
+        for <linux-pwm@vger.kernel.org>; Wed, 09 Mar 2022 05:53:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ovut23uayW/dOdtWDs48IgggZZNTYQQls77E5j7ziJo=;
+        b=VIbYQAPb5RgoGgeAmm6IcIn34FSd/45TsQD5QpOmlspgU2+VrP96K3dsSWJP8m9JuD
+         UxUWdVtN6W+s0x7ONlSzJMnYdQknafc4EYiVvCwGbT85eGhBU3gk7EfC3hghMWzVns8D
+         p2JVOEiIgLCFslyAuFCU0ftqrzhHjuFIQzjrC/xzSf/40+ITXctmK1RiQDf0515ROaOp
+         K520bIOqwp3w/xIO4U7iMcJhcs6czKueeCQ15Rvl4bIXe5B/ILWxW6J2vB8pHQr2/5mJ
+         qeerGdcPbZdA9ESvHdjgZqdkBErURJuwmnD36r0wApRiYNrh4MxRPER65QzEUwhH4ZAf
+         43Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=DNwPCyT8wmbEfZK8P/i6Q32UvGlt9pDVFx+4Sf2sAjk=;
-        b=5Ko8bUF0Sdsuk1x4ic4a9vzMyTaw9lJ3oJ0XpDAJD/DvqY+NH2OnjoSV4zuK/qCK2X
-         mv36P2IsBtRWDsbvKG82LrpB5cmK22rdTkyFZI6WSZbUQUAWqe/0jjJsdhorl+dhRjlP
-         yZJypK2lXpUCiqtaT+0pcasJDc8K1u5odnuHirunN/qYUP4vdyGkHXY0RnqxLL0T6Ncz
-         pczPeJVYiLl1Nf3kobP5loKhWGhE0quR93n1p21szL053DtCpjC9O4RA1Xy55PEzS0G6
-         W0inYNWu0TPfwOSs/wIXx6cKD8rXcCVs/AkxIqFe9wbQu/R7W4DFSvxbcj7jXNlQD8aR
-         +d4w==
-X-Gm-Message-State: AOAM5316YlYm+ywYVzaBls+KrRbFkI7fmgy/mK7/qEPMiKjTm0qodoHC
-        fbEt5OhzCqEHVcQza38SZvsJQYZa68taRW2JFS4HiXACAZZPVa4xWNLR+qS4vdHRB8+AA4corXU
-        eDypOW5zvU3HzrNqjhbh/
-X-Received: by 2002:a7b:c8c2:0:b0:389:9746:847c with SMTP id f2-20020a7bc8c2000000b003899746847cmr7696221wml.156.1646833402440;
-        Wed, 09 Mar 2022 05:43:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxSJ8Ywl1f4YowLEemqy29qqclDeVGuf5169bKODTz+Q+zNq8dX3nn3Xb5FN4RwNdJP8Nhbdw==
-X-Received: by 2002:a7b:c8c2:0:b0:389:9746:847c with SMTP id f2-20020a7bc8c2000000b003899746847cmr7696194wml.156.1646833402233;
-        Wed, 09 Mar 2022 05:43:22 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id p11-20020adf9d8b000000b001f063deef80sm1653234wre.86.2022.03.09.05.43.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Mar 2022 05:43:19 -0800 (PST)
-Message-ID: <bbb4f088-e6f8-52b6-c673-6e30583cbe57@redhat.com>
-Date:   Wed, 9 Mar 2022 14:43:14 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ovut23uayW/dOdtWDs48IgggZZNTYQQls77E5j7ziJo=;
+        b=hVlDNru5M3K86clNeSqhhtY0yipbunwiT8du5q38slteN3wuiLq7MFR/syGIeu/YYG
+         OAQ7dYZH+2lJyfy/L74CHSzWUWRpMqy3ZsdmdoqNyxFYtI0BMUHTbpDQpC+bsL29TumK
+         0LQU2h0m1PwdBlYR5mgdGBEEkyI5FkkJNTZs/jl+jKI6G898fUO2eg2zqLYgt6mYf2Nt
+         NVanJdCJu8AE3Vvp4S+pYmjKVuUJuXppOsbALQu0IgF+JBSfTA8BdvH+LNVsSrGHHC7+
+         PsOabqVjNCiV8lodJG1mhHl81DRZtEzCGkeGX1B1yELmFPR1aU5WjMkUEIMfLQGPn60L
+         jZLg==
+X-Gm-Message-State: AOAM5315NPG6NaerLct4Q4iuaZd8H2cCN1cEIHKjzF0X2iyrFt6tahhp
+        OVxpdkG5aRNl8C+Fdj1ZrXNAmJEVi8EwdiQkhSvy0A==
+X-Google-Smtp-Source: ABdhPJyjDkbzTtT/IWdlit5fMgUxFD/5gMRctZhnTrPtEVnm6o5Bd+AYivSovav9lczEHpwiGcWbWq4H/k4r+8kqHVI=
+X-Received: by 2002:a05:6a00:24cf:b0:4f7:38ea:9fd5 with SMTP id
+ d15-20020a056a0024cf00b004f738ea9fd5mr6810052pfv.0.1646834021278; Wed, 09 Mar
+ 2022 05:53:41 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>
-References: <20220214133710.3278506-1-javierm@redhat.com>
- <20220214133710.3278506-4-javierm@redhat.com>
- <CAMuHMdU+29x4ZHLAiPiReyLKw_VYBCCLw0bCoQmw9s6sQ4Bxcw@mail.gmail.com>
- <fd6ec463-f46d-0813-5d87-a00c07739e01@redhat.com>
- <CAMuHMdUVWKee+Wm=EP49=5TAgqodPsMjkC2MHUfnyBDF_zt_Zg@mail.gmail.com>
-From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <CAMuHMdUVWKee+Wm=EP49=5TAgqodPsMjkC2MHUfnyBDF_zt_Zg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220228183955.25508-1-jose.exposito89@gmail.com>
+ <164609067646.2361501.15747139249939190799@Monstersaurus> <20220303183720.GA334969@elementary>
+ <164634476693.3683041.3124143336848085499@Monstersaurus> <164639597452.3492470.16590890112062103735@Monstersaurus>
+In-Reply-To: <164639597452.3492470.16590890112062103735@Monstersaurus>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Wed, 9 Mar 2022 14:53:30 +0100
+Message-ID: <CAG3jFytLEHbzOHoGSoTk3WSHUBDns64aZWPwUFmhrUrQzncXGg@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: switch to devm_drm_of_get_bridge
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        andrzej.hajda@intel.com, linux-pwm@vger.kernel.org,
+        jonas@kwiboo.se, airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
+        jernej.skrabec@gmail.com, thierry.reding@gmail.com,
+        laurent.pinchart@ideasonboard.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, maxime@cerno.tech
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Geert,
+On Fri, 4 Mar 2022 at 13:12, Kieran Bingham
+<kieran.bingham@ideasonboard.com> wrote:
+>
+> Hi Jos=C3=A9
+>
+> Quoting Kieran Bingham (2022-03-03 21:59:26)
+> > Quoting Jos=C3=A9 Exp=C3=B3sito (2022-03-03 18:37:20)
+> > > On Mon, Feb 28, 2022 at 11:24:36PM +0000, Kieran Bingham wrote:
+> > > > Hi Jos=C3=A9
+> > > >
+> > > > Quoting Jos=C3=A9 Exp=C3=B3sito (2022-02-28 18:39:54)
+> > > > > The function "drm_of_find_panel_or_bridge" has been deprecated in
+> > > > > favor of "devm_drm_of_get_bridge".
+> > > > >
+> > > > > Switch to the new function and reduce boilerplate.
+> > > > >
+> > > > > Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com=
+>
+> > > > > ---
+> > > > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 8 +-------
+> > > > >  1 file changed, 1 insertion(+), 7 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/=
+drm/bridge/ti-sn65dsi86.c
+> > > > > index dab8f76618f3..fb8e16ed7e90 100644
+> > > > > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > > > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+> > > > > @@ -1232,15 +1232,9 @@ static int ti_sn_bridge_probe(struct auxil=
+iary_device *adev,
+> > > > >  {
+> > > > >         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.=
+parent);
+> > > > >         struct device_node *np =3D pdata->dev->of_node;
+> > > > > -       struct drm_panel *panel;
+> > > > >         int ret;
+> > > > >
+> > > > > -       ret =3D drm_of_find_panel_or_bridge(np, 1, 0, &panel, NUL=
+L);
+> > > > > -       if (ret)
+> > > > > -               return dev_err_probe(&adev->dev, ret,
+> > > > > -                                    "could not find any panel no=
+de\n");
+> > > > > -
+> > > > > -       pdata->next_bridge =3D devm_drm_panel_bridge_add(pdata->d=
+ev, panel);
+> > > > > +       pdata->next_bridge =3D devm_drm_of_get_bridge(pdata->dev,=
+ np, 1, 0);
+> > > >
+> > > > Yikes, I was about to rely on this panel variable to determine if t=
+he
+> > > > device is a panel or a display port connector. (Well, I am relying =
+on
+> > > > it, and patches are hoping to be reposted this week).
+> > > >
+> > > > Is there expected to be another way to identify if the next connect=
+ion
+> > > > is a panel or a bridge?
+> > > >
+> > > > Regards
+> > >
+> > > Hi Kieran,
+> > >
+> > > I'm getting started in the DRM subsystem. I couldn't tell if there is=
+ a
+> > > good way to access the panel pointer... I didn't manage to find it, b=
+ut
+> > > hopefully someone with more experience can point us to a solution.
+> > >
+> > > Since you mentioned display port, I'm not sure if in your case checki=
+ng
+> > > "pdata->next_bridge->type" could be good enough.
+>
+> Actually, it is. And I think this is actually cleaner (both here, and in
+> the series I'm working on).
+>
+> > > Anyway, if this patch causes you problems, please go ahead and ignore=
+ it.
+> > > I'm sure the series you are working on are more important than removi=
+ng
+> > > a deprecated function :)
+> >
+> > If it's deprecated, I don't want to block it's removal. Hopefully I can
+> > resume my work on this tomorrow so I can check to see what I can parse.
+> > Thanks for the lead on the bridge type, I'm sure I've seen that around
+> > too so hopefully that's enough. If it is, I'll rebase my work on top of
+> > your patch and retest.
+>
+> So - my series is now working with a bit of adaptation to run on top of
+> your patch, and I think the overall result is better. So:
+>
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>
 
-On 3/9/22 13:56, Geert Uytterhoeven wrote:
-> Hi Javier,
-> 
-> On Wed, Mar 9, 2022 at 1:14 PM Javier Martinez Canillas
-> <javierm@redhat.com> wrote:
->> On 3/8/22 17:30, Geert Uytterhoeven wrote:
->>> Unfortunately a regression was introduced since your v3: printed
->>> text is mirrored upside-down. I.e. "E" is rendered correctly, but "L"
->>> turns into "Γ" (Greek Gamma).
->>> I suspect something went wrong with the display initialization
->>> sequence.
->>>
->>
->> Could you please try Chen-Yu's fix for the COM scan direction mask ?
->>
->> https://lists.freedesktop.org/archives/dri-devel/2022-March/345915.html
->>
->> I made a mistake when converting to use the GENMASK() and FIELD_PREP()
->> macros in v4 as suggested by Andy. The SSD130X_SET_COM_SCAN_DIR_MASK
->> wasn't correct which would explain the output to be vertically flipped.
-> 
-> Thanks, confirmed fixed.
-> 
-
-Great, thanks a lot for testing and the confirmation!
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
-
+Applied to drm-misc-next.
