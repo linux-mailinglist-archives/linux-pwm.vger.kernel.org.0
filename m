@@ -2,165 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CD064DA7D9
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Mar 2022 03:15:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03D754DAAE0
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Mar 2022 07:52:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232659AbiCPCQe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Mar 2022 22:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59056 "EHLO
+        id S1353974AbiCPGxu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Mar 2022 02:53:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241389AbiCPCQd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Mar 2022 22:16:33 -0400
-Received: from 189.cn (ptr.189.cn [183.61.185.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E126BCD7;
-        Tue, 15 Mar 2022 19:15:18 -0700 (PDT)
-HMM_SOURCE_IP: 10.64.8.41:49050.1605950715
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-123.150.8.43 (unknown [10.64.8.41])
-        by 189.cn (HERMES) with SMTP id 1994D1002AD;
-        Wed, 16 Mar 2022 10:15:12 +0800 (CST)
-Received: from  ([123.150.8.43])
-        by gateway-153622-dep-749df8664c-mvcg4 with ESMTP id 8f25d97f08c443a3a48ae68ce49704ae for johan@kernel.org;
-        Wed, 16 Mar 2022 10:15:18 CST
-X-Transaction-ID: 8f25d97f08c443a3a48ae68ce49704ae
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 123.150.8.43
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-From:   Song Chen <chensong_2000@189.cn>
-To:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, greybus-dev@lists.linaro.org,
-        linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, elder@ieee.org
-Cc:     Song Chen <chensong_2000@189.cn>
-Subject: [PATCH v5] staging: greybus: introduce pwm_ops::apply
-Date:   Wed, 16 Mar 2022 10:21:25 +0800
-Message-Id: <1647397285-30061-1-git-send-email-chensong_2000@189.cn>
-X-Mailer: git-send-email 2.7.4
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S1351576AbiCPGxt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Mar 2022 02:53:49 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC6B5DA78
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Mar 2022 23:52:35 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nUNVs-0006dA-FP; Wed, 16 Mar 2022 07:52:04 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nUNVo-000zbf-Sq; Wed, 16 Mar 2022 07:51:59 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nUNVm-009UG4-Qs; Wed, 16 Mar 2022 07:51:58 +0100
+Date:   Wed, 16 Mar 2022 07:51:55 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     mail@conchuod.ie, sboyd@kernel.org, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        Atish Patra <atishp@rivosinc.com>, conor.dooley@microchip.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        lee.jones@linaro.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 00/11] Update the Icicle Kit device tree
+Message-ID: <20220316065155.tuuq2k4d5dczwtq2@pengutronix.de>
+References: <c94f9c0a-6dbe-c1f4-daff-e4d29f3ace02@conchuod.ie>
+ <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bkpwvtdvshkxkizn"
+Content-Disposition: inline
+In-Reply-To: <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Introduce newer .apply function in pwm_ops to replace legacy operations,
-like enable, disable, config and set_polarity.
 
-This guarantees atomic changes of the pwm controller configuration.
+--bkpwvtdvshkxkizn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Song Chen <chensong_2000@189.cn>
+On Wed, Mar 09, 2022 at 11:07:03PM -0800, Palmer Dabbelt wrote:
+> On Wed, 23 Feb 2022 12:48:16 PST (-0800), mail@conchuod.ie wrote:
+> > dt-bindings should be set now, so if you're still happy to take the
+> > series via riscv, that'd be great. i2c, spi & usb patches ended going
+> > via the sub-system trees (and have been dropped from the series), in
+> > case those generate warnings for you.
+>=20
+> Something went off the rails in email land and #0 and #2 didn't end up in=
+ my
+> patch queue but the rest did.  Luckily enough made it through that it did=
+n't
+> get lost, and lore's pretty great so this sort of thing isn't that big of=
+ a
+> deal these days.  That said, email is a bit of a black box so figured I'd
+> give you a heads up.
 
----
-v2:
-1, define duty_cycle and period as u64 in gb_pwm_config_operation.
-2, define duty and period as u64 in gb_pwm_config_request.
-3, disable before configuring duty and period if the eventual goal
-   is a disabled state.
+One of the patches in next now is
+df77f7735786ece2fcd8875b036a511ffcadfab6. It would be great if you could
+fix your patch application setup to not mangle names. Here it's
 
-v3:
-Regarding duty_cycle and period, I read more discussion in this thread,
-min, warn or -EINVAL, seems no perfect way acceptable for everyone.
-How about we limit their value to INT_MAX and throw a warning at the
-same time when they are wrong?
+	Acked-by: Uwe Kleine-K=3DF6nig <u.kleine-koenig@pengutronix.de>
 
-v4:
-1, explain why legacy operations are replaced.
-2, cap the value of period and duty to U32_MAX.
+where my =F6 was recorded as =3DF6. :-\
 
-v5:
-1, revise commit message.
----
- drivers/staging/greybus/pwm.c | 59 +++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 24 deletions(-)
+Best regards
+Uwe
 
-diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-index 891a6a672378..3add3032678b 100644
---- a/drivers/staging/greybus/pwm.c
-+++ b/drivers/staging/greybus/pwm.c
-@@ -204,43 +204,54 @@ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
- }
- 
--static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			 int duty_ns, int period_ns)
-+static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			const struct pwm_state *state)
- {
-+	int err;
-+	bool enabled = pwm->state.enabled;
-+	u64 period = state->period;
-+	u64 duty_cycle = state->duty_cycle;
- 	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 
--	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
--};
-+	/* set polarity */
-+	if (state->polarity != pwm->state.polarity) {
-+		if (enabled) {
-+			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
-+			enabled = false;
-+		}
-+		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
-+		if (err)
-+			return err;
-+	}
- 
--static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
--			       enum pwm_polarity polarity)
--{
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
-+	if (!state->enabled) {
-+		if (enabled)
-+			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
-+		return 0;
-+	}
- 
--	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
--};
-+	/* set period and duty cycle*/
-+	if (period > U32_MAX)
-+		period = U32_MAX;
- 
--static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
-+	if (duty_cycle > period)
-+		duty_cycle = period;
- 
--	return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
--};
-+	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_cycle, period);
-+	if (err)
-+		return err;
- 
--static void gb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
-+	/* enable/disable */
-+	if (!enabled)
-+		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
- 
--	gb_pwm_disable_operation(pwmc, pwm->hwpwm);
--};
-+	return 0;
-+}
- 
- static const struct pwm_ops gb_pwm_ops = {
- 	.request = gb_pwm_request,
- 	.free = gb_pwm_free,
--	.config = gb_pwm_config,
--	.set_polarity = gb_pwm_set_polarity,
--	.enable = gb_pwm_enable,
--	.disable = gb_pwm_disable,
-+	.apply = gb_pwm_apply,
- 	.owner = THIS_MODULE,
- };
- 
--- 
-2.25.1
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--bkpwvtdvshkxkizn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIxiQgACgkQwfwUeK3K
+7AnaOAf+KYzjoQhzMwQBCvuk5Nuy19InDXSbXr3hGJaP1HavbuLPFGVesC/ny0hy
+pYoeu3A8RpcK8VCbPnl3E8baLLrWlzzPEjbPzb0hrbGvu79Bkiire4nM9GmnCBKa
+uYWdxrbt8s4NRrvHmeqf3IAaXe3N2T98KWSjklHsqD10/S/QEBNphY6G9mcXi0Aj
+28imRZDsWhU2uTpe4UpbEXAq+GP3MzII3K3+gEtJmsRADPmkVcZlHVPzeABY9PWh
+TIEcWRwydEsaMDxUpl4tEv+lWTt3DpRp65cMC6ElJk7lWVIpIAQYLUYjhoQSIYsP
+XP549wvifCmIMBHY/C7IBeHUgwjl6w==
+=t8CP
+-----END PGP SIGNATURE-----
+
+--bkpwvtdvshkxkizn--
