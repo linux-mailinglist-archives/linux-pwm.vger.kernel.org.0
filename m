@@ -2,118 +2,249 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03D754DAAE0
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Mar 2022 07:52:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A4B24DB4AD
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Mar 2022 16:16:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353974AbiCPGxu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Mar 2022 02:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
+        id S1356966AbiCPPQY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Mar 2022 11:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351576AbiCPGxt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Mar 2022 02:53:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC6B5DA78
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Mar 2022 23:52:35 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nUNVs-0006dA-FP; Wed, 16 Mar 2022 07:52:04 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nUNVo-000zbf-Sq; Wed, 16 Mar 2022 07:51:59 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nUNVm-009UG4-Qs; Wed, 16 Mar 2022 07:51:58 +0100
-Date:   Wed, 16 Mar 2022 07:51:55 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     mail@conchuod.ie, sboyd@kernel.org, lewis.hanly@microchip.com,
-        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
-        Atish Patra <atishp@rivosinc.com>, conor.dooley@microchip.com,
-        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
-        lee.jones@linaro.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, geert@linux-m68k.org,
-        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v7 00/11] Update the Icicle Kit device tree
-Message-ID: <20220316065155.tuuq2k4d5dczwtq2@pengutronix.de>
-References: <c94f9c0a-6dbe-c1f4-daff-e4d29f3ace02@conchuod.ie>
- <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014>
+        with ESMTP id S1357272AbiCPPQR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Mar 2022 11:16:17 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473EF5BD2C
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Mar 2022 08:14:34 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id k25so2662370iok.8
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Mar 2022 08:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=kYdVKa8HQQd4XhmmDIeciSc5gdT8cpPi0Vqsz/8eVFs=;
+        b=LEjgeFBJFbL3lZQF1YeGU0E+75QxZD2INUycvw1BwX3z6jCdW6/KYCemiQE1gCip+y
+         cOH1P4yGx0BpQkUCjqTQi2ksWIDFrlTTx5+/2YGWkMpx03ZwuCfxG8Kez7j+3bhzni/K
+         c1E2+72+psCSK67LsXid7vffgQGOB+MSoLbgE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=kYdVKa8HQQd4XhmmDIeciSc5gdT8cpPi0Vqsz/8eVFs=;
+        b=TZTuhYNa5Jm/nI7NSc0/SqMnpj2IK7dtHlT6ErqCGhjhxqz4dKcABYvHcf+txm1I3p
+         RPkTPHS58D2EuP5gOX5FEQj38GZzS2tvv6BIy+tBfa7+WgM0MrJajEnWdzrHnlP98iZU
+         5pI7BcJr6bPIEqqPRBZDLPNP2lii6c1LvLPu33kPiRYp6jH8Hy/L/a7Ue7iGcAvZclf8
+         dJCNDVLG5ZkCZzIPiRQIKv0WkKaiJcZaJNtwkDetwIi85oBnIVuW9oGBZWiv03EPp48c
+         qtyiknXKuRwZLzsEhx8DMLi5KZ5W+raA47yagaDjsKFYxbYrZ7IH5qQV4mloWkMdd/S7
+         G1YQ==
+X-Gm-Message-State: AOAM530evR8DeGwV0K+piuCuD2QZyOfPtlg5qUGFGvQ9RgG+Wy+42O89
+        S3PjQJ8jYXKShpq5xvCX6x+jCA==
+X-Google-Smtp-Source: ABdhPJxrV6QRj/lzoH0KaD2xcOeZ79JwmoEE/P4htnTFDFGnW/pJKO/xmiSlSWBr8Tbkzn4uDn1SXQ==
+X-Received: by 2002:a5d:83c8:0:b0:604:c09b:259c with SMTP id u8-20020a5d83c8000000b00604c09b259cmr256148ior.106.1647443673559;
+        Wed, 16 Mar 2022 08:14:33 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id s13-20020a6bdc0d000000b006408888551dsm1114562ioc.8.2022.03.16.08.14.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Mar 2022 08:14:32 -0700 (PDT)
+Message-ID: <49f18070-0215-8475-907b-487d1e01c15c@ieee.org>
+Date:   Wed, 16 Mar 2022 10:14:30 -0500
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bkpwvtdvshkxkizn"
-Content-Disposition: inline
-In-Reply-To: <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v5] staging: greybus: introduce pwm_ops::apply
+Content-Language: en-US
+To:     Song Chen <chensong_2000@189.cn>, johan@kernel.org,
+        elder@kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, greybus-dev@lists.linaro.org,
+        linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+References: <1647397285-30061-1-git-send-email-chensong_2000@189.cn>
+From:   Alex Elder <elder@ieee.org>
+In-Reply-To: <1647397285-30061-1-git-send-email-chensong_2000@189.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 3/15/22 9:21 PM, Song Chen wrote:
+> Introduce newer .apply function in pwm_ops to replace legacy operations,
+> like enable, disable, config and set_polarity.
 
---bkpwvtdvshkxkizn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's not just "like" those four, it replaces *exactly* those
+four operations.
 
-On Wed, Mar 09, 2022 at 11:07:03PM -0800, Palmer Dabbelt wrote:
-> On Wed, 23 Feb 2022 12:48:16 PST (-0800), mail@conchuod.ie wrote:
-> > dt-bindings should be set now, so if you're still happy to take the
-> > series via riscv, that'd be great. i2c, spi & usb patches ended going
-> > via the sub-system trees (and have been dropped from the series), in
-> > case those generate warnings for you.
->=20
-> Something went off the rails in email land and #0 and #2 didn't end up in=
- my
-> patch queue but the rest did.  Luckily enough made it through that it did=
-n't
-> get lost, and lore's pretty great so this sort of thing isn't that big of=
- a
-> deal these days.  That said, email is a bit of a black box so figured I'd
-> give you a heads up.
+> This guarantees atomic changes of the pwm controller configuration.
+> 
+> Signed-off-by: Song Chen <chensong_2000@189.cn>
 
-One of the patches in next now is
-df77f7735786ece2fcd8875b036a511ffcadfab6. It would be great if you could
-fix your patch application setup to not mangle names. Here it's
+I see that support for the "atomic" ->apply operation was added
+by commit 5ec803edcb703 ("pwm: Add core infrastructure to allow
+atomic updates
+").  And what you're doing here is removing the
+enable, disable, set_polarity, and config operations provided
+in this driver to use the new apply callback instead.
 
-	Acked-by: Uwe Kleine-K=3DF6nig <u.kleine-koenig@pengutronix.de>
+And that in turn depends on a prior commit (and another commit
+or two after that) 43a276b003ed2 ("pwm: Introduce the pwm_state
+concept
+") to wrap the current state stored in the device in a
+sub-structure.
 
-where my =F6 was recorded as =3DF6. :-\
+As I understand it, if the period, duty cycle, polarity, usage power,
+or enabled state of the device differs from the current state of
+the device, the new ->apply callback changes the device's state to
+match what is requested.
 
-Best regards
-Uwe
+Please see my comments below.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> ---
+> v2:
+> 1, define duty_cycle and period as u64 in gb_pwm_config_operation.
+> 2, define duty and period as u64 in gb_pwm_config_request.
+> 3, disable before configuring duty and period if the eventual goal
+>     is a disabled state.
+> 
+> v3:
+> Regarding duty_cycle and period, I read more discussion in this thread,
+> min, warn or -EINVAL, seems no perfect way acceptable for everyone.
+> How about we limit their value to INT_MAX and throw a warning at the
+> same time when they are wrong?
+> 
+> v4:
+> 1, explain why legacy operations are replaced.
+> 2, cap the value of period and duty to U32_MAX.
+> 
+> v5:
+> 1, revise commit message.
+> ---
+>   drivers/staging/greybus/pwm.c | 59 +++++++++++++++++++++--------------
+>   1 file changed, 35 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+> index 891a6a672378..3add3032678b 100644
+> --- a/drivers/staging/greybus/pwm.c
+> +++ b/drivers/staging/greybus/pwm.c
+> @@ -204,43 +204,54 @@ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>   	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
+>   }
+>   
+> -static int gb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> -			 int duty_ns, int period_ns)
+> +static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			const struct pwm_state *state)
+>   {
+> +	int err;
+> +	bool enabled = pwm->state.enabled;
+> +	u64 period = state->period;
+> +	u64 duty_cycle = state->duty_cycle;
 
---bkpwvtdvshkxkizn
-Content-Type: application/pgp-signature; name="signature.asc"
+The use of local variables here is inconsistent, and that
+can be confusing.  Specifically, the "enabled" variable
+represents the *current* state, while the "period" and
+"duty_cycle" variables represent the *desired* state.  To
+avoid confusion, if you're going to use local variables
+like that, they should all represent *either* the current
+state *or* the new state.  Please update your patch to
+do one or the other.
 
------BEGIN PGP SIGNATURE-----
+>   	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+>   
+> -	return gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_ns, period_ns);
+> -};
+> +	/* set polarity */
+> +	if (state->polarity != pwm->state.polarity) {
+> +		if (enabled) {
+> +			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+> +			enabled = false;
+> +		}
+> +		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
+> +		if (err)
+> +			return err;
+> +	}
+>   
+> -static int gb_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+> -			       enum pwm_polarity polarity)
+> -{
+> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+> +	if (!state->enabled) {
+> +		if (enabled)
+> +			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+> +		return 0;
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIxiQgACgkQwfwUeK3K
-7AnaOAf+KYzjoQhzMwQBCvuk5Nuy19InDXSbXr3hGJaP1HavbuLPFGVesC/ny0hy
-pYoeu3A8RpcK8VCbPnl3E8baLLrWlzzPEjbPzb0hrbGvu79Bkiire4nM9GmnCBKa
-uYWdxrbt8s4NRrvHmeqf3IAaXe3N2T98KWSjklHsqD10/S/QEBNphY6G9mcXi0Aj
-28imRZDsWhU2uTpe4UpbEXAq+GP3MzII3K3+gEtJmsRADPmkVcZlHVPzeABY9PWh
-TIEcWRwydEsaMDxUpl4tEv+lWTt3DpRp65cMC6ElJk7lWVIpIAQYLUYjhoQSIYsP
-XP549wvifCmIMBHY/C7IBeHUgwjl6w==
-=t8CP
------END PGP SIGNATURE-----
+If you are disabling the device, you return without updating the
+period and duty cycle.  But you *do* set polarity.  Is that
+required by the PWM API?  (I don't actually know.)  Or can the
+polarity setting be simply ignored as well if the new state is
+disabled?
 
---bkpwvtdvshkxkizn--
+Also, if the polarity changed, the device will have already been
+disabled above, so there's no need to do so again (and perhaps
+it might be a bad thing to do twice?).
+
+> +	}
+>   
+> -	return gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, polarity);
+> -};
+
+Since you're clamping the values to 32 bits here, your comment
+should explain why (because Greybus uses 32-bit values here,
+while the API supports 64 bit values).  That would be a much
+more useful piece of information than "set period and duty cycle".
+
+> +	/* set period and duty cycle*/
+
+Include a space before "*/" in your comments.
+
+> +	if (period > U32_MAX)
+> +		period = U32_MAX;
+>   
+> -static int gb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+> +	if (duty_cycle > period)
+> +		duty_cycle = period;
+>   
+> -	return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+> -};
+> +	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_cycle, period);
+> +	if (err)
+> +		return err;
+
+What if the new state set usage_power to true?  It would
+be ignored here.  Is it OK to silently ignore it?  Even
+if it is, a comment about that would be good to see, so
+we know it's intentional.
+
+					-Alex
+
+> -static void gb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+> +	/* enable/disable */
+> +	if (!enabled)
+> +		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
+>   
+> -	gb_pwm_disable_operation(pwmc, pwm->hwpwm);
+> -};
+> +	return 0;
+> +}
+>   
+>   static const struct pwm_ops gb_pwm_ops = {
+>   	.request = gb_pwm_request,
+>   	.free = gb_pwm_free,
+> -	.config = gb_pwm_config,
+> -	.set_polarity = gb_pwm_set_polarity,
+> -	.enable = gb_pwm_enable,
+> -	.disable = gb_pwm_disable,
+> +	.apply = gb_pwm_apply,
+>   	.owner = THIS_MODULE,
+>   };
+>   
+
