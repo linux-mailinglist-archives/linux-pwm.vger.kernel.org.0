@@ -2,67 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E93F94E2CCD
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Mar 2022 16:48:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D8CA4E3255
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Mar 2022 22:27:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244570AbiCUPtb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Mar 2022 11:49:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
+        id S229693AbiCUV1E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Mar 2022 17:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350569AbiCUPt3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Mar 2022 11:49:29 -0400
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139BA25F2;
-        Mon, 21 Mar 2022 08:47:58 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id yy13so30737580ejb.2;
-        Mon, 21 Mar 2022 08:47:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=BjjQzcelBwwnS4d36yhGsVN+lSuVcK+I/7pFheIbDzM=;
-        b=LRkhqifFKkt9kkr+q+ZsSbuS1435iuBwr2Bq7RbtCahgzSnR6smsG6Pco/xwz0PnIg
-         SBGrtQ9dP5OcI/sDkZEic3IbRwkpmvxDZ9CMVP7MWfrUjQoaKJJ5G1LKTlGWZv2IPlGI
-         Y8BktMqG9+MhH1HNBt3dZLa6ZlkV3FeCIuGf7ryTzmQV9Y93Y99nIWKv5InRuXRkr2S8
-         ZdTwV4d4QgWtHTL8ue4tdox/WWb4+uqESAHqUux1v5nj7tOhOeSEwJF0X9p0fIJ6Nmy2
-         IxYtOXpBQtZ4K436m8WUFJrFVH3XI8y6qdWvdRVpjuJwnJ7+g5rpcGq/V8q+YB+LzDZx
-         IoWA==
-X-Gm-Message-State: AOAM531bj90fpW/9Z0edgPu1An0fBVYfiOckfvSG1wUSQo+VW+OPIbHA
-        7cJbTS2F6HGNenby2BRcCw0=
-X-Google-Smtp-Source: ABdhPJzqCtE5fkFOXCFcxOIHdOKfzJMEG7hn6xXZViUU/Ej/rG/kJINxuxhg/ic7+tAuhF/oYAgKMg==
-X-Received: by 2002:a17:907:7e96:b0:6da:f7ee:4a25 with SMTP id qb22-20020a1709077e9600b006daf7ee4a25mr20829508ejc.436.1647877676402;
-        Mon, 21 Mar 2022 08:47:56 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.googlemail.com with ESMTPSA id g13-20020a50bf4d000000b00410d407da2esm8259784edk.13.2022.03.21.08.47.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Mar 2022 08:47:55 -0700 (PDT)
-Message-ID: <09b4b714-4fb5-f2af-5a88-b48cbff35b7d@kernel.org>
-Date:   Mon, 21 Mar 2022 16:47:54 +0100
+        with ESMTP id S229506AbiCUV1D (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Mar 2022 17:27:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64E73476DC;
+        Mon, 21 Mar 2022 14:25:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 728526123B;
+        Mon, 21 Mar 2022 21:25:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE72C340EE;
+        Mon, 21 Mar 2022 21:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647897909;
+        bh=AKwmwLhwJETomCoi21Fza1mV0uLKeQfDm9gRO+vTHvI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MPxIKdPtpK4j7VKUCmDV+2tDsGY9qCuYZpT+uubn/K/7ZK4NFb15xCb7hlq9Udn/H
+         MyPl1Bk+q6LddZD/d1AuanZomshNMckC1t6J89dbe9aPrfrj2jV4VFMJ3LFFxatinG
+         8nGAUkv7JdOv+NClrOsXYg45DTg1HkU6jx8Tah4NtiEPqFXEyrdreKugKQTkRyWKrc
+         kbzZnCeF2Un5lZJqo4jqCFdILkwrWDyU06wV1wmVZsTgJcdUOiSAOHWV7SefJETDcd
+         d0N8EVw6gxjuXcIzFplBRj+SKCagjPJi8dToTNjOutjni0pgTncZZ2AW7rlyvnpKQx
+         iX6oJ6aiNI/GQ==
+Received: by mail-ej1-f53.google.com with SMTP id a8so32466468ejc.8;
+        Mon, 21 Mar 2022 14:25:09 -0700 (PDT)
+X-Gm-Message-State: AOAM530UiAgnZOXXy/T2Qgqek3nLWgM81QfN7gURhHXNic1iW4KlyRmM
+        mZkSd3BqKY2JkMoOqSZuzLMkbWejpS7r2+fJFQ==
+X-Google-Smtp-Source: ABdhPJzcUrtfN5C6Cp1DYIuKWWPjCKj++GrqTdBuxiMIr8dvQj2FvXNQlVmjtpr5ucAsK90IFEeDROYXBp42Lkqhk70=
+X-Received: by 2002:a17:906:5418:b0:6df:a07f:764b with SMTP id
+ q24-20020a170906541800b006dfa07f764bmr19268057ejo.27.1647897908076; Mon, 21
+ Mar 2022 14:25:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 3/4] dt-bindings: update google,cros-ec-pwm documentation
-Content-Language: en-US
-To:     Fabio Baltieri <fabiobaltieri@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
+References: <1647237097-29172-1-git-send-email-hammerh0314@gmail.com> <1647237097-29172-3-git-send-email-hammerh0314@gmail.com>
+In-Reply-To: <1647237097-29172-3-git-send-email-hammerh0314@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 21 Mar 2022 16:24:56 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJzbWejb0=XY+xi17n3P1QHWgHYhY1vM3cBBHOqRQ+4xA@mail.gmail.com>
+Message-ID: <CAL_JsqJzbWejb0=XY+xi17n3P1QHWgHYhY1vM3cBBHOqRQ+4xA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pwm: sunplus-pwm: Add Sunplus SoC SP7021 PWM Driver
+To:     Hammer Hsieh <hammerh0314@gmail.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        chrome-platform@lists.linux.dev, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220321143222.2523373-1-fabiobaltieri@chromium.org>
- <20220321143222.2523373-4-fabiobaltieri@chromium.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20220321143222.2523373-4-fabiobaltieri@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>,
+        "hammer.hsieh" <hammer.hsieh@sunplus.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,28 +67,18 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 21/03/2022 15:32, Fabio Baltieri wrote:
-> Update google,cros-ec-pwm node documentation to mention the
-> google,use_pwm_type property.
-> 
-> Signed-off-by: Fabio Baltieri <fabiobaltieri@chromium.org>
-> ---
->  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml         | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
-> index 4cfbffd8414a..2224e8e07029 100644
-> --- a/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml
-> @@ -19,6 +19,12 @@ description: |
->  properties:
->    compatible:
->      const: google,cros-ec-pwm
-> +
-> +  google,use_pwm_type:
+On Mon, Mar 14, 2022 at 12:51 AM Hammer Hsieh <hammerh0314@gmail.com> wrote:
+>
+> Add Sunplus SoC SP7021 PWM Driver
+>
+> Signed-off-by: Hammer Hsieh <hammerh0314@gmail.com>
 
-Hyphens, not underscores.
+Your message is corrupted because charset is set to 'y' which is not valid:
 
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 
-Best regards,
-Krzysztof
+This is due to git-send-email asking you what encoding to use and you
+entered 'y' instead of <enter> to accept the default of UTF-8.
+
+Rob
