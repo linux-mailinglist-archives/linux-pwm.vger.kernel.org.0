@@ -2,31 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3851F4E6B54
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Mar 2022 00:50:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF5CE4E6B52
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Mar 2022 00:50:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352674AbiCXXve (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Mar 2022 19:51:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36142 "EHLO
+        id S1356647AbiCXXvf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Mar 2022 19:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357759AbiCXXuI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Mar 2022 19:50:08 -0400
+        with ESMTP id S1357833AbiCXXuW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Mar 2022 19:50:22 -0400
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325713B3F3;
-        Thu, 24 Mar 2022 16:48:30 -0700 (PDT)
-X-UUID: 25912c82011a4dd9bf92c952f98c2cfa-20220325
-X-UUID: 25912c82011a4dd9bf92c952f98c2cfa-20220325
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEACD3B3F3;
+        Thu, 24 Mar 2022 16:48:49 -0700 (PDT)
+X-UUID: b9ac444f49c447358efb66243cb64152-20220325
+X-UUID: b9ac444f49c447358efb66243cb64152-20220325
 Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
         (envelope-from <miles.chen@mediatek.com>)
         (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 50517446; Fri, 25 Mar 2022 07:48:25 +0800
+        with ESMTP id 2025605287; Fri, 25 Mar 2022 07:48:45 +0800
 Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Fri, 25 Mar 2022 07:48:24 +0800
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 25 Mar 2022 07:48:43 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 25 Mar 2022 07:48:23 +0800
+ Transport; Fri, 25 Mar 2022 07:48:43 +0800
 From:   Miles Chen <miles.chen@mediatek.com>
 To:     <xinlei.lee@mediatek.com>
 CC:     <Project_Global_Chrome_Upstream_Group@mediatek.com>,
@@ -38,60 +37,56 @@ CC:     <Project_Global_Chrome_Upstream_Group@mediatek.com>,
         <matthias.bgg@gmail.com>, <rex-bc.chen@mediatek.com>,
         <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
         <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v4,2/6] dt-bindings: pwm: Remove compatible for MediaTek MT8167
-Date:   Fri, 25 Mar 2022 07:48:24 +0800
-Message-ID: <20220324234824.20588-1-miles.chen@mediatek.com>
+Subject: Re: [PATCH v4,1/6] dt-bindings: pwm: Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml format
+Date:   Fri, 25 Mar 2022 07:48:43 +0800
+Message-ID: <20220324234843.20641-1-miles.chen@mediatek.com>
 X-Mailer: git-send-email 2.18.0
-In-Reply-To: <1648101804-3584-3-git-send-email-xinlei.lee@mediatek.com>
-References: <1648101804-3584-3-git-send-email-xinlei.lee@mediatek.com>
+In-Reply-To: <1648101804-3584-2-git-send-email-xinlei.lee@mediatek.com>
+References: <1648101804-3584-2-git-send-email-xinlei.lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
-        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Xinlei,
-
-> Remove dt-binding documentation of pwm for MediaTek MT8167 SoC.
-> I did not find the compatiable corresponding to mt8167 
-> in the latest version of the pwm-mtk-disp.c driver file.
-> It may be disabled but not updated to the dt_binding file.
+> Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml format as suggested by maintainer
 > 
 > Signed-off-by: Xinlei Lee <xinlei.lee@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
->  Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 3 ---
->  1 file changed, 3 deletions(-)
+>  .../bindings/pwm/mediatek,pwm-disp.yaml       | 65 +++++++++++++++++++
+>  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 44 -------------
+>  2 files changed, 65 insertions(+), 44 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
 > 
 > diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> index f844695d605a..f18e8bbd13d2 100644
-> --- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+> new file mode 100644
+> index 000000000000..f844695d605a
+> --- /dev/null
 > +++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> @@ -20,9 +20,6 @@ properties:
->            - mediatek,mt2701-disp-pwm
->            - mediatek,mt6595-disp-pwm
->            - mediatek,mt8173-disp-pwm
-> -      - items:
-> -          - const: mediatek,mt8167-disp-pwm
-> -          - const: mediatek,mt8173-disp-pwm
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/mediatek,pwm-disp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Mediatek DISP_PWM Controller Device Tree Bindings
 
-I checked:
-grep -e 'mediatek,mt8167-disp-pwm' -e 'mediatek,mt8173-disp-pwm' drivers/ -RnH
-drivers/gpu/drm/mediatek/mtk_drm_drv.c:486:     { .compatible = "mediatek,mt8167-disp-pwm",
-drivers/gpu/drm/mediatek/mtk_drm_drv.c:488:     { .compatible = "mediatek,mt8173-disp-pwm",
-
-mediatek,mt8167-disp-pwm and mediatek,mt8173-disp-pwm are used in drivers/gpu/drm/mediatek/mtk_drm_drv.c.
-(added by commit 58e4c5398200 ("drm/mediatek: Add support for main DDP path on MT8167"))
-
-Is it ok to remove mediatek,mt8167-disp-pwm and mediatek,mt8173-disp-pwm?
+s/Mediatek/MediaTek/
 
 Thanks,
 Miles
->  
->    reg:
->      maxItems: 1
+> +
+> +maintainers:
+> +  - Jitao Shi <jitao.shi@mediatek.com>
+> +  - Xinlei Lee <xinlei.lee@mediatek.com>
+> +
+> +allOf:
