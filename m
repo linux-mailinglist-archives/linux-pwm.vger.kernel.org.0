@@ -2,82 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 228794E55CD
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Mar 2022 16:58:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C188C4E5E69
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Mar 2022 07:03:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245313AbiCWQAI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Mar 2022 12:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46162 "EHLO
+        id S242227AbiCXGFK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Mar 2022 02:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231529AbiCWQAH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Mar 2022 12:00:07 -0400
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E419F76669;
-        Wed, 23 Mar 2022 08:58:33 -0700 (PDT)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-de3f2a19c8so2126222fac.1;
-        Wed, 23 Mar 2022 08:58:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NG0MaL/m0Ugiyb4lvw9XfPJHFjK/vQPjCIXYdlzKaG8=;
-        b=AF/l746Uka3aY2pP60be4279oCgCtNT0jaqz8NpjRWMOILMGisN/Ug6d1MFGsSNjBu
-         4bqb0K2oY7LUIs7JSFA43qJEtoeO+HDHicwMwC0SkGoKjY9RtYFyyaAn3dJlougRAmLP
-         Lc0a+an+TRPh/EUMw5foGPGFySH62WTFnZpevYSWzTBQ6fCqnguVwmFsKZg4gdfiWyDE
-         /qB372d/z6X3W63/R7Xoh3iz+C3rHLLowMcF/bCJ+3PfxX9JCN1QBMKJ9Mj9w/ATLzim
-         hFfIMnH1P7oYmBBgQUuEomw/dg6wdwkSwiqndl6aNkdmoB9YE/iJo4Wf0EQVnGeAIQWu
-         s0Zg==
-X-Gm-Message-State: AOAM532UVM2WvHahRSykl2Xz2Y9j1INi8lnp3ieNApo9CXnjuh7b6CwS
-        z6n/jZ1EYg728JjidTfd8A==
-X-Google-Smtp-Source: ABdhPJzwB2nctudJI6BxharZdhijdzegpU5OW2/Oni8BU/n/uPgULwdatKy2CzcIlrvGMj/w9CBM2w==
-X-Received: by 2002:a05:6870:d254:b0:db:12b5:da3 with SMTP id h20-20020a056870d25400b000db12b50da3mr4592133oac.211.1648051113213;
-        Wed, 23 Mar 2022 08:58:33 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id p16-20020a05680811d000b002d72ec3a921sm104610oiv.21.2022.03.23.08.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 08:58:32 -0700 (PDT)
-Received: (nullmailer pid 4180667 invoked by uid 1000);
-        Wed, 23 Mar 2022 15:58:31 -0000
-Date:   Wed, 23 Mar 2022 10:58:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hammer Hsieh <hammerh0314@gmail.com>
-Cc:     hammer.hsieh@sunplus.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        wells.lu@sunplus.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: pwm: Add bindings doc for Sunplus
- SoC SP7021 PWM Driver
-Message-ID: <YjtDpyGp8pXYcqVH@robh.at.kernel.org>
-References: <1647945781-10191-1-git-send-email-hammerh0314@gmail.com>
- <1647945781-10191-2-git-send-email-hammerh0314@gmail.com>
+        with ESMTP id S242051AbiCXGFK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Mar 2022 02:05:10 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EB6BF6F;
+        Wed, 23 Mar 2022 23:03:34 -0700 (PDT)
+X-UUID: 30a4a54c15d8410889edfc7f19c0a512-20220324
+X-UUID: 30a4a54c15d8410889edfc7f19c0a512-20220324
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+        (envelope-from <xinlei.lee@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 167960996; Thu, 24 Mar 2022 14:03:29 +0800
+Received: from MTKMBS34N1.mediatek.inc (172.27.4.172) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Thu, 24 Mar 2022 14:03:27 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS34N1.mediatek.inc
+ (172.27.4.172) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 24 Mar
+ 2022 14:03:26 +0800
+Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Thu, 24 Mar 2022 14:03:25 +0800
+From:   <xinlei.lee@mediatek.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <linux-pwm@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <jitao.shi@mediatek.com>, <rex-bc.chen@mediatek.com>,
+        <allen-kh.cheng@mediatek.com>, Xinlei Lee <xinlei.lee@mediatek.com>
+Subject: [PATCH v4 0/6] Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml format
+Date:   Thu, 24 Mar 2022 14:03:18 +0800
+Message-ID: <1648101804-3584-1-git-send-email-xinlei.lee@mediatek.com>
+X-Mailer: git-send-email 2.6.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1647945781-10191-2-git-send-email-hammerh0314@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 22 Mar 2022 18:43:00 +0800, Hammer Hsieh wrote:
-> Add bindings doc for Sunplus SoC SP7021 PWM Driver
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Signed-off-by: Hammer Hsieh <hammerh0314@gmail.com>
-> ---
-> Changes in v4:
->  - no change
-> 
->  .../bindings/pwm/sunplus,sp7021-pwm.yaml           | 42 ++++++++++++++++++++++
->  MAINTAINERS                                        |  5 +++
->  2 files changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/sunplus,sp7021-pwm.yaml
-> 
+From: Xinlei Lee <xinlei.lee@mediatek.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes since v3:
+1. Combine multiplexed socs into one entry
+
+Changes since v2:
+1. Modify the PWM name to DISP_PWM.
+2. Include pwm.yaml.
+3. Separate conversion files and add/remove operations.
+
+Changes since v1:
+1. Fixed formatting issues mentioned in the v1.
+2. Delete pwm-mtk-disp.txt.
+3. Add mtk_pwm dt_maintainers.
+4. Add "#pwm-cells" & power-domains properties.
+5. Make dt_checking successful.
+
+Xinlei Lee (6):
+  dt-bindings: pwm: Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml
+    format
+  dt-bindings: pwm: Remove compatible for MediaTek MT8167
+  dt-bindings: pwm: Add compatible for MediaTek MT8183
+  dt-bindings: pwm: Add compatible for MediaTek MT8192
+  dt-bindings: pwm: Add compatible for MediaTek MT8195
+  dt-bindings: pwm: Add compatible for MediaTek MT8186
+
+ .../bindings/pwm/mediatek,pwm-disp.yaml       | 69 +++++++++++++++++++
+ .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 44 ------------
+ 2 files changed, 69 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+
+-- 
+2.18.0
+
