@@ -2,206 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 804384EFF3C
-	for <lists+linux-pwm@lfdr.de>; Sat,  2 Apr 2022 09:05:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5411A4F070C
+	for <lists+linux-pwm@lfdr.de>; Sun,  3 Apr 2022 05:06:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234717AbiDBHHP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 2 Apr 2022 03:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
+        id S233003AbiDCDI0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 2 Apr 2022 23:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbiDBHHO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 2 Apr 2022 03:07:14 -0400
-X-Greylist: delayed 359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 02 Apr 2022 00:05:21 PDT
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BF5B10241F;
-        Sat,  2 Apr 2022 00:05:21 -0700 (PDT)
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by box.trvn.ru (Postfix) with ESMTPSA id B31FE403F2;
-        Sat,  2 Apr 2022 11:59:16 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-        t=1648882757; bh=g3dd49ZLEvD3b7UkZq09nzJLTrDcbZhjuvyIkuyxUww=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rOhlGsQO/HTUiVU8OGWlJGCELzbuJLDlRNa5zJWC64lw2R6V66Vfo4vQg90/aWOM4
-         ptqXOjnOMgkSH236j+4w+8n5Co2yiCluXvASZKsMm7RGMaegx7OqCArSywud4CzGyC
-         fy2f5OFuN+er3HLk8tigyOkhM0/UZXdA57bL1C1A9Fq6aRNdBPD3BaiROs8vK0+j94
-         XJUVBBGhqHkCT0kscg/JSsO9oNw32bVDRM9JI5VnVT0x66RYA9LLP2gbh76oGZ+839
-         RAMeC6r8pcUNXPR/7HvfGHZxGZCVtrkItwCi4vMPx1sBg6Gn01y/TSEryhdP2nLZ6h
-         3TWDX5lPmP2wg==
+        with ESMTP id S232603AbiDCDIT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 2 Apr 2022 23:08:19 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 02 Apr 2022 20:06:23 PDT
+Received: from mta-out-01.alice.it (mta-out-01.alice.it [217.169.118.7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2372538BE5
+        for <linux-pwm@vger.kernel.org>; Sat,  2 Apr 2022 20:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alice.it; s=20211207; t=1648955183; 
+        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+        h=Reply-To:From:To:Date:Message-ID:MIME-Version;
+        b=qZ1tRb43mnF89xz6+kCP/atQHXeq5SzUldiVkQw3HS7MA9CylkjfyeaCgNagGwRaKE2PumOqIrKbdQiKxmXlqJGO+UFxzQsmEtu2QlexH1KYiOIbUKfyP+lP8mD4GYO+NwpMclJGoX1Y/NPOlLtqdW1W2qTjR4iaI76IpZG9lI2PCa4GHsVCVSZt4gbpYH6wlNrzrK5U0AJ+RNg3FK5EfgkAo1w9tD1YBIrDH9ft88V+Oo7YvaMSIRmvGTD3kc9GHEV6SpSMqrN2vqjydM5tUgCM0W3lTZ+bfCuakG02RQDCT9dthtBOljEWEkVEUApRoUZExsRMWHFrXq8G7FicVA==
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedvvddrudeiledgiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuvffgnffgvefqoffkvfetnffktedpqfgfvfenuceurghilhhouhhtmecufedtudenucfgmhhpthihuchsuhgsjhgvtghtucdluddtmdengfhmphhthicusghougihucdlhedtmdenucfjughrpehrhffvfffkggestddtfedttddttdenucfhrhhomhephggvuchhrghvvgcurghnuchofhhfvghruchtohcuihhnvhgvshhtuchinhcuhihouhhrucgtohhunhhtrhihuchunhguvghrucgruchjohhinhhtuchvvghnthhurhgvuchprghrthhnvghrshhhihhpuchplhgvrghsvgcurhgvphhlhicufhhorhcumhhorhgvucguvghtrghilhhsuceofhgpphgvnhhnrgesrghlihgtvgdrihhtqeenucggtffrrghtthgvrhhnpeehjeetgefhleetiedtkeelfffgjeeugeegleekueffgfegtdekkeeifedvvdffteenucfkphepudejiedrvddvjedrvdegvddrudeltdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopegrlhhitggvrdhithdpihhnvghtpedujeeirddvvdejrddvgedvrdduledtpdhmrghilhhfrhhomhepfhgpphgvnhhnrgesrghlihgtvgdrihhtpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-RazorGate-Vade-Verdict: clean 60
+X-RazorGate-Vade-Classification: clean
+Received: from alice.it (176.227.242.190) by mta-out-01.alice.it (5.8.807.04) (authenticated as f_penna@alice.it)
+        id 6244775000E19E2F for linux-pwm@vger.kernel.org; Sun, 3 Apr 2022 05:00:21 +0200
+Reply-To: dougfield20@inbox.lv
+From:   We have an offer to invest in your country under a
+         joint venture partnership please reply for more
+         details <f_penna@alice.it>
+To:     linux-pwm@vger.kernel.org
+Date:   02 Apr 2022 20:00:20 -0700
+Message-ID: <20220402200020.3403667ECAFA0B93@alice.it>
 MIME-Version: 1.0
-Date:   Sat, 02 Apr 2022 11:59:15 +0500
-From:   Nikita Travkin <nikita@trvn.ru>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        sboyd@kernel.org, krzk@kernel.org, linus.walleij@linaro.org,
-        masneyb@onstation.org, sean.anderson@seco.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, kernel@pengutronix.de
-Subject: Re: [PATCH v6 2/2] pwm: Add clock based PWM output driver
-In-Reply-To: <20220328105659.mg3pxbqynlufaq6z@pengutronix.de>
-References: <20220220115030.23772-1-nikita@trvn.ru>
- <20220220115030.23772-3-nikita@trvn.ru>
- <20220328105659.mg3pxbqynlufaq6z@pengutronix.de>
-Message-ID: <ce9a8bab61485ba06933cdb7fdea50ac@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,DOS_RCVD_IP_TWICE_B,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,BODY_EMPTY,
+        DKIM_INVALID,DKIM_SIGNED,EMPTY_MESSAGE,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,MISSING_SUBJECT,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L3,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.7 RCVD_IN_DNSWL_LOW RBL: Sender listed at https://www.dnswl.org/,
+        *       low trust
+        *      [217.169.118.7 listed in list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5075]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [f_penna[at]alice.it]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [dougfield20[at]inbox.lv]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 RCVD_IN_MSPIKE_L3 RBL: Low reputation (-3)
+        *      [217.169.118.7 listed in bl.mailspike.net]
+        *  2.3 EMPTY_MESSAGE Message appears to have no textual parts and no
+        *      Subject: text
+        *  1.8 MISSING_SUBJECT Missing Subject: header
+        *  0.1 DKIM_INVALID DKIM or DK signature exists, but is not valid
+        *  0.0 RCVD_IN_MSPIKE_BL Mailspike blacklisted
+        *  0.0 BODY_EMPTY No body text in message
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
-
-Uwe Kleine-König писал(а) 28.03.2022 15:56:
-> Hello,
-> 
-> just a few minor things left to criticize, see below.
-> 
-> On Sun, Feb 20, 2022 at 04:50:30PM +0500, Nikita Travkin wrote:
->> Some systems have clocks exposed to external devices. If the clock
->> controller supports duty-cycle configuration, such clocks can be used as
->> pwm outputs. In fact PWM and CLK subsystems are interfaced with in a
->> similar way and an "opposite" driver already exists (clk-pwm). Add a
->> driver that would enable pwm devices to be used via clk subsystem.
->>
->> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
->> --
->>
->> Changes in v2:
->>  - Address Uwe's review comments:
->>    - Round set clk rate up
->>    - Add a description with limitations of the driver
->>    - Disable and unprepare clock before removing pwmchip
->> Changes in v3:
->>  - Use 64bit version of div round up
->>  - Address Uwe's review comments:
->>    - Reword the limitations to avoid incorrect claims
->>    - Move the clk_enabled flag assignment
->>    - Drop unnecessary statements
->> Changes in v5:
->>  - add missed returns
->> Changes in v6:
->>  - Unprepare the clock on error
->>  - Drop redundant limitations points
->> ---
->>  drivers/pwm/Kconfig   |  10 +++
->>  drivers/pwm/Makefile  |   1 +
->>  drivers/pwm/pwm-clk.c | 139 ++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 150 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-clk.c
->>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index 21e3b05a5153..daa2491a4054 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -140,6 +140,16 @@ config PWM_BRCMSTB
->>  	  To compile this driver as a module, choose M Here: the module
->>  	  will be called pwm-brcmstb.c.
->>
->> +config PWM_CLK
->> +	tristate "Clock based PWM support"
->> +	depends on HAVE_CLK || COMPILE_TEST
-> 
-> Can you really compile this driver if HAVE_CLK isn't available?
-> 
-
-As I can see, clk.h has all the methods stubbed out if CONFIG_HAVE_CLK
-is not set. (And I think that all other headers like that do as well)
-
-I've tried to build it without clk right now and it builds with no
-errors, neither test robots complained about that.
-
->> +	help
->> +	  Generic PWM framework driver for outputs that can be
->> +	  muxed to clocks.
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called pwm-clk.
->> +
->>  config PWM_CLPS711X
->>  	tristate "CLPS711X PWM support"
->>  	depends on ARCH_CLPS711X || COMPILE_TEST
->> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
->> index 708840b7fba8..4a860103c470 100644
->> --- a/drivers/pwm/Makefile
->> +++ b/drivers/pwm/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_PWM_BCM_KONA)	+= pwm-bcm-kona.o
->>  obj-$(CONFIG_PWM_BCM2835)	+= pwm-bcm2835.o
->>  obj-$(CONFIG_PWM_BERLIN)	+= pwm-berlin.o
->>  obj-$(CONFIG_PWM_BRCMSTB)	+= pwm-brcmstb.o
->> +obj-$(CONFIG_PWM_CLK)		+= pwm-clk.o
->>  obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
->>  obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
->>  obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
->> diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
->> new file mode 100644
->> index 000000000000..52c9923368cb
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-clk.c
->> @@ -0,0 +1,139 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Clock based PWM controller
->> + *
->> + * Copyright (c) 2021 Nikita Travkin <nikita@trvn.ru>
->> + *
->> + * This is an "adapter" driver that allows PWM consumers to use
->> + * system clocks with duty cycle control as PWM outputs.
->> + *
->> + * Limitations:
->> + * - Due to the fact that exact behavior depends on the underlying
->> + *   clock driver, various limitations are possible.
->> + * - Underlying clock may not be able to give 0% or 100% duty cycle
->> + *   (constant off or on), exact behavior will depend on the clock.
->> + * - When the PWM is disabled, the clock will be disabled as well,
->> + *   line state will depend on the clock.
-> 
->  - The clk API doesn't expose the necessary calls to implement
->    .get_state().
-> 
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/math64.h>
->> +#include <linux/err.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/clk.h>
->> +#include <linux/pwm.h>
->> +
->> +struct pwm_clk_chip {
->> +	struct pwm_chip chip;
->> +	struct clk *clk;
->> +	bool clk_enabled;
->> +};
->> +
->> +#define to_pwm_clk_chip(_chip) container_of(_chip, struct pwm_clk_chip, chip)
->> +
->> +static int pwm_clk_apply(struct pwm_chip *pwm_chip, struct pwm_device *pwm,
->> +			 const struct pwm_state *state)
->> +{
->> +	struct pwm_clk_chip *chip = to_pwm_clk_chip(pwm_chip);
-> 
-> I'd prefer this was not called chip, as this is how struct pwm_chip
-> variables are called usually. My suggestion is:
-> 
-> 	chip -> pcchip
-> 	pwm_chip -> chip
-> 
-
-Thanks for the suggestion, I'll use the common naming then.
-
-Nikita
-
-> Best regards
-> Uwe
