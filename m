@@ -2,70 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5411A4F070C
-	for <lists+linux-pwm@lfdr.de>; Sun,  3 Apr 2022 05:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 792634F1CFD
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Apr 2022 23:37:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233003AbiDCDI0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 2 Apr 2022 23:08:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
+        id S1379506AbiDDV3r (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 4 Apr 2022 17:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232603AbiDCDIT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 2 Apr 2022 23:08:19 -0400
-X-Greylist: delayed 359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 02 Apr 2022 20:06:23 PDT
-Received: from mta-out-01.alice.it (mta-out-01.alice.it [217.169.118.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2372538BE5
-        for <linux-pwm@vger.kernel.org>; Sat,  2 Apr 2022 20:06:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alice.it; s=20211207; t=1648955183; 
-        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-        h=Reply-To:From:To:Date:Message-ID:MIME-Version;
-        b=qZ1tRb43mnF89xz6+kCP/atQHXeq5SzUldiVkQw3HS7MA9CylkjfyeaCgNagGwRaKE2PumOqIrKbdQiKxmXlqJGO+UFxzQsmEtu2QlexH1KYiOIbUKfyP+lP8mD4GYO+NwpMclJGoX1Y/NPOlLtqdW1W2qTjR4iaI76IpZG9lI2PCa4GHsVCVSZt4gbpYH6wlNrzrK5U0AJ+RNg3FK5EfgkAo1w9tD1YBIrDH9ft88V+Oo7YvaMSIRmvGTD3kc9GHEV6SpSMqrN2vqjydM5tUgCM0W3lTZ+bfCuakG02RQDCT9dthtBOljEWEkVEUApRoUZExsRMWHFrXq8G7FicVA==
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedvvddrudeiledgiedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuvffgnffgvefqoffkvfetnffktedpqfgfvfenuceurghilhhouhhtmecufedtudenucfgmhhpthihuchsuhgsjhgvtghtucdluddtmdengfhmphhthicusghougihucdlhedtmdenucfjughrpehrhffvfffkggestddtfedttddttdenucfhrhhomhephggvuchhrghvvgcurghnuchofhhfvghruchtohcuihhnvhgvshhtuchinhcuhihouhhrucgtohhunhhtrhihuchunhguvghrucgruchjohhinhhtuchvvghnthhurhgvuchprghrthhnvghrshhhihhpuchplhgvrghsvgcurhgvphhlhicufhhorhcumhhorhgvucguvghtrghilhhsuceofhgpphgvnhhnrgesrghlihgtvgdrihhtqeenucggtffrrghtthgvrhhnpeehjeetgefhleetiedtkeelfffgjeeugeegleekueffgfegtdekkeeifedvvdffteenucfkphepudejiedrvddvjedrvdegvddrudeltdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopegrlhhitggvrdhithdpihhnvghtpedujeeirddvvdejrddvgedvrdduledtpdhmrghilhhfrhhomhepfhgpphgvnhhnrgesrghlihgtvgdrihhtpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-RazorGate-Vade-Verdict: clean 60
-X-RazorGate-Vade-Classification: clean
-Received: from alice.it (176.227.242.190) by mta-out-01.alice.it (5.8.807.04) (authenticated as f_penna@alice.it)
-        id 6244775000E19E2F for linux-pwm@vger.kernel.org; Sun, 3 Apr 2022 05:00:21 +0200
-Reply-To: dougfield20@inbox.lv
-From:   We have an offer to invest in your country under a
-         joint venture partnership please reply for more
-         details <f_penna@alice.it>
-To:     linux-pwm@vger.kernel.org
-Date:   02 Apr 2022 20:00:20 -0700
-Message-ID: <20220402200020.3403667ECAFA0B93@alice.it>
+        with ESMTP id S1379381AbiDDRD6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 4 Apr 2022 13:03:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998A540A29;
+        Mon,  4 Apr 2022 10:02:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0873760DBE;
+        Mon,  4 Apr 2022 17:02:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 51705C34110;
+        Mon,  4 Apr 2022 17:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649091720;
+        bh=04frVOBorwVRLC9iR0TJrmOXUmgPLE7sifjv285UBqY=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=u4wKiB3cMuSr8X85DCWSAFYjooVhda9cApTtmkp7tZRxtQTB+pgUau+XD8HAdu9co
+         oxThbzXsle2iXHmd+iemZT0F0XHev26IPwYM4iI1hbroEUz17L+D8nm6vD0/CoCNIY
+         J/21dCexLvUqK0WwftAOMKgJpGSwNk7nglnDRs06SRyKGXGlM3OTFjNFbnDAlA2Q/g
+         WxrStf87q5tvCOcufEqKt9tTU4ATyPF2w4MTGfNeZBT5Ju1Na5o1C+nSOI4ojUtpe9
+         Z1fpj/klB5G7TabOuiLNZF9qS0Hw4zFloxHqr5WmL1IjlaRcg2esfmHuVUGF94Rzuq
+         tCqb83VI/qWcQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2AAA7E85B8C;
+        Mon,  4 Apr 2022 17:02:00 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Spam-Status: Yes, score=5.7 required=5.0 tests=BAYES_50,BODY_EMPTY,
-        DKIM_INVALID,DKIM_SIGNED,EMPTY_MESSAGE,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,MISSING_SUBJECT,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L3,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.7 RCVD_IN_DNSWL_LOW RBL: Sender listed at https://www.dnswl.org/,
-        *       low trust
-        *      [217.169.118.7 listed in list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5075]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [f_penna[at]alice.it]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [dougfield20[at]inbox.lv]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 RCVD_IN_MSPIKE_L3 RBL: Low reputation (-3)
-        *      [217.169.118.7 listed in bl.mailspike.net]
-        *  2.3 EMPTY_MESSAGE Message appears to have no textual parts and no
-        *      Subject: text
-        *  1.8 MISSING_SUBJECT Missing Subject: header
-        *  0.1 DKIM_INVALID DKIM or DK signature exists, but is not valid
-        *  0.0 RCVD_IN_MSPIKE_BL Mailspike blacklisted
-        *  0.0 BODY_EMPTY No body text in message
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/4] mfd/pwm: dt-bindings: google,cros-ec: include generic pwm
+ schema
+From:   patchwork-bot+chrome-platform@kernel.org
+Message-Id: <164909172016.14329.4245687704208123308.git-patchwork-notify@kernel.org>
+Date:   Mon, 04 Apr 2022 17:02:00 +0000
+References: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220214081916.162014-1-krzysztof.kozlowski@canonical.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, bleung@chromium.org,
+        groeck@chromium.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, matthias.bgg@gmail.com,
+        agross@kernel.org, bjorn.andersson@linaro.org, heiko@sntech.de,
+        dianders@chromium.org, devicetree@vger.kernel.org,
+        chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
+
+Hello:
+
+This series was applied to chrome-platform/linux.git (for-kernelci)
+by Heiko Stuebner <heiko@sntech.de>:
+
+On Mon, 14 Feb 2022 09:19:12 +0100 you wrote:
+> Hi,
+> 
+> DTS patches are independent. Not tested, but I really hope no downstream kernel
+> depends on pwm node naming... If it does, please change it to compatible. :)
+> 
+> Best regards,
+> Krzysztof
+> 
+> [...]
+
+Here is the summary with links:
+  - [1/4] dt-bindings: pwm: google,cros-ec: include generic pwm schema
+    https://git.kernel.org/chrome-platform/c/6b94ee669e8a
+  - [2/4] arm64: dts: mt8183: align Google CROS EC PWM node name with dtschema
+    (no matching commit)
+  - [3/4] arm64: dts: qcom: align Google CROS EC PWM node name with dtschema
+    https://git.kernel.org/chrome-platform/c/1e49defb8636
+  - [4/4] arm64: dts: rk3399: align Google CROS EC PWM node name with dtschema
+    https://git.kernel.org/chrome-platform/c/a0024f55eb5b
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
