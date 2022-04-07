@@ -2,38 +2,39 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0DDF4F77C7
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Apr 2022 09:39:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DAEE4F77CD
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Apr 2022 09:39:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241967AbiDGHl3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 7 Apr 2022 03:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40220 "EHLO
+        id S241979AbiDGHla (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 Apr 2022 03:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241987AbiDGHlZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Apr 2022 03:41:25 -0400
+        with ESMTP id S241992AbiDGHl0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Apr 2022 03:41:26 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 07 Apr 2022 00:39:23 PDT
 Received: from mail.schwermer.no (mail.schwermer.no [49.12.228.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3896B63384;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CE82C12F;
         Thu,  7 Apr 2022 00:39:16 -0700 (PDT)
 From:   sven@svenschwermer.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=svenschwermer.de;
-        s=mail; t=1649316787;
-        bh=pjAbnCs8cCcjtdBzAC9l+vd148bcJSfRgwQvGacOiYo=;
+        s=mail; t=1649316788;
+        bh=P0tMMt9R/eXzGbDcuMZHOpkIK7L6pAAugPc6ndoWwF8=;
         h=From:To:Cc:Subject:In-Reply-To:References;
-        b=cVhZja7pc4Ynpk20QCFXwL/8+1eOnP9W/STrPiSISAPoeL5O1CbMuAF1Odhv+EsyY
-         EEIbywrnMOnPkxk1NGbZzkPPLgr0wIFBbN6QZHEcuVh2BZwWj3LEWAPqAJOyW3xh4l
-         yaGBX/QpWdqmTUjVbLYpL329pCFHoNWVXTs2bQ4huD8ZnAXsAhwPFWJaS1XmXWJChB
-         z2cUS+9kwS3PJ+0k5eLXWwWOlYeeflvSbJL9cIRQ+zsBpsDZp4slmbjtc59ykOo3vL
-         ndTwIna7IwX7LRVm7Ee+e22n8rVmuXv1P3oP4DX8dzzW120fBUvgdbZleq5P22tCM1
-         zdtyhXNUtSVng==
+        b=igi3p+3sZ+2B10Xh4YNQb6U9TuTCp+/PBPqWuFcjkmp+HUFPA8542bXe16stCLA62
+         ySjJCFim8FdbbH8imakmt6Xb/2IIxO2Qe0FbNE7uRpTenv07/RiRjmXOsPU6kihYLe
+         dcTp1jTf49cw2TEt0NePzlvn2FIGUefsRfkv8vZKK2oYHjwJXKKwARoCkPwkehXZ3Q
+         wjAyRSHcXOds8vxWX+jLieNuyh4mgaLcAbppYVgIyPPJoEk5Z8MhsSK+0sAHDrsxsA
+         4UeFSrXJJg7jU0noD7HkXq2LUAzr15/OkNVFuzLolEGp5WR6xr9qAXZGpggAF0U4Al
+         fYMV1NtsJJqig==
 To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-pwm@vger.kernel.org
 Cc:     Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
         pavel@ucw.cz, robh+dt@kernel.org, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
         post@lespocky.de, andy.shevchenko@gmail.com, robh@kernel.org
-Subject: [PATCH v8 1/3 RESEND] dt-bindings: leds: Optional multi-led unit address
-Date:   Thu,  7 Apr 2022 09:32:23 +0200
-Message-Id: <20220407073225.71605-2-sven@svenschwermer.de>
+Subject: [PATCH v8 2/3 RESEND] dt-bindings: leds: Add multicolor PWM LED bindings
+Date:   Thu,  7 Apr 2022 09:32:24 +0200
+Message-Id: <20220407073225.71605-3-sven@svenschwermer.de>
 In-Reply-To: <20220407073225.71605-1-sven@svenschwermer.de>
 References: <20220407073225.71605-1-sven@svenschwermer.de>
 Mime-Version: 1.0
@@ -50,8 +51,8 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
 
-The unit address does not make sense in all cases the multi-led node is
-used, e.g. for the upcoming PWM multi-color LED driver.
+This allows to group multiple PWM-connected monochrome LEDs into
+multicolor LEDs, e.g. RGB LEDs.
 
 Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
@@ -62,26 +63,111 @@ Notes:
     * (no changes)
     
     Changes in v7:
+    * Added newlines
+    * Reorder slightly
+    * Rename top-level node in example
+    
+    Changes in v6:
+    * Fix device tree binding schema
+    
+    Changes in v5:
     * (no changes)
     
-    Added in v6
+    Changes in v4:
+    * (no changes)
+    
+    Changes in v3:
+    * Remove multi-led unit name
 
- .../devicetree/bindings/leds/leds-class-multicolor.yaml         | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/leds/leds-pwm-multicolor.yaml    | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-index 37445c68cdef..f41d021ed677 100644
---- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-@@ -20,7 +20,7 @@ description: |
-   within this documentation directory.
- 
- patternProperties:
--  "^multi-led@([0-9a-f])$":
-+  "^multi-led(@[0-9a-f])?$":
-     type: object
-     description: Represents the LEDs that are to be grouped.
-     properties:
+diff --git a/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+new file mode 100644
+index 000000000000..6625a528f727
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-pwm-multicolor.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-pwm-multicolor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Multi-color LEDs connected to PWM
++
++maintainers:
++  - Sven Schwermer <sven.schwermer@disruptive-technologies.com>
++
++description: |
++  This driver combines several monochrome PWM LEDs into one multi-color
++  LED using the multicolor LED class.
++
++properties:
++  compatible:
++    const: pwm-leds-multicolor
++
++  multi-led:
++    type: object
++
++    patternProperties:
++      "^led-[0-9a-z]+$":
++        type: object
++        $ref: common.yaml#
++
++        additionalProperties: false
++
++        properties:
++          pwms:
++            maxItems: 1
++
++          pwm-names: true
++
++          color: true
++
++        required:
++          - pwms
++          - color
++
++required:
++  - compatible
++
++allOf:
++  - $ref: leds-class-multicolor.yaml#
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    led-controller {
++        compatible = "pwm-leds-multicolor";
++
++        multi-led {
++          color = <LED_COLOR_ID_RGB>;
++          function = LED_FUNCTION_INDICATOR;
++          max-brightness = <65535>;
++
++          led-red {
++              pwms = <&pwm1 0 1000000>;
++              color = <LED_COLOR_ID_RED>;
++          };
++
++          led-green {
++              pwms = <&pwm2 0 1000000>;
++              color = <LED_COLOR_ID_GREEN>;
++          };
++
++          led-blue {
++              pwms = <&pwm3 0 1000000>;
++              color = <LED_COLOR_ID_BLUE>;
++          };
++        };
++    };
++
++...
 -- 
 2.35.1
 
