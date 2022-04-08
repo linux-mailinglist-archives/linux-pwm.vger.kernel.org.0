@@ -2,44 +2,46 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C0B74F994D
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Apr 2022 17:22:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 078E24F997B
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Apr 2022 17:29:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236998AbiDHPYz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 8 Apr 2022 11:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45314 "EHLO
+        id S237358AbiDHPba (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 8 Apr 2022 11:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229993AbiDHPYx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Apr 2022 11:24:53 -0400
+        with ESMTP id S233341AbiDHPb2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Apr 2022 11:31:28 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608EFEF0A3
-        for <linux-pwm@vger.kernel.org>; Fri,  8 Apr 2022 08:22:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C1911984A
+        for <linux-pwm@vger.kernel.org>; Fri,  8 Apr 2022 08:29:24 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ncqRi-0000Jj-Ai; Fri, 08 Apr 2022 17:22:46 +0200
+        id 1ncqY2-000114-9Z; Fri, 08 Apr 2022 17:29:18 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ncqRi-001pMJ-GI; Fri, 08 Apr 2022 17:22:45 +0200
+        id 1ncqY2-001pMh-Dj; Fri, 08 Apr 2022 17:29:16 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ncqRg-001zWy-Am; Fri, 08 Apr 2022 17:22:44 +0200
+        id 1ncqY0-001zXw-4g; Fri, 08 Apr 2022 17:29:16 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, Milo Kim <milo.kim@ti.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 2/2] pwm: lp3943: Implement .apply() callback
-Date:   Fri,  8 Apr 2022 17:22:39 +0200
-Message-Id: <20220408152239.164462-2-u.kleine-koenig@pengutronix.de>
+        Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de
+Subject: [PATCH] pwm: atmel-tcp: Make atmel_tcb_divisors static
+Date:   Fri,  8 Apr 2022 17:29:10 +0200
+Message-Id: <20220408152910.167698-1-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220408152239.164462-1-u.kleine-koenig@pengutronix.de>
-References: <20220408152239.164462-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2741; h=from:subject; bh=Hq0WItNUVK8JvqHq+XGFUvFAAgpr4MsL1V0DpLRr4+8=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiUFM7ab3N7JExwDFKJVdGLen1yBoq8+6bbLnjUwsr 9mQV8g6JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYlBTOwAKCRDB/BR4rcrsCcYMB/ 94unXcnYYBD3yRfUjiJvBiMlymNyjeAwdaepqJqPbGkb45LfiuhTYeTuihrcaoKqs9JsQLZJ4G0+32 yuVXep8iSDEAZ6bnO82QpO1JQn9pErt5ZgeOoL8MLHQHLSB3zCJUINTR70lBjDBlRVSJg9X3QQhmVb oSdHXdm7zhMCXR5vhz7Xk0lNVK9azLxNi5ejmB7662KQ5mGWtIFrqQVpiEpU/S1HZRfpCW9ZMT/Gkz G+asD05RatEuSK3wo3vBdwHgdyvGiWVJZGWMdBrC+tT8vLvmivKn+n/PV+++/LcVyL4hcbSNa863dn Wpt3KPQfDev+EDy5OZxb5Teml7kSpl
+X-Developer-Signature: v=1; a=openpgp-sha256; l=956; h=from:subject; bh=2u+T9Ia9KXdlTujpv/Tyn+RH3FPE1wel/5FNMC6y3k0=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiUFTDVIIrAeevAfs8D1kFWnsgDBePNjkEUS3rLwKf pK3K3naJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYlBUwwAKCRDB/BR4rcrsCbhdB/ 43mkR3myd7/PNjsdIZB0A0/WCEGammpLmCA3yiy7u7NwbhnJ13jytieyKKLrN6EqcCeT1LsZdo6jbw BIW10fampGDUER1OzeRfkCrdd6BSDAjs3Yzd2QBqRrUtZkTZrq4U1t7F2keWSlWUE14zHX2hsO63T+ DcXL/4EBFx7eja/s8p/0brNn34RHY8dDf+4h89kTtAJEC+UI/Wa+12N6JTBjCCFKJiAWx5jN49ialx icydNH1SVoWtejcfJT+VySmlMRIDZxQnhi4kK7TxbuoqvuSk9R5M6KSfUmrkmrxLJL8u2JqJQy64Rk WrGwMPyWPCpKNxsCzzKOjUsWkjvVKa
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -55,89 +57,33 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-To eventually get rid of all legacy drivers convert this driver to the
-modern world implementing .apply().
+The array atmel_tcb_divisors is not supposed to be used outside of the
+driver, so make it static.
+
+This fixes a sparse warning:
+
+	drivers/pwm/pwm-atmel-tcb.c:64:10: warning: symbol 'atmel_tcb_divisors' was not declared. Should it be static?
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-lp3943.c | 41 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 34 insertions(+), 7 deletions(-)
+ drivers/pwm/pwm-atmel-tcb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-lp3943.c b/drivers/pwm/pwm-lp3943.c
-index 2bd04ecb508c..215ef9069114 100644
---- a/drivers/pwm/pwm-lp3943.c
-+++ b/drivers/pwm/pwm-lp3943.c
-@@ -93,7 +93,7 @@ static void lp3943_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- }
- 
- static int lp3943_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			     int duty_ns, int period_ns)
-+			     u64 duty_ns, u64 period_ns)
- {
- 	struct lp3943_pwm *lp3943_pwm = to_lp3943_pwm(chip);
- 	struct lp3943 *lp3943 = lp3943_pwm->lp3943;
-@@ -118,15 +118,20 @@ static int lp3943_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		reg_duty     = LP3943_REG_PWM1;
- 	}
- 
--	period_ns = clamp(period_ns, LP3943_MIN_PERIOD, LP3943_MAX_PERIOD);
--	val       = (u8)(period_ns / LP3943_MIN_PERIOD - 1);
-+	/*
-+	 * Note that after this clamping, period_ns fits into an int. This is
-+	 * helpful because we can resort to integer division below instead of
-+	 * the (more expensive) 64 bit division.
-+	 */
-+	period_ns = clamp(period_ns, (u64)LP3943_MIN_PERIOD, (u64)LP3943_MAX_PERIOD);
-+	val       = (u8)((int)period_ns / LP3943_MIN_PERIOD - 1);
- 
- 	err = lp3943_write_byte(lp3943, reg_prescale, val);
- 	if (err)
- 		return err;
- 
- 	duty_ns = min(duty_ns, period_ns);
--	val = (u8)(duty_ns * LP3943_MAX_DUTY / period_ns);
-+	val = (u8)((int)duty_ns * LP3943_MAX_DUTY / (int)period_ns);
- 
- 	return lp3943_write_byte(lp3943, reg_duty, val);
- }
-@@ -183,12 +188,34 @@ static void lp3943_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	lp3943_pwm_set_mode(lp3943_pwm, pwm_map, LP3943_GPIO_OUT_HIGH);
- }
- 
-+static int lp3943_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    const struct pwm_state *state)
-+{
-+	int err;
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		if (pwm->state.enabled)
-+			lp3943_pwm_disable(chip, pwm);
-+		return 0;
-+	}
-+
-+	err = lp3943_pwm_config(chip, pwm, state->duty_cycle, state->period);
-+	if (err)
-+		return err;
-+
-+	if (!pwm->state.enabled)
-+		err = lp3943_pwm_enable(chip, pwm);
-+
-+	return err;
-+}
-+
- static const struct pwm_ops lp3943_pwm_ops = {
- 	.request	= lp3943_pwm_request,
- 	.free		= lp3943_pwm_free,
--	.config		= lp3943_pwm_config,
--	.enable		= lp3943_pwm_enable,
--	.disable	= lp3943_pwm_disable,
-+	.apply		= lp3943_pwm_apply,
- 	.owner		= THIS_MODULE,
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index 36f7ea381838..9869d3eb8355 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -61,7 +61,7 @@ struct atmel_tcb_pwm_chip {
+ 	struct atmel_tcb_channel bkup;
  };
  
+-const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128, 0, };
++static const u8 atmel_tcb_divisors[] = { 2, 8, 32, 128, 0, };
+ 
+ static inline struct atmel_tcb_pwm_chip *to_tcb_chip(struct pwm_chip *chip)
+ {
+
+base-commit: 3123109284176b1532874591f7c81f3837bbdc17
 -- 
 2.35.1
 
