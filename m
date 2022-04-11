@@ -2,69 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD0544FC04D
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Apr 2022 17:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47CA04FC31A
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Apr 2022 19:24:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347791AbiDKPXj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Apr 2022 11:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
+        id S1348828AbiDKR1C (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Apr 2022 13:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347812AbiDKPXi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Apr 2022 11:23:38 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 266F63B546
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 08:21:22 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id e21so7045933wrc.8
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 08:21:22 -0700 (PDT)
+        with ESMTP id S1348782AbiDKR1B (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Apr 2022 13:27:01 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A1E15713
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 10:24:46 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id i20so10948201wrb.13
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 10:24:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UBu9bKNpcsjBxVmcDi5TeRQJe5h4mzqRMvKt6Hs6yfk=;
-        b=KZQ1OwKLIJThuwjrnbXyMe/lbykmQB1HTeZdE0/lO7EMolpP+udEuy1jDaLgKfjIOU
-         O3iLTLrAODYzX7VmRAPCkpan/K3iYF2HqOs+D8Ym7Ui93sgqmTjrFG5QR/g4nVsI1K2K
-         R3LLIFk0pmPSfy4OCjq6ffYuhTry1WlgjiSsY=
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bO+BsNy1FuaSIt/iszQlx7cNNV6R1RPoXlTl3HVm+SU=;
+        b=Ef23PlWCxktDuXJojezEz7rTy41ev5OFZTSYEluyUMFaMBN5r3VkoTROanB9xCAs+7
+         r2momPwTkkAPaDDS6xRjwJ5+LzLxZWnr/0zlAiYEROFcxuv1v8GXUee6yWyu87ZPUg8F
+         w/vYU/1YlIqQcJQap4eIO0Q4+JPnLrJsb8F9o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UBu9bKNpcsjBxVmcDi5TeRQJe5h4mzqRMvKt6Hs6yfk=;
-        b=kcmbMwgHzOQdHpG+pfS0szl+L6arYtUpYtGY9aaxjAvK8SmW25UppROi9HJwXCzxQQ
-         /nvJIy5ysgqtMOpGPgPYrCzqN/jfQFGeEHGNJJQwDvAbbD7L7qSXUaBFy46PBJHmvI9V
-         Euz+2r6P9YsJ3FA64jADISAh7cf/LFeihxdlui2L4EV4cdsrA6qvhf6b7cpkfwniZYNM
-         uyRcijYhKJuNrBDu8NYS46B0ZHupaWqPiqC5jbDM0bsKyT+R65DAnIfCX4mhdn+XOPAY
-         nKo7JxMucNikcUOR9PIIMYZFG1qtHU0oWo9IVshOj9U7wr2t4Aio1IqZ6rB3c4KWYGFR
-         MgRw==
-X-Gm-Message-State: AOAM531eXZY3WsCBBAj4W/w18uL9/ozqbicma+cIO0pjtACMR/K+42jt
-        DUqHM7+4lozLvBmqnzBJtZFW0Q==
-X-Google-Smtp-Source: ABdhPJzyRb0pgwW+hkvXgmD5vgI/yUy7mnPtvBOPR3Pc6/kt7iIkuJyE7VE61GhHoAJGTrQIdU9cvw==
-X-Received: by 2002:a05:6000:1681:b0:207:acc5:85f6 with SMTP id y1-20020a056000168100b00207acc585f6mr133502wrd.595.1649690480633;
-        Mon, 11 Apr 2022 08:21:20 -0700 (PDT)
-Received: from fabiobaltieri-linux.lan ([37.228.205.1])
-        by smtp.gmail.com with ESMTPSA id bk1-20020a0560001d8100b002061d6bdfd0sm19512832wrb.63.2022.04.11.08.21.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bO+BsNy1FuaSIt/iszQlx7cNNV6R1RPoXlTl3HVm+SU=;
+        b=h0S2GHUGw3cQffZETAn4rVF6DnNTiHgmaAwGxooNXXGDlGWIr3GRi8nivfr/pJZfON
+         UqrICvgmaKyUI88eogXkZKfA3lKi09UjK5nr704iN0BuPxkwZYfL7I+FRABSngL7pVk3
+         84/0es6UkRwiG1yVjyGH9q5iWopAiR3IJHyJmNppxxkwjGhOXCZKvlCZDpZm+yM1ySKv
+         qldLl1OyWL7wwI7dgvLulzI7OG36hXTkSVqmrng0lVtPdhUK4Wim4cYa6VidAxR6+DEF
+         fW7YZArC8Z9sJg0w3LiSTR8ET/5GGWJFh3maxx6OXk2uZsTpYQ6+T/3Wn3S/aztCIFoP
+         inSw==
+X-Gm-Message-State: AOAM532GbvPOQeSUWby8bvPZuuInWok/vNvSf2zeuUHtalJ7wxWZnp/Y
+        AQ6f8/CV3jeOISM3K3Kpg0sk8w==
+X-Google-Smtp-Source: ABdhPJyVwSrN9QTx39nQx4YTCuMJy+ixVzZdD7j27qLoaF+61nhle+4/lc6ixo13tBZnovp5oT0hgg==
+X-Received: by 2002:a05:6000:1689:b0:204:19f5:541f with SMTP id y9-20020a056000168900b0020419f5541fmr25763937wrd.704.1649697884800;
+        Mon, 11 Apr 2022 10:24:44 -0700 (PDT)
+Received: from google.com ([37.228.205.1])
+        by smtp.gmail.com with ESMTPSA id p125-20020a1c2983000000b0038e6c62f527sm130326wmp.14.2022.04.11.10.24.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Apr 2022 08:21:20 -0700 (PDT)
+        Mon, 11 Apr 2022 10:24:44 -0700 (PDT)
+Date:   Mon, 11 Apr 2022 17:24:42 +0000
 From:   Fabio Baltieri <fabiobaltieri@chromium.org>
-To:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
+To:     Tzung-Bi Shih <tzungbi@kernel.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         chrome-platform@lists.linux.dev, linux-pwm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fabio Baltieri <fabiobaltieri@chromium.org>
-Subject: [PATCH v3 4/4] arm64: dts: address cros-ec-pwm channels by type
-Date:   Mon, 11 Apr 2022 15:21:14 +0000
-Message-Id: <20220411152114.2165933-5-fabiobaltieri@chromium.org>
-X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
-In-Reply-To: <20220411152114.2165933-1-fabiobaltieri@chromium.org>
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH v3 2/4] drivers: pwm: pwm-cros-ec: add channel type
+ support
+Message-ID: <YlRkWnVKp1ZBZEo8@google.com>
 References: <20220411152114.2165933-1-fabiobaltieri@chromium.org>
+ <20220411152114.2165933-3-fabiobaltieri@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220411152114.2165933-3-fabiobaltieri@chromium.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,311 +74,259 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Update various cros-ec-pwm board definitions to address the keyboard and
-screen backlight PWM channels by type rather than channel number. This
-makes the instance independent by the actual hardware configuration,
-relying on the EC firmware to pick the right channel, and allows
-dropping few dtsi overrides as a consequence.
+On Mon, Apr 11, 2022 at 03:21:12PM +0000, Fabio Baltieri wrote:
+> Add support for EC_PWM_TYPE_DISPLAY_LIGHT and EC_PWM_TYPE_KB_LIGHT pwm
+> types to the PWM cros_ec_pwm driver. This allows specifying one of these
+> PWM channel by functionality, and let the EC firmware pick the correct
+> channel, thus abstracting the hardware implementation from the kernel
+> driver.
+> 
+> To use it, define the node with the "google,cros-ec-pwm-type"
+> compatible.
+> 
+> Signed-off-by: Fabio Baltieri <fabiobaltieri@chromium.org>
 
-Changed the node label used to cros_ec_pwm_type to avoid ambiguity about
-the pwm cell meaning.
+Hey Tzung-Bi, ended up not adding your "Reviewed-by" tag since I changed
+a chunk of this patch after Rob's comment and there's few options for
+handling the DT compatibles, feel free to take another look.
 
-Signed-off-by: Fabio Baltieri <fabiobaltieri@chromium.org>
----
- .../dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts    | 4 ++--
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi   | 4 ++--
- arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi           | 1 +
- arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz.dtsi      | 4 ----
- arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi             | 9 +++++----
- .../boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts      | 7 ++++---
- arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi           | 7 ++++---
- arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi           | 4 ++--
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi               | 7 ++++---
- arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts          | 4 ----
- arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi  | 5 +++--
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts        | 4 ----
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi             | 1 +
- 13 files changed, 28 insertions(+), 33 deletions(-)
+Thanks
+Fabio
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts
-index dec11a4eb59e..e2554a313deb 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts
-@@ -15,13 +15,13 @@ pwmleds {
- 		compatible = "pwm-leds";
- 		keyboard_backlight: keyboard-backlight {
- 			label = "cros_ec::kbd_backlight";
--			pwms = <&cros_ec_pwm 0>;
-+			pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_KB_LIGHT>;
- 			max-brightness = <1023>;
- 		};
- 	};
- };
- 
--&cros_ec_pwm {
-+&cros_ec_pwm_type {
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-index 8f7bf33f607d..8474bd3af6eb 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi.dtsi
-@@ -92,8 +92,8 @@ volume_up {
- };
- 
- &cros_ec {
--	cros_ec_pwm: ec-pwm {
--		compatible = "google,cros-ec-pwm";
-+	cros_ec_pwm_type: ec-pwm {
-+		compatible = "google,cros-ec-pwm-type";
- 		#pwm-cells = <1>;
- 		status = "disabled";
- 	};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-index 0f9480f91261..ff54687ab8bf 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-@@ -7,6 +7,7 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/cros_ec.h>
- #include "mt8183.dtsi"
- #include "mt6358.dtsi"
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz.dtsi
-index c81805ef2250..aea7c66d95e0 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz.dtsi
-@@ -77,10 +77,6 @@ &ap_spi_fp {
- 	status = "okay";
- };
- 
--&backlight {
--	pwms = <&cros_ec_pwm 0>;
--};
--
- &camcc {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-index 732e1181af48..6552e0025f84 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/gpio-keys.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/cros_ec.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include <dt-bindings/sound/sc7180-lpass.h>
- 
-@@ -316,7 +317,7 @@ backlight: backlight {
- 		num-interpolated-steps = <64>;
- 		default-brightness-level = <951>;
- 
--		pwms = <&cros_ec_pwm 1>;
-+		pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_DISPLAY_LIGHT>;
- 		enable-gpios = <&tlmm 12 GPIO_ACTIVE_HIGH>;
- 		power-supply = <&ppvar_sys>;
- 		pinctrl-names = "default";
-@@ -354,7 +355,7 @@ pwmleds {
- 		keyboard_backlight: keyboard-backlight {
- 			status = "disabled";
- 			label = "cros_ec::kbd_backlight";
--			pwms = <&cros_ec_pwm 0>;
-+			pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_KB_LIGHT>;
- 			max-brightness = <1023>;
- 		};
- 	};
-@@ -637,8 +638,8 @@ cros_ec: ec@0 {
- 		pinctrl-0 = <&ap_ec_int_l>;
- 		spi-max-frequency = <3000000>;
- 
--		cros_ec_pwm: pwm {
--			compatible = "google,cros-ec-pwm";
-+		cros_ec_pwm_type: pwm {
-+			compatible = "google,cros-ec-pwm-type";
- 			#pwm-cells = <1>;
- 		};
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts b/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts
-index 1779d96c30f6..628ef990433b 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r0.dts
-@@ -11,6 +11,7 @@
- #include <dt-bindings/iio/qcom,spmi-adc7-pmr735a.h>
- #include <dt-bindings/input/gpio-keys.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/cros_ec.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- 
-@@ -336,7 +337,7 @@ pwmleds {
- 		keyboard_backlight: keyboard-backlight {
- 			status = "disabled";
- 			label = "cros_ec::kbd_backlight";
--			pwms = <&cros_ec_pwm 0>;
-+			pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_KB_LIGHT>;
- 			max-brightness = <1023>;
- 		};
- 	};
-@@ -705,8 +706,8 @@ cros_ec: ec@0 {
- 		pinctrl-0 = <&ap_ec_int_l>;
- 		spi-max-frequency = <3000000>;
- 
--		cros_ec_pwm: pwm {
--			compatible = "google,cros-ec-pwm";
-+		cros_ec_pwm_type: pwm {
-+			compatible = "google,cros-ec-pwm-type";
- 			#pwm-cells = <1>;
- 		};
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-index dc17f2079695..eb4b0e17adec 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
-@@ -15,6 +15,7 @@
- 
- #include <dt-bindings/input/gpio-keys.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/cros_ec.h>
- 
- #include "sc7280-qcard.dtsi"
- #include "sc7280-chrome-common.dtsi"
-@@ -288,7 +289,7 @@ pwmleds {
- 		keyboard_backlight: keyboard-backlight {
- 			status = "disabled";
- 			label = "cros_ec::kbd_backlight";
--			pwms = <&cros_ec_pwm 0>;
-+			pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_KB_LIGHT>;
- 			max-brightness = <1023>;
- 		};
- 	};
-@@ -421,8 +422,8 @@ cros_ec: ec@0 {
- 		pinctrl-0 = <&ap_ec_int_l>;
- 		spi-max-frequency = <3000000>;
- 
--		cros_ec_pwm: pwm {
--			compatible = "google,cros-ec-pwm";
-+		cros_ec_pwm_type: pwm {
-+			compatible = "google,cros-ec-pwm-type";
- 			#pwm-cells = <1>;
- 		};
- 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi
-index a7c346aa3b02..a797f09e1328 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi
-@@ -20,8 +20,8 @@ cros_ec: ec@0 {
- 		pinctrl-0 = <&ap_ec_int_l>;
- 		spi-max-frequency = <3000000>;
- 
--		cros_ec_pwm: pwm {
--			compatible = "google,cros-ec-pwm";
-+		cros_ec_pwm_type: pwm {
-+			compatible = "google,cros-ec-pwm-type";
- 			#pwm-cells = <1>;
- 		};
- 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index e7e4cc5936aa..a57951a50cd6 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/cros_ec.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sdm845.dtsi"
- 
-@@ -27,7 +28,7 @@ chosen {
- 
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
--		pwms = <&cros_ec_pwm 0>;
-+		pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_DISPLAY_LIGHT>;
- 		enable-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
- 		power-supply = <&ppvar_sys>;
- 		pinctrl-names = "default";
-@@ -708,8 +709,8 @@ cros_ec: ec@0 {
- 		pinctrl-0 = <&ec_ap_int_l>;
- 		spi-max-frequency = <3000000>;
- 
--		cros_ec_pwm: pwm {
--			compatible = "google,cros-ec-pwm";
-+		cros_ec_pwm_type: pwm {
-+			compatible = "google,cros-ec-pwm-type";
- 			#pwm-cells = <1>;
- 		};
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
-index 31ebb4e5fd33..5a076c2564f6 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
-@@ -55,10 +55,6 @@ trackpad: trackpad@15 {
- 	};
- };
- 
--&backlight {
--	pwms = <&cros_ec_pwm 0>;
--};
--
- &cpu_alert0 {
- 	temperature = <65000>;
- };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-index 3355fb90fa54..28eda361dfe1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-chromebook.dtsi
-@@ -198,6 +198,7 @@ backlight: backlight {
- 		power-supply = <&pp3300_disp>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&bl_en>;
-+		pwms = <&cros_ec_pwm_type CROS_EC_PWM_DT_DISPLAY_LIGHT>;
- 		pwm-delay-us = <10000>;
- 	};
- 
-@@ -462,8 +463,8 @@ ap_i2c_tp: &i2c5 {
- };
- 
- &cros_ec {
--	cros_ec_pwm: pwm {
--		compatible = "google,cros-ec-pwm";
-+	cros_ec_pwm_type: pwm {
-+		compatible = "google,cros-ec-pwm-type";
- 		#pwm-cells = <1>;
- 	};
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index 6863689df06f..e959a33af34b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -84,10 +84,6 @@ thermistor_ppvar_litcpu: thermistor-ppvar-litcpu {
- 	};
- };
- 
--&backlight {
--	pwms = <&cros_ec_pwm 1>;
--};
--
- &gpio_keys {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&bt_host_wake_l>, <&cpu1_pen_eject>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 162f08bca0d4..181159e9982d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/mfd/cros_ec.h>
- #include "rk3399.dtsi"
- #include "rk3399-op1-opp.dtsi"
- 
+> ---
+>  drivers/pwm/pwm-cros-ec.c | 109 ++++++++++++++++++++++++++++++--------
+>  1 file changed, 86 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+> index 5e29d9c682c3..83c33958d52b 100644
+> --- a/drivers/pwm/pwm-cros-ec.c
+> +++ b/drivers/pwm/pwm-cros-ec.c
+> @@ -6,23 +6,30 @@
+>   */
+>  
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/slab.h>
+>  
+> +#include <dt-bindings/mfd/cros_ec.h>
+> +
+> +#define OF_CROS_EC_PWM_TYPE ((void *)1)
+> +
+>  /**
+>   * struct cros_ec_pwm_device - Driver data for EC PWM
+>   *
+>   * @dev: Device node
+>   * @ec: Pointer to EC device
+>   * @chip: PWM controller chip
+> + * @use_pwm_type: Use PWM types instead of generic channels
+>   */
+>  struct cros_ec_pwm_device {
+>  	struct device *dev;
+>  	struct cros_ec_device *ec;
+>  	struct pwm_chip chip;
+> +	bool use_pwm_type;
+>  };
+>  
+>  /**
+> @@ -58,14 +65,31 @@ static void cros_ec_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>  	kfree(channel);
+>  }
+>  
+> -static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
+> +static int cros_ec_dt_type_to_pwm_type(u8 dt_index, u8 *pwm_type)
+>  {
+> +	switch (dt_index) {
+> +	case CROS_EC_PWM_DT_KB_LIGHT:
+> +		*pwm_type = EC_PWM_TYPE_KB_LIGHT;
+> +		return 0;
+> +	case CROS_EC_PWM_DT_DISPLAY_LIGHT:
+> +		*pwm_type = EC_PWM_TYPE_DISPLAY_LIGHT;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm, u8 index,
+> +				u16 duty)
+> +{
+> +	struct cros_ec_device *ec = ec_pwm->ec;
+>  	struct {
+>  		struct cros_ec_command msg;
+>  		struct ec_params_pwm_set_duty params;
+>  	} __packed buf;
+>  	struct ec_params_pwm_set_duty *params = &buf.params;
+>  	struct cros_ec_command *msg = &buf.msg;
+> +	int ret;
+>  
+>  	memset(&buf, 0, sizeof(buf));
+>  
+> @@ -75,14 +99,25 @@ static int cros_ec_pwm_set_duty(struct cros_ec_device *ec, u8 index, u16 duty)
+>  	msg->outsize = sizeof(*params);
+>  
+>  	params->duty = duty;
+> -	params->pwm_type = EC_PWM_TYPE_GENERIC;
+> -	params->index = index;
+> +
+> +	if (ec_pwm->use_pwm_type) {
+> +		ret = cros_ec_dt_type_to_pwm_type(index, &params->pwm_type);
+> +		if (ret) {
+> +			dev_err(ec->dev, "Invalid PWM type index: %d\n", index);
+> +			return ret;
+> +		}
+> +		params->index = 0;
+> +	} else {
+> +		params->pwm_type = EC_PWM_TYPE_GENERIC;
+> +		params->index = index;
+> +	}
+>  
+>  	return cros_ec_cmd_xfer_status(ec, msg);
+>  }
+>  
+> -static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index)
+> +static int cros_ec_pwm_get_duty(struct cros_ec_pwm_device *ec_pwm, u8 index)
+>  {
+> +	struct cros_ec_device *ec = ec_pwm->ec;
+>  	struct {
+>  		struct cros_ec_command msg;
+>  		union {
+> @@ -102,8 +137,17 @@ static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, u8 index)
+>  	msg->insize = sizeof(*resp);
+>  	msg->outsize = sizeof(*params);
+>  
+> -	params->pwm_type = EC_PWM_TYPE_GENERIC;
+> -	params->index = index;
+> +	if (ec_pwm->use_pwm_type) {
+> +		ret = cros_ec_dt_type_to_pwm_type(index, &params->pwm_type);
+> +		if (ret) {
+> +			dev_err(ec->dev, "Invalid PWM type index: %d\n", index);
+> +			return ret;
+> +		}
+> +		params->index = 0;
+> +	} else {
+> +		params->pwm_type = EC_PWM_TYPE_GENERIC;
+> +		params->index = index;
+> +	}
+>  
+>  	ret = cros_ec_cmd_xfer_status(ec, msg);
+>  	if (ret < 0)
+> @@ -133,7 +177,7 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	 */
+>  	duty_cycle = state->enabled ? state->duty_cycle : 0;
+>  
+> -	ret = cros_ec_pwm_set_duty(ec_pwm->ec, pwm->hwpwm, duty_cycle);
+> +	ret = cros_ec_pwm_set_duty(ec_pwm, pwm->hwpwm, duty_cycle);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -149,7 +193,7 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
+>  	int ret;
+>  
+> -	ret = cros_ec_pwm_get_duty(ec_pwm->ec, pwm->hwpwm);
+> +	ret = cros_ec_pwm_get_duty(ec_pwm, pwm->hwpwm);
+>  	if (ret < 0) {
+>  		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+>  		return;
+> @@ -204,13 +248,13 @@ static const struct pwm_ops cros_ec_pwm_ops = {
+>   * of PWMs it supports directly, so we have to read the pwm duty cycle for
+>   * subsequent channels until we get an error.
+>   */
+> -static int cros_ec_num_pwms(struct cros_ec_device *ec)
+> +static int cros_ec_num_pwms(struct cros_ec_pwm_device *ec_pwm)
+>  {
+>  	int i, ret;
+>  
+>  	/* The index field is only 8 bits */
+>  	for (i = 0; i <= U8_MAX; i++) {
+> -		ret = cros_ec_pwm_get_duty(ec, i);
+> +		ret = cros_ec_pwm_get_duty(ec_pwm, i);
+>  		/*
+>  		 * We look for SUCCESS, INVALID_COMMAND, or INVALID_PARAM
+>  		 * responses; everything else is treated as an error.
+> @@ -232,10 +276,27 @@ static int cros_ec_num_pwms(struct cros_ec_device *ec)
+>  	return U8_MAX;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cros_ec_pwm_of_match[] = {
+> +	{
+> +		.compatible = "google,cros-ec-pwm",
+> +	},
+> +	{
+> +		.compatible = "google,cros-ec-pwm-type",
+> +		.data = OF_CROS_EC_PWM_TYPE,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cros_ec_pwm_of_match);
+> +#else
+> +#define cros_ec_pwm_of_match NULL
+> +#endif
+> +
+>  static int cros_ec_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
+>  	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *id;
+>  	struct cros_ec_pwm_device *ec_pwm;
+>  	struct pwm_chip *chip;
+>  	int ret;
+> @@ -251,17 +312,27 @@ static int cros_ec_pwm_probe(struct platform_device *pdev)
+>  	chip = &ec_pwm->chip;
+>  	ec_pwm->ec = ec;
+>  
+> +	id = of_match_device(cros_ec_pwm_of_match, dev);
+> +	if (id && id->data == OF_CROS_EC_PWM_TYPE)
+> +		ec_pwm->use_pwm_type = true;
+> +
+>  	/* PWM chip */
+>  	chip->dev = dev;
+>  	chip->ops = &cros_ec_pwm_ops;
+>  	chip->of_xlate = cros_ec_pwm_xlate;
+>  	chip->of_pwm_n_cells = 1;
+> -	ret = cros_ec_num_pwms(ec);
+> -	if (ret < 0) {
+> -		dev_err(dev, "Couldn't find PWMs: %d\n", ret);
+> -		return ret;
+> +
+> +	if (ec_pwm->use_pwm_type) {
+> +		chip->npwm = CROS_EC_PWM_DT_COUNT;
+> +	} else {
+> +		ret = cros_ec_num_pwms(ec_pwm);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Couldn't find PWMs: %d\n", ret);
+> +			return ret;
+> +		}
+> +		chip->npwm = ret;
+>  	}
+> -	chip->npwm = ret;
+> +
+>  	dev_dbg(dev, "Probed %u PWMs\n", chip->npwm);
+>  
+>  	ret = pwmchip_add(chip);
+> @@ -285,14 +356,6 @@ static int cros_ec_pwm_remove(struct platform_device *dev)
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_OF
+> -static const struct of_device_id cros_ec_pwm_of_match[] = {
+> -	{ .compatible = "google,cros-ec-pwm" },
+> -	{},
+> -};
+> -MODULE_DEVICE_TABLE(of, cros_ec_pwm_of_match);
+> -#endif
+> -
+>  static struct platform_driver cros_ec_pwm_driver = {
+>  	.probe = cros_ec_pwm_probe,
+>  	.remove = cros_ec_pwm_remove,
+> -- 
+> 2.35.1.1178.g4f1659d476-goog
+> 
+
 -- 
-2.35.1.1178.g4f1659d476-goog
-
+Fabio Baltieri
