@@ -2,52 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 122EA4FBAE9
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Apr 2022 13:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBA144FC046
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Apr 2022 17:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344633AbiDKLcu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Apr 2022 07:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
+        id S1347806AbiDKPXg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Apr 2022 11:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345852AbiDKLck (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Apr 2022 07:32:40 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A7D3EF3D
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 04:30:23 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ndsFK-0005un-Cr; Mon, 11 Apr 2022 13:30:14 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ndsFK-002NLx-2z; Mon, 11 Apr 2022 13:30:12 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ndsFI-002aYA-2S; Mon, 11 Apr 2022 13:30:12 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, greybus-dev@lists.linaro.org,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
-Subject: [PATCH v2] staging: greybus: pwm: Drop assignment to struct pwm_chip::base
-Date:   Mon, 11 Apr 2022 13:30:10 +0200
-Message-Id: <20220411113010.208500-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S1347695AbiDKPXe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Apr 2022 11:23:34 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B675E32993
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 08:21:18 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id l62-20020a1c2541000000b0038e4570af2fso10273579wml.5
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 08:21:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VFG6EulH67RRWPIE71JJK8AZq6cWf3+aNSyjdrV2C8=;
+        b=f8FW30h1HbOZrWHAWLe1L6knIAO0lJCzBwigFR02VS5ig3PismUohmyDbYry74u0YC
+         UV5H7kw4tET6yKSP4M+ROchJBxSEI4tPWRE+9dUf4NNKvRls9SfSV+pJDH9H5jo177AX
+         S3p2Tb1K2+rBEP6VzhnsL5P5Oz4zNM4yZM/Ks=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VFG6EulH67RRWPIE71JJK8AZq6cWf3+aNSyjdrV2C8=;
+        b=vOUZQNu3FZP0UAGCWx6i+MNx9nXnmM9hi/ZAkgkWqtcuV8Ho84iy5/gnmnP6FeKm60
+         cEJ3xksnwqe1NOgmFD1PB/WIerMq/XWHondTrUExl99JJzt7wfSsqyhXhbM0ZVx2+F9V
+         jKEN3TNXdRy5l6vQo3+NjqPH7TA3n3GJMHxyLXxa+3EWBSVRISNcFTUn3IGDIrBxVG1X
+         wjXRuAXCJZwPLs5HqSuxRQzybC8cuV1AqDMoiEz5KIj/ZbBAi5RKdl0bgKhBxArb0sE0
+         NQB47I4dCxQm98tTZt9hwFKJsL/etXv2k0QkNGct+/ZlvWcPGixWOYgU8GudVKucIMQJ
+         vLIg==
+X-Gm-Message-State: AOAM532AtdqhdSUuJ7EIIoMH6guqiEx0gXM3foM8a579wXjrJjGIjGw8
+        RAgcaHIIqF3buxnzv72G5KV64A==
+X-Google-Smtp-Source: ABdhPJwbqNlCfR4VhfhDPHHdmhTKyU7+ZvArbU48oZz50iRIBTjWcOKUrdfpPb01ZRfsKygY1pculg==
+X-Received: by 2002:a7b:c5cd:0:b0:38c:8b1b:d220 with SMTP id n13-20020a7bc5cd000000b0038c8b1bd220mr28977405wmk.118.1649690476941;
+        Mon, 11 Apr 2022 08:21:16 -0700 (PDT)
+Received: from fabiobaltieri-linux.lan ([37.228.205.1])
+        by smtp.gmail.com with ESMTPSA id bk1-20020a0560001d8100b002061d6bdfd0sm19512832wrb.63.2022.04.11.08.21.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Apr 2022 08:21:16 -0700 (PDT)
+From:   Fabio Baltieri <fabiobaltieri@chromium.org>
+To:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        chrome-platform@lists.linux.dev, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fabio Baltieri <fabiobaltieri@chromium.org>
+Subject: [PATCH v3 0/4] Add channel type support to pwm-cros-ec
+Date:   Mon, 11 Apr 2022 15:21:10 +0000
+Message-Id: <20220411152114.2165933-1-fabiobaltieri@chromium.org>
+X-Mailer: git-send-email 2.35.1.1178.g4f1659d476-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1072; h=from:subject; bh=oYkYlGqsYivlb/FzVYP55LZaKNpBANwSA/sLpPYYLBM=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiVBE+4+KisJHPjf5XJcTPI7dY5rbvNdFCfKPO8ulS aY+sGT2JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYlQRPgAKCRDB/BR4rcrsCS2cB/ 93dQjtVSK3TYAsOVwf6veSxDzGFLCGM1qhZYJS3RijqipJh4ytOP2ARfItQ5GLKug7ZYCbfiX84Aw8 WexJeHIUOaNGRP8JLNYHCN/7QPaLtZ2JIaULLe4TFtg3K+e6ZrR++T9vVsZF6wQ2Esu/Wut5EjUS4k LvWwA2iKTO1TFLZkiIxsenzKAvMy6jj7hwPP+XPcpodY7jdPbvHtLrvp6Z2QSeR8LYlfzcR+stMs0i 8eeO87Qymg+SlCg9uaJJs2wABvw0/+92NYrHUVH1NF+Jqn34GvuCGmSNRCYzyIK4DzQbhXfZAxNfB6 Og7KI0PXcxVQGZhjfe1XfqqdLxEZO7
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,41 +70,62 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since commit f9a8ee8c8bcd ("pwm: Always allocate PWM chip base ID
-dynamically") the value held in base isn't used any more in the PWM
-framework. All PMWs get assigned a dynamic ID, so the assignment is
-redundant and can be dropped.
+Hi,
 
-Reviewed-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+The ChromiumOS EC PWM host command protocol supports specifying the
+requested PWM by type rather than channel. [1]
 
-changes since (implicit) v1: 
+This series adds support for specifying PWM by type rather than channel
+number in the pwm-cros-ec driver, which abstracts the node definitions
+from the actual hardware configuration from the kernel perspective,
+aligns the API with the one used by the bootloader, and allows removing
+some dtsi overrides.
 
- - Add "pwm: " to Subject
- - Add Reviewed-by:-tag for Johan
+Tested on a sc7180-trogdor board.
 
-Best regards
-Uwe
+Changes from v2:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=627837)
+- reworded patch 2 commit description
+- reworked the driver and dt documentation to use a new compatible rather than
+  boolean property
+- dropped the comment about build test only, tested on actual hardware
+  (trogdor), build test on x86 (with CONFIG_OF=n).
 
- drivers/staging/greybus/pwm.c | 1 -
- 1 file changed, 1 deletion(-)
+Changes from v1:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=625182)
+- fixed the dt include file license
+- fixed the property name (s/_/-/)
+- rebased on current linus tree (few dts files changed from a soc tree
+  pull, so patch 4 needs a recent base to apply correctly)
 
-diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-index ad20ec24031e..3fda172239d2 100644
---- a/drivers/staging/greybus/pwm.c
-+++ b/drivers/staging/greybus/pwm.c
-@@ -297,7 +297,6 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
- 
- 	pwm->dev = &gbphy_dev->dev;
- 	pwm->ops = &gb_pwm_ops;
--	pwm->base = -1;			/* Allocate base dynamically */
- 	pwm->npwm = pwmc->pwm_max + 1;
- 
- 	ret = pwmchip_add(pwm);
+[1] https://source.chromium.org/chromiumos/chromiumos/codesearch/+/main:src/platform/ec/common/pwm.c;l=24
+[2] https://source.chromium.org/chromiumos/chromiumos/codesearch/+/main:src/platform/depthcharge/src/drivers/ec/cros/ec.c;l=1271-1273
 
-base-commit: 3123109284176b1532874591f7c81f3837bbdc17
+Fabio Baltieri (4):
+  dt-bindings: add mfd/cros_ec definitions
+  drivers: pwm: pwm-cros-ec: add channel type support
+  dt-bindings: update google,cros-ec-pwm documentation
+  arm64: dts: address cros-ec-pwm channels by type
+
+ .../bindings/pwm/google,cros-ec-pwm.yaml      |   9 +-
+ .../mt8183-kukui-jacuzzi-fennel-sku1.dts      |   4 +-
+ .../dts/mediatek/mt8183-kukui-jacuzzi.dtsi    |   4 +-
+ .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi |   1 +
+ .../boot/dts/qcom/sc7180-trogdor-coachz.dtsi  |   4 -
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi  |   9 +-
+ .../qcom/sc7280-herobrine-herobrine-r0.dts    |   7 +-
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |   7 +-
+ .../arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi |   4 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |   7 +-
+ .../boot/dts/rockchip/rk3399-gru-bob.dts      |   4 -
+ .../dts/rockchip/rk3399-gru-chromebook.dtsi   |   5 +-
+ .../boot/dts/rockchip/rk3399-gru-kevin.dts    |   4 -
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  |   1 +
+ drivers/pwm/pwm-cros-ec.c                     | 109 ++++++++++++++----
+ include/dt-bindings/mfd/cros_ec.h             |  18 +++
+ 16 files changed, 140 insertions(+), 57 deletions(-)
+ create mode 100644 include/dt-bindings/mfd/cros_ec.h
+
 -- 
-2.35.1
+2.35.1.1178.g4f1659d476-goog
 
