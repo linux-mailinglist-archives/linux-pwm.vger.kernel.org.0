@@ -2,52 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4498A4FB601
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Apr 2022 10:31:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22E964FB71B
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Apr 2022 11:13:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343834AbiDKIdz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Apr 2022 04:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
+        id S232411AbiDKJP3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Apr 2022 05:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245065AbiDKIdy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Apr 2022 04:33:54 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494FB36B43
-        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 01:31:41 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ndpSK-000541-9r; Mon, 11 Apr 2022 10:31:28 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ndpSJ-002LsK-TZ; Mon, 11 Apr 2022 10:31:26 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ndpSH-002YpK-Pp; Mon, 11 Apr 2022 10:31:25 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        with ESMTP id S245384AbiDKJP2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Apr 2022 05:15:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7373FBC3
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 02:13:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EB74DB80E61
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Apr 2022 09:13:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC43C385A3;
+        Mon, 11 Apr 2022 09:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649668392;
+        bh=G6ZO25/Ykggr6xEHDgRUSWj5HIyhzLYYQqVAX06CjVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uHlY2rKwlK2fOYmJvIwN+tZGNg4yONHalHR1elSU8+wwh/pjb6p/ntD/MF/m0pyGG
+         TO3wahI7Dx/NjqgAHKE5xbdlTZf3rQr92rYmkgwuh2str4cmysB3Q6oxLyvRBuRAGh
+         ff6RTGz3/0uDn/eZjiV0D0RbTyCW0AHNFcoBHaT9ecoX0vHahoaoKoZYxqy7wgoc+n
+         f29uPTGnKqhoGvMyXhevVOR/drm1bg2zNAhFReRozalCtr0D8T0bpbOidlA6XQyrm4
+         AlT9NGCdklWU5yC/Wstz1yFnKshu5dPrM5Crp4U0EA0TzO2Bebv7qWvTooBOIr/5ce
+         hSV2MYe20MdVw==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1ndq6b-0002xP-TC; Mon, 11 Apr 2022 11:13:05 +0200
+Date:   Mon, 11 Apr 2022 11:13:05 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Alex Elder <elder@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH] staging: greybus: Drop assignment to struct pwm_chip::base
-Date:   Mon, 11 Apr 2022 10:31:18 +0200
-Message-Id: <20220411083118.200663-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.35.1
+        Lee Jones <lee.jones@linaro.org>, greybus-dev@lists.linaro.org,
+        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] staging: greybus: Drop assignment to struct
+ pwm_chip::base
+Message-ID: <YlPxIWfaFoQxW63Z@hovoldconsulting.com>
+References: <20220411083118.200663-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=898; h=from:subject; bh=ER/N+DeBOO1Y9RYHSt+mjXMVVEZi8R68GqVf6f45IVE=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiU+dSHXk+NBtIcvbw/KEdUTwpCfO/NCaMAnvUfQno iCURsYGJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYlPnUgAKCRDB/BR4rcrsCSrnB/ 96fl9Nz18OTqBGzJeS0O5PANuWobux9q5FllMui2XbKDNOpOZBPPFU5Yt5mm26LSXrOEaEp4sL6a5k VYq29MzRnBSs/lZpA9t2R8IlGkhAQVzaxQCpmVq9fugujlO0e4qES5nKDNO05edn9xhKYcLM4aFu/a wpqFI87bLcuu68JNZrHN3ffP3JdiuM2gXkTynocViZ+RMfZgy4p7YiQzLjFXkssiblweqPUT98CfZd /BbfSCdcOoKLCv4r6+l2aCo25CLgP+HBIZ51+SNoKubJnzpi+hHxlf3tq2f3rGp1RjRcVcum1r+ZYp MOvtwf1BT1mWW/IG/pxDqvsNROM+Sf
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20220411083118.200663-1-u.kleine-koenig@pengutronix.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,30 +61,37 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since commit f9a8ee8c8bcd ("pwm: Always allocate PWM chip base ID
-dynamically") the value held in base isn't used any more in the PWM
-framework. All PMWs get assigned a dynamic ID, so the assignment is
-redundant and can be dropped.
+On Mon, Apr 11, 2022 at 10:31:18AM +0200, Uwe Kleine-König wrote:
+> Since commit f9a8ee8c8bcd ("pwm: Always allocate PWM chip base ID
+> dynamically") the value held in base isn't used any more in the PWM
+> framework. All PMWs get assigned a dynamic ID, so the assignment is
+> redundant and can be dropped.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/staging/greybus/pwm.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+> index ad20ec24031e..3fda172239d2 100644
+> --- a/drivers/staging/greybus/pwm.c
+> +++ b/drivers/staging/greybus/pwm.c
+> @@ -297,7 +297,6 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
+>  
+>  	pwm->dev = &gbphy_dev->dev;
+>  	pwm->ops = &gb_pwm_ops;
+> -	pwm->base = -1;			/* Allocate base dynamically */
+>  	pwm->npwm = pwmc->pwm_max + 1;
+>  
+>  	ret = pwmchip_add(pwm);
+> 
+> base-commit: 3123109284176b1532874591f7c81f3837bbdc17
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/staging/greybus/pwm.c | 1 -
- 1 file changed, 1 deletion(-)
+I'd prefer if you added a "pwm: " module prefix to the summary (even if
+the previous patch to this driver didn't have that).
 
-diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-index ad20ec24031e..3fda172239d2 100644
---- a/drivers/staging/greybus/pwm.c
-+++ b/drivers/staging/greybus/pwm.c
-@@ -297,7 +297,6 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
- 
- 	pwm->dev = &gbphy_dev->dev;
- 	pwm->ops = &gb_pwm_ops;
--	pwm->base = -1;			/* Allocate base dynamically */
- 	pwm->npwm = pwmc->pwm_max + 1;
- 
- 	ret = pwmchip_add(pwm);
+Looks good to me otherwise:
 
-base-commit: 3123109284176b1532874591f7c81f3837bbdc17
--- 
-2.35.1
+Reviewed-by: Johan Hovold <johan@kernel.org>
 
+Johan
