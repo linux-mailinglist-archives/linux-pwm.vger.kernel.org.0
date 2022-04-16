@@ -2,120 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECE00501BD9
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Apr 2022 21:27:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F2B5034F5
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 Apr 2022 09:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244181AbiDNT05 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Apr 2022 15:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57634 "EHLO
+        id S230299AbiDPHwa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 16 Apr 2022 03:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233374AbiDNT0z (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Apr 2022 15:26:55 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46F665E1
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Apr 2022 12:24:29 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id x3so3767730wmj.5
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Apr 2022 12:24:29 -0700 (PDT)
+        with ESMTP id S230230AbiDPHwZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 16 Apr 2022 03:52:25 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A398FFFB8
+        for <linux-pwm@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id s137so10079873pgs.5
+        for <linux-pwm@vger.kernel.org>; Sat, 16 Apr 2022 00:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TzIdGf0orlPzlsnGm4d1/wOp9Ug675hNbMOMT58Ay5o=;
-        b=anV+lLXHdPoCvNvo4uqR9yVnraezCiI/gR7f3+/73+6+e/d+CvXkykdbFlf45Cak9p
-         yT/StOCyPW9e06boapRmdlJRlJoo9WnJYC5nAZfit00iz+WieHSZA23/C1Ws48LVJH7I
-         o3k9PJAs5zpKNhfC1/M859nQEVYjTW6pQhAYA=
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=bJd2DIgtyK+bZCVQpMa9XLiI7bVnFQgVFeGzbZ6bXamjrEFIUCNaIDR9YpvR5iTRQC
+         EoRjHn2hxdGgHpTmUXoJLhLdkz8kw8CpdMkf+RjOM2yxgJf0M2w5tnzpw0NiczM9cGQm
+         aTRY2J48j2+AVBVM6ZplapTERLwB7sqpQHn0KTPy+GATyEE1HlWbU25nZewZyTln9PiO
+         eb2iuPe3VcoLkYjZ6tmC44EeIcF1BzRiek/y+/+gg720T1wEvd/5m2iOgdTIUS3isI5Z
+         q2z1OdX/gYACU6OexrbNcXzEKBC+MKUq0Bm7V68HpmeyS3D5tFhEEP1iOfnkPKJo7x6w
+         XtNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TzIdGf0orlPzlsnGm4d1/wOp9Ug675hNbMOMT58Ay5o=;
-        b=0LpPUrBZrvwmaICE0+uwtunDptxtdNTdhvUZVDb0z14fCsVk25shBIxSJL7rW5GPuU
-         6AxFTxJWkdPpCaN7Rh7UwloYGdpsT19x9oho47UZrXf6JMfmzo0dfen/hrxPwzufKCU0
-         Waw9Ew+OKMhnqJWPxcezozYiC+L5/kLQ0g65ppf3cr+bc5CfrTo52mR8Y7qzX1nrtZCR
-         IOT6T/UnRHHYut031ZL6pCwcJx4fPdL11XP+G5gnDDxuO47fdbQzZt8LHcQssAI7rPlG
-         A2o6gWUFlka/+HS2PvsNkasOmSPOadKjGenGyCxjQVumd6hs/MNpKt1uNRBL2k+9W57Y
-         hCKA==
-X-Gm-Message-State: AOAM531fgHloEMBexAnpc/nFMN4rMbDLpiJP90aOMCKQWzH6nWxAjIuE
-        36mpn9f+OhgmvolnK5hyD3D5nw==
-X-Google-Smtp-Source: ABdhPJxgazeepxjQX/HIuYCUv+KWXKHE1HKC70Rms9bSy5mDaYHGosh9IMV8XRSLBN/aN4BdLq7q8w==
-X-Received: by 2002:a05:600c:1e85:b0:38c:ef05:ba5d with SMTP id be5-20020a05600c1e8500b0038cef05ba5dmr74515wmb.119.1649964268274;
-        Thu, 14 Apr 2022 12:24:28 -0700 (PDT)
-Received: from google.com ([37.228.205.1])
-        by smtp.gmail.com with ESMTPSA id v13-20020adfe28d000000b0020375f27a5asm2608680wri.4.2022.04.14.12.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Apr 2022 12:24:27 -0700 (PDT)
-Date:   Thu, 14 Apr 2022 19:24:25 +0000
-From:   Fabio Baltieri <fabiobaltieri@chromium.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
-        chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v4 3/4] dt-bindings: update google,cros-ec-pwm
- documentation
-Message-ID: <Ylh06cG7bII6rG77@google.com>
-References: <20220414092831.3717684-1-fabiobaltieri@chromium.org>
- <20220414092831.3717684-4-fabiobaltieri@chromium.org>
- <1649938809.993469.1698375.nullmailer@robh.at.kernel.org>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=5iwwAaxY8VjQlJrkEhN1TKNUpZKuch5dWTAZIIuVFY/9HGCsl2+EzJpVHw8m/f/NMJ
+         QVcDI0j/5P/CyiXXqR+ei5DNx+GmEljvVRHinv8DVVgjo+3E9feYpkSHlx8weihnmR9f
+         wyG1Dml9c2AbYLMhf30HC+KrPpLgb8eK8oTT022E3Iqf4tcGmrBG2lbRdrm6lSxIGegl
+         XvjdkwV0TKL6YYpvHNYKamqePf9zN5zCEYgPP2+XAiJATaz/mfeV00d7E1o7kMY8+ORp
+         Y4Wd+8HyFCk6PYVa5rOedE7kxXBbdOs3VXLTCNbe1eGrIRywZmD2a/8LoQuePtv6nTzp
+         4xWA==
+X-Gm-Message-State: AOAM532UjLd8GDTybmeptzNJVTTQCFnla0s7bh9y5Q5/9mLLAik0HbcM
+        WXzov7Mrsc9TljxuepFyC/S/pFCjUs0troqum2/ZUEMmVsk=
+X-Google-Smtp-Source: ABdhPJzPQ782jxaaybf4v05kBQtFRTzv0MMrux20NcZ4Q10XmGrK6dnUIabFDBNBmBOv8fFyQY5zqzYAgf4Cnc3KaCc=
+X-Received: by 2002:a92:508:0:b0:2cb:ebd8:a76b with SMTP id
+ q8-20020a920508000000b002cbebd8a76bmr1009500ile.156.1650095366830; Sat, 16
+ Apr 2022 00:49:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1649938809.993469.1698375.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:6638:1309:0:0:0:0 with HTTP; Sat, 16 Apr 2022 00:49:26
+ -0700 (PDT)
+Reply-To: daniel.seyba@yahoo.com
+From:   Seyba Daniel <royhalton13@gmail.com>
+Date:   Sat, 16 Apr 2022 09:49:26 +0200
+Message-ID: <CALSxb2w9zQYotuLcRSCPns53ksvT9UrEMVx-1Cp1f8RE7er3cA@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:542 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [royhalton13[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [royhalton13[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 07:20:09AM -0500, Rob Herring wrote:
-> On Thu, 14 Apr 2022 09:28:30 +0000, Fabio Baltieri wrote:
-> > Update google,cros-ec-pwm node documentation to mention the
-> > google,cros-ec-pwm-type compatible.
-> > 
-> > Signed-off-by: Fabio Baltieri <fabiobaltieri@chromium.org>
-> > ---
-> >  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml      | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> 
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> 
-> yamllint warnings/errors:
-> ./Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml:27:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-> ./Documentation/devicetree/bindings/pwm/google,cros-ec-pwm.yaml:30:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-> 
-> dtschema/dtc warnings/errors:
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/patch/
-> 
-> This check can fail if there are any dependencies. The base for a patch
-> series is generally the most recent rc1.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
+Hello,
 
-Missed out on that, will fix and resend.
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-Thanks!
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit.
-> 
+So please confirm interest by responding back.
 
--- 
-Fabio Baltieri
+My dearest regards
+
+Seyba Daniel
