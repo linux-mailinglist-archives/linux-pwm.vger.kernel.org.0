@@ -2,154 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17DC65087DE
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Apr 2022 14:13:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61860508811
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 Apr 2022 14:25:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352850AbiDTMPt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 20 Apr 2022 08:15:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
+        id S231172AbiDTM2I convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 20 Apr 2022 08:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352954AbiDTMPn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 Apr 2022 08:15:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2456D403E5
-        for <linux-pwm@vger.kernel.org>; Wed, 20 Apr 2022 05:12:58 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nh9CU-00022V-CW; Wed, 20 Apr 2022 14:12:50 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nh9CV-0049dR-2D; Wed, 20 Apr 2022 14:12:49 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nh9CS-004Tjg-Ap; Wed, 20 Apr 2022 14:12:48 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        with ESMTP id S244115AbiDTM2F (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 Apr 2022 08:28:05 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A6F1C91D;
+        Wed, 20 Apr 2022 05:25:19 -0700 (PDT)
+Received: by mail-qt1-f169.google.com with SMTP id d9so781480qty.12;
+        Wed, 20 Apr 2022 05:25:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HJ0UgcnIkbA6AHJznojilX0imBhr1YXT1/wXEX6agp8=;
+        b=ERcgKjTmfByXW50/gpFaNTWx7PR0nre43oGaE87nYkGF1fEHKSPQgXp5UYSmkLysEq
+         A0P5Al7qr2nK23lulNKiqEYxrJo7kWixJCMUtoAv/P+Akk4L8ZboxbHSe5bMQs6Aisxw
+         M69j9tQT6EuSiFUs0JA2rKxW6ejil/SC0BWeMnzFihpohaPFDTjT5FFaovmZxBNKJsiP
+         xuV3WROwTBQqwq0IgGCrPd/UZgXhQxv+C2PZE30XA/daVmDCSuONtNIXzCSt/yuGf4y6
+         IQfVj9WLX8s52M+mgs4juriL9G0Cy0PF+FB4ZEQz2uecdENwEw6eHHZGr8tM0id3aCr1
+         GZoQ==
+X-Gm-Message-State: AOAM531JBd8YIe+mb+UHFu2L8fwGH0K1Z7Z/+tfq8Cy5NsbzJW+TiUQG
+        QYy7suafhnuZDdUc53iQmrCqatszqxC66Q==
+X-Google-Smtp-Source: ABdhPJz7YvsmU6e5Mnn8UBcVu4TIsQAuOA0HX2HrsBFef5VslNevWSY7L5M6CAM4YIHWVXL2ZkZDfg==
+X-Received: by 2002:ac8:5c42:0:b0:2f1:e7f8:3e62 with SMTP id j2-20020ac85c42000000b002f1e7f83e62mr13669785qtj.41.1650457518149;
+        Wed, 20 Apr 2022 05:25:18 -0700 (PDT)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id v65-20020a376144000000b0069e7842f2f5sm1385235qkb.52.2022.04.20.05.25.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Apr 2022 05:25:17 -0700 (PDT)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-2ec05db3dfbso15966597b3.7;
+        Wed, 20 Apr 2022 05:25:17 -0700 (PDT)
+X-Received: by 2002:a81:6ccb:0:b0:2f1:68f1:d90e with SMTP id
+ h194-20020a816ccb000000b002f168f1d90emr18381119ywc.62.1650457516831; Wed, 20
+ Apr 2022 05:25:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220420121240.67781-1-u.kleine-koenig@pengutronix.de> <20220420121240.67781-5-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20220420121240.67781-5-u.kleine-koenig@pengutronix.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 20 Apr 2022 14:25:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV90BHjyjfU=MLkG2yPa1oFFF7ADrpKsEAp9s83DGBkow@mail.gmail.com>
+Message-ID: <CAMuHMdV90BHjyjfU=MLkG2yPa1oFFF7ADrpKsEAp9s83DGBkow@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] pwm: renesas-tpu: Rename variables to match the
+ usual naming
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Simon Horman <horms+renesas@verge.net.au>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v2 6/6] pwm: renesas-tpu: Improve precision of period and duty_cycle calculation
-Date:   Wed, 20 Apr 2022 14:12:40 +0200
-Message-Id: <20220420121240.67781-7-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220420121240.67781-1-u.kleine-koenig@pengutronix.de>
-References: <20220420121240.67781-1-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3068; h=from:subject; bh=qhmj+/kClimdnaMQquEEOOHX5xZ+ZRCX9FU00iWnViM=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBiX/i09g8CTVqTyKus3foEapayKgO+ir799otZKwof S7D4f3qJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYl/4tAAKCRDB/BR4rcrsCb1fCA CSWg4qs1CDKt47OWQYbajjaAIkiiTZiL6UiB7gD8Rk9sq+I4g3X3dyD+5LAtCYwVHm+p1lgQa1a0PS fAqLWMPfKBYRwPrsekaR4qa2FfQ42NOq3sN7JA2Vkj8wb7/kECp9j2n3dI1M0pGJrZAurXDDnUt/sn AK3lN79Q3Or/NRbsULoEAIj3HyvhyfoBarxzGg/o4gj/JbpKzzkq0+AWMBOKT66EtLIIKaeA4w76pr sifzthRq27fo+KsTH0w9qPrwrUekqHj/0xn3jvWVTvsKh4UBkF65jHOIzWIiThmXMGN9QGbi2wvSlM b5nuyxPpah01sQ+Zsw3bIkNB0C1XeH
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Lee Jones <lee.jones@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dividing by the result of a division looses precision. Consider for example
-clk_rate = 33000000 and period_ns = 500001. Then
+On Wed, Apr 20, 2022 at 2:12 PM Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+> The driver used "pwm" for struct tpu_pwm_device pointers. This name is
+> usually only used for struct pwm_device pointers which this driver calls
+> "_pwm". So rename to the driver data pointers to "tpd" which then allows
+> to drop the underscore from "_pwm".
+>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-	clk_rate / (NSEC_PER_SEC / period_ns)
+This patch didn't change (compared to v1), so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-has the exact value 16500.033, but in C this evaluates to 16508. It gets
-worse for even bigger values of period_ns, so with period_ns = 500000001,
-the exact result is 16500000.033 while in C we get 33000000.
+Gr{oetje,eeting}s,
 
-For that reason use
+                        Geert
 
-	clk_rate * period_ns / NSEC_PER_SEC
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-instead which doesn't suffer from this problem. To ensure this doesn't
-overflow add a safeguard check for clk_rate.
-
-Note that duty > period can never happen, so the respective check can be
-dropped.
-
-Incidentally this fixes a division by zero if period_ns > NSEC_PER_SEC.
-Another side effect is that values bigger than INT_MAX for period and
-duty_cyle are not wrongly discarded any more.
-
-Fixes: 99b82abb0a35 ("pwm: Add Renesas TPU PWM driver")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-renesas-tpu.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
-index 60ba7cf275c7..9e6978c39788 100644
---- a/drivers/pwm/pwm-renesas-tpu.c
-+++ b/drivers/pwm/pwm-renesas-tpu.c
-@@ -242,20 +242,29 @@ static void tpu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- }
- 
- static int tpu_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			  int duty_ns, int period_ns, bool enabled)
-+			  u64 duty_ns, u64 period_ns, bool enabled)
- {
- 	struct tpu_pwm_device *tpd = pwm_get_chip_data(pwm);
- 	struct tpu_device *tpu = to_tpu_device(chip);
- 	unsigned int prescaler;
- 	bool duty_only = false;
- 	u32 clk_rate;
--	u32 period;
-+	u64 period;
- 	u32 duty;
- 	int ret;
- 
- 	clk_rate = clk_get_rate(tpu->clk);
-+	if (unlikely(clk_rate > NSEC_PER_SEC)) {
-+		/*
-+		 * This won't happen in the nearer future, so this is only a
-+		 * safeguard to prevent the following calculation from
-+		 * overflowing. With this clk_rate * period_ns / NSEC_PER_SEC is
-+		 * not greater than period_ns and so fits into an u64.
-+		 */
-+		return -EINVAL;
-+	}
- 
--	period = clk_rate / (NSEC_PER_SEC / period_ns);
-+	period = mul_u64_u64_div_u64(clk_rate, period_ns, NSEC_PER_SEC);
- 
- 	/*
- 	 * Find the minimal prescaler in [0..3] such that
-@@ -292,18 +301,15 @@ static int tpu_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	period >>= 2 * prescaler;
- 
--	if (duty_ns) {
--		duty = (clk_rate >> 2 * prescaler)
--		     / (NSEC_PER_SEC / duty_ns);
--		if (duty > period)
--			return -EINVAL;
--	} else {
-+	if (duty_ns)
-+		duty = mul_u64_u64_div_u64(clk_rate, duty_ns,
-+					   (u64)NSEC_PER_SEC << (2 * prescaler));
-+	else
- 		duty = 0;
--	}
- 
- 	dev_dbg(&tpu->pdev->dev,
- 		"rate %u, prescaler %u, period %u, duty %u\n",
--		clk_rate, 1 << (2 * prescaler), period, duty);
-+		clk_rate, 1 << (2 * prescaler), (u32)period, duty);
- 
- 	if (tpd->prescaler == prescaler && tpd->period == period)
- 		duty_only = true;
--- 
-2.35.1
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
