@@ -2,68 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C24950BCA8
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:12:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A993650BCB3
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350961AbiDVQPF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Apr 2022 12:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47904 "EHLO
+        id S1378332AbiDVQQf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Apr 2022 12:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357434AbiDVQPE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:15:04 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1735C85D;
-        Fri, 22 Apr 2022 09:12:10 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id bu29so15173604lfb.0;
-        Fri, 22 Apr 2022 09:12:10 -0700 (PDT)
+        with ESMTP id S1378127AbiDVQQ3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:16:29 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5865E177
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:13:35 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id h11so10244375ljb.2
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=tUo95tRg9oswGTOGs7YDeTbiPQNo1Vj+yujmZ07iNkE=;
-        b=FLa3FV0MSiyAgF2qyUNtURfbCSQxRppSlJuyLPRYJCUhCKwdEJcbnUznBjJaW5PmFQ
-         clVb3BnSlvpBRd7Un9kv49I0jweeB9Q+IEw2idcC1n8H5og+XR/wZJ0ke4iZ3czRD5tQ
-         cuMBls+ZtSi1BD4F4tL4AkioVEUE3qE/D0CIJLegjKlvgqlxGcltFPj3pqPEjdi+/tml
-         vMM3PrkJKFsB8PNhcyCvgoZHcyQdBlmxb4xDmB+90ryGui/OoiYFKVi+XzrwMr/ypgJd
-         z3dorO1J1uzxWOUJVO8+h15OWXkq5DN91Bt6+XYRmK/SD7vUICWns9iF64rBHwU2gXDk
-         OTxQ==
+        bh=PzcbmcNBDSLvt2U83LGs67m5lIGBD3xN1LEXJmz0EiE=;
+        b=CTMMNoUMclwVRDfNqnz4EFyYHvvpVdmmk2vUfqbROT0cwOSEqH4O04K3ImbfTNSvlE
+         99ica51VNnNjLsUCY6uOKcP8NMKFVdItO1jAz4qpx0mKVWqcEb1AFNNOAPwLgucgOICD
+         Hl5D3naVlJMtT+Xf/2KjjLsUZXUYT37VIW3IOp2THOw8orRd2AEVFkB8+j17YderdCRh
+         i37Ag3SPMagRj4I/dvcxZAGZ+0c/jfTn60+6D6KC6el1NYIMgIDht9dMj+urzzmIuv1v
+         dBicF/NJ3YWqBx/9AL8hS06x63E57SdN9XngMxE2iYDY5U9Uy6GmuMrE89xwlm+ee+5M
+         ZCEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tUo95tRg9oswGTOGs7YDeTbiPQNo1Vj+yujmZ07iNkE=;
-        b=tygrQht4ELLDHJpMOrtrGKUPXLNvUXFid2hEee1NTk8rDXdKeakaL02tiujtbc8RHO
-         JJX5EkYregSlsFiVC+Szy6U6AYbu9YSX8x05cPf+mX5IzVeYY8ty4/pjQboQ3fAy4kkn
-         +d9BeajuyU2iHEPkAyuR7lM0wD1OaItMix7KqHsECE0xiVsLv/oW/kDQqHcf5faO/A0d
-         9OzhKESA9WDPJY33Ca07Ugp/QjvvQiTqfc3qguozau0JtmFPr/7Xjp/Ob/2ZRxV96Mfe
-         l6AaNABp/sJvrg8YnbMhzlobSz/+nEzvOh4e0/HB4Xb14RArs8W52DxM1ifmNJqe6sbD
-         XeAg==
-X-Gm-Message-State: AOAM533Vt4Bdol/14jIT3aOrV8ZjNg2SK+wpbefLKsWpBecsCaeCT6+f
-        zanEtTbRHmVfKTqUt06IGm1sditgADM=
-X-Google-Smtp-Source: ABdhPJyqLOH8nj96lV9crARCF1zTsrgpxWcFrXkyn1Y7RcoQRDIU1n10tbVDioOk+9ho+Nz5J1f6Ag==
-X-Received: by 2002:a05:6512:34da:b0:46b:b7fd:1eca with SMTP id w26-20020a05651234da00b0046bb7fd1ecamr3619901lfr.481.1650643929213;
-        Fri, 22 Apr 2022 09:12:09 -0700 (PDT)
+        bh=PzcbmcNBDSLvt2U83LGs67m5lIGBD3xN1LEXJmz0EiE=;
+        b=S9fmB6BwVqaiGR63M7ekoZazrcTppBI3VcUj/7gSZ0Fzko8VsQTkCBHurijJaQNt67
+         MfxZC09CjVxT9lg77WbnDXEMUch4Splugd8IxB1ZRGx6OuP/sJsttMGxbZs2TWx+QNvt
+         FKw38d0mnWFWKKIwkU2qR3u298AaMcinXdIgaygJs6EI8NyjNPx0E+oHMueZhMtmiytc
+         G1sXl7I6OnRgJCEvvMaiKJ1l+N/XITBwzXwKszbR2uG/1JsmlO+Sb/ddG1uMhwHE+JPo
+         4k+4BZj8BDvobHGUBD8Ds0Fz5y4K+NtMseBadCig8+6b2jc3FMsE9yeLXXB6/tGXoQ94
+         L5TA==
+X-Gm-Message-State: AOAM531ux+O9ot4XtGGGN8KE+gdGEs8oZ5/J2AfaoFHAwli6H/uz6tSI
+        i9UbHg+fK4WwcZLOpVOFpWU=
+X-Google-Smtp-Source: ABdhPJz82M/fBjDnl4m6PBwNmanaDsedG/GOuujME5bL28tQauD0ssOzMYhArhtFDLRL6c48DwuEMA==
+X-Received: by 2002:a05:651c:1542:b0:249:a87f:8a34 with SMTP id y2-20020a05651c154200b00249a87f8a34mr3353267ljp.442.1650644014129;
+        Fri, 22 Apr 2022 09:13:34 -0700 (PDT)
 Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id s8-20020a2e9c08000000b0024af06d6674sm254891lji.61.2022.04.22.09.12.07
+        by smtp.gmail.com with ESMTPSA id q29-20020a19431d000000b0046bb8d1e4f5sm269590lfa.262.2022.04.22.09.13.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 09:12:08 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 18:12:05 +0200
+        Fri, 22 Apr 2022 09:13:32 -0700 (PDT)
+Date:   Fri, 22 Apr 2022 18:13:29 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>,
-        paul@crapouillou.net
-Cc:     robh+dt@kernel.org, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mips: dts: ingenic: x1000: Add PWM device tree
- node
-Message-ID: <YmLT1VA8ZL57CQkO@orome>
-References: <20220224234133.15708-1-aidanmacdonald.0x0@gmail.com>
- <20220224234133.15708-2-aidanmacdonald.0x0@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: atmel-tcb: Drop duplicated tracking of per-channel
+ data
+Message-ID: <YmLUKdYOJ4d8hCuL@orome>
+References: <20220302180000.333087-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oqekWBq8aThw7qyZ"
+        protocol="application/pgp-signature"; boundary="R3f4do0xUoqwJK+v"
 Content-Disposition: inline
-In-Reply-To: <20220224234133.15708-2-aidanmacdonald.0x0@gmail.com>
+In-Reply-To: <20220302180000.333087-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -76,73 +76,52 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---oqekWBq8aThw7qyZ
-Content-Type: text/plain; charset=us-ascii
+--R3f4do0xUoqwJK+v
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 24, 2022 at 11:41:34PM +0000, Aidan MacDonald wrote:
-> Copied from the jz4740 devicetree and trimmed to 5 timers, which
-> is what the hardware supports.
+On Wed, Mar 02, 2022 at 07:00:00PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Per-channel data is tracked using struct pwm_device::chip_data and
+> struct atmel_tcb_pwm_chip::pwms[]. Simplify by using the latter
+> consistently.
 >=20
-> Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
->  arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> Hello,
+>=20
+> I just found this patch in my pwm tree authored back in November. It
+> seems I failed to send it out earlier as I find no trace of it in my
+> mailbox.
+>=20
+> Best regards
+> Uwe
+>=20
+>  drivers/pwm/pwm-atmel-tcb.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-However I don't see this upstream yet, neither in Linus' tree nor in
-linux-next. Paul, do you still have this on your radar?
+Applied, thanks.
 
 Thierry
 
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/i=
-ngenic/x1000.dtsi
-> index 8bd27edef216..0dcf37527c8e 100644
-> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-> @@ -127,6 +127,19 @@ wdt: watchdog@0 {
->  			clocks =3D <&tcu TCU_CLK_WDT>;
->  			clock-names =3D "wdt";
->  		};
-> +
-> +		pwm: pwm@40 {
-> +			compatible =3D "ingenic,x1000-pwm";
-> +			reg =3D <0x40 0x80>;
-> +
-> +			#pwm-cells =3D <3>;
-> +
-> +			clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>,
-> +				 <&tcu TCU_CLK_TIMER2>, <&tcu TCU_CLK_TIMER3>,
-> +				 <&tcu TCU_CLK_TIMER4>;
-> +			clock-names =3D "timer0", "timer1", "timer2",
-> +				      "timer3", "timer4";
-> +		};
->  	};
-> =20
->  	rtc: rtc@10003000 {
-> --=20
-> 2.34.1
->=20
-
---oqekWBq8aThw7qyZ
+--R3f4do0xUoqwJK+v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi09MACgkQ3SOs138+
-s6FFpRAAuH7U4JXdUlpL70pOW1ieMwEBCfi6FD7Ek1vDFOOMpYKWTmbckzoBi3JW
-nAbs6B3aKDgnopG7nui6lyS7XYosRXjgnvn05FIFdKApcAkE929MplQAG7x8JOuC
-pCHfLXuTkh3pngiZtyvVpqJ4ymT1e2Z1IV7is215b8SmUhotOtAPFS1gpbRXQLWR
-bTqfdaoxYHpmTHU5lcoZAzU3cqzAP28Ae/xhMoiSK+6ZaPpDGimC7MszBkGgJQZi
-VQ2PvhbIthFk7tAaBekRj9pQiD6pdk2IA+bctSpOcUoVp9NRvudgmm5rBEEKPuOf
-Sr7VNVd9/HNWGAiMtEGb3SbbUbBxzVXNxEWRz+NtO9Y6R4h8IpWmMIH/SMoR7fYy
-+Ea3HdylX2TENnuH+wonQAdNqJ0t5w2hlkjltJLDJUOqgF3KkugdMylzhWMpv3Dj
-anltpfr9KWN48c2N8VsBuUSfVlU0SZB6cV7dHq+8JTpucva/YtD+0gdwofl4cERF
-czY9p20Bzw1vlfCIDaeH1qLv/e5e5jGlJVmF8GFAA6CyyhNWit/5uWO57GATvSqE
-inSRdtOdmJkfnB91+bu2mpeirRIe5lM+8FfIW22OT4W0OXHSXC3ViLbLAa6w1zjm
-oIJroWw1T0nFvfsz9+PRPGVIqfD1KllKDrj8awyEtowT5wDC2Wg=
-=9GL8
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi1CkACgkQ3SOs138+
+s6FlqhAAjG8majGG8H2o4yutZN3cWXJYrbKahMHmFKtXH4JkQMVid/SpvmKaMdYz
+r5wkh2IB33F/rlzAhOvO56d7vKrmSlYn7D8B2a0PgA7FtglcK1DMehZXmUhzl89c
+DPqrbPQ099Dt8meks7ikg/haTGdRtozLsZEA/g4DKSqK3qy+XHwxZ/pGI5gaD5JS
+CamV4fFiq0UftkxcxcJ9Di8asw7GrAnzQkCIk4yw2+2+ZeoVKJ1vWkHUgzB+JkFv
+kiq0pU/qqZyNsv4qTEYIDmHQ0hirSRc5KR8MTmkGp6DxEy04BbbtbNUS5zGkG2Fa
+vaXDCkVGgCCmp4m2cq6pDqdf+jSSC4BLatQGvdmJIdBHxNED/rJARv8dknPW51Yp
+O0yE3YmF0z1BmXPCFuGFy0fqFETojOBMXK9yfvLM0b174SQHf6aS6bTeY/vvS13w
+I6St1+weg7XkUhxvAg4uCI0KdoSW5xf2uPmvkufTa60QRaLymJ7nALAyYrvzhzzm
+msAghJbk72CMgiqlf1Qa2gnmbPJyyRM50OBRHgfIex71KlVGtrrhXsfMJ1NXYrGQ
+CJG3rs+WwNxJUc2X9q2HoRVVtXRgEVh0539DDgBCJakoaykVu282iYGFH82Mhyd5
++YmCkv1KIA2fQn7zsehVejUOIkfmtLvULr2tpEbtYMgp2vkR5d8=
+=bL8L
 -----END PGP SIGNATURE-----
 
---oqekWBq8aThw7qyZ--
+--R3f4do0xUoqwJK+v--
