@@ -2,112 +2,86 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A99250BFA7
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 20:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B58F750C3CB
+	for <lists+linux-pwm@lfdr.de>; Sat, 23 Apr 2022 01:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231259AbiDVSLk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Apr 2022 14:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        id S233339AbiDVWzx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Apr 2022 18:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234265AbiDVSF7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 14:05:59 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1A921183B0;
-        Fri, 22 Apr 2022 11:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1650650029; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=36SBTaNp7dcTwurtvjqe7McQ+kB/vBW59yh6tlX/7i8=;
-        b=BPNDxQt/o50fWYfoDGVkwMu81csPM+9pmWJwPV3spGu9npSLkECl3pJuHungufYWLRFOC7
-        5Nrr0lLYcWZUeG4e+7vJR9j1YAGDLBrQ9UG1WEGQiiMjBhUN7BGGOEV/cwIpPYvSAXhIZV
-        CQWPYwr4aCSh1qE2gE3q4eszxbJPM8Y=
-Date:   Fri, 22 Apr 2022 18:53:39 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 2/2] mips: dts: ingenic: x1000: Add PWM device tree
- node
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Message-Id: <FP5RAR.CXCRD56PL7G72@crapouillou.net>
-In-Reply-To: <YmLT1VA8ZL57CQkO@orome>
-References: <20220224234133.15708-1-aidanmacdonald.0x0@gmail.com>
-        <20220224234133.15708-2-aidanmacdonald.0x0@gmail.com>
-        <YmLT1VA8ZL57CQkO@orome>
+        with ESMTP id S233664AbiDVWzV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 18:55:21 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104FD1E1DC4
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 15:18:37 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id r189so16927488ybr.6
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 15:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G4FyEq0J4+nC0MTe8qO25P0tPU2l2IpDCHzyMQrJqNA=;
+        b=AAmRV3w2Oc227kK2N6ru2O1CgaiHjqSP3HFhcCzwEyHL63jqnF+tp6a/J7AnfYPpEk
+         sU6za6lHhI0EfxX1Sr4kXFK5DFYX9gawJmC7xIIPqTuKrSenR6itm/L9dVv5I4cGUyeG
+         qqK//g/xd6wTf/46k30vG0AByPbyk7dLaqanNU1AXDRlH0bVbjnCilOkUcm8mhFpmPry
+         1dj2R6Qn4LMgvOZSjO2o5uFUL31JtGG2EgiR9FndNLkQTYiDd5+ColScDGU7vUKNr58U
+         RBO+nvxeiXF4cunLxrjv3r8CtJCNq+nbFIEwgUMqUs574oVSGjw5ahp2eOoD7s5J90cW
+         7o8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G4FyEq0J4+nC0MTe8qO25P0tPU2l2IpDCHzyMQrJqNA=;
+        b=fDTdqCWZaJh7cWv5kFeyL5/0rDdqpWSSTVcspdLaaOZUAlJxmcJDbzIuJwvmi5b3JU
+         BR0m2gt6wUqHU/nNqzawnJDEjRiKKs0/4QMhPbgS3GMEoqqe7pqckbG4cpYD0iI7W5XQ
+         rF30eQwj0J9bKU4ERyyPajgl1nf0bPRrwbfjGQv5Fgn6r9U3rqD5Sy7LOFtlM6zYTdsQ
+         l1/oftuJT7zLny4TvuGNSL6fhOtemalBz9rbQkymgnLCU+UqZSYQAEvL1cfQAZTPcEaO
+         YbSoF1XIUsNLRmY0bnoMRK5ouo7gTR+rvZseuKMAFXwIfpFvblmE3/yvEba0W0HrP2ry
+         H8bw==
+X-Gm-Message-State: AOAM532gL4lb6l8BT2v09Bc0J4uPjZwYpdPLqvgieqkfFC5x0oDXLxCd
+        HwXxWwRCE/dqQKN0q1CfUrPUVr99gvIKoBPv93O3RQ==
+X-Google-Smtp-Source: ABdhPJxqHo4RT34Ay1885+QQSd4dTrKwzDUBhzWyFIJoDUQ47o50iRXzILq9yYWWAXScqMAu7RkHJ5kgMRUN1s8dZbc=
+X-Received: by 2002:a25:4e82:0:b0:633:68d7:b864 with SMTP id
+ c124-20020a254e82000000b0063368d7b864mr6962271ybb.514.1650665911106; Fri, 22
+ Apr 2022 15:18:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <145383feecbe43f3bbd3e128143f7890f0314b3b.1649658220.git.baruch@tkos.co.il>
+ <YmLcdmQrO4+0tEiJ@orome>
+In-Reply-To: <YmLcdmQrO4+0tEiJ@orome>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 23 Apr 2022 00:18:20 +0200
+Message-ID: <CACRpkdaqRe8HgPvm-YH9p=ZDetX6jcVHFRgvqk064KW=2-a-mQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: drop pwm base assignment
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Baruch Siach <baruch@tkos.co.il>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+On Fri, Apr 22, 2022 at 6:48 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Le ven., avril 22 2022 at 18:12:05 +0200, Thierry Reding=20
-<thierry.reding@gmail.com> a =E9crit :
-> On Thu, Feb 24, 2022 at 11:41:34PM +0000, Aidan MacDonald wrote:
->>  Copied from the jz4740 devicetree and trimmed to 5 timers, which
->>  is what the hardware supports.
->>=20
->>  Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
->>  ---
->>   arch/mips/boot/dts/ingenic/x1000.dtsi | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->=20
-> However I don't see this upstream yet, neither in Linus' tree nor in
-> linux-next. Paul, do you still have this on your radar?
+> > -     /*
+> > -      * There may already be some PWM allocated, so we can't force
+> > -      * mvpwm->chip.base to a fixed point like mvchip->chip.base.
+> > -      * So, we let pwmchip_add() do the numbering and take the next free
+> > -      * region.
+> > -      */
+> > -     mvpwm->chip.base = -1;
 
-I don't have a tree so that would be a patch for Thomas (Cc'd) to go=20
-through the linux-mips tree.
-(Note to Thomas: patch 1 is already applied in the pwm tree)
+I don't see why this is removed. I understand why the comment is removed
+but all contemporary GPIO chips should use dynamic assignment of numbers
+i.e. base = -1.
 
-The changes look good though, so:
-
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-
-Cheers,
--Paul
-
->=20
-> Thierry
->=20
->>=20
->>  diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
->> b/arch/mips/boot/dts/ingenic/x1000.dtsi
->>  index 8bd27edef216..0dcf37527c8e 100644
->>  --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
->>  +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
->>  @@ -127,6 +127,19 @@ wdt: watchdog@0 {
->>   			clocks =3D <&tcu TCU_CLK_WDT>;
->>   			clock-names =3D "wdt";
->>   		};
->>  +
->>  +		pwm: pwm@40 {
->>  +			compatible =3D "ingenic,x1000-pwm";
->>  +			reg =3D <0x40 0x80>;
->>  +
->>  +			#pwm-cells =3D <3>;
->>  +
->>  +			clocks =3D <&tcu TCU_CLK_TIMER0>, <&tcu TCU_CLK_TIMER1>,
->>  +				 <&tcu TCU_CLK_TIMER2>, <&tcu TCU_CLK_TIMER3>,
->>  +				 <&tcu TCU_CLK_TIMER4>;
->>  +			clock-names =3D "timer0", "timer1", "timer2",
->>  +				      "timer3", "timer4";
->>  +		};
->>   	};
->>=20
->>   	rtc: rtc@10003000 {
->>  --
->>  2.34.1
->>=20
-
-
+Yours,
+Linus Walleij
