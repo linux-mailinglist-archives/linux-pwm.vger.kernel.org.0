@@ -2,70 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70E7850BDB2
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F13E850BDB7
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234479AbiDVQ64 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Apr 2022 12:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
+        id S234516AbiDVRAN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Apr 2022 13:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234536AbiDVQ6x (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:58:53 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2B660041;
-        Fri, 22 Apr 2022 09:55:59 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id bq30so15324277lfb.3;
-        Fri, 22 Apr 2022 09:55:59 -0700 (PDT)
+        with ESMTP id S1345433AbiDVRAI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 13:00:08 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399EA5FF2B;
+        Fri, 22 Apr 2022 09:57:12 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id t25so15314769lfg.7;
+        Fri, 22 Apr 2022 09:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=2pYMeHUvcayBz/9UI4GynHSCHFwlqj2AHLeRRSA2YCs=;
-        b=krXyhcne24yR9Gh9Zw9iW5pAPfymD6ScOTFGCbwgAiEfrdkto4s0WJKBkiyMT9wS8U
-         qiZ7Jeg4UtHkQycTkuZGLLXyhFIg28tnP4MQtX6j3dYWYo+1EYN3FDI1O4FjoZpL63r7
-         QuM0xTeyJ5IS0MuRNgZGFlo4BSax11D4NhIfsyHR51g700L3yGXcPgJHkP2wbd6Eor5n
-         rU3y/q11XVacnnOn7FMunwUUEC1z4BWbibkdKs4mGKjzBnft6qUcb0lgGy0thSIrv+h3
-         VDLdceA8c369rBPYYPT2F5w8MsDASgxJ3u15mtaP8SWcxy8OPYBCl/mj19AmQKdFPS2A
-         3TYA==
+        bh=bPH7VaBfkFbtZZotNuuTdskPihD6+M4P5/MTINbvQUc=;
+        b=Pe+UOZBQErS+Z8nmGZrZH2ly5AmAXR/nub2maR1YBDg2mW5cI8XFN7kRpzR9zJR1g/
+         RCcytxziQK15Y/+UhDwpzPO/z8urhmQ15jD9UMpIVuXdvYk4ZA9FMtQi/zELESwjYQ6k
+         oawpnRmK4g3hu3fT3s6md4XsDn4X61bzFwlVcJy4oKKXIIa+Wf5SbsrYbGooZQtu9T6w
+         mMrQaS3i1Iz83k0/NJ+NcahILWGnEI8wU5g8Ena+3kmorM7mSBcU3mLHYmzUGfSY57bG
+         E+QiOx9uS0cC7R96ZHgDOYCEZyLap5NE8EK+uYgY9glo5SCpnjSPQ7hN8GC1SPl/HsYy
+         6IUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2pYMeHUvcayBz/9UI4GynHSCHFwlqj2AHLeRRSA2YCs=;
-        b=wiWuArXZaLbxkN1NamDR7yBhy2ujn5vdVaFp+qv1MVnTaxdQ3EhgMTAaAB4tL1rQ+p
-         JPkYRx5K966Kx0XIMnF/YdVCMiOFsmLeymW0CUtgDje8Oa6jRIARET2WUCyUTPoIFCrx
-         X5fYOxdsMLNS3meioOiX2xpgTOegkJlvKHR4MBQdvSefAtPcK1rblur0e0D2++KVuAuA
-         XAw0uIpx7mrbUkRpb4bZ4RFU8w3pmaqE610RnLqVk8OBIeHozcCekKOg6fGbNLTfNfi9
-         772kICuE050BddmZh1jL40VZ7FyXF6jJM/R9gizCc7B5yo45WsQX6+gEclMbs2Sqgq4/
-         LnVA==
-X-Gm-Message-State: AOAM532L8Mv/8MaUa8Hp0RjTO8cpJORvg/QR+/eQ/w3c/1EqxXtR6gXk
-        w2WchsXRpiILAlLxJNLfT1A=
-X-Google-Smtp-Source: ABdhPJyCViL6TK3OhUnGEKGOgIn1Xu+YgBPckSSxDddGfTZMPnPildVIxagVVGzqWFFbTgRd6cy4kg==
-X-Received: by 2002:a19:5f0e:0:b0:44b:111:1622 with SMTP id t14-20020a195f0e000000b0044b01111622mr3758916lfb.161.1650646557381;
-        Fri, 22 Apr 2022 09:55:57 -0700 (PDT)
+        bh=bPH7VaBfkFbtZZotNuuTdskPihD6+M4P5/MTINbvQUc=;
+        b=XEiKvmg7xsYSXSZYVx/nLyolc7T/6RvikXHAvkNkh+jvOxdHOfpGJ0SkCTpejBuWuu
+         7cVV/dJx9ir3mL7fzph2FOZFcSsmdzYfqq66PcOvZUnSPe4g7zlp/b6WPBB7bwcOizQt
+         zy+RBChim9fHOwMIVFrO63EpsNmwtJL1tSPAGPCOiXaX+vSXKKhsurWYmIJYgOgF6sxd
+         HwZGI1SDFG/FStu42hZnLcapg1U3MgKzqry1M8evemEydgOfEPE1WHQzk738wFjlDRKV
+         j+4Qnd/ZjaM9fYy0bf6KapptCywlA3wTAFVqZXwgFMmJP33Bk9HAp3QjgL3pGCSLBAwv
+         u2wg==
+X-Gm-Message-State: AOAM532c6sb/kFQjdzrACwzo+q7gjzd4MMKryO5RL+6mJjBl1l1yUIdz
+        cNe5zK93yEllcseydASIz8k=
+X-Google-Smtp-Source: ABdhPJzdFQvGzdSLbrSe+adt+pVkjulM8+IbVohfTKqNcWpqfyrWUedIVpFG1a8BPbVbvzAdinxkHQ==
+X-Received: by 2002:a05:6512:2213:b0:471:c296:b659 with SMTP id h19-20020a056512221300b00471c296b659mr3848330lfu.24.1650646630354;
+        Fri, 22 Apr 2022 09:57:10 -0700 (PDT)
 Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id a2-20020a19e302000000b00471988e79cdsm282219lfh.180.2022.04.22.09.55.55
+        by smtp.gmail.com with ESMTPSA id r9-20020a2e8e29000000b0024da2131ed9sm269715ljk.100.2022.04.22.09.57.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 09:55:56 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 18:55:53 +0200
+        Fri, 22 Apr 2022 09:57:07 -0700 (PDT)
+Date:   Fri, 22 Apr 2022 18:57:04 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     xinlei.lee@mediatek.com
-Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        robh+dt@kernel.org, matthias.bgg@gmail.com,
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>, xinlei.lee@mediatek.com,
+        lee.jones@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, rex-bc.chen@mediatek.com,
         jitao.shi@mediatek.com,
         Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v6,0/5] Convert pwm-mtk-disp.txt to mediatek,
- pwm-disp.yaml format
-Message-ID: <YmLeGaZ0hX1kj9+v@orome>
+Subject: Re: [PATCH v6, 5/5] dt-bindings: pwm: Add interrupts property for
+ MediaTek MT8192
+Message-ID: <YmLeYOOCNciqhykt@orome>
 References: <1650284456-16407-1-git-send-email-xinlei.lee@mediatek.com>
+ <1650284456-16407-6-git-send-email-xinlei.lee@mediatek.com>
+ <a92d3b46-ace4-2d19-fef9-c59cd1a596ce@collabora.com>
+ <20220421134808.sqnecvysuzlgdsz5@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LcAPuwLqmWX+Fefx"
+        protocol="application/pgp-signature"; boundary="Xn43fwg7L9AIf1Ta"
 Content-Disposition: inline
-In-Reply-To: <1650284456-16407-1-git-send-email-xinlei.lee@mediatek.com>
+In-Reply-To: <20220421134808.sqnecvysuzlgdsz5@pengutronix.de>
 User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -78,73 +82,57 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---LcAPuwLqmWX+Fefx
-Content-Type: text/plain; charset=us-ascii
+--Xn43fwg7L9AIf1Ta
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 18, 2022 at 08:20:51PM +0800, xinlei.lee@mediatek.com wrote:
-> From: Xinlei Lee <xinlei.lee@mediatek.com>
+On Thu, Apr 21, 2022 at 03:48:08PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >=20
-> Change since v5:
-> 1.Add interrupts property.
+> On Thu, Apr 21, 2022 at 12:17:00PM +0200, AngeloGioacchino Del Regno wrot=
+e:
+> > Il 18/04/22 14:20, xinlei.lee@mediatek.com ha scritto:
+> > > From: Xinlei Lee <xinlei.lee@mediatek.com>
+> > >=20
+> > > Add interrupts property of pwm for MediaTek MT8192 SoC.
+> > >=20
+> > > Signed-off-by: Xinlei Lee <xinlei.lee@mediatek.com>
+> >=20
+> > Hello Xinlei,
+> > the pwm-mtk-disp.c driver does not support interrupts.
+> >=20
+> > Please add interrupts support to the driver first, and only then
+> > add that in the dt-bindings.
 >=20
-> Changes since v4:
-> 1.Base on Linux-next.
-> 2.Cancel removal of mt8167 compatiable patch.
->=20
-> Changes since v3:
-> 1. Combine multiplexed socs into one entry
->=20
-> Changes since v2:
-> 1. Modify the PWM name to DISP_PWM.
-> 2. Include pwm.yaml.
-> 3. Separate conversion files and add/remove operations.
->=20
-> Changes since v1:
-> 1. Fixed formatting issues mentioned in the v1.
-> 2. Delete pwm-mtk-disp.txt.
-> 3. Add mtk_pwm dt_maintainers.
-> 4. Add "#pwm-cells" & power-domains properties.
-> 5. Make dt_checking successful.
->=20
-> Xinlei Lee (5):
->   dt-bindings: pwm: Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml
->     format
->   dt-bindings: pwm: Add compatible for MediaTek MT8192
->   dt-bindings: pwm: Add compatible for MediaTek MT8195
->   dt-bindings: pwm: Add compatible for MediaTek MT8186
->   dt-bindings: pwm: Add interrupts property for MediaTek MT8192
->=20
->  .../bindings/pwm/mediatek,pwm-disp.yaml       | 75 +++++++++++++++++++
->  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 45 -----------
->  2 files changed, 75 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/mediatek,pwm-di=
-sp.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
+> in my understanding the linux driver state and the binding documentation
+> are somewhat independent. Here I'd say adding the irq information to dt
+> without the driver supporting it is fine.
 
-Applied, thanks.
+Agreed. I've applied this along with the rest. It doesn't have Rob's or
+Krzysztof's stamp of approval, but it's a trivial change and looks fine
+to me.
 
 Thierry
 
---LcAPuwLqmWX+Fefx
+--Xn43fwg7L9AIf1Ta
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi3hkACgkQ3SOs138+
-s6Huww/+LcxzjgeWvFFCu2uvAQB4pL5HxJI4grLWEbFg0ZLeOWl664dx3po5VI65
-cMvtk+MVuoHjnUC4OWUXHIzrj0S9dGtyvMzD0XfeANgoS0j/+5HJ4ywhkRyhjd/k
-SOFBE9f46qErRtUub+9XlH5v5CnpjVraYhlhHPYUEYEAhUzX8XC+4AzpJIY1hb8C
-D/rOhvyjAPzk8OzGlNpRwM3N1qH7jZI2PIF336N3TU1yMo270dNroGVPEIm/k1bC
-ToO6cYUWNsduq+i2n1d38CqDPwrhEvqvL05vvLZO05zlBCevqFsR1fTO3cE9nD5c
-cv0MWGU7hSsxJaMdu8V7f65vVtTyeshyo4RYSGlBRfNCTccYTTjl5NU3brICfx7x
-Sbp2KbpF1/+xdHYRLPor+G/gTJUuFuSujl/G3W2ZtCoQOIwrs8I/8jFv5HsHzkZU
-AZTzahQ1YbmILSDJ0wwxAHDT1/+NwQs7f3X5JosyLmM4I0Admbdx89XIUCszVruc
-dVn6CqNbLcJFXvyuKDauTjzYXYBgNwHq65d1qiy724VnkfJ8vnmCa6G+XEyM6oeJ
-5WSIq9As3pv47IjTPf7esxka9YQLAMVis4wxFTXGkjTEx809Rxz5KXr2ZwKBke+5
-Tw64dlGnIGEdXu0nklgQDJLJDG6fUN76A6KxE8oRr4eK9mcbV3Q=
-=KqxN
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi3mAACgkQ3SOs138+
+s6GaAw//VlLPxZ1xhdfymBfdZxhQ5KeACuZ6k/asJF7IV7j+qF8lPEGixgDeaLZF
+g139oHKqts/KjwLRBEerRUOKC1om/nZNbnF5phGdFXBhNCHPbgPEDXwDh64O6gNN
+VYiOS3e+9/UWgo18fkjE0vAtlf5BOytzKE3dxheacU29YENfK5mfajrP5OqsMmgs
+SXvoMWRuq2ni51pPlj1sNIoeK3FBwvM8D4yFHV8Ns/jpDRmIXqBafYUc0qu3l5yQ
+fX0ojlbaDppJ8YFyRPn7PDY36hA8siLvW9WCJ4GB0sAZeG1ZlA2zvMSFxNLz+OIE
+Xg76o+1+zMuWsHCCvay7Q+ylNlyyVCS4Kp33Ho8BMIHS2WLm1L0wUvaUGAHH4f4h
+I6TcMGxu++kh6g1LXFAZ8HCwUG8J+HdJiYgfKEH8DQuqzYfWl54GA1Gi65+zpCfA
+EoMbL4Ja/pb3QjlgtzoGWoGF9qMUigUy5DlICAJJs+JsI84YGj2UNCFS3uXCHOsC
+/Mh5APkBEz0hI8eF7jWhdpjsD1Fsl04aaHjGn0iIIKw8fHE1XoJXN85aU5jdKS77
+bvuAn7dcSlpasoPaUgIBnje0T7SGp3YKzaJs+PiRE5rxHitjMRLa0umLL/tKMhUE
+vJCoUPamD5R+OoQIeG8sXKQYV/+As6q8kGd21nwJI4AIJ8QhaIM=
+=c+hp
 -----END PGP SIGNATURE-----
 
---LcAPuwLqmWX+Fefx--
+--Xn43fwg7L9AIf1Ta--
