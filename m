@@ -2,65 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9214650BDA0
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E7850BDB2
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345128AbiDVQzu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Apr 2022 12:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+        id S234479AbiDVQ64 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Apr 2022 12:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234740AbiDVQzr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:55:47 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269045FF03
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:52:54 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id g19so15323389lfv.2
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:52:54 -0700 (PDT)
+        with ESMTP id S234536AbiDVQ6x (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:58:53 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2B660041;
+        Fri, 22 Apr 2022 09:55:59 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id bq30so15324277lfb.3;
+        Fri, 22 Apr 2022 09:55:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=vhXM0ntcXKHlydbZT/Xpn3h0qeo9VUsocNXCliyhBpM=;
-        b=IVijHsfm/xcq9j9GO5ywI9XTVSzWvOmnhnfTZpnrV4mZ86XRKhPyHlDH3SShJe2Szx
-         3XRgixRnOd4iBbOkqJqTKuGgirI6dpSUhqFZ+5mFvT43AqFC7sMFv7nUyZUbeHQW67Az
-         vynuM8TztIczQ23ev320ep58M0EVBusTQZI28zOZbUpUAlSpfB7MEk0SbfabqGH+dXkd
-         V12hr6BZQlENt3mhglKpproJD+6IVv6v/NK+pDYVz4gbVu/VhuLW3Qfh+V2Wu6k4oufX
-         ysAOmi3+1lZhboW2T8mtfIzkl6hMSh2HvRvjMk/6790//S02dZqZmnlSydZ8t/oaevG3
-         KzIA==
+        bh=2pYMeHUvcayBz/9UI4GynHSCHFwlqj2AHLeRRSA2YCs=;
+        b=krXyhcne24yR9Gh9Zw9iW5pAPfymD6ScOTFGCbwgAiEfrdkto4s0WJKBkiyMT9wS8U
+         qiZ7Jeg4UtHkQycTkuZGLLXyhFIg28tnP4MQtX6j3dYWYo+1EYN3FDI1O4FjoZpL63r7
+         QuM0xTeyJ5IS0MuRNgZGFlo4BSax11D4NhIfsyHR51g700L3yGXcPgJHkP2wbd6Eor5n
+         rU3y/q11XVacnnOn7FMunwUUEC1z4BWbibkdKs4mGKjzBnft6qUcb0lgGy0thSIrv+h3
+         VDLdceA8c369rBPYYPT2F5w8MsDASgxJ3u15mtaP8SWcxy8OPYBCl/mj19AmQKdFPS2A
+         3TYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vhXM0ntcXKHlydbZT/Xpn3h0qeo9VUsocNXCliyhBpM=;
-        b=DE6XbwVxhx1xiTAw8HzMUAaar0ik1JNFe6AgPil2iTfckV9WmyFipbQRuY4dpWpJ2S
-         DLK/QY2ANk8IjBxialYRFUPwNxXnX9X8W2d+s0wTqvSDiC0ZD7DW2NuYKNBNyugaZzCQ
-         Zg610RL5MI4/3K/avP7b4Anv/eKHNB0Xn5Y8T97pPXsJaVF0YFCdpYHzTQkABn5su/Bl
-         k8p6HcQY1ZJmDUHvf190xizMtgsl+j7sCLobQZZEUnkkxa6o+S3b3kc/xqsNdoSYOZiC
-         inyA/fBZpj2LVPS2qQah/CZS9f6sbnjv542lwYXuHcNdCcs+n2U1XDjrKCorn7lMWJdM
-         pMiA==
-X-Gm-Message-State: AOAM5301cl7989MO6LXfXUlzkM1IAk17hXJ3tb3aiL/9NecmeOsCTzOX
-        kwl721eCNqdJUNi8bwCrfVI=
-X-Google-Smtp-Source: ABdhPJw9h1Qy6xskefDrAGdXK/zJpcnjGhLLN4AFUFt1X8tV6AusqqGNo5nRHKwc3AZsJRyMX519IQ==
-X-Received: by 2002:a19:3845:0:b0:46d:1871:1c6b with SMTP id d5-20020a193845000000b0046d18711c6bmr3695288lfj.429.1650646372440;
-        Fri, 22 Apr 2022 09:52:52 -0700 (PDT)
+        bh=2pYMeHUvcayBz/9UI4GynHSCHFwlqj2AHLeRRSA2YCs=;
+        b=wiWuArXZaLbxkN1NamDR7yBhy2ujn5vdVaFp+qv1MVnTaxdQ3EhgMTAaAB4tL1rQ+p
+         JPkYRx5K966Kx0XIMnF/YdVCMiOFsmLeymW0CUtgDje8Oa6jRIARET2WUCyUTPoIFCrx
+         X5fYOxdsMLNS3meioOiX2xpgTOegkJlvKHR4MBQdvSefAtPcK1rblur0e0D2++KVuAuA
+         XAw0uIpx7mrbUkRpb4bZ4RFU8w3pmaqE610RnLqVk8OBIeHozcCekKOg6fGbNLTfNfi9
+         772kICuE050BddmZh1jL40VZ7FyXF6jJM/R9gizCc7B5yo45WsQX6+gEclMbs2Sqgq4/
+         LnVA==
+X-Gm-Message-State: AOAM532L8Mv/8MaUa8Hp0RjTO8cpJORvg/QR+/eQ/w3c/1EqxXtR6gXk
+        w2WchsXRpiILAlLxJNLfT1A=
+X-Google-Smtp-Source: ABdhPJyCViL6TK3OhUnGEKGOgIn1Xu+YgBPckSSxDddGfTZMPnPildVIxagVVGzqWFFbTgRd6cy4kg==
+X-Received: by 2002:a19:5f0e:0:b0:44b:111:1622 with SMTP id t14-20020a195f0e000000b0044b01111622mr3758916lfb.161.1650646557381;
+        Fri, 22 Apr 2022 09:55:57 -0700 (PDT)
 Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id s22-20020a197716000000b0046bc65188d6sm282643lfc.80.2022.04.22.09.52.50
+        by smtp.gmail.com with ESMTPSA id a2-20020a19e302000000b00471988e79cdsm282219lfh.180.2022.04.22.09.55.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 09:52:51 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 18:52:49 +0200
+        Fri, 22 Apr 2022 09:55:56 -0700 (PDT)
+Date:   Fri, 22 Apr 2022 18:55:53 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Alexander Shiyan <shc_work@mail.ru>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: clps71xx: Implement .apply() callback
-Message-ID: <YmLdYYg2egS5Jczj@orome>
-References: <20220408154520.173148-1-u.kleine-koenig@pengutronix.de>
+To:     xinlei.lee@mediatek.com
+Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        robh+dt@kernel.org, matthias.bgg@gmail.com,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, rex-bc.chen@mediatek.com,
+        jitao.shi@mediatek.com,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v6,0/5] Convert pwm-mtk-disp.txt to mediatek,
+ pwm-disp.yaml format
+Message-ID: <YmLeGaZ0hX1kj9+v@orome>
+References: <1650284456-16407-1-git-send-email-xinlei.lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cNLg9cLGMqSzp3kN"
+        protocol="application/pgp-signature"; boundary="LcAPuwLqmWX+Fefx"
 Content-Disposition: inline
-In-Reply-To: <20220408154520.173148-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <1650284456-16407-1-git-send-email-xinlei.lee@mediatek.com>
 User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -73,45 +78,73 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---cNLg9cLGMqSzp3kN
-Content-Type: text/plain; charset=utf-8
+--LcAPuwLqmWX+Fefx
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 08, 2022 at 05:45:20PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> To eventually get rid of all legacy drivers convert this driver to the
-> modern world implementing .apply().
+On Mon, Apr 18, 2022 at 08:20:51PM +0800, xinlei.lee@mediatek.com wrote:
+> From: Xinlei Lee <xinlei.lee@mediatek.com>
 >=20
-> This fixes a small issue in clps711x_get_duty() en passant: the
-> multiplication v * 0xf might have overflown.
+> Change since v5:
+> 1.Add interrupts property.
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-clps711x.c | 68 ++++++++++++--------------------------
->  1 file changed, 21 insertions(+), 47 deletions(-)
+> Changes since v4:
+> 1.Base on Linux-next.
+> 2.Cancel removal of mt8167 compatiable patch.
+>=20
+> Changes since v3:
+> 1. Combine multiplexed socs into one entry
+>=20
+> Changes since v2:
+> 1. Modify the PWM name to DISP_PWM.
+> 2. Include pwm.yaml.
+> 3. Separate conversion files and add/remove operations.
+>=20
+> Changes since v1:
+> 1. Fixed formatting issues mentioned in the v1.
+> 2. Delete pwm-mtk-disp.txt.
+> 3. Add mtk_pwm dt_maintainers.
+> 4. Add "#pwm-cells" & power-domains properties.
+> 5. Make dt_checking successful.
+>=20
+> Xinlei Lee (5):
+>   dt-bindings: pwm: Convert pwm-mtk-disp.txt to mediatek,pwm-disp.yaml
+>     format
+>   dt-bindings: pwm: Add compatible for MediaTek MT8192
+>   dt-bindings: pwm: Add compatible for MediaTek MT8195
+>   dt-bindings: pwm: Add compatible for MediaTek MT8186
+>   dt-bindings: pwm: Add interrupts property for MediaTek MT8192
+>=20
+>  .../bindings/pwm/mediatek,pwm-disp.yaml       | 75 +++++++++++++++++++
+>  .../devicetree/bindings/pwm/pwm-mtk-disp.txt  | 45 -----------
+>  2 files changed, 75 insertions(+), 45 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/mediatek,pwm-di=
+sp.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mtk-disp.txt
 
 Applied, thanks.
 
 Thierry
 
---cNLg9cLGMqSzp3kN
+--LcAPuwLqmWX+Fefx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi3WAACgkQ3SOs138+
-s6GOuQ/+JzOk8SNGvtH8CC8lVJaDjbcU8Sun+Wj196osVTj4tuUKlfgSTF5AbmlW
-+AeXOjQdIvvklT7OGezv8DovrSk0p9vWasprOrc99nQgQid0YRL5VhZ1OXsrfN/I
-Kdr/+g8g6unQvT23ciZOaj7EGKzwzD4HoZLRSq9nPui2b2ZBx04qt5D3M8ksmvYB
-RV2qB6c7YD9Q+Y49z0CDbL/4tHHf7qJQeokepzGdZyBL2i0u7bm7VQQwzVxDrZR5
-wHSV939GsgI66EMq6j0mfs2Po9id8bkhVnJ3G8JMpZlI5luv/+V6ZgEMED16YSPQ
-3yeW6kRZ0h/hh8taU/ezeQrCHI6/FM2OoxdLnPG1k/XpAnB9BtRbb+9yQ7cfLDLH
-5D5I5985rjZ2i6KGDo2cO4X7cAnZsWTVUqUN4tX5LUqcxGWj8jszU2goBbTbmInG
-FFpXG2XAhlBYx/Xwh+yVLSoeVlsL2d16O52NIafhVWhGj+tIY2LfvhnL0J0Sh47I
-q4BERHHTjT6y0uo/jjPwlPqAhh6VhM00t8/Z3BYeY6J2YNvjPT02Erh6QrwMvhLD
-dY/HCBBLPYrYADboGwcpRGo8dwz3M7NtL5jsMtjn0e5iLM4N4CZ4xoAIevyzrz8V
-jQ0jeNvNlYZiIfX+Z7qiQYDXPjlX2JH2CV8E9kK6BvVHKi8rDO8=
-=XbN8
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi3hkACgkQ3SOs138+
+s6Huww/+LcxzjgeWvFFCu2uvAQB4pL5HxJI4grLWEbFg0ZLeOWl664dx3po5VI65
+cMvtk+MVuoHjnUC4OWUXHIzrj0S9dGtyvMzD0XfeANgoS0j/+5HJ4ywhkRyhjd/k
+SOFBE9f46qErRtUub+9XlH5v5CnpjVraYhlhHPYUEYEAhUzX8XC+4AzpJIY1hb8C
+D/rOhvyjAPzk8OzGlNpRwM3N1qH7jZI2PIF336N3TU1yMo270dNroGVPEIm/k1bC
+ToO6cYUWNsduq+i2n1d38CqDPwrhEvqvL05vvLZO05zlBCevqFsR1fTO3cE9nD5c
+cv0MWGU7hSsxJaMdu8V7f65vVtTyeshyo4RYSGlBRfNCTccYTTjl5NU3brICfx7x
+Sbp2KbpF1/+xdHYRLPor+G/gTJUuFuSujl/G3W2ZtCoQOIwrs8I/8jFv5HsHzkZU
+AZTzahQ1YbmILSDJ0wwxAHDT1/+NwQs7f3X5JosyLmM4I0Admbdx89XIUCszVruc
+dVn6CqNbLcJFXvyuKDauTjzYXYBgNwHq65d1qiy724VnkfJ8vnmCa6G+XEyM6oeJ
+5WSIq9As3pv47IjTPf7esxka9YQLAMVis4wxFTXGkjTEx809Rxz5KXr2ZwKBke+5
+Tw64dlGnIGEdXu0nklgQDJLJDG6fUN76A6KxE8oRr4eK9mcbV3Q=
+=KqxN
 -----END PGP SIGNATURE-----
 
---cNLg9cLGMqSzp3kN--
+--LcAPuwLqmWX+Fefx--
