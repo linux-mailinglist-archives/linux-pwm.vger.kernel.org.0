@@ -2,65 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A396B50BD9E
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:52:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9214650BDA0
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Apr 2022 18:53:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1449926AbiDVQzI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Apr 2022 12:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52316 "EHLO
+        id S1345128AbiDVQzu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Apr 2022 12:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1449918AbiDVQyq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:54:46 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 534545F8FE
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:51:50 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id p12so9741755lfs.5
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:51:50 -0700 (PDT)
+        with ESMTP id S234740AbiDVQzr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Apr 2022 12:55:47 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269045FF03
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:52:54 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id g19so15323389lfv.2
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Apr 2022 09:52:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=6VrGwQD7al08XKL+o4zC3y9gLRT3nIeX9lZuJZpW50Q=;
-        b=VosOKDaC4qALsB3oUT33xKKT/CrvKuIkS9agO4VPqWgXExtMC3bmtGwb1aTvnXqDcG
-         WwJlcZM5DQGv5LcdNlDhwiBHtTSXGWM8Sd3ONsqFhrRu5w+xQQAPO5QeqnztfYavO0rF
-         BjI8JoE2Zr1dPVB4eBOf7GGi6LWvmm04pmQI5ZStpm+vCPF2jfwWi1SOxqn75kEAaP0V
-         ilMZ2p68U/vGX04DfihWnfpR7nCa5PcNA+vAsBeioKgixT6HOH9ENw3onfvYthbsRVkK
-         2kHzwZGYUOQI6jv23flOnsAPOJk5D/49Xq8twrUdwnMhayEJrt5KcreGlZM94jsherQK
-         CsbQ==
+        bh=vhXM0ntcXKHlydbZT/Xpn3h0qeo9VUsocNXCliyhBpM=;
+        b=IVijHsfm/xcq9j9GO5ywI9XTVSzWvOmnhnfTZpnrV4mZ86XRKhPyHlDH3SShJe2Szx
+         3XRgixRnOd4iBbOkqJqTKuGgirI6dpSUhqFZ+5mFvT43AqFC7sMFv7nUyZUbeHQW67Az
+         vynuM8TztIczQ23ev320ep58M0EVBusTQZI28zOZbUpUAlSpfB7MEk0SbfabqGH+dXkd
+         V12hr6BZQlENt3mhglKpproJD+6IVv6v/NK+pDYVz4gbVu/VhuLW3Qfh+V2Wu6k4oufX
+         ysAOmi3+1lZhboW2T8mtfIzkl6hMSh2HvRvjMk/6790//S02dZqZmnlSydZ8t/oaevG3
+         KzIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6VrGwQD7al08XKL+o4zC3y9gLRT3nIeX9lZuJZpW50Q=;
-        b=KUV9KF7n2gNlJduh/AmYD5GeOXnARbYxQx4pKFSHSjbMfmjYeAj8VxLmgc8sM23//o
-         Y2Y/eeNIBlMCARiyEVyx3UE81i+VXSAViBrGgCGccR8ZTZBDsV8pKtO150m+3p8fV+CT
-         fzLj45S/6oIl8lt0u1DkrkNhPrPSJUA8E3nF2IuYdc8ooNad8uoyVhDUOGbpT1JeEcxk
-         +Y0zD0dBDuf6RT+lgvazkB6IhFXltIcfAqP022QF8ae3U7xrkQLp+P5tI2odHm28iNvt
-         FnnFqVQ/BTut0eK4bS83jSv7e8ESjoRskQyhwd4SMwGNtYFu+jJwmgzliSn8USD2ijRp
-         T/Xw==
-X-Gm-Message-State: AOAM531envJwPK6Mpzn0Ye4A+UrNCaRm7mdf0KRVi4108k4WAl0fm/l2
-        3R9eND+URdz77A0XIvOnWv0=
-X-Google-Smtp-Source: ABdhPJzOJX1iL0zyaycZm5tRazJQZo+soRiFT6n/7gTMuGSEzOyyIRFOW80yJ/GvBc0GpCSS7IPFJw==
-X-Received: by 2002:a05:6512:2304:b0:471:c1a3:9d0f with SMTP id o4-20020a056512230400b00471c1a39d0fmr3723971lfu.339.1650646308539;
-        Fri, 22 Apr 2022 09:51:48 -0700 (PDT)
+        bh=vhXM0ntcXKHlydbZT/Xpn3h0qeo9VUsocNXCliyhBpM=;
+        b=DE6XbwVxhx1xiTAw8HzMUAaar0ik1JNFe6AgPil2iTfckV9WmyFipbQRuY4dpWpJ2S
+         DLK/QY2ANk8IjBxialYRFUPwNxXnX9X8W2d+s0wTqvSDiC0ZD7DW2NuYKNBNyugaZzCQ
+         Zg610RL5MI4/3K/avP7b4Anv/eKHNB0Xn5Y8T97pPXsJaVF0YFCdpYHzTQkABn5su/Bl
+         k8p6HcQY1ZJmDUHvf190xizMtgsl+j7sCLobQZZEUnkkxa6o+S3b3kc/xqsNdoSYOZiC
+         inyA/fBZpj2LVPS2qQah/CZS9f6sbnjv542lwYXuHcNdCcs+n2U1XDjrKCorn7lMWJdM
+         pMiA==
+X-Gm-Message-State: AOAM5301cl7989MO6LXfXUlzkM1IAk17hXJ3tb3aiL/9NecmeOsCTzOX
+        kwl721eCNqdJUNi8bwCrfVI=
+X-Google-Smtp-Source: ABdhPJw9h1Qy6xskefDrAGdXK/zJpcnjGhLLN4AFUFt1X8tV6AusqqGNo5nRHKwc3AZsJRyMX519IQ==
+X-Received: by 2002:a19:3845:0:b0:46d:1871:1c6b with SMTP id d5-20020a193845000000b0046d18711c6bmr3695288lfj.429.1650646372440;
+        Fri, 22 Apr 2022 09:52:52 -0700 (PDT)
 Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id o5-20020a198c05000000b00471b18fb5fesm279557lfd.306.2022.04.22.09.51.46
+        by smtp.gmail.com with ESMTPSA id s22-20020a197716000000b0046bc65188d6sm282643lfc.80.2022.04.22.09.52.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 09:51:47 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 18:51:45 +0200
+        Fri, 22 Apr 2022 09:52:51 -0700 (PDT)
+Date:   Fri, 22 Apr 2022 18:52:49 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Lee Jones <lee.jones@linaro.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: raspberrypi-poe: Fix endianess in firmware struct
-Message-ID: <YmLdIUoeIgGgwkT6@orome>
-References: <20220408153846.172701-1-u.kleine-koenig@pengutronix.de>
+        Alexander Shiyan <shc_work@mail.ru>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: clps71xx: Implement .apply() callback
+Message-ID: <YmLdYYg2egS5Jczj@orome>
+References: <20220408154520.173148-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jRZQOAO45MYM8cbE"
+        protocol="application/pgp-signature"; boundary="cNLg9cLGMqSzp3kN"
 Content-Disposition: inline
-In-Reply-To: <20220408153846.172701-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20220408154520.173148-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -73,53 +73,45 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---jRZQOAO45MYM8cbE
+--cNLg9cLGMqSzp3kN
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 08, 2022 at 05:38:46PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> The reg member of struct raspberrypi_pwm_prop is a little endian 32 bit
-> quantity. Explicitly convert the (native endian) value to little endian
-> on assignment as is already done in raspberrypi_pwm_set_property().
+On Fri, Apr 08, 2022 at 05:45:20PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> To eventually get rid of all legacy drivers convert this driver to the
+> modern world implementing .apply().
 >=20
-> This fixes the following sparse warning:
+> This fixes a small issue in clps711x_get_duty() en passant: the
+> multiplication v * 0xf might have overflown.
 >=20
-> 	drivers/pwm/pwm-raspberrypi-poe.c:69:24: warning: incorrect type in init=
-ializer (different base types)
-> 	drivers/pwm/pwm-raspberrypi-poe.c:69:24:    expected restricted __le32 [=
-usertype] reg
-> 	drivers/pwm/pwm-raspberrypi-poe.c:69:24:    got unsigned int [usertype] =
-reg
->=20
-> Fixes: 79caa362eab6 ("pwm: Add Raspberry Pi Firmware based PWM bus")
 > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
->  drivers/pwm/pwm-raspberrypi-poe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pwm/pwm-clps711x.c | 68 ++++++++++++--------------------------
+>  1 file changed, 21 insertions(+), 47 deletions(-)
 
 Applied, thanks.
 
 Thierry
 
---jRZQOAO45MYM8cbE
+--cNLg9cLGMqSzp3kN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi3SAACgkQ3SOs138+
-s6H7AQ/9EuzIw+kg5ZS3uJgpQtAm4zKHt1hY+DknntMIcCXXalK52oE7SB6qwTHw
-rMZ69THXB0cCkK2G4/sTYHaM2o4Nq2oulwRCAui++FXvHJAAGo4ambA8sLekPNBd
-cG7XEJlWFoqdumaJ8djbHrSXZiqGOnKFXVSVWUBIHfQl4mcG8xLYL41Vbb6+eDPD
-GIitZf5czD42do03QQ+JKP0auW/HClW/Px2MadV0Hl1TjtaehQEsop3z/vTr3dDv
-iV7yzQT4ix+9L7HIjUVQWIerRSq8YcnolZho5NQQVjdq0bDwn5u++ShjS5x7fRCN
-0vYuw+tb0zyEDwumHyp2YWKwuXITlUAytxsF5YgWXpE1RKAolX8sI3AkIBlE64+T
-Etzehuyl+h+rdqVNFKTMdG+3AGL2QiIO2QGk/l+MqKZpHFYdvUo71MSeY1iQVd8Q
-NGpv3b51BzH6vJTk5Wnc7L+9vywPm1WZa278E8HzLfaAf0VdmHfNmgayVdtC+5OO
-wcesYjvJR7s3OWLokPXunD4iEEXBObVWZ80qeFKrpdxima83yZiGORl8wQrR2peR
-ACyQV3uehFeB0oG9xpWBeNFvHZsWrUD7pOajMFBJY1ocqUqyKwoSTJ01IZV+Ue9c
-3j7WrVH5UYFqYoEAbXJXpaW6/a1Y20vdKKru+Rlj/iN9kS6BsWc=
-=nNWD
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmJi3WAACgkQ3SOs138+
+s6GOuQ/+JzOk8SNGvtH8CC8lVJaDjbcU8Sun+Wj196osVTj4tuUKlfgSTF5AbmlW
++AeXOjQdIvvklT7OGezv8DovrSk0p9vWasprOrc99nQgQid0YRL5VhZ1OXsrfN/I
+Kdr/+g8g6unQvT23ciZOaj7EGKzwzD4HoZLRSq9nPui2b2ZBx04qt5D3M8ksmvYB
+RV2qB6c7YD9Q+Y49z0CDbL/4tHHf7qJQeokepzGdZyBL2i0u7bm7VQQwzVxDrZR5
+wHSV939GsgI66EMq6j0mfs2Po9id8bkhVnJ3G8JMpZlI5luv/+V6ZgEMED16YSPQ
+3yeW6kRZ0h/hh8taU/ezeQrCHI6/FM2OoxdLnPG1k/XpAnB9BtRbb+9yQ7cfLDLH
+5D5I5985rjZ2i6KGDo2cO4X7cAnZsWTVUqUN4tX5LUqcxGWj8jszU2goBbTbmInG
+FFpXG2XAhlBYx/Xwh+yVLSoeVlsL2d16O52NIafhVWhGj+tIY2LfvhnL0J0Sh47I
+q4BERHHTjT6y0uo/jjPwlPqAhh6VhM00t8/Z3BYeY6J2YNvjPT02Erh6QrwMvhLD
+dY/HCBBLPYrYADboGwcpRGo8dwz3M7NtL5jsMtjn0e5iLM4N4CZ4xoAIevyzrz8V
+jQ0jeNvNlYZiIfX+Z7qiQYDXPjlX2JH2CV8E9kK6BvVHKi8rDO8=
+=XbN8
 -----END PGP SIGNATURE-----
 
---jRZQOAO45MYM8cbE--
+--cNLg9cLGMqSzp3kN--
