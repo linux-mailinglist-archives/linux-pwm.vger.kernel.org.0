@@ -2,104 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B1DC50D20D
-	for <lists+linux-pwm@lfdr.de>; Sun, 24 Apr 2022 15:31:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22AC450D6B6
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 Apr 2022 03:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236145AbiDXNeD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 24 Apr 2022 09:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37032 "EHLO
+        id S240246AbiDYBxO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 24 Apr 2022 21:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233855AbiDXNeC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 24 Apr 2022 09:34:02 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6F04505B
-        for <linux-pwm@vger.kernel.org>; Sun, 24 Apr 2022 06:31:02 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id y2so3752277ybi.7
-        for <linux-pwm@vger.kernel.org>; Sun, 24 Apr 2022 06:31:02 -0700 (PDT)
+        with ESMTP id S237354AbiDYBxN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 24 Apr 2022 21:53:13 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E71632B;
+        Sun, 24 Apr 2022 18:50:09 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id u33so150615ybd.11;
+        Sun, 24 Apr 2022 18:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UBhVovLDQ8BUGD5PCxc7A8mnlUEf+e10BiZ1ClrU/6A=;
-        b=ayxcokoWgbaqqN6zIepV/Lob6iNhN6aAz/jo3J9LLVzRzb0W7XpJzlma85fpcYPVyM
-         9Q4k4YZYV0k6Nf2Cag3uZpxebPa9pp7i7MUhw5ec8YSxCyNm7+uIjgjCSjqS9YR8xQBH
-         nHFXdicEh432hL5pMIFAejeHKt+jM0Elu35GgIxFOAy6v36L1bHb1MqxZRPy+QpQJNxL
-         RCI8i68+4qG2mVX14veiaTvVmRHGDInA01kTnCc76jn+snYiBgH9ptXqn4Ooq1YFExY5
-         my4mEOarHLtuhIuebACUVuvxD5z/Mv0be0E6i1v6oK5O+/DXV5WiA43TpyYlE0I5ktvj
-         bFCQ==
+        bh=mDDt8M1t/G8uSDIgwdLPig614Vo7S3NbYE/nG8CEaIY=;
+        b=RyK07uLMCiAxUPIrw0scL+OICAsiAYK31fHCS8kYD11NTAfCjDZUpct7AVnuLk9hzj
+         /7k6RnZSUU2m9x/LAMI+uGyyjcb+6XRPILW63xpJTplFNuN4ofNQByTmAaMQQSI2ArhS
+         KL2mT+b6lEPVPbGyJvwvGRadnFMzARfz0XZDCEVP3vzcZPMMb86lw/45eLBpgJUKiyiT
+         KJoX2PofhiEFIZCFWl6NqfwHT4i00f66oMLHP5PfL39HFlYPzAUjp4eTAD3h/1NjME5o
+         p5LHeqXtwkQh6PbS87GpuXZxaTvGv9xVkm4/JZQmreiYRVUdgFhtGlz6HTPijoWS1cfT
+         EtAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UBhVovLDQ8BUGD5PCxc7A8mnlUEf+e10BiZ1ClrU/6A=;
-        b=NpNYMZ/7VEOWxXZe1rjMhh94h6J7kic7GEErPiZkkIJbBJTFtqgHmUWAznjnx9vFEl
-         +HJn8nn5X/7qLlQ7b+VXuw2n4c6/IkB1NTba5F8GdqDJsiTtU7e6daSsgAfhxMRr2kJN
-         2yF6z9cL3mDII68S0p0sDRMtMlt/Dlqtwzf4euCcq1f9nbi8DrgO1T7Sv0TOHGAUv5sV
-         IPsAz3O8Pf01Z13fsOSjXR6yqTQfaxQj7ya72ga9UuWkuffDEbyqlO2ezNaODfj1Rpg6
-         k2Ulm8NN+/stVPrMre6JF8cOHEUpHE7dN+CkIyJYphviZv2Mfimy85QNAqXzLJEO7/Ey
-         dsBw==
-X-Gm-Message-State: AOAM5335psYGvtBtaUD+GvbycgGP1BtiqeSGxQsqudFRkC7BG0k8Q/C6
-        j2teMOg0aX8TNdl3Lgf/rCjxhFF48Wi7L8SO8ynDaw==
-X-Google-Smtp-Source: ABdhPJzJf6w+AZ3j9VTg7w0PyOvxSCL0mkaYNzMZjZYevGB/rOBDFd/PXDeYB14B1y0U8+9CXS1WaUC+VHJY77lfpZE=
-X-Received: by 2002:a25:4e82:0:b0:633:68d7:b864 with SMTP id
- c124-20020a254e82000000b0063368d7b864mr12644754ybb.514.1650807061564; Sun, 24
- Apr 2022 06:31:01 -0700 (PDT)
+        bh=mDDt8M1t/G8uSDIgwdLPig614Vo7S3NbYE/nG8CEaIY=;
+        b=7GyPbn9IOVhWMkNQ6nmVvFn4QEirUNB3V/gx7+hXqMfDKb2o+NuDNd0co3k6xTSPvS
+         +Nyi9ZFbl/o2QSMnHV2NbtdSRAz65iTKEmWLKUnThhel6/5sUnXaL9dONNFa4jroQqmM
+         k6wfsUENNCg4DOzB84mDd6f3dJqS3dM1jSJ1StPJEiUwuLnDMiHbgqud+7qcuugpGzCT
+         g8+D7hBN6cr6zSxoCP1k+OzPwHIfv8CF/SXkMUi27XYOscUfnak0DKXUIce+eOF2NPF1
+         uzqKyCThXGusQ5UkPZhXprQBzmn8uIvFJVFcDd16ibPaHtPFdy1NGRdovwBBeFVrcLId
+         /wNA==
+X-Gm-Message-State: AOAM531jN7TjB4QPBhuTuGmLqp/wBJFcrYzdyi1xa5RxEkk8e1iYTyPw
+        r2FXlUb1TdQ0DOW+tfiRb6FEd+T/ME0cJi3Bbc0=
+X-Google-Smtp-Source: ABdhPJzl54Fa3ZhWH0bvr1eOLo8+xWpsNJfwykF34nk0OeV8Jzikdnw+uKbmBC7EUbgCp99QDOu8OIWB+LSDAcdDTXg=
+X-Received: by 2002:a05:6902:154d:b0:644:b2e7:146 with SMTP id
+ r13-20020a056902154d00b00644b2e70146mr13945668ybu.271.1650851408712; Sun, 24
+ Apr 2022 18:50:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <145383feecbe43f3bbd3e128143f7890f0314b3b.1649658220.git.baruch@tkos.co.il>
- <YmLcdmQrO4+0tEiJ@orome> <CACRpkdaqRe8HgPvm-YH9p=ZDetX6jcVHFRgvqk064KW=2-a-mQ@mail.gmail.com>
- <20220423161831.ob7cxj7do4423vrv@pengutronix.de>
-In-Reply-To: <20220423161831.ob7cxj7do4423vrv@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 24 Apr 2022 15:30:50 +0200
-Message-ID: <CACRpkdZUSW8y8y0XhKocj8_pHMwKOTqesqpp2wxo+ogXnXOF+g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: drop pwm base assignment
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Lee Jones <lee.jones@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <1647945781-10191-1-git-send-email-hammerh0314@gmail.com> <YmLkjriZCm+juYEP@orome>
+In-Reply-To: <YmLkjriZCm+juYEP@orome>
+From:   hammer hsieh <hammerh0314@gmail.com>
+Date:   Mon, 25 Apr 2022 09:49:57 +0800
+Message-ID: <CAOX-t57vzkVVO25EMCpvddmE++M1_a8RoDhbNk_M=ObbrqzZMA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] Add PWM driver for Suplus SP7021 SoC
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, lee.jones@linaro.org,
+        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wells.lu@sunplus.com, "hammer.hsieh" <hammer.hsieh@sunplus.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Apr 23, 2022 at 6:18 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Sat, Apr 23, 2022 at 12:18:20AM +0200, Linus Walleij wrote:
-> > On Fri, Apr 22, 2022 at 6:48 PM Thierry Reding <thierry.reding@gmail.co=
-m> wrote:
-> >
-> > > > -     /*
-> > > > -      * There may already be some PWM allocated, so we can't force
-> > > > -      * mvpwm->chip.base to a fixed point like mvchip->chip.base.
-> > > > -      * So, we let pwmchip_add() do the numbering and take the nex=
-t free
-> > > > -      * region.
-> > > > -      */
-> > > > -     mvpwm->chip.base =3D -1;
-> >
-> > I don't see why this is removed. I understand why the comment is remove=
-d
-> > but all contemporary GPIO chips should use dynamic assignment of number=
-s
-> > i.e. base =3D -1.
+Yes, my colleague is working on it right now.
+But he submitted too many items at a time. (clock/reset/interrupt,
+defconfig/, arch/arm...)
+Current patch v13, still ongoing.
+https://lore.kernel.org/all/cover.1649659095.git.qinjian@cqplus1.com/
+
+Thierry Reding <thierry.reding@gmail.com> =E6=96=BC 2022=E5=B9=B44=E6=9C=88=
+23=E6=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=881:23=E5=AF=AB=E9=81=93=EF=
+=BC=9A
 >
-> This is an assignment to struct pwm_chip::base, not struct gpio_chip::bas=
-e.
-
-Ah, how confusing.
-If this is OK with Uwe:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+> On Tue, Mar 22, 2022 at 06:42:59PM +0800, Hammer Hsieh wrote:
+> > This is a patch series for PWM driver for Suplus SP7021 SoC.
+> >
+> > Sunplus SP7021 is an ARM Cortex A7 (4 cores) based SoC. It integrates
+> > many peripherals (ex: UART. I2C, SPI, SDIO, eMMC, USB, SD card and
+> > etc.) into a single chip. It is designed for industrial control.
+>
+> I just noticed as I was trying to do test builds that ARCH_SUNPLUS
+> doesn't exist yet. Are there any plans to add those in the near future?
+>
+> I can always use COMPILE_TEST to do test build, but I like to also do
+> proper builds because they sometimes flag things that COMPILE_TEST
+> misses (like this one).
+>
+> Thierry
