@@ -2,68 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B919A50FFEE
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Apr 2022 16:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 574445130F2
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 Apr 2022 12:09:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351379AbiDZOF2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 Apr 2022 10:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51094 "EHLO
+        id S236911AbiD1KNK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 28 Apr 2022 06:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351388AbiDZOF1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 Apr 2022 10:05:27 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2395D196894
-        for <linux-pwm@vger.kernel.org>; Tue, 26 Apr 2022 07:02:19 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id b19so25595594wrh.11
-        for <linux-pwm@vger.kernel.org>; Tue, 26 Apr 2022 07:02:19 -0700 (PDT)
+        with ESMTP id S232862AbiD1KMs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Apr 2022 06:12:48 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3B740A24
+        for <linux-pwm@vger.kernel.org>; Thu, 28 Apr 2022 03:04:31 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id t6so6057990wra.4
+        for <linux-pwm@vger.kernel.org>; Thu, 28 Apr 2022 03:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q2GTfUc7VLX7J3kb7UZo3L6hgl7G3SCi+Soy09ZT8/Q=;
-        b=V16PSVQfUB/Or3B+sTPWN0OESvTLnOXJvVItFoiiWr+i+XWczhhBYVqK0CQKrBFUPV
-         2nQrPeuHneJbpozsMrqjc0knwusbWrNPFgRqv28DbmGNIILbFLlzBHm98vIKW6Pp1XT1
-         S//6Kt+IKv+px8Q76JYBkx1Hxff3JHR3cKMP0=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SbMt1g6aoE0Bg5dwfqmFelsLQshOG2+YZf5M70rMj8Q=;
+        b=eDHxmC6WsUWOrWLtgePXgUyYSARbuIpxRXqT83D+MT5KWhvRUkaRmVEDHIEuZK6a6/
+         SgTx+6aOSj/uNyNwjy/w0C3vfP21G+btolT7n89mozDMEnkZh8KaR3J9AXZiiTGeDpff
+         fWPJ6oduu0twIwFmfkUv8PsBJskvta0iFptbM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q2GTfUc7VLX7J3kb7UZo3L6hgl7G3SCi+Soy09ZT8/Q=;
-        b=kGhR7C47eug8CN9Ae1VHM4KEK5V9B+bFyX/6MZ6fFGZ2YCF5gwkD2W6gQeJpH8ARfJ
-         DeXM+8dlMNYGaWF63iIngwQBG88nNwom3B7eevGGYJwZqFmzdg0ioF+qoVRvskJOLdWd
-         yFEUq3Gk3StyYaLzt4rynZGQl2FwiF9YS9/M39UHgxxvFKW9xBrS4QTDz22vfWiHL2fK
-         Yk+PTS6hkCGpx5Q7g+YmGYvND0slcwMZXZyIxKTjuVJYsHaig0mqewL3jXykjEMVGmhx
-         5aC7zdZyD2cscascS7BkPBUf+BjIzggno/FVH7S6/BPiyS2hTlV3aIocSpexjTi3AoFi
-         mh3Q==
-X-Gm-Message-State: AOAM532P2kaszK3ZU3FxQLy1OFlg5UsKppCm8VQYTCTcBGyw+IBvC4Gx
-        p8spq64ETFIzmxLxez3drl2Jqw==
-X-Google-Smtp-Source: ABdhPJxic/QZR2BhX6akoIU8RQ/B3yNQzrr038cwGWxQtu13ObaIie5wUl501AIceUw/M1p5EPN2Vg==
-X-Received: by 2002:adf:e346:0:b0:205:97d0:50db with SMTP id n6-20020adfe346000000b0020597d050dbmr18586212wrj.257.1650981737632;
-        Tue, 26 Apr 2022 07:02:17 -0700 (PDT)
-Received: from google.com ([37.228.205.1])
-        by smtp.gmail.com with ESMTPSA id j13-20020a05600c190d00b00393ee555683sm5414256wmq.27.2022.04.26.07.02.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SbMt1g6aoE0Bg5dwfqmFelsLQshOG2+YZf5M70rMj8Q=;
+        b=48UdtAfmzfT8ziw4OwY3TZsjKNmkR0dGqCI6+8O6O8s7AEtqTa2m0PE5Qe34Rl/Tdq
+         wT0maQ+u6XLoEjQWd232K+Yz1wcVp/C2bMr9tVCh1gDCYWvLk4etZ/BTRtriWpEaRG9S
+         GSpWuHehYEgxboj+XOkSbMnPe6906uloLf1t0sTeVbwoyURyEIDH+PNIFOntSMu8ZzYU
+         RjLh51jKV4myiLKLfrpYllzWhucY0s7Xv0a+PJGGc/9iPkJAtqMO1D39dmENI4I7XlNI
+         1U6siCUL0hRZYJf+6vjUF/Rfe11S6HvmehAxCBM5XtH8TsLQfXrOEIWprxGY53xGpMwx
+         nc6w==
+X-Gm-Message-State: AOAM533Cr+j8/aJrHMbsm6Yje3nZ26Wa7ZOfcymTg5oBrstlDyi96paf
+        aVYBTlo7QyjtDQc3mtrmb3Brgg==
+X-Google-Smtp-Source: ABdhPJyqFzeu7gO4jIJIJSD11VQmMog/KOSnjjmdVpYp4MOAqrZyPlPZSH+cTzEL0sYYjh71p4fM7Q==
+X-Received: by 2002:a5d:4f08:0:b0:20a:ddfe:bd99 with SMTP id c8-20020a5d4f08000000b0020addfebd99mr15546448wru.339.1651140270334;
+        Thu, 28 Apr 2022 03:04:30 -0700 (PDT)
+Received: from fabiobaltieri-linux.lan ([37.228.205.1])
+        by smtp.gmail.com with ESMTPSA id v5-20020a5d6785000000b0020a792848eesm15080449wru.82.2022.04.28.03.04.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Apr 2022 07:02:17 -0700 (PDT)
-Date:   Tue, 26 Apr 2022 14:02:15 +0000
+        Thu, 28 Apr 2022 03:04:29 -0700 (PDT)
 From:   Fabio Baltieri <fabiobaltieri@chromium.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+To:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         chrome-platform@lists.linux.dev, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] dt-bindings: update google,cros-ec-pwm
- documentation
-Message-ID: <Ymf7Z/BJQSWO6pjE@google.com>
-References: <20220420141556.681212-1-fabiobaltieri@chromium.org>
- <20220420141556.681212-4-fabiobaltieri@chromium.org>
- <YmcZn8mWQveT5HzT@robh.at.kernel.org>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Fabio Baltieri <fabiobaltieri@chromium.org>
+Subject: [PATCH v6 0/4] Add channel type support to pwm-cros-ec
+Date:   Thu, 28 Apr 2022 10:04:17 +0000
+Message-Id: <20220428100421.247471-1-fabiobaltieri@chromium.org>
+X-Mailer: git-send-email 2.36.0.rc2.479.g8af0fa9b8e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YmcZn8mWQveT5HzT@robh.at.kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -74,30 +70,77 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Apr 25, 2022 at 04:58:55PM -0500, Rob Herring wrote:
-> On Wed, Apr 20, 2022 at 02:15:55PM +0000, Fabio Baltieri wrote:
-> > Update google,cros-ec-pwm node documentation to mention the
-> > google,cros-ec-pwm-type compatible.
-> 
-> It would be good if the subject provided some clue what the update is. 
-> Every change is an update. And all bindings are 'documentation' so 
-> that can be dropped.
+Hi,
 
-Fair enough, I'll reword the subject and send a v6.
+The ChromiumOS EC PWM host command protocol supports specifying the
+requested PWM by type rather than channel. [1]
 
-> 
-> > 
-> > Signed-off-by: Fabio Baltieri <fabiobaltieri@chromium.org>
-> > ---
-> >  .../devicetree/bindings/pwm/google,cros-ec-pwm.yaml      | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> In any case,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
+This series adds support for specifying PWM by type rather than channel
+number in the pwm-cros-ec driver, which abstracts the node definitions
+from the actual hardware configuration from the kernel perspective,
+aligns the API with the one used by the bootloader, and allows removing
+some dtsi overrides.
 
-Thanks!
+Tested on a sc7180-trogdor board, build tested on x86.
+
+Changes from v5:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=633811)
+- reworded the binding patch commit subject
+- added one more review tag
+
+Changes from v4:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=632212)
+- fixed wrong indentation in the devietree file on patch 3
+- added review and ack tags from the previous run
+
+Changes from v3:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=631131)
+- actually reworded patch 2 commit description
+- reworked patch 2 to use of_device_is_compatible() instead of compatible .data
+
+Changes from v2:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=627837)
+- reworded patch 2 commit description
+- reworked the driver and dt documentation to use a new compatible rather than
+  boolean property
+- dropped the comment about build test only, tested on actual hardware
+  (trogdor), build test on x86 (with CONFIG_OF=n).
+
+Changes from v1:
+(https://patchwork.kernel.org/project/chrome-platform/list/?series=625182)
+- fixed the dt include file license
+- fixed the property name (s/_/-/)
+- rebased on current linus tree (few dts files changed from a soc tree
+  pull, so patch 4 needs a recent base to apply correctly)
+
+[1] https://source.chromium.org/chromiumos/chromiumos/codesearch/+/main:src/platform/ec/common/pwm.c;l=24
+[2] https://source.chromium.org/chromiumos/chromiumos/codesearch/+/main:src/platform/depthcharge/src/drivers/ec/cros/ec.c;l=1271-1273
+
+Fabio Baltieri (4):
+  dt-bindings: add mfd/cros_ec definitions
+  pwm: pwm-cros-ec: add channel type support
+  dt-bindings: google,cros-ec-pwm: add the new -type compatible
+  arm64: dts: address cros-ec-pwm channels by type
+
+ .../bindings/pwm/google,cros-ec-pwm.yaml      |  9 +-
+ .../mt8183-kukui-jacuzzi-fennel-sku1.dts      |  4 +-
+ .../dts/mediatek/mt8183-kukui-jacuzzi.dtsi    |  4 +-
+ .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi |  1 +
+ .../boot/dts/qcom/sc7180-trogdor-coachz.dtsi  |  4 -
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi  |  9 +-
+ .../qcom/sc7280-herobrine-herobrine-r0.dts    |  7 +-
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |  7 +-
+ .../arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi |  4 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |  7 +-
+ .../boot/dts/rockchip/rk3399-gru-bob.dts      |  4 -
+ .../dts/rockchip/rk3399-gru-chromebook.dtsi   |  5 +-
+ .../boot/dts/rockchip/rk3399-gru-kevin.dts    |  4 -
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  |  1 +
+ drivers/pwm/pwm-cros-ec.c                     | 82 +++++++++++++++----
+ include/dt-bindings/mfd/cros_ec.h             | 18 ++++
+ 16 files changed, 121 insertions(+), 49 deletions(-)
+ create mode 100644 include/dt-bindings/mfd/cros_ec.h
 
 -- 
-Fabio Baltieri
+2.36.0.rc2.479.g8af0fa9b8e-goog
+
