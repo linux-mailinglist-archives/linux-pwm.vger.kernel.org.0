@@ -2,26 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72A2E515C28
-	for <lists+linux-pwm@lfdr.de>; Sat, 30 Apr 2022 12:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC61515CAE
+	for <lists+linux-pwm@lfdr.de>; Sat, 30 Apr 2022 14:13:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382562AbiD3KJe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 30 Apr 2022 06:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41690 "EHLO
+        id S235048AbiD3MQ5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 30 Apr 2022 08:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382574AbiD3KJd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Apr 2022 06:09:33 -0400
-X-Greylist: delayed 547 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 30 Apr 2022 03:06:09 PDT
-Received: from relay05.th.seeweb.it (relay05.th.seeweb.it [IPv6:2001:4b7a:2000:18::166])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDED23BEA;
-        Sat, 30 Apr 2022 03:06:08 -0700 (PDT)
+        with ESMTP id S239527AbiD3MQ4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Apr 2022 08:16:56 -0400
+Received: from relay07.th.seeweb.it (relay07.th.seeweb.it [IPv6:2001:4b7a:2000:18::168])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FCA66CAD;
+        Sat, 30 Apr 2022 05:13:32 -0700 (PDT)
 Received: from SoMainline.org (94-209-165-62.cable.dynamic.v4.ziggo.nl [94.209.165.62])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id C1EDB3F735;
-        Sat, 30 Apr 2022 12:06:06 +0200 (CEST)
-Date:   Sat, 30 Apr 2022 12:06:05 +0200
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id DC5AD3F7B7;
+        Sat, 30 Apr 2022 14:13:29 +0200 (CEST)
+Date:   Sat, 30 Apr 2022 14:13:28 +0200
 From:   Marijn Suijten <marijn.suijten@somainline.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Pavel Machek <pavel@ucw.cz>,
@@ -36,7 +35,7 @@ Cc:     Pavel Machek <pavel@ucw.cz>,
         Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v14 1/2] dt-bindings: leds: Add Qualcomm Light Pulse
  Generator binding
-Message-ID: <20220430100605.vn4wf33mft3vdm5w@SoMainline.org>
+Message-ID: <20220430121328.35cycpztigw3v7q3@SoMainline.org>
 References: <20220303214300.59468-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -58,10 +57,6 @@ On 2022-03-03 13:42:59, Bjorn Andersson wrote:
 > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > Reviewed-by: Rob Herring <robh@kernel.org>
-
-Apart the nits below:
-
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
 > ---
 > 
 > Changes since v13:
@@ -122,6 +117,13 @@ Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
 > +    description:
 > +      power-source used to drive the output, as defined in the datasheet.
 > +      Should be specified if the TRILED block is present
+
+Upon closer inspection this is only true if the TRILED block also has a
+SRC register which appears to be optional.  Is it worth mentioning that
+here too?
+
+- Marijn
+
 > +    enum: [0, 1, 3]
 > +
 > +  qcom,dtest:
@@ -130,10 +132,6 @@ Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
 > +      A list of integer pairs, where each pair represent the dtest line the
 > +      particular channel should be connected to and the flags denoting how the
 > +      value should be outputed, as defined in the datasheet. The number of
-
-Nit: I think outputed is with double-t, though just using "output" here
-should work as well.
-
 > +      pairs should be the same as the number of channels.
 > +    items:
 > +      items:
@@ -141,11 +139,6 @@ should work as well.
 > +        - description: flags for the attachment
 > +
 > +  multi-led:
-
-As mentioned on IRC, doesn't this need an @[0-9a-f] designator, as
-specified in leds-class-multicolor.yaml and to match `#address-cells` on
-this level?  Same for the examples.
-
 > +    type: object
 > +    $ref: leds-class-multicolor.yaml#
 > +    properties:
@@ -159,11 +152,6 @@ this level?  Same for the examples.
 > +      "^led@[0-9a-f]$":
 > +        type: object
 > +        $ref: common.yaml#
-
-I'm not familiar enough with DT bindings - doesn't this need the
-requirements for `reg` just like the identical patternProperties for
-led@ below?
-
 > +
 > +patternProperties:
 > +  "^led@[0-9a-f]$":
