@@ -2,62 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB70D519FC3
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 May 2022 14:41:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73388519FD5
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 May 2022 14:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349857AbiEDMpW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 May 2022 08:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60388 "EHLO
+        id S1349932AbiEDMtg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 May 2022 08:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349868AbiEDMpS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 May 2022 08:45:18 -0400
+        with ESMTP id S1344100AbiEDMtf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 May 2022 08:49:35 -0400
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7EB534BBC;
-        Wed,  4 May 2022 05:41:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47308220C4;
+        Wed,  4 May 2022 05:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1651668101; x=1683204101;
+  t=1651668358; x=1683204358;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=0xK/7xdITbF+pih04wYbwSxYYf1EHQDCIwAe7zWDkPA=;
-  b=A2lD7D3BapfCA+qfV9d4psB0U7dRN3T23whMunEY1bo6pFcrvZ5ltp7e
-   OPIqn7dvF4qsF8kOaEeYOkzWJWfKbZAt8D4VAkC2k+pVoGg0GbS+VkPM3
-   GHMJh5+ANnZnKa4hQ+rObWq8+XTsT2lHNfnY0uK5buJX0+3bZmanwGKhA
-   K4N3WvRkjCuB1MU293xE/sy9FknftrRm2WNrX87Khz9OBiT5HvWLzz39n
-   fFyyHbZ7AhCd0v1k+oGRsWjDfvads51x+XsyoWEcu4ODgHguNmxwuDuxK
-   3bZZ0K+v6oXCZ7Oms+bTQ7D4WdIqJ69GsE256sBqz+YVjHUeAzvyaqsZ5
-   A==;
-X-IronPort-AV: E=Sophos;i="5.91,198,1647298800"; 
-   d="scan'208";a="23668417"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 May 2022 14:41:38 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 04 May 2022 14:41:38 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 04 May 2022 14:41:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1651668098; x=1683204098;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0xK/7xdITbF+pih04wYbwSxYYf1EHQDCIwAe7zWDkPA=;
-  b=HY3Os376tccHPyp8/XcOzhMF5jywn/V1WdNl8Q06sWmz8qQCXzp/igMw
-   LaMIUHnlUbhpHS4bvV4grAI43Mv2BttK7Wc91k6beZEa1l8C0slaANSfU
-   uEB680EmddugVGVaishjTUySDGY77IwIcGU4sgFiwBSIfrCKynWVS5nSj
-   ov7EQIMmmKf6vax+ajCRQusHVX1aktkGoA0Fu/t4t6CAIFKgcjx+vNif+
-   VcukFNvgMySblge6Wnqu6OzaTe4CSTQC98Y1TcJ31RvpKXPEJ36DRnQjO
-   VuNfFzJ4zP9YU/Iy6gTLlONJujogYt6uaGIMsEVGJzMJKHLe1WeRlFcEJ
+  bh=9F6pufJQLceNeFS61+KLsP5LSDTp6NKXvgvBUSkYwJg=;
+  b=KymhuHWF6vAa6CYtEHEPnToaFnTr9XtZlA1rfC/ZJQU+F6pthra1B+Ot
+   C0DD4NP7F3bmGxX8JoE8mWHw1WschxP6oqs0iMzgI4JTkXiPgortJ94Bl
+   Kn1s5ESS4LXIUHuEu5w/ZwYD9WBbjL6d/GRD93UJEcfm/5/qLnvmP27X0
+   Wqo/5/LOOkoBtCnJydj6Arc1YSgr3Mp53qylf1HApWs8YBLZdmtqgaZNU
+   v0b1BuRmlevs00Kcx92NWhbBVJB88AO88Waucd+yVjybDNzY5FsaeH4kX
+   elBdSdnU8Fr69FPar1xxaTCIxOaH6U+8G6kLKEoQxZK/gXjifjPFPt2i9
    g==;
 X-IronPort-AV: E=Sophos;i="5.91,198,1647298800"; 
-   d="scan'208";a="23668416"
+   d="scan'208";a="23668591"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 04 May 2022 14:45:56 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 04 May 2022 14:45:56 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 04 May 2022 14:45:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1651668356; x=1683204356;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9F6pufJQLceNeFS61+KLsP5LSDTp6NKXvgvBUSkYwJg=;
+  b=UekONrdWjEWCSQZ6P/hvzfNfKdgGTDpJvBuMyK8BHCqxCmVy5Y1P31Wj
+   qdSvVxQSXRnYkbJz8ynl4Bnm27saKKfKyYqLR72TwZAisQMRW19fQYFxU
+   jGgTz+isIklxQHVrLGyuz8PUjpXNKJTLxoXhl6XHX1y+KMojue1tsIk1L
+   7zHb/vXJ0m4AN4w5tiG8BDZ8F1ubG40F/5IzOqqx8n5D0anX/ADW+M421
+   QtA2qvuc9OwPVxvtFvbAwwnSWmLKhnlDXv51udRlrdOdJHn7i43lwdLc6
+   PeV7fGpmEL/23HJ3fQiHxPjByg7Oegi+L95WLRO8fY+XWUk4NrKx5QgL+
+   g==;
+X-IronPort-AV: E=Sophos;i="5.91,198,1647298800"; 
+   d="scan'208";a="23668590"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 May 2022 14:41:38 +0200
+  by mx1.tq-group.com with ESMTP; 04 May 2022 14:45:56 +0200
 Received: from steina-w.tq-net.de (unknown [10.123.49.12])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id F18AE280070;
-        Wed,  4 May 2022 14:41:37 +0200 (CEST)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 57FD3280070;
+        Wed,  4 May 2022 14:45:56 +0200 (CEST)
 From:   Alexander Stein <alexander.stein@ew.tq-group.com>
 To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Jean Delvare <jdelvare@suse.com>,
@@ -66,10 +66,11 @@ To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
 Cc:     Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH 1/1] hwmon: pwm-fan: dynamically switch regulator
-Date:   Wed,  4 May 2022 14:41:31 +0200
-Message-Id: <20220504124131.1045003-1-alexander.stein@ew.tq-group.com>
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: [PATCH v2 1/1] hwmon: pwm-fan: dynamically switch regulator
+Date:   Wed,  4 May 2022 14:45:51 +0200
+Message-Id: <20220504124551.1083383-1-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -106,7 +107,11 @@ handle regulator switching for the following conditions:
   regulator
 
 Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
+Changes in v2:
+* Added my own missing S-o-b
+
  drivers/hwmon/pwm-fan.c | 144 ++++++++++++++++++++++++++--------------
  1 file changed, 93 insertions(+), 51 deletions(-)
 
