@@ -2,349 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73388519FD5
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 May 2022 14:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A33151A29C
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 May 2022 16:52:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349932AbiEDMtg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 May 2022 08:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
+        id S1351499AbiEDOzo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 May 2022 10:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344100AbiEDMtf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 May 2022 08:49:35 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47308220C4;
-        Wed,  4 May 2022 05:45:58 -0700 (PDT)
+        with ESMTP id S1351522AbiEDOxk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 May 2022 10:53:40 -0400
+Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C3A24F18
+        for <linux-pwm@vger.kernel.org>; Wed,  4 May 2022 07:50:04 -0700 (PDT)
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-edf3b6b0f2so1012582fac.9
+        for <linux-pwm@vger.kernel.org>; Wed, 04 May 2022 07:50:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1651668358; x=1683204358;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9F6pufJQLceNeFS61+KLsP5LSDTp6NKXvgvBUSkYwJg=;
-  b=KymhuHWF6vAa6CYtEHEPnToaFnTr9XtZlA1rfC/ZJQU+F6pthra1B+Ot
-   C0DD4NP7F3bmGxX8JoE8mWHw1WschxP6oqs0iMzgI4JTkXiPgortJ94Bl
-   Kn1s5ESS4LXIUHuEu5w/ZwYD9WBbjL6d/GRD93UJEcfm/5/qLnvmP27X0
-   Wqo/5/LOOkoBtCnJydj6Arc1YSgr3Mp53qylf1HApWs8YBLZdmtqgaZNU
-   v0b1BuRmlevs00Kcx92NWhbBVJB88AO88Waucd+yVjybDNzY5FsaeH4kX
-   elBdSdnU8Fr69FPar1xxaTCIxOaH6U+8G6kLKEoQxZK/gXjifjPFPt2i9
-   g==;
-X-IronPort-AV: E=Sophos;i="5.91,198,1647298800"; 
-   d="scan'208";a="23668591"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 May 2022 14:45:56 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 04 May 2022 14:45:56 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 04 May 2022 14:45:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1651668356; x=1683204356;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9F6pufJQLceNeFS61+KLsP5LSDTp6NKXvgvBUSkYwJg=;
-  b=UekONrdWjEWCSQZ6P/hvzfNfKdgGTDpJvBuMyK8BHCqxCmVy5Y1P31Wj
-   qdSvVxQSXRnYkbJz8ynl4Bnm27saKKfKyYqLR72TwZAisQMRW19fQYFxU
-   jGgTz+isIklxQHVrLGyuz8PUjpXNKJTLxoXhl6XHX1y+KMojue1tsIk1L
-   7zHb/vXJ0m4AN4w5tiG8BDZ8F1ubG40F/5IzOqqx8n5D0anX/ADW+M421
-   QtA2qvuc9OwPVxvtFvbAwwnSWmLKhnlDXv51udRlrdOdJHn7i43lwdLc6
-   PeV7fGpmEL/23HJ3fQiHxPjByg7Oegi+L95WLRO8fY+XWUk4NrKx5QgL+
-   g==;
-X-IronPort-AV: E=Sophos;i="5.91,198,1647298800"; 
-   d="scan'208";a="23668590"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 May 2022 14:45:56 +0200
-Received: from steina-w.tq-net.de (unknown [10.123.49.12])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 57FD3280070;
-        Wed,  4 May 2022 14:45:56 +0200 (CEST)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
-Cc:     Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: [PATCH v2 1/1] hwmon: pwm-fan: dynamically switch regulator
-Date:   Wed,  4 May 2022 14:45:51 +0200
-Message-Id: <20220504124551.1083383-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.25.1
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QeFiQ9rABQ+jsnlWFATMHbzDLVEHfjrJ5lroY7LHjX4=;
+        b=H5IJ/aqZWpfdIMrj7CgLAqG/SdKN5STaYbw0mAiMe3knsYohgMViLX+4UVUoKCbjYy
+         KKl4gSQqN+y8a/5bgi2RL4jv+amby146NGM7XBx8dbVn4RsofMgka5QZYxjpufREvBgx
+         on8qRLmmmZDTNBS3mIpw49Zfq+rPlMGaYLZ12oBZLGWqrTnMda+uze00F4XB8lCnZ5nm
+         8Tl5G8rLBtDEYPTBoB6Iw3xTervmR0L8O+zASziNoND35e/wLu2xlyoXStOr8sXjon1D
+         bzVRi1ICf4OkXuJZNPr4iA9KfJYxKeZKraeRlic8bM30iN0elqk80fTjZY50t3Okqw6Y
+         ZeuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QeFiQ9rABQ+jsnlWFATMHbzDLVEHfjrJ5lroY7LHjX4=;
+        b=52fBC3HHKjb77kntYVj9roa67fFQxnlqGOIV2OZgBHFLE2CpkRAImN85jhRIVutk1h
+         4SkbSwjSO5MREx+CDSJEqx4Pmn8C3DvV3eTmyEh2w26oMi6h85SiQxyuWXOd23ggtxom
+         9SQMRe2h5OBAechkp9I4TJ/d7knF9RyOhYMvlLovN5AbMDsmv9kXVuyIrx5QITEzIL6I
+         bL+FwIt+2uV1/e8Terxq/nmExeMscXVLVTP7LxbfR6gPRUdl1mg3dxvvPMGkpzScAm8o
+         NYd/GgkawLEktPpHuv2rrKkeNa5VtuCzsocWLEOe8KnaoDJ4VHsSAY1HL8hbeSPiWSQp
+         yarQ==
+X-Gm-Message-State: AOAM5309dt+dmFcEM8iobzazBAXauHZDWkYd4REY5I0rpt4D7Shjw8Hp
+        cmNlNDg8jts5wQQK/4yTOhLXbQ==
+X-Google-Smtp-Source: ABdhPJwNJvAJDal6JEEM3A076oA8yC/XXroNGViJX0ZDvZfYyeiTcwTHDhaQwkREcnPpG+p4quwFKw==
+X-Received: by 2002:a05:6870:d254:b0:e9:5d17:9e35 with SMTP id h20-20020a056870d25400b000e95d179e35mr3712035oac.154.1651675803423;
+        Wed, 04 May 2022 07:50:03 -0700 (PDT)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id v15-20020a05683018cf00b0060603221251sm5158169ote.33.2022.05.04.07.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 May 2022 07:50:02 -0700 (PDT)
+Date:   Wed, 4 May 2022 07:51:46 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Doug Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v14 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <YnKTAvQc6eDxTl14@ripper>
+References: <20220303214300.59468-1-bjorn.andersson@linaro.org>
+ <20220303214300.59468-2-bjorn.andersson@linaro.org>
+ <20220504073009.GC8204@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220504073009.GC8204@duo.ucw.cz>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+On Wed 04 May 00:30 PDT 2022, Pavel Machek wrote:
 
-A pwm value equal to zero is meant to switch off the pwm
-hence also switching off the fan. Currently the optional
-regulator is always on. When using this driver on boards
-with an inverted pwm signal polarity this can cause running
-the fan at maximum speed when setting pwm to zero.
+> Hi!
+> 
+> > +/sys/class/leds/<led>/hw_pattern
+> > +--------------------------------
+> > +
+> > +Specify a hardware pattern for a Qualcomm LPG LED.
+> > +
+> > +The pattern is a series of brightness and hold-time pairs, with the hold-time
+> > +expressed in milliseconds. The hold time is a property of the pattern and must
+> > +therefor be identical for each element in the pattern (except for the pauses
+> > +described below).
+> 
+> therefore?
+> 
 
-The proposed changes switch the regulator off, when PWM is
-currently enabled but pwm is requested to set to zero
-and switch der regulator on, when PWM is currently disabled
-but pwm shall be set to a no zero value.
+Yes
 
-Add __set_pwm_and_regulator and rewrite __set_pwm to
-handle regulator switching for the following conditions:
+> > +Simple pattern::
+> > +
+> > +    "255 500 0 500"
+> > +
+> > +        ^
+> > +        |
+> > +    255 +----+    +----+
+> > +        |    |    |    |      ...
+> > +      0 |    +----+    +----
+> > +        +---------------------->
+> > +        0    5   10   15     time (100ms)
+> > +
+> > +The LPG supports specifying a longer hold-time for the first and last element
+> > +in the pattern, the so called "low pause" and "high pause".
+> 
+> Please see
+> Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt . This
+> should really be compatible.
+> 
 
-- probe: pwm duty -> max, pwm state is unkwown: use __set_pwm
-  and enable regulator separately to keep the devm action
-- off: new pwm duty is zero, pwm currently enabled: disable
-  regulator
-- on: new pwm duty is non zero, pwm currently disabled: enable
-  regulator
+Unfortunately the LPG hardware only supports fixed duration (except for
+the ability to hold/extend the first and last duration in the pattern)
+and it also does not support gradual transition between the brightness
+levels.
 
-Signed-off-by: Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Changes in v2:
-* Added my own missing S-o-b
+As such the pattern sequence provided to hw_pattern looks to be the
+smae, but I don't see that it can be made compatible.
 
- drivers/hwmon/pwm-fan.c | 144 ++++++++++++++++++++++++++--------------
- 1 file changed, 93 insertions(+), 51 deletions(-)
+> Can I get either patch to disable pattern infrastructure for now or to
+> get it compatible?
+> 
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index f12b9a28a232..b47d59fbe836 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -97,18 +97,50 @@ static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
- 	unsigned long period;
- 	int ret = 0;
- 	struct pwm_state *state = &ctx->pwm_state;
-+	/* track changes of reg_en for error handling */
-+	enum regulator_change {
-+		untouched,
-+		enabled,
-+		disabled,
-+	} reg_change = untouched;
- 
- 	mutex_lock(&ctx->lock);
-+
- 	if (ctx->pwm_value == pwm)
- 		goto exit_set_pwm_err;
- 
-+	if (ctx->reg_en) {
-+		if (pwm && !state->enabled) {
-+			reg_change = enabled;
-+			ret = regulator_enable(ctx->reg_en);
-+		} else if (!pwm && state->enabled) {
-+			reg_change = disabled;
-+			ret = regulator_disable(ctx->reg_en);
-+		}
-+		if (ret)
-+			goto exit_set_pwm_err;
-+	}
-+
- 	period = state->period;
- 	state->duty_cycle = DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
- 	state->enabled = pwm ? true : false;
- 
- 	ret = pwm_apply_state(ctx->pwm, state);
--	if (!ret)
-+	if (!ret) {
- 		ctx->pwm_value = pwm;
-+	} else if (reg_change != untouched) {
-+		/*
-+		 * revert regulator changes to keep consistency between
-+		 * pwm and regulator
-+		 */
-+		int err;
-+
-+		if (reg_change == enabled)
-+			err = regulator_disable(ctx->reg_en);
-+		else if (reg_change == disabled)
-+			err = regulator_enable(ctx->reg_en);
-+	}
-+
- exit_set_pwm_err:
- 	mutex_unlock(&ctx->lock);
- 	return ret;
-@@ -280,18 +312,50 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
- 	return 0;
- }
- 
--static void pwm_fan_regulator_disable(void *data)
-+/*
-+ * disable fan and regulator
-+ * if cleanup is true, disable pwm regardless of regulator disable result
-+ * this makes the function dual use for unloading driver and suspend
-+ */
-+
-+static int __pwm_fan_disable_or_cleanup(struct pwm_fan_ctx *ctx, bool cleanup)
- {
--	regulator_disable(data);
-+	int ret;
-+
-+	if (ctx->pwm_value) {
-+		/* keep ctx->pwm_state unmodified for pwm_fan_resume() */
-+		struct pwm_state state = ctx->pwm_state;
-+
-+		/* regulator is only enabled if pwm_value is not zero */
-+		if (ctx->pwm_value && ctx->reg_en) {
-+			ret = regulator_disable(ctx->reg_en);
-+			if (ret) {
-+				pr_err("Failed to disable fan supply: %d\n", ret);
-+				if (!cleanup)
-+					return ret;
-+			}
-+		}
-+
-+		state.duty_cycle = 0;
-+		state.enabled = false;
-+		ret = pwm_apply_state(ctx->pwm, &state);
-+	}
-+
-+	return ret;
- }
- 
--static void pwm_fan_pwm_disable(void *__ctx)
-+static void pwm_fan_cleanup(void *__ctx)
- {
- 	struct pwm_fan_ctx *ctx = __ctx;
--
--	ctx->pwm_state.enabled = false;
--	pwm_apply_state(ctx->pwm, &ctx->pwm_state);
- 	del_timer_sync(&ctx->rpm_timer);
-+	__pwm_fan_disable_or_cleanup(ctx, true);
-+}
-+
-+static int pwm_fan_disable(void *__ctx)
-+{
-+	struct pwm_fan_ctx *ctx = __ctx;
-+
-+	return __pwm_fan_disable_or_cleanup(ctx, false);
- }
- 
- static int pwm_fan_probe(struct platform_device *pdev)
-@@ -324,19 +388,14 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 			return PTR_ERR(ctx->reg_en);
- 
- 		ctx->reg_en = NULL;
--	} else {
--		ret = regulator_enable(ctx->reg_en);
--		if (ret) {
--			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
--			return ret;
--		}
--		ret = devm_add_action_or_reset(dev, pwm_fan_regulator_disable,
--					       ctx->reg_en);
--		if (ret)
--			return ret;
- 	}
- 
- 	pwm_init_state(ctx->pwm, &ctx->pwm_state);
-+	/*
-+	 * Ensure the PWM is switched on (including the regulator),
-+	 * independently from any previous PWM state
-+	 */
-+	ctx->pwm_state.enabled = false;
- 
- 	/*
- 	 * __set_pwm assumes that MAX_PWM * (period - 1) fits into an unsigned
-@@ -348,14 +407,17 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	/* Set duty cycle to maximum allowed and enable PWM output */
-+	/*
-+	 * Set duty cycle to maximum allowed and enable PWM output as well as
-+	 * the regulator. In case of error nothing is changed
-+	 */
- 	ret = __set_pwm(ctx, MAX_PWM);
- 	if (ret) {
- 		dev_err(dev, "Failed to configure PWM: %d\n", ret);
- 		return ret;
- 	}
- 	timer_setup(&ctx->rpm_timer, sample_timer, 0);
--	ret = devm_add_action_or_reset(dev, pwm_fan_pwm_disable, ctx);
-+	ret = devm_add_action_or_reset(dev, pwm_fan_cleanup, ctx);
- 	if (ret)
- 		return ret;
- 
-@@ -461,42 +523,22 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int pwm_fan_disable(struct device *dev)
--{
--	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
--	int ret;
--
--	if (ctx->pwm_value) {
--		/* keep ctx->pwm_state unmodified for pwm_fan_resume() */
--		struct pwm_state state = ctx->pwm_state;
--
--		state.duty_cycle = 0;
--		state.enabled = false;
--		ret = pwm_apply_state(ctx->pwm, &state);
--		if (ret < 0)
--			return ret;
--	}
--
--	if (ctx->reg_en) {
--		ret = regulator_disable(ctx->reg_en);
--		if (ret) {
--			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
- static void pwm_fan_shutdown(struct platform_device *pdev)
- {
--	pwm_fan_disable(&pdev->dev);
-+	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-+
-+	pwm_fan_cleanup(ctx);
- }
- 
- #ifdef CONFIG_PM_SLEEP
- static int pwm_fan_suspend(struct device *dev)
- {
--	return pwm_fan_disable(dev);
-+	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pwm_fan_disable(ctx);
-+
-+	return ret;
- }
- 
- static int pwm_fan_resume(struct device *dev)
-@@ -504,6 +546,9 @@ static int pwm_fan_resume(struct device *dev)
- 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
- 	int ret;
- 
-+	if (ctx->pwm_value == 0)
-+		return 0;
-+
- 	if (ctx->reg_en) {
- 		ret = regulator_enable(ctx->reg_en);
- 		if (ret) {
-@@ -512,9 +557,6 @@ static int pwm_fan_resume(struct device *dev)
- 		}
- 	}
- 
--	if (ctx->pwm_value == 0)
--		return 0;
--
- 	return pwm_apply_state(ctx->pwm, &ctx->pwm_state);
- }
- #endif
--- 
-2.25.1
+I'd be happy to get this updated to your liking, but this was one of the
+drivers we discussed when we introduced the pattern trigger and led to
+the conclusion that we need the ability to do hw-specific patterns.
 
+As such this document provides the hardware specific documentation, as
+we describe under "hw_pattern" in
+Documentation/ABI/testing/sysfs-class-led-trigger-pattern.
+
+Please advice on what you would like me to do.
+
+Regards,
+Bjorn
