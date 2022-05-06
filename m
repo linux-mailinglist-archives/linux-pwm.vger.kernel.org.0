@@ -2,33 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 943C051D346
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 May 2022 10:22:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FF1F51D377
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 May 2022 10:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239452AbiEFIZl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 May 2022 04:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41850 "EHLO
+        id S1390196AbiEFIjQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 May 2022 04:39:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390166AbiEFIY1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 May 2022 04:24:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFF06831C
-        for <linux-pwm@vger.kernel.org>; Fri,  6 May 2022 01:20:27 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nmtC4-0005eK-6q; Fri, 06 May 2022 10:20:08 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nmtBz-000fcd-Pj; Fri, 06 May 2022 10:20:02 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nmtBx-007uuY-MQ; Fri, 06 May 2022 10:20:01 +0200
-Date:   Fri, 6 May 2022 10:20:01 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+        with ESMTP id S1390206AbiEFIjO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 May 2022 04:39:14 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545EAE60;
+        Fri,  6 May 2022 01:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1651826130; x=1683362130;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ezNXxatfDHado1WYdiq8B8HsOFgBVwnLMYSDIoso/Xs=;
+  b=W8hFoaSaM7CU4k3cdti4seMqnhs+iUMSAoXDte9cpkN4ZveoVIvnZi4L
+   fJGqGSJ34H1qt/OS8loG7ymkbgelzMpuG9PxMfXsONl6ENa+BdV2bqVfc
+   voH2tyZkXhYzLNGtf2OtDvrief9nHw6C6KrOcsY7udomvDhWBLMerVQHx
+   9I9aVYHYbT/a5WgpQe32iyfNnsgh3TSJGIv0xarp3YkVR+x/1uDO1yK1V
+   f45eySf39s+b4XcRNec03N6lRRkdSnLIwXjt1s5s7bFUXIfG88YctXfSH
+   tnrA0m7aqTUXsNjoeGMVV5akQ+GSZiZDscN0wIMZjXI0vzTAjH6/toCXW
+   g==;
+X-IronPort-AV: E=Sophos;i="5.91,203,1647298800"; 
+   d="scan'208";a="23714677"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 06 May 2022 10:35:24 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 06 May 2022 10:35:24 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 06 May 2022 10:35:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1651826124; x=1683362124;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ezNXxatfDHado1WYdiq8B8HsOFgBVwnLMYSDIoso/Xs=;
+  b=X/yF1qKRxPq5umqV9DTTnD97HTq8pH6k6NsLOmVrEjlNA91Qgi9MCG8t
+   nQkKD0jdMS0VNHp7sbYNT6T3/tswmza5ah+j7yrmPjgbypEoHr4pzH9EA
+   L7xQvHNVjZSdGMG/qMw1b0FLEG7UIMRxtgH5keJMbtw4m7V07KJ9/BrHX
+   eKIpZOmypdf56iUOzwk1mavgzWflOTC2mf2I3xuPG/1HjT+L808SOTDUj
+   RMwaT7KBr8NLP5kkjhnnSaYKVH2tAmeNFmYEovpes1FhxZG/wDrnie0/J
+   OZCKSUIIrdVYngqjIKMJnsq2a8IaaIxXQ2E/zsUotDAK/eJNpxiEch+WQ
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.91,203,1647298800"; 
+   d="scan'208";a="23714676"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 06 May 2022 10:35:23 +0200
+Received: from steina-w.localnet (unknown [10.123.49.12])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id B60A3280070;
+        Fri,  6 May 2022 10:35:23 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     Guenter Roeck <linux@roeck-us.net>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Jean Delvare <jdelvare@suse.com>,
@@ -36,99 +68,82 @@ Cc:     Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Markus Niebel <Markus.Niebel@ew.tq-group.com>,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: (EXT) Re: [PATCH v2 1/1] hwmon: pwm-fan: dynamically switch
- regulator
-Message-ID: <20220506082001.hybxzaic5wza7irh@pengutronix.de>
-References: <20220504124551.1083383-1-alexander.stein@ew.tq-group.com>
- <20220505220037.GF1988936@roeck-us.net>
- <2112012.Mh6RI2rZIc@steina-w>
+Subject: Re: (EXT) Re: (EXT) Re: [PATCH v2 1/1] hwmon: pwm-fan: dynamically switch regulator
+Date:   Fri, 06 May 2022 10:35:21 +0200
+Message-ID: <2371611.jE0xQCEvom@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20220506082001.hybxzaic5wza7irh@pengutronix.de>
+References: <20220504124551.1083383-1-alexander.stein@ew.tq-group.com> <2112012.Mh6RI2rZIc@steina-w> <20220506082001.hybxzaic5wza7irh@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4xj45peqflexojgp"
-Content-Disposition: inline
-In-Reply-To: <2112012.Mh6RI2rZIc@steina-w>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---4xj45peqflexojgp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Fri, May 06, 2022 at 09:15:55AM +0200, Alexander Stein wrote:
-> Am Freitag, 6. Mai 2022, 00:00:37 CEST schrieb Guenter Roeck:
-> > On Wed, May 04, 2022 at 02:45:51PM +0200, Alexander Stein wrote:
-> > > From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Am Freitag, 6. Mai 2022, 10:20:01 CEST schrieb Uwe Kleine-K=F6nig:
+> * PGP Signed by an unknown key
+>=20
+> Hello,
+>=20
+> On Fri, May 06, 2022 at 09:15:55AM +0200, Alexander Stein wrote:
+> > Am Freitag, 6. Mai 2022, 00:00:37 CEST schrieb Guenter Roeck:
+> > > On Wed, May 04, 2022 at 02:45:51PM +0200, Alexander Stein wrote:
+> > > > From: Markus Niebel <Markus.Niebel@ew.tq-group.com>
+> > > >=20
+> > > > A pwm value equal to zero is meant to switch off the pwm
+> > > > hence also switching off the fan. Currently the optional
+> > > > regulator is always on. When using this driver on boards
+> > > > with an inverted pwm signal polarity this can cause running
+> > > > the fan at maximum speed when setting pwm to zero.
 > > >=20
-> > > A pwm value equal to zero is meant to switch off the pwm
-> > > hence also switching off the fan. Currently the optional
-> > > regulator is always on. When using this driver on boards
-> > > with an inverted pwm signal polarity this can cause running
-> > > the fan at maximum speed when setting pwm to zero.
+> > > The appropriate solution in this case would be to tell the
+> > > software that the pwm is inverted. Turning off the regulator
+> > > in that situation is a bad idea since setting the pwm value to
+> > > 1 would set it to almost full speed. That does not really make
+> > > sense.
 > >=20
-> > The appropriate solution in this case would be to tell the
-> > software that the pwm is inverted. Turning off the regulator
-> > in that situation is a bad idea since setting the pwm value to
-> > 1 would set it to almost full speed. That does not really make
-> > sense.
+> > The pwm-fan driver is already configured for inverted PWM (ommited some
+> > properties for shortness):
+> > fan0: pwm-fan {
+> >=20
+> > 	compatible =3D "pwm-fan";
+> > 	fan-supply =3D <&reg_pwm_fan>;
+> > 	pwms =3D <&pwm3 0 40000 PWM_POLARITY_INVERTED>;
+> > 	cooling-levels =3D <0 32 64 128 196 240>;
+> >=20
+> > [...]
+> > };
+> >=20
+> > The problem here is that the pwm-fan driver currently enables the
+> > regulator
+> > unconditionally, but the PWM only when the fan is enabled, refer to
+> > __set_pwm(). This results in a fan at full speed when pwm-fan is idle, =
+as
+> > pwm state is not enabled.
 >=20
-> The pwm-fan driver is already configured for inverted PWM (ommited some=
+> Which PWM driver are you using?
+
+It's pwm-imx27 on a imx8mp based board.
+
+> There is an implicit assumption in some PWM consumers that a disabled
+> PWM emits the inactive level. However not all PWMs do this. Is this such
+> a case?
+
+Oh, I was not aware of that assumption. As far I can tell, this assumption=
 =20
-> properties for shortness):
-> fan0: pwm-fan {
-> 	compatible =3D "pwm-fan";
-> 	fan-supply =3D <&reg_pwm_fan>;
-> 	pwms =3D <&pwm3 0 40000 PWM_POLARITY_INVERTED>;
-> 	cooling-levels =3D <0 32 64 128 196 240>;
-> [...]
-> };
->=20
-> The problem here is that the pwm-fan driver currently enables the regulat=
-or=20
-> unconditionally, but the PWM only when the fan is enabled, refer to=20
-> __set_pwm(). This results in a fan at full speed when pwm-fan is idle, as=
- pwm=20
-> state is not enabled.
+might actually be violated in pwm-imx27.
+If state->enabled=3D=3Dfalse then the EN Bit in PWMCR is not set which most=
+=20
+probably renders the output polarity in POUTC as inactive.
 
-Which PWM driver are you using?
+Best regards,
+Alexander
 
-There is an implicit assumption in some PWM consumers that a disabled
-PWM emits the inactive level. However not all PWMs do this. Is this such
-a case?=20
 
-Best regards
-Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4xj45peqflexojgp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmJ02iwACgkQwfwUeK3K
-7AnEdAf/bh4peqXpFzNxl2/EmIGsDvNR9EkQKDaJk992crSC/J9TJXT92F2AR9cz
-CRIhhuxUNGefIci4jCswFSmua8GgWcIWZF4sVKuvCGBLYwKt748ODwnijo77Ty2M
-jyah4etonSqJ3/z6kFZdbjF6R+MZaoLfe3/vBwLf51wQHSXb6uRPOiMMAaM0GZNo
-kTvsJJ/QejqiJyVlqEm/Ch/7OJj4b+cJiKUBTWLN93wU4xA34XX72NIV6jH27d5/
-V9Pzaogl7Jcs/zHL+CftdwHS20oYnzsAiidUR7tfeOIqHcd5Lmd55b8Po7UycCNh
-ql1XlVrX9bp3NPDb8ugqcgOj6TLk5w==
-=5YXv
------END PGP SIGNATURE-----
-
---4xj45peqflexojgp--
