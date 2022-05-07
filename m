@@ -2,127 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B664451E4A3
-	for <lists+linux-pwm@lfdr.de>; Sat,  7 May 2022 08:37:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B2851E597
+	for <lists+linux-pwm@lfdr.de>; Sat,  7 May 2022 10:29:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383532AbiEGGkt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 7 May 2022 02:40:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        id S1383686AbiEGIdB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 7 May 2022 04:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbiEGGks (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 7 May 2022 02:40:48 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FD940E6B;
-        Fri,  6 May 2022 23:37:02 -0700 (PDT)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 789541C0BA6; Sat,  7 May 2022 08:37:00 +0200 (CEST)
-Date:   Sat, 7 May 2022 08:36:59 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Doug Anderson <dianders@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v14 2/2] leds: Add driver for Qualcomm LPG
-Message-ID: <20220507063659.GA6968@amd>
-References: <20220303214300.59468-1-bjorn.andersson@linaro.org>
- <20220303214300.59468-2-bjorn.andersson@linaro.org>
- <20220504073009.GC8204@duo.ucw.cz>
- <YnKTAvQc6eDxTl14@ripper>
- <20220506160901.GA1199@bug>
- <YnVMcaRV86jZslhd@ripper>
+        with ESMTP id S1346054AbiEGIdA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 7 May 2022 04:33:00 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6F62CC86
+        for <linux-pwm@vger.kernel.org>; Sat,  7 May 2022 01:29:14 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nnFoO-0002EA-Ma; Sat, 07 May 2022 10:29:12 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nnFoO-000rlq-Jy; Sat, 07 May 2022 10:29:11 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nnFoM-00883N-A1; Sat, 07 May 2022 10:29:10 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] pwm: lpc32xx: Implement .apply() callback
+Date:   Sat,  7 May 2022 10:29:01 +0200
+Message-Id: <20220507082901.162933-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
-In-Reply-To: <YnVMcaRV86jZslhd@ripper>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1594; h=from:subject; bh=NDAjARmoaTPE3Jv09PVoWfPR6qZ+DeIyn+HnWT7+3aM=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBidi3JD5bQDLifqbxmec6ccBoJcbMVgp8GiYhb/0L6 4+cEJLGJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYnYtyQAKCRDB/BR4rcrsCSa3CA CTbOFFayXIt2dCwESYS4E2IvZ3FAgqfR6LD0rahF6/JtYAHDUzCYw2EWk4H7WueSBd63H4BcG8v3qu JdBweHXHgL+6fWBWPid+372YRgDziJLiTSaXHrtEvJ0y7zfu9LI9NZtqz9R1Y+QW6SkYqGT0zrE9vH zzG42rJTLug0fJJfatJM3WQI2TXhXWGRfwmfV1CdWpdkF7I+lPa3P3K2yuF7uepfnWL6Wxn7/1ewHV +PXHA58UopZUKYaKQEKo6CI0NTHkl4jIE9M3OTWrAzlYRblgYzCoxYJPiVN4Z7ZH2CEYf3Y7rco55C wyRPNEFgWY/rdRIrJnhUYi0wDoQqdc
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+To eventually get rid of all legacy drivers convert this driver to the
+modern world implementing .apply().
+This just pushed a variant of pwm_apply_legacy() into the driver that was
+slightly simplified because the driver doesn't provide a .set_polarity()
+callback.
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-lpc32xx.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-Hi!
+diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
+index ddeab5687cb8..86a0ea0f6955 100644
+--- a/drivers/pwm/pwm-lpc32xx.c
++++ b/drivers/pwm/pwm-lpc32xx.c
+@@ -88,10 +88,33 @@ static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	clk_disable_unprepare(lpc32xx->clk);
+ }
+ 
++static int lpc32xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			     const struct pwm_state *state)
++{
++	int err;
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (!state->enabled) {
++		if (pwm->state.enabled)
++			lpc32xx_pwm_disable(chip, pwm);
++
++		return 0;
++	}
++
++	err = lpc32xx_pwm_config(pwm->chip, pwm, state->duty_cycle, state->period);
++	if (err)
++		return err;
++
++	if (!pwm->state.enabled)
++		err = lpc32xx_pwm_enable(chip, pwm);
++
++	return err;
++}
++
+ static const struct pwm_ops lpc32xx_pwm_ops = {
+-	.config = lpc32xx_pwm_config,
+-	.enable = lpc32xx_pwm_enable,
+-	.disable = lpc32xx_pwm_disable,
++	.apply = lpc32xx_pwm_apply,
+ 	.owner = THIS_MODULE,
+ };
+ 
 
-> > > As such the pattern sequence provided to hw_pattern looks to be the
-> > > smae, but I don't see that it can be made compatible.
-> > >=20
-> > > > Can I get either patch to disable pattern infrastructure for now or=
- to
-> > > > get it compatible?
-> > > >=20
-> > >=20
-> > > I'd be happy to get this updated to your liking, but this was one of =
-the
-> > > drivers we discussed when we introduced the pattern trigger and led to
-> > > the conclusion that we need the ability to do hw-specific patterns.
-> > >=20
-> > > As such this document provides the hardware specific documentation, as
-> > > we describe under "hw_pattern" in
-> > > Documentation/ABI/testing/sysfs-class-led-trigger-pattern.
-> > >=20
-> > > Please advice on what you would like me to do.
-> >=20
-> > I'd like you to use same format leds-trigger-pattern describes.
-> >=20
-> > If someone passes "255 500 0 500", that's requesting gradual transition=
-s and
-> > your hw can not do that. You return -EINVAL.
-> >=20
-> > If someone wants that kind of blinking, they need to pass "255 0 255 50=
-0 0 0 0 500".
-> >=20
->=20
-> So the section under hw_pattern in sysfs-class-led-trigger-pattern that
-> says:
->=20
-> "Since different LED hardware can have different semantics of
-> hardware patterns, each driver is expected to provide its own
-> description for the hardware patterns in their documentation
-> file at Documentation/leds/."
->=20
-> That doesn't apply to this piece of hardware & driver?
+base-commit: 2bf8ee0faa988b5cec3503ebf2f970a0e84d24ee
+-- 
+2.35.1
 
-It applies: since your hardware can not do arbitrary patterns, you
-need description of what kinds of patterns it can do.
-
-But you should still use compatible format, so that pattern that is
-valid for hw_pattern file is valid for pattern file, too, and produces
-same result.
-
-If you believe documentation implies something else, it may need to be
-clarified.
-
-Best regards,
-								Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---+HP7ph2BbKc20aGI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAmJ2E4sACgkQMOfwapXb+vJMFACgv1L01dasG1ImG6KRZ5gYS2iV
-eHsAn0pdBf62FwAjzmn9R2KEOJoW/1rb
-=zdUZ
------END PGP SIGNATURE-----
-
---+HP7ph2BbKc20aGI--
