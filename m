@@ -2,44 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6282051E5A7
-	for <lists+linux-pwm@lfdr.de>; Sat,  7 May 2022 10:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 214BA51ECAB
+	for <lists+linux-pwm@lfdr.de>; Sun,  8 May 2022 11:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1446103AbiEGIrh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 7 May 2022 04:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
+        id S231644AbiEHJxh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 8 May 2022 05:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353489AbiEGIrg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 7 May 2022 04:47:36 -0400
+        with ESMTP id S232096AbiEHJoe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 8 May 2022 05:44:34 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CAC3F889
-        for <linux-pwm@vger.kernel.org>; Sat,  7 May 2022 01:43:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA78DFBA
+        for <linux-pwm@vger.kernel.org>; Sun,  8 May 2022 02:40:43 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nnG2W-0003ZA-VT; Sat, 07 May 2022 10:43:49 +0200
+        id 1nndP6-0001qE-9n; Sun, 08 May 2022 11:40:40 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nnG2W-000rna-UN; Sat, 07 May 2022 10:43:47 +0200
+        id 1nndP6-0014PZ-1g; Sun, 08 May 2022 11:40:38 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1nnG2U-00885o-Rb; Sat, 07 May 2022 10:43:46 +0200
+        id 1nndP3-008LQk-PA; Sun, 08 May 2022 11:40:37 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH] pwm: mediatek: Implement .apply() callback
-Date:   Sat,  7 May 2022 10:43:37 +0200
-Message-Id: <20220507084337.167890-1-u.kleine-koenig@pengutronix.de>
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] pwm: lpc18xx: Implement .apply() callback
+Date:   Sun,  8 May 2022 11:40:32 +0200
+Message-Id: <20220508094032.206141-1-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1612; h=from:subject; bh=1KW6ty6GQ2hPJLt+FmKcTNmj+Zi8+DqoBiVLGQsCtaQ=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBidjE1BE8QaAG8kut8vuwP3pNWJ+MbI0NoKyRVRwrT LZ5Sk6WJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYnYxNQAKCRDB/BR4rcrsCYnLB/ 0XT4bvhgerT8ZpBENu+CGRC0wyQ+GST9QmS1RA5dA1PSPitenhwiNFwL1Rem7vYeIvWjGlHcyZGHPo DGqv9AWug1qGxkwfMxeqvS7xIQSw4GLpchoUPsTyXybkc1cR95A88G0gq6dRRhOBOljAY5sfrRuE0I 2C2BVUUziHMnlSXvk1EsvJydBAstYrb8s2Bh6OOxvDAXaqVCW1CuVCtss5ICgRaz2Vzlt2n+qo/8TS Aoj0U69s/WVdkNCyWb4vVqRBc6nh4unYb8cDzecKToI2/jCZvC4m9yAB6u20XmIFMI9rHq3t8+Zjak xTjBBVwblUZzAx6cY7FUhH5i7rUB/l
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3310; h=from:subject; bh=g3FGW5yov/fKMMV/wxpj7a4/ke+oE7R883xfOnmKa6k=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBid5AMgx2+T/LWT898YxyL/ehfY0NqE7lpBk+Nuxlb UrO5Xr6JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYneQDAAKCRDB/BR4rcrsCQD+CA CCYqd6TOO7z1MjJdBVy+HFh5AXUKK5ix2T0hFStBp+GChWXTZo3amfYPIkQz432BBDKduFvWHCl/7r kFzA4tbZMEdktRR90doRIGLdmbLUBCvnOBubdO3n5qUdFv2NTDTmSeI1wbP2Gb4dmY0nKPB/epOVR3 s4iZXayPJ7DfXXICMAWybEbaoogq+cqOIou75pkOZjWQ4qlyKoNlotz77adO++/gsWmCtaylxz4RT+ C32T6w07Lto6C5xpObnaCwel9J0ATwvPCOXJqG8PbszFhJuRwjfjihtoun0dbzneJtozidhtMIyuB8 6pjV1yKUnl0Qh3ZUMpaGpnxHjsAmoE
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -57,56 +57,97 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 To eventually get rid of all legacy drivers convert this driver to the
 modern world implementing .apply().
-This just pushed a variant of pwm_apply_legacy() into the driver that was
-slightly simplified because the driver doesn't provide a .set_polarity()
-callback.
+This pushes a variant of pwm_apply_legacy into the driver that was slightly
+simplified because the .set_polarity callback was a noop.
+
+There is no change in behavior.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-mediatek.c | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
+ drivers/pwm/pwm-lpc18xx-sct.c | 43 ++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 568b13a48717..e264bb74fdde 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -198,10 +198,33 @@ static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	pwm_mediatek_clk_disable(chip, pwm);
+Hello,
+
+note the driver behave as expected when pwm_apply is called with a
+polarity change and .enabled = false, because the polarity change is
+only implemented in lpc18xx_pwm_enable(). I think this is a theoretic
+concern though, because a) this probably never happens and b) because
+the behaviour for a disabled PWM isn't formalized anyhow. This problem
+exists with and without this patch.
+
+Best regards
+Uwe
+
+diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+index b909096dba2f..272e0b5d01b8 100644
+--- a/drivers/pwm/pwm-lpc18xx-sct.c
++++ b/drivers/pwm/pwm-lpc18xx-sct.c
+@@ -226,14 +226,7 @@ static int lpc18xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
  }
  
-+static int pwm_mediatek_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
+-static int lpc18xx_pwm_set_polarity(struct pwm_chip *chip,
+-				    struct pwm_device *pwm,
+-				    enum pwm_polarity polarity)
+-{
+-	return 0;
+-}
+-
+-static int lpc18xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
++static int lpc18xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm, enum pwm_polarity polarity)
+ {
+ 	struct lpc18xx_pwm_chip *lpc18xx_pwm = to_lpc18xx_pwm_chip(chip);
+ 	struct lpc18xx_pwm_data *lpc18xx_data = &lpc18xx_pwm->channeldata[pwm->hwpwm];
+@@ -249,7 +242,7 @@ static int lpc18xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ 			   LPC18XX_PWM_EVSTATEMSK(lpc18xx_data->duty_event),
+ 			   LPC18XX_PWM_EVSTATEMSK_ALL);
+ 
+-	if (pwm_get_polarity(pwm) == PWM_POLARITY_NORMAL) {
++	if (polarity == PWM_POLARITY_NORMAL) {
+ 		set_event = lpc18xx_pwm->period_event;
+ 		clear_event = lpc18xx_data->duty_event;
+ 		res_action = LPC18XX_PWM_RES_SET;
+@@ -308,11 +301,35 @@ static void lpc18xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	clear_bit(lpc18xx_data->duty_event, &lpc18xx_pwm->event_map);
+ }
+ 
++static int lpc18xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			     const struct pwm_state *state)
 +{
 +	int err;
++	bool enabled = pwm->state.enabled;
 +
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
++	if (state->polarity != pwm->state.polarity && pwm->state.enabled) {
++		lpc18xx_pwm_disable(chip, pwm);
++		enabled = false;
++	}
 +
 +	if (!state->enabled) {
-+		if (pwm->state.enabled)
-+			pwm_mediatek_disable(chip, pwm);
++		if (enabled)
++			lpc18xx_pwm_disable(chip, pwm);
 +
 +		return 0;
 +	}
 +
-+	err = pwm_mediatek_config(pwm->chip, pwm, state->duty_cycle, state->period);
++	err = lpc18xx_pwm_config(pwm->chip, pwm, state->duty_cycle, state->period);
 +	if (err)
 +		return err;
 +
-+	if (!pwm->state.enabled)
-+		err = pwm_mediatek_enable(chip, pwm);
++	if (!enabled)
++		err = lpc18xx_pwm_enable(chip, pwm, state->polarity);
 +
 +	return err;
 +}
-+
- static const struct pwm_ops pwm_mediatek_ops = {
--	.config = pwm_mediatek_config,
--	.enable = pwm_mediatek_enable,
--	.disable = pwm_mediatek_disable,
-+	.apply = pwm_mediatek_apply,
+ static const struct pwm_ops lpc18xx_pwm_ops = {
+-	.config = lpc18xx_pwm_config,
+-	.set_polarity = lpc18xx_pwm_set_polarity,
+-	.enable = lpc18xx_pwm_enable,
+-	.disable = lpc18xx_pwm_disable,
++	.apply = lpc18xx_pwm_apply,
+ 	.request = lpc18xx_pwm_request,
+ 	.free = lpc18xx_pwm_free,
  	.owner = THIS_MODULE,
- };
- 
 
 base-commit: 2bf8ee0faa988b5cec3503ebf2f970a0e84d24ee
 -- 
