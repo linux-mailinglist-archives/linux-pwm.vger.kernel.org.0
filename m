@@ -2,154 +2,191 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 214BA51ECAB
-	for <lists+linux-pwm@lfdr.de>; Sun,  8 May 2022 11:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A120F51F5D9
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 May 2022 09:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231644AbiEHJxh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 8 May 2022 05:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33392 "EHLO
+        id S230464AbiEIH4v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 May 2022 03:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232096AbiEHJoe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 8 May 2022 05:44:34 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA78DFBA
-        for <linux-pwm@vger.kernel.org>; Sun,  8 May 2022 02:40:43 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nndP6-0001qE-9n; Sun, 08 May 2022 11:40:40 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nndP6-0014PZ-1g; Sun, 08 May 2022 11:40:38 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nndP3-008LQk-PA; Sun, 08 May 2022 11:40:37 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S233753AbiEIHoQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 May 2022 03:44:16 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E09C1C94FC;
+        Mon,  9 May 2022 00:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1652082022; x=1683618022;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NH2bCpAfSF6dzBC2s1g5mVBQnvaoxXYmplus3U1xzaA=;
+  b=OKW3fiKqfPh/3v8ewYLaWmfkICRAiju1Uh19p7PZSl8nN4oFVBLt1MDJ
+   Hv75K/sOFTP4n5smu4wbRGBbYRlXqW7b4CxJImfx4gewEsyTEP9i7/DEe
+   F+N11aEj+fvQ9qElzGmGWVbJSM0NR/aamJ6lq13iBO0qVflwSNClx/1ZE
+   Rj4szTHphPTHQr11KFw3YHOMc3ykvzTTsNOmclOwSShNI6UxKkNcS5gsJ
+   2EWgpMyUDNR2RhWm4YJrim2wVMQnhSLCqGwfVUUDKVgW/CLpvCR5neT1D
+   PfGBYMgsMq7mRP+5MALIX9DPaS4Mo5iV99yNpsmb4FI/q1r8KkXd3bAsT
+   A==;
+X-IronPort-AV: E=Sophos;i="5.91,210,1647298800"; 
+   d="scan'208";a="23744985"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 09 May 2022 09:39:18 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 09 May 2022 09:39:18 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 09 May 2022 09:39:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1652081958; x=1683617958;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NH2bCpAfSF6dzBC2s1g5mVBQnvaoxXYmplus3U1xzaA=;
+  b=ZU/FCGEiaqVb78fdG2hPVXVSoe6+ky7AWR1Powq7jcCdLihuYIHz4F1a
+   1g3Wzz2OhBmTI3nBfvsJ+Akjr+RZLXPHEmpxMekD8lOUlZO7h/LWsj/Xa
+   rbWKY/2oa2XOccgiIVpZMnaZihgyHjK0HBKjk6UiAmCYUD+Jf+ZaeaSGR
+   iiXcbU6Lv/zoBskZiqsQQdXUtMC2u9UM22lWC4fyVZPP2FLB/kl3/Zy+3
+   u/GlxJnc4zsJA8+XjnQ7Ncb3NojJQo8w8SS6zHX+H22Rr4dik/ohPTGxZ
+   A/th8cj+MZdcI9QeIgwgyG2+Nn05/qHRSKUYEP4zCevSNl1hLZnT6wC5f
+   g==;
+X-IronPort-AV: E=Sophos;i="5.91,210,1647298800"; 
+   d="scan'208";a="23744984"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 09 May 2022 09:39:18 +0200
+Received: from steina-w.localnet (unknown [10.123.49.12])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 27F03280070;
+        Mon,  9 May 2022 09:39:18 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
-        Vladimir Zapolskiy <vz@mleia.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pwm: lpc18xx: Implement .apply() callback
-Date:   Sun,  8 May 2022 11:40:32 +0200
-Message-Id: <20220508094032.206141-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.35.1
+        Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: (EXT) Re: (EXT) Re: (EXT) Re: [PATCH v2 1/1] hwmon: pwm-fan: dynamically switch regulator
+Date:   Mon, 09 May 2022 09:39:15 +0200
+Message-ID: <2184650.iZASKD2KPV@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20220506183124.GA2997799@roeck-us.net>
+References: <20220504124551.1083383-1-alexander.stein@ew.tq-group.com> <20220506142913.vbddyvkmhuvfd5o5@pengutronix.de> <20220506183124.GA2997799@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3310; h=from:subject; bh=g3FGW5yov/fKMMV/wxpj7a4/ke+oE7R883xfOnmKa6k=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBid5AMgx2+T/LWT898YxyL/ehfY0NqE7lpBk+Nuxlb UrO5Xr6JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYneQDAAKCRDB/BR4rcrsCQD+CA CCYqd6TOO7z1MjJdBVy+HFh5AXUKK5ix2T0hFStBp+GChWXTZo3amfYPIkQz432BBDKduFvWHCl/7r kFzA4tbZMEdktRR90doRIGLdmbLUBCvnOBubdO3n5qUdFv2NTDTmSeI1wbP2Gb4dmY0nKPB/epOVR3 s4iZXayPJ7DfXXICMAWybEbaoogq+cqOIou75pkOZjWQ4qlyKoNlotz77adO++/gsWmCtaylxz4RT+ C32T6w07Lto6C5xpObnaCwel9J0ATwvPCOXJqG8PbszFhJuRwjfjihtoun0dbzneJtozidhtMIyuB8 6pjV1yKUnl0Qh3ZUMpaGpnxHjsAmoE
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-To eventually get rid of all legacy drivers convert this driver to the
-modern world implementing .apply().
-This pushes a variant of pwm_apply_legacy into the driver that was slightly
-simplified because the .set_polarity callback was a noop.
+Am Freitag, 6. Mai 2022, 20:31:24 CEST schrieb Guenter Roeck:
+> On Fri, May 06, 2022 at 04:29:13PM +0200, Uwe Kleine-K=F6nig wrote:
+> > [Dropped Bartlomiej Zolnierkiewicz from Cc:; my mailer daemon claims the
+> > email address doens't exist.]
+> >=20
+> > Hello Guenter,
+> >=20
+> > On Fri, May 06, 2022 at 07:12:44AM -0700, Guenter Roeck wrote:
+> > > On Fri, May 06, 2022 at 02:23:11PM +0200, Alexander Stein wrote:
+> > > > Am Freitag, 6. Mai 2022, 12:23:01 CEST schrieb Uwe Kleine-K=F6nig:
+> > > > > See
+> > > > > https://lore.kernel.org/linux-pwm/20180806155129.cjcc7okmwtaujf43=
+@pe
+> > > > > ngutronix.de/ for one of the previous discussions.
+> > > >=20
+> > > > Thanks for the link. I took a look into it. I'm on your side here,
+> > > > IMHO
+> > > > pwm_disable() implies that the PWM perphery is disabled, including =
+any
+> > > > clocks or powerdomain. This is what pwm-imx27 actually does. This
+> > > > might lead to a, probably platform dependent, (undefined?) state of
+> > > > the PWM output pin. This implies it is not possible to disable the
+> > > > PWM periphery for inverted signals, if the disabled state is not the
+> > > > inactive level. You know all about it already.
+> > > > Then again from pwm-fan side I want be able to disable the FAN,
+> > > > turning of
+> > > > regulator and PWM, so powersaving is possible. That's what this pat=
+ch
+> > > > is
+> > > > about. This is similar also what pwm_bl is doing.
+> > > > Independent of the exact semantics, it makes sense to disable the
+> > > > regulator in pwm-fan as well when the fan shall be disabled.
+> > >=20
+> > > There are fans which never stop if pwm=3D=3D0, such as some CPU fans.=
+ I
+> > > don't
+> >=20
+> > I assume with pwm=3D=3D0 you actually mean duty_cycle =3D=3D 0?
+>=20
+> Correct. The "pwm" attribute sets the duty cycle.
+>=20
+> > > think it is a good idea to force those off by turning off their power.
+> > > The
+> > > problem in the driver is that it treats pwm=3D=3D0 as "disable pwm", =
+not as
+> > > "set pwm output to 0", Part of the probem may be that the ABI doesn't
+> > > have
+> > > a good representation for "disable pwm output", which is what is real=
+ly
+> > > wanted/needed here.
+> >=20
+> > Disable pwm output =3D=3D set pwm output to High-Z? Not all PWMs are ab=
+le to
+> > provide that.
+>=20
+> It is up to us to define whate it means exactly. If you are ok that "set
+> duty cycle to 0" reflects "set duty cycle to 0, disable pwm, and turn off
+> regulator", I would hope that you are ok with using the _enable attribute
+> to do the same and leaving pwm=3D=3D0 to do what it is supposed to do, ie=
+ to
+> keep pwm control enabled and set the duty cycle to 0.
 
-There is no change in behavior.
+Just to make sure to be on the same side and summarize a bit. What you mean=
+ is=20
+to add a new sysfs attribute to pwm-fan driver which controls what pwm_duty=
+=3D=3D0=20
+implies. I would suggest to name is 'keep_pwm_enabled' (but I am open for=20
+other suggestions) with the following meaning:
+1 - pwm_duty=3D=3D0 just means that. Set PWM duty to 0 and keep PWM (and fa=
+n=20
+regulator) enabled.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-lpc18xx-sct.c | 43 ++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 13 deletions(-)
+0 - pwm_duty=3D=3D0 means that the PWM duty is set to 0, PWM is disabled an=
+d any=20
+PWM fan regulator is disabled as well.
 
-Hello,
+=46or pwm_duty!=3D0 this setting is irrelevant. Having the default to be '1=
+' seems=20
+sensible in order to not brake boards as regulator will be kept enabled. PW=
+M=20
+duty and/or PWM disable is irrelevant as PWM inversion is not yet supported=
+=20
+properly anyway.
 
-note the driver behave as expected when pwm_apply is called with a
-polarity change and .enabled = false, because the polarity change is
-only implemented in lpc18xx_pwm_enable(). I think this is a theoretic
-concern though, because a) this probably never happens and b) because
-the behaviour for a disabled PWM isn't formalized anyhow. This problem
-exists with and without this patch.
+IMHO this should address all the mentioned issues. With 'keep_pwm_enabled=
+=3D1'=20
+only the duty is set and the regulators are not forced to be disabled. E.g.=
+=20
+the CPU fans mentioned by Guenter. This is also the case for hardware where=
+=20
+the regulator is shared or not switchable at all.
+On hardware where it is safe to disable the regulator and PWM=20
+keep_pwm_enabled=3D0' allows the system to poweroff PWM and powersupply for=
+ the=20
+fan to improve powersavings.
 
-Best regards
-Uwe
+With this it is up to the administrator to provide the correct setting for=
+=20
+this attribute as it highly depends on the actual hardware and/or usage.
 
-diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
-index b909096dba2f..272e0b5d01b8 100644
---- a/drivers/pwm/pwm-lpc18xx-sct.c
-+++ b/drivers/pwm/pwm-lpc18xx-sct.c
-@@ -226,14 +226,7 @@ static int lpc18xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return 0;
- }
- 
--static int lpc18xx_pwm_set_polarity(struct pwm_chip *chip,
--				    struct pwm_device *pwm,
--				    enum pwm_polarity polarity)
--{
--	return 0;
--}
--
--static int lpc18xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static int lpc18xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm, enum pwm_polarity polarity)
- {
- 	struct lpc18xx_pwm_chip *lpc18xx_pwm = to_lpc18xx_pwm_chip(chip);
- 	struct lpc18xx_pwm_data *lpc18xx_data = &lpc18xx_pwm->channeldata[pwm->hwpwm];
-@@ -249,7 +242,7 @@ static int lpc18xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 			   LPC18XX_PWM_EVSTATEMSK(lpc18xx_data->duty_event),
- 			   LPC18XX_PWM_EVSTATEMSK_ALL);
- 
--	if (pwm_get_polarity(pwm) == PWM_POLARITY_NORMAL) {
-+	if (polarity == PWM_POLARITY_NORMAL) {
- 		set_event = lpc18xx_pwm->period_event;
- 		clear_event = lpc18xx_data->duty_event;
- 		res_action = LPC18XX_PWM_RES_SET;
-@@ -308,11 +301,35 @@ static void lpc18xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 	clear_bit(lpc18xx_data->duty_event, &lpc18xx_pwm->event_map);
- }
- 
-+static int lpc18xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	int err;
-+	bool enabled = pwm->state.enabled;
-+
-+	if (state->polarity != pwm->state.polarity && pwm->state.enabled) {
-+		lpc18xx_pwm_disable(chip, pwm);
-+		enabled = false;
-+	}
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			lpc18xx_pwm_disable(chip, pwm);
-+
-+		return 0;
-+	}
-+
-+	err = lpc18xx_pwm_config(pwm->chip, pwm, state->duty_cycle, state->period);
-+	if (err)
-+		return err;
-+
-+	if (!enabled)
-+		err = lpc18xx_pwm_enable(chip, pwm, state->polarity);
-+
-+	return err;
-+}
- static const struct pwm_ops lpc18xx_pwm_ops = {
--	.config = lpc18xx_pwm_config,
--	.set_polarity = lpc18xx_pwm_set_polarity,
--	.enable = lpc18xx_pwm_enable,
--	.disable = lpc18xx_pwm_disable,
-+	.apply = lpc18xx_pwm_apply,
- 	.request = lpc18xx_pwm_request,
- 	.free = lpc18xx_pwm_free,
- 	.owner = THIS_MODULE,
+Best regards,
+Alexander
 
-base-commit: 2bf8ee0faa988b5cec3503ebf2f970a0e84d24ee
--- 
-2.35.1
+
 
