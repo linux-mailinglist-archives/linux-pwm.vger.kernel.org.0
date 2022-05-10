@@ -2,25 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CC60521E27
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 May 2022 17:23:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF11F521E2E
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 May 2022 17:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345534AbiEJP1S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 May 2022 11:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
+        id S1345775AbiEJP1W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 May 2022 11:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345842AbiEJP0K (ORCPT
+        with ESMTP id S1345855AbiEJP0K (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 May 2022 11:26:10 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB52615A77D;
-        Tue, 10 May 2022 08:11:51 -0700 (PDT)
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 724AB14038;
+        Tue, 10 May 2022 08:11:56 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.91,214,1647270000"; 
-   d="scan'208";a="119261240"
+   d="scan'208";a="120533877"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 11 May 2022 00:11:51 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 11 May 2022 00:11:55 +0900
 Received: from localhost.localdomain (unknown [10.226.92.112])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A24DE400A0E7;
-        Wed, 11 May 2022 00:11:47 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0D32F400A11D;
+        Wed, 11 May 2022 00:11:51 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
@@ -34,9 +34,9 @@ Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RFC 7/8] arm64: dts: renesas: rzg2l-smarc: Enable POEGG{A,B,C,D} on carrier board
-Date:   Tue, 10 May 2022 16:11:11 +0100
-Message-Id: <20220510151112.16249-8-biju.das.jz@bp.renesas.com>
+Subject: [RFC 8/8] arm64: dts: renesas: rzg2l-smarc: Link GPT4 with POEGGD on carrier board
+Date:   Tue, 10 May 2022 16:11:12 +0100
+Message-Id: <20220510151112.16249-9-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220510151112.16249-1-biju.das.jz@bp.renesas.com>
 References: <20220510151112.16249-1-biju.das.jz@bp.renesas.com>
@@ -51,40 +51,25 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Enable POEGG{A,B,C,D} on RZ/{G2,V2}L SMARC EVK.
+This patch links GPT4 with POEGGD on RZ/G2L SMARC EVK.
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-index 8fb68e95f1d7..f1fb9cecc49b 100644
+index f1fb9cecc49b..d7cc3897ee61 100644
 --- a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
 +++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-@@ -42,6 +42,22 @@ wm8978: codec@1a {
- 	};
+@@ -25,6 +25,7 @@ &cpu_dai {
+ &gpt4 {
+ 	pinctrl-0 = <&gpt4_pins>;
+ 	pinctrl-names = "default";
++	renesas,poeg-group = <&poeggd>;
+ 	status = "okay";
  };
  
-+&poegga {
-+	status = "okay";
-+};
-+
-+&poeggb {
-+	status = "okay";
-+};
-+
-+&poeggc {
-+	status = "okay";
-+};
-+
-+&poeggd {
-+	status = "okay";
-+};
-+
- /*
-  * To enable SCIF2 (SER0) on PMOD1 (CN7)
-  * SW1 should be at position 2->3 so that SER0_CTS# line is activated
 -- 
 2.25.1
 
