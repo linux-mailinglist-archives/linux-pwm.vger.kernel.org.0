@@ -2,178 +2,369 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6497B52077B
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 May 2022 00:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 367A8521143
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 May 2022 11:44:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231502AbiEIWXP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 May 2022 18:23:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35808 "EHLO
+        id S231309AbiEJJsY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 May 2022 05:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231486AbiEIWXO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 May 2022 18:23:14 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79F126C4C1;
-        Mon,  9 May 2022 15:19:18 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id v65so16722343oig.10;
-        Mon, 09 May 2022 15:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=pQ+NFz48u/PVAao/3y8aTxUEtE0Q3CzofdOnqfSSLRM=;
-        b=SRHDpOMWwSStBa2So+3KgzgNUSgKuGz1Pv5JZzkRKaL1taQta/d0mlGTwL+wgEFVS9
-         XZsklJP5mA99lFz4N+XYC1YG9Gv61wSSeWgXHIAcYhirKFP0zEtf6bfWn5Vm8CxlfX80
-         0TonBjXQF3kKIR9YqV6RISEOzQxj7Ug1fP0O6TEDsNnUpRT536F3s5SF7Lbo/Vuj7ZXy
-         2o5bE6Q3K3dYGsAotX2RtLSgAZZy0TcmQt9ixRsVpT9o5I1FKNQ3ysCEVREGBrfe6eDB
-         OfKUpu5l86I2kJ+09dflDPjrtlw8SMvofpOl5aPnTrSobxk5tW9OgnmQGuIW/DVl9MRw
-         OTMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=pQ+NFz48u/PVAao/3y8aTxUEtE0Q3CzofdOnqfSSLRM=;
-        b=oBixN26v+EwVKeyTZm9ebd/uqOfpgcCotHPZmIbg2HY7ZTHv7y5+g45PsE1/9ani0D
-         C0YFPZ3x1AZOn3Ai15NwV1sfeY+Kb/cHoaJ8TNV99yNa7G66T1lwBnlarnNcKQsJQyq+
-         GtmghqkiYz07YYje+qoMczyyrXVBP5dtvQxCBXhqTQFqwY1MNTwnFm1EoG0H3Dp7mqRw
-         by6vdUeWtqZe/0zkq4QjmJFzVwGx/jX2ytuxZR9UvwcplPY6p9dFK41rv92hTPaoyzLn
-         I3Jjd9mlykPKRO5EDAWlyYEDmhM0KsZq6BOTzyR1LcoEd0qDRxuQv3hC66Tls5VIJsog
-         KZwg==
-X-Gm-Message-State: AOAM5307ai/wonybnorkRl26lz7Aq5LGte5GrUWRq5nX8lhrGEyOWSTv
-        kDk+5eBfU317iwReEOAoKhEUAP9SOGYHIg==
-X-Google-Smtp-Source: ABdhPJwszSFM3fp5nHHTMxyVLySFOJj7h3zjbtkCLBA4VJjfy4go1mb0G/yoqB7qlfyMhBxXHIOK6g==
-X-Received: by 2002:a05:6808:645:b0:325:abf1:e7d0 with SMTP id z5-20020a056808064500b00325abf1e7d0mr8712229oih.123.1652134758073;
-        Mon, 09 May 2022 15:19:18 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f5-20020a9d5e85000000b0060603221262sm5106207otl.50.2022.05.09.15.19.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 15:19:16 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <c2e5b342-bdc3-727f-25d0-843f4ae3d51a@roeck-us.net>
-Date:   Mon, 9 May 2022 15:19:14 -0700
+        with ESMTP id S238957AbiEJJsS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 May 2022 05:48:18 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB9929B813
+        for <linux-pwm@vger.kernel.org>; Tue, 10 May 2022 02:44:18 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 7C6BA2C0230;
+        Tue, 10 May 2022 09:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1652175855;
+        bh=CV+nnOcVdQpKcQgRV0xaZ1gbK67yRvqbHUPMIFx963c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JoFE27gO/Ez8LMOL1AkLzWX4Qkfe7EEJNX2E3ihIR9mvzEzvN1tx8Ox6kSlfMZs8r
+         T9kCoK2rxlnd2y9BHaC1dgVHC2PgjR0lwd102U1UswBkGgDz1FY8Qlnw+xg7ZTs6zR
+         zKQEZxKbKy+lcgE+qfDsCWPR6hJe/f0kkdIKyVFzUqDYNXQpvH5HdW+vwrcxXUjAyD
+         FiBf5gw0egfG6y185RpHzNNWsxb/1n6B4NeXjqDP8QGHHzAYAFfOz+FxEOeobuyTna
+         vslC3W3GM0ypTLfOzEWYigsljbGZFWxcicUK3Lw52Zpz8T888PfK18XdPOQglch3jF
+         hLpONa6On0Bgg==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B627a33ee0000>; Tue, 10 May 2022 21:44:14 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by pat.atlnz.lc (Postfix) with ESMTP id 6F1CC13ECEC;
+        Tue, 10 May 2022 21:44:14 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 69B952A00D3; Tue, 10 May 2022 21:44:14 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] dt-bindings: gpio: gpio-mvebu: convert txt binding to YAML
+Date:   Tue, 10 May 2022 21:44:04 +1200
+Message-Id: <20220510094404.1020307-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.36.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: (EXT) Re: (EXT) Re: (EXT) Re: [PATCH v2 1/1] hwmon: pwm-fan:
- dynamically switch regulator
-Content-Language: en-US
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Markus Niebel <Markus.Niebel@ew.tq-group.com>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20220504124551.1083383-1-alexander.stein@ew.tq-group.com>
- <20220506142913.vbddyvkmhuvfd5o5@pengutronix.de>
- <20220506183124.GA2997799@roeck-us.net> <2184650.iZASKD2KPV@steina-w>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <2184650.iZASKD2KPV@steina-w>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=C7GXNjH+ c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=oZkIemNP1mAA:10 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=voM4FWlXAAAA:8 a=yZ6uvJJHfemicqfEXc0A:9 a=sptkURWiP4Gy88Gu7hUp:22 a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22 a=IC2XNlieTeVoXbcui8wp:22
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 5/9/22 00:39, Alexander Stein wrote:
-> Am Freitag, 6. Mai 2022, 20:31:24 CEST schrieb Guenter Roeck:
->> On Fri, May 06, 2022 at 04:29:13PM +0200, Uwe Kleine-König wrote:
->>> [Dropped Bartlomiej Zolnierkiewicz from Cc:; my mailer daemon claims the
->>> email address doens't exist.]
->>>
->>> Hello Guenter,
->>>
->>> On Fri, May 06, 2022 at 07:12:44AM -0700, Guenter Roeck wrote:
->>>> On Fri, May 06, 2022 at 02:23:11PM +0200, Alexander Stein wrote:
->>>>> Am Freitag, 6. Mai 2022, 12:23:01 CEST schrieb Uwe Kleine-König:
->>>>>> See
->>>>>> https://lore.kernel.org/linux-pwm/20180806155129.cjcc7okmwtaujf43@pe
->>>>>> ngutronix.de/ for one of the previous discussions.
->>>>>
->>>>> Thanks for the link. I took a look into it. I'm on your side here,
->>>>> IMHO
->>>>> pwm_disable() implies that the PWM perphery is disabled, including any
->>>>> clocks or powerdomain. This is what pwm-imx27 actually does. This
->>>>> might lead to a, probably platform dependent, (undefined?) state of
->>>>> the PWM output pin. This implies it is not possible to disable the
->>>>> PWM periphery for inverted signals, if the disabled state is not the
->>>>> inactive level. You know all about it already.
->>>>> Then again from pwm-fan side I want be able to disable the FAN,
->>>>> turning of
->>>>> regulator and PWM, so powersaving is possible. That's what this patch
->>>>> is
->>>>> about. This is similar also what pwm_bl is doing.
->>>>> Independent of the exact semantics, it makes sense to disable the
->>>>> regulator in pwm-fan as well when the fan shall be disabled.
->>>>
->>>> There are fans which never stop if pwm==0, such as some CPU fans. I
->>>> don't
->>>
->>> I assume with pwm==0 you actually mean duty_cycle == 0?
->>
->> Correct. The "pwm" attribute sets the duty cycle.
->>
->>>> think it is a good idea to force those off by turning off their power.
->>>> The
->>>> problem in the driver is that it treats pwm==0 as "disable pwm", not as
->>>> "set pwm output to 0", Part of the probem may be that the ABI doesn't
->>>> have
->>>> a good representation for "disable pwm output", which is what is really
->>>> wanted/needed here.
->>>
->>> Disable pwm output == set pwm output to High-Z? Not all PWMs are able to
->>> provide that.
->>
->> It is up to us to define whate it means exactly. If you are ok that "set
->> duty cycle to 0" reflects "set duty cycle to 0, disable pwm, and turn off
->> regulator", I would hope that you are ok with using the _enable attribute
->> to do the same and leaving pwm==0 to do what it is supposed to do, ie to
->> keep pwm control enabled and set the duty cycle to 0.
-> 
-> Just to make sure to be on the same side and summarize a bit. What you mean is
-> to add a new sysfs attribute to pwm-fan driver which controls what pwm_duty==0
-> implies. I would suggest to name is 'keep_pwm_enabled' (but I am open for
-> other suggestions) with the following meaning:
-> 1 - pwm_duty==0 just means that. Set PWM duty to 0 and keep PWM (and fan
-> regulator) enabled.
-> 
+Convert the existing device tree binding to YAML format.
 
-No, I am not suggesting that. I am suggesting to add support for the existing
-standard attribute pwm1_enable, and define what its values mean in the driver
-documentation. There is no need to provide a non-standard attribute.
+The old binding listed the interrupt-controller and related properties
+as required but there are sufficiently many existing usages without it
+that the YAML binding does not make the interrupt properties required.
 
-Guenter
+The offset and marvell,pwm-offset properties weren't in the old binding
+and are added to the YAML binding. The offset property is required when
+the marvell,armada-8k-gpio compatible is used.
 
-> 0 - pwm_duty==0 means that the PWM duty is set to 0, PWM is disabled and any
-> PWM fan regulator is disabled as well.
-> 
-> For pwm_duty!=0 this setting is irrelevant. Having the default to be '1' seems
-> sensible in order to not brake boards as regulator will be kept enabled. PWM
-> duty and/or PWM disable is irrelevant as PWM inversion is not yet supported
-> properly anyway.
-> 
-> IMHO this should address all the mentioned issues. With 'keep_pwm_enabled=1'
-> only the duty is set and the regulators are not forced to be disabled. E.g.
-> the CPU fans mentioned by Guenter. This is also the case for hardware where
-> the regulator is shared or not switchable at all.
-> On hardware where it is safe to disable the regulator and PWM
-> keep_pwm_enabled=0' allows the system to poweroff PWM and powersupply for the
-> fan to improve powersavings.
-> 
-> With this it is up to the administrator to provide the correct setting for
-> this attribute as it highly depends on the actual hardware and/or usage.
-> 
-> Best regards,
-> Alexander
-> 
-> 
-> 
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ .../devicetree/bindings/gpio/gpio-mvebu.txt   |  93 -----------
+ .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 147 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 148 insertions(+), 94 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.yam=
+l
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio-mvebu.txt
+deleted file mode 100644
+index 0fc6700ed800..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
++++ /dev/null
+@@ -1,93 +0,0 @@
+-* Marvell EBU GPIO controller
+-
+-Required properties:
+-
+-- compatible : Should be "marvell,orion-gpio", "marvell,mv78200-gpio",
+-  "marvell,armadaxp-gpio" or "marvell,armada-8k-gpio".
+-
+-    "marvell,orion-gpio" should be used for Orion, Kirkwood, Dove,
+-    Discovery (except MV78200) and Armada 370. "marvell,mv78200-gpio"
+-    should be used for the Discovery MV78200.
+-
+-    "marvel,armadaxp-gpio" should be used for all Armada XP SoCs
+-    (MV78230, MV78260, MV78460).
+-
+-    "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
+-    SoCs (either from AP or CP), see
+-    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
+r.txt
+-    for specific details about the offset property.
+-
+-- reg: Address and length of the register set for the device. Only one
+-  entry is expected, except for the "marvell,armadaxp-gpio" variant
+-  for which two entries are expected: one for the general registers,
+-  one for the per-cpu registers. Not used for marvell,armada-8k-gpio.
+-
+-- interrupts: The list of interrupts that are used for all the pins
+-  managed by this GPIO bank. There can be more than one interrupt
+-  (example: 1 interrupt per 8 pins on Armada XP, which means 4
+-  interrupts per bank of 32 GPIOs).
+-
+-- interrupt-controller: identifies the node as an interrupt controller
+-
+-- #interrupt-cells: specifies the number of cells needed to encode an
+-  interrupt source. Should be two.
+-  The first cell is the GPIO number.
+-  The second cell is used to specify flags:
+-    bits[3:0] trigger type and level flags:
+-      1 =3D low-to-high edge triggered.
+-      2 =3D high-to-low edge triggered.
+-      4 =3D active high level-sensitive.
+-      8 =3D active low level-sensitive.
+-
+-- gpio-controller: marks the device node as a gpio controller
+-
+-- ngpios: number of GPIOs this controller has
+-
+-- #gpio-cells: Should be two. The first cell is the pin number. The
+-  second cell is reserved for flags, unused at the moment.
+-
+-Optional properties:
+-
+-In order to use the GPIO lines in PWM mode, some additional optional
+-properties are required.
+-
+-- compatible: Must contain "marvell,armada-370-gpio"
+-
+-- reg: an additional register set is needed, for the GPIO Blink
+-  Counter on/off registers.
+-
+-- reg-names: Must contain an entry "pwm" corresponding to the
+-  additional register range needed for PWM operation.
+-
+-- #pwm-cells: Should be two. The first cell is the GPIO line number. The
+-  second cell is the period in nanoseconds.
+-
+-- clocks: Must be a phandle to the clock for the GPIO controller.
+-
+-Example:
+-
+-		gpio0: gpio@d0018100 {
+-			compatible =3D "marvell,armadaxp-gpio";
+-			reg =3D <0xd0018100 0x40>,
+-			    <0xd0018800 0x30>;
+-			ngpios =3D <32>;
+-			gpio-controller;
+-			#gpio-cells =3D <2>;
+-			interrupt-controller;
+-			#interrupt-cells =3D <2>;
+-			interrupts =3D <16>, <17>, <18>, <19>;
+-		};
+-
+-		gpio1: gpio@18140 {
+-			compatible =3D "marvell,armada-370-gpio";
+-			reg =3D <0x18140 0x40>, <0x181c8 0x08>;
+-			reg-names =3D "gpio", "pwm";
+-			ngpios =3D <17>;
+-			gpio-controller;
+-			#gpio-cells =3D <2>;
+-			#pwm-cells =3D <2>;
+-			interrupt-controller;
+-			#interrupt-cells =3D <2>;
+-			interrupts =3D <87>, <88>, <89>;
+-			clocks =3D <&coreclk 0>;
+-		};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Doc=
+umentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+new file mode 100644
+index 000000000000..84b72e506526
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+@@ -0,0 +1,147 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell EBU GPIO controller
++
++maintainers:
++  - Thierry Reding <thierry.reding@gmail.com>
++  - Lee Jones <lee.jones@linaro.org>
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - marvell,orion-gpio
++          - marvell,mv78200-gpio
++          - marvell,armada-370-gpio
++          - marvell,armadaxp-gpio
++          - marvell,armada-8k-gpio
++      - items:
++          - const: marvell,armada-370-gpio
++          - const: marvell,orion-gpio
++
++    description: |
++      "marvell,orion-gpio" should be used for Orion, Kirkwood, Dove, Dis=
+covery
++      (except MV78200) and Armada 370. "marvell,mv78200-gpio" should be =
+used
++      for the Discovery MV78200.
++
++      "marvel,armadaxp-gpio" should be used for all Armada XP SoCs (MV78=
+230,
++      MV78260, MV78460).
++
++      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K S=
+oCs
++      (either from AP or CP), see
++      Documentation/devicetree/bindings/arm/marvell/ap80x-system-control=
+ler.txt
++      for specific details about the offset property.
++
++  reg:
++    description: |
++      Address and length of the register set for the device. Only one en=
+try
++      is expected, except for the "marvell,armadaxp-gpio" variant for wh=
+ich
++      two entries are expected: one for the general registers, one for t=
+he
++      per-cpu registers. Not used for marvell,armada-8k-gpio.
++
++      An additional register set is needed, for the GPIO Blink
++      Counter on/off registers.
++    minItems: 1
++    maxItems: 2
++
++  reg-names:
++    description:
++      Must contain an entry "pwm" corresponding to the
++      additional register range needed for PWM operation.
++    minItems: 1
++    maxItems: 2
++
++  offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Offset in the register map for the gpio registers (in b=
+ytes)
++
++  interrupts:
++    description: |
++      The list of interrupts that are used for all the pins managed by t=
+his
++      GPIO bank. There can be more than one interrupt (example: 1 interr=
+upt
++      per 8 pins on Armada XP, which means 4 interrupts per bank of 32
++      GPIOs).
++    minItems: 1
++    maxItems: 4
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  gpio-controller: true
++
++  ngpios:
++    description:
++      number of GPIOs this controller has
++    minimum: 1
++    maximum: 32
++
++  "#gpio-cells":
++    const: 2
++
++  marvell,pwm-offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Offset in the register map for the pwm registers (in by=
+tes)
++
++  "#pwm-cells":
++    description:
++      The first cell is the GPIO line number. The second cell is the per=
+iod
++      in nanoseconds.
++    const: 2
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++required:
++  - compatible
++  - gpio-controller
++  - ngpios
++  - "#gpio-cells"
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: marvell,armada-8k-gpio
++then:
++  required:
++    - offset
++else:
++  required:
++    - reg
++
++unevaluatedProperties: true
++
++examples:
++  - |
++      gpio@d0018100 {
++        compatible =3D "marvell,armadaxp-gpio";
++        reg =3D <0xd0018100 0x40>, <0xd0018800 0x30>;
++        ngpios =3D <32>;
++        gpio-controller;
++        #gpio-cells =3D <2>;
++        interrupt-controller;
++        #interrupt-cells =3D <2>;
++        interrupts =3D <16>, <17>, <18>, <19>;
++      };
++
++  - |
++      gpio@18140 {
++        compatible =3D "marvell,armada-370-gpio";
++        reg =3D <0x18140 0x40>, <0x181c8 0x08>;
++        reg-names =3D "gpio", "pwm";
++        ngpios =3D <17>;
++        gpio-controller;
++        #gpio-cells =3D <2>;
++        #pwm-cells =3D <2>;
++        interrupt-controller;
++        #interrupt-cells =3D <2>;
++        interrupts =3D <87>, <88>, <89>;
++        clocks =3D <&coreclk 0>;
++      };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e8c52d0192a6..6b1c80fd7611 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16019,7 +16019,7 @@ L:	linux-pwm@vger.kernel.org
+ S:	Maintained
+ Q:	https://patchwork.ozlabs.org/project/linux-pwm/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linu=
+x-pwm.git
+-F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
++F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+ F:	Documentation/devicetree/bindings/pwm/
+ F:	Documentation/driver-api/pwm.rst
+ F:	drivers/gpio/gpio-mvebu.c
+--=20
+2.36.0
 
