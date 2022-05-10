@@ -2,100 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 654DF52255C
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 May 2022 22:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE3195225EF
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 May 2022 22:55:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231924AbiEJUV0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 May 2022 16:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
+        id S232586AbiEJUzY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 May 2022 16:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232171AbiEJUVZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 May 2022 16:21:25 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DBA86FA1F
-        for <linux-pwm@vger.kernel.org>; Tue, 10 May 2022 13:21:21 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1noWM9-00045f-Qa; Tue, 10 May 2022 22:21:17 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1noWM9-001YX0-QC; Tue, 10 May 2022 22:21:16 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1noWM7-008sln-PZ; Tue, 10 May 2022 22:21:15 +0200
-Date:   Tue, 10 May 2022 22:21:11 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, kernel@collabora.com,
-        nfraprado@collabora.com
-Subject: Re: [PATCH 1/2] pwm: pwm-mediatek: Add support for MediaTek Helio
- X10 MT6795
-Message-ID: <20220510202111.lbdtqr3i6i3m4hmb@pengutronix.de>
-References: <20220503105405.54832-1-angelogioacchino.delregno@collabora.com>
- <20220503105405.54832-2-angelogioacchino.delregno@collabora.com>
+        with ESMTP id S231743AbiEJUzY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 May 2022 16:55:24 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373402609F1
+        for <linux-pwm@vger.kernel.org>; Tue, 10 May 2022 13:55:22 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 6C5612C046F;
+        Tue, 10 May 2022 20:55:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1652216120;
+        bh=2Qpn3cSeJ6Ckg5/0EBd3448KCkcv1vPXpuk35DFY0vE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=hZcqeHu8yxSmp3Dd4WKaH4zA45aLtSHwpyWsVitZ/Nm0UwJKO89p3xvmoxMj6+7Ni
+         ZlnjMaSeffjXs5ghDWSFa7DINx6w5nC3E+AXY9hV1KNMs/ob5yojaEkwMr63wn47Ci
+         J24BmeBLenrlGWgePRaKTmUMMvIud2jpuO2n3z0OlWdQO7HWVisiS1ThhQ96hLTpTs
+         gvgDiRo36nua29+lAisZjnywxTBopeZ3D38Qjvq8TnxNP3el9pWKtix3G12Wv9x7GK
+         LWnzlqpnaEqn3VrmxAUpp512NWr3fGOdUXFS30tbxZ/iArh2NLNj3zxQ/VvH2oyVEQ
+         TruHpskndlLEw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[2001:df5:b000:bc8::77]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B627ad1380001>; Wed, 11 May 2022 08:55:20 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.32; Wed, 11 May 2022 08:55:20 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.033; Wed, 11 May 2022 08:55:20 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: gpio: gpio-mvebu: convert txt binding to
+ YAML
+Thread-Topic: [PATCH] dt-bindings: gpio: gpio-mvebu: convert txt binding to
+ YAML
+Thread-Index: AQHYZFKD08/UItmbQ0e7wNBkJKoFaK0XVTaAgAB5foA=
+Date:   Tue, 10 May 2022 20:55:19 +0000
+Message-ID: <eaea4c27-05b3-d26f-d091-99e07d14aae6@alliedtelesis.co.nz>
+References: <20220510094404.1020307-1-chris.packham@alliedtelesis.co.nz>
+ <6db35313-5dcd-c9f2-724c-d157a835c9fc@linaro.org>
+In-Reply-To: <6db35313-5dcd-c9f2-724c-d157a835c9fc@linaro.org>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8C3504451A9D124DBB16C208C60E7748@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wdtfek4vpxlvgeau"
-Content-Disposition: inline
-In-Reply-To: <20220503105405.54832-2-angelogioacchino.delregno@collabora.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=C7GXNjH+ c=1 sm=1 tr=0 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=oKJsc7D3gJEA:10 a=IkcTkHD0fZMA:10 a=oZkIemNP1mAA:10 a=JPAAYGfGNIWfKY3b7Z0A:9 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---wdtfek4vpxlvgeau
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 03, 2022 at 12:54:04PM +0200, AngeloGioacchino Del Regno wrote:
-> The MediaTek Helio X10 MT6795 SoC has 7 PWMs: add a compatible string
-> to use the right match data.
->=20
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-
-LGTM
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wdtfek4vpxlvgeau
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmJ6yTQACgkQwfwUeK3K
-7AnFkgf8CEb9HpPafjms8PISGpb1A+Q2khebLOLn50vUSlGgw0nQa+4pZESMHZyC
-h0hs5fyOboYaGCZ5Lbl2+u9weIDwOo8kWR4juafflr+yrSUmU7/SvUm6whOhwKyM
-4WGSasaDyyaI5Tu5V4AxjG9Uktc7l3LKdG6RsbXmh+pxsYR84faCAztr8fsJ8CnV
-YBJLqFDts+Zv8xO77mQY+b2v6v9cmee6iDc7hNQl9Lcxd2iZ/xsJu89Polf+B6bx
-iChumB+l6opA0uI0qWXBA7/AfZPDg4tGVG824HdpzSGranGnVRVZqWq6a1BY+jtd
-khpkFUchFBNgTRsi7ey7QPBwFLq4gg==
-=UxND
------END PGP SIGNATURE-----
-
---wdtfek4vpxlvgeau--
+KHNpZ2ggcmVzZW5kLCBUaHVuZGVyYmlyZCBkZWNpZGVkIHRoYXQgdGhpcyBuZWVkZWQgaHRtbCkN
+Cg0KT24gMTEvMDUvMjIgMDE6NDAsIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6DQo+PiArICBt
+YXJ2ZWxsLHB3bS1vZmZzZXQ6DQo+PiArICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2Rl
+ZmluaXRpb25zL3VpbnQzMg0KPj4gKyAgICBkZXNjcmlwdGlvbjogT2Zmc2V0IGluIHRoZSByZWdp
+c3RlciBtYXAgZm9yIHRoZSBwd20gcmVnaXN0ZXJzIChpbiBieXRlcykNCj4gSXQncyB0aGUgc2Ft
+ZSBhcyBvZmZzZXQuIFdoeSBhbGxvd2luZyBib3RoPyBJc24ndCBvbmUgZGVwcmVjYXRlZD8NCj4N
+ClRoaXMgb25lIGlzIGluIGFkZGl0aW9uIHRvIG9mZnNldC4gVGhlICJvZmZzZXQiIGlzIGZvciB0
+aGUgZ3BpbyANCnJlZ2lzdGVycyAibWFydmVsbCxwd20tb2Zmc2V0IiBpcyBmb3IgYSBzZXBhcmF0
+ZSBwd20gcmVsYXRlZCByZWdpc3RlciANCnRoYXQgaXMgbm90IGluIHRoZSBzYW1lIGNvbnRpZ3Vv
+dXMgYmxvY2su
