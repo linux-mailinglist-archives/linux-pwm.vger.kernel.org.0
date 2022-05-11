@@ -2,67 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8AA52345A
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 May 2022 15:37:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D8C85237E8
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 May 2022 17:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243006AbiEKNhB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 May 2022 09:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52748 "EHLO
+        id S1344121AbiEKP57 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 May 2022 11:57:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230257AbiEKNhA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 May 2022 09:37:00 -0400
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1219663FB;
-        Wed, 11 May 2022 06:36:57 -0700 (PDT)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-e656032735so2891523fac.0;
-        Wed, 11 May 2022 06:36:57 -0700 (PDT)
+        with ESMTP id S1344149AbiEKP4A (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 May 2022 11:56:00 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA7517E1D
+        for <linux-pwm@vger.kernel.org>; Wed, 11 May 2022 08:55:58 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id ch13so4903745ejb.12
+        for <linux-pwm@vger.kernel.org>; Wed, 11 May 2022 08:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=NCe9eepcmm5pM5STfrqjZwU8j89Uv9lHGyRkx9Iwq7c=;
+        b=Zf8SCCkecXCCgEpaj2bLTJnzLOAmeR7CkZ7qOrUm2VO2kmUIAyKx+F+AeNYE+hpIQx
+         JmcJte49LifGKo1REd5LPpB9yjV+Wikmg6YEInDyICKBVxrljhKGKuvd6h5VDoltLs67
+         9lfvO1SZbo645yyeoFeJ8SxtbSTXYgXVCZXlMWVqLhRJm0W6QD0rRfO8Y3l/nfxeSxJD
+         s8/06VJGXUTALB4Idse2+Qy3zm0XwjY8OV3VduGeuqaAaJVUOzqYMcHVGOZhzkf6P3Ap
+         mB892jCfGIVU/rzrsFIrST1Cu37urTZsLq6mCx9NhrKcYQOoNFm8YC/UvOmDe944YAmP
+         48gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=BESNWVMVzlpAR343foZqZ3D2dxIXgbt3nrEPEet5hPU=;
-        b=FnJ2dSrNizbwhV3xWRDuX8PXBOvkXMrcHh16XM5dBv1Y5lK4s+dn+RXP+LssiXUHSQ
-         IKBAhi8zcLMeMRViLLrJS+W69mZlrilS69EBR3RIf/2/PzMhJQxUJnRKuE0E7feQLXcT
-         gYw5CSdVFl+Ekf7E51LiNuEuD7ZzRZkFW058EFj+eu0+Bb/QQQTXDks0BZ42CGUufNPt
-         nxdv+4JQfSqZm9h0OvWR9E2bbFxRP6W3Q4FsNq1FoUSZcdJs7Ds6JfVgBOdkYfYzLUW8
-         Yitz6cciDat0YSRDRlhrHUDvuWjSvnMRVYCyCWNv32ngRccL9892950VnosJ5Wubv1LF
-         LToQ==
-X-Gm-Message-State: AOAM531zmTXPsew9N7HVXxj5kGkvXvK1OiClZsPSIzU1i8x2V92KpQBR
-        k0YSZ562E5x1vzvjvajrTssUi15vbA==
-X-Google-Smtp-Source: ABdhPJypjFI4l+Lms9fP4E6yGMirxQU8rgih54mxtA/iH+7Km5JEKremvPW8Rkvj9kndQb/uXX7XQQ==
-X-Received: by 2002:a05:6870:8985:b0:da:b3f:3253 with SMTP id f5-20020a056870898500b000da0b3f3253mr2684208oaq.259.1652276217077;
-        Wed, 11 May 2022 06:36:57 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id t142-20020acaaa94000000b0032647f4e437sm734905oie.45.2022.05.11.06.36.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 06:36:56 -0700 (PDT)
-Received: (nullmailer pid 182487 invoked by uid 1000);
-        Wed, 11 May 2022 13:36:55 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, brgl@bgdev.pl,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        lee.jones@linaro.org, u.kleine-koenig@pengutronix.de,
-        linux-gpio@vger.kernel.org
-In-Reply-To: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=NCe9eepcmm5pM5STfrqjZwU8j89Uv9lHGyRkx9Iwq7c=;
+        b=a9oPC2dUyBvhKYK4Nxsoj9RcXaW8ka5vv3LfqNr2gukmKJ4IzMQ2VMyfWmUydsOc2X
+         4/NtEGCD7eOqpLCUnQNio52gfZ76Mn+11+cdBSk4DpA4KGCjLswg/6rpZ5iNuERyZWVu
+         UeOtEWIv8R8633PwhPoF5pqrAxEqeuqypEoAmLrzMGWFT6avwo5DLSfhj2IswYRfC/cg
+         g0ujLPeghC8NxwDwL43BBmpJfZ0VMy35cssZmK4/im0RglzfU41pju6tOonFjsrtRhlf
+         grfeqgJXUBImL4ii7RgCDufRE2sSyEkdlYEmstcgYghJPnVWThH/nNdNTvm28ELbRwYJ
+         jv2Q==
+X-Gm-Message-State: AOAM533rJbyoGlgVeh+DMR5pgwmTwJp2Bz5ktUI1UEOWsYeax27GOYiW
+        MARosOB6XA3nxKWrmr06vCmuyw==
+X-Google-Smtp-Source: ABdhPJwMm4BtwRwLHiFzR5GYSDOEL//zHF9zXAAhO7EeCdx/TbOGi5w/JLyVYJRIx/zVNYSRsIIgQQ==
+X-Received: by 2002:a17:906:794e:b0:6f5:2072:b00a with SMTP id l14-20020a170906794e00b006f52072b00amr25202218ejo.277.1652284556612;
+        Wed, 11 May 2022 08:55:56 -0700 (PDT)
+Received: from [192.168.0.155] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id fl20-20020a1709072a9400b006f3ef214e13sm1078644ejc.121.2022.05.11.08.55.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 May 2022 08:55:56 -0700 (PDT)
+Message-ID: <59d23590-0b1e-39f0-80f1-d875081a276c@linaro.org>
+Date:   Wed, 11 May 2022 17:55:55 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v2] dt-bindings: gpio: gpio-mvebu: convert txt binding to
+ YAML
+Content-Language: en-US
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 References: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2] dt-bindings: gpio: gpio-mvebu: convert txt binding to YAML
-Date:   Wed, 11 May 2022 08:36:55 -0500
-Message-Id: <1652276215.699297.182486.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 11 May 2022 13:37:37 +1200, Chris Packham wrote:
+On 11/05/2022 03:37, Chris Packham wrote:
 > Convert the existing device tree binding to YAML format.
 > 
 > The old binding listed the interrupt-controller and related properties
@@ -72,51 +87,51 @@ On Wed, 11 May 2022 13:37:37 +1200, Chris Packham wrote:
 > The offset and marvell,pwm-offset properties weren't in the old binding
 > and are added to the YAML binding. The offset property is required when
 > the marvell,armada-8k-gpio compatible is used.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> 
-> Notes:
->     Changes in v2:
->     - Collect review from Andrew
->     - Remove unnecessary/obvious property descriptions
->     - Clarify reg property requirements for armadaxp vs the rest. Enforce
->       these with a variant specific constraint.
->     - Update compatible property requirements. marvell,orion-gpio and
->       marvell,armada-8k-gpio can be used on their own. Everything else needs
->       marvell,orion-gpio as a fallback.
->     - Correct example to include marvell,orion-gpio fallback
-> 
->  .../devicetree/bindings/gpio/gpio-mvebu.txt   |  93 -----------
->  .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 151 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 152 insertions(+), 94 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+These properties do not look correct. It's some hacky design. As I see
+in the driver, there is no reason to model the gpio under the syscon at
+all. The GPIO has its own address space, which is for example in
+armada-ap80x.dtsi 0x6f4000+0x1040.
 
-yamllint warnings/errors:
+Instead of describing it as a separate device under that address,
+someone created a syscon node for entire address space, put the GPIO as
+a fake child and added some new property "offset" indicating address
+offset. Wait, what, why?
 
-dtschema/dtc warnings/errors:
+Why this cannot be a child of SoC, just like all other nodes are?
 
-doc reference errors (make refcheckdocs):
-Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt: Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt: Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+Since this is a conversion and offset was never previously accepted in
+the bindings, it has to go to separate patch where you will need to get
+Rob's ack on documenting offset.
 
-See https://patchwork.ozlabs.org/patch/
+(...)
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +
+> +unevaluatedProperties: true
+> +
+> +examples:
+> +  - |
+> +      gpio@d0018100 {
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Wrong indentation. See example schema.
 
-pip3 install dtschema --upgrade
 
-Please check and re-submit.
+> +        compatible = "marvell,armadaxp-gpio", "marvell,orion-gpio";
+> +        reg = <0xd0018100 0x40>, <0xd0018800 0x30>;
+> +        ngpios = <32>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        interrupts = <16>, <17>, <18>, <19>;
+> +      };
+> +
+> +  - |
+> +      gpio@18140 {
 
+Best regards,
+Krzysztof
