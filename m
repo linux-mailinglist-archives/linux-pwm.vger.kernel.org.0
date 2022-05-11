@@ -2,136 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8C85237E8
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 May 2022 17:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70550523851
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 May 2022 18:15:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344121AbiEKP57 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 May 2022 11:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41440 "EHLO
+        id S1344440AbiEKQPA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 May 2022 12:15:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344149AbiEKP4A (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 May 2022 11:56:00 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA7517E1D
-        for <linux-pwm@vger.kernel.org>; Wed, 11 May 2022 08:55:58 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id ch13so4903745ejb.12
-        for <linux-pwm@vger.kernel.org>; Wed, 11 May 2022 08:55:57 -0700 (PDT)
+        with ESMTP id S1344451AbiEKQO6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 May 2022 12:14:58 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242C76D872
+        for <linux-pwm@vger.kernel.org>; Wed, 11 May 2022 09:14:56 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id m25so3298400oih.2
+        for <linux-pwm@vger.kernel.org>; Wed, 11 May 2022 09:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=NCe9eepcmm5pM5STfrqjZwU8j89Uv9lHGyRkx9Iwq7c=;
-        b=Zf8SCCkecXCCgEpaj2bLTJnzLOAmeR7CkZ7qOrUm2VO2kmUIAyKx+F+AeNYE+hpIQx
-         JmcJte49LifGKo1REd5LPpB9yjV+Wikmg6YEInDyICKBVxrljhKGKuvd6h5VDoltLs67
-         9lfvO1SZbo645yyeoFeJ8SxtbSTXYgXVCZXlMWVqLhRJm0W6QD0rRfO8Y3l/nfxeSxJD
-         s8/06VJGXUTALB4Idse2+Qy3zm0XwjY8OV3VduGeuqaAaJVUOzqYMcHVGOZhzkf6P3Ap
-         mB892jCfGIVU/rzrsFIrST1Cu37urTZsLq6mCx9NhrKcYQOoNFm8YC/UvOmDe944YAmP
-         48gQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Cf09Je3CtRN58q8NVoc2nPVu33QjMHj88UB5fSrOla4=;
+        b=CTG8yoxyViVJG9wmGrm6SLhEgFT0WuEvMoQXyZI5Kx6YkRB5j28pASLSwuZICqn0Cn
+         WUe9JQtUluE5n2n2m1EPa+FISLLmw74zubXRkCQO7+cPFnDb7SH7eHHvsAv5UmyVzyUV
+         Yg4qwAYNHpV19CvN9+QaSJdKAjMOYPnzZCA3hYz+C9nugper2Z4G1e1AGj+1SszRkaQo
+         moGjWWVVce7nK2CR/KrFugqD3XC1mwkzPeFT8lqC0rXm5ECEPIDRHLahArrblpkSEeOi
+         oarjMZfY1Bm/srauvkhyBWogv1HqzCKX1WkOEQx8b1IIsfASQoQDyYqMHU0Z+3n8xztv
+         Iymw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=NCe9eepcmm5pM5STfrqjZwU8j89Uv9lHGyRkx9Iwq7c=;
-        b=a9oPC2dUyBvhKYK4Nxsoj9RcXaW8ka5vv3LfqNr2gukmKJ4IzMQ2VMyfWmUydsOc2X
-         4/NtEGCD7eOqpLCUnQNio52gfZ76Mn+11+cdBSk4DpA4KGCjLswg/6rpZ5iNuERyZWVu
-         UeOtEWIv8R8633PwhPoF5pqrAxEqeuqypEoAmLrzMGWFT6avwo5DLSfhj2IswYRfC/cg
-         g0ujLPeghC8NxwDwL43BBmpJfZ0VMy35cssZmK4/im0RglzfU41pju6tOonFjsrtRhlf
-         grfeqgJXUBImL4ii7RgCDufRE2sSyEkdlYEmstcgYghJPnVWThH/nNdNTvm28ELbRwYJ
-         jv2Q==
-X-Gm-Message-State: AOAM533rJbyoGlgVeh+DMR5pgwmTwJp2Bz5ktUI1UEOWsYeax27GOYiW
-        MARosOB6XA3nxKWrmr06vCmuyw==
-X-Google-Smtp-Source: ABdhPJwMm4BtwRwLHiFzR5GYSDOEL//zHF9zXAAhO7EeCdx/TbOGi5w/JLyVYJRIx/zVNYSRsIIgQQ==
-X-Received: by 2002:a17:906:794e:b0:6f5:2072:b00a with SMTP id l14-20020a170906794e00b006f52072b00amr25202218ejo.277.1652284556612;
-        Wed, 11 May 2022 08:55:56 -0700 (PDT)
-Received: from [192.168.0.155] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id fl20-20020a1709072a9400b006f3ef214e13sm1078644ejc.121.2022.05.11.08.55.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 May 2022 08:55:56 -0700 (PDT)
-Message-ID: <59d23590-0b1e-39f0-80f1-d875081a276c@linaro.org>
-Date:   Wed, 11 May 2022 17:55:55 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Cf09Je3CtRN58q8NVoc2nPVu33QjMHj88UB5fSrOla4=;
+        b=Obh0VDCzcWBtbdON5DWparPRn2c/SQaJfAm9TzPRbNb35bXP/xvELyVncrthj6Tth4
+         /ER1+jXLg+FXuh20qRopN5aIjYmYI32B373mMFFX0NEvH1j+WlTPm2+AJmK4P7gtvrHC
+         rVZi+Z5TgOUl9bYrzB3rc8ZZc+zXR7776eu5ol/LSdN4cZJjlea6NgMHOqWGmIAOe27S
+         asG/RF/RUaY1TaBDFDB76Zu5RRWIMXmUsa5QXQUSIQg7cvpSbrXCx4C/q60fzr5C7brr
+         1QWgdsNXS6UU8Dqd3LSyLZ5i2TvTh3ZIQsKBAl3pWdnXBS0XYucbxag1pkb2zahXJg1V
+         OvHw==
+X-Gm-Message-State: AOAM532ZudsIkygRHhIAYwtLDpFdMkqCCAeCOHZHMFwrry8pqYvySzNj
+        oliKRBpof+Fh9qTXkPV2yBInvQ==
+X-Google-Smtp-Source: ABdhPJz8wvQ3CXsSwZJgwMBRizoEDzOcZERxCvR6YfvQLmBZIZFLmiRHdvM6kGdBrvW6hOVawnGctg==
+X-Received: by 2002:a05:6808:2199:b0:326:90e2:754b with SMTP id be25-20020a056808219900b0032690e2754bmr2876267oib.227.1652285695478;
+        Wed, 11 May 2022 09:14:55 -0700 (PDT)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id z18-20020a056808065200b00325cda1ffacsm861218oih.43.2022.05.11.09.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 May 2022 09:14:54 -0700 (PDT)
+Date:   Wed, 11 May 2022 09:17:25 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Doug Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v14 2/2] leds: Add driver for Qualcomm LPG
+Message-ID: <YnvhleAI5RW0ZvkV@ripper>
+References: <20220303214300.59468-1-bjorn.andersson@linaro.org>
+ <20220303214300.59468-2-bjorn.andersson@linaro.org>
+ <20220504073009.GC8204@duo.ucw.cz>
+ <YnKTAvQc6eDxTl14@ripper>
+ <20220506160901.GA1199@bug>
+ <YnVMcaRV86jZslhd@ripper>
+ <20220507063659.GA6968@amd>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH v2] dt-bindings: gpio: gpio-mvebu: convert txt binding to
- YAML
-Content-Language: en-US
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220511013737.1194344-1-chris.packham@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220507063659.GA6968@amd>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 11/05/2022 03:37, Chris Packham wrote:
-> Convert the existing device tree binding to YAML format.
+On Fri 06 May 23:36 PDT 2022, Pavel Machek wrote:
+
+> Hi!
 > 
-> The old binding listed the interrupt-controller and related properties
-> as required but there are sufficiently many existing usages without it
-> that the YAML binding does not make the interrupt properties required.
+> > > > As such the pattern sequence provided to hw_pattern looks to be the
+> > > > smae, but I don't see that it can be made compatible.
+> > > > 
+> > > > > Can I get either patch to disable pattern infrastructure for now or to
+> > > > > get it compatible?
+> > > > > 
+> > > > 
+> > > > I'd be happy to get this updated to your liking, but this was one of the
+> > > > drivers we discussed when we introduced the pattern trigger and led to
+> > > > the conclusion that we need the ability to do hw-specific patterns.
+> > > > 
+> > > > As such this document provides the hardware specific documentation, as
+> > > > we describe under "hw_pattern" in
+> > > > Documentation/ABI/testing/sysfs-class-led-trigger-pattern.
+> > > > 
+> > > > Please advice on what you would like me to do.
+> > > 
+> > > I'd like you to use same format leds-trigger-pattern describes.
+> > > 
+> > > If someone passes "255 500 0 500", that's requesting gradual transitions and
+> > > your hw can not do that. You return -EINVAL.
+> > > 
+> > > If someone wants that kind of blinking, they need to pass "255 0 255 500 0 0 0 500".
+> > > 
+> > 
+> > So the section under hw_pattern in sysfs-class-led-trigger-pattern that
+> > says:
+> > 
+> > "Since different LED hardware can have different semantics of
+> > hardware patterns, each driver is expected to provide its own
+> > description for the hardware patterns in their documentation
+> > file at Documentation/leds/."
+> > 
+> > That doesn't apply to this piece of hardware & driver?
 > 
-> The offset and marvell,pwm-offset properties weren't in the old binding
-> and are added to the YAML binding. The offset property is required when
-> the marvell,armada-8k-gpio compatible is used.
+> It applies: since your hardware can not do arbitrary patterns, you
+> need description of what kinds of patterns it can do.
+> 
+> But you should still use compatible format, so that pattern that is
+> valid for hw_pattern file is valid for pattern file, too, and produces
+> same result.
+> 
 
-These properties do not look correct. It's some hacky design. As I see
-in the driver, there is no reason to model the gpio under the syscon at
-all. The GPIO has its own address space, which is for example in
-armada-ap80x.dtsi 0x6f4000+0x1040.
+Okay, I didn't understand that the hw_pattern needs to be a subset of
+the pattern. I will prepare a patch to require the pattern to include
+the zero-time entries as well.
 
-Instead of describing it as a separate device under that address,
-someone created a syscon node for entire address space, put the GPIO as
-a fake child and added some new property "offset" indicating address
-offset. Wait, what, why?
+> If you believe documentation implies something else, it may need to be
+> clarified.
+> 
 
-Why this cannot be a child of SoC, just like all other nodes are?
+I'll read it again and if needed I'll try to clarify the expectations.
 
-Since this is a conversion and offset was never previously accepted in
-the bindings, it has to go to separate patch where you will need to get
-Rob's ack on documenting offset.
-
-(...)
-
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +
-> +unevaluatedProperties: true
-> +
-> +examples:
-> +  - |
-> +      gpio@d0018100 {
-
-Wrong indentation. See example schema.
-
-
-> +        compatible = "marvell,armadaxp-gpio", "marvell,orion-gpio";
-> +        reg = <0xd0018100 0x40>, <0xd0018800 0x30>;
-> +        ngpios = <32>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <16>, <17>, <18>, <19>;
-> +      };
-> +
-> +  - |
-> +      gpio@18140 {
-
-Best regards,
-Krzysztof
+Thanks,
+Bjorn
