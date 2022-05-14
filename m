@@ -2,110 +2,149 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 481D9527111
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 May 2022 14:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F25965273F5
+	for <lists+linux-pwm@lfdr.de>; Sat, 14 May 2022 22:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232346AbiENMw4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 14 May 2022 08:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
+        id S235096AbiENU2S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 14 May 2022 16:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbiENMwz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 14 May 2022 08:52:55 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 859D71A048
-        for <linux-pwm@vger.kernel.org>; Sat, 14 May 2022 05:52:54 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id fd25so352171edb.3
-        for <linux-pwm@vger.kernel.org>; Sat, 14 May 2022 05:52:54 -0700 (PDT)
+        with ESMTP id S235072AbiENU2R (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 14 May 2022 16:28:17 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DE328718
+        for <linux-pwm@vger.kernel.org>; Sat, 14 May 2022 13:28:15 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id f4so7020049lfu.12
+        for <linux-pwm@vger.kernel.org>; Sat, 14 May 2022 13:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WO6AgLCozZ3wyGfGPtWW8oIaWuQ2FPFTNopFE1zWXCk=;
-        b=1ocVqVOjl+AiZN8QRXqQsVoIAZEVlvK3+xwSuhpZ0SAAm9IEHKmRNazgZwPSuZAzaM
-         ZcsWn5gcMB6r7v/11YznNEEZcuTzkfOF6HomjGtEessS+FtHm2VaE/HzAz5BRKmtWxf8
-         DnjhwiNZ+AMtxWMRh3XgaFHdZ5pcCE1yY7Ns+jBwPmw/g4nYuyxVuK9VpHN4vwwPo6zA
-         V0zazsl7NX58V7upR8q10MTx9xU5plVnMPaA8v3Fd32V39BIADrYe2qMhKbF6W4LTU3N
-         ZQn8TOiHMs0i6l7lUEBoFTWLmOCFJ9cIw5+0fWGeEe7HYiOPPXzdMR6dnDrLi2zXeJAq
-         iV/w==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=oU8cEi9RGKI5PeHOuabBwBx8PODfLAO6JbRmPjOYsQc=;
+        b=UE5bV8SixnycPe242NT4unpuYuLs0IT3V/Lvwh7LTJhOmbejnDYbrPIsKrgTWgGAlW
+         9BLRS6VcSfONQ6/rP4mfhrEkpk3M11Nzl4YlCHiqI9cP1IglVd6S6Vfjo7pX45msSqrV
+         S3Ww5hQZYqN4ES4N6A9n3aHSoKDPdaFfygzW14Q1yqmqPoVXqt/CgEhctUEdRGOCNwY2
+         +ceKeyMdqX8RECrqnCcKBgMYKBYSjppskrTD6M2+AZDhAG6iEPF9L3d3HZDnOWnVRvBc
+         yjg64VPwRi5vYGloOWg7EAN1RW4JFkrYN5KrB097+QCrK/PQTD7HyDTz+futzCkZXbin
+         reng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WO6AgLCozZ3wyGfGPtWW8oIaWuQ2FPFTNopFE1zWXCk=;
-        b=mqe+XHs6wG7hDX6ItHn58giCGcyZql5aQk1sagUZIGZOhE6SmNIKGpxq7j+HxRj2db
-         BoUH1mfELexP1iWR/7H18o1S+4ufihsDVWdmQVOZCqir76UllJP76xXkjqXozpe2PS1r
-         U3AgI05yhQbB+piToc/38DWmnj69vFHfbLWT9q1IIIFpnMYHRklXJXPAobnfqgwglxcs
-         rjKFdyIBDzi1Gmo89S2iPb1CU8pgqnGwwLc6joEcs7QyXMH/u6lxE7KQ8+Aru/4FtVV5
-         EK4GmO68KvzpLqudZv4YdikeUZWy/R+B2LPUCN2AXX9Ttnwo+rNQ2IE6gU+aD0gJhcYg
-         iNrw==
-X-Gm-Message-State: AOAM532aggf9PIug/KsRpWmNM/ivmRFt3XtsivSBhERIdti2Vbh9WI8a
-        +cTGZ5SJmJSBdn7Y+n8m0eXJHMd/3tnb0F+Uxe0X+w==
-X-Google-Smtp-Source: ABdhPJwUmJb43pzTm/L8s79tD1jHSHyjOMK3KWZ616L87t9f6hhh7jX+ZEQ48khCBGU5R0kTsjVnkDq9PNJRv0ShmnE=
-X-Received: by 2002:aa7:da12:0:b0:427:b434:a374 with SMTP id
- r18-20020aa7da12000000b00427b434a374mr3644706eds.408.1652532773139; Sat, 14
- May 2022 05:52:53 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=oU8cEi9RGKI5PeHOuabBwBx8PODfLAO6JbRmPjOYsQc=;
+        b=EknyamlpTD41Olcd4mjo5tvQ+ul1cEKIljGxOyr075ePOtrGdsUJ+SkPGmvB1qrYjo
+         I0UO6DMpz0JX/3JyIhysDmC0tpnwwbbJDCYTffB0IM85Yv387SgFPDWfTwwVwb6Ph/Y4
+         kL0xtwMF6CuxWzlF9NVb/2iDuaa5bsd5BO1MWfQfgLzyFoscrwSmBgdn3t372crTKJVU
+         t1BllRzuAT3N8qSm/HEdMuiICHWlN9VGsceX818gBTxuGuizI5a0uLuCvzJL9M0r9b/l
+         VTQj3uxeLhc+aqu9q/w7J0PCRw83LisexvSHbesG/Nj5KbcbWMT5JOHcq6rZ52MeFHMl
+         WfIQ==
+X-Gm-Message-State: AOAM532U6ypZ/R5WP17dhqlJA54WE7QVIvwktBG5A+RaAJBeHGmoCOnQ
+        9gPF9xYBKIvH2pwDOLg4jQXRrg==
+X-Google-Smtp-Source: ABdhPJx00h31Y+JHjm9zszBh0Ce/1DU3I4eUQBWnozuMVemJIxolb+XGt/gBmwRvE9PJp3/pDzhWpQ==
+X-Received: by 2002:a05:6512:3a84:b0:472:6384:4de0 with SMTP id q4-20020a0565123a8400b0047263844de0mr7685091lfu.456.1652560093711;
+        Sat, 14 May 2022 13:28:13 -0700 (PDT)
+Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id f19-20020a19ae13000000b0047255d211b4sm799894lfc.227.2022.05.14.13.28.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 May 2022 13:28:13 -0700 (PDT)
+Message-ID: <4714c388-47ec-776a-7a50-362b258ffc25@linaro.org>
+Date:   Sat, 14 May 2022 22:28:12 +0200
 MIME-Version: 1.0
-References: <20220511075856.88687-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20220511075856.88687-1-u.kleine-koenig@pengutronix.de>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 14 May 2022 14:52:42 +0200
-Message-ID: <CAMRc=Mf4XfBMwt-M39kxXknf7LN4YkYEVe4Jyx13qEo0FLZk3Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu/pwm: Refuse requests with inverted polarity
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: gpio-mvebu: convert txt binding
+ to YAML
+Content-Language: en-US
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "enachman@marvell.com" <enachman@marvell.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+References: <20220512094125.3748197-1-chris.packham@alliedtelesis.co.nz>
+ <32aab734-5890-99b2-09c9-8ec7418c7649@linaro.org>
+ <e87482cb-20b1-fe09-7233-d56786d5eda6@alliedtelesis.co.nz>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <e87482cb-20b1-fe09-7233-d56786d5eda6@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, May 11, 2022 at 9:59 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> The driver doesn't take struct pwm_state::polarity into account when
-> configuring the hardware, so refuse requests for inverted polarity.
->
-> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/gpio/gpio-mvebu.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 4c1f9e1091b7..92ecaea2d5d4 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -707,6 +707,9 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->         unsigned long flags;
->         unsigned int on, off;
->
-> +       if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +               return -EINVAL;
-> +
->         val =3D (unsigned long long) mvpwm->clk_rate * state->duty_cycle;
->         do_div(val, NSEC_PER_SEC);
->         if (val > UINT_MAX + 1ULL)
->
-> base-commit: 3123109284176b1532874591f7c81f3837bbdc17
-> --
-> 2.35.1
->
+On 14/05/2022 04:20, Chris Packham wrote:
+> 
+>>> +
+>>> +allOf:
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: marvell,armada-8k-gpio
+>>> +    then:
+>>> +      required:
+>>> +        - offset
+>>> +    else:
+>>> +      required:
+>>> +        - reg
+>> one blank line please
+>>
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: marvell,armadaxp-gpio
+>> Original bindings are saying that second reg is optional for
+>> marvell,armada-370-gpio. What about other cases, e.g. mv78200-gpio? Is
+>> it also allowed (and optional) there?
+> This is where things get interesting. The armadaxp (and only the 
+> armadaxp) requires a second register value for some per-cpu registers. 
+> All of the other SoCs can have an optional 2nd register value if they 
+> want to use the PWM function. I guess that implies that the armadaxp 
+> can't do PWM.
+>>> +    then:
+>>> +      properties:
+>>> +        reg:
+>>> +          minItems: 2
+>> Then you also should require two reg-names.
+> 
+> Simple enough to add. But currently we've said that the reg-names are 
+> "gpio" and "pwm" but on the armadaxp the 2nd one is not "pwm" but 
+> something else ("per-cpu" perhaps?)
 
-Applied, thanks!
+In such case they would be failing with current bindings, because they
+expect "pwm" as second name, right?
 
-Bart
+> 
+> On the other hand this is all completely moot because the 
+> armada-xp-mv78*.dtsi actually use the "marvell,armada-370-gpio" 
+> compatible so this appears to be documenting something that is no longer 
+> used. Indeed it appears that the armadaxp specific usage was remove in 
+> 5f79c651e81e ("arm: mvebu: use global interrupts for GPIOs on Armada XP").
+> 
+> So perhaps the best course of action is to drop marvell,armadaxp-gpio 
+> from the new binding (noting that we've done so in the commit message).
+
+
+That's fine, maybe in a separate patch (2nd one)?
+
+
+Best regards,
+Krzysztof
