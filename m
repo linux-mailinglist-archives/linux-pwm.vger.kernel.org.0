@@ -2,77 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4983652B2DB
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 May 2022 09:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A949D52B2F1
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 May 2022 09:10:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231598AbiERGzb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 May 2022 02:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56794 "EHLO
+        id S231707AbiERHHB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 May 2022 03:07:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbiERGza (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 May 2022 02:55:30 -0400
+        with ESMTP id S231713AbiERHHA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 May 2022 03:07:00 -0400
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFB82714C;
-        Tue, 17 May 2022 23:55:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519FFA889C;
+        Wed, 18 May 2022 00:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1652856928; x=1684392928;
+  t=1652857618; x=1684393618;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2GWmTywvGXZKo4wTJGwOnrLkBLOm7I5Y8nS00EJHO0s=;
-  b=AzsIp02I+Kh6l2siOFeUSOIeYKVTkSUd7iP/70NSiQxo1TNc89mqQj01
-   M7wfXBd+fi+LdySuvTuZw53ybD0QXi59jCQTmmudNGXA2WBCPZS1PpozX
-   ENEr32Qr4A2AANkldNLIY4NHFFlitikg4P0+vqtpezzrXfAL3qrUobftr
-   xZO/JpcrFlgq2JSHmv3wH77fot+koLliON/dpNCKYhtJ48F2WWJ1EY4uN
-   s+c+iLwWjSvHr9utvcbNyIiQwP+9l/hSJCfxOw9X+b+Ati8lXHaLet+/6
-   ttgayNAuRK+XkoINdKf6KWlHPz9ROCT3P6VUvA1lh4VuKiae4e9aedljD
-   w==;
-X-IronPort-AV: E=Sophos;i="5.91,234,1647298800"; 
-   d="scan'208";a="23937466"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 18 May 2022 08:55:25 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 18 May 2022 08:55:25 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 18 May 2022 08:55:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1652856925; x=1684392925;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2GWmTywvGXZKo4wTJGwOnrLkBLOm7I5Y8nS00EJHO0s=;
-  b=q8SJJvrjOJwLUiiYNuQY0mI+Ofy6g84NfJUAjcXd/ve+EuPiJ77kUdk7
-   1yUxYS522UxRKiF9ZPgrN0hRcjCTPa8tQLVLIeF4FA7uInG8T610ZtubG
-   5X8dcWE2QTxcg6gCMUm22m5GYrGaJe/JkTIK447aY2xMVNyyblXK/ILaF
-   rsDQ2T2D4h0KS2efzVm/tKGz6xf+9rtPxuUnDiIxjaCSqXBrRf3A69cMG
-   yk6LvAyoVgyj3L1BWtmyBDuY0KpJQUSEpMJSUH6AE2ZeU55dCdehxPMUM
-   t+0e2L9F+UsZ6PMcwB1sbne5WidSXmaldHofJxEYPt/mGO+a+0NHYG/Em
+  bh=H+hzJvrKetPVEZoJzbpuCq9zdMggKUCx3wXO6f4SVrg=;
+  b=Ftwh81G/s/9grp18E7jFR3D3MH7wQgkWvlbAb5vT7fQRzx2J/gM5Jabd
+   mmaMpZpsFUolVG4AJp5SDOWjlJcAAt+x+Z3x+vxbYr2ORHAwZObTWSkYh
+   f9C36BKlS6qIZ2OI+K6kl8taERvqp76Q/FjWlaqMdv8ErNpSyJmvzP2mB
+   92XreQRyrTI6+dTOstn+0JfFieY+WASCFYfk6vSayhmlwplT1F6BV6Y9G
+   h72WWY3xbmnqVRrrT6VkbzTbY/w+qY7+BDdiiFDdh36k9NIHoNq+MDrg3
+   4Jp4P/5ySc0jgSqdqH6b/obdqgwOb1Em3rluM5YUXVWVCSFNUoO5MVtoD
    A==;
 X-IronPort-AV: E=Sophos;i="5.91,234,1647298800"; 
-   d="scan'208";a="23937465"
+   d="scan'208";a="23937991"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 18 May 2022 09:06:56 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 18 May 2022 09:06:56 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 18 May 2022 09:06:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1652857616; x=1684393616;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=H+hzJvrKetPVEZoJzbpuCq9zdMggKUCx3wXO6f4SVrg=;
+  b=oadaEUfslRSjpArOAs5I4nBQOKACFLieZD5hIAbtzTiIwa5mN2Z6G0bn
+   ppvBPEYex610xm9BkFsaMEYTe1oaXMpv3e6qHYQgUTG3zED2v/tZXkLu7
+   zJgfEK0qbW7llr4B+3vORwCMr7XFZFGEzuTCax/jh+ci75j3OnQdLPuhd
+   rUULnf8atm6bOYcZ501MP+6yuO/ynqvsChB+KzLUZGpfYTdD37Ge1ENQ9
+   wZIsFapTmXz2UNTPOBxrXhzNUyfsz3LWCPA7P8s1AgU4H58/s2Zxw7+fn
+   CBwthuGHb/wD7PtwhoFpsrJKu0CeXaA2bftSH/HHWqJRBq9GpWsEo6BQF
+   g==;
+X-IronPort-AV: E=Sophos;i="5.91,234,1647298800"; 
+   d="scan'208";a="23937990"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 18 May 2022 08:55:25 +0200
+  by mx1.tq-group.com with ESMTP; 18 May 2022 09:06:56 +0200
 Received: from steina-w.localnet (unknown [10.123.49.12])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9EE8E280070;
-        Wed, 18 May 2022 08:55:25 +0200 (CEST)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 7DB24280070;
+        Wed, 18 May 2022 09:06:56 +0200 (CEST)
 From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
         Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
         linux-pwm@vger.kernel.org,
         Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Subject: Re: [PATCH v3 6/6] hwmon: pwm-fan: Add hwmon_pwm_enable attribute
-Date:   Wed, 18 May 2022 08:55:23 +0200
-Message-ID: <10084894.nUPlyArG6x@steina-w>
+Subject: Re: (EXT) Re: [PATCH v3 6/6] hwmon: pwm-fan: Add hwmon_pwm_enable attribute
+Date:   Wed, 18 May 2022 09:06:54 +0200
+Message-ID: <3435664.iIbC2pHGDl@steina-w>
 Organization: TQ-Systems GmbH
-In-Reply-To: <c8f3e1b3-23e4-1dcb-7da3-e21a01062e9d@roeck-us.net>
-References: <20220517142620.1523143-1-alexander.stein@ew.tq-group.com> <20220517165726.trxa7lpz6kluvrg3@pengutronix.de> <c8f3e1b3-23e4-1dcb-7da3-e21a01062e9d@roeck-us.net>
+In-Reply-To: <20220517170658.u3dpe6gglsihh6n6@pengutronix.de>
+References: <20220517142620.1523143-1-alexander.stein@ew.tq-group.com> <355e6efa-dc65-771e-fcc0-2ca774d382de@roeck-us.net> <20220517170658.u3dpe6gglsihh6n6@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
@@ -85,118 +85,98 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am Dienstag, 17. Mai 2022, 19:32:11 CEST schrieb Guenter Roeck:
-> On 5/17/22 09:57, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > [dropping Bartlomiej Zolnierkiewicz from Cc as the address bounces]
-> >=20
-> > On Tue, May 17, 2022 at 09:32:24AM -0700, Guenter Roeck wrote:
-> >> On 5/17/22 07:53, Uwe Kleine-K=F6nig wrote:
-> >>> Hello,
-> >>>=20
-> >>> On Tue, May 17, 2022 at 04:26:20PM +0200, Alexander Stein wrote:
-> >>>> This adds the enable attribute which is used to differentiate if PWM
-> >>>> duty
-> >>>> means to switch off regulator and PWM or to keep them enabled but
-> >>>> at inactive PWM output level.
-> >>>>=20
-> >>>> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> >>>> ---
-> >>>>=20
-> >>>>    Documentation/hwmon/pwm-fan.rst | 10 ++++
-> >>>>    drivers/hwmon/pwm-fan.c         | 95
-> >>>>    +++++++++++++++++++++++++++++----
-> >>>>    2 files changed, 95 insertions(+), 10 deletions(-)
-> >>>>=20
-> >>>> diff --git a/Documentation/hwmon/pwm-fan.rst
-> >>>> b/Documentation/hwmon/pwm-fan.rst index 82fe96742fee..0083480068d1
-> >>>> 100644
-> >>>> --- a/Documentation/hwmon/pwm-fan.rst
-> >>>> +++ b/Documentation/hwmon/pwm-fan.rst
-> >>>> @@ -18,3 +18,13 @@ the hwmon's sysfs interface.
-> >>>>=20
-> >>>>    The fan rotation speed returned via the optional 'fan1_input' is
-> >>>>    extrapolated from the sampled interrupts from the tachometer sign=
-al
-> >>>>    within 1 second.>>>>=20
-> >>>> +
-> >>>> +The driver provides the following sensor accesses in sysfs:
-> >>>> +
-> >>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D
-> >>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>> +fan1_input	ro	fan tachometer speed in RPM
-> >>>> +pwm1_enable	rw	keep enable mode, defines behaviour when=20
-pwm1=3D0
-> >>>> +			0=3Dswitch off regulator and disable PWM
-> >>>> +			1=3Dkeep regulator enabled and set PWM to=20
-inactive level
-> >>>=20
-> >>> Is the pwm1_enable supposed to be set to 0 if that only does the right
-> >>> thing if the PWM emits low after pwm_disable()? The question I raised=
- in
-> >>> v2 about "what is the meaning of disable?" hasn't evolved, has it?
-> >>>=20
-> >>> I still think it's unfortunate, that "pwm1_enable" has an effect on t=
-he
-> >>> regulator.
-> >>=20
-> >> Trying to understand. Are you saying that you are ok with affecting the
-> >> regulator when setting pwm :=3D 0 (even though that doesn't really mean
-> >> "disable pwm output"), but not with making the behavior explicit by
-> >> using pwm1_enable ?
-> >=20
-> > Not sure about being ok with affecting the regulator when setting
-> > pwm :=3D 0. I don't know enough about pwm-fans to have a strong opinion
-> > for that.
-
-In my case (422J fan) just supplying voltage with inactive PWM results in a=
-=20
-minimum rotation speed. So these two settings are coupled here.
-
-> > Some questions to refine the semantics and my opinion:
-> >=20
-> > There are fans without a regulator? (I think: yes)
-> >=20
-> > A fan with a regulator always stops if the regulator is off?
-> > (Hmm, there might be problems with shared regulators that only go off
-> > when all consumers are off? What about always-on regulators, these don't
-> > go off on the last consumer calling disable, right?)
-
-IMHO this is something the system integrator shall manage. Is it possible t=
-o=20
-disable the regulator? No for shared/always-on ones. In this case stopping =
-the=20
-fan needs to be done by setting PWM to inactive level and keep regulator on=
-=20
-(pwm1_enable=3D1). If this results in a minimum rotation speed as it would =
-using=20
-a 422J, it's pretty much impossible to actually stop the fan in such a syst=
-em.
-
-> > Having said that I think the sane behaviour is:
-> >=20
-> > The intention of pwm :=3D 0 is to stop the fan. So disabling the regula=
-tor
-> > (if available) sounds right.
+Am Dienstag, 17. Mai 2022, 19:06:58 CEST schrieb Uwe Kleine-K=F6nig:
+> * PGP Signed by an unknown key
 >=20
-> There are fans (eg at least some CPU fans) which never stop, even with
-> pwm=3D0. How do you suggest to handle those ?
+> Hello,
+>=20
+> [dropped Bartlomiej Zolnierkiewicz from Cc:]
+>=20
+> On Tue, May 17, 2022 at 09:38:56AM -0700, Guenter Roeck wrote:
+> > On 5/17/22 07:26, Alexander Stein wrote:
+> > > This adds the enable attribute which is used to differentiate if PWM
+> > > duty
+> > > means to switch off regulator and PWM or to keep them enabled but
+> > > at inactive PWM output level.
+> > >=20
+> > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> > > ---
+> > >=20
+> > >   Documentation/hwmon/pwm-fan.rst | 10 ++++
+> > >   drivers/hwmon/pwm-fan.c         | 95 +++++++++++++++++++++++++++++-=
+=2D--
+> > >   2 files changed, 95 insertions(+), 10 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/hwmon/pwm-fan.rst
+> > > b/Documentation/hwmon/pwm-fan.rst index 82fe96742fee..0083480068d1
+> > > 100644
+> > > --- a/Documentation/hwmon/pwm-fan.rst
+> > > +++ b/Documentation/hwmon/pwm-fan.rst
+> > > @@ -18,3 +18,13 @@ the hwmon's sysfs interface.
+> > >=20
+> > >   The fan rotation speed returned via the optional 'fan1_input' is
+> > >   extrapolated from the sampled interrupts from the tachometer signal
+> > >   within 1 second.> >=20
+> > > +
+> > > +The driver provides the following sensor accesses in sysfs:
+> > > +
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D
+> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> > > +fan1_input	ro	fan tachometer speed in RPM
+> > > +pwm1_enable	rw	keep enable mode, defines behaviour when=20
+pwm1=3D0
+> > > +			0=3Dswitch off regulator and disable PWM
+> > > +			1=3Dkeep regulator enabled and set PWM to=20
+inactive level
+> >=20
+> > Unless I am missing something, I think we have (at least) three
+> > conditions to handle:
+> >=20
+> > - regulator disabled (independent of pwm value)
+> > - regulator enabled, pwm output disabled if pwm=3D0
+> > - regulator enabled, pwm output enabled and set to 0 (or, if inverted,
+> >=20
+> >   to maximum) if pwm=3D0
+>=20
+> What is your expectation for a disabled PWM?
+> https://lore.kernel.org/linux-pwm/20220517150555.404363-1-u.kleine-koenig=
+@pe
+> ngutronix.de might be relevant. If you assume that a pwm might output the
+> active level after disabling, the case "regulator enabled, pwm output
+> disabled if pwm=3D0" sounds wrong.
+>=20
+> Would "pwm1_disable_on_zero" be a better name than "pwm1_enable"? The
+> latter is completely unintuitive to me.
 
-If it's impossible to stop the fan from the hardware side (e.g. always-on=20
-regulators), then software only can do this much.
-Maybe adding those 4 states Uwe mentioned in [1] is not a bad idea. This wa=
-y=20
-it's possible to configure the exact behavior one would want/need. This als=
-o=20
-can handle the cases where a disabled PWM has no/wrong defined state.
+I guess Guenter suggested 'pwm1_enable' as it already exists as a predefine=
+d,=20
+optional attribute, avoiding adding a new custom attribute.
+Reading Documentation/hwmon/w83627ehf.rst or Documentation/hwmon/nzxt-
+smart2.rst I get the impression their meaning is pretty unrestricted.
+If you are concerned by using 'pwm1_enable', what about 'pwm1_mode'?
 
-Best regards
+> Maybe go for
+>=20
+>  0 -> keep pwm and regulator on
+>  1 -> disable pwm, keep regulator on
+>  2 -> keep pwm on, disable regulator
+>  3 -> disable pwm and regulator
+>=20
+> (so one bit for pwm and one for regulator), even if 1 is
+> wrong/unusual/dangerous?
+
+I tend to like this approach, as it can handle all combinations. You can=20
+decide whether you want to actually shutdown the PWM fan, or keep it enable=
+d=20
+but without providing any PWM. This can mean the fan still runs at the lowe=
+st=20
+speed. It also addresses the scenarios where regulator cannot be disabled a=
+t=20
+all.
+
+Best regards,
 Alexander
-
-[1] https://lore.kernel.org/all/
-20220517170658.u3dpe6gglsihh6n6@pengutronix.de/
 
 
