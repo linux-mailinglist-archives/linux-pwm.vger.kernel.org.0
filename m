@@ -2,78 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 973A252FB33
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 May 2022 13:14:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DB6352FD37
+	for <lists+linux-pwm@lfdr.de>; Sat, 21 May 2022 16:20:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354983AbiEULN4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 21 May 2022 07:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47350 "EHLO
+        id S237800AbiEUOUl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 21 May 2022 10:20:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242608AbiEULMF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 21 May 2022 07:12:05 -0400
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E8832980F;
-        Sat, 21 May 2022 04:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JAuEBwBjootxQxF6UtXiUBEG+RxbVp/hL6zSHDFdT3w=;
-  b=ms4YbeIaiFrb3eQ/g2HfvwwURehZdVXF+YljrS3TW1iIt/j1OLg9hv9E
-   t0PyRxXwq9KTBhyJLv9q1op4U8POddGd6+bygbzbe09uWFkhDf4jLtkVF
-   C6aqHBUoudPgy5+pXRCUc3cv9Yo16zaIb2MdrOLDa0fKTmw9IrBid4kna
-   Q=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.91,242,1647298800"; 
-   d="scan'208";a="14727917"
-Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 13:11:56 +0200
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     kernel-janitors@vger.kernel.org,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S244355AbiEUOUk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 21 May 2022 10:20:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D7F62CFB
+        for <linux-pwm@vger.kernel.org>; Sat, 21 May 2022 07:20:39 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nsPy0-0007em-SO; Sat, 21 May 2022 16:20:28 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nsPy0-003hyM-58; Sat, 21 May 2022 16:20:26 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nsPxy-00BCXz-4p; Sat, 21 May 2022 16:20:26 +0200
+Date:   Sat, 21 May 2022 16:20:23 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        kernel-janitors@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Claudiu Beznea <claudiu.beznea@microchip.com>,
         linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] pwm: atmel-tcb: fix typo in comment
-Date:   Sat, 21 May 2022 13:10:32 +0200
-Message-Id: <20220521111145.81697-22-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 2.20.1
+Subject: Re: [PATCH] pwm: atmel-tcb: fix typo in comment
+Message-ID: <20220521142023.qbk4s2gydpox7c2w@pengutronix.de>
+References: <20220521111145.81697-22-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tnsdnebowjixthkb"
+Content-Disposition: inline
+In-Reply-To: <20220521111145.81697-22-Julia.Lawall@inria.fr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Spelling mistake (triple letters) in comment.
-Detected with the help of Coccinelle.
 
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+--tnsdnebowjixthkb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
- drivers/pwm/pwm-atmel-tcb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, May 21, 2022 at 01:10:32PM +0200, Julia Lawall wrote:
+> Spelling mistake (triple letters) in comment.
+> Detected with the help of Coccinelle.
+>=20
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
-index 3977a0f9d132..2837b4ce8053 100644
---- a/drivers/pwm/pwm-atmel-tcb.c
-+++ b/drivers/pwm/pwm-atmel-tcb.c
-@@ -304,7 +304,7 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	/*
- 	 * Find best clk divisor:
- 	 * the smallest divisor which can fulfill the period_ns requirements.
--	 * If there is a gclk, the first divisor is actuallly the gclk selector
-+	 * If there is a gclk, the first divisor is actually the gclk selector
- 	 */
- 	if (tcbpwmc->gclk)
- 		i = 1;
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--tnsdnebowjixthkb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKI9SQACgkQwfwUeK3K
+7An1EQf3bDnHc/rwmXW/hxQYgjXTU66lI9Zhkw5vRZWJgMerGFoWG5K5cyNNv/5Y
+iq5MHhKURCOHVHyRfICTKuOOzpYrWanJajIbgYEB+N8shtt9dixlkFwDzWhqDIUj
+ceBdQQfZInYER2tWakDdkJgt6JndTwdJcQrMEB8NEIS5f+jJZNN22BtiGdqpmgrH
+zwinSNDCtnnOID3LPDmKhk3TgHlQZElkesUJtfyX6if55mI+mQbcCUd7TjnFzHIL
+0nJ4WwGDwO4hLfYe1iU4whJ63ETLyW5nt9NUZ7f5Wi5qgD5dAv9SawPvOTamGwSs
+G1nyZXV+f/OkfBsuepRQHgsYEPYJ
+=o9OB
+-----END PGP SIGNATURE-----
+
+--tnsdnebowjixthkb--
