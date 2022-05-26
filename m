@@ -2,109 +2,88 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B39F534504
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 May 2022 22:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFDB253481D
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 May 2022 03:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344672AbiEYUgv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 May 2022 16:36:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
+        id S1345731AbiEZB36 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 May 2022 21:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237203AbiEYUgu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 May 2022 16:36:50 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E090326EA
-        for <linux-pwm@vger.kernel.org>; Wed, 25 May 2022 13:36:48 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id q15so5325593edb.11
-        for <linux-pwm@vger.kernel.org>; Wed, 25 May 2022 13:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=jF4MxsPSKKSAh34A0y7fWqFeFSCCDQ9NCjS0um7aELU=;
-        b=Yv+jMbXKjnp0zU+NJyx2KHuveCnePIsv7Lt/swwOMMJkIm9xw3286z27eQcBEid6gc
-         iGtO6YYGBjAQUT/fYGDklvBfov/9PtZKSLKAoRp3PplBtP/tbqHx1meW8GeM34U1J5eE
-         b7iViW4U2VojAwWK3qzWqxjLSSFKUnzoe3Sg4UJcVJh1zDTaCIJ7Ra07epNQ2TbIlAF6
-         IyXJnoewnk6wMxJLyy+v2D3q9erZp0RCE+Iar7JSJvqylxGZO3J9JBlHDjR2cvSKmOu1
-         R1zljQkb+4kk3xAj/zRWd2HsiocSpvA5p2s+iMXZXBh2dofAJVb5znRKvU8jFU5wdjyt
-         NPBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=jF4MxsPSKKSAh34A0y7fWqFeFSCCDQ9NCjS0um7aELU=;
-        b=141X/fsnY5rv9RAkwcFPpsRdIzuGi8bbfFj2S7u9VGj1GPDtaxy5GNML73G97GwZfJ
-         eMlqPPBwOSKXmX6HKoPINiFOjdZbqCZd7SZSWNShboh1TGLQcCq23toFgq9fwMjtcNVn
-         fuTFD9iBprL+LFpqKGaIOzif4lZSBYFgQ6/nQTulhHFqCBRMqFADE33Z924HLJNglSml
-         gJGJr6nu2Z/jhcmVS+i6wygwQvASYoIzXCIUqJ1LdLC2OpcLk2mkcIaoIqLG/SgwuptS
-         xofdlu09S4xnR/lAnt+iBnp0sJhr0bgR1xYHH2BDh8Zz3tChipuk+mxtqgeNbPJA9m6z
-         JoSQ==
-X-Gm-Message-State: AOAM532ST69iAqBhJwHBF5K0LTIjUs6LvnRt3myxKyRk3vIS/6swlxVO
-        MnGah3rF48C6l5kMCkbE8ozOv8CQm3Tx8DCOWL0=
-X-Google-Smtp-Source: ABdhPJxtQHhRU0NPjLsbVGDyi7AUKC0KwsoIt67G86CjB3mgkrDtSBdioBDVuRlhK7s8y5zT6+gKnPjiHk6Ox0+xsFM=
-X-Received: by 2002:a05:6402:254e:b0:42b:4633:e53e with SMTP id
- l14-20020a056402254e00b0042b4633e53emr23449342edb.314.1653511006896; Wed, 25
- May 2022 13:36:46 -0700 (PDT)
+        with ESMTP id S1344773AbiEZB34 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 May 2022 21:29:56 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D36A0D05
+        for <linux-pwm@vger.kernel.org>; Wed, 25 May 2022 18:29:53 -0700 (PDT)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0A87A2C03B6;
+        Thu, 26 May 2022 01:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1653528590;
+        bh=I3hiIZVzx9XmT7pHq9qeq9MxM8PBXRaRGr/SMziszck=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xZcu7Qs7yUErY+Pg0fEDK8JQtGYct7XbAzIAEdi96sFcCDryDLF4Kj/4+GrCrPQb0
+         iLKCSy9dA80FnWIF1hF0UqyVUDkxrBzS5brGRBuTil5aQiKoiZcJO0hEphFOiH2uk5
+         zpxE16EwOoXezZHIko2LTJ6WsY1gTAbN+fi6J/l4EFzn2zWlJeTJC9wPppX0HVK4OY
+         Q1dTLOadvoyj2i2IllnymYRiTfRC6MpN06bz+onND+rUMEbwcq8o4WJiVa8sB+1e66
+         qKmXmoJe/kCd8YMUgjFZntp/CTtTsLcyKsf2FPQndnsNAjbSo99E2GJ+U3OdrN7eQ6
+         aPgfdCHntyq0A==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B628ed80d0000>; Thu, 26 May 2022 13:29:49 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by pat.atlnz.lc (Postfix) with ESMTP id C648A13ED7D;
+        Thu, 26 May 2022 13:29:49 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id C37682A0088; Thu, 26 May 2022 13:29:49 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        andrew@lunn.ch, thomas.petazzoni@free-electrons.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v4 0/3] dt-bindings: gpio: gpio-mvebu: Convert to DT schema format
+Date:   Thu, 26 May 2022 13:29:43 +1200
+Message-Id: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Received: by 2002:ab4:a26b:0:0:0:0:0 with HTTP; Wed, 25 May 2022 13:36:46
- -0700 (PDT)
-From:   Luisa Donstin <luisadonstin@gmail.com>
-Date:   Wed, 25 May 2022 22:36:46 +0200
-Message-ID: <CA+QBM2obO8yjLRDs7ZnAtHdmY2Zbt6q3ZLKRZMirHdnPqCsHsw@mail.gmail.com>
-Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
-To:     contact@firstdiamondbk.com
-Cc:     info@firstdiamondbk.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=U+Hs8tju c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=oZkIemNP1mAA:10 a=ajDLYV_rHKUppMWaFfwA:9
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Guten Tag,
+The 1st patch converts the old binding mostly 1:1.
+The 2nd patch deprecates the unused marvell,armadaxp compatible.
+The 3rd patch documents the existing usage of the offset/marvell,pwm-offs=
+et
+properties.
 
-Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
+Chris Packham (3):
+  dt-bindings: gpio: gpio-mvebu: convert txt binding to DT schema format
+  dt-bindings: gpio: gpio-mvebu: deprecate armadaxp-gpio
+  dt-bindings: gpio: gpio-mvebu: document offset and marvell,pwm-offset
 
-haben ?
+ .../arm/marvell/ap80x-system-controller.txt   |   2 +-
+ .../arm/marvell/cp110-system-controller.txt   |   2 +-
+ .../devicetree/bindings/gpio/gpio-mvebu.txt   |  93 -----------
+ .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 146 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 5 files changed, 149 insertions(+), 96 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.yam=
+l
 
-Ich habe versucht, Sie per E-Mail zu erreichen.
+--=20
+2.36.1
 
-Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
-
-Danke
-
-Luisa Donstin
-
-luisadonstin@gmail.com
-
-
-
-
-
-
-
-
-
-----------------------------------
-
-
-
-
-Good Afternoon,
-
-I was just wondering if you got my Previous E-mail
-have ?
-
-I tried to reach you by E-mail.
-
-Please come back to me quickly, it is very Important.
-
-Thanks
-
-Luisa Donstin
-
-luisadonstin@gmail.com
