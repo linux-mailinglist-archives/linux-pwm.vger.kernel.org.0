@@ -2,119 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31378534825
-	for <lists+linux-pwm@lfdr.de>; Thu, 26 May 2022 03:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 062DE534F12
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 May 2022 14:26:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345669AbiEZBaA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 May 2022 21:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        id S242083AbiEZM0m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 26 May 2022 08:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345692AbiEZB35 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 May 2022 21:29:57 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE18A2043
-        for <linux-pwm@vger.kernel.org>; Wed, 25 May 2022 18:29:53 -0700 (PDT)
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B7D2C2C0657;
-        Thu, 26 May 2022 01:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1653528590;
-        bh=LJpXCxq+I57n1rGrvrEseEpic3rE2tpsbcOLDqS+u6A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d46+nZvMGIizXwKJPNSFF24IzgHYKbcNoBV9wcC8fhp4j2mjGMRvsFPf0ne5URCwF
-         BaL1mA3ewHZjw9hqrlDX+gwqbAuW1A16GVQKTyq4d0YLiQWcsANSjeBf4JEBW1wzKX
-         toqANzsmNGYzy/H+CzngnIL4A61ZOE7Dcc7W2HT5VDjSs/8UTR9xB8btD7e7p23vIM
-         AbLolJ6XweycvByEkFaVPPqHaIz8bHUZSUqKA63+aP1eOuuy41YGNnNo5A2BmNpJrS
-         Tm+x+WD4XULE4aC4wQpRXSY7YcjREdh8lGXRi+0j7ZFMOAK7XDWqMtuz+cdvRTa0IY
-         IJZk+COvmiaBw==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-        id <B628ed80e0002>; Thu, 26 May 2022 13:29:50 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by pat.atlnz.lc (Postfix) with ESMTP id 60E7813ED7D;
-        Thu, 26 May 2022 13:29:50 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 606CC2A0088; Thu, 26 May 2022 13:29:50 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        with ESMTP id S244259AbiEZM0k (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 26 May 2022 08:26:40 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47CE65FAD
+        for <linux-pwm@vger.kernel.org>; Thu, 26 May 2022 05:26:38 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id rq11so2731569ejc.4
+        for <linux-pwm@vger.kernel.org>; Thu, 26 May 2022 05:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Y0e4snQi7n2SjF6Ck76whvuOc/klo+1JHia0LyM1puE=;
+        b=zxkEQl7RT17wo8Rs9kNSf6bo13XpGU4njx7LZLYlIraBIzs4x0eo/TEiIP2RBvi3tx
+         X+1MZmvi7e2MKKQ8X9Yg/9qZpCrmwWAWzpK3YxeVTzhEI1iCSWNlpJbpojKQM1nkDH6f
+         36t3mIXT2fDIUysG9c/G/z+QQFu9aiCQU2GbbwVbpGlbOG9ClLaCXNQ2/oXMva0KfuWn
+         W1zzZWW04ZdA00XVOZMlRzIxc4lCksumb8WSV7DCfF3v/X2/wT9PznH+c9FtMDsUxjzq
+         AucK2rtkIIBE4oCZYkB4dKf0sh5OxLcOBaMZ2iyO0B+ZgfRpKXO/IuoGpGIUunEUmMym
+         jJTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Y0e4snQi7n2SjF6Ck76whvuOc/klo+1JHia0LyM1puE=;
+        b=m0os3KlVEKzjFIWpsCDk5gXR/B+nW9BviDI9YpSMkws8+ayK8lyBsmytLDErh9BN50
+         qs67xafzof6GM7+7+Oa1HwaFDACnBVSywljWDIY1sowAy6NegTpDwieRkBF07vUuflpn
+         hf8I6XIHA8MU/cIuGqJQl5Uf0EpGFQLfLrUY1m7G8vSxBDBTdyGBw27U6RnWHxcYpNOU
+         ThuGrCNc5ANKEHr30RfN1QsjO/JOWD2ZFqh3nKjdU3/gxBI1cJMPMT5malj2aQwrvtbh
+         EFOyOqJmd3fOdzkshPjK+JSQ73vwQ+mjGvivtvexE96ijvto6EcF6MrScMXrvlzPCo/t
+         eh4Q==
+X-Gm-Message-State: AOAM531AtaeiLd+YZ8ZQpKSKXbS4izfGanAjwKo+WboL50eCrw4vQ+R3
+        7lLsKW6fz21uOHudb1vF0MX2Jw==
+X-Google-Smtp-Source: ABdhPJzWPJFuN9BjNjbPb5S4iPgNkMLre4lu+a45KZO8S/trrHBCe/pMNabMhSA1PN6VPwaNr+4czQ==
+X-Received: by 2002:a17:907:3faa:b0:6fe:d013:b22a with SMTP id hr42-20020a1709073faa00b006fed013b22amr20091822ejc.425.1653567996822;
+        Thu, 26 May 2022 05:26:36 -0700 (PDT)
+Received: from [192.168.0.177] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id c2-20020a170906154200b006fed5247df9sm462398ejd.196.2022.05.26.05.26.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 May 2022 05:26:36 -0700 (PDT)
+Message-ID: <d816796e-4b2d-77af-afbd-7d54eb18858a@linaro.org>
+Date:   Thu, 26 May 2022 14:26:35 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v4 1/3] dt-bindings: gpio: gpio-mvebu: convert txt binding
+ to DT schema format
+Content-Language: en-US
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
         andrew@lunn.ch, thomas.petazzoni@free-electrons.com
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v4 3/3] dt-bindings: gpio: gpio-mvebu: document offset and marvell,pwm-offset
-Date:   Thu, 26 May 2022 13:29:46 +1200
-Message-Id: <20220526012946.3862776-4-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
 References: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=U+Hs8tju c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=oZkIemNP1mAA:10 a=KKAkSRfTAAAA:8 a=XThe9qdf-NWsa71EaF4A:9 a=cvBusfyB2V15izCimMoJ:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <20220526012946.3862776-2-chris.packham@alliedtelesis.co.nz>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220526012946.3862776-2-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The offset and marvell,pwm-offset properties weren't in the old binding.
-Add them based on the existing usage in the driver and board DTS when
-the marvell,armada-8k-gpio compatible is used.
+On 26/05/2022 03:29, Chris Packham wrote:
+> Convert the existing device tree binding to DT schema format.
+> 
+> The old binding listed the interrupt-controller and related properties
+> as required but there are sufficiently many existing usages without it
+> that the YAML binding does not make the interrupt properties required.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
 
-Notes:
-    Changes in v4:
-    - Reword commit message slightly
-    - Add review from Krzysztof
-    Changes in v3:
-    - Split off from 1:1 conversion patch
 
- Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Doc=
-umentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-index 459ec35864fe..f1bd1e6b2e1f 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-@@ -45,6 +45,10 @@ properties:
-       - const: pwm
-     minItems: 1
-=20
-+  offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the gpio registers (in b=
-ytes)
-+
-   interrupts:
-     description: |
-       The list of interrupts that are used for all the pins managed by t=
-his
-@@ -68,6 +72,10 @@ properties:
-   "#gpio-cells":
-     const: 2
-=20
-+  marvell,pwm-offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the pwm registers (in by=
-tes)
-+
-   "#pwm-cells":
-     description:
-       The first cell is the GPIO line number. The second cell is the per=
-iod
---=20
-2.36.1
-
+Best regards,
+Krzysztof
