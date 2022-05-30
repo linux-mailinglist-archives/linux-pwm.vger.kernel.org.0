@@ -2,58 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 284175362AE
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 May 2022 14:40:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60CCF53882F
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 May 2022 22:21:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353172AbiE0MkQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 27 May 2022 08:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54612 "EHLO
+        id S241428AbiE3UVy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 May 2022 16:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345023AbiE0Mjx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 May 2022 08:39:53 -0400
-X-Greylist: delayed 4506 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 27 May 2022 05:25:34 PDT
-Received: from mail.composit.net (mail.composit.net [195.49.185.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EE9AE170666;
-        Fri, 27 May 2022 05:25:34 -0700 (PDT)
-Received: from mail.composit.net (localhost.localdomain [127.0.0.1])
-        by mail.composit.net (Proxmox) with ESMTP id 813E638B06C;
-        Fri, 27 May 2022 14:06:42 +0300 (MSK)
-Received: from mail.composit.net (mail.industrial-flow.com [192.168.101.14])
-        by mail.composit.net (Proxmox) with SMTP id 0B3A6397D98;
-        Fri, 27 May 2022 14:06:42 +0300 (MSK)
-Received: from [192.168.1.105] (Unknown [197.234.219.23])
-        by mail.composit.net with ESMTPSA
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256)
-        ; Fri, 27 May 2022 14:06:43 +0300
-Message-ID: <0B076A8F-BF7C-40A5-94D7-2EED27F59689@mail.composit.net>
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S230118AbiE3UVx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 May 2022 16:21:53 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB70863EF
+        for <linux-pwm@vger.kernel.org>; Mon, 30 May 2022 13:21:51 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id r9-20020a1c4409000000b00397345f2c6fso136962wma.4
+        for <linux-pwm@vger.kernel.org>; Mon, 30 May 2022 13:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eiDOJFzaInCJhnUpiGhTUeinv2gyCwbF/a7PS9tPsw8=;
+        b=GGLTks7z+Cu2sD67ItYjIkSDBnPFbXlry0Yr2hBSF7OQkd9rKRwnYFKllacNxl2clO
+         jWHHOCWRt3kxSiYR5U8LKYbDItbOm17Myh6fQPHght6fxMCiy8WPnyuQfqXiN0teNpjJ
+         6TpUF6rm3KWf64/X882oAL/sIwnxRDF8w3VwkUWFYx755AxKaLVLTGpTOXQ8i7LsSMYx
+         7mzkX6zpqpUTcc4ilmGiuAEnAgtOWEXfl2cJre2phoWZmTy7Uy9Hz0t18CM3WF2b/mBh
+         wAe+zJhJJj9rsXLXTbkOT8W1F71HrBAjoTvICAXgTHNJ5CM3mbqVBujloyWQh8SlM7x7
+         W5Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eiDOJFzaInCJhnUpiGhTUeinv2gyCwbF/a7PS9tPsw8=;
+        b=ELCdpuv7DT+2Fjem3sDJfPCEmNK0k3jSjJknqvK0iaQMWEzDmMoaDUZ/rKjWCZH6Zl
+         cWytzJqgmGaEIulj9ljpnwsikiZsF3FSzYO2IvrXNOx5ko8+IfV1bbYqrX8PN3u+aoQ4
+         3+jyuGvfSPPm+4G0S8HdlamwlhvlLxPuE0LDvvifnjubeQGrEpEbG7uL6kYhSanPZqbC
+         Gb/1P66AnriDxYGWZhH+zfrfVXGalekVbrtiGoegZOMSH+c8pn6nZkIpCIJCnB7ut9J8
+         MfTG7m6AI0j59M/CxIBfQr/QZTUAWNkstDgZbRexM8iFg1XrFDX7eeWprSS1XuhdyTEv
+         eAmw==
+X-Gm-Message-State: AOAM532LObnAMdzhmbmAWtK3SaiGb6Z5ha9l9dOXoswMMQIl1jTr/AVk
+        34IRUUomcvwp+qF4W6rOg0CnqA==
+X-Google-Smtp-Source: ABdhPJxAETeJdaqhq72lFl2LUU+Ioc+InFtkW1WnYu123vrwlMVWG/bC/IKO0H+s9HT4NX5FMo8g+w==
+X-Received: by 2002:a05:600c:48aa:b0:397:55ba:adb3 with SMTP id j42-20020a05600c48aa00b0039755baadb3mr20239263wmp.73.1653942110348;
+        Mon, 30 May 2022 13:21:50 -0700 (PDT)
+Received: from localhost.localdomain ([88.160.162.107])
+        by smtp.gmail.com with ESMTPSA id q9-20020a1cf309000000b0039754d1d327sm261860wmq.13.2022.05.30.13.21.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 May 2022 13:21:49 -0700 (PDT)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Fabien Parent <fparent@baylibre.com>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 1/2] dt-bindings: pwm: add MT8365 SoC binding
+Date:   Mon, 30 May 2022 22:21:34 +0200
+Message-Id: <20220530202136.906407-1-fparent@baylibre.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Greetings From Ukraine.  
-To:     Recipients <heiss@dnet.it>
-From:   "Kostiantyn Chichkov" <heiss@dnet.it>
-Date:   Fri, 27 May 2022 12:06:26 +0100
-Reply-To: kostiantync@online.ee
-X-Spam-Status: No, score=3.7 required=5.0 tests=BAYES_50,RCVD_IN_SBL,
-        RCVD_IN_SORBS_WEB,RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Good Morning,
+Add binding documentation for the MT8365 SoC.
 
-We are Kostiantyn Chychkov and Maryna Chudnovska from Ukraine, we need your service, we have gone through your profile and we will like to work with you on an important service that needs urgent attention due to the ongoing war in our country. Kindly acknowledge this inquiry as soon as possible for a detailed discussion about the service.
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
+ Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thank you.
-
-Yours expectantly,
-
-Kostiantyn Chichkov & Ms. Maryna Chudnovska,
-From Ukraine.
-
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+index 25ed214473d7..ac5c58bbb22d 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+@@ -8,6 +8,7 @@ Required properties:
+    - "mediatek,mt7628-pwm": found on mt7628 SoC.
+    - "mediatek,mt7629-pwm": found on mt7629 SoC.
+    - "mediatek,mt8183-pwm": found on mt8183 SoC.
++   - "mediatek,mt8365-pwm": found on mt8365 SoC.
+    - "mediatek,mt8516-pwm": found on mt8516 SoC.
+  - reg: physical base address and length of the controller's registers.
+  - #pwm-cells: must be 2. See pwm.yaml in this directory for a description of
+@@ -17,6 +18,7 @@ Required properties:
+                 has no clocks
+    - "top": the top clock generator
+    - "main": clock used by the PWM core
++   - "pwm1-3": the five per PWM clocks for mt8365
+    - "pwm1-8": the eight per PWM clocks for mt2712
+    - "pwm1-6": the six per PWM clocks for mt7622
+    - "pwm1-5": the five per PWM clocks for mt7623
+-- 
+2.36.1
 
