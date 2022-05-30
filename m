@@ -2,109 +2,118 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F020538831
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 May 2022 22:21:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5030D53883B
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 May 2022 22:31:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240450AbiE3UV4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 May 2022 16:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
+        id S240791AbiE3UbK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 May 2022 16:31:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243156AbiE3UVz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 May 2022 16:21:55 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC1B8D12C
-        for <linux-pwm@vger.kernel.org>; Mon, 30 May 2022 13:21:53 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id u3so16019757wrg.3
-        for <linux-pwm@vger.kernel.org>; Mon, 30 May 2022 13:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=L1vM38OHwAw07wuSGNIKDmB9lfDMUrNeDwo+6N+zaQs=;
-        b=rbdYWKHYaxO3Oo8biiJo4zPn/Ul+w5RbkvyVOEB3/4mnXnlGjHkQehTA3Koq7wkzna
-         FanKAs5XeFi7bavoqnYVyXkGtIJPIdz1+W1Nm8pyYiizUkUEFFw2pkjPoQl2uq6c9/z5
-         nSjTLmzejeBhrDY4LRaF1mPc7TLZboHRNtzkdVCZAYdDl8Tw1T1NXswiZGzXbcHfoePd
-         uFR+KgaUg1jZpAie1lzpXFgk/wiMyjpTZdAZ5Dmq3QX0LgO3CAmoNXcqRjRrVBXUeK9q
-         othnVsbT+f1fp5rxwduR7JhVfhUemm9rQOBeheHbp9zfpzNfinf4FFdNzteofmqhara0
-         hCIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=L1vM38OHwAw07wuSGNIKDmB9lfDMUrNeDwo+6N+zaQs=;
-        b=RIAAte/tGp93Ti89C4Qyl4rVsjrIe60JPhswSXRGdD/gw91KtzY8aH36K4ia+Al8iH
-         sZ3UaiWtaJFY+58hD4A9wnvpQpWdW8/krCs9LpL9JSlXocviv3zxSpy46gWbOX6US6qx
-         PvD6Zr8lAVcdTQ5WAmDbFNGhOpJu8o5NRICwrH7kskzLPtWf1soJu4+QHClAd/wbQ7fM
-         qKIjcWqkDD16Xfw3YjnMdtaCjwA6UjSfhDjtCtSfNbK60BRv1a6xSxhl1P0Hv09bEfSe
-         lonC2/O/q0oQ4dKLua5qPWllfMzWCSOBzBtF4eCWoJgMW/SgNcCUI++S90jJS3FFz8gE
-         622A==
-X-Gm-Message-State: AOAM531P1WXKVbTOSyqwtLHTII5IUwqGuyjmAuTGsmN7KyJ7qo2AZhm2
-        00v/6GiVFSl5pSSK0HMSHZ6LkA==
-X-Google-Smtp-Source: ABdhPJzqnMXzNaCigIjz1GAjTxyI8tshTxFw9D7Ucx2lKOehy+yE5Khqw9vdo4X+p+YlrV2WOmcARw==
-X-Received: by 2002:adf:fb04:0:b0:20c:dcbb:95bc with SMTP id c4-20020adffb04000000b0020cdcbb95bcmr47590696wrr.393.1653942112182;
-        Mon, 30 May 2022 13:21:52 -0700 (PDT)
-Received: from localhost.localdomain ([88.160.162.107])
-        by smtp.gmail.com with ESMTPSA id q9-20020a1cf309000000b0039754d1d327sm261860wmq.13.2022.05.30.13.21.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 May 2022 13:21:51 -0700 (PDT)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Fabien Parent <fparent@baylibre.com>, linux-pwm@vger.kernel.org,
+        with ESMTP id S240731AbiE3UbK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 May 2022 16:31:10 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7325672E03
+        for <linux-pwm@vger.kernel.org>; Mon, 30 May 2022 13:31:09 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nvm2b-0001eR-CN; Mon, 30 May 2022 22:31:05 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nvm2a-005W7e-AZ; Mon, 30 May 2022 22:31:02 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nvm2X-00DAOs-V5; Mon, 30 May 2022 22:31:01 +0200
+Date:   Mon, 30 May 2022 22:31:01 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: [PATCH 2/2] pwm: mediatek: add MT8365 support
-Date:   Mon, 30 May 2022 22:21:35 +0200
-Message-Id: <20220530202136.906407-2-fparent@baylibre.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220530202136.906407-1-fparent@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: add MT8365 SoC binding
+Message-ID: <20220530203101.5wq52q5pq523ewuu@pengutronix.de>
 References: <20220530202136.906407-1-fparent@baylibre.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ydudqqbygmakmkzx"
+Content-Disposition: inline
+In-Reply-To: <20220530202136.906407-1-fparent@baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for PWM on MT8365
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
- drivers/pwm/pwm-mediatek.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+--ydudqqbygmakmkzx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 568b13a48717..fd586bc51c5f 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -294,6 +294,12 @@ static const struct pwm_mediatek_of_data mt8183_pwm_data = {
- 	.has_ck_26m_sel = true,
- };
- 
-+static const struct pwm_mediatek_of_data mt8365_pwm_data = {
-+	.num_pwms = 3,
-+	.pwm45_fixup = false,
-+	.has_ck_26m_sel = true,
-+};
-+
- static const struct pwm_mediatek_of_data mt8516_pwm_data = {
- 	.num_pwms = 5,
- 	.pwm45_fixup = false,
-@@ -307,6 +313,7 @@ static const struct of_device_id pwm_mediatek_of_match[] = {
- 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
- 	{ .compatible = "mediatek,mt7629-pwm", .data = &mt7629_pwm_data },
- 	{ .compatible = "mediatek,mt8183-pwm", .data = &mt8183_pwm_data },
-+	{ .compatible = "mediatek,mt8365-pwm", .data = &mt8365_pwm_data },
- 	{ .compatible = "mediatek,mt8516-pwm", .data = &mt8516_pwm_data },
- 	{ },
- };
--- 
-2.36.1
+On Mon, May 30, 2022 at 10:21:34PM +0200, Fabien Parent wrote:
+> Add binding documentation for the MT8365 SoC.
+>=20
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Doc=
+umentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> index 25ed214473d7..ac5c58bbb22d 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>     - "mediatek,mt7628-pwm": found on mt7628 SoC.
+>     - "mediatek,mt7629-pwm": found on mt7629 SoC.
+>     - "mediatek,mt8183-pwm": found on mt8183 SoC.
+> +   - "mediatek,mt8365-pwm": found on mt8365 SoC.
+>     - "mediatek,mt8516-pwm": found on mt8516 SoC.
+>   - reg: physical base address and length of the controller's registers.
+>   - #pwm-cells: must be 2. See pwm.yaml in this directory for a descripti=
+on of
+> @@ -17,6 +18,7 @@ Required properties:
+>                  has no clocks
+>     - "top": the top clock generator
+>     - "main": clock used by the PWM core
+> +   - "pwm1-3": the five per PWM clocks for mt8365
 
+I think you either want s/3/5/ or s/five/three/ here?!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ydudqqbygmakmkzx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKVKYMACgkQwfwUeK3K
+7AlmTAf+IC1ZakoG/AbDBiw+ISsvysZi3oDGLTm43optth/vSyX8NRewez5UcedF
+lhD+yb619mm33nUfifszc601C2x4L47zLAVRSyVoMn2XiaDporeX17CbcCyq1tDO
+yb7dTFuQEdfYr+TbvvVp/5UkCq6cCNS0yojfqxcP+WmXVDD1GsRnzH5BR2dT4Ofy
+ynvcYyx8d7wroDefw9IMs01DdPDrXdA7qa6NcSBAzwrAKPRAOVSNvn8ULuE8Op8Y
+DyG+WasQYyCDO/k3grKxatZ/ht7OJKObTC+VSbhBucC6yTxYPtZp7tTyLfNR4ReJ
+q09ZfRsmPbRLgEVf+5phxmbaevk7uw==
+=Gzed
+-----END PGP SIGNATURE-----
+
+--ydudqqbygmakmkzx--
