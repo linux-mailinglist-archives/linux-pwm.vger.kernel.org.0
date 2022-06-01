@@ -2,75 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE6753AC3E
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jun 2022 19:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1B8753ADCD
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jun 2022 22:49:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356454AbiFARz4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Jun 2022 13:55:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45860 "EHLO
+        id S230017AbiFAUq1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Jun 2022 16:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355963AbiFARzy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Jun 2022 13:55:54 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE78194181;
-        Wed,  1 Jun 2022 10:55:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6653EB81BBA;
-        Wed,  1 Jun 2022 17:55:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 09F84C385A5;
-        Wed,  1 Jun 2022 17:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654106150;
-        bh=MLr8AMawc4C1Yd/HPD7cttpmEtgnwSe6B2HsG+8LnBo=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=UjaGDxBemEWegjO3Uglpf0pCYBWtYCnI+HO+S38JDTFlaWGwT8a8GqAId5q2vmkTO
-         WN1p4jzb3mmY//uAKmvKl6BhhqFk+vQL6dwsCij9I2AGDjlOcPGbdyBdayeQN1BUjl
-         kckECLquIPQ/8fHOtfPj9wnbP88yB/y+ioKDnH3k3srLGwaJ9Yx8cFPm/plMaQfyp/
-         Ga4/W75xi2yATvXcK0ZWdDK+Ur5Q0ywynahueCPXn/FzW7LhkP9y2D05GsrCWNbumG
-         UYKwYF014yRTQr7gChmKasJWjQj1OibowagHBnto9Uu8jAB1KDHcSJ91tSVyLtrD0/
-         0tQP5o109TVLQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EC62DEAC081;
-        Wed,  1 Jun 2022 17:55:49 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v5.19-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220601143839.3893139-1-thierry.reding@gmail.com>
-References: <20220601143839.3893139-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220601143839.3893139-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.19-rc1
-X-PR-Tracked-Commit-Id: 3d593b6e80ad2c911b5645af28d83eabb96e7c1b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8eca6b0a647aabea3d1d2907dd6245fc436f98e7
-Message-Id: <165410614996.7706.1482182484083714794.pr-tracker-bot@kernel.org>
-Date:   Wed, 01 Jun 2022 17:55:49 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230013AbiFAUoh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Jun 2022 16:44:37 -0400
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99373259F55
+        for <linux-pwm@vger.kernel.org>; Wed,  1 Jun 2022 13:29:52 -0700 (PDT)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-f33f0f5b1dso4224104fac.8
+        for <linux-pwm@vger.kernel.org>; Wed, 01 Jun 2022 13:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Gk4nfCem3ECRa7Gml0J0mN/3RZoOAdfGaQAqyHPKtiI=;
+        b=HLFKV03IvnCnmYNulbqEkPjTK3riUL87h2wHAPtiQ15M9iY6Q8e992KMQxJwLdk6f+
+         yc6asPWVRklcz8AY8oqwyi19SO9Z3FXfSKl8KIcHwdn2diZ16fcVN3Noj9XYHhxCnXOp
+         L86c6aBumcYcai1ti0jT0anzEO5LqUJSpP7KiFxQXIe3O9qnWY7viJfSABa1ly9ubc5O
+         7xqU4M/fQQEbpLLu8u6cCuAo0xRfp/5LoTJYIMP5ne/O4VXGwgI3hKlV02ue3fdzqvYA
+         6IABKhDngCz8ZKTuipfv5GZ/7HEqJFbM8x/u/85qQFiKTPs+Mb3XRU84XoMrlsTu1Zr+
+         PsMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Gk4nfCem3ECRa7Gml0J0mN/3RZoOAdfGaQAqyHPKtiI=;
+        b=LI7PPJmTGaIZLEEriCOCVcFKmOCxqiLKONQvlyqot5j+wyGmLN97hQNEvGQiQEqTvC
+         aWxYwFZb61ZoGhWIk5ilWLKhG3our/zzYLJYVvDxgUAKdWEBB15RDPvhL4QJ3M9OcPpY
+         dQtPxREp4a2v2Qw3opSC7T+0eg1L8ImN36ufTS63Z2KHTTPfBd3xShPVeca6vEdLNEpz
+         I9xgCwNrVjd8yp0i6TrS70Jn7+14V2rM6CknAX7coHKRE+UYj6xpU8DIlFWS3UY+nYZe
+         uT1up88yWcZg0nyr5OPaU+HbL4TR15aRVpw6eP6WHjvIb+rY3OVCyjk3cgUNO9InGZqg
+         JNYQ==
+X-Gm-Message-State: AOAM5318Uq+girgFYYUtoAicPWtgYsgiYfn7ITjmgdybcopNUMtLdKP3
+        Nc/dC07DTGrsKBghgOusoGFLoYmwz5pzGayUnyMll4d3FOw=
+X-Google-Smtp-Source: ABdhPJzieEZsH3sz7p7h/CGCrygaKC3twss2VqEDgMRTw52PjXyF0yZxDsfC/Wcw+CTWK4gcBihtpQQBph7O0cnThRw=
+X-Received: by 2002:a05:6870:308:b0:f1:ddfe:8ac5 with SMTP id
+ m8-20020a056870030800b000f1ddfe8ac5mr16670934oaf.237.1654111051378; Wed, 01
+ Jun 2022 12:17:31 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a05:6358:3601:b0:a3:2139:251d with HTTP; Wed, 1 Jun 2022
+ 12:17:30 -0700 (PDT)
+Reply-To: johnwinery@online.ee
+From:   johnwinery <alicejohnson8974@gmail.com>
+Date:   Wed, 1 Jun 2022 12:17:30 -0700
+Message-ID: <CAFqHCSSUC0MpbjYK8d-GCxOG4b6Qbk2uH3+xQDZte6cPBsxLGA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Wed,  1 Jun 2022 16:38:39 +0200:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.19-rc1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8eca6b0a647aabea3d1d2907dd6245fc436f98e7
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Greeting ,I had written an earlier mail to you but without response
