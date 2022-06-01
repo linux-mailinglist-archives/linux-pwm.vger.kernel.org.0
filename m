@@ -2,121 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E0A253AB6A
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jun 2022 18:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FE6753AC3E
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jun 2022 19:57:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353933AbiFAQ6c (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Jun 2022 12:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
+        id S1356454AbiFARz4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Jun 2022 13:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345508AbiFAQ6b (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Jun 2022 12:58:31 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BAC313B1;
-        Wed,  1 Jun 2022 09:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654102709; x=1685638709;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gwfhI1oZGrbLaBNHLPYsrYeVXkiVePA59FrgD/UWM4k=;
-  b=hQSW0WHNJloSEkd+fBNg6x0D7FQwMvl1Suv+2dWGOEJpYpQ4CxA42Xq6
-   qoLY0h8sYiJLuykchPmzBw4+gYxjTAlF250nj05Y6Sd7euk0V/cHXAB6J
-   USNZdcbTYv7I0SthhZyVYkKSAYlfdJAEiE7ZjSloh8pnhwcxl6UOFG2Ef
-   e89nTdPbuy7Fe3HMIJQ0FgtRSb97ffHdc2iLOcalfVu4TkQuQ/m95xlz3
-   7IdXJbcqq5A/80LgAfsKHGUQVEX2XlhG6FEJO8VsyLjitY9RMiFCF/AQ2
-   zbxIvvldRj32SY1P6AiaYaVzouCJrhxogRr7A+ry11DDBeMxd+0ZxsMUf
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10365"; a="275734842"
-X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="275734842"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 09:58:29 -0700
-X-IronPort-AV: E=Sophos;i="5.91,268,1647327600"; 
-   d="scan'208";a="530150781"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2022 09:58:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nwRfm-000QqW-EX;
-        Wed, 01 Jun 2022 19:58:18 +0300
-Date:   Wed, 1 Jun 2022 19:58:18 +0300
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     Javier Martinez Canillas <javierm@redhat.com>
-Cc:     Dominik Kierner <dkierner@dh-electronics.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
-Message-ID: <Ypeaqgc9r7TOiSbn@smile.fi.intel.com>
-References: <5d817ea54144414aa7865a72694b5811@dh-electronics.com>
- <536d4700-6f28-176d-7883-5793f5cd7c8e@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <536d4700-6f28-176d-7883-5793f5cd7c8e@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1355963AbiFARzy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Jun 2022 13:55:54 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE78194181;
+        Wed,  1 Jun 2022 10:55:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6653EB81BBA;
+        Wed,  1 Jun 2022 17:55:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 09F84C385A5;
+        Wed,  1 Jun 2022 17:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654106150;
+        bh=MLr8AMawc4C1Yd/HPD7cttpmEtgnwSe6B2HsG+8LnBo=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=UjaGDxBemEWegjO3Uglpf0pCYBWtYCnI+HO+S38JDTFlaWGwT8a8GqAId5q2vmkTO
+         WN1p4jzb3mmY//uAKmvKl6BhhqFk+vQL6dwsCij9I2AGDjlOcPGbdyBdayeQN1BUjl
+         kckECLquIPQ/8fHOtfPj9wnbP88yB/y+ioKDnH3k3srLGwaJ9Yx8cFPm/plMaQfyp/
+         Ga4/W75xi2yATvXcK0ZWdDK+Ur5Q0ywynahueCPXn/FzW7LhkP9y2D05GsrCWNbumG
+         UYKwYF014yRTQr7gChmKasJWjQj1OibowagHBnto9Uu8jAB1KDHcSJ91tSVyLtrD0/
+         0tQP5o109TVLQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EC62DEAC081;
+        Wed,  1 Jun 2022 17:55:49 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: Changes for v5.19-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220601143839.3893139-1-thierry.reding@gmail.com>
+References: <20220601143839.3893139-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220601143839.3893139-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.19-rc1
+X-PR-Tracked-Commit-Id: 3d593b6e80ad2c911b5645af28d83eabb96e7c1b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8eca6b0a647aabea3d1d2907dd6245fc436f98e7
+Message-Id: <165410614996.7706.1482182484083714794.pr-tracker-bot@kernel.org>
+Date:   Wed, 01 Jun 2022 17:55:49 +0000
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, May 25, 2022 at 09:46:24PM +0200, Javier Martinez Canillas wrote:
-> On 3/10/22 14:11, Dominik Kierner wrote:
+The pull request you sent on Wed,  1 Jun 2022 16:38:39 +0200:
 
-...
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.19-rc1
 
-> > # DRM Mode Configuration via Device Tree
-> > 
-> > In the old fbdev driver, the display modes are hard-coded, which means
-> > for every new display configuration, a new patch needs to be mainlined,
-> > which slows down official Kernel support and
-> > puts burden on the maintainers.
-> > Additionally, with the DRM-subsystem supporting height and length
-> > information, for scaling, this opens up a lot of new combinations.
-> > The SSD1306 for example, is available in multiple resolutions like
-> > 128x64 and 96x16 and comes in different sizes per resolution as well.
-> > Just to name a few:
-> > * 128x64 0.96" (22x11mm)
-> > * 128x64 1.3" (30x15mm)
-> > * 96x16 0.69" (18x3mm)
-> >> Instead of hard-coding, I would suggest something along the lines of
-> > of_get_drm_display_mode().
-> > The displays won't need to support multiple modes at the same time,
-> > let alone support for switching between them,
-> > so the one-time invocation of this expensive function might be worth it. 
-> > maybe a new and simpler function that could be named:
-> > of_get_drm_display_mode_simple()
-> 
-> This makes sense to me as well.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8eca6b0a647aabea3d1d2907dd6245fc436f98e7
 
-What about non-OF platforms? Please, do not spread OF-only interfaces,
-and use fwnode instead.
-
-> > Providing a mode could later prove useful for a conversion to
-> > drm_panel, if that is feasible.
-> > 
-> > But for a function like this, I have to chicken out.
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
