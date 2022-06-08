@@ -2,53 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C14F9543736
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jun 2022 17:24:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4582254387E
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jun 2022 18:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243320AbiFHPVU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Jun 2022 11:21:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
+        id S244986AbiFHQLs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Jun 2022 12:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244194AbiFHPSY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jun 2022 11:18:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECEDC22BF2
-        for <linux-pwm@vger.kernel.org>; Wed,  8 Jun 2022 08:13:31 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nyxMu-0008CD-1k; Wed, 08 Jun 2022 17:13:12 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nyxMu-007DGX-DN; Wed, 08 Jun 2022 17:13:11 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nyxMs-00F09c-2g; Wed, 08 Jun 2022 17:13:10 +0200
-Date:   Wed, 8 Jun 2022 17:13:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Conor.Dooley@microchip.com
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        Daire.McNamara@microchip.com, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <20220608151308.ym6ls3ku6ukhtly6@pengutronix.de>
-References: <20220607084551.2735922-1-conor.dooley@microchip.com>
- <20220607084551.2735922-2-conor.dooley@microchip.com>
- <20220607200755.tgsrwe4ten5inw27@pengutronix.de>
- <eefc366e-1d32-7565-0d6d-243b8addc381@microchip.com>
+        with ESMTP id S244978AbiFHQLs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Jun 2022 12:11:48 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2109.outbound.protection.outlook.com [40.107.114.109])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C445B27CF9;
+        Wed,  8 Jun 2022 09:11:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oJ/7DsvIxWIootAaKaAwW5qmtSgSoaMCmEdeGGsezaZdk03fJ3aoI+OMLnznPG+wAl/vED39UPlTNuuienphewQlH66P/oYon7YL+4bNxsPMjZ8oGUSlGl8Nyb9bvyNo/0rb8v6zIYN9OjDeDWbg6aSyE7/X+BD1U/mFiDcILO9c3YjFooOw95gSors+iK/G5z9h+JXEwFleHR+wMpWqMM5k82rZIRtL5qw5u+nUbZOAM2ePD7w4+buUO92Exuvxb0ZbwT0INpVwr4lwaqdJvi2C6oF9lHoP4+td5tdvQGUfFyHHb3ejHDZCPC3C+h7oVeBLqRbu5khjBhPq0+DGYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JjEIIOZ/iRUov1ICrbBnuyS9PdOIBtruLuHWo0O1YvM=;
+ b=it1IlY4tq0NF6vYSyPQUtJ7blkVNglcFc1+3v9ckL+gs3N9VaAauHDyAoySYqhiYPomp7PuyZyhYcRXappEv4WoXSvFfjZ/Ifu08VyUjYfR1ybxipvW+hDyKVU4K3KzHU1VNeyetgH0DJJ6l9ww7m2cmf6ZRnH0K/XkFMFWP4pJUSl4NyCHQqFuHqGkcBa3PbI/JWHuVWc2CYJOCKsqtMAjiFnbCVIk20TKuI9UfKIsnH7M6wW1jLWULP7Vx6gg09ZDDhpxEPAUXgavsIHoz/jbivjgPpRz+0PbchrbprotTHN6/O+0jYFem5+VGn5u4HfOJkJNKbr2mzuQdgPTLOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JjEIIOZ/iRUov1ICrbBnuyS9PdOIBtruLuHWo0O1YvM=;
+ b=dbRzXNtATwQ905FlL5pf7gJ2PT25A8WmYfZCt3SyEwm/2zpCEKiXNFTLNc97KVxZn+azDQ/+5KNBKSb7Nfa77kW2+ahK2pjpGGRN9gmVDvTsHwC6Fur/n9JYRtfBbdD2iOyBV90imgfKKSMcwaxJ1KpHEC0OICRLwa93c+JMYOY=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by OSBPR01MB2197.jpnprd01.prod.outlook.com (2603:1096:603:26::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.16; Wed, 8 Jun
+ 2022 16:11:43 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::3e:970b:c238:f57]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::3e:970b:c238:f57%9]) with mapi id 15.20.5332.011; Wed, 8 Jun 2022
+ 16:11:43 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: RE: [RFC 1/8] dt-bindings: soc: renesas: Add RZ/G2L POEG binding
+Thread-Topic: [RFC 1/8] dt-bindings: soc: renesas: Add RZ/G2L POEG binding
+Thread-Index: AQHYZIA3TRVrx9T/skGzEuiCwjtE0q0jmkqAgACR+bCAANHPAIAAA1bggAD1JACAAADlIIAAtu4AgB8tLqA=
+Date:   Wed, 8 Jun 2022 16:11:43 +0000
+Message-ID: <OS0PR01MB59221B3310BADB5D458A194586A49@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20220510151112.16249-1-biju.das.jz@bp.renesas.com>
+ <20220510151112.16249-2-biju.das.jz@bp.renesas.com>
+ <20220517210407.GA1635524-robh@kernel.org>
+ <OS0PR01MB5922FC66FD4EF05F31B17D3386D19@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20220518181730.GH3302100-robh@kernel.org>
+ <OS0PR01MB5922BC7AAC6154DEF7B98F0386D19@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <CAMuHMdWPy4HmPrfnL8kZmFBBcHY-EoNm7Z6CoJyudhKornTS=g@mail.gmail.com>
+ <OS0PR01MB5922D0FFFA82AC5428F8C8D886D09@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20220519200446.GB2071376-robh@kernel.org>
+In-Reply-To: <20220519200446.GB2071376-robh@kernel.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ceaf7abf-8d7c-4f42-8454-08da49699452
+x-ms-traffictypediagnostic: OSBPR01MB2197:EE_
+x-microsoft-antispam-prvs: <OSBPR01MB2197F8FFC8A8DC3A1FF9A89786A49@OSBPR01MB2197.jpnprd01.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Ron6WBYb+EJw80Ji3rSg6xTWDmlU4eO9rn0UQB02jgpmBW4IAL+LfYoAHPcAA25IiAZj4gWrNlNjhtD7arzr+jVsnvZn0LLX8/DIZh74oZH1UBJZk0apx1L/TrYWg2Bc28Pna0TwM+Hjd3M3CHFhNObsa2eI0EcsT2UBICFhZL+hY1EJMA6X6RgmiHPl5pWprbSi+51I4rv/BI/DlDvCclFJks5Mo2Ldg8A6OxRn98RL9CGHJyb5SfC+QPjXAgcqK8OHaLok90DbV7AuVLr9GuS6VctAX2XzpykSBXIs7K16VEARn0DhZgIpHdBJDqpVgMjI1tIv6eaetgEh3j61dRMy6MOqgELkft70S84/0hN3DCBBNpidlOSI8PsNNIUqo3eS6bqpu9x+EDi6ayfFkNSojzPKbQ8NX/EPVv6ziFtxCcRxXMrFGXmu2xotCYppavuyBKS82O2IFOnDlV4fa4oNsJx3HKW9AetvA8eKhjhzLRaaDo+FBAH2ePLtKvTQivsxsSdCvQmfW9V3J6P82s3MZ0kHNKfIix4oKgaPBglKy3IygmXxJcQDQnhzxYkbiSJMD8Q24aQv+XYlNYCwRxwdLV4mR6RgXBH7VXTUEqVFXi5c1GCVK9bF0l6rAacZLyfqaGS3uz/nT7b/LNw0tR6vplIbc3xy6h11gN7wSwStiVPTjXnS+IZIQzeBFnP6ZCwvh/hw2OurySAE9iZSSA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(38070700005)(66946007)(66446008)(8676002)(64756008)(52536014)(66556008)(7416002)(54906003)(86362001)(5660300002)(6916009)(508600001)(53546011)(6506007)(71200400001)(7696005)(66476007)(26005)(9686003)(76116006)(4326008)(122000001)(316002)(186003)(33656002)(2906002)(8936002)(83380400001)(38100700002)(55016003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?ghSE/mJYtSQsX2YPioMcmsP7ES8XpVlFzjEbC/6iSaXXC4VOr9iE08slYr?=
+ =?iso-8859-1?Q?ssSk7ejL26xyl4v0wGmysT6V9D+sdoPT2I4LcYwIAqTzkzU3uPilf5IyqL?=
+ =?iso-8859-1?Q?vOaIIMCYNelrgm3uqAHo8M1MWBojszMxwMCS2uhD/s5YDM1IPyJL7FrlXB?=
+ =?iso-8859-1?Q?YmiwHgcH0aRL8MfwhFNycNZ2T8T1cRi7/cZQ8sBe1ozQ5G3w+nuhX5ScZK?=
+ =?iso-8859-1?Q?SIfCH6FJ/ZfVqxHD1gbwkuBuPNzIBHMExV7lFF+BYc+KjXYw3NXdXv53MT?=
+ =?iso-8859-1?Q?7yt79jzs6jRS5RkOrpLYEeRCks4Jj2bSbrW3Wrrff5mVpnCzvRuBPYotWt?=
+ =?iso-8859-1?Q?l2X1mV0yqV64ab5R8cMvE9m+NqJ7rr1oPBB1wjULiuKoT7TPtyvtERsWjX?=
+ =?iso-8859-1?Q?Pl+0p7qii1wf/NhVI7YdNaTTkrkS+/3xGjjJx++J+AUQ5miHOufWVLNKAY?=
+ =?iso-8859-1?Q?o+TnQFV6AxrdEe6BJLK335DZFLgUxP/PlNfXb3ZuXdFvbfW1AqtujC7jW/?=
+ =?iso-8859-1?Q?hBdM4dGdnZW90uTyLo4dKxBpx7qAfqQ5GyMqGs2q7Ju23jLXEJKvBH4K9R?=
+ =?iso-8859-1?Q?JkOa/UCjv4sGJCbEZ4x6q0B2c8in7colM4MiQkogmGwldvAdGUiz7PCaX4?=
+ =?iso-8859-1?Q?6B6hX5toBQ1SlEoNnxHDgzcgUzrCSat+KRped9yrc0No+Ft6iWprfKyQOR?=
+ =?iso-8859-1?Q?hOJBDYea1jiuv1UxNGvQftn75k7zKeLbS8nIc6Iu8awgLHIkphhWVl5vum?=
+ =?iso-8859-1?Q?aFQhlpuF2dwGI61xkmd9T1iOAOAEfbnnD/a0y/uCvW3k9BrRacgu8ICcKo?=
+ =?iso-8859-1?Q?8m8P+FFypCllNHN9UtaIPZgsYbqXPRIEHYaFwHukD9Wdwcl68UEjIaJDO/?=
+ =?iso-8859-1?Q?1Ou82rQmMB0Dx6zSFQW4R0dcVtpw/S0i0m/FY5m2AEVlunWMvGWlzVjS83?=
+ =?iso-8859-1?Q?UpNORR61/gJgsq9pdVUN0Fczh/aD4C3W7SzZT00OJg67Vwc88CiArcMHTK?=
+ =?iso-8859-1?Q?ltwSFcNHABWXIe08HjH6aCzXU+oo9JdLHvlOps7LMFiTMXAjtFCaErPBTx?=
+ =?iso-8859-1?Q?OlCDI8wabFMf829SsUnGK2qGn3PUOaigZyUV20ebtuWw/KRa0PRO7PNoF4?=
+ =?iso-8859-1?Q?4XTQM9MVcNrlo5jqo9L7PUMRjNO8JY/RqcGd8scJj+QyYu54gRVZnfjSnT?=
+ =?iso-8859-1?Q?0XO1QlDqfRnlzH4YqYbYRwK3Ic1P8u6z/zR5060ixbYoJNPUO0i/TWge0L?=
+ =?iso-8859-1?Q?VsXADWNLWBgfn+vbV8yur3JjWDjI/lLImonMoG9LvAnJig4oF2geWr9v/Y?=
+ =?iso-8859-1?Q?P0qm9S+JBLmABBfPWd5YmQLZqh2FTYrxxM6j9X7SY6pHaGDKhJMRdQXnR+?=
+ =?iso-8859-1?Q?K03kDU0wFTrlU6p3TVeV5jC0ZgpLUVL5DOh1clg+5DgHuiiTgBWxdUNRvD?=
+ =?iso-8859-1?Q?2f9z/TJWwFWwzbLaVpMExUv/l97LAnG6Lhuq356b1wc7ogZb6MkCkZwS+/?=
+ =?iso-8859-1?Q?KRYgMA/kha4SboBTWj+OgI4G0XcKnbCqCcMlNCt06tqLKafVGfZgsUplA+?=
+ =?iso-8859-1?Q?ccyGLjsTrYQjHZX07WQ180KMN4hE9LzLj95Nl8ayQPexxQFH1vr+mbYXoh?=
+ =?iso-8859-1?Q?gKK7qgipH+Z5djcZEZMOPCCbIhpHO29RYsmXo3pGisxs1Q691JU40CbQCK?=
+ =?iso-8859-1?Q?OioGiRglTVdmV/07OQyBNEzltNdYkD9vkSGJUnfTF+L8l/9cFkIUdPUwzV?=
+ =?iso-8859-1?Q?uw0JhkMXf13r5yF0P6x3ZZQugtA/6h2Eg4NYH55ZIkGrVGNTMPoISBncla?=
+ =?iso-8859-1?Q?48UWUK8Q40IOVRcbYOgr6xBcNP8NUOE=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2eejere4qctl5jk6"
-Content-Disposition: inline
-In-Reply-To: <eefc366e-1d32-7565-0d6d-243b8addc381@microchip.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ceaf7abf-8d7c-4f42-8454-08da49699452
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2022 16:11:43.4551
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9PMVZh4mNggjkQVSz3RzBK3GOOz3duq+Z8p1/PUJWR7AZXqubVVM1ckkkF+6EeVz3TTJPNoT/n8f49YMG+O4Id46nDqjCo6Jc3u1i/UgmZI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2197
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,355 +140,137 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Rob,
 
---2eejere4qctl5jk6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the feedback.
 
-Hello Conor,
-
-On Wed, Jun 08, 2022 at 12:12:37PM +0000, Conor.Dooley@microchip.com wrote:
-> On 07/06/2022 21:07, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Jun 07, 2022 at 09:45:51AM +0100, Conor Dooley wrote:
-> >> Add a driver that supports the Microchip FPGA "soft" PWM IP core.
-> >>
-> >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> >> ---
-> >>   drivers/pwm/Kconfig              |  10 ++
-> >>   drivers/pwm/Makefile             |   1 +
-> >>   drivers/pwm/pwm-microchip-core.c | 289 +++++++++++++++++++++++++++++=
-++
-> >>   3 files changed, 300 insertions(+)
-> >>   create mode 100644 drivers/pwm/pwm-microchip-core.c
-> >>
-> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> >> index 21e3b05a5153..a651848e444b 100644
-> >> --- a/drivers/pwm/Kconfig
-> >> +++ b/drivers/pwm/Kconfig
-> >> @@ -383,6 +383,16 @@ config PWM_MEDIATEK
-> >>   	  To compile this driver as a module, choose M here: the module
-> >>   	  will be called pwm-mediatek.
-> >>  =20
-> >> +config PWM_MICROCHIP_CORE
-> >> +	tristate "Microchip corePWM PWM support"
-> >> +	depends on SOC_MICROCHIP_POLARFIRE || COMPILE_TEST
-> >> +	depends on HAS_IOMEM && OF
-> >> +	help
-> >> +	  PWM driver for Microchip FPGA soft IP core.
-> >> +
-> >> +	  To compile this driver as a module, choose M here: the module
-> >> +	  will be called pwm-microchip-core.
-> >> +
-> >>   config PWM_MXS
-> >>   	tristate "Freescale MXS PWM support"
-> >>   	depends on ARCH_MXS || COMPILE_TEST
-> >> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> >> index 708840b7fba8..d29754c20f91 100644
-> >> --- a/drivers/pwm/Makefile
-> >> +++ b/drivers/pwm/Makefile
-> >> @@ -33,6 +33,7 @@ obj-$(CONFIG_PWM_LPSS_PCI)	+=3D pwm-lpss-pci.o
-> >>   obj-$(CONFIG_PWM_LPSS_PLATFORM)	+=3D pwm-lpss-platform.o
-> >>   obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
-> >>   obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
-> >> +obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-core.o
-> >>   obj-$(CONFIG_PWM_MTK_DISP)	+=3D pwm-mtk-disp.o
-> >>   obj-$(CONFIG_PWM_MXS)		+=3D pwm-mxs.o
-> >>   obj-$(CONFIG_PWM_NTXEC)		+=3D pwm-ntxec.o
-> >> diff --git a/drivers/pwm/pwm-microchip-core.c b/drivers/pwm/pwm-microc=
-hip-core.c
-> >> new file mode 100644
-> >> index 000000000000..2cc1de163bcc
-> >> --- /dev/null
-> >> +++ b/drivers/pwm/pwm-microchip-core.c
-> >> @@ -0,0 +1,289 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * corePWM driver for Microchip FPGAs
-> >> + *
-> >> + * Copyright (c) 2021-2022 Microchip Corporation. All rights reserved.
-> >> + * Author: Conor Dooley <conor.dooley@microchip.com>
-> >> + *
-> >=20
-> > Is there a public datasheet for that hardware? If yes, please add a link
-> > here.
+> Subject: Re: [RFC 1/8] dt-bindings: soc: renesas: Add RZ/G2L POEG
+> binding
 >=20
-> Not quite a datasheet since this is for an FPGA core not a "real" part.
-> I can link the following "handbook" for it though (direct download link):
-> https://www.microsemi.com/document-portal/doc_download/1245275-corepwm-hb
-
-Anything that might be worth reading if a question about the driver's
-behaviour pops up is helpful. But ideally the comments about the
-registers are good enough that it's not needed. Still having a document
-around is good.
-=20
-> >> + */
-> >> +
-> >> +#include <linux/clk.h>
-> >> +#include <linux/err.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/pwm.h>
-> >> +#include <linux/math.h>
-> >> +
-> >> +#define PREG_TO_VAL(PREG) ((PREG) + 1)
-> >> +
-> >> +#define PRESCALE_REG	0x00u
-> >> +#define PERIOD_REG	0x04u
-> >> +#define PWM_EN_LOW_REG	0x08u
-> >> +#define PWM_EN_HIGH_REG	0x0Cu
-> >> +#define SYNC_UPD_REG	0xE4u
-> >> +#define POSEDGE_OFFSET	0x10u
-> >> +#define NEGEDGE_OFFSET	0x14u
-> >> +#define CHANNEL_OFFSET	0x08u
-> >=20
-> > Can you please prefix these register symbols with a driver prefix?
-> > Unique register names are good for tools like ctags and then it's
-> > obvious to the reader, that the defines are driver specific.
-> >=20
-> >> +struct mchp_core_pwm_registers {
-> >> +	u8 posedge;
-> >> +	u8 negedge;
-> >> +	u8 period_steps;
-> >> +	u8 prescale;
-> >=20
-> > these are the four registers for each channel, right? Can you add a
-> > short overview how these registers define the resulting output wave.
+> On Thu, May 19, 2022 at 09:30:19AM +0000, Biju Das wrote:
+> > Hi Geert,
+> >
+> > Thanks for the feedback.
+> >
+> > > Subject: Re: [RFC 1/8] dt-bindings: soc: renesas: Add RZ/G2L POEG
+> > > binding
+> > >
+> > > Hi Biju,
+> > >
+> > > On Wed, May 18, 2022 at 8:34 PM Biju Das
+> > > <biju.das.jz@bp.renesas.com>
+> > > wrote:
+> > > > > Subject: Re: [RFC 1/8] dt-bindings: soc: renesas: Add RZ/G2L
+> > > > > POEG binding On Wed, May 18, 2022 at 05:58:00AM +0000, Biju Das
+> wrote:
+> > > > > > > Subject: Re: [RFC 1/8] dt-bindings: soc: renesas: Add RZ/G2L
+> > > > > > > POEG binding
+> > > > > > >
+> > > > > > > On Tue, May 10, 2022 at 04:11:05PM +0100, Biju Das wrote:
+> > > > > > > > Add device tree bindings for the RZ/G2L Port Output Enable
+> > > > > > > > for GPT
+> > > > > > > (POEG).
+> > > > > > > >
+> > > > > > > > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > >
+> > > > > > > > +examples:
+> > > > > > > > +  - |
+> > > > > > > > +    #include <dt-bindings/clock/r9a07g044-cpg.h>
+> > > > > > > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > > > > > > > +
+> > > > > > > > +    poeggd: poeg@10049400 {
+> > > > > > > > +        compatible =3D "renesas,r9a07g044-poeg",
+> > > > > > > > + "renesas,rzg2l-
+> > > poeg";
+> > > > > > > > +        reg =3D <0x10049400 0x4>;
+> > > > > > >
+> > > > > > > This looks like it is part of some larger block?
+> > > > > >
+> > > > > > There are 2 IP blocks GPT(PWM) and POEG with its own resources
+> > > > > > like (register map, clk, reset and interrupts)
+> > > > > >
+> > > > > > Larger block is GPT, which has lot of functionalities. The
+> > > > > > output from GPT block can be disabled by this IP either by
+> > > > > > external trigger, request from GPT(Deadtime error, both output
+> > > > > > low/high) or explicit software control). This IP has only a
+> single register.
+> > > > > > Currently I am not
+> > > > > sure which framework to be used for this IP?? Or should it be
+> > > > > merged with
+> > >
+> > > Yeah, POEG is a weird beast.
+> > > Some of it fits under pin control, but not all of it.
+> > > From a quick glance, most of its configuration is intended to be
+> > > static, i.e. could be done from DT, like pin control?
+> > > I have no idea how to use the POEG interrupts, though.
+> >
+> > If there is a GPT request(Dead time error or Both output low/high
+> > condition) output is disabled automatically and we get an Interrupt.
+> > May be to clear it , we need to implement interrupt. Otherwise output
+> will be always disabled, even if the outputs are out of phase after the
+> fault condition.
+> >
+> > I have done a quick test with interrupts previously for output disable
+> using GPT request:-
+> > 	Use both A and B in phase, output is disabled automatically and
+> you get an interrupt in POEG block.
+> >       If you inverse B, it is out of phase and fault condition is no
+> more, but still output is disabled.
+> >       In this condition, If we want to enable outputs, we need to
+> clear interrupt status bits.
+> >
+> > >
+> > > > > larger block GPT by combining the resources?
+> > > > >
+> > > > > Usually, IP blocks would have some minimum address alignment
+> > > > > (typ 4K or 64K to be page aligned), but if there's no other IP
+> > > > > in this address range as-is is fine. The question is what's
+> > > > > before or after
+> > > the above address?
+> > > >
+> > > > As per the HW manual, before GPT IP block and after POE3
+> > > > block(Port
+> > > Output Enable 3 (POE3) for MTU).
+> > > >
+> > > > Before
+> > > > H'0_1004_8000 H'0_1004_87FF 2 Kbytes GPT
+> > > >
+> > > > After
+> > > > H'0_1004_9800 H'0_1004_9BFF 1 Kbyte POE3
+> > > >
+> > > > Please find the address map for the IP blocks near to it.
+> > > >
+> > > > H'0_1004_A000 H'0_1004_A3FF 1 Kbyte SSIF ch1
+> > > > H'0_1004_9C00 H'0_1004_9FFF 1 Kbyte SSIF ch0
+> > > > H'0_1004_9800 H'0_1004_9BFF 1 Kbyte POE3
+> > > > H'0_1004_9400 H'0_1004_97FF 1 Kbyte POEGD
+> > > > H'0_1004_9000 H'0_1004_93FF 1 Kbyte POEGC
+> > > > H'0_1004_8C00 H'0_1004_8FFF 1 Kbyte POEGB
+> > > > H'0_1004_8800 H'0_1004_8BFF 1 Kbyte POEGA
+> > > > H'0_1004_8000 H'0_1004_87FF 2 Kbytes GPT
+> > >
+> > > This is actually 8 x 256 bytes, for 8 GPT instances.
+> >
+> > Yes correct.
+> >
+> > >
+> > > > H'0_1004_7000 H'0_1004_7FFF 4 Kbytes SRC (Reg)
+> > > > H'0_1004_0000 H'0_1004_6FFF 28 Kbytes SRC (Memory)
+> > >
+> > > So you can combine GPT and POEG[A-D] into a single block.
+> > > However, doing so will make life harder when reusing the driver on
+> > > an SoC with a different layout, or a different number of POEG blocks
+> > > and GPT channels.
+> >
+> > I agree. Modelling as a different driver gives lots of flexibility.
 >=20
-> Ehh, only the edges are per channel. Does that change anything about
-> your feedback?
-> I'll add an explanation for each, sure.
-
-So the channels share the same period? If so you'll have to keep track
-of which PWM channels are enabled and only change the period if no other
-running channel is affected.
-
-> >> +};
-> >> +
-> >> +struct mchp_core_pwm_chip {
-> >> +	struct pwm_chip chip;
-> >> +	struct clk *clk;
-> >> +	void __iomem *base;
-> >> +	struct mchp_core_pwm_registers *regs;
-> >> +};
-> >> +
-> >> +static inline struct mchp_core_pwm_chip *to_mchp_core_pwm(struct pwm_=
-chip *chip)
-> >> +{
-> >> +	return container_of(chip, struct mchp_core_pwm_chip, chip);
-> >> +}
-> >> +
-> >> +static void mchp_core_pwm_enable(struct pwm_chip *chip, struct pwm_de=
-vice *pwm,
-> >> +				 bool enable)
-> >> +{
-> >> +	struct mchp_core_pwm_chip *mchp_core_pwm =3D to_mchp_core_pwm(chip);
-> >> +	u8 channel_enable, reg_offset, shift;
-> >> +
-> >> +	/*
-> >> +	 * There are two adjacent 8 bit control regs, the lower reg controls
-> >> +	 * 0-7 and the upper reg 8-15. Check if the pwm is in the upper reg
-> >> +	 * and if so, offset by the bus width.
-> >> +	 */
-> >> +	reg_offset =3D PWM_EN_LOW_REG + (pwm->hwpwm >> 3) * sizeof(u32);
-> >> +	shift =3D pwm->hwpwm > 7 ? pwm->hwpwm - 8 : pwm->hwpwm;
-> >> +
-> >> +	channel_enable =3D readb_relaxed(mchp_core_pwm->base + reg_offset);
-> >> +	channel_enable &=3D ~(1 << shift);
-> >> +	channel_enable |=3D (enable << shift);
-> >> +
-> >> +	writel_relaxed(channel_enable, mchp_core_pwm->base + reg_offset);
-> >> +}
-> >> +
-> >> +static void mchp_core_pwm_calculate_duty(struct pwm_chip *chip,
-> >> +					 const struct pwm_state *desired_state,
-> >> +					 struct mchp_core_pwm_registers *regs)
-> >> +{
-> >> +	struct mchp_core_pwm_chip *mchp_core_pwm =3D to_mchp_core_pwm(chip);
-> >> +	u64 clk_period =3D NSEC_PER_SEC;
-> >> +	u64 duty_steps;
-> >> +
-> >> +	/* Calculate the clk period and then the duty cycle edges */
-> >> +	do_div(clk_period, clk_get_rate(mchp_core_pwm->clk));
-> >> +
-> >> +	duty_steps =3D desired_state->duty_cycle * PREG_TO_VAL(regs->period_=
-steps);
-> >> +	do_div(duty_steps, (clk_period * PREG_TO_VAL(regs->period_steps)));
-> >=20
-> > Don't divide by a result of a division.
-> >=20
-> >> +	if (desired_state->polarity =3D=3D PWM_POLARITY_INVERSED) {
-> >> +		regs->negedge =3D 0u;
-> >> +		regs->posedge =3D duty_steps;
-> >> +	} else {
-> >> +		regs->posedge =3D 0u;
-> >> +		regs->negedge =3D duty_steps;
-> >> +	}
-> >> +}
-> >> +
-> >> +static void mchp_core_pwm_apply_duty(const u8 channel,
-> >> +				     struct mchp_core_pwm_chip *pwm_chip,
-> >> +				     struct mchp_core_pwm_registers *regs)
-> >> +{
-> >> +	void __iomem *channel_base =3D pwm_chip->base + channel * CHANNEL_OF=
-FSET;
-> >> +
-> >> +	writel_relaxed(regs->posedge, channel_base + POSEDGE_OFFSET);
-> >> +	writel_relaxed(regs->negedge, channel_base + NEGEDGE_OFFSET);
-> >> +}
-> >> +
-> >> +static void mchp_core_pwm_apply_period(struct mchp_core_pwm_chip *pwm=
-_chip,
-> >> +				       struct mchp_core_pwm_registers *regs)
-> >> +{
-> >> +	writel_relaxed(regs->prescale, pwm_chip->base + PRESCALE_REG);
-> >> +	writel_relaxed(regs->period_steps, pwm_chip->base + PERIOD_REG);
-> >> +}
-> >> +
-> >> +static int mchp_core_pwm_calculate_base(struct pwm_chip *chip,
-> >> +					const struct pwm_state *desired_state,
-> >> +					u8 *period_steps_r, u8 *prescale_r)
-> >> +{
-> >> +	struct mchp_core_pwm_chip *mchp_core_pwm =3D to_mchp_core_pwm(chip);
-> >> +	u64 tmp =3D desired_state->period;
-> >> +
-> >> +	/* Calculate the period cycles and prescale value */
-> >> +	tmp *=3D clk_get_rate(mchp_core_pwm->clk);
-> >> +	do_div(tmp, NSEC_PER_SEC);
-> >> +
-> >> +	if (tmp > 65535) {
-> >=20
-> > If a too long period is requested, please configure the biggest possible
-> > period.
-> >=20
-> >> +		dev_err(chip->dev,
-> >> +			"requested prescale exceeds the maximum possible\n");
-> >=20
-> > No error message in .apply() please.
+> The question is different h/w blocks or 1, not driver(s). It's
+> convenient when the answer is the same (i.e. h/w node:driver is 1:1),
+> but h/w is sometimes messy.
 >=20
-> No /error/ or no error /message/?
+> In any case, that looks like different blocks to me.
 
-No error message. Otherwise a userspace application might easily trash
-the kernel log.
+OK, As Geert suggested will model this block as pinctrl.
 
-> As in, can I make it a dev_warn or do you want it removed entirely
-> and replaced by capping at the max value?
-
-Yes, just cap to the max value. So the rule is always to pick the
-biggest possible period not bigger than the requested period. And for
-that one pick the biggest duty_cycle not bigger than the requested
-duty_cycle.
-
-> >> +	if (desired_state->enabled) {
-> >> +		if (current_state.enabled &&
-> >> +		    current_state.period =3D=3D desired_state->period &&
-> >> +		    current_state.polarity =3D=3D desired_state->polarity) {
-> >=20
-> > If everything is as before, why are you doing something at all?
->=20
-> This is a change in duty without any other change.
-> Could just remove this & recalculate everything when apply is called
-> to simply the logic?
-
-Ah, right. A comment (e.g. "only duty cycle changed") would be good for
-such stupid readers like me :-)
-
-I don't feel strong here. For many cases the period (and polarity) is
-kept constant and only duty_cycle changes. So optimizing for that case
-looks ok.
-
-> >> +			mchp_core_pwm_calculate_duty(chip, desired_state, mchp_core_pwm->r=
-egs);
-> >> +			mchp_core_pwm_apply_duty(channel, mchp_core_pwm, mchp_core_pwm->re=
-gs);
-> >> +		} else {
-> >> +			ret =3D mchp_core_pwm_calculate_base(chip, desired_state, &period_=
-steps_r,
-> >> +							   &prescale_r);
-> >> +			if (ret) {
-> >> +				dev_err(chip->dev, "failed to calculate base\n");
-> >=20
-> > mchp_core_pwm_calculate_base might already emit an error message. Apply
-> > shouldn't emit an error message at all.
-> >=20
-> >> +				return ret;
-> >> +			}
-> >> +
-> >> +			mchp_core_pwm->regs->period_steps =3D period_steps_r;
-> >> +			mchp_core_pwm->regs->prescale =3D prescale_r;
-> >> +
-> >> +			mchp_core_pwm_calculate_duty(chip, desired_state, mchp_core_pwm->r=
-egs);
-> >> +			mchp_core_pwm_apply_duty(channel, mchp_core_pwm, mchp_core_pwm->re=
-gs);
-> >> +			mchp_core_pwm_apply_period(mchp_core_pwm, mchp_core_pwm->regs);
-> >=20
-> > Is there a race where e.g. the output is defined by the previous period
-> > and the new duty_cycle?
->=20
-> "Yes". It depends on how the IP block is configured. I'll add a write to
-> the sync register (which is a NOP if not configured for sync mode).
-
-Several drivers have a "Limitations" section at the top of the driver.
-Something like that would be good to document there. Please stick to the
-format found in e.g. pwm-sl28cpld.c, that is: "Limitations:" (even if
-it's more about "Hardware Details") and then a list of items without
-empty line in between for easy greppability.
-
-> >=20
-> >> +		}
-> >> +
-> >> +		if (mchp_core_pwm->regs->posedge =3D=3D mchp_core_pwm->regs->negedg=
-e)
-> >> +			mchp_core_pwm_enable(chip, pwm, false);
-> >> +		else
-> >> +			mchp_core_pwm_enable(chip, pwm, true);
-> >=20
-> > Here is a race: If the PWM is running and it configured to be disabled
-> > with a different duty_cycle/period the duty_cycle/period might be
-> > (shortly) visible on the output with is undesirable.
->=20
-> This is trying to work around some nasty behaviour in the IP block.
-> If negedge =3D=3D posedge, it gives you a 50% duty cycle at twice the
-> period you asked for.
-> ie since the negedge and posedge are at the same time, it does
-> whichever edge is actually possible each time that period step is
-> reached.
-
-I didn't understand the normal behaviour of these registers yet, so
-cannot comment. Usually it's a good idea to document corner cases in
-comments.
-
-> If the state requested is disabled, it should be caught by the if()
-> prior to entering this & exit early & avoid this entirely.
->=20
-> I'll put the sync reg write after this, so if the block is configured
-> to support sync updates, the output waveform won't do anything odd.
-
-Sounds good.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2eejere4qctl5jk6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKgvIIACgkQwfwUeK3K
-7Al99gf+JvX6SezMaQzX9g6ogJm+XqqyDA0wAs1hfiK0jp32AqodG3J0AZmYVHGn
-LhQlmbCiZTx2+64nhYPUtlyWhQ7wfRtLJyFq0avakuwenXKMJb8RtjCClHx/NAvk
-U51vn2OxTXGgCfBt9RyruLOl5sBG3P8EMXA6GWRTEkrRg68lnEqRiv4qI3GLD51P
-u1ec17LA2gM9ROdqnL/4+DH48uw6Br+XXWwUr1w1CSth/Tfumu00YHGUE8kfLZG5
-oUY7dSSLtXLvnsFCa+h1UyT0LbYTwofvACb/LGj8WzgTOCInGCZbXtWnNbRNDw++
-71d7uA85aZke9k+SjMGaYJLjeMC3OQ==
-=CaMD
------END PGP SIGNATURE-----
-
---2eejere4qctl5jk6--
+Cheers,
+Biju
