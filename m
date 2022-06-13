@@ -2,70 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53221549D9C
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jun 2022 21:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4151A549DFD
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jun 2022 21:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350388AbiFMTZY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 13 Jun 2022 15:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
+        id S244959AbiFMTq5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 13 Jun 2022 15:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243600AbiFMTZH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Jun 2022 15:25:07 -0400
+        with ESMTP id S241668AbiFMTqr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Jun 2022 15:46:47 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3BD0537A84
-        for <linux-pwm@vger.kernel.org>; Mon, 13 Jun 2022 10:41:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4B4FA38A4
+        for <linux-pwm@vger.kernel.org>; Mon, 13 Jun 2022 11:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655142090;
+        s=mimecast20190719; t=1655144264;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=q9imHR0PldrK/4QqffqMQG4YlpeKi0rN5tf1tCAqvxI=;
-        b=OfLxLKMmXh1S0JEAwuW9kESxX/WmvV01sGlNpabaDxngbFrcIEHSG/5Fkm581Wd2AvJodx
-        IQVrUHuwGIKNdBkaL7D8xdVWIAU2Hq3X5lUoWk55A2iwasA5NQz3M4jTNc1hKEoqJopw8A
-        xF1Ia0qB9fKRr0O0qyctqVGEdnh8MNc=
+        bh=lUrbBgi3LSd4ND0XNRavmhKQAJhduQvPQp5t4kVdiFU=;
+        b=LAjQ5DG1EBh0zu3oaFKWaBxnRXngujI5HbltmjulGrnweJWgb/5GXBE9rzAnUw4fSefpvH
+        saz/8j1AAMNlhHrknTzAShom3JTyMbK7tNXcj9iDiyIe3E/EpoucquUyLNWM1fN7Ahouuk
+        swesg2EbGxCkSO2DUaufBaq4ihyu2mQ=
 Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
  [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-157-xCDx9VKwMLGJSSQBNi3WIQ-1; Mon, 13 Jun 2022 13:41:29 -0400
-X-MC-Unique: xCDx9VKwMLGJSSQBNi3WIQ-1
-Received: by mail-wm1-f71.google.com with SMTP id o2-20020a05600c510200b0039747b0216fso6236974wms.0
-        for <linux-pwm@vger.kernel.org>; Mon, 13 Jun 2022 10:41:29 -0700 (PDT)
+ us-mta-41-LkdvHYokPGiv0sO3lGXhRA-1; Mon, 13 Jun 2022 14:17:43 -0400
+X-MC-Unique: LkdvHYokPGiv0sO3lGXhRA-1
+Received: by mail-wm1-f71.google.com with SMTP id 2-20020a1c0202000000b0039c94528746so64554wmc.6
+        for <linux-pwm@vger.kernel.org>; Mon, 13 Jun 2022 11:17:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=q9imHR0PldrK/4QqffqMQG4YlpeKi0rN5tf1tCAqvxI=;
-        b=kMRdGUgrtpIDx4Mw695f8EzMmuBLs/oJXIPEWIgdq3ZlWdesF+Jg7Tp0WGRBliNx+P
-         5rW2qPs+Iwf77368hU3G0FPIQaaOTCMjOQ1xluOnNMeQ+JcG6DavERluqdY9FIwgj8dj
-         P6W5MNgJQkDXh079FNYYx4CrgXrtD4SX0BmtCOAOZ3/HjFhYAh7Le0RFzT5DGdJFw1Ha
-         h3jp4JqO+xJt6LcCJ3bxlV06smM8XEZdUsJUlWl3/jdhpwaPLLgecmfQB3KYuyAzfq1b
-         1EQ0/MkOm4UUhgOBwFy1Dd6rTpSZ45hQOeNpz9FOhuRTeEGQOcPTPgPPJNpwt0aj9rCV
-         Eu3g==
-X-Gm-Message-State: AOAM533JG0yo5zASIN40Gtk6aAHYhA/1wzO5zItVRg1oRZZmCYNX2arc
-        9VoqkMRMmV7wcMdd866g0E2sLLec3R9gUcNmTYzCi/ha4NOtqiJ/+mMbXcGkBm8yK5xColreC4c
-        ZusB2oBBLm2EUACIrqoVk
-X-Received: by 2002:a7b:c389:0:b0:39c:49fe:25df with SMTP id s9-20020a7bc389000000b0039c49fe25dfmr648454wmj.164.1655142087967;
-        Mon, 13 Jun 2022 10:41:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzOHYbSdU3QvmmoWgh9ozEuOjCqKEtc/UugRXjsMVcbeHCAdcofLjg4QDbLTxfNrnseTW/13Q==
-X-Received: by 2002:a7b:c389:0:b0:39c:49fe:25df with SMTP id s9-20020a7bc389000000b0039c49fe25dfmr648438wmj.164.1655142087759;
-        Mon, 13 Jun 2022 10:41:27 -0700 (PDT)
+        bh=lUrbBgi3LSd4ND0XNRavmhKQAJhduQvPQp5t4kVdiFU=;
+        b=W6b8Ccy7k1ny3HAK3c/eh25K68PuWo7A0eZgCDrc9ebgvJsximAog2iJab8IUJ2BZ2
+         ZsMv461dpVB6zX0uOrjnSFaRRi6SNfHELMkfV7PZa3SSNnzYfF4PmtJHI/z5csjtGAHJ
+         X/Qzwf12K3Hv07ENr/NJ99MadL6kGtFob38TkvAEspmT/v7UbobkA2MVpqM1WrNUIdd+
+         caQGesyz6yOSdS4CdoyUKHpSlNIuisvEaT06utR6Vg7OgNFDgv2Ula5Pibrp+7bxLVVu
+         xpJ5P3ncUUgmRn95lszF3HH1YBjdsc8ySFl9Bu7RBr5JRt6Ugyj5Hl1Ux4M3vR2x77nW
+         pSQA==
+X-Gm-Message-State: AJIora8a/SWPru8xt7ei5bqD/1+KXlRirYKKA6HHjDFXuUEguNpoC7Ve
+        aVuesdYiGkbHNjJJtOhwHcCuEygUNGzISk9MTJ66tSWuYngNlTvUh05uHbZa/dR1LmYUHbtaJYr
+        7eXQ6WQMK+XO5hBXUw/72
+X-Received: by 2002:a5d:5888:0:b0:217:fffd:6aae with SMTP id n8-20020a5d5888000000b00217fffd6aaemr1048200wrf.330.1655144262361;
+        Mon, 13 Jun 2022 11:17:42 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tp9ncPvOt7Y13/zNoeRC0TC4NujogoolYUDyUUEVuG1KDdBvNRsFOAEBVTpKybMh0EllQpqA==
+X-Received: by 2002:a5d:5888:0:b0:217:fffd:6aae with SMTP id n8-20020a5d5888000000b00217fffd6aaemr1048183wrf.330.1655144262045;
+        Mon, 13 Jun 2022 11:17:42 -0700 (PDT)
 Received: from [192.168.1.129] (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id b12-20020a05600010cc00b0020c5253d90asm9201616wrx.86.2022.06.13.10.41.26
+        by smtp.gmail.com with ESMTPSA id a21-20020a05600c069500b0039c54bb28f2sm9945877wmn.36.2022.06.13.11.17.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jun 2022 10:41:27 -0700 (PDT)
-Message-ID: <8cbfcc29-bc31-9bc8-2eaa-d873f7cf2d5f@redhat.com>
-Date:   Mon, 13 Jun 2022 19:41:25 +0200
+        Mon, 13 Jun 2022 11:17:41 -0700 (PDT)
+Message-ID: <71492744-faf9-3e73-4a32-cb62968b0324@redhat.com>
+Date:   Mon, 13 Jun 2022 20:17:40 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
 Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
 Content-Language: en-US
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        Dominik Kierner <dkierner@dh-electronics.com>
+To:     Dominik Kierner <dkierner@dh-electronics.com>
 Cc:     "airlied@linux.ie" <airlied@linux.ie>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
         "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "geert@linux-m68k.org" <geert@linux-m68k.org>,
@@ -80,9 +80,8 @@ Cc:     "airlied@linux.ie" <airlied@linux.ie>,
         "tzimmermann@suse.de" <tzimmermann@suse.de>,
         "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
 References: <7a78d57342754a5d9bd3ce7c7bf3fa47@dh-electronics.com>
- <YqdZN6mtEDF2CRtS@smile.fi.intel.com>
 From:   Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <YqdZN6mtEDF2CRtS@smile.fi.intel.com>
+In-Reply-To: <7a78d57342754a5d9bd3ce7c7bf3fa47@dh-electronics.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -95,30 +94,147 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 6/13/22 17:35, andriy.shevchenko@linux.intel.com wrote:
-> On Mon, Jun 13, 2022 at 11:39:30AM +0000, Dominik Kierner wrote:
->> On 5/25/2022 21:46, Javier Martinez Canillas wrote:
-> 
-> ...
-> 
->>> Thanks, I looked at the code briefly and think that there are things there that we
->>> could use. I.e the 3-wire SPI support that's in panel-solomon-ssd130x-spi-3wire.c.
+Hello Dominik,
+
+On 6/13/22 13:39, Dominik Kierner wrote:
+
+Removed the regmap part since Andy already commented and I agree with him.
+
+>>> Splitting in VCC/VBAT and VDD and enforcing their presence is of
+>>> course compatibility breaking.
+>>>
+>>> https://github.com/dh-electronics/panel-solomon-ssd130x-draft/blob/drm
+>>> -ssd130x/drivers/gpu/drm/panel/panel-solomon-ssd130x.h#L85
+>>> https://github.com/dh-electronics/panel-solomon-ssd130x-draft/blob/drm
+>>> -ssd130x/drivers/gpu/drm/panel/panel-solomon-ssd130x.c#L80
+>>>
 >>
->> When writing my driver code, I wasn't even considering using regmaps,
->> like You did in Your I2C-Code. If that's applicable for 3-wire-SPI,
->> it would likely be the better, more generic option. Your SPI-code
->> reuses these parts to some extent. For that case,
->> ssd130x_spi_regmap_config.reg_bits would need be changed to 1,
->> as the "register address" has a length of 1 bit and we are sending
->> 9 bits over the line and not 16.
->> Since we still have 2 bytes of host memory,
->> it should still be compatible with the 4-wire write, right?
->> Or would 3-wire SPI require a second regmap?
+>> It is a break in the DT binding indeed but on the other hand it seems that the
+>> regulator story is lacking in the current solomon,ssd1307fb.yaml anyways.
+>>
+>> That is, the binding schema only mentions a "vbat-supply" but the DRM driver is not
+>> looking for that but instead for "vcc-supply" (I think that was changed due some
+>> feedback I got on some revisions, but didn't update the DT binding). The fbdev
+>> drivers/video/fbdev/ssd1307fb.c driver does lookup "vbat-supply" but all the DTS and
+>> DTS overlays I find don't set one.
+>>
+>> Also the "vbat-supply" is not a required property in the current binding. One thing to
+>> notice is that regulator_get() and regulator_get_optional() semantics are confusing
+>> (at least for me). Since doesn't mean whether the regulator must be present or not
+>> but rather if a dummy regulator must be provided if a supply is not found.
 > 
-> I believe the cleanest solution is to have different regmap configurations.
+> I always understood regulator_get_optional() as a way of not having to rely on a dummy,
+> when a regulator is not present, but please correct me, if I am wrong on this.
+> The dummies would only be necessary for the mandatory supplies VCC and VDD. 
 > 
 
-I agree with this.
+Yes, that's what I tried to say. That's regulator_get() and not _optional()
+the function that will provide a dummy regulator if isn't physically present:
+
+https://elixir.bootlin.com/linux/latest/source/drivers/regulator/core.c#L2067
+
+> You mean this part of the documentation of regulator_get_optional(), correct?:
+> 
+>> * This is intended for use by consumers for devices which can have
+>> * some supplies unconnected in normal use, such as some MMC devices.
+>> * It can allow the regulator core to provide stub supplies for other
+>> * supplies requested using normal regulator_get() calls without
+>> * disrupting the operation of drivers that can handle absent
+>> * supplies.
+>
+> 
+>> In other words, I don't think that any of these supplies should be made required in
+>> the DT binding but just leave the current "vbat-supply" and add properties for "vcc-
+>> supply" and explain the relationship between these and just make the logic in the
+>> driver to override struct ssd130x_deviceinfo .need_chargepump if are present.
+> 
+> My idea was to require these supplies, so that the binding correctly
+> reflects the manuals. Driving supply VCC and logic supply VDD, are
+> present throughout the SSD130x family. Only the VBAT supply is an
+> optional SSD1306 specific and would therefore use an optional
+> regulator.
+> 
+> The only other device specific supply is the SSD1305's VDDIO supply,
+> which is mandatory and seems to be commonly connected to VDD,
+> so including that is likely unnecessary.
+> I Just wanted to mention it for completeness.
+> 
+> If the device isn't controllable by Linux, a dummy would be connected
+> instead, just like the dummy regulator documentation states:
+> 
+>> * This is useful for systems with mixed controllable and
+>> * non-controllable regulators, as well as for allowing testing on
+>> * systems with no controllable regulators.
+> 
+> Which would be the case, with the SSD130x controllers.
+> Sometimes they are connected to external, non-controllable regulators.
+> 
+> I figured that the kernel developers might be more open to a compatibility
+> breaking change, under the circumstance, that this is more or less a new
+> driver for DRM, that it provides atomic charge pump configuration for the
+> SSD1306 and that some (embedded) user space software might need to be
+> rewritten to accommodate for the transition from fbdev to DRM anyway.
+> But I might be wrong on this.
+> 
+
+So for example when you just use a voltage rail in let's say a board pin header
+then you will need to define supply nodes with compatible = "regulator-fixed" ?
+
+That is indeed more accurate from a hardware description point of view but I'm
+not convinced that this is something worth to break DT backward compatibility.
+
+You also mentioned (IIUC) that the regulators could be made optional and their
+presence be used as an indication that an atomic charge pump configuration can
+be made instead of using the current ssd130x->display_settings.use_charge_pump.
+
+I think that would prefer that the latter option, but will let others to chime
+in since maybe I'm not correct on the preferred approach.
+
+> 
+>>> # Static or Dynamic Configuration for SPI-Modes 3-Wire and 4-Wire
+>>>
+>>> For the SPI-protocol drivers I see two possible approaches:
+>>> * Dynamic configuration by determining the presence/absence of the
+>>>   D/C-GPIO and assigning the functions accordingly.
+>>>   This way a single driver file for both SPI modes could be sufficient.
+>>> * Static configuration by using the device-tree names
+>>>   (ssd130x-spi-3wire/-4wire) to differentiate between the SPI protocol
+>>>   drivers.
+>>>   This would obviously necessitate two drivers files.
+>>>
+>>> Which one do you think would be the best approach for this?
+>>>
+>>
+>> I think that prefer the first approach. As mentioned the staging driver has a
+>> "buswidth" property but as you said we could just use the "dc-gpios" presence as
+>> indication on whether is a 4-wire or 3-wire SPI mode.
+> 
+> You are correct, I do prefer the first approach.
+> It would cut the additional file and code required for the second
+> approach and eliminate an additional device tree name,
+> that would have been necessary otherwise.
+>
+
+Great that we are on the same page here.
+
+> 
+>>> What is Your opinion on using drm_panel for Your driver?
+>>>
+>>
+>> I can't remember exactly why I decided to stop using drm_panel, but I think that
+>> was because struct drm_panel doesn't have a DRM device and so couldn't use any of
+>> the helper functions that needed one?
+> 
+> I likely hit the same roadblock.
+> I would say, this approach should be revisited, when appropriate
+> helpers for this approach exist, as it would further clean up and
+> generify the ssd130x device configuration.
+>
+
+It's unlikely that drm_panel will get a drm_device since that was the case
+but was changed by commit aa6c43644bc5 ("drm/panel: drop drm_device from
+drm_panel"). But yes, I agree that we could revisit if there are helpers in
+the future to manage a backlight device that is handled by a DRM driver.
 
 -- 
 Best regards,
