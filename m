@@ -2,94 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5AF5492E4
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jun 2022 18:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15037549BBB
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Jun 2022 20:39:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345091AbiFMPRf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 13 Jun 2022 11:17:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37476 "EHLO
+        id S243243AbiFMSjE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 13 Jun 2022 14:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1387598AbiFMPPM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Jun 2022 11:15:12 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908BF12088B;
-        Mon, 13 Jun 2022 05:33:32 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id s12so10903814ejx.3;
-        Mon, 13 Jun 2022 05:33:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=VD9AusQPhhsv19ZmDVVBkmiyTKW+gPW1C2iR/TqV7/0=;
-        b=JZ6X4CGWWDBszUZ2NwNsM/JYojtlM1KcmH82DN3FVl/69G92+oG5fclDS3btw4+lSI
-         LwERbGexHq/RDZf/i4sBGW/rIElyWn8Oz3PkD29Y4GwWJsy4H1Sdsy7UfGoL8naaKU4+
-         +8SvZ84keSSSu/Y/9C1ARkwEv7T738bPkLlfLK/Fvzfyg5fEJXbMP+33uC9OPq4KgcRk
-         4V2bTougmnYBIwsbs3parJK07RlBy7rwedbOMsAQf99byX7JEutvjGqiVBDwXbNV8/Eg
-         jhWdJsGkv3Ca1Czv3gUXGZn5nd5+GlA0adEBBlxrejZ5x33evj8P59dV3Eb3gWPY0YCs
-         RWfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VD9AusQPhhsv19ZmDVVBkmiyTKW+gPW1C2iR/TqV7/0=;
-        b=nDBuV62CEf7MoUCuDl0uSiGy00eB/+YlTEnOm9DQIR6jWrfFSV0XPWCr80OMNLC13r
-         BoCsNRhRGb8dEXgVyAPAOyHr/fRY1m4Kc28xy8kG1EB01dgxPnFKheTk1ZkQ5y/oibGp
-         J5xs+zQqGroWtfALAKaGGzhIRmQTJXPyYLkjcr/Hppi8QQwC1IXgaWCQpyh+q6tKrc9k
-         1S5gqxus8G7c2c+xqRDoUeBXhLJhWMaZ4Ee1oWy8NSRJCa1bDOfW6sxsK1ElXMHWQEv8
-         iAugY2AUD24Dr6UDIhKAPVTj4Fsf/N4+uyb7OgC9ykujE74uyQ+Lxx1SdD1efH+J80GD
-         CDWw==
-X-Gm-Message-State: AOAM531BzPKbI6FBbT9/65exDH+aQGTQWPLfaTJUgVjkfR3VjT2DqfDD
-        flmOF6zL8AVmU9VOTaxgX8c=
-X-Google-Smtp-Source: ABdhPJw+RBhp5AwXRhr0zcDILCY+/pwvYIjbhjLDFxY3Qpacux2pQUqlC+Xrr++nZCJw0+2YDJ/vjQ==
-X-Received: by 2002:a17:906:b788:b0:711:fc54:e55e with SMTP id dt8-20020a170906b78800b00711fc54e55emr22200025ejb.270.1655123610787;
-        Mon, 13 Jun 2022 05:33:30 -0700 (PDT)
-Received: from felia.fritz.box (200116b8260df50011e978c0f780de03.dip.versatel-1u1.de. [2001:16b8:260d:f500:11e9:78c0:f780:de03])
-        by smtp.gmail.com with ESMTPSA id p14-20020a170906a00e00b007101f6f0720sm3782221ejy.120.2022.06.13.05.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 05:33:30 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: add include/dt-bindings/pwm to PWM SUBSYSTEM
-Date:   Mon, 13 Jun 2022 14:33:19 +0200
-Message-Id: <20220613123319.22964-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1343761AbiFMSiY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Jun 2022 14:38:24 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5BD37A1A;
+        Mon, 13 Jun 2022 08:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655134529; x=1686670529;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VaArXUZWlGkR+Rg5TxqlTrvxLQWmF66TsY0IDaHvDJU=;
+  b=i7tyoT18uRl6ySPsqGZst7te157jclRIvZKMGTMh1TS4sZZrECxYpygY
+   +ZXwA7kT+ctDiUX3sPHxLJzo259MFPlaY7UFHQA28Eg2YwkgAi38LeTYw
+   O80v9068dP90hPDwDiv2vCA6HdKM3kMNigzjYk88JuQ84TR3QKoTe3CB3
+   QpLVcOF9VNnGVOCF66TFwcFZEqMspgH8ZVk552FaY8+mogb2/x7JEeq7x
+   3TbF/MlwTzX36pYfC6/t2jhLGMZOYKaVr8KXO2wUVr1VRG5YP8NB7Tsyy
+   zfCnuMmlh/JaHpckjv+PNulW9M6nczdRNyhkevR1bw7WODy0CB2Fr1gq9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="261357223"
+X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
+   d="scan'208";a="261357223"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 08:35:28 -0700
+X-IronPort-AV: E=Sophos;i="5.91,297,1647327600"; 
+   d="scan'208";a="582283738"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2022 08:35:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1o0m64-000b8T-6V;
+        Mon, 13 Jun 2022 18:35:20 +0300
+Date:   Mon, 13 Jun 2022 18:35:19 +0300
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     Dominik Kierner <dkierner@dh-electronics.com>
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "sam@ravnborg.org" <sam@ravnborg.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "tzimmermann@suse.de" <tzimmermann@suse.de>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
+Message-ID: <YqdZN6mtEDF2CRtS@smile.fi.intel.com>
+References: <7a78d57342754a5d9bd3ce7c7bf3fa47@dh-electronics.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a78d57342754a5d9bd3ce7c7bf3fa47@dh-electronics.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Maintainers of the directory Documentation/devicetree/bindings/pwm
-are also the maintainers of the corresponding directory
-include/dt-bindings/pwm.
+On Mon, Jun 13, 2022 at 11:39:30AM +0000, Dominik Kierner wrote:
+> On 5/25/2022 21:46, Javier Martinez Canillas wrote:
 
-Add the file entry for include/dt-bindings/pwm to the appropriate
-section in MAINTAINERS.
+...
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Thierry, Lee, please pick this MAINTAINERS addition to your section.
+> > Thanks, I looked at the code briefly and think that there are things there that we
+> > could use. I.e the 3-wire SPI support that's in panel-solomon-ssd130x-spi-3wire.c.
+> 
+> When writing my driver code, I wasn't even considering using regmaps,
+> like You did in Your I2C-Code. If that's applicable for 3-wire-SPI,
+> it would likely be the better, more generic option. Your SPI-code
+> reuses these parts to some extent. For that case,
+> ssd130x_spi_regmap_config.reg_bits would need be changed to 1,
+> as the "register address" has a length of 1 bit and we are sending
+> 9 bits over the line and not 16.
+> Since we still have 2 bytes of host memory,
+> it should still be compatible with the 4-wire write, right?
+> Or would 3-wire SPI require a second regmap?
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+I believe the cleanest solution is to have different regmap configurations.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c67cd163cbb..ec2e764a22ee 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16287,6 +16287,7 @@ F:	Documentation/driver-api/pwm.rst
- F:	drivers/gpio/gpio-mvebu.c
- F:	drivers/pwm/
- F:	drivers/video/backlight/pwm_bl.c
-+F:	include/dt-bindings/pwm/
- F:	include/linux/pwm.h
- F:	include/linux/pwm_backlight.h
- K:	pwm_(config|apply_state|ops)
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
