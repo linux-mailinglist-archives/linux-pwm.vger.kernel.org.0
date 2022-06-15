@@ -2,141 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2110754B341
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jun 2022 16:34:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A27454C263
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jun 2022 09:08:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343833AbiFNObc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Jun 2022 10:31:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52134 "EHLO
+        id S1346349AbiFOHIu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Jun 2022 03:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343827AbiFNObc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Jun 2022 10:31:32 -0400
-X-Greylist: delayed 877 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Jun 2022 07:31:28 PDT
-Received: from mx3.securetransport.de (mx3.securetransport.de [IPv6:2a01:4f8:c0c:92be::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B04693151C;
-        Tue, 14 Jun 2022 07:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
-        s=dhelectronicscom; t=1655215552;
-        bh=kZWe6Zc/bv5y1c1ZqXyxmMpzmoXjoTrNmG4TQBrLGXc=;
-        h=From:To:CC:Subject:Date:From;
-        b=Bn6KL59vtQ2XwQWrgwfpvmx+vrRJxkE38aajl1hPEdhFiqEfkWlhgnmx452oispNt
-         7CCHu+dCo5jfaDDgoRAZ0A8s2m92ta8ZXGXf8aMp6cYOBpyaz6+zX9/mCjz6Y2G/NQ
-         CThsZmMojAiGBWDGYT5rmU9utEsTfI8j3AfbomUfsCq4ESfRChN7ZvtBl8qlqx/5gb
-         bW6B3Met3wMCKUItB4UPLIRlm1+UKoWBygcfAHlZloKg6Ho1QEHMTh8Nut7xqrerL3
-         EOqKzJnjXG8FatzxDWfJLtOv6r+7VfDSgt0BGgOpECnBsnuEw0NFXsXzFT272JDMT8
-         5cfDLXHZ+IS1A==
-X-secureTransport-forwarded: yes
-From:   Dominik Kierner <dkierner@dh-electronics.com>
-Complaints-To: abuse@cubewerk.de
-To:     Javier Martinez Canillas <javierm@redhat.com>
-CC:     "airlied@linux.ie" <airlied@linux.ie>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "tzimmermann@suse.de" <tzimmermann@suse.de>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
-Thread-Topic: [PATCH v6 3/6] drm: Add driver for Solomon SSD130x OLED displays
-Thread-Index: Adh/98yd/bFLOXDpTTiVpWIDbnNb5w==
-Date:   Tue, 14 Jun 2022 14:05:36 +0000
-Message-ID: <4dfc32123d1d4e38ae1afdd3f33109a9@dh-electronics.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S1343619AbiFOHId (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jun 2022 03:08:33 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5A5286D2;
+        Wed, 15 Jun 2022 00:08:32 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id r123-20020a1c2b81000000b0039c1439c33cso585327wmr.5;
+        Wed, 15 Jun 2022 00:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xLemtYN4NjZkALXs/YgJEqQjUNQmyKqkJvuZKJ4dSUA=;
+        b=TPvS/VbcNq+6Ypae95gBaHJ4vzgFNq9zVh1oqgug4WGPkNezDU71whbmowt+brLCQD
+         gBEOaPbE030U+bmS+tEvLrSPkT3QMhAHAEASiu/LciN7x3KdX9JsiZXGgurBxxuMe/DE
+         90/kuxnFrVy2K4reY3E0U5uC2f1U+jTOY6YcOCPrkVzCaFI1IicfRahkp+ca4jsEzBmY
+         g35v8qmnAm2BXeGxeWOHqPDbOpJGob11qV24Wk1pNX1Bkug+Pn28nbHMnZQ/riHesrh8
+         QjbUGgsK7Sws76W9+ZzQeSfiX7C8o0dczUKITjvKKd5gIsRQA7ActBYJQI4iaUWstWKj
+         mx9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xLemtYN4NjZkALXs/YgJEqQjUNQmyKqkJvuZKJ4dSUA=;
+        b=vXrsPhLimTf4hIC6t5SToBn769mJn/Nih/XVXorEyYVwHNY3fd9PHklP2Ft4au8Csf
+         XxyXHaUwNBJFi83DmLLSMvXyRlprp1iNzCsHPvRqHt0gtkd+z82sJ7GU86XgxZ6H9TcC
+         MM7PEL4FYlr8YiB3JbtEWr45wdx6xExrWmDfieym+vq9xuoJCHymSl3yPPtJOx4STWPz
+         /9G6zs95Nb9FJ6F3E8c7fkLeCCw8/4XGwSQVDLQASZbIj7zfeh3N1419sB6RMAzxUPxG
+         s9A7QiO6it3pgsOgC+3vNuBtnO8/Tf6MTL7Hqm0X9Tckfi7Qij654MdcXM9xN9OkXZTY
+         gc1Q==
+X-Gm-Message-State: AOAM531NI5S/wSvJgWUfiU77NFehipN4ydrxSycrHI/EgssNBXWLiNNT
+        gK5S35/Fk1I8q8IozCM3BWgQbMrSVGM=
+X-Google-Smtp-Source: ABdhPJwNiuycHQju8APe07AfqZFN0zr3QM0A1FSN64O19b05aJ62C/MzuRo6CLKYkDw4Bd4pey9ofg==
+X-Received: by 2002:a7b:c7c3:0:b0:398:934f:a415 with SMTP id z3-20020a7bc7c3000000b00398934fa415mr8371171wmk.27.1655276910397;
+        Wed, 15 Jun 2022 00:08:30 -0700 (PDT)
+Received: from debby ([2a01:e0a:a6d:a8d0:7ff4:8f61:5574:9f95])
+        by smtp.gmail.com with ESMTPSA id e12-20020adfa44c000000b0020fee88d0f2sm17160103wra.0.2022.06.15.00.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 00:08:29 -0700 (PDT)
+From:   Romain Perier <romain.perier@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Add PWM for MStar SoCs
+Date:   Wed, 15 Jun 2022 09:08:08 +0200
+Message-Id: <20220615070813.7720-1-romain.perier@gmail.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Javier
+This patches series adds a new driver for the PWM found in the Mstar
+MSC313e SoCs and newer. It adds a basic pwm driver, the corresponding
+devicetree bindings and its documentation.
 
-On 6/14/22 13:39, Javier Martinez Canillas wrote:
+Daniel Palmer (1):
+  pwm: Add support for the MSTAR MSC313 PWM
 
-> > I always understood regulator_get_optional() as a way of not having to =
-rely on a dummy,
-> > when a regulator is not present, but please correct me, if I am wrong o=
-n this.
-> > The dummies would only be necessary for the mandatory supplies VCC and =
-VDD.
-> >
->=20
-> Yes, that's what I tried to say. That's regulator_get() and not _optional=
-()
-> the function that will provide a dummy regulator if isn't physically pres=
-ent:
->=20
-> https://elixir.bootlin.com/linux/latest/source/drivers/regulator/core.c#L=
-2067
->=20
-> > You mean this part of the documentation of regulator_get_optional(), co=
-rrect?:
-> >
-> >> * This is intended for use by consumers for devices which can have
-> >> * some supplies unconnected in normal use, such as some MMC devices.
-> >> * It can allow the regulator core to provide stub supplies for other
-> >> * supplies requested using normal regulator_get() calls without
-> >> * disrupting the operation of drivers that can handle absent
-> >> * supplies.
-> >
-> >
-> So for example when you just use a voltage rail in let's say a board pin =
-header
-> then you will need to define supply nodes with compatible =3D "regulator-
-> fixed" ?
+Romain Perier (4):
+  dt-bindings: pwm: Add Mstar MSC313e PWM devicetree bindings
+    documentation
+  ARM: dts: mstar: Add pwm device node to infinity
+  ARM: dts: mstar: Add pwm device node to infinity3
+  ARM: dts: mstar: Add pwm device node to infinity2m
 
-Exactly.
+ .../bindings/pwm/mstar,msc313e-pwm.yaml       |  47 ++++
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/mstar-infinity.dtsi         |  10 +
+ arch/arm/boot/dts/mstar-infinity2m.dtsi       |   8 +
+ arch/arm/boot/dts/mstar-infinity3.dtsi        |  10 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-msc313e.c                     | 242 ++++++++++++++++++
+ 8 files changed, 329 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-msc313e.c
 
-> That is indeed more accurate from a hardware description point of view bu=
-t I'm
-> not convinced that this is something worth to break DT backward compatibi=
-lity.
-
-> You also mentioned (IIUC) that the regulators could be made optional and =
-their
-> presence be used as an indication that an atomic charge pump configuratio=
-n can
-> be made instead of using the current ssd130x->display_settings.use_charge=
-_pump.
->=20
-> I think that would prefer that the latter option, but will let others to =
-chime
-> in since maybe I'm not correct on the preferred approach.
-
-Yes, here the reference for the former approach:
-Chapter 2 "Charge Pump Regulator" on Page 62 of the SSD1306 datasheet:
-https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
-
-Just a TL;DR of the former approach for easier discussion:
-The logic supply VDD would always be mandatory.
-The low voltage supply VBAT would be optional and probed first.
-If found, it would supersede the "high" voltage driving supply VCC and
-the charge pump would be enabled. If VBAT is not found, then VCC is
-mandatory and the charge pump will not be enabled.
-
-
---
-Best regards
-
-Dominik Kierner
-Research & Development
-DH electronics
+-- 
+2.35.1
 
