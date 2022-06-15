@@ -2,104 +2,146 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F75554C25F
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jun 2022 09:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FEEC54C295
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jun 2022 09:25:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346300AbiFOHIt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Jun 2022 03:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
+        id S239654AbiFOHZM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Jun 2022 03:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345944AbiFOHIi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jun 2022 03:08:38 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18ED92937A;
-        Wed, 15 Jun 2022 00:08:36 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id q15so5797397wmj.2;
-        Wed, 15 Jun 2022 00:08:36 -0700 (PDT)
+        with ESMTP id S236504AbiFOHZL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jun 2022 03:25:11 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129A64704F
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Jun 2022 00:25:10 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id p6-20020a05600c1d8600b0039c630b8d96so1611692wms.1
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Jun 2022 00:25:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XhHHfhBS4JEZS5T4Cqsky8UODYiFkR3zFwNbdfWOgRM=;
-        b=B3CYB6Nl2KGF+oCOFeUR6gZzBF3a3b32bAom3UR9EAoLMEnX+yxruYjwcNyBnMBYkl
-         Dk9BQ01Wzx7JQFlgvVgUTMRUSac8nLBg3mCEVa9T7qiJijaj7dlNeik5AC5x9NSD2ggd
-         KWYDvbjRazPZ3QxQnCG0Ep6zIUM7F8LSdT5qo3J/B8bdJvx07PY3wZlwtePuDNpIXHry
-         AVqwQKpUvEv7KscMM8dojQH/4hQoa0FJx4gF9vfm/LMOS+v1EpZwLwPRkZ6u2WyQFRvG
-         /lDDxNO88QNANusB4C1VCw6pGFEV0gCvpHwAzbxygUE7zrSsmKWlbfSoYR2Ipo0/Wydf
-         czww==
+        d=conchuod.ie; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=NGo4rRV+VZvdT0hcJzW6pnymtoNuY20VyL3BfwK+vsQ=;
+        b=PPDREC5zr0fQXQ7G6MaJZgrNi8eSCMpiZLg0TLXmzGOZkcQ5lnGffm023x8RCrxWnm
+         0RHnRsCqEQzwRyNVN+EB6znWpMbNwxPeK4kIENpN1ToeaJOJtChy43E4gtApGwIt1YuI
+         xISMw3GYeul6bBNJp0m8wvNTxY8bjsBTz6OHqjPv0UGy1Y/r/Xzp1XCeOuE8k5LlY2XI
+         GBC3UFDN9aI+z1txwK0jrMlSQnOLOJUJqbTHRgybPZKzFfSI/ygaSlIhzbi4y4+NLHfV
+         YxvcwyVon3TauHB+J6R0ejkDHVM7UNHoeQR1Jat8mgf7qHjLK5BzGB4rs9X4dkDbQZm+
+         bK5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XhHHfhBS4JEZS5T4Cqsky8UODYiFkR3zFwNbdfWOgRM=;
-        b=7CGjM8W+htJGrOKACeV2f0ytq05EoI5kR81ZM4hvVz+bvBx7qTSDv0vNPNSPQ7AdLW
-         cfYH/DpCGE70DDRsM2VqpChBi5sNEf/x+0ETh96Q87bVf2Zaoh7cmYxhNCDRogZY1XyJ
-         axR1Y/EC667eEvW6grTB7RErw+tux7EOJm0kBBPexoY+Ac6Oe2rB4ma0Ufr1Xc1KSlOA
-         ukOdYVQnlwvZUHvCi8sawU5DHjwKMpzKaWcPKfvyxied2ji3KHOGPhCBYoQh3TNOWfsT
-         NVPn+ke9sUKorbHzxj1GXz1rziPA8raFpfNKX2A30IOCe6ihOCz3cL3nsd3zdp4sfi6c
-         44gQ==
-X-Gm-Message-State: AOAM532VJlZhoPzGRtMaC621lfMrwxeD/0LahkqfQvqugROstzD30hPK
-        fENpHnjGd2sTcktL3hRFnDJAxXo+liY=
-X-Google-Smtp-Source: ABdhPJx4NWtb3vWFFFfgrtFkg5c3A3KxJh3ThnO9v7JUj7JFhsIT9FFGr1tDDi/+cINTfg5V5a/R7Q==
-X-Received: by 2002:a7b:ce87:0:b0:39c:5509:660c with SMTP id q7-20020a7bce87000000b0039c5509660cmr8103989wmj.163.1655276915130;
-        Wed, 15 Jun 2022 00:08:35 -0700 (PDT)
-Received: from debby ([2a01:e0a:a6d:a8d0:7ff4:8f61:5574:9f95])
-        by smtp.gmail.com with ESMTPSA id n10-20020a056000170a00b00219fb3a275csm12058044wrc.16.2022.06.15.00.08.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 00:08:34 -0700 (PDT)
-From:   Romain Perier <romain.perier@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=NGo4rRV+VZvdT0hcJzW6pnymtoNuY20VyL3BfwK+vsQ=;
+        b=oNDlrjszK9mJ5sJ6omeT7BuzHr2nAGMXBlmghIJWxWskSJAHXa32Bl1QrHhiBIx9WY
+         Uf8Hi2P+GUPLbfsfRvbTVxKyZ7wAItuVZwsJkxPMlPt2SG26gMkuZIp18NwPLZJuz/hv
+         XjrKopuGQWxkrNOSDJILF3Ez8UON5EbGyqe9b3L1BzOFvvn7lLbGwTjH8aUyWrkgs4iz
+         +RgEq3DUN9FgBEokeuw3qxScn0DHoyl/Q/usPwhTtNJi9eHOcCoIL0xEe2lyp0sNrs/A
+         sOB3Vz/BfaMQDBZBDcdCCVRFpjfGwvFA26RhlaJA7uqYNp9EnxC7O5KbSw+oBZxk9lsm
+         aoBg==
+X-Gm-Message-State: AOAM5325kvA4q7rnhRnnvbGg+7MrcvEX11O/mF0p3Re4leBbT9R7bx0D
+        OnzhGB96qcRDGzLVak52atYu8A==
+X-Google-Smtp-Source: ABdhPJwYNKUeEBAZ4RUybATyRa6XP/R3ueVtMBVOx8BZh7j60wFKsSS2DRvlG4SBSF0xBFk6Exup1A==
+X-Received: by 2002:a7b:ce85:0:b0:39c:4b2e:fd26 with SMTP id q5-20020a7bce85000000b0039c4b2efd26mr8388758wmj.114.1655277908515;
+        Wed, 15 Jun 2022 00:25:08 -0700 (PDT)
+Received: from [10.205.160.53] ([95.83.233.54])
+        by smtp.gmail.com with ESMTPSA id k11-20020a056000004b00b0020d02262664sm13919956wrx.25.2022.06.15.00.25.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jun 2022 00:25:07 -0700 (PDT)
+Message-ID: <8293b455-1150-edb5-9005-fda4f2d2971b@conchuod.ie>
+Date:   Wed, 15 Jun 2022 08:23:34 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 1/5] dt-bindings: pwm: Add Mstar MSC313e PWM devicetree
+ bindings documentation
+Content-Language: en-US
+To:     Romain Perier <romain.perier@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Daniel Palmer <daniel@0x0f.com>,
-        Romain Perier <romain.perier@gmail.com>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] ARM: dts: mstar: Add pwm device node to infinity2m
-Date:   Wed, 15 Jun 2022 09:08:13 +0200
-Message-Id: <20220615070813.7720-6-romain.perier@gmail.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220615070813.7720-1-romain.perier@gmail.com>
 References: <20220615070813.7720-1-romain.perier@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+ <20220615070813.7720-2-romain.perier@gmail.com>
+From:   Conor Dooley <mail@conchuod.ie>
+In-Reply-To: <20220615070813.7720-2-romain.perier@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This adds definition of the pwm device node, infinity2m has its own
-hardware variant, so use the one for ssd20xd.
+On 15/06/2022 08:08, Romain Perier wrote:
+> This adds the documentation for the devicetree bindings of the Mstar
+> MSC313e RTC driver, it includes MSC313e SoCs and SSD20xd.
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
----
- arch/arm/boot/dts/mstar-infinity2m.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+I figure the RTC is a copy paste error?
 
-diff --git a/arch/arm/boot/dts/mstar-infinity2m.dtsi b/arch/arm/boot/dts/mstar-infinity2m.dtsi
-index 1b485efd7156..70561e512483 100644
---- a/arch/arm/boot/dts/mstar-infinity2m.dtsi
-+++ b/arch/arm/boot/dts/mstar-infinity2m.dtsi
-@@ -32,6 +32,14 @@ cpu1: cpu@1 {
- };
- 
- &riu {
-+	pwm: pwm@3400 {
-+		compatible = "mstar,ssd20xd-pwm";
-+		reg = <0x3400 0x400>;
-+		#pwm-cells = <2>;
-+		clocks = <&xtal_div2>;
-+		status = "disabled";
-+	};
-+
- 	smpctrl: smpctrl@204000 {
- 		reg = <0x204000 0x200>;
- 		status = "disabled";
--- 
-2.35.1
-
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> ---
+>   .../bindings/pwm/mstar,msc313e-pwm.yaml       | 47 +++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml b/Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml
+> new file mode 100644
+> index 000000000000..82f2357db085
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/mstar,msc313e-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Mstar MSC313e PWM controller
+> +
+> +allOf:
+> +  - $ref: "pwm.yaml#"
+> +
+> +maintainers:
+> +  - Daniel Palmer <daniel@0x0f.com>
+> +  - Romain Perier <romain.perier@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +          - mstar,msc313e-pwm
+> +          - mstar,ssd20xd-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwm: pwm@3400 {
+> +      compatible = "mstar,msc313e-pwm";
+> +      reg = <0x3400 0x400>;
+> +      #pwm-cells = <2>;
+> +      clocks = <&xtal_div2>;
+> +    };
