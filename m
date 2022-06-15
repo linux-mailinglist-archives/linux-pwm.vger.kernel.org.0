@@ -2,58 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 611F954C991
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jun 2022 15:16:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B56754D16D
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jun 2022 21:14:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348671AbiFONQK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Jun 2022 09:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52592 "EHLO
+        id S1348904AbiFOTOa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Jun 2022 15:14:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348856AbiFONQH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jun 2022 09:16:07 -0400
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB78B2E096;
-        Wed, 15 Jun 2022 06:16:04 -0700 (PDT)
-Received: by mail-il1-f178.google.com with SMTP id d6so8728417ilm.4;
-        Wed, 15 Jun 2022 06:16:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=8C80sIX/zds/z0xyweVsBMgV7P8Pift98ShjLgz5ZwQ=;
-        b=0iO9xBfkS60awmBiiU63PXTb86zX0eTAEBWBPpXsTeofnnaYPumY1x+xyl78Nr2pBT
-         e12mYeRqVfnOYtWh1YtuwYtckIObiEk2zZWrOFNF1RKjj7kviTn5ee5dqgzgi7YvELup
-         6SdCemA2W6PANsAJ2E8egUoXFl1yNOoa9a0k2pJvNrIijRbCrVR5jDhInUWWY5tCEzIV
-         fIXJhNOH/HnpOegF+Wvp2Fg4byBPVDUubeaFisEjEGZXuCtNsod6t3ipVJgi//rradiz
-         yvsMi10lSrlVkL9L4FVDDivXNVZw1T/WqFKquONI63DVhwJlniAQTXw56chHZ55KJA+F
-         jsLA==
-X-Gm-Message-State: AJIora9CWAD4r7Hpaww1Ri1rWcbVwg+s4Vj5cACdpui5cIqI9DviJkw1
-        EWDtLq6+w7YiussBYtNcCv22ufCmuA==
-X-Google-Smtp-Source: AGRyM1uZ9utNL5h2kFhjalsMtkLLXkoWdL+p72Vo2Z4lpjk/ny0uIeL/R8e97UqCCB1L4EDdFORe3A==
-X-Received: by 2002:a05:6e02:1c02:b0:2d3:ccfe:6551 with SMTP id l2-20020a056e021c0200b002d3ccfe6551mr6203007ilh.134.1655298964054;
-        Wed, 15 Jun 2022 06:16:04 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id z6-20020a023446000000b0033214fb0061sm6121054jaz.23.2022.06.15.06.16.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 06:16:03 -0700 (PDT)
-Received: (nullmailer pid 662450 invoked by uid 1000);
-        Wed, 15 Jun 2022 13:16:02 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Romain Perier <romain.perier@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Daniel Palmer <daniel@0x0f.com>
-In-Reply-To: <20220615070813.7720-2-romain.perier@gmail.com>
-References: <20220615070813.7720-1-romain.perier@gmail.com> <20220615070813.7720-2-romain.perier@gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: pwm: Add Mstar MSC313e PWM devicetree bindings documentation
-Date:   Wed, 15 Jun 2022 07:16:02 -0600
-Message-Id: <1655298962.395709.662448.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S1346482AbiFOTOa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Jun 2022 15:14:30 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AFC2717E;
+        Wed, 15 Jun 2022 12:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655320469; x=1686856469;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NhJp3BBzKkSAhPSokH+1OsWLVBR4UOySK6LdL2s0mZE=;
+  b=cMXinJrEJN27++lHyA1YqpSCVBK+Vhrj9chtAWfkqP70FRy5MoVLwUEN
+   H4kklczd3R95qRBISQFdafBX0VCgiMbvbZeRr8Ax38OUvJ4xdGdFWMpm6
+   jmGmMRpa2VzIxFhJWWCI/dN8Cl1FRC7TTT+ttgkDy+j/mgVUoC7Pjd/fg
+   +Buo+EgG36+wOmZg8ttZxJmb8Gt2yb35MpuKmbo859wQEDKBRfIgKozoH
+   Au5zA6JGnFwHSaeMR2/TY3pVXVdxxXFKsPkFjqEe3NYu3yZopDLJteuA6
+   lL37OCKd3uEqCx19VQsObn0qj7WI7TheCw2VsWrhRfi7pfHTfKVTrOMfb
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10379"; a="280116118"
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="280116118"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2022 12:14:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,302,1647327600"; 
+   d="scan'208";a="612884393"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 15 Jun 2022 12:14:27 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o1YTC-000N7j-Nm;
+        Wed, 15 Jun 2022 19:14:26 +0000
+Date:   Thu, 16 Jun 2022 03:14:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     kbuild-all@lists.01.org,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <202206160239.6lkHbYaU-lkp@intel.com>
+References: <20220613111759.1550578-2-conor.dooley@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220613111759.1550578-2-conor.dooley@microchip.com>
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,38 +69,39 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 15 Jun 2022 09:08:09 +0200, Romain Perier wrote:
-> This adds the documentation for the devicetree bindings of the Mstar
-> MSC313e RTC driver, it includes MSC313e SoCs and SSD20xd.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> ---
->  .../bindings/pwm/mstar,msc313e-pwm.yaml       | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml
-> 
+Hi Conor,
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+I love your patch! Yet something to improve:
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml:20:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-./Documentation/devicetree/bindings/pwm/mstar,msc313e-pwm.yaml:21:11: [warning] wrong indentation: expected 12 but found 10 (indentation)
+[auto build test ERROR on thierry-reding-pwm/for-next]
+[also build test ERROR on linus/master v5.19-rc2 next-20220615]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-dtschema/dtc warnings/errors:
+url:    https://github.com/intel-lab-lkp/linux/commits/Conor-Dooley/pwm-add-microchip-soft-ip-corePWM-driver/20220613-211851
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
+config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20220616/202206160239.6lkHbYaU-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/4451a8420f9fd16ee9a0801fcf02f1ec04bb8ab0
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Conor-Dooley/pwm-add-microchip-soft-ip-corePWM-driver/20220613-211851
+        git checkout 4451a8420f9fd16ee9a0801fcf02f1ec04bb8ab0
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash
 
-doc reference errors (make refcheckdocs):
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-See https://patchwork.ozlabs.org/patch/
+All errors (new ones prefixed by >>):
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+   powerpc-linux-ld: drivers/pwm/pwm-microchip-core.o: in function `mchp_core_pwm_apply':
+>> pwm-microchip-core.c:(.text.mchp_core_pwm_apply+0x290): undefined reference to `__udivdi3'
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
