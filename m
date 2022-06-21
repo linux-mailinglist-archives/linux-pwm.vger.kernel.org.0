@@ -2,496 +2,193 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0AC8550D51
-	for <lists+linux-pwm@lfdr.de>; Sun, 19 Jun 2022 23:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 787B1552B34
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Jun 2022 08:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbiFSVgA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 19 Jun 2022 17:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
+        id S1346095AbiFUGlr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Jun 2022 02:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbiFSVf7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Jun 2022 17:35:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F2BAE5E
-        for <linux-pwm@vger.kernel.org>; Sun, 19 Jun 2022 14:35:56 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o32aC-0007hT-2I; Sun, 19 Jun 2022 23:35:48 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o32a7-001WKi-3z; Sun, 19 Jun 2022 23:35:44 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1o32a7-00HS9b-QX; Sun, 19 Jun 2022 23:35:43 +0200
-Date:   Sun, 19 Jun 2022 23:35:20 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Romain Perier <romain.perier@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] pwm: Add support for the MSTAR MSC313 PWM
-Message-ID: <20220619213520.qonqdv4e7zkvpeo7@pengutronix.de>
-References: <20220615070813.7720-1-romain.perier@gmail.com>
- <20220615070813.7720-3-romain.perier@gmail.com>
+        with ESMTP id S1346087AbiFUGlq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Jun 2022 02:41:46 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97BF18E10;
+        Mon, 20 Jun 2022 23:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1655793702; x=1687329702;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BZksM27YizkujSkjCyARUVXlm0iWUJX1Mxr22hSXOMI=;
+  b=bxT3eRp3FeqN7jvExEqpvs7xNAJ2kW3/Bnga4onYsm8ZkiYDR43oCYJW
+   zIBIWqyueT4/RbOYKPmiZKYRc7yASeJBqoGjJclv6k+/AafCdhOe0ZJNd
+   Eucofnf5X4O/SwpxMjClfJIGupbVSbhlFey7GKnNEWHRk4FnlQtbKFCTG
+   OfAqxhHr9XiFsGW0+4fJQHDg8LuLC5XtzKQMyKvGRhVxMu3c3nwxDAVh7
+   CxRlkLJ9JHflRtvDmio+J9JynsLLL8OryqAz1NQAs5f+JHu2nl7bxo/io
+   lCVMCp6sLKMUrMxWFtmlj5cU5TYvosynMpN0m8HNd3uBTXViS+GtEOSzF
+   A==;
+X-IronPort-AV: E=Sophos;i="5.92,209,1650924000"; 
+   d="scan'208";a="24563675"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 21 Jun 2022 08:41:39 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 21 Jun 2022 08:41:39 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 21 Jun 2022 08:41:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1655793699; x=1687329699;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BZksM27YizkujSkjCyARUVXlm0iWUJX1Mxr22hSXOMI=;
+  b=mRiBx1bGwW+R4sUTqpowouzwBXrFQMRlefXdXIrTLmGsyQ32wCoqqKoq
+   UVXOuKNWYz22/F5nPTWdagQxy4Y3Q/CtoEOm/LGdGWny+rW1O2LiCWzFc
+   PBRU7QqAUsBprupyuRiIRT2tM/FaR4fuPVDXhMZEiqsEnn6ah5kgp73Fv
+   BdAXR5Q4PRkD4dOpS/aTCtWFVn2JEp1mbzdJBr9xfnQTq3ROIkK31QGYd
+   wHBElqwbk2CwnVuA7mv+1f4Rv0P550xCzx04LpyzqyQVJcEFI3LwqpqTi
+   /H4IPtnWOUaJ/eGCm7qY66oYHr9+7/ZGuNHnCLcOX9J4VRhyLiKRQoWeh
+   A==;
+X-IronPort-AV: E=Sophos;i="5.92,209,1650924000"; 
+   d="scan'208";a="24563674"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 21 Jun 2022 08:41:39 +0200
+Received: from steina-w.localnet (unknown [10.123.49.12])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9CDF8280056;
+        Tue, 21 Jun 2022 08:41:39 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Markus Niebel <Markus.Niebel@ew.tq-group.com>
+Subject: Re: [PATCH v4 6/6] hwmon: pwm-fan: Remove internal duplicated pwm_state
+Date:   Tue, 21 Jun 2022 08:41:37 +0200
+Message-ID: <13043200.uLZWGnKmhe@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <aa6f8c6c-6d8f-6d23-f035-00d27e7ec0af@roeck-us.net>
+References: <20220523110513.407516-1-alexander.stein@ew.tq-group.com> <4715301.GXAFRqVoOG@steina-w> <aa6f8c6c-6d8f-6d23-f035-00d27e7ec0af@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="silqiuwepn6la4xp"
-Content-Disposition: inline
-In-Reply-To: <20220615070813.7720-3-romain.perier@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Guenter, Uwe,
 
---silqiuwepn6la4xp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-On Wed, Jun 15, 2022 at 09:08:10AM +0200, Romain Perier wrote:
-> From: Daniel Palmer <daniel@0x0f.com>
+Am Montag, 23. Mai 2022, 16:18:57 CEST schrieb Guenter Roeck:
+> On 5/23/22 06:55, Alexander Stein wrote:
+> > Hi Uwe,
+> >=20
+> > Am Montag, 23. Mai 2022, 14:46:14 CEST schrieb Uwe Kleine-K=F6nig:
+> >> * PGP Signed by an unknown key
+> >>=20
+> >> Hello,
+> >>=20
+> >> On Mon, May 23, 2022 at 01:05:13PM +0200, Alexander Stein wrote:
+> >>> Each pwm device has already a pwm_state. Use this one instead of
+> >>> managing an own copy of it.
+> >>>=20
+> >>> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> >>> ---
+> >>>=20
+> >>>   drivers/hwmon/pwm-fan.c | 49 +++++++++++++++++++++++++-------------=
+=2D--
+> >>>   1 file changed, 30 insertions(+), 19 deletions(-)
+> >>>=20
+> >>> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> >>> index e5d4b3b1cc49..e0ce81cdf5e0 100644
+> >>> --- a/drivers/hwmon/pwm-fan.c
+> >>> +++ b/drivers/hwmon/pwm-fan.c
+> >>> @@ -40,7 +40,6 @@ struct pwm_fan_ctx {
+> >>>=20
+> >>>   	struct mutex lock;
+> >>>   	struct pwm_device *pwm;
+> >>>=20
+> >>> -	struct pwm_state pwm_state;
+> >>>=20
+> >>>   	struct regulator *reg_en;
+> >>>   	enum pwm_fan_enable_mode enable_mode;
+> >>>   	bool regulator_enabled;
+> >>>=20
+> >>> @@ -142,7 +141,7 @@ static int pwm_fan_switch_power(struct pwm_fan_ctx
+> >>> *ctx, bool on)>
+> >>>=20
+> >>>   static int pwm_fan_power_on(struct pwm_fan_ctx *ctx)
+> >>>   {
+> >>>=20
+> >>> -	struct pwm_state *state =3D &ctx->pwm_state;
+> >>> +	struct pwm_state state;
+> >>>=20
+> >>>   	int ret;
+> >>>   =09
+> >>>   	if (ctx->enabled)
+> >>>=20
+> >>> @@ -154,8 +153,9 @@ static int pwm_fan_power_on(struct pwm_fan_ctx *c=
+tx)
+> >>>=20
+> >>>   		return ret;
+> >>>   =09
+> >>>   	}
+> >>>=20
+> >>> -	state->enabled =3D true;
+> >>> -	ret =3D pwm_apply_state(ctx->pwm, state);
+> >>> +	pwm_get_state(ctx->pwm, &state);
+> >>> +	state.enabled =3D true;
+> >>> +	ret =3D pwm_apply_state(ctx->pwm, &state);
+> >>>=20
+> >>>   	if (ret) {
+> >>>   =09
+> >>>   		dev_err(ctx->dev, "failed to enable PWM\n");
+> >>>   		goto disable_regulator;
+> >>=20
+> >> IMHO this isn't a net win. You trade the overhead of pwm_get_state
+> >> against some memory savings. I personally am not a big fan of the
+> >> get_state + modify + apply codeflow. The PWM framework does internal
+> >> caching of the last applied state, but the details are a bit ugly. (i.=
+e.
+> >> pwm_get_state returns the last applied state, unless there was no state
+> >> applied before. In that case it returns what .get_state returned during
+> >> request time, unless there is no .get_state callback ... not sure if t=
+he
+> >> device tree stuff somehow goes into that, didn't find it on a quick
+> >> glance)
+> >>=20
+> >> Also there is a (small) danger, that pwm_state contains something that
+> >> isn't intended by the driver, e.g. a wrong polarity. So I like the
+> >> consumer to fully specify what they intend and not use pwm_get_state().
+> >=20
+> > Ah, I see. I have no hard feelings for this patch. I just wondered why =
+the
+> > PWM state is duplicated. and wanted to get rid of it. If there is a
+> > specific reason for this, I'm ok with that.
 >=20
-> This adds support for the PWM block on the Mstar MSC313e SoCs and newer.
->=20
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> Co-developed-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> ---
->  MAINTAINERS               |   1 +
->  drivers/pwm/Kconfig       |  10 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-msc313e.c | 242 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 254 insertions(+)
->  create mode 100644 drivers/pwm/pwm-msc313e.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2316278d9db9..45d001643b93 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2389,6 +2389,7 @@ F:	arch/arm/mach-mstar/
->  F:	drivers/clk/mstar/
->  F:	drivers/clocksource/timer-msc313e.c
->  F:	drivers/gpio/gpio-msc313.c
-> +F:	drivers/pwm/pwm-msc313e.c
->  F:	drivers/rtc/rtc-msc313.c
->  F:	drivers/watchdog/msc313e_wdt.c
->  F:	include/dt-bindings/clock/mstar-*
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 904de8d61828..802573122b25 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -651,6 +651,16 @@ config PWM_VT8500
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-vt8500.
-> =20
-> +config PWM_MSC313E
-> +	tristate "MStar MSC313e PWM support"
-> +	depends on ARCH_MSTARV7 || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for MSTAR MSC313e.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-msc313e.
-> +
-> +
+> I don't see the value of continuous runtime overhead to save a few bytes =
+of
+> data, so I don't see a reason to _not_ cache the state locally. This is
+> similar to caching a clock frequency locally instead of calling the clock
+> subsystem again and again to read it. Sure, nowadays CPUs are more powerf=
+ul
+> than they used to be, but I don't see that as reason or argument for
+> wasting their power.
 
-only one empty line between entries, and also please stick to alphabetic
-ordering.
+Ok, seems reasonable. I'm fully fine with patch 6 being dropped. What about=
+=20
+the other patches?
 
->  config PWM_XILINX
->  	tristate "Xilinx AXI Timer PWM support"
->  	depends on OF_ADDRESS
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 5c08bdb817b4..e24a48c78335 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -61,4 +61,5 @@ obj-$(CONFIG_PWM_TWL)		+=3D pwm-twl.o
->  obj-$(CONFIG_PWM_TWL_LED)	+=3D pwm-twl-led.o
->  obj-$(CONFIG_PWM_VISCONTI)	+=3D pwm-visconti.o
->  obj-$(CONFIG_PWM_VT8500)	+=3D pwm-vt8500.o
-> +obj-$(CONFIG_PWM_MSC313E)	+=3D pwm-msc313e.o
->  obj-$(CONFIG_PWM_XILINX)	+=3D pwm-xilinx.o
-> diff --git a/drivers/pwm/pwm-msc313e.c b/drivers/pwm/pwm-msc313e.c
-> new file mode 100644
-> index 000000000000..f20419c6b9be
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-msc313e.c
-> @@ -0,0 +1,242 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2021 Daniel Palmer <daniel@thingy.jp>
-> + * Copyright (C) 2022 Romain Perier <romain.perier@gmail.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +#define DRIVER_NAME "msc313e-pwm"
-> +
-> +#define CHANNEL_OFFSET	0x80
-> +#define REG_DUTY	0x8
-> +#define REG_PERIOD	0x10
-> +#define REG_DIV		0x18
-> +#define REG_CTRL	0x1c
-> +#define REG_SWRST	0x1fc
-> +
-> +struct msc313e_pwm_channel {
-> +	struct regmap_field *clkdiv;
-> +	struct regmap_field *polarity;
-> +	struct regmap_field *dutyl;
-> +	struct regmap_field *dutyh;
-> +	struct regmap_field *periodl;
-> +	struct regmap_field *periodh;
-> +	struct regmap_field *swrst;
-> +};
-> +
-> +struct msc313e_pwm {
-> +	struct regmap *regmap;
-> +	struct pwm_chip pwmchip;
-> +	struct clk *clk;
-> +	struct msc313e_pwm_channel channels[];
-> +};
-> +
-> +struct msc313e_pwm_info {
-> +	unsigned int channels;
-> +};
-> +
-> +#define to_msc313e_pwm(ptr) container_of(ptr, struct msc313e_pwm, pwmchi=
-p)
-> +
-> +static const struct regmap_config msc313e_pwm_regmap_config =3D {
-> +	.reg_bits =3D 16,
-> +	.val_bits =3D 16,
-> +	.reg_stride =3D 4,
-> +};
-> +
-> +static const struct msc313e_pwm_info msc313e_data =3D {
-> +	.channels =3D 8,
-> +};
-> +
-> +static const struct msc313e_pwm_info ssd20xd_data =3D {
-> +	.channels =3D 4,
-> +};
-> +
-> +static void msc313e_pwm_writecounter(struct regmap_field *low, struct re=
-gmap_field *high, u32 value)
-> +{
-> +	regmap_field_write(low, value);
-> +	regmap_field_write(high, value >> 16);
-
-Is this racy? E.g. if the hw is running and the low register overflows
-before the high register is updated?
-
-> +}
-> +
-> +static int msc313e_pwm_config(struct pwm_chip *chip, struct pwm_device *=
-device,
-> +			      int duty_ns, int period_ns)
-> +{
-> +	struct msc313e_pwm *pwm =3D to_msc313e_pwm(chip);
-> +	struct msc313e_pwm_channel *channel =3D &pwm->channels[device->hwpwm];
-> +	unsigned long long nspertick =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, cl=
-k_get_rate(pwm->clk));
-> +	unsigned long long div =3D 1;
-> +
-> +	/* fit the period into the period register by prescaling the clk */
-> +	while (DIV_ROUND_CLOSEST_ULL(period_ns, (nspertick =3D DIV_ROUND_CLOSES=
-T_ULL(nspertick, div)))
-> +	      > 0x3ffff){
-
-Strange line breaking.
-
-Dividing by a division is inexact, also please round down, not
-round-closest.
-
-Please test your driver with PWM_DEBUG enabled, and use something like I
-proposed in
-https://lore.kernel.org/linux-pwm/20220607200755.tgsrwe4ten5inw27@pengutron=
-ix.de .
+Best regards,
+Alexander
 
 
-> +		div++;
-> +		if (div > (0xffff + 1)) {
-> +			dev_err(chip->dev, "Can't fit period into period register\n");
-> +			return -EINVAL;
-> +		}
 
-If the requested period is too big, please configure the biggest
-possible period.
-
-Also .apply() shouldn't emit error messages as this might flood the
-kernel log.
-
-> +	}
-> +
-> +	regmap_field_write(channel->clkdiv, div - 1);
-> +	msc313e_pwm_writecounter(channel->dutyl, channel->dutyh,
-> +				 DIV_ROUND_CLOSEST_ULL(duty_ns, nspertick));
-> +	msc313e_pwm_writecounter(channel->periodl, channel->periodh,
-> +				 DIV_ROUND_CLOSEST_ULL(period_ns, nspertick));
-> +
-> +	return 0;
-> +};
-> +
-> +static int msc313e_pwm_set_polarity(struct pwm_chip *chip, struct pwm_de=
-vice *device,
-> +				    enum pwm_polarity polarity)
-> +{
-> +	struct msc313e_pwm *pwm =3D to_msc313e_pwm(chip);
-> +	struct msc313e_pwm_channel *channel =3D &pwm->channels[device->hwpwm];
-> +	unsigned int pol =3D 0;
-> +
-> +	if (polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		pol =3D 1;
-> +	regmap_field_update_bits(channel->polarity, 1, pol);
-> +
-> +	return 0;
-> +}
-> +
-> +static int msc313e_pwm_enable(struct pwm_chip *chip, struct pwm_device *=
-device)
-> +{
-> +	struct msc313e_pwm *pwm =3D to_msc313e_pwm(chip);
-> +	struct msc313e_pwm_channel *channel =3D &pwm->channels[device->hwpwm];
-> +	int ret;
-> +
-> +	ret =3D clk_prepare_enable(pwm->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	regmap_field_write(channel->swrst, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static void msc313e_pwm_disable(struct pwm_chip *chip, struct pwm_device=
- *device)
-> +{
-> +	struct msc313e_pwm *pwm =3D to_msc313e_pwm(chip);
-> +	struct msc313e_pwm_channel *channel =3D &pwm->channels[device->hwpwm];
-> +
-> +	regmap_field_write(channel->swrst, 1);
-> +	clk_disable(pwm->clk);
-
-how does the hardware behave on disable? Does it emit the inactive
-level? Or 0? Or does it freeze? Or high-Z? Please document that like
-it's done e.g. in drivers/pwm/pwm-sl28cpld.c. Stick to the format used
-there. (i.e. "Limitations:" + a list of hardware properties in the
-toplevel comment.)
-
-Does setting swrst ("software reset"?) reset the other registers?
-
-> +}
-> +
-> +static int msc313e_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 const struct pwm_state *state)
-> +{
-> +	if (state->enabled) {
-> +		msc313e_pwm_enable(chip, pwm);
-> +		msc313e_pwm_set_polarity(chip, pwm, state->polarity);
-> +		msc313e_pwm_config(chip, pwm, state->duty_cycle, state->period);
-
-If you enable at the end, you might prevent a glitch. I assume the
-glitch isn't preventable in general?
-
-Is the currently running period completed when a new configuration is
-written to the registers?
-
-As msc313e_pwm_enable calls clk_prepare_enable() unconditionally, and
-it's valid to call pwm_apply several times in a row with state->enabled
-=3D true, the clk calls are not balanced.
-
-> +	} else {
-> +		msc313e_pwm_disable(chip, pwm);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static void msc313e_get_state(struct pwm_chip *chip, struct pwm_device *=
-device,
-> +			      struct pwm_state *state)
-> +{
-> +	struct msc313e_pwm *pwm =3D to_msc313e_pwm(chip);
-> +	struct msc313e_pwm_channel *channel =3D &pwm->channels[device->hwpwm];
-> +	unsigned int pol =3D 0;
-> +
-> +	regmap_field_read(channel->polarity, &pol);
-> +	state->polarity =3D pol;
-
-I'd prefer something like:
-
-state->polarity =3D pol ? PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-
-to not hardcode the values of the PWM constants in the driver.
-
-Also this is incomplete, you need to handle .duty_cycle, .period and
-=2Eenabled, too.
-
-> +}
-> +
-> +static const struct pwm_ops msc313e_pwm_ops =3D {
-> +	.config =3D msc313e_pwm_config,
-> +	.set_polarity =3D msc313e_pwm_set_polarity,
-> +	.enable =3D msc313e_pwm_enable,
-> +	.disable =3D msc313e_pwm_disable,
-
-Please drop these. If there is an apply functions, these are all unused.
-
-> +	.apply =3D msc313e_apply,
-> +	.get_state =3D msc313e_get_state,
-> +	.owner =3D THIS_MODULE
-> +};
-> +
-> +static int msc313e_pwm_probe(struct platform_device *pdev)
-> +{
-> +	const struct msc313e_pwm_info *match_data;
-> +	struct device *dev =3D &pdev->dev;
-> +	struct msc313e_pwm *pwm;
-> +	__iomem void *base;
-> +	int i;
-> +
-> +	match_data =3D of_device_get_match_data(dev);
-> +	if (!match_data)
-> +		return -EINVAL;
-> +
-> +	base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	pwm =3D devm_kzalloc(dev, struct_size(pwm, channels, match_data->channe=
-ls), GFP_KERNEL);
-> +	if (!pwm)
-> +		return -ENOMEM;
-> +
-> +	pwm->clk =3D devm_clk_get(dev, NULL);
-> +	if (IS_ERR(pwm->clk))
-> +		return dev_err_probe(dev, PTR_ERR(pwm->clk), "Cannot get clk\n");
-> +
-> +	pwm->regmap =3D devm_regmap_init_mmio(dev, base, &msc313e_pwm_regmap_co=
-nfig);
-> +	if (IS_ERR(pwm->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(pwm->regmap), "Cannot get regmap\n");
-> +
-> +	for (i =3D 0; i < match_data->channels; i++) {
-> +		unsigned int offset =3D CHANNEL_OFFSET * i;
-> +		struct reg_field div_clkdiv_field =3D REG_FIELD(offset + REG_DIV, 0, 7=
-);
-> +		struct reg_field ctrl_polarity_field =3D REG_FIELD(offset + REG_CTRL, =
-4, 4);
-> +		struct reg_field dutyl_field =3D REG_FIELD(offset + REG_DUTY, 0, 15);
-> +		struct reg_field dutyh_field =3D REG_FIELD(offset + REG_DUTY + 4, 0, 2=
-);
-> +		struct reg_field periodl_field =3D REG_FIELD(offset + REG_PERIOD, 0, 1=
-5);
-> +		struct reg_field periodh_field =3D REG_FIELD(offset + REG_PERIOD + 4, =
-0, 2);
-> +		struct reg_field swrst_field =3D REG_FIELD(REG_SWRST, i, i);
-> +
-> +		pwm->channels[i].clkdiv =3D devm_regmap_field_alloc(dev, pwm->regmap,
-> +								  div_clkdiv_field);
-> +		pwm->channels[i].polarity =3D devm_regmap_field_alloc(dev, pwm->regmap,
-> +								    ctrl_polarity_field);
-> +		pwm->channels[i].dutyl =3D devm_regmap_field_alloc(dev, pwm->regmap, d=
-utyl_field);
-> +		pwm->channels[i].dutyh =3D devm_regmap_field_alloc(dev, pwm->regmap, d=
-utyh_field);
-> +		pwm->channels[i].periodl =3D devm_regmap_field_alloc(dev, pwm->regmap,=
- periodl_field);
-> +		pwm->channels[i].periodh =3D devm_regmap_field_alloc(dev, pwm->regmap,=
- periodh_field);
-> +		pwm->channels[i].swrst =3D devm_regmap_field_alloc(dev, pwm->regmap, s=
-wrst_field);
-
-Huh, never saw something like that. Is that really easier than using
-regmap_write()?
-
-> +	}
-> +
-> +	pwm->pwmchip.dev =3D dev;
-> +	pwm->pwmchip.ops =3D &msc313e_pwm_ops;
-> +	pwm->pwmchip.base =3D -1;
-
-Please drop this line
-
-> +	pwm->pwmchip.npwm =3D match_data->channels;
-> +	pwm->pwmchip.of_xlate =3D of_pwm_xlate_with_flags;
-
-You can drop this, this is assigned by default in the pwmchip_add
-function.
-
-> +	pwm->pwmchip.of_pwm_n_cells =3D 3;
-
-I didn't double check, but if the dtb has #pwm-cells =3D <3> this isn't
-needed.
-
-> +
-> +	platform_set_drvdata(pdev, pwm);
-
-This is unused -> drop.
-
-> +	return devm_pwmchip_add(dev, &pwm->pwmchip);
-> +}
-> +
-> +static const struct of_device_id msc313e_pwm_dt_ids[] =3D {
-> +	{ .compatible =3D "mstar,msc313e-pwm", .data =3D &msc313e_data },
-> +	{ .compatible =3D "mstar,ssd20xd-pwm", .data =3D &ssd20xd_data },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, msc313e_pwm_dt_ids);
-> +
-> +static struct platform_driver msc313e_pwm_driver =3D {
-> +	.probe =3D msc313e_pwm_probe,
-> +	.driver =3D {
-> +		.name =3D DRIVER_NAME,
-> +		.of_match_table =3D msc313e_pwm_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(msc313e_pwm_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Mstar MSC313e PWM driver");
-> +MODULE_AUTHOR("Daniel Palmer <daniel@thingy.jp>");
-> --=20
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---silqiuwepn6la4xp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKvlpUACgkQwfwUeK3K
-7AlzsQf/RY9U+Lyajw1cDmiTyhNYqB8fzUUESTBtOT3NKqbboYz5YbYxBGPQpqQ9
-v9Ng1I1+UMJfu3Gs/5T2SHrMTKiXt8HUhbrZZu+SfdqDjJzrfSEKLLZeSZNIpKfB
-xj6vrVifuLX7xjvfOlUfM99eTknF7Vtih1zDbBp/wJnP34w0eio3OIarQ2DPonOE
-z4dw89YcYuD6YvhWGHeY8zL9G9f1vrYfW36pAktWD7Oa3BLNup1u/Lwr/rfaBgVK
-DXyFrxBBULozjFoDd4RaF407RMZk4ZOmXTeHEAlx9Vc0/zVr/lz3DqURPGGKi7ef
-6vFYBFDnAGka8rjuInVQpkGsT+coLw==
-=0Sk+
------END PGP SIGNATURE-----
-
---silqiuwepn6la4xp--
