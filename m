@@ -2,119 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63FFB554BFD
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jun 2022 16:00:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC53D554E6A
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Jun 2022 17:04:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233499AbiFVOAs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 22 Jun 2022 10:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
+        id S1358882AbiFVPEI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 22 Jun 2022 11:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234575AbiFVOAq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Jun 2022 10:00:46 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1673369C0;
-        Wed, 22 Jun 2022 07:00:45 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id i10so19796721wrc.0;
-        Wed, 22 Jun 2022 07:00:45 -0700 (PDT)
+        with ESMTP id S1354477AbiFVPEB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Jun 2022 11:04:01 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F213EAB6
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Jun 2022 08:03:53 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id f65so16338468pgc.7
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Jun 2022 08:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kUoPBZyP0axk6nRKrhH6g/mHLGZVisdHs+5kDGpekpo=;
-        b=k1Ju7wSZg82QWvOtXh5C+tGY8yQTX/08iv3KdTAcyuRnqE58hCx1JQexXSe+URDpdE
-         p0ImgnAGaHjE4JislySg6qecoHYrJEejC/GKLB6sT9jN3wrUP9rOG2XIOForITnd02x0
-         jhYNwfPB2Ui/+rtwPhJukncCC+3XlAS1L+lRz2bl36BP7Jua1NPToYPE73iRGmqhze51
-         o7wdeYArozyn8VTtFZYDGYT6lbHLJjuhRIUJRJsvCozJh1TMeIXHlFc7KREnPbjXtdY+
-         CfZiTET5VyMN8qT2QjXSp7TEVMHYK/7YO0SOSiusTq/eFQ92Wv1PlC+bAT9u9ZB3fSWN
-         vzXQ==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=Jt/qXO7TwQJF3EWuk5p4azKGOCxq/Rzk3KoLqC6Pwff+0tHhs8als9639cidnzFde4
+         ry7ero38QELHA22RBkZWtE0xNRPiiPEWIvKtPd0fZpNhUDrKHRyETW5WgRrbPPmi6/vT
+         vJpxoQNLrGfsMgIfV+PXszjD1nMaBRUe0Gxx0eYZw7YGtSc5pfRkGeshne5cjr5BaKxu
+         3INPcNuWqxw7/0puGY6UuhzUSAv6SoxD7Bz3CVHuDQWru55+lIHO02gOv78FJXnTYNjB
+         rbtWgbiyhkE21LXWR11Bk6fRJOPFFcU92J8XbdNavb7vvb9W0t8MjYRzeI2ufnWOCsiS
+         AGLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kUoPBZyP0axk6nRKrhH6g/mHLGZVisdHs+5kDGpekpo=;
-        b=Zwh8DngaovadWe5moBvxoMu2tq+eUVu1XA9rhxLq1nkPaV9ewPTFzNwS3UoxvBu3C6
-         NCfz9NYaxsHQ8bjiU3ptPor2ZvQCT1uEC3I5KkdsaSUTy2uh7h20nwvYvJF08BHDQv/r
-         LiP1wk7CA/7loK7xDwfVit5rOMt15Y8vnh/uw792HTRoRr1A+kUjYYZHuZqbcHXutZOD
-         4W1tCpCKEmJ4OK0U5PkngKRAb53vLyEnOsePpVBdfDd3HwiOTVv7u9N3NzqUlPBvxesr
-         8kap05B9e46t7vNhmC+INenr0CzhhgbxLWzwy3h/wFU0shNXta8UwYlpEyAbEcrx1J1d
-         PzWg==
-X-Gm-Message-State: AJIora8e9M0SoojE/6WjI6WvlMnWUPNrA4kpMxnTQHizvNGS48+XUKih
-        OwXxxbkuYIMH9yJfYSQE1lA=
-X-Google-Smtp-Source: AGRyM1tHnt/jgPsUPVHQvg5sU4veue4z+CecoIbCr7Phmv2bIYomTp7Bt+U4+PUBWvt0gfS8ohWH7g==
-X-Received: by 2002:adf:fb10:0:b0:207:af88:1eb9 with SMTP id c16-20020adffb10000000b00207af881eb9mr3598860wrr.238.1655906444093;
-        Wed, 22 Jun 2022 07:00:44 -0700 (PDT)
-Received: from orome (p200300e41f12c800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f12:c800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id o4-20020adfcf04000000b0020ff877cfbdsm16655568wrj.87.2022.06.22.07.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 07:00:43 -0700 (PDT)
-Date:   Wed, 22 Jun 2022 16:00:40 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: add MT8365 SoC binding
-Message-ID: <YrMgiCPMsb3Y8Zd9@orome>
-References: <20220530205038.917431-1-fparent@baylibre.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vhZEVnaGNBjosB86GDUW8b2wHjB/+QU31bPXl36TqFE=;
+        b=i2iIT16358YHXHDBd4mx6WVxHhrJzSsAThJ5XNGdn8t+rulEZenDF5T5dn7z39bNXQ
+         tyi3LZUxW/7YRbsJxbXqRl9ZP0+H06CJXUvkZI+ngfe9Pqcw6NeFcRfxHaI9SPxoszMU
+         eDRuOzxA1KhVE7V/B0hOiZdF5bkKskBumC+sF4QC1Yoc5/yOJaUMCvSc/XbzL1yt8oZt
+         TLuq/l/2TuBoaQW2cBLhmdX8vsTUMFqhKoPQjzoqJIlO5rpPRItTGiG9sKCc6clINV4e
+         VcWuSEAnKeC08Ia5b6EffbryFRl7kDJLH/Of16Sh98JdU0YsqNPRXm+re9jjcy7q2B3u
+         LT+g==
+X-Gm-Message-State: AJIora/o//gh5S04SHTygrc1RZt9zhnO+W4OY1QLWuV/PRweVl7bYvST
+        dQhjD8w1J+MW4NVIfMyleQWRcFn/k+1UcbGI4rc=
+X-Google-Smtp-Source: AGRyM1uVFGSnpr+dTCH2B3yi91+xpZWxlNuq532hGAWMLDkFZu1Qrq3wwA6KogrJ63y1ppaQwcWp21NviyeWeo5Xswg=
+X-Received: by 2002:a63:af1c:0:b0:40c:f9fb:deca with SMTP id
+ w28-20020a63af1c000000b0040cf9fbdecamr3305128pge.479.1655910232628; Wed, 22
+ Jun 2022 08:03:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iKffDT5KCf9O/u8c"
-Content-Disposition: inline
-In-Reply-To: <20220530205038.917431-1-fparent@baylibre.com>
-User-Agent: Mutt/2.2.4 (c3baa83e) (2022-04-30)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a17:903:2308:b0:16a:1b3f:f74b with HTTP; Wed, 22 Jun 2022
+ 08:03:51 -0700 (PDT)
+Reply-To: sales0212@asonmedsystemsinc.com
+From:   Prasad Ronni <lerwickfinance7@gmail.com>
+Date:   Wed, 22 Jun 2022 16:03:51 +0100
+Message-ID: <CAFkto5szY9scoLwccBhUx92cgUVnT2cx2c=WmxiOTkm7N_y9gg@mail.gmail.com>
+Subject: Service Needed.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+-- 
+Hi,
 
---iKffDT5KCf9O/u8c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Are you currently open to work as our executive company representative
+on contractual basis working remotely? If yes, we will be happy to
+share more details. Looking forward to your response.
 
-On Mon, May 30, 2022 at 10:50:37PM +0200, Fabien Parent wrote:
-> Add binding documentation for the MT8365 SoC.
->=20
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
-> v2: fix clock description (five -> three)
->=20
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 ++
->  1 file changed, 2 insertions(+)
-
-Both patches applied, thanks.
-
-Thierry
-
---iKffDT5KCf9O/u8c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmKzIIgACgkQ3SOs138+
-s6EZwhAAtTbNvEnm90ZYyOiXMFI5+PaLF4vJyVAEMi3M8wnJERzD+fx6zlfpdey5
-HUOgg7d+R4Oma1wuGFo3HAMcIuG+/pel+eE8f7zGiYkcb2QNpzTrRsVQwBrjCPoY
-6upls6fu2Xhzebdkntda3Nnj+JqbPExxmAmrDVgudViBVXKGLLo8l+aFAf1xJYoZ
-AphfyPCLyxnC+MB4G0qrQVcPOdTQq433t+BnXZ9C4EnaEZA0vcjFk/CpIYXYme03
-sPbI06xJDZVuGluoEaoRq4O6r/v0foxfThn5tjZuwQJvSc2qEX5eJD0U1IFZdsj9
-3fJKnrmTQYA7zORslHNQV7aGCIRTtf9v87XvilY9G9P8n0Lp7rGiJrBQg0Kx/cXN
-Bb3j+0JnXQtzBB+v4226k/PMP/SDMviTKkQMp3Ls4DM4QOFb8Rn0pdGEhtKVV/FS
-ms3inwjO91jM11En+7DZgQHcA2Lm6fuHBhqiOzvyVTzRFj8BHrjg7iddjnhRW5uU
-I3V7ln95+aPaQzTQd0qFdg0cngmtc7Tgs04YmV2Rb1e2Nk4Db64h17jiOaeHsU03
-9gOBNpRUQ1neEkTRQ+dZCnXfUxnPgSeWHsOkrYIQgEmc4YrGAEIkgSFZUVSYQJFZ
-uCQYV9nCrnBcs+PoOwb7aX+5Bk3Cj+xeM0xp9KChkwt4Km/hM1E=
-=9amw
------END PGP SIGNATURE-----
-
---iKffDT5KCf9O/u8c--
+Regards,
