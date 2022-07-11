@@ -2,124 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05F1657036C
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Jul 2022 14:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CB985705A6
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Jul 2022 16:33:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232147AbiGKMzj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Jul 2022 08:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
+        id S231320AbiGKOdv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Jul 2022 10:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232141AbiGKMzh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Jul 2022 08:55:37 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2138.outbound.protection.outlook.com [40.107.113.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0462C2F653;
-        Mon, 11 Jul 2022 05:55:34 -0700 (PDT)
+        with ESMTP id S230304AbiGKOdp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Jul 2022 10:33:45 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5051318345;
+        Mon, 11 Jul 2022 07:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1657550023; x=1689086023;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=RV09yHx5AxRBjN7OTH1uNimsEVISCK7B2guZP0o1KL4=;
+  b=Xm8NVAMF1iSxNGojZRoUTEmLgan5Qb0yESJWutkmhPolRbAAZtv3l4W5
+   pYk3nqs28Ao2t5/sy7wIzc4E9VgsBrmay1IGViyMGH7uh1XWW6UD+na7j
+   kdMuelW4WfxUmq5tygXV8itwAE1SZLIcqyQRmW//IdgpwzPXrGjonuTlL
+   Hm5QnUFP/ZKIY9dPYmGBA7cJpuyIDdfYrw4HtP9rP2CydOayy59aNW2TK
+   AISA5QrwDDqgqGna4Bmg7z6O8iRhAsBNWv+d4A1/0KO0mxzovT2F3UD0S
+   vz4hJqQputyTEcRSMfCG8GfPiH/bOG/crvYe2W7qXlPVNDRJk7omSOtW7
+   A==;
+X-IronPort-AV: E=Sophos;i="5.92,263,1650956400"; 
+   d="scan'208";a="171883841"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Jul 2022 07:33:42 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 11 Jul 2022 07:33:41 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
+ Transport; Mon, 11 Jul 2022 07:33:41 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cRd48NbQry9nJ4HpEk7WQjRznhEsGXuqQcKFXV7bBhtrxYJe2q7eCMWnN6iIZBIwp3RmntpYa7qCj4UbMryl97O07UV9f2gz6cuLLei5hJGSGM/6LRrThTL5ZLwAsGP2V7aSiK28PL5gUeDOcpQtfZQxL6dsUSiS2PtypDlYW90qBR8UPE4tOwllOd0IKMtJhUodvJTl1WVqLI6Aw0LbPPOkCfbSV9xb6pl3v6qAup4H0p81fYBlniRJeE9sLJZ2xQZVmlnkWM51MRkxOiU/N2JPoc19PNz65XHAzYqFgycdm8Y5+ZZdwQjxHsgZ5HXjMN2mx2MDepV67/wEJTepWw==
+ b=TDPCgTMlZ2C+Ilr6sP7ei/SV5Wm9+1PUtGDFa0Vn4WQgX1arCTSgP1Z2SRpSirrexeOGm/wrbmOC321Y1NCxFfA2AL2fBYb1lp55DaK9PhsiRg+x/XtiaxV4mKBMmoISEEqY1R/b9Rnbj7sso5KSFQf/9aYOYVAa68rOeWBBgVBv81hiCcvkIvaleMfsAcyMRnSeBhyRyF3Vjz40d5tglEuFRIIcfi8NFRSbzmvYoHxPsBUroLHSnMII4Bg99DlAMlITk3oQWA0cJEmmccSMNQbpVbXAPTCISZ0P2I7L7vp8nff9hqVhFNiM5EzcpIBGsvN8MflV+zbyit4KOQ0TXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aloQNbJGqDQ9NugWs+bd7uHJxoya25qu7NIza1ZMT/s=;
- b=lrjLFGkRvYsRiQOwgLT9N3mqGOL8J77ftj4LmodCdzPVE6MR1xh5HeF024qeZ/fjF1Hnrt0fYIzCypqCCeK4o/TyD5dJAMLjWD+xZQ9oIQcLJ+G/pSsxAdb6RvuslGCgU3qs7gn5655VB/Tu4Mii5J3uklOqVJbbv918Y6Z5UCI9tjqhlcMemYWt+nR5bWPnirvamBUybNXPJ9CbCWVgGh/dxME4qnNbnUtgOIh+MtO04AtnCHzr/XerUoyxln2sqohKsU2o8ag5723DiGocxxngfeXDlyKCDLXmHgJ96A5ymTzKJ8aRF9cD291QGCzsjnDHTrY6GjSxcvbxVuV4bQ==
+ bh=RV09yHx5AxRBjN7OTH1uNimsEVISCK7B2guZP0o1KL4=;
+ b=g9eQTt+1K1I/CucWQhmSMcIuDtTo3Ec3LUZzZd2rvnqrTFWKPChaOMfjgAbsDy7lZbxEM4IQAGB/C8umhUasgVZmt7kDmLRt7DO8R53rdx7ILpCsp+tjjTHgVlyYdyAp9WdTOQlYHeHToa8toX7TSaaGcRn51V4HPhko7vFzxutKrqYzhANYf4EopPwQdKZXq7YDByShESmirn1NVPswUwIcdrv2G9PeaDt2Baha7nOPYSU8T4W5qQutE0f/Bx0HXZaR2CyRrWRUyQRdIzVJxrXtlsyF6gBwbxNy/wWOhF9BIWQicC/AkKhbLrjVDbRCMfKJHhFaqKDG6wV6IzzE3Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aloQNbJGqDQ9NugWs+bd7uHJxoya25qu7NIza1ZMT/s=;
- b=lmkCWyEuRWtmKNn+JhSxHnzr1MsemwYxvvNxdjhRFDO6oIvRao7/2ck0SN4/EucX2Wsu3k4AcLX9XHQnNB00CF+WhglRbAEEwLi3lE2WzqqngJebO0Uko3Nxjf5eAabkGHshmJb4mjPdaG3wCLvIXPF+2sRcenHGXU0LcDReSG0=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TY2PR01MB3290.jpnprd01.prod.outlook.com (2603:1096:404:7b::18) with
+ bh=RV09yHx5AxRBjN7OTH1uNimsEVISCK7B2guZP0o1KL4=;
+ b=CM1jH+ef29b8WdvDds1Gdb+v0Db1e6+A0slVe/o8SeGKdgKrfD75Gwb9FCbrWFeaxaFjpICowzqEooWmO83EVATJwxXn6VVVbp7pqA/f9sorka+uVcMeCre6f1LCDqoM4uwXYbiXpN+DQCtjKt16rlFTmCQrZQKRKmdxR0YfFWg=
+Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
+ by BY5PR11MB4260.namprd11.prod.outlook.com (2603:10b6:a03:1ba::30) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.25; Mon, 11 Jul
- 2022 12:55:31 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::dc06:eb07:874:ecce]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::dc06:eb07:874:ecce%8]) with mapi id 15.20.5417.026; Mon, 11 Jul 2022
- 12:55:31 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v2 2/2] pwm: Add support for RZ/G2L GPT
-Thread-Topic: [PATCH v2 2/2] pwm: Add support for RZ/G2L GPT
-Thread-Index: AQHYeb88fVRxU1LRfUqGAdbY2HigvK1IVR2AgDD3jIA=
-Date:   Mon, 11 Jul 2022 12:55:31 +0000
-Message-ID: <OS0PR01MB592298C8E5FFCCE333F60D6A86879@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20220606160509.250962-1-biju.das.jz@bp.renesas.com>
- <20220606160509.250962-3-biju.das.jz@bp.renesas.com>
- <20220610083013.7asxcv4b554ln7pu@pengutronix.de>
-In-Reply-To: <20220610083013.7asxcv4b554ln7pu@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Mon, 11 Jul
+ 2022 14:33:31 +0000
+Received: from CO1PR11MB5154.namprd11.prod.outlook.com
+ ([fe80::8d4a:1681:398d:9714]) by CO1PR11MB5154.namprd11.prod.outlook.com
+ ([fe80::8d4a:1681:398d:9714%5]) with mapi id 15.20.5417.026; Mon, 11 Jul 2022
+ 14:33:30 +0000
+From:   <Conor.Dooley@microchip.com>
+To:     <u.kleine-koenig@pengutronix.de>
+CC:     <thierry.reding@gmail.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <Daire.McNamara@microchip.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v5 3/4] pwm: add microchip soft ip corePWM driver
+Thread-Topic: [PATCH v5 3/4] pwm: add microchip soft ip corePWM driver
+Thread-Index: AQHYktiKMJrSlPtjv0SK+U5DwIwspK12NMcAgAAFfoCAAASIAIAABRoAgAL81IA=
+Date:   Mon, 11 Jul 2022 14:33:30 +0000
+Message-ID: <896d73ac-05af-8673-8379-29011800be83@microchip.com>
+References: <20220708143923.1129928-1-conor.dooley@microchip.com>
+ <20220708143923.1129928-4-conor.dooley@microchip.com>
+ <20220709160206.cw5luo7kxdshoiua@pengutronix.de>
+ <f2720cc9-be02-f457-7e8e-0d6b3845477c@microchip.com>
+ <20220709163758.nvsaf4jcwqenl2ax@pengutronix.de>
+ <2d734171-2a8a-2f89-9435-09e39d55dba5@microchip.com>
+In-Reply-To: <2d734171-2a8a-2f89-9435-09e39d55dba5@microchip.com>
+Accept-Language: en-IE, en-US
+Content-Language: en-IE
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+ header.d=none;dmarc=none action=none header.from=microchip.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 59a9986b-5891-4189-af5e-08da633ca324
-x-ms-traffictypediagnostic: TY2PR01MB3290:EE_
+x-ms-office365-filtering-correlation-id: a59e3fac-e126-45d9-d01a-08da634a5399
+x-ms-traffictypediagnostic: BY5PR11MB4260:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rLHlvEu4cdCi7Sq+fBCLD/QskrlkiNhqDLWPQVq9NK6nkHHIsLTdIj4a26ZjbatqtydVffhUW22J4sYQLtKfEFeIH5jnEqSY4rsnTw2uZwTKEyhncqi+5GUoQ78+5Szm1KdrnPrW+VqwTWhQn3pS/ht5/LrU5MhxqCS2/6h4LMRdUXQBCcv0S653dxs+E/7z8TYSVnLfqijC2KDBIrV45SMcteQPzhZZ6We6RaYbSJz2QxuhPHiq5xsOCUGTgeo9JJfSPOJkvvbecUy+fwk2WKcVuuga5HbdDd6j+C+592DkgKOHkblKQ5RmIAhE9g6aa/1SdGTScVGgEaHIFxxWIaj8JkWKiHlpoT+139hPUk5HlYLYAi1KnNAIygbXHziUVCWjsXk1nFuRJzxy0BUCq0FvH7MW8XCceFugIY7Ho/2TRRa1nIPNw08XHzWfpvMuJ504OsR3QUm5LqDKjFc7PRKGc2kfTtugMUtk3SYD6kwoj5nka7RZPXc+5McVHwbJ88LgPpRN2qdDryZwgZShWNpA9VoObDIOF8eZVhcPP0IieVLSK1+C8sJbqALM4s7l73ZJQFTHhhsFz7x1qCQkcuH7GswJ5TKtHtDR2YicrHJn+ze2WuVpuYnkChgvEHYd9tWQFcjcdYXtuX22dSuA6wRQnlncJRfD+0fV3iqQbCcO1voOXuizonu6sTsuTqG/LBeQI17QOHFl/NRzwzAYGwoZVnCNc9weMnAiBK56xqtxl+mXL4p/GVh1i2vV2u1TR2cx0beT2raXXqUFEQMU2yrLqSm/Ly0vlLY5hgkGr/g3vdNN7wutl/1ORme/ZXpCJOUBygXGDdU0Zm4B3z5ahFCazye8OVfjMnWHSgEkJRo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(8936002)(4326008)(52536014)(316002)(30864003)(71200400001)(54906003)(55016003)(38100700002)(5660300002)(478600001)(122000001)(83380400001)(2906002)(66946007)(33656002)(966005)(66556008)(38070700005)(9686003)(26005)(66574015)(6506007)(66476007)(186003)(41300700001)(76116006)(66446008)(6916009)(86362001)(8676002)(64756008)(7696005)(579004);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: MGRfizWhDsoTjcd4xTenjYnRLOmCnNpOntuqJeDxrZY/fKBNBilY2GRE37or7rJWCEryadGCTzl0aZVRNyxwwMEb9fU75bZbf8N6aA29yFdbD3Ljsb+ccm6/YYSacx4+YPYBmtDvVFPHCovdOUMYOD4sPHU7Z2EZ2wHSjrITNruXjGPwAPB/WBHBKsns857ifxq+exKCOBJinCGOrxVtPMTLbcOsAE74ywOvkYyPCk3CCYP+2ivsJNDiXZzkg3LKBNdg/Ck9ltuljhXmpn2oHn+mRwSwsogvLns3QsMsxm+u4Kdp9F7MVvV5z3nXF8C4iUFKfkJbiDoFJDbkL6RytzNRMATnxND3Ug4YJi5bvdIhNVvxCi+Xta8XoCQwV5K2MSjqGUNI5xLY/kCuC3mNRA4mQoG5A5Zi7JlwKIr0Ro/n1gRNg70/Smdh3hHixywldlWvAT/2huSD2K2bmfuRO+M9ouLPgQTPgiH0c5uRZ6Zxw05yz4A87F30WLK7lBA7VcIA11VY/zMNKGlDdFB8l5NtyGdroRNTli+ROpw7NGIM/Zy2QLpKUVuW1IAsb7x1OAA3MsxPfGjkokNiZhnUw4H+7sJgAcNSc3IqfXl3edXXJ7gURTtAESLPUzU2UoiOol0bCVff6DZecf4NNbAoMCPjaC2Tpm3HbmJroKcRmKBwYmYHoF3Dp32CTyLHUydeXTkpArEKiLxkRWbxPE6dwjCNOTw60BBe5C6RW5zxw6tZgCF1BvgktO80cqewcepIVBLGZ7O2mXoksWhN/rOT+xul2qLCWYGJO75Wm7t5WByI5kI5b1WwzdHKaW0Y8okLuNOdWiw1Wi5WmSqA8697an96WSRsjJfpRM4Fhlj7QJkPDl4lRDQuUwgnwcXFTFvL
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(396003)(366004)(376002)(346002)(39860400002)(38100700002)(2906002)(2616005)(86362001)(6486002)(41300700001)(6512007)(66574015)(38070700005)(6506007)(122000001)(53546011)(186003)(91956017)(31696002)(83380400001)(31686004)(26005)(66476007)(316002)(66446008)(66946007)(8676002)(71200400001)(4326008)(66556008)(64756008)(8936002)(6916009)(54906003)(5660300002)(36756003)(478600001)(76116006)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?XEQNW6yJql/H9KhTjGOGlqJSgpqEX/m6d+nObYSVR/gPwwOdPlfOYTToQP?=
- =?iso-8859-1?Q?cyR7DHfh2ankPksROmC53mIT4QJz6yUH7T0b2GPIq1rB4cGJIz1zJkA+Dd?=
- =?iso-8859-1?Q?XYS0w2qlo6QA0n0wd66nC8A6Wkzmh2ROjdwu1PnmsZCjCssurtCclz9H2K?=
- =?iso-8859-1?Q?gmwajkQa5VeiS4OdhFAk85R7ii54UDoDOudsB1Be05FU3rV87er6TJ4uFZ?=
- =?iso-8859-1?Q?1rjtC7fBb2h8S6xS1GitI1WpHx5h37d/jG8U7Yi9Jd63eUv8lSbEdk2zdZ?=
- =?iso-8859-1?Q?ebPaP+sopmgk7JAfrHLfJWfHNDZIcODCsqIHXyoO0RkxoVZjpCcfCsmzeq?=
- =?iso-8859-1?Q?x4QFHOnDA55n8o9vMskdrLVxU/N49DfoWpbnG+1N70paTgKoDgEhDF83g0?=
- =?iso-8859-1?Q?tc/JB/RIxnLv+dFxuAPKUJGzxEmWhneVivFjdBHwuCyD/aOdIR+O7+W9Uk?=
- =?iso-8859-1?Q?t7LNXNGBjbsLz+32/C7fH9A57892k9ora5pvSBapitXsSzdUjJITspC76Z?=
- =?iso-8859-1?Q?LJCChVDvshFy8ryY+GFl5zGqCv3PFK8RnT/2K74SpeIJqdt4ZxqGifoVd4?=
- =?iso-8859-1?Q?Aa6joEmrHa9pmTf+tQtQOR1CYtUNO7SGXZXjVS0R9VCuJMMcNcu0+wch7d?=
- =?iso-8859-1?Q?klTRmCnErRobxDbLXwb/ezHE2GVZMGvDSj/93bhehSnPcySGjmvDS7Y8/W?=
- =?iso-8859-1?Q?sNGtqGkd2om19wnkVB5WbHxiqHPuqm+LXpHHMvJoSUN5bOPCmSA1Yh2//9?=
- =?iso-8859-1?Q?X72m/DTETy6rOscTuKPJQTF77rcGJ9KggIG99lU2FzKgDtYcc5LO6hUJsb?=
- =?iso-8859-1?Q?L6fxleEdw1IXqyEt1RzmdVYGHn3jS6q5pdV5DNkhSgC+FAMOL3/2KjGwVQ?=
- =?iso-8859-1?Q?7AVEgHLsN3bUCbF/F+135Un+4dS/kRYMOZhnZM5T6925OscXJZgSFOasb/?=
- =?iso-8859-1?Q?YG/FQCyU612bt9lqhp3LO7vdbuWohXX2AqdxCkKzlTbWUws91xrbR9l7Sc?=
- =?iso-8859-1?Q?J1wNrgvrUaqQpSDo9SKUnBJRC9Y/A8hQQyEUavAFU/tRXyM/26ScRxTZM4?=
- =?iso-8859-1?Q?UrAqStbipzNOVwYNz8ctl937BYyn8+zJl0zLBTaEpeviMDjnqBzBr4eKzE?=
- =?iso-8859-1?Q?3CkqlSOvPlH/9M3J2RMaPVufO8QMeyTrhY+L8bH2JCuCp5I3+p+kqkiG6d?=
- =?iso-8859-1?Q?Jgs8qysirlg6v4njYdPnVEeLay+jWh0w6fqJ/eleXvvbf2PUu5LFNjPDPh?=
- =?iso-8859-1?Q?vtyjMsOP49kLk6BcwmcdWIUIVpfhm2hjaq2IKNgNDk4w9TlZmIxs0fSP/G?=
- =?iso-8859-1?Q?oCFz2NXJweaOK3QD1pvQXDjMY+HMhWk1G6eU84L2ZrKE+H9Pz3isNsc26g?=
- =?iso-8859-1?Q?nGCU8q2jjT2rVG+hR79XPZORRTIPffX1LTx163LkhGowcrClzcgOlSFIcU?=
- =?iso-8859-1?Q?1mDN0Er1B4uvV+o9pNcrJGrn5z7Z3eiaHLT+zOWMuxi4KlP1GBKRcMYe3l?=
- =?iso-8859-1?Q?T8Jh4NUXbohJ3TTh+bG0yGn4vZrlZdh3GrRkTpTirlNt51yd12+HN2XVZ5?=
- =?iso-8859-1?Q?NVWqtkYRyl84nnVfptEpMs1WeyTT4GeBqkRKD3OeMxl7ExTrnknsm1N8XA?=
- =?iso-8859-1?Q?NpuMHDJOQOng8an7yHtlXjzFNAIF1M0H++UeTKyPHQxAngD7nhziEjdQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RHJhRmVzMHlmbktrM0FrTUZVVERHUmFGYTk0eUh4d0hjeXd5T3Ewc3BUajU3?=
+ =?utf-8?B?SkdQWkZIdi9CZGQxNityRkJQaExLdDR3b0J4T2V6Ryt2ZTU0cTcxSDdxeGRY?=
+ =?utf-8?B?ZWFETmNLZkx3UStJVHkxcUlZK2lERUZQL3JvVUtxK2VTNnNoaFl0QTNGbm8z?=
+ =?utf-8?B?bG05OFFvUDlBUzBxcmRiUlFmN0NFeTl6VTFlQW83UzBCcTBsc0JqOVh3djM2?=
+ =?utf-8?B?amZucUlSY1VrT2p2NDBnVFM2bS80SlhQT2FoenBsY2VDeG56TFJERXZkZExU?=
+ =?utf-8?B?MEF5dEVzY0ZpemlCYXQ0Q1ZnNWxDN2FwMHJMNk1mQmNUMnJaeVE1TWFvS1BX?=
+ =?utf-8?B?ejlWbTcrQ3cvVUZBbVplL2U3ZU1UbHBwS2t3UEVDNHpEcnVFd2lUcGxTYzI2?=
+ =?utf-8?B?Sk1oVEdsbHVXY0swNFNQUjZaVXVYZ21hTzNzZlF1bGFwYnM3SWU3ajkxTmF5?=
+ =?utf-8?B?WmRhZkEvS1ZMYWU3T0p5bXprbTkxcWRMQnkzTzVCOG0zQytPc2tuZy9BWGtE?=
+ =?utf-8?B?NVEyL3BrTGdjd2pnKytWeWp0T2JwS2JaOVphSjJUQVo5cU9VeTNGaFcwT2Rt?=
+ =?utf-8?B?SHdnVnZ2aWtLeHdod2RpT0hFR2pNaEY5aXhKeUZQb3RPRjdrQVllMnUwL29z?=
+ =?utf-8?B?RGtXZDMxa3pyTVlKT0tBL0dpTzhTSVRLRWxVdWdvR2ZpUS9WQkpQeGVZdy9G?=
+ =?utf-8?B?bjk5ZFk3MG9jMlB4Snc3ekpxSkplQmllQ0EzdittekNYL083RTJwNEJNSHlX?=
+ =?utf-8?B?U1lPSm5xK1JUcitwczFGYzV2TTRzS3lENUlGZGJRRzlqS05raXp2L2FSc2Vs?=
+ =?utf-8?B?WVQrM29OVXg4QzVoaHgxdmVEemEvQmVIdm9YRjFhak1heWpPSDliYnJWS2FI?=
+ =?utf-8?B?QnhPMWxMVzVBSEJRV29hNWRDTk5EVlNxaTErakFpdXNJYXpEa3JXd1JVSnIr?=
+ =?utf-8?B?OWhFYVlsNExjVkNoUDBkV29xbXdJSCsva3c0M3VGdFlNcGpzQ3VpUDNQSlgv?=
+ =?utf-8?B?YVl3WnVnWTFDTWxoM2JNVExoYlk0eU5TNjNOOXhGNURwaEpJOXAxOTQxSExo?=
+ =?utf-8?B?OVQ3SnQ1U1kyM29YemU1SzFyTGJNdUYxWXBNbEhxdW9KWHFTb1QvTHRQZ3Q5?=
+ =?utf-8?B?dm1hQWpFYzlHc1Iya1FDQWowa1ByTkorN1QvU3dvcFozVDN4RzA2MDMxajND?=
+ =?utf-8?B?ZzNUWmNJNHY1R1V1emdMcUlMcVBSK1ZsYkp2UEVwV05JQy9jMEoyOGhoQS8y?=
+ =?utf-8?B?SW82eE9mMEx6M29yR3hWWlF2QkllWTR3bCttMWRFaitVYmRqcU1SS0VOZkV3?=
+ =?utf-8?B?WURQbWZsWXZQOVVvUUlZdnBWbERvRTdna0tSdmNWREo5MmgvVHZJeXlvRzFX?=
+ =?utf-8?B?ams0NUJWdDh1K212WnRMT0xaK29ET25ZOU1RRWwwMGE4MFQxTzBJTGszelhl?=
+ =?utf-8?B?cXNZU1VIYS9CeHlLNTNsSkFqYjVLY05ZWi9QVW44bFl2aUZXQmd5cHVTZEJP?=
+ =?utf-8?B?ckdUelVwUWlCd0FEbE1pVysrMGZUREZXcndHdUkycEZZUFNKdjhMQlZZV0FU?=
+ =?utf-8?B?WUQ4VVNZMzdJTEZSclRkcHZXUHRWOEx5UkNzb3ZlTkpUUWxDd2EyYVdqZnBV?=
+ =?utf-8?B?clB4bFozQkxheWZXaUZxNEpMc21oSHh3Q0pkenFkaFFFcDBwZ0RxWjNWZ0xw?=
+ =?utf-8?B?Mk5HamFKR3dJYWZJTytTR3MrT3VGUVpTeS9tMTU0RGEvN1pnVElLd2lac2Vs?=
+ =?utf-8?B?L0t5eldIZ1JzaWI3SWdSZkNQY3FXOCsvTVpuT2MvSVlNeWQxZ1pERFNEZXhr?=
+ =?utf-8?B?cVZqSDNaQWlBd0pMc2kycjlqa3lha2JBUlBPSEdxZERrMzM0OXpTM3llNVlZ?=
+ =?utf-8?B?QVUvL1R6WnFOc3hlNkJxQUE1eWYrKy9RYU1jdEhuUXgxN0ZzblkzRkIyTTVF?=
+ =?utf-8?B?Kzc3OVRKWGZiL2Y5dWM1ejloSmZlRXZ4VDNiWmU0YTdvd25TUHZUcnhmaHY5?=
+ =?utf-8?B?S3FnMEQwaE1sZ1Vsb01ZU0dJOGQ2R3hSb3pvOGxsbHZrNXptcFpGMmo2MVJM?=
+ =?utf-8?B?KzB4Mjl4NW1VUFlBY05hM2lIb1J4ZWVWelR2MUZSUUIwOWVjcDJtWHRxbnhO?=
+ =?utf-8?Q?HE6IlmfNN8gztNjsVJI1HMPMy?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B9CCEB9C3661E84AA09EE2918DFBB29C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59a9986b-5891-4189-af5e-08da633ca324
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 12:55:31.2468
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a59e3fac-e126-45d9-d01a-08da634a5399
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 14:33:30.7196
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 37c1giohtMCr5n1LhMrvEdfiMOSCEPCexUQip4sKmlfwcmviEufkNvbkAgdGG84jSqKA+qVR2/8QYWKEj7F6qOMUeMZ+XakUenU5k+nVQ78=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB3290
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+X-MS-Exchange-CrossTenant-userprincipalname: PXZulcyTLcQRppx2VdoUvaHBkTAZkj6Cf0TFUNTf703ZhjBE4jMv81tNxJFikOQGiXm7G2MgBPibgQ8D1Oy+k1+fEhGQeAklBaMHDVG4kG8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4260
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -128,648 +161,177 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
-
-Thanks for the feedback.
-
-> Subject: Re: [PATCH v2 2/2] pwm: Add support for RZ/G2L GPT
->=20
-> Hello,
->=20
-> On Mon, Jun 06, 2022 at 05:05:09PM +0100, Biju Das wrote:
-> > RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit
-> > timer (GPT32E). It supports the following functions
-> >  * 32 bits =D7 8 channels
-> >  * Up-counting or down-counting (saw waves) or up/down-counting
-> >    (triangle waves) for each counter.
-> >  * Clock sources independently selectable for each channel
-> >  * Two I/O pins per channel
-> >  * Two output compare/input capture registers per channel
-> >  * For the two output compare/input capture registers of each channel,
-> >    four registers are provided as buffer registers and are capable of
-> >    operating as comparison registers when buffering is not in use.
-> >  * In output compare operation, buffer switching can be at crests or
-> >    troughs, enabling the generation of laterally asymmetric PWM
-> waveforms.
-> >  * Registers for setting up frame cycles in each channel (with
-> capability
-> >    for generating interrupts at overflow or underflow)
-> >  * Generation of dead times in PWM operation
-> >  * Synchronous starting, stopping and clearing counters for arbitrary
-> >    channels
-> >  * Starting, stopping, clearing and up/down counters in response to
-> input
-> >    level comparison
-> >  * Starting, clearing, stopping and up/down counters in response to a
-> >    maximum of four external triggers
-> >  * Output pin disable function by dead time error and detected
-> >    short-circuits between output pins
-> >  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
-> >  * Enables the noise filter for input capture and external trigger
-> >    operation
-> >
-> > This patch adds basic pwm support for RZ/G2L GPT driver by creating
-> > separate logical channels for each IOs.
-> >
-> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > v1->v2:
-> >  * Added Limitations section
-> >  * dropped "_MASK" from the define names.
-> >  * used named initializer for struct phase
-> >  * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
-> >  * Revised the logic for prescale
-> >  * Added .get_state callback
-> >  * Improved error handling in rzg2l_gpt_apply
-> >  * Removed .remove callback
-> >  * Tested driver with PWM_DEBUG enabled
-> > RFC->V1:
-> >  * Updated macros
-> >  * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
-> >  * Added rzg2l_gpt_read()
-> > ---
-> >  drivers/pwm/Kconfig         |  11 ++
-> >  drivers/pwm/Makefile        |   1 +
-> >  drivers/pwm/pwm-rzg2l-gpt.c | 351
-> > ++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 363 insertions(+)
-> >  create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
-> >
-> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig index
-> > 904de8d61828..a6cf24cb31e0 100644
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -471,6 +471,17 @@ config PWM_ROCKCHIP
-> >  	  Generic PWM framework driver for the PWM controller found on
-> >  	  Rockchip SoCs.
-> >
-> > +config PWM_RZG2L_GPT
-> > +	tristate "Renesas RZ/G2L General PWM Timer support"
-> > +	depends on ARCH_RENESAS || COMPILE_TEST
-> > +	depends on HAS_IOMEM
-> > +	help
-> > +	  This driver exposes the General PWM Timer controller found in
-> Renesas
-> > +	  RZ/G2L like chips through the PWM API.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module
-> > +	  will be called pwm-rzg2l-gpt.
-> > +
-> >  config PWM_SAMSUNG
-> >  	tristate "Samsung PWM support"
-> >  	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS ||
-> > COMPILE_TEST diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > index 5c08bdb817b4..12bc2a005e24 100644
-> > --- a/drivers/pwm/Makefile
-> > +++ b/drivers/pwm/Makefile
-> > @@ -43,6 +43,7 @@ obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+=3D pwm-raspberryp=
-i-
-> poe.o
-> >  obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
-> >  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
-> >  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
-> > +obj-$(CONFIG_PWM_RZG2L_GPT)	+=3D pwm-rzg2l-gpt.o
-> >  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
-> >  obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
-> >  obj-$(CONFIG_PWM_SL28CPLD)	+=3D pwm-sl28cpld.o
-> > diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-> > new file mode 100644 index 000000000000..f83ba2d5c219
-> > --- /dev/null
-> > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
-> > @@ -0,0 +1,351 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Renesas RZ/G2L General PWM Timer (GPT) driver
-> > + *
-> > + * Copyright (C) 2022 Renesas Electronics Corporation
-> > + *
-> > + * Limitations:
-> > + * - Mode and Prescalar must be set, while the GTCNT is stopped.
-> > + * - Configured for Output low on GTIOCx pin when counting stops.
->=20
-> The last item means the PWM emits the inactive level when disabled,
-> right? Then I suggest to write that as:
->=20
->  * - When PWM is disabled, the output is driven to inactive.
->=20
-> to simplify understanding that. Also add:
->=20
->  * - While the hardware supports both polarities, the driver (for now)
->  *   only handles normal polarity.
-
-OK.
-
->=20
-> > + */
-> > +
-> > +#include <linux/bitfield.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/time.h>
-> > +
-> > +#define GPT_IO_PER_CHANNEL	2
-> > +
-> > +#define GTPR_MAX_VALUE	0xFFFFFFFF
-> > +#define GTCR		0x2c
-> > +#define GTUDDTYC	0x30
-> > +#define GTIOR		0x34
-> > +#define GTBER		0x40
-> > +#define GTCNT		0x48
-> > +#define GTCCRA		0x4c
-> > +#define GTCCRB		0x50
-> > +#define GTPR		0x64
-> > +
-> > +#define GTCR_CST	BIT(0)
-> > +#define GTCR_MD		GENMASK(18, 16)
-> > +#define GTCR_TPCS	GENMASK(26, 24)
-> > +
-> > +#define GTCR_MD_SAW_WAVE_PWM_MODE	FIELD_PREP(GTCR_MD, 0)
-> > +
-> > +#define GTUDDTYC_UP	BIT(0)
-> > +#define GTUDDTYC_UDF	BIT(1)
-> > +#define UP_COUNTING	(GTUDDTYC_UP | GTUDDTYC_UDF)
-> > +
-> > +#define GTIOR_GTIOA	GENMASK(4, 0)
-> > +#define GTIOR_GTIOB	GENMASK(20, 16)
-> > +#define GTIOR_OAE	BIT(8)
-> > +#define GTIOR_OBE	BIT(24)
-> > +
-> > +#define INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
-> > +#define INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
-> > +
-> > +#define GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH
-> 	(INIT_OUT_HI_OUT_HI_END_TOGGLE | GTIOR_OAE)
-> > +#define GTIOR_GTIOA_OUT_LO_END_TOGGLE_CMP_MATCH
-> 	(INIT_OUT_LO_OUT_LO_END_TOGGLE | GTIOR_OAE)
-> > +#define GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH
-> 	((INIT_OUT_HI_OUT_HI_END_TOGGLE << 16) | GTIOR_OBE)
-> > +#define GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH
-> 	((INIT_OUT_LO_OUT_LO_END_TOGGLE << 16) | GTIOR_OBE)
->=20
-> the LHS of the last define can be better written as:
->=20
-> 	FIELD_PREP(GTIOR_GTIOB, INIT_OUT_LO_OUT_LO_END_TOGGLE) | GTIOR_OBE
->=20
-> It's a bit longer, but doesn't duplicate the 16. Similar for the other
-> defines.
-
-But this is giving compilation error, Any pointers to fix this issue?
-
-In file included from drivers/pwm/pwm-rzg2l-gpt.c:14:
-./include/linux/bitfield.h:113:2: error: braced-group within expression all=
-owed only inside a function
-  113 |  ({        \
-      |  ^
-drivers/pwm/pwm-rzg2l-gpt.c:57:55: note: in expansion of macro 'FIELD_PREP'
-   57 | #define RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH FIELD_PREP(RZ=
-G2L_GTIOR_GTIOB, RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE) | RZG2L_GTIOR_OBE
-      |                                                       ^~~~~~~~~~
-drivers/pwm/pwm-rzg2l-gpt.c:75:12: note: in expansion of macro 'RZG2L_GTIOR=
-_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH'
-   75 |   .value =3D RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH,
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-make[2]: *** [scripts/Makefile.build:249: drivers/pwm/pwm-rzg2l-gpt.o] Erro=
-r 1
-make[1]: *** [scripts/Makefile.build:466: drivers/pwm] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1843: drivers] Error 2
-make: *** Waiting for unfinished jobs....
-
->=20
-> Can you please prefix all these defines all by RZG2L_?
-
-Ok, Agreed.
-
->=20
-> > +
-> > +struct phase {
-> > +	u32 value;
-> > +	u32 mask;
-> > +	u32 duty_reg_offset;
-> > +};
-> > +
-> > +static const struct phase phase_params[] =3D {
-> > +	/* Setting for phase A */
-> > +	{
-> > +		.value =3D GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH,
-> > +		.mask =3D GTIOR_GTIOA | GTIOR_OAE,
-> > +		.duty_reg_offset =3D GTCCRA,
-> > +	},
-> > +	/* Setting for phase B */
-> > +	{
-> > +		.value =3D GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH,
-> > +		.mask =3D GTIOR_GTIOB | GTIOR_OBE,
-> > +		.duty_reg_offset =3D GTCCRB,
-> > +	},
-> > +};
-> > +
-> > +struct gpt_pwm_device {
-> > +	const struct phase *ph;
-> > +};
-> > +
-> > +struct rzg2l_gpt_chip {
-> > +	struct pwm_chip chip;
-> > +	void __iomem *mmio;
-> > +	struct reset_control *rstc;
-> > +	struct clk *clk;
-> > +	struct gpt_pwm_device gpt[2];
-> > +};
-> > +
-> > +static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct
-> > +pwm_chip *chip) {
-> > +	return container_of(chip, struct rzg2l_gpt_chip, chip); }
-> > +
-> > +static void rzg2l_gpt_write(struct rzg2l_gpt_chip *pc, u32 reg, u32
-> > +data) {
-> > +	iowrite32(data, pc->mmio + reg);
-> > +}
-> > +
-> > +static u32 rzg2l_gpt_read(struct rzg2l_gpt_chip *pc, u32 reg) {
-> > +	return ioread32(pc->mmio + reg);
-> > +}
-> > +
-> > +static void rzg2l_gpt_modify(struct rzg2l_gpt_chip *pc, u32 reg, u32
-> > +clr, u32 set) {
-> > +	rzg2l_gpt_write(pc, reg, (rzg2l_gpt_read(pc, reg) & ~clr) | set); }
-> > +
-> > +static u8 rzg2l_calculate_prescale(struct rzg2l_gpt_chip *pc, u64
-> > +period_cycles) {
-> > +	u16 i, prod;
-> > +	u8 prescale;
-> > +
-> > +	prescale =3D 5;
-> > +	/* prescale 1, 4, 16, 64, 256 and 1024 */
-> > +	for (i =3D 0; i < 6; i++) {
-> > +		prod =3D 1 << (2 * i);
-> > +		if ((period_cycles / (1ULL * GTPR_MAX_VALUE * prod)) =3D=3D 0) {
-> > +			prescale =3D i;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	return prescale;
->=20
-> You must not do 64 bit divisions using /.
-> Also you can shorten the calculation using something like:
->=20
-> 	prescaled_period_cycles =3D period_cycles;
-> 	do_div(prescaled_period_cycles, GTPR_MAX_VALUE);
->=20
-> 	prescale =3D fls((prescaled_period_cycles + 1) >> 1);
-> 	return min(prescale, 5);
->=20
-> (Please double check, I didn't)
-
-OK, will do.
-
->=20
-> > +}
-> > +
-> > +static int rzg2l_gpt_request(struct pwm_chip *chip, struct pwm_device
-> > +*pwm) {
-> > +	struct rzg2l_gpt_chip *pc =3D to_rzg2l_gpt_chip(chip);
-> > +	struct gpt_pwm_device *gpt;
-> > +
-> > +	if (pwm->hwpwm >=3D GPT_IO_PER_CHANNEL)
-> > +		return -EINVAL;
-> > +
-> > +	gpt =3D &pc->gpt[pwm->hwpwm];
-> > +	gpt->ph =3D &phase_params[pwm->hwpwm];
-> > +	pwm_set_chip_data(pwm, gpt);
->=20
-> What is the advantage to do that here instead of at the place where gpt
-> and gpt->ph is used?
-
-Agreed, will remove pwm_set_chip_data as it is not reqd.
-
->=20
-> > +	pm_runtime_get_sync(chip->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rzg2l_gpt_free(struct pwm_chip *chip, struct pwm_device
-> > +*pwm) {
-> > +	pm_runtime_put(chip->dev);
-> > +}
-> > +
-> > +static int rzg2l_gpt_enable(struct rzg2l_gpt_chip *pc) {
-> > +	/* Start count */
-> > +	rzg2l_gpt_modify(pc, GTCR, GTCR_CST, GTCR_CST);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rzg2l_gpt_disable(struct rzg2l_gpt_chip *pc) {
-> > +	/* Stop count, Output low on GTIOCx pin when counting stops */
-> > +	rzg2l_gpt_modify(pc, GTCR, GTCR_CST, 0); }
-> > +
-> > +static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device
-> *pwm,
-> > +			    u64 duty_ns, u64 period_ns)
-> > +{
-> > +	struct gpt_pwm_device *gpt =3D pwm_get_chip_data(pwm);
-> > +	struct rzg2l_gpt_chip *pc =3D to_rzg2l_gpt_chip(chip);
-> > +	unsigned long rate, pv, dc;
-> > +	u64 period_cycles;
-> > +	u8 prescale;
-> > +
-> > +	rate =3D clk_get_rate(pc->clk);
-> > +	/*
-> > +	 * Refuse clk rates > 1 GHz to prevent overflowing the following
-> > +	 * calculation.
-> > +	 */
-> > +	if (rate > NSEC_PER_SEC)
-> > +		return -EINVAL;
-> > +
-> > +	period_cycles =3D mul_u64_u64_div_u64(rate, period_ns, NSEC_PER_SEC);
-> > +	prescale =3D rzg2l_calculate_prescale(pc, period_cycles);
-> > +
-> > +	pv =3D round_down(period_cycles >> (2 * prescale), 1 >> (2 *
-> prescale));
-> > +	period_cycles =3D mul_u64_u64_div_u64(rate, duty_ns, NSEC_PER_SEC);
-> > +	dc =3D round_down(period_cycles >> (2 * prescale), 1 >> (2 *
-> > +prescale));
-> > +
-> > +	/* Mode and Prescalar must be set, while the GTCNT is stopped. */
->=20
-> 	/* GTCNT must be stopped before modifying Mode and Prescaler */
->=20
-> is more accurate. Would it make sense to check if mode and prescaler have
-> to be modified before stopping the hardware?
-
-You mean cache, the mode and prescalar value and stop the H/w if an update =
-reqd??
-In this case, we need to add additional check before=20
-1) rzg2l_gpt_disable
-2) GPT set operating mode
-3) Select Prescale
-
-> > +	if (rzg2l_gpt_read(pc, GTCR) & GTCR_CST)
-> > +		rzg2l_gpt_disable(pc);
-> > +
-> > +	/* GPT set operating mode (saw-wave up-counting) */
-> > +	rzg2l_gpt_modify(pc, GTCR, GTCR_MD, GTCR_MD_SAW_WAVE_PWM_MODE);
-> > +
-> > +	/* Set count direction */
-> > +	rzg2l_gpt_write(pc, GTUDDTYC, UP_COUNTING);
-> > +
-> > +	/* Select count clock */
-> > +	rzg2l_gpt_modify(pc, GTCR, GTCR_TPCS, FIELD_PREP(GTCR_TPCS,
-> prescale
-> > +& 0x3));
->=20
-> prescale is <=3D 5, so there is no need for & 0x3.
-
-OK, Agreed.
-
->=20
-> > +	/* Set cycle */
-> > +	rzg2l_gpt_write(pc, GTPR, pv);
-> > +
-> > +	/* Set duty cycle */
-> > +	rzg2l_gpt_write(pc, gpt->ph->duty_reg_offset, dc);
-> > +
-> > +	/* Set initial value for counter */
-> > +	rzg2l_gpt_write(pc, GTCNT, 0);
-> > +
-> > +	/* Set no buffer operation */
-> > +	rzg2l_gpt_write(pc, GTBER, 0);
-> > +
-> > +	/* Enable pin output */
-> > +	rzg2l_gpt_modify(pc, GTIOR, gpt->ph->mask, gpt->ph->value);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void rzg2l_gpt_get_state(struct pwm_chip *chip, struct
-> pwm_device *pwm,
-> > +				struct pwm_state *state)
-> > +{
-> > +	struct rzg2l_gpt_chip *pc =3D to_rzg2l_gpt_chip(chip);
-> > +	struct gpt_pwm_device *gpt =3D pwm_get_chip_data(pwm);
-> > +	unsigned long rate;
-> > +	u8 prescale;
-> > +	u32 val;
-> > +
-> > +	val =3D rzg2l_gpt_read(pc, GTCR);
-> > +	state->enabled =3D val & GTCR_CST;
-> > +	if (state->enabled) {
-> > +		rate =3D clk_get_rate(pc->clk);
-> > +		prescale =3D FIELD_GET(GTCR_TPCS, val);
-> > +
-> > +		val =3D rzg2l_gpt_read(pc, GTPR);
-> > +		state->period =3D div_u64(val, rate) << (2 * prescale);
->=20
-> Didn't PWM_DEBUG report a problem here?=20
-What is rate typically? Which
-> ranges did you test with PWM_DEBUG enabled?=20
-
-PWM_DEBUG doesn't report any problem.
-
-Rate is 100MHz and 32bit counter.
-
-I have tested the range you mentioned in previous mail thread.
-
-Assuming you test using sysfs, a good test is:
-
-	echo 0 > duty_cycle
-
-	for i in $(seq 10000 -1 1); do
-		echo $i > period
-	done
-
-	for i in $(seq 1 10000); do
-		echo $i > period
-	done
-
-	for i in $(seq 10000 -1 1); do
-		echo $i > duty_cycle
-	done
-
-	for i in $(seq 1 10000); do
-		echo $i > duty_cycle
-	done
-
-This doesn't look to match
-
-> .apply(). I suspect .apply is wrong here, if I had to guess the division
-> by 0xffffffff is bogus.
->=20
-> Also you're loosing precision here. div_u64(val << (2 * prescale), rate)
-> would return a more accurate value. (However you had to make sure that
-> the shift doesn't overflow.)
-
-OK, will change the logic.
-
->=20
-> > +		val =3D rzg2l_gpt_read(pc, gpt->ph->duty_reg_offset);
-> > +		state->duty_cycle =3D div_u64(val, rate) << (2 * prescale);
-> > +	} else {
-> > +		state->period =3D GTPR_MAX_VALUE;
-> > +		state->duty_cycle =3D 0;
->=20
-> You can drop this else branch.
-
-OK, Agreed.
-
->=20
-> > +	}
-> > +
-> > +	state->polarity =3D PWM_POLARITY_NORMAL; }
-> > +
-> > +static int rzg2l_gpt_apply(struct pwm_chip *chip, struct pwm_device
-> *pwm,
-> > +			   const struct pwm_state *state)
-> > +{
-> > +	struct rzg2l_gpt_chip *pc =3D to_rzg2l_gpt_chip(chip);
-> > +	int ret =3D 0;
-> > +
-> > +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> > +		return -EINVAL;
-> > +
-> > +	if (!state->enabled)
-> > +		goto err;
->=20
-> I wouldn't call this "err", a request to disable the PWM isn't an error.
-
-I will just return 0 here.
-
->=20
-> > +	ret =3D rzg2l_gpt_config(chip, pwm, state->duty_cycle, state-
-> >period);
-> > +	if (ret)
-> > +		goto err;
->=20
-> No need to disable the PWM in this case, just return ret here.
-
-OK.
-
->=20
-> > +	return rzg2l_gpt_enable(pc);
-> > +err:
-> > +	rzg2l_gpt_disable(pc);
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct pwm_ops rzg2l_gpt_ops =3D {
-> > +	.request =3D rzg2l_gpt_request,
-> > +	.free =3D rzg2l_gpt_free,
-> > +	.get_state =3D rzg2l_gpt_get_state,
-> > +	.apply =3D rzg2l_gpt_apply,
-> > +	.owner =3D THIS_MODULE,
-> > +};
-> > +
-> > +static const struct of_device_id rzg2l_gpt_of_table[] =3D {
-> > +	{ .compatible =3D "renesas,rzg2l-gpt", },
-> > +	{ /* Sentinel */ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, rzg2l_gpt_of_table);
-> > +
-> > +static void rzg2l_gpt_reset_assert_pm_disable(void *data) {
-> > +	struct rzg2l_gpt_chip *pc =3D data;
-> > +
-> > +	pm_runtime_disable(pc->chip.dev);
-> > +	reset_control_assert(pc->rstc);
-> > +}
-> > +
-> > +static int rzg2l_gpt_probe(struct platform_device *pdev) {
-> > +	struct rzg2l_gpt_chip *rzg2l_gpt;
-> > +	int ret;
-> > +
-> > +	rzg2l_gpt =3D devm_kzalloc(&pdev->dev, sizeof(*rzg2l_gpt),
-> GFP_KERNEL);
-> > +	if (!rzg2l_gpt)
-> > +		return -ENOMEM;
-> > +
-> > +	rzg2l_gpt->mmio =3D devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(rzg2l_gpt->mmio))
-> > +		return PTR_ERR(rzg2l_gpt->mmio);
-> > +
-> > +	rzg2l_gpt->rstc =3D devm_reset_control_get_exclusive(&pdev->dev,
-> NULL);
-> > +	if (IS_ERR(rzg2l_gpt->rstc))
-> > +		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->rstc),
-> > +				     "get reset failed\n");
-> > +
-> > +	rzg2l_gpt->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(rzg2l_gpt->clk))
-> > +		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->clk),
-> > +				     "cannot get clock\n");
-> > +
-> > +	platform_set_drvdata(pdev, rzg2l_gpt);
-> > +
-> > +	ret =3D reset_control_deassert(rzg2l_gpt->rstc);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "cannot deassert reset control: %pe\n",
-> > +			ERR_PTR(ret));
-> > +		return ret;
-> > +	}
-> > +
-> > +	pm_runtime_enable(&pdev->dev);
-> > +
-> > +	ret =3D devm_add_action_or_reset(&pdev->dev,
-> > +				       rzg2l_gpt_reset_assert_pm_disable,
-> > +				       rzg2l_gpt);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	rzg2l_gpt->chip.dev =3D &pdev->dev;
-> > +	rzg2l_gpt->chip.ops =3D &rzg2l_gpt_ops;
-> > +	rzg2l_gpt->chip.npwm =3D GPT_IO_PER_CHANNEL;
-> > +
-> > +	return devm_pwmchip_add(&pdev->dev, &rzg2l_gpt->chip);
->=20
-> If the PWM is already running during probe (e.g. because the bootloader
-> enabled the LCD backlight and showed a splash screen), you should make
-> sure to keep the PWM in that state. In this case you are required to
-> enable the clk.
-
-OK, I will check the running state and disable the clk, if it is not runnin=
-g.
-
-        ret =3D pm_runtime_resume_and_get(&pdev->dev);                     =
-       =20
-         if (ret < 0)                                                      =
-      =20
-                return dev_err_probe(&pdev->dev, ret, "pm_runtime_resume_an=
-d_get failed");
-                                                                           =
-      =20
-         if (!(rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTCR) & RZG2L_GTCR_CST))    =
-      =20
-                 pm_runtime_put(&pdev->dev); =20
-
-Regards,
-Biju
-
->=20
-> > +}
-> > +
-> > +static struct platform_driver rzg2l_gpt_driver =3D {
-> > +	.driver =3D {
-> > +		.name =3D "pwm-rzg2l-gpt",
-> > +		.of_match_table =3D of_match_ptr(rzg2l_gpt_of_table),
-> > +	},
-> > +	.probe =3D rzg2l_gpt_probe,
-> > +};
-> > +module_platform_driver(rzg2l_gpt_driver);
-> > +
-> > +MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-> > +MODULE_DESCRIPTION("Renesas RZ/G2L General PWM Timer (GPT) Driver");
-> > +MODULE_LICENSE("GPL"); MODULE_ALIAS("platform:pwm-rzg2l-gpt");
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig
-> |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/
-> |
+SGV5IFV3ZSwgdG9vayBhbm90aGVyIGxvb2sgYXQgdGhpcyB0b2RheS4NCkknbGwgZ2l2ZSB5b3Ug
+c29tZSBtb3JlIGluZm8gb24gdGhlIHN5bmNfdXBkYXRlIGh3IHdoZW4gSSBzZW5kDQp0aGUgbmV4
+dCB2ZXJzaW9uLg0KDQpPbiAwOS8wNy8yMDIyIDE3OjAyLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90
+ZToNCj4gSGVsbG8gQ29ub3IsDQo+IA0KPiBPbiBGcmksIEp1bCAwOCwgMjAyMiBhdCAwMzozOToy
+MlBNICswMTAwLCBDb25vciBEb29sZXkgd3JvdGU6DQo+PiBBZGQgYSBkcml2ZXIgdGhhdCBzdXBw
+b3J0cyB0aGUgTWljcm9jaGlwIEZQR0EgInNvZnQiIFBXTSBJUCBjb3JlLg0KPj4NCj4+IFNpZ25l
+ZC1vZmYtYnk6IENvbm9yIERvb2xleSA8Y29ub3IuZG9vbGV5QG1pY3JvY2hpcC5jb20+DQo+PiAt
+LS0NCg0KPj4gK3N0YXRpYyBpbnQgbWNocF9jb3JlX3B3bV9hcHBseV9wZXJpb2Qoc3RydWN0IHB3
+bV9jaGlwICpjaGlwLCBjb25zdCBzdHJ1Y3QgcHdtX3N0YXRlICpzdGF0ZSwNCj4+ICsJCQkJICAg
+ICAgdTggKnByZXNjYWxlLCB1OCAqcGVyaW9kX3N0ZXBzKQ0KPj4gK3sNCj4+ICsJc3RydWN0IG1j
+aHBfY29yZV9wd21fY2hpcCAqbWNocF9jb3JlX3B3bSA9IHRvX21jaHBfY29yZV9wd20oY2hpcCk7
+DQo+PiArCXU2NCB0bXAsIGNsa19yYXRlOw0KPj4gKwl1MTYgcHJlc2NhbGVfdmFsLCBwZXJpb2Rf
+c3RlcHNfdmFsOw0KPj4gKw0KPj4gKwkvKg0KPj4gKwkgKiBDYWxjdWxhdGUgdGhlIHBlcmlvZCBj
+eWNsZXMgYW5kIHByZXNjYWxlIHZhbHVlcy4NCj4+ICsJICogVGhlIHJlZ2lzdGVycyBhcmUgZWFj
+aCA4IGJpdHMgd2lkZSAmIG11bHRpcGxpZWQgdG8gY29tcHV0ZSB0aGUgcGVyaW9kDQo+PiArCSAq
+IHVzaW5nIHRoZSBmb3JtdWxhOg0KPj4gKwkgKiAoY2xvY2tfcGVyaW9kKSAqIChwcmVzY2FsZSAr
+IDEpICogKHBlcmlvZF9zdGVwcyArIDEpDQo+PiArCSAqIHNvIHRoZSBtYXhpbXVtIHBlcmlvZCB0
+aGF0IGNhbiBiZSBnZW5lcmF0ZWQgaXMgMHgxMDAwMCB0aW1lcyB0aGUNCj4+ICsJICogcGVyaW9k
+IG9mIHRoZSBpbnB1dCBjbG9jay4NCj4+ICsJICogSG93ZXZlciwgZHVlIHRvIHRoZSBkZXNpZ24g
+b2YgdGhlICJoYXJkd2FyZSIsIGl0IGlzIG5vdCBwb3NzaWJsZSB0bw0KPj4gKwkgKiBhdHRhaW4g
+YSAxMDAlIGR1dHkgY3ljbGUgaWYgdGhlIGZ1bGwgcmFuZ2Ugb2YgcGVyaW9kX3N0ZXBzIGlzIHVz
+ZWQuDQo+PiArCSAqIFRoZXJlZm9yZSBwZXJpb2Rfc3RlcHMgaXMgcmVzdHJpY3RlZCB0byAweEZF
+IGFuZCB0aGUgbWF4aW11bSBtdWx0aXBsZQ0KPj4gKwkgKiBvZiB0aGUgY2xvY2sgcGVyaW9kIGF0
+dGFpbmFibGUgaXMgMHhGRjAwLg0KPj4gKwkgKi8NCj4+ICsJY2xrX3JhdGUgPSBjbGtfZ2V0X3Jh
+dGUobWNocF9jb3JlX3B3bS0+Y2xrKTsNCj4gDQo+ICsJLyogSWYgY2xrX3JhdGUgaXMgdG9vIGJp
+ZywgdGhlIGZvbGxvd2luZyBtdWx0aXBsaWNhdGlvbiBtaWdodCBvdmVyZmxvdyAqLw0KDQoNCkkg
+ZXhwYW5kZWQgdGhpcyBjb21tZW50IHNsaWdodGx5IHRvOg0KLyoNCiogSWYgY2xrX3JhdGUgaXMg
+dG9vIGJpZywgdGhlIGZvbGxvd2luZyBtdWx0aXBsaWNhdGlvbiBtaWdodCBvdmVyZmxvdy4NCiog
+SG93ZXZlciB0aGlzIGlzIGltcGxhdXNpYmxlLCBhcyB0aGUgZmFicmljIG9mIGN1cnJlbnQgRlBH
+QXMgY2Fubm90DQoqIHByb3ZpZGUgY2xvY2tzIGF0IGEgcmF0ZSBoaWdoIGVub3VnaC4NCiovDQoN
+Cj4+ICsJaWYgKGNsa19yYXRlID49IE5TRUNfUEVSX1NFQykNCj4+ICsJCXJldHVybiAtRUlOVkFM
+Ow0KPj4gKw0KPj4gKwl0bXAgPSBtdWxfdTY0X3U2NF9kaXZfdTY0KHN0YXRlLT5wZXJpb2QsIGNs
+a19yYXRlLCBOU0VDX1BFUl9TRUMpOw0KPj4gKw0KPj4gKwlpZiAodG1wID49IE1DSFBDT1JFUFdN
+X1BFUklPRF9NQVgpIHsNCj4+ICsJCSpwcmVzY2FsZSA9IE1DSFBDT1JFUFdNX1BSRVNDQUxFX01B
+WCAtIDE7DQo+PiArCQkqcGVyaW9kX3N0ZXBzID0gTUNIUENPUkVQV01fUEVSSU9EX1NURVBTX01B
+WCAtIDE7DQo+PiArCQlnb3RvIHdyaXRlX3JlZ2lzdGVyczsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlm
+b3IgKHByZXNjYWxlX3ZhbCA9IDE7IHByZXNjYWxlX3ZhbCA8PSBNQ0hQQ09SRVBXTV9QUkVTQ0FM
+RV9NQVg7IHByZXNjYWxlX3ZhbCsrKSB7DQo+PiArCQlwZXJpb2Rfc3RlcHNfdmFsID0gZGl2X3U2
+NCh0bXAsIHByZXNjYWxlX3ZhbCk7DQo+PiArCQlpZiAocGVyaW9kX3N0ZXBzX3ZhbCA+IE1DSFBD
+T1JFUFdNX1BFUklPRF9TVEVQU19NQVgpDQo+PiArCQkJY29udGludWU7DQo+PiArCQkqcGVyaW9k
+X3N0ZXBzID0gcGVyaW9kX3N0ZXBzX3ZhbCAtIDE7DQo+PiArCQkqcHJlc2NhbGUgPSBwcmVzY2Fs
+ZV92YWwgLSAxOw0KPj4gKwkJYnJlYWs7DQo+PiArCX0NCj4gDQo+IE9LLCBzbyB5b3Ugd2FudCB0
+byBmaW5kIHRoZSBzbWFsbGVzdCBwcmVzY2FsZV92YWwgc3VjaCB0aGF0DQo+IA0KPiAJcHJlc2Nh
+bGVfdmFsICogTUNIUENPUkVQV01fUEVSSU9EX1NURVBTX01BWCA+PSB0bXANCj4gDQo+IC4gWW91
+IGNhbiBjYWxjdWxhdGUgdGhhdCB3aXRob3V0IGEgbG9vcCBhczoNCj4gDQo+IAlwcmVzY2FsZV92
+YWwgPSBkaXZfdTY0KHRtcCwgTUNIUENPUkVQV01fUEVSSU9EX1NURVBTX01BWCk7DQoNCkhtbSwg
+bm90IHF1aXRlIHJpZ2h0LiBGb3IgdG1wIDwgTUNIUENPUkVQV01fUEVSSU9EX1NURVBTX01BWCB0
+aGlzIGdpdmVzDQp6ZXJvLiBJdCB3b3VsZCBoYXZlIHRvIGJlOg0KKnByZXNjYWxlID0gZGl2X3U2
+NCh0bXAsIE1DSFBDT1JFUFdNX1BFUklPRF9TVEVQU19NQVgpOw0KDQpJbiB3aGljaCBjYXNlLCB0
+aGUgbG9vcCBjb2xsYXBzZXMgdG86DQoNCipwcmVzY2FsZSA9IGRpdl91NjQodG1wLCBNQ0hQQ09S
+RVBXTV9QRVJJT0RfU1RFUFNfTUFYKTsNCi8qIFBSRUdfVE9fVkFMKCkgY2FuIHByb2R1Y2UgYSB2
+YWx1ZSBsYXJnZXIgdGhhbiBVSU5UOF9NQVggKi8NCipwZXJpb2Rfc3RlcHMgPSBkaXZfdTY0KHRt
+cCwgUFJFR19UT19WQUwoKHUzMikgKnByZXNjYWxlKSkgLSAxOw0KDQphbmQgdGhlIGludGVyaW0g
+X3ZhbCB2YXJpYWJsZXMgY2FuIGp1c3QgYmUgZGVsZXRlZC4NCg0KDQo+PiArc3RhdGljIGludCBt
+Y2hwX2NvcmVfcHdtX2FwcGx5KHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZp
+Y2UgKnB3bSwNCj4+ICsJCQkgICAgICAgY29uc3Qgc3RydWN0IHB3bV9zdGF0ZSAqc3RhdGUpDQo+
+PiArew0KPj4gKwlzdHJ1Y3QgbWNocF9jb3JlX3B3bV9jaGlwICptY2hwX2NvcmVfcHdtID0gdG9f
+bWNocF9jb3JlX3B3bShjaGlwKTsNCj4+ICsJc3RydWN0IHB3bV9zdGF0ZSBjdXJyZW50X3N0YXRl
+ID0gcHdtLT5zdGF0ZTsNCj4+ICsJYm9vbCBwZXJpb2RfbG9ja2VkOw0KPj4gKwl1NjQgcGVyaW9k
+Ow0KPj4gKwl1MTYgY2hhbm5lbF9lbmFibGVkOw0KPj4gKwl1OCBwcmVzY2FsZSwgcGVyaW9kX3N0
+ZXBzOw0KPj4gKwlpbnQgcmV0Ow0KPj4gKw0KPj4gKwlpZiAoIXN0YXRlLT5lbmFibGVkKSB7DQo+
+PiArCQltY2hwX2NvcmVfcHdtX2VuYWJsZShjaGlwLCBwd20sIGZhbHNlKTsNCj4+ICsJCXJldHVy
+biAwOw0KPj4gKwl9DQo+PiArDQo+PiArCS8qDQo+PiArCSAqIElmIHRoZSBvbmx5IHRoaW5nIHRo
+YXQgaGFzIGNoYW5nZWQgaXMgdGhlIGR1dHkgY3ljbGUgb3IgdGhlIHBvbGFyaXR5LA0KPj4gKwkg
+KiB3ZSBjYW4gc2hvcnRjdXQgdGhlIGNhbGN1bGF0aW9ucyBhbmQganVzdCBjb21wdXRlL2FwcGx5
+IHRoZSBuZXcgZHV0eQ0KPj4gKwkgKiBjeWNsZSBwb3MgJiBuZWcgZWRnZXMNCj4+ICsJICogQXMg
+YWxsIHRoZSBjaGFubmVscyBzaGFyZSB0aGUgc2FtZSBwZXJpb2QsIGRvIG5vdCBhbGxvdyBpdCB0
+byBiZQ0KPj4gKwkgKiBjaGFuZ2VkIGlmIGFueSBvdGhlciBjaGFubmVscyBhcmUgZW5hYmxlZC4N
+Cj4+ICsJICovDQo+PiArCXNwaW5fbG9jaygmbWNocF9jb3JlX3B3bS0+bG9jayk7DQo+PiArDQo+
+PiArCWNoYW5uZWxfZW5hYmxlZCA9ICgoKHUxNilyZWFkYl9yZWxheGVkKG1jaHBfY29yZV9wd20t
+PmJhc2UgKyBNQ0hQQ09SRVBXTV9FTigxKSkgPDwgOCkgfA0KPj4gKwkJcmVhZGJfcmVsYXhlZCht
+Y2hwX2NvcmVfcHdtLT5iYXNlICsgTUNIUENPUkVQV01fRU4oMCkpKTsNCj4+ICsJcGVyaW9kX2xv
+Y2tlZCA9IGNoYW5uZWxfZW5hYmxlZCAmIH4oMSA8PCBwd20tPmh3cHdtKTsNCj4+ICsNCj4+ICsJ
+aWYgKCghY3VycmVudF9zdGF0ZS5lbmFibGVkIHx8IGN1cnJlbnRfc3RhdGUucGVyaW9kICE9IHN0
+YXRlLT5wZXJpb2QpICYmICFwZXJpb2RfbG9ja2VkKSB7DQo+PiArCQlyZXQgPSBtY2hwX2NvcmVf
+cHdtX2FwcGx5X3BlcmlvZChjaGlwLCBzdGF0ZSwgJnByZXNjYWxlLCAmcGVyaW9kX3N0ZXBzKTsN
+Cj4+ICsJCWlmIChyZXQpIHsNCj4+ICsJCQlzcGluX3VubG9jaygmbWNocF9jb3JlX3B3bS0+bG9j
+ayk7DQo+PiArCQkJcmV0dXJuIHJldDsNCj4+ICsJCX0NCj4+ICsJfSBlbHNlIHsNCj4+ICsJCXBy
+ZXNjYWxlID0gcmVhZGJfcmVsYXhlZChtY2hwX2NvcmVfcHdtLT5iYXNlICsgTUNIUENPUkVQV01f
+UFJFU0NBTEUpOw0KPj4gKwkJcGVyaW9kX3N0ZXBzID0gcmVhZGJfcmVsYXhlZChtY2hwX2NvcmVf
+cHdtLT5iYXNlICsgTUNIUENPUkVQV01fUEVSSU9EKTsNCj4+ICsJfQ0KPj4gKw0KPj4gKwkvKg0K
+Pj4gKwkgKiBJZiB0aGUgcGVyaW9kIGlzIGxvY2tlZCwgaXQgbWF5IG5vdCBiZSBwb3NzaWJsZSB0
+byB1c2UgYSBwZXJpb2QgbGVzcw0KPj4gKwkgKiB0aGFuIHRoYXQgcmVxdWVzdGVkLg0KPj4gKwkg
+Ki8NCj4+ICsJcGVyaW9kID0gUFJFR19UT19WQUwocGVyaW9kX3N0ZXBzKSAqICBQUkVHX1RPX1ZB
+TChwcmVzY2FsZSkgKiBOU0VDX1BFUl9TRUM7DQo+IA0KPiBzLyAgLyAvDQo+IA0KPj4gKwlkb19k
+aXYocGVyaW9kLCBjbGtfZ2V0X3JhdGUobWNocF9jb3JlX3B3bS0+Y2xrKSk7DQo+PiArCWlmIChw
+ZXJpb2QgPiBzdGF0ZS0+cGVyaW9kKSB7DQo+PiArCQlzcGluX3VubG9jaygmbWNocF9jb3JlX3B3
+bS0+bG9jayk7DQo+PiArCQlyZXR1cm4gLUVJTlZBTDsNCj4+ICsJfQ0KPiANCj4gSSB3b3VsZCBj
+b25zaWRlciBpdCBlYXNpZXIgdG8gZG8gdGhlIGZvbGxvd2luZyAoaW4gcHNldWRvIHN5bnRheCk6
+DQo+IA0KPiANCj4gCXByZXNjYWxlLCBwZXJpb2Rfc3RlcHMgPSBjYWxjdWxhdGVfaHdwZXJpb2Qo
+cGVyaW9kKTsNCj4gDQo+IAlpZiAocGVyaW9kX2xvY2tlZCk6DQo+IAkJaHdwcmVzY2FsZSA9IHJl
+YWRiX3JlbGF4ZWQoUFJFU0NBTEUpDQo+IAkJaHdwZXJpb2Rfc3RlcHMgPSByZWFkYl9yZWxheGVk
+KFBFUklPRCkNCj4gDQo+IAkJaWYgcGVyaW9kX3N0ZXBzICogcHJlc2NhbGUgPCBod3BlcmlvZF9z
+dGVwcyAqIGh3cHJlc2NhbGU6DQo+IAkJCXJldHVybiAtRUlOVkFMDQo+IAkJZWxzZQ0KPiAJCQlw
+cmVzY2FsZSwgcGVyaW9kX3N0ZXBzID0gaHdwcmVzY2FsZSwNCj4gCQkJaHdwZXJpb2Rfc3RlcHMN
+Cg0KSSB0aGluayBJIGxpa2UgdGhpcyBtZXRob2QgbW9yZSB0aGFuIG1lc3NpbmcgYXJvdW5kIHdp
+dGggdGhlIGNsa3MuDQpJJ2xsIGNoYW5nZSB0byBzb21ldGhpbmcgbGlrZSB0aGlzIGZvciB0aGUg
+bmV4dCB2ZXJzaW9uLg0KDQo+IAlkdXR5X3N0ZXBzID0gY2FsY3VsYXRlX2h3ZHV0eShkdXR5LCBw
+cmVzY2FsZSkNCj4gCWlmIChkdXR5X3N0ZXBzID4gcGVyaW9kX3N0ZXBzKQ0KPiAJCWR1dHlfc3Rl
+cHMgPSBwZXJpb2Rfc3RlcHMNCg0KDQo+IA0KPj4gKwltY2hwX2NvcmVfcHdtX2FwcGx5X2R1dHko
+Y2hpcCwgcHdtLCBzdGF0ZSwgcHJlc2NhbGUsIHBlcmlvZF9zdGVwcyk7DQo+PiArDQo+PiArCS8q
+DQo+PiArCSAqIE5vdGlmeSB0aGUgYmxvY2sgdG8gdXBkYXRlIHRoZSB3YXZlZm9ybSBmcm9tIHRo
+ZSBzaGFkb3cgcmVnaXN0ZXJzLg0KPj4gKwkgKiBUaGUgdXBkYXRlZCB2YWx1ZXMgd2lsbCBub3Qg
+YXBwZWFyIG9uIHRoZSBidXMgdW50aWwgdGhleSBoYXZlIGJlZW4NCj4+ICsJICogYXBwbGllZCB0
+byB0aGUgd2F2ZWZvcm0gYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgbmV4dCBwZXJpb2QuIFdlIG11
+c3QNCj4+ICsJICogd3JpdGUgdGhlc2UgcmVnaXN0ZXJzIGFuZCB3YWl0IGZvciB0aGVtIHRvIGJl
+IGFwcGxpZWQgYmVmb3JlIGNhbGxpbmcNCj4+ICsJICogZW5hYmxlKCkuDQo+PiArCSAqLw0KPj4g
+KwlpZiAobWNocF9jb3JlX3B3bS0+c3luY191cGRhdGVfbWFzayAmICgxIDw8IHB3bS0+aHdwd20p
+KSB7DQo+PiArCQl3cml0ZWxfcmVsYXhlZCgxVSwgbWNocF9jb3JlX3B3bS0+YmFzZSArIE1DSFBD
+T1JFUFdNX1NZTkNfVVBEKTsNCj4+ICsJCXVzbGVlcF9yYW5nZShzdGF0ZS0+cGVyaW9kLCBzdGF0
+ZS0+cGVyaW9kICogMik7DQo+PiArCX0NCj4+ICsNCj4+ICsJc3Bpbl91bmxvY2soJm1jaHBfY29y
+ZV9wd20tPmxvY2spOw0KPj4gKw0KPj4gKwltY2hwX2NvcmVfcHdtX2VuYWJsZShjaGlwLCBwd20s
+IHRydWUpOw0KPiANCj4gSSBhbHJlYWR5IGFza2VkIGluIHRoZSBsYXN0IHJvdW5kOiBEbyB5b3Ug
+cmVhbGx5IG5lZWQgdG8gd3JpdGUgdGhlDQo+IFNZTkNfVVBEIHJlZ2lzdGVyIHR3aWNlPyBJIHdv
+dWxkIGV4cGVjdCB0aGF0IHlvdSBkb24ndD8hDQo+IA0KPiBBbHNvIHRoZSBsb2NraW5nIGxvb2tz
+IGZpc2h5IGhlcmUuIEl0IHdvdWxkIGJlIHNpbXBsZXIgKGFuZCBtYXliZSBldmVuDQo+IG1vcmUg
+cm9idXN0LCBkaWRuJ3QgdGhpbmsgZGVlcGx5IGFib3V0IGl0KSB0byBhc3N1bWUgaW4NCj4gbWNo
+cF9jb3JlX3B3bV9lbmFibGUoKSB0aGF0IHRoZSBjYWxsZXIgaG9sZHMgdGhlIGxvY2suIFRoZW4g
+eW91IG9ubHkNCj4gZ3JhYiB0aGUgbG9jayBvbmNlIGR1cmluZyAuYXBwbHkoKSBhbmQgbm90aGlu
+ZyBzdHJhbmdlIGNhbiBoYXBwZW4gaW4gdGhlDQo+IGdhcC4NCg0KSSBnb3QgaXQgaW50byBteSBo
+ZWFkIHRoYXQgZW5hYmxlKCkgY291bGQgYmUgY2FsbGVkIGJ5IHRoZSBmcmFtZXdvcmsuDQpJJ2xs
+IHNpbXBsaWZ5IHRoZSBsb2NraW5nIGhlcmUuDQoNCj4gSSdkIHRha2UgdGhlIGxvY2sgaGVyZSB0
+byBiZSBzdXJlIHRvIGdldCBhIGNvbnNpc3RlbnQgcmV0dXJuIHZhbHVlLg0KPiANCj4+ICsJY2hh
+bm5lbF9lbmFibGVkID0gKCgodTE2KXJlYWRiX3JlbGF4ZWQobWNocF9jb3JlX3B3bS0+YmFzZSAr
+IE1DSFBDT1JFUFdNX0VOKDEpKSA8PCA4KSB8DQo+PiArCQlyZWFkYl9yZWxheGVkKG1jaHBfY29y
+ZV9wd20tPmJhc2UgKyBNQ0hQQ09SRVBXTV9FTigwKSkpOw0KPiANCj4gbWljcm8gb3B0aW1pc2F0
+aW9uOiBZb3UncmUgcmVhZGluZyB0d28gcmVnaXN0ZXIgdmFsdWVzIGhlcmUsIGJ1dCBvbmx5IHVz
+ZQ0KPiBvbmUuIFNoYWRvd2luZyB0aGUgZW5hYmxlZCByZWdpc3RlcnMgaW4gbWNocF9jb3JlX3B3
+bSBtaWdodCBhbHNvIGJlIGFuDQo+IGlkZWEuDQoNCkknZCBhZ3JlZSwgYnV0IG1vcmUgZnJvbSB0
+aGUgcGVyc3BlY3RpdmUgb2YgaG93IGF3ZnVsIEkgZmVlbCB0aGlzIGNvZGUNCmxvb2tzLg0KDQo+
+IA0KPj4gKwlpZiAoY2hhbm5lbF9lbmFibGVkICYgMSA8PCBwd20tPmh3cHdtKQ0KPiANCj4gSSdt
+IGFsd2F5cyB1bnN1cmUgYWJvdXQgdGhlIGFzc29jaWF0aXZpdHkgb2YgJiBhbmQgPDwsIHNvIEkg
+d291bGQgaGF2ZQ0KPiB3cml0dGVuIHRoYXQgYXMNCj4gDQo+IAlpZiAoY2hhbm5lbF9lbmFibGVk
+ICYgKDEgPDwgcHdtLT5od3B3bSkpDQo+IA0KPiBJIGp1c3QgdGVzdGVkIHRoYXQgZm9yIHRoZSB1
+bXB0ZWVucyB0aW1lIGFuZCB5b3VyIGNvZGUgaXMgZmluZSwgc28gdGhpcw0KPiBpcyBvbmx5IGZv
+ciBodW1hbiByZWFkZXJzIGxpa2UgbWUuDQoNCkknbGwgY2hhbmdlIGl0LCBJJ2xsIHByb2IgaGF2
+ZSBmb3Jnb3R0ZW4gdGhlIGFzc29jaWF0aXZpdHkgYnkgdGhlIHRpbWUgSQ0KbG9vayBhdCB0aGUg
+ZHJpdmVyIG5leHQuDQoNCj4gDQo+PiArCQlzdGF0ZS0+ZW5hYmxlZCA9IHRydWU7DQo+PiArCWVs
+c2UNCj4+ICsJCXN0YXRlLT5lbmFibGVkID0gZmFsc2U7DQo+PiArDQo+PiArCXByZXNjYWxlID0g
+UFJFR19UT19WQUwocmVhZGJfcmVsYXhlZChtY2hwX2NvcmVfcHdtLT5iYXNlICsgTUNIUENPUkVQ
+V01fUFJFU0NBTEUpKTsNCj4+ICsNCj4+ICsJcG9zZWRnZSA9IHJlYWRiX3JlbGF4ZWQobWNocF9j
+b3JlX3B3bS0+YmFzZSArIE1DSFBDT1JFUFdNX1BPU0VER0UocHdtLT5od3B3bSkpOw0KPj4gKwlu
+ZWdlZGdlID0gcmVhZGJfcmVsYXhlZChtY2hwX2NvcmVfcHdtLT5iYXNlICsgTUNIUENPUkVQV01f
+TkVHRURHRShwd20tPmh3cHdtKSk7DQo+PiArDQo+PiArCWR1dHlfc3RlcHMgPSBhYnMoKHMxNilw
+b3NlZGdlIC0gKHMxNiluZWdlZGdlKTsNCj4gDQo+IElmIGR1dHlfc3RlcHMgPT0gMCB0aGUgcmV0
+dXJuZWQgcmVzdWx0IGlzIHdyb25nLiBJIHN1Z2dlc3QgdG8gZml4IHRoYXQsDQo+IGF0IGxlYXN0
+IG1lbnRpb24gdGhlIHByb2JsZW0gaW4gYSBjb21tZW50Lg0KDQpJIHRoaW5rIGhhbmRsaW5nIGl0
+IGlzIHRoZSB3YXkgdG8gZ28uDQoNCj4gDQo+PiArCXN0YXRlLT5kdXR5X2N5Y2xlID0gZHV0eV9z
+dGVwcyAqIHByZXNjYWxlICogTlNFQ19QRVJfU0VDOw0KPiANCj4gQ2FuIHRoaXMgb3ZlcmZsb3c/
+DQoNCk5vLCAyNTUgKiAyNTYgKiAxRTkgPCAyXjY0IGJ1dCAuLi4NCg0KPj4gKwlwcmVzY2FsZSA9
+IFBSRUdfVE9fVkFMKHJlYWRiX3JlbGF4ZWQobWNocF9jb3JlX3B3bS0+YmFzZSArIE1DSFBDT1JF
+UFdNX1BSRVNDQUxFKSk7DQoNCi4uLiBjYW4uDQoNCj4+PiBXaGF0IGlzIHRoZSB0eXBpY2FsIHJl
+dHVybiB2YWx1ZSBvZiBjbGtfZ2V0X3JhdGUobWNocF9jb3JlX3B3bS0+Y2xrKT8NCj4+DQo+PiBJ
+dCdzIGdvbm5hIGJlIGxlc3MgdGhhbiA2MDBNDQo+DQo+IEFuIGV4YWN0IHZhbHVlIHdvdWxkIGJl
+IGludGVyZXN0aW5nLCB0aGVuIHdoZW4gSSBzcG90IGEgcm91bmRpbmcgcHJvYmxlbQ0KPiBJIGNv
+dWxkIGdpdmUgeW91IGEgdGVzdCBjYXNlIHRvIGRvdWJsZSBjaGVjay4NCg0KVGhlIG1heGltdW0g
+ZGVwZW5kcyBvbiBzcGVlZCBncmFkZSwgYnV0IG5vIG1vcmUgdGhhbiAyMDAgTUh6Lg0KDQoNCj4+
+Pj4gWW91IG5lZWQgdG8gcm91bmQgdXAgaGVyZS4gRGlkIHlvdSB0ZXN0IHlvdXIgZHJpdmVyIHdp
+dGggUFdNX0RFQlVHIG9uPw0KPj4+PiBEdXJpbmcgdGVzdCBwbGVhc2UgZG8gZm9yIGEgZmV3IGZp
+eGVkIHBlcmlvZHM6DQo+Pj4+DQo+Pj4+IAlmb3IgZHV0eV9jeWNsZSBpbiBbMCAuLiBwZXJpb2Rd
+Og0KPj4+PiAJCXB3bV9hcHBseShteXB3bSwgey5wZXJpb2QgPSBwZXJpb2QsIC5kdXR5X2N5Y2xl
+ID0gZHV0eV9jeWNsZSwgLmVuYWJsZWQgPSB0cnVlLCAuLi59KQ0KPj4+Pg0KPj4+PiAJZm9yIGR1
+dHlfY3ljbGUgaW4gW3BlcmlvZCAuLiAwXToNCj4+Pj4gCQlwd21fYXBwbHkobXlwd20sIHsucGVy
+aW9kID0gcGVyaW9kLCAuZHV0eV9jeWNsZSA9IGR1dHlfY3ljbGUsIC5lbmFibGVkID0gdHJ1ZSwg
+Li4ufSkNCj4+Pj4NCj4+Pj4gYW5kIGNoZWNrIHRoZXJlIGlzIG5vIG91dHB1dCBjbGFpbWluZyBh
+IG1pc2NhbGN1bGF0aW9uLg0KPj4+DQo+Pj4gSSByYW4gdGhlIHN0dWZmIHlvdSBnYXZlIG1lIGxh
+c3QgdGltZSwgZG9pbmcgc29tZXRoaW5nIHNpbWlsYXIgdy8gYQ0KPj4+IHNoZWxsIGxvb3AuIEdv
+dCBubyByZXBvcnRlZCBtaXNjYWxjdWxhdGlvbnMuDQo+Pg0KPj4gSSdtIHN1cnByaXNlLCBJIHdv
+dWxkIGhhdmUgZXhwZWN0ZWQgdGhhdCBteSB0ZXN0IHJlY2lwZSB3b3VsZCBmaW5kIHN1Y2gNCj4+
+IGFuIGlzc3VlLiBDb3VsZCB5b3UgZm9sbG93IG15IGFyZ3VpbmcgYWJvdXQgdGhlIHJvdW5kaW5n
+IGRpcmVjdGlvbj8NCj4+IFRoZXJlIGFsd2F5cyB0aGUgcG9zc2liaWxpdHkgdGhhdCBJJ20gd3Jv
+bmcsIHRvby4NCj4NCj4gSSdsbCB0YWtlIGFub3RoZXIgbG9vayAmIGdldCBiYWNrIHRvIHlvdS4N
+Cg0KSSAqdGhpbmsqIEkgbWlnaHQndmUgc3BlbHQgIlBXTV9ERUJVRyIgYXMgIlBXTV9ERUJVRiIu
+Li4NCg0KSSdsbCByZXRlc3QhDQoNClRoYW5rcywNCkNvbm9yLg0K
