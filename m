@@ -2,65 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5927571C6E
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 16:26:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C9F6571C74
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 16:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233268AbiGLO0n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jul 2022 10:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43490 "EHLO
+        id S229903AbiGLO0m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jul 2022 10:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233308AbiGLO0d (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 10:26:33 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2142DB93C9;
-        Tue, 12 Jul 2022 07:26:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1657635978; x=1689171978;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0L9J2eXxRU3T3ZDdzxJjwk06pdsoufFKChVyEazSj6I=;
-  b=EH0eAnjCqFzDJuF6HIcqqZQN1Z8Nv8KZsGa3iz+XapXOd5Aj0YnbYrLb
-   y71Rha4fpA2n9uYYw9PQ6mXTaQrllHM8ZmEI5VTcglProTQey90258TKO
-   0/SkmOjXcSDYVhIxQrT61CYJaGwbR9fQg4YClYzGArOip5I8SFTWPZonC
-   CaONlljf5k59yfWRv8eVW7JD8xs+P/+PK1J7DevMD6LAwovsX5NsnGTNK
-   q1fNGalqBecEh0S6LUPg9ys1LMslwubEvSZ1qYCLA30f/de+FOl1BYO9p
-   q2i7E4dqh7Az9BRV6cuXqz8UliT3B1yetNGfKhOrYVj2YeoIBT5blvId1
-   g==;
-X-IronPort-AV: E=Sophos;i="5.92,265,1650956400"; 
-   d="scan'208";a="171772480"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Jul 2022 07:26:17 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Tue, 12 Jul 2022 07:26:15 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Tue, 12 Jul 2022 07:26:13 -0700
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v6 4/4] MAINTAINERS: add pwm to PolarFire SoC entry
-Date:   Tue, 12 Jul 2022 15:25:57 +0100
-Message-ID: <20220712142557.1773075-5-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220712142557.1773075-1-conor.dooley@microchip.com>
-References: <20220712142557.1773075-1-conor.dooley@microchip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S233577AbiGLO0Z (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 10:26:25 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F6BB93C5;
+        Tue, 12 Jul 2022 07:26:16 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id p128so7985408iof.1;
+        Tue, 12 Jul 2022 07:26:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=2smug+m1Lke8wFpPEM5ppWOdoo/9ROT7QK4c9TYtB6U=;
+        b=0IF9BcxGXIoEh6yGwI13UQbu0z1sKuFoLkAjY7ezSfTk1Mh/6u2sCpNIBE8v/kv2WE
+         y6k2I74rZL6VShto6O0Gy5/drgvX8XVy7lujFYPE4x+pq80FM/hAV6HC5jojItRmmtmB
+         Lus3JKQVQUCu8RfphiCwBMAh5voOc2hRI4XEkdaKVnA+A9tUEV993NCB7S3gxpUdnDCF
+         N78UdUjSWEc+IV34r66OKumwkgVP5GO2/MWFDIfkKpGz8V7hbKrZJsgihosXyFR+pDSu
+         CBUtbgsSd6eB5mjeK+v7oGwsakp/phMxD3sQd5qBWGm6XNNRtPNQPO0sYCPNJSXT5m5g
+         lGxg==
+X-Gm-Message-State: AJIora8OnJpToZchLuM5l7sgDBfK8ppygZWQ9aF5p59vDJ2aC2NJ2Vvy
+        tRQAtEX57DPanUoQ4l+L1Q==
+X-Google-Smtp-Source: AGRyM1u9UVtNz1Lq5TBvtlHE6sfHP3e+TCv3kW8PIg+n1aqq/Z1DAjz9ef1ZYwzKBGpoy+zzrudY0Q==
+X-Received: by 2002:a05:6638:2688:b0:33e:abf9:908d with SMTP id o8-20020a056638268800b0033eabf9908dmr13403331jat.166.1657635975713;
+        Tue, 12 Jul 2022 07:26:15 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id ay2-20020a5d9d82000000b00678ea668a39sm5086524iob.36.2022.07.12.07.26.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 07:26:15 -0700 (PDT)
+Received: (nullmailer pid 1805850 invoked by uid 1000);
+        Tue, 12 Jul 2022 14:26:12 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Ben Dooks <ben.dooks@sifive.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greentime Hu <greentime.hu@sifive.com>,
+        u.kleine-koenig@pengutronix.de,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org,
+        Adnan Chowdhury <adnan.chowdhury@sifive.com>,
+        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+In-Reply-To: <20220712100113.569042-4-ben.dooks@sifive.com>
+References: <20220712100113.569042-1-ben.dooks@sifive.com> <20220712100113.569042-4-ben.dooks@sifive.com>
+Subject: Re: [PATCH 3/7] pwm: dwc: add of/platform support
+Date:   Tue, 12 Jul 2022 08:26:12 -0600
+Message-Id: <1657635972.108769.1805849.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,25 +67,40 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the newly introduced pwm driver to the existing PolarFire SoC entry.
+On Tue, 12 Jul 2022 11:01:09 +0100, Ben Dooks wrote:
+> The dwc pwm controller can be used in non-PCI systems, so allow
+> either platform or OF based probing.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-synposys.yaml | 40 ++++++++++++++
+>  drivers/pwm/Kconfig                           |  5 +-
+>  drivers/pwm/pwm-dwc.c                         | 53 +++++++++++++++++++
+>  3 files changed, 96 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
+> 
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b5aeaddc9539..99f490a19850 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17468,6 +17468,7 @@ F:	drivers/char/hw_random/mpfs-rng.c
- F:	drivers/clk/microchip/clk-mpfs.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/rtc/rtc-mpfs.c
- F:	drivers/soc/microchip/
- F:	drivers/spi/spi-microchip-core.c
--- 
-2.36.1
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pwm/pwm-synposys.yaml:11:4: [warning] wrong indentation: expected 2 but found 3 (indentation)
+./Documentation/devicetree/bindings/pwm/pwm-synposys.yaml:31:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
