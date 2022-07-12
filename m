@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16160571667
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 12:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 116EA57166D
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 12:01:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232351AbiGLKB3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jul 2022 06:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
+        id S232806AbiGLKBc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jul 2022 06:01:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232570AbiGLKBY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 06:01:24 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A140FAA825
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:22 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id v14so10430068wra.5
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:22 -0700 (PDT)
+        with ESMTP id S232484AbiGLKBZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 06:01:25 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A41AAB10
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:23 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id q9so10428630wrd.8
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IHCGiaNr3aif8aeEvr8zpBcHltb8NjCKc/JcHxgZJu4=;
-        b=IgHIXIjFgQgQSr38iFd2NoGvaTsv8OWBBcDc1sH7Yt2b1NuYSMQAyJbpTJC2s14o4L
-         Fqx98/EIwCObU8Bx6syIyhLUrlXgYCPfqtWeq4juQylZldpIVxurpNrvT5GyLoDNRFOd
-         ZNic2PKz0YaV/SJs4S7M/+N7FXsOzJDmeYvdYiIKGuJX/YmvZIyyXsCYM5fK1fxP6/ao
-         dATG/yeBF+02SlN/lDJVEd3UNTRO3q9IDsGzchl6vgqJfngTXCcl31t7H8LZcueM5pq6
-         bQru6KHHQ+C8mvYuC+W0qTbno/0hrdSDPbpcCYTvBuQ4H51zLt+UfezIlf+pXXuQNVXp
-         TJzw==
+        bh=fNgP14MAtLj1mkNOkCSavVhxwnDVj9LKGVrRGWXTHqg=;
+        b=GObBu8Br3TyNkEjFsGP8ZvMKVaSsDv1DBLlx9KrtsaRdweH8X3QnI/Id8vbt01om9x
+         GIKWi4Fy/2XLTziQ6IkWK2T72dr5iKIwkgasJN16p5Ud/s4LrY/p4ljhBkPcpnM3o15E
+         +Yer5SImBBG7s1WRMiq8/zxZcZo98V4zolVSXBCAcOrn0gt55mgneq4Yufx1HIpYqSbZ
+         esYXfxJ5GIAZErrG6++Ya4QkJAcqLiDOhDay6DhWD8pZlpvAZMz1rBu5oisO08uTD7zl
+         CqyYQtW+KDFafYPvdlgI+FNI5s8pfO4BhnHKYo6iaommrbP28GFDLQZZ40xIk5Wz85JH
+         ioYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IHCGiaNr3aif8aeEvr8zpBcHltb8NjCKc/JcHxgZJu4=;
-        b=WaWk2gQ0+hCOAD1sQLilt1JLzk1HQPwULklWdOhBTYxcdLhARxh9J8OJbU/9WENfDc
-         yz1/zm/KZnuxDQ0BedDQdzIfgeEBn7qlwFj/p5LwyGPfAmNAawxSBE3tpZExru9LenfM
-         AM+GoNRm2cKdQS8RnERUpfgKDhqWgwT0QTQdFAwAtWj3oj95aSe02uVqiOziDfkWKhyG
-         U2vyZvmTABSnTknsISOXqrCTGeYNoAlY8ndlSjdYKggx7PXVnVgE2vsIIWPgmH/3SNw4
-         Oz6/v4xQMwI5S0CMTnim56dwgYmahYLjvqq74w4g1XgdyvKUAx+X5QzVN6F6tFD0FDyz
-         M8zA==
-X-Gm-Message-State: AJIora+nf4I4IVArGWzuBxI7ltrrn0JnESj+aGO+T0I4Wf+5lp9olxIM
-        IwvwACiNKI+EAdqrlzE506bm1/aRQ2axMm8c
-X-Google-Smtp-Source: AGRyM1sd3/yMZeWKXTHC3/S81sz6aQwLxkVeorSU+2ptnUvfZ35T3sWpgQgcJOgbphAa08l7M8nAkA==
-X-Received: by 2002:adf:f345:0:b0:21d:6a26:6d8f with SMTP id e5-20020adff345000000b0021d6a266d8fmr21644792wrp.538.1657620080841;
-        Tue, 12 Jul 2022 03:01:20 -0700 (PDT)
+        bh=fNgP14MAtLj1mkNOkCSavVhxwnDVj9LKGVrRGWXTHqg=;
+        b=HZPh6tJio4qv/mzrWeTnidDf1y+jYxyEfN/DDj32WKpkD1GD12t+Qft7E8lU0ki38U
+         4VVXUD9CY9g+FLJLTMTbPeZIn7+fml2qi91F1JHatoorsDP6InR8wv17BUjJrMskZ/bQ
+         DKE2gViqagN2YRoQ31fK+4SYfO8Y1eMV0+5ZJxkjOmLnUtBKXQiM3M9yqmWACKj2kYjb
+         bQ359jFaYRSIJSvL98Md3oIOIe1lCMk2MdCdoswJ+rP8Q3rng9X4Qk8S9s2wpxsKG/ui
+         QAeIaovS/CfmoJbdhocOFBbKOliEEAcHdr6mnlJsZcBGkd4/BfticuVnIPoRjX4Ol8md
+         0I6w==
+X-Gm-Message-State: AJIora9Kw65bVMT0Ykb7z3IvuGX5rYXidr9KmlTWg/dGkvkaWYvsro4K
+        TN12aq+7ES7/sbs2SJ7n1GWgF+RLv3MGebF9
+X-Google-Smtp-Source: AGRyM1tDf0TulvefmWPqg6e8ewgCNOGbNQvHvRkXvRP4sLZaZsOw3xNrUIQPWyetN0PANpvbInpVsw==
+X-Received: by 2002:a5d:6d46:0:b0:21b:933d:7950 with SMTP id k6-20020a5d6d46000000b0021b933d7950mr21023621wri.679.1657620081684;
+        Tue, 12 Jul 2022 03:01:21 -0700 (PDT)
 Received: from rainbowdash.office.codethink.co.uk ([167.98.27.226])
         by smtp.gmail.com with ESMTPSA id u9-20020a7bc049000000b0039747cf8354sm8895314wmc.39.2022.07.12.03.01.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 03:01:20 -0700 (PDT)
+        Tue, 12 Jul 2022 03:01:21 -0700 (PDT)
 From:   Ben Dooks <ben.dooks@sifive.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -60,9 +60,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Salmon <william.salmon@sifive.com>,
         Adnan Chowdhury <adnan.chowdhury@sifive.com>,
         Ben Dooks <ben.dooks@sifive.com>
-Subject: [PATCH 6/7] pwm: dwc: remove the CONFIG_OF in timer clock
-Date:   Tue, 12 Jul 2022 11:01:12 +0100
-Message-Id: <20220712100113.569042-7-ben.dooks@sifive.com>
+Subject: [PATCH 7/7] pwm: dwc: add snps,pwm-number to limit pwm count
+Date:   Tue, 12 Jul 2022 11:01:13 +0100
+Message-Id: <20220712100113.569042-8-ben.dooks@sifive.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220712100113.569042-1-ben.dooks@sifive.com>
 References: <20220712100113.569042-1-ben.dooks@sifive.com>
@@ -78,72 +78,65 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-We should probably change from the #ifdef added earlier in
-49a0f4692a8752c7b03cb26d54282bee5c8c71bb ("wm: dwc: add timer clock")
-and just have it always in the dwc data so if we have a system with
-both PCI and OF probing it should work
+Add snps,pwm-number property to indicate if the block does not have
+all 8 of the PWM blocks.
 
--- consider merging with original patch
+Not sure if this should be a general PWM property consider optional
+for all PWM types, so have added a specific one here (there is only
+one other controller with a property for PWM count at the moment)
+
+Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
 ---
- drivers/pwm/pwm-dwc.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/pwm/pwm-synposys.yaml | 5 +++++
+ drivers/pwm/pwm-dwc.c                                   | 8 ++++++++
+ 2 files changed, 13 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
+index 38ac0da75272..15bdf764b46a 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
+@@ -30,11 +30,16 @@ properties:
+       - items:
+         - const: snps,pwm
+ 
++  snps,pwm-number:
++    $ref: '/schemas/types.yaml#/definitions/uint32'
++    description: u32 value representing the number of PWM devices
++
+ required:
+   - "#pwm-cells"
+   - compatible
+   - reg
+   - clocks
+   - clock-names
++  - snps,pwm-number
+ 
+ additionalProperties: false
 diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index aa0486b89bdd..6a4364a5d137 100644
+index 6a4364a5d137..abdde83452ad 100644
 --- a/drivers/pwm/pwm-dwc.c
 +++ b/drivers/pwm/pwm-dwc.c
-@@ -37,12 +37,6 @@
+@@ -328,12 +328,20 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct dwc_pwm *dwc;
++	u32 nr_pwm;
+ 	int ret;
  
- #define DWC_TIMERS_TOTAL	8
- 
--#ifndef CONFIG_OF
--#define DWC_CLK_PERIOD_NS	10
--#else
--#define DWC_CLK_PERIOD_NS	dwc->clk_ns
--#endif
--
- /* Timer Control Register */
- #define DWC_TIM_CTRL_EN		BIT(0)
- #define DWC_TIM_CTRL_MODE	BIT(1)
-@@ -104,13 +98,13 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * periods and check are the result within HW limits between 1 and
- 	 * 2^32 periods.
- 	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, DWC_CLK_PERIOD_NS);
-+	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
- 	if (tmp < 1 || tmp > (1ULL << 32))
- 		return -ERANGE;
- 	low = tmp - 1;
- 
- 	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
--				    DWC_CLK_PERIOD_NS);
-+				    dwc->clk_ns);
- 	if (tmp < 1 || tmp > (1ULL << 32))
- 		return -ERANGE;
- 	high = tmp - 1;
-@@ -185,12 +179,12 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	duty += 1;
--	duty *= DWC_CLK_PERIOD_NS;
-+	duty *= dwc->clk_ns;
- 	state->duty_cycle = duty;
- 
- 	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
- 	period += 1;
--	period *= DWC_CLK_PERIOD_NS;
-+	period *= dwc->clk_ns;
- 	period += duty;
- 	state->period = period;
- 
-@@ -213,6 +207,7 @@ static struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
+ 	dwc = dwc_pwm_alloc(dev);
  	if (!dwc)
- 		return NULL;
+ 		return -ENOMEM;
  
-+	dwc->clk_ns = 10;
- 	dwc->chip.dev = dev;
- 	dwc->chip.ops = &dwc_pwm_ops;
- 	dwc->chip.npwm = DWC_TIMERS_TOTAL;
++	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
++		if (nr_pwm > DWC_TIMERS_TOTAL)
++			dev_err(dev, "too many PWMs specified (%d)\n", nr_pwm);
++		else
++			dwc->chip.npwm = nr_pwm;
++	}
++
+ 	dwc->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dwc->base))
+ 		return dev_err_probe(dev, PTR_ERR(dwc->base),
 -- 
 2.35.1
 
