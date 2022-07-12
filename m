@@ -2,53 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 116EA57166D
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 12:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B6D9571699
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 12:08:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232806AbiGLKBc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jul 2022 06:01:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
+        id S232814AbiGLKIb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jul 2022 06:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232484AbiGLKBZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 06:01:25 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A41AAB10
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:23 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id q9so10428630wrd.8
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:23 -0700 (PDT)
+        with ESMTP id S229621AbiGLKI1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 06:08:27 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB09AB69B
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:08:26 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id d12so13083417lfq.12
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fNgP14MAtLj1mkNOkCSavVhxwnDVj9LKGVrRGWXTHqg=;
-        b=GObBu8Br3TyNkEjFsGP8ZvMKVaSsDv1DBLlx9KrtsaRdweH8X3QnI/Id8vbt01om9x
-         GIKWi4Fy/2XLTziQ6IkWK2T72dr5iKIwkgasJN16p5Ud/s4LrY/p4ljhBkPcpnM3o15E
-         +Yer5SImBBG7s1WRMiq8/zxZcZo98V4zolVSXBCAcOrn0gt55mgneq4Yufx1HIpYqSbZ
-         esYXfxJ5GIAZErrG6++Ya4QkJAcqLiDOhDay6DhWD8pZlpvAZMz1rBu5oisO08uTD7zl
-         CqyYQtW+KDFafYPvdlgI+FNI5s8pfO4BhnHKYo6iaommrbP28GFDLQZZ40xIk5Wz85JH
-         ioYw==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=9tmI5itLo+az2NBT8yzH/XgEsrNR0rdSvtFYImf7rvM=;
+        b=jGL3yWUVHDyLo2mditJsLo9eZwQRwOlRMs1BOzwXgQgMl9VZKiWusZB3OL6+6pe1T3
+         1/kprO7Bg7O0JkhTVP7syWIF3fjkfFipAOfKIwsyREqj+gEs++uY4I0EC3riNWSg7M6+
+         wJpFMibQKKtpc2ChIZY33TAZyZekuEStAadNkqP0WmUB9+8kFaHVZnWgkhH3deTvqAnL
+         +LgiC3Fo2/ThdhQrS7xXtyUVhEFsjxNqdx0oAfDe+QL/gmUNMtTrINMQ6jSep5gtwNNx
+         S39Kw2Dp3bBW9Q8PGyofZ4rtXUpXOWvys+Ylgd6faJUOluLru5+mTt8DhZD9NlgbdtTj
+         bvug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fNgP14MAtLj1mkNOkCSavVhxwnDVj9LKGVrRGWXTHqg=;
-        b=HZPh6tJio4qv/mzrWeTnidDf1y+jYxyEfN/DDj32WKpkD1GD12t+Qft7E8lU0ki38U
-         4VVXUD9CY9g+FLJLTMTbPeZIn7+fml2qi91F1JHatoorsDP6InR8wv17BUjJrMskZ/bQ
-         DKE2gViqagN2YRoQ31fK+4SYfO8Y1eMV0+5ZJxkjOmLnUtBKXQiM3M9yqmWACKj2kYjb
-         bQ359jFaYRSIJSvL98Md3oIOIe1lCMk2MdCdoswJ+rP8Q3rng9X4Qk8S9s2wpxsKG/ui
-         QAeIaovS/CfmoJbdhocOFBbKOliEEAcHdr6mnlJsZcBGkd4/BfticuVnIPoRjX4Ol8md
-         0I6w==
-X-Gm-Message-State: AJIora9Kw65bVMT0Ykb7z3IvuGX5rYXidr9KmlTWg/dGkvkaWYvsro4K
-        TN12aq+7ES7/sbs2SJ7n1GWgF+RLv3MGebF9
-X-Google-Smtp-Source: AGRyM1tDf0TulvefmWPqg6e8ewgCNOGbNQvHvRkXvRP4sLZaZsOw3xNrUIQPWyetN0PANpvbInpVsw==
-X-Received: by 2002:a5d:6d46:0:b0:21b:933d:7950 with SMTP id k6-20020a5d6d46000000b0021b933d7950mr21023621wri.679.1657620081684;
-        Tue, 12 Jul 2022 03:01:21 -0700 (PDT)
-Received: from rainbowdash.office.codethink.co.uk ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id u9-20020a7bc049000000b0039747cf8354sm8895314wmc.39.2022.07.12.03.01.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 03:01:21 -0700 (PDT)
-From:   Ben Dooks <ben.dooks@sifive.com>
-To:     linux-pwm@vger.kernel.org
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=9tmI5itLo+az2NBT8yzH/XgEsrNR0rdSvtFYImf7rvM=;
+        b=7enJs2RR2qNTDfdmnWCJtCiYux2tjQoH+3NVEsXOswQetwQwfJ5BbCo8v3AxV1DCn7
+         JBFGoJ0moafHZe6mFKpPTSowEvdHwZA3u+/CVAZEzAgFLLt9ZDUhcRWqJ3a69SbxOe9+
+         j06g9we6fCjiVe9nzAFRyLra/AJtkzB3sbx9ljnGmxxeOeGTj0gkuCWQ/3mZXvvAX2fe
+         5LkHF9Yz6w0NyX9VTl8vfn07HSWfLNK44X/k2DLFmMvSqR0rxloRRP2eJkUozuOtqnZT
+         9DJ6GheB9McPLulte0FnExjr73TnYrpniKQAL1OO4lD5n9qEy/6Am8iGBMfbC/3aiMek
+         RKaA==
+X-Gm-Message-State: AJIora+dTct2lmkO7durqTfVfcp4sO4/bxl3xeVvYbJC43y3k350qlSG
+        uR/qXs2jAchsaxdJyeM9+3MYjQ==
+X-Google-Smtp-Source: AGRyM1v7YtW6PNha688Ly/qRMtHWf8J90QekegU41aq4ftRdp8UQi3tEPZqQDVm+oefoOtinVjYqVg==
+X-Received: by 2002:a05:6512:33d2:b0:489:ce1a:fb2a with SMTP id d18-20020a05651233d200b00489ce1afb2amr11046939lfg.558.1657620505091;
+        Tue, 12 Jul 2022 03:08:25 -0700 (PDT)
+Received: from [10.0.0.8] (fwa5da9-171.bb.online.no. [88.93.169.171])
+        by smtp.gmail.com with ESMTPSA id u2-20020a2e9f02000000b0025a67779931sm2339204ljk.57.2022.07.12.03.08.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 03:08:24 -0700 (PDT)
+Message-ID: <fdef31b4-9c27-ddda-f1e5-ee881812aa4e@linaro.org>
+Date:   Tue, 12 Jul 2022 12:08:21 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 3/7] pwm: dwc: add of/platform support
+Content-Language: en-US
+To:     Ben Dooks <ben.dooks@sifive.com>, linux-pwm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         u.kleine-koenig@pengutronix.de,
@@ -58,19 +65,16 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>,
         Sudip Mukherjee <sudip.mukherjee@sifive.com>,
         William Salmon <william.salmon@sifive.com>,
-        Adnan Chowdhury <adnan.chowdhury@sifive.com>,
-        Ben Dooks <ben.dooks@sifive.com>
-Subject: [PATCH 7/7] pwm: dwc: add snps,pwm-number to limit pwm count
-Date:   Tue, 12 Jul 2022 11:01:13 +0100
-Message-Id: <20220712100113.569042-8-ben.dooks@sifive.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220712100113.569042-1-ben.dooks@sifive.com>
+        Adnan Chowdhury <adnan.chowdhury@sifive.com>
 References: <20220712100113.569042-1-ben.dooks@sifive.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ <20220712100113.569042-4-ben.dooks@sifive.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220712100113.569042-4-ben.dooks@sifive.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,65 +82,16 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add snps,pwm-number property to indicate if the block does not have
-all 8 of the PWM blocks.
+On 12/07/2022 12:01, Ben Dooks wrote:
+> The dwc pwm controller can be used in non-PCI systems, so allow
+> either platform or OF based probing.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-synposys.yaml | 40 ++++++++++++++
 
-Not sure if this should be a general PWM property consider optional
-for all PWM types, so have added a specific one here (there is only
-one other controller with a property for PWM count at the moment)
+Bindings must be a separate patch. Preferably first in the series. Use
+proper subject prefix matching the subsystem.
 
-Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
----
- Documentation/devicetree/bindings/pwm/pwm-synposys.yaml | 5 +++++
- drivers/pwm/pwm-dwc.c                                   | 8 ++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-index 38ac0da75272..15bdf764b46a 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-@@ -30,11 +30,16 @@ properties:
-       - items:
-         - const: snps,pwm
- 
-+  snps,pwm-number:
-+    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    description: u32 value representing the number of PWM devices
-+
- required:
-   - "#pwm-cells"
-   - compatible
-   - reg
-   - clocks
-   - clock-names
-+  - snps,pwm-number
- 
- additionalProperties: false
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 6a4364a5d137..abdde83452ad 100644
---- a/drivers/pwm/pwm-dwc.c
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -328,12 +328,20 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct dwc_pwm *dwc;
-+	u32 nr_pwm;
- 	int ret;
- 
- 	dwc = dwc_pwm_alloc(dev);
- 	if (!dwc)
- 		return -ENOMEM;
- 
-+	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
-+		if (nr_pwm > DWC_TIMERS_TOTAL)
-+			dev_err(dev, "too many PWMs specified (%d)\n", nr_pwm);
-+		else
-+			dwc->chip.npwm = nr_pwm;
-+	}
-+
- 	dwc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dwc->base))
- 		return dev_err_probe(dev, PTR_ERR(dwc->base),
--- 
-2.35.1
-
+Best regards,
+Krzysztof
