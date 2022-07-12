@@ -2,64 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C9F6571C74
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 16:26:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B60572088
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 18:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbiGLO0m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jul 2022 10:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43116 "EHLO
+        id S234303AbiGLQPd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jul 2022 12:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233577AbiGLO0Z (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 10:26:25 -0400
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F6BB93C5;
-        Tue, 12 Jul 2022 07:26:16 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id p128so7985408iof.1;
-        Tue, 12 Jul 2022 07:26:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=2smug+m1Lke8wFpPEM5ppWOdoo/9ROT7QK4c9TYtB6U=;
-        b=0IF9BcxGXIoEh6yGwI13UQbu0z1sKuFoLkAjY7ezSfTk1Mh/6u2sCpNIBE8v/kv2WE
-         y6k2I74rZL6VShto6O0Gy5/drgvX8XVy7lujFYPE4x+pq80FM/hAV6HC5jojItRmmtmB
-         Lus3JKQVQUCu8RfphiCwBMAh5voOc2hRI4XEkdaKVnA+A9tUEV993NCB7S3gxpUdnDCF
-         N78UdUjSWEc+IV34r66OKumwkgVP5GO2/MWFDIfkKpGz8V7hbKrZJsgihosXyFR+pDSu
-         CBUtbgsSd6eB5mjeK+v7oGwsakp/phMxD3sQd5qBWGm6XNNRtPNQPO0sYCPNJSXT5m5g
-         lGxg==
-X-Gm-Message-State: AJIora8OnJpToZchLuM5l7sgDBfK8ppygZWQ9aF5p59vDJ2aC2NJ2Vvy
-        tRQAtEX57DPanUoQ4l+L1Q==
-X-Google-Smtp-Source: AGRyM1u9UVtNz1Lq5TBvtlHE6sfHP3e+TCv3kW8PIg+n1aqq/Z1DAjz9ef1ZYwzKBGpoy+zzrudY0Q==
-X-Received: by 2002:a05:6638:2688:b0:33e:abf9:908d with SMTP id o8-20020a056638268800b0033eabf9908dmr13403331jat.166.1657635975713;
-        Tue, 12 Jul 2022 07:26:15 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id ay2-20020a5d9d82000000b00678ea668a39sm5086524iob.36.2022.07.12.07.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 07:26:15 -0700 (PDT)
-Received: (nullmailer pid 1805850 invoked by uid 1000);
-        Tue, 12 Jul 2022 14:26:12 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        u.kleine-koenig@pengutronix.de,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org,
-        Adnan Chowdhury <adnan.chowdhury@sifive.com>,
-        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
-        William Salmon <william.salmon@sifive.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-In-Reply-To: <20220712100113.569042-4-ben.dooks@sifive.com>
-References: <20220712100113.569042-1-ben.dooks@sifive.com> <20220712100113.569042-4-ben.dooks@sifive.com>
-Subject: Re: [PATCH 3/7] pwm: dwc: add of/platform support
-Date:   Tue, 12 Jul 2022 08:26:12 -0600
-Message-Id: <1657635972.108769.1805849.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S233821AbiGLQPd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 12:15:33 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D867CA6D2
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 09:15:32 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oBIXp-0003lx-A9; Tue, 12 Jul 2022 18:15:29 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oBIXn-000Xqc-BZ; Tue, 12 Jul 2022 18:15:27 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oBIXm-004lKC-Oy; Tue, 12 Jul 2022 18:15:26 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>,
+        Ariel D'Alessandro <ariel@vanguardiasur.com.ar>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de
+Subject: [PATCH 1/2] pwm: lpc18xx: Convert to use dev_err_probe()
+Date:   Tue, 12 Jul 2022 18:15:18 +0200
+Message-Id: <20220712161519.44010-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.36.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1981; h=from:subject; bh=XTdYQGNYHBg/yfhYrF5ihnVxsNAWuFyJDuFug36m8/w=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBizZ4Qn5OUR+231DyhluYJgc8lQLXIgw1ls1MenYg6 0FRvyaiJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYs2eEAAKCRDB/BR4rcrsCUR5CA CfPxr+2sBRAcsPLWjQ/OVAq7Q589KpP5lJ9j3ZXoLY45RIYw2PKQDDejmZn6JmwvwPTrQOoQTp6baW VrcGimYOTNREbzCsQb9nWLev+h7aB+J7ORpemEcmK2QZre6WCgd5QWP0KSiRDJEdR62u/QHAr3BMKp 8iCp/JCN/qkYIzTth1xhOSm1hNyu5UjNPp6RvIYunSfibAEEIvnHHVl+hxhdP8I5HOhIXLkxyUUEhJ s4WuwE7UXzXWtwyumXqVM9R9B/Q4QL8hFZX9WGmcZPG0rq/mBUmkH3EaFo74bvgjaCsqiGa1q+bKNz wuzN56PaOgJbko2Jg13JBXOJ+ShamE
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,40 +56,61 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 12 Jul 2022 11:01:09 +0100, Ben Dooks wrote:
-> The dwc pwm controller can be used in non-PCI systems, so allow
-> either platform or OF based probing.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-synposys.yaml | 40 ++++++++++++++
->  drivers/pwm/Kconfig                           |  5 +-
->  drivers/pwm/pwm-dwc.c                         | 53 +++++++++++++++++++
->  3 files changed, 96 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-> 
+This has various upsides:
+ - It emits the symbolic name of the error code
+ - It is silent in the EPROBE_DEFER case and properly sets the defer reason
+ - It reduces the number of code lines slightly
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-lpc18xx-sct.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pwm/pwm-synposys.yaml:11:4: [warning] wrong indentation: expected 2 but found 3 (indentation)
-./Documentation/devicetree/bindings/pwm/pwm-synposys.yaml:31:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
+diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+index 272e0b5d01b8..9bb2693cece3 100644
+--- a/drivers/pwm/pwm-lpc18xx-sct.c
++++ b/drivers/pwm/pwm-lpc18xx-sct.c
+@@ -359,21 +359,19 @@ static int lpc18xx_pwm_probe(struct platform_device *pdev)
+ 		return PTR_ERR(lpc18xx_pwm->base);
+ 
+ 	lpc18xx_pwm->pwm_clk = devm_clk_get(&pdev->dev, "pwm");
+-	if (IS_ERR(lpc18xx_pwm->pwm_clk)) {
+-		dev_err(&pdev->dev, "failed to get pwm clock\n");
+-		return PTR_ERR(lpc18xx_pwm->pwm_clk);
+-	}
++	if (IS_ERR(lpc18xx_pwm->pwm_clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(lpc18xx_pwm->pwm_clk),
++				     "failed to get pwm clock\n");
+ 
+ 	ret = clk_prepare_enable(lpc18xx_pwm->pwm_clk);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "could not prepare or enable pwm clock\n");
+-		return ret;
+-	}
++	if (ret < 0)
++		return dev_err_probe(&pdev->dev, ret,
++				     "could not prepare or enable pwm clock\n");
+ 
+ 	lpc18xx_pwm->clk_rate = clk_get_rate(lpc18xx_pwm->pwm_clk);
+ 	if (!lpc18xx_pwm->clk_rate) {
+-		dev_err(&pdev->dev, "pwm clock has no frequency\n");
+-		ret = -EINVAL;
++		ret = dev_err_probe(&pdev->dev,
++				    -EINVAL, "pwm clock has no frequency\n");
+ 		goto disable_pwmclk;
+ 	}
+ 
+@@ -423,7 +421,7 @@ static int lpc18xx_pwm_probe(struct platform_device *pdev)
+ 
+ 	ret = pwmchip_add(&lpc18xx_pwm->chip);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "pwmchip_add failed: %d\n", ret);
++		dev_err_probe(&pdev->dev, ret, "pwmchip_add failed\n");
+ 		goto disable_pwmclk;
+ 	}
+ 
 
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
+base-commit: 394b517585da9fbb2eea2f2103ff47d37321e976
+-- 
+2.36.1
 
