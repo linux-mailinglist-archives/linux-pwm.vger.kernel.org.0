@@ -2,51 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8306B5714FE
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 10:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70CE957165C
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Jul 2022 12:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbiGLIrL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jul 2022 04:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
+        id S229962AbiGLKBU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Jul 2022 06:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231443AbiGLIrK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 04:47:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 403DCA5E7D
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 01:47:07 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oBBXs-0005qu-N6; Tue, 12 Jul 2022 10:47:04 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oBBXr-000TRi-1N; Tue, 12 Jul 2022 10:47:03 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oBBXq-004glI-Cl; Tue, 12 Jul 2022 10:47:02 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        with ESMTP id S232467AbiGLKBT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 06:01:19 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0251F2B63D
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:18 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id a5so10417971wrx.12
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 03:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e/OZ12grJH2HGfQQ0JrIOuWpQ+l/DZyZzBE/Hw/nsTI=;
+        b=EU7iMlqi8FpeejO7+rMoGD4Wxye2Cox8MctsGtKr3VaNp9WvOjacpSBgkbhWQhphMd
+         Jp+D6Gnma3tnEYiiQbeFWAltneO1Gv5ZW/4B+6DkidZcjKMe+g1mqLUIE0U65Xe3qpOW
+         Ax/gP6GnCr99NXgsejRbMRk/wh7qvVsviEGfsGxuwDi5JJ9cwLXuCF2YZFdVL1fp8rew
+         FXAp4AHMesXA8tUzbpl05D3/Z8WgUSBZOvSqt1TbLKZKYbFSJO5/gqHqlr2YqmbxV3nJ
+         UHe6DbLI+jWZtj25qKBDN16kHTlw7bUhDIeWm1E8K1I6IkFI92B7ox5Omkf99OOlRTWZ
+         sgSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e/OZ12grJH2HGfQQ0JrIOuWpQ+l/DZyZzBE/Hw/nsTI=;
+        b=F0Wg4uFYgJ22ixf1WFh0T+ZsrCCvO4zaLiyemoDJfaaXeHepEQN/6i0ZeX9SMGK/FL
+         oiGU1DqUl808SK6lYTnXHjbORblG0r2AYxAv5PfoGpFP9ZVeHVb4VKgEjbaNRGZsl83M
+         vLHRYd9Ck0pk6ptgfXjOxQe5nhiVr1jVlGFa7jD0ONZ0KR3vrawn6WoEJh96VRzo34Jq
+         sMhtgH5CJSJdno9IvIBcCds5XB1HTRmQaxg+L8gR6gDpGmr9EZOikKEVQGa4ka1Rdll6
+         dYO3Jx/IATR8Z6Cu8yWbRSsTq5wpReLKaRZzeBHSURNfynpabl7qYXijS4cAjla873Pm
+         C0Fg==
+X-Gm-Message-State: AJIora+1yCNks4T8JJKzXnRvoMLOgd9oFJLswC9D5pLk8PSMQ1jHoTLH
+        EPARcBO29jeQxXpOJdsBFY+SC0fMac5s3ear
+X-Google-Smtp-Source: AGRyM1sIzjo8aPQG1VOThm59M5Kb+jFhuDRcT8GZoOZVqneIRfH8hw3EuPTOOyTsM10btGdQRShb5A==
+X-Received: by 2002:a5d:4d4e:0:b0:21d:7a79:e04c with SMTP id a14-20020a5d4d4e000000b0021d7a79e04cmr21430181wru.519.1657620076357;
+        Tue, 12 Jul 2022 03:01:16 -0700 (PDT)
+Received: from rainbowdash.office.codethink.co.uk ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id u9-20020a7bc049000000b0039747cf8354sm8895314wmc.39.2022.07.12.03.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jul 2022 03:01:15 -0700 (PDT)
+From:   Ben Dooks <ben.dooks@sifive.com>
+To:     linux-pwm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        u.kleine-koenig@pengutronix.de,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] pwm: twl-led: Document some limitations and link to the reference manual
-Date:   Tue, 12 Jul 2022 10:46:56 +0200
-Message-Id: <20220712084656.21043-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.36.1
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
+        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Adnan Chowdhury <adnan.chowdhury@sifive.com>
+Subject: update synopsys driver for platform/devicetree support
+Date:   Tue, 12 Jul 2022 11:01:06 +0100
+Message-Id: <20220712100113.569042-1-ben.dooks@sifive.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1599; h=from:subject; bh=kot9CrGSPDenLpPrY+ywPeTxXA9dZ8AWO95dXBQj0CY=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBizTT7ltCCwCcsEPpDOAmjW4PYimQiwVsLEsCqlQYP /ix5gWaJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYs00+wAKCRDB/BR4rcrsCfmhB/ 9CGQjvqJBcqhazakqdhXvvzwcN+qlG00L9q5NCUDWvMQeJD10aR0YxZVUYFZybV3QP6/WOUU9ivBOp poutk4fyeBUWepKFM7nBLqtp/jPsijZPHnumhhc7OitagJA7bbcZdeJaceTGNS53JlL3NGYOidcFeE kx2tu7NmrFObC55l2ERLJYk1zi5Vk24yBLG+fqoJGFyraK7nD8E0pltBJj4IDTHnYA/Yo8hIyEVbm9 FuK+udPPNq51Ms0K9yI59YY7IxFJ7x0SsKIcXOA4Me+JGZHp9WuQZj3H++VIH0eAsKKa9nWGU3FwXj 1oVlP27D30C8n4rjgnTTPdCaVJ+unx
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,44 +75,13 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-I found these just from reading the reference manual and the driver
-source. It's unclear to me if there are glitches when updating the ON
-and OFF registers.
+This is a series to allow the Synopsys PWM driver to be built for
+device-tree/platform usage.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-twl-led.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+An open question is whether there should be some form of standard
+property for the number of PWMs that each device supports.
 
-diff --git a/drivers/pwm/pwm-twl-led.c b/drivers/pwm/pwm-twl-led.c
-index ed0b63dd38f1..8fb84b441853 100644
---- a/drivers/pwm/pwm-twl-led.c
-+++ b/drivers/pwm/pwm-twl-led.c
-@@ -7,6 +7,22 @@
-  *
-  * This driver is a complete rewrite of the former pwm-twl6030.c authorded by:
-  * Hemanth V <hemanthv@ti.com>
-+ *
-+ * Reference manual for the twl6030 is available at:
-+ * https://www.ti.com/lit/ds/symlink/twl6030.pdf
-+ *
-+ * Limitations:
-+ * - The twl6030 hardware only supports two period lengths (128 clock ticks and
-+ *   64 clock ticks), the driver only uses 128 ticks
-+ * - The hardware doesn't support ON = 0, so the active part of a period doesn't
-+ *   start at its beginning.
-+ * - The hardware could support inverted polarity (with a similar limitation as
-+ *   for normal: the last clock tick is always inactive).
-+ * - The hardware emits a constant low output when disabled.
-+ * - A request for .duty_cycle = 0 results in an output wave with one active
-+ *   clock tick per period. This should better use the disabled state.
-+ * - The driver only implements setting the relative duty cycle.
-+ * - The driver doesn't implement .get_state().
-  */
- 
- #include <linux/module.h>
+Note, the patches 5 and 6 could be grouped together as patch
+6 undoes some of the bits in 5 for configuration of clock rate.
 
-base-commit: 394b517585da9fbb2eea2f2103ff47d37321e976
--- 
-2.36.1
 
