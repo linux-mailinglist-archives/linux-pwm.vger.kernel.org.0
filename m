@@ -2,64 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADD7C5732E2
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 11:34:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 590AF5734AC
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 12:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236113AbiGMJeT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 13 Jul 2022 05:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45178 "EHLO
+        id S235313AbiGMKyb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 13 Jul 2022 06:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236072AbiGMJeA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jul 2022 05:34:00 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BA6FB8CB
-        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 02:32:01 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id z12so14647991wrq.7
-        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 02:32:01 -0700 (PDT)
+        with ESMTP id S235286AbiGMKya (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jul 2022 06:54:30 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538DAFE53E
+        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 03:54:28 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id o8so6271987wms.2
+        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 03:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=vObXGH70a1Gg25oDZzb8Ojf+bWP/SQ2CR5CSaB0GfCQ=;
-        b=UhlCtSEOxx3nG8eWaK2Ppa6xrk+qf777TFMCPxVlFUgKFBKVupeoUh9VgOqkkuep3I
-         xH6bCHyw1cg+H+ilVAsO2hZXqHnMrlO5acxa1b3aJK+0lJD8Qpuf+65teQzFQ7d7hWUB
-         3tTjGSngcJwWSuOxRREZ58M/jiJD1ATiTH43tMyygyagfe051KC+AH9Z6RhsKEQ4IltK
-         pI1XuJV2T/PJ188gY0xo72MBCYloIqukNbVGFHDkyLYjJ2vZnJ+aOzELQryBps5Bw9NC
-         hjg7cwBUFUpLWqbHV6piD9rXEuVD9ZHrJJCUVRX3sCiMe9aa7W0pTsA7kkecWkZ9Vnhq
-         Xs9Q==
+        bh=zA+Gr0O1dXUymIsstXZ4+gp6YZgz92xz0+cifPtZ8VY=;
+        b=dJ/IaUjPDcxVY9HMm3gvgLJNirdBz/bvUFkBr34JiH8xRV06oc+hpCZYAZbKB89uDf
+         tavyQSpRmeBM3FveWRa2+nSbrGTf7E3U3rFMhm8E/LCO1kpwZM1ufHumDFAKBgAH6l6o
+         My+t2ZY83MUztNI90GI6U1GllZFQAq/oDX7A/ccslPaJngYFq3vOX2cNBgdNY59+9CUo
+         HIlupftubdymC5blRqYpAVtps3H1V2fZ4N/g+dlxABo9M6M/WSL+UUGulP76wpzb5LEv
+         Npyivq+nzLGvdwenhGdSPLnPLgBow+W05G4oBsTOlp3pdkWhg8Kl87Y4WZe85xfcA1lp
+         etig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=vObXGH70a1Gg25oDZzb8Ojf+bWP/SQ2CR5CSaB0GfCQ=;
-        b=lGSST0DLUS2LhwBufGBbXm1ACqUQ6JCHM9NOL11tDa/tUONRRZoZH9XXrOKPE386RQ
-         vbcne6lfJnFz/EFuMj7NkTdDKLBbv2isyvV8Kmt4NrcohKjUudmPG1n9zxzfDzNR7aZY
-         Rh7Z+NjlFz35mHu1HogUQd0V+4wgM7J0Tu2s7e3vaSuxzvfPZ0Esct0BBfg5mYmTk4kw
-         H8To37+vMnh/WL8+92QCQN6hWqYkM1h3/IB21nS+CvdzJyVPfPXvrZ+eXNySADL454XZ
-         3hdPieQlze1b4QoaJW862gKYy4O3uS9XoUj4D+e66DUklBjCgbeenc2KnASuangEa5c2
-         HBrA==
-X-Gm-Message-State: AJIora9vFit64Y6i4aAb7Ags98trz+4s+X8iA+EHUSYDWb09h6IS/xZd
-        MGXKwDZcENK4isuUgP1PIiq26Q==
-X-Google-Smtp-Source: AGRyM1sQP9HzmNytj5sUSLj+8Jg8pdPt5xWvb6tfDX7fN95pwfeyqDsT/g3GevG//e+I8soW1cwr/A==
-X-Received: by 2002:adf:e28a:0:b0:210:b31:722 with SMTP id v10-20020adfe28a000000b002100b310722mr2265688wri.65.1657704713393;
-        Wed, 13 Jul 2022 02:31:53 -0700 (PDT)
+        bh=zA+Gr0O1dXUymIsstXZ4+gp6YZgz92xz0+cifPtZ8VY=;
+        b=POYJPWDIAFEPQaJV6Y97JZY4euTN4MgCVVWgyz+k9ZXRpOZJhF7HHtnfqq5Qag/Mme
+         tWx0kbANeLo4uHFOCR42RxaAuJPOekMEa14qr4eEj61Cunh/mVrNSj7ReT9nb1LSoMsp
+         0ysKxh8B6Q2aYTjTDApPePxQW0BI2ruFz9g2Fa9Pg5qp9TfFReChWKEBMXL9u6HOZFxa
+         pe0gRWLiEPHNkpyM55CSxhvxrKIBWfkv7fyCbcBOnijQILm3sjA36U/eqYSpXByCu/9n
+         lwxaqFbHtQR7ZKGrqt6I6GQTCyQqHJdPu0H2aJj1ATXI6kvf0ug2lZ9Rz+14OP0YkdmM
+         JHGQ==
+X-Gm-Message-State: AJIora9c7JofWEt07f2kG3Md32sCGD/SqsEfc7yJQZH9yG79UxDk2Ljj
+        EM06WX5czGZOJjXM8+BDRZpCzQ==
+X-Google-Smtp-Source: AGRyM1vO7jToOcXSkbXztEq6GM/5r+GdyuM6v7AVP/FZykv/iRWy7YkYg9j7PTNkFpVVg1qVpS30KA==
+X-Received: by 2002:a05:600c:1c96:b0:3a2:f29c:2c1f with SMTP id k22-20020a05600c1c9600b003a2f29c2c1fmr5559676wms.161.1657709666918;
+        Wed, 13 Jul 2022 03:54:26 -0700 (PDT)
 Received: from [192.168.0.17] (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id b5-20020adff905000000b0021d64a11727sm10395315wrr.49.2022.07.13.02.31.52
+        by smtp.gmail.com with ESMTPSA id c14-20020a7bc00e000000b003a044fe7fe7sm1796725wmb.9.2022.07.13.03.54.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Jul 2022 02:31:53 -0700 (PDT)
-Message-ID: <cd37c8fa-225e-519b-52a2-a052c62dd198@sifive.com>
-Date:   Wed, 13 Jul 2022 10:31:52 +0100
+        Wed, 13 Jul 2022 03:54:26 -0700 (PDT)
+Message-ID: <e014e037-db0b-56fc-f713-b371ae097acb@sifive.com>
+Date:   Wed, 13 Jul 2022 11:54:25 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH 6/7] pwm: dwc: remove the CONFIG_OF in timer clock
+Subject: Re: [PATCH 1/7] pwm: change &pci->dev to dev in probe
 Content-Language: en-GB
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-pwm@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        u.kleine-koenig@pengutronix.de,
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Greentime Hu <greentime.hu@sifive.com>,
@@ -68,15 +66,15 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Salmon <william.salmon@sifive.com>,
         Adnan Chowdhury <adnan.chowdhury@sifive.com>
 References: <20220712100113.569042-1-ben.dooks@sifive.com>
- <20220712100113.569042-7-ben.dooks@sifive.com>
- <bcbd1b29-7c6d-1d1d-2c72-b8818e99c65c@linaro.org>
+ <20220712100113.569042-2-ben.dooks@sifive.com>
+ <20220713081633.5lsunbl5mfnngdrs@pengutronix.de>
 From:   Ben Dooks <ben.dooks@sifive.com>
-In-Reply-To: <bcbd1b29-7c6d-1d1d-2c72-b8818e99c65c@linaro.org>
+In-Reply-To: <20220713081633.5lsunbl5mfnngdrs@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,18 +82,22 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 12/07/2022 11:09, Krzysztof Kozlowski wrote:
-> On 12/07/2022 12:01, Ben Dooks wrote:
->> We should probably change from the #ifdef added earlier in
->> 49a0f4692a8752c7b03cb26d54282bee5c8c71bb ("wm: dwc: add timer clock")
->> and just have it always in the dwc data so if we have a system with
->> both PCI and OF probing it should work
->>
->> -- consider merging with original patch
+On 13/07/2022 09:16, Uwe Kleine-König wrote:
+> On Tue, Jul 12, 2022 at 11:01:07AM +0100, Ben Dooks wrote:
+>> The dwc_pwm_probe() assignes dev to be &pci->dev but then uses
+>> &pci->dev throughout the function. Change these all to the be
+>> 'dev' variable to make lines shorter.
 > 
-> Missing SoB. Please run checkpatch.
+> Looks reasonable.
 > 
-> Best regards,
-> Krzysztof
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Will be merging this with the previous patch now, thanks.
+Thanks for the reviews, I'll get a new series out tomorrow.
+
+I might avoid the last patch about number of pwms for now
+and just get the basic driver updates sorted.
+
+-- 
+Ben
+
+
