@@ -2,48 +2,35 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B12A1572923
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 00:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC422572DEE
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 08:10:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232683AbiGLWRX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Jul 2022 18:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35694 "EHLO
+        id S234268AbiGMGKe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 13 Jul 2022 02:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231994AbiGLWRU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Jul 2022 18:17:20 -0400
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91746C8EB9;
-        Tue, 12 Jul 2022 15:17:19 -0700 (PDT)
-Received: by mail-il1-f170.google.com with SMTP id a20so5698842ilk.9;
-        Tue, 12 Jul 2022 15:17:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RObMc02t+WfPk9jeU/CAK3gKiv4t+C98B3+Wgqb9iOI=;
-        b=JBFYIM3nVDhc21861uYhnJiwMOO41UOQDAldOz9rKEc6+CD/lob4XnfsxtV42VAu9J
-         2ybH4MVN7J4ODKdbqEWJIbzWkGzG3gl5+JQnBijfYSRVrqBhoUNfZdnqmwGQyK1bHBGD
-         xH9xsTAZHdD9P6B+Fjyj05OvA13xl50ZNkygJ61bgLvBWHywVM1IC3EOvNaV97r1t1ct
-         sNCwy46qRA5pou45IlrD5+yyOKcFUr3Tp2wxF5LG5KrGqR9nBm1c7Xtb6WsoYrmfQO6O
-         KfjcKzF3DlEQfElbnkCa4Ewe+k8stJj65jiMxMNkwO5YK23HRYWvxYiv1TvOR7g+D+GD
-         9Beg==
-X-Gm-Message-State: AJIora+n7NQ19ZFyVpVLPxldmSxlXvFrY33gOiXTKJAx56DLQFZhqshQ
-        ZIml2bDvCQliXzFNatkyDgpwE4ptJg==
-X-Google-Smtp-Source: AGRyM1veasA2cLvMV1USkfsnPSymf/oUdQBcz43HrDFq0MZeNLk1n2jeyeynmVGvNRE1CWwd0P5aaQ==
-X-Received: by 2002:a92:ca0b:0:b0:2dc:1c04:67f6 with SMTP id j11-20020a92ca0b000000b002dc1c0467f6mr222356ils.124.1657664238656;
-        Tue, 12 Jul 2022 15:17:18 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id m21-20020a02a155000000b00339e2f0a9bfsm4613027jah.13.2022.07.12.15.17.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 15:17:18 -0700 (PDT)
-Received: (nullmailer pid 2459492 invoked by uid 1000);
-        Tue, 12 Jul 2022 22:17:15 -0000
-Date:   Tue, 12 Jul 2022 16:17:15 -0600
-From:   Rob Herring <robh@kernel.org>
+        with ESMTP id S232111AbiGMGKd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jul 2022 02:10:33 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87243C7493
+        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 23:10:32 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oBVZt-0006mS-FF; Wed, 13 Jul 2022 08:10:29 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oBVZs-000eq7-Eq; Wed, 13 Jul 2022 08:10:28 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oBVZr-004sba-E4; Wed, 13 Jul 2022 08:10:27 +0200
+Date:   Wed, 13 Jul 2022 08:10:24 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Ben Dooks <ben.dooks@sifive.com>
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        u.kleine-koenig@pengutronix.de,
         Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Greentime Hu <greentime.hu@sifive.com>,
@@ -51,18 +38,21 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         Sudip Mukherjee <sudip.mukherjee@sifive.com>,
         William Salmon <william.salmon@sifive.com>,
         Adnan Chowdhury <adnan.chowdhury@sifive.com>
-Subject: Re: [PATCH 3/7] pwm: dwc: add of/platform support
-Message-ID: <20220712221715.GT1823936-robh@kernel.org>
+Subject: Re: [PATCH 5/7] pwm: dwc: add timer clock
+Message-ID: <20220713061024.aapsqqtofb5y54zd@pengutronix.de>
 References: <20220712100113.569042-1-ben.dooks@sifive.com>
- <20220712100113.569042-4-ben.dooks@sifive.com>
+ <20220712100113.569042-6-ben.dooks@sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="emcef65jx2exq74x"
 Content-Disposition: inline
-In-Reply-To: <20220712100113.569042-4-ben.dooks@sifive.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <20220712100113.569042-6-ben.dooks@sifive.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,77 +60,115 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 11:01:09AM +0100, Ben Dooks wrote:
-> The dwc pwm controller can be used in non-PCI systems, so allow
-> either platform or OF based probing.
-> 
+
+--emcef65jx2exq74x
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 12, 2022 at 11:01:11AM +0100, Ben Dooks wrote:
+> Add a configurable clock base rate for the pwm as when
+> being built for non-PCI the block may be sourced from
+> an internal clock.
+>=20
 > Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-synposys.yaml | 40 ++++++++++++++
-
-Use compatible string for filename.
-
->  drivers/pwm/Kconfig                           |  5 +-
->  drivers/pwm/pwm-dwc.c                         | 53 +++++++++++++++++++
->  3 files changed, 96 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-> new file mode 100644
-> index 000000000000..38ac0da75272
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2022 SiFive, Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-synposys.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/pwm/pwm-dwc.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>=20
+> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+> index 235cb730c888..aa0486b89bdd 100644
+> --- a/drivers/pwm/pwm-dwc.c
+> +++ b/drivers/pwm/pwm-dwc.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/clk.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/pwm.h>
+> @@ -35,7 +36,12 @@
+>  #define DWC_TIMERS_COMP_VERSION	0xac
+> =20
+>  #define DWC_TIMERS_TOTAL	8
 > +
-> +title: Synopsys PWM controller
-> +
-> +maintainers:
-> +   - Ben Dooks <ben.dooks@sifive.com>
-> +
-> +properties:
-> +  "#pwm-cells":
-> +    description: |
-> +      See pwm.yaml in this directory for a description of the cells format.
+> +#ifndef CONFIG_OF
+>  #define DWC_CLK_PERIOD_NS	10
+> +#else
+> +#define DWC_CLK_PERIOD_NS	dwc->clk_ns
+> +#endif
 
-pwm.yaml doesn't define how many cells. You need to. And you don't need 
-generic descriptions.
+Hmm, that looks wrong. If you have CONFIG_OF but use the pci device ...
 
+IMHO it would help readability if you used ifdef. When there is an #else
+branch anyhow, there is no reason to use the negative variant.
+
+>  /* Timer Control Register */
+>  #define DWC_TIM_CTRL_EN		BIT(0)
+> @@ -54,6 +60,8 @@ struct dwc_pwm_ctx {
+>  struct dwc_pwm {
+>  	struct pwm_chip chip;
+>  	void __iomem *base;
+> +	struct clk *clk;
+> +	unsigned int clk_ns;
+>  	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
+>  };
+>  #define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
+> @@ -336,6 +344,14 @@ static int dwc_pwm_plat_probe(struct platform_device=
+ *pdev)
+>  		return dev_err_probe(dev, PTR_ERR(dwc->base),
+>  				     "failed to map IO\n");
+> =20
+> +	dwc->clk =3D devm_clk_get(dev, "timer");
+> +	if (IS_ERR(dwc->clk))
+> +		return dev_err_probe(dev, PTR_ERR(dwc->clk),
+> +				     "failed to get timer clock\n");
 > +
-> +  clocks:
-> +    items:
-> +      - description: Interface bus clock
-> +      - description: PWM reference clock
+> +	clk_prepare_enable(dwc->clk);
+> +	dwc->clk_ns =3D 1000000000 /clk_get_rate(dwc->clk);
 > +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: timer
-> +
-> +  compatible:
+>  	ret =3D pwmchip_add(&dwc->chip);
+>  	if (ret)
+>  		return ret;
 
-Convention is compatible comes first in the list.
+Here you're missing clk_disable_unprepare(). (Alternatively use
+devm_clk_get_enabled().)
 
-> +    oneOf:
-> +      - items:
-> +        - const: snps,pwm
+> @@ -347,6 +363,7 @@ static int dwc_pwm_plat_remove(struct platform_device=
+ *pdev)
+>  {
+>  	struct dwc_pwm *dwc =3D platform_get_drvdata(pdev);
+> =20
+> +	clk_disable_unprepare(dwc->clk);
+>  	pwmchip_remove(&dwc->chip);
 
-Don't need oneOf or items. Just 'const: snps,pwm'.
+The order is wrong here. You must only stop the clk when the pwmchip is
+removed. Until that the PWM is supposed to stay functional.
 
-That's pretty generic for a compatible. There's only 1 version of the IP 
-or is the version discoverable?
+>  	return 0;
+>  }
 
-> +
-> +required:
-> +  - "#pwm-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--emcef65jx2exq74x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLOYc0ACgkQwfwUeK3K
+7AmAUAf/XdDJHJMPrKmm8NeYvTXFPxbVIExnG2y6hwtGCMAts2C5wo7JY0wwUys4
+H5KgFGh8N0qNWw3a2QL9uGnCWznXwRXB+ir/rwYrBlRzcopQI03wzpfB88U1o2XG
+aEAQSBD+TjO1p5JtD/DswY052Olc5P/taAEgHnHb/k09rwCBOtK9XQAxrpv+pZ5R
+qD6+54LP1FMLVKaahcLZLT2gfTNU/qKlxF26r4FJZemOsels9zosJ+IuLDJ39GZF
+Bp/jEMdaqYpxqSPsanSScf3qlQkTY3hlYGCHMiFI3wccamyjoUvniWr4WJphZ3/O
+N443D1mPYj9YpFRcf8lDJUJ90Qiwbw==
+=rsdR
+-----END PGP SIGNATURE-----
+
+--emcef65jx2exq74x--
