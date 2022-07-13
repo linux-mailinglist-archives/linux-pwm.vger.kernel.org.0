@@ -2,35 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A71572DF3
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 08:11:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 784B85730D2
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 10:21:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233790AbiGMGLv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 13 Jul 2022 02:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48178 "EHLO
+        id S234853AbiGMIVO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 13 Jul 2022 04:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229826AbiGMGLu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jul 2022 02:11:50 -0400
+        with ESMTP id S234771AbiGMIUs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jul 2022 04:20:48 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADB8C74A1
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Jul 2022 23:11:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B1225C74
+        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 01:16:39 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oBVbA-0007AM-5d; Wed, 13 Jul 2022 08:11:48 +0200
+        id 1oBXXx-0008JI-Q1; Wed, 13 Jul 2022 10:16:37 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oBVb9-000eqF-6S; Wed, 13 Jul 2022 08:11:47 +0200
+        id 1oBXXw-000fs5-Oa; Wed, 13 Jul 2022 10:16:36 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oBVb8-004sbw-99; Wed, 13 Jul 2022 08:11:46 +0200
-Date:   Wed, 13 Jul 2022 08:11:43 +0200
+        id 1oBXXw-004tgI-48; Wed, 13 Jul 2022 10:16:36 +0200
+Date:   Wed, 13 Jul 2022 10:16:33 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -39,17 +38,15 @@ Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Sudip Mukherjee <sudip.mukherjee@sifive.com>,
         William Salmon <william.salmon@sifive.com>,
         Adnan Chowdhury <adnan.chowdhury@sifive.com>
-Subject: Re: [PATCH 6/7] pwm: dwc: remove the CONFIG_OF in timer clock
-Message-ID: <20220713061143.qvgt5wry3onbswlg@pengutronix.de>
+Subject: Re: [PATCH 1/7] pwm: change &pci->dev to dev in probe
+Message-ID: <20220713081633.5lsunbl5mfnngdrs@pengutronix.de>
 References: <20220712100113.569042-1-ben.dooks@sifive.com>
- <20220712100113.569042-7-ben.dooks@sifive.com>
- <bcbd1b29-7c6d-1d1d-2c72-b8818e99c65c@linaro.org>
- <77c97281-96d9-c969-18cf-6e609098aa57@sifive.com>
+ <20220712100113.569042-2-ben.dooks@sifive.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yywwgvrzbnvxjnxs"
+        protocol="application/pgp-signature"; boundary="s2v2wh6fpjpgvde6"
 Content-Disposition: inline
-In-Reply-To: <77c97281-96d9-c969-18cf-6e609098aa57@sifive.com>
+In-Reply-To: <20220712100113.569042-2-ben.dooks@sifive.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -64,48 +61,38 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---yywwgvrzbnvxjnxs
+--s2v2wh6fpjpgvde6
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 12, 2022 at 11:20:23AM +0100, Ben Dooks wrote:
-> On 12/07/2022 11:09, Krzysztof Kozlowski wrote:
-> > On 12/07/2022 12:01, Ben Dooks wrote:
-> > > We should probably change from the #ifdef added earlier in
-> > > 49a0f4692a8752c7b03cb26d54282bee5c8c71bb ("wm: dwc: add timer clock")
-> > > and just have it always in the dwc data so if we have a system with
-> > > both PCI and OF probing it should work
-> > >=20
-> > > -- consider merging with original patch
-> >=20
-> > Missing SoB. Please run checkpatch.
->=20
-> This was meant to be an RFC about whether it should be a single patch
-> or merged back into the previous one.
+On Tue, Jul 12, 2022 at 11:01:07AM +0100, Ben Dooks wrote:
+> The dwc_pwm_probe() assignes dev to be &pci->dev but then uses
+> &pci->dev throughout the function. Change these all to the be
+> 'dev' variable to make lines shorter.
 
-+1 for merging these
+Looks reasonable.
 
-Best regards
-Uwe
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---yywwgvrzbnvxjnxs
+--s2v2wh6fpjpgvde6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLOYhwACgkQwfwUeK3K
-7Anlkgf+PzfFU+vh+ZG2uD+0UJ1DqmgG+ptqG5hMxqBIBY95jJTmFQhXsDZ4MXGG
-cAp8rQObOhcDNgR8QBXVghQpeFMFdAPnV4j3bLERToB0Mqatd6JXi8VyN0ji27or
-RbCiDnSf+gBWa6t9tk6i6PHi3Eg1qMyRUtRmORruJNt1d/B2XKz6v2eAWWHIsJH0
-6Sf2U8Niqg8q26bMZJqe1UHxXok1omEQj/7yjp5MwM+gpNUQ8kBTcc/9SB3Vao4v
-Tm0ikwxMYVsBQEez7dnx3flHmwoKhJHt1uwKi7DPQVA3Qf1G/NiALr32gqk0etqc
-dZ61QOY3ZKu18/Hzgiste1wMU02GbQ==
-=Yud/
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLOf14ACgkQwfwUeK3K
+7AkCtwf/VJq+I2OQ71DdM8zplYxoOlLAqnz3nUbyIknJdF+erIcWNWal8AkW9ql0
++/ZIfQbp/CpVR3EZMQP3lmZ1eOj/5wydoga54JB/4K3DepHyW0zdVsah6wO/x4dO
+/0xe6dhpK96mpsq6cOB2Nr+dlfhcx0DaOMkSDXlb5ESAIdQSra2rlfG8akdIcNbc
+3mEie00p7iZQlvP82PiKVVHnZhhZa15XN7i2a8hoLXUgdXFaJsZDJ4zkLTKwZ8J/
+qvHgFj2QG74m11UDL6JGBEO5OZxdkZF5XwO813LjHkh6WZWc2+daWqdWuQGtz7hz
+4fwF9yalCz4xcsNsTf5fNzw/4B5gEQ==
+=edJC
 -----END PGP SIGNATURE-----
 
---yywwgvrzbnvxjnxs--
+--s2v2wh6fpjpgvde6--
