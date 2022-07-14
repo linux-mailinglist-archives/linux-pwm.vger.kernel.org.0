@@ -2,129 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ABB9573B05
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Jul 2022 18:20:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64EEF574731
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 10:38:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236463AbiGMQUK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 13 Jul 2022 12:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54500 "EHLO
+        id S237507AbiGNIh5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jul 2022 04:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231712AbiGMQUJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Jul 2022 12:20:09 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2ECDF95
-        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 09:20:08 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id bu1so15031324wrb.9
-        for <linux-pwm@vger.kernel.org>; Wed, 13 Jul 2022 09:20:08 -0700 (PDT)
+        with ESMTP id S236627AbiGNIhP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 04:37:15 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 438A53FA3A
+        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 01:37:13 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id e28so1651910lfj.4
+        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 01:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=O3+Y7xcE56ph/bvUjELsiX/t1x6avdlbiSjzSBYYUlE=;
-        b=aSUHr0nuX4xfoUZDKsuhmdVDCaLbqOoeKmHWM4teWn4+t2CDpIjvsny21pSIbMWgpd
-         GZxeidyUizUQPGBEqinM4bNO05NJpRDTZ6D1ua5cUrfKHAXJLlBII5SM7S0r1ohxrHHB
-         EbECwQtw0ByEA1f6HOEIA964/yBOZyilvpneKDkL11pbscTCPyATKIS5T3T1fkHuAXF9
-         J5q9vEOKPZGPrt58qfJsPysNqGzFZchy6yx+fChKra/FQ0UtxuhPUEyhfUa/T0+ILeJe
-         7i6+gLK7jFjOoxWkm6Iil/N30e1HefVX1LQ6XGzkw1/GKGOj+ZN7Jgo/GWm7cZSIksEE
-         vJrQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=eOKhIHPUU5qPTZbjyQcWfvRUY0zDAP8hnIUzGBjF2Jn5DfdNsbEWN2bt7ALPYmKFVp
+         Dxr1gDHkbIBW6Zt+nHPJYVynuk8AW0yQZ/Zbg6Hs/Db/0s9SnaRXX8dPxs4FUxGCTJqt
+         PUYZva9zdBfTCaw+ACjLsUUgRvbYiV1yKAF3EhOBh+YW55bYBsAw2vjNobpxCrdB648X
+         A9Vj0WSfJubet8viXTg/I9X1Zmn6KwP7YNCJiSogQMOb5VTL9XQBYGsxHSC28kklqMwQ
+         Xqm1mx/as6lOSd/UexvuUJPMkR0uIfSfLSUsGSd7SP6mXh7BeziDYVk18AfHAMhcFado
+         ZNLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=O3+Y7xcE56ph/bvUjELsiX/t1x6avdlbiSjzSBYYUlE=;
-        b=w9pVw1ms/AWreLH9vVbMZhWfYNh15/uP3XnPp0YcqtH4BsI5kq2OlAeaUw0ZC4q58B
-         LGYsgIWmaK37TSxuzQGPFNVMBE7C4zl6Z2qWcCBdmVlj0qLG+bSfSvq9+4bEHaF/JR73
-         U/S1sDeyw2P66pEx7TrJZXqzoggItN2QlHzYAb+PpyGMtqj/pmCJrNwhq/k8JrTOKwqN
-         rHEeHhilYzFg4eBV6hISrkbvBMQgiEI3+AvICeKDFiMnsI3BZs2leFVbf1fMUmWT7gbx
-         5XbeSQi+qYZLIg461h6sDAYu3tRJM1x5aJqB91Syy/mgIkBBi5o6tTPVoqnRn+hOk1Ou
-         yZxA==
-X-Gm-Message-State: AJIora8PZicrk0RaZIcwrqzZps53SiCrBA8IKLEkSXtgFwaS3BHxL878
-        Li2Bss6wQAUq37fVFV7gRT4Z/A==
-X-Google-Smtp-Source: AGRyM1utO9qcCtGSq+NZKZMNSEDCuaTjWDFpSNSpcDbotF2tXMRHIpZ7Q/OQt5gzO40+J1VuZR0wEQ==
-X-Received: by 2002:adf:9d92:0:b0:21d:66c4:e311 with SMTP id p18-20020adf9d92000000b0021d66c4e311mr4282466wre.575.1657729206626;
-        Wed, 13 Jul 2022 09:20:06 -0700 (PDT)
-Received: from [192.168.0.17] (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id w13-20020adff9cd000000b0021d20461bbbsm11405894wrr.88.2022.07.13.09.20.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Jul 2022 09:20:06 -0700 (PDT)
-Message-ID: <83b53b26-6621-d580-c704-b7c82bd96a12@sifive.com>
-Date:   Wed, 13 Jul 2022 17:20:05 +0100
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=KYwGiMspw8v9GSR7+zlJ4zCydRtf614juRAyGjaui4VhfCOkX/9POdCH7tEiEn5m3B
+         dtic3CBInDZcyMU78ZWeGcQX6CUQflmc6OzuP5jg0n//tTKbmHiEWxf3yjcdUY1edK3f
+         CBGaD9o30GzEtLEg/aaAy+DA8/Sc1OH0yF1dC38rOp6+o4yyCUabsuJzw39A7goVCAMH
+         SHIaPx9paJRc+diXKHY+MbZ6auvM4pk+AuI0ZU5g9lXnjIMTza9xBbHOkv+1pUU3S7kG
+         Bynb8ZjXoiRKs7ibFcPReRusYPPoQIXuuBHW5N/Uh+FdSBCu1P0FjXDfDFI371G7xjXy
+         E2VA==
+X-Gm-Message-State: AJIora8dNdgRj3O8+QVjgg2H2HGsGlvSuTPcdIxTQBphDHn4Fv5yngg6
+        9Kkm+UpwVUDs3lOlacNnA1INdOICSZU9xGzGzco=
+X-Google-Smtp-Source: AGRyM1suH6kpL0bxxrdPqBdRw7fjg6QmbYsIJ5KtUWeYknhIH8CIkHpjEQ1bnLxbFcENJg0E8wYhVlYhJeESVTPizkI=
+X-Received: by 2002:a05:6512:12c8:b0:489:efbf:18d1 with SMTP id
+ p8-20020a05651212c800b00489efbf18d1mr4734610lfg.192.1657787832538; Thu, 14
+ Jul 2022 01:37:12 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 3/7] pwm: dwc: add of/platform support
-Content-Language: en-GB
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh@kernel.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
-        William Salmon <william.salmon@sifive.com>,
-        Adnan Chowdhury <adnan.chowdhury@sifive.com>
-References: <20220712100113.569042-1-ben.dooks@sifive.com>
- <20220712100113.569042-4-ben.dooks@sifive.com>
- <20220712221715.GT1823936-robh@kernel.org>
- <feaacf44-f9a8-b892-d8ba-8a396b49d56b@sifive.com>
- <20220713135230.gjbd3v6iih2uicpu@pengutronix.de>
- <7999fec2-847a-86ce-ed78-d2a9008bf654@sifive.com>
- <20220713150755.bimcq2yiuvxn6n6v@pengutronix.de>
-From:   Ben Dooks <ben.dooks@sifive.com>
-In-Reply-To: <20220713150755.bimcq2yiuvxn6n6v@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Received: by 2002:a2e:9041:0:0:0:0:0 with HTTP; Thu, 14 Jul 2022 01:37:11
+ -0700 (PDT)
+Reply-To: abdwabbomaddahm@gmail.com
+From:   Abdwabbo Maddah <abdwabbomaddah746@gmail.com>
+Date:   Thu, 14 Jul 2022 09:37:11 +0100
+Message-ID: <CAFC-3icPrpmNqEMcqzAOFvzCPc-r5yv89mNAZ9SsCQvcOZ=+9g@mail.gmail.com>
+Subject: Get back to me... URGENT
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:12d listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4900]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [abdwabbomaddah746[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [abdwabbomaddah746[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 13/07/2022 16:07, Uwe Kleine-König wrote:
-> On Wed, Jul 13, 2022 at 03:30:07PM +0100, Ben Dooks wrote:
->> On 13/07/2022 14:52, Uwe Kleine-König wrote:
->>> On Wed, Jul 13, 2022 at 12:56:55PM +0100, Ben Dooks wrote:
->>>> On 12/07/2022 23:17, Rob Herring wrote:
->>>>> On Tue, Jul 12, 2022 at 11:01:09AM +0100, Ben Dooks wrote:
->>>>>> The dwc pwm controller can be used in non-PCI systems, so allow
->>>>>> either platform or OF based probing.
->>>>>>
->>>>>> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
->>
->> [snip]
->>
->>>>>> +properties:
->>>>>> +  "#pwm-cells":
->>>>>> +    description: |
->>>>>> +      See pwm.yaml in this directory for a description of the cells format.
->>>>>
->>>>> pwm.yaml doesn't define how many cells. You need to. And you don't need
->>>>> generic descriptions.
->>>>
->>>>    "#pwm-cells":
->>>>       const: 1
->>>>
->>>> should be sufficient then?
->>>
->>> I would expect a value of (at least) 2 or (better) 3.
->>
->> OOPS, forgot the phandle.
->>
->> I will have to check if we have any support yet for dealing
->> with any of the pwm flags yet.
-> 
-> I didn't double check, but given that the driver only supports inversed
-> polarity it might not even work without passing the flag for inversed
-> polarity. Having said that, I expect you have to only add "#pwm-cells =
-> <3>;" to your dts and then everything should work just fine.
-
-I hadn't noticed, but we've been testing with the sysfs interface
-as we're using qemu.
-
+-- 
+Dear,
+I had sent you a mail but i don't think you received it that's why am
+writing you again.It is important you get back to me as soon as you
+can.
+Abd-Wabbo Maddah
