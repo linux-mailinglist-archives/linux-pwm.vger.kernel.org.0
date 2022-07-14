@@ -2,50 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7B6657517E
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 17:13:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53FC15751B3
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 17:22:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232328AbiGNPNR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Jul 2022 11:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48964 "EHLO
+        id S240124AbiGNPVy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jul 2022 11:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbiGNPNQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 11:13:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B27C624BF
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 08:13:15 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oC0Wb-0003a1-JF; Thu, 14 Jul 2022 17:13:09 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oC0Wa-000wFM-JS; Thu, 14 Jul 2022 17:13:08 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oC0WZ-0059yH-Lw; Thu, 14 Jul 2022 17:13:07 +0200
-Date:   Thu, 14 Jul 2022 17:13:05 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Lee Jones <lee@kernel.org>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S240105AbiGNPVw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 11:21:52 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB6C60539
+        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 08:21:50 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id r10so3028321wrv.4
+        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 08:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZP/v8ROQZNe9hsHPJL6oKnTbTJZCrCGkGnLFioI+Fvs=;
+        b=zc2ivyoCK+kvXMBo3qql0SaINu+scvSM1y/gvVJyFuR1GqvOzSBZogRXLMScFaMc8c
+         SXG2U8mBibMgF8MEhMFkA1kTlqBRXIhC++X+pWLmIXYmZRqNt98CCvB2/puY0+nioEol
+         /BBPAXE+K/zudc6GflSzpKUED0/ieie6CjJ3ugmmzPO1EOFBtVK3ni5cpug6Iv1SKAQ3
+         kYkY9G3eq9PwPGAz81k+Bfsu/FJivMtOFFtHLSk93GnxjJH6jBxhYpeLCTJvsmn1yMNL
+         1/AKiLX7/x1hHDmUUxfUpZipubOako9kalXK+0jCiDmbPLFuZr/MFmb+cYACz8N6vxF2
+         iepw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZP/v8ROQZNe9hsHPJL6oKnTbTJZCrCGkGnLFioI+Fvs=;
+        b=Md9peZ2TiyGrAcBBJ/i3ieTVHy5ylJm7v/Gxub12vB8/XiR3QkF/MjFECzDvbO+tdf
+         xqqn+Wwr5u2MdCkLV6UJUxa1Ddi+QkR0bJq0NrfRKOgi321l4STUTEd5t0yR5ok7bVyB
+         3gNic4KjwkpuHRYN9dlX6c8Q3WKjx0b61QRHAS4kkhBx900X0Z+4xlA9gsogRKD3VoCy
+         xXnBytE/prxbOJ2UkItpajaf7qRjkDjMIxF8SWYevg+BhFt5/6eaBZozLu4kGSdVaZ6T
+         geJubm3TvFm1eCbEIIaV55n/vrmzPmO5yF1MC3THFiQWgaPKIAiDlKbT3CKd+sac3Zkj
+         WlMA==
+X-Gm-Message-State: AJIora/a9B747ky3OxF4cHTmNYL2ASyjM8lftO5zXNUZ1kzrlP6m+boW
+        6qC/XsE6c1NpvshsplB9Nw263DtOez4iuA==
+X-Google-Smtp-Source: AGRyM1tIhk9hLd6ozum0NBKrIshtJMT72+PlUC63cQOXl5f8uXly4TBxvlVhx7heX8RQf1fh0eiq3g==
+X-Received: by 2002:a5d:5444:0:b0:21d:6497:3210 with SMTP id w4-20020a5d5444000000b0021d64973210mr8558449wrv.587.1657812109173;
+        Thu, 14 Jul 2022 08:21:49 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id c12-20020a5d4ccc000000b0021d6e758752sm1731229wrt.24.2022.07.14.08.21.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jul 2022 08:21:48 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 16:21:46 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org
 Subject: Re: [PATCH 3/8] MAINTAINERS: Remove myself as PWM maintainer
-Message-ID: <20220714151305.ridfaom2l4qaao4t@pengutronix.de>
+Message-ID: <YtA0ikPPMuvPNGxs@google.com>
 References: <20220714112533.539910-1-lee@kernel.org>
  <20220714112533.539910-4-lee@kernel.org>
+ <20220714151305.ridfaom2l4qaao4t@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3gl6drcos7uz4es4"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220714112533.539910-4-lee@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220714151305.ridfaom2l4qaao4t@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,45 +75,27 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, 14 Jul 2022, Uwe Kleine-König wrote:
 
---3gl6drcos7uz4es4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hello Lee,
+> 
+> On Thu, Jul 14, 2022 at 12:25:28PM +0100, Lee Jones wrote:
+> > Thierry and Uwe are doing a fine job, leaving me surplus to requirement.
+> > 
+> > Happy to pop back on-board if anything changes in the future.
+> 
+> Thanks for your efforts in the team. I don't know your plans for the
+> future, but I wish you the luck you need and the strength to decide the
+> necessary choices on your path forward.
 
-Hello Lee,
+Thanks buddy.  Nothing drastic happening with respect to upstream.
 
-On Thu, Jul 14, 2022 at 12:25:28PM +0100, Lee Jones wrote:
-> Thierry and Uwe are doing a fine job, leaving me surplus to requirement.
->=20
-> Happy to pop back on-board if anything changes in the future.
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Thanks for your efforts in the team. I don't know your plans for the
-future, but I wish you the luck you need and the strength to decide the
-necessary choices on your path forward.
+Cheers.  Keep up the good work!
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---3gl6drcos7uz4es4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLQMn4ACgkQwfwUeK3K
-7AnNUQf/ZSlt/ZwJlet5WoVtGGeg3ZsIv7eybsl3SPDkQSksfwhKY1SVhY4LccGw
-TrRAN59juHvh8skMCzBUQ28VhR/wW0ArWO+ZyWNbWVq4nlKiFEt+328aEnF+An5F
-Ocr0Uen4ND924KVfBQVtPmYIViOOqGthd22OP6Bq2uM4Tq4W5V8gUMVBXzh4DcK1
-NBB4bJ66+ozZezsH05l7qpHNSqB873UVpQL0luL9N08gdIPDVMFfRdSQFfZZJj8L
-Dxfvi03aD+vw3vuQ4qoiL/4anDyYDApGMvaFbo64tW2JoyCbBhn0QVOF48VDTCPm
-lf7SyO4qN9SniCpCO18S/TWhprOfrg==
-=4+vw
------END PGP SIGNATURE-----
-
---3gl6drcos7uz4es4--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
