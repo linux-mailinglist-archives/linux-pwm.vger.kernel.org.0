@@ -2,92 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D31574E8E
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 15:04:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6C52574EDD
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 15:19:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238204AbiGNNEI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Jul 2022 09:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
+        id S239717AbiGNNTu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jul 2022 09:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238865AbiGNNEC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 09:04:02 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FBA92AC53;
-        Thu, 14 Jul 2022 06:04:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S239609AbiGNNTo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 09:19:44 -0400
+Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C615D0C6;
+        Thu, 14 Jul 2022 06:19:43 -0700 (PDT)
+Received: from tarshish (unknown [10.0.8.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D21D8CE273D;
-        Thu, 14 Jul 2022 13:03:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C97C34114;
-        Thu, 14 Jul 2022 13:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657803836;
-        bh=VrZxJeV9/aLFojPs64zCqrd01nxrrRn5D4ej8oJMXFQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jqDFhG/3d2mocDuOtWDe3vJTS0uOiBLyO/G3pnXat9/WDubNnby5WLCrotoPIEx/Q
-         b1tbKGCd7EMSDzbYCeZknBrFdQMmRifvDVn0Dixc2JhYE35p/dPMl26OkkdtvVZKVg
-         Km8N7/i4R3cZie8S8dwhMepdqORjAvGMKcCO9MDYj76REZ8N4iJM/ROGur+UsTDVmt
-         OUV6FgUBB0rjrwL44aMVgx/jVk+TqQgcVC/sc3/7lBIVr4UeYB0iThRzXiuQ/xfq+G
-         zt+ShlmaKNcjeFvQj+RflhF0UMCXC9zFfJlW/57CzGMC45CIaDW3jBGbC7VjIJrN5O
-         fmXWmxmx5SOxQ==
-Date:   Thu, 14 Jul 2022 14:03:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee@kernel.org>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        by mail.tkos.co.il (Postfix) with ESMTPS id AB87F440F68;
+        Thu, 14 Jul 2022 16:19:20 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+        s=default; t=1657804761;
+        bh=rC0OqKZ10lqLln3fBLyz//cFKspAfwxL4UXaVjVi8XU=;
+        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+        b=MrTieGt7XR0JWNrlhEggY6RFpCNTkj4S/I29D/r7E9iLRoiiNEjgQw8yvijyGUY18
+         USwelBx/a/W0eH1BaP1mzhtFoM9EGuDIkyQdwKwH7qQFtHooAFVTAkQSU6Nc+jVVkM
+         XTerN+TiDMSh98lyFqFChgc5phW+3acfas1dwnG8BDaaQsH0Y6dVmCULYnlDgSSUGF
+         n70TM89gabXhe2/ccNloA4yxCXHBI7WYa/82TCDja8IbKO+p3UOwH50XvzjcbJeL1c
+         xtOXwehx2xeSIwpMNT+0h9FfXyONjU4gbsY8wNl8dUO7GlHNyoaFZurmpxRm0YhQcW
+         WuYOR6YQikoEQ==
+References: <20220714115515.5748-1-pali@kernel.org>
+User-agent: mu4e 1.8.2; emacs 27.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 8/8] dt-bindings: regulator: pwm: Update Lee Jones' email
- address
-Message-ID: <YtAUN7yFFWTU5cpZ@sirena.org.uk>
-References: <20220714112533.539910-1-lee@kernel.org>
- <20220714112533.539910-9-lee@kernel.org>
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/4] gpio: mvebu: Fix check for pwm support on non-A8K
+ platforms
+Date:   Thu, 14 Jul 2022 16:14:27 +0300
+In-reply-to: <20220714115515.5748-1-pali@kernel.org>
+Message-ID: <87lesvde6s.fsf@tarshish>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Yvg+JLXlPyqENGR5"
-Content-Disposition: inline
-In-Reply-To: <20220714112533.539910-9-lee@kernel.org>
-X-Cookie: The devil finds work for idle glands.
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Pali,
 
---Yvg+JLXlPyqENGR5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jul 14, 2022 at 12:25:33PM +0100, Lee Jones wrote:
-> Going forward, I'll be using my kernel.org for upstream work.
-
+On Thu, Jul 14 2022, Pali Roh=C3=A1r wrote:
+> pwm support incompatible with Armada 80x0/70x0 API is not only in
+> Armada 370, but also in Armada XP, 38x and 39x. So basically every non-A8K
+> platform. Fix check for pwm support appropriately.
+>
+> Fixes: 85b7d8abfec7 ("gpio: mvebu: add pwm support for Armada 8K/7K")
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
 > ---
->  Documentation/devicetree/bindings/regulator/pwm-regulator.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpio-mvebu.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 2db19cd640a4..70a22b68c034 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -793,8 +793,7 @@ static int mvebu_pwm_probe(struct platform_device *pd=
+ev,
+>  	u32 offset;
+>  	u32 set;
+>=20=20
+> -	if (of_device_is_compatible(mvchip->chip.of_node,
+> -				    "marvell,armada-370-gpio")) {
+> +	if (mvchip->soc_variant !=3D MVEBU_GPIO_SOC_VARIANT_A8K) {
 
-Do you also want to update the comment and MODULE_AUTHOR in the driver
-source as well?
+The 'if' condition that follow the 'else' below become always true:
 
---Yvg+JLXlPyqENGR5
-Content-Type: application/pgp-signature; name="signature.asc"
+       } else if (mvchip->soc_variant =3D=3D MVEBU_GPIO_SOC_VARIANT_A8K) {
 
------BEGIN PGP SIGNATURE-----
+I would suggest to keep the '=3D=3D MVEBU_GPIO_SOC_VARIANT_A8K' condition,
+and reverse the if/else order, because positive logic is more readable.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmLQFDYACgkQJNaLcl1U
-h9Angwf+JCGE7zN+F5uiPcX+i+Cl98OLiAbl8LJHJcV94RJxmYYD1C5bQ/9BnB+P
-tRM9pXJToDA7knELPW/teo2rnnVI704DIUQjq69IH5do8qEsxLgccyZ86BDyteD3
-Gd3ulIooQ7Zs0FLJ2FLBqRERsQ0ktfmc1uKsk203ms1KmiNhg2qURkd2q+iKuOds
-u2Y2QsDWbA+xu6fGS9yqC/uFIWv8BJ6SV8O6O2eq1tv7iuLHOpiMQsdBnPsa+s9O
-OGAH/Ce8yoWeVGZC1zm4nHytGMAlVJpvjlkdTmtcDTV3iw8AKbBsIrVF3rop7G8h
-ymMHajfK9F5HQnbHmnWUlXtJKu26gQ==
-=WaBo
------END PGP SIGNATURE-----
+There is also another 'else' below that is dead code with this patch.
 
---Yvg+JLXlPyqENGR5--
+baruch
+
+>  		/*
+>  		 * There are only two sets of PWM configuration registers for
+>  		 * all the GPIO lines on those SoCs which this driver reserves
+
+
+--=20
+                                                     ~. .~   Tk Open Systems
+=3D}------------------------------------------------ooO--U--Ooo------------=
+{=3D
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
