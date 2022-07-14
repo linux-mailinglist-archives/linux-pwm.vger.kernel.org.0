@@ -2,61 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E236E574C8F
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 13:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6D31574E8E
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 15:04:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239121AbiGNL4S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Jul 2022 07:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
+        id S238204AbiGNNEI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jul 2022 09:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239113AbiGNL4R (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 07:56:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC7C2F67D;
-        Thu, 14 Jul 2022 04:56:15 -0700 (PDT)
+        with ESMTP id S238865AbiGNNEC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 09:04:02 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FBA92AC53;
+        Thu, 14 Jul 2022 06:04:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9E809B824CF;
-        Thu, 14 Jul 2022 11:56:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02956C34115;
-        Thu, 14 Jul 2022 11:56:13 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D21D8CE273D;
+        Thu, 14 Jul 2022 13:03:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C97C34114;
+        Thu, 14 Jul 2022 13:03:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657799773;
-        bh=bHCnfGkhpaHt2kUmFet5jXNnahSMUqgBM2cXP2rBui0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sT2i1eP7kxIpRDjAxJm4nPZ/AP32JPS/GSOCIjD/VZPe2jkNSuWRL3xCPM3bSyL1L
-         Ym8lM7wOVVRi9O3wzTCjetYsCvoAdkjenmSbzGWr7OjM2g3wADTYJroWfMWbrHOgOA
-         SLY2squ7k+ubQgscECGndgO656+oSzwWXGyZcAxspjpcRCUQP9heDLQ29AJpmrkrNz
-         flScWBFR2qjSzXbo0gWVhUHN+O7p0y6JyCP0qB59PBi5qCOR2KvweYHdMc/CYE653S
-         smR4CWYQuyMIkz5dI4gq2dvdM0/EShuIzfKUU02Xce9x25DWG9QMaeOYpyFAB2r4kU
-         TayMRXlXYuOxg==
-Received: by pali.im (Postfix)
-        id 3F244277A; Thu, 14 Jul 2022 13:56:10 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+        s=k20201202; t=1657803836;
+        bh=VrZxJeV9/aLFojPs64zCqrd01nxrrRn5D4ej8oJMXFQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jqDFhG/3d2mocDuOtWDe3vJTS0uOiBLyO/G3pnXat9/WDubNnby5WLCrotoPIEx/Q
+         b1tbKGCd7EMSDzbYCeZknBrFdQMmRifvDVn0Dixc2JhYE35p/dPMl26OkkdtvVZKVg
+         Km8N7/i4R3cZie8S8dwhMepdqORjAvGMKcCO9MDYj76REZ8N4iJM/ROGur+UsTDVmt
+         OUV6FgUBB0rjrwL44aMVgx/jVk+TqQgcVC/sc3/7lBIVr4UeYB0iThRzXiuQ/xfq+G
+         zt+ShlmaKNcjeFvQj+RflhF0UMCXC9zFfJlW/57CzGMC45CIaDW3jBGbC7VjIJrN5O
+         fmXWmxmx5SOxQ==
+Date:   Thu, 14 Jul 2022 14:03:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Lee Jones <lee@kernel.org>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/4] ARM: dts: armada-39x: Fix compatible string for gpios
-Date:   Thu, 14 Jul 2022 13:55:15 +0200
-Message-Id: <20220714115515.5748-4-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220714115515.5748-1-pali@kernel.org>
-References: <20220714115515.5748-1-pali@kernel.org>
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 8/8] dt-bindings: regulator: pwm: Update Lee Jones' email
+ address
+Message-ID: <YtAUN7yFFWTU5cpZ@sirena.org.uk>
+References: <20220714112533.539910-1-lee@kernel.org>
+ <20220714112533.539910-9-lee@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Yvg+JLXlPyqENGR5"
+Content-Disposition: inline
+In-Reply-To: <20220714112533.539910-9-lee@kernel.org>
+X-Cookie: The devil finds work for idle glands.
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -67,41 +60,34 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Armada 39x supports per CPU interrupts for gpios, like Armada XP.
 
-So add compatible string "marvell,armadaxp-gpio" for Armada 39x GPIO nodes.
+--Yvg+JLXlPyqENGR5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Driver gpio-mvebu.c which handles both pre-XP and XP variants already
-provides support for per CPU interrupts on XP and newer variants.
+On Thu, Jul 14, 2022 at 12:25:33PM +0100, Lee Jones wrote:
+> Going forward, I'll be using my kernel.org for upstream work.
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Fixes: d81a914fc630 ("ARM: dts: mvebu: armada-39x: add missing nodes describing GPIO's")
----
- arch/arm/boot/dts/armada-39x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> ---
+>  Documentation/devicetree/bindings/regulator/pwm-regulator.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index e0b7c2099831..ef3a3859802c 100644
---- a/arch/arm/boot/dts/armada-39x.dtsi
-+++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -213,7 +213,7 @@
- 			};
- 
- 			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
-+				compatible = "marvell,armadaxp-gpio", "marvell,orion-gpio";
- 				reg = <0x18100 0x40>;
- 				ngpios = <32>;
- 				gpio-controller;
-@@ -227,7 +227,7 @@
- 			};
- 
- 			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
-+				compatible = "marvell,armadaxp-gpio", "marvell,orion-gpio";
- 				reg = <0x18140 0x40>;
- 				ngpios = <28>;
- 				gpio-controller;
--- 
-2.20.1
+Do you also want to update the comment and MODULE_AUTHOR in the driver
+source as well?
 
+--Yvg+JLXlPyqENGR5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmLQFDYACgkQJNaLcl1U
+h9Angwf+JCGE7zN+F5uiPcX+i+Cl98OLiAbl8LJHJcV94RJxmYYD1C5bQ/9BnB+P
+tRM9pXJToDA7knELPW/teo2rnnVI704DIUQjq69IH5do8qEsxLgccyZ86BDyteD3
+Gd3ulIooQ7Zs0FLJ2FLBqRERsQ0ktfmc1uKsk203ms1KmiNhg2qURkd2q+iKuOds
+u2Y2QsDWbA+xu6fGS9yqC/uFIWv8BJ6SV8O6O2eq1tv7iuLHOpiMQsdBnPsa+s9O
+OGAH/Ce8yoWeVGZC1zm4nHytGMAlVJpvjlkdTmtcDTV3iw8AKbBsIrVF3rop7G8h
+ymMHajfK9F5HQnbHmnWUlXtJKu26gQ==
+=WaBo
+-----END PGP SIGNATURE-----
+
+--Yvg+JLXlPyqENGR5--
