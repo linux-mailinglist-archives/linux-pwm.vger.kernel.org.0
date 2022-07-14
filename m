@@ -2,72 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53FC15751B3
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 17:22:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 381A457550B
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Jul 2022 20:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240124AbiGNPVy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 14 Jul 2022 11:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
+        id S239881AbiGNSdu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 14 Jul 2022 14:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240105AbiGNPVw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 11:21:52 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB6C60539
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 08:21:50 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id r10so3028321wrv.4
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Jul 2022 08:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ZP/v8ROQZNe9hsHPJL6oKnTbTJZCrCGkGnLFioI+Fvs=;
-        b=zc2ivyoCK+kvXMBo3qql0SaINu+scvSM1y/gvVJyFuR1GqvOzSBZogRXLMScFaMc8c
-         SXG2U8mBibMgF8MEhMFkA1kTlqBRXIhC++X+pWLmIXYmZRqNt98CCvB2/puY0+nioEol
-         /BBPAXE+K/zudc6GflSzpKUED0/ieie6CjJ3ugmmzPO1EOFBtVK3ni5cpug6Iv1SKAQ3
-         kYkY9G3eq9PwPGAz81k+Bfsu/FJivMtOFFtHLSk93GnxjJH6jBxhYpeLCTJvsmn1yMNL
-         1/AKiLX7/x1hHDmUUxfUpZipubOako9kalXK+0jCiDmbPLFuZr/MFmb+cYACz8N6vxF2
-         iepw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ZP/v8ROQZNe9hsHPJL6oKnTbTJZCrCGkGnLFioI+Fvs=;
-        b=Md9peZ2TiyGrAcBBJ/i3ieTVHy5ylJm7v/Gxub12vB8/XiR3QkF/MjFECzDvbO+tdf
-         xqqn+Wwr5u2MdCkLV6UJUxa1Ddi+QkR0bJq0NrfRKOgi321l4STUTEd5t0yR5ok7bVyB
-         3gNic4KjwkpuHRYN9dlX6c8Q3WKjx0b61QRHAS4kkhBx900X0Z+4xlA9gsogRKD3VoCy
-         xXnBytE/prxbOJ2UkItpajaf7qRjkDjMIxF8SWYevg+BhFt5/6eaBZozLu4kGSdVaZ6T
-         geJubm3TvFm1eCbEIIaV55n/vrmzPmO5yF1MC3THFiQWgaPKIAiDlKbT3CKd+sac3Zkj
-         WlMA==
-X-Gm-Message-State: AJIora/a9B747ky3OxF4cHTmNYL2ASyjM8lftO5zXNUZ1kzrlP6m+boW
-        6qC/XsE6c1NpvshsplB9Nw263DtOez4iuA==
-X-Google-Smtp-Source: AGRyM1tIhk9hLd6ozum0NBKrIshtJMT72+PlUC63cQOXl5f8uXly4TBxvlVhx7heX8RQf1fh0eiq3g==
-X-Received: by 2002:a5d:5444:0:b0:21d:6497:3210 with SMTP id w4-20020a5d5444000000b0021d64973210mr8558449wrv.587.1657812109173;
-        Thu, 14 Jul 2022 08:21:49 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id c12-20020a5d4ccc000000b0021d6e758752sm1731229wrt.24.2022.07.14.08.21.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jul 2022 08:21:48 -0700 (PDT)
-Date:   Thu, 14 Jul 2022 16:21:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 3/8] MAINTAINERS: Remove myself as PWM maintainer
-Message-ID: <YtA0ikPPMuvPNGxs@google.com>
-References: <20220714112533.539910-1-lee@kernel.org>
- <20220714112533.539910-4-lee@kernel.org>
- <20220714151305.ridfaom2l4qaao4t@pengutronix.de>
+        with ESMTP id S235651AbiGNSds (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 14 Jul 2022 14:33:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379B011C3F;
+        Thu, 14 Jul 2022 11:33:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C848162196;
+        Thu, 14 Jul 2022 18:33:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B1EFC34114;
+        Thu, 14 Jul 2022 18:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657823627;
+        bh=uYJqubEioTmV1YTvZ/Dq1JpUQFHEuaX4No8uowtwz4U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iCuhAmcmtvA9NNwhysrRYtWPIC3q7sRKn1GqGl1jVy6Uacb6MLCcZ/akrntoT2MRN
+         R/KADwJ5BQqoY4Ry6pE63OW+hSSeUUHGYwbCqQouobhH3KXQIc8b30tbG2My95JAyR
+         yh0EMxN8W5Jvi8HCZ2L2HTq0QTC9ZCviSUEj+n0Ix5/caQO2B1GXP9Ue3h5zSbgJYJ
+         AUN2yZnY2EINbzZwafDaoESx3qcZ1/tPrK3dZ8KySJsyOieIzVqvt9WN+BlsxpyYgI
+         QAuIvIpejZgfHcqPmcBOr6fB54P1xLpClemDSZGR0KjzXGL/mR/4Lim0ffAmKPS7qP
+         1qvabzRWyPu6A==
+Received: by pali.im (Postfix)
+        id C1D6B1295; Thu, 14 Jul 2022 20:33:43 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Cc:     linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/4] gpio: mvebu: Fix check for pwm support on non-A8K platforms
+Date:   Thu, 14 Jul 2022 20:33:25 +0200
+Message-Id: <20220714183328.4137-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220714115515.5748-1-pali@kernel.org>
+References: <20220714115515.5748-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220714151305.ridfaom2l4qaao4t@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,27 +67,53 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 14 Jul 2022, Uwe Kleine-König wrote:
+pwm support incompatible with Armada 80x0/70x0 API is not only in
+Armada 370, but also in Armada XP, 38x and 39x. So basically every non-A8K
+platform. Fix check for pwm support appropriately.
 
-> Hello Lee,
-> 
-> On Thu, Jul 14, 2022 at 12:25:28PM +0100, Lee Jones wrote:
-> > Thierry and Uwe are doing a fine job, leaving me surplus to requirement.
-> > 
-> > Happy to pop back on-board if anything changes in the future.
-> 
-> Thanks for your efforts in the team. I don't know your plans for the
-> future, but I wish you the luck you need and the strength to decide the
-> necessary choices on your path forward.
+Fixes: 85b7d8abfec7 ("gpio: mvebu: add pwm support for Armada 8K/7K")
+Signed-off-by: Pali Rohár <pali@kernel.org>
 
-Thanks buddy.  Nothing drastic happening with respect to upstream.
+---
+Changes in v2:
+* reverse the if/else order per Baruch request
+---
+ drivers/gpio/gpio-mvebu.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Cheers.  Keep up the good work!
-
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 2db19cd640a4..de1e7a1a76f2 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -793,8 +793,12 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	u32 offset;
+ 	u32 set;
+ 
+-	if (of_device_is_compatible(mvchip->chip.of_node,
+-				    "marvell,armada-370-gpio")) {
++	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
++		int ret = of_property_read_u32(dev->of_node,
++					       "marvell,pwm-offset", &offset);
++		if (ret < 0)
++			return 0;
++	} else {
+ 		/*
+ 		 * There are only two sets of PWM configuration registers for
+ 		 * all the GPIO lines on those SoCs which this driver reserves
+@@ -804,13 +808,6 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 		if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
+ 			return 0;
+ 		offset = 0;
+-	} else if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
+-		int ret = of_property_read_u32(dev->of_node,
+-					       "marvell,pwm-offset", &offset);
+-		if (ret < 0)
+-			return 0;
+-	} else {
+-		return 0;
+ 	}
+ 
+ 	if (IS_ERR(mvchip->clk))
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
