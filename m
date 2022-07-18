@@ -2,137 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C57E0577008
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Jul 2022 18:09:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15275577C4E
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jul 2022 09:18:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbiGPQJX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 16 Jul 2022 12:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33062 "EHLO
+        id S233773AbiGRHS2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Jul 2022 03:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiGPQJW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 16 Jul 2022 12:09:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C2065F9;
-        Sat, 16 Jul 2022 09:09:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E462611A0;
-        Sat, 16 Jul 2022 16:09:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 234B0C34114;
-        Sat, 16 Jul 2022 16:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657987760;
-        bh=nuK8GK3uKLya8oToFj66vEMC13us5ufvacB/Y1/YHR0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sPJSozviix4Hz3h/Ln2GbrVWzORwGVK9GBOFiW/u2egcTXJqlDjjHnvWHyJlfl9jM
-         5szkTR/EjgPJ6Pyoq0Xl7TPREBwaFx11KtsMQO8WmwwrUehku6DkVn2VLP7sCPTnj2
-         bOt9FicTOU7ygEthnMiM4u/IhLXZt3nXzsEKFz3bIpqDpSfsUF4qqjf7Jdr9sVOtxT
-         vZUuFYyPHsOE+HSzZrC6uq4I66Wj4avbNFY1PyeI2e4iHxI2gIX85vC3I2+gqJc6xO
-         GW9gxYe3HjKVMPuu7ZtG47Ygv1hEW4vMWi8X76jg2GnmtLiK7NTZe5jBIPXW+0Ok7h
-         GbijlDI3fO5Tw==
-Received: by pali.im (Postfix)
-        id DC602A52; Sat, 16 Jul 2022 18:09:16 +0200 (CEST)
-Date:   Sat, 16 Jul 2022 18:09:16 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] ARM: dts: armada-38x: Fix compatible string for
- gpios
-Message-ID: <20220716160916.jp37siznitgzw6qf@pali>
-References: <20220714115515.5748-1-pali@kernel.org>
- <20220714183328.4137-1-pali@kernel.org>
- <20220714183328.4137-3-pali@kernel.org>
- <20220716144028.rzwcn4wl5uyxepjd@pengutronix.de>
- <20220716145019.nps3oh4a22fsuzup@pali>
- <20220716150751.6yaknmo3qwusyy5h@pengutronix.de>
+        with ESMTP id S233619AbiGRHS1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Jul 2022 03:18:27 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084221659E
+        for <linux-pwm@vger.kernel.org>; Mon, 18 Jul 2022 00:18:26 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id b26so15714715wrc.2
+        for <linux-pwm@vger.kernel.org>; Mon, 18 Jul 2022 00:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=gW4rCz2Fitz5o6DAUQMXkszJ5QgTwpkr1x/wG9fwwys=;
+        b=WAfdEbULVsF5Oo7vSbNU8BB24raJXDQHcwUNULmxYsyUjA+q0FFnge4ehvHxoU9urU
+         HzjuUBe8R/xL3MgwxR2IevPYimacvL8XuQompMyWgX0ATptMMfS6+c8ze/WIf8Jx+pL4
+         iTtNK8vAPgNglwypSrHB+YpmYcIxS8gDOOH7WULeskhAMDiQTmtldoTdOQquoYqOwJK4
+         DHVkFlWIFZRZN2Q8jZnC/7BDyjxewn4//sp/grS5mRj1QEYwpGCYCaweiCo+AoeGMNYS
+         iJSVGdOznd3znMCqvOaPAZtgidh7T24R3ZMQ3D8naib1g+Ht/kQ8Ul9L9KPCKTkG+Jkf
+         tZrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=gW4rCz2Fitz5o6DAUQMXkszJ5QgTwpkr1x/wG9fwwys=;
+        b=PZH5CpxdNDYmUmghsdrUsSh323DHJ7BRx2cFN1tpYoc71LmhxPm0Wcuaph6zBVXWHM
+         w7CbAnxpYleb5nX1eCFCtTWPtITe8QsO2V0qB/7XaJGPooM2QNONDNHJrdHDSXNsR/RI
+         mLjzYmHB0FPF1s3KTAdigRCzgr6oLDwYQIQTOJEQlzN+kvYigqGh4Al3Aik/KhX0N4wI
+         uvMY1ytT86lvLbC+0YZYvhlF9NDYamiMFJKYna2zUE0qLUWMGqWsJ7uGvvXNYRtRrbdf
+         4CDzhE2frGEKzPzZ20mKSJROU/iCXL9JAxhhIVKOmvKscDmWu+uZ4pbijBqnWroi2wYT
+         /lDA==
+X-Gm-Message-State: AJIora8UADqRfLhq8Q7HvZ7ec9zefrbV0ub8zrjQISVIAQdzp36miJHG
+        aASaDVVX75gM/MV99BVecQqS6g==
+X-Google-Smtp-Source: AGRyM1t+UYLA0q90Sx0OLpN5vQr5rFVtNKJ4KmLAjLMTXPex06QR2HLZKDt4VaOjk1Ct9sezG3ASHA==
+X-Received: by 2002:a5d:4750:0:b0:21e:375:2825 with SMTP id o16-20020a5d4750000000b0021e03752825mr6200608wrs.42.1658128704615;
+        Mon, 18 Jul 2022 00:18:24 -0700 (PDT)
+Received: from [10.35.4.171] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id c12-20020a5d4ccc000000b0021d6e758752sm10075729wrt.24.2022.07.18.00.18.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jul 2022 00:18:24 -0700 (PDT)
+Message-ID: <869e52f5-e1bd-4d40-1ba8-a467a852c3ec@sifive.com>
+Date:   Mon, 18 Jul 2022 08:18:23 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 3/7] pwm: dwc: add of/platform support
+Content-Language: en-GB
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Rob Herring <robh@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
+        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Adnan Chowdhury <adnan.chowdhury@sifive.com>
+References: <20220712100113.569042-1-ben.dooks@sifive.com>
+ <20220712100113.569042-4-ben.dooks@sifive.com>
+ <20220712221715.GT1823936-robh@kernel.org>
+ <feaacf44-f9a8-b892-d8ba-8a396b49d56b@sifive.com>
+ <20220713135230.gjbd3v6iih2uicpu@pengutronix.de>
+ <7999fec2-847a-86ce-ed78-d2a9008bf654@sifive.com>
+ <20220713150755.bimcq2yiuvxn6n6v@pengutronix.de>
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <20220713150755.bimcq2yiuvxn6n6v@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220716150751.6yaknmo3qwusyy5h@pengutronix.de>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Saturday 16 July 2022 17:07:51 Uwe Kleine-König wrote:
-> On Sat, Jul 16, 2022 at 04:50:19PM +0200, Pali Rohár wrote:
-> > On Saturday 16 July 2022 16:40:28 Uwe Kleine-König wrote:
-> > > On Thu, Jul 14, 2022 at 08:33:27PM +0200, Pali Rohár wrote:
-> > > > Armada 38x supports per CPU interrupts for gpios, like Armada XP. Pre-XP
-> > > > variants like Armada 370 do not support per CPU interrupts for gpios.
-> > > > 
-> > > > So change compatible string for Armada 38x from "marvell,armada-370-gpio"
-> > > > which indicates pre-XP variant to "marvell,armadaxp-gpio" which indicates
-> > > > XP variant or new.
-> > > > 
-> > > > Driver gpio-mvebu.c which handles both pre-XP and XP variants already
-> > > > provides support for per CPU interrupts on XP and newer variants.
-> > > > 
-> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > Fixes: 7cb2acb3fbae ("ARM: dts: mvebu: Add PWM properties for armada-38x")
-> > > > ---
-> > > >  arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> > > > index df3c8d1d8f64..9343de6947b3 100644
-> > > > --- a/arch/arm/boot/dts/armada-38x.dtsi
-> > > > +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> > > > @@ -292,7 +292,7 @@
-> > > >  			};
-> > > >  
-> > > >  			gpio0: gpio@18100 {
-> > > > -				compatible = "marvell,armada-370-gpio",
-> > > > +				compatible = "marvell,armadaxp-gpio",
-> > > >  					     "marvell,orion-gpio";
-> > > 
-> > > If you can treat the XP variant as 370 and everything that is supposed
-> > > to work on 370 works then, then maybe the right incarnation is:
-> > > 
-> > > 	compatible = "marvell,armadaxp-gpio", "marvell,armada-370-gpio", "marvell,orion-gpio";
-> > > 
-> > > ?
-> > 
-> > For pre-XP variants is "marvell,orion-gpio" enough and for XP + post-XP
-> > is needed "marvell,armadaxp-gpio" (with possible "marvell,orion-gpio"
-> > for backward compatibility).
-> > 
-> > So I do not see reason why to add "marvell,armada-370-gpio" nor what
-> > value it brings.
+On 13/07/2022 16:07, Uwe Kleine-König wrote:
+> On Wed, Jul 13, 2022 at 03:30:07PM +0100, Ben Dooks wrote:
+>> On 13/07/2022 14:52, Uwe Kleine-König wrote:
+>>> On Wed, Jul 13, 2022 at 12:56:55PM +0100, Ben Dooks wrote:
+>>>> On 12/07/2022 23:17, Rob Herring wrote:
+>>>>> On Tue, Jul 12, 2022 at 11:01:09AM +0100, Ben Dooks wrote:
+>>>>>> The dwc pwm controller can be used in non-PCI systems, so allow
+>>>>>> either platform or OF based probing.
+>>>>>>
+>>>>>> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+>>
+>> [snip]
+>>
+>>>>>> +properties:
+>>>>>> +  "#pwm-cells":
+>>>>>> +    description: |
+>>>>>> +      See pwm.yaml in this directory for a description of the cells format.
+>>>>>
+>>>>> pwm.yaml doesn't define how many cells. You need to. And you don't need
+>>>>> generic descriptions.
+>>>>
+>>>>    "#pwm-cells":
+>>>>       const: 1
+>>>>
+>>>> should be sufficient then?
+>>>
+>>> I would expect a value of (at least) 2 or (better) 3.
+>>
+>> OOPS, forgot the phandle.
+>>
+>> I will have to check if we have any support yet for dealing
+>> with any of the pwm flags yet.
 > 
-> If you boot an older kernel (i.e. one that doesn't support
-> marvell,armadaxp-gpio, but does support marvell,armada-370-gpio), it
+> I didn't double check, but given that the driver only supports inversed
+> polarity it might not even work without passing the flag for inversed
+> polarity. Having said that, I expect you have to only add "#pwm-cells =
+> <3>;" to your dts and then everything should work just fine.
 
-Is there such kernel version?
+I've gone back over the documentation we have for the block, and it
+should have a count for high and a count for low in the PWM mode the
+driver puts it into. I have no idea /why/ the driver is reporting it
+as inversed, unless the PCI version has this automatically set....
 
-> will work better as there are relevant differences between
-> marvell,orion-gpio and marvell,armada-370-gpio.
+I will go back and talk with the engineer who did the testing of the
+PWM to get the test-bench re-set and check this, however my expectation
+is we could easily do both and for the of/plat case we should just
+report normal polarity (and we could deal with the inversed by simply
+swapping the low and high values).
 
-And if yes, do we really need this in DTS files for new kernel
-versions? I can imagine that such change can be relevant for old LTS
-kernel version, but not for new versions.
+I also noted the v2 block supports 0 and 100% by setting a bit in the
+control and the timers to a given value, so that can also be added to
+the series (although this requires an IP generation option to be
+set) which we can also add.
 
-> For example some
-> registers seem to have a different offset ...
+Thnak you for pointing this out, hopefully we can have this sorted
+today and if so we will need to change this to a range of 2..3 for
+the PWM cells.
 
-armada-370-gpio is mapped to MVEBU_GPIO_SOC_VARIANT_ORION, so it will
-get same offsets as orion-gpio. So no change.
+
+> Best regards
+> Uwe
+> 
+
