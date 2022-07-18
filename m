@@ -2,59 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30A64577CE6
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jul 2022 09:54:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0564577D83
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jul 2022 10:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233041AbiGRHya (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Jul 2022 03:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42616 "EHLO
+        id S233130AbiGRI36 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 18 Jul 2022 04:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230009AbiGRHy3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Jul 2022 03:54:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97391112F
-        for <linux-pwm@vger.kernel.org>; Mon, 18 Jul 2022 00:54:27 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oDLaE-0001WB-2p; Mon, 18 Jul 2022 09:54:26 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oDLaD-001fcN-2M; Mon, 18 Jul 2022 09:54:25 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oDLaC-005uvA-Af; Mon, 18 Jul 2022 09:54:24 +0200
-Date:   Mon, 18 Jul 2022 09:54:22 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
-        William Salmon <william.salmon@sifive.com>,
-        Adnan Chowdhury <adnan.chowdhury@sifive.com>
-Subject: Re: [PATCH 1/7] pwm: change &pci->dev to dev in probe
-Message-ID: <20220718075422.tpxjkua67w4y2lee@pengutronix.de>
-References: <20220712100113.569042-1-ben.dooks@sifive.com>
- <20220712100113.569042-2-ben.dooks@sifive.com>
- <20220713081633.5lsunbl5mfnngdrs@pengutronix.de>
- <2cd139dd-559e-7975-41a7-c813bc5851ea@sifive.com>
- <20220718074954.4z4qiz2pbuyrzaje@pengutronix.de>
+        with ESMTP id S233522AbiGRI36 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Jul 2022 04:29:58 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A15517AB5
+        for <linux-pwm@vger.kernel.org>; Mon, 18 Jul 2022 01:29:54 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id h17so15991720wrx.0
+        for <linux-pwm@vger.kernel.org>; Mon, 18 Jul 2022 01:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Pvrgndmmn8YktJ8T281XpjP9LliHnMlSYEnEf1KWrn8=;
+        b=w/VI4XpE1c0gfAglNbNRXAhqPaRGANN0H3VlIihlDxCg0AFssRZyH9JH2CMhjh+m16
+         r9kx4cxZCwdPZHxM0QdTBdRa5GCRRy41dnLXaFC6kIw9J1f5Ud1bVQRDVEUOu+LjUtdS
+         0y0tP5IbD4pC0v7bW4NL3pvVOPG6p3ApdqDU1kFlB76VT7bI00QQ0lrVHyUiX7XOGp7o
+         j1sVgLaVztKSzwMJSZyw6MYGaI14FICoLPBg+neREy/8xVc3QW7pyhn80waPTWnR9x2t
+         9XNnDuiZm3q7jQ/GPmcSMQk6KrtZeHHA+RqZ7x6QBYgKE/kYnQPnRe2srklOqQJOWrb7
+         icHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Pvrgndmmn8YktJ8T281XpjP9LliHnMlSYEnEf1KWrn8=;
+        b=QcckNi1tdhuhM4b94f95Tun4zN/LqAzktn9vyRiglUefJQSAtjanZmMyt98mpfz8Ln
+         M/haby0KqFuO+Y7J338YCrVykrhwDpD/YVGxXXs5L0QIw2SgVZ1ZCZfcG0z0FsYBEyFl
+         6q2vL6UW0qYMWGrR5HG2uP40r9Giw4xRTlvbhP0hieRtxLaBc/pB/uE7Jnb+BkJr0ORp
+         AGxuTDm/CSQHGuvFnvq+x4jovtAeMVyshbxPNJEQyTEGbBMCdv8L9Qgzt2OVqk7P5hgv
+         1KMP9y0CZxSZEZprCbuKsgXeEvunXuQvUlO4buPD4dUak4AVBhte8JZwso9SGvFDGGmb
+         5Uyg==
+X-Gm-Message-State: AJIora8Kv2g5g91rbBROF0IZGF9oHdGJSbOL0vT18+djL+MKeImMO6ia
+        nD8iKS7AUixBlObEsPoQHrfFNA==
+X-Google-Smtp-Source: AGRyM1veFFWv0Q5z9BYX2jyf571R7JB8ReLTZNwWeeEEwHqF1qW4UQ6d0Kq8k4zFKqezBHF1hXY/XQ==
+X-Received: by 2002:a5d:64a3:0:b0:21d:adaa:ce4c with SMTP id m3-20020a5d64a3000000b0021dadaace4cmr21808418wrp.161.1658132992989;
+        Mon, 18 Jul 2022 01:29:52 -0700 (PDT)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id n30-20020a05600c3b9e00b003a2ed2a40e4sm17076668wms.17.2022.07.18.01.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Jul 2022 01:29:52 -0700 (PDT)
+Date:   Mon, 18 Jul 2022 09:29:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     =?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>
+Cc:     daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH RESEND v6] backlight: lp855x: Switch to atomic PWM API
+Message-ID: <YtUZ/ojZjcPlzTHi@google.com>
+References: <20220714215334.78226-1-mairacanal@riseup.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ngh2iorqj3djqfbj"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220718074954.4z4qiz2pbuyrzaje@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220714215334.78226-1-mairacanal@riseup.net>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,53 +72,31 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, 14 Jul 2022, Maíra Canal wrote:
 
---ngh2iorqj3djqfbj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Remove legacy PWM interface (pwm_config, pwm_enable, pwm_disable) and
+> replace it for the atomic PWM API.
+> 
+> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Signed-off-by: Maíra Canal <mairacanal@riseup.net>
 
-Hello,
+Nit: This should be chronological.
 
-On Mon, Jul 18, 2022 at 09:49:54AM +0200, Uwe Kleine-K=F6nig wrote:
-> On Mon, Jul 18, 2022 at 08:19:16AM +0100, Ben Dooks wrote:
-> > On 13/07/2022 09:16, Uwe Kleine-K=F6nig wrote:
-> > > On Tue, Jul 12, 2022 at 11:01:07AM +0100, Ben Dooks wrote:
-> > > > The dwc_pwm_probe() assignes dev to be &pci->dev but then uses
-> > > > &pci->dev throughout the function. Change these all to the be
-> > > > 'dev' variable to make lines shorter.
-> > >=20
-> > > Looks reasonable.
-> > >=20
-> > > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> >=20
-> > ack for 1/7 or the series?
->=20
-> The former. For the other patches I assume they will change in v2.
+> ---
+> V1 -> V2: Initialize variable and simplify conditional loop
+> V2 -> V3: Fix assignment of NULL variable
+> V3 -> V4: Replace division for pwm_set_relative_duty_cycle
+> V4 -> V5: Fix overwrite of state.period
+> V5 -> V6: Fix duty cycle rounding and set period outside conditional loop
+> ---
+>  drivers/video/backlight/lp855x_bl.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
 
-Oh well, and 2/7 is so obviously a preparation patch that I'll wait to
-see v2 for that one, too.
+Applied, thanks.
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ngh2iorqj3djqfbj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLVEawACgkQwfwUeK3K
-7AmTggf6A0ecpKFfBLiPjo/NNYwaME/rIWapOnrvy/ycFw1mJRqbs7Yys4jnN3Wp
-PEhd18VJo1i0pzD0tTlNayIso/8vm3oBwVyfCWazfm99Z0Fg5za+prV+51Jf4Vgz
-mnzDGFuMiXFYItmDPPlGOV0FVJsH2h07dalUkFCTtReX7CW/OoLHgt1eZ2OQgKsM
-ECw8Q/k+46q7qiXc2shR9Pk+G3svCkXZtVI5lhlqZnNdGnPKEU0Ixk/uo///C9pM
-2qJ2yRCNAzCPK2YWRVf43OuT4mHhMHxv32JlkqEWuUczQsqvQNPDj4xEj5BGy8/D
-TSSiVYp1pjGib45T5rRSKLIQgKZQKw==
-=Bzbt
------END PGP SIGNATURE-----
-
---ngh2iorqj3djqfbj--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
