@@ -2,31 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2DE557A3D6
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Jul 2022 17:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B167757A3D9
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Jul 2022 17:59:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239710AbiGSP70 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 19 Jul 2022 11:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
+        id S238009AbiGSP71 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 19 Jul 2022 11:59:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233933AbiGSP7U (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Jul 2022 11:59:20 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 40C9F5B79B;
-        Tue, 19 Jul 2022 08:59:18 -0700 (PDT)
+        with ESMTP id S239708AbiGSP70 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Jul 2022 11:59:26 -0400
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4621A5B7B6;
+        Tue, 19 Jul 2022 08:59:24 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.92,284,1650898800"; 
-   d="scan'208";a="128394749"
+   d="scan'208";a="126662062"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 20 Jul 2022 00:59:17 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 20 Jul 2022 00:59:23 +0900
 Received: from localhost.localdomain (unknown [10.226.92.160])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 011CB4007F3A;
-        Wed, 20 Jul 2022 00:59:12 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 23D804007F3A;
+        Wed, 20 Jul 2022 00:59:17 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
+        Krzysztof Kozlowski <krzk+dt@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
@@ -35,107 +34,180 @@ Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v3 0/2] Add support for RZ/G2L GPT
-Date:   Tue, 19 Jul 2022 16:59:08 +0100
-Message-Id: <20220719155910.576265-1-biju.das.jz@bp.renesas.com>
+        linux-renesas-soc@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: pwm: Add RZ/G2L GPT binding
+Date:   Tue, 19 Jul 2022 16:59:09 +0100
+Message-Id: <20220719155910.576265-2-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220719155910.576265-1-biju.das.jz@bp.renesas.com>
+References: <20220719155910.576265-1-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
-(GPT32E). It supports the following functions
- * 32 bits × 8 channels
- * Up-counting or down-counting (saw waves) or up/down-counting
-   (triangle waves) for each counter.
- * Clock sources independently selectable for each channel
- * Two I/O pins per channel
- * Two output compare/input capture registers per channel
- * For the two output compare/input capture registers of each channel,
-   four registers are provided as buffer registers and are capable of
-   operating as comparison registers when buffering is not in use.
- * In output compare operation, buffer switching can be at crests or
-   troughs, enabling the generation of laterally asymmetric PWM waveforms.
- * Registers for setting up frame cycles in each channel (with capability
-   for generating interrupts at overflow or underflow)
- * Generation of dead times in PWM operation
- * Synchronous starting, stopping and clearing counters for arbitrary
-   channels
- * Starting, stopping, clearing and up/down counters in response to input
-   level comparison
- * Starting, clearing, stopping and up/down counters in response to a
-   maximum of four external triggers
- * Output pin disable function by dead time error and detected
-   short-circuits between output pins
- * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
- * Enables the noise filter for input capture and external trigger
-   operation
+Add device tree bindings for the General PWM Timer (GPT).
 
-This patch series aims to add basic pwm support for RZ/G2L GPT driver
-by creating separate logical channels for each IOs.
-
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 v2->v3:
- * Added Rb tag from Rob for the bindings.
- * Updated limitation section
- * Added prefix "RZG2L_" for all macros
- * Modified prescale calculation
- * Removed pwm_set_chip_data
- * Updated comment related to modifying Mode and Prescaler
- * Updated setting of prescale value in rzg2l_gpt_config()
- * Removed else branch from rzg2l_gpt_get_state()
- * removed the err label from rzg2l_gpt_apply()
- * Added devm_clk_get_optional_enabled() to retain clk on status,
-   in case bootloader turns on the clk of pwm.
- * Replaced devm_reset_control_get_exclusive->devm_reset_control_get_shared
-   as single reset shared between 8 channels.
-V1->v2:
+ * Added Rb tag from Rob.
+v1->v2:
  * Added '|' after 'description:' to preserve formatting.
  * Removed description for pwm_cells as it is common property.
  * Changed the reg size in example from 0xa4->0x100
- * Added Rb tag from Geert for bindings.
- * Added Limitations section
- * dropped "_MASK" from the define names.
- * used named initializer for struct phase
- * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
- * Revised the logic for prescale
- * Added .get_state callback
- * Improved error handling in rzg2l_gpt_apply
- * Removed .remove callback
- * Tested the driver with PWM_DEBUG enabled.
-
+ * Added Rb tag from Geert.
 RFC->v1:
- * Added Description in binding patch
+ * Added Description
  * Removed comments from reg and clock
- * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
- * Added rzg2l_gpt_read() and updated macros
- * Removed dtsi patches, will send it separately
-
-RFC:
- * https://lore.kernel.org/linux-renesas-soc/20220430075915.5036-1-biju.das.jz@bp.renesas.com/T/#t
-
-Biju Das (2):
-  dt-bindings: pwm: Add RZ/G2L GPT binding
-  pwm: Add support for RZ/G2L GPT
-
- .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 129 ++++++
- drivers/pwm/Kconfig                           |  11 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-rzg2l-gpt.c                   | 367 ++++++++++++++++++
- 4 files changed, 508 insertions(+)
+---
+ .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 129 ++++++++++++++++++
+ 1 file changed, 129 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
- create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
 
-
-base-commit: 036ad6daa8f0fd357af7f50f9da58539eaa6f68c
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml b/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
+new file mode 100644
+index 000000000000..e8f7b9947eaa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/renesas,rzg2l-gpt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G2L General PWM Timer (GPT)
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++description: |
++  RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
++  (GPT32E). It supports the following functions
++  * 32 bits × 8 channels.
++  * Up-counting or down-counting (saw waves) or up/down-counting
++    (triangle waves) for each counter.
++  * Clock sources independently selectable for each channel.
++  * Two I/O pins per channel.
++  * Two output compare/input capture registers per channel.
++  * For the two output compare/input capture registers of each channel,
++    four registers are provided as buffer registers and are capable of
++    operating as comparison registers when buffering is not in use.
++  * In output compare operation, buffer switching can be at crests or
++    troughs, enabling the generation of laterally asymmetric PWM waveforms.
++  * Registers for setting up frame cycles in each channel (with capability
++    for generating interrupts at overflow or underflow)
++  * Generation of dead times in PWM operation.
++  * Synchronous starting, stopping and clearing counters for arbitrary
++    channels.
++  * Starting, stopping, clearing and up/down counters in response to input
++    level comparison.
++  * Starting, clearing, stopping and up/down counters in response to a
++    maximum of four external triggers.
++  * Output pin disable function by dead time error and detected
++    short-circuits between output pins.
++  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
++  * Enables the noise filter for input capture and external trigger
++    operation.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a07g044-gpt  # RZ/G2{L,LC}
++          - renesas,r9a07g054-gpt  # RZ/V2L
++      - const: renesas,rzg2l-gpt
++
++  reg:
++    maxItems: 1
++
++  '#pwm-cells':
++    const: 2
++
++  interrupts:
++    items:
++      - description: GTCCRA input capture/compare match
++      - description: GTCCRB input capture/compare
++      - description: GTCCRC compare match
++      - description: GTCCRD compare match
++      - description: GTCCRE compare match
++      - description: GTCCRF compare match
++      - description: GTADTRA compare match
++      - description: GTADTRB compare match
++      - description: GTCNT overflow/GTPR compare match
++      - description: GTCNT underflow
++
++  interrupt-names:
++    items:
++      - const: ccmpa
++      - const: ccmpb
++      - const: cmpc
++      - const: cmpd
++      - const: cmpe
++      - const: cmpf
++      - const: adtrga
++      - const: adtrgb
++      - const: ovf
++      - const: unf
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - power-domains
++  - resets
++
++allOf:
++  - $ref: pwm.yaml#
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r9a07g044-cpg.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    gpt4: pwm@10048400 {
++        compatible = "renesas,r9a07g044-gpt", "renesas,rzg2l-gpt";
++        reg = <0x10048400 0x100>;
++        interrupts = <GIC_SPI 270 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 271 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 272 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 273 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 274 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 275 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 276 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 277 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 278 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 279 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "ccmpa", "ccmpb", "cmpc", "cmpd",
++                          "cmpe", "cmpf", "adtrga", "adtrgb",
++                          "ovf", "unf";
++        clocks = <&cpg CPG_MOD R9A07G044_GPT_PCLK>;
++        power-domains = <&cpg>;
++        resets = <&cpg R9A07G044_GPT_RST_C>;
++        #pwm-cells = <2>;
++    };
 -- 
 2.25.1
 
