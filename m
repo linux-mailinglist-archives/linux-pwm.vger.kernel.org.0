@@ -2,89 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 415A3578C96
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 Jul 2022 23:18:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F4FE579525
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Jul 2022 10:20:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234028AbiGRVSR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 18 Jul 2022 17:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44586 "EHLO
+        id S231694AbiGSIUy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 19 Jul 2022 04:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229799AbiGRVSQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 18 Jul 2022 17:18:16 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C2428705;
-        Mon, 18 Jul 2022 14:18:15 -0700 (PDT)
-Received: by mail-io1-f50.google.com with SMTP id n7so10355998ioo.7;
-        Mon, 18 Jul 2022 14:18:15 -0700 (PDT)
+        with ESMTP id S230311AbiGSIUx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Jul 2022 04:20:53 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A762AC6A
+        for <linux-pwm@vger.kernel.org>; Tue, 19 Jul 2022 01:20:51 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id r2so19419540wrs.3
+        for <linux-pwm@vger.kernel.org>; Tue, 19 Jul 2022 01:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=xd0Nc+zNCPBmUNJaS2OhYDDTwIO4yuqtAZex5tQXAwY=;
+        b=KKTnV56L2I48XJSkwd71YzfFHWnJ6hVS7EBPHqF7YAFYqcpiMOZAdj7w4WkyPSVlhM
+         PVOdyHwoltehxoPYDPltF8QL2MpdK1M8V8GoLAWsJd6K8QTwtftTjpCKfHyCQi74aE3u
+         9E148AQz5DJmXBhRwyTFUmmek6rKToMgbu0yA1zs6BvYlEe+t3KE43G3dMQc2oPtx8nq
+         +5yG81pEmqTyg17UU0vND6WRzQNghnQiliz1+2+fhinspiE8KW4eTocRjEJ8ze7ppgQc
+         UeemB2I2f6bnsznb1t5K5s16J5Tt4ZbOI9BQK/VV0dEADnYWdBeh3jB4NEuZT3RUlGK8
+         qYjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CA6cnIkj6RDBPi8wVndYenOw7BfsLn6HBSCFjK/hRkk=;
-        b=vY4E7Q0/yf8wqlPZgngrNwlmKxoXFYP+p/0wY40QylcYgo05vvW1jblY+8Y/rrD60W
-         mvB+oq3IHROxgCx9/LMzKL0ZC6HgxHTR5dQBsK4iOpDRp4oTswfEopV1nSPGHILyDLsB
-         o1msV9CvWwBPmxxITtLFY7K8KxdC3V5OPrNsFtKOYoiaJr1D54cmvBPCRml/2kfoGzn4
-         UcwLqzvx0kvUM/FyRhmuFkHgGQUW4HqSXRoEIAw+WsaITdzLMsZLcvebdzvKlEhQtXcq
-         4DpwP3spj4IlX1bvoFKwmeIVFXaLYvQNRezKfjWEh3X73CP+to6RSfCh5JbcEfsC+lkP
-         s4Ng==
-X-Gm-Message-State: AJIora8iFb7qL0NrVzKn57cr5wVF0oLrajW3ENOSrcTp2KQXihLFYLFJ
-        BJxLQ7Pval5Vfs0VR0IVLA==
-X-Google-Smtp-Source: AGRyM1tMwB1OR6cOOec4zTljTVtyHRR6P+TR082tR8av+kzniYWrINr3/JwNrtZTkmpwLMaUd9NU5w==
-X-Received: by 2002:a02:a890:0:b0:33f:22b8:cb0b with SMTP id l16-20020a02a890000000b0033f22b8cb0bmr16115281jam.136.1658179093108;
-        Mon, 18 Jul 2022 14:18:13 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id j195-20020a0263cc000000b003417ba4f66asm840832jac.41.2022.07.18.14.18.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jul 2022 14:18:12 -0700 (PDT)
-Received: (nullmailer pid 3574265 invoked by uid 1000);
-        Mon, 18 Jul 2022 21:18:10 -0000
-Date:   Mon, 18 Jul 2022 15:18:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-        devicetree@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] doc: gpio-mvebu: Add information about Armada 38x
- and Armada 39x
-Message-ID: <20220718211810.GA3574206-robh@kernel.org>
-References: <20220714115515.5748-1-pali@kernel.org>
- <20220714183328.4137-1-pali@kernel.org>
- <20220714183328.4137-2-pali@kernel.org>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=xd0Nc+zNCPBmUNJaS2OhYDDTwIO4yuqtAZex5tQXAwY=;
+        b=Yyi5xFl4lMIGxUs1QTQTc3SbeCIBStpA6XtvMB/WHtuut8pJigvuGFMpf5iJ/YvCn9
+         jXnb8EdfZG9UKBMq7s/9pxpNbCMBVybf413X+akBvITL6pGbQvr46KZROjhf9+f/lODu
+         CvJYYX+K815DWfziObPwNpPhJu52zx1ImRApycfaW3+/W9bC4pYu93pZfGI5wuol6nba
+         xOTibz7vNL/JuxaePE91GnNMMZQ13m2aJgl/SM6Ldo4hMx1Fk/Or+iKWLDM8d4oc/r5z
+         i78omBClotAO6TrmXOCTlyu7yo5HxdzbmBaMFTLHA5nN+Hedgn+tFO1V+a7PMzN1yY+O
+         gxcw==
+X-Gm-Message-State: AJIora95hkQYVBtRygCERgUWgBCijXuIv8ZGJGKlE1WD6rl86cATdBvQ
+        zwozXxGwIA5HxkOT5Mj5TE+OjQ==
+X-Google-Smtp-Source: AGRyM1uRPrVhXybr+/OpVvs2JrvOxXfHp6ae4STNmjP1jNiXbtdo4HafHXzI9Q6EnMnSbvPw6pDYhQ==
+X-Received: by 2002:a05:6000:156b:b0:21d:9daf:3cdb with SMTP id 11-20020a056000156b00b0021d9daf3cdbmr25978919wrz.492.1658218850304;
+        Tue, 19 Jul 2022 01:20:50 -0700 (PDT)
+Received: from [10.35.4.171] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id h24-20020adfa4d8000000b0021d83eed0e9sm12490145wrb.30.2022.07.19.01.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Jul 2022 01:20:49 -0700 (PDT)
+Message-ID: <b318df5a-bf11-bfb8-aa7a-59d719081f8b@sifive.com>
+Date:   Tue, 19 Jul 2022 09:20:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220714183328.4137-2-pali@kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 7/7] pwm: dwc: add snps,pwm-number to limit pwm count
+Content-Language: en-GB
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        u.kleine-koenig@pengutronix.de,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
+        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Adnan Chowdhury <adnan.chowdhury@sifive.com>
+References: <20220712100113.569042-1-ben.dooks@sifive.com>
+ <20220712100113.569042-8-ben.dooks@sifive.com>
+ <20220718200828.GA3453680-robh@kernel.org>
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <20220718200828.GA3453680-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, 14 Jul 2022 20:33:26 +0200, Pali Rohár wrote:
-> Armada 38x and Armada 39x should use compatible string "marvel,armadaxp-gpio".
+On 18/07/2022 21:08, Rob Herring wrote:
+> On Tue, Jul 12, 2022 at 11:01:13AM +0100, Ben Dooks wrote:
+>> Add snps,pwm-number property to indicate if the block does not have
+>> all 8 of the PWM blocks.
+>>
+>> Not sure if this should be a general PWM property consider optional
+>> for all PWM types, so have added a specific one here (there is only
+>> one other controller with a property for PWM count at the moment)
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+>> ---
+>>   Documentation/devicetree/bindings/pwm/pwm-synposys.yaml | 5 +++++
+>>   drivers/pwm/pwm-dwc.c                                   | 8 ++++++++
+>>   2 files changed, 13 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
+>> index 38ac0da75272..15bdf764b46a 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-synposys.yaml
+>> @@ -30,11 +30,16 @@ properties:
+>>         - items:
+>>           - const: snps,pwm
+>>   
+>> +  snps,pwm-number:
+>> +    $ref: '/schemas/types.yaml#/definitions/uint32'
+>> +    description: u32 value representing the number of PWM devices
 > 
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> Why do we need to know this? Are you going to have a consumer to a
+> non-existent PWM? If you do need to know how many, it should be implied
+> by the compatible string.
 
-Acked-by: Rob Herring <robh@kernel.org>
+For this IP block it is a build time option for 1..8 timers
+so I thought it best we don't register non-existant timers
+
+
+The system we are working on only has 1 PWM timer per block.
+
+-- 
+Ben
+
