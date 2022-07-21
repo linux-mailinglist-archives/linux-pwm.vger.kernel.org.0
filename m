@@ -2,528 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ADEE57A3DE
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Jul 2022 17:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F9757C8FF
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Jul 2022 12:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236186AbiGSP7c (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 19 Jul 2022 11:59:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36668 "EHLO
+        id S232607AbiGUKbm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Jul 2022 06:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239700AbiGSP73 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 19 Jul 2022 11:59:29 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F1B715B79B;
-        Tue, 19 Jul 2022 08:59:27 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.92,284,1650898800"; 
-   d="scan'208";a="126662065"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 20 Jul 2022 00:59:27 +0900
-Received: from localhost.localdomain (unknown [10.226.92.160])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D60484003EB2;
-        Wed, 20 Jul 2022 00:59:23 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v3 2/2] pwm: Add support for RZ/G2L GPT
-Date:   Tue, 19 Jul 2022 16:59:10 +0100
-Message-Id: <20220719155910.576265-3-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220719155910.576265-1-biju.das.jz@bp.renesas.com>
-References: <20220719155910.576265-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S232832AbiGUKbl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Jul 2022 06:31:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AD960687
+        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 03:31:40 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oETSz-0002Vw-QO; Thu, 21 Jul 2022 12:31:38 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oETSy-002IMc-9X; Thu, 21 Jul 2022 12:31:36 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oETSx-006ZIG-8g; Thu, 21 Jul 2022 12:31:35 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Wan Jiabing <wanjiabing@vivo.com>, kernel@pengutronix.de,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Atish Patra <atishp@atishpatra.org>,
+        "Wesley W. Terpstra" <wesley@sifive.com>
+Subject: [PATCH 1/7] pwm: sifive: Simplify offset calculation for PWMCMP registers
+Date:   Thu, 21 Jul 2022 12:31:23 +0200
+Message-Id: <20220721103129.304697-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2206; h=from:subject; bh=S9GIGL+Cct/zyqgr/ikWe3LQhbttxTcRa9DxXEHmNkE=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBi2SrrxbR6WH/xT1XiSbvMGpd7KdnUxvzpxZ52l/3U 7p4plO2JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYtkq6wAKCRDB/BR4rcrsCdCLCA ChSWsJTopykEY66sAPoljOUbgwbe5BclCZKRJyMy7TtVK5CtIsUs5cBly/ahVIJX4fFuX012X++rop WkUTBtyyB2GNIwvjL4PapHBuV2zOdrljrtPEyjZ2bJGh+4fEXQJR8u6aHpcGaWKoodorvT+OzhegBl 3C9isWIU/SJeALqb9OPWT6tSV3WAjJ1T4o6XnsxuJhKJvq5bEJWqYwIyizoGD/UT7w6BRHrnEUjDSx L45pMXhfRf6aI7ozoSaTE9oq0bppgFSu4rW61kqx5yxzSHiWlgGdis5CAkAFdNktUjpOJY+J/GE7wR 9uIJP94GSbMvn6Th/K02QgD1lFOlj7
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
-(GPT32E). It supports the following functions
- * 32 bits × 8 channels
- * Up-counting or down-counting (saw waves) or up/down-counting
-   (triangle waves) for each counter.
- * Clock sources independently selectable for each channel
- * Two I/O pins per channel
- * Two output compare/input capture registers per channel
- * For the two output compare/input capture registers of each channel,
-   four registers are provided as buffer registers and are capable of
-   operating as comparison registers when buffering is not in use.
- * In output compare operation, buffer switching can be at crests or
-   troughs, enabling the generation of laterally asymmetric PWM waveforms.
- * Registers for setting up frame cycles in each channel (with capability
-   for generating interrupts at overflow or underflow)
- * Generation of dead times in PWM operation
- * Synchronous starting, stopping and clearing counters for arbitrary
-   channels
- * Starting, stopping, clearing and up/down counters in response to input
-   level comparison
- * Starting, clearing, stopping and up/down counters in response to a
-   maximum of four external triggers
- * Output pin disable function by dead time error and detected
-   short-circuits between output pins
- * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
- * Enables the noise filter for input capture and external trigger
-   operation
+Instead of explicitly using PWM_SIFIVE_PWMCMP0 + pwm->hwpwm *
+PWM_SIFIVE_SIZE_PWMCMP for each access to one of the PWMCMP registers,
+introduce a macro that takes the hwpwm id as parameter.
 
-This patch adds basic pwm support for RZ/G2L GPT driver by creating
-separate logical channels for each IOs.
+For the register definition using a plain 4 instead of the cpp constant
+PWM_SIFIVE_SIZE_PWMCMP is easier to read, so define the offset macro
+without the constant. The latter can then be dropped as there are no
+users left.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
-v2->v3:
- * Updated limitation section
- * Added prefix "RZG2L_" for all macros
- * Modified prescale calculation
- * Removed pwm_set_chip_data
- * Updated comment related to modifying Mode and Prescaler
- * Updated setting of prescale value in rzg2l_gpt_config()
- * Removed else branch from rzg2l_gpt_get_state()
- * removed the err label from rzg2l_gpt_apply()
- * Added devm_clk_get_optional_enabled() to retain clk on status,
-   in case bootloader turns on the clk of pwm.
- * Replaced devm_reset_control_get_exclusive->devm_reset_control_get_shared
-   as single reset shared between 8 channels.
-v1->v2:
- * Added Limitations section
- * dropped "_MASK" from the define names.
- * used named initializer for struct phase
- * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
- * Revised the logic for prescale
- * Added .get_state callback
- * Improved error handling in rzg2l_gpt_apply
- * Removed .remove callback
- * Tested driver with PWM_DEBUG enabled
-RFC->V1:
- * Updated macros
- * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
- * Added rzg2l_gpt_read()
----
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-rzg2l-gpt.c | 367 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 379 insertions(+)
- create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
+ drivers/pwm/pwm-sifive.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 904de8d61828..a6cf24cb31e0 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -471,6 +471,17 @@ config PWM_ROCKCHIP
- 	  Generic PWM framework driver for the PWM controller found on
- 	  Rockchip SoCs.
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index e6d05a329002..b7fc33b08d82 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -23,7 +23,7 @@
+ #define PWM_SIFIVE_PWMCFG		0x0
+ #define PWM_SIFIVE_PWMCOUNT		0x8
+ #define PWM_SIFIVE_PWMS			0x10
+-#define PWM_SIFIVE_PWMCMP0		0x20
++#define PWM_SIFIVE_PWMCMP(i)		(0x20 + 4 * (i))
  
-+config PWM_RZG2L_GPT
-+	tristate "Renesas RZ/G2L General PWM Timer support"
-+	depends on ARCH_RENESAS || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  This driver exposes the General PWM Timer controller found in Renesas
-+	  RZ/G2L like chips through the PWM API.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-rzg2l-gpt.
-+
- config PWM_SAMSUNG
- 	tristate "Samsung PWM support"
- 	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 5c08bdb817b4..12bc2a005e24 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+= pwm-raspberrypi-poe.o
- obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
-+obj-$(CONFIG_PWM_RZG2L_GPT)	+= pwm-rzg2l-gpt.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-new file mode 100644
-index 000000000000..95e0d2fd37f6
---- /dev/null
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -0,0 +1,367 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/G2L General PWM Timer (GPT) driver
-+ *
-+ * Copyright (C) 2022 Renesas Electronics Corporation
-+ *
-+ * Limitations:
-+ * - GTCNT must be stopped before modifying Mode and Prescaler.
-+ * - When PWM is disabled, the output is driven to inactive.
-+ * - While the hardware supports both polarities, the driver (for now)
-+ *   only handles normal polarity.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+#include <linux/time.h>
-+
-+#define RZG2L_GPT_IO_PER_CHANNEL	2
-+
-+#define RZG2L_GTPR_MAX_VALUE	0xFFFFFFFF
-+#define RZG2L_GTCR		0x2c
-+#define RZG2L_GTUDDTYC		0x30
-+#define RZG2L_GTIOR		0x34
-+#define RZG2L_GTBER		0x40
-+#define RZG2L_GTCNT		0x48
-+#define RZG2L_GTCCRA		0x4c
-+#define RZG2L_GTCCRB		0x50
-+#define RZG2L_GTPR		0x64
-+
-+#define RZG2L_GTCR_CST		BIT(0)
-+#define RZG2L_GTCR_MD		GENMASK(18, 16)
-+#define RZG2L_GTCR_TPCS		GENMASK(26, 24)
-+
-+#define RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE	FIELD_PREP(RZG2L_GTCR_MD, 0)
-+
-+#define RZG2L_GTUDDTYC_UP	BIT(0)
-+#define RZG2L_GTUDDTYC_UDF	BIT(1)
-+#define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
-+
-+#define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
-+#define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
-+#define RZG2L_GTIOR_OAE		BIT(8)
-+#define RZG2L_GTIOR_OBE		BIT(24)
-+
-+#define RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
-+#define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
-+
-+#define RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH \
-+	(RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE | RZG2L_GTIOR_OAE)
-+#define RZG2L_GTIOR_GTIOA_OUT_LO_END_TOGGLE_CMP_MATCH \
-+	(RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE | RZG2L_GTIOR_OAE)
-+#define RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH \
-+	((RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE << 16) | RZG2L_GTIOR_OBE)
-+#define RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH \
-+	((RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE << 16) | RZG2L_GTIOR_OBE)
-+
-+struct phase {
-+	u32 value;
-+	u32 mask;
-+	u32 duty_reg_offset;
-+};
-+
-+static const struct phase phase_params[] = {
-+	/* Setting for phase A */
-+	{
-+		.value = RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH,
-+		.mask = RZG2L_GTIOR_GTIOA | RZG2L_GTIOR_OAE,
-+		.duty_reg_offset = RZG2L_GTCCRA,
-+	},
-+	/* Setting for phase B */
-+	{
-+		.value = RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH,
-+		.mask = RZG2L_GTIOR_GTIOB | RZG2L_GTIOR_OBE,
-+		.duty_reg_offset = RZG2L_GTCCRB,
-+	},
-+};
-+
-+struct gpt_pwm_device {
-+	const struct phase *ph;
-+};
-+
-+struct rzg2l_gpt_chip {
-+	struct pwm_chip chip;
-+	void __iomem *mmio;
-+	struct reset_control *rstc;
-+	struct clk *clk;
-+	struct gpt_pwm_device gpt[2];
-+};
-+
-+static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct rzg2l_gpt_chip, chip);
-+}
-+
-+static void rzg2l_gpt_write(struct rzg2l_gpt_chip *pc, u32 reg, u32 data)
-+{
-+	iowrite32(data, pc->mmio + reg);
-+}
-+
-+static u32 rzg2l_gpt_read(struct rzg2l_gpt_chip *pc, u32 reg)
-+{
-+	return ioread32(pc->mmio + reg);
-+}
-+
-+static void rzg2l_gpt_modify(struct rzg2l_gpt_chip *pc, u32 reg, u32 clr, u32 set)
-+{
-+	rzg2l_gpt_write(pc, reg, (rzg2l_gpt_read(pc, reg) & ~clr) | set);
-+}
-+
-+static u8 rzg2l_calculate_prescale(struct rzg2l_gpt_chip *pc, u64 period_cycles)
-+{
-+	u64 prescaled_period_cycles;
-+	u8 prescale;
-+	u16 i;
-+
-+	prescaled_period_cycles = period_cycles >> 32;
-+	prescale = 5;
-+	/* prescale 1, 4, 16, 64, 256 and 1024 */
-+	for (i = 0; i < 6; i++) {
-+		if ((1 << (2 * i)) > prescaled_period_cycles) {
-+			prescale = i;
-+			break;
-+		}
-+	}
-+
-+	return prescale;
-+}
-+
-+static int rzg2l_gpt_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rzg2l_gpt_chip *pc = to_rzg2l_gpt_chip(chip);
-+	struct gpt_pwm_device *gpt;
-+
-+	if (pwm->hwpwm >= RZG2L_GPT_IO_PER_CHANNEL)
-+		return -EINVAL;
-+
-+	gpt = &pc->gpt[pwm->hwpwm];
-+	gpt->ph = &phase_params[pwm->hwpwm];
-+
-+	pm_runtime_get_sync(chip->dev);
-+
-+	return 0;
-+}
-+
-+static void rzg2l_gpt_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	pm_runtime_put(chip->dev);
-+}
-+
-+static int rzg2l_gpt_enable(struct rzg2l_gpt_chip *pc)
-+{
-+	/* Start count */
-+	rzg2l_gpt_modify(pc, RZG2L_GTCR, RZG2L_GTCR_CST, RZG2L_GTCR_CST);
-+
-+	return 0;
-+}
-+
-+static void rzg2l_gpt_disable(struct rzg2l_gpt_chip *pc)
-+{
-+	/* Stop count, Output low on GTIOCx pin when counting stops */
-+	rzg2l_gpt_modify(pc, RZG2L_GTCR, RZG2L_GTCR_CST, 0);
-+}
-+
-+static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    u64 duty_ns, u64 period_ns)
-+{
-+	struct rzg2l_gpt_chip *pc = to_rzg2l_gpt_chip(chip);
-+	struct gpt_pwm_device *gpt = &pc->gpt[pwm->hwpwm];
-+	unsigned long rate, pv, dc;
-+	u64 period_cycles;
-+	u8 prescale;
-+
-+	rate = clk_get_rate(pc->clk);
-+	/*
-+	 * Refuse clk rates > 1 GHz to prevent overflowing the following
-+	 * calculation.
-+	 */
-+	if (rate > NSEC_PER_SEC)
-+		return -EINVAL;
-+
-+	period_cycles = mul_u64_u64_div_u64(rate, period_ns, NSEC_PER_SEC);
-+	prescale = rzg2l_calculate_prescale(pc, period_cycles);
-+
-+	pv = round_down(period_cycles >> (2 * prescale), 1 << (2 * prescale));
-+	period_cycles = mul_u64_u64_div_u64(rate, duty_ns, NSEC_PER_SEC);
-+	dc = round_down(period_cycles >> (2 * prescale), 1 << (2 * prescale));
-+
-+	/* GTCNT must be stopped before modifying Mode and Prescaler */
-+	if (rzg2l_gpt_read(pc, RZG2L_GTCR) & RZG2L_GTCR_CST)
-+		rzg2l_gpt_disable(pc);
-+
-+	/* GPT set operating mode (saw-wave up-counting) */
-+	rzg2l_gpt_modify(pc, RZG2L_GTCR, RZG2L_GTCR_MD, RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE);
-+
-+	/* Set count direction */
-+	rzg2l_gpt_write(pc, RZG2L_GTUDDTYC, RZG2L_UP_COUNTING);
-+
-+	/* Select count clock */
-+	rzg2l_gpt_modify(pc, RZG2L_GTCR, RZG2L_GTCR_TPCS, FIELD_PREP(RZG2L_GTCR_TPCS, prescale));
-+
-+	/* Set cycle */
-+	rzg2l_gpt_write(pc, RZG2L_GTPR, pv);
-+
-+	/* Set duty cycle */
-+	rzg2l_gpt_write(pc, gpt->ph->duty_reg_offset, dc);
-+
-+	/* Set initial value for counter */
-+	rzg2l_gpt_write(pc, RZG2L_GTCNT, 0);
-+
-+	/* Set no buffer operation */
-+	rzg2l_gpt_write(pc, RZG2L_GTBER, 0);
-+
-+	/* Enable pin output */
-+	rzg2l_gpt_modify(pc, RZG2L_GTIOR, gpt->ph->mask, gpt->ph->value);
-+
-+	return 0;
-+}
-+
-+static void rzg2l_gpt_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				struct pwm_state *state)
-+{
-+	struct rzg2l_gpt_chip *pc = to_rzg2l_gpt_chip(chip);
-+	struct gpt_pwm_device *gpt = &pc->gpt[pwm->hwpwm];
-+	unsigned long rate;
-+	u8 prescale;
-+	u64 tmp;
-+	u32 val;
-+
-+	val = rzg2l_gpt_read(pc, RZG2L_GTCR);
-+	state->enabled = val & RZG2L_GTCR_CST;
-+	if (state->enabled) {
-+		rate = clk_get_rate(pc->clk);
-+		prescale = FIELD_GET(RZG2L_GTCR_TPCS, val);
-+
-+		val = rzg2l_gpt_read(pc, RZG2L_GTPR);
-+		tmp = NSEC_PER_SEC * val << (2 * prescale);
-+		state->period = DIV_ROUND_UP_ULL(tmp, rate);
-+
-+		val = rzg2l_gpt_read(pc, gpt->ph->duty_reg_offset);
-+		tmp = NSEC_PER_SEC * val << (2 * prescale);
-+		state->duty_cycle = DIV_ROUND_UP_ULL(tmp, rate);
-+	}
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+}
-+
-+static int rzg2l_gpt_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   const struct pwm_state *state)
-+{
-+	struct rzg2l_gpt_chip *pc = to_rzg2l_gpt_chip(chip);
-+	int ret;
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		rzg2l_gpt_disable(pc);
-+		return 0;
-+	}
-+
-+	ret = rzg2l_gpt_config(chip, pwm, state->duty_cycle, state->period);
-+	if (ret)
-+		return ret;
-+
-+	return rzg2l_gpt_enable(pc);
-+}
-+
-+static const struct pwm_ops rzg2l_gpt_ops = {
-+	.request = rzg2l_gpt_request,
-+	.free = rzg2l_gpt_free,
-+	.get_state = rzg2l_gpt_get_state,
-+	.apply = rzg2l_gpt_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static const struct of_device_id rzg2l_gpt_of_table[] = {
-+	{ .compatible = "renesas,rzg2l-gpt", },
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, rzg2l_gpt_of_table);
-+
-+static void rzg2l_gpt_reset_assert_pm_disable(void *data)
-+{
-+	struct rzg2l_gpt_chip *pc = data;
-+
-+	pm_runtime_disable(pc->chip.dev);
-+	reset_control_assert(pc->rstc);
-+}
-+
-+static int rzg2l_gpt_probe(struct platform_device *pdev)
-+{
-+	struct rzg2l_gpt_chip *rzg2l_gpt;
-+	struct clk *clk;
-+	int ret;
-+
-+	rzg2l_gpt = devm_kzalloc(&pdev->dev, sizeof(*rzg2l_gpt), GFP_KERNEL);
-+	if (!rzg2l_gpt)
-+		return -ENOMEM;
-+
-+	rzg2l_gpt->mmio = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(rzg2l_gpt->mmio))
-+		return PTR_ERR(rzg2l_gpt->mmio);
-+
-+	rzg2l_gpt->rstc = devm_reset_control_get_shared(&pdev->dev, NULL);
-+	if (IS_ERR(rzg2l_gpt->rstc))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->rstc),
-+				     "get reset failed\n");
-+
-+	rzg2l_gpt->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(rzg2l_gpt->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->clk),
-+				     "cannot get clock\n");
-+
-+	platform_set_drvdata(pdev, rzg2l_gpt);
-+
-+	ret = reset_control_deassert(rzg2l_gpt->rstc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "cannot deassert reset control: %pe\n",
-+			ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = devm_add_action_or_reset(&pdev->dev,
-+				       rzg2l_gpt_reset_assert_pm_disable,
-+				       rzg2l_gpt);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk = devm_clk_get_optional_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(clk)) {
-+		rzg2l_gpt_reset_assert_pm_disable(rzg2l_gpt);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(clk),
-+				     "clk operation failed");
-+	}
-+
-+	if (!(rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTCR) & RZG2L_GTCR_CST))
-+		devm_clk_put(&pdev->dev, clk);
-+
-+	rzg2l_gpt->chip.dev = &pdev->dev;
-+	rzg2l_gpt->chip.ops = &rzg2l_gpt_ops;
-+	rzg2l_gpt->chip.npwm = RZG2L_GPT_IO_PER_CHANNEL;
-+
-+	return devm_pwmchip_add(&pdev->dev, &rzg2l_gpt->chip);
-+}
-+
-+static struct platform_driver rzg2l_gpt_driver = {
-+	.driver = {
-+		.name = "pwm-rzg2l-gpt",
-+		.of_match_table = of_match_ptr(rzg2l_gpt_of_table),
-+	},
-+	.probe = rzg2l_gpt_probe,
-+};
-+module_platform_driver(rzg2l_gpt_driver);
-+
-+MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas RZ/G2L General PWM Timer (GPT) Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:pwm-rzg2l-gpt");
+ /* PWMCFG fields */
+ #define PWM_SIFIVE_PWMCFG_SCALE		GENMASK(3, 0)
+@@ -36,8 +36,6 @@
+ #define PWM_SIFIVE_PWMCFG_GANG		BIT(24)
+ #define PWM_SIFIVE_PWMCFG_IP		BIT(28)
+ 
+-/* PWM_SIFIVE_SIZE_PWMCMP is used to calculate offset for pwmcmpX registers */
+-#define PWM_SIFIVE_SIZE_PWMCMP		4
+ #define PWM_SIFIVE_CMPWIDTH		16
+ #define PWM_SIFIVE_DEFAULT_PERIOD	10000000
+ 
+@@ -112,8 +110,7 @@ static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
+ 	u32 duty, val;
+ 
+-	duty = readl(ddata->regs + PWM_SIFIVE_PWMCMP0 +
+-		     pwm->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
++	duty = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
+ 
+ 	state->enabled = duty > 0;
+ 
+@@ -193,8 +190,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk));
+ 	}
+ 
+-	writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP0 +
+-	       pwm->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
++	writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
+ 
+ 	if (state->enabled != enabled)
+ 		pwm_sifive_enable(chip, state->enabled);
+
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
 -- 
-2.25.1
+2.36.1
 
