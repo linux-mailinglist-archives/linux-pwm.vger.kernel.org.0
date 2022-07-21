@@ -2,30 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F8D457C902
+	by mail.lfdr.de (Postfix) with ESMTP id 6B05A57C903
 	for <lists+linux-pwm@lfdr.de>; Thu, 21 Jul 2022 12:31:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233182AbiGUKbn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 21 Jul 2022 06:31:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58588 "EHLO
+        id S233220AbiGUKbo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Jul 2022 06:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233220AbiGUKbm (ORCPT
+        with ESMTP id S233225AbiGUKbm (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Jul 2022 06:31:42 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FFA61D58
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 03:31:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CFDED125
+        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 03:31:39 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oETSz-0002Vx-QO; Thu, 21 Jul 2022 12:31:38 +0200
+        id 1oETSz-0002Vz-QO; Thu, 21 Jul 2022 12:31:37 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oETSy-002IMg-FZ; Thu, 21 Jul 2022 12:31:36 +0200
+        id 1oETSy-002IMl-IZ; Thu, 21 Jul 2022 12:31:36 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oETSx-006ZIJ-Dh; Thu, 21 Jul 2022 12:31:35 +0200
+        id 1oETSx-006ZIM-JH; Thu, 21 Jul 2022 12:31:35 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
@@ -36,15 +36,15 @@ Cc:     Wan Jiabing <wanjiabing@vivo.com>, kernel@pengutronix.de,
         Yash Shah <yash.shah@sifive.com>,
         Atish Patra <atishp@atishpatra.org>,
         "Wesley W. Terpstra" <wesley@sifive.com>
-Subject: [PATCH 2/7] pwm: sifive: Fold pwm_sifive_enable() into its only caller
-Date:   Thu, 21 Jul 2022 12:31:24 +0200
-Message-Id: <20220721103129.304697-2-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 3/7] pwm: sifive: Reduce time the controller lock is held
+Date:   Thu, 21 Jul 2022 12:31:25 +0200
+Message-Id: <20220721103129.304697-3-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220721103129.304697-1-u.kleine-koenig@pengutronix.de>
 References: <20220721103129.304697-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1745; h=from:subject; bh=sKOWXDCL91kq58t0FdekJeukQkU6Bwjo3++M3hvFQls=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBi2Srv+TgOLs1G9g7euiKgebUIZ8RhD3suhSpXS9Vw WaUQQwiJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYtkq7wAKCRDB/BR4rcrsCaQaB/ 0UHu0XNU/HMCeI8tIqAxgqTzAnvVsOD0HiVNK5OiNnKzTx5up6NUB1+1vZj5Jog1MjDfMpaBUTekek UYsWcQ4T/l21c0qoq1sKJZHDMFf0H/d/mdj8/1u5Oafi5Ky79GyIuUpzfaEDEppmH9SmwEjf72b3/T K1Q9AAW3+bQF3hpHfrgXgwYpuI7x2GQc4tbxSm3/KCbhnGogkdzkUf8dYc33zYfqcU3LBXVZGMsJuz Qu5JbIkJo3W8zmeKkOVROAtuhAwtJBRIlQFe2EWzZqD39MG2wojWy9R/m4GsutzgIIsXz0Qv7B+0LG WU/grNk7VedR5GloHAORBj5FJaibM2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2153; h=from:subject; bh=J40tL02o9FO4AFx8pwx3mZeFbRQCIoDJSyD9wHvo7Bo=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBi2Srys/0egwS0iYQbrd+sk9wZXWLS+eWFR8ARYEas Y8+EXc2JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYtkq8gAKCRDB/BR4rcrsCcG1B/ 4ipirIA6LplygiukGiSZZJ+OP+ym5swDwJGcI5D7TWYk/jD+kmQTsvzSnbG2mCSIP16fp1MyZKacCf 96W3WZvxXLQBs4XkAP60pZ2YX/5puZJE77TNMepcAAD18FENyT6EwnfYeeWy3Ben9qjUepVX3iyhhR 7qIlP6yK+fkUnH7ml5OgvkVCTf3sOwYoMoiEEPafbAMlJImjxDxy0OvQagk4X9KQCYkxBfJ8Y4QpUM goss5DoYNMsC3TruNIMaLoeWecmB6+mZgTh3xNE8vgg+4KqT4yQyW1BrjVzIjhhiWAX3a1ZkGJ4X+q FmnEpj4OvVzXhVtxEisAM8PTwPpApB
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,64 +59,71 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-There is only a single caller of pwm_sifive_enable() which only enables
-or disables the clk. Put this implementation directly into
-pwm_sifive_apply() which allows further simplification in the next
-change.
-
-There is no change in behaviour.
+The lock is only to serialize access and update to user_count and
+approx_period between different PWMs served by the same pwm_chip.
+So the lock needs only to be taken during the check if the (chip global)
+period can and/or needs to be changed.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-sifive.c | 28 ++++++++--------------------
- 1 file changed, 8 insertions(+), 20 deletions(-)
+ drivers/pwm/pwm-sifive.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index b7fc33b08d82..91cf90bd4083 100644
+index 91cf90bd4083..6017e311a879 100644
 --- a/drivers/pwm/pwm-sifive.c
 +++ b/drivers/pwm/pwm-sifive.c
-@@ -124,24 +124,6 @@ static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	state->polarity = PWM_POLARITY_INVERSED;
+@@ -41,7 +41,7 @@
+ 
+ struct pwm_sifive_ddata {
+ 	struct pwm_chip	chip;
+-	struct mutex lock; /* lock to protect user_count */
++	struct mutex lock; /* lock to protect user_count and approx_period */
+ 	struct notifier_block notifier;
+ 	struct clk *clk;
+ 	void __iomem *regs;
+@@ -76,6 +76,7 @@ static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	mutex_unlock(&ddata->lock);
  }
  
--static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
--{
--	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
--	int ret;
--
--	if (enable) {
--		ret = clk_enable(ddata->clk);
--		if (ret) {
--			dev_err(ddata->chip.dev, "Enable clk failed\n");
--			return ret;
--		}
--	} else {
--		clk_disable(ddata->clk);
--	}
--
--	return 0;
--}
--
- static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
++/* Called holding ddata->lock */
+ static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
+ 				    unsigned long rate)
  {
-@@ -192,8 +174,14 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -144,7 +145,6 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return ret;
+ 	}
+ 
+-	mutex_lock(&ddata->lock);
+ 	cur_state = pwm->state;
+ 	enabled = cur_state.enabled;
+ 
+@@ -163,14 +163,17 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* The hardware cannot generate a 100% duty cycle */
+ 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+ 
++	mutex_lock(&ddata->lock);
+ 	if (state->period != ddata->approx_period) {
+ 		if (ddata->user_count != 1) {
++			mutex_unlock(&ddata->lock);
+ 			ret = -EBUSY;
+ 			goto exit;
+ 		}
+ 		ddata->approx_period = state->period;
+ 		pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk));
+ 	}
++	mutex_unlock(&ddata->lock);
  
  	writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
  
--	if (state->enabled != enabled)
--		pwm_sifive_enable(chip, state->enabled);
-+	if (state->enabled != enabled) {
-+		if (state->enabled) {
-+			if (clk_enable(ddata->clk))
-+				dev_err(ddata->chip.dev, "Enable clk failed\n");
-+		} else {
-+			clk_disable(ddata->clk);
-+		}
-+	}
+@@ -185,7 +188,6 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  
  exit:
  	clk_disable(ddata->clk);
+-	mutex_unlock(&ddata->lock);
+ 	return ret;
+ }
+ 
 -- 
 2.36.1
 
