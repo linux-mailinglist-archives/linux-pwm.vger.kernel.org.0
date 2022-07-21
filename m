@@ -2,97 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09B7057D258
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Jul 2022 19:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CCB557D4FE
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Jul 2022 22:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbiGURVc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 21 Jul 2022 13:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49232 "EHLO
+        id S229862AbiGUUpg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Jul 2022 16:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229833AbiGURV3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Jul 2022 13:21:29 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7166D2D1CF
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 10:21:28 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id k11so2761054wrx.5
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 10:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SXLvUdDnjJEodQJ94faqLUeDy8d1elhS2wljuKyR9r4=;
-        b=OSGxsO7g2K40pu0NwLqzvnlUz82CEbFPTvtAHhq0Lt42XIo478IZ0cVHDyZcv3LzN+
-         doQwS0X5S7UHIxC9NIByl8mpgfD+9fykQt8oCdaEmU61OOI4m/PpDnv1MosqFBkN+Mm6
-         Eah/SZ6SreSS+CWTZNEMdvTvTRoLgblAU2dfyUrMl5tNJESdszbOWXfe3Gd+tsC1mNIa
-         V/LZjsE1Rq7iYgiJNcx4XZ1FcwcPBXWrZdOyi6bpWW07Bp7wovr21Nkp97BOPnXf9a9S
-         k2mwT8d9r+UvMll3RAl+MpEmvZNnLBOi+1iHTbqB2z5dlGiFL851dRrd2FQgyyixo8v7
-         HSYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SXLvUdDnjJEodQJ94faqLUeDy8d1elhS2wljuKyR9r4=;
-        b=u+idPBYmvedgZ5rjNQeNHnnhrgjysqM0wwkC7/yZefGdnDpnTxlZDLsV09AANY+Z/s
-         rlBz5yDBrzh+d7AYxfzIH29LAxwu0zeiq/UIYwBxKEGnrFM94SavNsU+aSDyi8R89oLk
-         PSOcx1AyO3mW3WdrGE7gmgGZlep/W+Mt7JXEwdyL92l8prpfTvONVpwfNtODaXr6m6uz
-         AI/J8NOG2UCfa2C/jZuYojeBG5g8xpJv/sLcjgvHpKz7F9sxJXevSklmJpkKm/JOQsVi
-         10YhaVjQ0TpT6NTmji8dyRm3vvyUQ7oVpo+7K6Pfe1d8kL09728LQm7m9OwlIsB/0YzB
-         a3Aw==
-X-Gm-Message-State: AJIora/UVybcpO3P3JFFZSjzyQzBfDWUmKVPywLqxtTKinsLjdksqc4F
-        z0XBJOgI2zYuQvc2FAWJZFb1hg==
-X-Google-Smtp-Source: AGRyM1sIASv9vmR7KNGAFsXqp4jOf5Se7BsMQgouD3zNrQ1FA0oeq0+2XKTq6qHLn4chl5q3KOnZWQ==
-X-Received: by 2002:a05:6000:1847:b0:21d:c149:263 with SMTP id c7-20020a056000184700b0021dc1490263mr30567246wri.449.1658424086844;
-        Thu, 21 Jul 2022 10:21:26 -0700 (PDT)
-Received: from henark71.. ([109.76.125.251])
-        by smtp.gmail.com with ESMTPSA id e24-20020a05600c219800b003a2cf1535aasm2455697wme.17.2022.07.21.10.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 10:21:26 -0700 (PDT)
-From:   Conor Dooley <mail@conchuod.ie>
-To:     u.kleine-koenig@pengutronix.de
-Cc:     conor.dooley@microchip.com, daire.mcnamara@microchip.com,
-        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        robh+dt@kernel.org, thierry.reding@gmail.com
-Subject: [PATCH v7 4/4] MAINTAINERS: add pwm to PolarFire SoC entry
-Date:   Thu, 21 Jul 2022 18:21:10 +0100
-Message-Id: <20220721172109.941900-5-mail@conchuod.ie>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220721172109.941900-1-mail@conchuod.ie>
-References: <20220721172109.941900-1-mail@conchuod.ie>
+        with ESMTP id S229498AbiGUUpf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Jul 2022 16:45:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C128C5AA
+        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 13:45:34 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oEd36-0007cE-VT; Thu, 21 Jul 2022 22:45:33 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oEd35-002NmU-4Y; Thu, 21 Jul 2022 22:45:31 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oEd34-006etl-Bn; Thu, 21 Jul 2022 22:45:30 +0200
+Date:   Thu, 21 Jul 2022 22:45:22 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, Wan Jiabing <wanjiabing@vivo.com>,
+        "Wesley W. Terpstra" <wesley@sifive.com>,
+        Atish Patra <atishp@atishpatra.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>, kernel@pengutronix.de,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 6/7] pwm: sifive: Ensure the clk is enabled exactly one
+ per running PWM
+Message-ID: <20220721204522.rxmah6k66e5qe2kb@pengutronix.de>
+References: <20220721103129.304697-1-u.kleine-koenig@pengutronix.de>
+ <20220721103129.304697-6-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tw4bbsb5rcnz5y6s"
+Content-Disposition: inline
+In-Reply-To: <20220721103129.304697-6-u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-Add the newly introduced pwm driver to the existing PolarFire SoC entry.
+--tw4bbsb5rcnz5y6s
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Hello,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d14a446df13..c785765c66b7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17510,6 +17510,7 @@ F:	drivers/char/hw_random/mpfs-rng.c
- F:	drivers/clk/microchip/clk-mpfs.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/rtc/rtc-mpfs.c
- F:	drivers/soc/microchip/
- F:	drivers/spi/spi-microchip-core.c
--- 
-2.37.1
+[dropped Yash Shah from Cc, their email address bounces]
 
+While browsing the list of open patches in patchwork, I noticed a typo:
+
+$Subject ~=3D s/one/once/
+
+@Thierry: Assuming you are otherwise happy with this patch, should I
+resend for this typo, or do you fixup while applying it?
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--tw4bbsb5rcnz5y6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLZutkACgkQwfwUeK3K
+7Ak4jwf7B0aaBqdXkpF3FQrZPsipc/Vqc1BgGFhde6css7wDonrIajzx0QcrTjVw
+l9BeiCddSj2WbeLz+gkxy/G6bZYA3NhlxdkALfaia93EVFRsI1SAAZPZWKt1sF3K
+xjMe3i/33frybUvRoOekahbo5QJxKDibu859WrV0vsoMQ1SpWzihDSlUw0Uqaczs
+KXKHC24OURPEkdtsvxYHEUZMEKCQ3kY8S1Gwyfc9c/PUfiNR1GDbfaEQPB0aEcg4
+i7dySHXZ/WpVf18e0KIdk2GayszXcdoiuAUa8rn1shVw0yeJK9UTEU8z/hLnfqLZ
+tZ6T80mq9WUnAft0aNWN3pO4G52Oag==
+=iSjr
+-----END PGP SIGNATURE-----
+
+--tw4bbsb5rcnz5y6s--
