@@ -2,62 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC58657D24F
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Jul 2022 19:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C87A657D252
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Jul 2022 19:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbiGURV0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 21 Jul 2022 13:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
+        id S229750AbiGURV1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Jul 2022 13:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiGURVZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Jul 2022 13:21:25 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9415C248CF
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 10:21:23 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id d8so3219178wrp.6
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 10:21:23 -0700 (PDT)
+        with ESMTP id S229517AbiGURV0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Jul 2022 13:21:26 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF32A2CC95
+        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 10:21:24 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id f24-20020a1cc918000000b003a30178c022so3741097wmb.3
+        for <linux-pwm@vger.kernel.org>; Thu, 21 Jul 2022 10:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=conchuod.ie; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CmRxLVY9HuAG01Hu57i7xdSoJXhylPjj1q4eOpHaFLo=;
-        b=bTWUL7ViGNTVsC1FoDdx7RIkNJcFCZWlEiGsHbnuE+6RcUfQUpWssDkNFN/E4Dx2wc
-         S4QXVjfjyFqP9+KLSIg5alE48GBHoasHbTMPJJ0c97khOC+DXmIWPq2rA3KGqSRTo7p4
-         n8mLzpupa6zIRkP3mXzEPKc7oNuUDwZQS6IeeCevOwLeEEHk0HGihjt1E4h2e/ZsCPSr
-         OFWfOIOnC57+2bM9UB5fjBwRAyLdAL0Ufmt8j/AnA31QIl/1DKwDTY+jF3XJm5y3dAaT
-         MGToqoriWdQxlLDA6F/h5BRFAtA7/i6u7VNrC/qJ30AmrwL441/sKzUFEs3LtvjdWtel
-         zT8Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XkkKPN3JJIki5/fJ0m2iMmrfk4IJDQ0Iyb2jgEwcMfA=;
+        b=MPZoE7gQwOxPubrMsSNTRL2lSMXyd7GdLpsv87PPzdomrz6yEU381zHGLjU0kmnqeQ
+         WtGx7JqzCm8T0cLSIzMZ5v5SrIr3ldYAkBNphbsgO6sAXriMu5lefm+3TPJzBs1yp2o4
+         UNIRU3SS8Z0voBJ6/nUisMbU0iz1vkak5zWJDLUK7ntavyNgeaAkrGT8Nxxa/1sXLAen
+         vY4eDgkECXnqYcPEX2Ckqn/xr5bFqLiUZFlYFin4gcB3e8pCsy49RWJEjvTMubhJT/3k
+         UdnH6aq/fqdfp+5TUF5OB38JDpy3yExgYHEVNT1hfYXYmPktMJbQGROk7dqSLV+CTlDl
+         xa5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CmRxLVY9HuAG01Hu57i7xdSoJXhylPjj1q4eOpHaFLo=;
-        b=WHi7bmP3TrMy6j74lGMQSuAhYgtS4459OTMbyf5SHMh2ITMMHMn0XiqbG7dfdGtqHz
-         pIH/rLhnbvvMoVyrj/UwMiKzHxl5Q572VbqAsp09dCGDxnUEIKi8bgnM4SApA+3c2CaD
-         ITnGR2L8Gq7l7N41g748DYVR5DtzKzY/FxbwG8/uunBfSVkErCUEz/q8ySukffGXl1FS
-         HPeVkSgo/fFUSX0M1SEqHGFCHEZJg5GiLpp9H/olfkEyy9rMbFG+FKEqyv8ijLp7U58b
-         JfLUINGqydj3TvSmQE+ld4wy5dn3UGGFX9VGQ171PNWRkLIQlRXLf6DPhjxwvFGW18+6
-         4mYA==
-X-Gm-Message-State: AJIora9yI7V2T1rLNugCHSBK/U5bJdT+joeDWt21ZizWnSISzYQFWW+L
-        CX5Mvr/Vopm0INCgDtytP+Dgag==
-X-Google-Smtp-Source: AGRyM1teRPSq/gbNJAmKT5r8AGTamBTGc9+ZMkZBVbSD6pG2a1PnAJYJzQxDdZRMi/sHSn+IxunABg==
-X-Received: by 2002:a05:6000:719:b0:21e:4530:c558 with SMTP id bs25-20020a056000071900b0021e4530c558mr8808003wrb.243.1658424081913;
-        Thu, 21 Jul 2022 10:21:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XkkKPN3JJIki5/fJ0m2iMmrfk4IJDQ0Iyb2jgEwcMfA=;
+        b=Z/FN9m8A5s+6DYulMktWalwmSSG8IRYaC1RzT0iJUr3rV55TOJ/bmtejfzUhrGs0Fv
+         rLPq8zw1b8o0LIrbG4ZuQepYrQuT0DrMkHpQoHsNkqsWk2ts7l2gh3pR8HtvzwPVcTNv
+         gt6nWHHNdA9PJkAdF/6htMFSqz/6AMEcFJyu9i7FAYxFJXd0SbetUsrq3hF32mp6W9rR
+         NPxg1Tjg7RAYa5GXMBcCkPYWU5g6pXi/GNq3FWd8WK+aMS5oTYOM7ghs5UaNt9w3CBmM
+         sByuBgKFR6B+zdq4Nxf/Ek7zUaaUm9hIzTpYXE7ea3Ji4dl0fZveYnbxcvh5ukd1rRBk
+         U31w==
+X-Gm-Message-State: AJIora/aQfW/60S9NGO6bTA0E6EIYGF06kyX1wFs8U4B/EwdJGKFFiJg
+        DdRL7JswzvwonsMrJWV6AGqhIw==
+X-Google-Smtp-Source: AGRyM1uhhSObQMZkAZrCHl/IohFymT6ZizEWGdATrGEa0Aj1iPY95PQHYw/2A70KC/Ux7C4ZW05kEg==
+X-Received: by 2002:a1c:f314:0:b0:3a2:fee4:91d4 with SMTP id q20-20020a1cf314000000b003a2fee491d4mr8835647wmq.108.1658424083196;
+        Thu, 21 Jul 2022 10:21:23 -0700 (PDT)
 Received: from henark71.. ([109.76.125.251])
-        by smtp.gmail.com with ESMTPSA id e24-20020a05600c219800b003a2cf1535aasm2455697wme.17.2022.07.21.10.21.20
+        by smtp.gmail.com with ESMTPSA id e24-20020a05600c219800b003a2cf1535aasm2455697wme.17.2022.07.21.10.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 10:21:21 -0700 (PDT)
+        Thu, 21 Jul 2022 10:21:22 -0700 (PDT)
 From:   Conor Dooley <mail@conchuod.ie>
 To:     u.kleine-koenig@pengutronix.de
 Cc:     conor.dooley@microchip.com, daire.mcnamara@microchip.com,
         devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
         lee.jones@linaro.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        robh+dt@kernel.org, thierry.reding@gmail.com
-Subject: [PATCH v7 0/4] Microchip soft ip corePWM driver
-Date:   Thu, 21 Jul 2022 18:21:06 +0100
-Message-Id: <20220721172109.941900-1-mail@conchuod.ie>
+        robh+dt@kernel.org, thierry.reding@gmail.com,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 1/4] dt-bindings: pwm: fix microchip corePWM's pwm-cells
+Date:   Thu, 21 Jul 2022 18:21:07 +0100
+Message-Id: <20220721172109.941900-2-mail@conchuod.ie>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220721172109.941900-1-mail@conchuod.ie>
+References: <20220721172109.941900-1-mail@conchuod.ie>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -71,78 +74,31 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-Hey Uwe, all,
+corePWM is capable of inverted operation but the binding requires
+\#pwm-cells of 2. Expand the binding to support setting the polarity.
 
-(~same cover as v5)
+Fixes: df77f7735786 ("dt-bindings: pwm: add microchip corepwm binding")
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Added some extra patches so I have a cover letter this time.
-You pointed out that I was overriding npwmcells in the driver and I
-realised that the dt & binding were not correct so I have added two
-simple patches to deal with that. The dts patch I will take in my tree
-once the binding is applied.
-
-For the maintainers entry, I mentioned before that I have several
-changes in-flight for it. We are late~(ish)~ in the cycle so I doubt
-you'll be applying this for v5.20, but in the off chance you do - I
-would be happy to send it (with your Ack) alongside an i2c addition
-that is "deferred". I rebased it ~today~ on top of an additional change
-so it may not apply for you.
-
-In your review of v3, you had a lot of comments about the period and
-duty cycle calculations, so I have had another run at them. I converted
-the period calculation to "search" from the bottom up for the suitable
-prescale value. The duty cycle calculation has been fixed - the problem
-was exactly what I suspected in my replies to your review. I had to block
-the use of a 0xFF period_steps register value (which I think should be
-covered by the updated comment and limitation #2).
-
-Beyond that, I have rebased on -next and converted to the devm_ stuff
-in probe that was recently added & dropped remove() - as requested.
-I added locking to protect the period racing, changed the #defines and
-switched to returning -EINVAL when the period is locked to a value
-greater than that requested.
-
-I'll take the dts change myself once the rest is merged.
-
-Thanks,
-Conor.
-
-Changes from v6:
-- Dropped an unused variable that I'd missed
-- Actually check the return values of the mutex lock()s
-- Re-rebased on -next for the MAINTAINERS patch (again...)
-
-Changes from v5:
-- switched to a mutex b/c we must sleep with the lock taken
-- simplified the locking in apply() and added locking to get_state()
-- reworked apply() as requested
-- removed the loop in the period calculation (thanks Uwe!)
-- add a copy of the enable registers in the driver to save on reads.
-- remove the second (useless) write to sync_update
-- added some missing rounding in get_state()
-- couple other minor cleanups as requested in:
-https://lore.kernel.org/linux-riscv/20220709160206.cw5luo7kxdshoiua@pengutronix.de/
-
-Changes from v4:
-- dropped some accidentally added files
-
-Conor Dooley (4):
-  dt-bindings: pwm: fix microchip corePWM's pwm-cells
-  riscv: dts: fix the icicle's #pwm-cells
-  pwm: add microchip soft ip corePWM driver
-  MAINTAINERS: add pwm to PolarFire SoC entry
-
- .../bindings/pwm/microchip,corepwm.yaml       |   4 +-
- MAINTAINERS                                   |   1 +
- .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |   2 +-
- drivers/pwm/Kconfig                           |  10 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-microchip-core.c              | 371 ++++++++++++++++++
- 6 files changed, 387 insertions(+), 2 deletions(-)
- create mode 100644 drivers/pwm/pwm-microchip-core.c
-
-
-base-commit: a3fd3ca134d9485a0f9a7bdcffd7f8bae27f79d3
+diff --git a/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml b/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+index a7fae1772a81..cd8e9a8907f8 100644
+--- a/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+@@ -30,7 +30,9 @@ properties:
+     maxItems: 1
+ 
+   "#pwm-cells":
+-    const: 2
++    enum: [2, 3]
++    description:
++      The only flag supported by the controller is PWM_POLARITY_INVERTED.
+ 
+   microchip,sync-update-mask:
+     description: |
 -- 
 2.37.1
 
