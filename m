@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3550658245D
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 Jul 2022 12:32:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24C6B5824B0
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 Jul 2022 12:45:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231654AbiG0KcI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 27 Jul 2022 06:32:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
+        id S229801AbiG0KpH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 27 Jul 2022 06:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiG0KcH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 27 Jul 2022 06:32:07 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B4143E77
-        for <linux-pwm@vger.kernel.org>; Wed, 27 Jul 2022 03:32:04 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id x23-20020a05600c179700b003a30e3e7989so792122wmo.0
-        for <linux-pwm@vger.kernel.org>; Wed, 27 Jul 2022 03:32:04 -0700 (PDT)
+        with ESMTP id S229449AbiG0KpG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 27 Jul 2022 06:45:06 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E58474E8
+        for <linux-pwm@vger.kernel.org>; Wed, 27 Jul 2022 03:45:05 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id u5so23612930wrm.4
+        for <linux-pwm@vger.kernel.org>; Wed, 27 Jul 2022 03:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=KF5uYYuW8cxuLLmsc44dNIhEgku8IG2mFelPwjuqW9k=;
-        b=kSgPrO66VNp9uxBdfc2Eourw4cX9CrZfWDmJvsq1B4hColf78QJMF9RXXcIbtmk3bZ
-         ZgXGQfbfynWmyuS2CVe98YILXdOt6sE4B8OALkLH91bNapoBJObJLFuJOIAOJzIkqc0m
-         OfiFUjyb81WRC+0uVVuuGSEb9pNvEbLbGYqBC27xD+Q3vUyLeVThAZYvuhlFLL0fIQwY
-         uxA57eeRYkJkPRGNzF6vz/GTAFKV/nqEdNy2AFVstBq9k8qct20SUhsZpjxYOlonNtMR
-         SAyzba1oPkiB+5g/qHX2Ji1SxEFdlBkRRAv63IWS926w6ghqyafneoP3fAKV1UbECQ+f
-         LpKg==
+        bh=5oVqAH+iWelszybMh6Ae4+JTub68D8khqQAfrWm+UrY=;
+        b=Vf9pdSjZMg3SLJ19yGuuiHBu8f0Z4m7f640uGxbOjb43MhHIpy3Z7mK4GKres7Ordp
+         SpllByUGC+tfiiifjsPpQpw2mF7ycjBIZikMFCnyNcASVp3GXdmLo9rBbu18erzVq18v
+         Uq7SPPy9krm2n8atNNVDbhZ87Gx6RlMJDlKIAWHmipUqu84MC+GBBWrH3AhnWIpVMkye
+         H2JlPBYgPFlyqHlSdraDF7pQlQzaNRup4ernzsPFtQ9iDUDYxLIH8BEFFq+9on8/jrxO
+         Rvvdsl2r9+9u3UbXW197Xm3br5AwXHApHvDIubYmQuxdVNhn73VuAV7aQUziKTSWxRx/
+         Hs0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=KF5uYYuW8cxuLLmsc44dNIhEgku8IG2mFelPwjuqW9k=;
-        b=MID+5Bmn7+0IgeiHA/si9ZUZs7dZ/4hmEaou56dzFbJ8Rg+qFE75PoLlLLdr8yuq53
-         ZqBqqpJ77T/gQSotI5nUK1Qxg3N/dUkrq7KEnbooGLgVCP0cvXWimjxTecw/UMSj1vhc
-         qW2BFUyvPbvAYAo+eDdcYsBaAmn3oJHDRwXi4TUyus8Ag3nHoDBRa7vlqMNvvjzfB/yL
-         YWi7fNoGaReG4creaE+EAewNqWSN4/gMXxihr/B12T+FAc553vTBdCsLVMcVJ+c1kpRR
-         3E5eaZVjtC+c8hhjwOBwSBPuNvZ0vAjk6wrQvrgdyzT1rueMEGX6YaUwm06WaStZMUe1
-         QnDw==
-X-Gm-Message-State: AJIora/VtE6UT03RQ2Yi6WfMDZFcc7n+45BwCPY4WX4sxvhoyxiMky26
-        03RHWhF2ysUv1Az4BmAZ7uXunQ==
-X-Google-Smtp-Source: AGRyM1sBceEVCYrz7G9ieJ2YXza7FBRyLu2iZ9/nRQjtxtByTph6/cZBponIXeyHZNRSUpMil3ZQIg==
-X-Received: by 2002:a05:600c:3ba3:b0:3a3:5dd:f10f with SMTP id n35-20020a05600c3ba300b003a305ddf10fmr2554827wms.185.1658917923420;
-        Wed, 27 Jul 2022 03:32:03 -0700 (PDT)
+        bh=5oVqAH+iWelszybMh6Ae4+JTub68D8khqQAfrWm+UrY=;
+        b=zCBNR1bFksuzqDbOn7V0OUtzb+3p1lzEu6CKxl36ZMoh1oy1ApRTfXeBEQpHUndoLH
+         FpRX+lZqUkmF/mFPPGQZe4NZmD2joq2DOzQhW+eHz9q3+WhCjVv5pw3LZEgy7hwTwGsy
+         7gs7jMNeyAwdvTKIuNjSb2s0icOObse4iOBdMZ5SA2mx4zYe/LuIRp6Z+CWkBNNOew07
+         ncusHx2waST4T3w0KQLYcM6dsi4C9dZyqZiAgxdQ3uHazjG+9i8mApInZIkWowLXa9bN
+         XOENpp4YlffmWa65JaRt+ooHsJvYj3DFgtCTdHnP4dQkQJPxS4OrGhs35fq1zwUfhtQU
+         pNJw==
+X-Gm-Message-State: AJIora/awTYzGgU8MnhThq7CxK01v/fi1MEYHvHW36d5C5nzEFsZpxPz
+        +HIh4zkFrlUUR63krFca345v8g==
+X-Google-Smtp-Source: AGRyM1uGCOaeaXOdwirAYekuOB4Lxs31AWSF1L9awJK4JKpctBf/cT7K9dLT9+RwDmyqaDaxZr91vA==
+X-Received: by 2002:a05:6000:1848:b0:21e:8fa5:e5f4 with SMTP id c8-20020a056000184800b0021e8fa5e5f4mr7738882wri.691.1658918703770;
+        Wed, 27 Jul 2022 03:45:03 -0700 (PDT)
 Received: from [192.168.0.17] (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id y2-20020a5d6142000000b0021d70a871cbsm16828378wrt.32.2022.07.27.03.32.02
+        by smtp.gmail.com with ESMTPSA id c3-20020a7bc003000000b003a2e7c13a3asm1877429wmb.42.2022.07.27.03.45.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jul 2022 03:32:03 -0700 (PDT)
-Message-ID: <1d4573fc-407a-13c2-b049-e7a060d7929b@sifive.com>
-Date:   Wed, 27 Jul 2022 11:32:01 +0100
+        Wed, 27 Jul 2022 03:45:03 -0700 (PDT)
+Message-ID: <d335c1a6-ad45-994c-053f-32cdfa4cab8d@sifive.com>
+Date:   Wed, 27 Jul 2022 11:45:02 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
@@ -74,8 +74,7 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -144,29 +143,8 @@ On 26/07/2022 12:05, Krzysztof Kozlowski wrote:
 > compatible should not be used as fallback at all, because it is simply
 > to generic (PWM is not some model name but common acronym),
 
-I suppose dw-apb-timers is the actual document name, but that's already
-been used for the timer mode in a number of SoCs so probably isn't going
-to be useful. dw-apb-timers-pwm might be a better prefix if snps,pwm is
-not going to be acceptable. (Yes, the block can be built as either a
-PWM or a generic interrupt generating timer at IP generation time)
+Thank you for the feedback, forgot to say that on the original reply.
 
-As for the version numbers, we could have the -v.vv suffix for these
-blocks, but the v2.xx log has 22 entries already and only one feature
-for programming (which is also a configurable one so can't be just
-enabled by default - it's the 0/100 mode flag in the control registers).
-
-I'm not sure what the v1.xx timers had, but I don't have access to this
-information and we're getting these documents as second-generation so I
-am not sure if we can get a v1.xx at-all (I suspect this is also going
-to have a number of revisions and about 1 useful register api change
-which would be the "new mode" double counter method which we currently
-rely on having being implicitly enabled by the IP builder (again this
-feature is still something that can be configured on IP genaration))
-
-Given the configurability of the core, the version numbers might be
-usable at some point, but it does seem to be a lot of churn for what
-currently can be described by one boolean for the 0/100 feature that
-might-be available. Is there a way of saying the compatible string
-can be dw-apb-timers-pwm-2.[0-9][0-9][a-z] ?
-
+-- 
+Ben
 
