@@ -2,66 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28F0F5844D3
-	for <lists+linux-pwm@lfdr.de>; Thu, 28 Jul 2022 19:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D779B5844DE
+	for <lists+linux-pwm@lfdr.de>; Thu, 28 Jul 2022 19:22:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbiG1RSU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 28 Jul 2022 13:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57926 "EHLO
+        id S232766AbiG1RVs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 28 Jul 2022 13:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231998AbiG1RST (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Jul 2022 13:18:19 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91DD6D9F5;
-        Thu, 28 Jul 2022 10:18:18 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id ss3so4229610ejc.11;
-        Thu, 28 Jul 2022 10:18:18 -0700 (PDT)
+        with ESMTP id S229461AbiG1RVl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 28 Jul 2022 13:21:41 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C30743F2
+        for <linux-pwm@vger.kernel.org>; Thu, 28 Jul 2022 10:21:16 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id b26so3127606wrc.2
+        for <linux-pwm@vger.kernel.org>; Thu, 28 Jul 2022 10:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=KHxlRISvchYZZeG5QH2xEBKAnceyIE0jpB0uouPZJ3M=;
-        b=UiLVK+qCT9gY8jQM2exwGLSaKC8y9LZPiXE8Vdv8FSaRYZM4F5MaUHQomst+47Npfb
-         7jmOaJIuvS01O72aiVRpNX+83DCdnchVVFnS1ypvcPfrT887AwbNLoKFCpTWkGqtga8a
-         xWgwVrY3sxFXNjoB1TPzDVEQvirMpVcjzApHboWIT1+07V6iTEdA+KPlCXYqm/Zb+XKT
-         WjHkUiYSIMR/igapknU2FughwE+GVRTNijsB6itaA+Y3L4wwabSRiZcybxKce0pwxH1Q
-         rsJdKsAmTxIwo6IvMBtrIEqBUSUMVfGvqpbCf5r9beXhlehsCKtkD4Qtk5mnXRajC4bi
-         YBMQ==
+        bh=t+etLTzNyLJaLhfnN2Y0kWOJM0j7ATJJ9jDPhPNxfgU=;
+        b=WIcMjMSXA+1gvFlpvcTCCpGNtTHFOVEe/jAX23J2P7bmpQndiKIwrBAtBPCwxO6e2g
+         P7GqyHEP66Ji3gXcm/sWL9VCvqLNe90c96sBH3gQU7obtDD/BkdinoUZV7X2BUJi1Tr/
+         XPfje0dWFk1a+RJjh14/4SRGlXd9nTaUadE/I+0eCTxqvFGi8qENAySnslGHroB1M/Kl
+         YRMcx+klWRJ4uKTG7vPpOJvlH6/y7cOyMFGTDzpAGSWxok6wCYwR3GGU6I9q0fIyP8rh
+         waVJNvARADP2EY8kfXaLQlAHBvBWw85xTZpjyKk4pUEe31t47Z0/sYJVJIzMPfQRUl94
+         2GrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KHxlRISvchYZZeG5QH2xEBKAnceyIE0jpB0uouPZJ3M=;
-        b=XYlwTOSETUi4dZm12ZKJlNHXVQlRgCejj8ax2+xNj8e+t+iQH190a92Xq9riMkhpDC
-         j7xiH/jpOWRtPAeJ9KOQHQjYj3NOk3cDvEZoldW0nQ2EIN3Qgz01Ts5rCVDS54OKbFal
-         4m6d5zizTVToaGfDDPmIXH7ep8G9w9YC07/UpyW+2IOdOvVUT9PdVuIqFtt+ihfJJv6F
-         S1eFVY3+DTxlLSHm8+WDHOadzDFIsHG/0lm0R5DKvZxtyHL1OC0LXcA1l3JyHfa8JFCb
-         +edSglp7QcLM0FGSyTUZ2Ln/pyQnsBdHpo/FARz9BuNNVo2exVJy4iOKeKMDC1Oe+AGX
-         E5/Q==
-X-Gm-Message-State: AJIora++wqajzV88DPYs8+UY22Yfr38AJ+RNgUReF9IPv/pJWYXHwPfo
-        kfJYetm+4NSl6MM1pUDoK+I=
-X-Google-Smtp-Source: AGRyM1sRwcH9Rq6esei6oEYWfbW2vNHMithUlyMPEYkVcVTbjbZzOzisljAncisy7T6nA0i4N3XssQ==
-X-Received: by 2002:a17:907:9482:b0:72b:8c16:dac0 with SMTP id dm2-20020a170907948200b0072b8c16dac0mr18699523ejc.286.1659028697120;
-        Thu, 28 Jul 2022 10:18:17 -0700 (PDT)
+        bh=t+etLTzNyLJaLhfnN2Y0kWOJM0j7ATJJ9jDPhPNxfgU=;
+        b=dPqq1XH3vtFNjlTpiJZ3EfgibpjjE+tdKi1bCUFeCpurZStRuJu7JeM8hsn477ZqGZ
+         y+KOt8F++XtgR29LkVR2q85742G5xhxC3ZGl2IY63WcTk+jfSOuyGlDf5xt0tVD9bmto
+         j+ogWMRjYPmHjIfOniv1fVoyehR8074GeF/D8wGwKIa7JSBCKuEXvH5D+P2cOQAYst6h
+         wOriJhkudpYLvRcnlWy+A+E0hpDzRZBTTvpnhStjZPeDwR1cry4KuRXTzEwqtole7nxU
+         EkPVKu97bP0ALCpnlnHBOQAhsuT8ocT5VN7qaXk2kTnBeFsqnZ2wUmKwVmIY8dfeMY9y
+         ZcHQ==
+X-Gm-Message-State: AJIora8VrR6c/8hqSIiJo+FjrpkbJmuOf3aGQri84m57dZxb5llZ7m3W
+        IfTd2H4D/zCe08F31kmH3xQ=
+X-Google-Smtp-Source: AGRyM1s2utHVMrbvjAy9quP4F3Tm33jybmKLMDRCMayiwtfrw8kRDnNCOuA1v0+iauiVvy0DzNEONA==
+X-Received: by 2002:a05:6000:1549:b0:21d:bdce:1d01 with SMTP id 9-20020a056000154900b0021dbdce1d01mr18795425wry.373.1659028874536;
+        Thu, 28 Jul 2022 10:21:14 -0700 (PDT)
 Received: from orome (p200300e41f12c800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f12:c800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id v22-20020aa7dbd6000000b0043d06d80d27sm420703edt.86.2022.07.28.10.18.15
+        by smtp.gmail.com with ESMTPSA id f19-20020adfb613000000b0021e13efa17esm1458762wre.70.2022.07.28.10.21.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Jul 2022 10:18:15 -0700 (PDT)
-Date:   Thu, 28 Jul 2022 19:18:14 +0200
+        Thu, 28 Jul 2022 10:21:13 -0700 (PDT)
+Date:   Thu, 28 Jul 2022 19:21:11 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lee Jones <lee@kernel.org>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 3/8] MAINTAINERS: Remove myself as PWM maintainer
-Message-ID: <YuLE1urkBjTjGDHI@orome>
-References: <20220714112533.539910-1-lee@kernel.org>
- <20220714112533.539910-4-lee@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: twl-led: Document some limitations and link to the
+ reference manual
+Message-ID: <YuLFh0t4AiVx2y0K@orome>
+References: <20220712084656.21043-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mVFp3QKFFA/ktDAF"
+        protocol="application/pgp-signature"; boundary="ZkvPDctp6KLpbEzu"
 Content-Disposition: inline
-In-Reply-To: <20220714112533.539910-4-lee@kernel.org>
+In-Reply-To: <20220712084656.21043-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/2.2.6 (2022-06-05)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -74,60 +74,43 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---mVFp3QKFFA/ktDAF
+--ZkvPDctp6KLpbEzu
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 14, 2022 at 12:25:28PM +0100, Lee Jones wrote:
-> Thierry and Uwe are doing a fine job, leaving me surplus to requirement.
+On Tue, Jul 12, 2022 at 10:46:56AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> I found these just from reading the reference manual and the driver
+> source. It's unclear to me if there are glitches when updating the ON
+> and OFF registers.
 >=20
-> Happy to pop back on-board if anything changes in the future.
->=20
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> Cc: linux-pwm@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Lee Jones <lee@kernel.org>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5fbbeec1fae6b..67ae1329123fa 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16465,7 +16465,6 @@ F:	drivers/media/rc/pwm-ir-tx.c
->  PWM SUBSYSTEM
->  M:	Thierry Reding <thierry.reding@gmail.com>
->  R:	Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> -M:	Lee Jones <lee.jones@linaro.org>
->  L:	linux-pwm@vger.kernel.org
->  S:	Maintained
->  Q:	https://patchwork.ozlabs.org/project/linux-pwm/list/
+>  drivers/pwm/pwm-twl-led.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
 Applied, thanks.
 
 Thierry
 
---mVFp3QKFFA/ktDAF
+--ZkvPDctp6KLpbEzu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmLixNYACgkQ3SOs138+
-s6FkFw/+PcxskQg0NtwRTRJ2/5pnHx9biMU7zh+TESzFS/BnDF9fg2d2R/RC3y+g
-Gs9nmk0rvGTHdhXEzdK6jXo6QZKzw2Uk4UyFsVUE0ob15emegvBrutiHaDIMKecd
-dueDSsbwPbW2b9hvrCAUoxiCGGzxcaWWkkm6J6jb/pGtS2l59+HHEW1SKY0yE4QL
-HRJSrI48p+HSrvmrzdKkyXGgh+7W5KLH2KK9lTyyhzwjPxx+hFTjzmChnOA6R1C6
-wImvXLWC9Dl1NZUYLfidxLhuu2v2JCwa7nIrENd+5flXgpuy0oFTNEB98TwA8Jh6
-9OuJ+mnUv/+KL7EoS9XbdZHEze5KDT+B8DrWDAJIJAHH1XmjKwlbuP8odUVgEEUp
-ihDgphEi/UEZrl+9IELyVQE44RJZtOceBY/FTn9HTvhbTQBdP3nQZKRkBoKRqoot
-xCM8TLO0laAfSCpKKHdH4TEf7xBgtvZCdW91C2vcQOyycvUlx3u5Fp2Zohf9xEGg
-XPqZ2ncQFQ5oh02Bk7WRRbJ6f3b0trrDUete/0e3VUiBMim6qNlnq5FybTUVK6ou
-ekEctHcsoEnc8ku0yZgpMsBLTeoXCS+Sie/+FfcG4qa/igGbqEpkPGp8SgwGY+ed
-zSfuao+KVrSxk0mtZnUe+uiLi9jOakQPlFzWQ2cM4AAZASq706U=
-=jft8
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmLixYcACgkQ3SOs138+
+s6Hoow/+PrQmxKTuHiIml4vKUQbOzTrz3EoxrgiYaHOQ5dOg6uMpu28dYTLBUi+Z
+haWdPHJl43QOoKSgkkt2bKhbsA0LkXclL3a7v99cGFZkaJx3VcyDIFvhbwLDn6nF
+tk8eYJtKrvqz5dYZElc4fSxdxfgsbQH5SyrhiKRJHM3vLL7AMkeauq9bZ/yZ8UMC
+5N7QHX12Z2LbYPuuj8/6YAj5oqRgtrRQHTKihRTv2RQQTudvKadMgBqZKkQj4Wgm
+7hJ8HQgx4F+Ipq6PjNmzkkyUzTet95SUOBAkfE5R5uDEAUEiSwDLVmLQG8dXXmmJ
+/K0QAD2eCGPsbqzTHwlvULf9RhG5fbHV5DRShUSjsqH/4ZkW0c+r1SMWlG0u/BHu
+F/hN0URL7pQpUIJaEs2Gjd893SQxADgcgACrb8Fc+KSaC3mmnusk/MCOWs6D7xnS
+rW7y3J6cTZh1Rq7+c19/gtMhx/fRncTid2I5TNyLoR3xk0vUKaa8RuqHzlOn/pqd
+ExMfJaSAaU2QRvQ7bOKF8+U6RKi74ZgcvCoIpNC9E9AUacoUEO7uDRrcbIxoAapo
+6+SI8OdwaoiiGe4pV3MmVFi/FZ3Q/iaVGdSh8jWM0Dt6gUYRkmBd2if4QEgyp84k
+79GyzMaiYoPy1nNvFhVrU475ceo7V9Z+cr2D1a6fjB1yHm25frM=
+=x5P6
 -----END PGP SIGNATURE-----
 
---mVFp3QKFFA/ktDAF--
+--ZkvPDctp6KLpbEzu--
