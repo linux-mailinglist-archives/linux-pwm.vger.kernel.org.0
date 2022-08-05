@@ -2,51 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7131958AE79
+	by mail.lfdr.de (Postfix) with ESMTP id BB9E058AE7A
 	for <lists+linux-pwm@lfdr.de>; Fri,  5 Aug 2022 18:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240963AbiHEQvF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Aug 2022 12:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48550 "EHLO
+        id S241114AbiHEQvB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 Aug 2022 12:51:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240988AbiHEQuy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Aug 2022 12:50:54 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4AD1C125
+        with ESMTP id S241022AbiHEQux (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Aug 2022 12:50:53 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC69237F7
         for <linux-pwm@vger.kernel.org>; Fri,  5 Aug 2022 09:50:50 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id b21-20020a05600c4e1500b003a32bc8612fso1516772wmq.3
+Received: by mail-wm1-x32e.google.com with SMTP id r1-20020a05600c35c100b003a326685e7cso4095295wmq.1
         for <linux-pwm@vger.kernel.org>; Fri, 05 Aug 2022 09:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=MnRM0/0IvgGtmALzay+KKuxuL9L7ec4/ENnxhkmEu0Q=;
-        b=jPNeDsvM9ON44JSlp39pKrw4+Qw+Wmp0x7j1vZHjc9WudWV8dVShaQsp8qS2bKEnh6
-         r+Ru+w9wNlXfFOmq09dJhq5OzqbB/Zc3U2D/XEqmYCo+GCAaG6egbHak0rtaQOZYX1vM
-         wuVVnNRQ0PtWAMHh4OAjoFL/3U55OTR6R2Stv0jIeB9r6uQduC/yWuUjvWqTCvgxUAsF
-         eN1Shm5ES65XWq32IzZ0Dg6xiHuvp4z8e1Mf0Z6+wJLNfoWF5Z+GyZhFpFWCFMd2eQvi
-         emQeHVs8/8HzRfYy/ZBls7NCtc6KWuDSFAimESy5FW3Awho530DJHRYTWWn+xIpJ9gNe
-         AQEw==
+        bh=yBJp61T732NhGvuYuS8ssmWnNYi45D7jFrvNVeym7no=;
+        b=LUgQeOOwftQJP0tKGwJY1ZErHDgZUvn4JHdWsZOolJMRDJPF33KXTjxkBQjFIU0GQt
+         YfEAVlMNTTy2rCodHHTHKM4yTERMMIimuLasIyIRLPe69kjbnSvZlV0qVFiR+oMnEKE5
+         eM/NYISQApci32tIh1y2eBx50mc8+03wgBXPGkWtW8+zqmwgshsy+8CQMUXtS+ChE9Vn
+         IyOE5RiHl0iEsfROzcLquyDInSs2SVs6oOT8OdFCzMzEU4085GX6Wf5ci9eACkF4ZUBK
+         i3hpu2/Y0JFdLpwd0x+hvDfPGl9S9S/BhS7oyqaZExY/jnlhHxROpw+JkyCejYVww/Ik
+         dL/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=MnRM0/0IvgGtmALzay+KKuxuL9L7ec4/ENnxhkmEu0Q=;
-        b=wnRg2Iz5pUQ83ohgzJ96ULybkmpJ3bhPZJ2niwfhzhwLpCJY2GUX/99WADTk6A/cJW
-         rwa3zLAPE2zI8+1iaCf3iZaCu5VAsdTkajhtDPxDEu6D/To1zr6xM8qK9RVIPkbDStrn
-         6pHuEzuQkxJ4ueTGAX9GeJSrCHmaAh0G8ydeL8RZm1qk8VKmRw55mK0kek/XmAC9fvdH
-         X+4z3WyJidBlGTvrKkZF6uwLWZwuFJBuX4ZnNu44lmdnnxelt5rlX2/wPf7z1O6Q9DEW
-         NpcbmV7HMjIJwtnYWPTJlGdV96R8cJo7GA5zKdAkyQR6m5mx8ASyVSqofTAe1o7g0Y0u
-         SpAA==
-X-Gm-Message-State: ACgBeo0p5ClIk/8+/jBny1CwyS4BJhECfW5RfX8XBq+dffu43Eq3pxKK
-        +UdXl706yNUkklVBpt+dlQfRK3MP9Rrq4fHR
-X-Google-Smtp-Source: AA6agR44ih/XPWj1ROUhl3PpcKPXw9THsTAXfnCoTFP9AsDJXUtGec86TVYz2HmjLlz96qab7qg1aw==
-X-Received: by 2002:a05:600c:4e94:b0:3a3:455b:a277 with SMTP id f20-20020a05600c4e9400b003a3455ba277mr5226727wmq.198.1659718248877;
-        Fri, 05 Aug 2022 09:50:48 -0700 (PDT)
+        bh=yBJp61T732NhGvuYuS8ssmWnNYi45D7jFrvNVeym7no=;
+        b=2mP4wo+3dG/C5yr0n9y4JVul7IUYdR1EkKHjsYfqYksdQggECgA2CC6sa6iaC8eXBe
+         PXv6nEidGE9tuTZoZjcfJQAlKohgBB4B2bBKuE3Ow3E6gIc4kZW00B6lTy8f/Rz9NVP8
+         KPDoE6AsxypecB708ftGzQdmq7sWZYeP4/4zC1o9xjsVvtCFW7xTqTerzy4uY5Y4ChSq
+         TERjWZ+0mHa7iCF6SdAh61004xGiLnuRQlEPFp4hOE926aqG4ZwfAg+3vqAVgQt2fkVX
+         +B2nne/x4YAWAdfuHoEnzChGQDmfwFLGA+Bx1KEa3Z2vNVyYWSjbX5gg3g03VlgQnRR/
+         W01Q==
+X-Gm-Message-State: ACgBeo3EvfK59emI1K7+8O9001f8MS9NQ6GlDOJW/n73UdRNA1fqP4pH
+        lw75tllB3lhhWLIdp/J9vxKlqBQ3rAkIBNrU
+X-Google-Smtp-Source: AA6agR4PJ6FvfUDry8dDMg/k/gZ2UHnGi7IpK1O00WLhlYJzCF6UAcvJhmmLLVY1R3TAfAXGSTClqw==
+X-Received: by 2002:a05:600c:a18f:b0:3a5:174e:d650 with SMTP id id15-20020a05600ca18f00b003a5174ed650mr3463797wmb.47.1659718249542;
+        Fri, 05 Aug 2022 09:50:49 -0700 (PDT)
 Received: from rainbowdash.office.codethink.co.uk ([167.98.27.226])
         by smtp.gmail.com with ESMTPSA id h28-20020a05600c2cbc00b003a4f08495b7sm11325374wmc.34.2022.08.05.09.50.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Aug 2022 09:50:48 -0700 (PDT)
+        Fri, 05 Aug 2022 09:50:49 -0700 (PDT)
 From:   Ben Dooks <ben.dooks@sifive.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -59,9 +59,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Salmon <william.salmon@sifive.com>,
         Jude Onyenegecha --subject-prefix=PATCH v3 
         <jude.onyenegecha@sifive.com>, Ben Dooks <ben.dooks@sifive.com>
-Subject: [PATCH 7/8] pwm: dwc: add snps,pwm-number to limit pwm count
-Date:   Fri,  5 Aug 2022 17:50:32 +0100
-Message-Id: <20220805165033.140958-8-ben.dooks@sifive.com>
+Subject: [PATCH 8/8] pwm: dwc: add PWM bit unset in get_state call
+Date:   Fri,  5 Aug 2022 17:50:33 +0100
+Message-Id: <20220805165033.140958-9-ben.dooks@sifive.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220805165033.140958-1-ben.dooks@sifive.com>
 References: <20220805165033.140958-1-ben.dooks@sifive.com>
@@ -69,7 +69,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,43 +77,71 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add snps,pwm-number property to indicate if the block does not have
-all 8 of the PWM blocks.
+If we are not in PWM mode, then the output is technically a 50%
+output based on a single timer instead of the high-low based on
+the two counters. Add a check for the PWM mode in dwc_pwm_get_state()
+and if DWC_TIM_CTRL_PWM is not set, then return a 50% cycle.
 
-Not sure if this should be a general PWM property consider optional
-for all PWM types, so have added a specific one here (there is only
-one other controller with a property for PWM count at the moment)
+This may only be an issue on initialisation, as the rest of the
+code currently assumes we're always going to have the extended
+PWM mode using two counters.
 
 Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
 ---
- drivers/pwm/pwm-dwc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/pwm/pwm-dwc.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 5c319d0e3d52..5edfb8f8acbf 100644
+index 5edfb8f8acbf..49e666be7afd 100644
 --- a/drivers/pwm/pwm-dwc.c
 +++ b/drivers/pwm/pwm-dwc.c
-@@ -328,12 +328,20 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
+@@ -171,23 +171,35 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
  {
- 	struct device *dev = &pdev->dev;
- 	struct dwc_pwm *dwc;
-+	u32 nr_pwm;
- 	int ret;
+ 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+ 	u64 duty, period;
++	u32 ctrl, ld, ld2;
  
- 	dwc = dwc_pwm_alloc(dev);
- 	if (!dwc)
- 		return -ENOMEM;
+ 	pm_runtime_get_sync(chip->dev);
  
-+	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
-+		if (nr_pwm > DWC_TIMERS_TOTAL)
-+			dev_err(dev, "too many PWMs specified (%d)\n", nr_pwm);
-+		else
-+			dwc->chip.npwm = nr_pwm;
-+	}
+-	state->enabled = !!(dwc_pwm_readl(dwc,
+-				DWC_TIM_CTRL(pwm->hwpwm)) & DWC_TIM_CTRL_EN);
++	ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
++	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
++	ld2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
+ 
+-	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
+-	duty += 1;
+-	duty *= dwc->clk_ns;
+-	state->duty_cycle = duty;
++	state->enabled = !!(ctrl & DWC_TIM_CTRL_EN);
+ 
+-	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
+-	period += 1;
+-	period *= dwc->clk_ns;
+-	period += duty;
+-	state->period = period;
++	/* If we're not in PWM, technically the output is a 50-50
++	 * based on the timer load-count only.
++	 */
++	if (ctrl & DWC_TIM_CTRL_PWM) {
++		duty = ld;
++		duty += 1;
++		duty *= dwc->clk_ns;
 +
- 	dwc->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dwc->base))
- 		return dev_err_probe(dev, PTR_ERR(dwc->base),
++		period = ld2;
++		period += 1;
++		period *= dwc->clk_ns;
++		period += duty;
++	} else {
++		duty = (ld + 1) * dwc->clk_ns;
++		period = duty * 2;
++	}
+ 
++	state->period = period;
++	state->duty_cycle = duty;
+ 	state->polarity = PWM_POLARITY_INVERSED;
+ 
+ 	pm_runtime_put_sync(chip->dev);
 -- 
 2.35.1
 
