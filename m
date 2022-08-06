@@ -2,179 +2,236 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5114F58B503
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Aug 2022 12:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8E8F58B66A
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Aug 2022 17:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbiHFKW5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 6 Aug 2022 06:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
+        id S232572AbiHFPZY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 6 Aug 2022 11:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbiHFKW4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Aug 2022 06:22:56 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED3913D5A
-        for <linux-pwm@vger.kernel.org>; Sat,  6 Aug 2022 03:22:55 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oKGxJ-0002Wp-Ve; Sat, 06 Aug 2022 12:22:54 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oKGxF-0024dX-NW; Sat, 06 Aug 2022 12:22:52 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oKGxH-009uYH-Br; Sat, 06 Aug 2022 12:22:51 +0200
-Date:   Sat, 6 Aug 2022 12:22:48 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S231604AbiHFPZX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 6 Aug 2022 11:25:23 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837979FEA;
+        Sat,  6 Aug 2022 08:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1659799522; x=1691335522;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yeMrOGaLj7UiZ3aSAIAl9Iu73Rv0eEWT/0hnU9WSJMI=;
+  b=eoW+a3M8jCwTF/zon9zMNufyDi1pzg5HyZMKPLXwYYC7iEfpv8feFeUx
+   pe6WkQT9xcpF3Cwvww1tx5FZmcsLu6rszGQj+WB3GKocV/oXXhkjFsHlD
+   5AJ/aFvhHjFhbv51qJWkASK5WZdrZRAR7NYM0sUHszcKGVKgh/QC2Lofs
+   lwfsjQLizLdQ65lcu+JpjYuppQ7dLd5OxA02qnM4OkGOPnRKOTVurQ4JD
+   CvgTOvASoRgQB17FPu3aGaZo6pQZTrBMI9ATgr9iVnUcNPIBmZNu0j1vD
+   s4CFHm3P/Nv9IoasOdgIj7pAVlDVeI8juT37q4TmaEM2i+sABHQFWOeaw
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10431"; a="352098533"
+X-IronPort-AV: E=Sophos;i="5.93,217,1654585200"; 
+   d="scan'208";a="352098533"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2022 08:25:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,217,1654585200"; 
+   d="scan'208";a="600652376"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2022 08:25:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9F31617D5; Sat,  6 Aug 2022 18:25:30 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        jarkko.nikula@linux.intel.com,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha --subject-prefix=PATCH v3 
-        <jude.onyenegecha@sifive.com>
-Subject: Re: [PATCH 8/8] pwm: dwc: add PWM bit unset in get_state call
-Message-ID: <20220806102248.66htxhfia4irpx5t@pengutronix.de>
-References: <20220805165033.140958-1-ben.dooks@sifive.com>
- <20220805165033.140958-9-ben.dooks@sifive.com>
+        Jean Delvare <jdelvare@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v1 1/3] hwmon: (pwm-fan) Make use of device properties
+Date:   Sat,  6 Aug 2022 18:25:15 +0300
+Message-Id: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u5pk4sbymvf2ijox"
-Content-Disposition: inline
-In-Reply-To: <20220805165033.140958-9-ben.dooks@sifive.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Convert the module to be property provider agnostic and allow
+it to be used on non-OF platforms.
 
---u5pk4sbymvf2ijox
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add mod_devicetable.h include.
 
-Hello,
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/hwmon/Kconfig   |  2 +-
+ drivers/hwmon/pwm-fan.c | 50 +++++++++++++++++++++--------------------
+ 2 files changed, 27 insertions(+), 25 deletions(-)
 
-On Fri, Aug 05, 2022 at 05:50:33PM +0100, Ben Dooks wrote:
-> If we are not in PWM mode, then the output is technically a 50%
-> output based on a single timer instead of the high-low based on
-> the two counters. Add a check for the PWM mode in dwc_pwm_get_state()
-> and if DWC_TIM_CTRL_PWM is not set, then return a 50% cycle.
->=20
-> This may only be an issue on initialisation, as the rest of the
-> code currently assumes we're always going to have the extended
-> PWM mode using two counters.
->=20
-> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-> ---
->  drivers/pwm/pwm-dwc.c | 34 +++++++++++++++++++++++-----------
->  1 file changed, 23 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-> index 5edfb8f8acbf..49e666be7afd 100644
-> --- a/drivers/pwm/pwm-dwc.c
-> +++ b/drivers/pwm/pwm-dwc.c
-> @@ -171,23 +171,35 @@ static void dwc_pwm_get_state(struct pwm_chip *chip=
-, struct pwm_device *pwm,
->  {
->  	struct dwc_pwm *dwc =3D to_dwc_pwm(chip);
->  	u64 duty, period;
-> +	u32 ctrl, ld, ld2;
-> =20
->  	pm_runtime_get_sync(chip->dev);
-> =20
-> -	state->enabled =3D !!(dwc_pwm_readl(dwc,
-> -				DWC_TIM_CTRL(pwm->hwpwm)) & DWC_TIM_CTRL_EN);
-> +	ctrl =3D dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
-> +	ld =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
-> +	ld2 =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
-> =20
-> -	duty =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
-> -	duty +=3D 1;
-> -	duty *=3D dwc->clk_ns;
-> -	state->duty_cycle =3D duty;
-> +	state->enabled =3D !!(ctrl & DWC_TIM_CTRL_EN);
-> =20
-> -	period =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
-> -	period +=3D 1;
-> -	period *=3D dwc->clk_ns;
-> -	period +=3D duty;
-> -	state->period =3D period;
-> +	/* If we're not in PWM, technically the output is a 50-50
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index e70d9614bec2..58912a5c5de8 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1613,7 +1613,7 @@ source "drivers/hwmon/pmbus/Kconfig"
+ 
+ config SENSORS_PWM_FAN
+ 	tristate "PWM fan"
+-	depends on (PWM && OF) || COMPILE_TEST
++	depends on PWM || COMPILE_TEST
+ 	depends on THERMAL || THERMAL=n
+ 	help
+ 	  If you say yes here you get support for fans connected to PWM lines.
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 6c08551d8d14..9ce9f2543861 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -9,10 +9,11 @@
+ 
+ #include <linux/hwmon.h>
+ #include <linux/interrupt.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+-#include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/sysfs.h>
+@@ -25,7 +26,6 @@ struct pwm_fan_tach {
+ 	int irq;
+ 	atomic_t pulses;
+ 	unsigned int rpm;
+-	u8 pulses_per_revolution;
+ };
+ 
+ struct pwm_fan_ctx {
+@@ -36,6 +36,7 @@ struct pwm_fan_ctx {
+ 
+ 	int tach_count;
+ 	struct pwm_fan_tach *tachs;
++	u32 *pulses_per_revolution;
+ 	ktime_t sample_start;
+ 	struct timer_list rpm_timer;
+ 
+@@ -73,7 +74,7 @@ static void sample_timer(struct timer_list *t)
+ 			pulses = atomic_read(&tach->pulses);
+ 			atomic_sub(pulses, &tach->pulses);
+ 			tach->rpm = (unsigned int)(pulses * 1000 * 60) /
+-				(tach->pulses_per_revolution * delta);
++				(ctx->pulses_per_revolution[i] * delta);
+ 		}
+ 
+ 		ctx->sample_start = ktime_get();
+@@ -229,16 +230,14 @@ static const struct thermal_cooling_device_ops pwm_fan_cooling_ops = {
+ 	.set_cur_state = pwm_fan_set_cur_state,
+ };
+ 
+-static int pwm_fan_of_get_cooling_data(struct device *dev,
+-				       struct pwm_fan_ctx *ctx)
++static int pwm_fan_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
+ {
+-	struct device_node *np = dev->of_node;
+ 	int num, i, ret;
+ 
+-	if (!of_find_property(np, "cooling-levels", NULL))
++	if (!device_property_present(dev, "cooling-levels"))
+ 		return 0;
+ 
+-	ret = of_property_count_u32_elems(np, "cooling-levels");
++	ret = device_property_count_u32(dev, "cooling-levels");
+ 	if (ret <= 0) {
+ 		dev_err(dev, "Wrong data!\n");
+ 		return ret ? : -EINVAL;
+@@ -250,8 +249,8 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
+ 	if (!ctx->pwm_fan_cooling_levels)
+ 		return -ENOMEM;
+ 
+-	ret = of_property_read_u32_array(np, "cooling-levels",
+-					 ctx->pwm_fan_cooling_levels, num);
++	ret = device_property_read_u32_array(dev, "cooling-levels",
++					     ctx->pwm_fan_cooling_levels, num);
+ 	if (ret) {
+ 		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+ 		return ret;
+@@ -302,7 +301,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&ctx->lock);
+ 
+-	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
++	ctx->pwm = devm_pwm_get(dev, NULL);
+ 	if (IS_ERR(ctx->pwm))
+ 		return dev_err_probe(dev, PTR_ERR(ctx->pwm), "Could not get PWM\n");
+ 
+@@ -370,6 +369,20 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 		if (!fan_channel_config)
+ 			return -ENOMEM;
+ 		ctx->fan_channel.config = fan_channel_config;
++
++		ctx->pulses_per_revolution = devm_kmalloc_array(dev,
++								ctx->tach_count,
++								sizeof(*ctx->pulses_per_revolution),
++								GFP_KERNEL);
++		if (!ctx->pulses_per_revolution)
++			return -ENOMEM;
++
++		/* Setup default pulses per revolution */
++		memset32(ctx->pulses_per_revolution, 2, ctx->tach_count);
++
++		device_property_read_u32_array(dev, "pulses-per-revolution",
++					       ctx->pulses_per_revolution,
++					       ctx->tach_count);
+ 	}
+ 
+ 	channels = devm_kcalloc(dev, channel_count + 1,
+@@ -381,7 +394,6 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < ctx->tach_count; i++) {
+ 		struct pwm_fan_tach *tach = &ctx->tachs[i];
+-		u32 ppr = 2;
+ 
+ 		tach->irq = platform_get_irq(pdev, i);
+ 		if (tach->irq == -EPROBE_DEFER)
+@@ -397,20 +409,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 
+-		of_property_read_u32_index(dev->of_node,
+-					   "pulses-per-revolution",
+-					   i,
+-					   &ppr);
+-		tach->pulses_per_revolution = ppr;
+-		if (!tach->pulses_per_revolution) {
+-			dev_err(dev, "pulses-per-revolution can't be zero.\n");
+-			return -EINVAL;
+-		}
+-
+ 		fan_channel_config[i] = HWMON_F_INPUT;
+ 
+ 		dev_dbg(dev, "tach%d: irq=%d, pulses_per_revolution=%d\n",
+-			i, tach->irq, tach->pulses_per_revolution);
++			i, tach->irq, ctx->pulses_per_revolution[i]);
+ 	}
+ 
+ 	if (ctx->tach_count > 0) {
+@@ -430,7 +432,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hwmon);
+ 	}
+ 
+-	ret = pwm_fan_of_get_cooling_data(dev, ctx);
++	ret = pwm_fan_get_cooling_data(dev, ctx);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.35.1
 
-Huh, I expected checkpatch to warn about that. AFAIK the /* is supposed
-to be on a line for itself?!
-
-> +	 * based on the timer load-count only.
-> +	 */
-> +	if (ctrl & DWC_TIM_CTRL_PWM) {
-> +		duty =3D ld;
-> +		duty +=3D 1;
-> +		duty *=3D dwc->clk_ns;
-
-I would prefer to write that as:
-
-	duty =3D (ld + 1) * dwc->clk_ns;
-
-given that todays compilers are clever enough to optimize that just fine
-and this version is better readable for humans.
-
-> +
-> +		period =3D ld2;
-> +		period +=3D 1;
-> +		period *=3D dwc->clk_ns;
-> +		period +=3D duty;
-> +	} else {
-> +		duty =3D (ld + 1) * dwc->clk_ns;
-> +		period =3D duty * 2;
-> +	}
-> =20
-> +	state->period =3D period;
-> +	state->duty_cycle =3D duty;
->  	state->polarity =3D PWM_POLARITY_INVERSED;
-> =20
->  	pm_runtime_put_sync(chip->dev);
-> --=20
-> 2.35.1
-
-I'm marking all patches in this series as "changes requested" even
-though not all patches were commented. I assume that you continue to
-care for all of them for the next revision. Please make sure to pass -v4
-to git format-patch (or git send-email) then.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---u5pk4sbymvf2ijox
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLuQPUACgkQwfwUeK3K
-7AkR4gf7B9DBt7Mv4iKarUbP2G34tW5Z9GSdvjrFJw4QvIL/0gcLeKCbH+X1Qnki
-3hAZJquao//+vfAmfx29dn1GPtKmoqTUbWMqvSGOgmiTBDG3zosHo5k7F247veo3
-irIJCmSIvHkCgFN3WOyi47+hOxs5NWvq21N26nJrZ8cr2WyGsJADcyCCuGxT9H+T
-tuU1aaMFCoyZ3q+pM36vFjX3lZNaEXzGkWCeKsG91dZHxcLz6ZfgV2XC/ntyVlkK
-whKv2eWtdBBTfiFJc7SB6Mu21EnMBg7TojWmhS/UGrhYk298cn6Uy5Z5V06o9XMs
-IzYv87bOB0hsnAbqXJM9dktqkwxdyQ==
-=knzw
------END PGP SIGNATURE-----
-
---u5pk4sbymvf2ijox--
