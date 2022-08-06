@@ -2,122 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAC7F58B308
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Aug 2022 02:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C77C258B329
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Aug 2022 03:13:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241430AbiHFA0n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 Aug 2022 20:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49616 "EHLO
+        id S241531AbiHFBNq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 5 Aug 2022 21:13:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241414AbiHFA0l (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Aug 2022 20:26:41 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D59186DA;
-        Fri,  5 Aug 2022 17:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659745600; x=1691281600;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V7WkwMRtvzgnOUB9B91sjg30DJM30XVkzNMiGpG+Zm0=;
-  b=ULgoFTKVmGhyhdZx8POJGHTYZ7kiJVgoQV2Ob8+bb5o6DpRZV+eYEFr7
-   9Tmu9ciY9+9k+gDgpQ8ANZV2SZiXXdjIFkF0bfeUm4YygxtrFBMxJNdeS
-   FTWHKijPJsuzf/B2dSxB1fw8ycIPfNmnSUXb6pf8qMPmg8zVfaUlTQbLV
-   u792zqwihyLto6GbnLoVDRwEgJ6GgqKX4uHe+UPsUWw+HfPYtXkBeeCe0
-   xVIenC5fGb4r+i8hoXSfCrmjQA0WqAa8pqsCQHs0Vvsx0/QLoX2GGkF9G
-   JRytBVrAr8bWL5t2PUkupjbWlX9UYUqdUDAC4RGpCP6h26rkeq07Xy5JW
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10430"; a="273368296"
-X-IronPort-AV: E=Sophos;i="5.93,217,1654585200"; 
-   d="scan'208";a="273368296"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2022 17:26:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,217,1654585200"; 
-   d="scan'208";a="636673589"
-Received: from lkp-server01.sh.intel.com (HELO e0eace57cfef) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 05 Aug 2022 17:26:36 -0700
-Received: from kbuild by e0eace57cfef with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oK7eG-000Jqf-0r;
-        Sat, 06 Aug 2022 00:26:36 +0000
-Date:   Sat, 6 Aug 2022 08:26:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ben Dooks <ben.dooks@sifive.com>, linux-pwm@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        u.kleine-koenig@pengutronix.de,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        jarkko.nikula@linux.intel.com,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha --subject-prefix=PATCH v3 
-        <jude.onyenegecha@sifive.com>, Ben Dooks <ben.dooks@sifive.com>
-Subject: Re: [PATCH 4/8] pwm: dwc: add of/platform support
-Message-ID: <202208060853.DyMRfoge-lkp@intel.com>
-References: <20220805165033.140958-5-ben.dooks@sifive.com>
+        with ESMTP id S238624AbiHFBNp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 Aug 2022 21:13:45 -0400
+X-Greylist: delayed 305 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 05 Aug 2022 18:13:44 PDT
+Received: from mail.galen.ru (mail.galen.ru [213.219.228.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FA620F62
+        for <linux-pwm@vger.kernel.org>; Fri,  5 Aug 2022 18:13:44 -0700 (PDT)
+Received: from s40.gln.local (10.10.10.18) by s41.gln.local (10.10.10.19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.7; Sat, 6 Aug 2022
+ 04:08:37 +0300
+Received: from [163.123.143.160] (10.10.10.47) by s40.gln.local (10.10.10.18)
+ with Microsoft SMTP Server id 15.2.1118.7 via Frontend Transport; Sat, 6 Aug
+ 2022 04:08:37 +0300
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220805165033.140958-5-ben.dooks@sifive.com>
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Do not ignore this message
+To:     <linux-pwm@vger.kernel.org>
+From:   Hoosain Jano <galen@galen.ru>
+Date:   Sat, 6 Aug 2022 03:08:37 +0200
+Reply-To: <hoosanano@gmail.com>
+Message-ID: <d8fd7fcd-732d-4dba-829b-3cf43242892c@s40.gln.local>
+X-Spam-Status: No, score=2.9 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Ben,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on thierry-reding-pwm/for-next]
-[also build test WARNING on linus/master v5.19 next-20220805]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Dooks/dt-bindings-pwm-Document-Synopsys-DesignWare-snps-pwm-dw-apb-timers-pwm2/20220806-015142
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20220806/202208060853.DyMRfoge-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/3bd100d711908b7d16a2c4793b4f5b597acb8d7f
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Ben-Dooks/dt-bindings-pwm-Document-Synopsys-DesignWare-snps-pwm-dw-apb-timers-pwm2/20220806-015142
-        git checkout 3bd100d711908b7d16a2c4793b4f5b597acb8d7f
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/pwm/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/pwm/pwm-dwc.c:321:1: warning: data definition has no type or storage class
-     321 | module_pci_driver(dwc_pwm_driver);
-         | ^~~~~~~~~~~~~~~~~
-   drivers/pwm/pwm-dwc.c:321:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
->> drivers/pwm/pwm-dwc.c:321:1: warning: parameter names (without types) in function declaration
-   drivers/pwm/pwm-dwc.c:311:26: warning: 'dwc_pwm_driver' defined but not used [-Wunused-variable]
-     311 | static struct pci_driver dwc_pwm_driver = {
-         |                          ^~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +321 drivers/pwm/pwm-dwc.c
-
-1ed2b3fca64516 Jarkko Nikula 2020-10-02  320  
-1ed2b3fca64516 Jarkko Nikula 2020-10-02 @321  module_pci_driver(dwc_pwm_driver);
-1ed2b3fca64516 Jarkko Nikula 2020-10-02  322  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+I have a legitimate & profitable project/business which will benefit you a lot.For details email me.
