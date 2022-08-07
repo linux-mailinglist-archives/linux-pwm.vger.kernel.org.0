@@ -2,50 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 975DF58BAA5
-	for <lists+linux-pwm@lfdr.de>; Sun,  7 Aug 2022 13:23:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 027F358BE0C
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Aug 2022 00:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231958AbiHGLXj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 7 Aug 2022 07:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52190 "EHLO
+        id S230118AbiHGWlP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 7 Aug 2022 18:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231282AbiHGLXi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 7 Aug 2022 07:23:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A09A5FD7
-        for <linux-pwm@vger.kernel.org>; Sun,  7 Aug 2022 04:23:37 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oKeNa-0006Yh-P9; Sun, 07 Aug 2022 13:23:34 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oKeNX-002HmP-7G; Sun, 07 Aug 2022 13:23:33 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oKeNY-00A8KA-O6; Sun, 07 Aug 2022 13:23:32 +0200
-Date:   Sun, 7 Aug 2022 13:23:32 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v1 4/4] pwm: sysfs: Utilize an array for polarity strings
-Message-ID: <20220807112332.ku5c447ou22f364w@pengutronix.de>
-References: <20220806212331.40086-1-andriy.shevchenko@linux.intel.com>
- <20220806212331.40086-4-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ufc46rnrxz5yzjdy"
-Content-Disposition: inline
-In-Reply-To: <20220806212331.40086-4-andriy.shevchenko@linux.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S242416AbiHGWkr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 7 Aug 2022 18:40:47 -0400
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BCE8BCA8;
+        Sun,  7 Aug 2022 15:33:54 -0700 (PDT)
+Received: by mail-io1-f54.google.com with SMTP id i84so5894083ioa.6;
+        Sun, 07 Aug 2022 15:33:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:references:in-reply-to:cc:to:from
+         :x-gm-message-state:from:to:cc;
+        bh=3eZwuAFmjc+ZRz+NnpymNnE5U9avZ4uyAs/hATKVDy0=;
+        b=VVmtLY/XQAxuXiitQ8f1y8BbVrThiqW11AABbhdsD1qr5DY1V1F2f54fpkYlCfy6Yf
+         61vpM4RHGIDl7qAEyIurGi6tBjlVpQtbI+txyqyC23+60+2fv83RaOPnOwsNCYw4kXU0
+         Si3mmtl0mMk6o7Ewftm8pYBoDIYoZ5xHjYqOqTJ4VeeEm/rntzw8j39fbgLAxQbEQ9qW
+         0eD0GBqhJCfY8YV+1BC8kCBt0P4Y6NwTbKYYJoC4Vq7QmAeAIR96ND3u6OxKfP3TTfJg
+         aXxR57TVHEdGWyf6xOAnOYYVlkw+BTSfCFgQi/3eFtjKXtDel+AyCu4a906KJt92tSfA
+         WpuA==
+X-Gm-Message-State: ACgBeo1yhOsNATS144hj/v56E+jLOUbQ1T8IZAa330fIVSzsk+z8RPlZ
+        AXbsE+co6gHfN/ZvDIapQQ==
+X-Google-Smtp-Source: AA6agR6CbM74O42J1P5fVI6paXKlRrzL+WE41cDa93XM13rQjSONQDHjl6WY3uvZKT/x8peMjJNypg==
+X-Received: by 2002:a6b:cd4f:0:b0:675:b0bf:d999 with SMTP id d76-20020a6bcd4f000000b00675b0bfd999mr6358562iog.193.1659911633211;
+        Sun, 07 Aug 2022 15:33:53 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id o9-20020a022209000000b0033f7e44904fsm4473076jao.134.2022.08.07.15.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Aug 2022 15:33:52 -0700 (PDT)
+Received: (nullmailer pid 2326179 invoked by uid 1000);
+        Sun, 07 Aug 2022 22:33:51 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Ben Dooks <ben.dooks@sifive.com>
+Cc:     u.kleine-koenig@pengutronix.de,
+        William Salmon <william.salmon@sifive.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Jude Onyenegecha --subject-prefix=PATCH v3 
+        <jude.onyenegecha@sifive.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        jarkko.nikula@linux.intel.com
+In-Reply-To: <20220805165033.140958-2-ben.dooks@sifive.com>
+References: <20220805165033.140958-1-ben.dooks@sifive.com> <20220805165033.140958-2-ben.dooks@sifive.com>
+Subject: Re: [PATCH 1/8] dt-bindings: pwm: Document Synopsys DesignWare snps,pwm-dw-apb-timers-pwm2
+Date:   Sun, 07 Aug 2022 16:33:51 -0600
+Message-Id: <1659911631.163349.2326178.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,82 +67,48 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---ufc46rnrxz5yzjdy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Andy,
-
-On Sun, Aug 07, 2022 at 12:23:31AM +0300, Andy Shevchenko wrote:
-> Code is smaller and looks nicer if we combine polarity strings into an ar=
-ray.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, 05 Aug 2022 17:50:26 +0100, Ben Dooks wrote:
+> Add documentation for the bindings for Synopsys' DesignWare PWM block
+> as we will be adding DT/platform support to the Linux driver soon.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
 > ---
->  drivers/pwm/sysfs.c | 32 ++++++++++++--------------------
->  1 file changed, 12 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-> index 767c4b19afb1..1bbc5286b7c6 100644
-> --- a/drivers/pwm/sysfs.c
-> +++ b/drivers/pwm/sysfs.c
-> @@ -151,27 +151,23 @@ static ssize_t enable_store(struct device *child,
->  	return ret ? : size;
->  }
-> =20
-> +static const char * const polarity_strings[] =3D {
+> v3:
+>  - add description and example
+>  - merge the snps,pwm-number into this patch
+>  - rename snps,pwm to snps,dw-apb-timers-pwm2
+> v2:
+>  - fix #pwm-cells to be 3
+>  - fix indentation and ordering issues
+> ---
+>  .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> 
 
-I like having function and variable prefixes, so I'd prefer this to be
-called pwm_polarity_strings[]. (Side note: The device show and store
-callbacks obviously don't have a prefix either because DEVICE_ATTR_RW et
-al force the functions to be called "${name}_show" and "${name}_store".
-I considered already a few times to introduce something like
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-	#define __ATTR_NS_RW_MODE(_name, _ns,_mode) {                           \
-		.attr   =3D { .name =3D __stringify(_name),                         \
-			    .mode =3D VERIFY_OCTAL_PERMISSIONS(_mode) },          \
-		.show   =3D _ns ## _ ## _name ## _show,                           \
-		.store  =3D _ns ## _ ## _name ## _store,                          \
-	}
+yamllint warnings/errors:
 
-	#define DEVICE_ATTR_NS_RW(_name, _ns) \
-		struct device_attribute _ns ## _dev_attr_ ## _name =3D __ATTR_NS_RW_MODE(=
-_name, _ns, 0600)
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/pwm/snps,dw-apb-timers-pwm2.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.example.dtb: pwm@180000: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
 
-To allow the functions to have a name space. Never came around to do
-that though.)
+doc reference errors (make refcheckdocs):
 
-> +	[PWM_POLARITY_NORMAL]	=3D "normal",
-> +	[PWM_POLARITY_INVERSED]	=3D "inversed",
+See https://patchwork.ozlabs.org/patch/
 
-I slightly prefer to not align the =3D in such definitions. Using a single
-plain space before =3D is already used in the definiton of pwm_class in
-the same file.
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-Otherwise the patch looks fine.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Best regards
-Uwe
+pip3 install dtschema --upgrade
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Please check and re-submit.
 
---ufc46rnrxz5yzjdy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLvoLEACgkQwfwUeK3K
-7AklEAf/Vo801CPG+QKQ1kvDz9xnKZg0qJyG5ltbIS00e8Sh5YfdvP5/XBOO/zII
-Ml0WjMT4hJzWAM3L14R2ngr9JMz2eFR1284c/XMJfZKUKvq5L6gV8lI8n85h+o/9
-cC2sts/YfAaG3FdjpDpaUA3x7YUlsl6Ubp13LN72xBm8TENezG9FZcs2NVBdHGYg
-qZhickB30W5dVtszev0psOtQcw9m/eadEYWDCLKgDZoxPph6piePc8MriGh3xLDN
-NpVyA+8BNvkgJ/vdgENWQF9QD+5KmomnbJqHJYI8ySejiNAdQ3/h9XqbSaqAX3X5
-tF5XJWJkPG1SBfRUY6VyZ+Mzo9u1Fg==
-=92eN
------END PGP SIGNATURE-----
-
---ufc46rnrxz5yzjdy--
