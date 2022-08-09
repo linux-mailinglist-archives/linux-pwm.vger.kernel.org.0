@@ -2,122 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E875A58E065
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Aug 2022 21:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7F5B58E2FC
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Aug 2022 00:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344323AbiHIToc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 9 Aug 2022 15:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
+        id S230089AbiHIWQp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 9 Aug 2022 18:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344255AbiHITn6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 Aug 2022 15:43:58 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04ED826572;
-        Tue,  9 Aug 2022 12:43:57 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id f65so12273602pgc.12;
-        Tue, 09 Aug 2022 12:43:57 -0700 (PDT)
+        with ESMTP id S230110AbiHIWPW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 Aug 2022 18:15:22 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D4D26AE0
+        for <linux-pwm@vger.kernel.org>; Tue,  9 Aug 2022 15:15:16 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 12so12643447pga.1
+        for <linux-pwm@vger.kernel.org>; Tue, 09 Aug 2022 15:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:sender
-         :from:to:cc;
-        bh=nHDRknKkSxBf5+yxWGf1TayINvpuh1YnMsi4TGI5L64=;
-        b=lPLNxLCIX1dwtCnrB9EVgaGgZ0kfoSlR7Lzq5TksRxAT6RbMZF7upqWuXEUbx5DWI+
-         LWNEth7+Xh5uWJKhSta+2lJrg0YcB03xDPRCYAil2HABXwqGWWyghvsDRc/6cxDkoSHj
-         xjZcBnq5GeeshdMUdUCKgtvN/sKsENokj/a4C1sLyRoWFdBBSflFD7jwvdadF77UW9uL
-         ME6QZeEuGjGkDiZH5eDPnqIzMc5/3smeCDpoWuS73feGVRbqpvgZvn4pjZLDWtbEnjWB
-         MNkS4DytYBFJvI7ufEDOg1jjw8IkzBtBp/ImSyn56vKSIB4slVkFn5ufDBlFRSCSjr6c
-         g4cg==
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=QTP95oQi+RYhXbI8sz4RyTZp0RSE4jP48cyyUmWbTiK1ItvOHbADVtjkGHK/8zFbqv
+         EIzUG3d4HgG5eAQxnVHuBpH33ycuIiNpMEXk8S0LHARhhQGb6AufQVVn/40aQfLvP77W
+         778oK7qnpGZXO0Q2aGCYT4Mad4FGDHlh1br3s7D4D+9Vr7gPQrhXDR8bwR1fyz6kQ1n2
+         /mI7/+oIm6xqfpBjeRephfywWnzvzUcqvvdKwYuFsxmTm/GRVEQb9jKfBsLPvHEPeyBR
+         SLk52BQ10Zm7GZ4Mv5gugSKJZhGFXVOipaGDVsAOq6ABLyMrmGMv+5RYTjL3cqduwO+M
+         O1Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:sender
+        h=to:subject:message-id:date:from:reply-to:mime-version
          :x-gm-message-state:from:to:cc;
-        bh=nHDRknKkSxBf5+yxWGf1TayINvpuh1YnMsi4TGI5L64=;
-        b=6lYOj29dZnTp8b1z7Mh6NB221cyHHh9w6W2CSOERkrIdXxcwn3DdFS7ZxHDpmtaHrI
-         fsoZZYLtGFnVrFNbUinAQ+P2L7K8UAtFz/xBYa3mGrV0mACTz1/eDQGLbmGCsJTHdGvs
-         w3Guh2srfou1jWmP9vlntq8ErVYd8IXm/eLdxAqGraU+503gJFyzpZOlArbdP8hffH5k
-         BuNYDfzxJiBI/0zHnVa3fuy68BHGrhAwpPkWjBSBwaVY5XPxsCqyfWmGWgW+zhJ5XnMd
-         U/VzjRD1xkjYQu2Xobtp6ZJPp6tghJSeY1HmHoRO3t3pmVdAEZmfCSuYXPCWeJ/zo3aq
-         Hazw==
-X-Gm-Message-State: ACgBeo3bq+n36HVBkM+jPHPO5XrxexAQDPleJfjfzZuyzAsQKTinPKNo
-        NseOaEJhn5gT/TnmoEf7/RQ=
-X-Google-Smtp-Source: AA6agR62P4yfUsDnyBdYd0rvlFO2PQLOfIoZuXbrinTjsSQUQXH9GtfIrD9ZA45qpzIadoh6nbfPtA==
-X-Received: by 2002:a05:6a00:21c2:b0:52b:ff44:666a with SMTP id t2-20020a056a0021c200b0052bff44666amr24416045pfj.83.1660074236466;
-        Tue, 09 Aug 2022 12:43:56 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y1-20020a655a01000000b0041a5e8dedaasm8270435pgs.92.2022.08.09.12.43.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Aug 2022 12:43:55 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <df5eaddd-4d41-348e-9d60-b302815f2970@roeck-us.net>
-Date:   Tue, 9 Aug 2022 12:43:52 -0700
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=w6MkaTlJGUl2T+TWx2DjUNTLeSC3qYRjRfERgf28Suv/TwvTdb24T2PNOOk3XpU2II
+         WFeGObT/w2nWr6dqGBI5lMYVHkgkr/bE5N0Srv752hkZ/JoQNaijjxAU37owk97SUq4n
+         l4+Sgfah7ZLoytoJ5qD/OrN4g6FfmWvrGKhgClpD+/vwjdgxU1dhq9gtT7XRvBwLwNKG
+         FoJCtHBw52Ci9nM7Q5mUfmQmdxrSFS2dD7Zh7AHPrdkfadizt23Fvb7kEwAphdsVMqDz
+         6U6Ueg7bQNqVyy53hphYZ2WIp7Tvs6/ofq+XJFfwpa3insSmZ8Wqz6mHj6XB8pwwFSac
+         Lqgw==
+X-Gm-Message-State: ACgBeo206JxYVJaTUtXw3O6UVi/FCS7gnp28K4/4qVnnI1VVMEfOtAog
+        FuPc1so32xoLPNQbdU5pqD0nn4uWOO4/0r0g9QSdNjC0nEmcvA==
+X-Google-Smtp-Source: AA6agR7pJ6r7fhR2kV9XLe+oV3h+/ej1weqLnpTQS1YP5ule1vsDwGSNCnOW6LlEIY2xTapZFY+hu5KXPqSjTYpoaJM=
+X-Received: by 2002:a63:4642:0:b0:41b:d353:c5c7 with SMTP id
+ v2-20020a634642000000b0041bd353c5c7mr20359415pgk.568.1660083303718; Tue, 09
+ Aug 2022 15:15:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>
-References: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com>
- <20220807083438.qqe3mzp43aytxbcl@pengutronix.de>
- <CAHp75VdYrnb8k72TFhB9eKDtyj_pm1gDqL+sDYixkuYy0Xb_Pw@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v1 1/3] hwmon: (pwm-fan) Make use of device properties
-In-Reply-To: <CAHp75VdYrnb8k72TFhB9eKDtyj_pm1gDqL+sDYixkuYy0Xb_Pw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a10:e8a6:b0:2d4:fb1c:cc5e with HTTP; Tue, 9 Aug 2022
+ 15:15:03 -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Dr. Ali Moses" <alimoses07@gmail.com>
+Date:   Tue, 9 Aug 2022 15:15:03 -0700
+Message-ID: <CADWzZe65tcOX2+bMZfMLLauGpHEQ9Cdv814nLU=uQvKzDFrEVg@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:533 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [alimoses07[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [alimoses07[at]gmail.com]
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 8/7/22 02:20, Andy Shevchenko wrote:
-> On Sun, Aug 7, 2022 at 10:38 AM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> 
->> at a quick glance this looks nice. I wonder if it makes sense to split
->> the patch. For example the change
->>
->> -       ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
->> +       ctx->pwm = devm_pwm_get(dev, NULL);
->>
->> could stand alone. Also I think this change is the relevant part in
->> patch #1 that makes patches #2 and #3 possible.
-> 
-> True.
-> 
->> When this patch doesn't get split, the series needs some coordination,
->> as patch #1 is for hwmon and patches #2 and #3 are for pwm.
->>
->> Splitting the series into:
->>
->>          hwmon: (pwm-fan) Use of devm_pwm_get() instead of devm_of_pwm_get()
->>          pwm: core: Get rid of unused devm_of_pwm_get()
->>          pwm: core: Make of_pwm_get() static
->>
->> for pwm and the remainder of this patch for hwmon might make application
->> of the changes here easier to coordinate.
-> 
-> Either way it will need the hwmon maintainer ACKs or alike.
-> Since we have (plenty of) time I will wait a bit for hwmon maintainers
-> to react. Guenter, what would you prefer?
-> 
+-- 
+Hello,
+We the Board Directors believe you are in good health, doing great and
+with the hope that this mail will meet you in good condition, We are
+privileged and delighted to reach you via email" And we are urgently
+waiting to hear from you. and again your number is not connecting.
 
-I have a substantial number of patches pending for the pwm-fan driver.
-Some of those will conflict with this patch. I'll have to spend more time
-to be able to understand the implications.
+My regards,
+Dr. Ali Moses..
 
-Guenter
+Sincerely,
+Prof. Chin Guang
