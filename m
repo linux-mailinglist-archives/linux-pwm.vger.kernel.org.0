@@ -2,189 +2,122 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8B2958CD07
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Aug 2022 19:49:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E875A58E065
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Aug 2022 21:45:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236004AbiHHRty (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 8 Aug 2022 13:49:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55566 "EHLO
+        id S1344323AbiHIToc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 9 Aug 2022 15:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243874AbiHHRtj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 Aug 2022 13:49:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE4E186F6
-        for <linux-pwm@vger.kernel.org>; Mon,  8 Aug 2022 10:48:53 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oL6rz-0000Q7-JR; Mon, 08 Aug 2022 19:48:51 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oL6rq-002Xvr-7w; Mon, 08 Aug 2022 19:48:44 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oL6rr-00APNG-QM; Mon, 08 Aug 2022 19:48:43 +0200
-Date:   Mon, 8 Aug 2022 19:48:42 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     "m.shams" <m.shams@samsung.com>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alim.akhtar@samsung.com
-Subject: Re: [PATCH] pwm: removes period check from pwm_apply_state()
-Message-ID: <20220808174842.jiato34jzqstchdn@pengutronix.de>
-References: <CGME20220805102056epcas5p29f22d42c854bebe6d0301b56094cf3ea@epcas5p2.samsung.com>
- <20220805101125.47955-1-m.shams@samsung.com>
- <20220805155509.edqwxcvyoqfic4pn@pengutronix.de>
- <019701d8ab31$94c86d60$be594820$@samsung.com>
+        with ESMTP id S1344255AbiHITn6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 Aug 2022 15:43:58 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04ED826572;
+        Tue,  9 Aug 2022 12:43:57 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id f65so12273602pgc.12;
+        Tue, 09 Aug 2022 12:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:sender
+         :from:to:cc;
+        bh=nHDRknKkSxBf5+yxWGf1TayINvpuh1YnMsi4TGI5L64=;
+        b=lPLNxLCIX1dwtCnrB9EVgaGgZ0kfoSlR7Lzq5TksRxAT6RbMZF7upqWuXEUbx5DWI+
+         LWNEth7+Xh5uWJKhSta+2lJrg0YcB03xDPRCYAil2HABXwqGWWyghvsDRc/6cxDkoSHj
+         xjZcBnq5GeeshdMUdUCKgtvN/sKsENokj/a4C1sLyRoWFdBBSflFD7jwvdadF77UW9uL
+         ME6QZeEuGjGkDiZH5eDPnqIzMc5/3smeCDpoWuS73feGVRbqpvgZvn4pjZLDWtbEnjWB
+         MNkS4DytYBFJvI7ufEDOg1jjw8IkzBtBp/ImSyn56vKSIB4slVkFn5ufDBlFRSCSjr6c
+         g4cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:sender
+         :x-gm-message-state:from:to:cc;
+        bh=nHDRknKkSxBf5+yxWGf1TayINvpuh1YnMsi4TGI5L64=;
+        b=6lYOj29dZnTp8b1z7Mh6NB221cyHHh9w6W2CSOERkrIdXxcwn3DdFS7ZxHDpmtaHrI
+         fsoZZYLtGFnVrFNbUinAQ+P2L7K8UAtFz/xBYa3mGrV0mACTz1/eDQGLbmGCsJTHdGvs
+         w3Guh2srfou1jWmP9vlntq8ErVYd8IXm/eLdxAqGraU+503gJFyzpZOlArbdP8hffH5k
+         BuNYDfzxJiBI/0zHnVa3fuy68BHGrhAwpPkWjBSBwaVY5XPxsCqyfWmGWgW+zhJ5XnMd
+         U/VzjRD1xkjYQu2Xobtp6ZJPp6tghJSeY1HmHoRO3t3pmVdAEZmfCSuYXPCWeJ/zo3aq
+         Hazw==
+X-Gm-Message-State: ACgBeo3bq+n36HVBkM+jPHPO5XrxexAQDPleJfjfzZuyzAsQKTinPKNo
+        NseOaEJhn5gT/TnmoEf7/RQ=
+X-Google-Smtp-Source: AA6agR62P4yfUsDnyBdYd0rvlFO2PQLOfIoZuXbrinTjsSQUQXH9GtfIrD9ZA45qpzIadoh6nbfPtA==
+X-Received: by 2002:a05:6a00:21c2:b0:52b:ff44:666a with SMTP id t2-20020a056a0021c200b0052bff44666amr24416045pfj.83.1660074236466;
+        Tue, 09 Aug 2022 12:43:56 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y1-20020a655a01000000b0041a5e8dedaasm8270435pgs.92.2022.08.09.12.43.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Aug 2022 12:43:55 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <df5eaddd-4d41-348e-9d60-b302815f2970@roeck-us.net>
+Date:   Tue, 9 Aug 2022 12:43:52 -0700
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="h3ccmj6mewpavh5f"
-Content-Disposition: inline
-In-Reply-To: <019701d8ab31$94c86d60$be594820$@samsung.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>
+References: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com>
+ <20220807083438.qqe3mzp43aytxbcl@pengutronix.de>
+ <CAHp75VdYrnb8k72TFhB9eKDtyj_pm1gDqL+sDYixkuYy0Xb_Pw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v1 1/3] hwmon: (pwm-fan) Make use of device properties
+In-Reply-To: <CAHp75VdYrnb8k72TFhB9eKDtyj_pm1gDqL+sDYixkuYy0Xb_Pw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 8/7/22 02:20, Andy Shevchenko wrote:
+> On Sun, Aug 7, 2022 at 10:38 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> 
+>> at a quick glance this looks nice. I wonder if it makes sense to split
+>> the patch. For example the change
+>>
+>> -       ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
+>> +       ctx->pwm = devm_pwm_get(dev, NULL);
+>>
+>> could stand alone. Also I think this change is the relevant part in
+>> patch #1 that makes patches #2 and #3 possible.
+> 
+> True.
+> 
+>> When this patch doesn't get split, the series needs some coordination,
+>> as patch #1 is for hwmon and patches #2 and #3 are for pwm.
+>>
+>> Splitting the series into:
+>>
+>>          hwmon: (pwm-fan) Use of devm_pwm_get() instead of devm_of_pwm_get()
+>>          pwm: core: Get rid of unused devm_of_pwm_get()
+>>          pwm: core: Make of_pwm_get() static
+>>
+>> for pwm and the remainder of this patch for hwmon might make application
+>> of the changes here easier to coordinate.
+> 
+> Either way it will need the hwmon maintainer ACKs or alike.
+> Since we have (plenty of) time I will wait a bit for hwmon maintainers
+> to react. Guenter, what would you prefer?
+> 
 
---h3ccmj6mewpavh5f
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have a substantial number of patches pending for the pwm-fan driver.
+Some of those will conflict with this patch. I'll have to spend more time
+to be able to understand the implications.
 
-Hello,
-
-I fixed up the quoting for you in this mail. Please fix your mailer to
-not break quotes, this is quite annoying. (Looking at the headers of
-your mail you're using Outlook. Then your only viable option is to
-switch to a saner client.)
-
-On Mon, Aug 08, 2022 at 07:47:03PM +0530, m.shams wrote:
-> On Fri, Aug 05, 2022 at 03:41:25PM +0530, Tamseel Shams wrote:
-> > > There may be situation when PWM is exported using sysfs, but at that=
-=20
-> > > point PWM period is not set. At this situation if we issue a system=
-=20
-> > > suspend, it calls pwm_class_suspend which in turn calls=20
-> > > pwm_apply_state, where PWM period value is checked which returns an=
-=20
-> > > invalid argument error casuing Kernel to panic. So, check for PWM=20
-> > > period value is removed so as to fix the kernel panic observed during=
-=20
-> > > suspend.
-> >
-> > This looks and sounds wrong. One thing I would accept is:
-> >
-> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> > index 0e042410f6b9..075bbcdad6c1 100644
-> > --- a/drivers/pwm/core.c
-> > +++ b/drivers/pwm/core.c
-> > @@ -557,8 +557,8 @@ int pwm_apply_state(struct pwm_device *pwm, const s=
-truct pwm_state *state)
-> > 	 */
-> > 	might_sleep();
-> >=20
-> > -	if (!pwm || !state || !state->period ||
-> > -	    state->duty_cycle > state->period)
-> > +	if (!pwm || !state || state->enabled && (!state->period ||
-> > +	    state->duty_cycle > state->period))
-> >  		return -EINVAL;
-> >=20
-> > 	chip =3D pwm->chip;
-> >
-> > That is, don't refuse calling pwm_apply_state() for state->period =3D 0=
- and
-> > even state->duty_cycle > state->period if the > > PWM is not enabled.
->=20
-> By this do you mean doing it following way?
->=20
-> if (!pwm || !state || (pwm && !state->period) ||
-> 	    (pwm && state->duty_cycle > state->period))
-> 		return -EINVAL;
-
-No. Your expression is logically equivalent to what we already have. I
-meant:
-
-	if (!pwm || !state || state->enabled && (!state->period ||
-	    state->duty_cycle > state->period))
-		return -EINVAL;
-
-Learning to read diffs (maybe Outlook scrambled the view for you, too?)
-is a nice capability you should master.
-
-> > But anyhow, even without that the kernel should not panic. So I ask you
-> > to research and provide some more info about > > the problem. (Which
-> > hardware does it affect? Where does it panic? ...)
->=20
-> Observing Kernel panic in exynos SoC when we issue system suspend. Follow=
-ing
-> is the snippet of error:
->=20
-> # echo mem > /sys/power/state
-> [   29.224784] 010: Kernel panic - not syncing: pwm pwmchip0:
-> dpm_run_callback failure
-> [   29.240134] 010: Call trace:
-> [   29.242993] 010:  dump_backtrace+0x0/0x1b8
-> [   29.247067] 010:  show_stack+0x24/0x30
-> [   29.250793] 010:  dump_stack+0xb8/0x114
-> [   29.254606] 010:  panic+0x180/0x398
-> [   29.258073] 010:  dpm_run_callback+0x270/0x278
-> [   29.262493] 010:  __device_suspend+0x15c/0x628
-> [   29.266913] 010:  dpm_suspend+0x124/0x3b0
-> [   29.270899] 010:  dpm_suspend_start+0xa0/0xa8
-> [   29.275233] 010:  suspend_devices_and_enter+0x110/0x968
-> [   29.280433] 010:  pm_suspend+0x308/0x3d8
-> [   29.284333] 010:  state_store+0x8c/0x110
-> [   29.288233] 010:  kobj_attr_store+0x14/0x28
-> [   29.292393] 010:  sysfs_kf_write+0x5c/0x78
-> [   29.296466] 010:  kernfs_fop_write+0x10c/0x220
-> [   29.300886] 010:  __vfs_write+0x48/0x90
-> [   29.304699] 010:  vfs_write+0xb8/0x1c0
-> [   29.308426] 010:  ksys_write+0x74/0x100
-> [   29.312240] 010:  __arm64_sys_write+0x24/0x30
-> [   29.316573] 010:  el0_svc_handler+0x110/0x1b8
-> [   29.320906] 010:  el0_svc+0x8/0x1bc
-> [   29.324374] 010: SMP: stopping secondary CPUs
-> [   29.328711] 010: Kernel Offset: disabled
-> [   29.332607] 010: CPU features: 0x0002,00006008
-> [   29.337026] 010: Memory Limit: none
-> [   29.343949] 010: Rebooting in 1 seconds..
-> [   30.344539] 010: Disabling non-boot CPUs ...
-
-Just locking at that and starring at drivers/base/power/main.c for a
-while doesn't make this clearer to me. Are you using a mainline kernel?
-Which version?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---h3ccmj6mewpavh5f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmLxTHcACgkQwfwUeK3K
-7AnRqwf/T0HURo/59d7Says04pIjzt0PFI9frzTB4sYkj4zbhpAUei2YGxqVR4qt
-F83CgOS25CQ9neDBa8QHf1I30ZgzTV3iWslBI8za3QCQ692DYFYsJzebbue9atvY
-u3qBPG3nV53RUy1GX35GbQlwyp5b95RXSbj/E7guahQmy/QcYSaeC8tIGC2tXrdo
-eVK/FYy8IFP0+zkwyQpmOZiT++ANsmnfnQRn9A3IUWa+nGDztGdfFAdnW7ximUDF
-obRGY2SXHHdASGtmk3SHKkSJRgHFv5O2Zw4GNRinkMdC/6mp2ZgEIYf1Zl89qu8I
-RB3MGLWNnPzXAt+9Cr1TqYZCrDegYA==
-=VMIQ
------END PGP SIGNATURE-----
-
---h3ccmj6mewpavh5f--
+Guenter
