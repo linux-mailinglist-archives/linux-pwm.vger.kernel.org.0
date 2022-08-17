@@ -2,246 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AEEC596AB4
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Aug 2022 09:57:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D93E597009
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Aug 2022 15:40:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233610AbiHQH4g (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Aug 2022 03:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
+        id S238367AbiHQNeH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Aug 2022 09:34:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233546AbiHQH4e (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Aug 2022 03:56:34 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF2479EE2
-        for <linux-pwm@vger.kernel.org>; Wed, 17 Aug 2022 00:56:32 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id h1so6306942wmd.3
-        for <linux-pwm@vger.kernel.org>; Wed, 17 Aug 2022 00:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=CcRETYtN4fhauMaZGbGwCRZe38WMqLheltJ1uKiMAEM=;
-        b=Tb6VTYbA/7axkgPLKP48Ab3RJm5sF55AwVA7gqX1Azxjc7zsVLnQmKILWa9/3Fnw5q
-         OT59iy6UEhNpD/in+jnRA1wKfkTFvepGUjGUzCULHNHiaxDZ/pjCaTFROuUQ8X/6a/Z9
-         c3AXpDq51d9kS0l1BDd2qR0lSbWXJ+pp8FHTkE+ugFabfu8+MGw1L8xe/xGbulfPBLnp
-         UIHPwSxLTUdcn+o3nALmchARxus1doIWYQs3tEECSTQ0alfoUXSAAFkQf7iTrQSmEtXn
-         05wl2RJusYrCzzbgosOGpu2hgDm5Pyoq1HIREqFWMNZq2acvTXfniHNbSb3QqTtDtADH
-         KvDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=CcRETYtN4fhauMaZGbGwCRZe38WMqLheltJ1uKiMAEM=;
-        b=oq0/ojwx6cQRkxU8H6PKUE/+IPBt2/sRLMumaPMhNAN75/SLxfQUQeO7m+/i3mcG42
-         n/HFvCi3asVI+2gI7onoPM5n9EwqptxxxGuPuKvYHn2UN+QYIp1Uc+vz/as26NQb9LrB
-         9WpyRYxbF2GKvDzlzuGW85ClClnMzixFmMdymjtfojJjm71iJyhGjengjRMBBZZXBbQd
-         F0Cw/PuP3EBHmp1EO/brYhMy9AFJTnDClJpcaZTDaeAxPKM5Q6v1g3BrK6v3LyJKsjVk
-         XLUZBevke3KJ8YXUhjHOIFByPjHIeV48hSua3PTbVygLAZHxDL2vAnF31W9i3uc8oP2m
-         ++lg==
-X-Gm-Message-State: ACgBeo0agP2bhIuIv7HWFHKjWJEDCQodHdUdXg9bhCmD5V7muWTks6nE
-        ZzAIQVrg49cD+YVyWKNTVsgK8g==
-X-Google-Smtp-Source: AA6agR7cylNCBdJrLWk6b3MPoS6xKKceqNxmNadV5AstoXwgDEqMaxLlNUU/A1ScQUcMAQs6N8XLPg==
-X-Received: by 2002:a1c:2944:0:b0:3a5:ead6:3e48 with SMTP id p65-20020a1c2944000000b003a5ead63e48mr1241903wmp.100.1660722991407;
-        Wed, 17 Aug 2022 00:56:31 -0700 (PDT)
-Received: from [10.35.5.6] ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id n13-20020a05600c4f8d00b003a5f3f5883dsm1302212wmq.17.2022.08.17.00.56.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Aug 2022 00:56:31 -0700 (PDT)
-Message-ID: <a51c48a1-8d42-eb10-2350-6962bac8ffdd@sifive.com>
-Date:   Wed, 17 Aug 2022 08:56:29 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.1
-Subject: Re: [PATCH 6/8] pwm: dwc: add timer clock
-Content-Language: en-GB
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S239449AbiHQNdc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Aug 2022 09:33:32 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A868F95F;
+        Wed, 17 Aug 2022 06:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1660743144; x=1692279144;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4dmBBRSG7eMGt8juxKy2hs5MyorJMiVbbfoy6JIX9XY=;
+  b=J30HLQRxAP5Y7+9J/YrkGqugy6BRCwS4rNuBcWvgWxWkd69iQwOPFS9h
+   /nxyRmK51K00UR2DAaTq+yZFbbMi/2i9oATusMp1qnYiPQMY5Uhd2O0P8
+   nEUmueQl1KPMh7MQg14VlPORt+oyMmhIZME+y5vtpM4wlVM2LuivzJUKM
+   WdalFBhisdQTXz0wuW3vXxufSyFbc5j+Z4WrDenbh9wzI2i2QXLtCeVs4
+   PHPweeSz4y5gfjX2b7kPEnuA6JhPIR9mr84adZ/WXMUvAgfgTgexmyuEw
+   v6ExysqknQ9qqQ7j63O6ObpfE32WGO8me34wDZJMYUEnsyMq8ml9xD+vF
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10442"; a="318500695"
+X-IronPort-AV: E=Sophos;i="5.93,243,1654585200"; 
+   d="scan'208";a="318500695"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2022 06:32:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,243,1654585200"; 
+   d="scan'208";a="583769626"
+Received: from lkp-server02.sh.intel.com (HELO 81d7e1ade3ba) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 17 Aug 2022 06:32:21 -0700
+Received: from kbuild by 81d7e1ade3ba with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oOJ9g-0000yc-29;
+        Wed, 17 Aug 2022 13:32:20 +0000
+Date:   Wed, 17 Aug 2022 21:31:31 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Conor Dooley <conor.dooley@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        jarkko.nikula@linux.intel.com,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha --subject-prefix=PATCH v3 
-        <jude.onyenegecha@sifive.com>
-References: <20220805165033.140958-1-ben.dooks@sifive.com>
- <20220805165033.140958-7-ben.dooks@sifive.com>
- <20220806100703.uxnf2i4pne2kwk63@pengutronix.de>
-From:   Ben Dooks <ben.dooks@sifive.com>
-In-Reply-To: <20220806100703.uxnf2i4pne2kwk63@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     kbuild-all@lists.01.org,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v8 3/4] pwm: add microchip soft ip corePWM driver
+Message-ID: <202208172150.rEZ2HEYS-lkp@intel.com>
+References: <20220816120829.719749-4-conor.dooley@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220816120829.719749-4-conor.dooley@microchip.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 06/08/2022 11:07, Uwe Kleine-König wrote:
-> Hello Ben,
-> 
-> On Fri, Aug 05, 2022 at 05:50:31PM +0100, Ben Dooks wrote:
->> Add a configurable clock base rate for the pwm as when being built
->> for non-PCI the block may be sourced from an internal clock.
->>
->> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
->> ---
->> v2:
->>    - removed the ifdef and merged the other clock patch in here
->> ---
->>   drivers/pwm/pwm-dwc.c | 22 +++++++++++++++++-----
->>   1 file changed, 17 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
->> index d5f2df6fee62..5c319d0e3d52 100644
->> --- a/drivers/pwm/pwm-dwc.c
->> +++ b/drivers/pwm/pwm-dwc.c
->> @@ -18,6 +18,7 @@
->>   #include <linux/kernel.h>
->>   #include <linux/module.h>
->>   #include <linux/pci.h>
->> +#include <linux/clk.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pwm.h>
->> @@ -35,7 +36,6 @@
->>   #define DWC_TIMERS_COMP_VERSION	0xac
->>   
->>   #define DWC_TIMERS_TOTAL	8
->> -#define DWC_CLK_PERIOD_NS	10
->>   
->>   /* Timer Control Register */
->>   #define DWC_TIM_CTRL_EN		BIT(0)
->> @@ -54,6 +54,8 @@ struct dwc_pwm_ctx {
->>   struct dwc_pwm {
->>   	struct pwm_chip chip;
->>   	void __iomem *base;
->> +	struct clk *clk;
->> +	unsigned int clk_ns;
->>   	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
->>   };
->>   #define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
->> @@ -96,13 +98,13 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
->>   	 * periods and check are the result within HW limits between 1 and
->>   	 * 2^32 periods.
->>   	 */
->> -	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, DWC_CLK_PERIOD_NS);
->> +	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
->>   	if (tmp < 1 || tmp > (1ULL << 32))
->>   		return -ERANGE;
->>   	low = tmp - 1;
->>   
->>   	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
->> -				    DWC_CLK_PERIOD_NS);
->> +				    dwc->clk_ns);
-> 
-> You're loosing precision here as clk_ns is already the result of a
-> division. We're having
-> 
-> 	dwc->clk_ns = 1000000000 / clk_get_rate(dwc->clk);
-> 
-> from dwc_pwm_plat_probe() (in the platform case).
-> 
-> Consider clk_rate = 285714285 and state->period - state->duty_cycle =
-> 300000. Then you get tmp = 100000 while the exact result would be:
-> 
-> 	300000 * 285714285 / 1000000000 = 85714.2855
-> 
-> Note that even doing
-> 
-> 	dwc->clk_ns = DIV_ROUND_CLOSEST(1000000000, clk_get_rate(dwc->clk))
-> 
-> only somewhat weakens the problem, with the above numbers you then get
-> 75000.
-> 
-> Also note that rounding closest is also wrong in the calculation of tmp
-> because the driver is supposed to implement the biggest period not
-> bigger than the requested period and for that period implement the
-> biggest duty cycle not bigger than the requested duty cycle.
-> 
-> Can the hardware emit 0% relative duty cycle (e.g. by disabling)?
+Hi Conor,
 
-Not sure, we do have an IP build option to look at for 0/100% but
-this is not enabled for the PCI case.
+I love your patch! Yet something to improve:
 
-Given everything else, I would rather fix the division and accuracy
-issues once we've got the changes under review sorted.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.0-rc1]
+[cannot apply to thierry-reding-pwm/for-next robh/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
->>   	if (tmp < 1 || tmp > (1ULL << 32))
->>   		return -ERANGE;
->>   	high = tmp - 1;
->> @@ -177,12 +179,12 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->>   
->>   	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
->>   	duty += 1;
->> -	duty *= DWC_CLK_PERIOD_NS;
->> +	duty *= dwc->clk_ns;
->>   	state->duty_cycle = duty;
->>   
->>   	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
->>   	period += 1;
->> -	period *= DWC_CLK_PERIOD_NS;
->> +	period *= dwc->clk_ns;
->>   	period += duty;
->>   	state->period = period;
->>   
->> @@ -205,6 +207,7 @@ static struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
->>   	if (!dwc)
->>   		return NULL;
->>   
->> +	dwc->clk_ns = 10;
->>   	dwc->chip.dev = dev;
->>   	dwc->chip.ops = &dwc_pwm_ops;
->>   	dwc->chip.npwm = DWC_TIMERS_TOTAL;
->> @@ -336,6 +339,14 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
->>   		return dev_err_probe(dev, PTR_ERR(dwc->base),
->>   				     "failed to map IO\n");
->>   
->> +	dwc->clk = devm_clk_get(dev, "timer");
->> +	if (IS_ERR(dwc->clk))
->> +		return dev_err_probe(dev, PTR_ERR(dwc->clk),
->> +				     "failed to get timer clock\n");
->> +
->> +	clk_prepare_enable(dwc->clk);
-> 
-> If you used devm_clk_get_enabled() you wouldn't need to care separately
-> for enabling. (If you stick to separate calls, please add error checking
-> for clk_prepare_enable().)
+url:    https://github.com/intel-lab-lkp/linux/commits/Conor-Dooley/Microchip-soft-ip-corePWM-driver/20220816-201744
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20220817/202208172150.rEZ2HEYS-lkp@intel.com/config)
+compiler: mips-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/961e375a245186c8ec2c40e48e5baf40a112f14a
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Conor-Dooley/Microchip-soft-ip-corePWM-driver/20220816-201744
+        git checkout 961e375a245186c8ec2c40e48e5baf40a112f14a
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash
 
-ok, will use.
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
->> +	dwc->clk_ns = 1000000000 / clk_get_rate(dwc->clk);
-> 
-> s/1000000000/NSEC_PER_SEC/
+All errors (new ones prefixed by >>):
 
-ok, fixed.
+   arch/mips/kernel/head.o: in function `kernel_entry':
+   (.ref.text+0xac): relocation truncated to fit: R_MIPS_26 against `start_kernel'
+   init/main.o: in function `set_reset_devices':
+   main.c:(.init.text+0x20): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x30): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `debug_kernel':
+   main.c:(.init.text+0xa4): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0xb4): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `quiet_kernel':
+   main.c:(.init.text+0x128): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x138): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `warn_bootconfig':
+   main.c:(.init.text+0x1ac): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x1bc): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
+   init/main.o: in function `init_setup':
+   main.c:(.init.text+0x234): relocation truncated to fit: R_MIPS_26 against `_mcount'
+   main.c:(.init.text+0x254): additional relocation overflows omitted from the output
+   mips-linux-ld: drivers/pwm/pwm-microchip-core.o: in function `mchp_core_pwm_enable':
+>> pwm-microchip-core.c:(.text.mchp_core_pwm_enable+0x1cc): undefined reference to `__udivdi3'
 
->> +
->>   	ret = pwmchip_add(&dwc->chip);
->>   	if (ret)
->>   		return ret;
->> @@ -347,6 +358,7 @@ static int dwc_pwm_plat_remove(struct platform_device *pdev)
->>   {
->>   	struct dwc_pwm *dwc = platform_get_drvdata(pdev);
->>   
->> +	clk_disable_unprepare(dwc->clk);
->>   	pwmchip_remove(&dwc->chip);
-> 
-> This is wrong, you must not disable the clock before calling
-> pwmchip_remove() as the PWM is supposed to stay functional until
-> pwmchip_remove() returns.
-
-I've moved to devm_clk_get_enabled and devm_pwmchip_add()
-
-> 
->>   	return 0;
->>   }
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
