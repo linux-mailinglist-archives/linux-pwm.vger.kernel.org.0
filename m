@@ -2,116 +2,246 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0CA45969B3
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Aug 2022 08:43:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AEEC596AB4
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Aug 2022 09:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbiHQGnf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 Aug 2022 02:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
+        id S233610AbiHQH4g (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Aug 2022 03:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233218AbiHQGne (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Aug 2022 02:43:34 -0400
-Received: from smtp.smtpout.orange.fr (smtp07.smtpout.orange.fr [80.12.242.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1EB2D1E1
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Aug 2022 23:43:32 -0700 (PDT)
-Received: from [192.168.1.18] ([90.11.190.129])
-        by smtp.orange.fr with ESMTPA
-        id OClyoHRZ0g7y2OClyokcqD; Wed, 17 Aug 2022 08:43:30 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 17 Aug 2022 08:43:30 +0200
-X-ME-IP: 90.11.190.129
-Message-ID: <27846879-6660-26b3-5839-997b92cda6d2@wanadoo.fr>
-Date:   Wed, 17 Aug 2022 08:43:26 +0200
+        with ESMTP id S233546AbiHQH4e (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Aug 2022 03:56:34 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF2479EE2
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Aug 2022 00:56:32 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id h1so6306942wmd.3
+        for <linux-pwm@vger.kernel.org>; Wed, 17 Aug 2022 00:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=CcRETYtN4fhauMaZGbGwCRZe38WMqLheltJ1uKiMAEM=;
+        b=Tb6VTYbA/7axkgPLKP48Ab3RJm5sF55AwVA7gqX1Azxjc7zsVLnQmKILWa9/3Fnw5q
+         OT59iy6UEhNpD/in+jnRA1wKfkTFvepGUjGUzCULHNHiaxDZ/pjCaTFROuUQ8X/6a/Z9
+         c3AXpDq51d9kS0l1BDd2qR0lSbWXJ+pp8FHTkE+ugFabfu8+MGw1L8xe/xGbulfPBLnp
+         UIHPwSxLTUdcn+o3nALmchARxus1doIWYQs3tEECSTQ0alfoUXSAAFkQf7iTrQSmEtXn
+         05wl2RJusYrCzzbgosOGpu2hgDm5Pyoq1HIREqFWMNZq2acvTXfniHNbSb3QqTtDtADH
+         KvDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=CcRETYtN4fhauMaZGbGwCRZe38WMqLheltJ1uKiMAEM=;
+        b=oq0/ojwx6cQRkxU8H6PKUE/+IPBt2/sRLMumaPMhNAN75/SLxfQUQeO7m+/i3mcG42
+         n/HFvCi3asVI+2gI7onoPM5n9EwqptxxxGuPuKvYHn2UN+QYIp1Uc+vz/as26NQb9LrB
+         9WpyRYxbF2GKvDzlzuGW85ClClnMzixFmMdymjtfojJjm71iJyhGjengjRMBBZZXBbQd
+         F0Cw/PuP3EBHmp1EO/brYhMy9AFJTnDClJpcaZTDaeAxPKM5Q6v1g3BrK6v3LyJKsjVk
+         XLUZBevke3KJ8YXUhjHOIFByPjHIeV48hSua3PTbVygLAZHxDL2vAnF31W9i3uc8oP2m
+         ++lg==
+X-Gm-Message-State: ACgBeo0agP2bhIuIv7HWFHKjWJEDCQodHdUdXg9bhCmD5V7muWTks6nE
+        ZzAIQVrg49cD+YVyWKNTVsgK8g==
+X-Google-Smtp-Source: AA6agR7cylNCBdJrLWk6b3MPoS6xKKceqNxmNadV5AstoXwgDEqMaxLlNUU/A1ScQUcMAQs6N8XLPg==
+X-Received: by 2002:a1c:2944:0:b0:3a5:ead6:3e48 with SMTP id p65-20020a1c2944000000b003a5ead63e48mr1241903wmp.100.1660722991407;
+        Wed, 17 Aug 2022 00:56:31 -0700 (PDT)
+Received: from [10.35.5.6] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id n13-20020a05600c4f8d00b003a5f3f5883dsm1302212wmq.17.2022.08.17.00.56.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Aug 2022 00:56:31 -0700 (PDT)
+Message-ID: <a51c48a1-8d42-eb10-2350-6962bac8ffdd@sifive.com>
+Date:   Wed, 17 Aug 2022 08:56:29 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] pwm: rockchip: Convert to use dev_err_probe()
-Content-Language: en-US
-To:     zhaoxiao <zhaoxiao@uniontech.com>, thierry.reding@gmail.com,
-        heiko@sntech.de
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220817055949.20497-1-zhaoxiao@uniontech.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20220817055949.20497-1-zhaoxiao@uniontech.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.1
+Subject: Re: [PATCH 6/8] pwm: dwc: add timer clock
+Content-Language: en-GB
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        jarkko.nikula@linux.intel.com,
+        William Salmon <william.salmon@sifive.com>,
+        Jude Onyenegecha --subject-prefix=PATCH v3 
+        <jude.onyenegecha@sifive.com>
+References: <20220805165033.140958-1-ben.dooks@sifive.com>
+ <20220805165033.140958-7-ben.dooks@sifive.com>
+ <20220806100703.uxnf2i4pne2kwk63@pengutronix.de>
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <20220806100703.uxnf2i4pne2kwk63@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Le 17/08/2022 à 07:59, zhaoxiao a écrit :
-> It's fine to call dev_err_probe() in ->probe() when error code is known.
-> Convert the driver to use dev_err_probe().
+On 06/08/2022 11:07, Uwe Kleine-König wrote:
+> Hello Ben,
 > 
-> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
-> ---
->   drivers/pwm/pwm-rockchip.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
+> On Fri, Aug 05, 2022 at 05:50:31PM +0100, Ben Dooks wrote:
+>> Add a configurable clock base rate for the pwm as when being built
+>> for non-PCI the block may be sourced from an internal clock.
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+>> ---
+>> v2:
+>>    - removed the ifdef and merged the other clock patch in here
+>> ---
+>>   drivers/pwm/pwm-dwc.c | 22 +++++++++++++++++-----
+>>   1 file changed, 17 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+>> index d5f2df6fee62..5c319d0e3d52 100644
+>> --- a/drivers/pwm/pwm-dwc.c
+>> +++ b/drivers/pwm/pwm-dwc.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>>   #include <linux/pci.h>
+>> +#include <linux/clk.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pwm.h>
+>> @@ -35,7 +36,6 @@
+>>   #define DWC_TIMERS_COMP_VERSION	0xac
+>>   
+>>   #define DWC_TIMERS_TOTAL	8
+>> -#define DWC_CLK_PERIOD_NS	10
+>>   
+>>   /* Timer Control Register */
+>>   #define DWC_TIM_CTRL_EN		BIT(0)
+>> @@ -54,6 +54,8 @@ struct dwc_pwm_ctx {
+>>   struct dwc_pwm {
+>>   	struct pwm_chip chip;
+>>   	void __iomem *base;
+>> +	struct clk *clk;
+>> +	unsigned int clk_ns;
+>>   	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
+>>   };
+>>   #define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
+>> @@ -96,13 +98,13 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
+>>   	 * periods and check are the result within HW limits between 1 and
+>>   	 * 2^32 periods.
+>>   	 */
+>> -	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, DWC_CLK_PERIOD_NS);
+>> +	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
+>>   	if (tmp < 1 || tmp > (1ULL << 32))
+>>   		return -ERANGE;
+>>   	low = tmp - 1;
+>>   
+>>   	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
+>> -				    DWC_CLK_PERIOD_NS);
+>> +				    dwc->clk_ns);
 > 
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-> index f3647b317152..bd7ab37aaf88 100644
-> --- a/drivers/pwm/pwm-rockchip.c
-> +++ b/drivers/pwm/pwm-rockchip.c
-> @@ -331,15 +331,12 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
->   	if (IS_ERR(pc->pclk)) {
->   		ret = PTR_ERR(pc->pclk);
->   		if (ret != -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
-> -		return ret;
-> +			return dev_err_probe(&pdev->dev, ret, "Can't get APB clk: %d\n");
+> You're loosing precision here as clk_ns is already the result of a
+> division. We're having
+> 
+> 	dwc->clk_ns = 1000000000 / clk_get_rate(dwc->clk);
+> 
+> from dwc_pwm_plat_probe() (in the platform case).
+> 
+> Consider clk_rate = 285714285 and state->period - state->duty_cycle =
+> 300000. Then you get tmp = 100000 while the exact result would be:
+> 
+> 	300000 * 285714285 / 1000000000 = 85714.2855
+> 
+> Note that even doing
+> 
+> 	dwc->clk_ns = DIV_ROUND_CLOSEST(1000000000, clk_get_rate(dwc->clk))
+> 
+> only somewhat weakens the problem, with the above numbers you then get
+> 75000.
+> 
+> Also note that rounding closest is also wrong in the calculation of tmp
+> because the driver is supposed to implement the biggest period not
+> bigger than the requested period and for that period implement the
+> biggest duty cycle not bigger than the requested duty cycle.
+> 
+> Can the hardware emit 0% relative duty cycle (e.g. by disabling)?
 
-Hi,
+Not sure, we do have an IP build option to look at for 0/100% but
+this is not enabled for the PCI case.
 
-Previously, if (ret != -EPROBE_DEFER), we were returning. Now we just 
-ignore it and continue.
-If done on purpose, you should explain why in the commit log.
+Given everything else, I would rather fix the division and accuracy
+issues once we've got the changes under review sorted.
 
-My guess is that the test should also be removed. dev_err_probe() 
-handles that for us.
+> 
+>>   	if (tmp < 1 || tmp > (1ULL << 32))
+>>   		return -ERANGE;
+>>   	high = tmp - 1;
+>> @@ -177,12 +179,12 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>>   
+>>   	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
+>>   	duty += 1;
+>> -	duty *= DWC_CLK_PERIOD_NS;
+>> +	duty *= dwc->clk_ns;
+>>   	state->duty_cycle = duty;
+>>   
+>>   	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
+>>   	period += 1;
+>> -	period *= DWC_CLK_PERIOD_NS;
+>> +	period *= dwc->clk_ns;
+>>   	period += duty;
+>>   	state->period = period;
+>>   
+>> @@ -205,6 +207,7 @@ static struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
+>>   	if (!dwc)
+>>   		return NULL;
+>>   
+>> +	dwc->clk_ns = 10;
+>>   	dwc->chip.dev = dev;
+>>   	dwc->chip.ops = &dwc_pwm_ops;
+>>   	dwc->chip.npwm = DWC_TIMERS_TOTAL;
+>> @@ -336,6 +339,14 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
+>>   		return dev_err_probe(dev, PTR_ERR(dwc->base),
+>>   				     "failed to map IO\n");
+>>   
+>> +	dwc->clk = devm_clk_get(dev, "timer");
+>> +	if (IS_ERR(dwc->clk))
+>> +		return dev_err_probe(dev, PTR_ERR(dwc->clk),
+>> +				     "failed to get timer clock\n");
+>> +
+>> +	clk_prepare_enable(dwc->clk);
+> 
+> If you used devm_clk_get_enabled() you wouldn't need to care separately
+> for enabling. (If you stick to separate calls, please add error checking
+> for clk_prepare_enable().)
 
+ok, will use.
 
-You could use PTR_ERR(pc->pclk) directly. There is no need to assign it 
-to ret. This would simplify even further the code.
+>> +	dwc->clk_ns = 1000000000 / clk_get_rate(dwc->clk);
+> 
+> s/1000000000/NSEC_PER_SEC/
 
+ok, fixed.
 
-You removed the last 'ret' parameter, which is fine, but left the %d in 
-the message.
-Compiling trigger the issue.
-Please, ALWAYS, at least compile test your changes, even when things 
-look obvious.
+>> +
+>>   	ret = pwmchip_add(&dwc->chip);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -347,6 +358,7 @@ static int dwc_pwm_plat_remove(struct platform_device *pdev)
+>>   {
+>>   	struct dwc_pwm *dwc = platform_get_drvdata(pdev);
+>>   
+>> +	clk_disable_unprepare(dwc->clk);
+>>   	pwmchip_remove(&dwc->chip);
+> 
+> This is wrong, you must not disable the clock before calling
+> pwmchip_remove() as the PWM is supposed to stay functional until
+> pwmchip_remove() returns.
 
+I've moved to devm_clk_get_enabled and devm_pwmchip_add()
 
-Look at the code around line 316 to see how it is done.
+> 
+>>   	return 0;
+>>   }
+> 
 
->   	}
->   
->   	ret = clk_prepare_enable(pc->clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk: %d\n");
-
-'return' before dev_err_probe() missing?
-
-You removed the last 'ret' parameter, but left the %d in the message.
-(same comment about compiling as above)
-
->   
->   	ret = clk_prepare_enable(pc->pclk);
->   	if (ret) {
-
-
-Why just converting 2 dev_err() and leaving the other one in the probe 
-untouched?
-
-CJ
