@@ -2,53 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D4F596452
-	for <lists+linux-pwm@lfdr.de>; Tue, 16 Aug 2022 23:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B5D7596915
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Aug 2022 08:02:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237517AbiHPVPd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 16 Aug 2022 17:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54836 "EHLO
+        id S233977AbiHQF6K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 Aug 2022 01:58:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237556AbiHPVPV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 16 Aug 2022 17:15:21 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1288385FF2
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Aug 2022 14:15:04 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id r16so4830847wrm.6
-        for <linux-pwm@vger.kernel.org>; Tue, 16 Aug 2022 14:15:04 -0700 (PDT)
+        with ESMTP id S231365AbiHQF6J (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 Aug 2022 01:58:09 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29212D90
+        for <linux-pwm@vger.kernel.org>; Tue, 16 Aug 2022 22:58:08 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id j3so12625802ljo.0
+        for <linux-pwm@vger.kernel.org>; Tue, 16 Aug 2022 22:58:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=phcPBaGxOFAemR9YFsCDrE8yrlHvz+AvjsJ/jn+/KmI=;
-        b=D2LBTNDmEF2+Dr1NzlXFxUrarWUqPPataJ7eBvvm12Ez5MuwP9UXnt3hAVGjut9uaW
-         10d7KRwvsmRnkblDnIGWGr9woJ/rSO57iN7N5bCNHYrBAjuOcatAK7hi/r7iiB72izxY
-         gMkFSK3VpssRb6tFteFowVmh6kBf31UNSAwgB1Upw/iNMmHfIbtzmtvkFRiiry/5CKFL
-         JK/gdsnf6uNRrgEMoZnOzMRaAtyONnn1gbXy3s6RP+bPuE6EuuyZ4zgaW5Aj/063xIJE
-         iTwG2P79SecEn4QjY+LjHcn/8Hxsv7H5NiNOOMNWaYxGk5kF4CnT/S9F8CfZzq3EjblN
-         ErxA==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=aUqumd66SBJ39SQ3AQf1bxB+pDEZwaoNVNdZ68RDANQ=;
+        b=KugdImXnAzARq3XArw/RJ1XvgROZaBH7VwG7f/JODTd34gv3CP7Q6S/kLHs/IXgjEI
+         ApyJJhBMk/DnCp9GlK43L6vlNDIwBy1sPqMDHrqiPpkcEsXl3THPf4Tx6nkAWfK4fUuT
+         5r1x6Ra9qMPhJkdCIMcsYYwAJqaflI7XlTBOSmVCs3ljdj2TBJlshROFdrGYXmM9vChi
+         z+IxD4ChR6X0ARD2yhHnt2lrGDXjx4JsEfa38pcUUMfObcbXvbW3mvnZoqIxV3n9hxqr
+         qoycpbNFXKbwDiAJ+Q03t+knl3bVkb7s9PA66juKu7ZyVonP4z+NMYy9KVn9sC19sr2I
+         mdJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=phcPBaGxOFAemR9YFsCDrE8yrlHvz+AvjsJ/jn+/KmI=;
-        b=3BeJouO2rpAW0EN9SdcZXw2es84t6IiHwGi4zfA6FX2iUva8tk7b2OFvsqHqUIHIEV
-         qd/oeBuMBr48sLEW7Zteid1hyxZmpMOFEWJOnZdVPNqnTNO2YGUEiP++mEEo9VdetVnX
-         v4hxL8LzdnnyhA+PS7zFaowzx5SJDWVYWnFDsKEY7FmaCwcnfZAlw2G1yyswfuY7rr0j
-         n8+oEO+BpdrXnFGALYrAc6cDGtvMdWmroIMX9LYPECOTfkMN9ZAYELVyF6WCUFVWhQJv
-         deDgCXvvp6Vne4aJuu0lXxdlBi0c9N+br3Itv21DB36AJc9g966vzjc0stz+odtIHqPn
-         UkUQ==
-X-Gm-Message-State: ACgBeo3IHSFa9QbM0vLYzxfNZZ7uJ0dGBOhD/WWImZuob5nok/RUdNqd
-        DxupxfCEQlKyimpnhAhJqH4g4Mfjpqrj/A==
-X-Google-Smtp-Source: AA6agR7I7O5srqcLe0uvZsPtmDixINs6HcsyX4Rz7ZRgeDlHqmucBoGATsBy2Nq2Jzcldqq8Kaujkw==
-X-Received: by 2002:a5d:4b87:0:b0:21e:ffa6:a3a6 with SMTP id b7-20020a5d4b87000000b0021effa6a3a6mr12289683wrt.418.1660684504334;
-        Tue, 16 Aug 2022 14:15:04 -0700 (PDT)
-Received: from rainbowdash.office.codethink.co.uk ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id r4-20020a1c4404000000b003a3170a7af9sm23913wma.4.2022.08.16.14.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 14:15:04 -0700 (PDT)
-From:   Ben Dooks <ben.dooks@sifive.com>
-To:     linux-pwm@vger.kernel.org
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=aUqumd66SBJ39SQ3AQf1bxB+pDEZwaoNVNdZ68RDANQ=;
+        b=gsylOcQXCopJeh9tMF0hUr1RvGS19MpmprhhQlThyMwm6iN6TSgNHW0ps9WAxUn2hP
+         8qejwgJPvmv6h8vwrhqzYJuB90G6xeAPRae6YknbMH6eyd9zaMdSrrKaiTCfp+XkkoD+
+         Rv/wDGzRpFCN2FJCQH/5ocEC3zxMx2/trqopaG4n/eXQ0ob+xa4KyyWTag4Js3AJqeEq
+         30ITJW1n+eBhYNBzRHZrZIo/zBqV9eyQ+Vi9WQ+UAGpZbKZVifuVMpa1mZzVR0m+SA2m
+         Jdi2mZRbV7m8wF7dBuxqdAcOdaKD018kSJ4IxbIrqHrs2qMtXXmC1niNL9xihcXSUz2a
+         km/A==
+X-Gm-Message-State: ACgBeo2Es2fJY/gwht9VPRhkNocLjQQ3WFD0SLoHFuE7PyeAE44RxAn/
+        VS8vvkzYIP18HxGGHL9Oyxcszg==
+X-Google-Smtp-Source: AA6agR43LFwAtzNImS4Lf1YJ09vjOKuLkdHqLccVESB33RuJQHJw1t9kIoZyBH9wImctlf0H6BEYnQ==
+X-Received: by 2002:a2e:b892:0:b0:25f:db66:3b86 with SMTP id r18-20020a2eb892000000b0025fdb663b86mr7820287ljp.79.1660715886520;
+        Tue, 16 Aug 2022 22:58:06 -0700 (PDT)
+Received: from ?IPV6:2001:14bb:ae:539c:1b1c:14b7:109b:ed76? (d15l54h48cw7vbh-qr4-4.rev.dnainternet.fi. [2001:14bb:ae:539c:1b1c:14b7:109b:ed76])
+        by smtp.gmail.com with ESMTPSA id v13-20020a056512348d00b0048a835a60f6sm1571181lfr.251.2022.08.16.22.58.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Aug 2022 22:58:06 -0700 (PDT)
+Message-ID: <f07d2072-4056-bf2e-82d5-271d8b8792e6@linaro.org>
+Date:   Wed, 17 Aug 2022 08:58:04 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [RFC v4 01/10] dt-bindings: pwm: Document Synopsys DesignWare
+ snps,pwm-dw-apb-timers-pwm2
+Content-Language: en-US
+To:     Ben Dooks <ben.dooks@sifive.com>, linux-pwm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         u.kleine-koenig@pengutronix.de,
@@ -57,89 +66,131 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greentime Hu <greentime.hu@sifive.com>,
         jarkko.nikula@linux.intel.com,
         William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Ben Dooks <ben.dooks@sifive.com>
-Subject: [RFC v4 10/10] pwm: dwc: add PWM bit unset in get_state call
-Date:   Tue, 16 Aug 2022 22:14:54 +0100
-Message-Id: <20220816211454.237751-11-ben.dooks@sifive.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220816211454.237751-1-ben.dooks@sifive.com>
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
 References: <20220816211454.237751-1-ben.dooks@sifive.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ <20220816211454.237751-2-ben.dooks@sifive.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220816211454.237751-2-ben.dooks@sifive.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-If we are not in PWM mode, then the output is technically a 50%
-output based on a single timer instead of the high-low based on
-the two counters. Add a check for the PWM mode in dwc_pwm_get_state()
-and if DWC_TIM_CTRL_PWM is not set, then return a 50% cycle.
+On 17/08/2022 00:14, Ben Dooks wrote:
+> Add documentation for the bindings for Synopsys' DesignWare PWM block
+> as we will be adding DT/platform support to the Linux driver soon.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+> ---
+> v4:
+>  - fixed typos, added reg
+> v3:
+>  - add description and example
+>  - merge the snps,pwm-number into this patch
+>  - rename snps,pwm to snps,dw-apb-timers-pwm2
+> v2:
+>  - fix #pwm-cells to be 3
+>  - fix indentation and ordering issues
+> ---
+>  .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> new file mode 100644
+> index 000000000000..e7feae6d4404
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2022 SiFive, Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/snps,dw-apb-timers-pwm2.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Synopsys DW-APB timers PWM controller
+> +
+> +maintainers:
+> +  - Ben Dooks <ben.dooks@sifive.com>
+> +
+> +description:
+> +  This describes the DesignWare APB timers module when used in the PWM
+> +  mode. The IP core can be generated with various options which can
+> +  control the functionality, the number of PWMs available and other
+> +  internal controls the designer requires.
+> +
+> +  The IP block has a version register so this can be used for detection
+> +  instead of having to encode the IP version number in the device tree
+> +  comaptible.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: snps,dw-apb-timers-pwm2
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  clocks:
+> +    items:
+> +      - description: Interface bus clock
+> +      - description: PWM reference clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bus
+> +      - const: timer
+> +
+> +  snps,pwm-number:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of PWM channels configured for this instance
+> +    enum: [1, 2, 3, 4, 5, 6, 7, 8]
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#pwm-cells"
+> +  - compatible
+> +  - reg
 
-This may only be an issue on initialisation, as the rest of the
-code currently assumes we're always going to have the extended
-PWM mode using two counters.
+Keep the same order as list of properties.
 
-Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
----
-v4:
- - fixed review comment on mulit-line calculations
----
- drivers/pwm/pwm-dwc.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +
 
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 1251620ab771..5ef0fe7ea3e9 100644
---- a/drivers/pwm/pwm-dwc.c
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -121,23 +121,30 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- {
- 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
- 	u64 duty, period;
-+	u32 ctrl, ld, ld2;
- 
- 	pm_runtime_get_sync(chip->dev);
- 
--	state->enabled = !!(dwc_pwm_readl(dwc,
--				DWC_TIM_CTRL(pwm->hwpwm)) & DWC_TIM_CTRL_EN);
-+	ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
-+	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
-+	ld2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
- 
--	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
--	duty += 1;
--	duty *= dwc->clk_ns;
--	state->duty_cycle = duty;
-+	state->enabled = !!(ctrl & DWC_TIM_CTRL_EN);
- 
--	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
--	period += 1;
--	period *= dwc->clk_ns;
--	period += duty;
--	state->period = period;
-+	/* If we're not in PWM, technically the output is a 50-50
-+	 * based on the timer load-count only.
-+	 */
-+	if (ctrl & DWC_TIM_CTRL_PWM) {
-+		duty = (ld + 1) * dwc->clk_ns;
-+		period = (ld2 + 1)  * dwc->clk_ns;
-+		period += duty;
-+	} else {
-+		duty = (ld + 1) * dwc->clk_ns;
-+		period = duty * 2;
-+	}
- 
-+	state->period = period;
-+	state->duty_cycle = duty;
- 	state->polarity = PWM_POLARITY_INVERSED;
- 
- 	pm_runtime_put_sync(chip->dev);
--- 
-2.35.1
+Just one blank line.
 
+> +examples:
+> +  - |
+> +    pwm: pwm@180000 {
+> +      #pwm-cells = <3>;
+> +      compatible = "snps,dw-apb-timers-pwm2";
+> +      reg = <0x180000 0x200>;
+
+The convention of DTS is: compatible, then reg, then rest of properties.
+
+> +      clocks = <&bus &timer>;
+
+You put here one item, not two. This has to be <&bus>, <&timer>
+
+> +      clock-names = "bus", "timer";
+> +    };
+
+
+Best regards,
+Krzysztof
