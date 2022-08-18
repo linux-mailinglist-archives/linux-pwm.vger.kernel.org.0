@@ -2,49 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEFFF5980CB
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Aug 2022 11:27:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07302598478
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Aug 2022 15:44:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240698AbiHRJ0i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 18 Aug 2022 05:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
+        id S245280AbiHRNoA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 18 Aug 2022 09:44:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240641AbiHRJ03 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Aug 2022 05:26:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E676CB14C0
-        for <linux-pwm@vger.kernel.org>; Thu, 18 Aug 2022 02:26:28 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oObnC-00069T-EB; Thu, 18 Aug 2022 11:26:22 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oObn9-000U8E-ER; Thu, 18 Aug 2022 11:26:19 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oObn8-00CV21-Oe; Thu, 18 Aug 2022 11:26:18 +0200
-Date:   Thu, 18 Aug 2022 11:26:18 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     zhaoxiao <zhaoxiao@uniontech.com>
-Cc:     thierry.reding@gmail.com, heiko@sntech.de,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: rockchip: Convert to use dev_err_probe()
-Message-ID: <20220818092618.ek6sg64jgamfl4lm@pengutronix.de>
-References: <20220818075503.18442-1-zhaoxiao@uniontech.com>
+        with ESMTP id S245288AbiHRNng (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Aug 2022 09:43:36 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB4DEE3B
+        for <linux-pwm@vger.kernel.org>; Thu, 18 Aug 2022 06:43:27 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id r16so1790617wrm.6
+        for <linux-pwm@vger.kernel.org>; Thu, 18 Aug 2022 06:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=gdtFXgHWhh+XIigks5RLtKKk7+/QyECdBRgxpIDg+rY=;
+        b=CRQRkmx9QJakJCitP0xE2kHRoJI7Q1h3WCopqGkW2W7VW3fBk4YPkR/W36fzpl+vs3
+         w3Pzdr+nFyqeyn/yZW44/GwgBIGNLlDSW2YHUmSqh/XFHZE1GsyCmvn5KL2wxM3A3JMh
+         G8gr0HOLL3rYLXmjdLcrHRv7sXrBdp/WQLryZs4Dqc8c8AWSznHP+q+iutARgounarEP
+         P8uaffvE53aJodK6nG1LADChr09p743rBIQjl9l3f07d7sVbd4LBfXhr4qLMEK00KyDQ
+         mzy2ISaLOHE+bgt6GhPzubLjK+0dYMPQvTSwfy44FWs8RY7h6uO9MXW0sO88U40Qas7g
+         6s5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=gdtFXgHWhh+XIigks5RLtKKk7+/QyECdBRgxpIDg+rY=;
+        b=LYxm6ZN3sD8KLbhTiLq4vwqUrFEq9JCtuEEAZ6dxhH6t9GdyRmBcyIxpVNMr4oQ9bz
+         9CTJ7fDzx3sJ6R475ddS6kNpDTsccJEpQd9C16xV+Hx1Rrnfy6e8ybaSRaOlQh51uSO4
+         lrBIRTZJDEYGKn4KzPxTHwZKHfhrx/L8Z8NngH9kO8o/ssceUCWJBSzwUflTKJ1Vz1dH
+         g3TCoaRtLJqXFAG7VfsxecFks0z9ywYRv1WevzKD0G6iBRC9zHqg/UMLJLckA1AgIxIl
+         jlWU+vM9Rn104QS7Lh9uh1i+TwQdUMf5LKRCBfrrK71tf5FKhQznYlimgExcra4dKlAc
+         bcjQ==
+X-Gm-Message-State: ACgBeo3k2EeIZ6EzSNXsqxVKZPd00cjAiMtN/SfjkWbPFZY5tZPwQzxd
+        EgYtwkR5xmdAjmA9Prh+T1gYdw==
+X-Google-Smtp-Source: AA6agR670uQSVwx9Q/I3W7D6pg4XeV0tOb6A7chSd5qk3c3U5X0VadcWSaPFIUHhH+t+9q2f22hOKg==
+X-Received: by 2002:a5d:64c1:0:b0:222:ce3e:bd35 with SMTP id f1-20020a5d64c1000000b00222ce3ebd35mr1646220wri.520.1660830205663;
+        Thu, 18 Aug 2022 06:43:25 -0700 (PDT)
+Received: from [192.168.0.17] (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
+        by smtp.gmail.com with ESMTPSA id z11-20020a5d4c8b000000b002252f57865asm1536525wrs.15.2022.08.18.06.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Aug 2022 06:43:25 -0700 (PDT)
+Message-ID: <b3605922-a0ef-7d44-7e83-3146b6c17068@sifive.com>
+Date:   Thu, 18 Aug 2022 14:43:24 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ylelyo52mqncwfjb"
-Content-Disposition: inline
-In-Reply-To: <20220818075503.18442-1-zhaoxiao@uniontech.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.1
+Subject: Re: [RFC v4 01/10] dt-bindings: pwm: Document Synopsys DesignWare
+ snps,pwm-dw-apb-timers-pwm2
+Content-Language: en-GB
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-pwm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        u.kleine-koenig@pengutronix.de,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        jarkko.nikula@linux.intel.com,
+        William Salmon <william.salmon@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
+References: <20220816211454.237751-1-ben.dooks@sifive.com>
+ <20220816211454.237751-2-ben.dooks@sifive.com>
+ <f07d2072-4056-bf2e-82d5-271d8b8792e6@linaro.org>
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <f07d2072-4056-bf2e-82d5-271d8b8792e6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,93 +85,125 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 17/08/2022 06:58, Krzysztof Kozlowski wrote:
+> On 17/08/2022 00:14, Ben Dooks wrote:
+>> Add documentation for the bindings for Synopsys' DesignWare PWM block
+>> as we will be adding DT/platform support to the Linux driver soon.
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+>> ---
+>> v4:
+>>   - fixed typos, added reg
+>> v3:
+>>   - add description and example
+>>   - merge the snps,pwm-number into this patch
+>>   - rename snps,pwm to snps,dw-apb-timers-pwm2
+>> v2:
+>>   - fix #pwm-cells to be 3
+>>   - fix indentation and ordering issues
+>> ---
+>>   .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml | 69 +++++++++++++++++++
+>>   1 file changed, 69 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+>> new file mode 100644
+>> index 000000000000..e7feae6d4404
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+>> @@ -0,0 +1,69 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2022 SiFive, Inc.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pwm/snps,dw-apb-timers-pwm2.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Synopsys DW-APB timers PWM controller
+>> +
+>> +maintainers:
+>> +  - Ben Dooks <ben.dooks@sifive.com>
+>> +
+>> +description:
+>> +  This describes the DesignWare APB timers module when used in the PWM
+>> +  mode. The IP core can be generated with various options which can
+>> +  control the functionality, the number of PWMs available and other
+>> +  internal controls the designer requires.
+>> +
+>> +  The IP block has a version register so this can be used for detection
+>> +  instead of having to encode the IP version number in the device tree
+>> +  comaptible.
+>> +
+>> +allOf:
+>> +  - $ref: pwm.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: snps,dw-apb-timers-pwm2
+>> +
+>> +  "#pwm-cells":
+>> +    const: 3
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: Interface bus clock
+>> +      - description: PWM reference clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: bus
+>> +      - const: timer
+>> +
+>> +  snps,pwm-number:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: The number of PWM channels configured for this instance
+>> +    enum: [1, 2, 3, 4, 5, 6, 7, 8]
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - "#pwm-cells"
+>> +  - compatible
+>> +  - reg
+> 
+> Keep the same order as list of properties.
 
---ylelyo52mqncwfjb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ok, will fix.
 
-Hello,
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +
+> 
+> Just one blank line.
+> 
+>> +examples:
+>> +  - |
+>> +    pwm: pwm@180000 {
+>> +      #pwm-cells = <3>;
+>> +      compatible = "snps,dw-apb-timers-pwm2";
+>> +      reg = <0x180000 0x200>;
+> 
+> The convention of DTS is: compatible, then reg, then rest of properties.
+> 
+>> +      clocks = <&bus &timer>;
+> 
+> You put here one item, not two. This has to be <&bus>, <&timer>
+> 
+>> +      clock-names = "bus", "timer";
+>> +    };
 
-On Thu, Aug 18, 2022 at 03:55:03PM +0800, zhaoxiao wrote:
-> It's fine to call dev_err_probe() in ->probe() when error code is known.
-> Convert the driver to use dev_err_probe().
->=20
-> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
+Argh, thanks, I completely missed this as our platform only has
+one clock provider for this (the bus and timer clocks are the
+same)
 
-Is zhaoxiao your real name, or is that a nickname/pseudonym? If the
-latter please use your real name here. See
-Documentation/process/submitting-patches.rst for the justification.
 
-> ---
->  v2: remove the %d in the message.
->=20
->  drivers/pwm/pwm-rockchip.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-> index f3647b317152..c6e088c1a6bf 100644
-> --- a/drivers/pwm/pwm-rockchip.c
-> +++ b/drivers/pwm/pwm-rockchip.c
-> @@ -330,16 +330,12 @@ static int rockchip_pwm_probe(struct platform_devic=
-e *pdev)
-> =20
->  	if (IS_ERR(pc->pclk)) {
->  		ret =3D PTR_ERR(pc->pclk);
-> -		if (ret !=3D -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
-> -		return ret;
-> +		return dev_err_probe(&pdev->dev, ret, "Can't get APB clk\n");
->  	}
+> Best regards,
+> Krzysztof
 
-This could be further simplified (as pointed out in the (implicit) v1)
-to:
+Thanks for the review.
 
-	if (IS_ERR(pc->pclk))
-		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk\n"=
-);
-
-but I wouldn't insist on that one as it's somewhat subjective if you
-like it better on two lines.
-
-> =20
->  	ret =3D clk_prepare_enable(pc->clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n");
-> =20
->  	ret =3D clk_prepare_enable(pc->pclk);
->  	if (ret) {
-
-The context here continues with:
-
- 		dev_err(&pdev->dev, "Can't prepare enable APB clk: %d\n", ret);
-
-this could benefit from dev_err_probe(), too.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ylelyo52mqncwfjb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmL+BbgACgkQwfwUeK3K
-7AnXdwf/SCKYwxVa9X/EZUJNYZ4JoZxEd2KIaLTp4u56HOd8yRi93jqzyfpW/D8p
-AwpxXtYWaOpjqkD91McFcMU38v+TrauCMk3Jwh6kVrdNJgYUizgficNC7dvdIGib
-T/xiQk8jT4183khhOnDYCuExvpkCsjpET4UVIKGH/5RyaCnIVz78hETzjO+JdRd+
-+qTJZ0FCLkNSqdiER2bTJzBQggZYHmgaeXMXfXwrEOHXLvgC3UZFoT3/uLGtbYfg
-zQYmoZvs4viRjs03i6TQo6xHLNJ/4En8CJeqd6g7jgv21TcUna47xb4+WjCbAmZz
-vuocyj4JmgbRB+SRhIMClmvZP8x1kg==
-=gOtP
------END PGP SIGNATURE-----
-
---ylelyo52mqncwfjb--
+I guess this is now too late for 6.0-rc ?
