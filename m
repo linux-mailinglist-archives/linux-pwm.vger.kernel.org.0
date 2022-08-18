@@ -2,46 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A23E597F78
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Aug 2022 09:47:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5B19597FA1
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Aug 2022 09:58:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243884AbiHRHp6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 18 Aug 2022 03:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
+        id S243923AbiHRHyO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 18 Aug 2022 03:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243878AbiHRHp6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Aug 2022 03:45:58 -0400
+        with ESMTP id S241441AbiHRHyL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Aug 2022 03:54:11 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E174DB35
-        for <linux-pwm@vger.kernel.org>; Thu, 18 Aug 2022 00:45:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5997346DB7
+        for <linux-pwm@vger.kernel.org>; Thu, 18 Aug 2022 00:54:10 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oOaDo-0000J2-AM; Thu, 18 Aug 2022 09:45:44 +0200
+        id 1oOaLt-0001N8-Qr; Thu, 18 Aug 2022 09:54:05 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oOaDm-000T5y-RS; Thu, 18 Aug 2022 09:45:42 +0200
+        id 1oOaLs-000T6y-HP; Thu, 18 Aug 2022 09:54:04 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oOaDm-00CU0p-5z; Thu, 18 Aug 2022 09:45:42 +0200
-Date:   Thu, 18 Aug 2022 09:45:39 +0200
+        id 1oOaLr-00CU1m-UD; Thu, 18 Aug 2022 09:54:03 +0200
+Date:   Thu, 18 Aug 2022 09:54:01 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     zhaoxiao <zhaoxiao@uniontech.com>
-Cc:     thierry.reding@gmail.com, narmstrong@baylibre.com,
-        khilman@baylibre.com, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: meson: Simplify probe function with dev_err_probe()
-Message-ID: <20220818074539.j6vrkj622hpg5n7y@pengutronix.de>
-References: <20220818072234.9640-1-zhaoxiao@uniontech.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, Maxim Schwalm <maxim.schwalm@gmail.com>,
+        Svyatoslav Ryhel <clamor95@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de, linux-tegra@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] pwm: tegra: Optimize period calculation
+Message-ID: <20220818075401.wguqvcbhzj5ttnio@pengutronix.de>
+References: <20220425132244.48688-1-u.kleine-koenig@pengutronix.de>
+ <524ca143-e9d4-2a79-3e9e-c8b9ffc9f513@gmail.com>
+ <20220815070935.guqzzlny7f6kcprc@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5fayku33dtf3ylbe"
+        protocol="application/pgp-signature"; boundary="vrb75h43zlwa7b25"
 Content-Disposition: inline
-In-Reply-To: <20220818072234.9640-1-zhaoxiao@uniontech.com>
+In-Reply-To: <20220815070935.guqzzlny7f6kcprc@pengutronix.de>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -56,166 +59,179 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---5fayku33dtf3ylbe
-Content-Type: text/plain; charset=iso-8859-1
+--vrb75h43zlwa7b25
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 18, 2022 at 03:22:34PM +0800, zhaoxiao wrote:
-> Switch to dev_err_probe() to remove all dev_err() -> return repeated
-> patterns, simplifying and shortening the probe function.
->=20
-> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
-> ---
->  drivers/pwm/pwm-meson.c | 53 ++++++++++++++---------------------------
->  1 file changed, 18 insertions(+), 35 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 57112f438c6d..43ce8d9a33d2 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -126,20 +126,16 @@ static int meson_pwm_request(struct pwm_chip *chip,=
- struct pwm_device *pwm)
-> =20
->  	if (channel->clk_parent) {
->  		err =3D clk_set_parent(channel->clk, channel->clk_parent);
-> -		if (err < 0) {
-> -			dev_err(dev, "failed to set parent %s for %s: %d\n",
-> +		if (err < 0)
-> +			return dev_err_probe(dev, err, "failed to set parent %s for %s\n",
->  				__clk_get_name(channel->clk_parent),
-> -				__clk_get_name(channel->clk), err);
-> -			return err;
-> -		}
-> +				__clk_get_name(channel->clk));
->  	}
-> =20
->  	err =3D clk_prepare_enable(channel->clk);
-> -	if (err < 0) {
-> -		dev_err(dev, "failed to enable clock %s: %d\n",
-> -			__clk_get_name(channel->clk), err);
-> -		return err;
-> -	}
-> +	if (err < 0)
-> +		return dev_err_probe(dev, err, "failed to enable clock %s\n",
-> +			__clk_get_name(channel->clk));
+Hello,
 
-It's wrong to use dev_err_probe in .request(). The function is only
-supposed to be used in the .probe() call.
-
->  	return 0;
->  }
-> @@ -166,24 +162,18 @@ static int meson_pwm_calc(struct meson_pwm *meson, =
+On Mon, Aug 15, 2022 at 09:09:35AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Mon, Aug 15, 2022 at 03:28:25AM +0300, Dmitry Osipenko wrote:
+> > 25.04.2022 16:22, Uwe Kleine-K=C3=B6nig =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > > Dividing by the result of a division looses precision because the res=
+ult is
+> > > rounded twice. E.g. with clk_rate =3D 48000000 and period =3D 3276003=
+3 the
+> > > following numbers result:
+> > >=20
+> > > 	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH =3D 187500
+> > > 	hz =3D DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns) =3D 3=
+052
+> > > 	rate =3D DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz) =3D 6144
+> > >=20
+> > > The exact result would be 6142.5061875 and (apart from rounding) this=
+ is
+> > > found by using a single division. As a side effect is also a tad
+> > > cheaper to calculate.
+> > >=20
+> > > Also using clk_rate >> PWM_DUTY_WIDTH looses precision. Consider for
+> > > example clk_rate =3D 47999999 and period =3D 106667:
+> > >=20
+> > > 	mul_u64_u64_div_u64(pc->clk_rate >> PWM_DUTY_WIDTH, period_ns,
+> > > 			    NSEC_PER_SEC) =3D 19
+> > >=20
+> > > 	mul_u64_u64_div_u64(pc->clk_rate, period_ns,
+> > > 			    NSEC_PER_SEC << PWM_DUTY_WIDTH) =3D 20
+> > >=20
+> > > (The exact result is 20.000062083332033.)
+> > >=20
+> > > With this optimizations also switch from round-closest to round-down =
+for
+> > > the period calculation. Given that the calculations were non-optimal =
+for
+> > > quite some time now with variations in both directions which nobody
+> > > reported as a problem, this is the opportunity to align the driver's
+> > > behavior to the requirements of new drivers. This has several upsides:
+> > >=20
+> > >  - Implementation is easier as there are no round-nearest variants of
+> > >    mul_u64_u64_div_u64().
+> > >  - Requests for too small periods are now consistently refused. This =
+was
+> > >    kind of arbitrary before, where period_ns < min_period_ns was
+> > >    refused, but in some cases min_period_ns isn't actually implementa=
+ble
+> > >    and then values between min_period_ns and the actual minimum were
+> > >    rounded up to the actual minimum.
+> > >=20
+> > > Note that the duty_cycle calculation isn't using the usual round-down
+> > > approach yet.
+> > >=20
+> > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > > Hello,
+> > >=20
+> > > changes since (implicit) v1: Updated changelog to explain why rate =
+=3D 0
+> > > is refused now.
+> > >=20
+> > > Best regards
+> > > Uwe
+> > >=20
+> > >  drivers/pwm/pwm-tegra.c | 10 +++++-----
+> > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > >=20
+> > > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> > > index e5a9ffef4a71..7fc03a9ec154 100644
+> > > --- a/drivers/pwm/pwm-tegra.c
+> > > +++ b/drivers/pwm/pwm-tegra.c
+> > > @@ -99,7 +99,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, =
 struct pwm_device *pwm,
->  		duty =3D period - duty;
-> =20
->  	fin_freq =3D clk_get_rate(channel->clk);
-> -	if (fin_freq =3D=3D 0) {
-> -		dev_err(meson->chip.dev, "invalid source clock frequency\n");
-> -		return -EINVAL;
-> -	}
-> +	if (fin_freq =3D=3D 0)
-> +		return dev_err_probe(meson->chip.dev, -EINVAL, "invalid source clock f=
-requency\n");
-> =20
->  	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
-> =20
->  	pre_div =3D div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
-> -	if (pre_div > MISC_CLK_DIV_MASK) {
-> -		dev_err(meson->chip.dev, "unable to get period pre_div\n");
-> -		return -EINVAL;
-> -	}
-> +	if (pre_div > MISC_CLK_DIV_MASK)
-> +		return dev_err_probe(meson->chip.dev, -EINVAL, "unable to get period p=
-re_div\n");
-> =20
->  	cnt =3D div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
-> -	if (cnt > 0xffff) {
-> -		dev_err(meson->chip.dev, "unable to get period cnt\n");
-> -		return -EINVAL;
-> -	}
-> +	if (cnt > 0xffff)
-> +		return dev_err_probe(meson->chip.dev, -EINVAL, "unable to get period c=
-nt\n");
-> =20
->  	dev_dbg(meson->chip.dev, "period=3D%u pre_div=3D%u cnt=3D%u\n", period,
->  		pre_div, cnt);
-> @@ -200,10 +190,8 @@ static int meson_pwm_calc(struct meson_pwm *meson, s=
-truct pwm_device *pwm,
->  		/* Then check is we can have the duty with the same pre_div */
->  		duty_cnt =3D div64_u64(fin_freq * (u64)duty,
->  				     NSEC_PER_SEC * (pre_div + 1));
-> -		if (duty_cnt > 0xffff) {
-> -			dev_err(meson->chip.dev, "unable to get duty cycle\n");
-> -			return -EINVAL;
-> -		}
-> +		if (duty_cnt > 0xffff)
-> +			return dev_err_probe(meson->chip.dev, -EINVAL, "unable to get duty cy=
-cle\n");
-> =20
->  		dev_dbg(meson->chip.dev, "duty=3D%u pre_div=3D%u duty_cnt=3D%u\n",
->  			duty, pre_div, duty_cnt);
-> @@ -509,11 +497,8 @@ static int meson_pwm_init_channels(struct meson_pwm =
-*meson)
->  		channel->mux.hw.init =3D &init;
-> =20
->  		channel->clk =3D devm_clk_register(dev, &channel->mux.hw);
-> -		if (IS_ERR(channel->clk)) {
-> -			err =3D PTR_ERR(channel->clk);
-> -			dev_err(dev, "failed to register %s: %d\n", name, err);
-> -			return err;
-> -		}
-> +		if (IS_ERR(channel->clk))
-> +			return dev_err_probe(dev, PTR_ERR(channel->clk), "failed to register =
-%s\n", name);
+> > >  			    int duty_ns, int period_ns)
+> > >  {
+> > >  	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
+> > > -	unsigned long long c =3D duty_ns, hz;
+> > > +	unsigned long long c =3D duty_ns;
+> > >  	unsigned long rate, required_clk_rate;
+> > >  	u32 val =3D 0;
+> > >  	int err;
+> > > @@ -156,11 +156,9 @@ static int tegra_pwm_config(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
+> > >  		pc->clk_rate =3D clk_get_rate(pc->clk);
+> > >  	}
+> > > =20
+> > > -	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;
+> > > -
+> > >  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
+> > > -	hz =3D DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
+> > > -	rate =3D DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
+> > > +	rate =3D mul_u64_u64_div_u64(pc->clk_rate, period_ns,
+> > > +				   (u64)NSEC_PER_SEC << PWM_DUTY_WIDTH);
+> > > =20
+> > >  	/*
+> > >  	 * Since the actual PWM divider is the register's frequency divider
+> > > @@ -169,6 +167,8 @@ static int tegra_pwm_config(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> > >  	 */
+> > >  	if (rate > 0)
+> > >  		rate--;
+> > > +	else
+> > > +		return -EINVAL;
+> >=20
+> > This patch broke backlight on Asus Transformer tablets, they are now
+> > getting this -EINVAL. The root of the problem is under investigation.
+>=20
+> This means that you requested a period that is smaller than the minimal
+> period the hardware can implement.
+>=20
+> What is the clk rate of the PWM clk (i.e. pc->clk_rate?). Looking at
+> arch/arm/boot/dts/tegra30-asus-transformer-common.dtsi I guess period is
+> 4000000. That in turn would mean that
+>=20
+> 	mul_u64_u64_div_u64(pc->clk_rate, period_ns, (u64)NSEC_PER_SEC << PWM_DU=
+TY_WIDTH)
+>=20
+> returned 0 which (with the assumption period_ns =3D 4000000) would imply
+> the clk rate is less than 64000.
+>=20
+> I don't know the machine, but some more information would be good: What
+> is the actual clock rate? Can you please enable PWM_DEBUG (at compile
+> time) and tracing (at runtime) (i.e.
+>=20
+> 	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
+>=20
+> ), reproduce the problem and provide the trace (i.e.
+>=20
+> 	cat /sys/kernel/debug/tracing/trace
+>=20
+> )?
+>=20
+> > Should we revert this patch meantime or maybe you (Uwe/Thierry) have an
+> > idea about what actually has gone wrong here? Thanks in advance.
+>=20
+> I'd like to understand if the problem is indeed that the backlight
+> driver requests a too small period. In this case I'd prefer to adapt the
+> backlight device to use better pwm settings. If there is a problem in
+> my change, this needs to be fixed. If you provide the above data, I can
+> check the details.
 
-This is the first conversion that is OK, as meson_pwm_init_channels() is
-(only) called by meson_pwm_probe().
-
-> =20
->  		snprintf(name, sizeof(name), "clkin%u", i);
-
-Here follows another return that could benefit for a conversion to
-dev_err_probe. Currently it only returns an error code and doesn't emit
-a message, but a message would be good.
-
-> @@ -550,10 +535,8 @@ static int meson_pwm_probe(struct platform_device *p=
-dev)
->  		return err;
-> =20
->  	err =3D devm_pwmchip_add(&pdev->dev, &meson->chip);
-> -	if (err < 0) {
-> -		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", err);
-> -		return err;
-> -	}
-> +	if (err < 0)
-> +		return dev_err_probe(&pdev->dev, err, "failed to register PWM chip\n");
-> =20
->  	return 0;
->  }
-
-This hunk is fine.
+I'd like to get this regression fixed and so a feedback from your side
+would be highly appreciated. Without further input I'm unable to debug
+this and a revert would be a sad outcome. Can you at least work out the
+clk rate, which might be possible by looking into
+/sys/kernel/debug/clk/clk_summary.
 
 Best regards
 Uwe
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---5fayku33dtf3ylbe
+--vrb75h43zlwa7b25
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmL97iAACgkQwfwUeK3K
-7Aloowf8DNE8Ty+jmb5ZdrGY5MKJET0h1cpJIMOw+WsplfWN4AMck2XDGapTwCUy
-K93fyvtByX2AJxlcHtUELqO2pATd0m/oS4SIHIhSeKCyZ4MND+FxGURycAPkWeJb
-HXXiZXHGQYcY6UjbWQRJiCW3fzKcFxHlOaqVCoTSJoHsGzXJuEURtPVSLr5mRCk2
-bod5upR4BKqOrISOxFBy301qstUusEQGJ2KtbqtMJoax2iKb4mQ7DiSBzbj7diJc
-DbebzC43HhOVM9Bxx8ODIYLQa9dNxhFAtvEWYW7DjDifruZy6N8eRH/3KYMpHx3N
-nhPMf669dNoAPNrQkyQyZlRqEeEZZA==
-=+YW5
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmL98BYACgkQwfwUeK3K
+7AlOdgf9G1XjCN2oz0aUHLpZuA2QSX8myEWYMyjrJf3K8x977HkKWLMNwQYb7JPO
+CrMwFccCceqvjFLJucR/xABuAjWcHsOKKi9IIXcTj/JJN6ecMQxv3+bsrEOF0bjc
+vvg51qnoUPKvyyoUPqVq3dVaJGETB1PrwCnffGqWPQXpL9uE0smi/MH/mHDqG0VB
+wxq2DvF4AF5HZqwJ3ueM98btyusRfKcJKSisTPna16dMxarLriU+Lsh9pESR7fxY
+dj6hK3uZbKWdogeycXx5k0cqsMGujKTGQZxWiCimiNTXFCsR5w535Y/ZDGOgY30w
+fhmbSLI16qtE8mBskhZECfUQM8D9XA==
+=wKKn
 -----END PGP SIGNATURE-----
 
---5fayku33dtf3ylbe--
+--vrb75h43zlwa7b25--
