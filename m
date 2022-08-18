@@ -2,207 +2,258 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36E5D598E1A
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Aug 2022 22:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22084599119
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 01:20:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346103AbiHRUeO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 18 Aug 2022 16:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53554 "EHLO
+        id S1346124AbiHRXUp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 18 Aug 2022 19:20:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345577AbiHRUeN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Aug 2022 16:34:13 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6FF47BA9;
-        Thu, 18 Aug 2022 13:34:10 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-119-13.nat.spd-mgts.ru [109.252.119.13])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dmitry.osipenko)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 830566601B46;
-        Thu, 18 Aug 2022 21:34:08 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1660854849;
-        bh=3McgXyA2V1HlrJJ8k6J3er3Mn2T7ge7Jotci/sbzqxw=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=f6/YMyW1rN0mrl48pL0EhtaCJcSwmXUxUje8WhpYKxH9Qhc+rr5SN7bCO/D5wr2mp
-         npvXcUasTAyW967dIba/t+ZVISrSCKgKslBSUce0ie1zuaJTIqyOe2E2CSB3kNa76Z
-         UH01rXSV0WZIs1Adx2hdGzJTwSpZ/fLn/YQL9MHDksvuRH+c1qaV/3SHpycsUgkwUy
-         mMqxFeHbxF/hLZzUNFIFI4IL56RQNrDFkh+DqrJfR84ENh9OREJ97H50YhwkbsJumX
-         mBs6k13HLZcQnOixJO5baQxenyiVjC9vT/NK1ygOO+QgLM1iVL16JqYc4UQ7RzmP2H
-         qI6t9JePt+fug==
-Message-ID: <8ba9431b-b2bf-9fb0-9ba7-afeb2c3bce94@collabora.com>
-Date:   Thu, 18 Aug 2022 23:34:03 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v2] pwm: tegra: Optimize period calculation
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, Maxim Schwalm <maxim.schwalm@gmail.com>,
-        Svyatoslav Ryhel <clamor95@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        with ESMTP id S234827AbiHRXUo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 Aug 2022 19:20:44 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544C448EB2;
+        Thu, 18 Aug 2022 16:20:43 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso6079143pjk.0;
+        Thu, 18 Aug 2022 16:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc;
+        bh=NK3oPYmCQJH4udrs0XzADJ5rLSUEh35MtVHYmSmGTno=;
+        b=lAGkEnLjQS0leDi18SdVWZbt4EMrdoENDIqOb4UhJng/iM9TRoriKt93H6nISAyKcm
+         QiUraSMQ9sr7WXPoxce46Lrs1Qu73l+H4pKagsleaOPFWpVX8M1DtZTVMcsa+MR6oUek
+         ALrsrimm0tnMTf0DsCpLfpxW0FIjVswoH5Smubu+hLcDb83zlvOKbTkVjEI5j5HYFwVr
+         U4R+3F6I8UjxJNqFFJTzS9uQ7e0ryjwKTtxM6oKAeyyfW+onn/4s2myQDzlSPPEecyBW
+         BLv37g8Hhx2VlWwzmTTLM9Ob/RXAi1385xfaHosIWLDNBh2g4ljB6GNdAZsPMNm0iM0A
+         RyQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc;
+        bh=NK3oPYmCQJH4udrs0XzADJ5rLSUEh35MtVHYmSmGTno=;
+        b=2sDu0q3p603eo+aD8IIeOJbiDIo4bGZFbxhEFZ8LasN2EqJhuBVZCyOxzcR2EEc8aH
+         Nq9x7EJVRcrpg1r/tPjslJkFsEScfpOmxGM+DhfjI992aL5ZBrvA5+YZMwp5kZqvcD11
+         wSAspUHGyRAmKFMp2H6k6QqLpnLpLL31eNMYlSJcLoOBumMVxuf9PzKtfUdqW32DwHYQ
+         YzayOwyMM9qBb/5397D71U4tnMi3YSEz5VaEIVRX/c2NOZSxmY8M9xnO0HBwNpiyr3U0
+         Z1wFa5r6rE4kb6zFpEnksQFC06bCTca0QqaI+YZUkWWKnjE4yfRAzdw2Vy81Vjx/ovL3
+         GdYw==
+X-Gm-Message-State: ACgBeo0WhkhfpNy+cNU6Oo032bslLM1xPCK5d0f+MOmqOJUVtUSrgCDX
+        GJ9dpbwZRHN/mj1vejRc0jk=
+X-Google-Smtp-Source: AA6agR6sQMJACV9ZAATQcATZQhMwp7ovZzSTbbzQlIi8IFzY8wNOszWiFXbPnS2w1AaQRyX5sEKdDA==
+X-Received: by 2002:a17:90b:1e49:b0:1f5:1dbf:4c3a with SMTP id pi9-20020a17090b1e4900b001f51dbf4c3amr11186872pjb.232.1660864842822;
+        Thu, 18 Aug 2022 16:20:42 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 2-20020a630c42000000b004129741dd9dsm1812779pgm.51.2022.08.18.16.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Aug 2022 16:20:41 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Thu, 18 Aug 2022 16:20:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, linux-tegra@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Graichen <thomas.graichen@gmail.com>
-References: <20220425132244.48688-1-u.kleine-koenig@pengutronix.de>
- <524ca143-e9d4-2a79-3e9e-c8b9ffc9f513@gmail.com>
- <20220815070935.guqzzlny7f6kcprc@pengutronix.de>
- <20220818075401.wguqvcbhzj5ttnio@pengutronix.de>
-From:   Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20220818075401.wguqvcbhzj5ttnio@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
+        Jean Delvare <jdelvare@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v1 1/3] hwmon: (pwm-fan) Make use of device properties
+Message-ID: <20220818232040.GA3505561@roeck-us.net>
+References: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 8/18/22 10:54, Uwe Kleine-König wrote:
-> Hello,
+On Sat, Aug 06, 2022 at 06:25:15PM +0300, Andy Shevchenko wrote:
+> Convert the module to be property provider agnostic and allow
+> it to be used on non-OF platforms.
 > 
-> On Mon, Aug 15, 2022 at 09:09:35AM +0200, Uwe Kleine-König wrote:
->> On Mon, Aug 15, 2022 at 03:28:25AM +0300, Dmitry Osipenko wrote:
->>> 25.04.2022 16:22, Uwe Kleine-König пишет:
->>>> Dividing by the result of a division looses precision because the result is
->>>> rounded twice. E.g. with clk_rate = 48000000 and period = 32760033 the
->>>> following numbers result:
->>>>
->>>> 	rate = pc->clk_rate >> PWM_DUTY_WIDTH = 187500
->>>> 	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns) = 3052
->>>> 	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz) = 6144
->>>>
->>>> The exact result would be 6142.5061875 and (apart from rounding) this is
->>>> found by using a single division. As a side effect is also a tad
->>>> cheaper to calculate.
->>>>
->>>> Also using clk_rate >> PWM_DUTY_WIDTH looses precision. Consider for
->>>> example clk_rate = 47999999 and period = 106667:
->>>>
->>>> 	mul_u64_u64_div_u64(pc->clk_rate >> PWM_DUTY_WIDTH, period_ns,
->>>> 			    NSEC_PER_SEC) = 19
->>>>
->>>> 	mul_u64_u64_div_u64(pc->clk_rate, period_ns,
->>>> 			    NSEC_PER_SEC << PWM_DUTY_WIDTH) = 20
->>>>
->>>> (The exact result is 20.000062083332033.)
->>>>
->>>> With this optimizations also switch from round-closest to round-down for
->>>> the period calculation. Given that the calculations were non-optimal for
->>>> quite some time now with variations in both directions which nobody
->>>> reported as a problem, this is the opportunity to align the driver's
->>>> behavior to the requirements of new drivers. This has several upsides:
->>>>
->>>>  - Implementation is easier as there are no round-nearest variants of
->>>>    mul_u64_u64_div_u64().
->>>>  - Requests for too small periods are now consistently refused. This was
->>>>    kind of arbitrary before, where period_ns < min_period_ns was
->>>>    refused, but in some cases min_period_ns isn't actually implementable
->>>>    and then values between min_period_ns and the actual minimum were
->>>>    rounded up to the actual minimum.
->>>>
->>>> Note that the duty_cycle calculation isn't using the usual round-down
->>>> approach yet.
->>>>
->>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->>>> ---
->>>> Hello,
->>>>
->>>> changes since (implicit) v1: Updated changelog to explain why rate = 0
->>>> is refused now.
->>>>
->>>> Best regards
->>>> Uwe
->>>>
->>>>  drivers/pwm/pwm-tegra.c | 10 +++++-----
->>>>  1 file changed, 5 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
->>>> index e5a9ffef4a71..7fc03a9ec154 100644
->>>> --- a/drivers/pwm/pwm-tegra.c
->>>> +++ b/drivers/pwm/pwm-tegra.c
->>>> @@ -99,7 +99,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->>>>  			    int duty_ns, int period_ns)
->>>>  {
->>>>  	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
->>>> -	unsigned long long c = duty_ns, hz;
->>>> +	unsigned long long c = duty_ns;
->>>>  	unsigned long rate, required_clk_rate;
->>>>  	u32 val = 0;
->>>>  	int err;
->>>> @@ -156,11 +156,9 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->>>>  		pc->clk_rate = clk_get_rate(pc->clk);
->>>>  	}
->>>>  
->>>> -	rate = pc->clk_rate >> PWM_DUTY_WIDTH;
->>>> -
->>>>  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
->>>> -	hz = DIV_ROUND_CLOSEST_ULL(100ULL * NSEC_PER_SEC, period_ns);
->>>> -	rate = DIV_ROUND_CLOSEST_ULL(100ULL * rate, hz);
->>>> +	rate = mul_u64_u64_div_u64(pc->clk_rate, period_ns,
->>>> +				   (u64)NSEC_PER_SEC << PWM_DUTY_WIDTH);
->>>>  
->>>>  	/*
->>>>  	 * Since the actual PWM divider is the register's frequency divider
->>>> @@ -169,6 +167,8 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->>>>  	 */
->>>>  	if (rate > 0)
->>>>  		rate--;
->>>> +	else
->>>> +		return -EINVAL;
->>>
->>> This patch broke backlight on Asus Transformer tablets, they are now
->>> getting this -EINVAL. The root of the problem is under investigation.
->>
->> This means that you requested a period that is smaller than the minimal
->> period the hardware can implement.
->>
->> What is the clk rate of the PWM clk (i.e. pc->clk_rate?). Looking at
->> arch/arm/boot/dts/tegra30-asus-transformer-common.dtsi I guess period is
->> 4000000. That in turn would mean that
->>
->> 	mul_u64_u64_div_u64(pc->clk_rate, period_ns, (u64)NSEC_PER_SEC << PWM_DUTY_WIDTH)
->>
->> returned 0 which (with the assumption period_ns = 4000000) would imply
->> the clk rate is less than 64000.
->>
->> I don't know the machine, but some more information would be good: What
->> is the actual clock rate? Can you please enable PWM_DEBUG (at compile
->> time) and tracing (at runtime) (i.e.
->>
->> 	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
->>
->> ), reproduce the problem and provide the trace (i.e.
->>
->> 	cat /sys/kernel/debug/tracing/trace
->>
->> )?
->>
->>> Should we revert this patch meantime or maybe you (Uwe/Thierry) have an
->>> idea about what actually has gone wrong here? Thanks in advance.
->>
->> I'd like to understand if the problem is indeed that the backlight
->> driver requests a too small period. In this case I'd prefer to adapt the
->> backlight device to use better pwm settings. If there is a problem in
->> my change, this needs to be fixed. If you provide the above data, I can
->> check the details.
+> Add mod_devicetable.h include.
 > 
-> I'd like to get this regression fixed and so a feedback from your side
-> would be highly appreciated. Without further input I'm unable to debug
-> this and a revert would be a sad outcome. Can you at least work out the
-> clk rate, which might be possible by looking into
-> /sys/kernel/debug/clk/clk_summary.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 
-+ Thomas Graichen, who reported on irc that it also broke backlight on
-Nyan Big Chromebook
+I had another look at this patch. A substantial part of the changes
+is because device properties don't support of_property_read_u32_index(),
+reworking the code to use device_property_read_u32_array() instead.
+Sorry, I don't like it, it results in a substantial number of unnecessary
+changes. Device properties should support the equivalent of
+of_property_read_u32_index() instead to simplify conversions.
 
--- 
-Best regards,
-Dmitry
+Guenter
+
+> ---
+>  drivers/hwmon/Kconfig   |  2 +-
+>  drivers/hwmon/pwm-fan.c | 50 +++++++++++++++++++++--------------------
+>  2 files changed, 27 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index e70d9614bec2..58912a5c5de8 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1613,7 +1613,7 @@ source "drivers/hwmon/pmbus/Kconfig"
+>  
+>  config SENSORS_PWM_FAN
+>  	tristate "PWM fan"
+> -	depends on (PWM && OF) || COMPILE_TEST
+> +	depends on PWM || COMPILE_TEST
+>  	depends on THERMAL || THERMAL=n
+>  	help
+>  	  If you say yes here you get support for fans connected to PWM lines.
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 6c08551d8d14..9ce9f2543861 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -9,10 +9,11 @@
+>  
+>  #include <linux/hwmon.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> -#include <linux/of.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/property.h>
+>  #include <linux/pwm.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/sysfs.h>
+> @@ -25,7 +26,6 @@ struct pwm_fan_tach {
+>  	int irq;
+>  	atomic_t pulses;
+>  	unsigned int rpm;
+> -	u8 pulses_per_revolution;
+>  };
+>  
+>  struct pwm_fan_ctx {
+> @@ -36,6 +36,7 @@ struct pwm_fan_ctx {
+>  
+>  	int tach_count;
+>  	struct pwm_fan_tach *tachs;
+> +	u32 *pulses_per_revolution;
+>  	ktime_t sample_start;
+>  	struct timer_list rpm_timer;
+>  
+> @@ -73,7 +74,7 @@ static void sample_timer(struct timer_list *t)
+>  			pulses = atomic_read(&tach->pulses);
+>  			atomic_sub(pulses, &tach->pulses);
+>  			tach->rpm = (unsigned int)(pulses * 1000 * 60) /
+> -				(tach->pulses_per_revolution * delta);
+> +				(ctx->pulses_per_revolution[i] * delta);
+>  		}
+>  
+>  		ctx->sample_start = ktime_get();
+> @@ -229,16 +230,14 @@ static const struct thermal_cooling_device_ops pwm_fan_cooling_ops = {
+>  	.set_cur_state = pwm_fan_set_cur_state,
+>  };
+>  
+> -static int pwm_fan_of_get_cooling_data(struct device *dev,
+> -				       struct pwm_fan_ctx *ctx)
+> +static int pwm_fan_get_cooling_data(struct device *dev, struct pwm_fan_ctx *ctx)
+>  {
+> -	struct device_node *np = dev->of_node;
+>  	int num, i, ret;
+>  
+> -	if (!of_find_property(np, "cooling-levels", NULL))
+> +	if (!device_property_present(dev, "cooling-levels"))
+>  		return 0;
+>  
+> -	ret = of_property_count_u32_elems(np, "cooling-levels");
+> +	ret = device_property_count_u32(dev, "cooling-levels");
+>  	if (ret <= 0) {
+>  		dev_err(dev, "Wrong data!\n");
+>  		return ret ? : -EINVAL;
+> @@ -250,8 +249,8 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
+>  	if (!ctx->pwm_fan_cooling_levels)
+>  		return -ENOMEM;
+>  
+> -	ret = of_property_read_u32_array(np, "cooling-levels",
+> -					 ctx->pwm_fan_cooling_levels, num);
+> +	ret = device_property_read_u32_array(dev, "cooling-levels",
+> +					     ctx->pwm_fan_cooling_levels, num);
+>  	if (ret) {
+>  		dev_err(dev, "Property 'cooling-levels' cannot be read!\n");
+>  		return ret;
+> @@ -302,7 +301,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  
+>  	mutex_init(&ctx->lock);
+>  
+> -	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
+> +	ctx->pwm = devm_pwm_get(dev, NULL);
+>  	if (IS_ERR(ctx->pwm))
+>  		return dev_err_probe(dev, PTR_ERR(ctx->pwm), "Could not get PWM\n");
+>  
+> @@ -370,6 +369,20 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  		if (!fan_channel_config)
+>  			return -ENOMEM;
+>  		ctx->fan_channel.config = fan_channel_config;
+> +
+> +		ctx->pulses_per_revolution = devm_kmalloc_array(dev,
+> +								ctx->tach_count,
+> +								sizeof(*ctx->pulses_per_revolution),
+> +								GFP_KERNEL);
+> +		if (!ctx->pulses_per_revolution)
+> +			return -ENOMEM;
+> +
+> +		/* Setup default pulses per revolution */
+> +		memset32(ctx->pulses_per_revolution, 2, ctx->tach_count);
+> +
+> +		device_property_read_u32_array(dev, "pulses-per-revolution",
+> +					       ctx->pulses_per_revolution,
+> +					       ctx->tach_count);
+>  	}
+>  
+>  	channels = devm_kcalloc(dev, channel_count + 1,
+> @@ -381,7 +394,6 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  
+>  	for (i = 0; i < ctx->tach_count; i++) {
+>  		struct pwm_fan_tach *tach = &ctx->tachs[i];
+> -		u32 ppr = 2;
+>  
+>  		tach->irq = platform_get_irq(pdev, i);
+>  		if (tach->irq == -EPROBE_DEFER)
+> @@ -397,20 +409,10 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  			}
+>  		}
+>  
+> -		of_property_read_u32_index(dev->of_node,
+> -					   "pulses-per-revolution",
+> -					   i,
+> -					   &ppr);
+> -		tach->pulses_per_revolution = ppr;
+> -		if (!tach->pulses_per_revolution) {
+> -			dev_err(dev, "pulses-per-revolution can't be zero.\n");
+> -			return -EINVAL;
+> -		}
+> -
+>  		fan_channel_config[i] = HWMON_F_INPUT;
+>  
+>  		dev_dbg(dev, "tach%d: irq=%d, pulses_per_revolution=%d\n",
+> -			i, tach->irq, tach->pulses_per_revolution);
+> +			i, tach->irq, ctx->pulses_per_revolution[i]);
+>  	}
+>  
+>  	if (ctx->tach_count > 0) {
+> @@ -430,7 +432,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  		return PTR_ERR(hwmon);
+>  	}
+>  
+> -	ret = pwm_fan_of_get_cooling_data(dev, ctx);
+> +	ret = pwm_fan_get_cooling_data(dev, ctx);
+>  	if (ret)
+>  		return ret;
+>  
