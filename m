@@ -2,220 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59D2F59A378
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 20:04:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8D859A97C
+	for <lists+linux-pwm@lfdr.de>; Sat, 20 Aug 2022 01:35:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354745AbiHSRiI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Aug 2022 13:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40492 "EHLO
+        id S240821AbiHSXdC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Aug 2022 19:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354696AbiHSRhl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 13:37:41 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D522108F88
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 09:56:19 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id k9so5865666wri.0
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 09:56:19 -0700 (PDT)
+        with ESMTP id S240543AbiHSXdA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 19:33:00 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5CB3114A5C;
+        Fri, 19 Aug 2022 16:32:59 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id i67so2957627vkb.2;
+        Fri, 19 Aug 2022 16:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=j8ZFLgSTuoY+TTUHZWrcVuE8dk4bzAu1Ol/k32eYOKo=;
-        b=nCeLu/MZDEMn9xcn0UTdb5giZelaptFqrYfLTpFVpGUyRt0a1rfHB4zbFeY9u5RuEm
-         ra8qEx/QlowcDY/sLXOYo7z54En5EAHFO0cqMb62GuwRUQ9Zdls4Yp7wHMh3F6rIUi2I
-         vWLmusLiXpm669P3BO45yjiYa+Ou1SRyJJaGoxTXX5NgprcEqo2dFf/lKhBaI58KkYVl
-         MfoBO5ML0AJoT50U4+m9Xfd6Mt9tX2rBzarQV5eoM8RDXlfFtyu1luEELfOmpcXi/OLg
-         iU6vZ7FsU9qjsk1OhfJnEo2lIY9RNBvWOCJlpEqoAaaVbH6uk35/BgD12N020ftgQ28m
-         0iVw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=8Ftt3u2zVCJ1XlR/QC6Ig2RR9m+8QvnAb/eHfD5q1ag=;
+        b=eo8bqwAPmtSdzpfC2DXbNh1J+I4B3JgMZPZGvQwqJZ8zZiILLZeVZxbp+nNPCMQgir
+         ND29DitHrMJ5vWipZ//ZPEFizYP6eeFn/DiDdrGg26CZgXcvLA5j9Ho1GTHzhZ3t7oE/
+         luOF4fjMXtVJfi6YzE9a+DljBgBmoaUjqr2KlVEzzppf9JjF3cZlhZmh/vGq5IkcfnLj
+         XfGp407fNCISq1mZdY79HdDwvNEm3o6fg8NwGfoAUDlzbAzu3EXnYacVWVN3XYTruSi3
+         yRvda0WWPHy0zxa7c2Fm/RjxoFZS0HwBAL9/nxZVcMgSdywfaH3wZjxC3J7qQVyB3Wn/
+         8pRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=j8ZFLgSTuoY+TTUHZWrcVuE8dk4bzAu1Ol/k32eYOKo=;
-        b=F3+eN7QFV24wD0VOze6nLWIB0yY0vXCjyMTB9m6fQFsOGal6d+A1n+PNdIWRHJVlv8
-         RsCCht8t21v2K0Bikgqikvi5yuouvPWs4nV8FPapKSAm6RjiM694Rp+eVv1LtlvWSzvp
-         hesUJzjIAMdSJAY16ktZH9c9xQvgeaFA/L0r45BKZOlyCTCu8xT/vAkffpDYqjqSoB58
-         JxvQN640EUhpGujOvgzyeNvlaCetNq88U6TVxRD617V9EX+EtBay8aUhlu3Z+tkx5Shq
-         KnOQof4GcQnZabaFu3IrQ6RNiu/JUR6YII4t/ODJs1TC6H2STU5Du4HIKJangBO6RTL0
-         brQg==
-X-Gm-Message-State: ACgBeo0eWHDWsx6p65ELuRVtfAXSfrTMs2LEjNfG1lMYwgdRK0Te7PX6
-        a5afwB+pP7sj7ChuA8/k/V0TuA==
-X-Google-Smtp-Source: AA6agR53e1VEDJjz/li961SS7ONlLdMbFVXssWMS5p0Je6jZnUgfpFJ4cC21S0dWpydRb8Bl9rTJBQ==
-X-Received: by 2002:a05:6000:184c:b0:223:2c8b:c43c with SMTP id c12-20020a056000184c00b002232c8bc43cmr4882669wri.16.1660928171492;
-        Fri, 19 Aug 2022 09:56:11 -0700 (PDT)
-Received: from [10.35.5.6] ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id 8-20020a05600c024800b003a5537bb2besm5826357wmj.25.2022.08.19.09.56.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Aug 2022 09:56:10 -0700 (PDT)
-Message-ID: <2306e6c2-f07c-719c-1052-9bc60e59eca6@sifive.com>
-Date:   Fri, 19 Aug 2022 17:56:10 +0100
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=8Ftt3u2zVCJ1XlR/QC6Ig2RR9m+8QvnAb/eHfD5q1ag=;
+        b=m7fw3visih2cB3/NcyKErXYIwXNaGIO3i68WqwLKzwn0zQtedodzegUSpmikgPr7JI
+         9tEgPKMoKD+S0TzjOdG/ishXb6E3ZQuGW8STj6SQ0M/d9vfFHSVVQw4vFlFnIWAgnk7o
+         hJNMAYRvwgpdUmyt9jm2z1CHw8J/9C7udYqW6h7mwLXCJOcsr2z1/Z4h4IEa/ESe5xR1
+         +IUfWm2M5/o5KnfCpjraoAWETeGCuJ7pQKTwYvCw6cp1w9dJ4R6DHsENynqMFRV06CIj
+         T5wAYbbUdkxJEbWXL3Jh2Jth1I3/Lkb6f0yxNiUUPFM7uEfcefDhh1cX8pBLJNZxPLp3
+         Reqg==
+X-Gm-Message-State: ACgBeo2qCKPU2Z/vdHwRgXTBpJtkGSMg9oISfWkVFVlzx5FKFDAK+PF+
+        eodEyqbwMZD8HpR8vEpjG8JM9mlDqFYiuR6NUIA=
+X-Google-Smtp-Source: AA6agR6eJaaqNg8VDsxPvmfVCSoGG2OIUBTxkWbH6MePnRJAOqSfJjo7UZdduGoUilT7hODPdRuYkkP+jlm7KDQsFVY=
+X-Received: by 2002:ac5:c7d7:0:b0:389:61cd:ac2d with SMTP id
+ e23-20020ac5c7d7000000b0038961cdac2dmr1482277vkn.27.1660951978768; Fri, 19
+ Aug 2022 16:32:58 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.1
-Subject: Re: [RFC v4 06/10] pwm: dwc: split pci out of core driver
-Content-Language: en-GB
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-pwm@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        u.kleine-koenig@pengutronix.de,
+References: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com>
+ <20220818232040.GA3505561@roeck-us.net> <CAHp75Vf+-4U6OW4sf+mKsPt8WoRL_jN-sYtzOMzhhH8--+OU1w@mail.gmail.com>
+ <20220819130955.GB3108215@roeck-us.net>
+In-Reply-To: <20220819130955.GB3108215@roeck-us.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 20 Aug 2022 02:32:22 +0300
+Message-ID: <CAHp75VetU7_sJ-n6UHgFE+NU56t2Gw83x9E+OHETZkyxyF1qBQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] hwmon: (pwm-fan) Make use of device properties
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>
-References: <20220816211454.237751-1-ben.dooks@sifive.com>
- <20220816211454.237751-7-ben.dooks@sifive.com>
- <edecb3a9-e2d4-41a1-1d06-b3a30a9bac60@linux.intel.com>
-From:   Ben Dooks <ben.dooks@sifive.com>
-In-Reply-To: <edecb3a9-e2d4-41a1-1d06-b3a30a9bac60@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Jean Delvare <jdelvare@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 19/08/2022 14:38, Jarkko Nikula wrote:
-> Hi
-> 
-> On 8/17/22 00:14, Ben Dooks wrote:
->> Moving towards adding non-pci support for the driver, move the pci
->> parts out of the core into their own module. This is partly due to
->> the module_driver() code only being allowed once in a module and also
->> to avoid a number of #ifdef if we build a single file in a system
->> without pci support.
->>
->> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
->> ---
-> 
-> I quickly tested this on Intel Elkhart and didn't notice any regression. 
-> A few comments below.
-> 
->>   drivers/pwm/Kconfig       |  14 +++-
->>   drivers/pwm/Makefile      |   1 +
->>   drivers/pwm/pwm-dwc-pci.c | 133 ++++++++++++++++++++++++++++++++
->>   drivers/pwm/pwm-dwc.c     | 158 +-------------------------------------
->>   drivers/pwm/pwm-dwc.h     |  58 ++++++++++++++
->>   5 files changed, 207 insertions(+), 157 deletions(-)
->>   create mode 100644 drivers/pwm/pwm-dwc-pci.c
->>   create mode 100644 drivers/pwm/pwm-dwc.h
->>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index 3f3c53af4a56..a9f1c554db2b 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -175,15 +175,23 @@ config PWM_CROS_EC
->>         Controller.
->>   config PWM_DWC
->> -    tristate "DesignWare PWM Controller"
->> -    depends on PCI || COMPILE_TEST
->> +    tristate "DesignWare PWM Controller core"
->>       depends on HAS_IOMEM
->>       help
->> -      PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
->> +      PWM driver for Synopsys DWC PWM Controller.
->>         To compile this driver as a module, choose M here: the module
->>         will be called pwm-dwc.
->> +config PWM_DWC_PCI
->> +    tristate "DesignWare PWM Controller core"
-> 
-> Same text as core part has. How about "DesignWare PWM Controller PCI 
-> driver"?
+On Fri, Aug 19, 2022 at 4:09 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Fri, Aug 19, 2022 at 12:56:42PM +0300, Andy Shevchenko wrote:
+> > On Fri, Aug 19, 2022 at 2:41 AM Guenter Roeck <linux@roeck-us.net> wrot=
+e:
+> > > On Sat, Aug 06, 2022 at 06:25:15PM +0300, Andy Shevchenko wrote:
+> > > > Convert the module to be property provider agnostic and allow
+> > > > it to be used on non-OF platforms.
+> > > >
+> > > > Add mod_devicetable.h include.
+> > > >
+> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > >
+> > > I had another look at this patch. A substantial part of the changes
+> > > is because device properties don't support of_property_read_u32_index=
+(),
+> > > reworking the code to use device_property_read_u32_array() instead.
+> > > Sorry, I don't like it, it results in a substantial number of unneces=
+sary
+> > > changes. Device properties should support the equivalent of
+> > > of_property_read_u32_index() instead to simplify conversions.
+> >
+> > Not all (device property) providers can have such API available. Are
+> > you suggesting to
+> >  a) alloc memory for entire array;
+> >  b) cache one for a given index;
+> >  c) free a memory;
+> >  d) loop as many times as index op is called.
+> >
+> > Sorry, this is way too far and non-optimal in comparison to the
+> > substantial number of unnecessary changes (two or three small
+> > refactorings?).
+> >
+> > Another way is to provide a pwm-fan-acpi, which will be the copy of
+> > the driver after this patch is applied. I don't think it's a very
+> > bright idea either.
+> >
+> An alternative might be to split the patch in two parts, one replacing
+> of_property_read_u32_index() with of_property_read_u32_array() as
+> preparation, with the above rationale and a note that this is to
+> prepare for the switch to device properties, and then the actual device
+> property switch. Some context showing how other conversions handled this
+> problem would also be nice, though not necessary.
 
-Thanks, did notice a couple of kconfig issues so will look at that.
+Thanks for the idea, I like it and it would indeed simplify the
+understanding of the changes made.
 
-> 
->> +    depends on PWM_DWC && HAS_IOMEM && PCI
->> +    help
->> +      PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
->> +
->> +      To compile this driver as a module, choose M here: the module
->> +      will be called pwm-dwc-pci.
->> +
->>   config PWM_EP93XX
->>       tristate "Cirrus Logic EP93xx PWM support"
->>       depends on ARCH_EP93XX || COMPILE_TEST
->> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
->> index 7bf1a29f02b8..a70d36623129 100644
->> --- a/drivers/pwm/Makefile
->> +++ b/drivers/pwm/Makefile
->> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLPS711X)    += pwm-clps711x.o
->>   obj-$(CONFIG_PWM_CRC)        += pwm-crc.o
->>   obj-$(CONFIG_PWM_CROS_EC)    += pwm-cros-ec.o
->>   obj-$(CONFIG_PWM_DWC)        += pwm-dwc.o
->> +obj-$(CONFIG_PWM_DWC_PCI)    += pwm-dwc-pci.o
->>   obj-$(CONFIG_PWM_EP93XX)    += pwm-ep93xx.o
->>   obj-$(CONFIG_PWM_FSL_FTM)    += pwm-fsl-ftm.o
->>   obj-$(CONFIG_PWM_HIBVT)        += pwm-hibvt.o
->> diff --git a/drivers/pwm/pwm-dwc-pci.c b/drivers/pwm/pwm-dwc-pci.c
->> new file mode 100644
->> index 000000000000..2213d0e7f3c8
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-dwc-pci.c
->> @@ -0,0 +1,133 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * DesignWare PWM Controller driver (PCI part)
->> + *
->> + * Copyright (C) 2018-2020 Intel Corporation
->> + *
->> + * Author: Felipe Balbi (Intel)
->> + * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
->> + * Author: Raymond Tan <raymond.tan@intel.com>
->> + *
->> + * Limitations:
->> + * - The hardware cannot generate a 0 % or 100 % duty cycle. Both 
->> high and low
->> + *   periods are one or more input clock periods long.
->> + */
->> +
-> 
-> I think this is more common limitation rather than PCI part.
-
-The PCI is based off an core without the support, it is added
-as a build option as of (IIRC) the 2.13 core.
-
-> 
->> --- a/drivers/pwm/pwm-dwc.c
->> +++ b/drivers/pwm/pwm-dwc.c
->> @@ -1,16 +1,12 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   /*
->> - * DesignWare PWM Controller driver
->> + * DesignWare PWM Controller driver core
->>    *
->>    * Copyright (C) 2018-2020 Intel Corporation
->>    *
->>    * Author: Felipe Balbi (Intel)
->>    * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
->>    * Author: Raymond Tan <raymond.tan@intel.com>
->> - *
->> - * Limitations:
->> - * - The hardware cannot generate a 0 % or 100 % duty cycle. Both 
->> high and low
->> - *   periods are one or more input clock periods long.
->>    */
-> 
-> Relates to previous comment, is there reason why this limitation is 
-> removed from the core part?
-
-See above.
-
-> 
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-dwc.h
->> +#define DWC_CLK_PERIOD_NS    10
-> 
-> Perhaps this addition can be removed if patch 7/10 goes before this 
-> patch? It's anyway specific to PCI part only.
-
-Will look into that
-
+--=20
+With Best Regards,
+Andy Shevchenko
