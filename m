@@ -2,63 +2,46 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE34559980E
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 11:06:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 661455998BC
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 11:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347907AbiHSI6Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Aug 2022 04:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
+        id S1347525AbiHSJ27 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Aug 2022 05:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347898AbiHSI6S (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 04:58:18 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6577616F;
-        Fri, 19 Aug 2022 01:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1660899496; x=1692435496;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EW5WWQcuhe1n/gF8QxR46HQULYTGKaa7UvnqyPxMU0w=;
-  b=rlyTZxNfdhXPg8V3wSoGdWopelLCiRc9GkOhpPGqrE2D2RvPfdbkq557
-   PZUlQYgFYfgASUNTTlPr63P+Pd0EhFBf1Y2417+fAoEP2IhOZ6vMuk1/q
-   Ey6QXMkiMw2s6G7ytkjuCsaz7z8tjYDiMMSbxyVWKtwwS7fFLJ7wSnhWC
-   J+aTj5IX6VBfK9IoqqJzyVJQV/HYkDHMMH3SrEsoaWnv1D0Fgo7CA3R9r
-   ZTjK1FJBLK6OW2GoB9k7JhtB98MhmE4Wj0BMg9EQ2UEhXb0rICDGkltJ9
-   HdH/FDkNVcST5ZixYfyiSWJdcD1nnYDLykXrBfmKJDSXHGfSRGBwAlgBW
-   g==;
-X-IronPort-AV: E=Sophos;i="5.93,247,1654585200"; 
-   d="scan'208";a="177049803"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Aug 2022 01:58:16 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Fri, 19 Aug 2022 01:58:15 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
- Transport; Fri, 19 Aug 2022 01:58:13 -0700
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v9 4/4] MAINTAINERS: add pwm to PolarFire SoC entry
-Date:   Fri, 19 Aug 2022 09:57:04 +0100
-Message-ID: <20220819085703.4161266-5-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220819085703.4161266-1-conor.dooley@microchip.com>
-References: <20220819085703.4161266-1-conor.dooley@microchip.com>
+        with ESMTP id S1347365AbiHSJ26 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 05:28:58 -0400
+X-Greylist: delayed 93685 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 19 Aug 2022 02:28:53 PDT
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9400F792FF
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 02:28:51 -0700 (PDT)
+X-QQ-mid: bizesmtp86t1660901192tain063a
+Received: from localhost.localdomain ( [123.114.60.34])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Fri, 19 Aug 2022 17:26:30 +0800 (CST)
+X-QQ-SSF: 01400000002000D0U000B00A0000000
+X-QQ-FEAT: KIY2vMteGsnLesbcnYjO65jCSDMXx38WD8izJS76jGYwSKVCwA35iceBJxy+n
+        F03JnHqpKpDl+JOk+nQf9fpPVGDczqT2LwpJaRDpuaKdMrWIOQbkfd2OxU+cohX9hNEexS3
+        0QI8oLQUxC1chmMtILtdMBfD6DJrW58+4JDLEY1EFgJk9qKpJZKJmPFV+P+ovZFVW2n2P0W
+        aGOrQRRRKAJNgbZpeMJJB1lc4dGfZsAzD3jc1oWa3n5DXOY19cPadqY6yg7DTQcC1xyJAV9
+        xHjhrlfuWCDw26mSK5de6fiky0axYAm4Pb6xn2tl5DlN6xMoPsyssjLANwekyLIm0bDtKYl
+        R9haxOMkA0/1CXf9fjh2bdjE5vcTis+CVqaCbUSD+ZMWOsmOlcP6MSFHUjzNQ==
+X-QQ-GoodBg: 2
+From:   zhaoxiao <zhaoxiao@uniontech.com>
+To:     thierry.reding@gmail.com, heiko@sntech.de
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zhaoxiao <zhaoxiao@uniontech.com>
+Subject: [PATCH v4] pwm: rockchip: Convert to use dev_err_probe()
+Date:   Fri, 19 Aug 2022 17:26:27 +0800
+Message-Id: <20220819092627.19416-1-zhaoxiao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,25 +50,57 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the newly introduced pwm driver to the existing PolarFire SoC entry.
+It's fine to call dev_err_probe() in ->probe() when error code is known.
+Convert the driver to use dev_err_probe().
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ v4: add the missing dev_err function.
+ drivers/pwm/pwm-rockchip.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a5012ba6ff9..5db66c743595 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17532,6 +17532,7 @@ F:	drivers/char/hw_random/mpfs-rng.c
- F:	drivers/clk/microchip/clk-mpfs.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/rtc/rtc-mpfs.c
- F:	drivers/soc/microchip/
- F:	drivers/spi/spi-microchip-core.c
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index f3647b317152..e6ee14c6a159 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -328,22 +328,16 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 	else
+ 		pc->pclk = pc->clk;
+ 
+-	if (IS_ERR(pc->pclk)) {
+-		ret = PTR_ERR(pc->pclk);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(pc->pclk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk\n");
+ 
+ 	ret = clk_prepare_enable(pc->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n");
+ 
+ 	ret = clk_prepare_enable(pc->pclk);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Can't prepare enable APB clk: %d\n", ret);
++		dev_err_probe(&pdev->dev, ret, "Can't prepare enable APB clk: %d\n", ret);
+ 		goto err_clk;
+ 	}
+ 
+@@ -360,7 +354,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 
+ 	ret = pwmchip_add(&pc->chip);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
++		dev_err_probe(&pdev->dev, ret, "pwmchip_add() failed: %d\n", ret);
+ 		goto err_pclk;
+ 	}
+ 
 -- 
-2.36.1
+2.20.1
+
 
