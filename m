@@ -2,55 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3034599DAE
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 16:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59D2F59A378
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 20:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348671AbiHSOrV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Aug 2022 10:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55426 "EHLO
+        id S1354745AbiHSRiI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Aug 2022 13:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349050AbiHSOrU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 10:47:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6A8EE49B
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 07:47:19 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oP3HC-0003wt-2B; Fri, 19 Aug 2022 16:47:10 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oP3H9-000jRx-Q8; Fri, 19 Aug 2022 16:47:07 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oP3H9-00Ckm6-4a; Fri, 19 Aug 2022 16:47:07 +0200
-Date:   Fri, 19 Aug 2022 16:44:53 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Romain Perier <romain.perier@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] pwm: Add support for the MSTAR MSC313 PWM
-Message-ID: <20220819144453.4pegktwwargunlzl@pengutronix.de>
-References: <20220615070813.7720-1-romain.perier@gmail.com>
- <20220615070813.7720-3-romain.perier@gmail.com>
- <20220619213520.qonqdv4e7zkvpeo7@pengutronix.de>
- <CABgxDo+_uZyO2vV4QxmVLTo2ohpAxzC89jcGJ3oksT6XxEBCmA@mail.gmail.com>
+        with ESMTP id S1354696AbiHSRhl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 13:37:41 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D522108F88
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 09:56:19 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id k9so5865666wri.0
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 09:56:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=j8ZFLgSTuoY+TTUHZWrcVuE8dk4bzAu1Ol/k32eYOKo=;
+        b=nCeLu/MZDEMn9xcn0UTdb5giZelaptFqrYfLTpFVpGUyRt0a1rfHB4zbFeY9u5RuEm
+         ra8qEx/QlowcDY/sLXOYo7z54En5EAHFO0cqMb62GuwRUQ9Zdls4Yp7wHMh3F6rIUi2I
+         vWLmusLiXpm669P3BO45yjiYa+Ou1SRyJJaGoxTXX5NgprcEqo2dFf/lKhBaI58KkYVl
+         MfoBO5ML0AJoT50U4+m9Xfd6Mt9tX2rBzarQV5eoM8RDXlfFtyu1luEELfOmpcXi/OLg
+         iU6vZ7FsU9qjsk1OhfJnEo2lIY9RNBvWOCJlpEqoAaaVbH6uk35/BgD12N020ftgQ28m
+         0iVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=j8ZFLgSTuoY+TTUHZWrcVuE8dk4bzAu1Ol/k32eYOKo=;
+        b=F3+eN7QFV24wD0VOze6nLWIB0yY0vXCjyMTB9m6fQFsOGal6d+A1n+PNdIWRHJVlv8
+         RsCCht8t21v2K0Bikgqikvi5yuouvPWs4nV8FPapKSAm6RjiM694Rp+eVv1LtlvWSzvp
+         hesUJzjIAMdSJAY16ktZH9c9xQvgeaFA/L0r45BKZOlyCTCu8xT/vAkffpDYqjqSoB58
+         JxvQN640EUhpGujOvgzyeNvlaCetNq88U6TVxRD617V9EX+EtBay8aUhlu3Z+tkx5Shq
+         KnOQof4GcQnZabaFu3IrQ6RNiu/JUR6YII4t/ODJs1TC6H2STU5Du4HIKJangBO6RTL0
+         brQg==
+X-Gm-Message-State: ACgBeo0eWHDWsx6p65ELuRVtfAXSfrTMs2LEjNfG1lMYwgdRK0Te7PX6
+        a5afwB+pP7sj7ChuA8/k/V0TuA==
+X-Google-Smtp-Source: AA6agR53e1VEDJjz/li961SS7ONlLdMbFVXssWMS5p0Je6jZnUgfpFJ4cC21S0dWpydRb8Bl9rTJBQ==
+X-Received: by 2002:a05:6000:184c:b0:223:2c8b:c43c with SMTP id c12-20020a056000184c00b002232c8bc43cmr4882669wri.16.1660928171492;
+        Fri, 19 Aug 2022 09:56:11 -0700 (PDT)
+Received: from [10.35.5.6] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id 8-20020a05600c024800b003a5537bb2besm5826357wmj.25.2022.08.19.09.56.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Aug 2022 09:56:10 -0700 (PDT)
+Message-ID: <2306e6c2-f07c-719c-1052-9bc60e59eca6@sifive.com>
+Date:   Fri, 19 Aug 2022 17:56:10 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gulr5uxr5zgvdp56"
-Content-Disposition: inline
-In-Reply-To: <CABgxDo+_uZyO2vV4QxmVLTo2ohpAxzC89jcGJ3oksT6XxEBCmA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.1
+Subject: Re: [RFC v4 06/10] pwm: dwc: split pci out of core driver
+Content-Language: en-GB
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-pwm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        u.kleine-koenig@pengutronix.de,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
+References: <20220816211454.237751-1-ben.dooks@sifive.com>
+ <20220816211454.237751-7-ben.dooks@sifive.com>
+ <edecb3a9-e2d4-41a1-1d06-b3a30a9bac60@linux.intel.com>
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <edecb3a9-e2d4-41a1-1d06-b3a30a9bac60@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -59,56 +83,139 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 19/08/2022 14:38, Jarkko Nikula wrote:
+> Hi
+> 
+> On 8/17/22 00:14, Ben Dooks wrote:
+>> Moving towards adding non-pci support for the driver, move the pci
+>> parts out of the core into their own module. This is partly due to
+>> the module_driver() code only being allowed once in a module and also
+>> to avoid a number of #ifdef if we build a single file in a system
+>> without pci support.
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+>> ---
+> 
+> I quickly tested this on Intel Elkhart and didn't notice any regression. 
+> A few comments below.
+> 
+>>   drivers/pwm/Kconfig       |  14 +++-
+>>   drivers/pwm/Makefile      |   1 +
+>>   drivers/pwm/pwm-dwc-pci.c | 133 ++++++++++++++++++++++++++++++++
+>>   drivers/pwm/pwm-dwc.c     | 158 +-------------------------------------
+>>   drivers/pwm/pwm-dwc.h     |  58 ++++++++++++++
+>>   5 files changed, 207 insertions(+), 157 deletions(-)
+>>   create mode 100644 drivers/pwm/pwm-dwc-pci.c
+>>   create mode 100644 drivers/pwm/pwm-dwc.h
+>>
+>> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> index 3f3c53af4a56..a9f1c554db2b 100644
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -175,15 +175,23 @@ config PWM_CROS_EC
+>>         Controller.
+>>   config PWM_DWC
+>> -    tristate "DesignWare PWM Controller"
+>> -    depends on PCI || COMPILE_TEST
+>> +    tristate "DesignWare PWM Controller core"
+>>       depends on HAS_IOMEM
+>>       help
+>> -      PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
+>> +      PWM driver for Synopsys DWC PWM Controller.
+>>         To compile this driver as a module, choose M here: the module
+>>         will be called pwm-dwc.
+>> +config PWM_DWC_PCI
+>> +    tristate "DesignWare PWM Controller core"
+> 
+> Same text as core part has. How about "DesignWare PWM Controller PCI 
+> driver"?
 
---gulr5uxr5zgvdp56
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, did notice a couple of kconfig issues so will look at that.
 
-Hello Romain,
+> 
+>> +    depends on PWM_DWC && HAS_IOMEM && PCI
+>> +    help
+>> +      PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
+>> +
+>> +      To compile this driver as a module, choose M here: the module
+>> +      will be called pwm-dwc-pci.
+>> +
+>>   config PWM_EP93XX
+>>       tristate "Cirrus Logic EP93xx PWM support"
+>>       depends on ARCH_EP93XX || COMPILE_TEST
+>> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+>> index 7bf1a29f02b8..a70d36623129 100644
+>> --- a/drivers/pwm/Makefile
+>> +++ b/drivers/pwm/Makefile
+>> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLPS711X)    += pwm-clps711x.o
+>>   obj-$(CONFIG_PWM_CRC)        += pwm-crc.o
+>>   obj-$(CONFIG_PWM_CROS_EC)    += pwm-cros-ec.o
+>>   obj-$(CONFIG_PWM_DWC)        += pwm-dwc.o
+>> +obj-$(CONFIG_PWM_DWC_PCI)    += pwm-dwc-pci.o
+>>   obj-$(CONFIG_PWM_EP93XX)    += pwm-ep93xx.o
+>>   obj-$(CONFIG_PWM_FSL_FTM)    += pwm-fsl-ftm.o
+>>   obj-$(CONFIG_PWM_HIBVT)        += pwm-hibvt.o
+>> diff --git a/drivers/pwm/pwm-dwc-pci.c b/drivers/pwm/pwm-dwc-pci.c
+>> new file mode 100644
+>> index 000000000000..2213d0e7f3c8
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-dwc-pci.c
+>> @@ -0,0 +1,133 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * DesignWare PWM Controller driver (PCI part)
+>> + *
+>> + * Copyright (C) 2018-2020 Intel Corporation
+>> + *
+>> + * Author: Felipe Balbi (Intel)
+>> + * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+>> + * Author: Raymond Tan <raymond.tan@intel.com>
+>> + *
+>> + * Limitations:
+>> + * - The hardware cannot generate a 0 % or 100 % duty cycle. Both 
+>> high and low
+>> + *   periods are one or more input clock periods long.
+>> + */
+>> +
+> 
+> I think this is more common limitation rather than PCI part.
 
-On Fri, Aug 19, 2022 at 03:12:56PM +0200, Romain Perier wrote:
-> Le dim. 19 juin 2022 =E0 23:35, Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> a =E9crit :
-> > > +static void msc313e_pwm_writecounter(struct regmap_field *low, struc=
-t regmap_field *high, u32 value)
-> > > +{
-> > > +     regmap_field_write(low, value);
-> > > +     regmap_field_write(high, value >> 16);
-> >
-> > Is this racy? E.g. if the hw is running and the low register overflows
-> > before the high register is updated?
-> >
->=20
-> Ack, I am re-working most of the stuff you noticed. The problem with
-> this IP blocks (and others...) is we have close registers
-> but we only need to write or read 16 bits in each of these (it is
-> mainly reverse engineered from vendor source or runtime most of the
-> time) . You cannot really do a single read (except by doing an obscur
-> thing via readq ? ...)
+The PCI is based off an core without the support, it is added
+as a build option as of (IIRC) the 2.13 core.
 
-This is fine, but pleast document that in a comment.
+> 
+>> --- a/drivers/pwm/pwm-dwc.c
+>> +++ b/drivers/pwm/pwm-dwc.c
+>> @@ -1,16 +1,12 @@
+>>   // SPDX-License-Identifier: GPL-2.0
+>>   /*
+>> - * DesignWare PWM Controller driver
+>> + * DesignWare PWM Controller driver core
+>>    *
+>>    * Copyright (C) 2018-2020 Intel Corporation
+>>    *
+>>    * Author: Felipe Balbi (Intel)
+>>    * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+>>    * Author: Raymond Tan <raymond.tan@intel.com>
+>> - *
+>> - * Limitations:
+>> - * - The hardware cannot generate a 0 % or 100 % duty cycle. Both 
+>> high and low
+>> - *   periods are one or more input clock periods long.
+>>    */
+> 
+> Relates to previous comment, is there reason why this limitation is 
+> removed from the core part?
 
-Best regards
-Uwe
+See above.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> 
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-dwc.h
+>> +#define DWC_CLK_PERIOD_NS    10
+> 
+> Perhaps this addition can be removed if patch 7/10 goes before this 
+> patch? It's anyway specific to PCI part only.
 
---gulr5uxr5zgvdp56
-Content-Type: application/pgp-signature; name="signature.asc"
+Will look into that
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmL/oeIACgkQwfwUeK3K
-7AnLfAf/Q730KOcWvic9TGtU5LYxv/PYwKyDY+F+78jFpI+Q15r9ECURWXCeXVx8
-Qr5883rCMEpqlcwUvP30Gosy0oFVvhAsZMg/Jq/BOQMJMyFwb8L7Dxw814dIeqdq
-7K6BLh3PP9AjkqCH1d8l2PxsPmmovPASki2/olFnHrN/MQdzgN+bAow52Ua1Rj4k
-7xdu3AQlhQf4O3ohpshUFxoxi+9lS9tcD+QSOxHoG5cXyQgC0UxMhhxEyu0ojiGJ
-klX5Qw4oRmRm35cfupZhfitj00+RbF/VLeMY0sLqyYIKoGJbr+y5PEH4XSP4wmAS
-MeyGeP0/BKsW8Awe3iK9F6urs60esA==
-=+A3G
------END PGP SIGNATURE-----
-
---gulr5uxr5zgvdp56--
