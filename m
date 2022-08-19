@@ -2,105 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 661455998BC
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 11:37:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC600599947
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 11:59:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347525AbiHSJ27 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Aug 2022 05:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
+        id S1348266AbiHSJ6O (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Aug 2022 05:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347365AbiHSJ26 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 05:28:58 -0400
-X-Greylist: delayed 93685 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 19 Aug 2022 02:28:53 PDT
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9400F792FF
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 02:28:51 -0700 (PDT)
-X-QQ-mid: bizesmtp86t1660901192tain063a
-Received: from localhost.localdomain ( [123.114.60.34])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 19 Aug 2022 17:26:30 +0800 (CST)
-X-QQ-SSF: 01400000002000D0U000B00A0000000
-X-QQ-FEAT: KIY2vMteGsnLesbcnYjO65jCSDMXx38WD8izJS76jGYwSKVCwA35iceBJxy+n
-        F03JnHqpKpDl+JOk+nQf9fpPVGDczqT2LwpJaRDpuaKdMrWIOQbkfd2OxU+cohX9hNEexS3
-        0QI8oLQUxC1chmMtILtdMBfD6DJrW58+4JDLEY1EFgJk9qKpJZKJmPFV+P+ovZFVW2n2P0W
-        aGOrQRRRKAJNgbZpeMJJB1lc4dGfZsAzD3jc1oWa3n5DXOY19cPadqY6yg7DTQcC1xyJAV9
-        xHjhrlfuWCDw26mSK5de6fiky0axYAm4Pb6xn2tl5DlN6xMoPsyssjLANwekyLIm0bDtKYl
-        R9haxOMkA0/1CXf9fjh2bdjE5vcTis+CVqaCbUSD+ZMWOsmOlcP6MSFHUjzNQ==
-X-QQ-GoodBg: 2
-From:   zhaoxiao <zhaoxiao@uniontech.com>
-To:     thierry.reding@gmail.com, heiko@sntech.de
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zhaoxiao <zhaoxiao@uniontech.com>
-Subject: [PATCH v4] pwm: rockchip: Convert to use dev_err_probe()
-Date:   Fri, 19 Aug 2022 17:26:27 +0800
-Message-Id: <20220819092627.19416-1-zhaoxiao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S1348306AbiHSJ57 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 05:57:59 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A811F4C9B;
+        Fri, 19 Aug 2022 02:57:19 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id g16so2907633qkl.11;
+        Fri, 19 Aug 2022 02:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc;
+        bh=/WIizd4+ASdkLn8xaORlftblvX7iF24VmukZ5lVBNU8=;
+        b=WBQ19U1DAzER9eiwrktnTik/2a3VJg3p0hPXXGFvEam0lUqNY7eD/DPZxcH4tnq3hs
+         Kunc2r3YYnuK5MerOwDWN0gKBAFIak8Ry5LelPAGykEL9WcYIO+IJEIpFRn6Emr98geP
+         DhXIXt/a3b9aqVP7/k3K11McCsl4noX7ErwTvu9wbAdthR4OkhScsX2AVz1SDeh+vI4y
+         FzV4wE8pOJ4QK39BIDTOoUbgAqXbWKWNf8BiK2TYQtR+rfV0GUML9oScRLqAtANjxv4B
+         9KkopgiiCNa/LH/tTbhjgOhl8BmxzI2OBawfSRzZ4D6AW9U+x7oNK59HuRwRJ5f+TEz7
+         texQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc;
+        bh=/WIizd4+ASdkLn8xaORlftblvX7iF24VmukZ5lVBNU8=;
+        b=p9nT5/eSF9r6oP8cKgdq4CgJcPg9DM48mRNEnfiPmDuGdPP7vQe9Cd9dxvKoRQeKhq
+         J8fYZhS0KzQl+i+Twr1iMYbAqi4aZgLaFRXxhBHZuOd0Mj/CjlZ4Eu8nJGKO4e7+J0sR
+         5BqmPQAt2/abbgeILoLi/Y6gi6zBevizjWDexZJTb2wz/Xr8meplfIz31ROO4C1dliEw
+         AvudU6fHpMU4/MsIsWsOIAaXbOxWYDEGw2DMnJMTuVyxAQoOlEyun74TFXu0r4+HOmyI
+         OqR/8NgpO5BatfxdluyEzG7fi026OxOgOIv6nQphbXCHu1wnYfuU/MxAK4EWwP9ReM8P
+         hDuw==
+X-Gm-Message-State: ACgBeo2twVdL6fKj8bg8cQBKzANd6eRV5HTIaEdaMicVIOVEk/nhuWon
+        0gRRbdoEEfQVNrDXo+HzIbBYWHo/buNMWQdQ5BE=
+X-Google-Smtp-Source: AA6agR51w56fpbskuo54O8W+TZy9Y+3HiBfTHc0Ja/DTeXlR7tEwzfrsY7hfhFOAb40XYnFAHBE+f2rIqZmDJlgHeIo=
+X-Received: by 2002:a05:620a:2987:b0:6ba:dc04:11ae with SMTP id
+ r7-20020a05620a298700b006badc0411aemr4696051qkp.748.1660903038316; Fri, 19
+ Aug 2022 02:57:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220806152517.78159-1-andriy.shevchenko@linux.intel.com> <20220818232040.GA3505561@roeck-us.net>
+In-Reply-To: <20220818232040.GA3505561@roeck-us.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 19 Aug 2022 12:56:42 +0300
+Message-ID: <CAHp75Vf+-4U6OW4sf+mKsPt8WoRL_jN-sYtzOMzhhH8--+OU1w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] hwmon: (pwm-fan) Make use of device properties
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-It's fine to call dev_err_probe() in ->probe() when error code is known.
-Convert the driver to use dev_err_probe().
+On Fri, Aug 19, 2022 at 2:41 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> On Sat, Aug 06, 2022 at 06:25:15PM +0300, Andy Shevchenko wrote:
+> > Convert the module to be property provider agnostic and allow
+> > it to be used on non-OF platforms.
+> >
+> > Add mod_devicetable.h include.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+>
+> I had another look at this patch. A substantial part of the changes
+> is because device properties don't support of_property_read_u32_index(),
+> reworking the code to use device_property_read_u32_array() instead.
+> Sorry, I don't like it, it results in a substantial number of unnecessary
+> changes. Device properties should support the equivalent of
+> of_property_read_u32_index() instead to simplify conversions.
 
-Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
----
- v4: add the missing dev_err function.
- drivers/pwm/pwm-rockchip.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+Not all (device property) providers can have such API available. Are
+you suggesting to
+ a) alloc memory for entire array;
+ b) cache one for a given index;
+ c) free a memory;
+ d) loop as many times as index op is called.
 
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index f3647b317152..e6ee14c6a159 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -328,22 +328,16 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 	else
- 		pc->pclk = pc->clk;
- 
--	if (IS_ERR(pc->pclk)) {
--		ret = PTR_ERR(pc->pclk);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
--		return ret;
--	}
-+	if (IS_ERR(pc->pclk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk\n");
- 
- 	ret = clk_prepare_enable(pc->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n");
- 
- 	ret = clk_prepare_enable(pc->pclk);
- 	if (ret) {
--		dev_err(&pdev->dev, "Can't prepare enable APB clk: %d\n", ret);
-+		dev_err_probe(&pdev->dev, ret, "Can't prepare enable APB clk: %d\n", ret);
- 		goto err_clk;
- 	}
- 
-@@ -360,7 +354,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 
- 	ret = pwmchip_add(&pc->chip);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-+		dev_err_probe(&pdev->dev, ret, "pwmchip_add() failed: %d\n", ret);
- 		goto err_pclk;
- 	}
- 
--- 
-2.20.1
+Sorry, this is way too far and non-optimal in comparison to the
+substantial number of unnecessary changes (two or three small
+refactorings?).
 
+Another way is to provide a pwm-fan-acpi, which will be the copy of
+the driver after this patch is applied. I don't think it's a very
+bright idea either.
 
+--=20
+With Best Regards,
+Andy Shevchenko
