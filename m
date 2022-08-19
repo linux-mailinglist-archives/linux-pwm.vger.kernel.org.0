@@ -2,46 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E591E5996DC
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 10:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2E0D599776
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Aug 2022 10:36:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347423AbiHSIIK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Aug 2022 04:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36816 "EHLO
+        id S1347566AbiHSIWy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 19 Aug 2022 04:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347469AbiHSIHz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 04:07:55 -0400
+        with ESMTP id S236670AbiHSIWx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 04:22:53 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C16CE68D5
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 01:07:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D41D9FC1
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 01:22:52 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oOx2m-00031g-JK; Fri, 19 Aug 2022 10:07:52 +0200
+        id 1oOxH8-0004of-3W; Fri, 19 Aug 2022 10:22:42 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oOx2k-000g0P-Gz; Fri, 19 Aug 2022 10:07:50 +0200
+        id 1oOxH5-000g1u-IS; Fri, 19 Aug 2022 10:22:39 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oOx2j-00Chb8-U1; Fri, 19 Aug 2022 10:07:49 +0200
-Date:   Fri, 19 Aug 2022 10:07:48 +0200
+        id 1oOxH4-00Chdh-N7; Fri, 19 Aug 2022 10:22:38 +0200
+Date:   Fri, 19 Aug 2022 10:22:35 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Tamseel Shams <m.shams@samsung.com>
-Cc:     thierry.reding@gmail.com, lee.jones@linaro.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alim.akhtar@samsung.com
-Subject: Re: [PATCH v2] pwm: Fixes dpm_run_callback() error in
- pwm_apply_state()
-Message-ID: <20220819080748.c2qprsddcvjb7vkx@pengutronix.de>
-References: <CGME20220819044619epcas5p27ba774aacaa5d2a0056bba376b9dae54@epcas5p2.samsung.com>
- <20220819043459.32584-1-m.shams@samsung.com>
+To:     zhaoxiao <zhaoxiao@uniontech.com>
+Cc:     thierry.reding@gmail.com, heiko@sntech.de,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: rockchip: Convert to use dev_err_probe()
+Message-ID: <20220819082235.ygyw3spkbpookzyy@pengutronix.de>
+References: <20220819070756.14895-1-zhaoxiao@uniontech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2ufd7wqzuulu3quu"
+        protocol="application/pgp-signature"; boundary="2ashbpe5mzbtgjqm"
 Content-Disposition: inline
-In-Reply-To: <20220819043459.32584-1-m.shams@samsung.com>
+In-Reply-To: <20220819070756.14895-1-zhaoxiao@uniontech.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -56,60 +54,75 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---2ufd7wqzuulu3quu
+--2ashbpe5mzbtgjqm
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 19, 2022 at 10:04:59AM +0530, Tamseel Shams wrote:
-> Return invalid argument error from pwm_apply_state()
-> call when 'period is not set' or 'duty_cycle is greater
-> than period' only when PWM is enabled, so as to fix the
-> dpm_run_callback() error seen on exynos SoC during
-> Suspend
+On Fri, Aug 19, 2022 at 03:07:56PM +0800, zhaoxiao wrote:
+> It's fine to call dev_err_probe() in ->probe() when error code is known.
+> Convert the driver to use dev_err_probe().
 >=20
-> There may be situation when PWM is exported using sysfs,
-> but at that point period is not set for PWM. At this
-> point if we do suspend, then during pwm_apply_state
-> function call from pwm_class_suspend, it checks whether
-> period is set or not. It is not set now, so it returns
-> an invalid argument error which issues dpm_run_callback()
-> error
+> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
+> ---
+>  v3: 1.There is no need to assign it to 'ret', and use PTR_ERR(pc->pclk) =
+directly.
+>      2.add the return before dev_err_probe().
+>  drivers/pwm/pwm-rockchip.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
 >=20
-> Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+> index f3647b317152..eda1bd49d260 100644
+> --- a/drivers/pwm/pwm-rockchip.c
+> +++ b/drivers/pwm/pwm-rockchip.c
+> @@ -328,18 +328,12 @@ static int rockchip_pwm_probe(struct platform_devic=
+e *pdev)
+>  	else
+>  		pc->pclk =3D pc->clk;
+> =20
+> -	if (IS_ERR(pc->pclk)) {
+> -		ret =3D PTR_ERR(pc->pclk);
+> -		if (ret !=3D -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
+> -		return ret;
+> -	}
+> +	if (IS_ERR(pc->pclk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk=
+\n");
+> =20
+>  	ret =3D clk_prepare_enable(pc->clk);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n"=
+);
+> =20
+>  	ret =3D clk_prepare_enable(pc->pclk);
+>  	if (ret) {
 
-I still consider this a band aid and I think there is need for prudence
-here. Did you verify that all lowlevel drivers handle a state that is
-now allowed in a sane way? If you did, you missed at least
-pwm-bcm2835.c, I guess there are more but I stopped checking.
+Still missing two dev_err() that are unconverted ...
 
-So while this change might make sense in the future, I think it's wrong
-to do it now.
-
-I stand to the request to find out why pwm->state is strange. Maybe you
-just have to fix your .get_state() callback.
-
-Best regards
 Uwe
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---2ufd7wqzuulu3quu
+--2ashbpe5mzbtgjqm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmL/RNEACgkQwfwUeK3K
-7AmK1wf/VNuYaNLZvpltnb55FdNVkUyi3cKwn6hMcycHd15o0ZIWFiBX+eI1+XKS
-gLEi6ax4G2UvPUwtedAt9Syumibd2Fcm6Sf8P3u/IBT9haqwOmNGrAUbHqXobSh5
-Wd5rMyYIRL7lY5GYx4Cx6NWrjAxWqdc6RwtfudEbjYdYCNQ5RfDHTAWo18aKd3N+
-+fEKVG2LSK1L0rpo1b5F2UZNk/oIELCEO8Ua3aBsMsrVEOYQoX1BH7JChGAy7zSi
-9oMh5gbdCn8LNxiBk7FaWwh0RqjSWTR94MzWlgO8FcfKARU3ALbO+joQkObyK5Du
-DjrgdxNAPUUUE5eP51EwOac1ZdY8ow==
-=GZXz
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmL/SEgACgkQwfwUeK3K
+7AmYCAf+JNAnIXa6WEgqFlr9kJ6eRLkB5TuFo0vd5ix980QQR+G0ouBvA6+aiEyP
+vagnbM2Ln+ld6ZJGCqgAKwbQcjXTB5x2QZ7r0m4lDetPJKXyHbp5wG0OxAgubbrt
+tA1u1h6gV98fN5nQhJ21AmP27ysF8zAr50aK7oq0T+6T0AKTDzT0cjeZTdFbX2zb
+td/aTKo9RZ9CotP9OXpXPuQV2z/wvsmnqzSwhAG1oyqPq6hDU2BcMGbZdx6fOzTm
+Tlist939BIzup5wRGA1rFceLYb3A4esTq0/TrnGYiwWXxk3E33eWJw/GQYlQ/DgQ
+eudXywcnEeJJ321bqFFVKwIPxImj8A==
+=eUfy
 -----END PGP SIGNATURE-----
 
---2ufd7wqzuulu3quu--
+--2ashbpe5mzbtgjqm--
