@@ -2,114 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAEBC59BA43
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Aug 2022 09:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CD6759BB39
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Aug 2022 10:19:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233120AbiHVH32 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 Aug 2022 03:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50854 "EHLO
+        id S233057AbiHVITu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Aug 2022 04:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233133AbiHVH31 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Aug 2022 03:29:27 -0400
-Received: from smtp.smtpout.orange.fr (smtp01.smtpout.orange.fr [80.12.242.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B862A27C
-        for <linux-pwm@vger.kernel.org>; Mon, 22 Aug 2022 00:29:26 -0700 (PDT)
-Received: from [192.168.1.18] ([90.11.190.129])
-        by smtp.orange.fr with ESMTPA
-        id Q1s6ofUmvLFqbQ1s6oZUKW; Mon, 22 Aug 2022 09:29:23 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 22 Aug 2022 09:29:23 +0200
-X-ME-IP: 90.11.190.129
-Message-ID: <66333c4d-8e8b-22a0-0c05-b72e2db2d3ca@wanadoo.fr>
-Date:   Mon, 22 Aug 2022 09:29:17 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v4] pwm: rockchip: Convert to use dev_err_probe()
-Content-Language: en-US
-To:     zhaoxiao <zhaoxiao@uniontech.com>, thierry.reding@gmail.com,
-        heiko@sntech.de
+        with ESMTP id S232871AbiHVITt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Aug 2022 04:19:49 -0400
+Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6998F1DA72;
+        Mon, 22 Aug 2022 01:19:45 -0700 (PDT)
+X-QQ-mid: bizesmtp79t1661156333tn1skwkr
+Received: from localhost.localdomain ( [123.114.60.34])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Mon, 22 Aug 2022 16:18:52 +0800 (CST)
+X-QQ-SSF: 01400000002000D0U000B00A0000000
+X-QQ-FEAT: abDNkBO9wxGSSTXraPu2eHWuksMIwlUpD0v3GkNTcQZh7Wdc/Fr0iBTHZKnOE
+        NXeDfgC69XIwvzXui9ShjI/mipkDaSqfvKmfaGM4CISezq40clj1tmVOENDzf9j+1mlXo7f
+        Qi/ngMCE4t/2piN6qAueBA/fNKLqN1B/wILObQCby95uuG+rs4KL0VBAL6z9urAJCRBP4LZ
+        lmD/1RJEDyipWN/5IrJ42lY6+RGmitY1n3M9vd8qTYw5u4LefxeROAmT0GQhi/2qB5th4cp
+        XrY4vTzaHSffTYBrJ0LY+1xHef+vQ6p53zD4Vxi71Z5AgnNJwbkVmwW7bvHg63TdaGPiHVd
+        QlYaFEJUY78MbAzsygTxNn7+QscQfipg7EqoSO+3klEAD6fB+XR9Vi7CK1VTw==
+X-QQ-GoodBg: 2
+From:   zhaoxiao <zhaoxiao@uniontech.com>
+To:     thierry.reding@gmail.com, heiko@sntech.de
 Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220819092627.19416-1-zhaoxiao@uniontech.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20220819092627.19416-1-zhaoxiao@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        zhaoxiao <zhaoxiao@uniontech.com>
+Subject: [PATH v5] pwm: rockchip: Convert to use dev_err_probe()
+Date:   Mon, 22 Aug 2022 16:18:48 +0800
+Message-Id: <20220822081848.5126-1-zhaoxiao@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvr:qybglogicsvr1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Le 19/08/2022 à 11:26, zhaoxiao a écrit :
-> It's fine to call dev_err_probe() in ->probe() when error code is known.
-> Convert the driver to use dev_err_probe().
+It's fine to call dev_err_probe() in ->probe() when error code is known.
+Convert the driver to use dev_err_probe().
 
-Hi, just a last comment below.
+Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
+---
+ v5: delete the redundant ret and %d.
+ drivers/pwm/pwm-rockchip.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-> 
-> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
-> ---
->   v4: add the missing dev_err function.
->   drivers/pwm/pwm-rockchip.c | 18 ++++++------------
->   1 file changed, 6 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-> index f3647b317152..e6ee14c6a159 100644
-> --- a/drivers/pwm/pwm-rockchip.c
-> +++ b/drivers/pwm/pwm-rockchip.c
-> @@ -328,22 +328,16 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
->   	else
->   		pc->pclk = pc->clk;
->   
-> -	if (IS_ERR(pc->pclk)) {
-> -		ret = PTR_ERR(pc->pclk);
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (IS_ERR(pc->pclk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk\n");
->   
->   	ret = clk_prepare_enable(pc->clk);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n");
->   
->   	ret = clk_prepare_enable(pc->pclk);
->   	if (ret) {
-> -		dev_err(&pdev->dev, "Can't prepare enable APB clk: %d\n", ret);
-> +		dev_err_probe(&pdev->dev, ret, "Can't prepare enable APB clk: %d\n", ret);
-
-As in the previous patches, %d and the final ret are not needed. 
-dev_err_probe() will already display an error code in a human readable way.
-
->   		goto err_clk;
->   	}
->   
-> @@ -360,7 +354,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
->   
->   	ret = pwmchip_add(&pc->chip);
->   	if (ret < 0) {
-> -		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-> +		dev_err_probe(&pdev->dev, ret, "pwmchip_add() failed: %d\n", ret);
-
-Same here.
-
-Otherwise, LGTM.
-
-CJ
-
->   		goto err_pclk;
->   	}
->   
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index f3647b317152..a5af859217c1 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -328,22 +328,16 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 	else
+ 		pc->pclk = pc->clk;
+ 
+-	if (IS_ERR(pc->pclk)) {
+-		ret = PTR_ERR(pc->pclk);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(pc->pclk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk\n");
+ 
+ 	ret = clk_prepare_enable(pc->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n");
+ 
+ 	ret = clk_prepare_enable(pc->pclk);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "Can't prepare enable APB clk: %d\n", ret);
++		dev_err_probe(&pdev->dev, ret, "Can't prepare enable APB clk\n");
+ 		goto err_clk;
+ 	}
+ 
+@@ -360,7 +354,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 
+ 	ret = pwmchip_add(&pc->chip);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
++		dev_err_probe(&pdev->dev, ret, "pwmchip_add() failed\n");
+ 		goto err_pclk;
+ 	}
+ 
+-- 
+2.20.1
 
