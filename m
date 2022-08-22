@@ -2,77 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3E3759AA67
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Aug 2022 03:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAEBC59BA43
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Aug 2022 09:29:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241413AbiHTBPU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 19 Aug 2022 21:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41638 "EHLO
+        id S233120AbiHVH32 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 Aug 2022 03:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230223AbiHTBPT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 19 Aug 2022 21:15:19 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD0C4D176
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 18:15:19 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso9040069pjk.0
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Aug 2022 18:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc;
-        bh=GyIdygXpERIYq0zhovmgdDSjsG4Trhk4Rphv5GwxReI=;
-        b=OskaUT25Ml1j6SJGRfesbUO39qWbANrmUn5D2ZyLiH8H8ulJxRV/3INsDklikhozwj
-         RRUvl6MVWmNPFSl8m3IWhbGLl9LHrzbVMmBuLWuh9O+TOCAWQUO+ngo5hah5nod/KRH/
-         /J2ID/vHypkk65gqWt4Fz0Jk5UYIOV94pfPAIWiGSDotocqM7By8RbQ1R5AmhRCS0olj
-         54M6qvpi8SwCycqs7itlmDsSQYwrVa6JdeeSXNZSMJfiQ1Vj3Ogg/q5ut6OjF80MQsZK
-         Fpl8dKmiXjet/CpguND3G8BEXRjZ1j5Hr5HbXqJfZO0AhEOqeSDgMRJjMddQjGEpuEJY
-         FPxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=GyIdygXpERIYq0zhovmgdDSjsG4Trhk4Rphv5GwxReI=;
-        b=N3BJSomzOtpwMTQtIhLN36jkgEoYpd87jO0UuDMnP2XcvWmSquosw1cs6kzuq27+mw
-         d3yRWMwlaiLyUUddsgqD5lLE3MgaY6sDw2kRX+C1nWjT486yyzmmZMqhIWJ/v6Uyqt0X
-         ooGWV6NIrVIC7wG+MxKd7OOaLIgeVykgag2qt7ceBwNmwDGLCSr7J1Trq7OD2W5comPA
-         3JCvU89YRF5oBq7aErg5bXAvUKnAvvaaZL7oFEcQLWZoOFRBI7Ccdvi6xmsYhJvS21vS
-         YA6+0K1ulTNAtue2fWSQQQbwJ7YNLeUdpbhaZI6xkRUUPzz8ivv+qyxEsLBTIrhQYYfE
-         lX8g==
-X-Gm-Message-State: ACgBeo1Ka/OlfOrDuSQ49/PTQEImZ57BWOL20vgzREKraFCyVh6wsdsl
-        7vmUKJ2ikdZI9yzT9evt5/LPvUe9QuweHvtfdF0=
-X-Google-Smtp-Source: AA6agR4vaQgAfCxtaenQIIa2v59ZGfOiiyNTZuRve53RLJp0M3B5lqO3d9wPZgBCRBqreToIcTezTHQmL9W5pw0him4=
-X-Received: by 2002:a17:90a:c782:b0:1f7:a4ed:11a1 with SMTP id
- gn2-20020a17090ac78200b001f7a4ed11a1mr11505128pjb.12.1660958118670; Fri, 19
- Aug 2022 18:15:18 -0700 (PDT)
+        with ESMTP id S233133AbiHVH31 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 Aug 2022 03:29:27 -0400
+Received: from smtp.smtpout.orange.fr (smtp01.smtpout.orange.fr [80.12.242.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B862A27C
+        for <linux-pwm@vger.kernel.org>; Mon, 22 Aug 2022 00:29:26 -0700 (PDT)
+Received: from [192.168.1.18] ([90.11.190.129])
+        by smtp.orange.fr with ESMTPA
+        id Q1s6ofUmvLFqbQ1s6oZUKW; Mon, 22 Aug 2022 09:29:23 +0200
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 22 Aug 2022 09:29:23 +0200
+X-ME-IP: 90.11.190.129
+Message-ID: <66333c4d-8e8b-22a0-0c05-b72e2db2d3ca@wanadoo.fr>
+Date:   Mon, 22 Aug 2022 09:29:17 +0200
 MIME-Version: 1.0
-Received: by 2002:a17:902:d4d2:b0:16e:fde3:172d with HTTP; Fri, 19 Aug 2022
- 18:15:18 -0700 (PDT)
-Reply-To: aseanvietnam55@gmail.com
-From:   ASEAN VIETNAM <yawoarouna@gmail.com>
-Date:   Sat, 20 Aug 2022 01:15:18 +0000
-Message-ID: <CABoxYe3R_nHxasOOWN5m0wYj_+gKnSGUEqv+xQrVKuEgN2moTw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v4] pwm: rockchip: Convert to use dev_err_probe()
+Content-Language: en-US
+To:     zhaoxiao <zhaoxiao@uniontech.com>, thierry.reding@gmail.com,
+        heiko@sntech.de
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20220819092627.19416-1-zhaoxiao@uniontech.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20220819092627.19416-1-zhaoxiao@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
---=20
-Hello,
+Le 19/08/2022 à 11:26, zhaoxiao a écrit :
+> It's fine to call dev_err_probe() in ->probe() when error code is known.
+> Convert the driver to use dev_err_probe().
 
-You have an important message get back to me for more information.
+Hi, just a last comment below.
 
-Mr. Le Luong Minh
-(Ph=C3=B3 C=E1=BB=A5c Ng=C3=A2n kh=E1=BB=91) Deputy Department of the Treas=
-ury
-Vietnam.
+> 
+> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
+> ---
+>   v4: add the missing dev_err function.
+>   drivers/pwm/pwm-rockchip.c | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+> index f3647b317152..e6ee14c6a159 100644
+> --- a/drivers/pwm/pwm-rockchip.c
+> +++ b/drivers/pwm/pwm-rockchip.c
+> @@ -328,22 +328,16 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+>   	else
+>   		pc->pclk = pc->clk;
+>   
+> -	if (IS_ERR(pc->pclk)) {
+> -		ret = PTR_ERR(pc->pclk);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
+> -		return ret;
+> -	}
+> +	if (IS_ERR(pc->pclk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(pc->pclk), "Can't get APB clk\n");
+>   
+>   	ret = clk_prepare_enable(pc->clk);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Can't prepare enable PWM clk: %d\n", ret);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Can't prepare enable PWM clk\n");
+>   
+>   	ret = clk_prepare_enable(pc->pclk);
+>   	if (ret) {
+> -		dev_err(&pdev->dev, "Can't prepare enable APB clk: %d\n", ret);
+> +		dev_err_probe(&pdev->dev, ret, "Can't prepare enable APB clk: %d\n", ret);
+
+As in the previous patches, %d and the final ret are not needed. 
+dev_err_probe() will already display an error code in a human readable way.
+
+>   		goto err_clk;
+>   	}
+>   
+> @@ -360,7 +354,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+>   
+>   	ret = pwmchip_add(&pc->chip);
+>   	if (ret < 0) {
+> -		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+> +		dev_err_probe(&pdev->dev, ret, "pwmchip_add() failed: %d\n", ret);
+
+Same here.
+
+Otherwise, LGTM.
+
+CJ
+
+>   		goto err_pclk;
+>   	}
+>   
+
