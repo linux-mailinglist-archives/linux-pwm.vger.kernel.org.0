@@ -2,90 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A456B59F601
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Aug 2022 11:13:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82E345A2D12
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Aug 2022 19:07:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231569AbiHXJMs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 24 Aug 2022 05:12:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        id S233141AbiHZRHJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 26 Aug 2022 13:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235811AbiHXJMq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 24 Aug 2022 05:12:46 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 226BC5D0F9;
-        Wed, 24 Aug 2022 02:12:46 -0700 (PDT)
+        with ESMTP id S231447AbiHZRHI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 26 Aug 2022 13:07:08 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B6BCD50C;
+        Fri, 26 Aug 2022 10:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1661332365; x=1692868365;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EW5WWQcuhe1n/gF8QxR46HQULYTGKaa7UvnqyPxMU0w=;
-  b=qBl0RAEvDSMDoOFYYvDcJpj8JnhQu3Yu1GG/FVs/YKcrkW7Ld8/ohoUI
-   g4kX93QLXX2ov4PWjiQV3QZli9+Lqxvx1B/A0Fj3kIPY+p1M8P/RHi9Vo
-   5pOoAq6G9PM6P0OeJRaFVkACV2kjJV6o9vCvAeMp0q7dagHcJ6IBiBiuD
-   q55lkSnU1e/pD12h5ZHaaWFF6Ub7KPtj5u7G6/DvfpYV9jGuzambLSjPf
-   ocNHGSekDb+bTVoC/A1y8nWSeLB2JqP1Em4/Tuk1tEQ18MtVG2sWlkNUb
-   +VQAW7dWih/dnP3M1r02tSYBN2KYSW5url+ZiEJS5MFgKfSf2xp8l21fG
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661533627; x=1693069627;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ilscLTpKs/IqV0qkRKvz7LoihcjNqeU+V/R/IHV5unc=;
+  b=HhKLE6/smRztAFKxUOckzckgrCFUl/5SGQ5hwKr5hHR1buaf+MDVOuP/
+   g3p5ZhTTKlnHPhegteTtliABB/asKjphFrq71OKUz8mld5jZZ+EJy83G/
+   tCm5ZO69R55myaNpVSQ/lEHGWsNF0KBvR8Q6RxPwTH0PXEpjbVplgE8Gs
+   rZJNNRbwXwYrsrlvSVRJMcpXPmTyOOX+CudC2eSAKkwkpG1/U/Fwuh6h5
+   5H9NaoeCpHI5oi40BWEGqEcl6BuG4973TDgqYV1auCHIqVUWw8FPHexML
+   eIibN7vILHjzXnb6dp8C4rnXWE3753U+OuIlrFdW4+7VHezivTPGN9KwX
    g==;
-X-IronPort-AV: E=Sophos;i="5.93,260,1654585200"; 
-   d="scan'208";a="177669398"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Aug 2022 02:12:45 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 24 Aug 2022 02:12:45 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
- Transport; Wed, 24 Aug 2022 02:12:43 -0700
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="274304602"
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="274304602"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 10:07:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
+   d="scan'208";a="938821066"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2022 10:07:05 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EA3E719D; Fri, 26 Aug 2022 20:07:19 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v10 4/4] MAINTAINERS: add pwm to PolarFire SoC entry
-Date:   Wed, 24 Aug 2022 10:12:15 +0100
-Message-ID: <20220824091215.141577-5-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220824091215.141577-1-conor.dooley@microchip.com>
-References: <20220824091215.141577-1-conor.dooley@microchip.com>
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v2 1/4] pwm: sysfs: Switch to DEFINE_SIMPLE_DEV_PM_OPS() and pm_sleep_ptr()
+Date:   Fri, 26 Aug 2022 20:07:13 +0300
+Message-Id: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the newly introduced pwm driver to the existing PolarFire SoC entry.
+Using these newer macros allows the compiler to remove the unused
+structure and functions when !CONFIG_PM_SLEEP + removes the need to
+mark pm functions __maybe_unused.
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+v2: added tag (Uwe)
+ drivers/pwm/sysfs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a5012ba6ff9..5db66c743595 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17532,6 +17532,7 @@ F:	drivers/char/hw_random/mpfs-rng.c
- F:	drivers/clk/microchip/clk-mpfs.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/rtc/rtc-mpfs.c
- F:	drivers/soc/microchip/
- F:	drivers/spi/spi-microchip-core.c
+diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+index 9903c3a7eced..c21b6046067b 100644
+--- a/drivers/pwm/sysfs.c
++++ b/drivers/pwm/sysfs.c
+@@ -433,7 +433,7 @@ static int pwm_class_resume_npwm(struct device *parent, unsigned int npwm)
+ 	return ret;
+ }
+ 
+-static int __maybe_unused pwm_class_suspend(struct device *parent)
++static int pwm_class_suspend(struct device *parent)
+ {
+ 	struct pwm_chip *chip = dev_get_drvdata(parent);
+ 	unsigned int i;
+@@ -464,20 +464,20 @@ static int __maybe_unused pwm_class_suspend(struct device *parent)
+ 	return ret;
+ }
+ 
+-static int __maybe_unused pwm_class_resume(struct device *parent)
++static int pwm_class_resume(struct device *parent)
+ {
+ 	struct pwm_chip *chip = dev_get_drvdata(parent);
+ 
+ 	return pwm_class_resume_npwm(parent, chip->npwm);
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(pwm_class_pm_ops, pwm_class_suspend, pwm_class_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(pwm_class_pm_ops, pwm_class_suspend, pwm_class_resume);
+ 
+ static struct class pwm_class = {
+ 	.name = "pwm",
+ 	.owner = THIS_MODULE,
+ 	.dev_groups = pwm_chip_groups,
+-	.pm = &pwm_class_pm_ops,
++	.pm = pm_sleep_ptr(&pwm_class_pm_ops),
+ };
+ 
+ static int pwmchip_sysfs_match(struct device *parent, const void *data)
 -- 
-2.36.1
+2.35.1
 
