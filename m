@@ -2,135 +2,134 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD1765A2D67
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Aug 2022 19:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 240BD5A3ADD
+	for <lists+linux-pwm@lfdr.de>; Sun, 28 Aug 2022 04:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242864AbiHZR0h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 26 Aug 2022 13:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55342 "EHLO
+        id S231721AbiH1CPc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Sat, 27 Aug 2022 22:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237173AbiHZR0f (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 26 Aug 2022 13:26:35 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90548D7D10;
-        Fri, 26 Aug 2022 10:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661534794; x=1693070794;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2zWAQOZU1jlg5UsmBxiYI1ssdG8wCjNtvRzP9zRWwUk=;
-  b=dKEoTXpUSyB6Agoojg1pVTAuie+FLx5aFPqTmTfn/FhuE5LilF7Vlcf+
-   gqWfIvyxe06VYEg9FetGJNYGmixvAd3V3D5dvVap6SYHzjHXrcgPwxspe
-   Qj8NDlmhg0B3nV9jmq9n8znoh+oFlXTTNjgpEJ30FcVzRoG4W10hz2Zj9
-   DoZOuX84kx+mKfON/cH2oNMNvY+xDalxdQN6elSlBsRcJ5ZmWmcW6AxvZ
-   2G+Hv1is7Js+xNj+sa2D9kfTI8MBkT7knnCrSFD9HzuA3g3I4EbnXUeAH
-   ZGG7/OGY49R2HAiz59DQePS8Z7P+EvDekPTSvUSDCH+TeyCqGq3DUdsNV
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10451"; a="293299381"
-X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="293299381"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2022 10:26:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,265,1654585200"; 
-   d="scan'208";a="736694594"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2022 10:26:31 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C1A5A238; Fri, 26 Aug 2022 20:26:45 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231697AbiH1CPa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 27 Aug 2022 22:15:30 -0400
+X-Greylist: delayed 466 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 27 Aug 2022 19:15:27 PDT
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C938A52DCE
+        for <linux-pwm@vger.kernel.org>; Sat, 27 Aug 2022 19:15:27 -0700 (PDT)
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay09.hostedemail.com (Postfix) with ESMTP id A4A2E808B3;
+        Sun, 28 Aug 2022 02:07:40 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf19.hostedemail.com (Postfix) with ESMTPA id 765B420027;
+        Sun, 28 Aug 2022 02:07:39 +0000 (UTC)
+Message-ID: <5ba98dbd91dc981ec7384484b2a498805abef6b0.camel@perches.com>
+Subject: Re: [PATCH v2 4/4] pwm: sysfs: Utilize an array for polarity strings
+From:   Joe Perches <joe@perches.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2 3/3] pwm: core: Make of_pwm_get() static
-Date:   Fri, 26 Aug 2022 20:26:42 +0300
-Message-Id: <20220826172642.16404-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220826172642.16404-1-andriy.shevchenko@linux.intel.com>
-References: <20220826172642.16404-1-andriy.shevchenko@linux.intel.com>
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Date:   Sat, 27 Aug 2022 22:07:38 -0400
+In-Reply-To: <20220826170716.6886-4-andriy.shevchenko@linux.intel.com>
+References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
+         <20220826170716.6886-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Rspamd-Queue-Id: 765B420027
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Stat-Signature: hed4q761cpj4ekwmpa1xwd89x111ebwk
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18e8tZ+l4e9sZ6+USwDYNFsrhKxx8WnSpk=
+X-HE-Tag: 1661652459-664208
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-There are no users outside of PWM core of the of_pwm_get().
-Make it static.
+On Fri, 2022-08-26 at 20:07 +0300, Andy Shevchenko wrote:
+> Code is smaller and looks nicer if we combine polarity strings
+> into an array.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-v2: added tag (Uwe)
- drivers/pwm/core.c  |  5 ++---
- include/linux/pwm.h | 10 ----------
- 2 files changed, 2 insertions(+), 13 deletions(-)
+It's less robust though as PWM_POLARITY_NORMAL and _INVERSED
+are now required to be 0 and 1.  As the only 2 values in
+an enum they are, but that's not really guaranteed unless
+you read the enum definition.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index dc1b7263a0b0..cfe3a0327471 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -734,8 +734,8 @@ static struct device_link *pwm_device_link_add(struct device *dev,
-  * Returns: A pointer to the requested PWM device or an ERR_PTR()-encoded
-  * error code on failure.
-  */
--struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
--			      const char *con_id)
-+static struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
-+				     const char *con_id)
- {
- 	struct pwm_device *pwm = NULL;
- 	struct of_phandle_args args;
-@@ -797,7 +797,6 @@ struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
- 
- 	return pwm;
- }
--EXPORT_SYMBOL_GPL(of_pwm_get);
- 
- /**
-  * acpi_pwm_get() - request a PWM via parsing "pwms" property in ACPI
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 572ba92e4206..d70c6e5a839d 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -403,8 +403,6 @@ struct pwm_device *of_pwm_single_xlate(struct pwm_chip *pc,
- 				       const struct of_phandle_args *args);
- 
- struct pwm_device *pwm_get(struct device *dev, const char *con_id);
--struct pwm_device *of_pwm_get(struct device *dev, struct device_node *np,
--			      const char *con_id);
- void pwm_put(struct pwm_device *pwm);
- 
- struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id);
-@@ -495,14 +493,6 @@ static inline struct pwm_device *pwm_get(struct device *dev,
- 	return ERR_PTR(-ENODEV);
- }
- 
--static inline struct pwm_device *of_pwm_get(struct device *dev,
--					    struct device_node *np,
--					    const char *con_id)
--{
--	might_sleep();
--	return ERR_PTR(-ENODEV);
--}
--
- static inline void pwm_put(struct pwm_device *pwm)
- {
- 	might_sleep();
--- 
-2.35.1
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: added pwm_ prefix to the variable (Uwe), adjusted intendation (Uwe)
+>  drivers/pwm/sysfs.c | 32 ++++++++++++--------------------
+>  1 file changed, 12 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+> index 767c4b19afb1..502167e44a3d 100644
+> --- a/drivers/pwm/sysfs.c
+> +++ b/drivers/pwm/sysfs.c
+> @@ -151,27 +151,23 @@ static ssize_t enable_store(struct device *child,
+>  	return ret ? : size;
+>  }
+>  
+> +static const char * const pwm_polarity_strings[] = {
+> +	[PWM_POLARITY_NORMAL] = "normal",
+> +	[PWM_POLARITY_INVERSED] = "inversed",
+> +};
+> +
+>  static ssize_t polarity_show(struct device *child,
+>  			     struct device_attribute *attr,
+>  			     char *buf)
+>  {
+>  	const struct pwm_device *pwm = child_to_pwm_device(child);
+> -	const char *polarity = "unknown";
+>  	struct pwm_state state;
+>  
+>  	pwm_get_state(pwm, &state);
+> +	if (state.polarity < 0 || state.polarity >= ARRAY_SIZE(pwm_polarity_strings))
+> +		return sysfs_emit(buf, "unknown\n");
+>  
+> -	switch (state.polarity) {
+> -	case PWM_POLARITY_NORMAL:
+> -		polarity = "normal";
+> -		break;
+> -
+> -	case PWM_POLARITY_INVERSED:
+> -		polarity = "inversed";
+> -		break;
+> -	}
+> -
+> -	return sysfs_emit(buf, "%s\n", polarity);
+> +	return sysfs_emit(buf, "%s\n", pwm_polarity_strings[state.polarity]);
+>  }
+>  
+>  static ssize_t polarity_store(struct device *child,
+> @@ -180,20 +176,16 @@ static ssize_t polarity_store(struct device *child,
+>  {
+>  	struct pwm_export *export = child_to_pwm_export(child);
+>  	struct pwm_device *pwm = export->pwm;
+> -	enum pwm_polarity polarity;
+>  	struct pwm_state state;
+>  	int ret;
+>  
+> -	if (sysfs_streq(buf, "normal"))
+> -		polarity = PWM_POLARITY_NORMAL;
+> -	else if (sysfs_streq(buf, "inversed"))
+> -		polarity = PWM_POLARITY_INVERSED;
+> -	else
+> -		return -EINVAL;
+> +	ret = sysfs_match_string(pwm_polarity_strings, buf);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	mutex_lock(&export->lock);
+>  	pwm_get_state(pwm, &state);
+> -	state.polarity = polarity;
+> +	state.polarity = ret;
+>  	ret = pwm_apply_state(pwm, &state);
+>  	mutex_unlock(&export->lock);
+>  
 
