@@ -2,100 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCEC25A41B2
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Aug 2022 06:04:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77DAF5A4460
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Aug 2022 09:59:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbiH2EE0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Aug 2022 00:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
+        id S229661AbiH2H7t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Aug 2022 03:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbiH2EEZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Aug 2022 00:04:25 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C792A422D1;
-        Sun, 28 Aug 2022 21:04:22 -0700 (PDT)
-X-UUID: e0704174ad5b44e98ced9ba308e31452-20220829
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=sVk2Undvd2lu/+jxUtCCeLvk7O4M0gaM2/6KiQi3Bqg=;
-        b=HuWcM4URPm3QFXETfvV4/2IwAf/12uj5DY+LUwW6yr6QSSUrDxUkwnI3RZzkOJKsXXRZdSHO4Wjp9Wgb1CI/VejYkOAZQ26e73dzCve2PsKalyNlkY5XaWvaPuArTE5iqZy+AuhuUdKxqsRekS3gp9WTBekkP82yBAGr9Gy2lwA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.10,REQID:dccfeccb-1bbb-4855-a94b-99e16ee2354e,OB:0,L
-        OB:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_
-        Ham,ACTION:release,TS:0
-X-CID-META: VersionHash:84eae18,CLOUDID:aa87e1cf-20bd-4e5e-ace8-00692b7ab380,C
-        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
-        ,Bulk:nil,QS:nil,BEC:nil,COL:0
-X-UUID: e0704174ad5b44e98ced9ba308e31452-20220829
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <xinlei.lee@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 249186991; Mon, 29 Aug 2022 12:04:16 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.792.15; Mon, 29 Aug 2022 12:04:15 +0800
-Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.792.15 via Frontend Transport; Mon, 29 Aug 2022 12:04:14 +0800
-From:   <xinlei.lee@mediatek.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <jitao.shi@mediatek.com>
-CC:     <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        xinlei lee <xinlei.lee@mediatek.com>
-Subject: [PATCH] pwm: mtk-disp: Fix the parameters calculated  by the enabled flag of disp_pwm.
-Date:   Mon, 29 Aug 2022 12:04:12 +0800
-Message-ID: <1661745852-27323-1-git-send-email-xinlei.lee@mediatek.com>
-X-Mailer: git-send-email 2.6.4
+        with ESMTP id S229537AbiH2H7s (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Aug 2022 03:59:48 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C221EE;
+        Mon, 29 Aug 2022 00:59:44 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id g16so5466397qkl.11;
+        Mon, 29 Aug 2022 00:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=g7t/BY4DanplPrl7da5mnck18jW/2xAc45QCfnvQXO4=;
+        b=RK8cgJfTAC5BpVAHLjFNqQRLC96gedrRCTeDrrNy+X+MP2G6ka61dZGTaYkibOJVoK
+         d7Dej1HraTuweHeVuEjUjqCCdoa4qgqcyTG1FNKVZucP0xyFek2oVHyAPAtMz6f4VLvv
+         +4J4qncWP7X5KzITsf0/ohNYFM1DteLeGZAyB4cBTJJpxXt4oJ5tnqxnjM/UdMf69GNh
+         j+d3GNb9mRxWBYgeZiDauzeqZg4rghdnwEPavuo8BrkM5v/PDyX/IrZa3C+2IndWq99o
+         ZKYTtnIPIKDPf+c/6/Z4o9aTlDBdqO20jP9spfJinAnvqwisBAsyXVfFC/EKhu+sw4pr
+         rInA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=g7t/BY4DanplPrl7da5mnck18jW/2xAc45QCfnvQXO4=;
+        b=gNnT+HIm69F8cSzxVKQy2iUeYvmxmRtvMBk1inKOWovYMM9xE0Tgl5bvqB3HiG0jIF
+         N8uVHYik2SJMYKjlQL9rPZib09mAgWqNbpcp+GdtW2BQxsJqpD90XP9vGXVaurfOZ0FV
+         20u7cD/3F2NU/GDtRMBMnSUuNpHS3VAk6KtUijYAUbSe0rYBL4mwpY9UIhLmobAHGVC5
+         lkpsBxgvoxWpzHeWqa9EU2YGRAkJLhMO8J8aqblLyiAlE7r/SaOzp98syfoAnkAwrK0d
+         RyXvawvQGvxRuc7ODeAAzgzkEEe8x7CM3rFD+aH18kn4pi9yrht/gwBDcNMsA0TPUaXK
+         eXRQ==
+X-Gm-Message-State: ACgBeo0Qvxjwl9sn2mDP1qiJZKZl/TpapICPLe9oHHA3G2bIINS/vQmz
+        x+zk6tt7SKx8bTSeEkvsRKlHyyMPPpj1U955Ia0=
+X-Google-Smtp-Source: AA6agR43upvOu7ID2TzzW6S1NEhyG9G3pwO02U2fdyvD3RoRznwwm+L7k66+Oax4H0qLbD6PMidnJweV5UkWi/Z4CgQ=
+X-Received: by 2002:a05:620a:254d:b0:6ab:84b8:25eb with SMTP id
+ s13-20020a05620a254d00b006ab84b825ebmr7445131qko.383.1661759983909; Mon, 29
+ Aug 2022 00:59:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
+ <20220826170716.6886-4-andriy.shevchenko@linux.intel.com> <5ba98dbd91dc981ec7384484b2a498805abef6b0.camel@perches.com>
+ <CAHp75VfY5RgAju5ASvAp565oF6VmYYiuowNsPTGSm=+1iFJ98A@mail.gmail.com>
+ <2e158f8dc433b6b78d47d209495bed678d92369a.camel@perches.com>
+ <CAHp75Vc0NtYcuSUP106V54U6EBYsj3LMx2FDJT4_pfB3gAtpPQ@mail.gmail.com> <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
+In-Reply-To: <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 29 Aug 2022 10:59:07 +0300
+Message-ID: <CAHp75VezJ41z7KUbJE5Fo-oO7W-+nD00A23Gnqmfp6eUL7VT6w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] pwm: sysfs: Utilize an array for polarity strings
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: xinlei lee <xinlei.lee@mediatek.com>
+On Sun, Aug 28, 2022 at 9:19 PM Joe Perches <joe@perches.com> wrote:
+> On Sun, 2022-08-28 at 20:40 +0300, Andy Shevchenko wrote:
+> > On Sun, Aug 28, 2022 at 4:46 PM Joe Perches <joe@perches.com> wrote:
+> > > On Sun, 2022-08-28 at 09:40 +0300, Andy Shevchenko wrote:
+> > > > On Sunday, August 28, 2022, Joe Perches <joe@perches.com> wrote:
+> > > > > On Fri, 2022-08-26 at 20:07 +0300, Andy Shevchenko wrote:
+> > > > > > Code is smaller and looks nicer if we combine polarity strings
+> > > > > > into an array.
+> >
+> > > > First of all, please remove unnecessary context when replying.
+> > >
+> > > I am _very_ aware of context.
+> > > I specifically left the code in.
+> > >
+> > > > > It's less robust though as PWM_POLARITY_NORMAL and _INVERSED
+> > > > > are now required to be 0 and 1.  As the only 2 values in
+> > > > > an enum they are, but that's not really guaranteed unless
+> > > > > you read the enum definition.
+> > > >
+> > > > So, what do you suggest here and in many other similar places (yes, ABI
+> > > > implied) in the kernel?
+> > >
+> > > Leaving the code alone.
+> >
+> > It's good that PWM maintainers look at this differently.
+>
+> The enum is not userspace so it's not ABI.
+>
+> The PWM maintainers are free to do what they want but I
+> prefer obviousness over compactness.
 
-In the original mtk_disp_pwm_get_state() function, the result of reading
-con0 & BIT(0) is enabled as disp_pwm. 
-In order to conform to the register table, we should use the disp_pwm 
-base address as the enabled judgment.
+Why do you not start "fixing" other similar places in the kernel?
 
-Fixes: 3f2b16734914 ("pwm: mtk-disp: Implement atomic API .get_state()")
-
-Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
-Reviewed-by: Miles Chen <miles.chen@mediatek.com>
----
-Base on the branch of Linux-next/master.
-Split from series [1].
-[1] https://patchwork.kernel.org/project/linux-mediatek/cover/1661239875-19841-1-git-send-email-xinlei.lee@mediatek.com/
----
----
- drivers/pwm/pwm-mtk-disp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-index c605013..50425cd 100644
---- a/drivers/pwm/pwm-mtk-disp.c
-+++ b/drivers/pwm/pwm-mtk-disp.c
-@@ -197,7 +197,7 @@ static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
- 	rate = clk_get_rate(mdp->clk_main);
- 	con0 = readl(mdp->base + mdp->data->con0);
- 	con1 = readl(mdp->base + mdp->data->con1);
--	state->enabled = !!(con0 & BIT(0));
-+	state->enabled = !!(readl(mdp->base) & BIT(0));
- 	clk_div = FIELD_GET(PWM_CLKDIV_MASK, con0);
- 	period = FIELD_GET(PWM_PERIOD_MASK, con1);
- 	/*
 -- 
-2.6.4
-
+With Best Regards,
+Andy Shevchenko
