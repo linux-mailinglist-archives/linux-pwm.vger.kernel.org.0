@@ -2,110 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77DAF5A4460
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Aug 2022 09:59:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E34745A474D
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Aug 2022 12:37:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbiH2H7t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Aug 2022 03:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
+        id S229557AbiH2Kh6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 29 Aug 2022 06:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbiH2H7s (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Aug 2022 03:59:48 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C221EE;
-        Mon, 29 Aug 2022 00:59:44 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id g16so5466397qkl.11;
-        Mon, 29 Aug 2022 00:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=g7t/BY4DanplPrl7da5mnck18jW/2xAc45QCfnvQXO4=;
-        b=RK8cgJfTAC5BpVAHLjFNqQRLC96gedrRCTeDrrNy+X+MP2G6ka61dZGTaYkibOJVoK
-         d7Dej1HraTuweHeVuEjUjqCCdoa4qgqcyTG1FNKVZucP0xyFek2oVHyAPAtMz6f4VLvv
-         +4J4qncWP7X5KzITsf0/ohNYFM1DteLeGZAyB4cBTJJpxXt4oJ5tnqxnjM/UdMf69GNh
-         j+d3GNb9mRxWBYgeZiDauzeqZg4rghdnwEPavuo8BrkM5v/PDyX/IrZa3C+2IndWq99o
-         ZKYTtnIPIKDPf+c/6/Z4o9aTlDBdqO20jP9spfJinAnvqwisBAsyXVfFC/EKhu+sw4pr
-         rInA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=g7t/BY4DanplPrl7da5mnck18jW/2xAc45QCfnvQXO4=;
-        b=gNnT+HIm69F8cSzxVKQy2iUeYvmxmRtvMBk1inKOWovYMM9xE0Tgl5bvqB3HiG0jIF
-         N8uVHYik2SJMYKjlQL9rPZib09mAgWqNbpcp+GdtW2BQxsJqpD90XP9vGXVaurfOZ0FV
-         20u7cD/3F2NU/GDtRMBMnSUuNpHS3VAk6KtUijYAUbSe0rYBL4mwpY9UIhLmobAHGVC5
-         lkpsBxgvoxWpzHeWqa9EU2YGRAkJLhMO8J8aqblLyiAlE7r/SaOzp98syfoAnkAwrK0d
-         RyXvawvQGvxRuc7ODeAAzgzkEEe8x7CM3rFD+aH18kn4pi9yrht/gwBDcNMsA0TPUaXK
-         eXRQ==
-X-Gm-Message-State: ACgBeo0Qvxjwl9sn2mDP1qiJZKZl/TpapICPLe9oHHA3G2bIINS/vQmz
-        x+zk6tt7SKx8bTSeEkvsRKlHyyMPPpj1U955Ia0=
-X-Google-Smtp-Source: AA6agR43upvOu7ID2TzzW6S1NEhyG9G3pwO02U2fdyvD3RoRznwwm+L7k66+Oax4H0qLbD6PMidnJweV5UkWi/Z4CgQ=
-X-Received: by 2002:a05:620a:254d:b0:6ab:84b8:25eb with SMTP id
- s13-20020a05620a254d00b006ab84b825ebmr7445131qko.383.1661759983909; Mon, 29
- Aug 2022 00:59:43 -0700 (PDT)
+        with ESMTP id S229455AbiH2Kh5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Aug 2022 06:37:57 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C105AC5E;
+        Mon, 29 Aug 2022 03:37:54 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id B9C4E6601EED;
+        Mon, 29 Aug 2022 11:37:51 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1661769472;
+        bh=XUq2kdBS4OyttnvnvgNCtPhMLla0r0PwgobFNtpuStU=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=X9fjiT3eZ8u5h40tuCDPa7YcPwRvCRI5eydtEfE71RWaFwh3k+S7oN18rNo3Sd8Cv
+         SxGz1sWeHALT7fh61Cw23/dZuUDSCMZudkhIm23SEoT7zxcRkGyLwsCH6WJr80QdaU
+         jmFlLHgJ6bkJTufumd1QEMOp6aOhgY/SoVeQO2yyv8JiJTHecAojLVUcz1z0y4/82q
+         0PJDAucwt8KiUOJEZF4JBiqWha0J+OI/8CfqwmR0ioM2AIp67RAaGtLaLNej+gVPKR
+         fwP02a+jJ5Mdp/mJnJ/AY68GyHyhOBzqwqSrWravlKPUGm1wWSYnL2fjxPA0yXobyk
+         f+HkH3FwMoT1g==
+Message-ID: <f473ecee-fd71-8783-dffc-7d7cf06a3b77@collabora.com>
+Date:   Mon, 29 Aug 2022 12:37:49 +0200
 MIME-Version: 1.0
-References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
- <20220826170716.6886-4-andriy.shevchenko@linux.intel.com> <5ba98dbd91dc981ec7384484b2a498805abef6b0.camel@perches.com>
- <CAHp75VfY5RgAju5ASvAp565oF6VmYYiuowNsPTGSm=+1iFJ98A@mail.gmail.com>
- <2e158f8dc433b6b78d47d209495bed678d92369a.camel@perches.com>
- <CAHp75Vc0NtYcuSUP106V54U6EBYsj3LMx2FDJT4_pfB3gAtpPQ@mail.gmail.com> <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
-In-Reply-To: <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 29 Aug 2022 10:59:07 +0300
-Message-ID: <CAHp75VezJ41z7KUbJE5Fo-oO7W-+nD00A23Gnqmfp6eUL7VT6w@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] pwm: sysfs: Utilize an array for polarity strings
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] dt-bindings: pwm: Add compatible for Mediatek MT8188
+Content-Language: en-US
+To:     xinlei.lee@mediatek.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, jitao.shi@mediatek.com,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <1661744916-15441-1-git-send-email-xinlei.lee@mediatek.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <1661744916-15441-1-git-send-email-xinlei.lee@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Aug 28, 2022 at 9:19 PM Joe Perches <joe@perches.com> wrote:
-> On Sun, 2022-08-28 at 20:40 +0300, Andy Shevchenko wrote:
-> > On Sun, Aug 28, 2022 at 4:46 PM Joe Perches <joe@perches.com> wrote:
-> > > On Sun, 2022-08-28 at 09:40 +0300, Andy Shevchenko wrote:
-> > > > On Sunday, August 28, 2022, Joe Perches <joe@perches.com> wrote:
-> > > > > On Fri, 2022-08-26 at 20:07 +0300, Andy Shevchenko wrote:
-> > > > > > Code is smaller and looks nicer if we combine polarity strings
-> > > > > > into an array.
-> >
-> > > > First of all, please remove unnecessary context when replying.
-> > >
-> > > I am _very_ aware of context.
-> > > I specifically left the code in.
-> > >
-> > > > > It's less robust though as PWM_POLARITY_NORMAL and _INVERSED
-> > > > > are now required to be 0 and 1.  As the only 2 values in
-> > > > > an enum they are, but that's not really guaranteed unless
-> > > > > you read the enum definition.
-> > > >
-> > > > So, what do you suggest here and in many other similar places (yes, ABI
-> > > > implied) in the kernel?
-> > >
-> > > Leaving the code alone.
-> >
-> > It's good that PWM maintainers look at this differently.
->
-> The enum is not userspace so it's not ABI.
->
-> The PWM maintainers are free to do what they want but I
-> prefer obviousness over compactness.
+Il 29/08/22 05:48, xinlei.lee@mediatek.com ha scritto:
+> From: xinlei lee <xinlei.lee@mediatek.com>
+> 
+> Base on the branch of Linux-next/master.
+> Split from series [1].
+> [1] https://patchwork.kernel.org/project/linux-mediatek/cover/1661239875-19841-1-git-send-email-xinlei.lee@mediatek.com/
+> 
+> Add dt-binding documentation of pwm for MediaTek MT8188 SoC.
+> 
+> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Why do you not start "fixing" other similar places in the kernel?
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
