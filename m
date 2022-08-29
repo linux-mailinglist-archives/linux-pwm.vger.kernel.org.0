@@ -2,86 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 771165A3F0E
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Aug 2022 20:19:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AFB85A4192
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Aug 2022 05:48:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbiH1STj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Sun, 28 Aug 2022 14:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
+        id S229486AbiH2Dsy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 28 Aug 2022 23:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbiH1ST0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 28 Aug 2022 14:19:26 -0400
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A160F26AF0;
-        Sun, 28 Aug 2022 11:19:25 -0700 (PDT)
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay03.hostedemail.com (Postfix) with ESMTP id 85B4BA08C0;
-        Sun, 28 Aug 2022 18:19:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf03.hostedemail.com (Postfix) with ESMTPA id 427266000A;
-        Sun, 28 Aug 2022 18:19:23 +0000 (UTC)
-Message-ID: <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
-Subject: Re: [PATCH v2 4/4] pwm: sysfs: Utilize an array for polarity strings
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Date:   Sun, 28 Aug 2022 14:19:22 -0400
-In-Reply-To: <CAHp75Vc0NtYcuSUP106V54U6EBYsj3LMx2FDJT4_pfB3gAtpPQ@mail.gmail.com>
-References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
-         <20220826170716.6886-4-andriy.shevchenko@linux.intel.com>
-         <5ba98dbd91dc981ec7384484b2a498805abef6b0.camel@perches.com>
-         <CAHp75VfY5RgAju5ASvAp565oF6VmYYiuowNsPTGSm=+1iFJ98A@mail.gmail.com>
-         <2e158f8dc433b6b78d47d209495bed678d92369a.camel@perches.com>
-         <CAHp75Vc0NtYcuSUP106V54U6EBYsj3LMx2FDJT4_pfB3gAtpPQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        with ESMTP id S229472AbiH2Dsx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 28 Aug 2022 23:48:53 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACBF92A71C;
+        Sun, 28 Aug 2022 20:48:46 -0700 (PDT)
+X-UUID: 9393fca5910f4465bf14f3c11ad7d03c-20220829
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=AByt+oN/3war7U+cJjRxWCJPG/HJ+aYATp1ohXXHplc=;
+        b=aN4JyeQ8A/uRZ9zOy5c/875tt8bP2kikM/IpLn2UFi44PKEGBAUwP/4GQ/FQOf+8LXFDHY6ckZprZs9+1xaGG7KR6BDfFNMNiHedtqOSVG5za0P7TjP13m+Ugib88HJeUeyUP69iPuXFl+lZiD/pgi68vpQE+ritN6NUtHh5vS8=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.10,REQID:7cf615f6-9808-45ea-9dd5-dde63d9a2830,OB:0,L
+        OB:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_
+        Ham,ACTION:release,TS:0
+X-CID-META: VersionHash:84eae18,CLOUDID:c6136020-1c20-48a5-82a0-25f9c331906d,C
+        OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
+        ,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: 9393fca5910f4465bf14f3c11ad7d03c-20220829
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <xinlei.lee@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 2066606207; Mon, 29 Aug 2022 11:48:41 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Mon, 29 Aug 2022 11:48:39 +0800
+Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.15 via Frontend Transport; Mon, 29 Aug 2022 11:48:38 +0800
+From:   <xinlei.lee@mediatek.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <matthias.bgg@gmail.com>
+CC:     <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <jitao.shi@mediatek.com>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        xinlei lee <xinlei.lee@mediatek.com>
+Subject: [PATCH] dt-bindings: pwm: Add compatible for Mediatek MT8188
+Date:   Mon, 29 Aug 2022 11:48:36 +0800
+Message-ID: <1661744916-15441-1-git-send-email-xinlei.lee@mediatek.com>
+X-Mailer: git-send-email 2.6.4
 MIME-Version: 1.0
-X-Stat-Signature: njsqjytwjmkwzj5sqq7r1n5jckk7dxyr
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 427266000A
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.6
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18/vqjLL/pG4e8NYe4xDSDL11Wp8Rlsh0k=
-X-HE-Tag: 1661710763-657123
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, 2022-08-28 at 20:40 +0300, Andy Shevchenko wrote:
-> On Sun, Aug 28, 2022 at 4:46 PM Joe Perches <joe@perches.com> wrote:
-> > On Sun, 2022-08-28 at 09:40 +0300, Andy Shevchenko wrote:
-> > > On Sunday, August 28, 2022, Joe Perches <joe@perches.com> wrote:
-> > > > On Fri, 2022-08-26 at 20:07 +0300, Andy Shevchenko wrote:
-> > > > > Code is smaller and looks nicer if we combine polarity strings
-> > > > > into an array.
-> 
-> > > First of all, please remove unnecessary context when replying.
-> > 
-> > I am _very_ aware of context.
-> > I specifically left the code in.
-> > 
-> > > > It's less robust though as PWM_POLARITY_NORMAL and _INVERSED
-> > > > are now required to be 0 and 1.  As the only 2 values in
-> > > > an enum they are, but that's not really guaranteed unless
-> > > > you read the enum definition.
-> > > 
-> > > So, what do you suggest here and in many other similar places (yes, ABI
-> > > implied) in the kernel?
-> > 
-> > Leaving the code alone.
-> 
-> It's good that PWM maintainers look at this differently.
+From: xinlei lee <xinlei.lee@mediatek.com>
 
-The enum is not userspace so it's not ABI.
+Base on the branch of Linux-next/master.
+Split from series [1].
+[1] https://patchwork.kernel.org/project/linux-mediatek/cover/1661239875-19841-1-git-send-email-xinlei.lee@mediatek.com/
 
-The PWM maintainers are free to do what they want but I
-prefer obviousness over compactness.
+Add dt-binding documentation of pwm for MediaTek MT8188 SoC.
+
+Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+index 8c4f8bf..0088bc8 100644
+--- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
++++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
+@@ -27,6 +27,7 @@ properties:
+       - items:
+           - enum:
+               - mediatek,mt8186-disp-pwm
++              - mediatek,mt8188-disp-pwm
+               - mediatek,mt8192-disp-pwm
+               - mediatek,mt8195-disp-pwm
+           - const: mediatek,mt8183-disp-pwm
+-- 
+2.6.4
+
