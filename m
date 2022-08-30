@@ -2,115 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 259565A4EAC
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Aug 2022 15:58:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 122CE5A60E1
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 Aug 2022 12:36:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229873AbiH2N6I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 29 Aug 2022 09:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39176 "EHLO
+        id S229684AbiH3Kgy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 Aug 2022 06:36:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbiH2N6A (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 29 Aug 2022 09:58:00 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 616F380F49;
-        Mon, 29 Aug 2022 06:58:00 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id l3so8060516plb.10;
-        Mon, 29 Aug 2022 06:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc;
-        bh=uyREE3fVUfVLXJ9trWcxM2jpkfj4wawfjqxKtCQdtxA=;
-        b=K3orChyEl1A6UE9Ly+Y03qPb6XOUUe2qzgKr5pkBRS7CFcpc9FR/pvhxIU/aGBN16c
-         +kyygQgxUaxZTp+iQg0x3lhZM33wG5SMyJRh0es4VL9r4YwOAokMDxCs79ANmtF8i1nV
-         c84bo1fXAJFE8Egir1R1/kSDfEpGd9cLOGV1LbQ6nNX1Dp9/PZnBHHnH05zbabvp+UxI
-         lXBL8JfU6UvAYQLHSfyvNdVT8gRPQCTQC1DGXlg/raAnerBoNTgRfVr68F6wMs2X/6mV
-         J0wOTl/PK7kfWLBlLEkZA7xLlGr3tDHiSPB6cMmvN3eRKqXdras4zkYTR2mODqWElY0L
-         Jgzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc;
-        bh=uyREE3fVUfVLXJ9trWcxM2jpkfj4wawfjqxKtCQdtxA=;
-        b=2Setj6vFXkmR3zuZkG901GUtRUMCmOBh031TTTULHEeGn/YjEpregE5YRUBz5vOBQW
-         m75lQabZzPXj+UABfLjp2HQIL51kNa/F5MyBlRmNznzpPTJOaPdH+NqFJWgz1KspnS2T
-         QOdDFzZmLSmamClhqpfYC2TLlKLkSgiOsApWUgOWvMy4HjiWptpBLMi6DGMhdcfuyj3B
-         LM1/gFe1sscjG6YPS5APFP1COPom2DXfiUbvxTnMJsaIDZRWOJcDDSLzl0IFh7zXIGHT
-         RrGSZYGpL5KHvLNSQ2spYgte8b7p6w8Cwi0Mkl/b4DSoRysslQG+34CSi2WBrnfFzaKu
-         7s5g==
-X-Gm-Message-State: ACgBeo1molrpGh4DKcEjUQR+rmuLOe48rAOs1EIT9NIyS5fkpc8I2arz
-        78j6Zqvb8hGA/o+byqADdZ0=
-X-Google-Smtp-Source: AA6agR6Q6YpWQ51FcZTGOpVW7g4gq/cMS0zb6rHM4EA4LQpOVbKe9Cxnq3Onm2eCPPb2IREyOn8H2w==
-X-Received: by 2002:a17:90b:3003:b0:1fd:f876:72f4 with SMTP id hg3-20020a17090b300300b001fdf87672f4mr717140pjb.145.1661781479939;
-        Mon, 29 Aug 2022 06:57:59 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b202-20020a621bd3000000b005377c854b50sm7252719pfb.1.2022.08.29.06.57.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Aug 2022 06:57:59 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Mon, 29 Aug 2022 06:57:58 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jean Delvare <jdelvare@suse.com>
-Subject: Re: [PATCH v2 1/3] hwmon: (pwm-fan) Replace OF specific call to PWM
- by plain one
-Message-ID: <20220829135758.GA306130@roeck-us.net>
-References: <20220826172642.16404-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229739AbiH3Kgx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 Aug 2022 06:36:53 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0548DA99D6;
+        Tue, 30 Aug 2022 03:36:53 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 307116601D92;
+        Tue, 30 Aug 2022 11:36:51 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1661855811;
+        bh=rss5yhhAOkOZgTjBZofcKSYZN8+ajXcvMRSruFr6dis=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=RUAjO6OG7y1chiDV49ps6XX8amWr8x4vu6e0hPO26PpmdZwFEmx3SCcn4hZDfj9+u
+         ktpfka3e/PYETn0wBuskZycxoQ2crlpZJpeahGRqi7tWwMv/mwh0GZL5kyJgBvGxp7
+         eyUaOgRaAwVRePrSHz5RfJyzHTjiSGcFA0DCvNaIT9sUd0hiZSYKJjcrCLsUQ8teUQ
+         fyiz/vEqUwq4Y1ASnBVumYPy1Rm/YDZOehKWxj4e3hmbwiYxIJJNvPKgToU9uDsS6Q
+         ovMYZpcxOwqQfvUDGK/ERFtuMDJr+c3H5RksGbrBpCt90NQRWm1ON7Y4aPxX7EhBhH
+         jVuCTKY53gesA==
+Message-ID: <814291c8-e24f-ea5c-8f88-af978f72e335@collabora.com>
+Date:   Tue, 30 Aug 2022 12:36:48 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220826172642.16404-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] pwm: mtk-disp: Fix the parameters calculated by the
+ enabled flag of disp_pwm.
+Content-Language: en-US
+To:     xinlei.lee@mediatek.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, matthias.bgg@gmail.com,
+        jitao.shi@mediatek.com
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <1661745852-27323-1-git-send-email-xinlei.lee@mediatek.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <1661745852-27323-1-git-send-email-xinlei.lee@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 08:26:40PM +0300, Andy Shevchenko wrote:
-> There is no need to call OF specific devm_of_pwm_get() since
-> the device node parameter duplicates in the device parameter.
-> Hence we may safely replace it by plain devm_pwm_get() call.
+Il 29/08/22 06:04, xinlei.lee@mediatek.com ha scritto:
+> From: xinlei lee <xinlei.lee@mediatek.com>
 > 
-> This allows to drop devm_of_pwm_get() as no more users will be.
+> In the original mtk_disp_pwm_get_state() function, the result of reading
+> con0 & BIT(0) is enabled as disp_pwm.
+> In order to conform to the register table, we should use the disp_pwm
+> base address as the enabled judgment.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-I am going to apply the series to hwmon-next.
-Uwe, please holler if that is not ok.
-
-Thanks,
-Guenter
-
-> ---
-> v2: added tag (Uwe), left only one-liner change (Uwe, Guenter)
->  drivers/hwmon/pwm-fan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Fixes: 3f2b16734914 ("pwm: mtk-disp: Implement atomic API .get_state()")
 > 
-> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-> index 6c08551d8d14..06fd1d75101d 100644
-> --- a/drivers/hwmon/pwm-fan.c
-> +++ b/drivers/hwmon/pwm-fan.c
-> @@ -302,7 +302,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
->  
->  	mutex_init(&ctx->lock);
->  
-> -	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
-> +	ctx->pwm = devm_pwm_get(dev, NULL);
->  	if (IS_ERR(ctx->pwm))
->  		return dev_err_probe(dev, PTR_ERR(ctx->pwm), "Could not get PWM\n");
->  
+> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+> Reviewed-by: Miles Chen <miles.chen@mediatek.com>
+
+This fix is valid for all MediaTek SoCs that are currently supported in
+pwm-mtk-disp (and some others that aren't supported yet).
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
