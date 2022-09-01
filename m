@@ -2,156 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1635A8036
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Aug 2022 16:30:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB695A9983
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Sep 2022 15:56:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbiHaOa4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 31 Aug 2022 10:30:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
+        id S232840AbiIANzk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 1 Sep 2022 09:55:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbiHaOaz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 31 Aug 2022 10:30:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E95887548C;
-        Wed, 31 Aug 2022 07:30:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S234107AbiIANzd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Sep 2022 09:55:33 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97267109F;
+        Thu,  1 Sep 2022 06:55:32 -0700 (PDT)
+Received: from jupiter.universe (dyndsl-037-138-187-177.ewe-ip-backbone.de [37.138.187.177])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 81BF561BBB;
-        Wed, 31 Aug 2022 14:30:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F252C433C1;
-        Wed, 31 Aug 2022 14:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661956253;
-        bh=RZ1NKKaymq+6ZylhYUzYOUmsnd+VirvgHXMwybf81Gk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KzCHCyUlihhvc1ponolL2CKrfgyltgxE0XMCQYgm7hVLIC7RJj3YjsGI2U56jcAbk
-         NT37ydGKbDzkJQztXhN+PzEPGTLB0JJbsYn0FzTq/K513FT2WdLuuTZZJeWYJEv/iU
-         cnNzCXSGD2AMCaGq49nQUx2amtpdXdlsjWbA82nKTx+JJMo1ppxeRrrfJyyQfWVZ2S
-         7MU1RYKH6bCbUOSiGEF/VQkZvvHcRtEoGM0fHDpcP7G21yrgSSBcl5gTCp46qFEQ3g
-         jG1KXFgwy9hmNA2TaOUgOqCa8fbzCTvSXXs3/LNnsMFETBCHs/XJgs3b3Y11FkbbD9
-         OZ/sGQdHQFPxA==
-Received: by pali.im (Postfix)
-        id 80DA1855; Wed, 31 Aug 2022 16:30:49 +0200 (CEST)
-Date:   Wed, 31 Aug 2022 16:30:49 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7EA5C660038D;
+        Thu,  1 Sep 2022 14:55:30 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1662040530;
+        bh=S/Fwz+sP2OV+s9AizJMsolHEAHaDJPcK93omLyO1qQM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RcXNM05FgwGRKfefzMc+c3TlyhYkVm/ErV7nXEhRx1FjyWIUX+vBVuM3THG7Log/X
+         wuaaymVOPULdXidN1lcoflZvoljfzYeqIgNla2n8tOjDH+EQC4/Mk29GmECMd9Jy8R
+         672g5NtzzAbLtwO+46TIBfhAKHcXYk1dH93VqvTnKJWv7KwdlcM66DYK7Lh1Je5AVB
+         BIAIsiGo+OXkGzjZKt5sj4Jmj800IbNZHhrtLdsU9dOYghKz3phsFDC6HK9ZPkNYG7
+         ySd9rk9qV3wzlvze1rglpM6wp1emjAMBDwUkrWxBhwRbTGhYjMUJebT72fcBrPzSWn
+         TQIZSUpWs7jhw==
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 2E88A48015C; Thu,  1 Sep 2022 15:55:28 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] ARM: dts: armada-38x: Fix compatible string for
- gpios
-Message-ID: <20220831143049.gdh6dyrn5su2enox@pali>
-References: <20220714115515.5748-1-pali@kernel.org>
- <20220714183328.4137-1-pali@kernel.org>
- <20220714183328.4137-3-pali@kernel.org>
- <20220716144028.rzwcn4wl5uyxepjd@pengutronix.de>
- <20220716145019.nps3oh4a22fsuzup@pali>
- <20220716150751.6yaknmo3qwusyy5h@pengutronix.de>
- <20220716160916.jp37siznitgzw6qf@pali>
- <20220725200417.nwthxzvdv2bzd5ej@pengutronix.de>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>,
+        linux-pwm@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        kernel@collabora.com
+Subject: [PATCH 1/1] dt-bindings: pwm: rockchip: Add description for rk3588
+Date:   Thu,  1 Sep 2022 15:55:23 +0200
+Message-Id: <20220901135523.52151-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220725200417.nwthxzvdv2bzd5ej@pengutronix.de>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Monday 25 July 2022 22:04:17 Uwe Kleine-König wrote:
-> Hello Pali,
-> 
-> On Sat, Jul 16, 2022 at 06:09:16PM +0200, Pali Rohár wrote:
-> > On Saturday 16 July 2022 17:07:51 Uwe Kleine-König wrote:
-> > > On Sat, Jul 16, 2022 at 04:50:19PM +0200, Pali Rohár wrote:
-> > > > On Saturday 16 July 2022 16:40:28 Uwe Kleine-König wrote:
-> > > > > On Thu, Jul 14, 2022 at 08:33:27PM +0200, Pali Rohár wrote:
-> > > > > > Armada 38x supports per CPU interrupts for gpios, like Armada XP. Pre-XP
-> > > > > > variants like Armada 370 do not support per CPU interrupts for gpios.
-> > > > > > 
-> > > > > > So change compatible string for Armada 38x from "marvell,armada-370-gpio"
-> > > > > > which indicates pre-XP variant to "marvell,armadaxp-gpio" which indicates
-> > > > > > XP variant or new.
-> > > > > > 
-> > > > > > Driver gpio-mvebu.c which handles both pre-XP and XP variants already
-> > > > > > provides support for per CPU interrupts on XP and newer variants.
-> > > > > > 
-> > > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > > Fixes: 7cb2acb3fbae ("ARM: dts: mvebu: Add PWM properties for armada-38x")
-> > > > > > ---
-> > > > > >  arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
-> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> > > > > > index df3c8d1d8f64..9343de6947b3 100644
-> > > > > > --- a/arch/arm/boot/dts/armada-38x.dtsi
-> > > > > > +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> > > > > > @@ -292,7 +292,7 @@
-> > > > > >  			};
-> > > > > >  
-> > > > > >  			gpio0: gpio@18100 {
-> > > > > > -				compatible = "marvell,armada-370-gpio",
-> > > > > > +				compatible = "marvell,armadaxp-gpio",
-> > > > > >  					     "marvell,orion-gpio";
-> > > > > 
-> > > > > If you can treat the XP variant as 370 and everything that is supposed
-> > > > > to work on 370 works then, then maybe the right incarnation is:
-> > > > > 
-> > > > > 	compatible = "marvell,armadaxp-gpio", "marvell,armada-370-gpio", "marvell,orion-gpio";
-> > > > > 
-> > > > > ?
-> > > > 
-> > > > For pre-XP variants is "marvell,orion-gpio" enough and for XP + post-XP
-> > > > is needed "marvell,armadaxp-gpio" (with possible "marvell,orion-gpio"
-> > > > for backward compatibility).
-> > > > 
-> > > > So I do not see reason why to add "marvell,armada-370-gpio" nor what
-> > > > value it brings.
-> > > 
-> > > If you boot an older kernel (i.e. one that doesn't support
-> > > marvell,armadaxp-gpio, but does support marvell,armada-370-gpio), it
-> > 
-> > Is there such kernel version?
-> 
-> Ah, I thought you added "marvell,armadaxp-gpio" with this patch series.
-> 
-> > > will work better as there are relevant differences between
-> > > marvell,orion-gpio and marvell,armada-370-gpio.
-> > 
-> > And if yes, do we really need this in DTS files for new kernel
-> > versions? I can imagine that such change can be relevant for old LTS
-> > kernel version, but not for new versions.
-> > 
-> > > For example some
-> > > registers seem to have a different offset ...
-> > 
-> > armada-370-gpio is mapped to MVEBU_GPIO_SOC_VARIANT_ORION, so it will
-> > get same offsets as orion-gpio. So no change.
-> 
-> OK, you're right, my assumptions were wrong. I'm convinced your change
-> is fine now:
-> 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Best regards
-> Uwe
+Add "rockchip,rk3588-pwm" compatible string for PWM nodes found
+on a rk3588 platform.
 
-Ok, are there any other objections with this patch series?
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+No driver changes required.
+---
+ Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+index a336ff9364a9..f946861e3f8a 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+@@ -30,6 +30,7 @@ properties:
+               - rockchip,px30-pwm
+               - rockchip,rk3308-pwm
+               - rockchip,rk3568-pwm
++              - rockchip,rk3588-pwm
+           - const: rockchip,rk3328-pwm
+ 
+   reg:
+-- 
+2.35.1
+
