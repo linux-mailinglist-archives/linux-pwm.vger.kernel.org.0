@@ -2,190 +2,163 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70BB35AF547
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Sep 2022 22:04:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7851B5AF554
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Sep 2022 22:05:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbiIFUEA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Sep 2022 16:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44266 "EHLO
+        id S230474AbiIFUFm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Sep 2022 16:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbiIFUDb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Sep 2022 16:03:31 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86887357F9;
-        Tue,  6 Sep 2022 12:59:00 -0700 (PDT)
+        with ESMTP id S230509AbiIFUFQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Sep 2022 16:05:16 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F8C1BD175;
+        Tue,  6 Sep 2022 13:00:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662494340; x=1694030340;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DLAYl/tomufvU0qedUSOwgtL2ARaViWqYo/L/dYYvM4=;
-  b=FVcIFZvQ2kKKzPHHFr+PF/BmFz0NnQ+cCKdTOnd/prwrPm6y3oRp3bqX
-   oSdlFxAiQCoxQonPsz3mXBDXzjjQ8hf0fwQlxnId3IkUGrM3R4IBXGHKR
-   Y+Ei8QFKr7OCkaILsiZdbsBoiv6sJaJikwDm80st1OO/OwwNgDTIr657S
-   r/HBr0OjfY2c4JwxK8rmjWEhF6Yz/60kHHXAiBWewef5keqNTqabjkN9u
-   Yx/dEgqtul6NI+/fsSBon8ZJJ/vDHWYV+1v2cpDbHq9pIx1KnAAHn2/jY
-   NUuMlUMSDeXexEnKQRZGXNyldvibjhQsNzSVLfBDA0VXB6HZxkLVcBX0m
+  t=1662494450; x=1694030450;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=iq1Y9qzevbXHQV0PMTlCthi3beONg7fz4bV5MI/m6y4=;
+  b=M6BXCBHbOGN3zvi9oLzQIhvP1A+S/3yxa/pNBXdjCXO4UpXTergRLhNu
+   4YGwQm7HN8poLnMGnnBMWjvNGV+xEyNB6PtjXsdGVyeadBobmuvkN+A2p
+   8X9TtkDX1nOeDxKmxN+S+XiIt82cdk16rvF7RELShgazO0CzON/4wdPg8
+   lVlZGqkszBFZ/1KpSDYZE8QZblUN2hVUPJjMibGcMArXZ3eWXplmRmntO
+   OjhfOXQI6r56U5Avbup/JEq7pnOQgZyJyX5vSyRgCKElddv28kwdv6Z/q
+   dzb/Onk862EkWUoEPn+nJU4HYt4lV/tTIIJ/uWFn69mO+Kr8AmnRN3BBS
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="279705025"
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="296692324"
 X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="279705025"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 12:57:31 -0700
+   d="scan'208";a="296692324"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 12:57:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="610070470"
+   d="scan'208";a="717838948"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 06 Sep 2022 12:57:30 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 06 Sep 2022 12:57:30 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E167A86; Tue,  6 Sep 2022 22:57:45 +0300 (EEST)
+        id 0EA4E238; Tue,  6 Sep 2022 22:57:46 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v1 1/9] pwm: lpss: Deduplicate board info data structures
-Date:   Tue,  6 Sep 2022 22:57:27 +0300
-Message-Id: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/9] pwm: lpss: Move resource mapping to the glue drivers
+Date:   Tue,  6 Sep 2022 22:57:29 +0300
+Message-Id: <20220906195735.87361-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
+References: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-With help of __maybe_unused, that allows to avoid compilation warnings,
-move the board info structures from the C files to the common header
-and hence deduplicate configuration data.
+Move resource mapping to the glue drivers which helps
+to transform pwm_lpss_probe() to pure library function
+that may be used by others without need of specific
+resource management.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pwm/pwm-lpss-pci.c      | 29 -----------------------------
- drivers/pwm/pwm-lpss-platform.c | 23 -----------------------
- drivers/pwm/pwm-lpss.h          | 30 ++++++++++++++++++++++++++++++
- 3 files changed, 30 insertions(+), 52 deletions(-)
+ drivers/pwm/pwm-lpss-pci.c      | 6 +++++-
+ drivers/pwm/pwm-lpss-platform.c | 9 ++++++---
+ drivers/pwm/pwm-lpss.c          | 7 ++-----
+ drivers/pwm/pwm-lpss.h          | 2 +-
+ 4 files changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-index c893ec3d2fb4..75b778e839b3 100644
+index 9f2c666b95ec..f3367e844e61 100644
 --- a/drivers/pwm/pwm-lpss-pci.c
 +++ b/drivers/pwm/pwm-lpss-pci.c
-@@ -14,35 +14,6 @@
+@@ -25,8 +25,12 @@ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
+ 	if (err < 0)
+ 		return err;
  
- #include "pwm-lpss.h"
++	err = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
++	if (err)
++		return err;
++
+ 	info = (struct pwm_lpss_boardinfo *)id->driver_data;
+-	lpwm = pwm_lpss_probe(&pdev->dev, &pdev->resource[0], info);
++	lpwm = pwm_lpss_probe(&pdev->dev, pcim_iomap_table(pdev)[0], info);
+ 	if (IS_ERR(lpwm))
+ 		return PTR_ERR(lpwm);
  
--/* BayTrail */
--static const struct pwm_lpss_boardinfo pwm_lpss_byt_info = {
--	.clk_rate = 25000000,
--	.npwm = 1,
--	.base_unit_bits = 16,
--};
--
--/* Braswell */
--static const struct pwm_lpss_boardinfo pwm_lpss_bsw_info = {
--	.clk_rate = 19200000,
--	.npwm = 1,
--	.base_unit_bits = 16,
--};
--
--/* Broxton */
--static const struct pwm_lpss_boardinfo pwm_lpss_bxt_info = {
--	.clk_rate = 19200000,
--	.npwm = 4,
--	.base_unit_bits = 22,
--	.bypass = true,
--};
--
--/* Tangier */
--static const struct pwm_lpss_boardinfo pwm_lpss_tng_info = {
--	.clk_rate = 19200000,
--	.npwm = 4,
--	.base_unit_bits = 22,
--};
--
- static int pwm_lpss_probe_pci(struct pci_dev *pdev,
- 			      const struct pci_device_id *id)
- {
 diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
-index 928570430cef..fcd80cca2f6d 100644
+index 96fde1b2b967..af57472f3ddc 100644
 --- a/drivers/pwm/pwm-lpss-platform.c
 +++ b/drivers/pwm/pwm-lpss-platform.c
-@@ -15,29 +15,6 @@
- 
- #include "pwm-lpss.h"
- 
--/* BayTrail */
--static const struct pwm_lpss_boardinfo pwm_lpss_byt_info = {
--	.clk_rate = 25000000,
--	.npwm = 1,
--	.base_unit_bits = 16,
--};
--
--/* Braswell */
--static const struct pwm_lpss_boardinfo pwm_lpss_bsw_info = {
--	.clk_rate = 19200000,
--	.npwm = 1,
--	.base_unit_bits = 16,
--	.other_devices_aml_touches_pwm_regs = true,
--};
--
--/* Broxton */
--static const struct pwm_lpss_boardinfo pwm_lpss_bxt_info = {
--	.clk_rate = 19200000,
--	.npwm = 4,
--	.base_unit_bits = 22,
--	.bypass = true,
--};
--
- static int pwm_lpss_probe_platform(struct platform_device *pdev)
- {
+@@ -20,16 +20,19 @@ static int pwm_lpss_probe_platform(struct platform_device *pdev)
  	const struct pwm_lpss_boardinfo *info;
-diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
-index 8b3476f25e06..3864f32c2487 100644
---- a/drivers/pwm/pwm-lpss.h
-+++ b/drivers/pwm/pwm-lpss.h
-@@ -33,6 +33,36 @@ struct pwm_lpss_boardinfo {
- 	bool other_devices_aml_touches_pwm_regs;
+ 	const struct acpi_device_id *id;
+ 	struct pwm_lpss_chip *lpwm;
+-	struct resource *r;
++	void __iomem *base;
+ 
+ 	id = acpi_match_device(pdev->dev.driver->acpi_match_table, &pdev->dev);
+ 	if (!id)
+ 		return -ENODEV;
+ 
+ 	info = (const struct pwm_lpss_boardinfo *)id->driver_data;
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+-	lpwm = pwm_lpss_probe(&pdev->dev, r, info);
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	lpwm = pwm_lpss_probe(&pdev->dev, base, info);
+ 	if (IS_ERR(lpwm))
+ 		return PTR_ERR(lpwm);
+ 
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index a82a57eb2482..44f9bb80611d 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -207,7 +207,7 @@ static const struct pwm_ops pwm_lpss_ops = {
+ 	.owner = THIS_MODULE,
  };
  
-+/* BayTrail */
-+static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_byt_info = {
-+	.clk_rate = 25000000,
-+	.npwm = 1,
-+	.base_unit_bits = 16,
-+};
-+
-+/* Braswell */
-+static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_bsw_info = {
-+	.clk_rate = 19200000,
-+	.npwm = 1,
-+	.base_unit_bits = 16,
-+	.other_devices_aml_touches_pwm_regs = true,
-+};
-+
-+/* Broxton */
-+static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_bxt_info = {
-+	.clk_rate = 19200000,
-+	.npwm = 4,
-+	.base_unit_bits = 22,
-+	.bypass = true,
-+};
-+
-+/* Tangier */
-+static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_tng_info = {
-+	.clk_rate = 19200000,
-+	.npwm = 4,
-+	.base_unit_bits = 22,
-+};
-+
- struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, struct resource *r,
+-struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, struct resource *r,
++struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *base,
+ 				     const struct pwm_lpss_boardinfo *info)
+ {
+ 	struct pwm_lpss_chip *lpwm;
+@@ -222,10 +222,7 @@ struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, struct resource *r,
+ 	if (!lpwm)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	lpwm->regs = devm_ioremap_resource(dev, r);
+-	if (IS_ERR(lpwm->regs))
+-		return ERR_CAST(lpwm->regs);
+-
++	lpwm->regs = base;
+ 	lpwm->info = info;
+ 
+ 	c = lpwm->info->clk_rate;
+diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
+index 3864f32c2487..5995b6b750a8 100644
+--- a/drivers/pwm/pwm-lpss.h
++++ b/drivers/pwm/pwm-lpss.h
+@@ -63,7 +63,7 @@ static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_tng_info = {
+ 	.base_unit_bits = 22,
+ };
+ 
+-struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, struct resource *r,
++struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *base,
  				     const struct pwm_lpss_boardinfo *info);
  
+ #endif	/* __PWM_LPSS_H */
 -- 
 2.35.1
 
