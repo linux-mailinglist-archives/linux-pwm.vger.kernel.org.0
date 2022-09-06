@@ -2,77 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 917045AEDAA
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Sep 2022 16:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C0DA5AF539
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Sep 2022 22:02:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242134AbiIFOiZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Sep 2022 10:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
+        id S230373AbiIFUCY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Sep 2022 16:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234075AbiIFOiB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Sep 2022 10:38:01 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E82DD81B0C;
-        Tue,  6 Sep 2022 07:00:12 -0700 (PDT)
+        with ESMTP id S230390AbiIFUCG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Sep 2022 16:02:06 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30112BA176;
+        Tue,  6 Sep 2022 12:57:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662472813; x=1694008813;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jgV2lWWjq/uG5FoAvxLpsU0/ppNVg7RQVY9CZ4CndCM=;
-  b=QWsTLFVxvCrEHGn/8G/cudWmai0MRXrAoPO4oM78wCo8l/T7De7eXIQ3
-   Nghz1yCicOk1AMt3hbjBfNF2JQH+8IQzW5yahhwWKtflQpFVCeIT7x0dw
-   jauZd+d1Gg7b50aayw4qVOHIWWo8cbo2crFXDHIouHyyDlmTBmkrxsz0s
-   vcCrRoH9vMrtID2rsvTXAAkS9VVlS4s/DPT088H5rCHY+An6RQpZWHTLS
-   9TGkjcT89Ra3QU8JnV0mki0GAX+iQdX3PDiqUiRaGerFgRDE5I8VNc3Ds
-   iNNTGIJl5fOnE2Ty0b7hc/mRCtNww1EJeb5W3HK0vBLLKzWSNa24adv0O
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="279612176"
+  t=1662494258; x=1694030258;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=U3KLmkQYC25dsT/dzKWxv9yfMWhzJxNZMsvxnNcpr0s=;
+  b=dPklQ31WIbMBqIyyJ8YhCZoEgTfL1L7VOHUz9jw4uvVrj746QdZq0VZG
+   tCiUzaj1em6NcbJyJe4r1+8sMvZScL6oevCsmIeMEPMPI6S/cuRKV7e+Z
+   yqY7Os6xTSrzw11iMAuupcJ0m/w0x7pkYnobuy90K7LQv8rSEjpGd0l1R
+   OtcqBEsfr77xCdc5HPdKzE01Uy9Mfmpw/JTjVAXwCVEcXh2KLh+nJrUBt
+   o6tl4Sb8dMgTBsC8skt5LxAP7QVv73ZBk+qMXid097vCmGqNpVWj0IINL
+   IXQfC6LxAF0QwR0pFQkf/Bx7uVMJKFNQ5um0Ge0A7aYsBd/BEtUXFjqzj
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="277085500"
 X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="279612176"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 06:57:35 -0700
+   d="scan'208";a="277085500"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 12:57:32 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="565100120"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 06:57:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oVZ51-009909-1d;
-        Tue, 06 Sep 2022 16:57:31 +0300
-Date:   Tue, 6 Sep 2022 16:57:31 +0300
+   d="scan'208";a="789796848"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 06 Sep 2022 12:57:30 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EF94A7C; Tue,  6 Sep 2022 22:57:45 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/4] pwm: sysfs: Switch to DEFINE_SIMPLE_DEV_PM_OPS()
- and pm_sleep_ptr()
-Message-ID: <YxdRy5NRRUkXU156@smile.fi.intel.com>
-References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/9] pwm: lpss: Move exported symbols to PWM_LPSS namespace
+Date:   Tue,  6 Sep 2022 22:57:28 +0300
+Message-Id: <20220906195735.87361-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
+References: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 08:07:13PM +0300, Andy Shevchenko wrote:
-> Using these newer macros allows the compiler to remove the unused
-> structure and functions when !CONFIG_PM_SLEEP + removes the need to
-> mark pm functions __maybe_unused.
+Avoid unnecessary pollution of the global symbol namespace by
+moving library functions in to a specific namespace and import
+that into the drivers that make use of the functions.
 
-Anything I should have done for this to be applied?
+For more info: https://lwn.net/Articles/760045/
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pwm/pwm-lpss-pci.c      | 1 +
+ drivers/pwm/pwm-lpss-platform.c | 1 +
+ drivers/pwm/pwm-lpss.c          | 2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index 75b778e839b3..9f2c666b95ec 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -92,3 +92,4 @@ module_pci_driver(pwm_lpss_driver_pci);
+ 
+ MODULE_DESCRIPTION("PWM PCI driver for Intel LPSS");
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(PWM_LPSS);
+diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platform.c
+index fcd80cca2f6d..96fde1b2b967 100644
+--- a/drivers/pwm/pwm-lpss-platform.c
++++ b/drivers/pwm/pwm-lpss-platform.c
+@@ -87,4 +87,5 @@ module_platform_driver(pwm_lpss_driver_platform);
+ 
+ MODULE_DESCRIPTION("PWM platform driver for Intel LPSS");
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(PWM_LPSS);
+ MODULE_ALIAS("platform:pwm-lpss");
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 36d4e83e6b79..a82a57eb2482 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -250,7 +250,7 @@ struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, struct resource *r,
+ 
+ 	return lpwm;
+ }
+-EXPORT_SYMBOL_GPL(pwm_lpss_probe);
++EXPORT_SYMBOL_NS_GPL(pwm_lpss_probe, PWM_LPSS);
+ 
+ MODULE_DESCRIPTION("PWM driver for Intel LPSS");
+ MODULE_AUTHOR("Mika Westerberg <mika.westerberg@linux.intel.com>");
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
