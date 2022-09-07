@@ -2,105 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08D105B04E1
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Sep 2022 15:13:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F213C5B065E
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Sep 2022 16:22:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiIGNNI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Sep 2022 09:13:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        id S230154AbiIGOWd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Sep 2022 10:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbiIGNM6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Sep 2022 09:12:58 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E147E314;
-        Wed,  7 Sep 2022 06:12:52 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id t14so13045987wrx.8;
-        Wed, 07 Sep 2022 06:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=XhHHfhBS4JEZS5T4Cqsky8UODYiFkR3zFwNbdfWOgRM=;
-        b=cNPthfE851d7tnORcRK51E1iI5AqPMQEo0UIapDJ1GUAaS8Z4ZppZZ7rLg5TOY1tuS
-         ZQK4JcssPZtZ+Kdff2MXU4oAn9W8OdKmOU47c4ciwwvc8VP5azQaVUJAe1PXJ4JAeNVJ
-         NpWGMfDVf9SkB5y1Jf7d3M50H+FHDReUXNXtfON70iPH30Jr0e525XQLwBypbmfGG9kB
-         DcCNrQwNETpxUHoco8WOnCDHLrYOt5wx2EdQUnsyo9+QtJbnCV5yED/uhhNjO0+/fHz8
-         cfgTeIlHOoCh9mMrKmIIkNc6du8op7r5JLownxHSaCuG26MzZ76XmnF4rXSsJlPTGjPh
-         c39w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=XhHHfhBS4JEZS5T4Cqsky8UODYiFkR3zFwNbdfWOgRM=;
-        b=AALWwaLBh/kYJ2zt2atQ6EYKBaXmK/B3z6IvOhNA/Bmbx15EuP5oDr3KkKEcB5wKE2
-         CzMiTDZhvIXx1/LEjCQpmTYIOA7yqtTqTTuBhOPjuRKWsk8OU2sGvNeUTzL9BBMJkJAQ
-         UcHdyb6+p8C3+6hcIF5iozConXJut5piE5CnCPV60M0FKjWXHxr4PMQZKfjpX7et1VjL
-         h7MbXmQdukHoLQ5LUHFGhqBChD5UuGwfM/qYOHwwB6ubAJP0SKoa80mmyBQa5Nz9j+PX
-         gfx1l5VUR52QCVCAt0LISWh3jpKM/azJaPe5O9eywjAPcHk/EdI9j/a5j/xBH9MvSFyM
-         /0HA==
-X-Gm-Message-State: ACgBeo1IbkYFp6lSmVoaAKz0rLldZpwi4U+jQue0dEHxADwZakaSh+pQ
-        E5nGty56JDzvChKmAEKpHq6mbMt66vU=
-X-Google-Smtp-Source: AA6agR4RcR+HDYfOlSTd0KPvM/Pn5D6JH1gw1MsiVX4ajkgr5c2JDjkO5ziK3Y8MEQ6KyTtY0oTSDQ==
-X-Received: by 2002:adf:dbc4:0:b0:225:333d:8404 with SMTP id e4-20020adfdbc4000000b00225333d8404mr2215948wrj.671.1662556371220;
-        Wed, 07 Sep 2022 06:12:51 -0700 (PDT)
-Received: from debby ([2a01:e0a:a6d:a8d0:7ff4:8f61:5574:9f95])
-        by smtp.gmail.com with ESMTPSA id d11-20020adffd8b000000b00228df23bd51sm3975325wrr.82.2022.09.07.06.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 06:12:50 -0700 (PDT)
-From:   Romain Perier <romain.perier@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] ARM: dts: mstar: Add pwm device node to infinity2m
-Date:   Wed,  7 Sep 2022 15:12:41 +0200
-Message-Id: <20220907131241.31941-6-romain.perier@gmail.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220907131241.31941-1-romain.perier@gmail.com>
-References: <20220907131241.31941-1-romain.perier@gmail.com>
+        with ESMTP id S230147AbiIGOWa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Sep 2022 10:22:30 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12777B2B0;
+        Wed,  7 Sep 2022 07:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662560538; x=1694096538;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=fizAyjXY+bxoAErvuoxhgX8OBGPwMh/zYZZrL+bLqL0=;
+  b=LjZzAmrw5/sokz/GmDKy4OQtw5WIIILwhBJzUVxtp2XjJ9IEldXWE/py
+   /Bduy79wRuVyep8wOYzufhAu5F4wLWnyJBcvCL3qKNChi4Dgn4ECJ5rmK
+   y6nXkdQjNHI8h5YH7FRfnX9mw+n2x430rSUN35JAWXdypPY5DyO+q3PHo
+   TTzpRQE3/0XEtDnVFSkTeQlN2TEO7gXS0UZk0xwZAaOI9phwg4ay8yNCN
+   n2b6QsHuzeVbz74MsMlrX2AHadMgY5MbBCzWcwsvK2cgJX5bkwZ3s2xq0
+   L4a31wEvt9lWDCn599C94wM0S53eY/H9PdIyQMA5uVMSX4M7xded/TPuP
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="277277424"
+X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
+   d="scan'208";a="277277424"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 07:22:01 -0700
+X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
+   d="scan'208";a="591721253"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 07:21:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oVvw9-009gDJ-05;
+        Wed, 07 Sep 2022 17:21:53 +0300
+Date:   Wed, 7 Sep 2022 17:21:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v1 2/9] pwm: lpss: Move exported symbols to PWM_LPSS
+ namespace
+Message-ID: <YxipACrMCQbE4xmk@smile.fi.intel.com>
+References: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
+ <20220906195735.87361-2-andriy.shevchenko@linux.intel.com>
+ <20220907091144.picr3byckxco7w6m@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220907091144.picr3byckxco7w6m@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This adds definition of the pwm device node, infinity2m has its own
-hardware variant, so use the one for ssd20xd.
+On Wed, Sep 07, 2022 at 11:11:44AM +0200, Uwe Kleine-König wrote:
+> On Tue, Sep 06, 2022 at 10:57:28PM +0300, Andy Shevchenko wrote:
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
----
- arch/arm/boot/dts/mstar-infinity2m.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> >  MODULE_DESCRIPTION("PWM platform driver for Intel LPSS");
+> >  MODULE_LICENSE("GPL v2");
+> > +MODULE_IMPORT_NS(PWM_LPSS);
+> >  MODULE_ALIAS("platform:pwm-lpss");
+> 
+> While it's not wrong to add the IMPORT_NS statement to each file, I'd
+> had added it to pwm-lpss.h. IMHO that makes sense as every includer of
+> that header needs that IMPORT_NS to actually use the symbols declared
+> there.
 
-diff --git a/arch/arm/boot/dts/mstar-infinity2m.dtsi b/arch/arm/boot/dts/mstar-infinity2m.dtsi
-index 1b485efd7156..70561e512483 100644
---- a/arch/arm/boot/dts/mstar-infinity2m.dtsi
-+++ b/arch/arm/boot/dts/mstar-infinity2m.dtsi
-@@ -32,6 +32,14 @@ cpu1: cpu@1 {
- };
- 
- &riu {
-+	pwm: pwm@3400 {
-+		compatible = "mstar,ssd20xd-pwm";
-+		reg = <0x3400 0x400>;
-+		#pwm-cells = <2>;
-+		clocks = <&xtal_div2>;
-+		status = "disabled";
-+	};
-+
- 	smpctrl: smpctrl@204000 {
- 		reg = <0x204000 0x200>;
- 		status = "disabled";
+If you have an optional dependency you may not need to include namespace
+to avoid dragging it for peanuts.
+
+...
+
+> > -EXPORT_SYMBOL_GPL(pwm_lpss_probe);
+> > +EXPORT_SYMBOL_NS_GPL(pwm_lpss_probe, PWM_LPSS);
+> 
+> There is something possible with more magic:
+
+I know.
+
+> 	#define DEFAULT_SYMBOL_NAMESPACE PWM_LPSS
+> 
+> which you only need once in pwm-lpss.c and then all exports use that
+> namespace. (And if you pick up my suggestion for patch 1 you also
+> benefit from that.)
+
+For a single export (even for a few of them) it's an overkill.
+
+Taking above into consideration I don't think we need to alter
+a proposed change.
+
+Thanks for review!
+
 -- 
-2.35.1
+With Best Regards,
+Andy Shevchenko
+
 
