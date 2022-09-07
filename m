@@ -2,98 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F369A5B0688
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Sep 2022 16:28:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C7125B06CA
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Sep 2022 16:32:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbiIGO2V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Sep 2022 10:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36638 "EHLO
+        id S230362AbiIGOcV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Sep 2022 10:32:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230215AbiIGO2S (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Sep 2022 10:28:18 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B62713EB2;
-        Wed,  7 Sep 2022 07:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662560874; x=1694096874;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yPHRVWO3U0npV4VOBqkt491C2RssIupsalxDqSwaFLY=;
-  b=eG1ONWzR/PO9VGuZaXLxIW1OcAU3ADU9+Du/iRdixBa4472VJl4walP3
-   9LMEc5swLw0J9N81PlXKinlvnNI9kA15Xk2UU5hgfIjrb/2w47m0pBjQO
-   4K2yLU2tcQEv1Try/HQ8pLSHCT2+Z5CNeO9vT877vwTKCwFqOWD1djYYb
-   yl9/VI6IeVvd2A43gFr32ZSDzXFcE1FeEZPvc/QDB+aiOGH3jf09f0bkT
-   CzrYx6d6D93GA/l25Teom26vE2fzE44LrBHub1j+UN+QogSPaYw7MA5FT
-   TKaJK00y3zkTvA4WU+VxQ9pIrTU9w75r7WgaJAU/GliTpIXGteWz/PtYJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="279897897"
-X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
-   d="scan'208";a="279897897"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 07:27:26 -0700
-X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
-   d="scan'208";a="756792434"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 07:27:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oVw1S-009gLv-1d;
-        Wed, 07 Sep 2022 17:27:22 +0300
-Date:   Wed, 7 Sep 2022 17:27:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v1 1/9] pwm: lpss: Deduplicate board info data structures
-Message-ID: <YxiqSiP4dTa2bhUh@smile.fi.intel.com>
-References: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
- <20220907090412.kqvbmgfgeb4toz5n@pengutronix.de>
+        with ESMTP id S230296AbiIGOb5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Sep 2022 10:31:57 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA29D520BF
+        for <linux-pwm@vger.kernel.org>; Wed,  7 Sep 2022 07:31:53 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id bj12so30735400ejb.13
+        for <linux-pwm@vger.kernel.org>; Wed, 07 Sep 2022 07:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date;
+        bh=UTPjlhWN0j/3cl0uibj9IdU3K9tIHCNTd74bAPWV+BQ=;
+        b=hlX5LG70Pfi5xUfXCm2C7WvkXcJVP5UakJZVNodPOy7vNkSXQuxkM6JMnL0NkwpmEx
+         GApIDchppryVktOBo5G41BqVss7NVeWmLRXcOx2bAZqQ+LAYFz8ePbLc684sFXT4Nmqj
+         OcoPmJYuvMlwncvSBL0BFnkvuWLyKibj/n8A5QS+qmy30Nhg7xyf0NkI/q67juR/h0tY
+         bD/nOML45bK21IZjrLP4cVfkyGYdsdvh6OJ7KPKPWGwDpi4WDdxiFiQ5bptV3cHn11YY
+         R2/ccByiK1oIAZVOw3mE9dymIO7CzllUwLBF2JbmBffIhO2NpTaaNqhGzBB+XMxejIE1
+         VDsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=UTPjlhWN0j/3cl0uibj9IdU3K9tIHCNTd74bAPWV+BQ=;
+        b=k7DCOeLhadMsVLTgMpv+mMAkY7qwViJileykhbb9YMA13ytZss+LvpSGqi3teaBck2
+         3agcktYA2BFkjL9X76h2OBu5XMpvSaHzSnha62EZj8EIOkTvrdh8Nr3QpijSUfAVEf95
+         I0pzqgXk6Al/vm9KWzA499iZIwFTGjVLlM+U9Dx4/7RvvfLALpfC0jRlmQjqsIfTaC7s
+         zZcWeiTNMxPkYBVxcwFwQ5G2+jA9jNMUA9bL26xfEbcQ4C2xWFtfHtv1SCNw1PXkr75y
+         BmX6s6iXfg2PD/7lQLLzh5cvbZelgMFjWh+8ry/bJ/gAKdpXBhMmzmgvee+Tnkr+nBVJ
+         pj1w==
+X-Gm-Message-State: ACgBeo3rW1LQFKwD/u1XUCvgNMvR5/GkQMQ8vnSGYcAHvVxRvgrLSXKG
+        C/V7HumxPwiZBTfRu7P0rcCH2rewOIknu3nCb+A=
+X-Google-Smtp-Source: AA6agR4pyZsB+xbbjgKGlrl2+RDjPAQ7wWCMdSGS3qWC1Sv629AIX++hkd3miN/bJlP1/yRRoX5bdHKo53e2l2Vr/Xc=
+X-Received: by 2002:a17:906:38f:b0:742:1f68:7058 with SMTP id
+ b15-20020a170906038f00b007421f687058mr2510502eja.743.1662561112231; Wed, 07
+ Sep 2022 07:31:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220907090412.kqvbmgfgeb4toz5n@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a54:3fc4:0:0:0:0:0 with HTTP; Wed, 7 Sep 2022 07:31:51 -0700 (PDT)
+Reply-To: lumar.casey@outlook.com
+From:   LUMAR CASEY <miriankushrat@gmail.com>
+Date:   Wed, 7 Sep 2022 16:31:51 +0200
+Message-ID: <CAO4StN23CjT73+kAZo3jW6NA7B_rVMGFz9vZYzq4Gs86AZgN6A@mail.gmail.com>
+Subject: ATTENTION/PROPOSAL
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.8 required=5.0 tests=ADVANCE_FEE_4_NEW_MONEY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM,UNDISC_MONEY,UPPERCASE_75_100 autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:644 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5014]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [miriankushrat[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 UPPERCASE_75_100 message body is 75-100% uppercase
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  0.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  0.0 ADVANCE_FEE_4_NEW_MONEY Advance Fee fraud and lots of money
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 11:04:12AM +0200, Uwe Kleine-König wrote:
-> On Tue, Sep 06, 2022 at 10:57:27PM +0300, Andy Shevchenko wrote:
-> > With help of __maybe_unused, that allows to avoid compilation warnings,
-> > move the board info structures from the C files to the common header
-> > and hence deduplicate configuration data.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/pwm/pwm-lpss-pci.c      | 29 -----------------------------
-> >  drivers/pwm/pwm-lpss-platform.c | 23 -----------------------
-> >  drivers/pwm/pwm-lpss.h          | 30 ++++++++++++++++++++++++++++++
-> 
-> Given that both the pci driver and the platform driver alread depend on
-> pwm-lpss.o, I'd prefer something like the patch below to really
-> deduplicate the data.
+ATTENTION
 
-Why not? I can use yours in v2. Can I get your SoB tag?
+BUSINESS PARTNER,
 
-> One thing to note is that the two pwm_lpss_bsw_info are not identical. I
-> didn't check how that is relevant. Did you check that?
+I AM LUMAR CASEY WORKING WITH AN INSURANCE FINANCIAL INSTITUTE, WITH
+MY POSITION AND PRIVILEGES I WAS ABLE TO SOURCE OUT AN OVER DUE
+PAYMENT OF 12.8 MILLION POUNDS THAT IS NOW SECURED WITH A SHIPPING
+DIPLOMATIC OUTLET.
 
-Yes, ACPI version should be used. Because switch to ACPI/PCI is done in BIOS
-while quite likely the rest of AML code is the same, meaning similar issue
-might be observed. The no bug report is due to no PCI enabled device in the
-wild, I think, and only reference boards can be tested, so nobody really cares
-about PCI Braswell case.
+I AM SEEKING YOUR PARTNERSHIP TO RECEIVE THIS CONSIGNMENT AS AS MY
+PARTNER TO INVEST THIS FUND INTO A PROSPEROUS INVESTMENT VENTURE IN
+YOUR COUNTRY.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I AWAIT YOUR REPLY TO ENABLE US PROCEED WITH THIS BUSINESS PARTNERSHIP TOGETHER.
 
+REGARDS,
 
+LUMAR CASEY
