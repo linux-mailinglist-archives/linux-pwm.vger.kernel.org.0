@@ -2,167 +2,236 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 969535AF54E
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Sep 2022 22:05:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06E375AFFD6
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Sep 2022 11:04:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbiIFUEd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Sep 2022 16:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
+        id S230229AbiIGJEU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Sep 2022 05:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230036AbiIFUEC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Sep 2022 16:04:02 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2211409B;
-        Tue,  6 Sep 2022 12:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662494382; x=1694030382;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1GmuwRmBcP+qpqm868ZlLiTER6yT1AblOqnH4Dlpe/4=;
-  b=WUlupqneHjKsRzvVz5N7pYtc/7DBPiirwHapJDv4QeFXpVRxepSnlse3
-   aFFUPEpdIzMt+UiIVhEWDVfQZu0HZZ5CBdiGcW2/N5UAiupHxDpRjg2EX
-   EZZgA48SD+FpN2HUlA7eT4YyzOinivUqwNwrSiUX8D2zDSdhDJpPbtO4j
-   Hn2gt2n8WOTV9w5/AR8QG8NenET3Z/xzZAo5utD4uMn329mZ/0iQJuVYQ
-   ef4yJZQefP3YQJ/03Yz7aphJEBh+c/idTrJOQxExkTVIWjblteWJnioA3
-   obkP6IicAugRq2McUcevoIDKGcGrv1CkE1005rtaLuG+jLe1PlTsZkrYT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="358407370"
-X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="358407370"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 12:57:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="647351096"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 06 Sep 2022 12:57:32 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 4D24657F; Tue,  6 Sep 2022 22:57:46 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v1 9/9] pwm: lpss: Allow other drivers to enable PWM LPSS
-Date:   Tue,  6 Sep 2022 22:57:35 +0300
-Message-Id: <20220906195735.87361-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230263AbiIGJET (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Sep 2022 05:04:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7E7AFADA
+        for <linux-pwm@vger.kernel.org>; Wed,  7 Sep 2022 02:04:18 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oVqyk-0002uB-EQ; Wed, 07 Sep 2022 11:04:14 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oVqyh-004PGT-O8; Wed, 07 Sep 2022 11:04:13 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oVqyi-00GfDc-RP; Wed, 07 Sep 2022 11:04:12 +0200
+Date:   Wed, 7 Sep 2022 11:04:12 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v1 1/9] pwm: lpss: Deduplicate board info data structures
+Message-ID: <20220907090412.kqvbmgfgeb4toz5n@pengutronix.de>
 References: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="scqcxlngs5jspysc"
+Content-Disposition: inline
+In-Reply-To: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWM LPSS device can be embedded in another device.
-In order to enable it, allow that drivers to probe
-a corresponding device.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pwm/pwm-lpss.h                     | 26 ++---------------
- include/linux/platform_data/x86/pwm-lpss.h | 33 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 24 deletions(-)
- create mode 100644 include/linux/platform_data/x86/pwm-lpss.h
+--scqcxlngs5jspysc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
-index 35e570067fc6..41cb4b6246bb 100644
---- a/drivers/pwm/pwm-lpss.h
-+++ b/drivers/pwm/pwm-lpss.h
-@@ -13,11 +13,9 @@
- #include <linux/pwm.h>
- #include <linux/types.h>
- 
--#define MAX_PWMS			4
--
--struct device;
-+#include <linux/platform_data/x86/pwm-lpss.h>
- 
--struct pwm_lpss_boardinfo;
-+#define MAX_PWMS			4
- 
- struct pwm_lpss_chip {
- 	struct pwm_chip chip;
-@@ -25,23 +23,6 @@ struct pwm_lpss_chip {
- 	const struct pwm_lpss_boardinfo *info;
- };
- 
--struct pwm_lpss_boardinfo {
--	unsigned long clk_rate;
--	unsigned int npwm;
--	unsigned long base_unit_bits;
--	/*
--	 * Some versions of the IP may stuck in the state machine if enable
--	 * bit is not set, and hence update bit will show busy status till
--	 * the reset. For the rest it may be otherwise.
--	 */
--	bool bypass;
--	/*
--	 * On some devices the _PS0/_PS3 AML code of the GPU (GFX0) device
--	 * messes with the PWM0 controllers state,
--	 */
--	bool other_devices_aml_touches_pwm_regs;
+On Tue, Sep 06, 2022 at 10:57:27PM +0300, Andy Shevchenko wrote:
+> With help of __maybe_unused, that allows to avoid compilation warnings,
+> move the board info structures from the C files to the common header
+> and hence deduplicate configuration data.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pwm/pwm-lpss-pci.c      | 29 -----------------------------
+>  drivers/pwm/pwm-lpss-platform.c | 23 -----------------------
+>  drivers/pwm/pwm-lpss.h          | 30 ++++++++++++++++++++++++++++++
+
+Given that both the pci driver and the platform driver alread depend on
+pwm-lpss.o, I'd prefer something like the patch below to really
+deduplicate the data.
+
+One thing to note is that the two pwm_lpss_bsw_info are not identical. I
+didn't check how that is relevant. Did you check that?
+
+Best regards
+Uwe
+
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index c893ec3d2fb4..75b778e839b3 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -14,35 +14,6 @@
+=20
+ #include "pwm-lpss.h"
+=20
+-/* BayTrail */
+-static const struct pwm_lpss_boardinfo pwm_lpss_byt_info =3D {
+-	.clk_rate =3D 25000000,
+-	.npwm =3D 1,
+-	.base_unit_bits =3D 16,
 -};
 -
- /* BayTrail */
- static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_byt_info = {
- 	.clk_rate = 25000000,
-@@ -72,7 +53,4 @@ static __maybe_unused const struct pwm_lpss_boardinfo pwm_lpss_tng_info = {
- 	.base_unit_bits = 22,
- };
- 
--struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *base,
--				     const struct pwm_lpss_boardinfo *info);
+-/* Braswell */
+-static const struct pwm_lpss_boardinfo pwm_lpss_bsw_info =3D {
+-	.clk_rate =3D 19200000,
+-	.npwm =3D 1,
+-	.base_unit_bits =3D 16,
+-};
 -
- #endif	/* __PWM_LPSS_H */
-diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
-new file mode 100644
-index 000000000000..296bd837ddbb
---- /dev/null
-+++ b/include/linux/platform_data/x86/pwm-lpss.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Intel Low Power Subsystem PWM controller driver */
-+
-+#ifndef __PLATFORM_DATA_X86_PWM_LPSS_H
-+#define __PLATFORM_DATA_X86_PWM_LPSS_H
-+
-+#include <linux/types.h>
-+
-+struct device;
-+
-+struct pwm_lpss_chip;
-+
-+struct pwm_lpss_boardinfo {
-+	unsigned long clk_rate;
-+	unsigned int npwm;
-+	unsigned long base_unit_bits;
-+	/*
-+	 * Some versions of the IP may stuck in the state machine if enable
-+	 * bit is not set, and hence update bit will show busy status till
-+	 * the reset. For the rest it may be otherwise.
-+	 */
-+	bool bypass;
-+	/*
-+	 * On some devices the _PS0/_PS3 AML code of the GPU (GFX0) device
-+	 * messes with the PWM0 controllers state,
-+	 */
-+	bool other_devices_aml_touches_pwm_regs;
+-/* Broxton */
+-static const struct pwm_lpss_boardinfo pwm_lpss_bxt_info =3D {
+-	.clk_rate =3D 19200000,
+-	.npwm =3D 4,
+-	.base_unit_bits =3D 22,
+-	.bypass =3D true,
+-};
+-
+-/* Tangier */
+-static const struct pwm_lpss_boardinfo pwm_lpss_tng_info =3D {
+-	.clk_rate =3D 19200000,
+-	.npwm =3D 4,
+-	.base_unit_bits =3D 22,
+-};
+-
+ static int pwm_lpss_probe_pci(struct pci_dev *pdev,
+ 			      const struct pci_device_id *id)
+ {
+diff --git a/drivers/pwm/pwm-lpss-platform.c b/drivers/pwm/pwm-lpss-platfor=
+m.c
+index 928570430cef..834423c34f48 100644
+--- a/drivers/pwm/pwm-lpss-platform.c
++++ b/drivers/pwm/pwm-lpss-platform.c
+@@ -15,28 +15,6 @@
+=20
+ #include "pwm-lpss.h"
+=20
+-/* BayTrail */
+-static const struct pwm_lpss_boardinfo pwm_lpss_byt_info =3D {
+-	.clk_rate =3D 25000000,
+-	.npwm =3D 1,
+-	.base_unit_bits =3D 16,
+-};
+-
+-/* Braswell */
+-static const struct pwm_lpss_boardinfo pwm_lpss_bsw_info =3D {
+-	.clk_rate =3D 19200000,
+-	.npwm =3D 1,
+-	.base_unit_bits =3D 16,
+-	.other_devices_aml_touches_pwm_regs =3D true,
+-};
+-
+-/* Broxton */
+-static const struct pwm_lpss_boardinfo pwm_lpss_bxt_info =3D {
+-	.clk_rate =3D 19200000,
+-	.npwm =3D 4,
+-	.base_unit_bits =3D 22,
+-	.bypass =3D true,
+-};
+=20
+ static int pwm_lpss_probe_platform(struct platform_device *pdev)
+ {
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 36d4e83e6b79..e8b16b67bfd4 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -29,6 +29,39 @@
+ /* Size of each PWM register space if multiple */
+ #define PWM_SIZE			0x400
+=20
++/* BayTrail */
++const struct pwm_lpss_boardinfo pwm_lpss_byt_info =3D {
++	.clk_rate =3D 25000000,
++	.npwm =3D 1,
++	.base_unit_bits =3D 16,
 +};
++EXPORT_SYMBOL_GPL(pwm_lpss_byt_info);
 +
-+struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *base,
-+				     const struct pwm_lpss_boardinfo *info);
++/* Braswell */
++const struct pwm_lpss_boardinfo pwm_lpss_bsw_info =3D {
++	.clk_rate =3D 19200000,
++	.npwm =3D 1,
++	.base_unit_bits =3D 16,
++};
++EXPORT_SYMBOL_GPL(pwm_lpss_bsw_info);
 +
-+#endif	/* __PLATFORM_DATA_X86_PWM_LPSS_H */
--- 
-2.35.1
++/* Broxton */
++const struct pwm_lpss_boardinfo pwm_lpss_bxt_info =3D {
++	.clk_rate =3D 19200000,
++	.npwm =3D 4,
++	.base_unit_bits =3D 22,
++	.bypass =3D true,
++};
++EXPORT_SYMBOL_GPL(pwm_lpss_bxt_info);
++
++/* Tangier */
++const struct pwm_lpss_boardinfo pwm_lpss_tng_info =3D {
++	.clk_rate =3D 19200000,
++	.npwm =3D 4,
++	.base_unit_bits =3D 22,
++};
++EXPORT_SYMBOL_GPL(pwm_lpss_tng_info);
++
+ static inline struct pwm_lpss_chip *to_lpwm(struct pwm_chip *chip)
+ {
+ 	return container_of(chip, struct pwm_lpss_chip, chip);
+diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
+index 8b3476f25e06..918d2f177109 100644
+--- a/drivers/pwm/pwm-lpss.h
++++ b/drivers/pwm/pwm-lpss.h
+@@ -33,6 +33,11 @@ struct pwm_lpss_boardinfo {
+ 	bool other_devices_aml_touches_pwm_regs;
+ };
+=20
++extern const struct pwm_lpss_boardinfo pwm_lpss_tng_info;
++extern const struct pwm_lpss_boardinfo pwm_lpss_bxt_info;
++extern const struct pwm_lpss_boardinfo pwm_lpss_bsw_info;
++extern const struct pwm_lpss_boardinfo pwm_lpss_byt_info;
++
+ struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, struct resource *=
+r,
+ 				     const struct pwm_lpss_boardinfo *info);
+=20
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--scqcxlngs5jspysc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMYXokACgkQwfwUeK3K
+7AnUAggAgAeeWAWu/LmXJf/jBBobK0LmrjQtLRhHxMwo5TwkbqSLFSCBo0FRE5yW
+SsqRB+eDvqPleo+qjA5RlXVnlPyi/nMw0NYyIepbZVT9gLcTvM4vwcz8YPxverCs
+kZD41KdNh8t+CUgtGhfbXyyIkuFqbxe01D0nRIYyem/DdL12gKhQxqXypv09l53q
+++KpWaejfKb3r11q0aafg9f51e8JBHNEaxBCSdlRGvlmRHIQ5afCbLwaytbRxN3u
+GJOFZ4FXpKpSux8MRa+zwETxLKQn3YZ83MOvC3bBK7AyR8tqGkrAkmf5lAzvq9BE
+o4Obg1PL6gKZLWw9k1m8rtEzi9fW6Q==
+=KFjG
+-----END PGP SIGNATURE-----
+
+--scqcxlngs5jspysc--
