@@ -2,107 +2,122 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91D215B0B4B
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Sep 2022 19:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6B15B16EA
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Sep 2022 10:26:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbiIGRQm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Sep 2022 13:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34994 "EHLO
+        id S231582AbiIHI0K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 8 Sep 2022 04:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbiIGRQm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Sep 2022 13:16:42 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4829BCCC2;
-        Wed,  7 Sep 2022 10:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662571001; x=1694107001;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=FhbnyvCHPUalZVKZ0XsPpnzBkTOoT5SyRtycYuZjiVs=;
-  b=HaclRdub2IVEbHOTupV0OrIOmWDiLOltbE4HlFsQ7k7RDHbvbrYV29r9
-   +8a6lpL1Mkb/EoA95lf4XFwLHfG17siJPQ/VxKMNc/PtDdLNBHxJSmHWm
-   0bZRENwStZKpoDsYdIs8d+Rx7n4jgzNb8O6yPQ6Y7DLqvHQfp82YGgyTq
-   EoIcPLjRBhA+pHsupUWfc8LKDemJ+SxzSLqkjiNp2YPu7Aq/79K3t8fKI
-   b7+hhq3yDs61cTvafqMeQz0fsn176Wwd/FcdPRrcHGz31qZqava9o4y7o
-   Lej1RVmxqEf2wnQkK2qtAFUvkVpor8g3iK95QSc2DMT5U4SDckQ2UgY0J
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="295678033"
-X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
-   d="scan'208";a="295678033"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 10:16:29 -0700
-X-IronPort-AV: E=Sophos;i="5.93,297,1654585200"; 
-   d="scan'208";a="565605191"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 10:16:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oVycx-009jZe-0p;
-        Wed, 07 Sep 2022 20:14:15 +0300
-Date:   Wed, 7 Sep 2022 20:14:15 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S231584AbiIHIZz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Sep 2022 04:25:55 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD3AD41A4
+        for <linux-pwm@vger.kernel.org>; Thu,  8 Sep 2022 01:25:52 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oWCr3-00018X-Va; Thu, 08 Sep 2022 10:25:46 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oWCr1-004auW-8t; Thu, 08 Sep 2022 10:25:45 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oWCr2-00Gsa9-6j; Thu, 08 Sep 2022 10:25:44 +0200
+Date:   Thu, 8 Sep 2022 10:25:44 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v1 2/9] pwm: lpss: Move exported symbols to PWM_LPSS
- namespace
-Message-ID: <YxjRZ7wOoLvn5wgI@smile.fi.intel.com>
+Subject: Re: [PATCH v1 1/9] pwm: lpss: Deduplicate board info data structures
+Message-ID: <20220908082544.vhcwffikm6xpsjwf@pengutronix.de>
 References: <20220906195735.87361-1-andriy.shevchenko@linux.intel.com>
- <20220906195735.87361-2-andriy.shevchenko@linux.intel.com>
- <20220907091144.picr3byckxco7w6m@pengutronix.de>
- <YxipACrMCQbE4xmk@smile.fi.intel.com>
- <YxjOOpfkSRPcUQfn@smile.fi.intel.com>
+ <20220907090412.kqvbmgfgeb4toz5n@pengutronix.de>
+ <YxiqSiP4dTa2bhUh@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3inb7slan4u4p6ty"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YxjOOpfkSRPcUQfn@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <YxiqSiP4dTa2bhUh@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 08:00:42PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 07, 2022 at 05:21:53PM +0300, Andy Shevchenko wrote:
-> > On Wed, Sep 07, 2022 at 11:11:44AM +0200, Uwe Kleine-König wrote:
-> > > On Tue, Sep 06, 2022 at 10:57:28PM +0300, Andy Shevchenko wrote:
 
-...
+--3inb7slan4u4p6ty
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > > -EXPORT_SYMBOL_GPL(pwm_lpss_probe);
-> > > > +EXPORT_SYMBOL_NS_GPL(pwm_lpss_probe, PWM_LPSS);
-> > > 
-> > > There is something possible with more magic:
-> > > 	#define DEFAULT_SYMBOL_NAMESPACE PWM_LPSS
-> > > 
-> > > which you only need once in pwm-lpss.c and then all exports use that
-> > > namespace. (And if you pick up my suggestion for patch 1 you also
-> > > benefit from that.)
-> > 
-> > For a single export (even for a few of them) it's an overkill.
-> 
-> Ah, you adding there 4 more. But still I think it's an overkill. It's so small
-> driver that duplicating namespace in each of the exported symbols is not an
-> issue, is it?
+On Wed, Sep 07, 2022 at 05:27:22PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 07, 2022 at 11:04:12AM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Sep 06, 2022 at 10:57:27PM +0300, Andy Shevchenko wrote:
+> > > With help of __maybe_unused, that allows to avoid compilation warning=
+s,
+> > > move the board info structures from the C files to the common header
+> > > and hence deduplicate configuration data.
+> > >=20
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  drivers/pwm/pwm-lpss-pci.c      | 29 -----------------------------
+> > >  drivers/pwm/pwm-lpss-platform.c | 23 -----------------------
+> > >  drivers/pwm/pwm-lpss.h          | 30 ++++++++++++++++++++++++++++++
+> >=20
+> > Given that both the pci driver and the platform driver alread depend on
+> > pwm-lpss.o, I'd prefer something like the patch below to really
+> > deduplicate the data.
+>=20
+> Why not? I can use yours in v2. Can I get your SoB tag?
 
-Okay, now looking at the patch organization (I forgot that I moved NS one to be
-not the first one) your suggestion makes a point. We won't change the code we
-just introduced.
+Sure:
 
-That said, I would like to get your SoB or what you agree with to the patch 1
-and I make this one as you suggested.
+Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
+> > One thing to note is that the two pwm_lpss_bsw_info are not identical. I
+> > didn't check how that is relevant. Did you check that?
+>=20
+> Yes, ACPI version should be used. Because switch to ACPI/PCI is done in B=
+IOS
+> while quite likely the rest of AML code is the same, meaning similar issue
+> might be observed. The no bug report is due to no PCI enabled device in t=
+he
+> wild, I think, and only reference boards can be tested, so nobody really =
+cares
+> about PCI Braswell case.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm willing to believe that; please mention that in the commit log.
 
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3inb7slan4u4p6ty
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMZpwUACgkQwfwUeK3K
+7AlGlQf+Mvid7EtJBez73pTjqsiZKkRYw8V664rQvM4FZQ34SE4cRHzCC4fncp9G
+PmAuoMXZ1CFWw47RHfWUkX1tkRhiAEktAwATlXKY06AMhif+0vy5xCwb12EBtyEa
+WB6lTTsBSIKCYqmmFTxOYMdGJPswoaBaPsDne0bAZretcGEu3Vz4az6CkdxQig5M
+RJGuVu6O2Uf3cTAIpDZUwF6TNSM2yRnS2ziwjovqOlrj2nxoGGhGzJQd7lvIfWBl
+e+8qKIRLj1yKjzaLMHTtbMM4bQBsprLFyi5UjXAdpPT47m/2l5L0futGGH2MeyZi
+Cs7fdAcCnSPbF2JpNQl28zi5hjx2SQ==
+=FL0c
+-----END PGP SIGNATURE-----
+
+--3inb7slan4u4p6ty--
