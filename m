@@ -2,181 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D8A95B1FC4
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Sep 2022 15:57:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D38D65B3E78
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Sep 2022 20:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232280AbiIHN5A (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 8 Sep 2022 09:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59416 "EHLO
+        id S229651AbiIISDu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Sep 2022 14:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232184AbiIHN4y (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Sep 2022 09:56:54 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83E7B6D14;
-        Thu,  8 Sep 2022 06:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662645410; x=1694181410;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ClRv4YDuC6sHMGg76v4yV0u46OLwed7onWZxOHGjYlw=;
-  b=hAYdbV1kCjaKXzNcOCx5Ed4565b3J0300//eYlKC6k97iL/oF29LPlE7
-   QvZtRBtHKYB3MN3tRQl8wfGL18OczHLaCwLP8niImVK2MoWRmZwOAW7GY
-   3Zy9QjuOyXUB57nKtTIo2umTRMyCDZ50cEOkXb68PZRIjpk+rXOUwq2y6
-   qoYxBaIapcJeavfDcnvW103JEOBwi5/zvXIXL8MdWOtrPapDJBD7qvpsk
-   FDGDzjBg4xvF8p0Dm3t/MfbIQPnDZ55WQwYMy4IMgUwjLnfjUQlfCccu4
-   8GJ4PdfFgYJ6cyxf1PBq+ZzrFOoNOtREiImPaVLTz1dCE08n0Pd4dEDEN
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="358906744"
-X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
-   d="scan'208";a="358906744"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 06:56:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
-   d="scan'208";a="943352130"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Sep 2022 06:56:48 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B8D8B6CD; Thu,  8 Sep 2022 16:57:02 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 9/9] pwm: lpss: Allow other drivers to enable PWM LPSS
-Date:   Thu,  8 Sep 2022 16:56:58 +0300
-Message-Id: <20220908135658.64463-10-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220908135658.64463-1-andriy.shevchenko@linux.intel.com>
-References: <20220908135658.64463-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230513AbiIISDs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Sep 2022 14:03:48 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3BF6C76F
+        for <linux-pwm@vger.kernel.org>; Fri,  9 Sep 2022 11:03:47 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id v15so1827430qvi.11
+        for <linux-pwm@vger.kernel.org>; Fri, 09 Sep 2022 11:03:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date;
+        bh=tZOGbBG1Sz4Crh3myx+VI4GFHPnZMYPEGmfQNkYU6/M=;
+        b=KoEcCeRVsKOmbPBASGfArKPyPk5xgU+ECrGcQ4BRqFMT8mIA8HwY3xozuzl3DR/cvT
+         qHrJasTJRPWjlXR0K2/yZ2aISF5wAOWAZynexZfHpxReP/ZSXSWLzknKb95aqeQQU2+8
+         adM1VcfGMdaYaxMLLXIt5woL4SOfj8IkUSF9/rpIkHjBEfYj9+hOXmHdNIbDx3B8iWZz
+         vWSvR/8POgCqvONPy49R9j2gfmHTE9JYQiWwnqO/6nmEFvuyNwWiDXv0npL6hqPLmw64
+         QwIOn0t64T4BYvIWrzBMb5fZWGEo8gN1FiVUs2fgoCjFqqZDlsieuTbEg9kIDXrunU8V
+         JxrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=tZOGbBG1Sz4Crh3myx+VI4GFHPnZMYPEGmfQNkYU6/M=;
+        b=rVZKxmDHMTjWmKWgKORlfcToZcF9A3+4704kGDVxIYc1sbD8tWXYnjuK3xU3mGypkk
+         HyyXpXGBXcIOXFCfvFds3rMyTtWgNBggZZG9mBjTjSUJqmdTP1S3ykw7VWLlyL55UL2K
+         vnvfwrOgtdInvzuX6H+SyrAqgbamtJr/PcD5UOrujo/nGkgEIZmFlegBBhN096hVbE5S
+         Jf8sQCX0Qs1Ual1HvjFocJ6iUDuN8LEQ+P6r1tP9hfJJ7RbaFoYZiqsjswl+KaiOvwCv
+         qfg2JRgG9V0/J/nUZwAdyLCuU7LtLiAWKjalNQ/F9cWIXbNFbCjVL6lUDzYSPOfQ8guT
+         iX9Q==
+X-Gm-Message-State: ACgBeo2VnD7aV/rN35zV/+GhnM5iOoYS4xQarZ01dIJYo1/mgMPN60Lq
+        wwWDbfIUeukx/MBV2XZQDKlW/UDCLZX3pX6kVI8=
+X-Google-Smtp-Source: AA6agR4Tom9PzBBE3BMIBe3KOdARp4DxosldMNkhAulmkRIme8rRzgUmwPID1FXp5AxfG3zLlhVUyQX4pNd/yEqC2ik=
+X-Received: by 2002:a05:6214:e82:b0:4a0:cbae:2690 with SMTP id
+ hf2-20020a0562140e8200b004a0cbae2690mr13933462qvb.81.1662746625690; Fri, 09
+ Sep 2022 11:03:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Sender: elisabethj451@gmail.com
+Received: by 2002:ad4:5be1:0:0:0:0:0 with HTTP; Fri, 9 Sep 2022 11:03:45 -0700 (PDT)
+From:   Doris David <mrs.doris.david02@gmail.com>
+Date:   Fri, 9 Sep 2022 11:03:45 -0700
+X-Google-Sender-Auth: OgLlyF7dTVeMjCGdmuqm8QRzgHU
+Message-ID: <CAP7Jaw7eUogUfmr3E35pOMxZxFH+EAzBNVu7P1PSApb4tVxJyw@mail.gmail.com>
+Subject: Re: Greetings My Dear,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
+        BAYES_80,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_8,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:f2a listed in]
+        [list.dnswl.org]
+        *  2.0 BAYES_80 BODY: Bayes spam probability is 80 to 95%
+        *      [score: 0.9301]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [elisabethj451[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [elisabethj451[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 MONEY_FRAUD_8 Lots of money and very many fraud phrases
+        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
+        *  0.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWM LPSS device can be embedded in another device.
-In order to enable it, allow that drivers to probe
-a corresponding device.
+Greetings,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pwm/pwm-lpss.h                        | 26 ++--------------
- .../linux/platform_data/x86}/pwm-lpss.h       | 30 ++++---------------
- 2 files changed, 7 insertions(+), 49 deletions(-)
- copy {drivers/pwm => include/linux/platform_data/x86}/pwm-lpss.h (52%)
+I sent this mail praying it will find you in a good condition, since I
+myself am in a very critical health condition in which I sleep every
+night  without knowing if I may be alive to see the next day. I am
+Mrs.David Doris, a widow suffering from a long time illness. I have
+some funds I  inherited from my late husband, the sum of ($11,000 000
+00) my Doctor told me recently that I have serious sickness which is a
+cancer problem. What disturbs me most is my stroke sickness. Having
+known my condition, I decided to donate this fund to a good person
+that will utilize it the way I am going to instruct herein. I need a
+very Honest God.
 
-diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
-index 0249c01befd5..fe32e336db8e 100644
---- a/drivers/pwm/pwm-lpss.h
-+++ b/drivers/pwm/pwm-lpss.h
-@@ -13,11 +13,9 @@
- #include <linux/pwm.h>
- #include <linux/types.h>
- 
--#define MAX_PWMS			4
--
--struct device;
-+#include <linux/platform_data/x86/pwm-lpss.h>
- 
--struct pwm_lpss_boardinfo;
-+#define MAX_PWMS			4
- 
- struct pwm_lpss_chip {
- 	struct pwm_chip chip;
-@@ -25,29 +23,9 @@ struct pwm_lpss_chip {
- 	const struct pwm_lpss_boardinfo *info;
- };
- 
--struct pwm_lpss_boardinfo {
--	unsigned long clk_rate;
--	unsigned int npwm;
--	unsigned long base_unit_bits;
--	/*
--	 * Some versions of the IP may stuck in the state machine if enable
--	 * bit is not set, and hence update bit will show busy status till
--	 * the reset. For the rest it may be otherwise.
--	 */
--	bool bypass;
--	/*
--	 * On some devices the _PS0/_PS3 AML code of the GPU (GFX0) device
--	 * messes with the PWM0 controllers state,
--	 */
--	bool other_devices_aml_touches_pwm_regs;
--};
--
- extern const struct pwm_lpss_boardinfo pwm_lpss_byt_info;
- extern const struct pwm_lpss_boardinfo pwm_lpss_bsw_info;
- extern const struct pwm_lpss_boardinfo pwm_lpss_bxt_info;
- extern const struct pwm_lpss_boardinfo pwm_lpss_tng_info;
- 
--struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *base,
--				     const struct pwm_lpss_boardinfo *info);
--
- #endif	/* __PWM_LPSS_H */
-diff --git a/drivers/pwm/pwm-lpss.h b/include/linux/platform_data/x86/pwm-lpss.h
-similarity index 52%
-copy from drivers/pwm/pwm-lpss.h
-copy to include/linux/platform_data/x86/pwm-lpss.h
-index 0249c01befd5..296bd837ddbb 100644
---- a/drivers/pwm/pwm-lpss.h
-+++ b/include/linux/platform_data/x86/pwm-lpss.h
-@@ -1,29 +1,14 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * Intel Low Power Subsystem PWM controller driver
-- *
-- * Copyright (C) 2014, Intel Corporation
-- *
-- * Derived from the original pwm-lpss.c
-- */
-+/* Intel Low Power Subsystem PWM controller driver */
- 
--#ifndef __PWM_LPSS_H
--#define __PWM_LPSS_H
-+#ifndef __PLATFORM_DATA_X86_PWM_LPSS_H
-+#define __PLATFORM_DATA_X86_PWM_LPSS_H
- 
--#include <linux/pwm.h>
- #include <linux/types.h>
- 
--#define MAX_PWMS			4
--
- struct device;
- 
--struct pwm_lpss_boardinfo;
--
--struct pwm_lpss_chip {
--	struct pwm_chip chip;
--	void __iomem *regs;
--	const struct pwm_lpss_boardinfo *info;
--};
-+struct pwm_lpss_chip;
- 
- struct pwm_lpss_boardinfo {
- 	unsigned long clk_rate;
-@@ -42,12 +27,7 @@ struct pwm_lpss_boardinfo {
- 	bool other_devices_aml_touches_pwm_regs;
- };
- 
--extern const struct pwm_lpss_boardinfo pwm_lpss_byt_info;
--extern const struct pwm_lpss_boardinfo pwm_lpss_bsw_info;
--extern const struct pwm_lpss_boardinfo pwm_lpss_bxt_info;
--extern const struct pwm_lpss_boardinfo pwm_lpss_tng_info;
--
- struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *base,
- 				     const struct pwm_lpss_boardinfo *info);
- 
--#endif	/* __PWM_LPSS_H */
-+#endif	/* __PLATFORM_DATA_X86_PWM_LPSS_H */
--- 
-2.35.1
+fearing a person who can claim this money and use it for Charity
+works, for orphanages, widows and also build schools for less
+privileges that will be named after my late husband if possible and to
+promote the word of God and the effort that the house of God is
+maintained. I do not want a situation where this money will be used in
+an ungodly manner. That's why I' making this decision. I'm not afraid
+of death so I know where I'm going. I accept this decision because I
+do not have any child who will inherit this money after I die. Please
+I want your sincere and urgent answer to know if you will be able to
+execute this project, and I will give you more information on how
+thunder will be transferred to your bank account. I am waiting for
+your reply.
 
+May God Bless you,
+Mrs.David Doris,
