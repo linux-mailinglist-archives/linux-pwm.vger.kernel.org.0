@@ -2,100 +2,164 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 898A25B4750
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 17:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 374055B485E
+	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 21:50:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbiIJPmo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Sep 2022 11:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
+        id S229817AbiIJTss (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 10 Sep 2022 15:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiIJPmn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Sep 2022 11:42:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398E614D26;
-        Sat, 10 Sep 2022 08:42:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DA13EB8010F;
-        Sat, 10 Sep 2022 15:42:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F99C433C1;
-        Sat, 10 Sep 2022 15:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662824560;
-        bh=luECLScAoXW4trye3u3QR5BAVG50o9WKq4LURxl0cWE=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=OglzfM37e36vzr8RIz38aKNhfmFgibKtibSrXPxPXQxdygFx+atkOZh3JNt71PUY6
-         2S0Eip2IqnsZuGY7oggCvdwm42lV9aRNn7Dn9nUzGuh/E4BcZYjwkAAn+a+jtNxp+8
-         FOXE46EQA4dSN2Km2LXB6ukzhgc7QWaVgmbUb4i2klVbVrzmJNvLapw+jTc4WgP8Sn
-         gT6sTIx/QE1RnpSC++ABbUzSwSDvU1GBgjd7UB997SV46FyILWCbmjKFFIh1JSPvq0
-         8RJ0TU+fU8kaAQVZSguBGoaIlIokY7BL2FEZpfhephsISRy9GGuv5q5iKanIgYycUH
-         ILd1FW78uL9qw==
-From:   Mark Brown <broonie@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>, kever.yang@rock-chips.com
-Cc:     linux@roeck-us.net, vigneshr@ti.com, sjg@chromium.org,
-        miquel.raynal@bootlin.com, gregkh@linuxfoundation.org,
-        linux-pwm@vger.kernel.org, richard@nod.at, heiko@sntech.de,
-        robh+dt@kernel.org, jamie@jamieiles.com,
-        u.kleine-koenig@pengutronix.de, linux-mtd@lists.infradead.org,
-        philipp.tomsich@vrull.eu, ulf.hansson@linaro.org,
-        linux-kernel@vger.kernel.org, wim@linux-watchdog.org,
-        thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
-        vkoul@kernel.org, zhangqing@rock-chips.com,
-        linux-rockchip@lists.infradead.org, linux-phy@lists.infradead.org,
-        krzysztof.kozlowski+dt@linaro.org, kishon@ti.com,
-        linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-In-Reply-To: <4f283231-2ed4-202b-0c23-157bce0841ee@gmail.com>
-References: <20220909212543.17428-1-jbx6244@gmail.com> <4f283231-2ed4-202b-0c23-157bce0841ee@gmail.com>
-Subject: Re: (subset) [PATCH v1 01/11] dt-bindings: serial: rockchip: add rockchip,rk3128-uart
-Message-Id: <166282455399.474671.11726724099870642599.b4-ty@kernel.org>
-Date:   Sat, 10 Sep 2022 16:42:33 +0100
+        with ESMTP id S229896AbiIJTsK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Sep 2022 15:48:10 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5032167F7;
+        Sat, 10 Sep 2022 12:48:07 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id y3so11601940ejc.1;
+        Sat, 10 Sep 2022 12:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=0gpqeUaUdq1jgASkshCgKRmA+Q1+uZQMqt4GLBoHHR4=;
+        b=SwwucSHlXm0YPfeeC4lZlFZ0Z+dOmRGPQkOla56HWKeyOlplorH3zvOV9tOGT3pmgF
+         kvpEpOd9jdcY25oRmAec19MKAehbtwqF4/ycOuVjaXqSGUzfJjVbCgHtOEu8FWujUIjs
+         /+Ivfh5ZGXeZ49lkWrMCSrY4sTUIgDrBmCrCD6IxYuOi59VWv+BNdWe1YHSTBkGmJFlB
+         2KyDVNOxbX4/G+lsR/g5/JKfn3SO7sjiVWxOB9kWgl5iX8/MwMUDSNolWdwZRplv3cFY
+         Gm+wmG0ZHynL0mG0Hp8Zb+4VDdU3o9bt1dTGa74Gp8Mvghr7eTk8gV9x+g2zYihY4txV
+         ibhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=0gpqeUaUdq1jgASkshCgKRmA+Q1+uZQMqt4GLBoHHR4=;
+        b=w/TG74Ztig6K/oRVPqSkPXakdOUS4gWyu2QKlJnOJMeFo4jNTU/QJ5TYzvd+BJ+6Xr
+         FIkuMHFup9oXQokbDNlIwhm7BL0XWYWEOfMxE3cySFoBO8rhfsRPtwJ8QCg+b9Io/3Ik
+         EPh4/vGTzKPq6fnO9AYi0NXPJqDorMlEhHqOS5TdvLQwaRmu2fdYdTTQtuK6qHPdzFPC
+         29s4KLaxFVaeiF4VWRdkKf7mfQNBqpi1a8aTVQtSbEpOXUIh54Mh5PrNnGESr3gLJkO2
+         2wMV1bhRQhDGP9c5vYkV/BKL0zdf9C0gFrdpIFI74g6ovzVUm6AW/wg3Xf2lFq1euFQp
+         TXaQ==
+X-Gm-Message-State: ACgBeo3os0pTc6LAHqXMsfTI2nXJeLfS5Kbk/6x8cxNPusvb3qLgWTMQ
+        bstN/d7N9g9KmqOToDsg+6M=
+X-Google-Smtp-Source: AA6agR7X+LQPt9/yXz/e+j2Vs+LXI3PFWRHgchsO6YkfGoeC9fg48fhlEHAuSGAbjlI8W1ZTcSuhuA==
+X-Received: by 2002:a17:907:728c:b0:730:c005:5d93 with SMTP id dt12-20020a170907728c00b00730c0055d93mr14059967ejc.265.1662839286227;
+        Sat, 10 Sep 2022 12:48:06 -0700 (PDT)
+Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id ly9-20020a170906af4900b0073dde62713asm2090628ejb.89.2022.09.10.12.48.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 10 Sep 2022 12:48:05 -0700 (PDT)
+Message-ID: <1c13181b-8421-69d8-21ee-9742dd5f55dd@gmail.com>
+Date:   Sat, 10 Sep 2022 21:48:04 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.10.0-dev-fc921
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v1 03/11] dt-bindings: pwm: rockchip: add
+ rockchip,rk3128-pwm
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de
+Cc:     linux-rockchip@lists.infradead.org, philipp.tomsich@vrull.eu,
+        linux-arm-kernel@lists.infradead.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kever.yang@rock-chips.com, zhangqing@rock-chips.com,
+        linux-kernel@vger.kernel.org, heiko@sntech.de
+References: <20220909212543.17428-1-jbx6244@gmail.com>
+ <f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmail.com>
+ <1662821635.180247.34700.nullmailer@robh.at.kernel.org>
+From:   Johan Jonker <jbx6244@gmail.com>
+In-Reply-To: <1662821635.180247.34700.nullmailer@robh.at.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, 10 Sep 2022 00:01:28 +0200, Johan Jonker wrote:
-> Add rockchip,rk3128-uart compatible string.
+Reduced CC.
+
+Hi Rob,
+
+The rk3328 and rv1108 PWM interrupt is chaired between blocks I think.
+For rv1108 the same interrupt is used for all PWM nodes.
+For rk3328 only added to one PWM node.
+Currently not in use in a Linux drivers??
+
+No consensus yet...on removing or parent node, so it stays as it is...
+Maybe if you have ideas things will change. ;)
+
+Johan
+
+===
+
+See discussion:
+https://lore.kernel.org/linux-rockchip/20b7c702-9412-93b4-3174-e8633bc413d7@gmail.com/ 
+
+On 9/10/22 16:53, Rob Herring wrote:
+> On Sat, 10 Sep 2022 00:02:22 +0200, Johan Jonker wrote:
+>> Add rockchip,rk3128-pwm compatible string.
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+> 
+> Running 'make dtbs_check' with the schema in this patch gives the
+> following warnings. Consider if they are expected or the schema is
+> incorrect. These may not be new warnings.
+> 
+> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> This will change in the future.
+> 
+> Full log is available here: https://patchwork.ozlabs.org/patch/
 > 
 > 
-
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[05/11] dt-bindings: spi: rockchip: add rockchip,rk3128-spi
-        commit: 14c3ffd7947ef3623682148be07b9c0bb8737f37
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> pwm@10280000: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@10280010: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@10280020: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@10280030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@20040000: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@20040010: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@20040020: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@20040030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
+> 	arch/arm/boot/dts/rv1108-evb.dtb
+> 
+> pwm@ff1b0030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-a1.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-evb.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dtb
+> 	arch/arm64/boot/dts/rockchip/rk3328-roc-pc.dtb
+> 
