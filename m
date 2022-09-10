@@ -2,60 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03E955B44EA
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 09:46:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13AB75B46A6
+	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 16:30:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiIJHq2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Sep 2022 03:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
+        id S229601AbiIJOae (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 10 Sep 2022 10:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbiIJHq1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Sep 2022 03:46:27 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FEB71707
-        for <linux-pwm@vger.kernel.org>; Sat, 10 Sep 2022 00:46:25 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id m15so6474266lfl.9
-        for <linux-pwm@vger.kernel.org>; Sat, 10 Sep 2022 00:46:25 -0700 (PDT)
+        with ESMTP id S229464AbiIJOac (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Sep 2022 10:30:32 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491F932A90;
+        Sat, 10 Sep 2022 07:30:31 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id p1-20020a17090a2d8100b0020040a3f75eso4170930pjd.4;
+        Sat, 10 Sep 2022 07:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Xc325GZc+vxzGRAdvA0vChIvJkypnglJvofgNCbWMR4=;
-        b=CPmvcoQIYyMAF4zt3FXqNSoDD7DiPiOGlYdVcymhCh+IKdlIs7rTLSuAVlx/fnmLcu
-         96NZnumm1CF84Z+2pYGPbjiWAkif5ly3iN0Kwrq0KeWNsLda90xz+GV8V1yK9ItJ4vG2
-         B1EJuY2n5/0kLF9US3rV3/w1AZwY4XPQxshrXFoNm8pI/hSdNgeek9/L11NVXvSYTWgU
-         2fK6mTHrRrlrabBghWT0dudUvkei0lR0po0ax3jU4MditiLLlY72FydbDtgkVbMNSil7
-         27Nm3kr9NLe4oefhueLn2QCXYfMY0dphxyDHblNj7RHUwh5Jd3gLvlwaOrkHot8uTUZQ
-         Yt0w==
+         :sender:from:to:cc:subject:date;
+        bh=NfxfbFr6yb0xol1xxFYNDP3VjWYzuHsl9L6WlI3ZH0I=;
+        b=o8CJbWXfF7dDOkG/l5CIf/K/X51rljLp3Su1VTY6THuSv7r6HBvEecHssTHM10MXAz
+         SMIRv61RSwPsKDY0NpAu1a/8WXreef5wZy9lzEa1Tlvzo4qiIgqLpSckinSbLPpGmKsL
+         EwiXyjllU2nMgctHnqy9HkEHRPMBH784+q8IR7VxWoXuT+KHOceyVlmeYRVkvTcZHD7S
+         0F7WE+CRClm3Sg58TTzZkougAJkCokbofBPu9qntooE6rBkvjc7aWuKjmWes01f5kgM8
+         Rp0+peZSiyk8AqeSLwgtvnpxW87q7bi+pu+E+/OA5O0tWmP/AQCv+NXZVw9MjXpYLlCz
+         nUMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Xc325GZc+vxzGRAdvA0vChIvJkypnglJvofgNCbWMR4=;
-        b=dmhfjqFzEHwLmYdQEapWVAzJ3283q/A+3NURkLTQAEJBj1oya6JbbmfkxeLf1l5OZt
-         3WvybovktwM5CqtA+N2OBqiyObsyleLCuwZs1yg8Prr66TwJZymMGiCXq03ixZKgpbrM
-         URULYMD9VyVvcuC1P21ZTkXhW792wtC4CZcd3Ab/PMkJfV6vR6wupzbK1Aaa6qqDZqeB
-         FbWUhfcnUnY+KA2D/cg5fDK5KHv6vjrFYy7yr67pAvw7rk5qdMaHUAkykn1NPNulPDwm
-         uv1N4cteH54JqnpEs7H8IEYvvnxN8arRi32NGCvXJua+ewuBqrPRrWonPqQR6nyDFSkj
-         00Cw==
-X-Gm-Message-State: ACgBeo3lq+DLqX2R3BHN40ipgmxWxPsk46YYEjOse4uesSaQ6DRAMRQS
-        rLhVLzsd1rDoi24TZ2/QZBTyzw==
-X-Google-Smtp-Source: AA6agR75ZEPrL/yKL8ezMsVKnuKBIXSz81lwLCFZHWoLKO6Bsf7yB53ADVYs4VBVxujyrIqJgj0K/g==
-X-Received: by 2002:ac2:4f03:0:b0:496:272:625d with SMTP id k3-20020ac24f03000000b004960272625dmr5369172lfr.303.1662795983686;
-        Sat, 10 Sep 2022 00:46:23 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id h12-20020a05651c124c00b0026bda31c10fsm201998ljh.61.2022.09.10.00.46.21
+         :sender:x-gm-message-state:from:to:cc:subject:date;
+        bh=NfxfbFr6yb0xol1xxFYNDP3VjWYzuHsl9L6WlI3ZH0I=;
+        b=jFxFnPkzcJeejC+up4IjWHWA9E5VLgH8K0dEG2FYC+B2CLMpHuAgS1W9GW2sufJ1eM
+         nnaNcHQXiqcUmCgBLDRy3esnFP5+xrToIid8nFnxY6AwWiQk2a4b+GL0SDrGLOJzBeYK
+         he+ALcHKE+ThC2WXj5gANJ/7pnwFzC3sHrCjRNJcvgYyR0ymdgMD5ajlg95VrZfiNqJU
+         f9eTsRyCDpVnn9oZMmwO+rUEqYQE+BiafAQsKBqe1dOzjme98+utn26VgQ7BGqS3zvKU
+         D3B2a2jJkyVJNVeqLj7XQiivZ5XBhsZylywTqFbEPzRffPhrvdUY9WP2hBOpC/s9faYl
+         uZ3Q==
+X-Gm-Message-State: ACgBeo1ZolmKmE9mr4N6p5jaRVV5I7kxjlfzzaDt8F61ODfKjln3E6vv
+        E4Htb15QbvAhTpokyuHPqlw=
+X-Google-Smtp-Source: AA6agR45j1E2oUagm+srWFqub3Qu6YOOhrbPdG8/lVANoSphqwJKLExI6LaQWXuJkmIkirNUxO79XA==
+X-Received: by 2002:a17:90a:a60b:b0:200:919a:55a1 with SMTP id c11-20020a17090aa60b00b00200919a55a1mr14980138pjq.194.1662820230702;
+        Sat, 10 Sep 2022 07:30:30 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n2-20020a170902d2c200b00176b63535adsm2328040plc.260.2022.09.10.07.30.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Sep 2022 00:46:23 -0700 (PDT)
-Message-ID: <e8b33710-db07-bde4-e1d1-d42c05b87d6b@linaro.org>
-Date:   Sat, 10 Sep 2022 09:46:21 +0200
+        Sat, 10 Sep 2022 07:30:29 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <0dab9988-3a7e-77f2-de71-58e67cc79663@roeck-us.net>
+Date:   Sat, 10 Sep 2022 07:30:27 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v1 11/11] dt-bindings: mtd: rockchip: add
- rockchip,rk3128-nfc
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v1 07/11] dt-bindings: watchdog: rockchip: add
+ rockchip,rk3128-wdt
 Content-Language: en-US
 To:     Johan Jonker <jbx6244@gmail.com>, kever.yang@rock-chips.com
 Cc:     sjg@chromium.org, philipp.tomsich@vrull.eu, robh+dt@kernel.org,
@@ -64,9 +65,9 @@ Cc:     sjg@chromium.org, philipp.tomsich@vrull.eu, robh+dt@kernel.org,
         vigneshr@ti.com, kishon@ti.com, vkoul@kernel.org,
         thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         gregkh@linuxfoundation.org, broonie@kernel.org,
-        wim@linux-watchdog.org, linux@roeck-us.net,
-        zhangqing@rock-chips.com, jamie@jamieiles.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wim@linux-watchdog.org, zhangqing@rock-chips.com,
+        jamie@jamieiles.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-mtd@lists.infradead.org, linux-phy@lists.infradead.org,
@@ -74,29 +75,43 @@ Cc:     sjg@chromium.org, philipp.tomsich@vrull.eu, robh+dt@kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-watchdog@vger.kernel.org
 References: <20220909212543.17428-1-jbx6244@gmail.com>
- <f09665c1-9938-38c1-9a31-f196a3ef9cf0@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <f09665c1-9938-38c1-9a31-f196a3ef9cf0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+ <a4da79fe-3449-6538-742f-790835ffe43a@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <a4da79fe-3449-6538-742f-790835ffe43a@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 10/09/2022 00:01, Johan Jonker wrote:
-> Add rockchip,rk3128-nfc compatible string.
+On 9/9/22 15:01, Johan Jonker wrote:
+> Add rockchip,rk3128-wdt compatible string.
 > 
 > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> index 6461eb4f4..92df6e453 100644
+> --- a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
+> @@ -20,6 +20,7 @@ properties:
+>             - enum:
+>                 - rockchip,px30-wdt
+>                 - rockchip,rk3066-wdt
+> +              - rockchip,rk3128-wdt
+>                 - rockchip,rk3188-wdt
+>                 - rockchip,rk3228-wdt
+>                 - rockchip,rk3288-wdt
 
-
-Best regards,
-Krzysztof
