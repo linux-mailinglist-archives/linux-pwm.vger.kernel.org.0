@@ -2,61 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 015545B4255
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 00:05:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E955B44EA
+	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 09:46:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230526AbiIIWEE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Sep 2022 18:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49940 "EHLO
+        id S229505AbiIJHq2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 10 Sep 2022 03:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232361AbiIIWCl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Sep 2022 18:02:41 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC4C14A51B;
-        Fri,  9 Sep 2022 15:02:34 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id gh9so7131603ejc.8;
-        Fri, 09 Sep 2022 15:02:34 -0700 (PDT)
+        with ESMTP id S229455AbiIJHq1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Sep 2022 03:46:27 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FEB71707
+        for <linux-pwm@vger.kernel.org>; Sat, 10 Sep 2022 00:46:25 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id m15so6474266lfl.9
+        for <linux-pwm@vger.kernel.org>; Sat, 10 Sep 2022 00:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date;
-        bh=5wDSQei0VH/0N0cIYpX+WvxREvgCAsAfy7LHoQVjBlQ=;
-        b=pzeyCMXPWtw5W3TzsjGLnySXo8soVYUYeJ9xFygN5yMcAFfkmo68Mn5NVSDaAqvEef
-         eMfcgrKdofMIrb0NkC9c/9Vds5bjV3ktzlLzWstteZoyzJiblmObGx9yNFJOzwAvY7lO
-         1KY9hKyA68Qr0+/E5uvCFdh+SbIOxQgl4kCdLO3bEGLkkfQGP9D/Q9zv03tqjXBbFmW/
-         wQA877zU19eUftI9o02PkytlYbM/sujtsOJ3kUS0dJ/fdCEs1YH93ga6tw2Zt32RLYLH
-         dvfsrtjWpLuPSgMAfQYmTNPST7qelX0TgYFbw5w+81Sytx+Gi4mwLwH/2plVR4zEjN9H
-         7bkQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=Xc325GZc+vxzGRAdvA0vChIvJkypnglJvofgNCbWMR4=;
+        b=CPmvcoQIYyMAF4zt3FXqNSoDD7DiPiOGlYdVcymhCh+IKdlIs7rTLSuAVlx/fnmLcu
+         96NZnumm1CF84Z+2pYGPbjiWAkif5ly3iN0Kwrq0KeWNsLda90xz+GV8V1yK9ItJ4vG2
+         B1EJuY2n5/0kLF9US3rV3/w1AZwY4XPQxshrXFoNm8pI/hSdNgeek9/L11NVXvSYTWgU
+         2fK6mTHrRrlrabBghWT0dudUvkei0lR0po0ax3jU4MditiLLlY72FydbDtgkVbMNSil7
+         27Nm3kr9NLe4oefhueLn2QCXYfMY0dphxyDHblNj7RHUwh5Jd3gLvlwaOrkHot8uTUZQ
+         Yt0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=5wDSQei0VH/0N0cIYpX+WvxREvgCAsAfy7LHoQVjBlQ=;
-        b=F3HCG7L//kgoDJrzYe+NHXevX4FMYr/mOfckkY9UiMdW75Jt75KEJfaEWla9QBXWEt
-         8KV4xU7H1cLDSPDaGPB4IOo/ecTZ+MUkHKo5wvrWld4UykUNo5gT7J6J+8AEwqwozzyf
-         Nw6KJmiTcotPujdcucTvvi0y+bA4mRoOCJtzBQERRXMGlZywYDYGHpg0k6Zfj5e/P58A
-         HueLAjnXzhhsjp7F5LV+7VeCjiLqTL5gKnkmdlnAWS/WJGVsu9YGx3TaL+akcp/iro8a
-         Pu/ytwsBSg9CICSq4/qpDDcLGSIYYSWzyFdOVkc2hiRIkEZTc+4g1VVNNRWZMJvazQdp
-         2MGw==
-X-Gm-Message-State: ACgBeo1/aaw/tDvawkIN+gg+jIv09L3TnbJFxV3lwP4+XMZIGiqjgbdT
-        pM9e3hRr9puUuEiHXrpLoZI=
-X-Google-Smtp-Source: AA6agR5i2KdDv0Rikxka5ZmZqz4fP9NU9rl0imXOMXzTXa+EpchEAZGLS2pB1pzRZUktqmDJgOVSoQ==
-X-Received: by 2002:a17:907:3d8e:b0:741:8ebe:3464 with SMTP id he14-20020a1709073d8e00b007418ebe3464mr11326966ejc.747.1662760952366;
-        Fri, 09 Sep 2022 15:02:32 -0700 (PDT)
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id x17-20020a1709065ad100b0073d87068042sm804845ejs.110.2022.09.09.15.02.30
+        bh=Xc325GZc+vxzGRAdvA0vChIvJkypnglJvofgNCbWMR4=;
+        b=dmhfjqFzEHwLmYdQEapWVAzJ3283q/A+3NURkLTQAEJBj1oya6JbbmfkxeLf1l5OZt
+         3WvybovktwM5CqtA+N2OBqiyObsyleLCuwZs1yg8Prr66TwJZymMGiCXq03ixZKgpbrM
+         URULYMD9VyVvcuC1P21ZTkXhW792wtC4CZcd3Ab/PMkJfV6vR6wupzbK1Aaa6qqDZqeB
+         FbWUhfcnUnY+KA2D/cg5fDK5KHv6vjrFYy7yr67pAvw7rk5qdMaHUAkykn1NPNulPDwm
+         uv1N4cteH54JqnpEs7H8IEYvvnxN8arRi32NGCvXJua+ewuBqrPRrWonPqQR6nyDFSkj
+         00Cw==
+X-Gm-Message-State: ACgBeo3lq+DLqX2R3BHN40ipgmxWxPsk46YYEjOse4uesSaQ6DRAMRQS
+        rLhVLzsd1rDoi24TZ2/QZBTyzw==
+X-Google-Smtp-Source: AA6agR75ZEPrL/yKL8ezMsVKnuKBIXSz81lwLCFZHWoLKO6Bsf7yB53ADVYs4VBVxujyrIqJgj0K/g==
+X-Received: by 2002:ac2:4f03:0:b0:496:272:625d with SMTP id k3-20020ac24f03000000b004960272625dmr5369172lfr.303.1662795983686;
+        Sat, 10 Sep 2022 00:46:23 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id h12-20020a05651c124c00b0026bda31c10fsm201998ljh.61.2022.09.10.00.46.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Sep 2022 15:02:32 -0700 (PDT)
-Message-ID: <405db21d-154e-fed0-7524-ace1cef0203c@gmail.com>
-Date:   Sat, 10 Sep 2022 00:02:30 +0200
+        Sat, 10 Sep 2022 00:46:23 -0700 (PDT)
+Message-ID: <e8b33710-db07-bde4-e1d1-d42c05b87d6b@linaro.org>
+Date:   Sat, 10 Sep 2022 09:46:21 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.0
-From:   Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v1 02/11] dt-bindings: i2c: rockchip: add rockchip,rk3128-i2c
-To:     kever.yang@rock-chips.com
+Subject: Re: [PATCH v1 11/11] dt-bindings: mtd: rockchip: add
+ rockchip,rk3128-nfc
+Content-Language: en-US
+To:     Johan Jonker <jbx6244@gmail.com>, kever.yang@rock-chips.com
 Cc:     sjg@chromium.org, philipp.tomsich@vrull.eu, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de,
         ulf.hansson@linaro.org, miquel.raynal@bootlin.com, richard@nod.at,
@@ -73,39 +74,29 @@ Cc:     sjg@chromium.org, philipp.tomsich@vrull.eu, robh+dt@kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-watchdog@vger.kernel.org
 References: <20220909212543.17428-1-jbx6244@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20220909212543.17428-1-jbx6244@gmail.com>
+ <f09665c1-9938-38c1-9a31-f196a3ef9cf0@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <f09665c1-9938-38c1-9a31-f196a3ef9cf0@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add rockchip,rk3128-i2c compatible string.
+On 10/09/2022 00:01, Johan Jonker wrote:
+> Add rockchip,rk3128-nfc compatible string.
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-index ee9f8b91d..82b9d6682 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-@@ -29,6 +29,7 @@ properties:
-       - items:
-           - enum:
-               - rockchip,rk3036-i2c
-+              - rockchip,rk3128-i2c
-               - rockchip,rk3368-i2c
-           - const: rockchip,rk3288-i2c
-       - items:
--- 
-2.20.1
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+
+Best regards,
+Krzysztof
