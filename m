@@ -2,164 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 374055B485E
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Sep 2022 21:50:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E62155B5661
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Sep 2022 10:37:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbiIJTss (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Sep 2022 15:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35544 "EHLO
+        id S230411AbiILIhS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Sep 2022 04:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbiIJTsK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Sep 2022 15:48:10 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5032167F7;
-        Sat, 10 Sep 2022 12:48:07 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id y3so11601940ejc.1;
-        Sat, 10 Sep 2022 12:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=0gpqeUaUdq1jgASkshCgKRmA+Q1+uZQMqt4GLBoHHR4=;
-        b=SwwucSHlXm0YPfeeC4lZlFZ0Z+dOmRGPQkOla56HWKeyOlplorH3zvOV9tOGT3pmgF
-         kvpEpOd9jdcY25oRmAec19MKAehbtwqF4/ycOuVjaXqSGUzfJjVbCgHtOEu8FWujUIjs
-         /+Ivfh5ZGXeZ49lkWrMCSrY4sTUIgDrBmCrCD6IxYuOi59VWv+BNdWe1YHSTBkGmJFlB
-         2KyDVNOxbX4/G+lsR/g5/JKfn3SO7sjiVWxOB9kWgl5iX8/MwMUDSNolWdwZRplv3cFY
-         Gm+wmG0ZHynL0mG0Hp8Zb+4VDdU3o9bt1dTGa74Gp8Mvghr7eTk8gV9x+g2zYihY4txV
-         ibhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=0gpqeUaUdq1jgASkshCgKRmA+Q1+uZQMqt4GLBoHHR4=;
-        b=w/TG74Ztig6K/oRVPqSkPXakdOUS4gWyu2QKlJnOJMeFo4jNTU/QJ5TYzvd+BJ+6Xr
-         FIkuMHFup9oXQokbDNlIwhm7BL0XWYWEOfMxE3cySFoBO8rhfsRPtwJ8QCg+b9Io/3Ik
-         EPh4/vGTzKPq6fnO9AYi0NXPJqDorMlEhHqOS5TdvLQwaRmu2fdYdTTQtuK6qHPdzFPC
-         29s4KLaxFVaeiF4VWRdkKf7mfQNBqpi1a8aTVQtSbEpOXUIh54Mh5PrNnGESr3gLJkO2
-         2wMV1bhRQhDGP9c5vYkV/BKL0zdf9C0gFrdpIFI74g6ovzVUm6AW/wg3Xf2lFq1euFQp
-         TXaQ==
-X-Gm-Message-State: ACgBeo3os0pTc6LAHqXMsfTI2nXJeLfS5Kbk/6x8cxNPusvb3qLgWTMQ
-        bstN/d7N9g9KmqOToDsg+6M=
-X-Google-Smtp-Source: AA6agR7X+LQPt9/yXz/e+j2Vs+LXI3PFWRHgchsO6YkfGoeC9fg48fhlEHAuSGAbjlI8W1ZTcSuhuA==
-X-Received: by 2002:a17:907:728c:b0:730:c005:5d93 with SMTP id dt12-20020a170907728c00b00730c0055d93mr14059967ejc.265.1662839286227;
-        Sat, 10 Sep 2022 12:48:06 -0700 (PDT)
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id ly9-20020a170906af4900b0073dde62713asm2090628ejb.89.2022.09.10.12.48.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Sep 2022 12:48:05 -0700 (PDT)
-Message-ID: <1c13181b-8421-69d8-21ee-9742dd5f55dd@gmail.com>
-Date:   Sat, 10 Sep 2022 21:48:04 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
+        with ESMTP id S230342AbiILIg6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Sep 2022 04:36:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1203AE091
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Sep 2022 01:36:17 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oXeuO-0003qU-HH; Mon, 12 Sep 2022 10:35:12 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oXeuK-000GV0-Lc; Mon, 12 Sep 2022 10:35:07 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oXeuI-000L6p-Kj; Mon, 12 Sep 2022 10:35:06 +0200
+Date:   Mon, 12 Sep 2022 10:35:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     kever.yang@rock-chips.com, sjg@chromium.org,
+        philipp.tomsich@vrull.eu, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de,
+        ulf.hansson@linaro.org, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com, kishon@ti.com, vkoul@kernel.org,
+        thierry.reding@gmail.com, gregkh@linuxfoundation.org,
+        broonie@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net,
+        zhangqing@rock-chips.com, jamie@jamieiles.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-phy@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
 Subject: Re: [PATCH v1 03/11] dt-bindings: pwm: rockchip: add
  rockchip,rk3128-pwm
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de
-Cc:     linux-rockchip@lists.infradead.org, philipp.tomsich@vrull.eu,
-        linux-arm-kernel@lists.infradead.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kever.yang@rock-chips.com, zhangqing@rock-chips.com,
-        linux-kernel@vger.kernel.org, heiko@sntech.de
+Message-ID: <20220912083506.js4zyou7kdphrs7m@pengutronix.de>
 References: <20220909212543.17428-1-jbx6244@gmail.com>
  <f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmail.com>
- <1662821635.180247.34700.nullmailer@robh.at.kernel.org>
-From:   Johan Jonker <jbx6244@gmail.com>
-In-Reply-To: <1662821635.180247.34700.nullmailer@robh.at.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tqnrn4kzd6owce4p"
+Content-Disposition: inline
+In-Reply-To: <f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Reduced CC.
 
-Hi Rob,
+--tqnrn4kzd6owce4p
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The rk3328 and rv1108 PWM interrupt is chaired between blocks I think.
-For rv1108 the same interrupt is used for all PWM nodes.
-For rk3328 only added to one PWM node.
-Currently not in use in a Linux drivers??
+Hello,
 
-No consensus yet...on removing or parent node, so it stays as it is...
-Maybe if you have ideas things will change. ;)
+On Sat, Sep 10, 2022 at 12:02:22AM +0200, Johan Jonker wrote:
+> Add rockchip,rk3128-pwm compatible string.
+>=20
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Johan
+Considering the problems pointed out by Rob as orthogonal to this
+change:
 
-===
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-See discussion:
-https://lore.kernel.org/linux-rockchip/20b7c702-9412-93b4-3174-e8633bc413d7@gmail.com/ 
+Best regards
+Uwe
 
-On 9/10/22 16:53, Rob Herring wrote:
-> On Sat, 10 Sep 2022 00:02:22 +0200, Johan Jonker wrote:
->> Add rockchip,rk3128-pwm compatible string.
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
->>  1 file changed, 1 insertion(+)
->>
-> 
-> Running 'make dtbs_check' with the schema in this patch gives the
-> following warnings. Consider if they are expected or the schema is
-> incorrect. These may not be new warnings.
-> 
-> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-> This will change in the future.
-> 
-> Full log is available here: https://patchwork.ozlabs.org/patch/
-> 
-> 
-> pwm@10280000: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@10280010: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@10280020: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@10280030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@20040000: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@20040010: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@20040020: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@20040030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm/boot/dts/rv1108-elgin-r1.dtb
-> 	arch/arm/boot/dts/rv1108-evb.dtb
-> 
-> pwm@ff1b0030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 	arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-a1.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-evb.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-rock-pi-e.dtb
-> 	arch/arm64/boot/dts/rockchip/rk3328-roc-pc.dtb
-> 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--tqnrn4kzd6owce4p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMe7zcACgkQwfwUeK3K
+7AlZYwf/ffseGIKL3qdR1ObyfIb5V+iGVTp/SdYtO08mrURjLUEo+B+syZnhYPKY
+WaIox8KDLDXTTzG+l8SOyJN/eVX56XZFaFzqNKpscD60wLFga+ccFaNKGJtk7knG
+NvhVkaLBCMShPPlR6KT4mcKOmSBnZcge7q+h4oVQ5fgstpl2uOPQJPrIrZ+B+k8v
+36gKyh5sYqGHe+uP6mIyiO8yuPztWwFfCILv5MV99qgCPftl3L8IgyvK2vI6wO50
+ymfHbqlS8nxTODgi5iTI0PFMn0YJII1d2xwguOheFXUzRYuU/n3wft1Krdnwcdm2
+fMeJle5erwYQ8Z6/F8F+XCMTdI83dA==
+=6TOs
+-----END PGP SIGNATURE-----
+
+--tqnrn4kzd6owce4p--
