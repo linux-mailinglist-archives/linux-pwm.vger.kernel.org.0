@@ -2,53 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DA525B6A41
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Sep 2022 11:05:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C175B6A64
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Sep 2022 11:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbiIMJFv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Sep 2022 05:05:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
+        id S231409AbiIMJMO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Sep 2022 05:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbiIMJFu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Sep 2022 05:05:50 -0400
+        with ESMTP id S231247AbiIMJMN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Sep 2022 05:12:13 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DCF31AF29
-        for <linux-pwm@vger.kernel.org>; Tue, 13 Sep 2022 02:05:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA45B5809C
+        for <linux-pwm@vger.kernel.org>; Tue, 13 Sep 2022 02:12:12 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oY1rE-0007zx-K3; Tue, 13 Sep 2022 11:05:28 +0200
+        id 1oY1xf-0000rp-TU; Tue, 13 Sep 2022 11:12:07 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oY1rC-000SnT-KM; Tue, 13 Sep 2022 11:05:25 +0200
+        id 1oY1xg-000SoJ-6q; Tue, 13 Sep 2022 11:12:06 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1oY1rA-000YSD-HX; Tue, 13 Sep 2022 11:05:24 +0200
-Date:   Tue, 13 Sep 2022 11:05:21 +0200
+        id 1oY1xd-000YrN-Qf; Tue, 13 Sep 2022 11:12:05 +0200
+Date:   Tue, 13 Sep 2022 11:12:02 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     xinlei.lee@mediatek.com
-Cc:     thierry.reding@gmail.com, matthias.bgg@gmail.com,
-        jitao.shi@mediatek.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH] pwm: mtk-disp: Fix the parameters calculated  by the
- enabled flag of disp_pwm.
-Message-ID: <20220913090521.6ybohvgbehua4rgv@pengutronix.de>
-References: <1661745852-27323-1-git-send-email-xinlei.lee@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        kernel@collabora.com, linux-pwm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/1] dt-bindings: pwm: rockchip: Add description for
+ rk3588
+Message-ID: <20220913091202.2oawzrq2u5iiz6hq@pengutronix.de>
+References: <20220901135523.52151-1-sebastian.reichel@collabora.com>
+ <1662059695.095333.2226883.nullmailer@robh.at.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ss3zheu2y6khfn6n"
+        protocol="application/pgp-signature"; boundary="ayq25s2e3amakfxs"
 Content-Disposition: inline
-In-Reply-To: <1661745852-27323-1-git-send-email-xinlei.lee@mediatek.com>
+In-Reply-To: <1662059695.095333.2226883.nullmailer@robh.at.kernel.org>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,68 +60,41 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---ss3zheu2y6khfn6n
+--ayq25s2e3amakfxs
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Rob,
 
-On Mon, Aug 29, 2022 at 12:04:12PM +0800, xinlei.lee@mediatek.com wrote:
-> From: xinlei lee <xinlei.lee@mediatek.com>
+On Thu, Sep 01, 2022 at 02:14:55PM -0500, Rob Herring wrote:
+> On Thu, 01 Sep 2022 15:55:23 +0200, Sebastian Reichel wrote:
+> > Add "rockchip,rk3588-pwm" compatible string for PWM nodes found
+> > on a rk3588 platform.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > ---
+> > No driver changes required.
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
 >=20
-> In the original mtk_disp_pwm_get_state() function, the result of reading
-> con0 & BIT(0) is enabled as disp_pwm.=20
-> In order to conform to the register table, we should use the disp_pwm=20
-> base address as the enabled judgment.
-
-Do you want to say:
-
-	The enable bit of the hardware is bit 0 of the DISP_PWM_EN
-	register at offset 0 for all supported hardwares. Up to now the
-	bit was wrongly assumed to be in the CON0 register.
-
-?
-
-> Fixes: 3f2b16734914 ("pwm: mtk-disp: Implement atomic API .get_state()")
+> Running 'make dtbs_check' with the schema in this patch gives the
+> following warnings. Consider if they are expected or the schema is
+> incorrect. These may not be new warnings.
 >=20
+> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> This will change in the future.
 
-This newline is unusal.
+Is this a list of *new* warnings, or is the report (somewhat) orthogonal
+to the actual change and you just used the opportunity that someone
+touched the pwm-rockchip binding to point out that there is some cleanup
+to do?
 
-> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
-> Reviewed-by: Miles Chen <miles.chen@mediatek.com>
-> ---
-> Base on the branch of Linux-next/master.
-> Split from series [1].
-> [1] https://patchwork.kernel.org/project/linux-mediatek/cover/1661239875-=
-19841-1-git-send-email-xinlei.lee@mediatek.com/
-> ---
-> ---
->  drivers/pwm/pwm-mtk-disp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-> index c605013..50425cd 100644
-> --- a/drivers/pwm/pwm-mtk-disp.c
-> +++ b/drivers/pwm/pwm-mtk-disp.c
-> @@ -197,7 +197,7 @@ static void mtk_disp_pwm_get_state(struct pwm_chip *c=
-hip,
->  	rate =3D clk_get_rate(mdp->clk_main);
->  	con0 =3D readl(mdp->base + mdp->data->con0);
->  	con1 =3D readl(mdp->base + mdp->data->con1);
-> -	state->enabled =3D !!(con0 & BIT(0));
-> +	state->enabled =3D !!(readl(mdp->base) & BIT(0));
+> Full log is available here: https://patchwork.ozlabs.org/patch/
 
-I would expect this to better be:
-
-	state->enabled =3D !!(readl(mdp->base + DISP_PWM_EN) & BIT(0));
-
-which is the same for the compiler but a bit more descriptive for the
-human reader.
-
->  	clk_div =3D FIELD_GET(PWM_CLKDIV_MASK, con0);
->  	period =3D FIELD_GET(PWM_PERIOD_MASK, con1);
->  	/*
+Hm, that gives me a 404.
 
 Best regards
 Uwe
@@ -127,19 +103,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ss3zheu2y6khfn6n
+--ayq25s2e3amakfxs
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMgR84ACgkQwfwUeK3K
-7AmsfQf/TlNRXjA19E2+0tCASjyiQWsjnKiN3D+nPd9q8hTxXDbGyQ5KOtZWuUDZ
-+D4joVtIozL0FvlLaR/c745PZm3evjT1S4ZfjgMb+f1/ZSwAX3CyUR0DyRvLubMU
-niChOnS0K063Q8RShrCG8qaphmlSrp82HNKfyjt5aT2dvHBKkNo90llkn4BI5h2G
-p3t5fRn/OtbymDjCt7LsFtZqr5Fck5WiW7aTEkZrT5Wz6FQZ9TMbIgmC3X+wNenK
-cbCPPBfFPDADycZjWaZk3HYfG7P2O1cB595u3i87XeuTIZVAZg9F483lA9z7s4MT
-RecWGzcRbCOwRPgtwcI+jSK2WtP1jA==
-=JSbz
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMgSV8ACgkQwfwUeK3K
+7Alq5QgAmOfz+nd/dPgkG496zmEYMnmf/JKWgKSLv7Za3H3D3b2lcrSIMq9ELHjz
+n3K3IxrpSMlUnbBYfIczZujgnQtmgJIfwdQ58E77dqaF5U3xXNQwrDm8AVns2LlA
+zt5YY+PuTFINuk/fM7BXHoKZlqw5vJwMb52avAkndKddXEFuS+KCR4e9eRHpd1J0
+Ma7Gwoz9EHvLg7uag9pbkyeEUG3Pnd3U+d90q3rd+byShxyNECLltESxW6+HySXf
+Je3LGm4VOnBmrobESRXIx50LS6LD3N5+kmnIKVBWb7b7lkVCmmPgT4CyzMasv4BA
+nMSmE4ylP9K3ZONkIS2/0i/hkuRIhA==
+=2uq6
 -----END PGP SIGNATURE-----
 
---ss3zheu2y6khfn6n--
+--ayq25s2e3amakfxs--
