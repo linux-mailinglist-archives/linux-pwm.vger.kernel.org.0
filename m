@@ -2,57 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C65735B820E
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Sep 2022 09:33:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 050725B834A
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Sep 2022 10:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbiINHdR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Sep 2022 03:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57842 "EHLO
+        id S229646AbiINIxH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Sep 2022 04:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbiINHdQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Sep 2022 03:33:16 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570626FA05
-        for <linux-pwm@vger.kernel.org>; Wed, 14 Sep 2022 00:33:15 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oYMtS-00076d-Ep; Wed, 14 Sep 2022 09:33:10 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oYMtS-000eOy-63; Wed, 14 Sep 2022 09:33:08 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oYMtQ-000lNc-69; Wed, 14 Sep 2022 09:33:08 +0200
-Date:   Wed, 14 Sep 2022 09:33:05 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        kernel@collabora.com, linux-pwm@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/1] dt-bindings: pwm: rockchip: Add description for
- rk3588
-Message-ID: <20220914073305.4zorbsve75raiygd@pengutronix.de>
-References: <20220901135523.52151-1-sebastian.reichel@collabora.com>
- <1662059695.095333.2226883.nullmailer@robh.at.kernel.org>
- <20220913091202.2oawzrq2u5iiz6hq@pengutronix.de>
- <20220913141601.fi6pl2xdo4xmtw6t@mercury.elektranox.org>
+        with ESMTP id S229503AbiINIxG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Sep 2022 04:53:06 -0400
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78EB45F7F6;
+        Wed, 14 Sep 2022 01:53:04 -0700 (PDT)
+Received: from [89.101.193.68] (helo=phil.sntech)
+        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <heiko@sntech.de>)
+        id 1oYO8L-0004ae-5u; Wed, 14 Sep 2022 10:52:37 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>, kever.yang@rock-chips.com
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, vkoul@kernel.org,
+        vigneshr@ti.com, linux@roeck-us.net, ulf.hansson@linaro.org,
+        devicetree@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        u.kleine-koenig@pengutronix.de, linux-mtd@lists.infradead.org,
+        zhangqing@rock-chips.com, linux-pwm@vger.kernel.org,
+        jamie@jamieiles.com, krzysztof.kozlowski+dt@linaro.org,
+        linux-spi@vger.kernel.org, gregkh@linuxfoundation.org,
+        thierry.reding@gmail.com, sjg@chromium.org,
+        philipp.tomsich@vrull.eu, kishon@ti.com, richard@nod.at,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org, broonie@kernel.org,
+        wim@linux-watchdog.org, linux-serial@vger.kernel.org,
+        miquel.raynal@bootlin.com
+Subject: Re: (subset) [PATCH v1 01/11] dt-bindings: serial: rockchip: add rockchip,rk3128-uart
+Date:   Wed, 14 Sep 2022 10:52:33 +0200
+Message-Id: <166314554237.197444.11513118217413767473.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <4f283231-2ed4-202b-0c23-157bce0841ee@gmail.com>
+References: <20220909212543.17428-1-jbx6244@gmail.com> <4f283231-2ed4-202b-0c23-157bce0841ee@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="d4hlshwof6wtcph6"
-Content-Disposition: inline
-In-Reply-To: <20220913141601.fi6pl2xdo4xmtw6t@mercury.elektranox.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,75 +55,16 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sat, 10 Sep 2022 00:01:28 +0200, Johan Jonker wrote:
+> Add rockchip,rk3128-uart compatible string.
 
---d4hlshwof6wtcph6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks!
 
-On Tue, Sep 13, 2022 at 04:16:01PM +0200, Sebastian Reichel wrote:
-> Hi,
->=20
-> On Tue, Sep 13, 2022 at 11:12:02AM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello Rob,
-> >=20
-> > On Thu, Sep 01, 2022 at 02:14:55PM -0500, Rob Herring wrote:
-> > > On Thu, 01 Sep 2022 15:55:23 +0200, Sebastian Reichel wrote:
-> > > > Add "rockchip,rk3588-pwm" compatible string for PWM nodes found
-> > > > on a rk3588 platform.
-> > > >=20
-> > > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > > > ---
-> > > > No driver changes required.
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >=20
-> > >=20
-> > > Running 'make dtbs_check' with the schema in this patch gives the
-> > > following warnings. Consider if they are expected or the schema is
-> > > incorrect. These may not be new warnings.
-> > >=20
-> > > Note that it is not yet a requirement to have 0 warnings for dtbs_che=
-ck.
-> > > This will change in the future.
-> >=20
-> > Is this a list of *new* warnings, or is the report (somewhat) orthogonal
-> > to the actual change and you just used the opportunity that someone
-> > touched the pwm-rockchip binding to point out that there is some cleanup
-> > to do?
-> >=20
-> > > Full log is available here: https://patchwork.ozlabs.org/patch/
-> >=20
-> > Hm, that gives me a 404.
->=20
-> This is an existing problem with the rv1108 binding.
-> The rk3588 does not have pwm interrupts.
+[08/11] dt-bindings: arm: rockchip: pmu: add rockchip,rk3128-pmu
+        commit: 9c2f4521344f3b14fa0be050100ef726edc36cbc
+[10/11] dt-bindings: soc: rockchip: grf: add rockchip,rk3128-grf
+        commit: adc4f190260a6c004f950992d8c9ee3aec8da38b
 
-I thought so, so:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---d4hlshwof6wtcph6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMhg64ACgkQwfwUeK3K
-7AkzOQf/UlE4uRbME2zQ6MnFx1BbofJkGfho9rOJJtyCBopDKAYsf+bqwxmNKeL/
-JJn+OhgKkFgnnqDuhcxp/ObXO8s6hgc7bswXYjYLZ0suDQOnA6DaScHnuJdecNyY
-p9dmbYoGxtwI1LjGifz1J8DyC3Y9v2jZi6sd6hV10RGf4W9KYzWNUzwbm9U9LZQG
-G2aCxu5ilXJYhkPoUItBEzlGIyuhh9mcZ9viwPlPsC2Bf220DKVUE+wqfajFSeQ1
-rkteqmsJYIGQJuCleX/gEgnCy5XoCG3J3XkiVOwoYE5S0eSlMB/WAD4PH72ViTwi
-blpiE1JnAMoGaXeTLz7p8Ngd48dfJA==
-=I5Ps
------END PGP SIGNATURE-----
-
---d4hlshwof6wtcph6--
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
