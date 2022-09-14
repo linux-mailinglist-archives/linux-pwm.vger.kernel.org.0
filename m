@@ -2,33 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AA495B8BCE
+	by mail.lfdr.de (Postfix) with ESMTP id 6FAEC5B8BCF
 	for <lists+linux-pwm@lfdr.de>; Wed, 14 Sep 2022 17:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbiINPbs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Sep 2022 11:31:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
+        id S229638AbiINPbt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Sep 2022 11:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiINPbr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Sep 2022 11:31:47 -0400
+        with ESMTP id S229690AbiINPbs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Sep 2022 11:31:48 -0400
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B619C4455F;
-        Wed, 14 Sep 2022 08:31:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B9750700;
+        Wed, 14 Sep 2022 08:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1663169506; x=1694705506;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Tc8r3viZ1THhht9uyUek4ZAite/GHEyNkUji3BY65Oc=;
-  b=MZsqRlGwRLAyfQDSewGd/wRmpZ/arQPDcUlu2LATUyopWDi0535TH3qC
-   /A2LImcBR2TRx3QThpMl2gVEfAi1wDOOSECAdAM+RTzVrihbVYKcU0zvb
-   cAT082AvgURQ+h+oDEjOc4XbkpaxLXFMKyPzibL+t97xICXzJp9yGs/kw
-   +yTchCVOq5qNcjC1VAgZ/6lM0sBtgleQT111+RY5W0CqXa+uaDHSm+D5+
-   CFFhw1oKBxmPV8r2oSjTTR4VhzLe4JasCEaJDY83bfaSKuIhHH5BSOEPe
-   v90CslkkhGvVT+Cv5Nosu6v3C/o9Oz8FrxoUe2+sSljPiOYEigUljV0N8
-   w==;
+  t=1663169507; x=1694705507;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WM+xIdPpk5wsGwY+EBkuixZH3uS2Jyz3uzB0NBE5Q3k=;
+  b=E04LbOy8t4tccSnSG00tuUe7kxj1oMBa1w+Nh+RH8pVEO8T02/Bz6ge4
+   CErxje0B/G+4VvSSr6/BYPzpFCn1D0w6SY1Ri/2vS4qz212P5DogZonb4
+   RipUt4UvMeKFP0x5/K8n5YScGSb2wFS8LwwyzesTvcFyr2vsIW1evZNn7
+   naxzJSJjAMXoAKJCH4/knYLz4b3/vJNagz4iyki1vZMM8YBbnItO3VScn
+   EhCwFzZkzrsY9YXA+vtFmscjvt+cBl/4Aymewevwv/XcHpFhQeuTMM4X8
+   O7WeaRcs4VsLJAO6u+os2J7IYEGD1MThvClSilNA6081cN9qbA6HXMPRp
+   A==;
 X-IronPort-AV: E=Sophos;i="5.93,315,1654552800"; 
-   d="scan'208";a="26181296"
+   d="scan'208";a="26181299"
 Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
   by mx1-pgp.tq-group.com with ESMTP; 14 Sep 2022 17:31:44 +0200
 Received: from mx1.tq-group.com ([192.168.6.7])
@@ -39,25 +39,25 @@ X-PGP-Universal: processed;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
   t=1663169504; x=1694705504;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Tc8r3viZ1THhht9uyUek4ZAite/GHEyNkUji3BY65Oc=;
-  b=BohBRBJtClMjPxH3V+5nDbNMBNlmCcAFnJroPUwUzL6lD+DVTyfpJzOy
-   QlHjwQdIyqjuR9ptRhHJe/TU9Nsbt6I3e0Ph7BUQTOkKZGTW3mfWGRUMu
-   n06SjHu1Ar9AZgm3yxNogpqi17tm8Hjzm+05JUzaOXZZihJAok/K7Vy/i
-   3iAefo/fkZluuT3GaysZr3d7+uIhH4ukTt7D+7q9YkNWwQaCDsJ0Kv3tk
-   N1BgUFWmpXmz5bZmIrZSD8QpsguzYCqMv7+YDdONCwAppw+Dit7yN96lk
-   ryfEGCOQV3oFTbAiVUl61B50eEq/8wLzssoIQJXiLgkNgpRvdyB98i0lu
-   w==;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WM+xIdPpk5wsGwY+EBkuixZH3uS2Jyz3uzB0NBE5Q3k=;
+  b=e1l8ZBIQ36TVBcdaZU1MXuzLIw3pzc6lrcKToWJDn9jYcHUd7t7S10t5
+   HpOSnK/9Z4+GTqrmKUzyJ7DGFKJ8fBkFnzQ72pWk7/MXRa4BRaX3PtjZm
+   N6kGGA8Kl97s/q4phzyuu+hYmi/nWOKlA0GczZTnpo7RaMrxNasQ9Sl80
+   LKznogmhpCBIiRjEzQpakkeASHsuj4SVxOFhG3yNysKtYxFzhCfk1UENX
+   4pFxQWKdEDPZGAdRahxmDyqmEuDP6JKvrHo76OepNIBioFh+wlk7Dy/NU
+   CdelbAOUTDBxTDkPvRXBXa36YfXT4xNe47ASAtEN6XfQiwEOi2ifJ/BLr
+   g==;
 X-IronPort-AV: E=Sophos;i="5.93,315,1654552800"; 
-   d="scan'208";a="26181295"
+   d="scan'208";a="26181298"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
   by mx1.tq-group.com with ESMTP; 14 Sep 2022 17:31:44 +0200
 Received: from steina-w.tq-net.de (unknown [10.123.49.11])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id CA30C280056;
-        Wed, 14 Sep 2022 17:31:43 +0200 (CEST)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 0C2D3280072;
+        Wed, 14 Sep 2022 17:31:44 +0200 (CEST)
 From:   Alexander Stein <alexander.stein@ew.tq-group.com>
 To:     Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -68,10 +68,12 @@ To:     Jean Delvare <jdelvare@suse.com>,
 Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Subject: [PATCH v5 0/5] hwmon: pwm-fan: switch regulator dynamically
-Date:   Wed, 14 Sep 2022 17:31:32 +0200
-Message-Id: <20220914153137.613982-1-alexander.stein@ew.tq-group.com>
+Subject: [PATCH v5 1/5] hwmon: pwm-fan: Refactor fan power on/off
+Date:   Wed, 14 Sep 2022 17:31:33 +0200
+Message-Id: <20220914153137.613982-2-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220914153137.613982-1-alexander.stein@ew.tq-group.com>
+References: <20220914153137.613982-1-alexander.stein@ew.tq-group.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -83,44 +85,73 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello everyone,
+In preparation for dynamically switching regulator, split the power on
+and power off sequence into separate functions.
 
-this is the next version for supporting switching off the pwm-fan regulator.
-Review points from Guenter are included.
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/hwmon/pwm-fan.c | 36 ++++++++++++++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 6 deletions(-)
 
-Changes in v5:
-* Added Guenter's R-b to Patch 1 & 4
-* Removed useless goto (Patch 2)
-* Added error checking when switching off PWM (Patch 2)
-* Removed useless branches when switching power (Patch 3)
-* Removed useless (temporary) variable (Patch 3)
-* Updated Patch 5 to changes of previous patches
-* Dropped Patch 6 completly for lack of benefit
-
-Changes in v4:
-* Reordered commits so current behavior is the default all the time
-* Fixed pwm state bug in Patch 1, this affects the patch context in Patch 2
-* Refactor even more code in Patch 3 & 4 for smaller further patches
-* Squashed the dynamic regulator switch patch and the sysfs attribute patch
-  into one, keeping default behavior.
-  Overhaul the patch to support different modes altogether
-* Fixed bugs in module removal in pwm1_enable=1
-* Moved internal PWM state removal to the end to keep the patch smaller
-
-Best regards,
-Alexander
-
-Alexander Stein (5):
-  hwmon: pwm-fan: Refactor fan power on/off
-  hwmon: pwm-fan: Simplify enable/disable check
-  hwmon: pwm-fan: Add dedicated power switch function
-  hwmon: pwm-fan: split __set_pwm into locked/unlocked functions
-  hwmon: pwm-fan: Switch regulator dynamically
-
- Documentation/hwmon/pwm-fan.rst |  12 ++
- drivers/hwmon/pwm-fan.c         | 312 +++++++++++++++++++++++---------
- 2 files changed, 241 insertions(+), 83 deletions(-)
-
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 06fd1d75101d..c8a7926d39e7 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -82,23 +82,47 @@ static void sample_timer(struct timer_list *t)
+ 	mod_timer(&ctx->rpm_timer, jiffies + HZ);
+ }
+ 
+-static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
++static int pwm_fan_power_on(struct pwm_fan_ctx *ctx)
+ {
++	struct pwm_state *state = &ctx->pwm_state;
+ 	unsigned long period;
+-	int ret = 0;
++	int ret;
++
++	period = state->period;
++	state->duty_cycle = DIV_ROUND_UP(ctx->pwm_value * (period - 1), MAX_PWM);
++	state->enabled = true;
++	ret = pwm_apply_state(ctx->pwm, state);
++
++	return ret;
++}
++
++static int pwm_fan_power_off(struct pwm_fan_ctx *ctx)
++{
+ 	struct pwm_state *state = &ctx->pwm_state;
+ 
++	state->enabled = false;
++	state->duty_cycle = 0;
++	pwm_apply_state(ctx->pwm, state);
++
++	return 0;
++}
++
++static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
++{
++	int ret = 0;
++
+ 	mutex_lock(&ctx->lock);
+ 	if (ctx->pwm_value == pwm)
+ 		goto exit_set_pwm_err;
+ 
+-	period = state->period;
+-	state->duty_cycle = DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
+-	state->enabled = pwm ? true : false;
++	if (pwm > 0)
++		ret = pwm_fan_power_on(ctx);
++	else
++		ret = pwm_fan_power_off(ctx);
+ 
+-	ret = pwm_apply_state(ctx->pwm, state);
+ 	if (!ret)
+ 		ctx->pwm_value = pwm;
++
+ exit_set_pwm_err:
+ 	mutex_unlock(&ctx->lock);
+ 	return ret;
 -- 
 2.25.1
 
