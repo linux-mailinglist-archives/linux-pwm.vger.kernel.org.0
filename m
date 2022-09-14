@@ -2,61 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5412E5B8BD3
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Sep 2022 17:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F08065B8BD6
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Sep 2022 17:31:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbiINPbu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Sep 2022 11:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
+        id S229770AbiINPbw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Sep 2022 11:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbiINPbt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Sep 2022 11:31:49 -0400
+        with ESMTP id S229542AbiINPbu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Sep 2022 11:31:50 -0400
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5540A4455F;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1048048CAB;
         Wed, 14 Sep 2022 08:31:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1663169508; x=1694705508;
+  t=1663169509; x=1694705509;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=85aJxQmKurDkYSP1FJQw3TqELhxhuad70Kc3ZbTLiDU=;
-  b=JCopAZ3UxZkFbmCtdPYkBFq77fhwhJtRvfwHCSWYBpTGpcVyetXtWY/h
-   PlHH/I5MsqPU3Tu5hBLnCp+8G7KjC6StkOfQ/QdqKfX6XfAaAvI/3wLhT
-   cm90SRv+1YGC6CE/52WFCodc5yC8OIp2PfVOUG1SAO3SJZZeStzofMgLy
-   X5P2v/LAFO+ZpnIciowt3n/41xWUxRWs9S4BzdaRw4f3bgNg4csm9Qn1a
-   BBcfL+Xp6S10k0PAKWhEEcckD4bA1T8qYT1ifz/r3t2xkwFurxiMlGf9N
-   NYKqn3q0jd40u/5qtg9TZnR6cl3ieSgUW0YyaM0ctLKUcAiL5/Tb+6GLD
+  bh=ILty9AwYF/A0k9EWfznOPHbvgTNH+i70Ca8VVGwNl1M=;
+  b=fgyG472QnAZFpy5OH66FDNrVNRB2CtF9p4qyVh2Aniwa4iDg8I8CJsbH
+   3UsFz7GoxwigZ2va+3Be2De6jpH0t43ivQ0fFY+5HweEZMMHtdZPtkjKZ
+   odey9N04q4EbtKPNk51A7indCa1avN1HmeyFyrRrbopgUzaUxJsEbKVKu
+   0JL6Xm7RxY3/cWzVC1lYLQDpfepKxIDavkEtpZwrTQhylch5E4rH4kwM6
+   o5KnFDTs6Amp+rU9aAWsJ5WtnjS8asGYZC/UmFNSztq79QIXByvTNwJdr
+   gaMkGMgAsWn68wXHErDhUxVrbPjytQhMqeIIpIX1D+m2m7QHCIkO/usV4
    w==;
 X-IronPort-AV: E=Sophos;i="5.93,315,1654552800"; 
-   d="scan'208";a="26181305"
+   d="scan'208";a="26181306"
 Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 14 Sep 2022 17:31:44 +0200
+  by mx1-pgp.tq-group.com with ESMTP; 14 Sep 2022 17:31:45 +0200
 Received: from mx1.tq-group.com ([192.168.6.7])
   by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 14 Sep 2022 17:31:44 +0200
+  Wed, 14 Sep 2022 17:31:45 +0200
 X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 14 Sep 2022 17:31:44 +0200
+        by tq-pgp-pr1.tq-net.de on Wed, 14 Sep 2022 17:31:45 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1663169504; x=1694705504;
+  t=1663169505; x=1694705505;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=85aJxQmKurDkYSP1FJQw3TqELhxhuad70Kc3ZbTLiDU=;
-  b=TNx2rb7vlJsNyykDsNrCbfi9QNtwXpZQnzbXLYUPn8tOni0IXiL98Nez
-   It7mhgv561AVkLJZk2jSIZSUIeW/ZaehH+/xGNWXAU8SYrpQO181+kDfU
-   HSrLCbeHBCymHll4QXIUMFrPjl+A7tJ2G+026WtdpjsHdeZwPChtkYOzV
-   qLczwEHa2FdycrZKUESbXz+tUxauRv3qH0+T4jgYJyfIZ/9qFBW4Re2No
-   Hr6Xzo8H9DwKGi7gUzwiNR0HKSqeLskNmizpRFxhKuQp20+M2e0UlaCku
-   LRiR8Lh2kJKbn8fWu7DNWfozjsGhsTq34GZfAdvTx4AwGBioHAGERjd8f
-   A==;
+  bh=ILty9AwYF/A0k9EWfznOPHbvgTNH+i70Ca8VVGwNl1M=;
+  b=ZZgw0xbXl5rKp7mbJgEPlyq2ifvcEsp7o6lL/AtuZtIA8sCRIPoKRA2C
+   obVrEixQ8JydMCdZZ4dlhXNcUDylEfpXf1PqEoMD0+Z38xVHrU4EgEcpv
+   8mHOBMz2gyNuQ7LqoITLHUvRjvKlm/OTDV8xxaF0C2GH0ZpgkMhd6qwYQ
+   mzLpidypHBPxexP51LvQSNn2GYsIu9Q000x3immeAVVYRbmLLuqjkvkzQ
+   30zMFmLqWEnKDLTnTJXpCITNa7kTR1yBrRVb1QqnSBjufs/7r7aEsYmYB
+   45h7rnoIYXQA45thiHurvnqjDbh3UHt5IRPslSaxnWsiUX2nSly7sUhB0
+   w==;
 X-IronPort-AV: E=Sophos;i="5.93,315,1654552800"; 
-   d="scan'208";a="26181303"
+   d="scan'208";a="26181304"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
   by mx1.tq-group.com with ESMTP; 14 Sep 2022 17:31:44 +0200
 Received: from steina-w.tq-net.de (unknown [10.123.49.11])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 6D3BD280073;
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9BDF9280074;
         Wed, 14 Sep 2022 17:31:44 +0200 (CEST)
 From:   Alexander Stein <alexander.stein@ew.tq-group.com>
 To:     Jean Delvare <jdelvare@suse.com>,
@@ -68,9 +68,9 @@ To:     Jean Delvare <jdelvare@suse.com>,
 Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Subject: [PATCH v5 3/5] hwmon: pwm-fan: Add dedicated power switch function
-Date:   Wed, 14 Sep 2022 17:31:35 +0200
-Message-Id: <20220914153137.613982-4-alexander.stein@ew.tq-group.com>
+Subject: [PATCH v5 4/5] hwmon: pwm-fan: split __set_pwm into locked/unlocked functions
+Date:   Wed, 14 Sep 2022 17:31:36 +0200
+Message-Id: <20220914153137.613982-5-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220914153137.613982-1-alexander.stein@ew.tq-group.com>
 References: <20220914153137.613982-1-alexander.stein@ew.tq-group.com>
@@ -85,112 +85,92 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This handles enabling/disabling the regulator in a single function, while
-keeping the enables/disabled balanced. This is a preparation when
-regulator is switched from different code paths.
+Regular calls to set_pwm don't hold the mutex, but the upcoming
+update_enable support needs to call set_pwm with the mutex being held.
+So provide the previous behavior in set_pwm (handling the lock), while
+adding __set_pwm which assumes the lock being held.
 
 Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/hwmon/pwm-fan.c | 46 +++++++++++++++++++++++++++--------------
- 1 file changed, 31 insertions(+), 15 deletions(-)
+ drivers/hwmon/pwm-fan.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 01412c71deb3..92c5b7f5ddd6 100644
+index 92c5b7f5ddd6..12ef3b3dbe22 100644
 --- a/drivers/hwmon/pwm-fan.c
 +++ b/drivers/hwmon/pwm-fan.c
-@@ -35,6 +35,7 @@ struct pwm_fan_ctx {
- 	struct pwm_device *pwm;
- 	struct pwm_state pwm_state;
- 	struct regulator *reg_en;
-+	bool regulator_enabled;
- 	bool enabled;
+@@ -152,14 +152,12 @@ static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+ 	unsigned long period;
+ 	int ret = 0;
  
- 	int tach_count;
-@@ -85,6 +86,25 @@ static void sample_timer(struct timer_list *t)
- 	mod_timer(&ctx->rpm_timer, jiffies + HZ);
- }
+-	mutex_lock(&ctx->lock);
+-
+ 	if (pwm > 0) {
+ 		period = state->period;
+ 		state->duty_cycle = DIV_ROUND_UP(pwm * (period - 1), MAX_PWM);
+ 		ret = pwm_apply_state(ctx->pwm, state);
+ 		if (ret)
+-			goto exit_set_pwm_err;
++			return ret;
+ 		ret = pwm_fan_power_on(ctx);
+ 	} else {
+ 		ret = pwm_fan_power_off(ctx);
+@@ -167,8 +165,17 @@ static int  __set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
+ 	if (!ret)
+ 		ctx->pwm_value = pwm;
  
-+static int pwm_fan_switch_power(struct pwm_fan_ctx *ctx, bool on)
-+{
-+	int ret = 0;
-+
-+	if (!ctx->reg_en)
-+		return ret;
-+
-+	if (!ctx->regulator_enabled && on) {
-+		ret = regulator_enable(ctx->reg_en);
-+		if (ret == 0)
-+			ctx->regulator_enabled = true;
-+	} else if (ctx->regulator_enabled && !on) {
-+		ret = regulator_disable(ctx->reg_en);
-+		if (ret == 0)
-+			ctx->regulator_enabled = false;
-+	}
+-exit_set_pwm_err:
 +	return ret;
 +}
 +
- static int pwm_fan_power_on(struct pwm_fan_ctx *ctx)
- {
- 	struct pwm_state *state = &ctx->pwm_state;
-@@ -320,7 +340,7 @@ static int pwm_fan_of_get_cooling_data(struct device *dev,
- 
- static void pwm_fan_regulator_disable(void *data)
- {
--	regulator_disable(data);
-+	pwm_fan_switch_power(data, false);
++static int set_pwm(struct pwm_fan_ctx *ctx, unsigned long pwm)
++{
++	int ret;
++
++	mutex_lock(&ctx->lock);
++	ret = __set_pwm(ctx, pwm);
+ 	mutex_unlock(&ctx->lock);
++
+ 	return ret;
  }
  
- static void pwm_fan_pwm_disable(void *__ctx)
-@@ -364,13 +384,13 @@ static int pwm_fan_probe(struct platform_device *pdev)
+@@ -192,7 +199,7 @@ static int pwm_fan_write(struct device *dev, enum hwmon_sensor_types type,
+ 	if (val < 0 || val > MAX_PWM)
+ 		return -EINVAL;
  
- 		ctx->reg_en = NULL;
- 	} else {
--		ret = regulator_enable(ctx->reg_en);
-+		ret = pwm_fan_switch_power(ctx, true);
- 		if (ret) {
- 			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
- 			return ret;
- 		}
- 		ret = devm_add_action_or_reset(dev, pwm_fan_regulator_disable,
--					       ctx->reg_en);
-+					       ctx);
- 		if (ret)
- 			return ret;
- 	}
-@@ -516,12 +536,10 @@ static int pwm_fan_disable(struct device *dev)
- 			return ret;
- 	}
+-	ret = __set_pwm(ctx, val);
++	ret = set_pwm(ctx, val);
+ 	if (ret)
+ 		return ret;
  
--	if (ctx->reg_en) {
--		ret = regulator_disable(ctx->reg_en);
--		if (ret) {
--			dev_err(dev, "Failed to disable fan supply: %d\n", ret);
--			return ret;
--		}
-+	ret = pwm_fan_switch_power(ctx, false);
-+	if (ret) {
-+		dev_err(dev, "Failed to disable fan supply: %d\n", ret);
-+		return ret;
+@@ -280,7 +287,7 @@ pwm_fan_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
+ 	if (state == ctx->pwm_fan_state)
+ 		return 0;
+ 
+-	ret = __set_pwm(ctx, ctx->pwm_fan_cooling_levels[state]);
++	ret = set_pwm(ctx, ctx->pwm_fan_cooling_levels[state]);
+ 	if (ret) {
+ 		dev_err(&cdev->device, "Cannot set pwm!\n");
+ 		return ret;
+@@ -398,7 +405,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+ 	pwm_init_state(ctx->pwm, &ctx->pwm_state);
+ 
+ 	/*
+-	 * __set_pwm assumes that MAX_PWM * (period - 1) fits into an unsigned
++	 * set_pwm assumes that MAX_PWM * (period - 1) fits into an unsigned
+ 	 * long. Check this here to prevent the fan running at a too low
+ 	 * frequency.
+ 	 */
+@@ -408,7 +415,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
  	}
  
- 	return 0;
-@@ -543,12 +561,10 @@ static int pwm_fan_resume(struct device *dev)
- 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
- 	int ret;
- 
--	if (ctx->reg_en) {
--		ret = regulator_enable(ctx->reg_en);
--		if (ret) {
--			dev_err(dev, "Failed to enable fan supply: %d\n", ret);
--			return ret;
--		}
-+	ret = pwm_fan_switch_power(ctx, true);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable fan supply: %d\n", ret);
-+		return ret;
- 	}
- 
- 	if (ctx->pwm_value == 0)
+ 	/* Set duty cycle to maximum allowed and enable PWM output */
+-	ret = __set_pwm(ctx, MAX_PWM);
++	ret = set_pwm(ctx, MAX_PWM);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to configure PWM: %d\n", ret);
+ 		return ret;
 -- 
 2.25.1
 
