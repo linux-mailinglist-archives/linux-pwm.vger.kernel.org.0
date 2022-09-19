@@ -2,55 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E18EB5BD6CC
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Sep 2022 00:06:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D90275BD752
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Sep 2022 00:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbiISWG1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Sep 2022 18:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48828 "EHLO
+        id S229926AbiISWav (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Sep 2022 18:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiISWG0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Sep 2022 18:06:26 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DEB49B54
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Sep 2022 15:06:23 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id k9so1383830wri.0
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Sep 2022 15:06:23 -0700 (PDT)
+        with ESMTP id S229913AbiISWat (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Sep 2022 18:30:49 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564EA4F68A
+        for <linux-pwm@vger.kernel.org>; Mon, 19 Sep 2022 15:30:44 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id r3-20020a05600c35c300b003b4b5f6c6bdso405911wmq.2
+        for <linux-pwm@vger.kernel.org>; Mon, 19 Sep 2022 15:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=ixw7chpePOC+MLhrlMTpQHvviDIReReYqRXhDHS+LsE=;
-        b=MTU+cL6hp6f9T9hHZK1qtBuS4UE3E75gmwhW8YWLDfnyfkP1ZKR7ntjgL9f0ZWI1Bq
-         h4h6f8vzgNpa2NCsEFmvTDW7Kq/T1u03RvC+tw7QqBTnX7Z0nDH5FAm+U6asPpf8w2WS
-         OBXDbSBf8oEB5Vjyp5az62OxCA9OfmgUUcmDFCXBC9wDo3r8XMj8N+6EX4IHYQu5Cj5S
-         4vBKLvNSGuldmPRo6coz7S7mCgTq40Sni6ak5grfz2ir3PaPyjm5BcbMiA02hEJVU8tq
-         dEFV87LXthpwMdUgc63el5Lf4vRgJM6Tmkw8YnCLpTmX3iU/seH7aJ6FCVAQF+98caCj
-         UnFw==
+        bh=H64L7pxloe6ABjQPB6dOZxxjzAKfBLX2WzxDmXIAW9k=;
+        b=h6hdPIuuXe/NvoMHtntpj69O9G+CzBzEIubkbH2eD3iogfL2/4jClFnCSNBob1GlbG
+         1BLs4fDDqrW6KF18dFxr15CuEee6qnNOoO8z6rvHWf5e+1W2nHhYvZ/ka8AI+GfSK9hC
+         QLmfZtPIogBXCS7MLwijj2Qq5LU9CmllsqYXIliveBUKwMisqFS83sCEm6yjvk2vZnI2
+         d+BH9ApZUt04jn/7AVMFz38gfRupRSDRDuXuqxvX5HYFkSy/p/i5Zqqe6E6LpJeuxAA8
+         HCHK5ae9CptsbVx/vTnWBPL1bQoxPDnSk6bjkXGYMrsHyOYRRLDgpaFw8kKhVPAOhUC3
+         YR/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=ixw7chpePOC+MLhrlMTpQHvviDIReReYqRXhDHS+LsE=;
-        b=kgi9aUhuTmIbhS0KatfzR09LmosGVJReAJFCd5Zb2iVg9s7D55P3ET3X7OVdJrLzy0
-         w+cV16D8rw4Rti02k0rpYYMJiNlPCtUzUyzRiM4DGRlwGUuT5VnKNcq7HYkKWuDgOwSv
-         DDzcMkk8C82xGusRCO1WPpGybY4hBR9J/hM8yRnWNy+Om2ts1dLqOhwvTV/T9m/Qq40z
-         7s7CMF/uf2cHwPO2qvvg0G8R8CzIkHoV7mH8O0Cr1c9mfV1EF6XsUA0seTQ2IUyFK0UP
-         nu+67Jq6QdMDcxtFnEOCIQnCwGnP6x6oJUSYKvL4g+z9Pcxue3v+nsPw6fVxNzsZ24tf
-         GBng==
-X-Gm-Message-State: ACrzQf3h1j53Jkrsc0Edpdz6yYonBP2lFk1AHBbYH8byjH5RnPT71rav
-        5G+a3GxNMlVC+eoLc1WF6tedkQ==
-X-Google-Smtp-Source: AMsMyM6xghtZubWcuL/UbtqUKWsZPmma3Wxd7oe7RWho2DnwtH1o58uPfquQMMN7QbsOio3L8ivREA==
-X-Received: by 2002:adf:d206:0:b0:228:64c1:c3fb with SMTP id j6-20020adfd206000000b0022864c1c3fbmr12014163wrh.260.1663625182237;
-        Mon, 19 Sep 2022 15:06:22 -0700 (PDT)
+        bh=H64L7pxloe6ABjQPB6dOZxxjzAKfBLX2WzxDmXIAW9k=;
+        b=uxIbqIaGhXLW3W99F3iUWpanDp6tP4fmR6xGN3cVT6zYVEWYtlFDOB9yCRfZI3Ifry
+         riQxcVQQZUDTdKs1BOoyrD1oEGKKmhuBCuUqi9nNJdfPPDBn747rJS3CmdwQVxr7/82M
+         k5tRICnayieZFKWnG11Yg/Q3qsjiblJXiBLgdkqQY01QkZvuPkFc4PwX/PXGo5ufpuDO
+         ReEf8T62gHQUF7ifjXsluvRfywg34+mi3U01Dz4F18djDCt768umJNNlUMGOfSY1Knai
+         mOtX6Rw/rXhsxd6M1dZCXCROpN9Q9HZKoE8DL+EFJlkd2tKwKkdCBiY+psJ6kQzzdFjN
+         S1tg==
+X-Gm-Message-State: ACrzQf1eM9Vik16m1YJeMbt3MFRgOFQVUGj6BH4uUE3kv1ErK6c9TN3F
+        wutVebvqNJd88jeNXqqntsGVEQ==
+X-Google-Smtp-Source: AMsMyM4rhC/gFJIckxCkKzWYA+1S2wvnQLDFWaaAHKzLCWW53xSA/CpQVaBpxQp/saH/1X3R3XoI+g==
+X-Received: by 2002:a05:600c:27d1:b0:3b4:5e9c:23ed with SMTP id l17-20020a05600c27d100b003b45e9c23edmr237361wmb.180.1663626642884;
+        Mon, 19 Sep 2022 15:30:42 -0700 (PDT)
 Received: from [192.168.0.17] (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id h21-20020a05600c351500b003b491f99a25sm16756983wmq.22.2022.09.19.15.06.21
+        by smtp.gmail.com with ESMTPSA id l16-20020a05600c1d1000b003a601a1c2f7sm16407376wms.19.2022.09.19.15.30.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 15:06:21 -0700 (PDT)
-Message-ID: <9d021e83-774f-3524-a65d-0ef0f74c8545@sifive.com>
-Date:   Mon, 19 Sep 2022 23:06:20 +0100
+        Mon, 19 Sep 2022 15:30:42 -0700 (PDT)
+Message-ID: <193bf7d7-ac7c-5bcd-1f2b-f95dc3621f61@sifive.com>
+Date:   Mon, 19 Sep 2022 23:30:41 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.2
@@ -67,23 +67,22 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>
 References: <20220816211454.237751-1-ben.dooks@sifive.com>
  <20220816211454.237751-9-ben.dooks@sifive.com>
- <20220915072430.bhpwk6iyqmyz6oie@pengutronix.de>
+ <20220914164720.bjh6tqw6zb66vsyz@pengutronix.de>
 From:   Ben Dooks <ben.dooks@sifive.com>
-In-Reply-To: <20220915072430.bhpwk6iyqmyz6oie@pengutronix.de>
+In-Reply-To: <20220914164720.bjh6tqw6zb66vsyz@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 15/09/2022 08:24, Uwe Kleine-König wrote:
-> Hello,
-> 
+On 14/09/2022 17:47, Uwe Kleine-König wrote:
 > On Tue, Aug 16, 2022 at 10:14:52PM +0100, Ben Dooks wrote:
 >> The dwc pwm controller can be used in non-PCI systems, so allow
 >> either platform or OF based probing.
@@ -115,13 +114,170 @@ On 15/09/2022 08:24, Uwe Kleine-König wrote:
 >>   
 >> +config PWM_DWC_OF
 >> +	tristate "DesignWare PWM Controller (OF bus)
+>> +	depends on PWM_DWC && OF
+>> +	help
+>> +	  PWM driver for Synopsys DWC PWM Controller on an OF bus.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called pwm-dwc-of.
+>> +
+>>   config PWM_EP93XX
+>>   	tristate "Cirrus Logic EP93xx PWM support"
+>>   	depends on ARCH_EP93XX || COMPILE_TEST
+>> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+>> index a70d36623129..d1fd1641f077 100644
+>> --- a/drivers/pwm/Makefile
+>> +++ b/drivers/pwm/Makefile
+>> @@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
+>>   obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
+>>   obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
+>>   obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
+>> +obj-$(CONFIG_PWM_DWC_OF)	+= pwm-dwc-of.o
+>>   obj-$(CONFIG_PWM_DWC_PCI)	+= pwm-dwc-pci.o
+>>   obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
+>>   obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
+>> diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
+>> new file mode 100644
+>> index 000000000000..d18fac287325
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-dwc-of.c
+>> @@ -0,0 +1,78 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * DesignWare PWM Controller driver OF
+>> + *
+>> + * Copyright (C) 2022 SiFive, Inc.
+>> + */
+>> +
+>> +#include <linux/bitops.h>
+>> +#include <linux/export.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/pwm.h>
+>> +#include <linux/io.h>
+>> +
+>> +#include "pwm-dwc.h"
+>> +
+>> +static int dwc_pwm_plat_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct dwc_pwm *dwc;
+>> +	int ret;
+>> +
+>> +	dwc = dwc_pwm_alloc(dev);
+>> +	if (!dwc)
+>> +		return -ENOMEM;
+>> +
+>> +	dwc->base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(dwc->base))
+>> +		return dev_err_probe(dev, PTR_ERR(dwc->base),
+>> +				     "failed to map IO\n");
 > 
-> There is a missing " which results in:
+> devm_platform_ioremap_resource() already emits an error message.
+
+ok, fixed
+
+
+>> +
+>> +	dwc->clk = devm_clk_get_enabled(dev, "timer");
+>> +	if (IS_ERR(dwc->clk))
+>> +		return dev_err_probe(dev, PTR_ERR(dwc->clk),
+>> +				     "failed to get timer clock\n");
+>> +
+>> +	clk_prepare_enable(dwc->clk);
 > 
-> 	drivers/pwm/Kconfig:196:warning: multi-line strings not supported
+> You don't need clk_prepare_enable() as you used devm_clk_get_enabled().
+> 
+> (Otherwise, when keeping clk_prepare_enable() you need to check the
+> return value.)
+
+ok, fixed. I didn't notice that when changing to devm_
+
+> 
+>> +	dwc->clk_ns = NSEC_PER_SEC / clk_get_rate(dwc->clk);
+> 
+> I think I already pointed out this is non-optimal.
+> 
+> Later you use clk_ns in __dwc_pwm_configure_timer():
+> 
+> 	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
+> 
+> So what you really want here is:
+> 
+> 	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle * clk_get_rate(dwc->clk), NSEC_PER_SEC);
+> 
+> With for example clk_get_rate(dwc->clk) = 201171875 and duty_cycle =
+> 4096 you now get clk_ns = 4 (while the exact value is 4.97087..), tmp =
+> 1024, while the exact value is 824.
+> 
+> So the idea is to add a clkrate member to the private driver struct, let
+> it default to 100000000 for the pci case and use the line I suggested
+> above.
+
+ok, will consider keeping the rate in hz and modifiying the pci
+version to use 10 * NSEC_PER_SEC for the rate.
+
+I've been trying to avoid changing the pci case, but I think for
+anything with a clk pointer we should be doing clk_get_rate in the
+calc code
+
+> 
+>> +
+>> +	ret = devm_pwmchip_add(dev, &dwc->chip);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+> 
+> This is equivalent to
+> 
+> 	return ret;
+
+Will sort that out.
+
+
+>> +}
+>> +
+>> +static int dwc_pwm_plat_remove(struct platform_device *pdev)
+>> +{
+>> +	struct dwc_pwm *dwc = platform_get_drvdata(pdev);
+>> +
+>> +	clk_disable_unprepare(dwc->clk);
+>> +	return 0;
+>> +}
+> 
+> When dropping clk_prepare_enable() the .remove callback can go away,
+> too.
+
+thanks, spotted that one a while ago.
+
+>> +
+>> +static const struct of_device_id dwc_pwm_dt_ids[] = {
+>> +	{ .compatible = "snps,dw-apb-timers-pwm2" },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, dwc_pwm_dt_ids);
+>> +
+>> +static struct platform_driver dwc_pwm_plat_driver = {
+>> +	.driver = {
+>> +		.name		= "dwc-pwm",
+>> +		.of_match_table  = dwc_pwm_dt_ids,
+>> +	},
+>> +	.probe	= dwc_pwm_plat_probe,
+>> +	.remove	= dwc_pwm_plat_remove,
+>> +};
+>> +
+>> +module_platform_driver(dwc_pwm_plat_driver);
+>> +
+>> +MODULE_ALIAS("platform:dwc-pwm-of");
+>> +MODULE_AUTHOR("Ben Dooks <ben.dooks@sifive.com>");
+>> +MODULE_DESCRIPTION("DesignWare PWM Controller");
+>> +MODULE_LICENSE("GPL");
 > 
 > Best regards
 > Uwe
-
-Thanks, fixed.
+> 
 
