@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B8EC5BE8AA
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Sep 2022 16:21:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A1ED5BE8AB
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Sep 2022 16:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231778AbiITOVJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 20 Sep 2022 10:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42778 "EHLO
+        id S231760AbiITOV1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 20 Sep 2022 10:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231804AbiITOUv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Sep 2022 10:20:51 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B796610E;
-        Tue, 20 Sep 2022 07:18:25 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id y11so3209385pjv.4;
-        Tue, 20 Sep 2022 07:18:25 -0700 (PDT)
+        with ESMTP id S231764AbiITOVE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Sep 2022 10:21:04 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4249C11C12;
+        Tue, 20 Sep 2022 07:19:27 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id bh13so2782855pgb.4;
+        Tue, 20 Sep 2022 07:19:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date;
-        bh=ZNo6njl9VQzi89Lfql6SNWwRdDKHkzKe/5QWx44jgTI=;
-        b=INAEsoofZE4tAT5+oEwyD0R+qetq/94sqRsZG+P0PsZhEkakelBLi3ut7Zq9UE+vzE
-         NPMuaN1TqTLC+Vh5Q1mr14dSeMkiXNevOesrPj+r1+5ea+2P3EDYIn+9olM+aoDnQNqb
-         0O6+qGnSaY1mBPI0dkZ/V14X7jSX12XyIu1zCs6OkE+a4XXj3wkKC9H3n8tCG8I81KB4
-         +sBR+ybaYhuXZ6kwnMpW5SPWbrp8C84rcHDI31DsrwKVYuFSs5JI0hBlffckTbiT0ecI
-         Xdgv+EKIiobsM89tuRkbTJNuku7kibitERu/5IF7hWmkSWztH3JQ0Xgo69mkR7uTxnbx
-         CTRg==
+        bh=VXEcIbQ0V8hEk0noSkT2sAeiDRQ27pxVdSWGQHxmOR8=;
+        b=BuQhEA/1zqL7jbiYk7lGlAKEoQJ/v6+FUT8v5qyPLygKrcUMV5UatNhNfIhzfDilLx
+         TzYmki3eD72o+jXiV15GzgCNFstPqvZ8SrwSff3Cuyc5DC9NR3JU5A1IEppqQlKZQydq
+         b+EyU7ZzH11/TIME4DFcy8dKFTcfg1gxVYqxsEYHqZISLa/aCLjuSd4FGCR6RdUwtstM
+         YZmQYhUDGN4whIPwRp2dXQjSKgGS9i6/lQo775p9wU1ZRreZ2V2ybD0HPr/ra03BPMdZ
+         rIDngSQikEemcZyFeAMy2+hOYyjnGOoPSFI7xncdZKcsItc0vjtzIdfRekG5qyt7creV
+         UshA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=ZNo6njl9VQzi89Lfql6SNWwRdDKHkzKe/5QWx44jgTI=;
-        b=Y35xhcVztLSzDH9noOE6pwwrznWDxmXXtavfqszg44qy2ShiOK/d9Kkd5cNLgZ60Gg
-         DlMn783ng7yylEdeao1y8/JuzDeRNDXVP15uWr7mYcVMfArhdOgEo3qYG5sWO0GVC/yv
-         exDOe9KlHK6tNaSf2nqFWBOkt5AAtRTYaOgncGfxwZFyYCjlabR1FtTBO7hncOZ2GVpi
-         ahDvk0avmyTawJ6ZTgbNIxyIRYSrbNwcoMmoA+7M9peOG5CEE2bIbHz+rGcE8KdIhw78
-         wmFOz2siVmOO8BJRJeIdGrT5r47dvfjDjvfiaujus+L1KCaWpHfl0rT4ONoi2AOkQn45
-         SBPQ==
-X-Gm-Message-State: ACrzQf3ibR3MRORbwpP+Vpx/1QyiGWbzbtwRFv6E9ZlDG3/zFZmfkYNE
-        aVf5rnlzDKGoYzuyZDuQmiw=
-X-Google-Smtp-Source: AMsMyM4QODw5yAotYsr55q6C/CJCiFbhAQaNtB5H19BovgqPnNwYvj410xPFXiv6uQIrcAibu1G9zg==
-X-Received: by 2002:a17:90b:3b90:b0:202:80ac:467c with SMTP id pc16-20020a17090b3b9000b0020280ac467cmr4056175pjb.17.1663683504636;
-        Tue, 20 Sep 2022 07:18:24 -0700 (PDT)
+        bh=VXEcIbQ0V8hEk0noSkT2sAeiDRQ27pxVdSWGQHxmOR8=;
+        b=bD0sDEasp3ilDbjKI2ujDSZAvwAMWS+ljo5nz7Qi3UvqEU+t464bqyU916mdd1X/62
+         zEBueucOYFO1LtHYx+8fy8wFsEDMBdVteUvhH53ANWY2MAerIOIl98x30vxyJvqGDlX6
+         z4NE8MjE7NX9OdsJwfthmG+RebZ8rRMo6Y4UqRElXLtLmD1lThpFIxIrXnbDKkqH+8WN
+         nR/ysgdSabXiA/VnEvUccgY37jvKANllcjrQnV8peBNRqLsj6NADbb7sYZ48WSs13LW2
+         OSJZv4qNBWppr4uRg+oPU5B6SA1vHBi7T3brxm2OPvM1W/OPA/9ZdtMdCpG78DSX/7NZ
+         J8+g==
+X-Gm-Message-State: ACrzQf22Hf2zdY0138+uVt1OnIhu6OfdrPbeoiiev5zul7f2lO10LGod
+        4m3WvE6gesbD2YHrorODCK8=
+X-Google-Smtp-Source: AMsMyM6uyU4QFzZfvHH7IpAVwGwKKuVXxlTZ7GQvQ580Av6M9yiYRu0K0jegV/M4rABQ6NSQNEFm3g==
+X-Received: by 2002:a05:6a00:1248:b0:548:2e34:65e1 with SMTP id u8-20020a056a00124800b005482e3465e1mr24047061pfi.82.1663683566642;
+        Tue, 20 Sep 2022 07:19:26 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l24-20020a17090b079800b00202d1745014sm89899pjz.31.2022.09.20.07.18.23
+        by smtp.gmail.com with ESMTPSA id a2-20020a1709027e4200b001754fa42065sm1517011pln.143.2022.09.20.07.19.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Sep 2022 07:18:23 -0700 (PDT)
+        Tue, 20 Sep 2022 07:19:26 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 20 Sep 2022 07:18:23 -0700
+Date:   Tue, 20 Sep 2022 07:19:25 -0700
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Alexander Stein <alexander.stein@ew.tq-group.com>
 Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
@@ -58,15 +58,15 @@ Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
         <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
         Markus Niebel <Markus.Niebel@ew.tq-group.com>
-Subject: Re: [PATCH v5 3/5] hwmon: pwm-fan: Add dedicated power switch
- function
-Message-ID: <20220920141823.GA3650215@roeck-us.net>
+Subject: Re: [PATCH v5 4/5] hwmon: pwm-fan: split __set_pwm into
+ locked/unlocked functions
+Message-ID: <20220920141925.GA3684684@roeck-us.net>
 References: <20220914153137.613982-1-alexander.stein@ew.tq-group.com>
- <20220914153137.613982-4-alexander.stein@ew.tq-group.com>
+ <20220914153137.613982-5-alexander.stein@ew.tq-group.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220914153137.613982-4-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20220914153137.613982-5-alexander.stein@ew.tq-group.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
@@ -78,12 +78,14 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 05:31:35PM +0200, Alexander Stein wrote:
-> This handles enabling/disabling the regulator in a single function, while
-> keeping the enables/disabled balanced. This is a preparation when
-> regulator is switched from different code paths.
+On Wed, Sep 14, 2022 at 05:31:36PM +0200, Alexander Stein wrote:
+> Regular calls to set_pwm don't hold the mutex, but the upcoming
+> update_enable support needs to call set_pwm with the mutex being held.
+> So provide the previous behavior in set_pwm (handling the lock), while
+> adding __set_pwm which assumes the lock being held.
 > 
 > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 Applied to hwmon-next.
 
