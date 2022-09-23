@@ -2,93 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 801025E7741
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Sep 2022 11:33:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C83C5E7829
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Sep 2022 12:23:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230064AbiIWJd4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Sep 2022 05:33:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51206 "EHLO
+        id S229612AbiIWKXA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 23 Sep 2022 06:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231519AbiIWJdc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Sep 2022 05:33:32 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A1A98D37
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Sep 2022 02:33:31 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id u18so18861458lfo.8
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Sep 2022 02:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=AD0vTTxMT9RyIohVOxhCfhEFX/pSVlOoEyWGLFMykLs=;
-        b=UhkveveyGMsC3fXDaMiw6HTgR5Zv+DbiE61b4ocxMG3/U8cuKdD2iW7i5Yp31yRIug
-         QopqNYn25G8AvUp3dsrrwngLRlX/To+TOvIAji4gRf/yIz2Kdc1MOIgN8vLUgBVt+lHm
-         cQO80P447qb3+hFff+intrPsHiB14c/0itSyHqIwD4OWn5hamdkRWZusiimZN/b3Xwrh
-         iYGQsnjSC8YqCEjq5dtj7wqu+7nP5kfQ9eFe3XcfqSjm7eDvc2lbgQfOja66ySEnSuqr
-         N1zckqBM1DuLaI6D9A6Pr1oTdeHId9lk3HPYWxBpeDKihykWbTWrdIRpnO+yEd78UhJe
-         xnjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=AD0vTTxMT9RyIohVOxhCfhEFX/pSVlOoEyWGLFMykLs=;
-        b=m7oT6dCmFFh3G9EyF7Tyd9t1w/wtYCc11IQ+3AYx0V+TA95mvsbI8eVadNH6tCdcmf
-         GaNqV7seP7YUxda5lVDla3ILNqCFHUMTHm4IN7LG66vG4BzEYMc1Obhw6f3UDKrLvEsE
-         nMe4H7uoge6kI/EMfAWyuHq/8ZGRx1mtVQbHWPkDkbvNSAIQpUppxSz4inNl3h6ryf3B
-         vXkGC29zmZF3v/qge8UkmAE1q55zk9lfZFK5ojr3BM6bMaJ9eapa8gAv8wbaL2+1xEcp
-         4lXQR6mPEtWFqjxvOppfPWbNI1U5XAzw+mLINmL8CiTsTgKMVKlYWXusidr3V1UAGy9u
-         2Z2g==
-X-Gm-Message-State: ACrzQf1sf6+OBfq+fnnLi6FP+hg4cDe8ysBGZ5enIsQmPSPYVm9/FeKl
-        ChR4cYlisztT4uOtstcVJE06kA==
-X-Google-Smtp-Source: AMsMyM5ItBtaNE5LqPfrqHn/2dI0USL2WWX+6SJ0p7rlNnSh/9j/Nh1IbeRKKJtADpAcudz6OcL6dg==
-X-Received: by 2002:a05:6512:6c9:b0:49a:51d4:d517 with SMTP id u9-20020a05651206c900b0049a51d4d517mr2977807lff.329.1663925610119;
-        Fri, 23 Sep 2022 02:33:30 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id q2-20020a2e5c02000000b0025e4c49969fsm1282517ljb.98.2022.09.23.02.33.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Sep 2022 02:33:29 -0700 (PDT)
-Message-ID: <2d4f3740-88cd-c3c4-70f5-69c0a040d268@linaro.org>
-Date:   Fri, 23 Sep 2022 11:33:28 +0200
+        with ESMTP id S229512AbiIWKW7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Sep 2022 06:22:59 -0400
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2134812E439;
+        Fri, 23 Sep 2022 03:22:57 -0700 (PDT)
+Received: from p508fdb48.dip0.t-ipconnect.de ([80.143.219.72] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <heiko@sntech.de>)
+        id 1obfpM-0005nH-6s; Fri, 23 Sep 2022 12:22:36 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     kever.yang@rock-chips.com, sjg@chromium.org,
+        philipp.tomsich@vrull.eu, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, ulf.hansson@linaro.org,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        kishon@ti.com, vkoul@kernel.org, thierry.reding@gmail.com,
+        gregkh@linuxfoundation.org, broonie@kernel.org,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        zhangqing@rock-chips.com, jamie@jamieiles.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-phy@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v1 03/11] dt-bindings: pwm: rockchip: add rockchip,rk3128-pwm
+Date:   Fri, 23 Sep 2022 12:22:34 +0200
+Message-ID: <2166557.taCxCBeP46@phil>
+In-Reply-To: <20220920062149.o6gdhsh7bk5rl4ah@pengutronix.de>
+References: <20220909212543.17428-1-jbx6244@gmail.com> <f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmail.com> <20220920062149.o6gdhsh7bk5rl4ah@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH,v2] dt-bindings: pwm: Add compatible for Mediatek MT8188
-Content-Language: en-US
-To:     xinlei.lee@mediatek.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com,
-        jitao.shi@mediatek.com
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@list.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <1663915394-30091-1-git-send-email-xinlei.lee@mediatek.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1663915394-30091-1-git-send-email-xinlei.lee@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
+        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 23/09/2022 08:43, xinlei.lee@mediatek.com wrote:
-> From: xinlei lee <xinlei.lee@mediatek.com>
+Am Dienstag, 20. September 2022, 08:21:49 CEST schrieb Uwe Kleine-König:
+> Hello,
 > 
-> Add dt-binding documentation of pwm for MediaTek MT8188 SoC.
+> On Sat, Sep 10, 2022 at 12:02:22AM +0200, Johan Jonker wrote:
+> > Add rockchip,rk3128-pwm compatible string.
+> > 
+> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > 
-> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> Is the expectation that this goes in via PWM, or together with the other
+> patches via the rockchip maintainers?
+
+in general I think bindings always go through the subsystem that
+they're targetting - PWM in this case.
+
+Acked-by: Heiko Stuebner <heiko@sntech.de>
 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Heiko
 
-Best regards,
-Krzysztof
 
