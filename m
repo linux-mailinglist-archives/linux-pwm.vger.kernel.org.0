@@ -2,95 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D435E9A57
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 09:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 863A75E9A71
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 09:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233742AbiIZHUu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Sep 2022 03:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48508 "EHLO
+        id S233582AbiIZHaw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Sep 2022 03:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233997AbiIZHUr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 03:20:47 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FCA327B07
-        for <linux-pwm@vger.kernel.org>; Mon, 26 Sep 2022 00:20:46 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id n40-20020a05600c3ba800b003b49aefc35fso3184208wms.5
-        for <linux-pwm@vger.kernel.org>; Mon, 26 Sep 2022 00:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=3jdNtELdCn4sS99CPBgsVFr3jQOrpqoAztbQgH6ZpnE=;
-        b=tn3lOcQjwJXnx1Sx0TUQ62fSBIhMpku7J++HgD5uFWFnqKGT+lJ8cfrpZgsx1isATe
-         miwsSvYxv0bVUUco9JYk5vQpUBtIT5b1gIvclSTZF3iUtBapuWuzGmPh1O9+ghG/8TE1
-         xee7ee/237mIf1GV+tluXRrY/qH/MVVvoEoTBrz7JOq7CmuoMKYYZ1x6vAW0hHNHn0si
-         uVdNXesmpKUlzHj1hSzZa5QcRQoxmSSTXnMPt9XI43ygFaE0UwTjnl6BLmMVrXkzgJjn
-         h1Kgax2nWYS9QMhBG6+6qJ2moO4TQIDFFYZMbBlzTEoKSzn44MPfBjeLp8yt/3j3+GAm
-         hwtg==
+        with ESMTP id S233264AbiIZHav (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 03:30:51 -0400
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D65A20BFD;
+        Mon, 26 Sep 2022 00:30:50 -0700 (PDT)
+Received: by mail-qv1-f44.google.com with SMTP id g4so3853457qvo.3;
+        Mon, 26 Sep 2022 00:30:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=3jdNtELdCn4sS99CPBgsVFr3jQOrpqoAztbQgH6ZpnE=;
-        b=ZlQTTyzy2n4DhLnqSJvPmYB20rlxxuNjIIx1UFD2zurf516jBBEVXDOmm6+zOcwZEb
-         MCT/svsx4TL3oR9JDpsx8NpnNi7TyOffiXXqPDP61zE3G8fpKkRyRsrqnDaCQY4PxgCk
-         QO7iUgUDIVPGG8EV3ATy/JAhWPO3Qc59OB6WhuVz3FqVh2i1qdVFSl8zz0xAYHgs4Abz
-         rqFflHEOAvGJKrH1JXkjxhW0vkvKmtwmMY7iGToo6Ipq1VxeUckG1q880f1DPMvaSBdA
-         njFcbyEmf1dnGUpI9hZTvfRNjeSKjsq97sPpqyEYMXF1czNrwto+brBRpAvSkhBQWGC1
-         0DFA==
-X-Gm-Message-State: ACrzQf0mxUftTD1D0CPvusXJMtLdLsodpAvjPFHLFkzER5SYsOFNPwGo
-        pf5lptJPiexAfSiZPZTUU/J8w005gh+qGNslep11Fw==
-X-Google-Smtp-Source: AMsMyM5oTORr2x7yyhS1QT1DENmiHP9FslJNer9UgFyATnA8n6gcC3oJMwEaX6Aaxc+zwFauRci48qNhw1xDVg8ViEY=
-X-Received: by 2002:a05:600c:1e08:b0:3b4:8fef:d63c with SMTP id
- ay8-20020a05600c1e0800b003b48fefd63cmr20577851wmb.158.1664176844980; Mon, 26
- Sep 2022 00:20:44 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=PD9kRGu3xP06426an9uPmLar4Br/xl9PzLRr4C+tbrw=;
+        b=7Oj36kkQgBDsmZKKbKnJoIX9d194NeacrbL4hAfi5knLaV/9xzaZe6ojIak4KcZSo0
+         XPZOb7nWf4WOuuh5WRgcIjZJ+L0qxuIrX2fYmhiNzAKoCcovKdxe5iqRtX5pxzjzsySO
+         NO4NqXCSq9SOH4V2ktmpZfzt4XyOypW4BrpJYNa2KktLmujje8EKePsHw1o7HsqHDsxY
+         aGzzN+D6gAKSwIqTr7CdSTBfaN0kXtLi774OOjYtpdp+GtKDSf9uK9o13Ss8TJzfFoNq
+         7BPoSLnon15Wh+N5bFEL2rMxEO6n8iaxD9oC6YabA3dIM1Qk5K2ZZan7p7RDR0DuORsz
+         oWJg==
+X-Gm-Message-State: ACrzQf3ZIIEpEUWWMAOo40OSi+ihB/gTb1IyJ+mnhMrKGCVg0P1EBJlY
+        RJz6dVlpjZtg6NNh46wl4tDm3pxoEuI=
+X-Google-Smtp-Source: AMsMyM7i9IZ3oKY/XdPBB8qswSZUQwg/wKw5aLJbdDrhimL0SWJfrtAi4qlqKkoQ8kkr9gnx9KYi1A==
+X-Received: by 2002:a05:6214:2129:b0:4ac:8dfe:9d82 with SMTP id r9-20020a056214212900b004ac8dfe9d82mr16056290qvc.98.1664177448999;
+        Mon, 26 Sep 2022 00:30:48 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id w12-20020a05620a444c00b006af1f0af045sm11458785qkp.107.2022.09.26.00.30.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 00:30:48 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-3487d84e477so59409067b3.6;
+        Mon, 26 Sep 2022 00:30:48 -0700 (PDT)
+X-Received: by 2002:a0d:dd09:0:b0:344:fca5:9b44 with SMTP id
+ g9-20020a0ddd09000000b00344fca59b44mr19280461ywe.358.1664177448106; Mon, 26
+ Sep 2022 00:30:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220714115515.5748-1-pali@kernel.org> <20220714183328.4137-1-pali@kernel.org>
-In-Reply-To: <20220714183328.4137-1-pali@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 26 Sep 2022 09:20:33 +0200
-Message-ID: <CAMRc=MfAS3GQ_U+kaHPP7ApCs1StVsUdBFee7Ey_xUYW2CDMXg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] gpio: mvebu: Fix check for pwm support on non-A8K platforms
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+References: <20220919075727.rmph7jmopaqvyyri@pengutronix.de>
+ <OS0PR01MB5922B87D4A05973F88B427A7864C9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20220920155306.dvcz4324zvg72udm@pengutronix.de> <OS0PR01MB5922A9B3314F2F2B32F6B0DE864C9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <OS0PR01MB5922289B89061F6B3DF4819F864F9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20220921133542.3glfgeddnlhrebkz@pengutronix.de> <OS0PR01MB592258F2341BEDA1A5A7301C864F9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20220922053605.qivxzwon52orbdgz@pengutronix.de> <OS0PR01MB59220ECD0B2D42DF5012B6C7864E9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <TYCPR01MB59336AAF4DD1D304FA53451286509@TYCPR01MB5933.jpnprd01.prod.outlook.com>
+ <20220924134233.m7uyvwyulbmo3mrv@pengutronix.de> <OS0PR01MB5922B479EE78E840DA9B8F0E86509@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB5922B479EE78E840DA9B8F0E86509@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 26 Sep 2022 09:30:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU_-Y_MV=6t+ri_MicEMK+Z5JhxHHp3AsDU+4KgdMsXSQ@mail.gmail.com>
+Message-ID: <CAMuHMdU_-Y_MV=6t+ri_MicEMK+Z5JhxHHp3AsDU+4KgdMsXSQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] pwm: Add support for RZ/G2L GPT
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jul 14, 2022 at 8:33 PM Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> pwm support incompatible with Armada 80x0/70x0 API is not only in
-> Armada 370, but also in Armada XP, 38x and 39x. So basically every non-A8=
-K
-> platform. Fix check for pwm support appropriately.
->
-> Fixes: 85b7d8abfec7 ("gpio: mvebu: add pwm support for Armada 8K/7K")
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
->
-> ---
-> Changes in v2:
-> * reverse the if/else order per Baruch request
+Hi Biju,
 
-Applied, thanks!
+On Sat, Sep 24, 2022 at 6:10 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> Note:
+> I have a plan to develop another PWM driver using MTU IP on the same SoC.
+> The work is not started yet.
 
-Bart
+That is the MTU3, which seems to be a further evolution of the MTU2
+in e.g. RZ/A1, which is already supported as a timer through the
+sh_mtu2 driver?
+
+> For this IP, I planned to use MFD framework for the MTU driver and
+> Will add counter driver, timer driver(clock source, clock event)
+> and pwm driver as child devices.
+>
+> Currently the MFD driver and 16-Bit Phase Counting using counter framework
+> is almost done.
+
+Do you really need an MFD? (MFDs trigger a red flag for me ;-)
+E.g. there are two sets of bindings for renesas,tpu: when #pwm-cells
+is present, it is used for PWM, otherwise it is used as a timer.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
