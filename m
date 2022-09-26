@@ -2,66 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E77625E9E20
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 11:45:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 318575E9E3C
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 11:49:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234359AbiIZJpi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Sep 2022 05:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51434 "EHLO
+        id S233912AbiIZJs7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Sep 2022 05:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233625AbiIZJpD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 05:45:03 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D730D15711;
-        Mon, 26 Sep 2022 02:43:50 -0700 (PDT)
+        with ESMTP id S233588AbiIZJsM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 05:48:12 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372866328;
+        Mon, 26 Sep 2022 02:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664185430; x=1695721430;
+  t=1664185690; x=1695721690;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=2ofBCBpdftIlM/Orx1EIGaCpNLoaj4BYeHzamm1P3a4=;
-  b=jKjGTKpQxfjUEIzksWdj8Q+lQPYkFclyPI6Oe9PW1UgplkB2YKvWOCci
-   oVfvvV54FsBpkEWtgoa1WyduKpuvPW3lKDsNlIg88oK9YhDZpH6sRMksK
-   7wzkszI5QFJlM5XYyfIorGkEvTZEBV0cuQT1/ZmBEk+ZLk2mx8JyAcwrN
-   In02xJcB9dwwt/Z9T3zUH74zPhYnxBvados81yQIe7YQ8BBGnI4Mq7KM3
-   t3/4xZffc6zcyBWPN7yIE3/8AbgR/ECNMQOyEGEQE45nXAyW8Lp23oUWW
-   0BzjgriO3FlSovYVU3aSMbNS9d+FNFDKOu2o2ifBshoBaXP5S0JCyuNRt
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="362815577"
+  bh=rFbdK+TnkebQ/ebOKxQtSt/l+qNTLawZB70V4CVhIXw=;
+  b=VBZfKlcI60pm02Di3RETVVEqU/TQD09kTztYajGnolRMNOtvl22cbEH4
+   wuVTAorEeDO6OPQcByuV8ruqd5E8lm1+hVprdO2h/oGfl4b6O63KrkcU4
+   NcXKJ1F8hp31bxQEtnVThjj6XlV2H+kDsbNtUbl76Wygf+uDqB4PChvwQ
+   CeeKlqRe7ejnuqGmq2GRWR4pueaY8C61Jcb5F7QjUtNNv0h8cB+cgyvf+
+   X0ay3k06eKdDXZ1rd3QwHVYkAhxuuRxnW+U6kkrlJEH66qx5YUjK7WcLW
+   kckIlBKspRui6Z3WuTJ1lXIfJEpLouFmwN8eXZh9BbYfU8crkY6ucu5kl
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="300967957"
 X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
-   d="scan'208";a="362815577"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 02:43:50 -0700
+   d="scan'208";a="300967957"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 02:48:09 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="689491308"
+X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="796265739"
 X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
-   d="scan'208";a="689491308"
+   d="scan'208";a="796265739"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Sep 2022 02:43:48 -0700
+  by orsmga005.jf.intel.com with ESMTP; 26 Sep 2022 02:48:07 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ockeR-007jS2-1l;
-        Mon, 26 Sep 2022 12:43:47 +0300
-Date:   Mon, 26 Sep 2022 12:43:47 +0300
+        id 1ockic-007jXR-18;
+        Mon, 26 Sep 2022 12:48:06 +0300
+Date:   Mon, 26 Sep 2022 12:48:06 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/9] pwm: lpss: Move exported symbols to PWM_LPSS
- namespace
-Message-ID: <YzF0U7q5Fl0UaogR@smile.fi.intel.com>
+Subject: Re: [PATCH v2 4/9] pwm: lpss: Include headers we are direct user of
+Message-ID: <YzF1VmChe+MyXxJF@smile.fi.intel.com>
 References: <20220908135658.64463-1-andriy.shevchenko@linux.intel.com>
- <20220908135658.64463-3-andriy.shevchenko@linux.intel.com>
- <20220924095945.pzyhc24jhjwlfdin@pengutronix.de>
+ <20220908135658.64463-5-andriy.shevchenko@linux.intel.com>
+ <20220924100453.hupbeotwqrehc4yq@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220924095945.pzyhc24jhjwlfdin@pengutronix.de>
+In-Reply-To: <20220924100453.hupbeotwqrehc4yq@pengutronix.de>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,52 +68,56 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Sep 24, 2022 at 11:59:45AM +0200, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Thu, Sep 08, 2022 at 04:56:51PM +0300, Andy Shevchenko wrote:
-> > Avoid unnecessary pollution of the global symbol namespace by
-> > moving library functions in to a specific namespace and import
-> > that into the drivers that make use of the functions.
+On Sat, Sep 24, 2022 at 12:04:53PM +0200, Uwe Kleine-König wrote:
+> On Thu, Sep 08, 2022 at 04:56:53PM +0300, Andy Shevchenko wrote:
+> > For the sake of integrity, include headers we are direct user of.
 > > 
-> > For more info: https://lwn.net/Articles/760045/
+> > While at it, replace device.h with a forward declaration and add
+> > missed struct pwm_lpss_boardinfo one.
 > > 
-> > Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > ---
-> >  drivers/pwm/pwm-lpss-pci.c      | 1 +
-> >  drivers/pwm/pwm-lpss-platform.c | 1 +
-> >  drivers/pwm/pwm-lpss.c          | 2 ++
-> >  3 files changed, 4 insertions(+)
+> >  drivers/pwm/pwm-lpss.h | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-> > index 75b778e839b3..9f2c666b95ec 100644
-> > --- a/drivers/pwm/pwm-lpss-pci.c
-> > +++ b/drivers/pwm/pwm-lpss-pci.c
-> > @@ -92,3 +92,4 @@ module_pci_driver(pwm_lpss_driver_pci);
+> > diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
+> > index c344921b2cab..839622964b2a 100644
+> > --- a/drivers/pwm/pwm-lpss.h
+> > +++ b/drivers/pwm/pwm-lpss.h
+> > @@ -10,11 +10,15 @@
+> >  #ifndef __PWM_LPSS_H
+> >  #define __PWM_LPSS_H
 > >  
-> >  MODULE_DESCRIPTION("PWM PCI driver for Intel LPSS");
-> >  MODULE_LICENSE("GPL v2");
-> > +MODULE_IMPORT_NS(PWM_LPSS);
+> > -#include <linux/device.h>
+> >  #include <linux/pwm.h>
+> > +#include <linux/types.h>
+> >  
+> >  #define MAX_PWMS			4
+> >  
+> > +struct device;
 > 
-> Each user of the lpss.h header needs that, right? Then the
-> MODULE_IMPORT_NS statement can go into the header, too.
+> It's not clear to me how this is an improvment. Isn't it saner to
+> include <linux/device.h>?
 
-With the same answer as for v1: any user that might include the header for
-the sake of data types will get the NS inclusion even if they don't need
-that (yes, I don't think it's practical, but slightly better to make sure
-that if one uses an API, one adds necessary NS inclusions; also note that
-in case of stale header inclusion this again might bring unnecessary NS,
-while the header should be removed -- with that being said, I think we
-might need some kind of extended includecheck to see if the APIs and data
-structures are actually used when a certain header is included).
+The compilation time improvement. You don't need to include entire
+train of unrelated stuff when compile something.
 
-> Even without this change:
+Moreover, the rule of thumb for the headers is avoid as much as possible
+unrelated inclusions not only due to compilation time rising, but also
+due to potential circular dependencies and increasing dependency hell
+of headers. Believe me, we suffer a lot in the kernel due to this
+(I have an example). Also you may check the Ingo's work of improving
+headers breakage (APIs vs. implementation vs. data types, etc) to see
+the achievement(s).
+
+> > +struct pwm_lpss_boardinfo;
 > 
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Why is this necessary? The struct is defined a few lines below the
+> context of this patch and I see no user that would benefit.
 
-Thanks!
-
+This is clean way of how we program in C. We should forward declare
+the types _before_ using them. Since this is a pointer, forward
+declaration is enough.
 
 -- 
 With Best Regards,
