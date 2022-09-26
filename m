@@ -2,134 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F7E25E9E6F
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 11:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A4195E9EB8
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 12:11:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233902AbiIZJ4I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Sep 2022 05:56:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43882 "EHLO
+        id S235049AbiIZKLn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Sep 2022 06:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234783AbiIZJ4B (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 05:56:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01B321E22
-        for <linux-pwm@vger.kernel.org>; Mon, 26 Sep 2022 02:55:59 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ockq9-0000xP-Vj; Mon, 26 Sep 2022 11:55:54 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ockqA-0030M6-N4; Mon, 26 Sep 2022 11:55:53 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ockq8-003dB7-68; Mon, 26 Sep 2022 11:55:52 +0200
-Date:   Mon, 26 Sep 2022 11:55:47 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S234920AbiIZKLF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 06:11:05 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0713AE5A;
+        Mon, 26 Sep 2022 03:10:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664187014; x=1695723014;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=incQH2Dto+dCjnAkW9zHBf/lKL8d+xXml11ziotBF6o=;
+  b=NnbbdZeS0wgw8SiRC+/JofX4POqGNfFYCSuZuo+bNygMG49/5zet0RSW
+   S+zGEl+0JShjDiu6sfb4FPU0JTlv/X9hsqWA9XzJOZPbdIBDCI1R3Qd9y
+   QP38e75iF2YJNEHHwWMTTB8LSDCMClzars1bXUXrPGMFpV/mFvLIHPvMz
+   ycWfdmyU4ldxiDsuHhNUmiw9eZH/7r3Sa2ntCLMdIMjzoAy38wE/ma+WC
+   kDOTSeO0YFMo6BXxSyWuTiAG3JONi/YHjmLWKF9tJK8GfhASTI3jUO8ar
+   zThhqR2SO/ckvWj8X84P/25aRY0iMwnaCmTmKu9nxQmNCkDZiZspWKnXG
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="302458319"
+X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
+   d="scan'208";a="302458319"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2022 03:10:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10481"; a="866068060"
+X-IronPort-AV: E=Sophos;i="5.93,345,1654585200"; 
+   d="scan'208";a="866068060"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Sep 2022 03:10:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ocl3z-007kCD-0c;
+        Mon, 26 Sep 2022 13:10:11 +0300
+Date:   Mon, 26 Sep 2022 13:10:10 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [PATCH v2 2/9] pwm: lpss: Move exported symbols to PWM_LPSS
  namespace
-Message-ID: <20220926095547.be5bbtyqqlm4ytgy@pengutronix.de>
+Message-ID: <YzF6ggfpyZSMfkIN@smile.fi.intel.com>
 References: <20220908135658.64463-1-andriy.shevchenko@linux.intel.com>
  <20220908135658.64463-3-andriy.shevchenko@linux.intel.com>
  <20220924095945.pzyhc24jhjwlfdin@pengutronix.de>
  <YzF0U7q5Fl0UaogR@smile.fi.intel.com>
+ <20220926095547.be5bbtyqqlm4ytgy@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hfdadlkz3bl7lpkl"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <YzF0U7q5Fl0UaogR@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220926095547.be5bbtyqqlm4ytgy@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Sep 26, 2022 at 11:55:47AM +0200, Uwe Kleine-König wrote:
+> On Mon, Sep 26, 2022 at 12:43:47PM +0300, Andy Shevchenko wrote:
+> > On Sat, Sep 24, 2022 at 11:59:45AM +0200, Uwe Kleine-König wrote:
+> > > On Thu, Sep 08, 2022 at 04:56:51PM +0300, Andy Shevchenko wrote:
 
---hfdadlkz3bl7lpkl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Mon, Sep 26, 2022 at 12:43:47PM +0300, Andy Shevchenko wrote:
-> On Sat, Sep 24, 2022 at 11:59:45AM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > On Thu, Sep 08, 2022 at 04:56:51PM +0300, Andy Shevchenko wrote:
-> > > Avoid unnecessary pollution of the global symbol namespace by
-> > > moving library functions in to a specific namespace and import
-> > > that into the drivers that make use of the functions.
-> > >=20
-> > > For more info: https://lwn.net/Articles/760045/
-> > >=20
-> > > Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > ---
-> > >  drivers/pwm/pwm-lpss-pci.c      | 1 +
-> > >  drivers/pwm/pwm-lpss-platform.c | 1 +
-> > >  drivers/pwm/pwm-lpss.c          | 2 ++
-> > >  3 files changed, 4 insertions(+)
-> > >=20
-> > > diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-> > > index 75b778e839b3..9f2c666b95ec 100644
-> > > --- a/drivers/pwm/pwm-lpss-pci.c
-> > > +++ b/drivers/pwm/pwm-lpss-pci.c
-> > > @@ -92,3 +92,4 @@ module_pci_driver(pwm_lpss_driver_pci);
-> > > =20
-> > >  MODULE_DESCRIPTION("PWM PCI driver for Intel LPSS");
-> > >  MODULE_LICENSE("GPL v2");
-> > > +MODULE_IMPORT_NS(PWM_LPSS);
-> >=20
-> > Each user of the lpss.h header needs that, right? Then the
-> > MODULE_IMPORT_NS statement can go into the header, too.
->=20
-> With the same answer as for v1: any user that might include the header for
-> the sake of data types will get the NS inclusion even if they don't need
-> that (yes, I don't think it's practical, but slightly better to make sure
+> > > > +MODULE_IMPORT_NS(PWM_LPSS);
+> > > 
+> > > Each user of the lpss.h header needs that, right? Then the
+> > > MODULE_IMPORT_NS statement can go into the header, too.
+> > 
+> > With the same answer as for v1: any user that might include the header for
+> > the sake of data types will get the NS inclusion even if they don't need
+> > that (yes, I don't think it's practical, but slightly better to make sure
+> 
+> I'm not sure I understand you correctly here. For some headers you
+> cannot assume that a file including the header also needs the namespace
+> macro, but for pwm-lpss.h that should be a safe assumption.
 
-I'm not sure I understand you correctly here. For some headers you
-cannot assume that a file including the header also needs the namespace
-macro, but for pwm-lpss.h that should be a safe assumption.
+Yes, it's a safe assumption for _this_ case (as I pointed out above that
+there is probably no practical to assume otherwise), in general it may be
+not the case.
 
-> that if one uses an API, one adds necessary NS inclusions; also note that
-> in case of stale header inclusion this again might bring unnecessary NS,
-> while the header should be removed -- with that being said, I think we
-> might need some kind of extended includecheck to see if the APIs and data
-> structures are actually used when a certain header is included).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-+1 for a check about unused headers.
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---hfdadlkz3bl7lpkl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMxdyAACgkQwfwUeK3K
-7AmNVggAk1GEZzKksLpjEm+h7HIHh/JThWp30glOmmKTCU7NsNkq1QZ8Yzak2oOj
-oBppa/VVzvKnihoLHYVNG1cypEnuH4UuI27hFiGPpWO6JS/L5MrEKLShUyE/Sy04
-dOzM4w+FC8vFtWXLaaBwF1tzJM+fKC+JP2ev2RxlLFe1EKJ8ARcrfIVYPuEygoD+
-BgXHhR7WYsPrg88NPFCA4mSAC1aoE/S5d0O4Mx/YXA3mq/wccapMdOIQSdPsaj8M
-UkRAmTv0G5fZYsdMTTjjfKhVdou2FZdSxfaxtzZLGxXgMnwjOt41n/NOnSnDTtHX
-Zs0/c52v5gX6ERaPVWBT0TheEn+aGw==
-=IBMc
------END PGP SIGNATURE-----
-
---hfdadlkz3bl7lpkl--
