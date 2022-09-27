@@ -2,93 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 432DF5EC9EA
-	for <lists+linux-pwm@lfdr.de>; Tue, 27 Sep 2022 18:48:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 575C15ECAB2
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 Sep 2022 19:22:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232925AbiI0Qsx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 27 Sep 2022 12:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
+        id S231628AbiI0RWs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 27 Sep 2022 13:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233235AbiI0Qs1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Sep 2022 12:48:27 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF075788A
-        for <linux-pwm@vger.kernel.org>; Tue, 27 Sep 2022 09:47:49 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1odDkJ-000683-KF; Tue, 27 Sep 2022 18:47:47 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1odDkJ-003G7n-Ie; Tue, 27 Sep 2022 18:47:46 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1odDkH-003wFM-6t; Tue, 27 Sep 2022 18:47:45 +0200
-Date:   Tue, 27 Sep 2022 18:47:42 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        jarkko.nikula@linux.intel.com,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: Re: [RFC v4 00/10] RFC on synpsys pwm driver changes
-Message-ID: <20220927164742.3ulbkcwxqpukibla@pengutronix.de>
-References: <20220816211454.237751-1-ben.dooks@sifive.com>
+        with ESMTP id S230504AbiI0RWr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Sep 2022 13:22:47 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8061C771F;
+        Tue, 27 Sep 2022 10:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664299366; x=1695835366;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Cw27lEfIdc1DhVIpD8qZcxwH3Zpfg7Yzp+ZMZUk8s94=;
+  b=ifdNnnAc0Elb8J5LDb7p2WHdgjt+sred8zPUXkVHIxPu4aLUM1E4VqE7
+   PWto8Qi4I1oYhqkGOREeIqTVCFBTO+G5cxnqT4xuemTsq1Tk0zFfLxzaa
+   4MEw0SuxcroREid0zcrvTEldBqOS8hgctrb1HERwqNdX0v8tTO/XtP/vi
+   t/1nJ5BuhkNw6SnK4wr1J6IOHb55c/gVnq4veSfCxudqgrL2IYqiwyVBf
+   SOWPBC5eez4vPZdXwxPAeZwXJRweev5hBil79dW8+8BOpILz6TZ9pguWU
+   35vnxHccT5XLREJqNq/2DyrNGv+99oItEqdBQQuR2tjjoZ9SaFhhDwCde
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="363216994"
+X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
+   d="scan'208";a="363216994"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 10:22:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="623832196"
+X-IronPort-AV: E=Sophos;i="5.93,350,1654585200"; 
+   d="scan'208";a="623832196"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 27 Sep 2022 10:22:41 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id E705A7C; Tue, 27 Sep 2022 20:22:59 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pwm: core: Replace custom implementation of device_match_fwnode()
+Date:   Tue, 27 Sep 2022 20:22:58 +0300
+Message-Id: <20220927172258.62418-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cebenyd2jeyttlqg"
-Content-Disposition: inline
-In-Reply-To: <20220816211454.237751-1-ben.dooks@sifive.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Replace custom implementation of the device_match_fwnode().
 
---cebenyd2jeyttlqg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pwm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hello Ben,
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index cfe3a0327471..d333e7422f4a 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -678,7 +678,7 @@ static struct pwm_chip *fwnode_to_pwmchip(struct fwnode_handle *fwnode)
+ 	mutex_lock(&pwm_lock);
+ 
+ 	list_for_each_entry(chip, &pwm_chips, list)
+-		if (chip->dev && dev_fwnode(chip->dev) == fwnode) {
++		if (chip->dev && device_match_fwnode(chip->dev, fwnode)) {
+ 			mutex_unlock(&pwm_lock);
+ 			return chip;
+ 		}
+-- 
+2.35.1
 
-there was some feedback to individual patches that require a rework. I'm
-marking the whole series as "changes requested" in the expectation that
-you will resend them all once you addressed the feedback.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---cebenyd2jeyttlqg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMzKSsACgkQwfwUeK3K
-7AnCFAgAmJ4HLsrTpLjkl+OWM/r9rlcJKQiu1UZxcaBQ/DwW6jUhVvk5T1Eg8ql8
-R+4D2R6scINcebshZXulqmKPAnBW6C9c/giXh4qQeissnbuFMgnc6Ia9bVkpodtU
-+6XoTwGKuT68RBtPy7YKUsCMg3X4gJpU6KVeOkgSXOeZwCV793thK2kU4K8LDGx6
-7INE7NsLr7jDnkY7rAbhxH5BQbgBlr9sJPmxmNdp2qourT/U3vKufvfpxTO61bSE
-80TUmL0DG8Sy4xpCx11PJP9hFYU9rCk+fbJ9Ptzei2TRXrZm6+Wsipq0Dc9E9wid
-/5hhjlsPqRptgwnSx9tfrdQaGdJLfA==
-=9u23
------END PGP SIGNATURE-----
-
---cebenyd2jeyttlqg--
