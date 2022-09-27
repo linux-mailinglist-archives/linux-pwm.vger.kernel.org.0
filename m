@@ -2,124 +2,147 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 940735EC7A0
-	for <lists+linux-pwm@lfdr.de>; Tue, 27 Sep 2022 17:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 196175EC8BF
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 Sep 2022 17:56:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231655AbiI0P0e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 27 Sep 2022 11:26:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58222 "EHLO
+        id S230202AbiI0P4Q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 27 Sep 2022 11:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbiI0P0d (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Sep 2022 11:26:33 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79DFCE512B;
-        Tue, 27 Sep 2022 08:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664292392; x=1695828392;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Z8FgthVjK3HQZ0A3apHAWKG6Ji7sJozTBBg/+WlDrgA=;
-  b=KSuzBwLWAOtrolABnWp89VLoJdQW9oWAPI5kBvQEZ7D3phByQLSxgjDe
-   4IeiHjy8uGwuvTF8A3VoPoEf4J7xVFZ9PMnNZG561R+Wx67Bvm4maQgNv
-   xapH4LOdxAhT8LTPt6KTBxn7w/JEMd/oS/bH+n9ai++cW0r9O+sxevI0F
-   I2M8AUednhyQLnTamhoouFl15Xmty4uJOhH1iIQ+2R5P9Noi2mC1oT06L
-   QpC2uYDNLQbHnf+I/bRoI52HUbYIvl2y9McGGmI2SmhysdVj4ktCX3lCc
-   6hTra/8P1nbZJGDgxU00S9nmaVL72K1ONdaGMPs2zA6KviSWE7RmESTk3
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="327703861"
-X-IronPort-AV: E=Sophos;i="5.93,349,1654585200"; 
-   d="scan'208";a="327703861"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Sep 2022 08:26:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10483"; a="652317491"
-X-IronPort-AV: E=Sophos;i="5.93,349,1654585200"; 
-   d="scan'208";a="652317491"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 27 Sep 2022 08:26:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1odCTc-008VUt-2k;
-        Tue, 27 Sep 2022 18:26:28 +0300
-Date:   Tue, 27 Sep 2022 18:26:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S232440AbiI0Pzf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Sep 2022 11:55:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8AC767442
+        for <linux-pwm@vger.kernel.org>; Tue, 27 Sep 2022 08:55:31 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1odCve-0007tO-6Z; Tue, 27 Sep 2022 17:55:26 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1odCve-003Ff6-UJ; Tue, 27 Sep 2022 17:55:25 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1odCvc-003vkM-JT; Tue, 27 Sep 2022 17:55:24 +0200
+Date:   Tue, 27 Sep 2022 17:55:21 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [PATCH v3 4/8] pwm: lpss: Include headers we are direct user of
-Message-ID: <YzMWJFmeMAvn0e1c@smile.fi.intel.com>
+Message-ID: <20220927155521.t4hanojroe247lqr@pengutronix.de>
 References: <20220927144723.9655-1-andriy.shevchenko@linux.intel.com>
  <20220927144723.9655-5-andriy.shevchenko@linux.intel.com>
  <20220927151053.7eh63stoganpgawr@pengutronix.de>
+ <YzMWJFmeMAvn0e1c@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rxnw7fwrtmqvlaez"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220927151053.7eh63stoganpgawr@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <YzMWJFmeMAvn0e1c@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 05:10:53PM +0200, Uwe Kleine-König wrote:
-> On Tue, Sep 27, 2022 at 05:47:19PM +0300, Andy Shevchenko wrote:
-> > For the sake of integrity, include headers we are direct user of.
-> > 
-> > While at it, add missed struct pwm_lpss_boardinfo one and replace
-> > device.h with a forward declaration. The latter improves compile
-> > time due to reducing overhead of device.h parsing with entire train
-> > of dependencies.
-> 
-> Hm, I copied the cmdline for the compiler from a V=1 build and only run
-> the compiler on drivers/pwm/pwm-lpss-pci.c.
-> 
-> With #include <device.h> I got:
-> 
-> 	real	0m0.421s
-> 	user	0m0.354s
-> 	sys	0m0.066s
-> 
-> With struct device; I got:
-> 
-> 	real	0m0.431s
-> 	user	0m0.378s
-> 	sys	0m0.052s
-> 
-> Are the numbers for you considerably different?
 
-Why Ingo created thousands of patches to do something similar? Because for
-a single user you won't see a big difference, but when amount of small pieces
-are gathered together, you definitely will.
+--rxnw7fwrtmqvlaez
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +struct device;
+On Tue, Sep 27, 2022 at 06:26:28PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 27, 2022 at 05:10:53PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Sep 27, 2022 at 05:47:19PM +0300, Andy Shevchenko wrote:
+> > > For the sake of integrity, include headers we are direct user of.
+> > >=20
+> > > While at it, add missed struct pwm_lpss_boardinfo one and replace
+> > > device.h with a forward declaration. The latter improves compile
+> > > time due to reducing overhead of device.h parsing with entire train
+> > > of dependencies.
+> >=20
+> > Hm, I copied the cmdline for the compiler from a V=3D1 build and only r=
+un
+> > the compiler on drivers/pwm/pwm-lpss-pci.c.
+> >=20
+> > With #include <device.h> I got:
+> >=20
+> > 	real	0m0.421s
+> > 	user	0m0.354s
+> > 	sys	0m0.066s
+> >=20
+> > With struct device; I got:
+> >=20
+> > 	real	0m0.431s
+> > 	user	0m0.378s
+> > 	sys	0m0.052s
+> >=20
+> > Are the numbers for you considerably different?
+>=20
+> Why Ingo created thousands of patches to do something similar? Because for
+> a single user you won't see a big difference, but when amount of small pi=
+eces
+> are gathered together, you definitely will.
 
-...
+My doubt is that for me the effect of using struct device over #include
+<device.h> is even negative (looking at real and user). Is it sys which
+counts in the end?
 
-> > +struct pwm_lpss_boardinfo;
-> 
-> Hmm, I wonder why there is no compiler warning without that declaration.
-> At least in my builds. Do you see a warning? IMHO it's better to fix
-> that be swapping the order of struct pwm_lpss_chip and struct
-> pwm_lpss_boardinfo.
+> > > +struct device;
+>=20
+> ...
+>=20
+> > > +struct pwm_lpss_boardinfo;
+> >=20
+> > Hmm, I wonder why there is no compiler warning without that declaration.
+> > At least in my builds. Do you see a warning? IMHO it's better to fix
+> > that be swapping the order of struct pwm_lpss_chip and struct
+> > pwm_lpss_boardinfo.
+>=20
+> Have I told about warning?
 
-Have I told about warning? It's a proper C programming style.
-You don't have a warning because all pointers are considered to be the same,
-but it is better style to explicitly point that out.
+No, it's just me who expected there would be a warning if a pointer to
+struct pwm_lpss_boardinfo is used before struct pwm_lpss_boardinfo is
+defined (or declared).
 
-OTOH you may go and clean all the forward declarations of the data structures
-in the kernel, but I believe the work wouldn't be appreciated much.
+Anyhow, I stand by my opinion that swapping the order of struct
+pwm_lpss_chip and struct pwm_lpss_boardinfo is a saner fix.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> It's a proper C programming style.
+> You don't have a warning because all pointers are considered to be the sa=
+me,
+> but it is better style to explicitly point that out.
 
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rxnw7fwrtmqvlaez
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmMzHOYACgkQwfwUeK3K
+7AmavAf/U+jkVW0ouecO59BG5w3pv7o8Fu4dLdQr5+Cg/FsqJFKw3Nk6MFWubaJ/
+LnDciWFBOSPfdQJb8fauFaBAdaIJ9WDPrvgka2lb+xlcOXCShsElepeffvEEfubq
+XWuBN6mpbuLaz75HH2RK2XMABitQwXC2Pq5FrhQ+SZ5I7ZUV3PVzw/dQaHr8Ha2g
+QFE9oPs6FX3YHV5SPkJ+o550ZVLGU5lmn4LtNulQaG7BzE8GOS7DziZblmIIF0sw
+Wpg9TBeqo0ilEO7XEWD76tGY7RayHSbYNiENc3R6obGFyawX5DqDSCHbaGi9Kdyx
+m9OeLINHOhZ4EuyO264CvzRD8z4ETw==
+=bQXS
+-----END PGP SIGNATURE-----
+
+--rxnw7fwrtmqvlaez--
