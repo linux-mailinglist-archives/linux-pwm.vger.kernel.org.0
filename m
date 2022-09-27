@@ -2,83 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ED175EAB35
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Sep 2022 17:35:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74CF75EBAD8
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 Sep 2022 08:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236712AbiIZPfv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Sep 2022 11:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
+        id S229458AbiI0Glc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 27 Sep 2022 02:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236873AbiIZPdu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Sep 2022 11:33:50 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F64286817;
-        Mon, 26 Sep 2022 07:21:03 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MblF60X2yzWh38;
-        Mon, 26 Sep 2022 22:16:58 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 26 Sep 2022 22:21:01 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 26 Sep
- 2022 22:21:00 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-fbdev@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>
-CC:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
-        <lee@kernel.org>, <daniel.thompson@linaro.org>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH -next resend] backlight: pwm_bl: Switch to use dev_err_probe() helper
-Date:   Mon, 26 Sep 2022 22:27:50 +0800
-Message-ID: <20220926142750.2298337-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230018AbiI0Glb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Sep 2022 02:41:31 -0400
+Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8365C80484;
+        Mon, 26 Sep 2022 23:41:30 -0700 (PDT)
+Received: by mail-ua1-x92b.google.com with SMTP id a14so3212509uat.13;
+        Mon, 26 Sep 2022 23:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=mFh6NsEr1L0/g93EnTYq+6Sa+0CU8JHFpiWEKCGOkR8=;
+        b=qF57YCZupFWGBIxMIKZYL6Kt8BangP8hdYRrZ6j+IZYMqY/PePENXRnKuunVz9xtoL
+         9f05cfme8U5aex6FaU/SLwJrhASE76mIzQYVqQqsJuVS9LQ4eTMa1crm4bXlMFn/T8R0
+         X69Akmkgdbw4vR7gCXsY1XrypfJZG4COGJdauudrAQv6QAyfTqG7qzvaoZjyO2YqA6dz
+         SU1156kVS1i6eKoFG8tNXGV7JiJq1MeJQ97eiZCMwnjY+8oLRDb2yWVnzlWGQLGtUK69
+         B0EzlHGmfisE/kC/h+7yi6R2MRXKNRkxQgzdvTDZRD8oDfzop1Cj2aawpXxeVvOyopHZ
+         ZDGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=mFh6NsEr1L0/g93EnTYq+6Sa+0CU8JHFpiWEKCGOkR8=;
+        b=vxVf5A0IuADTb8ZSuBP8Soja6lorht6DeHZeKCj6JFTBnjj78dW4TwE4l3HWeV0OV5
+         JkhnuwkbyHCxiSUBp2GpuJ9xTZrecpNQLynOcr4/NXYVEsihkFnxDcn19xFZMxj1Sims
+         IwAcKpdq00QBluBtXRwviZvKxQ0yy3OpxIs6W30QoExgQpd1JrJG1qVJU1WVV7dT9DPO
+         xH+rHLcOUnbn/2UsTG+KA+HAGIuL6Cw5db8Jx74ZxFy2Mm0QOioYaS6pkj0EDlXaIkGx
+         E2aR+/9vHQPGmd4ty1vYd1GRQPomLSQeMv6JqucA5JzVj3moHQqOFiJ7IkI2yIYRF9IJ
+         zfsg==
+X-Gm-Message-State: ACrzQf0epbWKSZmktN8zFsnKiRAGp67Gts24D4eg3IOwoQx1MyzedZex
+        E+t9N4MyK6xbd3J6vI21cHrFO/sP8B2EGQSeous=
+X-Google-Smtp-Source: AMsMyM51gajmAGQxmY2CPH1PAtXWHmIvx24FcR1pBMGJzHAvgISRbjE74dgZApEAxpte15rRTi3BILSpkBR/kgJURbo=
+X-Received: by 2002:ab0:2256:0:b0:3cd:36b4:41c with SMTP id
+ z22-20020ab02256000000b003cd36b4041cmr5233315uan.73.1664260888910; Mon, 26
+ Sep 2022 23:41:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220907131241.31941-1-romain.perier@gmail.com>
+In-Reply-To: <20220907131241.31941-1-romain.perier@gmail.com>
+From:   Romain Perier <romain.perier@gmail.com>
+Date:   Tue, 27 Sep 2022 08:41:17 +0200
+Message-ID: <CABgxDoKeJrVK2NxJXd=MicdBWUyusf1aGbgKvyrOyB7m0xbPaQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Add PWM for MStar SoCs
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-In the probe path, dev_err() can be replaced with dev_err_probe()
-which will check if error code is -EPROBE_DEFER and prints the
-error name. It also sets the defer probe reason which can be
-checked later through debugfs. It's more simple in error path.
+ping ;)
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
----
-Resend for adding SoB.
----
- drivers/video/backlight/pwm_bl.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Regards,
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index c0523a0269ee..ae858e3bd38f 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -513,9 +513,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	}
- 
- 	if (IS_ERR(pb->pwm)) {
--		ret = PTR_ERR(pb->pwm);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "unable to request PWM\n");
-+		ret = dev_err_probe(&pdev->dev, PTR_ERR(pb->pwm),
-+				    "unable to request PWM\n");
- 		goto err_alloc;
- 	}
- 
--- 
-2.25.1
-
+Le mer. 7 sept. 2022 =C3=A0 15:12, Romain Perier <romain.perier@gmail.com> =
+a =C3=A9crit :
+>
+> This patches series adds a new driver for the PWM found in the Mstar
+> MSC313e SoCs and newer. It adds a basic pwm driver, the corresponding
+> devicetree bindings and its documentation.
+>
+> Changes since v1:
+> - Fixed commit message for the dt-bindings doc
+> - Removed "OneOf" from the dt-bindings doc
+> - Re-ordered alphabetically in Kconfig and remove
+>   unseless empty lines
+> - Explain and adds comment in _writecounter() (hw
+>   constrainst)
+> - Reworked the msc313e_pwm_config() function
+> - Fixed clk handling
+> - Removed extra callbacks, only keep .apply and .get_state
+> - Implement .get_state completly, this fixes the driver with PWM_DEBUG
+>   (the whole driver has been tested with PWM_DEBUG).
+> - Dropped useless lines in _probe
+> - I have kept regmap_field() because it is more clean and helpful, it
+>   avoids to do too much of offset and mask and shift all over the place.
+>
+> Daniel Palmer (1):
+>   pwm: Add support for the MSTAR MSC313 PWM
+>
+> Romain Perier (4):
+>   dt-bindings: pwm: Add Mstar MSC313e PWM devicetree bindings
+>     documentation
+>   ARM: dts: mstar: Add pwm device node to infinity
+>   ARM: dts: mstar: Add pwm device node to infinity3
+>   ARM: dts: mstar: Add pwm device node to infinity2m
+>
+>  .../bindings/pwm/mstar,msc313e-pwm.yaml       |  46 +++
+>  MAINTAINERS                                   |   1 +
+>  arch/arm/boot/dts/mstar-infinity.dtsi         |  10 +
+>  arch/arm/boot/dts/mstar-infinity2m.dtsi       |   8 +
+>  arch/arm/boot/dts/mstar-infinity3.dtsi        |  10 +
+>  drivers/pwm/Kconfig                           |  10 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-msc313e.c                     | 269 ++++++++++++++++++
+>  8 files changed, 355 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/mstar,msc313e-p=
+wm.yaml
+>  create mode 100644 drivers/pwm/pwm-msc313e.c
+>
+> --
+> 2.35.1
+>
