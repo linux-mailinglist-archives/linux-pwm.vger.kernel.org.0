@@ -2,94 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D3FC5EDE51
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 15:58:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DEA45EDE56
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 15:59:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233049AbiI1N6W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 09:58:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36858 "EHLO
+        id S233482AbiI1N7v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 09:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbiI1N6V (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 09:58:21 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA96F54C9E;
-        Wed, 28 Sep 2022 06:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664373500; x=1695909500;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Wg5C49y3dUqV2lp0/dT4U8xXQcghpcMbXMBXeb+bk+E=;
-  b=dEnYCwZ2Fqqutss25trHuFXU5ZIQr5cR753RvATHK/sAPUZSFJCvZmZk
-   5Su1SjN3HYT22sLDyprTzFYTfSUPbfig7yFS+DobK9w7H4kwrjfF0d5lh
-   eox/l7frWqhJpz3AV7blBAIjf0HqR/QI4hleoGPCiPnjFqmNGRIxBKGIB
-   kHnU9z6qKjKFTGbeafdEjgzAvSXWLKwoMfrimChY0CZuGn01Y/DhMHg7Q
-   yn6bSuSC50jrNceurt3laTePQzOkfVZUMYADN9gFM6Rx5NVDOPe7yxmqg
-   GG+17JxBFD2AEWJkH636DT0qu0sMOBwfGlU84KE3yZxTy/Msf1X4ISH0b
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="363447404"
-X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
-   d="scan'208";a="363447404"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 06:58:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="652686854"
-X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
-   d="scan'208";a="652686854"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 28 Sep 2022 06:58:19 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1odXZp-008xJG-24;
-        Wed, 28 Sep 2022 16:58:17 +0300
-Date:   Wed, 28 Sep 2022 16:58:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 3/4] pwm: sysfs: Replace sprintf() with sysfs_emit()
-Message-ID: <YzRS+VIBK1AiysEN@smile.fi.intel.com>
-References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
- <20220826170716.6886-3-andriy.shevchenko@linux.intel.com>
- <YzQ9+Wzhfnila1s3@orome>
- <YzRO0xrzlrHAYdaI@smile.fi.intel.com>
+        with ESMTP id S229862AbiI1N7t (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 09:59:49 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA65FD03;
+        Wed, 28 Sep 2022 06:59:45 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id b2so4443084eja.6;
+        Wed, 28 Sep 2022 06:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=lpfVHj+RDccjHYGjeoqa72Pm48ZvPePtdQJtt8JQZXk=;
+        b=k7Zv4LgRiDjyJBlii7p5vFZBJyFH+e44eYv5nzGTZE46tV5K3r7cHb+eBBoBvLO3lK
+         pl2jh6Ov24srBnGirRzzHwQlgFfyJSVa+OQ0F9nGec98lPOmtgD1O7qeGanfpiiadoG0
+         RYULKpM25+w14uMV1IBmh1BmpIWMDlSM7d5RCPMlt5qWGKCDYyFABRFFit8l4ocl3J8e
+         hihBXWhJriR0F7OpOeJT0VEO2PCGZr4FEGC+6E10GyX2uKwNwJdxiaL1kVQVL4DKaF9B
+         1fWkXvfqgaEhdqQS8fKhxfyF1n7qw0czLzsxTXDQe7B9HIkvxyEJ1OTM4V1nJME+fcAQ
+         MHcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=lpfVHj+RDccjHYGjeoqa72Pm48ZvPePtdQJtt8JQZXk=;
+        b=7xifiPrX1Fo9afq5AFGPU9xyjjQ1V5EBomFa1NGnzn4cP6JCnsUA2kI5vG58qPB+2/
+         pPLKFwdkbWTT3YpjfpOzelIfQDX1NnSdEWEMGSp2H/P6RltUoogdaNCKD4VxB9KPIgza
+         eb6mRwLHpUE/dASQlMBozjGi2AuzJh7wk+XPcutbkGv30ZbuqolAjDqjyhNSo4tp55G3
+         mf0JwBXZy3gttYhOL2b15WXOseJcf6WVmc5hx2K79EhsDUk636XoumeyIdOOti8Zafrj
+         NmjO/9ozDRH63x/i34n5fN6Kq1DP3CZtG6P4AfuXQTuXit/ioec8Ocp8oS4RLs7UyC5o
+         YMYg==
+X-Gm-Message-State: ACrzQf3GQHvjekViHxqrQpyyajfD36EPWpslI1nMn3bfk2geaC8uSz4B
+        ZgxRLnnsX7x4OXLTHS28D3A=
+X-Google-Smtp-Source: AMsMyM5hBOvEKEWpHZgz3huI7BLk3tHM3vkbt2WoWDY6DRqLKZ5Fj/SdI+SaNpg7MlhI7XgiNtj4uw==
+X-Received: by 2002:a17:907:a04e:b0:770:79f4:f520 with SMTP id gz14-20020a170907a04e00b0077079f4f520mr27033245ejc.730.1664373583736;
+        Wed, 28 Sep 2022 06:59:43 -0700 (PDT)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id cm17-20020a0564020c9100b0044838efb8f8sm3387858edb.25.2022.09.28.06.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 06:59:42 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 15:59:40 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     xinlei.lee@mediatek.com
+Cc:     u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, matthias.bgg@gmail.com,
+        jitao.shi@mediatek.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@list.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH,v2] dt-bindings: pwm: Add compatible for Mediatek MT8188
+Message-ID: <YzRTTGPAstQTnJdZ@orome>
+References: <1663915394-30091-1-git-send-email-xinlei.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CmzLNmPwX482UbLD"
 Content-Disposition: inline
-In-Reply-To: <YzRO0xrzlrHAYdaI@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1663915394-30091-1-git-send-email-xinlei.lee@mediatek.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 04:40:35PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 28, 2022 at 02:28:41PM +0200, Thierry Reding wrote:
-> > On Fri, Aug 26, 2022 at 08:07:15PM +0300, Andy Shevchenko wrote:
-> > > For sysfs outputs, it's safer to use a new helper, sysfs_emit(),
-> > > instead of the raw sprintf() & co. This patch replaces such a
-> > > sprintf() call straightforwardly with the new helper.
-> 
-> > How exactly is sysfs_emit() safer here? In all of these cases, the
-> > values that sprintf() writes are the only values that are written into
-> > the buffer and we know that none of them exceed PAGE_SIZE. So the
-> > additional checks that sysfs_emit() performs are useless.
-> 
-> This is a recommended way to use sysfs_emit() mentioned in Documentation.
-> Care to fix documentation?
 
-For your convenience, Documentation/filesystems/sysfs.rst says:
+--CmzLNmPwX482UbLD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-  the value to be returned to user space.
+On Fri, Sep 23, 2022 at 02:43:14PM +0800, xinlei.lee@mediatek.com wrote:
+> From: xinlei lee <xinlei.lee@mediatek.com>
+>=20
+> Add dt-binding documentation of pwm for MediaTek MT8188 SoC.
+>=20
+> Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Applied, thanks.
 
+Thierry
 
+--CmzLNmPwX482UbLD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0U0wACgkQ3SOs138+
+s6EgCA/8Cln97n5y2+lTHYL2Vh12ctUxVaV7Fh2q63qXOofQ6M8htH+lKEC+g2fp
+ijRlTNFATbA5KZOyJa2MAYHfcdx/hL4fwaEJitMBQoOiusTTAcv204BfC+ag1L+3
+0CB3ayFrPF5mzEYqXvwq0vrQG2ohV86gDAF98O9kmHGMnqnzPEGMKcjz4m4bLGCA
+3bWAlYlBVFRxptoLgc4sQFY4UgYm29JMxvq2QF+wHBC9zzzc0Cnl17bps6gaRzmD
+HSojW19WJn0SJMzRNbZJE0AwX6lHmIQMO6cC2medls2UTiuWPneQDFsF9OdOw9Id
+n9e3gH2NJk4bRl8rrUDy2XnN6YmQM3iYkx7qQjzGaIyaUP9Z9xT5HkXD+atHrQHA
+aK98/D8DrfgM3lUor/3zE6OHdM/aU/pkUNEecWs7gURoQnlgIuwBADi81KZq0JHk
+mG4Dlp1ElDofdhhvqd0o1MZ7H7cRqQKj9iaceY5Z+1n/xo8L8W65jdwdKP7hry3J
+N3WMwlbHC/V/817fNNoEahE4MbwzSUbR/Ogh72Ye9F1Qw4dJ88xKGT/b6nqNZCus
+ZX3W7Ay1pg1jVz/8S9/OnkBmPM+XMDVzga82JuaGZ5Obl7Pqyr4IWgiJX6MTyaCA
+ILG4DBs/H4f6wlIYdek77xYg4Cb3KY3SCM43u8ucYTKW0/+MJHc=
+=ojFY
+-----END PGP SIGNATURE-----
+
+--CmzLNmPwX482UbLD--
