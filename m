@@ -2,83 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8715EDD38
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 14:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E66415EDD78
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 15:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233996AbiI1Mz7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 08:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44108 "EHLO
+        id S233742AbiI1NGm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 09:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233621AbiI1Mz5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 08:55:57 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476334A81A;
-        Wed, 28 Sep 2022 05:55:54 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id rk17so13735894ejb.1;
-        Wed, 28 Sep 2022 05:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=Te5x3E57m7cOxR02iErARIkX0eaDD14Z91rfL50K4UE=;
-        b=VZs37zWVN7illdyOhUS5P/ohuurX/YrDbuqtXuJ8fz3n8/iX2si6QM3+1Np6yAEh6b
-         5qfOdzaE1GzIYH9tCXlM351Z1Mbz9nVpiuFcUS6iwlh3IZp1bswtFyjhPftz9IpiWQpk
-         XxdVWmwaBJEWJFhwAo/Es2wuUHX2Ax5N+6J0cblbDooIOSAHbJFZQT8lAhvFYpjYUvCo
-         f26E1gY2ryq98RM65f9OAJ36x3mLtDbZbynnRorb18saGCFG1eBhsZKipZM0BPzcXHvL
-         qf+V/Ty1gQoJmPl8x9a2NDwa7t8wv7X3MgSpv7YCKID6X8ZnO96N0OxQOeF7999mEC6Q
-         i57A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=Te5x3E57m7cOxR02iErARIkX0eaDD14Z91rfL50K4UE=;
-        b=NTElxgj8sdNh1XBdVLek3x63eTOxzAdp4fVBJ+p9eNiqUEXzRO7OQEFnH5Jae12SVa
-         j/dQcFbPEhEQKlDRwE8276PkTU9c1UDsa7KPCEBYyTWN9ZuFZzBEsSqEA+D4mtKVTbUo
-         pBpObBsmDkFke4F/rQJv1DN1llRj6gZ5f10+Fp8U5LTrAI+DakzlabruvdGMrH9nNrOt
-         GBKcYdaU9mMKrDEU9M7qV9FtvYweYBKPBVc0WZW1hBPEp1KVdZ44DJCq6wJrpfxnXvE8
-         I9U6WizVp9fnAX+Bla+0dUDk8+nDQ16JNLdWc0+dxPd2kNVTzzGLYM1LJBoMmsj8H7Kl
-         LngQ==
-X-Gm-Message-State: ACrzQf1JuKIFtPU3BdBfhB5bgsMxAh9Xj71533iyFq35Us8zMKgmhVYU
-        yFU9duW/FLdB38jBU1MLt28=
-X-Google-Smtp-Source: AMsMyM7OXe0/T+3lsZ2mP27MAf2iIGhR3xg9qM/R3946y2uNjo9NFKytzOuyM+b/vFjywh8BT+gkeA==
-X-Received: by 2002:a17:907:a05c:b0:772:eb61:904b with SMTP id gz28-20020a170907a05c00b00772eb61904bmr27861699ejc.237.1664369753063;
-        Wed, 28 Sep 2022 05:55:53 -0700 (PDT)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ez23-20020a1709070bd700b00780a26edfcesm2324189ejc.60.2022.09.28.05.55.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 05:55:51 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 14:55:49 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Robert Foss <robert.foss@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-leds@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 3/3] pwm: Handle .get_state() failures
-Message-ID: <YzREVarafbsRUl4t@orome>
-References: <20220916151506.298488-1-u.kleine-koenig@pengutronix.de>
- <20220916151506.298488-3-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S233644AbiI1NGl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 09:06:41 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9059FA89;
+        Wed, 28 Sep 2022 06:06:38 -0700 (PDT)
+Received: from mercury (dyndsl-095-033-171-230.ewe-ip-backbone.de [95.33.171.230])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id C26096602289;
+        Wed, 28 Sep 2022 14:06:36 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1664370396;
+        bh=c9JtjBwjFF79SmCgeSuVKQRi+U2ANa35gBatTDWdXx0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OOelG3G2yNH+GLL44hnU0wzqsyItfNvfy8eFzQKq1odX4RcRFcjdDim/XLNURgyJv
+         +CAYnDW57CdWTzAmA5aLnbeoM/GYE1NGAULfWDTEhasSIt8CIitWPD1G5sXB1AkLHa
+         KAW7kt0aTg9Hj9pP0Nb9DF8S59Alp6kDDy3DvR8N6JADp+zFSRq/1FR8xgx6MYIqR2
+         4w8GS4ZzSZrKtvW1Gb+XdFzKUrbTl7/gCeURe7/L8B26cqpId3HoGFW2MH8U5YuvSn
+         DLge7QGIojTzHD38pPj3kjwZZGB1T25Z45xNLNhs6aAQbeys/WfBZzun1gd7xAQrqh
+         rfYpzC14Y5NjA==
+Received: by mercury (Postfix, from userid 1000)
+        id 70F9F106033C; Wed, 28 Sep 2022 15:06:34 +0200 (CEST)
+Date:   Wed, 28 Sep 2022 15:06:34 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        kernel@collabora.com, linux-pwm@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: pwm: rockchip: Add description for
+ rk3588
+Message-ID: <20220928130634.x5cfkwegwgqer2xx@mercury.elektranox.org>
+References: <20220901135523.52151-1-sebastian.reichel@collabora.com>
+ <1662059695.095333.2226883.nullmailer@robh.at.kernel.org>
+ <20220913091202.2oawzrq2u5iiz6hq@pengutronix.de>
+ <20220913141601.fi6pl2xdo4xmtw6t@mercury.elektranox.org>
+ <YzQ0jTmJCBwV+x2y@orome>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e50AYHBveDjKXIgT"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f2ysunquf6nsloxy"
 Content-Disposition: inline
-In-Reply-To: <20220916151506.298488-3-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+In-Reply-To: <YzQ0jTmJCBwV+x2y@orome>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -86,66 +66,83 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---e50AYHBveDjKXIgT
-Content-Type: text/plain; charset=utf-8
+--f2ysunquf6nsloxy
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 16, 2022 at 05:15:06PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> This suppresses diagnosis for PWM_DEBUG routines and makes sure that
-> pwm->state isn't modified in pwm_device_request() if .get_state() fails.
+Hi,
+
+On Wed, Sep 28, 2022 at 01:48:29PM +0200, Thierry Reding wrote:
+> On Tue, Sep 13, 2022 at 04:16:01PM +0200, Sebastian Reichel wrote:
+> > Hi,
+> >=20
+> > On Tue, Sep 13, 2022 at 11:12:02AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > Hello Rob,
+> > >=20
+> > > On Thu, Sep 01, 2022 at 02:14:55PM -0500, Rob Herring wrote:
+> > > > On Thu, 01 Sep 2022 15:55:23 +0200, Sebastian Reichel wrote:
+> > > > > Add "rockchip,rk3588-pwm" compatible string for PWM nodes found
+> > > > > on a rk3588 platform.
+> > > > >=20
+> > > > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > > > > ---
+> > > > > No driver changes required.
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >=20
+> > > >=20
+> > > > Running 'make dtbs_check' with the schema in this patch gives the
+> > > > following warnings. Consider if they are expected or the schema is
+> > > > incorrect. These may not be new warnings.
+> > > >=20
+> > > > Note that it is not yet a requirement to have 0 warnings for dtbs_c=
+heck.
+> > > > This will change in the future.
+> > >=20
+> > > Is this a list of *new* warnings, or is the report (somewhat) orthogo=
+nal
+> > > to the actual change and you just used the opportunity that someone
+> > > touched the pwm-rockchip binding to point out that there is some clea=
+nup
+> > > to do?
+> > >=20
+> > > > Full log is available here: https://patchwork.ozlabs.org/patch/
+> > >=20
+> > > Hm, that gives me a 404.
+> >=20
+> > This is an existing problem with the rv1108 binding.
+> > The rk3588 does not have pwm interrupts.
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/core.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 381db04cfa00..421573590613 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -108,9 +108,14 @@ static int pwm_device_request(struct pwm_device *pwm=
-, const char *label)
->  	}
-> =20
->  	if (pwm->chip->ops->get_state) {
-> -		err =3D pwm->chip->ops->get_state(pwm->chip, pwm, &pwm->state);
-> +		struct pwm_state state;
-> +
-> +		err =3D pwm->chip->ops->get_state(pwm->chip, pwm, &state);
->  		trace_pwm_get(pwm, &pwm->state, err);
-> =20
-> +		if (!err)
-> +			pwm->state =3D state;
+> Can somebody go and fix that, then?
 
-So basically this means that callers of pwm_get_state() will get the
-zeroed out pwm->state. This can cause issues with the likes of
-pwm_set_relative_duty_cycle() which many drivers would use. Do we
-perhaps want to set an internal error in this case so that it can be
-propagated to callers in pwm_get_state()? That would allow them to fall
-back to some default configuration rather than potentially breaking
-altogether.
+I assume this will be taken care of with the rk3128 patchset, since
+that is affected anyways:
 
-Thierry
+https://lore.kernel.org/linux-pwm/f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmai=
+l.com/
 
---e50AYHBveDjKXIgT
+-- Sebastian
+
+--f2ysunquf6nsloxy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0RFUACgkQ3SOs138+
-s6Hu/w//cFpzkzV1FZ3sHLAMgkA+dobRGgpdOP62XrOaTSHVIWizW8u3OJmkXQjY
-1xYExTJ6OvncXH0DB+pMxM3Uvsb4N5A7K/iEYKA5SlTLG8DJSv59VXDtEAbPKFVC
-I3hMh0DwlZkJzl010tJ/3FQqUipFylqonRmKaIONqFHGRsYQNylw1K3CqH0yYDG0
-LjFaz5eYJtqK2Nrzt5BjUalfjDKdtL6AsaePTYEKFymMfqjlWCbmafrIzF7X2j4y
-7QwoFg4AXrOSRbvV8qeoMqToVD0EWfyND12OZxOtaqFipQIZcUK6XAOPyyKxGiiv
-1PnbqDioH9S1e+iCMPgibUHeyn5z9YaQu43S9BclAPB/66kUuC+pHlOy6XWbRnAm
-hXpuptlzCdib8B/tRG0ltl0ZxR3etiInFEPROFxB313S989rv+G5rh63vDuRKDQ0
-cGGrZ/uNhUjZRvTn6rdOBYuaZLkqA+aYPqXLo1orwrDgULjzVi3EE5sucZDibrGv
-aSiHQOvaRVrej5pARbL0hAuXC94Fz27mefri57MPdSuMBAejJSKs/HVdzYIPWmSz
-KjH4U9nBDQo4B8rYeltC7BS21zD7vdJW12DWd4F1fk0Ix/bknFaT/2XgflLi0qP2
-KLfXjVYERi56Db0xzT4ufVA8qqbAlYIU/tLp5LmLdgxdQMt0N9w=
-=CAO3
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmM0RtQACgkQ2O7X88g7
++prpdw/8CDA0maCo1deheKUSy8nfdV6SmgJMk9rAjqdItMm4h+mcp3HE1UBP0YB6
+QKATRpGvPYE7fkcxCNQouS7jpcZUy/wKeVrZBMRQ/KFa+FhaqxMi3s71GO43EH82
+pLegd52EYc5FrKJnEPDi9zWjEDw/qrQcrTT8xp4bFfeuo+Fpwl/xB6CniCCQhOVo
+rvI2s/SVjZjBSj4XUF4pkbEFBOwZorajRS/apfYUceMStner4ORF4ltxQFVFeXrq
+oVxRnkrgXCVhmHRRtyyXAsLtQ/7AciTZC0VlyQM9/f/Il97YKgYOX9r/YfjnvKlG
+vLFEFHZHLvt8bpgAHNlQIZSR5LifKmZFsOcegd3wuTfXETtFAYPK9p2oExp8WWJf
+FbTQD6thpSHOpT4ZvFl/UT4s5izLQAa4nfSSIVrMOpk/9ZHgrSJegrBK6LneJE1Z
+0JKAxS8JyF4R5iNVPH4j/UsAhrbeCfz/NY8XD0AFMMRiYit+75VwaUa3lPAYqW+6
+NCct/u7HPCRvqqek+qlbs17jO1XQPwEGmIF9ukgf36bPC0mGEv/ZS9C45KrEaB3l
+hvJ0ZQ7DglTsB5i8ejmNj2zMq1eU+Hn/zMQILcraiVi46+1adEHjQVFuZBKu+Ayf
+SY+pydPmmBBCSJS5bkhYEF7UHGW/fMDew7zLIAziw68K2tWAt44=
+=n053
 -----END PGP SIGNATURE-----
 
---e50AYHBveDjKXIgT--
+--f2ysunquf6nsloxy--
