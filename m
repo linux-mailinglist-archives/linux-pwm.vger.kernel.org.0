@@ -2,118 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BA7E5EDCBA
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 14:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1FD75EDD0F
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 14:42:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233950AbiI1Mb6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 08:31:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
+        id S233720AbiI1Mmv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 08:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233895AbiI1Mbv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 08:31:51 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0575F925AC;
-        Wed, 28 Sep 2022 05:31:49 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id rk17so13601191ejb.1;
-        Wed, 28 Sep 2022 05:31:49 -0700 (PDT)
+        with ESMTP id S233357AbiI1Mmt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 08:42:49 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A80F7A51F
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Sep 2022 05:42:47 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id m3so17054163eda.12
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Sep 2022 05:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=a+YK+sOaAr06YqwD/6gGw78eX83RIWDlgvjrbDoyUEg=;
-        b=JkfbblA/Go8wkLhhiII9xXOZ/Q4yTYZfjOsjVo8kXWFEWdzmOYeLNytCig7MoJ+aEo
-         K/to6pxnzQIKOBqU469SVieS6h3Y7uS7YO0MwN5NiujDk/ppDg7G8hxwiyHhhA2sUmkA
-         u6JynE5azgOKDGJ0nTbQlLu3A/p6zWffguUr7ASBrRhXH6/IuoxtDYzJnXSg7+oBCOMs
-         ZIMNrkLzHgyurjoO73vnCFTWuAYlOhLOM3WmSp0CqKcvr1xMA7F1oBlAQiB6TmoJACJn
-         WJ+wqJcm82cL+WzWEJA5fuoxrtpk/9vo8aEOJxsL4qnEAaM8HWDzv87G40n+dI8VBfgS
-         YrqA==
+        d=0x0f.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=+hjCG5UL8I6/ympH09ZsxGiHso7S25Rf/BVVg15oSkU=;
+        b=bYPruSwGmECkZuxS1nGmryAJEGsb1OPELVmL5cNoFOcLHOY5jGAr3JCMMpKy4xWbI5
+         EmKzsaZlS7/OxuRcJnP624lwy7Mgua220PRA8yoY4c5Xsa84NlibXFBZa8aTKB67YnA9
+         CJhLPZtl8eN49+t8zm3CtVg10KCGAgnRURVxM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=a+YK+sOaAr06YqwD/6gGw78eX83RIWDlgvjrbDoyUEg=;
-        b=NlJJTn8dtWBd8Cp9pQa3waVIQWz0HTVXxrvgmEa0cVx+ABsL5S74rXIVaraCvz0xcT
-         wdbDrL+9oTZl3dUaH5PSwaKIPeyf8bCBbObMOdV2tEMdMA3rAZwurPCWKn8GmYbEPAsU
-         LatKXcps6ILzJGZZqrm8sjUHelq017fenJmQ0+mcBnN1aU7JSU63gfb7lLerRZ/W9+3d
-         5pZKUgd49hXFgQt/FmCnGeTaVCt3whxXDYMiNvXSnpq0tEqKHUyTa3gr5vJD9scNkQjv
-         of1447CBXf6LZGVPRXj/KUA0h4ZdFssTH3Cwg8oCT/QRi/6NR78mBgXJc7heUtV28jb0
-         8NrA==
-X-Gm-Message-State: ACrzQf2S2XENLFou4wPJZ3iOCsqn1Tf/wRa45MlgQCcWlvxxd2dobHet
-        CUTdhqD3RHHUFlNlSHlc/UNpfMmM5P4=
-X-Google-Smtp-Source: AMsMyM5+F4A3pIzODJUSsyuE24SZpblU8q+Lmby2O30RLEdcvW/lEafvB3XIslbHhFzEJMBUWAdCKA==
-X-Received: by 2002:a17:907:9816:b0:787:4350:3a19 with SMTP id ji22-20020a170907981600b0078743503a19mr5547221ejc.627.1664368308072;
-        Wed, 28 Sep 2022 05:31:48 -0700 (PDT)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id b18-20020a17090630d200b00780982d77d1sm2278422ejb.154.2022.09.28.05.31.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 05:31:46 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 14:31:45 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/4] pwm: sysfs: Switch to DEFINE_SIMPLE_DEV_PM_OPS()
- and pm_sleep_ptr()
-Message-ID: <YzQ+sYdl2HR/4fNi@orome>
-References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
+        bh=+hjCG5UL8I6/ympH09ZsxGiHso7S25Rf/BVVg15oSkU=;
+        b=xusuHA67Pzf2Iv7YDb08X6VIGb+MYVIbmYsWJ5jZMMl7AXOtALko329o90IlxDnWDl
+         35NzLrQt3vY7DytZduteAqglmbyDKnitMiQwo+/qI7c3ktOxzdj9sN+r4XkZU5KV/rjL
+         W4cWigTM0Z4EYp8c9N+FBHhzag4BZHVZUpJZesM4ywHtYv3gG/QEEaui9xiAjidYP+cn
+         Uh3YpvgOdMDItor6bnO99uzXNASiDKxAS8IRJJgcX7WajTxK+0BeYlw1/htsNOe8CAk2
+         EijcaaF3vvqLhNiX2dVg/Rq7pSyBj0rANtugJnRwF+ju/kaiyaa2b4dBoizvol2ehFRR
+         fpgg==
+X-Gm-Message-State: ACrzQf2oM2nPnySE0we345BiNdV+N9lqm1KCQsei/VbDsajlV+6Nx/Bi
+        fngborZedUWkFpLzP+oBk5aldzTRhl7+VAs60dpPAQ==
+X-Google-Smtp-Source: AMsMyM4L09hga+4vZZ+SsULLjP5VCQkFWMN77LetF1he+ktd1029o2uzUEeK6LjBCtBjRvzUcnljgtyBLAiiOCJXfF4=
+X-Received: by 2002:a05:6402:42c5:b0:44e:b640:16fb with SMTP id
+ i5-20020a05640242c500b0044eb64016fbmr33974635edc.29.1664368965904; Wed, 28
+ Sep 2022 05:42:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bc7ifuzH2AwXLvof"
-Content-Disposition: inline
-In-Reply-To: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+References: <20220907131241.31941-1-romain.perier@gmail.com>
+ <20220907131241.31941-3-romain.perier@gmail.com> <20220927163314.rzfld7sqchsdfvfg@pengutronix.de>
+In-Reply-To: <20220927163314.rzfld7sqchsdfvfg@pengutronix.de>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Wed, 28 Sep 2022 21:47:12 +0900
+Message-ID: <CAFr9PXmWGTQoNxxY99MT_ptHMDTmai1eOrZteuP7A0TyPwVidw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] pwm: Add support for the MSTAR MSC313 PWM
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Romain Perier <romain.perier@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Uwe,
 
---bc7ifuzH2AwXLvof
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 28 Sept 2022 at 01:33, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Romain, hello Daniel,
 
-On Fri, Aug 26, 2022 at 08:07:13PM +0300, Andy Shevchenko wrote:
-> Using these newer macros allows the compiler to remove the unused
-> structure and functions when !CONFIG_PM_SLEEP + removes the need to
-> mark pm functions __maybe_unused.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> v2: added tag (Uwe)
->  drivers/pwm/sysfs.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+Romain is doing the fixes to this so I'll let him answer the other
+bits but on all of the "what does the hardware do?" questions I'll
+have to test that on the hardware and follow up. The only
+documentation we have is very rough listings of registers and bits and
+not much else.
 
-Applied, thanks.
+>
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_DESCRIPTION("Mstar MSC313e PWM driver");
+> > +MODULE_AUTHOR("Daniel Palmer <daniel@thingy.jp>");
+>
+> That address doesn't match the author of this patch. Is this on purpose?
 
-Thierry
+My intention is to put all of the stuff for this MStar (Now Sigmastar)
+platform under this domain including the kernel, u-boot and PCB files
+so that at some point I can handover the whole thing to someone else
+or maybe a community that want to take over by giving them the domain.
+I should really set my email address in git for these commits to match
+but keep forgetting.
 
---bc7ifuzH2AwXLvof
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0PrEACgkQ3SOs138+
-s6Fibg//Uw167V2Wf+JtDDPv8IVcnyVx6lGpkFKF5IFHNZRBJ8KX2DAMrzFOsv+f
-/KIQdAPfxCP+AT2ZDUf6JbECW4m4dQSf8SYRhxzi1LqHntZLQnOPDsIF3cAM7NCT
-vdbTlBeNLjV+iIcO34zkIolE9LdIykWUmS4U+7Mc8igq5P5Tn3dLqXLegk49uo47
-26+Ldev7cpniqK1RtGyWT+qOFnCmxR+P9OJwJIDdA6HhcEf9VBNuqTvyubqRAklr
-Vh4oh6Sov204KdwWlbZ1MIf+dVWB2Su16q8Rrevggg7NFIcWVO2zfvfWFe4UcAWd
-uWrZcusub0FFANIW22KyF3yZnJvg+buaLPni2dCCTy/396muGY2rk4+q2dnTazR1
-wI2GXhCzdC2lK8CpLxvyBR+nXM1NDPkiSayjcVU2R8oWYxhegsFD72ZrQY2KE53u
-HJkWihAbGWCb5dsWGi38Xsl5r5JAXxHdelK6MZKD2Eu6ulACfui+kuxAKTeLdXCm
-F0G/dn6hbDHZgQJXN4g048Ac+FB4bNDoXRNbfxYxfmhy3OylmRGxJs6KGnTZcWTK
-pHgydMTPzh1pJOdL+xK+NZ3rULA4mG8VzFVusiHH3GfQW52tgfmawwF0Hd5eXMmd
-S/sXsdVA98E3ASBJoy9lTR7idD0AxoG4UvVZMuyqL4EFrwSI1kY=
-=2fes
------END PGP SIGNATURE-----
-
---bc7ifuzH2AwXLvof--
+Daniel
