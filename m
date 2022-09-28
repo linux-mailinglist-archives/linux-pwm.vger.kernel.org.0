@@ -2,70 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A03F85EDF30
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 16:50:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E1015EDF5A
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 16:58:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234551AbiI1Oue (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 10:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
+        id S234117AbiI1O6E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 10:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234486AbiI1OuJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 10:50:09 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E0595E77;
-        Wed, 28 Sep 2022 07:50:01 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id bj12so27605947ejb.13;
-        Wed, 28 Sep 2022 07:50:01 -0700 (PDT)
+        with ESMTP id S233380AbiI1O6C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 10:58:02 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB825D133;
+        Wed, 28 Sep 2022 07:58:01 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id y8so17632993edc.10;
+        Wed, 28 Sep 2022 07:58:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=cKWO9+JfzL2fzwwzI1VgJVcxOTRPCNulp/5l/O+wGWs=;
-        b=cfG0rNL3i1oY1EJm2ZgBBCmigLLtk6wzMHtiiWZzXw7pWoAIiQpEgrj5Y8YaqKrsPM
-         V2H4iIvCrglIUGx0BPw3PuorNMrC0dekdpeChlYVw8dfPFPYxUR3y44truQfDBzq4um7
-         QaQf2+G/DvleUX4dJGJ2e2Z5gxOccKUCE86C4WBZq318n4VK6rTZww2qfm0uC/mwvvmN
-         fV9XAGqBCCNzrgYd/aKSQvhou8zt9ASXE7omy3w0dIuTcsFTsp9Xzgogp7pBA423Wn59
-         5Ylu/N9oWa/mva70zA+1swJtM1XZUNM0F0nMjV0n3efyy46as3ApfQR2fdZPjuy9ot2k
-         3CPw==
+        bh=f/HZZdebxu0hO5KZ/Snq1NCBmoxmHmJa1M3saKHy9Es=;
+        b=jtj1UtFJVUp5mNI4ABQVK5ICzxz4G0U0TL/nqgIor186nRlOWwfgakV7iFEO1BLHCl
+         6CcOkodKGf80Vd7Xr7122HjJzIlhikhPJOPnlmpKxfer/GDMVkhEMLdUa0grHS4r6dOE
+         fTil81BnYfo3VVlpZ3Qk4SE4aIGergw+OpSDO93NKRgMnWDNlKz/AvLwf83c/hMfQUvE
+         BjUqVc3mKkyf5z86ZJ1RcjXX1DR5pJ5iyCRpE5FzYRvxDJXj9H4ZRZpyc0dfOatNbQ8n
+         /bZ92U+MKCrzcPpaXVZp/ASazA/iPvsBRunEhQRrVjOw0hYV/1QqZlCFWi50GPsMwIyW
+         HApA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=cKWO9+JfzL2fzwwzI1VgJVcxOTRPCNulp/5l/O+wGWs=;
-        b=iIDRTJ48U/GyN1afYe4wAd/gwGGC49zKXtmMBF15tXfb+qKBm87ctcdGZw9SC+OQcy
-         hyLclODttFX25VSE0UKyUdCP3LtBY0q2+K1lpLoqJCIjnDA5IBTnSjqNDR8kARMzzDsJ
-         Gt29FnhfRRbe5G+q3WcZfSpyykqYK2OLd9O847l/013aSpvGxTUE5pfJ3akPyz/yq6Uf
-         mwz43IEkuNiTnMg0WmMHNCFZOSgxVJwLILKMIFR3tHPbpS6cgr+XceE1dbhPIIwNbNLB
-         k9plMHmVJROVuqDr3u2+RuQVMiqIBajm/lkoQDzkubmEF8zpTHxT6etZxopsSqlRDFTN
-         e0aA==
-X-Gm-Message-State: ACrzQf30lTjTSBJf4F91MLDZ+8UDIx+RintAylVVkDw21oLzMlGw8Kle
-        6GB99wZQiMJys5Hcwb+4nG0=
-X-Google-Smtp-Source: AMsMyM5q4Jb1gflu02dHE290aKNhEsUhWN3orEUliz3hq7XGsv2+zQB2JJi2ujEoI+tWKLEzyx8SFA==
-X-Received: by 2002:a17:907:8a13:b0:782:5146:dffa with SMTP id sc19-20020a1709078a1300b007825146dffamr26998139ejc.538.1664376599852;
-        Wed, 28 Sep 2022 07:49:59 -0700 (PDT)
+        bh=f/HZZdebxu0hO5KZ/Snq1NCBmoxmHmJa1M3saKHy9Es=;
+        b=tHYfyQfNoPSO87e0Dljv5xyDW/KUmsaSrFTIjgQN1H7dEGLtjLIXwcxgnm5CzwZIXr
+         lMgFp1qf8QKXu5R/3l29ikb0tTFSpQ3NKKzPq1cpxXG7iGr1HeC82aDrpZ7//iv/lT2G
+         6Nz3x60lE0xA2b3VsujaonbSLAVoDshw5756xMGW1NW1cOq674iq1bOGSi2aPFtwVcQL
+         t0FrNTxFJXV9lEFzG7NjUmcoVUzeyFzWR39SJ9MWHcRZEeiJouA9E67WIX8h2eR4/U5R
+         c3F7FkkWNihB/T2czo+SwGpvXVKh0M1ksLQvAfr19Tlh8eIrGSQXhAg6MiMXMSR7UTp/
+         lJnQ==
+X-Gm-Message-State: ACrzQf123O2PMzbXu4PxVcRsf2Gmnvt7dHIlQYxHr/768rbhpazCd/kZ
+        x8u6ROtVtgWVpjG6WuPHnKI=
+X-Google-Smtp-Source: AMsMyM7P9BftqFLmbn8pq97+RcsL9sHd7ATUVph0laOCiYhyFNRrNXjEz5TRTkt2bnbH2NN6eqXjAQ==
+X-Received: by 2002:aa7:c956:0:b0:43b:206d:c283 with SMTP id h22-20020aa7c956000000b0043b206dc283mr33701362edt.381.1664377079907;
+        Wed, 28 Sep 2022 07:57:59 -0700 (PDT)
 Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id k22-20020a1709063fd600b00782cd82db09sm2470286ejj.106.2022.09.28.07.49.58
+        by smtp.gmail.com with ESMTPSA id n2-20020a17090695c200b0073cf6ec3276sm2440311ejy.207.2022.09.28.07.57.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 07:49:59 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 16:49:57 +0200
+        Wed, 28 Sep 2022 07:57:59 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 16:57:57 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/7] pwm: lpss: Make use of bits.h macros for all masks
-Message-ID: <YzRfFVdZ5XsStnFq@orome>
-References: <20220927162421.11052-1-andriy.shevchenko@linux.intel.com>
- <20220927162421.11052-7-andriy.shevchenko@linux.intel.com>
- <YzRYPvzWFBXijIBQ@orome>
- <YzRde5PuFnL5KbrC@smile.fi.intel.com>
+Subject: Re: [PATCH v1 1/1] pwm: core: Replace custom implementation of
+ device_match_fwnode()
+Message-ID: <YzRg9cLVlfZfKhws@orome>
+References: <20220927172258.62418-1-andriy.shevchenko@linux.intel.com>
+ <YzRZp4e48XK6jAZD@orome>
+ <YzRfAE58ZMI/MC0K@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+v1CZxweel0L0gXY"
+        protocol="application/pgp-signature"; boundary="xknfgDc4sPDfyFdY"
 Content-Disposition: inline
-In-Reply-To: <YzRde5PuFnL5KbrC@smile.fi.intel.com>
+In-Reply-To: <YzRfAE58ZMI/MC0K@smile.fi.intel.com>
 User-Agent: Mutt/2.2.7 (2022-08-07)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -78,46 +77,58 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---+v1CZxweel0L0gXY
+--xknfgDc4sPDfyFdY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 28, 2022 at 05:43:07PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 28, 2022 at 04:20:46PM +0200, Thierry Reding wrote:
-> > On Tue, Sep 27, 2022 at 07:24:20PM +0300, Andy Shevchenko wrote:
-> > > Make use of the GENMASK() (far less error-prone, far more concise).
-> >=20
-> > Very subjective.
+On Wed, Sep 28, 2022 at 05:49:36PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 28, 2022 at 04:26:47PM +0200, Thierry Reding wrote:
+> > On Tue, Sep 27, 2022 at 08:22:58PM +0300, Andy Shevchenko wrote:
+> > > Replace custom implementation of the device_match_fwnode().
 >=20
-> See an example why not: 0a90ed8d0cfa ("platform/x86: pmc_atom: Fix SLP_TY=
-Px
-> bitfield mask").
+> > I really don't see the point in having an exported symbol for this. It's
+> > a simple comparison and the result is even longer than the original.
+>=20
+> Longer doesn't always mean worse.
+>=20
+> > The
+> > *only* reason why this helper exists seems to be because it is getting
+> > used in *_find_device() callbacks.
+>=20
+> Yes and no. Initially for the purpose to be a callback it can be reused.
+> The point is that it hides the dev_fwnode() machinery behind and taking
+> into account ongoing discussion about constification of the dev_fwnode()
+> we might need to touch this or similar places to avoid problems with
+> compiler.
 
-Hardly comparable to this particular case. And really this is stuff
-that's getting on my nerves. People constantly replacing perfectly fine
-code with something equivalent just for the sake of it.
+Maybe next time use that argument in the commit message. That's much
+more convincing than a useless "replace custom implementation" because
+that just makes it look like you're doing this to pass the time or
+something.
+
+Applied, with a slightly updated commit message, thanks.
 
 Thierry
 
---+v1CZxweel0L0gXY
+--xknfgDc4sPDfyFdY
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0XxUACgkQ3SOs138+
-s6GWbw/+PT/IqxUtpkvtS8FDWP7Q3tbJu/lU9b0EEuQpkJQFJZV3lAdL52Ir3hc5
-H1OWcn048rPj24btlM/U0RciJW0gj05sAw+ixHtTtLU7KrhovdfRm/P2aUJNnlUN
-99H7ktODgZjDkPcd/4PeO0jGYlvlN/egut5Cp/Rf2d3vJW8nu48+vXdVLydLZjof
-N1vHDs+p2Tx+C+HAmaDS+aWIM78/9JkmzpLfv7DQsv0cawPw1Ca+IJ6xumvITjx5
-0D8ZV55qMuVd1fb7DqRstKHbL2W/HwX0H90fGeRau1GKu1BFSSb0ub6bSG8QXbW7
-ED4L3MeZrB7l/daWp4RtE8iwNlTaimRBC6fJqkQELdj7BXjQymwaJBoJj7IMJv3k
-vnDJi+0uhZbaYwGqOX1nsVGBBuEjLlSFtFVDSLvinnKTs0wqEg4vvD0iEJFO4Icu
-d/1aQQhnLt4c9uLSHWfzriV9dtexNajABfoCCRCEVu8JuQgc6t3Zr++89eKfHhta
-N5cSZ4mWd7i29vqyJIwZ4UEcF7FlI2lJGRM5JTJoaHNkqsPLznwpGSs0PypFI+Qc
-S6e+DAnrlcYGZqGfzmYLKi0I/xvg45n3EYgDecnhBX4edFz2vnQxgQipM+GwO3Ii
-YIlOBUj9kVgcL4DUg4sr2VxYO+6VI/JCEz7xmzBFC/K01+FGeF8=
-=fmm5
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0YPUACgkQ3SOs138+
+s6EWZg//doDoJ9LYc3N9ewjYfNNQ+0y9uPO8ycCSvymdc4l5O24ERDkAz2fiTrDn
+CKRGCtHYIojNdcKQN5dDNkwQqyqxpRN89vtN1uzDdLlHLCpBQYQIZd704o9B1EC8
+lY9m/nuszQZH26gUCaZxPoWGMnwNfsFOAAC+JSUvX8OD5TyXUzChRAjjzw6ti0L+
+tstTFcDyvdCxP7qVlzIijToLHaT6b7Kx0pt7XcQ3/ErIQTr/G7K1y2K7bbIGettc
+3iGRQGeup+TfHjsGZonvRP+CR7Eq3nU/eEmfVNeZk3QomVv9meCY2IJ09UrKMxY+
+kJRbMRkzujHPmRfRRLH00DHGMOis0FhAHa1wdkJksvq//bylWIyQk1/8lgPrCJhJ
+ONeJSBhWkHXSjFU3uus23WaRqyE3iLnppOEJBAoeWpffaZ9MzHevoy/hq0HoyDPF
+bHB8GfTNl3190HHXr6V0Vg5FxWt27Jovi1G+q+udL0j0tfk9gbvlzazm6txEcaCO
+Ar7M8gBlh7Ug0tpgSCo+nWVuGyDsFDs/xnuQPJQ5jgYTk/qHOjXJmfuphc0SpNWm
+SZycV/t8/fZDxgzqInkIIQqJGIFEvqLmgRp+xGiOgoB1uKjX1z2O9HxvlIjzDZ01
+Ke/7FXOZimRAnxHrpt1B0t87bILDa3MGYMLuIbqEXcdFm7dCAyI=
+=t1Qp
 -----END PGP SIGNATURE-----
 
---+v1CZxweel0L0gXY--
+--xknfgDc4sPDfyFdY--
