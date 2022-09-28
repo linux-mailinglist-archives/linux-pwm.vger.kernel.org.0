@@ -2,61 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1C8B5EDDE9
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 15:41:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FDE85EDE02
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 15:43:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234037AbiI1NlH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 09:41:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57584 "EHLO
+        id S234193AbiI1Nn1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 09:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234251AbiI1Nkr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 09:40:47 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 347F3925B2;
-        Wed, 28 Sep 2022 06:40:39 -0700 (PDT)
+        with ESMTP id S233551AbiI1NnW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 09:43:22 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A8699B62;
+        Wed, 28 Sep 2022 06:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664372439; x=1695908439;
+  t=1664372600; x=1695908600;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=J5h6n9qgLKyvzXPveHko95e1eP2rnwHvggEMNLzh/dk=;
-  b=eq/qZSI83k1GedY/ELxpVLxgH5U9re9nAe74wEoka6oTbrdOPOKDDtfJ
-   qMLozKOZvtC+nn+VLh3u5BOt90qLALB/Zb1Egxe4rcljS1ijmk16E23BP
-   4SaguAMWpH4N/WXugstDKikj6WF5S0TgAsDGyLLsc/zjIaOnTzfJW/SAV
-   1nIxPmm9JP0DWjUcMsN/mNlSfZritsMfFUoIGRJrGEIBPTHQLZm3F+9LL
-   HFsd6cLSo+qzMl03NneqkJkANa8HFwNmhpyzGshR6ao1ojWXP2uCnvaSQ
-   F0NfGZaoKCyLI7ebhAaCf0Oc5bsR8HHibTrf/7fkGeNL1MGVfpXDT5z/m
+  bh=9LQdEru0PYlG2TQfhhZT1PNcyVyVp/h39DuwkHJvKpI=;
+  b=g1voqlQ7qt3xHhc/B6kG1khIynQSo2PaUnciZx1eDPpe1oCyc71D5PhF
+   pXsRsDfBOkUSTNr+RQpcK7aMQ6sqkIkdfdz060c1tUAqWEV+F7pc8wslj
+   ll1qrtzj/av3H0lSNQQ/5hrE9GNfpCkEbex1W9ZsSEhVdVhnQiQmqFElJ
+   ujZ3kYrPhPpxyEcQ8FuFFBn8WST/RizbSkZ0rDbrgo9I7ZASKo+ztI50J
+   yRBuJI7RnOgPqkn8PpCE56GYh3c8OzNaSjsxaRgRoyVJB3u4saGQ4q/Dc
+   lN43npMQjK8ot9zz5n2PFcXFP2OrZcZRtAkKCVQluQ4qAWBOCIhHNOwFv
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="281973023"
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="303087164"
 X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
-   d="scan'208";a="281973023"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 06:40:38 -0700
+   d="scan'208";a="303087164"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 06:43:20 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="764293561"
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="655134405"
 X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
-   d="scan'208";a="764293561"
+   d="scan'208";a="655134405"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Sep 2022 06:40:37 -0700
+  by orsmga001.jf.intel.com with ESMTP; 28 Sep 2022 06:43:19 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1odXIh-008x0t-2W;
-        Wed, 28 Sep 2022 16:40:35 +0300
-Date:   Wed, 28 Sep 2022 16:40:35 +0300
+        id 1odXLJ-008x3c-2S;
+        Wed, 28 Sep 2022 16:43:17 +0300
+Date:   Wed, 28 Sep 2022 16:43:17 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 3/4] pwm: sysfs: Replace sprintf() with sysfs_emit()
-Message-ID: <YzRO0xrzlrHAYdaI@smile.fi.intel.com>
+Subject: Re: [PATCH v2 2/4] pwm: sysfs: Return directly from the for-loop in
+ PM callbacks
+Message-ID: <YzRPdfC/2AdeMXtu@smile.fi.intel.com>
 References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
- <20220826170716.6886-3-andriy.shevchenko@linux.intel.com>
- <YzQ9+Wzhfnila1s3@orome>
+ <20220826170716.6886-2-andriy.shevchenko@linux.intel.com>
+ <YzQ+m3jjh6tOyXmS@orome>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YzQ9+Wzhfnila1s3@orome>
+In-Reply-To: <YzQ+m3jjh6tOyXmS@orome>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -67,19 +68,19 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 02:28:41PM +0200, Thierry Reding wrote:
-> On Fri, Aug 26, 2022 at 08:07:15PM +0300, Andy Shevchenko wrote:
-> > For sysfs outputs, it's safer to use a new helper, sysfs_emit(),
-> > instead of the raw sprintf() & co. This patch replaces such a
-> > sprintf() call straightforwardly with the new helper.
+On Wed, Sep 28, 2022 at 02:31:23PM +0200, Thierry Reding wrote:
+> On Fri, Aug 26, 2022 at 08:07:14PM +0300, Andy Shevchenko wrote:
+> > There is no need to assign ret to 0 and then break the loop just
+> > for returning the error to the caller. Instead, return directly
+> > from the for-loop, and 0 otherwise.
 
-> How exactly is sysfs_emit() safer here? In all of these cases, the
-> values that sprintf() writes are the only values that are written into
-> the buffer and we know that none of them exceed PAGE_SIZE. So the
-> additional checks that sysfs_emit() performs are useless.
+> I fail to see how this is an improvement. The outcome is exactly the
+> same and this doesn't even make the code shorter. Why bother?
 
-This is a recommended way to use sysfs_emit() mentioned in Documentation.
-Care to fix documentation?
+The improvement is in maintenance. It's proven that assignments in the
+definition block might lead to the subtle mistakes when it's not close
+enough to the actual use. That said, this is an improvement from
+maintaining and developing perspectives.
 
 -- 
 With Best Regards,
