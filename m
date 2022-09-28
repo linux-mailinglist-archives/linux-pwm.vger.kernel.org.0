@@ -2,66 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A49095EDC25
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 14:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 295235EDC60
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 14:16:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233733AbiI1MBw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 08:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
+        id S232346AbiI1MQB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 08:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233720AbiI1MBt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 08:01:49 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E02C6D540;
-        Wed, 28 Sep 2022 05:01:46 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id x92so3787493ede.9;
-        Wed, 28 Sep 2022 05:01:46 -0700 (PDT)
+        with ESMTP id S232160AbiI1MQA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 08:16:00 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4ADE7E014;
+        Wed, 28 Sep 2022 05:15:58 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id b2so3825061eja.6;
+        Wed, 28 Sep 2022 05:15:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=dxu2OvV7EkR74oImSWAPrEQpf5qWpS/N4G3imzt8Kwc=;
-        b=HHhCI4hsQ/1Jg0qSAdwJQahZ4v0r/djosFNCZo+7gJjD8TDjTb797Ll+nplojKCnoI
-         xNK0aCuPFMoqzotj1wtxmm7yYdMirHmqP0OkmdrWZ0uUGSRhoii6M6x/SsAadLtMq9YH
-         7v8rh4ENnA7vPNAnYMj1Te476d9dcexdcCXyDQKPblnYZOP7PuQzNimZzXFBehYQSDhh
-         z9r43ZPQYd5cAIrqo50yPFAn1fB0ScqOyDl9sTXVGWzosvaSH+KD/nZdR4wTVS4WGvGO
-         nXeilgGK8DnjOAwuu/EJLMesTVGSQt8N/i9bk9QAJ6w4skiKgjKSny7TRdMSBMTAZLIl
-         p0/w==
+        bh=w2WvxyPY6RXkuWJozN8KTXQujp3KO4pPhB3QayKEgz8=;
+        b=dqbnN4ZWolUFzz6PipqWBEOKB2gHUwajLtFD61DerTNwXIpxrXhHvX5ywSaq2Aa/mV
+         TKLIg5AzndvP6XY9crsqggpXff5hnD24nJDmzsspZsjE68GyBI8upTVnA4e55FNNZoRo
+         +zHj7DkBPWi5HD5fLBPEQVq5RRGu51XI6kZmaKFr1SBa9DT7E1THj3bPjHdqL5xO142N
+         k0PB3pVJyMW8NBLNMe09iUhA5qbHC3VeLpqPNCOwyavNC0GYFsiKe4/a4ByxmZiz2gfK
+         sHRYSaZgrqMxDoqfS5moXp14+9J+6FxU/LBQdenAnBGV5GfX/WhJUl/5UEQXFkXZk6n7
+         bUcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=dxu2OvV7EkR74oImSWAPrEQpf5qWpS/N4G3imzt8Kwc=;
-        b=ZseFMqtWHvNq7m/vOBJJWgX8xN1BAvsR7RBJyu5znRQUDIP9OGfojiysDD0n8TaWPD
-         a5xdo7zQiXGpf0Jt7SmuAgUTxYjFjs29C63aw1mWpv0//Vemuax/kbFO8KakuXgha8kt
-         3WKtXFStcZ5aXpM8jg7iPolKcGpBM/5LsFhebW4SI/ptdprQoVW0i22V5hDF/ZyMmEyd
-         Njy8ch+/Vj7gi/ZyEU/MgU2eFtWNcEu3b6llyrGKMXQmLj1xCx+6MQvbd06/KcJCHBxI
-         tsnwx2HhEb9gYUnxgQCpsV/JcoYV5mAmjrbrqvY1lxEjtbxrzMAsCc0cJHieqJAa6KTe
-         tmkg==
-X-Gm-Message-State: ACrzQf0DWRSQktVlJLCaZd8Eaf3mMtOnvdhUv978krzKo1sVASvJEjMH
-        2J8TbcI2F8WFrSEb//eVxkQ=
-X-Google-Smtp-Source: AMsMyM4dNSFiIdi46xobvaunWwBUgINlADlsibMnyAgKQil1xkGkAYqSRar+ptRCxG6+cAiwlxJg1g==
-X-Received: by 2002:a05:6402:249f:b0:453:eb1b:1f8b with SMTP id q31-20020a056402249f00b00453eb1b1f8bmr32545025eda.235.1664366504775;
-        Wed, 28 Sep 2022 05:01:44 -0700 (PDT)
+        bh=w2WvxyPY6RXkuWJozN8KTXQujp3KO4pPhB3QayKEgz8=;
+        b=pjSzSSX83OQdL7zWwNkQESQwYaGA/0lxUVZ5TMXRM5YlE19j2enP6pN8muGMIAlr8Q
+         SyerC1t07Vi+re984ibE+ZD7XkEln7OeKuYym6KHcy1HojawXxX3SkR5fO89kweO6K3V
+         fNkC2LQGWoY/est7Yo4vDWwrBfcgE51NafLhaxEVs0qGH07G0fn/QQ1oVpuVmuSfcFc7
+         CsPRkDzPrkU81rt0EjAbiIzrOARsBzBpOgRraeyX3zCdTgra0Q8htWnTHBy28TTQjXiL
+         Gf3kHahKy/kFUF+ty/afRS5PQ3p3TCAblIblHkHC+CwxhT+CEn78D49P5r59aS/hsEJQ
+         /XPQ==
+X-Gm-Message-State: ACrzQf0IGmhQf8l+fwMugHu3A10EhW0jwTSAzXaC1MaZL2Nr/+0uQexc
+        bWzOCtkAeD5aMhiIFG7FRSU=
+X-Google-Smtp-Source: AMsMyM7THVOWnM8D8auMBqIMc5SVBkp2v/DavzytV3CbgZgs4QTLHM8GAkLCYZ7bHSzRQSwy2oMH1g==
+X-Received: by 2002:a17:906:a3c2:b0:783:19a2:74d3 with SMTP id ca2-20020a170906a3c200b0078319a274d3mr16817850ejb.288.1664367356958;
+        Wed, 28 Sep 2022 05:15:56 -0700 (PDT)
 Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id v2-20020aa7d9c2000000b00457c321454asm2914946eds.37.2022.09.28.05.01.43
+        by smtp.gmail.com with ESMTPSA id e3-20020a170906844300b007415f8ffcbbsm2286000ejy.98.2022.09.28.05.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 05:01:43 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 14:01:42 +0200
+        Wed, 28 Sep 2022 05:15:55 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 14:15:54 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     zhaoxiao <zhaoxiao@uniontech.com>
-Cc:     heiko@sntech.de, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATH v5] pwm: rockchip: Convert to use dev_err_probe()
-Message-ID: <YzQ3puvqsnWgnVQs@orome>
-References: <20220822081848.5126-1-zhaoxiao@uniontech.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 4/4] pwm: sysfs: Utilize an array for polarity strings
+Message-ID: <YzQ6+mX+75KBW9O7@orome>
+References: <20220826170716.6886-1-andriy.shevchenko@linux.intel.com>
+ <20220826170716.6886-4-andriy.shevchenko@linux.intel.com>
+ <5ba98dbd91dc981ec7384484b2a498805abef6b0.camel@perches.com>
+ <CAHp75VfY5RgAju5ASvAp565oF6VmYYiuowNsPTGSm=+1iFJ98A@mail.gmail.com>
+ <2e158f8dc433b6b78d47d209495bed678d92369a.camel@perches.com>
+ <CAHp75Vc0NtYcuSUP106V54U6EBYsj3LMx2FDJT4_pfB3gAtpPQ@mail.gmail.com>
+ <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zHYWCWBx7NmYQlRn"
+        protocol="application/pgp-signature"; boundary="K7V/mrz7OYoGtLJP"
 Content-Disposition: inline
-In-Reply-To: <20220822081848.5126-1-zhaoxiao@uniontech.com>
+In-Reply-To: <25705469f329005a4ff699d1f45a12dcb575adc0.camel@perches.com>
 User-Agent: Mutt/2.2.7 (2022-08-07)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -74,43 +83,65 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---zHYWCWBx7NmYQlRn
+--K7V/mrz7OYoGtLJP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 22, 2022 at 04:18:48PM +0800, zhaoxiao wrote:
-> It's fine to call dev_err_probe() in ->probe() when error code is known.
-> Convert the driver to use dev_err_probe().
+On Sun, Aug 28, 2022 at 02:19:22PM -0400, Joe Perches wrote:
+> On Sun, 2022-08-28 at 20:40 +0300, Andy Shevchenko wrote:
+> > On Sun, Aug 28, 2022 at 4:46 PM Joe Perches <joe@perches.com> wrote:
+> > > On Sun, 2022-08-28 at 09:40 +0300, Andy Shevchenko wrote:
+> > > > On Sunday, August 28, 2022, Joe Perches <joe@perches.com> wrote:
+> > > > > On Fri, 2022-08-26 at 20:07 +0300, Andy Shevchenko wrote:
+> > > > > > Code is smaller and looks nicer if we combine polarity strings
+> > > > > > into an array.
+> >=20
+> > > > First of all, please remove unnecessary context when replying.
+> > >=20
+> > > I am _very_ aware of context.
+> > > I specifically left the code in.
+> > >=20
+> > > > > It's less robust though as PWM_POLARITY_NORMAL and _INVERSED
+> > > > > are now required to be 0 and 1.  As the only 2 values in
+> > > > > an enum they are, but that's not really guaranteed unless
+> > > > > you read the enum definition.
+> > > >=20
+> > > > So, what do you suggest here and in many other similar places (yes,=
+ ABI
+> > > > implied) in the kernel?
+> > >=20
+> > > Leaving the code alone.
+> >=20
+> > It's good that PWM maintainers look at this differently.
 >=20
-> Signed-off-by: zhaoxiao <zhaoxiao@uniontech.com>
-> ---
->  v5: delete the redundant ret and %d.
->  drivers/pwm/pwm-rockchip.c | 18 ++++++------------
->  1 file changed, 6 insertions(+), 12 deletions(-)
+> The enum is not userspace so it's not ABI.
+>=20
+> The PWM maintainers are free to do what they want but I
+> prefer obviousness over compactness.
 
-Applied, thanks.
+I do agree with Joe, I don't see any benefit in this.
 
 Thierry
 
---zHYWCWBx7NmYQlRn
+--K7V/mrz7OYoGtLJP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0N6UACgkQ3SOs138+
-s6Fd8w/+OgFefafybG6NdOA/Xib6VZJm2VIPFCndAetyNtEM+EgvkjFigNoSCYjS
-x9BKfY4rMC+bqAdHLg+OLqHsYTH8hz7OiGHovIZMaTrF7A+sMkNzspjJeM7JdM+S
-P1eQzcZbnWE/RQxk7eu4MXJtUxR66+quCkXAdQE1+HmXGECubjLG2j3aBXFDG3On
-PMRc3p/gRZ/pbmwbv5K5dLDAbvb93xEjr+6TYPQBFSsM7N3Oxov8K29MkkrBDhAK
-T8AbP7qF39Hkld+8CRVPIMO4ShYGoCF5F/boN/+LIRjyjHRRvVMZUf9OB6Z0Peed
-nqORMItNM+YAuVGB/QWAAuU7n7GAMzH8IiMx112V2upFeArtKLnqvsTi+1GmCxXc
-vCnAnZIJqZdJ0zF1G/aSY2ZreDUm4yUl1RO34soF9TrsaO7Mpw6oatqHsh/op0G2
-lWWY3O38m/YW18XU5RD1TuU/+pEahfW4AUHCvB9khHe3o6lQev0nCZppM1UmyUmy
-9ipeLbqDfyHzzqCOS75dDf/RpnY3ySKfXQgxzp8okbxBSba4PdKWGlL9Hdvo9CZ/
-OZyIFso8paDKqTiW2jlpi8oZQr2YxAyhcm9qGRzUjHbK26VkF/IUNEr98IKva5uQ
-t2lVXy2OCKdcm1xPzAoEUdTNw/w6H5HDwlm0icqapzWzlmt+JDI=
-=IiTE
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0OvcACgkQ3SOs138+
+s6E2qA//efIhd72suhbp3wVU26ZYv3vUeU5PabYxkAYaKzVAwSJHsrbXFzBz6APi
+X798wCLXzPfS12kYUC+pvu5CBEFvPuhjT3un37OLqgtdBOmcwJNodT/kQKy6rDcP
+EeOx0Nsd0i9JWPvROazR2gXlYHGL1hrfnKUslbPX20zkLc2Ed4UCHmJc8pQMWdal
+tltnqg8zyLe8qAmRKtUXqqzSD2jMNjntkHtAr/digrTbwejtAe+NEJlqgjQx0/EA
+hCGrl48IVq8ZGnoAtFl3THxMEMuh3FZM0eULmDpkA1FsFgYzyIjbJGUoJHv+1N1O
+E+FCXF0QmeL1T6uVxTnPG2kPyR63V7GdtvacROmTXRGsSfnQFewO/biLWnClUzF0
+50rnYGZnL3pLnlfIxtkQ9hKyC0IU0yS3Nmda6wq3Bm4u8H9ABeOta6tHc3re3pG3
+ftrZhHoRGF7IKl1IgEVcZ3zvYiNW25aZJFlo8vTLMrXlLWVLKiqqgTnwtA6tH+Yb
+7N2KNbaWeYtbP/SgrBvWORQGMG2d5wRKT3JosZIVtrxvtKIKl78mrVcRPbEx5RvN
+vWTI97/AYJloDRy+ltdoJO5gK0Xr6SAtFymnt2bfhLNc0fkZypA22Ztgn3qw/a/z
+BQq2TAwX2m6je5HxNA5T1Xi6+55R8gDLuUOaV7lt4OWxdnmgB50=
+=2Pm5
 -----END PGP SIGNATURE-----
 
---zHYWCWBx7NmYQlRn--
+--K7V/mrz7OYoGtLJP--
