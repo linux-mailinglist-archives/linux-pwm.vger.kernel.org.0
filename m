@@ -2,121 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 278C15EDEBB
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 16:26:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B8A5EDF04
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Sep 2022 16:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233473AbiI1O0x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 28 Sep 2022 10:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48200 "EHLO
+        id S234454AbiI1OnP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Sep 2022 10:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232140AbiI1O0w (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 10:26:52 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74A6AB043;
-        Wed, 28 Sep 2022 07:26:51 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id b2so4623792eja.6;
-        Wed, 28 Sep 2022 07:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=ST2BK2mX1JCCQ9EFwAE5AZgxqJqWOKXszXNYYKrCeOo=;
-        b=fOAtzd8r5UBHXZOTqNd+oJWdgIr3GR0dH4rYbxhJCt+n1wC1qN0wOOdeghk/B0ZOKY
-         Ds3f/WSrShkTNGz8rSkG2WP3GbQuHtfVZ4LSSnSDLNS14Cd36vzDjJlaIUD6Mjc7Oejy
-         P9E/LNtKNMlAS7xxyJXArBWsEk+wDmaxjwWwe3v4rexKnYNvNp1nYHCMM7XnvIxgvCIm
-         TY2+L1domuiGpddzNb/Z4uPq0XT4eJs93PADRHjvhyzSpevT7CDdycDU/EhKMJ603N1f
-         kzXn/Zv9L093xAMdPROKPjZAj5xcZIXuk63xm+lTwIyGxgYbK21AiEnmapr99sX9P7cS
-         FzSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=ST2BK2mX1JCCQ9EFwAE5AZgxqJqWOKXszXNYYKrCeOo=;
-        b=7rrpMcxbg7wCQ5yEzN41RSydm+nh/ajZoSgqnsU4ET2rhQFAk9vO1ZzwIYzS0cPZRU
-         QVe1lU/yVLK690QfYdceBXxfap+WyAPhlTZRLrlsARz1Y6FEU4y/PLCwju7thQcWf3SF
-         czhnHeC996EIBR0UW0MChlkdX6NnoUjgVbxQ59F+qoYBv240a2UUIDx/jTysFG/jZktE
-         aRX7ZF0bui2Yg1gofkLeEVpPWswA0DsKpmct0rDIgrTaLQw6IHu99Qg/FgZE6sWO3x0N
-         iXcDElHQdLQa4CgZYP+R9AlzEXaTL+jK5Xfxi9WoHDrGu/Ad7NqbWVIYK7u0CY0pDucO
-         4ZXQ==
-X-Gm-Message-State: ACrzQf3fOvwikbZB6jFf2eGkeSk33JxiaXb66uBq6MfyoNfnmPpUDSlp
-        FYKtSecJGMHnBh2iyvfAayY=
-X-Google-Smtp-Source: AMsMyM6XNfrZvpFbSGtzSmzUFzKSUmxyNXOHyplBro9a2JQ0GLSefzDlPE8FHnRnQki92+NorjgG8g==
-X-Received: by 2002:a17:907:608f:b0:787:a1ae:1d3b with SMTP id ht15-20020a170907608f00b00787a1ae1d3bmr1146140ejc.431.1664375210394;
-        Wed, 28 Sep 2022 07:26:50 -0700 (PDT)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id g17-20020a50ee11000000b00452e7ae2214sm369354eds.42.2022.09.28.07.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 07:26:49 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 16:26:47 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        with ESMTP id S233534AbiI1OnO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Sep 2022 10:43:14 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F8EAED91;
+        Wed, 28 Sep 2022 07:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664376193; x=1695912193;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XzQ8pnmeP2qSNXN417/XXU2Y2eIwv3syoJcPNFYPRxI=;
+  b=Sjw05Y6gog7U/Wa4zsZPePOl+AsjaZpCU0r0m5E3AfSwz816YD5bcE9p
+   tio0WMJYWPPBSlr0A0dS7ipdF69cdK0a2QCUcbU3569LFetV88fw1CAx8
+   auKBSnXutBljkMGNb4TlZU8gncF+ihC/HB0/gQaJVosFQYpnE4okZBgFt
+   Q4PhkvQ+11z8BKDOdgF/F4D4jKxzYDif5eMXb39nhOub89xGbsT6ctC2j
+   iV4/tC6Cbsu44aStzlev5F77PWO10QVOVFGkYQFKJfgdCiFPZmRMPSGKm
+   ieGW7LeL+L9gsL1p7NlrbxKb4Qb1S2VaMSV0PKXx4yYvNlE5vWbe9YPJy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="365665188"
+X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
+   d="scan'208";a="365665188"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 07:43:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10484"; a="747452867"
+X-IronPort-AV: E=Sophos;i="5.93,352,1654585200"; 
+   d="scan'208";a="747452867"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP; 28 Sep 2022 07:43:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1odYHE-008yAq-0Q;
+        Wed, 28 Sep 2022 17:43:08 +0300
+Date:   Wed, 28 Sep 2022 17:43:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] pwm: core: Replace custom implementation of
- device_match_fwnode()
-Message-ID: <YzRZp4e48XK6jAZD@orome>
-References: <20220927172258.62418-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 6/7] pwm: lpss: Make use of bits.h macros for all masks
+Message-ID: <YzRde5PuFnL5KbrC@smile.fi.intel.com>
+References: <20220927162421.11052-1-andriy.shevchenko@linux.intel.com>
+ <20220927162421.11052-7-andriy.shevchenko@linux.intel.com>
+ <YzRYPvzWFBXijIBQ@orome>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vdy9eD3fV+qPIudS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220927172258.62418-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <YzRYPvzWFBXijIBQ@orome>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, Sep 28, 2022 at 04:20:46PM +0200, Thierry Reding wrote:
+> On Tue, Sep 27, 2022 at 07:24:20PM +0300, Andy Shevchenko wrote:
+> > Make use of the GENMASK() (far less error-prone, far more concise).
+> 
+> Very subjective.
 
---vdy9eD3fV+qPIudS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+See an example why not: 0a90ed8d0cfa ("platform/x86: pmc_atom: Fix SLP_TYPx
+bitfield mask").
 
-On Tue, Sep 27, 2022 at 08:22:58PM +0300, Andy Shevchenko wrote:
-> Replace custom implementation of the device_match_fwnode().
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pwm/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I really don't see the point in having an exported symbol for this. It's
-a simple comparison and the result is even longer than the original. The
-*only* reason why this helper exists seems to be because it is getting
-used in *_find_device() callbacks.
 
-Honestly, I don't see a reason why this should be applied. And frankly,
-why bother making all these changes. It's a waste of time, in my
-opinion.
-
-Thierry
-
---vdy9eD3fV+qPIudS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM0WacACgkQ3SOs138+
-s6GZPQ/9GNWC4zWN1qTFdvUJKUGytJRXd3aIpbRWPPgKs0JUnsO3vLmw1Z+Apaos
-iDtgZdRUXn15+bO+/T47KsrVDy1+PC8ejhx1GEe8Ao268N5vDuXpMyotsZFBRHaU
-POysXXfzZ0ATASmMCjXt2hWW7x2n4uxsobc6Y+EwtboZcS8UOaaQAaEA4MoFdCpl
-FIO9LNq5NW4mRM6dV/7roK56igsBNTVr4KLQ4WGkP4DAOyMPOebUSxgYNWADMHgn
-Te5jcNRw4t55P8YMqhSVjSm/xu2N/cqAWu9DGRo7t25ts2cY0o6blOGbj0kizW1+
-1R5/g3Vz6XclBWPcGr+ILP2S1dQF4drpEuEer+EDv00T7B11HBsmz7Vz13GvU/Od
-pX6hnvTFRdnRghSGqB4H340rougcPjQanqPkgv+MMJjW0DdVOX/HKcB179C/h/Vj
-izQe77r3/GNcJRHUhi6/y3toTFHUthqfYuBBojETmvpLKaNkQQe5rUklu4RUncQL
-kxjY9P1J7XJNSKkoOyleInHcbCgOtGzTYgYR3LLgYhl32rXHjwt38c5b7HK6Hl/f
-K35l3uB1qTa1E4rWTu9LECNAYq+1UstNgBhd4wgztQRpK6Spbynafkxgk9aG14Pw
-Vadh7dn/UfzAvURKhub6qQWjx3JSEsCQlprnMCy3FzR6eIvNi/I=
-=aH0a
------END PGP SIGNATURE-----
-
---vdy9eD3fV+qPIudS--
