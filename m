@@ -2,57 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02BAC5F2187
-	for <lists+linux-pwm@lfdr.de>; Sun,  2 Oct 2022 08:18:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDDCF5F2188
+	for <lists+linux-pwm@lfdr.de>; Sun,  2 Oct 2022 08:18:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbiJBGSl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 2 Oct 2022 02:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
+        id S229461AbiJBGSp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 2 Oct 2022 02:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiJBGSi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 2 Oct 2022 02:18:38 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABD574F18E
-        for <linux-pwm@vger.kernel.org>; Sat,  1 Oct 2022 23:18:37 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id q7so78646pfl.9
-        for <linux-pwm@vger.kernel.org>; Sat, 01 Oct 2022 23:18:37 -0700 (PDT)
+        with ESMTP id S229449AbiJBGSo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 2 Oct 2022 02:18:44 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F7E4F18E
+        for <linux-pwm@vger.kernel.org>; Sat,  1 Oct 2022 23:18:42 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id w2so7689705pfb.0
+        for <linux-pwm@vger.kernel.org>; Sat, 01 Oct 2022 23:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=schmorgal.com; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=258c6ilUlPgoCnjGUHRElR4sfuv4hNJ78FrbPm5zqZs=;
-        b=UjAu+3OQeNTVLdeOmdTl5Ao6tdR6hRGlLPDqOTLL6XqCEc9ATl0Ek1KpmdqIhcUu5b
-         EvejfpZmIL2rkB1EX4f+yLjwceYW8yilyAydxays6tmEqZUzJzYbDAdZXxNVPrRUMZzX
-         i29q6WNLamJMeDhf5dGAhOvokdyy4W1hwC6t0=
+        bh=JygOsF2A3C/k9yqqeU23bDjFlU/HrMWA2w+1Wjpfh0Q=;
+        b=QsSekMB6e/FrjTg6TkilMsOZzk77Izam2mGaBFhHTqYD4q8VassOqt5wd0e4bV5Wby
+         bb505OtjNypGGtABacgXmVpN5Ba1Qklbwb6uNf33RlHWLrS2iLhF+tQsIJOdswDH8kIM
+         tccwyp/Ylh9iL1edZGvgSACgC7/u5+RVeplGo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=258c6ilUlPgoCnjGUHRElR4sfuv4hNJ78FrbPm5zqZs=;
-        b=Ate/eOSu467/q9xOO1QidlR0JZwpMmPGNvaTBZ/1IulkHa0dVnmmL6RO0iufRWK5qY
-         z7boL+PrR26Ece12TAslerOcRAQVvcDN1AEpeh9camjo+AV4Vdz+7OLcbjMnc+HMCzRC
-         pG/O7BCRHowvpnH4bLdwDmDF8TtrtYBxhLOt/GSUxBTjXzasUhME5m9dbdwOxv1WB+8W
-         HUYMaudjqIsTYEFgkTxcld87qwwoUuBz6SqbMMNwd2CcwW11YOQa2cGcc3W3V3rN9JX7
-         Ypp7RylVZKnWOGK0if0rIwR3jpJ/q+YYb8wnsJFgbK3F7WmpFlDmdFHjq+bWTjIMF358
-         SBNA==
-X-Gm-Message-State: ACrzQf3+omv9WchCkCRup0pMcDzD7D9FvsqB7UYzSsIt+JgR0k+i+WBb
-        /m9PeiRLytun+TlGBj+TShYPbwuEqSt4l/G3TmQ=
-X-Google-Smtp-Source: AMsMyM5tam0ndfZfj6CG3wABrXIbM5f16Aixq5no+frBnYe5ybMpuawFAs8i70j9y90yYvSb7a6cYg==
-X-Received: by 2002:a05:6a00:198d:b0:548:bd77:69b1 with SMTP id d13-20020a056a00198d00b00548bd7769b1mr16752825pfl.20.1664691517115;
-        Sat, 01 Oct 2022 23:18:37 -0700 (PDT)
+        bh=JygOsF2A3C/k9yqqeU23bDjFlU/HrMWA2w+1Wjpfh0Q=;
+        b=MCYGZHv1gDnUchoUuVtSOMriKZV0zT6Lm/KD4HZBalr6CNuXWiizjlWzBP6DetHe2n
+         BV77c22BedviePxc6UCHlP38FRJL167eEPZfXCnulhPdSSP5gU263idmnQ0O7f+SCzZh
+         2KVDZuQhsJEDb0IGFz7fFCMo1obEv4jLlNwHcA0y7eN3HJcRP/w+dA4mYOlbxoDPg7kh
+         WttrwvF2UZi6mWXx5mcbmQ6O5V0cKRNh4QwTv0dNPrASMuqzT7EvFA4lcy/xO1zJxGyB
+         th38AyHLTTjJ1ED87yNUAW85OTbyjavzL1nVnd96HPvihX2VvZ1WVHQsxlRVEnSPar5w
+         d0gA==
+X-Gm-Message-State: ACrzQf1mrd6KIac+ug/BOLebXzL9P043ZcSabkHC1lPs/tNMu5ywvsWd
+        lo84MKk8VqyATigtobtain9asw==
+X-Google-Smtp-Source: AMsMyM5pTPC9sghUzT5s+SZlqPGQ+MP/FjvhL+w095ZxymOXEX8GvufeRlUTd3mYVKCzTN6Y+dMAUQ==
+X-Received: by 2002:a63:d40b:0:b0:43b:e86f:d384 with SMTP id a11-20020a63d40b000000b0043be86fd384mr13830414pgh.167.1664691522232;
+        Sat, 01 Oct 2022 23:18:42 -0700 (PDT)
 Received: from doug-ryzen-5700G.. ([50.45.132.124])
-        by smtp.gmail.com with ESMTPSA id u1-20020a17090a4bc100b00202aa2b5295sm6276242pjl.36.2022.10.01.23.18.36
+        by smtp.gmail.com with ESMTPSA id u1-20020a17090a4bc100b00202aa2b5295sm6276242pjl.36.2022.10.01.23.18.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Oct 2022 23:18:36 -0700 (PDT)
+        Sat, 01 Oct 2022 23:18:41 -0700 (PDT)
 From:   Doug Brown <doug@schmorgal.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     linux-pwm@vger.kernel.org, Doug Brown <doug@schmorgal.com>
-Subject: [PATCH 1/2] pwm: pxa: Enable clock before applying config
-Date:   Sat,  1 Oct 2022 23:15:51 -0700
-Message-Id: <20221002061552.45479-2-doug@schmorgal.com>
+Subject: [PATCH 2/2] pwm: pxa: Set duty cycle to 0 before disabling
+Date:   Sat,  1 Oct 2022 23:15:52 -0700
+Message-Id: <20221002061552.45479-3-doug@schmorgal.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221002061552.45479-1-doug@schmorgal.com>
 References: <20221002061552.45479-1-doug@schmorgal.com>
@@ -67,71 +67,34 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The clock has to be on before we can apply the config anyway, so there
-is no need to turn the clock on, off, and back on again.
+Turning off the clock doesn't guarantee that the pin will be left in a
+low state. Set the duty cycle to 0 first to force it to turn off.
 
-This fixes an issue discovered on the PXA168 where sometimes the PWM
-output doesn't activate properly if the clock is turned off and back on
-too quickly. Removing the on/off/on sequence eliminates the problem.
+Without this fix, the PWM peripheral on a PXA168 was observed to
+randomly leave the PWM pin high after attempting to turn it off,
+especially when the duty cycle was set to 100%.
 
 Signed-off-by: Doug Brown <doug@schmorgal.com>
 ---
- drivers/pwm/pwm-pxa.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ drivers/pwm/pwm-pxa.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-index 0bcaa58c6a91..208c32c79453 100644
+index 208c32c79453..d426e4f17241 100644
 --- a/drivers/pwm/pwm-pxa.c
 +++ b/drivers/pwm/pwm-pxa.c
-@@ -64,7 +64,6 @@ static int pxa_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	unsigned long long c;
- 	unsigned long period_cycles, prescale, pv, dc;
- 	unsigned long offset;
--	int rc;
- 
- 	offset = pwm->hwpwm ? 0x10 : 0;
- 
-@@ -86,18 +85,11 @@ static int pxa_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		dc = mul_u64_u64_div_u64(pv + 1, duty_ns, period_ns);
- 
--	/* NOTE: the clock to PWM has to be enabled first
--	 * before writing to the registers
--	 */
--	rc = clk_prepare_enable(pc->clk);
--	if (rc < 0)
--		return rc;
--
-+	/* Clock is required here. We can assume it's already on. */
- 	writel(prescale, pc->mmio_base + offset + PWMCR);
- 	writel(dc, pc->mmio_base + offset + PWMDCR);
- 	writel(pv, pc->mmio_base + offset + PWMPCR);
- 
--	clk_disable_unprepare(pc->clk);
- 	return 0;
- }
- 
-@@ -130,12 +122,17 @@ static int pxa_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return 0;
- 	}
- 
-+	if (!pwm->state.enabled) {
-+		err = pxa_pwm_enable(chip, pwm);
-+		if (err)
-+			return err;
-+	}
+@@ -103,6 +103,12 @@ static int pxa_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ static void pxa_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct pxa_pwm_chip *pc = to_pxa_pwm_chip(chip);
++	unsigned long offset = pwm->hwpwm ? 0x10 : 0;
 +
- 	err = pxa_pwm_config(chip, pwm, state->duty_cycle, state->period);
--	if (err)
-+	if (err) {
-+		pxa_pwm_disable(chip, pwm);
- 		return err;
--
--	if (!pwm->state.enabled)
--		return pxa_pwm_enable(chip, pwm);
-+	}
++	/* Ensure the duty cycle is set to 0 before turning off the clock.
++	 * Otherwise, the PWM pin might stay high.
++	 */
++	writel(0, pc->mmio_base + offset + PWMDCR);
  
- 	return 0;
+ 	clk_disable_unprepare(pc->clk);
  }
 -- 
 2.34.1
