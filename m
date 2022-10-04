@@ -2,20 +2,20 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70EE45F40C8
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Oct 2022 12:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ABBB5F40CB
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Oct 2022 12:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbiJDK3X (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 4 Oct 2022 06:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
+        id S229750AbiJDK31 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 4 Oct 2022 06:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiJDK3K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 Oct 2022 06:29:10 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C682CC9A;
-        Tue,  4 Oct 2022 03:29:04 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-333a4a5d495so131013797b3.10;
-        Tue, 04 Oct 2022 03:29:04 -0700 (PDT)
+        with ESMTP id S229748AbiJDK3R (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 Oct 2022 06:29:17 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70AE38A0A;
+        Tue,  4 Oct 2022 03:29:16 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 2so6787637pgl.7;
+        Tue, 04 Oct 2022 03:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
@@ -33,18 +33,18 @@ X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date;
         bh=1lUIWCR3r011/t+0Z08z8q0dDNOYLDdrY1UN5uqDESU=;
-        b=NBApH2ntn+gYq/THuRUXq5E7L85yRP2hpROdpbf3pqalCtZrT0uDT0JaAxZrFJ3gIC
-         BjbjGxojpLNOnv/thMjJR+V5bD6PYyCjnBNRJv9r3zudoTwwNa9H//rJoh8zRbpb8w9+
-         tOVLHUQ251fTOn1BntKaPyV6mJorpMKrJC9lDiNfj4/7oj8koAqQbyKVjeoWMcgDeCqh
-         hnbRyOurWOuaTwPaisJIguPPyG7BBWnmq37722xKvGLBVKFCsU0BhkxI7bPmpAuqCwRB
-         zV79DyU7T9TQb1Bmw/FfT66N3OYmqWkXFMu3y0j7/R5DucleyKEnPz4rm83E6/u26TmZ
-         yueg==
-X-Gm-Message-State: ACrzQf1mzTjZe8YBkkLXv5+DCXoNADINY+M3Sp8Il6ndi30YLsoi9cvM
-        2jJPhllhTGFm2oR1gxWDTwA1IozJNuvdri2pmuE=
-X-Google-Smtp-Source: AMsMyM5hUjwDTJXjQh3X5oEZcEqPnJf1clOw6pk6zBfZkQn7WdGWwxByl5BWqYRPXkcZlH19NWRTLO0YlNbG7PQ00G4=
-X-Received: by 2002:a81:3887:0:b0:354:f509:7fae with SMTP id
- f129-20020a813887000000b00354f5097faemr24996677ywa.459.1664879344047; Tue, 04
- Oct 2022 03:29:04 -0700 (PDT)
+        b=wn3SzbkGxtmYCAM4o2ZAIs6n3MRBEwEut/foonhO50G+G7ZCd6YUkMzw5XwSJA5afL
+         xNLE6jedsAGV0HA/8zc4N6qXYbagtDJfy3CTKKLr1H3+c3Lvqe5F1WIkpUFOoyBpC7uS
+         p2yOL2PUw5NlJGX1mkoEocDXyrr6N/5JQxQiwK4uENuo+OjfoEd7cbzfZlnhrxm1R5er
+         TOH+KjcVOe24PVjd6cDPKtXMsW2BltOJiZHOe6CDMBGiWDHmyUIhC3YpIgjnI7teyRz4
+         HQIpkIpUzA07J9TcXdPJwr77SDcR9AmCvZcOeLwlucF1wjCcI8uly8tPSIXHKzfHFa2J
+         riNw==
+X-Gm-Message-State: ACrzQf38Rap/IhLDRHlFdpbjHomBEHNFTcE2OuAAr1tI6WTAkYnALEe7
+        PyB2ouiBeYBaFHQqjUArWP6Ph4wi0kynTugxheM=
+X-Google-Smtp-Source: AMsMyM7SvDBeOhkq+Ivypn9rn/B6teJ3MW2JQ+uehMelLeuITtvgtJHVksoR7P65LCcTmkDoRJ/Wbwu7/URj2JilorA=
+X-Received: by 2002:a05:6a00:d70:b0:561:bea7:608b with SMTP id
+ n48-20020a056a000d7000b00561bea7608bmr3322843pfv.54.1664879356325; Tue, 04
+ Oct 2022 03:29:16 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220425132244.48688-1-u.kleine-koenig@pengutronix.de>
  <524ca143-e9d4-2a79-3e9e-c8b9ffc9f513@gmail.com> <20220815070935.guqzzlny7f6kcprc@pengutronix.de>
@@ -69,7 +69,7 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
