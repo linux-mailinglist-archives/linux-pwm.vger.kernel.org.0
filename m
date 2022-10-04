@@ -2,241 +2,216 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 203615F2E48
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Oct 2022 11:41:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70EE45F40C8
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Oct 2022 12:29:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbiJCJlq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 3 Oct 2022 05:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34488 "EHLO
+        id S229783AbiJDK3X (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 4 Oct 2022 06:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbiJCJlT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 3 Oct 2022 05:41:19 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2133.outbound.protection.outlook.com [40.107.114.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA70C606BC;
-        Mon,  3 Oct 2022 02:35:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KgqRe28V/bFCmnOPnpdzPeG95llG9f6PKiZ599E0+2ypQZyhAqWW4KMzxIAJICZteTnlm8EeZWvADOIdQBE6YZkz4bIfhOzMPSEbpnUl+nB02RWB6PnJkphGrjsyMZtPh3y3aowwSsLqamBC5v+tKxx3i+T9aTq9ji4xxqDA1yS+31/hkgoWYSDlA4O+0VHkTRDBJgT5zgKwtlHrXVoXV0HlT4aRme26sbYdn/3iW3krDT0BA7F7DZMk08LRtGXmqrehxTNaesAY0CHq9IZYqvq94OZbJNdbeATOQTxctx6gduAMuWOOBHJL3GvNi8J/wzNz0Lns489HdvuM+x488g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TIRO1mrwpEi98zoFnSYwIaUbSzTNH1Hf9LQ6UycA7O4=;
- b=XWJokref4iAIC/8kLX/69Col3c1o7cbjbQeleiSN85QKBsDHF2T4Xa10jSOUrkMEUGccPn9vQiS5XKiB/n0uj7EZaPY4o4aIBrwyHXEB2EQ8VoZUsdu5cpCk8fg4Nj5vXahtdKXa0FIoIgsj4q3ADM/2Yp4X0ciRxL67oYuNxs7QIrpiK/6QgAD+dzYaD45tepZG0BD8r0dEafTBJYhIBTkAOMbOq67VUecgcHOpJ9YFJCZ81s1ePsenVkcVvxmEdQCYYGar2bhUfjAk4Y1SPN4Ef9+JMtam/elFxrq9uzCCc4fQtCKGkxl7P3oYqEVqsOLgu0KxJNZrpLSZBPfJeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TIRO1mrwpEi98zoFnSYwIaUbSzTNH1Hf9LQ6UycA7O4=;
- b=q8/bTjjrI+EeDCmkfa1kLXbUQx++Li2eXf2V8oCdYv/cBLBSDDMjwZhUTSjnQkCcqMo28d3dZjDroptNLLIyfMJZqcOde/BLepcuoCRiJmGuoqyHeEnKLn9BKL/WMctfZzw1Zza3zx+VCg/YiwcvdTUVLIrGHb8KDPa3ATfGknU=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TYWPR01MB10049.jpnprd01.prod.outlook.com (2603:1096:400:1e1::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Mon, 3 Oct
- 2022 09:34:44 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::73a6:588d:1198:7262]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::73a6:588d:1198:7262%7]) with mapi id 15.20.5676.028; Mon, 3 Oct 2022
- 09:34:44 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Lee Jones <lee@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH RFC 3/7] dt-bindings: mfd: rz-mtu3: Document RZ/G2L MTU3
- PWM
-Thread-Topic: [PATCH RFC 3/7] dt-bindings: mfd: rz-mtu3: Document RZ/G2L MTU3
- PWM
-Thread-Index: AQHY0+6TADmAt9m0c0u1ieTfUadBoq32sJKAgAABH3CAATHPgIACC6NggAJdkoCAAAsx0IAADI+AgAAATiCAAAkn8A==
-Date:   Mon, 3 Oct 2022 09:34:44 +0000
-Message-ID: <OS0PR01MB5922C02DBFCD5B262400E7A7865B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20220929103043.1228235-1-biju.das.jz@bp.renesas.com>
- <20220929103043.1228235-4-biju.das.jz@bp.renesas.com>
- <YzXbU69imBM5aKwn@google.com>
- <OS0PR01MB5922134DC72EE29D5404867B86579@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <YzbcyxY839GlR71V@google.com>
- <OS0PR01MB592241115B5D0F17B8CAE9D086599@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <YzqQC3gEzGksqYzk@google.com>
- <OS0PR01MB5922630991BABA41FAE06BBE865B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <Yzqj9/1TVEB1BZcL@google.com>
- <OS0PR01MB59222A065B460F2B72634577865B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB59222A065B460F2B72634577865B9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYWPR01MB10049:EE_
-x-ms-office365-filtering-correlation-id: 54eeae0f-547b-4240-93e1-08daa52281a3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BxOHvl8mwCuQXB1V262By6ZylR2qAXlVwbnea3lc5tkqhtevo7E2RovGCAgGzquOr/GU0VMabBtgfOj5piWE/dQj9+/wY+lUpRyRHPbMRqTyPJaowKYw/ShvL7OwcyzCt0U8oqdZe0W79Cb64gnjV0qC5QA8P4SDbVhpM1BrpRXcp7sM7R2/J9gLWLFKltw+B8n2qElhglr81sv58ntb0u1az13lNjJmVtW0TG/ssbvhcuayX1WktEZXGMdk9lh1DeY8L1DBawVZBrBOtQ9FjwX5vkbGZnu1D0BkBmsUIWEK9wJFKJKxcga2p/NKE3KtQNryxbyIXfXkY9F9ZHVfEusdG5J3tbpBwMTL89BwWyYQO6TnfRJ6vB0ePBVi+drw/ZR1bExIz7AaK0zwSDuBRVnCJDtikhGtAeF+6L91awcY3mNJVPuEC19EZxWHeXVrxyFupiDWWvFhcREnVtEydYYgDtoeZ6FM4XzQZrGr0ODkyXaktQAbtMzeMJQhx5K98jGlND4PjjnQNAYV6EIvbpkP147FNmyxdon77KrzQJnyG/celeSFlVgjqNoRU0dSo1eS739bi/EkmoAWZWtL0x1UkXbfqii5bENnAqa7N26T87VKqWHVyYCH1hbGaCCQfkDpnQiAWKZyDr2MnwS7LVb1RrW7t2ERZkFIC1vfD+Aoqr/9zGApgQNp7FPy43isgvvJbOYRf4ybVy0Sz9CG/qVuD1dBZsGAHHrc3gadykhio+rTEU9QeUUuXrCqGkHlpTNsQaYPNtQQQqcPzLV3oQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(451199015)(54906003)(2940100002)(26005)(9686003)(7696005)(6506007)(6916009)(4326008)(66946007)(76116006)(316002)(8676002)(71200400001)(66476007)(66556008)(478600001)(64756008)(66446008)(38100700002)(55016003)(122000001)(86362001)(33656002)(38070700005)(83380400001)(186003)(5660300002)(8936002)(41300700001)(52536014)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?akdUQlRWeExvQXFvVHo4bDlGV04vMmM0L1RLSzI0LzhyWjlxbVZHU3VJWEg0?=
- =?utf-8?B?WTU1VmV1ZFhmSllsZjFHYjR2ZU5YOWVJNG95Q0hnUHprVzlQeERYWkNxRWlK?=
- =?utf-8?B?YmpFRi9makE2aTFQcFI5Sm0rR09ONjBuMWtXUDhXcTFJSXdXVlNOZzdnMVNx?=
- =?utf-8?B?clkyVEhCbWdSTVhGbkpLQUdEQUlGUk42UDlzTzNOeVBRTE1GVnNTWWhmRnB5?=
- =?utf-8?B?bERSemVCcm5GWS90cDVyVVQ5MzVLUnMxUG5rTmdmT1VHVkVyaTY5b3FXNEMr?=
- =?utf-8?B?ZXpXaHIwUEoxSCthVitFZjJpRTR1djdTNHFpaVExZFZVTDhQZzhJM1JNbmZu?=
- =?utf-8?B?RERyYjMrMzFudks0SmhqZWM2NVlOT3A0VFc0ak0xR1BWdkFaM2ZNWlFaL1Ro?=
- =?utf-8?B?M1l2Y3VGUUZxVmxJR29YVGhoZGt5R3VqM0RIK0gwQWVCTnNhNC80VFRyV2lk?=
- =?utf-8?B?bU9KazBKWHZ1QWJBcHlVajhkWmQxdGlUUlkrVEU4TVBONjYvNnVHZlpsVTNp?=
- =?utf-8?B?RHAvclFKTW56R21pZUxtK1ZGUUJYV3BDODJZdXNJYkQzRVVrS0FzdWd0bWxK?=
- =?utf-8?B?bG9lVTMxS3d3VGZtaUVGdDFKQVM4ZThCRVJBbWtRUnZBV0wzaUJSU0ZTZW1u?=
- =?utf-8?B?N25BREljd1dOOGl0anZjblJ2RlpzZTNTMmk1WHRnNXp6QlRGK1BNQmZzZmVS?=
- =?utf-8?B?ZnpkWHNCaDEybGtTTXRSTXlqbW90UDhOaitBalMrQ1hqZEsxc25SekUxU1do?=
- =?utf-8?B?OW1pc2lRaDJXejZ2aDY1OEFVK0dYdjFTVlkwZWNwamZ6bGNEUG5lMnRMcnhF?=
- =?utf-8?B?d3k3aVg3dU1aTVhlKzlqOERQWmI2Tk5mT2RDNUdnY2tYQWJ2aHgxbFlVV2ho?=
- =?utf-8?B?WlFtcHJDMVkwamhncDhjTHBKQ25RSWUyMWl1eEJ2V000Y0pSQm5vUFdlanhi?=
- =?utf-8?B?cktNN2oycTlKbUxpbGRBbmNPMTFKUDMwTjlRN2lET1d3Ui9YeHdHTjVRR25p?=
- =?utf-8?B?NjVaeGl5Vi93MGY4ZnV4Z0RQdFlUUnBaSGxTL3Y0VG13bFlWdUJ5YUxNYXRX?=
- =?utf-8?B?NXViMkt2aUdoMFNlczI1TWlqTktrRjdOTWkyc0pXU3FmOUVydHI3ZUVuc3lY?=
- =?utf-8?B?N29IV0ZtSE5SWWF0R2Y2Y0FSclFjbnluVkFBTmM5VkkwOUZOcGx0T3BOeVFk?=
- =?utf-8?B?cWZlNDE2dGRyeU1FeWZlSVJFeWRTellndlNONjRRWG9nSERhZ1B0OGw5ampk?=
- =?utf-8?B?UWJuTGRrTjIzdlpKb1NqVDBtRUhmcm5Lb0J4U3o3b2NHbXgxSDJRb3dVQi9N?=
- =?utf-8?B?d1pLaTJrVFJpamZERFZTM3Vib2h2amdmYVNHQU5WbFpoYnY5ZGVPUjJvM2kw?=
- =?utf-8?B?SVZLMmdXcVF3elZ1KzJrbVVqQmpPTHVwQjhUQ1cxekdhMjh6a1pOUWpaZDJx?=
- =?utf-8?B?TGw5Ui9mUnVINkhmZ09QRmNFL1hmSk5uQktpS2doTVZCUzFwSXp5aEo1alhK?=
- =?utf-8?B?UTRWaFVRUGpnYlZUWmhpRDRBU28zeFJVN1BMcWdGSEkxSUxrVHJselNBaVFk?=
- =?utf-8?B?SERYNzF4UGVrenhxYnNncXNzUlQrWDR3VXp3NXdlTitjeDZTeVdKcDAyZEth?=
- =?utf-8?B?RGVrSi9EN21BM2tBWUhHTEVrcmFoMnFHbUw5REFIWWh3aGxrYXNSdkJTTG85?=
- =?utf-8?B?YXpxaEJQQUdIV0p0Snl2ZG1taWd4ZVVPQXdJRzZNb1NxeU5CK2hxVTRHNmZ1?=
- =?utf-8?B?UERtZ3ZqSUVYOTdxcWswK09DNTN3REJjMm5zaFJaMXpMaHVGY3RkS29jUjMy?=
- =?utf-8?B?aFllMkg4STVJV0R6K25FTVkvcG1UL3REZGEvSm8wamltMnQ4SzdjQmFzZE54?=
- =?utf-8?B?a3pSNzNaY3JGdmNyMVQ1S1Z0NDFnNTZNV0JWZG5WV3A2SGZ2WkFhZi8yMHBk?=
- =?utf-8?B?dzZTcW1SM0djTmpWc0QwRGJlRUQ3dXpKQXRqZXpUek95TE50cFhOYzExQVM3?=
- =?utf-8?B?Y0kzK0VoSUxhalB5NFM3Rk5yZk5YWkdHYWcraGdQRmh0Zko1K21mdFhjWVNr?=
- =?utf-8?B?eC95M0JZampFM2dhZ3RiY0REd2ZEMHpRMlIxVWU0L21iRG5iUGFRQTI0eU1D?=
- =?utf-8?Q?5W4Ohy9rsvl90OiYnn7BA0VVb?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S229851AbiJDK3K (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 4 Oct 2022 06:29:10 -0400
+Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C682CC9A;
+        Tue,  4 Oct 2022 03:29:04 -0700 (PDT)
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-333a4a5d495so131013797b3.10;
+        Tue, 04 Oct 2022 03:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=1lUIWCR3r011/t+0Z08z8q0dDNOYLDdrY1UN5uqDESU=;
+        b=gWFEx5m1Blh2fa8ekzLkgvMBG69ssxYAMdYFjll11yfRMcZDKShKvPI0W4GX18SyJv
+         9Z0dc/68MRlow3gJlBBCd0eEqYs5GQL2csch/wfy7Hl/TBvgNP4QFIwghTo+/9tSwUEB
+         txQDJUjkjVlQzVrNZrjspI7ao2uA//Y+4DLnon5HEjU2w++AnmOQA2nqpG3+D18WSFWW
+         HRbFDxtd+dCdfzq5A/I9l8C1rwfmW7pDEGuBoYG6eGOJRxjX6epdl4xDXrCjhwP9jWxL
+         hkkFflJ+Rt2EntPEuDgOCVYgb9QZ/JPjzkrmUxsNroI8NzyjycOQucQrGECvmjtOKQtc
+         yhzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=1lUIWCR3r011/t+0Z08z8q0dDNOYLDdrY1UN5uqDESU=;
+        b=NBApH2ntn+gYq/THuRUXq5E7L85yRP2hpROdpbf3pqalCtZrT0uDT0JaAxZrFJ3gIC
+         BjbjGxojpLNOnv/thMjJR+V5bD6PYyCjnBNRJv9r3zudoTwwNa9H//rJoh8zRbpb8w9+
+         tOVLHUQ251fTOn1BntKaPyV6mJorpMKrJC9lDiNfj4/7oj8koAqQbyKVjeoWMcgDeCqh
+         hnbRyOurWOuaTwPaisJIguPPyG7BBWnmq37722xKvGLBVKFCsU0BhkxI7bPmpAuqCwRB
+         zV79DyU7T9TQb1Bmw/FfT66N3OYmqWkXFMu3y0j7/R5DucleyKEnPz4rm83E6/u26TmZ
+         yueg==
+X-Gm-Message-State: ACrzQf1mzTjZe8YBkkLXv5+DCXoNADINY+M3Sp8Il6ndi30YLsoi9cvM
+        2jJPhllhTGFm2oR1gxWDTwA1IozJNuvdri2pmuE=
+X-Google-Smtp-Source: AMsMyM5hUjwDTJXjQh3X5oEZcEqPnJf1clOw6pk6zBfZkQn7WdGWwxByl5BWqYRPXkcZlH19NWRTLO0YlNbG7PQ00G4=
+X-Received: by 2002:a81:3887:0:b0:354:f509:7fae with SMTP id
+ f129-20020a813887000000b00354f5097faemr24996677ywa.459.1664879344047; Tue, 04
+ Oct 2022 03:29:04 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54eeae0f-547b-4240-93e1-08daa52281a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2022 09:34:44.8486
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OjsbLWxkAhsroFHr0s7bWnksEPVfsRt3/S7SSRLm6M7xDDVNTRXvBLBF390V712I6WHv7O04pQkGKHaRzVccyEZ9Z8q32E7rAV5fpxXZ5CE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10049
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20220425132244.48688-1-u.kleine-koenig@pengutronix.de>
+ <524ca143-e9d4-2a79-3e9e-c8b9ffc9f513@gmail.com> <20220815070935.guqzzlny7f6kcprc@pengutronix.de>
+ <20220818075401.wguqvcbhzj5ttnio@pengutronix.de> <8ba9431b-b2bf-9fb0-9ba7-afeb2c3bce94@collabora.com>
+ <20220921081721.l2bpeokwxy5pwfdh@pengutronix.de> <e109b19b-47a6-28b6-3eca-b45720637afe@nvidia.com>
+ <Yy2iSuOiShnokwGL@orome>
+In-Reply-To: <Yy2iSuOiShnokwGL@orome>
+From:   Thomas Graichen <thomas.graichen@googlemail.com>
+Date:   Tue, 4 Oct 2022 12:28:25 +0200
+Message-ID: <CAOUEw12eDo2k5h+A05EHDkr4xDCQVw3O=2T-30KpFjhYRWhXmw@mail.gmail.com>
+Subject: Re: [PATCH v2] pwm: tegra: Optimize period calculation
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+        Dmitry Osipenko <digetx@gmail.com>, linux-pwm@vger.kernel.org,
+        Maxim Schwalm <maxim.schwalm@gmail.com>,
+        Svyatoslav Ryhel <clamor95@gmail.com>, kernel@pengutronix.de,
+        linux-tegra@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgTGVlIEpwbmVzLA0KDQpUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiBTdWJqZWN0OiBS
-RTogW1BBVENIIFJGQyAzLzddIGR0LWJpbmRpbmdzOiBtZmQ6IHJ6LW10dTM6IERvY3VtZW50DQo+
-IFJaL0cyTCBNVFUzIFBXTQ0KPiANCj4gSGkgTGVlLA0KPiANCj4gPiBTdWJqZWN0OiBSZTogW1BB
-VENIIFJGQyAzLzddIGR0LWJpbmRpbmdzOiBtZmQ6IHJ6LW10dTM6IERvY3VtZW50DQo+ID4gUlov
-RzJMIE1UVTMgUFdNDQo+ID4NCj4gPiBPbiBNb24sIDAzIE9jdCAyMDIyLCBCaWp1IERhcyB3cm90
-ZToNCj4gPg0KPiA+ID4gSGkgTGVlLA0KPiA+ID4NCj4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRD
-SCBSRkMgMy83XSBkdC1iaW5kaW5nczogbWZkOiByei1tdHUzOiBEb2N1bWVudA0KPiA+ID4gPiBS
-Wi9HMkwgTVRVMyBQV00NCj4gPiA+ID4NCj4gPiA+ID4gT24gU2F0LCAwMSBPY3QgMjAyMiwgQmlq
-dSBEYXMgd3JvdGU6DQo+ID4gPiA+DQo+ID4gPiA+ID4gSGkgTGVlIEpvbmVzLA0KPiA+ID4gPiA+
-DQo+ID4gPiA+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFJGQyAzLzddIGR0LWJpbmRpbmdzOiBt
-ZmQ6IHJ6LW10dTM6DQo+ID4gRG9jdW1lbnQNCj4gPiA+ID4gPiA+IFJaL0cyTCBNVFUzIFBXTQ0K
-PiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IE9uIFRodSwgMjkgU2VwIDIwMjIsIEJpanUgRGFzIHdy
-b3RlOg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gSGkgTGVlIEpvbmVzLA0KPiA+ID4gPiA+
-ID4gPg0KPiA+ID4gPiA+ID4gPiBUaGFua3MgZm9yIHRoZSBmZWVkYmFjay4NCj4gPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFJGQyAzLzddIGR0LWJpbmRp
-bmdzOiBtZmQ6IHJ6LW10dTM6DQo+ID4gPiA+IERvY3VtZW50DQo+ID4gPiA+ID4gPiA+ID4gUlov
-RzJMIE1UVTMgUFdNDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBPbiBUaHUsIDI5
-IFNlcCAyMDIyLCBCaWp1IERhcyB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-PiA+ID4gRG9jdW1lbnQgUlovRzJMIE1UVTMgUFdNIHN1cHBvcnQuIEl0IHN1cHBvcnRzDQo+IGZv
-bGxvd2luZw0KPiA+ID4gPiA+ID4gPiA+ID4gcHdtDQo+ID4gPiA+ID4gPiBtb2Rlcy4NCj4gPiA+
-ID4gPiA+ID4gPiA+IAkxKSBQV00gbW9kZSAxDQo+ID4gPiA+ID4gPiA+ID4gPiAJMikgUFdNIG1v
-ZGUgMg0KPiA+ID4gPiA+ID4gPiA+ID4gCTMpIFJlc2V0LXN5bmNocm9uaXplZCBQV00gbW9kZQ0K
-PiA+ID4gPiA+ID4gPiA+ID4gCTQpIENvbXBsZW1lbnRhcnkgUFdNIG1vZGUgMSAodHJhbnNmZXIg
-YXQgY3Jlc3QpDQo+ID4gPiA+ID4gPiA+ID4gPiAJNSkgQ29tcGxlbWVudGFyeSBQV00gbW9kZSAy
-ICh0cmFuc2ZlciBhdCB0cm91Z2gpDQo+ID4gPiA+ID4gPiA+ID4gPiAJNikgQ29tcGxlbWVudGFy
-eSBQV00gbW9kZSAzICh0cmFuc2ZlciBhdCBjcmVzdCBhbmQNCj4gPiA+ID4gPiA+ID4gPiA+IHRy
-b3VnaCkNCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IFNob3VsZG4ndCBhbGwgdGhp
-cyBnbyBpbiB0aGUgUFdNIGRyaXZlciBiaW5kaW5nPw0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gPiBMb29rcyBsaWtlIGF0IHRvcCBsZXZlbCBNVFUzIElQIHByb3ZpZGVzIHNpbWlsYXIgSFcN
-Cj4gPiA+ID4gZnVuY3Rpb25hbGl0eQ0KPiA+ID4gPiA+ID4gbGlrZQ0KPiA+ID4gPiA+ID4gPiBi
-ZWxvdyBiaW5kaW5nIFsxXSwgd2hlcmUgdGhlcmUgaXMgYSBjb3JlIE1GRCBkcml2ZXIgYW5kDQo+
-IHB3bSwNCj4gPiA+ID4gPiA+ID4gY291bnRlciBhbmQgdGltZXIgYXMgY2hpbGQgZGV2aWNlcy4N
-Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBQcmV2aW91cyBtaXN0YWtlcyBhcmUgbm90IGdvb2Qg
-cmVmZXJlbmNlcyBmb3Igd2hhdCBzaG91bGQNCj4gPiBoYXBwZW4NCj4gPiA+ID4gaW4NCj4gPiA+
-ID4gPiA+IHRoZSBwcmVzZW50IGFuZCB0aGUgZnV0dXJlLiA9OykNCj4gPiA+ID4gPg0KPiA+ID4g
-PiA+IFdoeSBkbyB5b3UgdGhpbmsgdGhhdCByZWZlcmVuY2UgaXMgbm90IGEgZ29vZCBvbmU/IEkg
-YmVsaWV2ZQ0KPiA+IHRoZXJlDQo+ID4gPiA+ID4gc2hvdWxkIGJlIHNvbWUgcmVhc29uIGZvciBp
-dC4NCj4gPiA+ID4NCj4gPiA+ID4gSSBkaWRuJ3QgZXZlbiBsb29rIGF0IGl0Lg0KPiA+ID4gPg0K
-PiA+ID4gPiBXaGF0IEkgImJlbGlldmUiIGlzIHRoYXQgZG9jdW1lbnRhdGlvbiBmb3IgZWFjaCBm
-dW5jdGlvbmFsaXR5DQo+ID4gPiA+IGJlbG9uZ2luZyB0byBhIHBhcnRpY3VsYXIgc3Vic3lzdGVt
-IHNob3VsZCBsaXZlIGluIHN1YnN5c3RlbSdzDQo+ID4gPiA+IGFzc29jaWF0ZWQgZG9jdW1lbnRh
-dGlvbiBkaXJlY3RvcnkgYW5kIGJlIHJldmlld2VkL21haW50YWluZWQgYnkNCj4gPiA+ID4gdGhh
-dCBzdWJzeXN0ZW0ncyBhc3NvY2lhdGVkIG1haW50YWluZXIuDQo+ID4gPg0KPiA+ID4gSWYgSSBh
-bSBjb3JyZWN0LCBNRkQgaXMgc3Vic3lzdGVtIGZvciBjYWxsaW5nIHNoYXJlZCByZXNvdXJjZXMN
-Cj4gPiBhY3Jvc3MNCj4gPiA+IHN1YnN5c3RlbXMuDQo+ID4gPg0KPiA+ID4gSGVyZSBzaGFyZWQg
-cmVzb3VyY2VzIGFyZSBjaGFubmVscyB3aGljaCBpcyBzaGFyZWQgYnkgdGltZXIsDQo+IGNvdW50
-ZXINCj4gPiA+IGFuZCBwd20NCj4gPg0KPiA+IFdoaWNoIEFQSSBkbyB0aGUgY29uc3VtZXJzIHVz
-ZSB0byBvYnRhaW4gdGhlc2Ugc2hhcmVkIHJlc291cmNlcz8NCj4gDQo+IFRoZXkgbmVlZCB0byB1
-c2UgTUZEIGRyaXZlciBBUEkgdG8gZ2V0IHNoYXJlZCByZXNvdXJjZXMuDQo+IA0KPiA+DQo+ID4g
-PiBUaGV5IGFyZSBjaGlsZCBvYmplY3RzIG9mIE1GRCBzdWJzeXN0ZW1zLiBUaGF0IGlzIHRoZSBy
-ZWFzb24gaXQgaXMNCj4gPiBpbiBNRkRuZGluZ3MuDQo+ID4NCj4gPiBJZiB0aGUgcHJvcGVydGll
-cyBiZWxvbmcgdG8gdGhlIGNoaWxkLCB0aGV5IHNob3VsZCBiZSBkb2N1bWVudGVkIGluDQo+ID4g
-dGhlIGNoaWxkJ3MgYmluZGluZ3MuICBTaG92aW5nIGFsbCBmdW5jdGlvbmFsaXR5IGFuZCBieSBl
-eHRlbnNpb24NCj4gYWxsDQo+ID4gZG9jdW1lbnRhdGlvbiBpbnRvIHRoZSBNRkQgZHJpdmVyIGFu
-ZC9vciBiaW5kaW5nIGlzIGluY29ycmVjdA0KPiA+IGJlaGF2aW91ci4NCj4gDQo+IERvIHlvdSBo
-YXZlIGFuIGV4YW1wbGUsIGhvdyB3aWxsIGl0IGxvb2sgbGlrZSwgaWYgdGhlIGJlbG93IGJpbmRp
-bmcgdG8NCj4gYmUgcGFydCBvZiBwd20gYW5kIGxpbmtlZCBhZ2FpbnN0IHRoZSBwYXJlbnQgTUZE
-IGRyaXZlcj8NCj4gDQo+IA0KPiArICAiXnB3bUAoWzAtNF18WzYtN10pKyQiOg0KPiArICAgIHR5
-cGU6IG9iamVjdA0KPiArDQo+ICsgICAgcHJvcGVydGllczoNCj4gKyAgICAgIGNvbXBhdGlibGU6
-DQo+ICsgICAgICAgIGNvbnN0OiByZW5lc2FzLHJ6LW10dTMtcHdtDQo+ICsNCj4gKyAgICAgIHJl
-ZzoNCj4gKyAgICAgICAgZGVzY3JpcHRpb246IElkZW50aWZ5IHB3bSBjaGFubmVscy4NCj4gKyAg
-ICAgICAgaXRlbXM6DQo+ICsgICAgICAgICAgZW51bTogWyAwLCAxLCAyLCAzLCA0LCA2LCA3IF0N
-Cj4gKw0KPiArICAgICAgIiNwd20tY2VsbHMiOg0KPiArICAgICAgICBjb25zdDogMg0KPiArDQo+
-ICsgICAgICByZW5lc2FzLHB3bS1tb2RlMToNCj4gKyAgICAgICAgdHlwZTogYm9vbGVhbg0KPiAr
-ICAgICAgICBkZXNjcmlwdGlvbjogRW5hYmxlIFBXTSBtb2RlIDEuDQo+ICsNCj4gKyAgICAgIHJl
-bmVzYXMscHdtLW1vZGUyOg0KPiArICAgICAgICB0eXBlOiBib29sZWFuDQo+ICsgICAgICAgIGRl
-c2NyaXB0aW9uOiBFbmFibGUgUFdNIG1vZGUgMi4NCj4gKw0KPiArICAgICAgcmVuZXNhcyxyZXNl
-dC1zeW5jaHJvbml6ZWQtcHdtLW1vZGU6DQo+ICsgICAgICAgIHR5cGU6IGJvb2xlYW4NCj4gKyAg
-ICAgICAgZGVzY3JpcHRpb246IEVuYWJsZSBSZXNldC1zeW5jaHJvbml6ZWQgUFdNIG1vZGUuDQo+
-ICsNCj4gKyAgICAgIHJlbmVzYXMsY29tcGxlbWVudGFyeS1wd20tbW9kZTE6DQo+ICsgICAgICAg
-IHR5cGU6IGJvb2xlYW4NCj4gKyAgICAgICAgZGVzY3JpcHRpb246IENvbXBsZW1lbnRhcnkgUFdN
-IG1vZGUgMSAodHJhbnNmZXIgYXQgY3Jlc3QpLg0KPiArDQo+ICsgICAgICByZW5lc2FzLGNvbXBs
-ZW1lbnRhcnktcHdtLW1vZGUyOg0KPiArICAgICAgICB0eXBlOiBib29sZWFuDQo+ICsgICAgICAg
-IGRlc2NyaXB0aW9uOiBDb21wbGVtZW50YXJ5IFBXTSBtb2RlIDIgKHRyYW5zZmVyIGF0IHRyb3Vn
-aCkuDQo+ICsNCj4gKyAgICAgIHJlbmVzYXMsY29tcGxlbWVudGFyeS1wd20tbW9kZTM6DQo+ICsg
-ICAgICAgIHR5cGU6IGJvb2xlYW4NCj4gKyAgICAgICAgZGVzY3JpcHRpb246IENvbXBsZW1lbnRh
-cnkgUFdNIG1vZGUgMyAodHJhbnNmZXIgYXQgY3Jlc3QgYW5kDQo+IHRyb3VnaCkuDQo+ICsNCj4g
-KyAgICByZXF1aXJlZDoNCj4gKyAgICAgIC0gY29tcGF0aWJsZQ0KPiArICAgICAgLSByZWcNCj4g
-KyAgICAgIC0gIiNwd20tY2VsbHMiDQo+ICsNCj4gDQo+IGV4YW1wbGVzOg0KPiArICAgICAgcHdt
-QDMgew0KPiArICAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMscnotbXR1My1wd20iOw0KPiAr
-ICAgICAgICByZWcgPSA8Mz47DQo+ICsgICAgICAgICNwd20tY2VsbHMgPSA8Mj47DQo+ICsgICAg
-ICAgIHJlbmVzYXMscHdtLW1vZGUxOw0KPiArICAgICAgfTsNCj4gICAgICB9Ow0KPiANCj4gDQo+
-IENoZWVycywNCj4gQmlqdQ0KPiANCj4gPg0KPiA+IExvb2tpbmcgYXQgaXQgZnJvbSBhbm90aGVy
-IHBlcnNwZWN0aXZlLCBJIGNhbm5vdC9zaG91bGQgbm90IHJldmlldw0KPiA+IFBXTSwgUmVzZXQs
-IENvdW50ZXIgb3IgVGltZXIgYmluZGluZ3MsIHNpbmNlIEkgZG8gbm90IGhhdmUgdGhlIGxldmVs
-DQo+ID4gb2Ygc3ViamVjdCBhcmVhIGtub3dsZWRnZSBhcyB0aGUgYXNzaWduZWQgbWFpbnRhaW5l
-cnMgZG8uDQo+ID4NCj4gPiBQbGVhc2UgcGxhY2UgYWxsIHN1Yi1zeXN0ZW0gc3BlY2lmaWMgYmlu
-ZGluZ3MgaW4gdGhlaXIgY29ycmVjdA0KPiAobGVhZikNCj4gPiBiaW5kaW5ncyBhbmQgbGluayB0
-byB0aGVtIGZyb20gdGhpcyBvbmUgKHJ1biB0aGlzKToNCj4gPg0KPiA+ICAgZ2l0IGdyZXAgXCRy
-ZWYgLS0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC8NCg0KVGhhbmtzIGZv
-ciB0aGUgcG9pbnRlciwgSSBnb3QgcmVmZXJlbmNlcyBbMV0gYW5kIFsyXS4gSSBjYW4gbW9kZWwg
-bGlrZSB0aGlzLA0KSWYgZXZlcnlvbmUgb2sgd2l0aCBpdC4NCg0KWzFdIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQva29udHJvbixzbDI4Y3BsZC55YW1sDQoNClsyXSBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2tvbnRyb24sc2wyOGNwbGQtcHdtLnlh
-bWwNCg0KQ2hlZXJzLA0KQmlqdQ0K
+On Fri, Sep 23, 2022 at 2:10 PM Thierry Reding <thierry.reding@gmail.com> w=
+rote:
+>
+> On Thu, Sep 22, 2022 at 12:12:31PM +0100, Jon Hunter wrote:
+> > Hi Uwe,
+> >
+> > On 21/09/2022 09:17, Uwe Kleine-K=C3=B6nig wrote:
+> >
+> > ...
+> >
+> > > As the clk-rate is only 32768 Hz we get (with period_ns =3D 1000000)
+> > >
+> > >     32768 * 1000000 / (1000000000 << 8) =3D 0.128
+> > >
+> > > which is indeed rounded down to 0 and then runs into the error path
+> > > returning -EINVAL. Before my change (that now broke the backlight
+> > > configuration) configuration continued and then ended with actually
+> > > configuring period =3D 7812500 ns which is off by nearly a factor of =
+8.
+> >
+> > I am seeing the same issue on Tegra210 Jetson Nano (device-tree
+> > tegra210-p3450-0000.dts). This also has a clock rate of 32768 Hz by
+> > default which means the min period is 30517ns. However, in the probe
+> > the min_period_ns comes from the pc->soc->max_frequency which is 48
+> > MHz for Tegra210. The min_period_ns =3D 1/(48 MHz / (2^8)) which is
+> > 5334ns. Hence, the actual min period is less than what is actually
+> > possible.
+> >
+> > I wonder if we should be warning about this and fixing the min
+> > period ...
+> >
+> > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> > index 2f3dcb9e9278..f72928c05c81 100644
+> > --- a/drivers/pwm/pwm-tegra.c
+> > +++ b/drivers/pwm/pwm-tegra.c
+> > @@ -310,9 +310,13 @@ static int tegra_pwm_probe(struct platform_device =
+*pdev)
+> >          */
+> >         pc->clk_rate =3D clk_get_rate(pc->clk);
+> > +       if (pc->clk_rate < pc->soc->max_frequency)
+> > +               dev_warn(&pdev->dev, "Max frequency limited to %lu Hz!"=
+,
+> > +                        pc->clk_rate);
+> > +
+> >         /* Set minimum limit of PWM period for the IP */
+> >         pc->min_period_ns =3D
+> > -           (NSEC_PER_SEC / (pc->soc->max_frequency >> PWM_DUTY_WIDTH))=
+ + 1;
+> > +           (NSEC_PER_SEC / (pc->clk_rate >> PWM_DUTY_WIDTH)) + 1;
+> >         pc->rst =3D devm_reset_control_get_exclusive(&pdev->dev, "pwm")=
+;
+> >
+> > The above does not fix this issue but ...
+> > > I didn't find a device tree for an Asus Transformer tablet bases on a
+> > > tegra124 in the kernel source, but the options are:
+> > >
+> > >   - Revert commit 8c193f4714df ("pwm: tegra: Optimize period calculat=
+ion").
+> > >     I don't like this. IMHO this commit is an improvement and the pro=
+blem
+> > >     is that the consumer requests a too small period. For a backlight
+> > >     this might be ok to result in a much bigger period, for other
+> > >     usecases it isn't and so I like refusing period =3D 1000000.
+> > >
+> > >   - We could just drop the "else / return -EINVAL".
+> > >     This is inconsistent as then (again) some periods are rounded up
+> > >     (with the given clk rate that would be 5334 <=3D period < 7812500=
+)
+> > >     while others (period < 5334) yield -EINVAL.
+> > >
+> > >   - Increase the period that the backlight is using to at least 78125=
+00.
+> > >     This is done (I guess) by replacing 1000000 by 7812500 (or more) =
+in
+> > >     the backlight's PWM phandle.
+> > >
+> > >   - Make the PWM clk faster.
+> > >     Looking quickly through the tegra clk driver, the parent of the P=
+WM
+> > >     clk could be changed from clk_32k to pll_p or pll_c. This should =
+be
+> > >     doable in the dts using something like:
+> > >
+> > >             assigned-clocks =3D <&tegra_car TEGRA124_CLK_PWM>;
+> > >     assigned-clock-parents =3D <&tegra_car TEGRA124_CLK_PLL_P>;
+> > >
+> > >     in the pwm node. (Note this includes much guesswork, I don't know=
+ the
+> > >     PPL's clk-rate, so this might break in other ways. Another option=
+ is
+> > >     using PLL_C.)
+> > >
+> > > Probably the latter is the nicest option. Is it possible to find out =
+the
+> > > setting when the machine is running the original vendor OS?
+> >
+> > The latter does seem correct to me. This fixes the issue for Tegra210 .=
+..
+> >
+> > diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot=
+/dts/nvidia/tegra210.dtsi
+> > index 4f0e51f1a343..842843e0a585 100644
+> > --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> > +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+> > @@ -670,6 +670,10 @@
+> >                 clock-names =3D "pwm";
+> >                 resets =3D <&tegra_car 17>;
+> >                 reset-names =3D "pwm";
+> > +
+> > +               assigned-clocks =3D <&tegra_car TEGRA210_CLK_PWM>;
+> > +               assigned-clock-parents =3D <&tegra_car TEGRA210_CLK_PLL=
+_P>;
+> > +
+> >                 status =3D "disabled";
+> >         };
+>
+> Traditionally we've always set the clock parent in the driver via the
+> init table (at least on chips prior to Tegra186). On the other hand we
+> have a few occurrences of assigned-clock-rates already for Tegra210. I
+> don't feel strongly either way. A minor advantage of having the fix in
+> the clock driver is that it fixes this automatically for older device
+> trees. Not that it really matters since people always update kernel and
+> DTB at the same time on Tegra devices.
+>
+> It'd be great if we could get confirmation that changing the parent
+> clock fixes this on all other boards as well, then we can fix it at the
+> same time for all of them.
+>
+> Thierry
+
+just a little update: i just compiled a v6.0 kernel for the nyan
+chromebook (tegra124) and now the display remains completely black -
+with v5.19 it was at least working with broken brightness control -
+reverting the pwm optimization patch it works perfectly fine in both
+cases ... please let me know if you have any patches i should test to
+fix this
+
+best wishes - thomas
