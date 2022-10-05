@@ -2,54 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDBC75F5C7F
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Oct 2022 00:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EBF15F5C8A
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Oct 2022 00:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbiJEWM6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 5 Oct 2022 18:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39140 "EHLO
+        id S229801AbiJEWNT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 5 Oct 2022 18:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbiJEWMx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Oct 2022 18:12:53 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CEE83207
-        for <linux-pwm@vger.kernel.org>; Wed,  5 Oct 2022 15:12:52 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id w18so19090543wro.7
-        for <linux-pwm@vger.kernel.org>; Wed, 05 Oct 2022 15:12:52 -0700 (PDT)
+        with ESMTP id S229556AbiJEWM5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 5 Oct 2022 18:12:57 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61BA8320E
+        for <linux-pwm@vger.kernel.org>; Wed,  5 Oct 2022 15:12:54 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id j16so15880359wrh.5
+        for <linux-pwm@vger.kernel.org>; Wed, 05 Oct 2022 15:12:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=JVsjMt/QqWDQIkbN9ThQA44X6Q8M6+q3vjfLdgd5aDk=;
-        b=lns6fCmSp1PmCoJBnYkhAb1nQxyf69647ZdqX1ZEZsl0yxpJhWobRqY0R/rhtzgEZj
-         KVIoTT60Tv0pIZmmnD9m1I195DBzHzTEMOxrAoWfI5nItLrKzGvaTTVo4TuGA8A/bwgI
-         FvgrWLjPE6WSNO7zMIcJD1Dbk2dH4yKS87CRB2Q6aHz4NUP1/OaW4s0QkcFpco4tZKUn
-         3GDVX64VGS8OPsMDf9BW8bF+ncgYPOJeZIQvAnnJffEuG8OHg/E+24nQs13P9sDbbPSC
-         41g6QzIOh713i2HKRk1UEbxwKUrzreIA0Jfr0gtOGlvY1S1Niqt7u2/jWKOn3DhpeI53
-         cZSw==
+        bh=jHgpM9msku+bALl651QUnjaXOaBmDTjcFSZrhAOsAIw=;
+        b=ezLldVzIELuh9GKUtqN4sVyuwnjPmYYBPXCfkjBKE/FsxomHUgP+7BpBb+1UpnpJvz
+         M6fmKDq8I4mASuhtpimGdyHbk7wh5x8I6XLBDsY7D7gmYFFU/8/gSFrmCSTvBkMrEuvO
+         +aGKVzCO5JwcKPOrFXAC7iMCdoNoxicOZivO6b88si/p1fK8RRdvGspAOcONCFI6njf1
+         xFlu4XdTF3mvs/TxUMgui26yDOAjJEmUUALq6WvGnbG0i7hXQHqMXAkApAdaTODifg5b
+         as6D+XqGhKBJk+pYvyV3tTC0qnl1XhvhaYNvc48XQpGRMMRt1CC0da/wvpcNrnBwR1gh
+         +arQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=JVsjMt/QqWDQIkbN9ThQA44X6Q8M6+q3vjfLdgd5aDk=;
-        b=5pNR7ETtnDfgdT2BI5PGQxnKrjOt3KuMDS98ZeybRxiVk/mKXvd/Lho1vQQgJotsHD
-         Tk2Qe21QI88oeey5avPj/rnhqRXYDv04wyzzWMe3/ndKK9nqw+LC+DcAhJjNLTajhTq+
-         rO8V/h36WYNER4LG3TJzgVLzTNK1u06VmJgNKtXLHNwI18RiIZQIo2IvA+wu55vSN2Eu
-         kD0gByvsL2g05PLGYkcmQl/hNr8JNVi8xtfIJ8zAiqyfRWjUS19QYmXd1NPjRGNt2kmj
-         XD0EqGoI4iuWjOjYuF3ZMbI5CTKVxLrKW2iAscjijzUlJ9yrzYXmmxdHMqZfHlkz8Q/1
-         UPmQ==
-X-Gm-Message-State: ACrzQf0cZRZwE1EMsNO4ZPZYV4FhvnbuSFYVykkcO82Nfe2D4Lp0dVJ9
-        VA4gPgao427ODNxNVVNOExkAQFtq8qKP2x4go/HppiFsGsfl8dojIr6tfeXWExbo80Khbr83pvw
-        W561ozRmcWeRXtZbTshizmRCemUiVVX2uNrfI311dahpHSApI/0y1hZZfTcinQiy0kF8rHH6tcQ
-        M=
-X-Google-Smtp-Source: AMsMyM64144/H+SMQ4cld0JX811x0IsidPU2IR5ZlGuFZbVWusIQE0gBZpA9vl7SFsyXTQungnHxew==
-X-Received: by 2002:adf:eacf:0:b0:22e:369:2081 with SMTP id o15-20020adfeacf000000b0022e03692081mr1071029wrn.339.1665007971560;
-        Wed, 05 Oct 2022 15:12:51 -0700 (PDT)
+        bh=jHgpM9msku+bALl651QUnjaXOaBmDTjcFSZrhAOsAIw=;
+        b=O6/klw1db0ENvDNIJDnjyBDWKhxXTgGp6jIoY88+/+MaDSs6l9Ojm0zg8O6IlMERky
+         vfIqY4e2ez1nSF9+3MreKVwHCnQvXjbdiiJjJwDRLb0AarxJ1iXq6zQV9Ob2KZ/KRqY0
+         4YaDQMlUbRmR0zYiVnnw5mFD3gfsiEiua+QRNFzrNKxsmJyJ5buj3Ee3FuA1xgjNaE8e
+         MREG/gQFP/hS2PiCrv3w6gvTORRsNLnmlxf3wsjHIFRGGfBMkhE2FqvT/GrOip2XgeVx
+         7GqNLyuqC5REoEF4pIoxTN9zj79S3t43J3j7A+qgVPh8GdQWozjuPeUosywisSdK2e56
+         t89w==
+X-Gm-Message-State: ACrzQf08gkr12OXY+crpQ3SzGDf7SOFPEX6LqzEc6nwX31w5vEh1p1cR
+        PQ4AvsfY+Z2nh1aCQah1yRZSJzccoysizw+jEFiYx5KEG3QR/Rd7732Zt9YQRJZYL8Ym084lrb5
+        teRghNYOsIWIuv8ZxtmK6cZIXBt3YYLaTXJo8XVzJokudNDxzE3138ktR8K373pwbm4ewyumPpv
+        I=
+X-Google-Smtp-Source: AMsMyM48dy7nhBw1QhwHlThXoLMpumSZYnAYmoM8IiCvXW8DPZmEy/BLepUg+NN9JWNUYKze2OPQHw==
+X-Received: by 2002:adf:fd4a:0:b0:22d:d3aa:e004 with SMTP id h10-20020adffd4a000000b0022dd3aae004mr1039755wrs.173.1665007972657;
+        Wed, 05 Oct 2022 15:12:52 -0700 (PDT)
 Received: from rainbowdash.. (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id d2-20020adffd82000000b0022e327f849fsm12184437wrr.5.2022.10.05.15.12.50
+        by smtp.gmail.com with ESMTPSA id d2-20020adffd82000000b0022e327f849fsm12184437wrr.5.2022.10.05.15.12.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 15:12:50 -0700 (PDT)
+        Wed, 05 Oct 2022 15:12:52 -0700 (PDT)
 From:   Ben Dooks <ben.dooks@sifive.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         William Salmon <william.salmon@sifive.com>,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>,
         Ben Dooks <ben.dooks@sifive.com>
-Subject: [PATCH v5 05/10] pwm: dwc: use devm_pwmchip_add
-Date:   Wed,  5 Oct 2022 23:12:37 +0100
-Message-Id: <20221005221242.470734-6-ben.dooks@sifive.com>
+Subject: [PATCH v5 06/10] pwm: dwc: split pci out of core driver
+Date:   Wed,  5 Oct 2022 23:12:38 +0100
+Message-Id: <20221005221242.470734-7-ben.dooks@sifive.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20221005221242.470734-1-ben.dooks@sifive.com>
 References: <20221005221242.470734-1-ben.dooks@sifive.com>
@@ -72,48 +72,474 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Use devm_pwmchip_add() to add the pwm chip to avoid having to manually
-remove it (useful for the next patch which adds the platform-device
-support).
+Moving towards adding non-pci support for the driver, move the pci
+parts out of the core into their own module. This is partly due to
+the module_driver() code only being allowed once in a module and also
+to avoid a number of #ifdef if we build a single file in a system
+without pci support.
 
 Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
 ---
- drivers/pwm/pwm-dwc.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+v4:
+ - removed DWC_PERIOD_NS as not needed
+---
+ drivers/pwm/Kconfig       |  14 +++-
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-dwc-pci.c | 133 ++++++++++++++++++++++++++++++++
+ drivers/pwm/pwm-dwc.c     | 158 +-------------------------------------
+ drivers/pwm/pwm-dwc.h     |  57 ++++++++++++++
+ 5 files changed, 206 insertions(+), 157 deletions(-)
+ create mode 100644 drivers/pwm/pwm-dwc-pci.c
+ create mode 100644 drivers/pwm/pwm-dwc.h
 
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 3f3c53af4a56..a9f1c554db2b 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -175,15 +175,23 @@ config PWM_CROS_EC
+ 	  Controller.
+ 
+ config PWM_DWC
+-	tristate "DesignWare PWM Controller"
+-	depends on PCI || COMPILE_TEST
++	tristate "DesignWare PWM Controller core"
+ 	depends on HAS_IOMEM
+ 	help
+-	  PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
++	  PWM driver for Synopsys DWC PWM Controller.
+ 
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-dwc.
+ 
++config PWM_DWC_PCI
++	tristate "DesignWare PWM Controller core"
++	depends on PWM_DWC && HAS_IOMEM && PCI
++	help
++	  PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-dwc-pci.
++
+ config PWM_EP93XX
+ 	tristate "Cirrus Logic EP93xx PWM support"
+ 	depends on ARCH_EP93XX || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 7bf1a29f02b8..a70d36623129 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_PWM_CLPS711X)	+= pwm-clps711x.o
+ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
+ obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
+ obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
++obj-$(CONFIG_PWM_DWC_PCI)	+= pwm-dwc-pci.o
+ obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
+ obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
+ obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
+diff --git a/drivers/pwm/pwm-dwc-pci.c b/drivers/pwm/pwm-dwc-pci.c
+new file mode 100644
+index 000000000000..2213d0e7f3c8
+--- /dev/null
++++ b/drivers/pwm/pwm-dwc-pci.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * DesignWare PWM Controller driver (PCI part)
++ *
++ * Copyright (C) 2018-2020 Intel Corporation
++ *
++ * Author: Felipe Balbi (Intel)
++ * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
++ * Author: Raymond Tan <raymond.tan@intel.com>
++ *
++ * Limitations:
++ * - The hardware cannot generate a 0 % or 100 % duty cycle. Both high and low
++ *   periods are one or more input clock periods long.
++ */
++
++#include <linux/bitops.h>
++#include <linux/export.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pm_runtime.h>
++#include <linux/pwm.h>
++
++#include "pwm-dwc.h"
++
++static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
++{
++	struct device *dev = &pci->dev;
++	struct dwc_pwm *dwc;
++	int ret;
++
++	dwc = dwc_pwm_alloc(dev);
++	if (!dwc)
++		return -ENOMEM;
++
++	ret = pcim_enable_device(pci);
++	if (ret) {
++		dev_err(dev, "Failed to enable device (%pe)\n", ERR_PTR(ret));
++		return ret;
++	}
++
++	pci_set_master(pci);
++
++	ret = pcim_iomap_regions(pci, BIT(0), pci_name(pci));
++	if (ret) {
++		dev_err(dev, "Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
++		return ret;
++	}
++
++	dwc->base = pcim_iomap_table(pci)[0];
++	if (!dwc->base) {
++		dev_err(dev, "Base address missing\n");
++		return -ENOMEM;
++	}
++
++	ret = devm_pwmchip_add(dev, &dwc->chip);
++	if (ret)
++		return ret;
++
++	pm_runtime_put(dev);
++	pm_runtime_allow(dev);
++
++	return 0;
++}
++
++static void dwc_pwm_remove(struct pci_dev *pci)
++{
++	pm_runtime_forbid(&pci->dev);
++	pm_runtime_get_noresume(&pci->dev);
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int dwc_pwm_suspend(struct device *dev)
++{
++	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
++	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
++		if (dwc->chip.pwms[i].state.enabled) {
++			dev_err(dev, "PWM %u in use by consumer (%s)\n",
++				i, dwc->chip.pwms[i].label);
++			return -EBUSY;
++		}
++		dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
++		dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
++		dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
++	}
++
++	return 0;
++}
++
++static int dwc_pwm_resume(struct device *dev)
++{
++	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
++	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
++		dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
++		dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
++		dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
++	}
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(dwc_pwm_pm_ops, dwc_pwm_suspend, dwc_pwm_resume);
++
++static const struct pci_device_id dwc_pwm_id_table[] = {
++	{ PCI_VDEVICE(INTEL, 0x4bb7) }, /* Elkhart Lake */
++	{  }	/* Terminating Entry */
++};
++MODULE_DEVICE_TABLE(pci, dwc_pwm_id_table);
++
++static struct pci_driver dwc_pwm_driver = {
++	.name = "pwm-dwc",
++	.probe = dwc_pwm_probe,
++	.remove = dwc_pwm_remove,
++	.id_table = dwc_pwm_id_table,
++	.driver = {
++		.pm = &dwc_pwm_pm_ops,
++	},
++};
++
++module_pci_driver(dwc_pwm_driver);
++
++MODULE_AUTHOR("Felipe Balbi (Intel)");
++MODULE_AUTHOR("Jarkko Nikula <jarkko.nikula@linux.intel.com>");
++MODULE_AUTHOR("Raymond Tan <raymond.tan@intel.com>");
++MODULE_DESCRIPTION("DesignWare PWM Controller");
++MODULE_LICENSE("GPL");
 diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 61f11e0a9319..56cde9da2c0e 100644
+index 56cde9da2c0e..90a8ae1252a1 100644
 --- a/drivers/pwm/pwm-dwc.c
 +++ b/drivers/pwm/pwm-dwc.c
-@@ -242,7 +242,7 @@ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
- 		return -ENOMEM;
- 	}
+@@ -1,16 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * DesignWare PWM Controller driver
++ * DesignWare PWM Controller driver core
+  *
+  * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * Author: Felipe Balbi (Intel)
+  * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+  * Author: Raymond Tan <raymond.tan@intel.com>
+- *
+- * Limitations:
+- * - The hardware cannot generate a 0 % or 100 % duty cycle. Both high and low
+- *   periods are one or more input clock periods long.
+  */
  
--	ret = pwmchip_add(&dwc->chip);
-+	ret = devm_pwmchip_add(dev, &dwc->chip);
- 	if (ret)
- 		return ret;
+ #include <linux/bitops.h>
+@@ -21,51 +17,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/pwm.h>
  
-@@ -254,12 +254,8 @@ static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+-#define DWC_TIM_LD_CNT(n)	((n) * 0x14)
+-#define DWC_TIM_LD_CNT2(n)	(((n) * 4) + 0xb0)
+-#define DWC_TIM_CUR_VAL(n)	(((n) * 0x14) + 0x04)
+-#define DWC_TIM_CTRL(n)		(((n) * 0x14) + 0x08)
+-#define DWC_TIM_EOI(n)		(((n) * 0x14) + 0x0c)
+-#define DWC_TIM_INT_STS(n)	(((n) * 0x14) + 0x10)
+-
+-#define DWC_TIMERS_INT_STS	0xa0
+-#define DWC_TIMERS_EOI		0xa4
+-#define DWC_TIMERS_RAW_INT_STS	0xa8
+-#define DWC_TIMERS_COMP_VERSION	0xac
+-
+-#define DWC_TIMERS_TOTAL	8
+-#define DWC_CLK_PERIOD_NS	10
+-
+-/* Timer Control Register */
+-#define DWC_TIM_CTRL_EN		BIT(0)
+-#define DWC_TIM_CTRL_MODE	BIT(1)
+-#define DWC_TIM_CTRL_MODE_FREE	(0 << 1)
+-#define DWC_TIM_CTRL_MODE_USER	(1 << 1)
+-#define DWC_TIM_CTRL_INT_MASK	BIT(2)
+-#define DWC_TIM_CTRL_PWM	BIT(3)
+-
+-struct dwc_pwm_ctx {
+-	u32 cnt;
+-	u32 cnt2;
+-	u32 ctrl;
+-};
+-
+-struct dwc_pwm {
+-	struct pwm_chip chip;
+-	void __iomem *base;
+-	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
+-};
+-#define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
+-
+-static inline u32 dwc_pwm_readl(struct dwc_pwm *dwc, u32 offset)
+-{
+-	return readl(dwc->base + offset);
+-}
+-
+-static inline void dwc_pwm_writel(struct dwc_pwm *dwc, u32 value, u32 offset)
+-{
+-	writel(value, dwc->base + offset);
+-}
++#include "pwm-dwc.h"
  
- static void dwc_pwm_remove(struct pci_dev *pci)
+ static void __dwc_pwm_set_enable(struct dwc_pwm *dwc, int pwm, int enabled)
  {
--	struct dwc_pwm *dwc = pci_get_drvdata(pci);
--
- 	pm_runtime_forbid(&pci->dev);
- 	pm_runtime_get_noresume(&pci->dev);
--
--	pwmchip_remove(&dwc->chip);
- }
+@@ -196,7 +148,7 @@ static const struct pwm_ops dwc_pwm_ops = {
+ 	.owner = THIS_MODULE,
+ };
  
- #ifdef CONFIG_PM_SLEEP
+-static struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
++struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
+ {
+ 	struct dwc_pwm *dwc;
+ 
+@@ -211,109 +163,7 @@ static struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
+ 	dev_set_drvdata(dev, dwc);
+ 	return dwc;
+ }
+-
+-static int dwc_pwm_probe(struct pci_dev *pci, const struct pci_device_id *id)
+-{
+-	struct device *dev = &pci->dev;
+-	struct dwc_pwm *dwc;
+-	int ret;
+-
+-	dwc = dwc_pwm_alloc(dev);
+-	if (!dwc)
+-		return -ENOMEM;
+-
+-	ret = pcim_enable_device(pci);
+-	if (ret) {
+-		dev_err(dev, "Failed to enable device (%pe)\n", ERR_PTR(ret));
+-		return ret;
+-	}
+-
+-	pci_set_master(pci);
+-
+-	ret = pcim_iomap_regions(pci, BIT(0), pci_name(pci));
+-	if (ret) {
+-		dev_err(dev, "Failed to iomap PCI BAR (%pe)\n", ERR_PTR(ret));
+-		return ret;
+-	}
+-
+-	dwc->base = pcim_iomap_table(pci)[0];
+-	if (!dwc->base) {
+-		dev_err(dev, "Base address missing\n");
+-		return -ENOMEM;
+-	}
+-
+-	ret = devm_pwmchip_add(dev, &dwc->chip);
+-	if (ret)
+-		return ret;
+-
+-	pm_runtime_put(dev);
+-	pm_runtime_allow(dev);
+-
+-	return 0;
+-}
+-
+-static void dwc_pwm_remove(struct pci_dev *pci)
+-{
+-	pm_runtime_forbid(&pci->dev);
+-	pm_runtime_get_noresume(&pci->dev);
+-}
+-
+-#ifdef CONFIG_PM_SLEEP
+-static int dwc_pwm_suspend(struct device *dev)
+-{
+-	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+-	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
+-	int i;
+-
+-	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-		if (dwc->chip.pwms[i].state.enabled) {
+-			dev_err(dev, "PWM %u in use by consumer (%s)\n",
+-				i, dwc->chip.pwms[i].label);
+-			return -EBUSY;
+-		}
+-		dwc->ctx[i].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(i));
+-		dwc->ctx[i].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(i));
+-		dwc->ctx[i].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i));
+-	}
+-
+-	return 0;
+-}
+-
+-static int dwc_pwm_resume(struct device *dev)
+-{
+-	struct pci_dev *pdev = container_of(dev, struct pci_dev, dev);
+-	struct dwc_pwm *dwc = pci_get_drvdata(pdev);
+-	int i;
+-
+-	for (i = 0; i < DWC_TIMERS_TOTAL; i++) {
+-		dwc_pwm_writel(dwc, dwc->ctx[i].cnt, DWC_TIM_LD_CNT(i));
+-		dwc_pwm_writel(dwc, dwc->ctx[i].cnt2, DWC_TIM_LD_CNT2(i));
+-		dwc_pwm_writel(dwc, dwc->ctx[i].ctrl, DWC_TIM_CTRL(i));
+-	}
+-
+-	return 0;
+-}
+-#endif
+-
+-static SIMPLE_DEV_PM_OPS(dwc_pwm_pm_ops, dwc_pwm_suspend, dwc_pwm_resume);
+-
+-static const struct pci_device_id dwc_pwm_id_table[] = {
+-	{ PCI_VDEVICE(INTEL, 0x4bb7) }, /* Elkhart Lake */
+-	{  }	/* Terminating Entry */
+-};
+-MODULE_DEVICE_TABLE(pci, dwc_pwm_id_table);
+-
+-static struct pci_driver dwc_pwm_driver = {
+-	.name = "pwm-dwc",
+-	.probe = dwc_pwm_probe,
+-	.remove = dwc_pwm_remove,
+-	.id_table = dwc_pwm_id_table,
+-	.driver = {
+-		.pm = &dwc_pwm_pm_ops,
+-	},
+-};
+-
+-module_pci_driver(dwc_pwm_driver);
++EXPORT_SYMBOL_GPL(dwc_pwm_alloc);
+ 
+ MODULE_AUTHOR("Felipe Balbi (Intel)");
+ MODULE_AUTHOR("Jarkko Nikula <jarkko.nikula@linux.intel.com>");
+diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
+new file mode 100644
+index 000000000000..c8dd690eefb3
+--- /dev/null
++++ b/drivers/pwm/pwm-dwc.h
+@@ -0,0 +1,57 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * DesignWare PWM Controller driver
++ *
++ * Copyright (C) 2018-2020 Intel Corporation
++ *
++ * Author: Felipe Balbi (Intel)
++ * Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
++ * Author: Raymond Tan <raymond.tan@intel.com>
++ */
++
++#define DWC_TIM_LD_CNT(n)	((n) * 0x14)
++#define DWC_TIM_LD_CNT2(n)	(((n) * 4) + 0xb0)
++#define DWC_TIM_CUR_VAL(n)	(((n) * 0x14) + 0x04)
++#define DWC_TIM_CTRL(n)		(((n) * 0x14) + 0x08)
++#define DWC_TIM_EOI(n)		(((n) * 0x14) + 0x0c)
++#define DWC_TIM_INT_STS(n)	(((n) * 0x14) + 0x10)
++
++#define DWC_TIMERS_INT_STS	0xa0
++#define DWC_TIMERS_EOI		0xa4
++#define DWC_TIMERS_RAW_INT_STS	0xa8
++#define DWC_TIMERS_COMP_VERSION	0xac
++
++#define DWC_TIMERS_TOTAL	8
++
++/* Timer Control Register */
++#define DWC_TIM_CTRL_EN		BIT(0)
++#define DWC_TIM_CTRL_MODE	BIT(1)
++#define DWC_TIM_CTRL_MODE_FREE	(0 << 1)
++#define DWC_TIM_CTRL_MODE_USER	(1 << 1)
++#define DWC_TIM_CTRL_INT_MASK	BIT(2)
++#define DWC_TIM_CTRL_PWM	BIT(3)
++
++struct dwc_pwm_ctx {
++	u32 cnt;
++	u32 cnt2;
++	u32 ctrl;
++};
++
++struct dwc_pwm {
++	struct pwm_chip chip;
++	void __iomem *base;
++	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
++};
++#define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
++
++static inline u32 dwc_pwm_readl(struct dwc_pwm *dwc, u32 offset)
++{
++	return readl(dwc->base + offset);
++}
++
++static inline void dwc_pwm_writel(struct dwc_pwm *dwc, u32 value, u32 offset)
++{
++	writel(value, dwc->base + offset);
++}
++
++extern struct dwc_pwm *dwc_pwm_alloc(struct device *dev);
 -- 
 2.35.1
 
