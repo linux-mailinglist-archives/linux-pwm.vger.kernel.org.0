@@ -2,580 +2,232 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B4DD5F68A8
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Oct 2022 15:57:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 076AF5F69AF
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Oct 2022 16:36:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231521AbiJFN5j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Oct 2022 09:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37178 "EHLO
+        id S230325AbiJFOgB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Oct 2022 10:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231479AbiJFN5i (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Oct 2022 09:57:38 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 899379082D;
-        Thu,  6 Oct 2022 06:57:36 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.95,163,1661785200"; 
-   d="scan'208";a="135616448"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 06 Oct 2022 22:57:35 +0900
-Received: from localhost.localdomain (unknown [10.226.92.84])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2398853EEFCE;
-        Thu,  6 Oct 2022 22:57:32 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
+        with ESMTP id S230496AbiJFOf7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Oct 2022 10:35:59 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 446298322D
+        for <linux-pwm@vger.kernel.org>; Thu,  6 Oct 2022 07:35:56 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ogRyb-00065S-Kj; Thu, 06 Oct 2022 16:35:53 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ogRyX-004ymV-2J; Thu, 06 Oct 2022 16:35:47 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ogRyU-0061hl-D2; Thu, 06 Oct 2022 16:35:46 +0200
+Date:   Thu, 6 Oct 2022 16:35:44 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v3 3/4] pwm: Add support for RZ/G2L MTU3 PWM
-Date:   Thu,  6 Oct 2022 14:57:16 +0100
-Message-Id: <20221006135717.1748560-4-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221006135717.1748560-1-biju.das.jz@bp.renesas.com>
-References: <20221006135717.1748560-1-biju.das.jz@bp.renesas.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Lee Jones <lee.jones@linaro.org>, kernel@pengutronix.de
+Subject: Re: [PATCH 3/3] pwm: Make capture support optional
+Message-ID: <20221006143544.ivhjruazd5m673hf@pengutronix.de>
+References: <20220523174502.987113-1-u.kleine-koenig@pengutronix.de>
+ <20220523174502.987113-3-u.kleine-koenig@pengutronix.de>
+ <YrMdON4uOMfDFN8h@orome>
+ <20220622170945.n7eyrnuezs52itt3@pengutronix.de>
+ <20220930154355.3uymms4xtmlshgmd@pengutronix.de>
+ <Yz7Ttd0WXv7MeKtc@orome>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2cxcz5kpy3g6jkn5"
+Content-Disposition: inline
+In-Reply-To: <Yz7Ttd0WXv7MeKtc@orome>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for RZ/G2L MTU3 PWM driver. The IP supports
-following PWM modes
 
-1) PWM mode 1
-2) PWM mode 2
-3) Reset-synchronized PWM mode
-4) Complementary PWM mode 1 (transfer at crest)
-5) Complementary PWM mode 2 (transfer at trough)
-6) Complementary PWM mode 3 (transfer at crest and trough)
+--2cxcz5kpy3g6jkn5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds basic pwm mode 1 support for RZ/G2L MTU3 driver
-by creating separate logical channels for each IOs.
+Hello Thierry,
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v2->v3:
- * No change.
-v1->v2:
- * Modelled as a single PWM device handling multiple channles.
- * Used PM framework to manage the clocks.
----
- drivers/pwm/Kconfig       |  11 +
- drivers/pwm/Makefile      |   1 +
- drivers/pwm/pwm-rz-mtu3.c | 462 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 474 insertions(+)
- create mode 100644 drivers/pwm/pwm-rz-mtu3.c
+On Thu, Oct 06, 2022 at 03:10:13PM +0200, Thierry Reding wrote:
+> On Fri, Sep 30, 2022 at 05:43:55PM +0200, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Jun 22, 2022 at 07:09:45PM +0200, Uwe Kleine-K=F6nig wrote:
+> > > On Wed, Jun 22, 2022 at 03:46:32PM +0200, Thierry Reding wrote:
+> > > > On Mon, May 23, 2022 at 07:45:02PM +0200, Uwe Kleine-K=F6nig wrote:
+> > > > > The only code making use of the capture functionality is the sysf=
+s code
+> > > > > in the PWM framework. I suspect there are no real users and would=
+ like to
+> > > > > deprecate it in favor of the counter framework. So introduce a kc=
+onfig
+> > > > > symbol to remove the capture support and make the sysfs file a st=
+ub.
+> > > > >=20
+> > > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > > > ---
+> > > > >  drivers/pwm/Kconfig     | 12 ++++++++++++
+> > > > >  drivers/pwm/core.c      |  3 ++-
+> > > > >  drivers/pwm/pwm-sti.c   |  4 ++++
+> > > > >  drivers/pwm/pwm-stm32.c |  4 ++++
+> > > > >  drivers/pwm/sysfs.c     |  4 ++++
+> > > > >  include/linux/pwm.h     |  5 +++++
+> > > > >  6 files changed, 31 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > I've applied patches 1-2 for now, but I'm not convinced about this =
+yet.
+> > > >=20
+> > > > The PWM capture is something that's typically useful for applicatio=
+ns
+> > > > served from userspace, which is why only the sysfs implementation
+> > > > exists. So anything that's based on another framework is likely not
+> > > > going to have in-kernel users either. Can you specify exactly how t=
+his
+> > > > alternative implementation would look like and how it would be an
+> > > > improvement over the current implementation?
+> > >=20
+> > > The counter framework would generate a continous stream of events whi=
+le
+> > > you measure and from the timestamps of the events you can determine
+> > > period and duty cycle. So this is even more flexible because pwm-capt=
+ure
+> > > only supports one-shot mode while with the counter stuff you can stop
+> > > to measure whenever you want to. Having said that, I didn't actually =
+use
+> > > the counter framework for something like that, but that's how I think=
+ it
+> > > works and the framework has users.
+> > >=20
+> > > Other than that I have no better reasoning than the commit log. It's
+> > > some time ago something happend in pwm that concerns the capture
+> > > functionality[1] and the 13 new drivers since then all didn't impleme=
+nt
+> > > capture support. Also the capture stuff was done by an ST employee for
+> > > an ST driver, so that might not even be an active user but just a
+> > > developer fulfilling a management roadmap such that the marketing
+> > > department can advertise capture support. (Added Fabrice Gasnier to C=
+c:,
+> > > maybe he will comment.)
+> > >=20
+> > > I don't know of any user of this, but of course I cannot rule out the=
+re
+> > > are users I just don't know of. So the suggestion here looks reasonab=
+le
+> > > to me: There is a Kconfig item now, people who don't use capture can
+> > > disable it and the ones who rely on it set it =3Dy. I expect that when
+> > > this switch hits the distribution kernels it will initially be off. T=
+hen
+> > > either people will wail to enable it. Or they don't and in a few years
+> > > we can be even more convinced there are no active users.
+> >=20
+> > You discarded this patch as "rejected" without any feedback to my
+> > explanation :-\
+>=20
+> Sorry, I hadn't realized that there was outstanding feedback on this.
+>=20
+> > Do you think that capture support is such a vital part of the pwm
+> > framework that everyone who makes use of a PWM should also have the
+> > capture stuff even though only two drivers implement the needed callback
+> > and all drivers that were added in the last five years don't?
+>=20
+> Just because only two drivers support a feature doesn't automatically
+> make it useless or non-vital.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 60d13a949bc5..568f1be139b9 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -481,6 +481,17 @@ config PWM_ROCKCHIP
- 	  Generic PWM framework driver for the PWM controller found on
- 	  Rockchip SoCs.
- 
-+config PWM_RZ_MTU3
-+	tristate "Renesas RZ/G2L MTU3 PWM Timer support"
-+	depends on ARCH_RZG2L || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  This driver exposes the MTU3 PWM Timer controller found in Renesas
-+	  RZ/G2L like chips through the PWM API.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-rz-mtu3.
-+
- config PWM_SAMSUNG
- 	tristate "Samsung PWM support"
- 	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 7bf1a29f02b8..b85fc9fba326 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+= pwm-raspberrypi-poe.o
- obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
-+obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
- obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
-diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
-new file mode 100644
-index 000000000000..b4c25e48a50e
---- /dev/null
-+++ b/drivers/pwm/pwm-rz-mtu3.c
-@@ -0,0 +1,462 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/G2L MTU3 PWM Timer driver
-+ *
-+ * Copyright (C) 2022 Renesas Electronics Corporation
-+ *
-+ * Hardware manual for this IP can be found here
-+ * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-users-manual-hardware-0?language=en
-+ *
-+ * Limitations:
-+ * - When PWM is disabled, the output is driven to Hi-Z.
-+ * - While the hardware supports both polarities, the driver (for now)
-+ *   only handles normal polarity.
-+ * - While the hardware supports pwm mode{1,2}, reset-synchronized pwm and
-+ *   complementary pwm modes, the driver (for now) only handles pwm mode1.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/rz-mtu3.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/limits.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/time.h>
-+
-+#define RZ_MTU3_TMDR1_MD_NORMAL		(0)
-+#define RZ_MTU3_TMDR1_MD_PWM_MODE_1	(2)
-+
-+#define RZ_MTU3_TIOR_OC_RETAIN		(0)
-+#define RZ_MTU3_TIOR_OC_0_H_COMP_MATCH	(2)
-+#define RZ_MTU3_TIOR_OC_1_TOGGLE	(7)
-+#define RZ_MTU3_TIOR_OC_IOA		GENMASK(3, 0)
-+
-+#define RZ_MTU3_TCR_CCLR_TGRC		(5 << 5)
-+#define RZ_MTU3_TCR_CKEG_RISING		(0 << 3)
-+
-+#define RZ_MTU3_TCR_TPCS		GENMASK(2, 0)
-+
-+#define RZ_MTU3_MAX_PWM_MODE1_CHANNELS	(12)
-+
-+#define RZ_MTU3_MAX_HW_PWM_CHANNELS	(7)
-+
-+static const u8 rz_mtu3_pwm_mode1_num_ios[] = { 2, 1, 1, 2, 2, 2, 2 };
-+
-+struct rz_mtu3_pwm_chip {
-+	struct pwm_chip chip;
-+	struct clk *clk;
-+	struct mutex lock;
-+	unsigned long rate;
-+	u32 user_count[RZ_MTU3_MAX_HW_PWM_CHANNELS];
-+	struct rz_mtu3_channel *ch[RZ_MTU3_MAX_HW_PWM_CHANNELS];
-+};
-+
-+static inline struct rz_mtu3_pwm_chip *to_rz_mtu3_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct rz_mtu3_pwm_chip, chip);
-+}
-+
-+static u8 rz_mtu3_pwm_calculate_prescale(struct rz_mtu3_pwm_chip *rz_mtu3,
-+					 u64 period_cycles)
-+{
-+	u32 prescaled_period_cycles;
-+	u8 prescale;
-+
-+	prescaled_period_cycles = period_cycles >> 16;
-+	if (prescaled_period_cycles >= 16)
-+		prescale = 3;
-+	else
-+		prescale = (fls(prescaled_period_cycles) + 1) / 2;
-+
-+	return prescale;
-+}
-+
-+static struct rz_mtu3_channel *
-+rz_mtu3_get_hw_channel(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u32 channel)
-+{
-+	unsigned int i, ch_index = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
-+		ch_index += rz_mtu3_pwm_mode1_num_ios[i];
-+
-+		if (ch_index > channel)
-+			break;
-+	}
-+
-+	return rz_mtu3_pwm->ch[i];
-+}
-+
-+static u32 rz_mtu3_get_hw_channel_index(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+					struct rz_mtu3_channel *ch)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
-+		if (ch == rz_mtu3_pwm->ch[i])
-+			break;
-+	}
-+
-+	return i;
-+}
-+
-+static bool rz_mtu3_pwm_is_second_channel(u32 ch_index, u32 hwpwm)
-+{
-+	u32 i, pwm_ch_index = 0;
-+
-+	for (i = 0; i < ch_index; i++)
-+		pwm_ch_index += rz_mtu3_pwm_mode1_num_ios[i];
-+
-+	return pwm_ch_index != hwpwm;
-+}
-+
-+static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+				      u32 hwpwm)
-+{
-+	struct rz_mtu3_channel *ch;
-+	bool is_channel_en;
-+	u32 ch_index;
-+	u8 val;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	is_channel_en = rz_mtu3_is_enabled(ch);
-+
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, hwpwm))
-+		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORL);
-+	else
-+		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORH);
-+
-+	return (is_channel_en && (val & RZ_MTU3_TIOR_OC_IOA));
-+}
-+
-+static int rz_mtu3_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+
-+	mutex_lock(&rz_mtu3_pwm->lock);
-+	rz_mtu3_pwm->user_count[ch_index]++;
-+	mutex_unlock(&rz_mtu3_pwm->lock);
-+
-+	ch->function = RZ_MTU3_PWM_MODE_1;
-+
-+	return 0;
-+}
-+
-+static void rz_mtu3_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+
-+	mutex_lock(&rz_mtu3_pwm->lock);
-+	rz_mtu3_pwm->user_count[ch_index]--;
-+	mutex_unlock(&rz_mtu3_pwm->lock);
-+
-+	if (!rz_mtu3_pwm->user_count[ch_index])
-+		ch->function = RZ_MTU3_NORMAL;
-+}
-+
-+static int rz_mtu3_pwm_enable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+			      struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+	u8 val;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	val = (RZ_MTU3_TIOR_OC_1_TOGGLE << 4) | RZ_MTU3_TIOR_OC_0_H_COMP_MATCH;
-+
-+	rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_PWM_MODE_1);
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, val);
-+	else
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, val);
-+
-+	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
-+		rz_mtu3_enable(ch);
-+
-+	return 0;
-+}
-+
-+static void rz_mtu3_pwm_disable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+				struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+
-+	/* Return to normal mode and disable output pins of MTU3 channel */
-+	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_NORMAL);
-+
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, RZ_MTU3_TIOR_OC_RETAIN);
-+	else
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, RZ_MTU3_TIOR_OC_RETAIN);
-+
-+	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
-+		rz_mtu3_disable(ch);
-+}
-+
-+static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	unsigned long pv, dc;
-+	u64 period_cycles;
-+	u64 duty_cycles;
-+	u32 ch_index;
-+	u8 prescale;
-+	u8 val;
-+
-+	/*
-+	 * Refuse clk rates > 1 GHz to prevent overflowing the following
-+	 * calculation.
-+	 */
-+	if (rz_mtu3_pwm->rate > NSEC_PER_SEC)
-+		return -EINVAL;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	duty_cycles = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycles = 0;
-+
-+	period_cycles = mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
-+					NSEC_PER_SEC);
-+	prescale = rz_mtu3_pwm_calculate_prescale(rz_mtu3_pwm, period_cycles);
-+
-+	if (period_cycles >> (2 * prescale) <= U16_MAX)
-+		pv = period_cycles >> (2 * prescale);
-+	else
-+		pv = U16_MAX;
-+
-+	duty_cycles = mul_u64_u32_div(duty_cycles, rz_mtu3_pwm->rate,
-+				      NSEC_PER_SEC);
-+	if (duty_cycles >> (2 * prescale) <= U16_MAX)
-+		dc = duty_cycles >> (2 * prescale);
-+	else
-+		dc = U16_MAX;
-+
-+	val = RZ_MTU3_TCR_CKEG_RISING | prescale;
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
-+				      RZ_MTU3_TCR_CCLR_TGRC | val);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRD, dc);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRC, pv);
-+	} else {
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
-+				      RZ_MTU3_TCR_CCLR_TGRA | val);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRB, dc);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRA, pv);
-+	}
-+
-+	return 0;
-+}
-+
-+static void rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	u8 prescale, val;
-+	u32 ch_index;
-+	u16 dc, pv;
-+	u64 tmp;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	pm_runtime_get_sync(chip->dev);
-+	state->enabled = rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, pwm->hwpwm);
-+	if (state->enabled) {
-+		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TCR);
-+		prescale = FIELD_GET(RZ_MTU3_TCR_TPCS, val);
-+
-+		if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
-+			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRD);
-+			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRC);
-+		} else {
-+			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRB);
-+			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRA);
-+		}
-+
-+		tmp = NSEC_PER_SEC * (u64)pv << (2 * prescale);
-+		state->period = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
-+
-+		tmp = NSEC_PER_SEC * (u64)dc << (2 * prescale);
-+		state->duty_cycle = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
-+	}
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	pm_runtime_put(chip->dev);
-+}
-+
-+static int rz_mtu3_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct pwm_state cur_state;
-+	bool enabled;
-+	int ret;
-+
-+	cur_state = pwm->state;
-+	enabled = cur_state.enabled;
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (!enabled && state->enabled)
-+		pm_runtime_get_sync(chip->dev);
-+
-+	ret = rz_mtu3_pwm_config(chip, pwm, state);
-+	if (ret && state->enabled)
-+		goto done;
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			rz_mtu3_pwm_disable(rz_mtu3_pwm, pwm);
-+		ret = 0;
-+		goto done;
-+	}
-+
-+	return rz_mtu3_pwm_enable(rz_mtu3_pwm, pwm);
-+done:
-+	if (enabled && !state->enabled)
-+		pm_runtime_put(chip->dev);
-+
-+	return ret;
-+}
-+
-+static const struct pwm_ops rz_mtu3_pwm_ops = {
-+	.request = rz_mtu3_pwm_request,
-+	.free = rz_mtu3_pwm_free,
-+	.get_state = rz_mtu3_pwm_get_state,
-+	.apply = rz_mtu3_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static const struct of_device_id rz_mtu3_pwm_of_table[] = {
-+	{ .compatible = "renesas,rz-mtu3-pwm", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rz_mtu3_pwm_of_table);
-+
-+static int __maybe_unused rz_mtu3_pwm_pm_runtime_suspend(struct device *dev)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(rz_mtu3_pwm->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rz_mtu3_pwm_pm_runtime_resume(struct device *dev)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(dev);
-+
-+	clk_prepare_enable(rz_mtu3_pwm->clk);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops rz_mtu3_pwm_pm_ops = {
-+	SET_RUNTIME_PM_OPS(rz_mtu3_pwm_pm_runtime_suspend, rz_mtu3_pwm_pm_runtime_resume, NULL)
-+};
-+
-+static void rz_mtu3_pwm_pm_disable(void *data)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(data);
-+
-+	pm_runtime_disable(rz_mtu3_pwm->chip.dev);
-+	pm_runtime_set_suspended(rz_mtu3_pwm->chip.dev);
-+}
-+
-+static int rz_mtu3_pwm_probe(struct platform_device *pdev)
-+{
-+	struct rz_mtu3 *ddata = dev_get_drvdata(pdev->dev.parent);
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm;
-+	struct device *dev = &pdev->dev;
-+	int num_pwm_hw_ch;
-+	unsigned int i;
-+	int ret;
-+
-+	rz_mtu3_pwm = devm_kzalloc(&pdev->dev, sizeof(*rz_mtu3_pwm), GFP_KERNEL);
-+	if (!rz_mtu3_pwm)
-+		return -ENOMEM;
-+
-+	rz_mtu3_pwm->clk = ddata->clk;
-+	num_pwm_hw_ch = 0;
-+	for (i = 0; i < RZ_MTU_NUM_CHANNELS; i++) {
-+		if (i == RZ_MTU5 || i == RZ_MTU8)
-+			continue;
-+
-+		rz_mtu3_pwm->ch[num_pwm_hw_ch] = &ddata->channels[i];
-+		rz_mtu3_pwm->ch[num_pwm_hw_ch]->dev = dev;
-+		if (rz_mtu3_pwm->ch[num_pwm_hw_ch]->function != RZ_MTU3_NORMAL)
-+			return dev_err_probe(dev, -EINVAL,
-+					     "channel '%u' is already claimed\n", i);
-+		num_pwm_hw_ch++;
-+	}
-+
-+	rz_mtu3_pwm->rate = clk_get_rate(rz_mtu3_pwm->clk);
-+
-+	mutex_init(&rz_mtu3_pwm->lock);
-+
-+	clk_prepare_enable(rz_mtu3_pwm->clk);
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	ret = devm_add_action_or_reset(&pdev->dev,
-+				       rz_mtu3_pwm_pm_disable,
-+				       rz_mtu3_pwm);
-+	if (ret < 0)
-+		goto disable_clock;
-+
-+	platform_set_drvdata(pdev, rz_mtu3_pwm);
-+
-+	rz_mtu3_pwm->chip.dev = &pdev->dev;
-+	rz_mtu3_pwm->chip.ops = &rz_mtu3_pwm_ops;
-+	rz_mtu3_pwm->chip.npwm = RZ_MTU3_MAX_PWM_MODE1_CHANNELS;
-+
-+	ret = devm_pwmchip_add(&pdev->dev, &rz_mtu3_pwm->chip);
-+	if (ret) {
-+		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-+		goto disable_clock;
-+	}
-+
-+	return 0;
-+
-+disable_clock:
-+	clk_disable_unprepare(rz_mtu3_pwm->clk);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver rz_mtu3_pwm_driver = {
-+	.driver = {
-+		.name = "pwm-rz-mtu3",
-+		.pm = &rz_mtu3_pwm_pm_ops,
-+		.of_match_table = of_match_ptr(rz_mtu3_pwm_of_table),
-+	},
-+	.probe = rz_mtu3_pwm_probe,
-+};
-+module_platform_driver(rz_mtu3_pwm_driver);
-+
-+MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas RZ/G2L MTU3 PWM Timer Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:pwm-rz-mtu3");
--- 
-2.25.1
+Ack, but two drivers also don't automatically make it useful or vital. I
+never used it even tough I already used PWMs a lot. Did you ever use it?
 
+> This feature was added because somebody
+> needed it and I haven't received feedback that this is unused, so I
+
+So you expect people to tell you which part of the PWM framework they
+stopped using (or never used)? <sarcasm>Has anybody ever told you that
+they don't use CONFIG_PWM? Maybe we should compile it in
+unconditionally.</sarcasm>
+
+> see no reason why this should be removed.
+
+I don't want to remove it---at least for now. Just make it possible to
+disable this code for users who don't need it. (To pick up your line of
+reasoning: I haven't received feedback that it is used.) I'm happy about
+every unused feature I can disable, even if it only affects a single
+sysfs property. Code that is compiled out cannot trash cache lines or
+bring in runtime overhead or security problems without any gain. Yeah,
+this affects only very little code, but flipping a Kconfig switch is
+still easier than even to consider to review the capture stuff for
+unwanted effects. Given that more than 90% (99% ?) don't use capture, I
+do see some benefit.
+
+> The overhead for drivers that
+> don't use this is negligible. There's exactly one function pointer that
+> would always be NULL for those. Then there's one sysfs attribute with
+> associated code and one core function that's just a teeny tiny wrapper
+> around the function pointer.
+
+Agreed, the overhead is small. Still code that is hardly used, not even
+by the maintainers of the framework is a bad thing in my eyes. So being
+able to disable it (and ship kernels with that item disabled in distros)
+is a good way to find users who care, should they really exist. Either
+outcome is a win. Either we can get rid of an unused feature at some
+point in time, or we actually know there are users and we know their
+email address.
+
+> On the other side of this we have an additional PWM_CAPTURE Kconfig
+> symbol that introduces another combination that needs to be compile-
+> tested for along with the potential to confuse users when they don't
+> get capture support, etc. And that's just not worth it.
+
+My (subjective) judgement is obviously different. IMHO compile testing
+isn't a big issue. There are enough auto builders around to catch this
+and should really someone get it wrong, it's easy and trivial to fix.
+And if we had done this change 5 years ago, exactly zero patches since
+then would have had to care about this Kconfig symbol.
+
+> If you really think that the counters framework is a better fit, the
+> right way to deprecate this is to add support for equivalent capture
+> functionality to that framework and get everyone to transition to that.
+
+I claim everyone already transitioned. I cannot prove it as you cannot
+prove the opposite. Until we make it harder for people to use it.
+
+> Once that's done we can deprecate (and eventually perhaps even remove)
+> the PWM capture stuff.
+
+Best regards
+Uwe
+
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2cxcz5kpy3g6jkn5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmM+570ACgkQwfwUeK3K
+7AmMfAf8Du1oVmGhifijBfhjuqdJzMJtFztJjYoW6YNylA3Zsw/73JPhz1JIstuV
+c+NdtRQnbzLyEsX5F+IJZEma04MarvY5ALnlwEw59tld/VXeE8j5FdfCekaepxCN
+lwy07NhSEZ0T10WkHHVQbmbE852JMxiWdmWUxkI2EgRv8VtunS1jLH4C6pZHQGL/
+oSm45OcERmnsKq40Qbv6AdMPl8tE7ITiYlslSNNXzEx50x+lFY3lnrzccZyVlggG
+IGHXysx+AOTlTOrDng6ouH23J0wT+umrKvMKQI4T5itYQ9EANgzLlHSD/hTlTLdy
+nKRjY+60jn+3QD5/jaAIO4pqVAPqtQ==
+=L6jl
+-----END PGP SIGNATURE-----
+
+--2cxcz5kpy3g6jkn5--
