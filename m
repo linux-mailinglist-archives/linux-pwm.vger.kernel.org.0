@@ -2,87 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22B2E5F7B96
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Oct 2022 18:37:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED045F7DD8
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Oct 2022 21:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbiJGQhN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 7 Oct 2022 12:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47342 "EHLO
+        id S229469AbiJGTU4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 7 Oct 2022 15:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbiJGQhN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Oct 2022 12:37:13 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0811A2A702;
-        Fri,  7 Oct 2022 09:37:11 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8EE7EBBE;
-        Fri,  7 Oct 2022 18:37:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1665160629;
-        bh=97pBNmV86ZVOaN6D4MpiNCBGOD0ODinP3LiNmN/vpLs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ee22JhDOhnYR/K/k+LlBrNKDbjJHUe1V3rK+T1JtDqjfc8hU3Ye07BUQpwGwGp8OL
-         FvccFRJPj77oLpXzTjA3nuVJXuhbSGx2PwsDpZht3leklhX86nYZV5/rRLfQg5SXrd
-         hqZ0Pc20MheOjEcwu0azX7S1hvjw3H+JuDFnz/O8=
-Date:   Fri, 7 Oct 2022 19:37:04 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: renesas,tpu: Add r8a779g0 support
-Message-ID: <Y0BVsLW6KRdxiU3s@pendragon.ideasonboard.com>
-References: <f5ad691051f69f2dbfcb5c5a722960bd9cd41b06.1665156364.git.geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f5ad691051f69f2dbfcb5c5a722960bd9cd41b06.1665156364.git.geert+renesas@glider.be>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229810AbiJGTUe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Oct 2022 15:20:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F99586F90;
+        Fri,  7 Oct 2022 12:20:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 477B061751;
+        Fri,  7 Oct 2022 19:20:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 184E7C43143;
+        Fri,  7 Oct 2022 19:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665170413;
+        bh=Iu17HPfPp9N3wrvrQDMTeZI03jpk1YE5VCkvpTHQ8To=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=vRLAKweRLWu7Zvv4NtquG/IVIJUzAz+WdgmjRNujqiTY9u/nBZMeVhxH4hFMIgM29
+         l+HwPvulgGxgSGifevR0FFmwUSumx7WngUQ18PlgqXc9DdAF4rLZbHAZgdiJ8IKhpm
+         NJ12LokHbbYgshXwtk7D/5GSOjgyf4bKuPP4+YeWCcDu0Ul+TYac4cjnB9ScpfwkLD
+         KFfVFrGltVDY/HaHuPsD/7ITJ8JjIohsC4t16wDw5LDyybY9qeLha59TDTKW3qepsF
+         xiMFlYz9ygVZTPCQaH1o+chDlHQyuDX0e0/0FpoIldQBVNapXE/tmm67jxzAn7VoRK
+         44lJcnvs3JUJQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 07BE6E2A05C;
+        Fri,  7 Oct 2022 19:20:13 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: Changes for v6.1-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20221006153325.2253653-1-thierry.reding@gmail.com>
+References: <20221006153325.2253653-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20221006153325.2253653-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.1-rc1
+X-PR-Tracked-Commit-Id: 4709f9ea338d34276d747c88323f964e148c0c09
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3fb55dd14036b875b96c39d6e18fc53feb891891
+Message-Id: <166517041302.8063.15667367820730054947.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Oct 2022 19:20:13 +0000
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Geert,
+The pull request you sent on Thu,  6 Oct 2022 17:33:25 +0200:
 
-Thank you for the patch.
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.1-rc1
 
-On Fri, Oct 07, 2022 at 05:26:37PM +0200, Geert Uytterhoeven wrote:
-> Document support for the 16-Bit Timer Pulse Unit (TPU) in the Renesas
-> R-Car V4H (R8A779G0) SoC.
-> 
-> Based on a patch in the BSP by CongDang.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3fb55dd14036b875b96c39d6e18fc53feb891891
 
-Easy enough.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> ---
->  Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> index c6b2ab56b7feade7..a3e52b22dd180422 100644
-> --- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.yaml
-> @@ -40,6 +40,7 @@ properties:
->            - renesas,tpu-r8a77970  # R-Car V3M
->            - renesas,tpu-r8a77980  # R-Car V3H
->            - renesas,tpu-r8a779a0  # R-Car V3U
-> +          - renesas,tpu-r8a779g0  # R-Car V4H
->        - const: renesas,tpu
->  
->    reg:
+Thank you!
 
 -- 
-Regards,
-
-Laurent Pinchart
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
