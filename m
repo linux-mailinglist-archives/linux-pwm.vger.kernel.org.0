@@ -2,522 +2,170 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 849455FA085
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Oct 2022 16:52:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C1405FA0F7
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Oct 2022 17:13:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiJJOwr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 10 Oct 2022 10:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
+        id S229696AbiJJPNs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 10 Oct 2022 11:13:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbiJJOwr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 Oct 2022 10:52:47 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C77742AE5;
-        Mon, 10 Oct 2022 07:52:45 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.95,173,1661785200"; 
-   d="scan'208";a="136028508"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 10 Oct 2022 23:52:45 +0900
-Received: from localhost.localdomain (unknown [10.226.92.95])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 93F9042F5166;
-        Mon, 10 Oct 2022 23:52:41 +0900 (JST)
+        with ESMTP id S229461AbiJJPNr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 Oct 2022 11:13:47 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2098.outbound.protection.outlook.com [40.107.114.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58337356CB;
+        Mon, 10 Oct 2022 08:13:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lt6xOdU+GxEtR4/W8wEE+3KzOSeslEobbdYfg3TSzNWKhNTufVR0NKJlG8dPcaAPPRqqN+LbqGQBMumUT6uOuAUxQkV+qYFSqbCKJJ9LfSEE1JbU0DVxHHajG06nJfkrVFUnQsluK51VTypapBVBI/JCs0ENdyICvB01MFuby3H5KE8QqpSzyCCB5VZVwonUGBxibrUgST2ACwUSk1O5ZSghBNgBEB2t8voj3AZouaQxnPa6AWL1+RkSp7rfz3VCfc1fbtkIby0kOC6PnuDdQdyJSEEvWorKZ8SWo0iay7QKAURRwXcFD4+X4NgyuIQe0PW50T5k7u9x55aPFDnPxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mGBAHluOzxlYrbU1+BlIwp/P6rC5KBgs3imAfKo6IQQ=;
+ b=IFM38mXTHCNrIR34NEZJW5RSLb4b52/PWESRViOnQH4s1G0XJbQG4WDt75XhUV6BwafhVmAv0F7CAyHA1AOch4CKLzb16BTpn7jn8igzrgZiy+KocxMyiHXlupVU6NnMZqixL/URPZu3TKMLxHBdoWxWP8InkhcG9TFRXEPwoYa61a/h+ZeS//BEUp0wzAUqG6eqk2YwpSq3sfgg6hVr2NGyXaNMzWF9iFmiAEYkcJw2jxodDA3ZHzSwHZrYbhYhYjRjpEIA2YxXdc2wbuISm6jEWRabaoPrBVVEKg5FQG7Ls87lSUh4VjVYh/FDuO1xj1WC2jcvNe1c945oofFw6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mGBAHluOzxlYrbU1+BlIwp/P6rC5KBgs3imAfKo6IQQ=;
+ b=a1DbbJTY1QKqtBGWT7pWrQkkh9+SG0wvHJRX+qVK7fGwnAvLywI8pBpXfxGuTlOwI8fL05T6bQomqZyIBPNAGfQ9DvkAQ59Libf+dDqZT6vGYdh752LXSa0o//dkI5BOy6VEKAHvQdneMoM7mQkkdCMhrzko7xCqIW0hBzRr9pk=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by TY3PR01MB9889.jpnprd01.prod.outlook.com (2603:1096:400:22b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15; Mon, 10 Oct
+ 2022 15:13:44 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::73a6:588d:1198:7262]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::73a6:588d:1198:7262%9]) with mapi id 15.20.5709.019; Mon, 10 Oct 2022
+ 15:13:42 +0000
 From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee@kernel.org>,
         Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>, Lee Jones <lee@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+CC:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v4 4/4] mfd: Add RZ/G2L MTU3 PWM driver
-Date:   Mon, 10 Oct 2022 15:52:22 +0100
-Message-Id: <20221010145222.1047748-5-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221010145222.1047748-1-biju.das.jz@bp.renesas.com>
-References: <20221010145222.1047748-1-biju.das.jz@bp.renesas.com>
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v3 1/4] dt-bindings: mfd: Document RZ/G2L MTU3a bindings
+Thread-Topic: [PATCH v3 1/4] dt-bindings: mfd: Document RZ/G2L MTU3a bindings
+Thread-Index: AQHY2YuXPmW6g+v5akyG0CoeRXz0kq4Bzk0AgAEPNNCAAT9J8IACFFSAgAGPMsA=
+Date:   Mon, 10 Oct 2022 15:13:42 +0000
+Message-ID: <OS0PR01MB592241145883E6862C3BF50286209@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20221006135717.1748560-1-biju.das.jz@bp.renesas.com>
+ <20221006135717.1748560-2-biju.das.jz@bp.renesas.com>
+ <20221006201746.GA93297-robh@kernel.org>
+ <OS0PR01MB5922F8058FC8FD1E35C17755865F9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <OS0PR01MB59221BDEB7E6B39AEFD31C44865E9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <8b4a2bfd-ce7f-6bb9-4e50-ecd9bda881a2@linaro.org>
+In-Reply-To: <8b4a2bfd-ce7f-6bb9-4e50-ecd9bda881a2@linaro.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TY3PR01MB9889:EE_
+x-ms-office365-filtering-correlation-id: 13e38223-6e06-4c9d-a247-08daaad204ab
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: P0m1zBxVkjf+NCITxz0CqJUPkVwmFj7WvYTrDsLPuNJi0illTCAGr8mvFuqpBy3RQcVfFbDfq2IOm+v3P70OTfKW3r2iI/CdiRmdP7P75porsaU9Oo++cOsZZ8JN0LaEenJF62JqPz1IDKeiHcH6LZEIyR/AiaZ1vg78YN0kkMUU3Unab8+Ad22CqGoSXWCbw8h3PVRVjj8DNE1FwzAaNrqzSyFqQWuJN0n7MVKl2n2xb+5Gmi7mR7QEwjMLU8YOO+RYA8b69K6vq3xGTuuyBN9i5wRGXCTs0C0ZbEzJjjTbmIRZH+wnRohCj9MPe65Yr9EWcJKEcVUQXUpHleiowF2IAbDF4y8fs/KbMWSt925cP55+A6UxjckBozyNM+D5zmqcVRm/F3GHQjnrg6xv74RnLJ+33EBhPe3mUo2fROQWA8i6F1KY8rxmG/WiTVx31ToGVFHBu+f8X/CrGtll19tI2pid1EflYwVEtDc5o9n3H+5VU83jU7bI6QxhtTbDEo9muJm2TUSoSwKmEf+4/FPCu6zKtJPRx7ItgoNJrrDrmuM/T6MAMvKmNiYiPmK+MyzkreO4X9OlLqbJn718XN395wpHnI2Bjur7S8ReoI18r2EVXTkE9EK6OvEo9DGKJNvez3xQBzwW1feIk0rNt/deF45ezdEkNIiTQE1BBobaQlJFFEX3mYQjHb+3eOzdE5nzS3H1xr/O1OJfgIqq7Zxvj/8jFlWVTS1pWkAGkGDvyTQDGx1ctAcLiwJdYAeZr+tgf5mq8sIK7ehtrTTZETpdVeLn4Yso2Mi+3YnBGrKJFMVt6meYpujtB1W0LBl1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(396003)(346002)(366004)(136003)(451199015)(6506007)(7696005)(53546011)(26005)(66556008)(38100700002)(55016003)(122000001)(316002)(86362001)(71200400001)(8676002)(66446008)(4326008)(64756008)(66946007)(76116006)(966005)(66476007)(38070700005)(33656002)(83380400001)(186003)(478600001)(2906002)(54906003)(5660300002)(52536014)(110136005)(8936002)(7416002)(9686003)(41300700001)(32563001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RkFSWVJLVEpMRjlTeVBBY3VDcGFUSllDWEVWd2owTHk5TWlvNmk0bzYwOHBP?=
+ =?utf-8?B?TW91QWYvYW9rb013Ykx4VkdXaHYreHAydVptQXJ0K3VOMHc0RStkTHFCL1k4?=
+ =?utf-8?B?dGNHZFBwRkxXWkRkZnBiZjgzK3pRWVFnOXhRcU5LeWtGSVltemlIZ2JUV2Jq?=
+ =?utf-8?B?V2NUUTNtbGg5RFczNG1ic294azNMK2hJRXh3bml6Z0RqZllPOGRBMDZON0tF?=
+ =?utf-8?B?TEE1RVVsdEIyUkx3Y2htN3Q5aHMvbGJRaGlVdjd3SVVoUDJsWGF6YVI4dS9U?=
+ =?utf-8?B?dHFFcDhRWDd6bFJHMHMvbmE1bzgwUlo5TEdWYW1EOVRuTTNrNytsZkZZOTJS?=
+ =?utf-8?B?UUR4OU1rU3JjZUVTak41OGF1KzRsZFpBNWpUUGJ6U1Z2ZE5sRi9TRzNpSXlC?=
+ =?utf-8?B?L3p0WlBoY2FUamVWTFpJVEtpVWtEbEp3Qkx6dWdzSTdMeGxzeVZsZEJyTDd4?=
+ =?utf-8?B?UTZZYmQ1L2xnZG9iUkExajkzbFlubTQybUl4L3NlWWQvUXhBOWsrM285MExq?=
+ =?utf-8?B?VU1kbVhRdzBKb3JwUXN3NzVjY21MemZlOFZPTWRDT2VRVE5vVUdDeVlnTEN2?=
+ =?utf-8?B?WDB0akFtaThYbEJ3M0VQN3lBVXBlbVZHSVZtTzI2WW9ISUtZT0d0VWRBMllB?=
+ =?utf-8?B?enJjTk5sakpSdVBJakRSbXFoU1o0UzhhaEFYSHhxT3FUblliYzltMDJVaXo2?=
+ =?utf-8?B?QUJNZE9scWFkQ1lBRXBQL0N4RGNHOGhNdG1DZmNSU1V4NnV5RHh4dXRtYUZo?=
+ =?utf-8?B?NkpFMGlXWDI0c01MTUt0RGx6NlR6N1l0c2VuazltM0d3VkhoSGVNeS9wMS9Z?=
+ =?utf-8?B?NDBtYUs4UWhXSnVkN2cwWHIzbXRPRk5xdnBRbi8vNVhqM2d0SDNwY1kvSFBV?=
+ =?utf-8?B?c2JyK3YxUy9sVFA5Q3JvTFFuUHF5SDhpanhLQ1E1T2p2YmNONmg2ajU3SmRr?=
+ =?utf-8?B?QmlQdUVneDZzeUZYM2ZyWlJ6bHJxZysxalpqTFRUVC9UZjVNYjh4SERBVHRK?=
+ =?utf-8?B?OXpieU9uQmtmNUsyLzhrUWorNFlmVFhxUEd6dUJhSjI1eGljY3Vsb0grcFIr?=
+ =?utf-8?B?aWNacmw0aThZL1NBVUhMOUg4cGxGMnBPNWtjS1RtRHdLYXJscnY2NVc1QmRx?=
+ =?utf-8?B?dXl3ZVBla21kS3k5OGQyeHNPQ2xGZGpPMG9IQVhQelU1Q2hwQ3k5ZmE1aGdm?=
+ =?utf-8?B?RVZaYWpNTnZXUTV1WDhRYXdieHRTZFBVRDZpRkw3Zzc1cmdJNU9uais2RkFZ?=
+ =?utf-8?B?d1ZoeHVNSHBac1dMV095akhTRGFDdGJDUkwzNTBjUGx4NjFrSVV5UmhRay9Y?=
+ =?utf-8?B?VmtuM2hUNGwzY2pyZE1ERFpVUzhXWktrY3BiOVJCYWZOTGJzbklYZVE5TDY1?=
+ =?utf-8?B?WHlUeFY0a2syMFJFb2t5R3lKcFZTR2Zhb2ZGeWFRc1hQNFlaYncrM3d6ZStG?=
+ =?utf-8?B?VWRaRzB1cmNPbS9NUVlMYzlQRzFuR0FtVE80UXE4TXJuWXNNdU9qem9aMGdX?=
+ =?utf-8?B?RXErZlg0WkQyY09tWXBVNE8vQzVtMkVRYWhzbU1HaHM2WGxWYUJWSGdnNkph?=
+ =?utf-8?B?WERoQThwRjhCS0hyNk9zdCswTXVTQjgzUE1pNy9sVUVadUpNZVVtUXJsUGRn?=
+ =?utf-8?B?dkM0dmEwcThxZzRZR0IvWTBnaFJKQU5FRWYycTZnQVB3VDlteU9vNE40TzNZ?=
+ =?utf-8?B?ZTlBSzQ0dmxqQzUvRE0zb2liYWxaTnFaSmduZDRUZzF2bytaSWdNaExObWlS?=
+ =?utf-8?B?QlhycXNLWWpvYlJHSktiVmZEc3hId2NOZzJYRFVKd3hxaElxWUJ4NWdGOE5E?=
+ =?utf-8?B?R1V3VnkrR2h2WmF6MXJoZlh4Q3A3OFQ5T1BIcGprY1M0QkIybTBJQVRNTEtZ?=
+ =?utf-8?B?MTM1OFpoMllINnVhZTcvVmRkbjdHSm9qRWZnTkxnT3dlOGx5ek5CeWUva2lq?=
+ =?utf-8?B?N2ZJdmVYTFcyOUYyOEIzYXZTN3JpanFmeWNSN1FwYVVidHZRcEpyb2FQbGc4?=
+ =?utf-8?B?akNicGZYcm5ScDBYM2lHd24rSVlRM1RXczQ2dmcyNHF2QWw3SEhlb2V2dE00?=
+ =?utf-8?B?TThGUE5RQ3VncGJyemdUTE11OFAvUjVrWW85YTVnRHM1blptN012eWQyY0J5?=
+ =?utf-8?B?WXcweTFVTVZpek90TTBBdFBWYnVWZGtadkgwSnNhVTZHdVZyVTBxUHBjcUtO?=
+ =?utf-8?B?dWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13e38223-6e06-4c9d-a247-08daaad204ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2022 15:13:42.4401
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JYbF4beSc4jAHTmm1UEaUXHoZM9CRHhHTrLkRSFgkOGsPub6dfitdY8J+pWxAbj9j2wVcJgvScYahDolPom+ysrKlYc7YjT+8nrxrLzHdLk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB9889
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for RZ/G2L MTU3 PWM driver. The IP supports
-following PWM modes
-
-1) PWM mode{1,2}
-2) Reset-synchronized PWM mode
-3) Complementary PWM mode{1,2,3}
-
-This patch adds basic pwm mode 1 support for RZ/G2L MTU3 driver
-by creating separate logical channels for each IOs.
-
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v3->v4:
- * There is no resource associated with "rz-mtu3-pwm" compatible
-   and moved the code to mfd subsystem as it binds against "rz-mtu".
- * Removed struct platform_driver rz_mtu3_pwm_driver.
-v2->v3:
- * No change.
-v1->v2:
- * Modelled as a single PWM device handling multiple channles.
- * Used PM framework to manage the clocks.
----
- drivers/mfd/Kconfig       |   6 +
- drivers/mfd/Makefile      |   2 +
- drivers/mfd/rz-mtu3-pwm.c | 405 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 413 insertions(+)
- create mode 100644 drivers/mfd/rz-mtu3-pwm.c
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index fa88056224c9..1a0208236adc 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1994,6 +1994,12 @@ config MFD_RZ_MTU3_CNT
- 	  SoCs. This IP supports both 16-bit and 32-bit phase counting mode
- 	  support.
- 
-+config MFD_RZ_MTU3_PWM
-+	tristate "Renesas RZ/G2L MTU3 PWM Timer support"
-+	depends on MFD_RZ_MTU3
-+	help
-+	  Enable support for RZ/G2L MTU3 PWM Timer controller.
-+
- config MFD_STM32_LPTIMER
- 	tristate "Support for STM32 Low-Power Timer"
- 	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9d0d1fd22f99..50c7467f7c79 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -253,7 +253,9 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
- 
- rz-mtu3-objs			:= rz-mtu3-core.o
- rz-mtu3-$(CONFIG_MFD_RZ_MTU3_CNT)	+= rz-mtu3-cnt.o
-+rz-mtu3-$(CONFIG_MFD_RZ_MTU3_PWM)	+= rz-mtu3-pwm.o
- obj-$(CONFIG_MFD_RZ_MTU3) 	+= rz-mtu3.o
-+
- obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
- obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
- obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
-diff --git a/drivers/mfd/rz-mtu3-pwm.c b/drivers/mfd/rz-mtu3-pwm.c
-new file mode 100644
-index 000000000000..8aa67577e022
---- /dev/null
-+++ b/drivers/mfd/rz-mtu3-pwm.c
-@@ -0,0 +1,405 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/G2L MTU3 PWM Timer driver
-+ *
-+ * Copyright (C) 2022 Renesas Electronics Corporation
-+ *
-+ * Hardware manual for this IP can be found here
-+ * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-users-manual-hardware-0?language=en
-+ *
-+ * Limitations:
-+ * - When PWM is disabled, the output is driven to Hi-Z.
-+ * - While the hardware supports both polarities, the driver (for now)
-+ *   only handles normal polarity.
-+ * - While the hardware supports pwm mode{1,2}, reset-synchronized pwm and
-+ *   complementary pwm modes, the driver (for now) only handles pwm mode1.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/limits.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/time.h>
-+
-+#include "rz-mtu3.h"
-+
-+#define RZ_MTU3_TMDR1_MD_NORMAL		(0)
-+#define RZ_MTU3_TMDR1_MD_PWM_MODE_1	(2)
-+
-+#define RZ_MTU3_TIOR_OC_RETAIN		(0)
-+#define RZ_MTU3_TIOR_OC_0_H_COMP_MATCH	(2)
-+#define RZ_MTU3_TIOR_OC_1_TOGGLE	(7)
-+#define RZ_MTU3_TIOR_OC_IOA		GENMASK(3, 0)
-+
-+#define RZ_MTU3_TCR_CCLR_TGRC		(5 << 5)
-+#define RZ_MTU3_TCR_CKEG_RISING		(0 << 3)
-+
-+#define RZ_MTU3_TCR_TPCS		GENMASK(2, 0)
-+
-+#define RZ_MTU3_MAX_PWM_MODE1_CHANNELS	(12)
-+
-+#define RZ_MTU3_MAX_HW_PWM_CHANNELS	(7)
-+
-+static const u8 rz_mtu3_pwm_mode1_num_ios[] = { 2, 1, 1, 2, 2, 2, 2 };
-+
-+/**
-+ * struct rz_mtu3_pwm_chip - MTU3 pwm private data
-+ *
-+ * @chip: MTU3 pwm chip data
-+ * @lock: Lock to prevent concurrent access for usage count
-+ * @rate: MTU3 clock rate
-+ * @user_count: MTU3 usage count
-+ * @rz_mtu3_channel: HW channels for the PWM
-+ */
-+
-+struct rz_mtu3_pwm_chip {
-+	struct pwm_chip chip;
-+	struct mutex lock;
-+	unsigned long rate;
-+	u32 user_count[RZ_MTU3_MAX_HW_PWM_CHANNELS];
-+	struct rz_mtu3_channel *ch[RZ_MTU3_MAX_HW_PWM_CHANNELS];
-+};
-+
-+static inline struct rz_mtu3_pwm_chip *to_rz_mtu3_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct rz_mtu3_pwm_chip, chip);
-+}
-+
-+static u8 rz_mtu3_pwm_calculate_prescale(struct rz_mtu3_pwm_chip *rz_mtu3,
-+					 u64 period_cycles)
-+{
-+	u32 prescaled_period_cycles;
-+	u8 prescale;
-+
-+	prescaled_period_cycles = period_cycles >> 16;
-+	if (prescaled_period_cycles >= 16)
-+		prescale = 3;
-+	else
-+		prescale = (fls(prescaled_period_cycles) + 1) / 2;
-+
-+	return prescale;
-+}
-+
-+static struct rz_mtu3_channel *
-+rz_mtu3_get_hw_channel(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u32 channel)
-+{
-+	unsigned int i, ch_index = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
-+		ch_index += rz_mtu3_pwm_mode1_num_ios[i];
-+
-+		if (ch_index > channel)
-+			break;
-+	}
-+
-+	return rz_mtu3_pwm->ch[i];
-+}
-+
-+static u32 rz_mtu3_get_hw_channel_index(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+					struct rz_mtu3_channel *ch)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
-+		if (ch == rz_mtu3_pwm->ch[i])
-+			break;
-+	}
-+
-+	return i;
-+}
-+
-+static bool rz_mtu3_pwm_is_second_channel(u32 ch_index, u32 hwpwm)
-+{
-+	u32 i, pwm_ch_index = 0;
-+
-+	for (i = 0; i < ch_index; i++)
-+		pwm_ch_index += rz_mtu3_pwm_mode1_num_ios[i];
-+
-+	return pwm_ch_index != hwpwm;
-+}
-+
-+static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+				      u32 hwpwm)
-+{
-+	struct rz_mtu3_channel *ch;
-+	bool is_channel_en;
-+	u32 ch_index;
-+	u8 val;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	is_channel_en = rz_mtu3_is_enabled(ch);
-+
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, hwpwm))
-+		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORL);
-+	else
-+		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORH);
-+
-+	return (is_channel_en && (val & RZ_MTU3_TIOR_OC_IOA));
-+}
-+
-+static int rz_mtu3_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+
-+	mutex_lock(&rz_mtu3_pwm->lock);
-+	rz_mtu3_pwm->user_count[ch_index]++;
-+	mutex_unlock(&rz_mtu3_pwm->lock);
-+
-+	ch->function = RZ_MTU3_PWM_MODE_1;
-+
-+	return 0;
-+}
-+
-+static void rz_mtu3_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+
-+	mutex_lock(&rz_mtu3_pwm->lock);
-+	rz_mtu3_pwm->user_count[ch_index]--;
-+	mutex_unlock(&rz_mtu3_pwm->lock);
-+
-+	if (!rz_mtu3_pwm->user_count[ch_index])
-+		ch->function = RZ_MTU3_NORMAL;
-+}
-+
-+static int rz_mtu3_pwm_enable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+			      struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+	u8 val;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	val = (RZ_MTU3_TIOR_OC_1_TOGGLE << 4) | RZ_MTU3_TIOR_OC_0_H_COMP_MATCH;
-+
-+	rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_PWM_MODE_1);
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, val);
-+	else
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, val);
-+
-+	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
-+		rz_mtu3_enable(ch);
-+
-+	return 0;
-+}
-+
-+static void rz_mtu3_pwm_disable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+				struct pwm_device *pwm)
-+{
-+	struct rz_mtu3_channel *ch;
-+	u32 ch_index;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+
-+	/* Return to normal mode and disable output pins of MTU3 channel */
-+	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_NORMAL);
-+
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, RZ_MTU3_TIOR_OC_RETAIN);
-+	else
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, RZ_MTU3_TIOR_OC_RETAIN);
-+
-+	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
-+		rz_mtu3_disable(ch);
-+}
-+
-+static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      const struct pwm_state *state)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	unsigned long pv, dc;
-+	u64 period_cycles;
-+	u64 duty_cycles;
-+	u32 ch_index;
-+	u8 prescale;
-+	u8 val;
-+
-+	/*
-+	 * Refuse clk rates > 1 GHz to prevent overflowing the following
-+	 * calculation.
-+	 */
-+	if (rz_mtu3_pwm->rate > NSEC_PER_SEC)
-+		return -EINVAL;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	duty_cycles = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycles = 0;
-+
-+	period_cycles = mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
-+					NSEC_PER_SEC);
-+	prescale = rz_mtu3_pwm_calculate_prescale(rz_mtu3_pwm, period_cycles);
-+
-+	if (period_cycles >> (2 * prescale) <= U16_MAX)
-+		pv = period_cycles >> (2 * prescale);
-+	else
-+		pv = U16_MAX;
-+
-+	duty_cycles = mul_u64_u32_div(duty_cycles, rz_mtu3_pwm->rate,
-+				      NSEC_PER_SEC);
-+	if (duty_cycles >> (2 * prescale) <= U16_MAX)
-+		dc = duty_cycles >> (2 * prescale);
-+	else
-+		dc = U16_MAX;
-+
-+	val = RZ_MTU3_TCR_CKEG_RISING | prescale;
-+	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
-+				      RZ_MTU3_TCR_CCLR_TGRC | val);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRD, dc);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRC, pv);
-+	} else {
-+		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
-+				      RZ_MTU3_TCR_CCLR_TGRA | val);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRB, dc);
-+		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRA, pv);
-+	}
-+
-+	return 0;
-+}
-+
-+static void rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct rz_mtu3_channel *ch;
-+	u8 prescale, val;
-+	u32 ch_index;
-+	u16 dc, pv;
-+	u64 tmp;
-+
-+	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-+	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-+	pm_runtime_get_sync(chip->dev);
-+	state->enabled = rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, pwm->hwpwm);
-+	if (state->enabled) {
-+		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TCR);
-+		prescale = FIELD_GET(RZ_MTU3_TCR_TPCS, val);
-+
-+		if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
-+			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRD);
-+			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRC);
-+		} else {
-+			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRB);
-+			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRA);
-+		}
-+
-+		tmp = NSEC_PER_SEC * (u64)pv << (2 * prescale);
-+		state->period = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
-+
-+		tmp = NSEC_PER_SEC * (u64)dc << (2 * prescale);
-+		state->duty_cycle = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
-+	}
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	pm_runtime_put(chip->dev);
-+}
-+
-+static int rz_mtu3_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
-+	struct pwm_state cur_state;
-+	bool enabled;
-+	int ret;
-+
-+	cur_state = pwm->state;
-+	enabled = cur_state.enabled;
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (!enabled && state->enabled)
-+		pm_runtime_get_sync(chip->dev);
-+
-+	ret = rz_mtu3_pwm_config(chip, pwm, state);
-+	if (ret && state->enabled)
-+		goto done;
-+
-+	if (!state->enabled) {
-+		if (enabled)
-+			rz_mtu3_pwm_disable(rz_mtu3_pwm, pwm);
-+		ret = 0;
-+		goto done;
-+	}
-+
-+	return rz_mtu3_pwm_enable(rz_mtu3_pwm, pwm);
-+done:
-+	if (enabled && !state->enabled)
-+		pm_runtime_put(chip->dev);
-+
-+	return ret;
-+}
-+
-+static const struct pwm_ops rz_mtu3_pwm_ops = {
-+	.request = rz_mtu3_pwm_request,
-+	.free = rz_mtu3_pwm_free,
-+	.get_state = rz_mtu3_pwm_get_state,
-+	.apply = rz_mtu3_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+int rz_mtu3_pwm_probe(struct platform_device *pdev)
-+{
-+	struct rz_mtu3 *ddata = dev_get_drvdata(&pdev->dev);
-+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm;
-+	struct device *dev = &pdev->dev;
-+	int num_pwm_hw_ch;
-+	unsigned int i;
-+	int ret;
-+
-+	rz_mtu3_pwm = devm_kzalloc(&pdev->dev, sizeof(*rz_mtu3_pwm), GFP_KERNEL);
-+	if (!rz_mtu3_pwm)
-+		return -ENOMEM;
-+
-+	ddata->pwm_priv = rz_mtu3_pwm;
-+	num_pwm_hw_ch = 0;
-+	for (i = 0; i < RZ_MTU_NUM_CHANNELS; i++) {
-+		if (i == RZ_MTU5 || i == RZ_MTU8)
-+			continue;
-+
-+		rz_mtu3_pwm->ch[num_pwm_hw_ch] = &ddata->channels[i];
-+		rz_mtu3_pwm->ch[num_pwm_hw_ch]->dev = dev;
-+		num_pwm_hw_ch++;
-+	}
-+
-+	rz_mtu3_pwm->rate = clk_get_rate(ddata->clk);
-+
-+	mutex_init(&rz_mtu3_pwm->lock);
-+
-+	rz_mtu3_pwm->chip.dev = &pdev->dev;
-+	rz_mtu3_pwm->chip.ops = &rz_mtu3_pwm_ops;
-+	rz_mtu3_pwm->chip.npwm = RZ_MTU3_MAX_PWM_MODE1_CHANNELS;
-+
-+	ret = devm_pwmchip_add(&pdev->dev, &rz_mtu3_pwm->chip);
-+	if (ret)
-+		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(rz_mtu3_pwm_probe);
-+
-+MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas RZ/G2L MTU3 PWM Timer Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+SGkgS3J6eXN6dG9mIEtvemxvd3NraSwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvNF0g
+ZHQtYmluZGluZ3M6IG1mZDogRG9jdW1lbnQgUlovRzJMIE1UVTNhDQo+IGJpbmRpbmdzDQo+IA0K
+PiBPbiAwOC8xMC8yMDIyIDA5OjQyLCBCaWp1IERhcyB3cm90ZToNCj4gDQo+ID4+Pj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICJ0Z2lhOCIsICJ0Z2liOCIsICJ0Z2ljOCIsICJ0Z2lkOCIsDQo+
+ID4+PiAidGdpdjgiLCAidGdpdTgiOw0KPiA+Pj4+ICsgICAgICBjbG9ja3MgPSA8JmNwZyBDUEdf
+TU9EIFI5QTA3RzA0NF9NVFVfWF9NQ0tfTVRVMz47DQo+ID4+Pj4gKyAgICAgIHBvd2VyLWRvbWFp
+bnMgPSA8JmNwZz47DQo+ID4+Pj4gKyAgICAgIHJlc2V0cyA9IDwmY3BnIFI5QTA3RzA0NF9NVFVf
+WF9QUkVTRVRfTVRVMz47DQo+ID4+Pj4gKw0KPiA+Pj4+ICsgICAgICBjb3VudGVyIHsNCj4gPj4+
+PiArICAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMscnotbXR1My1jb3VudGVyIjsNCj4gPj4+
+DQo+ID4+PiBZb3UgZG9uJ3QgaGF2ZSBhbnkgcmVzb3VyY2VzIGZvciB0aGUgY291bnRlciBpbiBE
+VCwgc28geW91IGRvbid0DQo+ID4+IGV2ZW4NCj4gPj4+IG5lZWQgYSBub2RlIGhlcmUuIEp1c3Qg
+aGF2ZSB0aGUgcGFyZW50IGRyaXZlciBpbnN0YW5pYXRlIHRoZQ0KPiBjb3VudGVyDQo+ID4+PiBk
+cml2ZXIuDQo+ID4+DQo+ID4NCj4gPiBJZiBJIHJlbW92ZSAicmVuZXNhcyxyei1tdHUzLWNvdW50
+ZXIiIGFuZCAicmVuZXNhcyxyei1tdHUzLXB3bSIgdGhlbg0KPiA+IGluc3RhbnRpYXRpbmcgdGhl
+IGNvdW50ZXIgYW5kIHB3bSBkcml2ZXIgZnJvbSBwYXJlbnQgZHJpdmVyIGJ5DQo+ID4gZGlyZWN0
+bHkgY2FsbGluZyBwcm9iZSBmdW5jdGlvbiBpcyBnaXZpbmcgY3ljbGljIGRlcGVuZGVuY3kNCj4g
+ZXJyb3JbMV0uDQo+IA0KPiBIb3cgaXMgdGhpcyByZWxhdGVkIHRvIERUPyBQdXJwb3NlIG9mIERU
+IGlzIG5vdCB0byBzb2x2ZSB5b3VyIHByb2JlDQo+IHByb2JsZW1zLg0KDQpPSy4NCg0KPiANCj4g
+Pg0KPiA+IFNvIGxvb2tzIGxpa2UgZWl0aGVyIHdlIG5lZWQgdG8gdXNlIGNvbXBhdGlibGUNCj4g
+PiAicmVuZXNhcyxyei1tdHUzLWNvdW50ZXIiIGFuZCAicmVuZXNhcyxyei1tdHUzLXB3bSIgaWYg
+dGhlc2UNCj4gPiBmdW5jdGlvbmFsaXRpZXMgdG8gYmUgaW4gcmVzcGVjdGl2ZSBzdWJzeXN0ZW0g
+dHJlZQ0KPiA+DQo+IA0KPiBObywgeW91IGRvbid0IG5lZWQuIFlvdXIgZHJpdmVyIGltcGxlbWVu
+dGF0aW9uIGlzIG5vdCByZWFsbHkgcmVsYXRlZA0KPiB0byB0aGUgYmluZGluZ3MuDQoNCk9LLiBQ
+b3N0ZWQgWzFdIHdpdGggdGhlIHN1Z2dlc3RlZCBiaW5kaW5nIGNoYW5nZXMuDQoNClsxXSBodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcmVuZXNhcy1zb2MvbGlzdC8/
+c2VyaWVzPTY4NDIzMw0KDQpDaGVlcnMsDQpCaWp1DQo=
