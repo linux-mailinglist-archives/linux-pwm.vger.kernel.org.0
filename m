@@ -2,49 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 270305FFA62
-	for <lists+linux-pwm@lfdr.de>; Sat, 15 Oct 2022 15:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFE465FFA87
+	for <lists+linux-pwm@lfdr.de>; Sat, 15 Oct 2022 16:29:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbiJON4k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 15 Oct 2022 09:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
+        id S229556AbiJOO3A (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 15 Oct 2022 10:29:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbiJON4j (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Oct 2022 09:56:39 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2136.outbound.protection.outlook.com [40.107.114.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056CB481C5;
-        Sat, 15 Oct 2022 06:56:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=grQKAeg7ZYfuMYSuwwmSjqrRR9wM3iGEcQjzpWZ0SNy921ctI/6GHc4CBrIZVkJtssGYlmD2BbV/qL0TFERuI+2tvS+L8etdFz3pyQNUv98V56DnPHY9RqiTU7pwuvYcaT8Ode3qknJinAXEtWmAEhfKL7UfdjOLJds2b59ZulgnEYj76XajDz+RckEJtaqQ2prA5s/lETSmQ0do0xwnUJ3Q2drIweQEa2t4Pup5EJfmD6u79F9/BlgIRWlJQCU/xqcknQiPc95Uc/6zNFNNMz8D1lZcH/d7cqsj5yj8pWIYhTXVwumziM3f++DSAro4ONxYG7jy+qNLx75x8ttHCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QcTww735DYQqYyaa5IJ/mO3y+sz5aaFBhBdkhm1gzok=;
- b=ShnyisRcE4y9//EzopE9ldXwtAcV9o2W11xiQzrVCHQPUJ+lBvlR7eb3rm+NdotVVi6hZd9ce0LramQgZMsDCLJZsTeyfCrfmxEav8E2bjmNdiTbDyGoZasaIZXHoX82Ak2G7l+wbq89oWDdS6Y8hMPCUul3B8Y5Y1IePEiq2iQ+iuxhG4cmoTt7H6q+/PrXTy8/+5WBkmDwRhi12Cx8FfHdtkQLB/T+ecHYExRht4tHVcvZ0yTqIF/ujwyvnm2j7SUW16dBeacvUY5VICrz8pNChPPmjjIGK8RZEF3Jt7USwb5Dw/FPzRFcwxouX94Cz7vNjI+e5faeJcpq0FLQ1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QcTww735DYQqYyaa5IJ/mO3y+sz5aaFBhBdkhm1gzok=;
- b=NeRZKowztGS5VtMSoRKko0YSqP2Ny8CzhOXzYFqwebgqw+EAqkpSLnzctz/nlXFBZfsNQQxYK/gXyNQPvDYZCDRTXbk57eudn061fEiXkM8Jdt1vdF1tg3vwLIJou8tpEp4QqyHQD0UXDPoNY2HGBaDml/rpifpeM497KVS30us=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TYCPR01MB6109.jpnprd01.prod.outlook.com (2603:1096:400:61::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Sat, 15 Oct
- 2022 13:56:35 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::73a6:588d:1198:7262]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::73a6:588d:1198:7262%8]) with mapi id 15.20.5723.030; Sat, 15 Oct 2022
- 13:56:35 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        with ESMTP id S229510AbiJOO26 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Oct 2022 10:28:58 -0400
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB584BD32
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Oct 2022 07:28:57 -0700 (PDT)
+Received: by mail-ot1-x330.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so3432298otu.7
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Oct 2022 07:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7qcdc/RkU0O0HbC0puyR2nnMuiyvRGRAFhnef/JK/qI=;
+        b=FSiaN47kDaF7oQH2XxDO3ksX+whBp1B+3AXnhFdsO/P/XKeNZ1eFr2Dcki+0mcYosb
+         6jR2xhwmQ+Goi5deUMyJDq9GZHk562L7EyHJTjqvaS2j1jz+NWEPJNck3cHAT8XJehks
+         +b54IQNQOjZJUBtI4Zguax5rVk6JX4HZ1Ijkc0LzjmmyZPJihBGT6n02nSE5VZNrwBFA
+         d6+TxzVh4siIN3CLvMRQlK78RS96WGUgsgu/T4BLYqqbk1t6ENaDnghbe876kzD6DafA
+         Pl3C/Sw9s4ArZI61om5XAPNbr2OGZ00KPNNLVl5TBWOiEd2Bp86uInIJE0vnyxQqE7FT
+         pmww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7qcdc/RkU0O0HbC0puyR2nnMuiyvRGRAFhnef/JK/qI=;
+        b=dxa3os+vNbmZnbsKpb8gjWtPsaprTrUK+lr4rQGnbT1HAM1VpJhHDVmTMqcjCn0cGX
+         e6qYrW8bJ8Uct1cx00EtqeKx6W2MmoCxa8oq9uI6dMTpEKqtUzabOW/7zGTAtbZz6tJZ
+         dTYUB3+UMHT0cmAv457GjGBKseGruUaJ8/VBdX/29uSyIZ4AVuZlNRO7MhDPxAYllgcP
+         3mONv/xnUdZhlMx3RXRTnWZ/R6puu69WgqXLaoK20jTM9XGH5acfcmSV5gvyXkZtis99
+         ovXv6iX8jJAEphg3ACX5I+cEQUY79YXrbGdzPdq6XnJM4+/FLgupZ+V3bRE2VIq0i4M9
+         +frw==
+X-Gm-Message-State: ACrzQf1wVhsrzzT1jzjb37zGfDgU3ECf0mcJUBXrgcZucCEomgxrQC/g
+        Dp3a1xDB8QNEIYbtmq4R80jrpCQ3bt2u/Q==
+X-Google-Smtp-Source: AMsMyM7irA69CMmCVPDognpb7cdJLnYmXyUjx9zZmnhPAKaagiQHpVW0aWOZSt2YvYsg73hWhiewqA==
+X-Received: by 2002:a05:6830:1552:b0:661:8b22:84b6 with SMTP id l18-20020a056830155200b006618b2284b6mr1386038otp.12.1665844136951;
+        Sat, 15 Oct 2022 07:28:56 -0700 (PDT)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id j31-20020a056870051f00b0012c21a64a76sm2686518oao.24.2022.10.15.07.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Oct 2022 07:28:56 -0700 (PDT)
+Date:   Sat, 15 Oct 2022 10:28:53 -0400
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC:     Lee Jones <lee@kernel.org>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        Lee Jones <lee@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
@@ -52,120 +66,167 @@ CC:     Lee Jones <lee@kernel.org>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         "linux-renesas-soc@vger.kernel.org" 
         <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v4 4/4] mfd: Add RZ/G2L MTU3 PWM driver
-Thread-Topic: [PATCH v4 4/4] mfd: Add RZ/G2L MTU3 PWM driver
-Thread-Index: AQHY3Lf1ZjO75wmqM0qPUfqcMk9xD64JjDKAgAACnKCAABKoAIAAATcwgAADlICAAAF6AIAAAXgAgAAA2nCAAAOggIAF1F/w
-Date:   Sat, 15 Oct 2022 13:56:34 +0000
-Message-ID: <OS0PR01MB59221B7B21E13CEC0BDC1B2786279@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: mfd: Document RZ/G2L MTU3a bindings
+Message-ID: <Y0rDpaGosqox77SQ@fedora>
 References: <20221010145222.1047748-1-biju.das.jz@bp.renesas.com>
- <20221010145222.1047748-5-biju.das.jz@bp.renesas.com>
- <b701187b-d2aa-eecc-0052-d611d1f45807@linaro.org>
- <OS0PR01MB59227CF4B0D4CA846E24298C86239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <219922df-5bba-e6ae-fa89-60a9b319424b@linaro.org>
- <OS0PR01MB592269EB3BAE686A2F74B48286239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <f12dfcd3-ef5c-b422-c00c-35cef082a3ff@linaro.org>
- <OS0PR01MB5922E406D2711AA6B8CD632C86239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <ddfb11e0-0704-1600-d89c-ec8ca1650c38@linaro.org>
- <OS0PR01MB5922130811695F9B906EA62E86239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <7b8f1097-e56d-2cb9-337d-c7d771eca6e4@linaro.org>
-In-Reply-To: <7b8f1097-e56d-2cb9-337d-c7d771eca6e4@linaro.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYCPR01MB6109:EE_
-x-ms-office365-filtering-correlation-id: dadf1bc6-19b9-47cc-c1cc-08daaeb5128e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tmP9Czd5B4/dtw+KncvWWjtEtISdx0I/K5pm68m+B/eYSD3Mu0fJXv5KsjFJwvIGPD7niPI6hkK8SaV1sUNn6I4UK4M6Dg/hZwWn2qGgxeQy0bCx0RykHaoBZkAkeIupKp5gg/QKKg8qDwQGHl+Qv+j2p+jIlrm5w0ElfgwQmA4dvwFDhpoEGSk5FbKSZbvJLc6zBUElz+PVS9fXT+Kf2ypMjqJEaSONHZx+8x0odH0FggGNywtaGV7Emq0U+FbfVSLoSgoF/DiQNzyoCUMonjkHLI/kZXuvpqNnOPuQpkEK7y+vPeLo37iU4sgGdu1zxiIkdmjOMvttwMDy0DrImficVg6KmRMw+A7ucOdsxR4a3zAmUwF942lUJu0Rg6nbiOm3+C56QmfALmslDPb7qyGckzwHlcB+tknhfmEOkCRwFyw6aBDPEvnIZCD+/bqmn3OrVwuZFZCm4+QdguSXJVY5LPgdg7XzoZwwGd0Dvhb8Cs+eD5eQM2FPudwniMHveCmmhF1aoTSk5WgOtcdJqRrhIRhQXGLbsfrIIYChYNmoSo4sy/Obpw2+ff75KZhpb354IAy8GepGMqFubVC2vEVttm5jCiwZXxktHa6/LM5PH65hrWCiWoN6OUBqhcc3eSbCjA2f7p7iAYzl8MAM5+ta2LBTwARfgHHda9WPjtL/LypWiyA9zXCkzT63OFHpHIuusWy4uqq8Eh8hMLKkt9khCv43OHBFk8DHhPrkL0PODc2/r8uuLBUfJQUHuggejd4L/Yiyop79tIdDgj0O6g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(451199015)(53546011)(6506007)(7696005)(41300700001)(2906002)(186003)(83380400001)(52536014)(8936002)(9686003)(38070700005)(33656002)(26005)(122000001)(5660300002)(38100700002)(86362001)(55016003)(478600001)(71200400001)(54906003)(316002)(66946007)(76116006)(66556008)(66476007)(66446008)(64756008)(4326008)(8676002)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QytuWmN5bXczSzhWdlBzbTMxZTN3RjQ5MjBQU3ZQK3BpVm4xUWNLRzlIUzhF?=
- =?utf-8?B?amRxNUUwVlVCQlY5SHRqZHBNYkhycDFoWU5JRWJvMFM3YkM3YzBINlhZYmFG?=
- =?utf-8?B?WFFKbExDbGlLYS90WXRIWXpadU4wTGhJM3JrM0JsREpkVkRDTHVSNjdLUnFt?=
- =?utf-8?B?VngyTC9FZzlSNmpnUi9rOERXdnF1N1FQR2N3aVg5ejN3ZWJCMnUzbzBhQnA5?=
- =?utf-8?B?N280UkZJRWdGUmo3ZTZHR0w5TXltZVM5cjVZMll6Uk9md2wxV3VvRWliTEEw?=
- =?utf-8?B?eC9tZGZZakhqcDduKys3WTVva1NhTGkrRVVnbVUzZXlUTVMwQ1BKUEVhN0Jj?=
- =?utf-8?B?NXd6Rmk4bERFQjRnNUhtcXpGUXlLMVdFQmtSa1AzWklSZkh2cDdoVkFoaTUx?=
- =?utf-8?B?ajNPRUFPUDlVRTJNVVdBMUJXZWdPTC81RUJIOFBtZUZ5M0EzZ0trVjFrTGlI?=
- =?utf-8?B?UWlCcHRFTFV6Q0dFSXh5bXhKME10Z2NmZ3RIS2tiTVZQZmcvMjRNaS9DU2c2?=
- =?utf-8?B?VGhZb3hGNndNWHNOWFVMeDdPQ1VoT1QzbkhNZ2ZkVFgxdWUxMlVzV2NVQUNv?=
- =?utf-8?B?RW5lMUdRMnU2TlE4MjF1eG16U3U3UzdlUkNFUzd1Z3UwZmh3bm5HN0pxcEZG?=
- =?utf-8?B?a2Vxb1A2dndicmg5aUZvWllyTGpYcnduZVBBUTM5Ymx3WStNZnF5ejlwK0FS?=
- =?utf-8?B?ek56bi9FeDdXeTRLa0lCVDl4cUlScHV2b085SGw5allBSG1kSHV2OFA4Q1Zs?=
- =?utf-8?B?dGxyTDU3ZG5samFVc0pzaU5MZStaMTNQK0tiQ3NiQ1E2dVVqYWxzNEJpQitu?=
- =?utf-8?B?T0dUYnBDbnJhWTdsdk9oTmVNYnpFV0xYdHZORzNleUV3NENBVmxNam9nVmVZ?=
- =?utf-8?B?RWY3dW44VCtEVDdvWklZcTh5SXgwNW5lRFNhZ0pmdG1KTWJ2aHBrL1VVc0d0?=
- =?utf-8?B?UE1rTDc4MEVpVGVDSkwwdzBSblFyKy9NbGxWbnlJbVo2UjhkUGpHdWZza0FZ?=
- =?utf-8?B?K1p3azZJRmorY0wxYlVHMTFaZnFsNmp1RzR0WWh4L003L0kzOTZYL1M4MzJi?=
- =?utf-8?B?N1ZoTzFBTXZXT3c2ckNUSGFZbkZlUFp4MTBJUWhQRWszRTQ4Y3NZNDFiNmlZ?=
- =?utf-8?B?YUpLL01kNmIwWDZuUzM4SzJyNlhNSEZxTXlHaFVhaE5DL2VkeWh2T055MVdO?=
- =?utf-8?B?b1hJT2V6V2VBajZEN1BEY1lFNU1oR2ZTK3cydm1KY1ZHMUtwYkUwVU5HYjFw?=
- =?utf-8?B?ZjdBalVyZlljd3pRVENDc1FjRDN5YjdOSkZFSVBXMDloSjVTanV0SlhJS3R3?=
- =?utf-8?B?dUp0NUZoSEppOUVaNUd1dEI0dFg3dlN1RmE4c1IxbzF3ZDlRelNFaElHVjlJ?=
- =?utf-8?B?MUFTL2hvRWZIbXprTkh2MnMvMUtiWWtVRW1Na2prdFd4MzFsOGpLaXM0Tzdp?=
- =?utf-8?B?Tk5zYUJxTTdzUU9TMHZQQkdtVDRvckRjSUtnQVl3NUNqZGtRdXlSaWtxVTgr?=
- =?utf-8?B?Yk1iL2hIVHNmQjVEY0JxSzlGY2JiYlMvNHMzUkFpRkRFNTJqZFkrKzhEalVR?=
- =?utf-8?B?dmRQY3pLR21YNW9Xb0V2Z2lQM1NCNVhOa3RMR01seG84cU1jckVaV0R6WUNX?=
- =?utf-8?B?Z1JFcy9CeHpMSExBdndCRm5LUUNMbDM5U0prUnVqNXJhRjhYeURkSU1jOTJJ?=
- =?utf-8?B?akRGK3NEOUxXdllxL2JXOXVvdjRVT0xvbUJpYWJCYjdxSTgxUXpWQWprU01M?=
- =?utf-8?B?M21yUGNKL09GYWt0RWNoazA0ZWhFRWFGYWpBV3d3d3lPNjhIaTVJZFM3d0xu?=
- =?utf-8?B?M0FQVDFzU3d1TDRlTDNSR1lZQ0JoZnJIdUttY3hsY3NIU1BBTmZ5bTVobGFu?=
- =?utf-8?B?SnB4SDE3RldVTXhHTmZTSUc5Zmtpa081Ym9WenorV28vYVJVeGZQb00wTGVV?=
- =?utf-8?B?VDVTTHE5Y2dZdTdmdEtYZWhsSmRURnV3UENaUTVWNDVTbWJnejhJMVhzMml2?=
- =?utf-8?B?YWlkaTNZbGNacjBEZ3hLK2xwbUE5ak1ONjRFTlhPRGpBMktlTzVGeDliTXVF?=
- =?utf-8?B?TitmZWozaXdrQ2hMeHRLb1BWTlU3YVJoUUppckNkdFErZkFiY0QwK2RTS0Ra?=
- =?utf-8?Q?ZYFGwCW4MuiFQh2td537K0lm/?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <20221010145222.1047748-2-biju.das.jz@bp.renesas.com>
+ <8d6b8f0e-d9d7-0d77-aa99-379de768fd5d@linaro.org>
+ <OS0PR01MB592232C831CCA84FC302212F86239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <ad2e4445-052b-d65a-bdba-5759c169aafd@linaro.org>
+ <OS0PR01MB59228146DE05231586212FE886239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <17fc9f27-03ad-7663-db21-2f14c7ff4312@linaro.org>
+ <OS0PR01MB5922152268684B5564AA170D86239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dadf1bc6-19b9-47cc-c1cc-08daaeb5128e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Oct 2022 13:56:34.9693
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5w4ompn3PRyBWJ8lFvTLTnP+cO9MpgAi0a0F0rQpusKRe1vQnkgYSWQxCgxdhG7APEJ/SVrJo+oqcThdzCMOQTiswuByZIYs/bMfvG+0wXM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB6109
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OGnd6CUR9MeZqDcJ"
+Content-Disposition: inline
+In-Reply-To: <OS0PR01MB5922152268684B5564AA170D86239@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgS3J6eXN6dG9mIEtvemxvd3NraSwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDQvNF0g
-bWZkOiBBZGQgUlovRzJMIE1UVTMgUFdNIGRyaXZlcg0KPiANCj4gT24gMTEvMTAvMjAyMiAxNjo0
-MywgQmlqdSBEYXMgd3JvdGU6DQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgNC80XSBtZmQ6
-IEFkZCBSWi9HMkwgTVRVMyBQV00gZHJpdmVyDQo+ID4+DQo+ID4+IE9uIDExLzEwLzIwMjIgMTY6
-MzUsIEJpanUgRGFzIHdyb3RlOg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFNvIG5vLCBoZXJlIGFuZCBp
-biBvdGhlciBmaWxlcyAtIGRvbid0IHB1dCBzdWJzeXN0ZW0gc3BlY2lmaWMNCj4gPj4gY29kZQ0K
-PiA+Pj4+Pj4gbGlrZSBQV00gb3IgdGltZXIgaW50byBNRkQuDQo+ID4+Pj4+DQo+ID4+Pj4+IFdo
-ZXJlIHNob3VsZCBkbyB3ZSBwdXQsIGlmIHRoZXJlIGlzIHNpbmdsZSBkcml2ZXIgdG8gYmUgYmlu
-ZA0KPiA+PiBhZ2FpbnN0DQo+ID4+Pj4+ICJyZW5lc2FzLHJ6LW10dTMiIGFuZCByZWdpc3RlciBm
-dW5jdGlvbmFsaXRpZXMgZm9yIHB3bSBhbmQNCj4gPj4gY291bnRlcj8/DQo+ID4+Pj4NCj4gPj4+
-PiBBZ2FpbiAtIGhvdyBiaW5kaW5nIGlzIHJlbGF0ZWQgdG8gdGhpcyBwcm9ibGVtPyBJZiB5b3Ug
-aGF2ZQ0KPiA+PiBzZXBhcmF0ZQ0KPiA+Pj4+IGRyaXZlcnMsIGUuZy4gY291bnRlciwgdGltZXIg
-YW5kIFBXTSwgYWxsIGdvIHRvIHRoZWlyIHJlc3BlY3RpdmUNCj4gPj4+PiBzdWJzeXN0ZW1zLiBD
-b3VudGVyIGdvZXMgdG8gY291bnRlciwgdGltZXIgdG8gdGltZXIsIFBXTSB0byBwd20uDQo+ID4+
-Pg0KPiA+Pj4gSG93IGRvIHlvdSBpbnN0YW50aWF0ZSB0aGVzZSBkcml2ZXJzIHdpdGggYSBzaW5n
-bGUgY29tcGF0aWJsZQ0KPiA+PiAicmVuZXNhcyxyei1tdHUzIj8NCj4gPj4+IElmIGl0IGlzIHNl
-cGFyYXRlIGRyaXZlcnMuDQo+ID4+Pg0KPiA+Pg0KPiA+PiBXaXRoIE1GRCBmcmFtZXdvcmsgYW5k
-IG1mZF9jZWxsLCBqdXN0IGxpa2UgbWFueSwgbWFueSBvdGhlcg0KPiBkcml2ZXJzLg0KPiA+DQo+
-ID4gVGhleSBhbGwgaGF2ZSBjb21wYXRpYmxlcyBmb3IgY2hpbGQgZGV2aWNlcywgcmlnaHQ/Pw0K
-PiANCj4gTm8NCj4gDQo+ID4gQ2FuIHlvdSBwbGVhc2UgUHJvdmlkZSBhbiBNRkQgZXhhbXBsZSB3
-aGljaCBoYXMgYSBzaW5nbGUgY29tcGF0aWJsZQ0KPiA+IGFuZCBNdWx0aXBsZSBjaGlsZCBkZXZp
-Y2VzIGluIGRpZmZlcmVudCBzdWJzeXN0ZW1zPz8NCj4gDQo+IFRoZXJlIGlzIHBsZW50eSBvZiBl
-eGFtcGxlczoNCj4gZ2l0IGdyZXAgLUMgNCAnc3RydWN0IG1mZF9jZWxsJw0KPiANCj4gRXZlbiB0
-aGUgZmlyc3Qgc2VhcmNoIHJlc3VsdCBpbiBNRkQgZGlyZWN0b3J5IGZpdHMgeW91ciBuZWVkcywg
-ZG9lc24ndA0KPiBpdD8NCg0KVGhhbmtzIGZvciB0aGUgcG9pbnRlci4gV2lsbCBzZW5kIG5leHQg
-dmVyc2lvbiBiYXNlZCBvbiB0aGlzLg0KDQpDaGVlcnMsDQpCaWp1DQo=
+
+--OGnd6CUR9MeZqDcJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Oct 11, 2022 at 08:31:48PM +0000, Biju Das wrote:
+> > Subject: Re: [PATCH v4 1/4] dt-bindings: mfd: Document RZ/G2L MTU3a
+> > bindings
+> >=20
+> > On 11/10/2022 15:23, Biju Das wrote:
+> > >> Subject: Re: [PATCH v4 1/4] dt-bindings: mfd: Document RZ/G2L MTU3a
+> > >> bindings
+> > >>
+> > >> On 11/10/2022 10:55, Biju Das wrote:
+> > >>>
+> > >>>>>  .../bindings/mfd/renesas,rz-mtu3.yaml         | 305
+> > >>>> ++++++++++++++++++
+> > >>>>>  1 file changed, 305 insertions(+)  create mode 100644
+> > >>>>> Documentation/devicetree/bindings/mfd/renesas,rz-mtu3.yaml
+> > >>>>
+> > >>>> This should not be in MFD. Just because some device has few
+> > >> features,
+> > >>>> does not mean it should go to MFD... Choose either timer or pwm.
+> > >>>
+> > >>> MFD is for multifunction device. This IP supports multiple
+> > functions
+> > >>> like timer, pwm, clock source/events. That is the reason I have
+> > >> added
+> > >>> here. MFD is core which provides register access for client
+> > devices.
+> > >>>
+> > >>> For me moving it to pwm or counter is not a big problem.
+> > >>> Why do you think it cannot be MFD?
+> > >>
+> > >>
+> > >> Because it makes MFD a dump for everything where author did not
+> > want
+> > >> to think about real device aspects, but instead represented driver
+> > >> design (MFD driver).
+> > >
+> > > Core driver is MFD, just provides resources to child devices and is
+> > > not aware of any real device aspects.
+> > >
+> > >>
+> > >> MFDs are pretty often combining unrelated features, e.g. PMICs
+> > which
+> > >> have wakeup and system power control, regulator, 32 kHz clocks, RTC
+> > >> and some USB connector.
+> > >
+> > > Here also same right? pwm, counter and clock are 3 unrelated
+> > features.
+> > > That is the reason we have separate subsystems for these features.
+> >=20
+> > These are quite similar features of a similar piece of hardware.
+> > Sometimes called timer.
+> >=20
+> > >
+> > >>
+> > >> Just because you will have clocksource driver, PWM driver and timer
+> > >> driver does not make it a MFD.
+> > >
+> > > MFD is multi function device.
+> >=20
+> > No. MFD is a Linux subsystem name. Not a device type. The bindings are
+> > located in respective type.
+> >=20
+> > > So are are you agreeing Clock source, PWM and timer are different
+> > > functionalities or not? If not, why do we have 3 subsystems, if it
+> > is
+> > > same?
+> >=20
+> > Linux subsystems? We can have millions of them and it is not related
+> > to bindings.
+>=20
+> OK.
+>=20
+> >=20
+> >=20
+> > > Where do keep these bindings as there is only single "rz_mtu"
+> > bindings for these 3 different functionalities?
+> >=20
+> > Again, focus on hardware not on Linux drivers. Hardware is called MTU
+> > - Multi-Function TIMER Unit. Timer.
+>=20
+> OK
+> >=20
+> > > pwm or counter or mfd?
+> >=20
+> > Not MFD. I already proposed where to put it. Other Timer/PWM/Counter
+> > units are also in timer.
+> >=20
+>=20
+> I guess for counter/pwm maintainers, it is ok to model MTU3 as a single=
+=20
+> binding "rz-mtu3" in timer that binds against counter and pwm=20
+> functionalities as well??
+>=20
+> Cheers,
+> Biju
+
+I'm okay with putting the MTU3 binding under timer; we already have
+Documentation/devicetree/bindings/timer/renesas,mtu2.yaml there so
+adding a new renesas,mtu3.yaml next to it seems reasonable.
+
+Just to reiterate Krzysztof's point, the subsystems in Linux serve as a
+way to group drivers together that utilize the same ABIs, whereas the
+devicetree is a structure for organizing physical hardware. The
+structure of physical hardware types don't necessarily match the
+organization of the ABIs we use to support them. This is why you may end
+up with differing heirarchies between the devicetree and driver
+subsystems.
+
+To illustrate the point, take for example a hypothetical
+digital-to-analog (DAC) device with a few GPIO lines. Those GPIO
+input signals could be tied to buttons used to indicate to the system
+that a user wants to reset or adjust the DAC output, while the GPIO
+output signals could be status lights or triggers indicating that the
+DAC is operating. The respective driver for this device may utilize the
+IIO subsystem to support the DAC and the GPIO subsystem to support those
+GPIO lines, but it would be incorrect to put this under MFD because the
+purpose of the GPIO lines is to assist in the operation of the DAC; in
+other words, this is primarily a DAC device with some auxiliary
+convenience functionalities, not a MFD with distinct unrelated separate
+components.
+
+William Breathitt Gray
+
+--OGnd6CUR9MeZqDcJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY0rDpQAKCRC1SFbKvhIj
+K6mqAQDuzOKTBtslnggYS7G5BypPDLq+0QzPSh11RvBzX/twyAEAr8JLtpMgRKbQ
+mualkhgXervhhLg/l1tagAvfPDBw6wM=
+=dWxm
+-----END PGP SIGNATURE-----
+
+--OGnd6CUR9MeZqDcJ--
