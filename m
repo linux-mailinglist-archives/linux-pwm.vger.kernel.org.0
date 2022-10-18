@@ -2,76 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E57516027BD
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Oct 2022 11:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9CC6602809
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Oct 2022 11:13:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230439AbiJRJAY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Oct 2022 05:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47866 "EHLO
+        id S231163AbiJRJNX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Oct 2022 05:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbiJRJAA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Oct 2022 05:00:00 -0400
+        with ESMTP id S231161AbiJRJNV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Oct 2022 05:13:21 -0400
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5C5F5
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Oct 2022 01:59:58 -0700 (PDT)
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06BD315FD9
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Oct 2022 02:13:20 -0700 (PDT)
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 74D523F133
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Oct 2022 08:59:56 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B9A813F367
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Oct 2022 09:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1666083596;
-        bh=rsJY6FOVKsSZqaiC4n0rKD5tmA7MRY+EAjtb8qwOqtw=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version;
-        b=CFT5D1tpM72SRqO01Ib+VGP+Ct+afYPXhi9eW847BMfN/Bby0SGTJHb9qvp0BrALj
-         aBQ/luZSs5YfATGJpyywMNbtTZ90rUzIsgFRMm2wZDvVLfHXXO1oSJaevtTZZMAw8Q
-         TFv81serHH+Vc715r0e8CkgSH3/VWWA7boijvSrdAZLv8ZR9tg2rmRVaZN1sa5PqM7
-         O9ChOMp2zCdEj10cfDTbt2/q2V54UgU8VD0iQGbdCYoYMj50SYZFN+8IjkfRvj4u9D
-         82yuw/W4AELZ5fzqrpjqTfuWSUZLb0WUYWtoKvw9zRDgz8sqre/LtF6FUNusfkVcbH
-         nU/y3PnkZv6tg==
-Received: by mail-ed1-f69.google.com with SMTP id y14-20020a056402270e00b0045d1baf4951so9078154edd.11
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Oct 2022 01:59:56 -0700 (PDT)
+        s=20210705; t=1666084398;
+        bh=Hh8fsE9KkAVKP7Lv5PdzMeHsN9pjYg33humb2afrU8o=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=aDqCQd+FewwtieF1tSynz0H4EEaGHP3TwjG83GTfFE5yRZXZVVQPRMWFSqYlmrBwn
+         mkdAPLeRbieFvpgGvz6QOOVO/6IE7/9kX0AZvLSdtbaaphpXvE7utxQ9bBsmVIKVNG
+         Jj3w+BaeMhUVDzfr8bJH/qCr7VrBnQTm32c7fuF3wbFI/70+i5WzF8O04DgIu5I/MF
+         MwNiQLOK5tjQmpqU1Y13an4KUnVwNaCYr4n+F637HyPP2jcn+ahx/RJAepXi7/AsTv
+         xZVNUQ2kS1vXhYdM06yraHwySelv/fZJoG9NHb7uE7+WhMejLZJUGe5aCZmBrBrsNd
+         Vyncmzq0mq7QQ==
+Received: by mail-ed1-f70.google.com with SMTP id w1-20020a056402268100b0045d06ea5575so9772992edd.6
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Oct 2022 02:13:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rsJY6FOVKsSZqaiC4n0rKD5tmA7MRY+EAjtb8qwOqtw=;
-        b=EUWFcPwBA2LumB8j3ool8dZeR14LRDvqmw4IM5sYX92tSw/8oCWueAr2xWGC3hWPl/
-         58dY2Ze27vy6KIh+nJGXXpvd8bgQ184RMyEL79n1u2CxQ3qhI11kp8bbThppfMTSfaO1
-         N/qmOA2ZW5AeMnH0U7wruo/S3nmKEShUKri2wZHXGaK3ZartQGRO0xZ9K981HIkE086p
-         4Wfhe8BeIBomWTtXglURqV1N7/hQWNZt8aVynvupIcmqhtkntX7F8XIJAt99w2BWo4Pk
-         Eh+AxQ/hO0M4rkj2ArZjhy0wvC6I3PSqlMbKWYcoMUFeY0uza84y0r28dFp077Vz1yuo
-         rDHQ==
-X-Gm-Message-State: ACrzQf2WXHdEx0xBohcZkTub6RcoWFbXZTDPOMJq92v0wnI9EmoK+w+H
-        3S22DzclWG4ToC031oL4Zr4kOcFdE90OuJZ68V+84BoP1L/Opzq2g6t+oSKGdE95Yl2Y2KKszdA
-        P93ZJJI7sujfeybIFhGGGT7c3kmP6RhPK6o8Tdw==
-X-Received: by 2002:a17:906:5dce:b0:78d:e71a:6e0 with SMTP id p14-20020a1709065dce00b0078de71a06e0mr1547547ejv.360.1666083594752;
-        Tue, 18 Oct 2022 01:59:54 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5K4MaqQNlIDzfCG5+7V36kXaIPiEcFutHEtHExpdX4evBO0X1ZQHZCnCeIFP7LhslGKZ6dtQ==
-X-Received: by 2002:a17:906:5dce:b0:78d:e71a:6e0 with SMTP id p14-20020a1709065dce00b0078de71a06e0mr1547537ejv.360.1666083594531;
-        Tue, 18 Oct 2022 01:59:54 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hh8fsE9KkAVKP7Lv5PdzMeHsN9pjYg33humb2afrU8o=;
+        b=nFCZRNSnejpnovwX2EzJkW3cj9xsPPwEVkI5kuIaGqRQdZXLkO/K6njpdPfo7Nj0nq
+         ILLhsRYoE2N9ovle2ygPIKRmSgeO5hHluCpuy/V51BYTce82i27nCyVGF1pfRSDj+ISl
+         pngXnwQzXXXeYUTActZn+wFR7MHWjKrhLAxFrZi0jYYSWNa/OrEYpGzM5KI/27PMuHuy
+         MWvj4JIi7Fr/ioHnVrwEIlu3niyiBSuDT2VQn7pGao3ooxK1ygGkogwtg3nu8Z+sVee+
+         VsQyjpOKYwq+YrBCCaFDM3/jXJsRZ8HFKUMXVV/gcYaS2857rHWKXzl6JePk1KQJTzkw
+         OrpQ==
+X-Gm-Message-State: ACrzQf3qBwqg1GpTPE1ga1rhftZ36MZB/XO8lhBlm3r7SFBXNziISvg5
+        4IJk1lVbuldk3SDKmGYWMl5WsB+5uqWwTBvIpWMBkqYIR0Z8CdquGlxLPM5vMgHH5VAwE4HXwIe
+        HDrMAqKemUf1cF3z0onIhXL0PUKFuQHWCrjrd4A==
+X-Received: by 2002:a05:6402:548f:b0:457:ed40:5f58 with SMTP id fg15-20020a056402548f00b00457ed405f58mr1673594edb.408.1666084398207;
+        Tue, 18 Oct 2022 02:13:18 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6RtBiVWqlow4RIWQd6Iya71pSIgsGy2YuI+R6Q4lXOuU1BXFxCyytUUPbyjbx6D0cVL2MX/w==
+X-Received: by 2002:a05:6402:548f:b0:457:ed40:5f58 with SMTP id fg15-20020a056402548f00b00457ed405f58mr1673583edb.408.1666084397997;
+        Tue, 18 Oct 2022 02:13:17 -0700 (PDT)
 Received: from stitch.. (80.71.140.73.ipv4.parknet.dk. [80.71.140.73])
-        by smtp.gmail.com with ESMTPSA id c1-20020a17090618a100b007877ad05b32sm7115765ejf.208.2022.10.18.01.59.53
+        by smtp.gmail.com with ESMTPSA id x9-20020a170906710900b0073a20469f31sm7270172ejj.41.2022.10.18.02.13.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 01:59:54 -0700 (PDT)
+        Tue, 18 Oct 2022 02:13:17 -0700 (PDT)
 From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Wesley W . Terpstra" <wesley@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: sifive: Call pwm_sifive_update_clock() while mutex is held
-Date:   Tue, 18 Oct 2022 10:59:52 +0200
-Message-Id: <20221018085953.414433-1-emil.renner.berthing@canonical.com>
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Atish Patra <atishp@atishpatra.org>,
+        "Wesley W. Terpstra" <wesley@sifive.com>
+Cc:     linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] pwm: sifive: Always let the first pwm_apply_state succeed
+Date:   Tue, 18 Oct 2022 11:13:16 +0200
+Message-Id: <20221018091316.415685-1-emil.renner.berthing@canonical.com>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221018061656.1428111-1-u.kleine-koenig@pengutronix.de>
-References: <20221018061656.1428111-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -81,48 +81,55 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-> As was documented in commit 0f02f491b786 ("pwm: sifive: Reduce time the=0D
-> controller lock is held") a caller of pwm_sifive_update_clock() must=0D
-> hold the mutex. So fix pwm_sifive_clock_notifier() to grab the lock.=0D
-> =0D
-> While this necessity was only documented later, the race exists since=0D
-> the driver was introduced.=0D
-> =0D
-> Fixes: 9e37a53eb051 ("pwm: sifive: Add a driver for SiFive SoC PWM")=0D
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>=0D
-=0D
-Thanks, as discussed on IRC:=0D
-Reported-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>=0D
-=0D
-..and you can also add my=0D
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>=0D
-=0D
-/Emil=0D
-=0D
-> ---=0D
->  drivers/pwm/pwm-sifive.c | 5 ++++-=0D
->  1 file changed, 4 insertions(+), 1 deletion(-)=0D
-> =0D
-> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c=0D
-> index 2d4fa5e5fdd4..bb7239313401 100644=0D
-> --- a/drivers/pwm/pwm-sifive.c=0D
-> +++ b/drivers/pwm/pwm-sifive.c=0D
-> @@ -204,8 +204,11 @@ static int pwm_sifive_clock_notifier(struct notifier=
-_block *nb,=0D
->  	struct pwm_sifive_ddata *ddata =3D=0D
->  		container_of(nb, struct pwm_sifive_ddata, notifier);=0D
->  =0D
-> -	if (event =3D=3D POST_RATE_CHANGE)=0D
-> +	if (event =3D=3D POST_RATE_CHANGE) {=0D
-> +		mutex_lock(&ddata->lock);=0D
->  		pwm_sifive_update_clock(ddata, ndata->new_rate);=0D
-> +		mutex_unlock(&ddata->lock);=0D
-> +	}=0D
->  =0D
->  	return NOTIFY_OK;=0D
->  }=0D
-> =0D
-> base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780=0D
-> =0D
-> -- =0D
-> 2.37.2=0D
+Commit 2cfe9bbec56ea579135cdd92409fff371841904f added support for the
+RGB and green PWM controlled LEDs on the HiFive Unmatched board
+managed by the leds-pwm-multicolor and leds-pwm drivers respectively.
+All three colours of the RGB LED and the green LED run from different
+lines of the same PWM, but with the same period so this works fine when
+the LED drivers are loaded one after the other.
+
+Unfortunately it does expose a race in the PWM driver when both LED
+drivers are loaded at roughly the same time. Here is an example:
+
+  |          Thread A           |          Thread B           |
+  |  led_pwm_mc_probe           |  led_pwm_probe              |
+  |    devm_fwnode_pwm_get      |                             |
+  |      pwm_sifive_request     |                             |
+  |        ddata->user_count++  |                             |
+  |                             |    devm_fwnode_pwm_get      |
+  |                             |      pwm_sifive_request     |
+  |                             |        ddata->user_count++  |
+  |         ...                 |          ...                |
+  |    pwm_state_apply          |    pwm_state_apply          |
+  |      pwm_sifive_apply       |      pwm_sifive_apply       |
+
+Now both calls to pwm_sifive_apply will see that ddata->approx_period,
+initially 0, is different from the requested period and the clock needs
+to be updated. But since ddata->user_count >= 2 both calls will fail
+with -EBUSY, which will then cause both LED drivers to fail to probe.
+
+Fix it by letting the first call to pwm_sifive_apply update the clock
+even when ddata->user_count != 1.
+
+Fixes: 9e37a53eb051 ("pwm: sifive: Add a driver for SiFive SoC PWM")
+Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+---
+ drivers/pwm/pwm-sifive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index 2d4fa5e5fdd4..ccdf92045f34 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -159,7 +159,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	mutex_lock(&ddata->lock);
+ 	if (state->period != ddata->approx_period) {
+-		if (ddata->user_count != 1) {
++		if (ddata->user_count != 1 && ddata->approx_period) {
+ 			mutex_unlock(&ddata->lock);
+ 			return -EBUSY;
+ 		}
+-- 
+2.37.2
+
