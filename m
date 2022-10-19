@@ -2,45 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C385603ABA
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Oct 2022 09:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 092CD603AC4
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Oct 2022 09:39:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229942AbiJSHfP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 19 Oct 2022 03:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49152 "EHLO
+        id S230073AbiJSHjh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 19 Oct 2022 03:39:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJSHfO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Oct 2022 03:35:14 -0400
+        with ESMTP id S229986AbiJSHje (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Oct 2022 03:39:34 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F7F5973D
-        for <linux-pwm@vger.kernel.org>; Wed, 19 Oct 2022 00:35:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F71D10B
+        for <linux-pwm@vger.kernel.org>; Wed, 19 Oct 2022 00:39:33 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ol3bb-00057p-Ea; Wed, 19 Oct 2022 09:35:11 +0200
+        id 1ol3fn-0005es-KK; Wed, 19 Oct 2022 09:39:31 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ol3ba-0003yL-95; Wed, 19 Oct 2022 09:35:10 +0200
+        id 1ol3fm-0003yv-UY; Wed, 19 Oct 2022 09:39:30 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ol3bZ-00917n-62; Wed, 19 Oct 2022 09:35:09 +0200
-Date:   Wed, 19 Oct 2022 09:35:09 +0200
+        id 1ol3fl-00918f-Pu; Wed, 19 Oct 2022 09:39:29 +0200
+Date:   Wed, 19 Oct 2022 09:39:29 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Doug Brown <doug@schmorgal.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] pwm: pxa: Remove clk enable/disable from
- pxa_pwm_config
-Message-ID: <20221019073509.ky26xddaqicvptb7@pengutronix.de>
+Subject: Re: [PATCH v2 4/5] pwm: pxa: Wait for final PWM period to finish
+Message-ID: <20221019073929.3abj6ohhcreifyso@pengutronix.de>
 References: <20221003015546.202308-1-doug@schmorgal.com>
- <20221003015546.202308-4-doug@schmorgal.com>
+ <20221003015546.202308-5-doug@schmorgal.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="caeaqwm73zttzkkr"
+        protocol="application/pgp-signature"; boundary="4n23ogamoew7lsb5"
 Content-Disposition: inline
-In-Reply-To: <20221003015546.202308-4-doug@schmorgal.com>
+In-Reply-To: <20221003015546.202308-5-doug@schmorgal.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -54,54 +53,39 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---caeaqwm73zttzkkr
+--4n23ogamoew7lsb5
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 02, 2022 at 06:55:44PM -0700, Doug Brown wrote:
-> Now that pxa_pwm_apply always enables the clock first, there is no need
-> for pxa_pwm_config to do any clock enabling/disabling.
+On Sun, Oct 02, 2022 at 06:55:45PM -0700, Doug Brown wrote:
+> If the clock is turned on too quickly after being turned off, it won't
+> actually turn back on. Work around this problem by waiting for the final
+> period to complete when disabling the PWM. The delay logic is borrowed
+> from the pwm-sun4i driver.
 >=20
-> Signed-off-by: Doug Brown <doug@schmorgal.com>
-> ---
->  drivers/pwm/pwm-pxa.c | 9 ---------
->  1 file changed, 9 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-> index 9ee9b41d62b8..cf4d22c91929 100644
-> --- a/drivers/pwm/pwm-pxa.c
-> +++ b/drivers/pwm/pwm-pxa.c
-> @@ -64,7 +64,6 @@ static int pxa_pwm_config(struct pwm_chip *chip, struct=
- pwm_device *pwm,
->  	unsigned long long c;
->  	unsigned long period_cycles, prescale, pv, dc;
->  	unsigned long offset;
-> -	int rc;
-> =20
->  	offset =3D pwm->hwpwm ? 0x10 : 0;
-> =20
-> @@ -86,18 +85,10 @@ static int pxa_pwm_config(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->  	else
->  		dc =3D mul_u64_u64_div_u64(pv + 1, duty_ns, period_ns);
-> =20
-> -	/* NOTE: the clock to PWM has to be enabled first
-> -	 * before writing to the registers
-> -	 */
-> -	rc =3D clk_prepare_enable(pc->clk);
-> -	if (rc < 0)
-> -		return rc;
-> -
->  	writel(prescale, pc->mmio_base + offset + PWMCR);
->  	writel(dc, pc->mmio_base + offset + PWMDCR);
->  	writel(pv, pc->mmio_base + offset + PWMPCR);
-> =20
-> -	clk_disable_unprepare(pc->clk);
->  	return 0;
->  }
+> To avoid unnecessary delays, skip the whole config process if the PWM is
+> already disabled and staying disabled.
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+I wonder if there is some documentation available about this issue. This
+feels like a workaround without knowledge about the details and so might
+break at the next opportunity.
+
+> [...]
+> @@ -122,6 +127,18 @@ static int pxa_pwm_apply(struct pwm_chip *chip, stru=
+ct pwm_device *pwm,
+>  	if (!state->enabled && pwm->state.enabled)
+>  		clk_disable_unprepare(pc->clk);
+> =20
+> +	if (state->enabled)
+> +		return 0;
+> +
+> +	/* Wait for the final PWM period to finish. This prevents it from
+> +	 * being re-enabled too quickly (which can fail silently).
+> +	 */
+
+Please stick to the usual comment style. i.e. put the /* on a line for
+itself.
 
 Best regards
 Uwe
@@ -110,19 +94,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---caeaqwm73zttzkkr
+--4n23ogamoew7lsb5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNPqKoACgkQwfwUeK3K
-7AkXZAf7B/dj+mG290sU9U3RNbtH6wdfjStwt1PG5BiEtJ4bxaEtXSN56u5DkdwZ
-/yA/8jXt1Wa8sBXzSILmO9c35EP9l143O9wDT4GceAL2TDg0qKQvKxOZA9DvQZvF
-D85kLrm17cFYm4Rl7wnf0jEDyDvBrq175WE/B0l9rvyMk/beb3sQINmdVJ++kSfS
-zFsAq4kVPYut99g9+JvA9X2mXola6az/oWGKRJlYS67K1+IzxL3t6IlJtYOwhHCY
-DEY450P/+Imko7B3ldqMjMAgTFEdDeLB1az7S+AvNtvUf4q8IFrUNjL7WmGoFe6J
-yBpVQ9z2bYXfHOlohrB4fLKwFy1rtg==
-=a0rE
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNPqa4ACgkQwfwUeK3K
+7Am8CAgAi8je4Hahx9fvqz//mh9fkYDvIkxfD6mRWhPpZMw5dS8A78gcX1FVYwtX
+UhpCSHqMLJnusfl3oIu1rjKORKDmz7UlC6x09JfPhMqK7MsegKrVRevLrixW+Im6
+VK79xO850bnwPTGTpEZzsebQcgVy/T1NYa7MpY5WJCa47B8CTlEW/CulhKb4yl/2
+e8YAD5I+6KKK2t7TA/HN3Z3hYILl8LVzNNKPnKzmVpREmGt219zRv78mBKCqTtF3
+51qa5pq24INHzRNy6HJDX5BCno31fQ76l3ro0Qwnmz+nh1024W/DlOR8J908SArJ
+99hca/gpeqQiZ5jfit+qKQTadhjNMQ==
+=bfc+
 -----END PGP SIGNATURE-----
 
---caeaqwm73zttzkkr--
+--4n23ogamoew7lsb5--
