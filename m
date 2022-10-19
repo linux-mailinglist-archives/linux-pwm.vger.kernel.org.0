@@ -2,95 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E293E604023
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Oct 2022 11:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65715604094
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Oct 2022 12:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234008AbiJSJmk convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 19 Oct 2022 05:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
+        id S230268AbiJSKFv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 19 Oct 2022 06:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235099AbiJSJmN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Oct 2022 05:42:13 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEFA5D7E07;
-        Wed, 19 Oct 2022 02:19:07 -0700 (PDT)
-Received: from p508fdae2.dip0.t-ipconnect.de ([80.143.218.226] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1ol5C7-0004cp-PN; Wed, 19 Oct 2022 11:16:59 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Jonker <jbx6244@gmail.com>, thierry.reding@gmail.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        sebastian.reichel@collabora.com, wxt@rock-chips.com,
-        kever.yang@rock-chips.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 2/2] ARM: dts: rk3288: add the interrupts property for PWM
-Date:   Wed, 19 Oct 2022 11:16:58 +0200
-Message-ID: <5883380.DvuYhMxLoT@phil>
-In-Reply-To: <20221019072621.lh5hcznggbcscihf@pengutronix.de>
-References: <6eba6c10-9c96-b40f-937a-e02d43b04cd7@gmail.com> <7ae39c9c-8424-8b65-ac09-c0e87f3b0f01@arm.com> <20221019072621.lh5hcznggbcscihf@pengutronix.de>
+        with ESMTP id S234622AbiJSKFS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Oct 2022 06:05:18 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8041D0C9;
+        Wed, 19 Oct 2022 02:43:52 -0700 (PDT)
+X-UUID: f32d2bf420ce445486fa0c94b58479ca-20221019
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Kog1vDR6cA7Cv/+p3jG4ipnaDZd4MDhSuD+VBldspaE=;
+        b=su5nwCGt5Oz+fYz3hMY5xHpH9xtgIqKo0O+NuSgYA2AI9ryoH8ZrwvITVLajtSJt/MpvitTiMTHu9jEakhF74wEV78m8gLDaShdMqkZ7SrXVdlMWxIL5qwm9YKKNsgauPOSnJN7fToz3r1JwwpKl0kwnm5E5QCBwIRRmA5Kyii4=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.12,REQID:4709ae2d-bb2f-4f3e-b64f-715b7cc10456,IP:0,U
+        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+        release,TS:0
+X-CID-META: VersionHash:62cd327,CLOUDID:16134aa3-73e4-48dd-a911-57b5d5484f14,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: f32d2bf420ce445486fa0c94b58479ca-20221019
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <xinlei.lee@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1042997215; Wed, 19 Oct 2022 17:42:21 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Wed, 19 Oct 2022 17:42:20 +0800
+Received: from mszsdaap41.gcn.mediatek.inc (10.16.6.141) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.15 via Frontend Transport; Wed, 19 Oct 2022 17:42:19 +0800
+From:   <xinlei.lee@mediatek.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <jitao.shi@mediatek.com>
+CC:     <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        xinlei lee <xinlei.lee@mediatek.com>
+Subject: [PATCH v4] pwm: mtk-disp: Fix the parameters calculated by the enabled flag of disp_pwm
+Date:   Wed, 19 Oct 2022 17:42:18 +0800
+Message-ID: <1666172538-11652-1-git-send-email-xinlei.lee@mediatek.com>
+X-Mailer: git-send-email 2.6.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
-        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Am Mittwoch, 19. Oktober 2022, 09:26:21 CEST schrieb Uwe Kleine-König:
-> On Thu, Sep 29, 2022 at 04:50:43PM +0100, Robin Murphy wrote:
-> > On 2022-09-29 15:04, Johan Jonker wrote:
-> > > The Rockchip rk3288 SoC has 4-built-in PWM channels.
-> > > 
-> > > Configurable to operate in capture mode.
-> > > Measures the high/low polarity effective cycles of this input waveform
-> > > Generates a single interrupt at the transition of input waveform polarity
-> > > 
-> > > Configurable to operate in continuous mode or one-shot mode.
-> > > One-shot operation will produce N + 1 periods of the waveform,
-> > > where N is the repeat counter value, and generates a single interrupt at
-> > > the end of operation.
-> > > Continuous mode generates the waveform continuously and
-> > > do not generates any interrupts.
-> > > 
-> > > Add interrupts property to rk3288 PWM nodes.
-> > 
-> > As far as I can make out from the TRM, these are only valid when
-> > GRF_SOC_CON2[0] = 0, otherwise it's in "new" RK_PWM mode using SPI 78 for
-> > all channels. Which apparently will be the case for anyone using upstream
-> > U-Boot:
-> > 
-> > https://source.denx.de/u-boot/u-boot/-/blob/master/arch/arm/mach-rockchip/rk3288/rk3288.c#L83
-> 
-> Huh, so it depends on a (software) setting which irqs are in use?
+From: xinlei lee <xinlei.lee@mediatek.com>
 
-In the past when Rockchip swapped one IP block for another they often
-had both in a soc for one generation (as a safeguard probably)
-So the rk3288 has two different pwm implementations and the GRF
-register selects which one is active.
+In the original mtk_disp_pwm_get_state() function wrongly uses bit 0 of
+CON0 to judge if the PWM is enabled.
+However that is indicated by a bit (at a machine dependent position) in
+the DISP_PWM_EN register. Fix this accordingly.
 
-Heiko
+Fixes: 3f2b16734914 ("pwm: mtk-disp: Implement atomic API .get_state()")
+Signed-off-by: xinlei lee <xinlei.lee@mediatek.com>
+---
+Rebase on linus/master v6.1-rc1.
 
-> So the
-> patch isn't correct as is, but I have no idea how to make it right.
-> Should we rely on the bootloader to fixup the dtb correctly?
-> 
-> Anyhow, I'm marking the patch as 'changes-requested' in our patchwork
-> instance.
-> 
-> Best regards
-> Uwe
-> 
-> 
+change since v3:
+1. Remove the empty line between Fixes: and S-o-b.
 
+change since v2:
+1. Modify the code for readability.
 
+change since v1:
+1. Modify the way to set disp_pwm enbale.
+---
+---
+ drivers/pwm/pwm-mtk-disp.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+index c605013e4114..3fbb4bae93a4 100644
+--- a/drivers/pwm/pwm-mtk-disp.c
++++ b/drivers/pwm/pwm-mtk-disp.c
+@@ -178,7 +178,7 @@ static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
+ {
+ 	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+ 	u64 rate, period, high_width;
+-	u32 clk_div, con0, con1;
++	u32 clk_div, pwm_en, con0, con1;
+ 	int err;
+ 
+ 	err = clk_prepare_enable(mdp->clk_main);
+@@ -197,7 +197,8 @@ static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
+ 	rate = clk_get_rate(mdp->clk_main);
+ 	con0 = readl(mdp->base + mdp->data->con0);
+ 	con1 = readl(mdp->base + mdp->data->con1);
+-	state->enabled = !!(con0 & BIT(0));
++	pwm_en = readl(mdp->base + DISP_PWM_EN);
++	state->enabled = !!(pwm_en & mdp->data->enable_mask);
+ 	clk_div = FIELD_GET(PWM_CLKDIV_MASK, con0);
+ 	period = FIELD_GET(PWM_PERIOD_MASK, con1);
+ 	/*
+-- 
+2.18.0
 
