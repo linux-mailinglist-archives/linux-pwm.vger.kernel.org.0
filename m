@@ -2,80 +2,99 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6F946080C7
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Oct 2022 23:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAABD608170
+	for <lists+linux-pwm@lfdr.de>; Sat, 22 Oct 2022 00:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229777AbiJUVao (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 21 Oct 2022 17:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49060 "EHLO
+        id S229661AbiJUWXk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 Oct 2022 18:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbiJUVam (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Oct 2022 17:30:42 -0400
-X-Greylist: delayed 719 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Oct 2022 14:30:40 PDT
-Received: from outside11.canonet.ne.jp (outside11.canonet.ne.jp [210.134.168.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 20943246C2F;
-        Fri, 21 Oct 2022 14:30:39 -0700 (PDT)
-Received: from csp11.canonet.ne.jp (unknown [172.21.160.131])
-        by outside11.canonet.ne.jp (Postfix) with ESMTP id 264F11E0341;
-        Sat, 22 Oct 2022 06:07:50 +0900 (JST)
-Received: from echeck11.canonet.ne.jp ([172.21.160.121])
-        by csp1 with ESMTP
-        id lzF7owiRi4VyBlzF8oakYZ; Sat, 22 Oct 2022 06:07:50 +0900
-Received: from echeck11.canonet.ne.jp (localhost [127.0.0.1])
-        by esets.canonet.ne.jp (Postfix) with ESMTP id C22F61C0266;
-        Sat, 22 Oct 2022 06:07:49 +0900 (JST)
-X-Virus-Scanner: This message was checked by ESET Mail Security
-        for Linux/BSD. For more information on ESET Mail Security,
-        please, visit our website: http://www.eset.com/.
-Received: from smtp11.canonet.ne.jp (unknown [172.21.160.101])
-        by echeck11.canonet.ne.jp (Postfix) with ESMTP id 96B061C0261;
-        Sat, 22 Oct 2022 06:07:49 +0900 (JST)
-Received: from nashinohana.jp (webmail.canonet.ne.jp [210.134.169.250])
-        by smtp11.canonet.ne.jp (Postfix) with ESMTPA id D38BB15F964;
-        Sat, 22 Oct 2022 06:07:48 +0900 (JST)
+        with ESMTP id S229515AbiJUWXj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Oct 2022 18:23:39 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44EE1989B1;
+        Fri, 21 Oct 2022 15:23:38 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id t4-20020a9d7f84000000b00661c3d864f9so2627607otp.10;
+        Fri, 21 Oct 2022 15:23:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UHszIOTWUTJP89iQhIQJQcS5anPEr/u81IUhAbne1c0=;
+        b=nYG4B5ikiFB5fxaPRWt+jZ29ivrlmTVECFYjQR0EL7T8PVi4SW1U+4MEgXIDk9JOCm
+         Wkr4vXI4TTpv0ztO5zMou3vwePSJnt+LYx55OIM/2LifNZ62LNmAeOE5T1xijrN+lFg7
+         /Nkvx35Ra7UkrcIishLpvzMHEpHZqFsR+ENQcS79WP1+ex+6zdA2QiNEkZERaFoqDa/u
+         HUAW6RL/GthdQKADHy86P3Bah56zYbfe5Er6SjE/WFtKetHZTkQheWunQvqgYv6fcsM8
+         kvntM2WkvQTmX85ZKINkDnto7QPswLQ8s6ZIKYKa7/LkZBivjdm4dzkjChTIk/4r0u+z
+         RPVA==
+X-Gm-Message-State: ACrzQf1lxxI+hd+IEc/QOmqJQI2t0g/xAes8L+/Z1ghV2T0rheVAAvYj
+        4S9ekNoH6AOcDLVr9+AQ7w==
+X-Google-Smtp-Source: AMsMyM7gWaTAPjU/J6G3PGYBWNZixVoh21QdQ6tuN4esEuPLJDcHyZ9RDpCEZ9GvgreWkUsX+2JKFQ==
+X-Received: by 2002:a05:6830:9ca:b0:661:2ba:9b69 with SMTP id y10-20020a05683009ca00b0066102ba9b69mr10851745ott.240.1666391018007;
+        Fri, 21 Oct 2022 15:23:38 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id n22-20020a9d64d6000000b006618eb616dbsm1627548otl.8.2022.10.21.15.23.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Oct 2022 15:23:37 -0700 (PDT)
+Received: (nullmailer pid 567525 invoked by uid 1000);
+        Fri, 21 Oct 2022 22:23:38 -0000
+Date:   Fri, 21 Oct 2022 17:23:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Golle <daniel@makrotopia.org>
+Cc:     linux-pwm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Frank Wunderlich <frank-w@public-files.de>
+Subject: Re: [PATCH 2/2] dt-bindings: pwm: mediatek: Add compatible string
+ for MT7986
+Message-ID: <20221021222338.GA565200-robh@kernel.org>
+References: <Y1K53n7LnjoMoIfj@makrotopia.org>
 MIME-Version: 1.0
-Message-ID: <20221021210748.0000551F.0637@nashinohana.jp>
-Date:   Sat, 22 Oct 2022 06:07:48 +0900
-From:   "Bret Walker Law Firm" <client@nashinohana.jp>
-To:     <INBOX@nashinohana.jp>
-Reply-To: <bret.walkerchambers@gmail.com>
-Subject: INQUIRY
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-ORGANIZATION: Bret Walker Law Firm
-X-MAILER: Active! mail
-X-EsetResult: clean, %VIRUSNAME%
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1666386469;VERSION=7938;MC=1399364259;TRN=0;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
-X-I-ESET-AS: RN=0;RNP=
-X-ESET-Antispam: OK
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,SPF_HELO_NONE,SPF_PASS,UNRESOLVED_TEMPLATE,
-        XPRIO_SHORT_SUBJ autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5260]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-        *  1.0 XPRIO_SHORT_SUBJ Has X Priority header + short subject
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y1K53n7LnjoMoIfj@makrotopia.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, Oct 21, 2022 at 04:25:18PM +0100, Daniel Golle wrote:
+> Add new compatible string for MT7986 PWM.
+> 
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> index 554c96b6d0c3e0..6f4e60c9e18b81 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>     - "mediatek,mt7623-pwm": found on mt7623 SoC.
+>     - "mediatek,mt7628-pwm": found on mt7628 SoC.
+>     - "mediatek,mt7629-pwm": found on mt7629 SoC.
+> +   - "mediatek,mt7986-pwm": found on mt7986 SoC.
 
-Greetings,
+This version of the PWM h/w is not compatible with any of the existing 
+chips? If it is, it should have a fallback compatible.
 
-I trust you are well. I sent you an email yesterday, I just want to be
-sure you received it.
-
-Please let me know as soon as possible.
-
-Thank you,
-
-Regard
-
-
+>     - "mediatek,mt8183-pwm": found on mt8183 SoC.
+>     - "mediatek,mt8195-pwm", "mediatek,mt8183-pwm": found on mt8195 SoC.
+>     - "mediatek,mt8365-pwm": found on mt8365 SoC.
+> -- 
+> 2.38.1
+> 
+> 
