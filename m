@@ -2,146 +2,129 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37450608F41
-	for <lists+linux-pwm@lfdr.de>; Sat, 22 Oct 2022 21:35:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A39B608F6B
+	for <lists+linux-pwm@lfdr.de>; Sat, 22 Oct 2022 21:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbiJVTfb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 22 Oct 2022 15:35:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38024 "EHLO
+        id S229967AbiJVTsy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 22 Oct 2022 15:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbiJVTf3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 22 Oct 2022 15:35:29 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66013645F1
-        for <linux-pwm@vger.kernel.org>; Sat, 22 Oct 2022 12:35:27 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id 3-20020a17090a0f8300b00212d5cd4e5eso3939642pjz.4
-        for <linux-pwm@vger.kernel.org>; Sat, 22 Oct 2022 12:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=schmorgal.com; s=google;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dHMj5gP50YkDnVtpzbnoFnxAZpOBc2+tzU5B6MVDdlQ=;
-        b=EFs8gZZuAc/O2PsMWiw/HMOkf5HCphClEdS3/450t7OB4UxnvNyQUlLd3ieDeoiS7W
-         FhMuSYQJ/c7cTyEja0yxqznCiDC2aePMJ0jIegVWL7x7OkdrD0lIbZ9xGv+4yYu1LIN7
-         d8Cgn36EDR2sYzxEG6BLE77AmGfFOOOh4bClo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dHMj5gP50YkDnVtpzbnoFnxAZpOBc2+tzU5B6MVDdlQ=;
-        b=ds7ccrZCIxEWHRc4aRtKwHhB/zMXYJKOec25/CoWX32pjNy5oJwe5wmCZFFZSRtwhi
-         msOWj5hP8GZq6RNtqY2+tjVXxL4rzd5bufOgPIwMafbKArIqEBrxm6hgyn/p59lULN7T
-         fZoxLMr9LLPYUtlkRFrnfzWg5wL5MTdR3r0SuYcTl9LWcjWaimtLm7gqlimtm5mQxNHq
-         Lg4I2tcyErCOfoEkEVzbEadynAHQJl2ZcR1WRrkujeyY6QIthwIBQzjve4JIxBuNLdKP
-         47cTomSPAe/v92x8PCYdIL44SM+/zV5trEyyJ+RI6TfQftpWFxg5PpUFOrK23kZrVVvX
-         8IVw==
-X-Gm-Message-State: ACrzQf0hCJIMNPxM6OazfyoA4i4uVAiA5a+ZIzXJ2t4gEuKHNxXxI+NV
-        f5zABej+ZyzGoxjtux5LOl75Sg==
-X-Google-Smtp-Source: AMsMyM4d9hENdAtejRBCm7znm3f+8BMf4kvsub8C4CdT2WgdTqkQsqysWSarb5tX0pwtPZ+YAquxVQ==
-X-Received: by 2002:a17:90b:2751:b0:20a:e437:a9e8 with SMTP id qi17-20020a17090b275100b0020ae437a9e8mr64190149pjb.181.1666467326631;
-        Sat, 22 Oct 2022 12:35:26 -0700 (PDT)
-Received: from [192.168.1.33] ([192.183.212.197])
-        by smtp.googlemail.com with ESMTPSA id v15-20020a17090ad58f00b002036006d65bsm3435734pju.39.2022.10.22.12.35.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Oct 2022 12:35:25 -0700 (PDT)
-Message-ID: <a9c974f1-fc66-b964-c7f0-b7e4320f2177@schmorgal.com>
-Date:   Sat, 22 Oct 2022 12:35:23 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S229847AbiJVTsq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 22 Oct 2022 15:48:46 -0400
+Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F5412D80A;
+        Sat, 22 Oct 2022 12:48:44 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6AD1458012A;
+        Sat, 22 Oct 2022 15:48:41 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute3.internal (MEProxy); Sat, 22 Oct 2022 15:48:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1666468121; x=1666475321; bh=UGS1Mg1RbR
+        rjg7l/C4uODk6tRvKSFxQmBze4CDiRUok=; b=R769R20cvAUvCJzdLxBnDkwPBp
+        EbTpyCnh90ePwkW/W271GgnujcaxKPNlKUZTD1QiMzbOX6UUmX5GBGQy5YnoG3Hz
+        7bIbm4GGSebbV6RK2kBgjxCEhVjRMxNaLgKsw+7i5e4f4W2C2HsQFTmKv8S+gZdE
+        jcEJHfdX99rjFuuQuzOPTEkJYLvC3gJ1f7jx+9U6cwktdP6NSfqNvxTgarEWxD1c
+        GFRrikCndHmtZnFVFspin0GH0nBuno9DFl/vX1YEuWJJ1DmabcJBI+QgW+pFl13L
+        PUlTUh21czWS+IFSiTNJyGJ4p7ipLzCb7UJepNPQ1EVgfsLevgq5To41FFEw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1666468121; x=1666475321; bh=UGS1Mg1RbRrjg7l/C4uODk6tRvKS
+        FxQmBze4CDiRUok=; b=DZdlxJQ1/OPf/Y6KDYWPfdC+mu56NzIOlbXghWxjCj9D
+        9CPMuzFO6wSIpYXaVVKO5ogBmtK5zrRUpai6gPg5qF7aq51p1Tf8zgVV+aEGQIpg
+        Le7lvLJR+05feR3Q+7owk4RsmE3rzpsqGg/UOGa7xGgp5BzvreC3G8OxhZ0WzoTZ
+        kHVkLu1P+KTSJm4dYCrODRLVTVeSHwuFqAuyI9eyO0UD5B3tL3/NipBn2AFumQvr
+        +xjvFjLrJEOmbNOFedB+o0knlGPPR7li0EwNxPvDXhDL0DJhj4plmQqEZJg8uEWZ
+        ljUtVQj8llXCVqwnpTmY8Mpk0y+FjFMyLlNEuZEfiA==
+X-ME-Sender: <xms:GElUY9vt3ItviEp5AJXQjYcX0YyV47YTITTgtkGjjNw0aSie0vzYkg>
+    <xme:GElUY2cknoJTeDpYvjbC4RFS-FtPGbyfFDbbyjNFIChdDqrc0xYFVavFYI99vu8kl
+    0KtHqNspAg1e6vBhwY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrgedttddgudegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:GElUYwxiXoqPMILm1SZ_32__qu1Q5l_zrlV4KYN9jBrAlex9SwSKIg>
+    <xmx:GElUY0PzOcbbrTlSQkCZ5j1lrS1Cnv1p6FZXhLQlA1lHQyiDXRQGng>
+    <xmx:GElUY9-JQg9pRkXJG00aarf_3pC2T4jG_plPdMl-YxzKsRcEtsxZ9g>
+    <xmx:GUlUYyKFp-5FR5wwM3xl6nutJeKlKU0pfMGHX_pxDvaIG8i-amMB_w>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 90C24B60086; Sat, 22 Oct 2022 15:48:40 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
+Mime-Version: 1.0
+Message-Id: <7c4531b8-a296-4ea3-9564-b094704d10b2@app.fastmail.com>
+In-Reply-To: <e7ace68a-98e5-63c8-7dd7-a35d0eba1c6e@linaro.org>
+References: <20221021202254.4142411-1-arnd@kernel.org>
+ <e7ace68a-98e5-63c8-7dd7-a35d0eba1c6e@linaro.org>
+Date:   Sat, 22 Oct 2022 21:48:19 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+        "Arnd Bergmann" <arnd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, "Ben Dooks" <ben-linux@fluff.org>,
+        "Simtec Linux Team" <linux@simtec.co.uk>,
+        linux-doc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org,
         linux-pwm@vger.kernel.org
-References: <20221003015546.202308-1-doug@schmorgal.com>
- <20221003015546.202308-5-doug@schmorgal.com>
- <20221019073929.3abj6ohhcreifyso@pengutronix.de>
-From:   Doug Brown <doug@schmorgal.com>
-Subject: Re: [PATCH v2 4/5] pwm: pxa: Wait for final PWM period to finish
-In-Reply-To: <20221019073929.3abj6ohhcreifyso@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 00/21] ARM: s3c: clean out obsolete platforms
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+On Sat, Oct 22, 2022, at 17:18, Krzysztof Kozlowski wrote:
+> On 21/10/2022 16:22, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>> 
+>> The s3c24xx platform was marked as deprecated a while ago,
+>> and for the s3c64xx platform, we marked all except one legacy
+>> board file as unused.
+>> 
+>> This series removes all of those, leaving only s3c64xx support
+>> for DT based boots as well as the cragg6410 board file.
+>> 
+>> About half of the s3c specific drivers were only used on
+>> the now removed machines, so these drivers can be retired
+>> as well. I can either merge the driver removal patches through
+>> the soc tree along with the board file patches, or subsystem
+>> maintainers can pick them up into their own trees, whichever
+>> they prefer.
+>
+> Just to be sure - do you expect me to ack the series, or rather as usual
+> pick them up?
 
-On 10/19/2022 12:39 AM, Uwe Kleine-König wrote:
-> On Sun, Oct 02, 2022 at 06:55:45PM -0700, Doug Brown wrote:
->> If the clock is turned on too quickly after being turned off, it won't
->> actually turn back on. Work around this problem by waiting for the final
->> period to complete when disabling the PWM. The delay logic is borrowed
->> from the pwm-sun4i driver.
->>
->> To avoid unnecessary delays, skip the whole config process if the PWM is
->> already disabled and staying disabled.
-> 
-> I wonder if there is some documentation available about this issue. This
-> feels like a workaround without knowledge about the details and so might
-> break at the next opportunity.
+I think in this case it is easier if I pick them up with your
+Ack along with the other platforms I posted, as there are
+some minor conflicts between Makefile/Kconfig changes where
+I remove adjacent lines.
 
-Thanks for reviewing! Yes, it does feel like a crazy workaround. I'm not
-super proud of it. The best documentation I've been able to look at is
-the PXA168 software manual [1]. Page 502 of the PDF talks about a
-"graceful shutdown" where turning off the clock enable bit doesn't
-immediately stop the clock, and instead it waits for the current PWM
-period to complete first. This driver is currently configuring it for
-graceful shutdown mode, because the PWMCR_SD bit is not set (page 1257).
-
-I've experimentally determined that if you try to turn the clock back on
-when a graceful shutdown is still scheduled, it doesn't cancel the
-graceful shutdown, so the clock ends up off afterward, even though the
-common clock framework thinks it's still on. The hacky delay in this
-commit works around that problem. This almost seems like a problem that
-should be solved on the common clock framework side instead, but it
-doesn't know what the PWM frequency is so it wouldn't know how long to
-delay.
-
-Do all the other similar drivers in the kernel do a graceful shutdown
-like this when they are turned off? If not, a simpler solution would be
-to start turning on the PWMCR_SD bit instead, so the clock stops
-immediately (potentially resulting in the final duty cycle being short).
-I tested that change in place of this commit and it seems to work pretty
-well, although I can still cause it to fail if I turn my PWM backlight
-off and back on quickly without a "sleep 0.000001" in between. It feels
-to me like there are some weird interdependencies between the clock
-enable bits and the actual PWM controller block, at least in the PXA168,
-likely due to "graceful shutdown" mode's existence.
-
-What do you think? Turning on the PWMCR_SD bit would be very simple, but
-it doesn't fully fix the issue in my testing. I'd still be okay with it
-though, because the only failure case I can reproduce is a minor edge
-case (plus, I don't love the delay solution).
-
-> 
->> [...]
->> @@ -122,6 +127,18 @@ static int pxa_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   	if (!state->enabled && pwm->state.enabled)
->>   		clk_disable_unprepare(pc->clk);
->>   
->> +	if (state->enabled)
->> +		return 0;
->> +
->> +	/* Wait for the final PWM period to finish. This prevents it from
->> +	 * being re-enabled too quickly (which can fail silently).
->> +	 */
-> 
-> Please stick to the usual comment style. i.e. put the /* on a line for
-> itself.
-
-My bad, thanks for pointing this out. If this comment still exists in
-the next version of the patch, I'll fix it.
-
-Thanks,
-Doug
-
-[1] 
-https://web.archive.org/web/20160428154454/http://www.marvell.com/application-processors/armada-100/assets/armada_16x_software_manual.pdf
+       Arnd
