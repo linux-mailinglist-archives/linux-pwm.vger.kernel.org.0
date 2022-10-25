@@ -2,144 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86B9660C3BE
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Oct 2022 08:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3DEF60C3DC
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Oct 2022 08:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230366AbiJYGVh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Oct 2022 02:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
+        id S230179AbiJYGf6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Oct 2022 02:35:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbiJYGVg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Oct 2022 02:21:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EF31BE92
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Oct 2022 23:21:34 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1onDJb-0007AK-Jt; Tue, 25 Oct 2022 08:21:31 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1onDJb-000G3y-C5; Tue, 25 Oct 2022 08:21:30 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1onDJZ-00ASFg-Hl; Tue, 25 Oct 2022 08:21:29 +0200
-Date:   Tue, 25 Oct 2022 08:21:29 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/5] pwm: jz4740: Fix pin level of disabled TCU2
- channels, part 1
-Message-ID: <20221025062129.drzltbavg6hrhv7r@pengutronix.de>
-References: <20221024205213.327001-1-paul@crapouillou.net>
- <20221024205213.327001-2-paul@crapouillou.net>
+        with ESMTP id S230158AbiJYGf4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Oct 2022 02:35:56 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF8DD57D9;
+        Mon, 24 Oct 2022 23:35:50 -0700 (PDT)
+X-UUID: ccebf7460a9a45168cbc4bdc435dc7b0-20221025
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID; bh=CfnTvI4GdsO3+FNOnQzLcJsES3nFkH0SLT+tjy22q1s=;
+        b=SzizaYfA8XJzbvIk7BvYYJEc14oPI3xq5b7ZlVdO3D9aYwlTN5h/+2Qx4dBk7m/ph5lat3o4NrzSkKJWS8/zHoK00v1p3FTU+sepLemrA9oLsvbYIE4IW/kZD+qoZH5OQSjZfGd8Huo61nWMNaOiu9q7qGs/p6Kc9HYI1NIbYCw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.12,REQID:02ad6422-a7d0-4992-986b-602297c1141a,IP:0,U
+        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:51,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:51
+X-CID-INFO: VERSION:1.1.12,REQID:02ad6422-a7d0-4992-986b-602297c1141a,IP:0,URL
+        :0,TC:0,Content:0,EDM:0,RT:0,SF:51,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+        elease,TS:51
+X-CID-META: VersionHash:62cd327,CLOUDID:5ea394e4-e572-4957-be22-d8f73f3158f9,B
+        ulkID:2210251435453GLI2UE9,BulkQuantity:0,Recheck:0,SF:38|28|17|19|48|102,
+        TC:nil,Content:0,EDM:-3,IP:nil,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:
+        0
+X-UUID: ccebf7460a9a45168cbc4bdc435dc7b0-20221025
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 639325440; Tue, 25 Oct 2022 14:35:44 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.792.15; Tue, 25 Oct 2022 14:35:43 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkmbs13n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.15 via Frontend
+ Transport; Tue, 25 Oct 2022 14:35:43 +0800
+Message-ID: <b5ab84b4d595713588f1d8a68a1585ca3ae5521e.camel@mediatek.com>
+Subject: Re: [PATCH 1/2] pwm: mediatek: Add support for MT7986
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Daniel Golle <daniel@makrotopia.org>, <linux-pwm@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Tue, 25 Oct 2022 14:35:43 +0800
+In-Reply-To: <Y1K5ym1EL8kwzQEt@makrotopia.org>
+References: <Y1K5ym1EL8kwzQEt@makrotopia.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5xgfedwwwq7lvzdq"
-Content-Disposition: inline
-In-Reply-To: <20221024205213.327001-2-paul@crapouillou.net>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        T_SPF_TEMPERROR,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Daniel:
 
---5xgfedwwwq7lvzdq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2022-10-21 at 16:24 +0100, Daniel Golle wrote:
+> Add support for PWM on MT7986 which has 2 PWM channels, one of them
+> is
+> typically used for a temperature controlled fan.
+> 
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  drivers/pwm/pwm-mediatek.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index 6901a44dc428de..2219cba033e348 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -329,6 +329,12 @@ static const struct pwm_mediatek_of_data
+> mt8365_pwm_data = {
+>  	.has_ck_26m_sel = true,
+>  };
+>  
+> +static const struct pwm_mediatek_of_data mt7986_pwm_data = {
+> +	.num_pwms = 2,
+> +	.pwm45_fixup = false,
+> +	.has_ck_26m_sel = true,
 
-Hello,
+For MT7986 SoC, I think the value of "has_ck_26m_sel" should be 'false' 
 
-On Mon, Oct 24, 2022 at 09:52:09PM +0100, Paul Cercueil wrote:
-> The "duty > cycle" trick to force the pin level of a disabled TCU2
-> channel would only work when the channel had been enabled previously.
->=20
-> Address this issue by enabling the PWM mode in jz4740_pwm_disable
-> (I know, right) so that the "duty > cycle" trick works before disabling
-> the PWM channel right after.
->=20
-> This issue went unnoticed, as the PWM pins on the majority of the boards
-> tested would default to the inactive level once the corresponding TCU
-> clock was enabled, so the first call to jz4740_pwm_disable() would not
-> actually change the pin levels.
->=20
-> On the GCW Zero however, the PWM pin for the backlight (PWM1, which is
-> a TCU2 channel) goes active as soon as the timer1 clock is enabled.
-> Since the jz4740_pwm_disable() function did not work on channels not
-> previously enabled, the backlight would shine at full brightness from
-> the moment the backlight driver would probe, until the backlight driver
-> tried to *enable* the PWM output.
->=20
-> With this fix, the PWM pins will be forced inactive as soon as
-> jz4740_pwm_apply() is called (and might be reconfigured to active if
-> dictated by the pwm_state). This means that there is still a tiny time
-> frame between the .request() and .apply() callbacks where the PWM pin
-> might be active. Sadly, there is no way to fix this issue: it is
-> impossible to write a PWM channel's registers if the corresponding clock
-> is not enabled, and enabling the clock is what causes the PWM pin to go
-> active.
->=20
-> There is a workaround, though, which complements this fix: simply
-> starting the backlight driver (or any PWM client driver) with a "init"
-> pinctrl state that sets the pin as an inactive GPIO. Once the driver is
-> probed and the pinctrl state switches to "default", the regular PWM pin
-> configuration can be used as it will be properly driven.
->=20
-> Fixes: c2693514a0a1 ("pwm: jz4740: Obtain regmap from parent node")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Cc: stable@vger.kernel.org
+> +};
+> +
+>  static const struct pwm_mediatek_of_data mt8516_pwm_data = {
+>  	.num_pwms = 5,
+>  	.pwm45_fixup = false,
+> @@ -342,6 +348,7 @@ static const struct of_device_id
+> pwm_mediatek_of_match[] = {
+>  	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data
+> },
+>  	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data
+> },
+>  	{ .compatible = "mediatek,mt7629-pwm", .data = &mt7629_pwm_data
+> },
+> +	{ .compatible = "mediatek,mt7986-pwm", .data = &mt7986_pwm_data
+> },
+>  	{ .compatible = "mediatek,mt8183-pwm", .data = &mt8183_pwm_data
+> },
+>  	{ .compatible = "mediatek,mt8365-pwm", .data = &mt8365_pwm_data
+> },
+>  	{ .compatible = "mediatek,mt8516-pwm", .data = &mt8516_pwm_data
+> },
 
-OK, understood the issue. I think there is another similar issue: The
-clk is get and enabled only in the .request() callback. The result is (I
-think---depends on a few further conditions) that if you have the
-backlight driver as a module and the bootloader enables the backlight to
-show a splash screen, the backlight goes off because of the
-clk_disable_unused initcall.
+Regards,
+Sam
 
-So the right thing to do is to get the clock in .probe(), and ensure it
-is kept on if the PWM is running already. Then you can also enable the
-counter in .probe() and don't care for it in the enable and disable
-functions.
-
-The init pinctrl then has to be on the PWM then, but that's IMHO ok.
-
-Best regards
-Uwe
-
-PS: While looking into the driver I noticed that .request() uses
-dev_err_probe(). That's wrong, this function is only supposed to be used
-in .probe().
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5xgfedwwwq7lvzdq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNXgGYACgkQwfwUeK3K
-7AnfjggAnEOBtXlPzcBwx8UedR+Wp2Bwl4cWaX4hA3RCsLJJRov0yjJ0x9r5HGBf
-kE+ut8y6I42VSGXLwaPZAwqjNhiAP7NPvXyTOckvrgUk4UZXXmRYVHqrkP7UQRWI
-mVyJWG0LPMd45Swx66Rkf6IDnDwgUTpP8ClZqFaZo/luiPz2kI8IJ1OYLNFTRxis
-k/OPQWYLeFtM4QAZXjH1PJq1W4RGKR8jZZTvyDOZkEuT1f5vQyeMeCIXdv9CxvOE
-1VU/x/FpAsppfw7LwbTSzjJ+31OdWCWBpqZ7uH5J4G115q4dtc7FD1cLVNOx3E+/
-YsVQS9JuYF0B/YlX9qv8v5KAhWagkw==
-=sVSE
------END PGP SIGNATURE-----
-
---5xgfedwwwq7lvzdq--
