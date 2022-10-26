@@ -2,115 +2,175 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6BDC60DBD3
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Oct 2022 09:06:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7675260DE81
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Oct 2022 12:00:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233187AbiJZHGK convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 26 Oct 2022 03:06:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
+        id S231476AbiJZKAd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Oct 2022 06:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233182AbiJZHGJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Oct 2022 03:06:09 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE59674BAC;
-        Wed, 26 Oct 2022 00:06:06 -0700 (PDT)
-Received: by mail-qt1-f178.google.com with SMTP id l28so9310530qtv.4;
-        Wed, 26 Oct 2022 00:06:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9EmVPQE/ovI/dPmhhr1wEw1SPWZw+nWSc8rrtFBbd34=;
-        b=YMHPnSoVVge+rxOzqBa4Myguwk+u6mduuV3p7Gz9ljGgdc0RdNuc6/aQhSz5QR6CRe
-         RI6vZ6bxYU9aDGVsGCC9GVYJGzevOIsm5JncZn0dpBPnlasz/T6lcKsRwVHKi35TXlai
-         RK2LNLaU5gQIhUWc06vMcLh9gJDoIdVqpTjIJ2lg3Z0oF/3ibnDT4RP8CjG9wJ6LY9H0
-         ttwHxiNSQw4UHOroYfLODdm03rR1OVi3fbXxGNjo2Rt2CUZfOvowiTVVCrDFAPYY9q49
-         6t47LTAbLFLDe1KcjqPJmWlKQBKisC9LNdmNpCCeslqoD3xRbXterlZI3ui2lz330xgI
-         tUYA==
-X-Gm-Message-State: ACrzQf0T3ouR+b0MGI8Sv4mmi5hYjKq6i4tHf2cUoNOKlG6IsxiXaDDo
-        dr9YC0glIHSc0ycsnECqUlpS0pFglQkH+w==
-X-Google-Smtp-Source: AMsMyM5P+foiYncIasrJ6IajVDiZX/dm91ucePDtQONgyhN1+Zf+xjlc00XIstDKG3Umd8ySHeOUHg==
-X-Received: by 2002:a05:622a:387:b0:394:7a0a:9584 with SMTP id j7-20020a05622a038700b003947a0a9584mr35549849qtx.60.1666767955116;
-        Wed, 26 Oct 2022 00:05:55 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id w5-20020a05620a444500b006e2d087fd63sm3468738qkp.63.2022.10.26.00.05.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Oct 2022 00:05:54 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id n130so17708952yba.10;
-        Wed, 26 Oct 2022 00:05:54 -0700 (PDT)
-X-Received: by 2002:a5b:52:0:b0:6cb:7584:1b20 with SMTP id e18-20020a5b0052000000b006cb75841b20mr5924096ybp.380.1666767954181;
- Wed, 26 Oct 2022 00:05:54 -0700 (PDT)
+        with ESMTP id S232528AbiJZKAa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Oct 2022 06:00:30 -0400
+Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D797F1DA52;
+        Wed, 26 Oct 2022 03:00:27 -0700 (PDT)
+Received: from local
+        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+         (Exim 4.94.2)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1ondCv-0005BQ-Sg; Wed, 26 Oct 2022 12:00:22 +0200
+Date:   Wed, 26 Oct 2022 11:00:18 +0100
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     linux-pwm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/2] pwm: mediatek: Add support for MT7986
+Message-ID: <Y1kFMmkavtBc4BnV@makrotopia.org>
+References: <Y1K5ym1EL8kwzQEt@makrotopia.org>
+ <b5ab84b4d595713588f1d8a68a1585ca3ae5521e.camel@mediatek.com>
+ <Y1fPLzwUz/E9C3I1@makrotopia.org>
+ <df08d62655e57d00ab5596bc90a4c40c332cee6b.camel@mediatek.com>
 MIME-Version: 1.0
-References: <12f2142991690d2b1d6890821f6e7779a4d4bdc0.1666706435.git.geert+renesas@glider.be>
- <20221026001713.kuu5mj6kogosvqnk@pengutronix.de>
-In-Reply-To: <20221026001713.kuu5mj6kogosvqnk@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 26 Oct 2022 09:05:42 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW=h922855yyiiR2Bo+P2Dg7S7r1pVBF56S+Z0ytng3fA@mail.gmail.com>
-Message-ID: <CAMuHMdW=h922855yyiiR2Bo+P2Dg7S7r1pVBF56S+Z0ytng3fA@mail.gmail.com>
-Subject: Re: [PATCH] pwm: Add missing dummy for devm_pwmchip_add()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df08d62655e57d00ab5596bc90a4c40c332cee6b.camel@mediatek.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+On Wed, Oct 26, 2022 at 02:17:06PM +0800, Sam Shih wrote:
+> On Tue, 2022-10-25 at 12:57 +0100, Daniel Golle wrote:
+> > On Tue, Oct 25, 2022 at 02:35:43PM +0800, Sam Shih wrote:
+> > > Hi Daniel:
+> > > 
+> > > On Fri, 2022-10-21 at 16:24 +0100, Daniel Golle wrote:
+> > > > Add support for PWM on MT7986 which has 2 PWM channels, one of
+> > > > them
+> > > > is
+> > > > typically used for a temperature controlled fan.
+> > > > 
+> > > > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> > > > ---
+> > > >  drivers/pwm/pwm-mediatek.c | 7 +++++++
+> > > >  1 file changed, 7 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-
+> > > > mediatek.c
+> > > > index 6901a44dc428de..2219cba033e348 100644
+> > > > --- a/drivers/pwm/pwm-mediatek.c
+> > > > +++ b/drivers/pwm/pwm-mediatek.c
+> > > > @@ -329,6 +329,12 @@ static const struct pwm_mediatek_of_data
+> > > > mt8365_pwm_data = {
+> > > >  	.has_ck_26m_sel = true,
+> > > >  };
+> > > >  
+> > > > +static const struct pwm_mediatek_of_data mt7986_pwm_data = {
+> > > > +	.num_pwms = 2,
+> > > > +	.pwm45_fixup = false,
+> > > > +	.has_ck_26m_sel = true,
+> > > 
+> > > For MT7986 SoC, I think the value of "has_ck_26m_sel" should be
+> > > 'false'
+> > 
+> > That's a bit surprising, please explain why.
+> > 
+> 
+> The clock tree of MT7981/MT7986 PWM BCLK is as bellow:
+> PLL --> topckgen fix-factors --> TOP_PWM_SEL (topckgen clock mux) -->
+> --
+> > CLK_INFRA_PWM_BSEL (infra clock mux) --> PWM BCLK (gate)
+> 
+> We do have the clock multiplexer to select the source clock for PWM_BCLK
+> https://github.com/torvalds/linux/blob/master/drivers/clk/mediatek/clk-mt7986-infracfg.c#L63
+> 
+> In my knowledge, the pwm hardware of MT7981/MT7986 SoC should ignore
+> this register directtly, but we still keep the register for backword
+> compatibility.
+> 
+> In fact, the MT7986 SoC is also working whether 'has_ck_26m_sel' is
+> 'true' or 'false'.
+> 
+> Going back to the definition of 'has_ck_26m_sel', if it means
+> "PWM_CK_26M_SEL" register exists or not, we should use 'true', but if
+> it means clock from 26M clock or BUS clock, we should use 'false'
 
-On Wed, Oct 26, 2022 at 2:17 AM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Oct 25, 2022 at 04:03:42PM +0200, Geert Uytterhoeven wrote:
-> > The PWM subsystem supports compile-testing if CONFIG_PWM is disabled.
-> > However, no dummy is provided for devm_pwmchip_add(), which may lead to
-> > build failures.
-> >
-> > Fixes: bcda91bf86c1ff76 ("pwm: Add a device-managed function to add PWM chips")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Is this a problem that today yields a failure to compile? As of v6.1-rc1
-> and also in next all callers are below drivers/pwm/ which isn't included
-> in the build without PWM=y.
+It means 'write 0 to PWM_CK_26M_SEL to make sure PWM BCLK is selected'.
+If the register isn't used at all on MT7986 (despite being mentioned in
+the datasheet) or the value written there never has any effect then
+there is no need to do this and has_ck_26m_sel can be false.
 
-So none of these support compile-testing with CONFIG_PWM=n...
+> 
+> > Reading the commit adding .has_ck_26m_sel field:
+> > > commit 0c0ead76235db0bcfaab83f04db546995449d002
+> > > Author: Fabien Parent <fparent@baylibre.com>
+> > > Date:   Mon Oct 19 16:07:02 2020 +0200
+> > > 
+> > > pwm: mediatek: Always use bus clock
+> > > 
+> > > The MediaTek PWM IP can sometimes use the 26 MHz source clock to
+> > > generate the PWM signal, but the driver currently assumes that we
+> > > always
+> > > use the PWM bus clock to generate the PWM signal.
+> > > 
+> > > This commit modifies the PWM driver in order to force the PWM IP to
+> > > always use the bus clock as source clock.
+> > > 
+> > > I do not have the datasheet of all the MediaTek SoC, so I don't
+> > > know if
+> > > the register to choose the source clock is present in all the SoCs
+> > > or
+> > > only in subset. As a consequence I made this change optional by
+> > > using a
+> > > platform data paremeter to says whether this register is supported
+> > > or
+> > > not. On all the SoCs I don't have the datasheet (MT2712, MT7622,
+> > > MT7623,
+> > > MT7628, MT7629) I kept the behavior to be the same as before this
+> > > change.
+> > > 
+> > > Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> > 
+> > From MT7986 datasheet:
+> > > 0x10048210 PWM_CK_26M_SEL PWM BCLK Selection
+> > > Reset value 0x00000001
+> > > Description
+> > > 0: Select bus CLK as BCLK
+> > > 1: Select 26M fix CLK as BCLK
+> > So after reset, the 26M clock is selected by default.
+> > 
+> > In pwm-mediatek.c I read:
+> > > #define PWM_CK_26M_SEL          0x210
+> > > ...
+> > >         /* Make sure we use the bus clock and not the 26MHz clock
+> > > */
+> > >         if (pc->soc->has_ck_26m_sel)
+> > >                 writel(0, pc->regs + PWM_CK_26M_SEL);
+> > 
+> > So this PWM_CK_26M_SEL register does exist on MT7986 and has the
+> > same address as expected by the driver ($PWM_BASE + 0x210).
+> > The default value selected after reset (0x00000001) matches the
+> > problem and solution described in the commit description
+> > "pwm: mediatek: Always use bus clock".
+> > 
+> > Sidenode: I've tried with both, .has_ck_26m_sel = true as well as
+> > .has_ck_26m_sel = false. Both do work, but the behavior is slightly
+> > different, again matching the commit description above.
+> 
+> What is the difference between the two?
+> 
+> I tried to config the pwm ch0 period=1000000 and duty=500000,
+> Modify PWM_CK_26M_SEL, and measure the output waveform, the waveform
+> keep the same.
 
-> Am I missing something or is this just preparing that one of the drivers
-> that doesn't live in drivers/pwm might call devm_pwmchip_add in the
-> future?
-
-I saw it with the RZ/G2L MTU3 PWM driver[1], which is not yet applied.
-After noticing its sibling counter driver lacked a dependency on
-CONFIG_COUNTER, I tried disabling CONFIG_PWM...
-
-> In that case I wouldn't add that Fixes: line (and also oppose to
-> backporting that commit to stable).
-
-I tend to disagree: more drivers may be converted to devm_pwmchip_add()
-in the future, possibly as part of a fix, causing troubles for the
-stable team when backporting such fixes.
-
-Thanks!
-
-[1] https://lore.kernel.org/all/CAMuHMdWE+H=aXkt61hZK6mbQairwdk1F522mZRemC0T5LxQtMg@mail.gmail.com
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Maybe something else already sets the PWM_CK_26M_SEL register to 0
+before Linux starts (e.g. U-Boot)?
