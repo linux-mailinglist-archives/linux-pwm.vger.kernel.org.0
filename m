@@ -2,58 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52C6060F397
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Oct 2022 11:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5137D60FA44
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Oct 2022 16:17:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232946AbiJ0JWp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 27 Oct 2022 05:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
+        id S236329AbiJ0ORg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 27 Oct 2022 10:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235286AbiJ0JWn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Oct 2022 05:22:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 113E9476EF
-        for <linux-pwm@vger.kernel.org>; Thu, 27 Oct 2022 02:22:42 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1onz5p-0007LF-Or; Thu, 27 Oct 2022 11:22:29 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1onz5p-000fr5-4o; Thu, 27 Oct 2022 11:22:28 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1onz5n-00B4Xo-IF; Thu, 27 Oct 2022 11:22:27 +0200
-Date:   Thu, 27 Oct 2022 11:22:27 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Romain Perier <romain.perier@gmail.com>
+        with ESMTP id S236336AbiJ0ORg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Oct 2022 10:17:36 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2071.outbound.protection.outlook.com [40.107.243.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4B3186780;
+        Thu, 27 Oct 2022 07:17:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GHD1yvrI+8yqkZDGT4NoUt4OJmMcL4k+14bDg+Z00kEs7fJ2J+NBtNaWQfwZgdoKOkxq1+AAcHRIa6uWkpVCCwdcC40gJdFOfkJelo7+eZ+pGfwvULnPLFA4oHBxMCGw9fJ/H7PS+a9w/gWkBlkrxo8nhR5rgH22tTV1Yf4+y1tuBaBGsPcA3At6BAZWSJPOeaGpP2X1BZXO//kBBP8hMpgyyUFbCVDG4QrdIoZv+uzNOTg3mz9mzjWEEdmAqHqvNA/TWMfxDnq6tpMtL8LQkqNWnQmBlXYNrN1ptulwYf3orYaD9aSsfwG4yHCSaFXpfO0AnD/OkFDAPoc5lUtsog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=68kjr2+7f9k44ruJC5/DSrNKz17Sjj0bevNKmJZNUPo=;
+ b=ZtUn5qGjIj1+sHF5rwLJWsGtF+RNg5Wpbd4PW5w/Wsj1gYRVicH6voFb9t2XUWCXu1gC77nGTYyxk/amya1A1ts0UP554sF0QlJ2T7x1KGxP2M21zywANcLk1CsoE2QYxYkLVOV88JEG7Ei7Lr+Cuh1s7L8Hqh/l0VLfkK8UWREf3Ho4Wa0jGugVvdXn5dbzn6LHxnoMIC+DG1v5CrzPL7hLyDbkvXJzkqbC0vwgvg4/h0sVSdnpg+2kl8296uKtzjZNgg2J5KmTJVZQvPXF7d7UwWr474sWAdrmFj6fKtfq/c6vvYqB3NRVeW7EaYpyXIjGqR5GnP1wHBH3mOL7ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=68kjr2+7f9k44ruJC5/DSrNKz17Sjj0bevNKmJZNUPo=;
+ b=NvpHj8vBU/XtwDnFSRucnCjlcra1H71k/voM3Zu95Z32ndfgiD1yeS++68HBdulUpM2syZmaT9ReAldmekfRi0miInCMBmPzWWhIvMZN/ymRjE7zU3JFnQsB7E3Pti/2gZy75mPHNR4pMVfUBp24T81j0OyZ63tnRn+F7icoDe0Gl5i6WHcHgxCLUibJn4BgPeWeSjjmJsJtR23ieNlvuO1CAYRRjL8Z0hF3a038t2ohVTL36+zYv+o+jHNM3KRNuZxD9sPZyMOevaQjPfZRD6x7FWGE34nallRPE+fIqLPKqvmni8aODiOHSdrK20xY5yxBhiliqUh0etKwLTVT5g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
+ BL1PR12MB5850.namprd12.prod.outlook.com (2603:10b6:208:395::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5746.28; Thu, 27 Oct 2022 14:17:32 +0000
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::c0e5:f111:3e59:7c66]) by CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::c0e5:f111:3e59:7c66%6]) with mapi id 15.20.5746.028; Thu, 27 Oct 2022
+ 14:17:32 +0000
+Message-ID: <89260f9f-a54b-108c-6144-5bcb06d5dc83@nvidia.com>
+Date:   Thu, 27 Oct 2022 15:17:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 2/2] pwm: tegra: Fix required rate when clock is lower
+ than needed
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] pwm: Add support for the MSTAR MSC313 PWM
-Message-ID: <20221027092227.wkxjsw6mep3o3auc@pengutronix.de>
-References: <20220907131241.31941-1-romain.perier@gmail.com>
- <20220907131241.31941-3-romain.perier@gmail.com>
- <20220927163314.rzfld7sqchsdfvfg@pengutronix.de>
- <CABgxDoJmVRbZEP02QoEhHKXiu127073oK2NE2VgFHBADCBbdog@mail.gmail.com>
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20221026101305.30670-1-jonathanh@nvidia.com>
+ <20221026101305.30670-2-jonathanh@nvidia.com>
+ <20221026142301.3cgwqozpafpuu34k@pengutronix.de>
+ <5bb9e817-9e4d-dd02-9c04-443efcf58226@nvidia.com>
+ <20221027064003.22hx7iftdpg7s5hi@pengutronix.de>
+From:   Jon Hunter <jonathanh@nvidia.com>
+In-Reply-To: <20221027064003.22hx7iftdpg7s5hi@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P123CA0250.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a7::21) To CO6PR12MB5444.namprd12.prod.outlook.com
+ (2603:10b6:5:35e::8)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gok45hmzf5nviwgp"
-Content-Disposition: inline
-In-Reply-To: <CABgxDoJmVRbZEP02QoEhHKXiu127073oK2NE2VgFHBADCBbdog@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|BL1PR12MB5850:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c3eba9e-8acf-4837-9890-08dab825fc9a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 81i8dr7MudYQq0oOvFSgwkRqWuAqDwbxL57iypaWGqvCKDd78li8ys6xILz7qsIXGcKTazTePkK4GuXzfHF4AFb8gT9xtUBExB1nv4i4zvnlD98+5WU/SFK0GELpn0fInA9BBe0MufL0F/XVUIh3ynE/45cld9LwAPFozc3WdhGcE8ZsWWjT2s8vWNWfLU91jYoAV6s1wB2hleQpbym2tr2UoBkv7JtAOaKqGQ63A+QCQ5M3m+z7iwKOclN6WPn4nDazmwzv71iCW2f8ekHnJM+FYjTGPjQZ+ghgHpjBeIckTuAsOj5c15eV8Pq/WSd4n4X/CnBZH2oOM8uoE5P0qKUkDIRb2+qb61nrpVy+jsld2jsB1UYf+F6OjbVHovniAIkGd4GPbDTLdlOMz6uBEHzUZViRqEt6+DBQ+sx8zAU+aYHqYXLJw7L3la1QuHme/l3w14HATrI4VhisvKd+oB03K/M45RC6eWd61Nygmvjg2WjJNuhlHqCiQcmt9fp26Bbhk6YNHFwm4IdrWU1gEX7m6+HOgvaBfDHb7t5JJ747u/4jzvM3vtMFz96xGtSGFIYZCFh3przEJHkHT94p0YYXkfq21avEOQyJNWZUPy99ouJ+HzZ7PHDYfNdvSluJDwQSuiOae3ZnRTzOblNJSPZdgULsBU1hlAsrd+9s2+HPpzlHkTJamuaFhzjWnU/+VDhg8WYvi848eXeTlM4pNKciEvEkMAmIOlSHi/MGTukQJ56UQUPFHEoGdYLQanHLc2E/DKE6CqMdEG7VR/Z1myUe2E38TAL5o1juH/CxkdJ9njDtXnLp9vAuVt9IiG7INEzwrd7DpVRzjEMsPUUyzQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(451199015)(2616005)(31686004)(6916009)(6486002)(316002)(38100700002)(36756003)(8936002)(86362001)(31696002)(186003)(53546011)(66574015)(6666004)(83380400001)(55236004)(6512007)(26005)(6506007)(4326008)(478600001)(66476007)(41300700001)(5660300002)(66946007)(66556008)(2906002)(8676002)(20673002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eXZtelpUMGZ5QldvWG5jald2YlJ5cnRTRnNaaGFzMHJZekJUNGpvK0xBVXp3?=
+ =?utf-8?B?c2Y2UWxQU2FidFBuWDhOWDRySFoyazVGdUQzdjFETlAzZzJ1dDc4aWt5ZkNl?=
+ =?utf-8?B?QVgzRlIyeFU5K0gzdGRlNVZDelVjN1Uva2JNSjJqRHBOcGJweklqMldkc0JZ?=
+ =?utf-8?B?OGVzVVYrK09GTVcrZG5XZ280ZlNBNDBROTBPb2FSMnNEYmlha3J1R2RPRU10?=
+ =?utf-8?B?Y1N2ZGxSZUhiUFR5UThYdTVFSTlFRUh2REIvemJqQmN0UitLMTBtVmkwMGZC?=
+ =?utf-8?B?Q2JRZStlWFVnWWlyNm8rdjA1UTRjSUtIQjUrTUhWbmNCbDBDajFFQXI5QVVD?=
+ =?utf-8?B?WnZrelNWUFkrRmpBbkNlcXJUaUNNRTVpejZaclp6WGU3NjhOQWdtL3VBdzBL?=
+ =?utf-8?B?VnQ2NW5rOXdudGsxZHZUQUtOOGhoT081ZDR4Tkx6SGMrSWh3V25sc1VtQXht?=
+ =?utf-8?B?S2dYM2RGQ3lnZmQ5ZmJkTnIvZDduWVdIYzMwWURGdWp6bjhpSlkrL1hKeHNJ?=
+ =?utf-8?B?anVKYzU3VE5iZFppSzdzSWxGSUFPMnlXMTdkRUdacjJLdFY2dTRaSHh1N1pO?=
+ =?utf-8?B?TmxvZ0ZTVDVvK2tBTlBOWHloYld6SzBPOW1UMFB3YnovNEd2VDd0dFlKRUNo?=
+ =?utf-8?B?RmdGVllEdWlEQVdjdG9SYkZqMjNQWTN5cGZIaUV4M3VQWnRpWldsSyttRENl?=
+ =?utf-8?B?ZU5HM0JIYlljbjA4T0d6NEFudHZPZkJNMjVyeEFhWVRWRENaZElYYW53dVUr?=
+ =?utf-8?B?S0pFSzBlaHZkajk0MWMzbDBHTGIwMnlxS1ZhdnlmWk42MkNXUW51REMvMGFQ?=
+ =?utf-8?B?b3QveVdZTWRxVnU2dkhReTFiaEdDOWFCN2Y2NnZhOE1MTWtMcUhlK1ZGYVdn?=
+ =?utf-8?B?QitMaDhIdGF2WFNRdlA5dlh3R0NrRGpkRmVnVUQ2Rkp2YUN4VUtUVnU2aHB1?=
+ =?utf-8?B?eHA0czNHOVdGQkVkdkRnUlFBem9kNEN0RDdoWmZIWFFHSmZlbzgweHdWNkFU?=
+ =?utf-8?B?YmJoUHFJK0N4U29WQU1BT2lEemUyeS9zV2FiWGs4bVA2QmZCU2VhcDVGeVFr?=
+ =?utf-8?B?enF0TWdEK3dCQXVjUDd4b3I5ZzRxb2hPcm12RlFLZkhBNTZEaGE4akcveERo?=
+ =?utf-8?B?N3E4VEg0Tk1iTDU1dWVDekJReWpHSndtZTBIRWdqUzRiRVpnU0pWOEluWlRH?=
+ =?utf-8?B?WjY3UGY2MWJWUWk5bGRmQVFQSDUwb0pzaFkvd1RqV3MybWFVa2R0NU0xN2NG?=
+ =?utf-8?B?dXJGSUVWaFlCV3crVnFXOEI4bzhrYm9FenNoZlRySjlVcXBDZ2ZXWmxXQXBS?=
+ =?utf-8?B?aDVsS2l0YXZ5eTFWRFFSNFluUzFUZGdnbmhkdHZrdkVtWXpaY2NjWml1akZz?=
+ =?utf-8?B?RERFQlM4NEZibjA3UmY4YzArN1ZtdGhZZmpWRW1nb0dMaFhwR2Vqa1U0R3Z1?=
+ =?utf-8?B?WkR1WDFZWldaaTcyQUN6U0ttMTFpTzdNSm5BblBDbzRFMlJaTm40dnZJMUhX?=
+ =?utf-8?B?ODlzMktHSzJaa2dQSGdVWHpQTDJQSHZOcURud2gzeHBWZk9xd2lUYkxSUUF5?=
+ =?utf-8?B?K1hMZ2hzYWVyUTRZbVZ1aFQ2TlF3d3hOeXBBcVMxZW1XWkpQeWZWVkxHUE5U?=
+ =?utf-8?B?Ym9RcW53RWNwd0RQUUF3Zm1GTkF6aXNPRW9yK2krUy9jZU10cnMzQlBRSko4?=
+ =?utf-8?B?NWRtc0ZKTjRMaHpLNm9wbjljaVh3QlVSS25SL3RiQy9sdEtVc29qZFloQzly?=
+ =?utf-8?B?SU84d1I3V09rQTZydDJmdFhwM2pGamV4eDB0UkN5TVZNZEhUeGhKMWlnSTdo?=
+ =?utf-8?B?enZtZVJMYzRFdmlrczRKQjFYZmhYNW45UnpmL2tVbzkrUmRSbGRud3VoQ2pX?=
+ =?utf-8?B?Yi8vTnVaZWhMK3BXQUxSclBYd3R5NmM2dzRVYTJNUmdjUEZqYTBISkNLL3dL?=
+ =?utf-8?B?OXJNMzdqMENNRmdJS1NHeStQMGU1eS8yZDRIbXBhcVpRNHpjS2JpR1R6ZWV6?=
+ =?utf-8?B?akhqTnJ5UmNNdVhPUHplRnhJbFFPbmEzN2NnL0lGWTJCMzVIOFlLdDdYYk0y?=
+ =?utf-8?B?Qlk2TERZYU1GUzN2eXdVS2xvMHpFMzRCVldLOFFXT0hKSy9Ud3VET1o3eUxL?=
+ =?utf-8?B?SUR2QjJvMVJmWW50bzZRbXpLSGFtTHI5cDZ5elIydDFhZGIxUndFVytvZy9H?=
+ =?utf-8?B?a2c9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c3eba9e-8acf-4837-9890-08dab825fc9a
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2022 14:17:32.0448
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aze7owLK/+RPZAmbZS9I6BWKvo7m2bbUlUq+veJa0EwKCevLXLIstJk1JMS4BuOtqMfZRkRcRXSzQHkLhyHtkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5850
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -61,233 +130,125 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---gok45hmzf5nviwgp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 27/10/2022 07:40, Uwe Kleine-König wrote:
+> Hello Jon,
+> 
+> On Wed, Oct 26, 2022 at 09:17:08PM +0100, Jon Hunter wrote:
+>> On 26/10/2022 15:23, Uwe Kleine-König wrote:
+>>> On Wed, Oct 26, 2022 at 11:13:05AM +0100, Jon Hunter wrote:
+>>>> If the 'required_clk_rate' is greater than the clock rate that can be
+>>>> provided, then when mul_u64_u64_div_u64() is called to determine the
+>>>> 'rate' for the PWM divider, 0 will be returned. If 'rate' is 0, then we
+>>>> will return -EINVAL and fail to configure the PWM. Fix this by adding 1
+>>>> to the PWM_DUTY_WIDTH when calculating the 'required_clk_rate' to ensure
+>>>> that 'rate' is greater or equal to 1. This fixes an issue on Tegra234
+>>>> where configuring the PWM fan fails.
+>>>>
+>>>> Fixes: 8c193f4714df ("pwm: tegra: Optimize period calculation")
+>>>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>>>> ---
+>>>>    drivers/pwm/pwm-tegra.c | 13 +++++++++++++
+>>>>    1 file changed, 13 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+>>>> index 8a33c500f93b..973e2c1533ab 100644
+>>>> --- a/drivers/pwm/pwm-tegra.c
+>>>> +++ b/drivers/pwm/pwm-tegra.c
+>>>> @@ -148,6 +148,19 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>>>>   		required_clk_rate = DIV_ROUND_UP_ULL((NSEC_PER_SEC << PWM_DUTY_WIDTH),
+>>>>   						     period_ns);
+>>>> +		/*
+>>>> +		 * If the 'required_clk_rate' is greater than the clock rate
+>>>> +		 * that can be provided, then when mul_u64_u64_div_u64() is
+>>>> +		 * called to determine the 'rate' for the PWM divider, 0 will
+>>>> +		 * be returned. If 'rate' is 0, then we will return -EINVAL and
+>>>> +		 * fail to configure the PWM. If this case, add 1 to the
+>>>> +		 * PWM_DUTY_WIDTH when calculating the 'required_clk_rate' to
+>>>> +		 * ensure that 'rate' is greater or equal to 1.
+>>>> +		 */
+>>>> +		if (required_clk_rate > clk_round_rate(pc->clk, required_clk_rate))
+>>>> +			required_clk_rate = DIV_ROUND_UP_ULL((NSEC_PER_SEC << (PWM_DUTY_WIDTH + 1)),
+>>>> +							     period_ns);
+>>>> +
+>>>
+>>> It's implicit knowledge that (roughly) doubling the clk rate is the
+>>> right value (i.e the minimal value to get a
+>>> clk_rate >= (NSEC_PER_SEC << PWM_DUTY_WIDTH) / period_ns?
+>>
+>> Are you suggesting I drop the comment? Sorry not sure what you are trying to
+>> say here and if you think something should be changed.
+> 
+> No, I just wondered about that +1 being the right thing to do. Consider
+> period_ns was 400003. Then you get required_clk_rate = 639996.
+> Now we want to prevent that calling dev_pm_opp_set_rate(..., 639996)
+> yields a rate less than 639996.
+> 
+> You're implicitly claiming that 1279991 will do. But without further
+> knowledge also that value might yield a rate less than 639996; or 959993
+> might yield a rate that better fits our needs (i.e.
+> 
+> 	639996 <= clk_round_rate(..., 959993) < clk_round_rate(..., 1279991)
+> 
+> ). So my question was about "why 1279991?" and if there is implicit
+> knowledge that makes 1279991 the right choice. Assuming there is such a
+> reasoning, I'd prefer a comment like:
+> 
+> 	/*
+> 	 * To achieve a period not bigger than the requested period we
+> 	 * must ensure that the input clock runs with at least
+> 	 * $required_clk_rate Hz. As consecutive possible rates differ
+> 	 * by a factor of two we double our request if
+> 	 * $required_clk_rate yields a too slow rate.
+> 	 */
+> 
+> I'm not entirely sure this would be a sound assumption but I think you
+> get the point?! (It might be necessary to double exactly the requested
+> value and then you still have to make some (reasonable) assumption about
+> clk_round_rate().)
 
-Hello Romain,
 
-On Thu, Oct 27, 2022 at 10:36:10AM +0200, Romain Perier wrote:
-> Le mar. 27 sept. 2022 =E0 18:33, Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> a =E9crit :
-> >
-> > Hello Romain, hello Daniel,
-> >
-> > adding Mark Brown to Cc: for the regmap stuff.
-> >
-> > On Wed, Sep 07, 2022 at 03:12:38PM +0200, Romain Perier wrote:
-> > > From: Daniel Palmer <daniel@0x0f.com>
-> > >
-> > > This adds support for the PWM block on the Mstar MSC313e SoCs and new=
-er.
-> > >
-> > > Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> > > Co-developed-by: Romain Perier <romain.perier@gmail.com>
-> > > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > > ---
-> > >  MAINTAINERS               |   1 +
-> > >  drivers/pwm/Kconfig       |   9 ++
-> > >  drivers/pwm/Makefile      |   1 +
-> > >  drivers/pwm/pwm-msc313e.c | 269 ++++++++++++++++++++++++++++++++++++=
-++
-> > >  4 files changed, 280 insertions(+)
-> > >  create mode 100644 drivers/pwm/pwm-msc313e.c
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 9d7f64dc0efe..c3b39b09097c 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -2439,6 +2439,7 @@ F:      arch/arm/mach-mstar/
-> > >  F:   drivers/clk/mstar/
-> > >  F:   drivers/clocksource/timer-msc313e.c
-> > >  F:   drivers/gpio/gpio-msc313.c
-> > > +F:   drivers/pwm/pwm-msc313e.c
-> > >  F:   drivers/rtc/rtc-msc313.c
-> > >  F:   drivers/watchdog/msc313e_wdt.c
-> > >  F:   include/dt-bindings/clock/mstar-*
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index 60d13a949bc5..8049fd03a821 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -372,6 +372,15 @@ config PWM_MESON
-> > >         To compile this driver as a module, choose M here: the module
-> > >         will be called pwm-meson.
-> > >
-> > > +config PWM_MSC313E
-> > > +     tristate "MStar MSC313e PWM support"
-> > > +     depends on ARCH_MSTARV7 || COMPILE_TEST
-> > > +     help
-> > > +       Generic PWM framework driver for MSTAR MSC313e.
-> > > +
-> > > +       To compile this driver as a module, choose M here: the module
-> > > +       will be called pwm-msc313e.
-> > > +
-> > >  config PWM_MTK_DISP
-> > >       tristate "MediaTek display PWM driver"
-> > >       depends on ARCH_MEDIATEK || COMPILE_TEST
-> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > > index 7bf1a29f02b8..bc285c054f2a 100644
-> > > --- a/drivers/pwm/Makefile
-> > > +++ b/drivers/pwm/Makefile
-> > > @@ -62,4 +62,5 @@ obj-$(CONFIG_PWM_TWL)               +=3D pwm-twl.o
-> > >  obj-$(CONFIG_PWM_TWL_LED)    +=3D pwm-twl-led.o
-> > >  obj-$(CONFIG_PWM_VISCONTI)   +=3D pwm-visconti.o
-> > >  obj-$(CONFIG_PWM_VT8500)     +=3D pwm-vt8500.o
-> > > +obj-$(CONFIG_PWM_MSC313E)    +=3D pwm-msc313e.o
-> > >  obj-$(CONFIG_PWM_XILINX)     +=3D pwm-xilinx.o
-> > > diff --git a/drivers/pwm/pwm-msc313e.c b/drivers/pwm/pwm-msc313e.c
-> > > new file mode 100644
-> > > index 000000000000..a71f39ba66c3
-> > > --- /dev/null
-> > > +++ b/drivers/pwm/pwm-msc313e.c
-> > > @@ -0,0 +1,269 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (C) 2021 Daniel Palmer <daniel@thingy.jp>
-> > > + * Copyright (C) 2022 Romain Perier <romain.perier@gmail.com>
-> > > + */
-> > > +
-> > > +#include <linux/clk.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/pwm.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +#define DRIVER_NAME "msc313e-pwm"
-> > > +
-> > > +#define CHANNEL_OFFSET       0x80
-> > > +#define REG_DUTY     0x8
-> > > +#define REG_PERIOD   0x10
-> > > +#define REG_DIV              0x18
-> > > +#define REG_CTRL     0x1c
-> > > +#define REG_SWRST    0x1fc
-> > > +
-> > > +struct msc313e_pwm_channel {
-> > > +     struct regmap_field *clkdiv;
-> > > +     struct regmap_field *polarity;
-> > > +     struct regmap_field *dutyl;
-> > > +     struct regmap_field *dutyh;
-> > > +     struct regmap_field *periodl;
-> > > +     struct regmap_field *periodh;
-> > > +     struct regmap_field *swrst;
-> > > +};
-> > > +
-> > > +struct msc313e_pwm {
-> > > +     struct regmap *regmap;
-> > > +     struct pwm_chip pwmchip;
-> > > +     struct clk *clk;
-> > > +     struct msc313e_pwm_channel channels[];
-> > > +};
-> > > +
-> > > +struct msc313e_pwm_info {
-> > > +     unsigned int channels;
-> > > +};
-> > > +
-> > > +#define to_msc313e_pwm(ptr) container_of(ptr, struct msc313e_pwm, pw=
-mchip)
-> > > +
-> > > +static const struct regmap_config msc313e_pwm_regmap_config =3D {
-> > > +     .reg_bits =3D 16,
-> > > +     .val_bits =3D 16,
-> > > +     .reg_stride =3D 4,
-> > > +};
-> > > +
-> > > +static const struct msc313e_pwm_info msc313e_data =3D {
-> > > +     .channels =3D 8,
-> > > +};
-> > > +
-> > > +static const struct msc313e_pwm_info ssd20xd_data =3D {
-> > > +     .channels =3D 4,
-> > > +};
-> > > +
-> > > +static void msc313e_pwm_writecounter(struct regmap_field *low, struc=
-t regmap_field *high, u32 value)
-> > > +{
-> > > +     /* The bus that connects the CPU to the peripheral registers sp=
-lits 32 bit registers into
-> >
-> > Please fix the comment style to use /* on a line for itself. Also for
-> > comments staying below 80 chars per line is appreciated.
->=20
-> even if check-patch.pl --strict passed ? ^^
+So actually, I am not claiming that doubling the clock rate will do.
+All I am claiming is that we know that based upon the rate returned
+by clk_round_rate(), we can determine if the original
+required_clk_rate we calculated will work or not. If we determine
+that this does not work because it is less than we need, then the
+next logical step would be to try a higher rate.
 
-I also already wondered about check-patch not demanding this. *shrug*
+We already know that the period is greater than the minimum period
+that is allowed, because we check this earlier on. So if the period
+is greater than the min period, it would seem that doubling the
+clock rate might be sufficient. Worse case it is not and we still
+return -EINVAL and we are no better off.
 
-> > > +      * two 16bit registers placed 4 bytes apart. It's the hardware =
-design they used. The counter
-> > > +      * we are about to write has this contrainst.
-> >
-> > s/contrainst/contraint/
-> >
-> > I wonder if that could be abstracted by regmap?!
->=20
-> I had the same thought, not from what I have read/found, but perhaps
-> the regmap maintainer has an opinion.
->=20
-> >
-> > > +      */
-> > > +     regmap_field_write(low, value & 0xffff);
-> > > +     regmap_field_write(high, value >> 16);
-> > > +}
-> > > +
-> > > +static void msc313e_pwm_readcounter(struct regmap_field *low, struct=
- regmap_field *high, u32 *value)
-> > > +{
-> > > +     unsigned int val =3D 0;
-> > > +
-> > > +     regmap_field_read(low, &val);
-> > > +     *value =3D val;
-> > > +     regmap_field_read(high, &val);
-> > > +     *value =3D (val << 16) | *value;
-> > > +}
-> > > +
-> > > +static int msc313e_pwm_config(struct pwm_chip *chip, struct pwm_devi=
-ce *device,
-> > > +                           int duty_ns, int period_ns)
-> > > +{
-> > > +     struct msc313e_pwm *pwm =3D to_msc313e_pwm(chip);
-> > > +     unsigned long long nspertick =3D DIV_ROUND_DOWN_ULL(NSEC_PER_SE=
-C, clk_get_rate(pwm->clk));
-> > > +     struct msc313e_pwm_channel *channel =3D &pwm->channels[device->=
-hwpwm];
-> > > +     unsigned long long div =3D 1;
-> > > +
-> > > +     /* Fit the period into the period register by prescaling the cl=
-k */
-> > > +     while (DIV_ROUND_DOWN_ULL(period_ns, nspertick) > 0x3ffff) {
-> >
-> > dividing by the result of a division looses precision. Also rounding
-> > down both divisions looks wrong.
->=20
-> Such cases are not supposed to be covered by PWM_DEBUG ? (because
-> everything passed with PWM_DEBUG)
+However, I see that I have been focused on the current issue in
+front of me and this works. The alternative that I see would be to
+stick with the maximum rate permitted ...
 
-Note that PWM_DEBUG being silent isn't an indicator that everything is
-fine. It cannot catch everything and so doesn't replace human review.
+diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+index 8a33c500f93b..2099ecca4237 100644
+--- a/drivers/pwm/pwm-tegra.c
++++ b/drivers/pwm/pwm-tegra.c
+@@ -148,12 +148,14 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+                 required_clk_rate = DIV_ROUND_UP_ULL((NSEC_PER_SEC << PWM_DUTY_WIDTH),
+                                                      period_ns);
+  
+-               err = dev_pm_opp_set_rate(pc->dev, required_clk_rate);
+-               if (err < 0)
+-                       return -EINVAL;
+-
+-               /* Store the new rate for further references */
+-               pc->clk_rate = clk_get_rate(pc->clk);
++               if (required_clk_rate <= clk_round_rate(pc->clk, required_clk_rate)) {
++                       err = dev_pm_opp_set_rate(pc->dev, required_clk_rate);
++                       if (err < 0)
++                               return -EINVAL;
++
++                       /* Store the new rate for further references */
++                       pc->clk_rate = clk_get_rate(pc->clk);
++               }
+         }
 
-If you tell me what clk_get_rate() returns for you, I might be able to
-tell you a procedure that makes PWM_DEBUG unhappy.
+Jon
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---gok45hmzf5nviwgp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNaTdAACgkQwfwUeK3K
-7AnMqgf8DzFsEd9BI2kFodRUCfC6mjEpPasgkBKB6PUykVv8BpgpneGcod1ZuGaf
-mFa8bCcs+2m/KIBKGaO6EXjWd5/8v1jwfTUMi6tArh2KXYcODvyWBDkAFenw5jqX
-3K+dpScgpoD+tBam1wzgkCsDBqH7aS7tk0yTEJZEQd1U0kTiKUTFLHarnmlqQcAZ
-ZaTQdSuA4DXfKVEIsXo+PxMF6VUuW96tvnktN15Q1qe1baW7hymbe5w3sGOLYI3c
-AxQI5QeEshwegQ+CmJNYFE+s96MuMG2tA+Y9C7Jyzb2iooqkIPB65sS3DnJaa4Gh
-NT22oQSFzN+YTPBRGIjPos0kq84n2A==
-=Umol
------END PGP SIGNATURE-----
-
---gok45hmzf5nviwgp--
+-- 
+nvpublic
