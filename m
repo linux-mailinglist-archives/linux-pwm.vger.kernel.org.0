@@ -2,211 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE12960FCA5
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Oct 2022 18:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AD34610C59
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Oct 2022 10:39:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236344AbiJ0QJV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 27 Oct 2022 12:09:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59988 "EHLO
+        id S229777AbiJ1Ijl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Oct 2022 04:39:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234372AbiJ0QJU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Oct 2022 12:09:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89E31849AE
-        for <linux-pwm@vger.kernel.org>; Thu, 27 Oct 2022 09:09:18 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oo5RU-0006Vd-H3; Thu, 27 Oct 2022 18:09:16 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oo5RT-000jfF-Cm; Thu, 27 Oct 2022 18:09:14 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oo5RR-00B9wF-QW; Thu, 27 Oct 2022 18:09:13 +0200
-Date:   Thu, 27 Oct 2022 18:09:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] pwm: tegra: Fix required rate when clock is lower
- than needed
-Message-ID: <20221027160913.3wkz4ewmmh2z3xuk@pengutronix.de>
-References: <20221026101305.30670-1-jonathanh@nvidia.com>
- <20221026101305.30670-2-jonathanh@nvidia.com>
- <20221026142301.3cgwqozpafpuu34k@pengutronix.de>
- <5bb9e817-9e4d-dd02-9c04-443efcf58226@nvidia.com>
- <20221027064003.22hx7iftdpg7s5hi@pengutronix.de>
- <89260f9f-a54b-108c-6144-5bcb06d5dc83@nvidia.com>
- <04d2c7ea-cfb1-b8a3-c1ad-39449a6a1701@nvidia.com>
+        with ESMTP id S229572AbiJ1Ijj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Oct 2022 04:39:39 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E790E0EA;
+        Fri, 28 Oct 2022 01:39:37 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 0CFB3660290F;
+        Fri, 28 Oct 2022 09:39:35 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1666946375;
+        bh=UhMWJ/1/cEHdLVXxkAy9ur25nedUXLfJn8yUZ5lgu04=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=TefUW9//YWfJDnNMBy5ONnnUxBXe/gejvnZs+Gxu/ShigBEh2gElXp/yeYKn67n3W
+         wYKId+ZA4K5/rNAaMXTTZNbz8D04HFcxOrsdoL06tjAd057i1R1cRA0xuVj6nTZMWL
+         jc2HqGmg46eE/7za1W7guuJoTKf/w9NjTTZkSxrH4fmmCKMjHTxuUX2yXPo6dCzf++
+         W3BVHpf2icr820ATZo4+yvfE4iQFk5fUPIYoT0iTJqWC3eWZ5hP+uswwu4T1cE/YTg
+         33b9ucRL2oO2bz+cmRA3nbRJkjIWq3VNm2SkaMQYU3Or+FnlgIOJ6cLE8M0oybagYC
+         mMBK4o/11hlqw==
+Message-ID: <eb47aba9-e5d9-9f27-06ae-cf386b291b05@collabora.com>
+Date:   Fri, 28 Oct 2022 10:39:31 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="de3xodq7j52epw7e"
-Content-Disposition: inline
-In-Reply-To: <04d2c7ea-cfb1-b8a3-c1ad-39449a6a1701@nvidia.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH] pwm: mediatek: always use bus clock for PWM on MT7622
+Content-Language: en-US
+To:     Daniel Golle <daniel@makrotopia.org>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Fabien Parent <fparent@baylibre.com>,
+        Zhi Mao <zhi.mao@mediatek.com>,
+        Sam Shih <sam.shih@mediatek.com>
+References: <Y1iF2slvSblf6bYK@makrotopia.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <Y1iF2slvSblf6bYK@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Il 26/10/22 02:56, Daniel Golle ha scritto:
+> According to MT7622 Reference Manual for Development Board v1.0 the PWM
+> unit found in the MT7622 SoC also comes with the PWM_CK_26M_SEL register
+> at offset 0x210 just like other modern MediaTek ARM64 SoCs.
+> And also MT7622 sets that register to 0x00000001 on reset which is
+> described as 'Select 26M fix CLK as BCLK' in the datasheet.
+> Hence set has_ck_26m_sel to true also for MT7622 which results in the
+> driver writing 0 to the PWM_CK_26M_SEL register which is described as
+> 'Select bus CLK as BCLK'.
+> 
+> Fixes: 0c0ead76235db0 ("pwm: mediatek: Always use bus clock")
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
 
---de3xodq7j52epw7e
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-On Thu, Oct 27, 2022 at 04:40:04PM +0100, Jon Hunter wrote:
->=20
-> On 27/10/2022 15:17, Jon Hunter wrote:
->=20
-> ...
->=20
-> > However, I see that I have been focused on the current issue in
-> > front of me and this works. The alternative that I see would be to
-> > stick with the maximum rate permitted ...
-> >=20
-> > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> > index 8a33c500f93b..2099ecca4237 100644
-> > --- a/drivers/pwm/pwm-tegra.c
-> > +++ b/drivers/pwm/pwm-tegra.c
-> > @@ -148,12 +148,14 @@ static int tegra_pwm_config(struct pwm_chip *chip,
-> > struct pwm_device *pwm,
-> >  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 required_clk_rate =3D DI=
-V_ROUND_UP_ULL((NSEC_PER_SEC <<
-> > PWM_DUTY_WIDTH),
-> >  =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0 period_ns);
-> >=20
-> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 err =3D dev_pm_opp_set_rate=
-(pc->dev, required_clk_rate);
-> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (err < 0)
-> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret=
-urn -EINVAL;
-> > -
-> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /* Store the new rate for f=
-urther references */
-> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pc->clk_rate =3D clk_get_ra=
-te(pc->clk);
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (required_clk_rate <=3D =
-clk_round_rate(pc->clk,
-> > required_clk_rate)) {
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 err=
- =3D dev_pm_opp_set_rate(pc->dev,
-> > required_clk_rate);
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if =
-(err < 0)
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
-> > +
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 /* =
-Store the new rate for further references */
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pc-=
->clk_rate =3D clk_get_rate(pc->clk);
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-> >  =A0=A0=A0=A0=A0=A0=A0 }
->=20
->=20
-> Thinking about it some more, it is probably simpler and better to ...
->=20
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index 8a33c500f93b..16855f7686db 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -148,6 +148,17 @@ static int tegra_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->                 required_clk_rate =3D DIV_ROUND_UP_ULL((NSEC_PER_SEC << P=
-WM_DUTY_WIDTH),
->                                                      period_ns);
-> +               /*
-> +                * If the 'required_clk_rate' is greater than the clock r=
-ate
-> +                * that can be provided then we will fail to configure th=
-e PWM,
 
-This is unclear. clk_round_rate(pc->clk, required_clk_rate) isn't the
-(maximal) rate that can be provided. It's just the rate you get when
-requesting required_clk_rate.
-
-> +                * because the 'rate' calculation below will return 0 and=
- which
-> +                * will cause this function to return -EINVAL. To avoid t=
-his, if
-> +                * the 'required_clk_rate' is greater than the rate retur=
-ned by
-> +                * clk_round_rate(), set the PWM clock to the max frequen=
-cy.
-> +                */
-> +               if (required_clk_rate > clk_round_rate(pc->clk, required_=
-clk_rate))
-> +                       required_clk_rate =3D ULONG_MAX;
-> +
-
-That looks wrong. Assume the clk can implement either
-
-	51 MHz, 102 MHz, 204 MHz or 408 MHz
-
-Say you want at least 52 MHz and clk_round_rate(..., 52000000) =3D
-51000000. Then you want to pick 102 MHz, not 408 MHz, don't you?
-
->                 err =3D dev_pm_opp_set_rate(pc->dev, required_clk_rate);
->                 if (err < 0)
->                         return -EINVAL;
->=20
-> Setting the 'required_clk_rate' to ULONG_MAX will cause the PWM to run
-> at the max clock. For Tegra234, this is 408MHz (assuming the PLLP is the
-> parent).
-
-It's another implicit assumption that using ULONG_MAX configures the
-maximal possible rate ...
-
-I'd write:
-
-	if (required_clk_rate > clk_round_rate(pc->clk, required_clk_rate))
-		/*
-		 * required_clk_rate is a lower bound for the input
-		 * rate; for lower rates there is no value for PWM_SCALE
-		 * that yields a period less than or equal to the
-		 * requested period. So increase required_clk_rate.
-		 *
-		 * Some more talk about the properties of clk that
-		 * motivate that doubling (or whatever you pick) is a
-		 * sane strategy.
-		 */
-		required_clk_rate *=3D 2;
-
-I'd not explain the details about the calculation, someone interested in
-that will/should look at the code anyhow.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---de3xodq7j52epw7e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNarSYACgkQwfwUeK3K
-7AlEpQgAh2g9isTOAlc1ShrSHhrK3Q46nvkn0XZARW8pFXm8FEEKitSBT1FtvEqz
-FM2M2jwuuBFyAaq3/CTBH+QRJoqAEA6qUtBE9t3zeW2lpOdkpZw9kPWT26pBhk3D
-8ZYNToHYG1x3kKqmBbaDxJmRO3nBCSAZ/5JOBFUeKxXZfn78BdYrZ/fn20Ul/ih8
-RtoC2Q7cSzYh85Voehj4Vt9/jRxtgqHnJNzEXoHjibNNKT5d/FyHF34KNH5n5l7L
-aneWm7RcUhZ0m4XWc44PdiiqPMceafrOGlYv5Pdn5trQDIrl5M7qf3GbPXaTVybX
-dZo8Ij0NzgwgTDl3te3g90yJGkZz0Q==
-=Gy7z
------END PGP SIGNATURE-----
-
---de3xodq7j52epw7e--
