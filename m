@@ -2,66 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 258F2611A9A
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Oct 2022 21:04:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0354C611B1D
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Oct 2022 21:47:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbiJ1TEo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Oct 2022 15:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38626 "EHLO
+        id S229781AbiJ1Trg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Oct 2022 15:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbiJ1TEm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Oct 2022 15:04:42 -0400
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5516FDFAD;
-        Fri, 28 Oct 2022 12:04:40 -0700 (PDT)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-13c2cfd1126so7288953fac.10;
-        Fri, 28 Oct 2022 12:04:40 -0700 (PDT)
+        with ESMTP id S229520AbiJ1Trf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Oct 2022 15:47:35 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC81E241B07
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Oct 2022 12:47:33 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id a27so835807qtw.10
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Oct 2022 12:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SuLQ4LGhTb9iEJLwlybh7NzL9tVrunJow2oZoFj99dQ=;
+        b=Pjxp64dtv0DecR/RobHlhnBssFPkJpiIYdP9pzvHpW8KX1urKw17Q3/hVzO6xZuWU0
+         ZEBP7vT3vkOpmYLoHdriGyrmvzZ7BkZmOWgPP3PV7bczMOcHweuS0/lffViCJIt/zuTh
+         GQvoM9yVvq8QtBvga4RIfbp7cvVeoRvDUlevsM7b1/SnTgFsY/w9vPdcH/utytuS3kty
+         Kx7tCElNtSa8/P9Rxw0cqhW4GGO0QGqALG5Zca8cMOvmrsjNKC7wqSTPQinjgA5BZ49S
+         VYzbWWiza4Z/UtvQt2tUN89m0uFwB8WeQwLBW7M9W2qD4bih9ojfGr/pBjHHrpNO1ygV
+         S4+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RtfpI9rlbOhsKpmZm1h0Bvu9a77/MRnLOJ2Qclf1R/g=;
-        b=bAU8WkXgJzbLqj/s1xMIlYjC73u64Y+eF+FDViEqGXlUM2RfJgmn5VnkJACM0eoqS2
-         g5tYy4gmWyPIFi52SiglNeC3T+gSVOkPY7SClSC270eH3JJHzkgFlPVfavATEtJV2pgS
-         5wFZ7A+I1rrQdUlQQVCcaD5li+8Ocy+aqEwP9YsiKZD9iGWrrbmspR+aAZBIFIEfnqad
-         GyXN/ZDSu4LW8xw2fwPB+iscyHumlzav8jA46n4BZzUvMzMPI3FF7nDE2/lB7ow5mp7L
-         L70WhUYPoj9NRsgsncZgXZl4p72sh/c/JsOV0IR95RqTWmAR+JxOwNqxQrSFnAECADa2
-         uXqw==
-X-Gm-Message-State: ACrzQf323+lU11+L+G/SBCOUu2CRc1pdCaRxe5S1XlFnS6rrc2L15jra
-        oOOy0t4sdMJue3NeycyIAQ==
-X-Google-Smtp-Source: AMsMyM6tezh5o2b4dNkYK5v+E6BduBVm+8wB6EMOaQdLqRIYQoPr5GfMlgIq26LTdQ2B28Jfk4dbpw==
-X-Received: by 2002:a05:6870:b414:b0:130:ea11:761c with SMTP id x20-20020a056870b41400b00130ea11761cmr393921oap.62.1666983879570;
-        Fri, 28 Oct 2022 12:04:39 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id g91-20020a9d12e4000000b00661b019accbsm2022445otg.3.2022.10.28.12.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Oct 2022 12:04:39 -0700 (PDT)
-Received: (nullmailer pid 2098127 invoked by uid 1000);
-        Fri, 28 Oct 2022 19:04:38 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc:     krzysztof.kozlowski+dt@linaro.org, sven@svenpeter.dev,
-        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        asahi@lists.linux.dev, marcan@marcan.st, alyssa@rosenzweig.io
-In-Reply-To: <20221028165215.43662-2-fnkl.kernel@gmail.com>
-References: <20221028165215.43662-1-fnkl.kernel@gmail.com> <20221028165215.43662-2-fnkl.kernel@gmail.com>
-Message-Id: <166698381253.2093680.6251640066817102720.robh@kernel.org>
+        bh=SuLQ4LGhTb9iEJLwlybh7NzL9tVrunJow2oZoFj99dQ=;
+        b=WHKtu0Pf5kYl2VL2WO1RvUs7ZEcHtK32YEx2MWJMYDKas6KHQOGsErMgI0emNHFm/6
+         sn9YSHurj7tMLVbDIesmekeCV0J8MaJ7QE9OxgX3vktNHVr9FNPqmYOmI6t8yovCKAnZ
+         snfSjsGk5Vb4O9VRIVlKAmRmlCW1W9w5meLPGtT5eqROoFgFxJeGyr/8grKRFD0jVgW4
+         2498wVmhks8m5yYCbtFfB++Ei82qWGoVqORdzq7OsJuHcwTHwvm6NpK5bM68w/2HcOAk
+         jImbyOxG9SpbPGpeWl1teY0nXHPbj4TtFKgX/RZqykdyw4fHGv9rlet2e7eh4XVzSvZ4
+         Tvsw==
+X-Gm-Message-State: ACrzQf0CRTVEveNKWTFF/tG3HmZ1cc7QUwYA0bJ9B9qgn0V3zGQm6sOl
+        mG3t7Nk1rCg+rJx+spamJEmDrA==
+X-Google-Smtp-Source: AMsMyM6lrikoLcv6eLHGa7lpzNLbaHvBXJP/FuXl58MVeVcQpzV+fNRBVO9OTj27uH/gzSL/lvnmwQ==
+X-Received: by 2002:ac8:5b81:0:b0:39c:b735:6b8b with SMTP id a1-20020ac85b81000000b0039cb7356b8bmr1011547qta.416.1666986453067;
+        Fri, 28 Oct 2022 12:47:33 -0700 (PDT)
+Received: from [192.168.1.11] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id h24-20020ac85498000000b00399b73d06f0sm2842518qtq.38.2022.10.28.12.47.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Oct 2022 12:47:32 -0700 (PDT)
+Message-ID: <498e6e3a-6391-c220-f7db-211aa415dde8@linaro.org>
+Date:   Fri, 28 Oct 2022 15:47:30 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
 Subject: Re: [PATCH 1/4] dt-bindings: pwm: Add Apple PWM controller
-Date:   Fri, 28 Oct 2022 14:04:38 -0500
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Language: en-US
+To:     Sasha Finkelstein <fnkl.kernel@gmail.com>,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20221028165215.43662-1-fnkl.kernel@gmail.com>
+ <20221028165215.43662-2-fnkl.kernel@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221028165215.43662-2-fnkl.kernel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 28 Oct 2022 19:52:13 +0300, Sasha Finkelstein wrote:
+On 28/10/2022 12:52, Sasha Finkelstein wrote:
 > Apple SoCs such as the M1 contain a PWM controller used
 > among other things to control the keyboard backlight.
 > 
@@ -71,32 +89,65 @@ On Fri, 28 Oct 2022 19:52:13 +0300, Sasha Finkelstein wrote:
 >  1 file changed, 51 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-apple.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-apple.yaml b/Documentation/devicetree/bindings/pwm/pwm-apple.yaml
+> new file mode 100644
+> index 000000000000..39dc32e00a3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-apple.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-apple.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Apple FPWM controller
+> +
+> +maintainers:
+> +  - asahi@lists.linux.dev
+> +  - Sasha Finkelstein <fnkl.kernel@gmail.com>
+> +
+> +description: |+
+> +  PWM controller used for keyboard backlight on ARM Macs
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - apple,t8103-fpwm
+> +          - apple,t6000-fpwm
+> +          - apple,t8112-fpwm
+> +      - const: apple,s5l-fpwm
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Missing blank line.
 
-yamllint warnings/errors:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwm: fpwm@235044000 {
+> +      compatible = "apple,s5l-fpwm";
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/pwm-apple.example.dtb: fpwm@235044000: compatible:0: 'apple,s5l-fpwm' is not one of ['apple,t8103-fpwm', 'apple,t6000-fpwm', 'apple,t8112-fpwm']
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/pwm-apple.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/pwm-apple.example.dtb: fpwm@235044000: compatible: ['apple,s5l-fpwm'] is too short
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/pwm-apple.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/pwm-apple.example.dtb: fpwm@235044000: reg: [[2, 889470976], [0, 16384]] is too long
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/pwm-apple.yaml
+As Rob's bot pointed out, this does not match the bindings so you did
+not test them before sending :(
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
+Best regards,
+Krzysztof
 
