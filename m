@@ -2,80 +2,161 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F001B613AC3
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Oct 2022 16:54:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB0E2613B5B
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Oct 2022 17:33:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231537AbiJaPyd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Oct 2022 11:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58648 "EHLO
+        id S231715AbiJaQdD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Oct 2022 12:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231405AbiJaPy3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Oct 2022 11:54:29 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802AB1260A
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Oct 2022 08:54:27 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id d26so30452058eje.10
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Oct 2022 08:54:27 -0700 (PDT)
+        with ESMTP id S230502AbiJaQdC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Oct 2022 12:33:02 -0400
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E6FB12639;
+        Mon, 31 Oct 2022 09:33:02 -0700 (PDT)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-13bd2aea61bso14083304fac.0;
+        Mon, 31 Oct 2022 09:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=54IXG2FPqhGXRhjbMJeBZJCoE2PKYVWz3wVMDeZTLCU=;
-        b=ggQuzJDmtFt6ASf4MAUPpLpVRWq6C7d6tt/xb2JvHAUqilqDuKCKdgzoD+ZHtcZ4fq
-         1eGGH4GCkwFmv29dMVSA+sfIupMAQoPy3Udm0shqfwmjwPGRMgse5DloY6LJ1rN88fY5
-         7w6hrxuUesvdnXYoKXWNpBj8Pr4Xr8VccPz4cuzn5bfujDLgEBPPC3xuLT0jbsm1ipxh
-         FUhqBkZXPIIrWP2PsdxLUGOhzhmQjhACQa60SJn3FJ739vynVm2k1qMYY8Csfsj0y2lM
-         nw2YA5xx80yJfSa/JhPpfgs1o84qgLa+OLcJIGH+THHb6qZkx3Z3XMPBiJeb5RsMIDTj
-         0+FQ==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nRI+o3ilNy6BRglFYtPBCSjFHSotex4sZhj80mY7+B0=;
+        b=SVnTcl1lpn+/Zo4KZExQ/xtmB3FX28WGvVRwEEmM6Y3UXVdM0216wEGIrQDVlrE3i6
+         GkUUpddq2+YYaoFMAhlNlOi/+cJAeDbKWhWUaswhq6ToTVgg1iI+EtlZryDuiLzfW7Ex
+         4JOZYW4yggUC3BKOfTGwrR0iP2Qk5z4fXwZ3UM1xGZD+LMT65s8Q7yxehkxMVHYrNrtz
+         boaIBC4c7PUqZjGrnJjVtxrVIfeLmB0t0qcCAWFWQDiZT6f982KRMe/Bg2nMWOGwOuV/
+         0lUKhMCp/NrLIAbpN1alBTuXkQzSydemuGwMRi3lgRSrCWBYOnU0Uuq3OdTKYX5+JP4N
+         5HyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=54IXG2FPqhGXRhjbMJeBZJCoE2PKYVWz3wVMDeZTLCU=;
-        b=USBJAQIadKCMtz8zAmkTcuGDbUjNOTeDvA96e0N/jfc4FQg8nsn1RYiaQK8Yl6tptV
-         pAXtNEWlQ8sz8I+7rtqRwkACjXFyjtwWhvRg7tDSsrNs9ot+5GhdCSicy7VrD0K/XkAq
-         7aQIyDKNQsA3KjRnI5j8s5sK/2SZnZjT20DqbZRYJ2E4ozoe25AE2ol5DwxSIb2K5igO
-         Hf41kBwDpxcQ7wxkcw9KOpr4YleKxp5jk20G1z0d6ezs12LHaazn22nbMzQKP0IdxLF3
-         MWMYjQoYWyLuREV40UbTKpJIfz9RUE2fA8nIvYZXA1sF4R5YiADuBrctYsX7RlC6cVt+
-         uJrw==
-X-Gm-Message-State: ACrzQf2OeJoukmktxHGA+DCaRVyZBo5S6MwGOcRgAo0heaPIUnelFW+M
-        y07AC0cP7UVA51JGTz8CfyW1Fowm7D03UWMy43o=
-X-Google-Smtp-Source: AMsMyM5ij4ZkrsD6JU9uNQElQEIR/nCACjnjtY6wVFIdrV6cBJv1SK5jJ5zr23msglTQ3T5SKFNEM5GHVkDHr+Qm+NE=
-X-Received: by 2002:a17:906:3054:b0:7ad:e82b:ac23 with SMTP id
- d20-20020a170906305400b007ade82bac23mr282876ejd.235.1667231665911; Mon, 31
- Oct 2022 08:54:25 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nRI+o3ilNy6BRglFYtPBCSjFHSotex4sZhj80mY7+B0=;
+        b=38K/uNdClHMVYou1ZFkSUfqWFZLiRbmaIEygwRWXDo+dxeNAl+nSUBeMXl1h/eDP6L
+         XrIDfOOCVWGRZtzMiOnfmV2urwug1H14NBQRJry5RW98C9vCm6P/f+1Xr/ryFI3aTd9b
+         NMEpPxN/27/WCat/9mRbEgrVR5QRBSq3tfH0EJhE+7saciejYyyfa060MWKjLEX0Q6rO
+         VubZ7Iizw04Az1saLRM1xVrWjNOrJevxjPYn1pImsnBT9kUuAEhSyxRkjBAAA32E+5M4
+         0TAf+Mo+lq96U1rF98yW6JiaRLNRVKQaSuhXvi/YHQulgU77pY/69tt9hdy8vsIn4y5P
+         ieig==
+X-Gm-Message-State: ACrzQf1zwi1FLn79VMDmhrsCdaf5zhEyu1m9le5wvuWhrMTFJJLGRjzP
+        Qma+KPdYh/a1EuTLL8qfpZM=
+X-Google-Smtp-Source: AMsMyM6kBoxiwO1Uv/nlw9plsMsl+O0fwtUzFqGcwTVvhEfCG4duaw0GKD/w5pVjpjUH0wYosdkUVA==
+X-Received: by 2002:a05:6870:8883:b0:13b:61ac:a5d4 with SMTP id m3-20020a056870888300b0013b61aca5d4mr7754751oam.75.1667233981127;
+        Mon, 31 Oct 2022 09:33:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d17-20020a4aa591000000b004762a830156sm2491672oom.32.2022.10.31.09.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Oct 2022 09:33:00 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Mon, 31 Oct 2022 09:32:58 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     jdelvare@suse.com, robh+dt@kernel.org, joel@jms.id.au,
+        andrew@aj.id.au, lee.jones@linaro.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, BMC-SW@aspeedtech.com,
+        garnermic@meta.com
+Subject: Re: [PATCH 3/3] hwmon: Add Aspeed ast2600 TACH support
+Message-ID: <20221031163258.GC2462187@roeck-us.net>
+References: <20221031103809.20225-1-billy_tsai@aspeedtech.com>
+ <20221031103809.20225-4-billy_tsai@aspeedtech.com>
 MIME-Version: 1.0
-Received: by 2002:a05:7208:608b:b0:5d:5fd:eaac with HTTP; Mon, 31 Oct 2022
- 08:54:25 -0700 (PDT)
-Reply-To: victorinaquezon01@yahoo.com
-From:   Victorina <victorinaquezon@gmail.com>
-Date:   Mon, 31 Oct 2022 15:54:25 +0000
-Message-ID: <CAAOoKduTk21eCti1a2TBD7guF=FZ3iOogb8zsgEqi1wEJNe+NQ@mail.gmail.com>
-Subject: Good Morning
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221031103809.20225-4-billy_tsai@aspeedtech.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
--- 
-I am Madam Victorina Quezon a citizen of philippine,A widow
-I am  woman going through so much pain and suffer and might not walk
-again if nothing is been done fast
-Please  I want you to help me retrieve the only Thing I have now in a
-box  which contains my jewelries and 585,000 thounsand dollars   which
- my late husband left for me which is currently in a Security company,
-I have no strength to do this due to my health condition and safety
-Please Keep this Confidential
-I await your response
-Please reply me at     victorinaquezon01@yahoo.com
-So i can explain more
-With love
-Victorina Quezon
+On Mon, Oct 31, 2022 at 06:38:08PM +0800, Billy Tsai wrote:
+> This patch add the support of Tachometer which can use to monitor the
+> frequency of the input. The tach supports up to 16 channels and it's part
+> function of multi-function device "pwm-tach controller".
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  drivers/hwmon/Kconfig               |   9 +
+>  drivers/hwmon/Makefile              |   1 +
+>  drivers/hwmon/tach-aspeed-ast2600.c | 692 ++++++++++++++++++++++++++++
+
+Please also provide Documentation/hwmon/tach-aspeed-ast2600.rst.
+
+[ ... ]
+
+> +	hwmon = devm_hwmon_device_register_with_groups(dev, "aspeed_tach", priv,
+> +						       priv->groups);
+
+Please use the new hwmon api (devm_hwmon_device_register_with_info).
+
+> +	ret = PTR_ERR_OR_ZERO(hwmon);
+> +	if (ret) {
+> +		dev_err_probe(dev, ret, "Failed to register hwmon device\n");
+> +		goto err_assert_reset;
+> +	}
+> +	platform_set_drvdata(pdev, priv);
+> +	return 0;
+> +err_assert_reset:
+> +	reset_control_assert(priv->reset);
+> +err_disable_clk:
+> +	clk_disable_unprepare(priv->clk);
+
+You should be able to use devm_clk_get_enabled() to handle
+the clock. If reset handling has to come first, you could use
+devm_add_action_or_reset() for it. This way you would
+not need the remove function, and error cleanup would
+be much simplified.
+
+Thanks,
+Guenter
+
+> +	return ret;
+> +}
+> +
+> +static int aspeed_tach_remove(struct platform_device *pdev)
+> +{
+> +	struct aspeed_tach_data *priv = platform_get_drvdata(pdev);
+> +
+> +	reset_control_assert(priv->reset);
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_stach_match_table[] = {
+> +	{
+> +		.compatible = "aspeed,ast2600-tach",
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_stach_match_table);
+> +
+> +static struct platform_driver aspeed_tach_driver = {
+> +	.probe		= aspeed_tach_probe,
+> +	.remove		= aspeed_tach_remove,
+> +	.driver		= {
+> +		.name	= "aspeed_tach",
+> +		.of_match_table = of_stach_match_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(aspeed_tach_driver);
+> +
+> +MODULE_AUTHOR("Billy Tsai <billy_tsai@aspeedtech.com>");
+> +MODULE_DESCRIPTION("Aspeed ast2600 TACH device driver");
+> +MODULE_LICENSE("GPL v2");
+> +
+> -- 
+> 2.25.1
+> 
