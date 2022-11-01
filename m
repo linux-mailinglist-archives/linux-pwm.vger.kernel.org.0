@@ -2,24 +2,24 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2770E614C58
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 15:17:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2337E614C5B
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 15:17:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230228AbiKAORK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Nov 2022 10:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37686 "EHLO
+        id S230229AbiKAORL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Nov 2022 10:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbiKAORJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 10:17:09 -0400
+        with ESMTP id S229934AbiKAORL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 10:17:11 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 97BCE1A817;
-        Tue,  1 Nov 2022 07:17:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6771311A32;
+        Tue,  1 Nov 2022 07:17:10 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A01AD23A;
-        Tue,  1 Nov 2022 07:17:14 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CACD113E;
+        Tue,  1 Nov 2022 07:17:16 -0700 (PDT)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1B9F3F703;
-        Tue,  1 Nov 2022 07:17:06 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E5093F703;
+        Tue,  1 Nov 2022 07:17:08 -0700 (PDT)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Jernej Skrabec <jernej.skrabec@gmail.com>,
         Samuel Holland <samuel@sholland.org>,
@@ -31,9 +31,9 @@ Cc:     devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
         Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: [PATCH 1/9] dt-bindings: pwm: allwinner,sun4i-a10: Add F1C100s compatible
-Date:   Tue,  1 Nov 2022 14:16:50 +0000
-Message-Id: <20221101141658.3631342-2-andre.przywara@arm.com>
+Subject: [PATCH 2/9] ARM: dts: suniv: f1c100s: add PWM node
+Date:   Tue,  1 Nov 2022 14:16:51 +0000
+Message-Id: <20221101141658.3631342-3-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221101141658.3631342-1-andre.przywara@arm.com>
 References: <20221101141658.3631342-1-andre.przywara@arm.com>
@@ -47,31 +47,36 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWM controller in the Allwinner F1C100s series of SoCs is the same
-as in the A20 SoCs, so allow using that as the fallback name.
-
-Join the V3s compatible string in an enum on the way.
+The Allwinner F1C100s family of SoCs contain a PWM controller compatible
+to the one used in the A20 chip.
+Add the DT node so that any users can simply enable it in their board
+DT.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml      | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/suniv-f1c100s.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-index 4cc3cc7c50bec..66e400f2a3a4f 100644
---- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-@@ -25,7 +25,9 @@ properties:
-           - const: allwinner,sun8i-a83t-pwm
-           - const: allwinner,sun8i-h3-pwm
-       - items:
--          - const: allwinner,sun8i-v3s-pwm
-+          - enum:
-+              - allwinner,suniv-f1c100s-pwm
-+              - allwinner,sun8i-v3s-pwm
-           - const: allwinner,sun7i-a20-pwm
-       - items:
-           - const: allwinner,sun50i-a64-pwm
+diff --git a/arch/arm/boot/dts/suniv-f1c100s.dtsi b/arch/arm/boot/dts/suniv-f1c100s.dtsi
+index 0edc1724407b3..d5a6324e76465 100644
+--- a/arch/arm/boot/dts/suniv-f1c100s.dtsi
++++ b/arch/arm/boot/dts/suniv-f1c100s.dtsi
+@@ -192,6 +192,15 @@ wdt: watchdog@1c20ca0 {
+ 			clocks = <&osc32k>;
+ 		};
+ 
++		pwm: pwm@1c21000 {
++			compatible = "allwinner,suniv-f1c100s-pwm",
++				     "allwinner,sun7i-a20-pwm";
++			reg = <0x01c21000 0xc>;
++			clocks = <&osc24M>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
++
+ 		uart0: serial@1c25000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x01c25000 0x400>;
 -- 
 2.25.1
 
