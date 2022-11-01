@@ -2,61 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3813614EAD
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 16:56:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D24576150F5
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 18:42:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230291AbiKAP4d (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Nov 2022 11:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36562 "EHLO
+        id S231201AbiKARmk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Nov 2022 13:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230100AbiKAP4b (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 11:56:31 -0400
+        with ESMTP id S230331AbiKARmi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 13:42:38 -0400
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC32167E8;
-        Tue,  1 Nov 2022 08:56:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE801D32F;
+        Tue,  1 Nov 2022 10:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667318191; x=1698854191;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9EMEBtyd+ncSOy04taxX8rD97/YD448iR78mVb4VTLI=;
-  b=Amc1/UUZbZYYXCeYtWD7C+H1E+Dkd5JxPxMR007CkP4uPucKxkzSc1vB
-   nsUJyvY1/61kXXdo01XGdUzEl+qA+Q9YgVMFBj5NKrNZs5rVO54B71wJh
-   50CmP/33NsoS9XFMkAAd/5gwxqTFjXxnV6mygEwk9BCCKgQ9VGJ0dsqQ/
-   XBte+/lC9xUgEgJqhL8M/qV8ywX22ddQpF1RFm/UvqE0HWlCipFS1o+aG
-   5F6JNUy/jv6h/XO8LAo4V6E5whsQmatlLY+yo7/g2H1PIqSwNOquA5+Hx
-   c0M4nSMqbcpJY4++s7+VUUYf60rqY8hwSZadtnCS5jh0wHpFoJ54Mz9cZ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="292474815"
+  t=1667324557; x=1698860557;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=oHHuxOzKVmiUxNopbnR8MZfBR9TH3eINRdcTm5mkIiE=;
+  b=fklKvWAOUgxhzBXbMRj5KmpjzVkklz7DrGUEHl/9Azl4UlH4QPnrx4KI
+   2U2l9f0srdspN3xAKUoRTJRXT8Hx6830ysDtufjZjXpKWRklHGys4QvjK
+   FhGRZWlG5l7vWuLRFbarirYzgMOrA9mFK8Owudpx0gjZAxIY3IwW52/Mh
+   qrfcoxhtebX942LxJkOsXp/8Liw8cgqNlV2Cyo0oJf8faF1p6X0mPQBj4
+   GlSs26tDp7HfdDHSa1yAKfDSr0QCkaMOD1psJhH+JdO8Y97VVEN2JfGW5
+   dVFXQJyJeQH0Ng/O12F4SjrjEpfCfTLXExCBP/pS/Gg8k4lFfKImrxx3o
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="292506333"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="292474815"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 08:56:30 -0700
+   d="scan'208";a="292506333"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 10:42:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="776537934"
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="636478620"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="776537934"
+   d="scan'208";a="636478620"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Nov 2022 08:56:28 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 01 Nov 2022 10:42:34 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 903364B5; Tue,  1 Nov 2022 17:56:47 +0200 (EET)
+        id DBDAAF7; Tue,  1 Nov 2022 19:42:57 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 6/6] pinctrl: intel: Enumerate PWM device when community has a capabilitty
-Date:   Tue,  1 Nov 2022 17:56:42 +0200
-Message-Id: <20221101155642.52575-7-andriy.shevchenko@linux.intel.com>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/3] pwm: core: Refactor pwmchip_add() to avoid extra checks
+Date:   Tue,  1 Nov 2022 19:42:53 +0200
+Message-Id: <20221101174255.54452-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221101155642.52575-1-andriy.shevchenko@linux.intel.com>
-References: <20221101155642.52575-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -68,77 +61,40 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Some of the Communities may have PWM capability. In such cases,
-enumerate PWM device via respective driver. User is still responsible
-for setting correct pin muxing for the line that needs to output the
-signal.
+When we already know that everything is fine there is no need
+to use ret variable. Refactor code accordingly.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 29 +++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/pwm/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index e17d1318b913..fe5bf2184cbf 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -24,6 +24,8 @@
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index d333e7422f4a..855abd0a776f 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -296,16 +296,16 @@ int pwmchip_add(struct pwm_chip *chip)
+ 	INIT_LIST_HEAD(&chip->list);
+ 	list_add(&chip->list, &pwm_chips);
  
-+#include <linux/platform_data/x86/pwm-lpss.h>
-+
- #include "../core.h"
- #include "pinctrl-intel.h"
+-	ret = 0;
+-
+ 	if (IS_ENABLED(CONFIG_OF))
+ 		of_pwmchip_add(chip);
  
-@@ -49,6 +51,8 @@
- #define PADOWN_MASK(p)			(GENMASK(3, 0) << PADOWN_SHIFT(p))
- #define PADOWN_GPP(p)			((p) / 8)
+-out:
+ 	mutex_unlock(&pwm_lock);
  
-+#define PWMC				0x204
-+
- /* Offset from pad_regs */
- #define PADCFG0				0x000
- #define PADCFG0_RXEVCFG_SHIFT		25
-@@ -1494,6 +1498,27 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 	return 0;
- }
- 
-+static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
-+				   struct intel_community *community)
-+{
-+	static const struct pwm_lpss_boardinfo info = {
-+		.clk_rate = 19200000,
-+		.npwm = 1,
-+		.base_unit_bits = 22,
-+		.bypass = true,
-+	};
-+	struct pwm_lpss_chip *pwm;
-+
-+	if (!(community->features & PINCTRL_FEATURE_PWM))
-+		return 0;
-+
-+	pwm = pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
-+	if (IS_ERR(pwm) && PTR_ERR(pwm) != -ENODEV)
-+		return PTR_ERR(pwm);
+-	if (!ret)
+-		pwmchip_sysfs_export(chip);
++	pwmchip_sysfs_export(chip);
 +
 +	return 0;
-+}
-+
- int intel_pinctrl_probe(struct platform_device *pdev,
- 			const struct intel_pinctrl_soc_data *soc_data)
- {
-@@ -1592,6 +1617,10 @@ int intel_pinctrl_probe(struct platform_device *pdev,
- 			ret = intel_pinctrl_add_padgroups_by_size(pctrl, community);
- 		if (ret)
- 			return ret;
-+
-+		ret = intel_pinctrl_probe_pwm(pctrl, community);
-+		if (ret)
-+			return ret;
- 	}
++out:
++	mutex_unlock(&pwm_lock);
  
- 	irq = platform_get_irq(pdev, 0);
+ 	return ret;
+ }
 -- 
 2.35.1
 
