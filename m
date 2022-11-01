@@ -2,60 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6297C6150F4
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 18:42:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D55361510D
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 18:47:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbiKARmj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Nov 2022 13:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
+        id S229641AbiKARru (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Nov 2022 13:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229766AbiKARmi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 13:42:38 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5BA1D0E6;
-        Tue,  1 Nov 2022 10:42:36 -0700 (PDT)
+        with ESMTP id S229562AbiKARrt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 13:47:49 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466EA1D643;
+        Tue,  1 Nov 2022 10:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667324556; x=1698860556;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SbsFTojRHajkqxc6yQDWgDcq4VABF214el1jsXeM55s=;
-  b=UvmfhpiaRo9PXBsFqP7lwaYFwVpHuEjJuZ95TSl3D03DvPY5iOXrJcAc
-   yzXCEJW0Hgg6GI1v8CWBUg2/GIXvr/OnHiTmFXD5RS6Y8PaSz8BfqMnPI
-   6NdVm0Ya9UVk9Fop2Y7g13bsMk4F3719YJVLKg71AcpFKM3PHFtfZgfD7
-   8vz9kK1ZZQdNGMuFHW3h8Iq1sfRBBQ111Gho8j1yvhUKjvZojuvN6gBdk
-   rZwXhk1uX8a5SxiJ6nX8+o0YcGXQASgciaEW6XEjadf8tB0krJOEwmG5c
-   zG7ZBS+ImcEoAT5Y2HBs5mi53FVOlzFGXCHp8zc8rEgDg1v7Fl3KcaxvN
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="310909163"
+  t=1667324869; x=1698860869;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TYf5YYIzFj+h7ElHv3ioNLA0mS+1SXo5oCNtaYVIquA=;
+  b=N+5O+DumIbOame0OI571r3Y2i4czPcQ4fSvgdL9h58eXO5ZiBhRFdYWx
+   tbH/wgAoDhX1ofBhmqyTfYJbKHrE2CK/kMp11PsbsoU4bfnhmMXHwD3ZA
+   /JLJBTvnKFv3Ct7t5E3sXSVn3MfqpP8eqSE95Wr9Ah+cDrCKwy7fhs2op
+   EPQaLqRiiBd3HZQ/wynIbLHH5u+SfVK1sypDEJfjYtsPXTYbJuyyFPEiV
+   lSFQpfO2wqzqXNpjb5yAyXbe/eksdPO4UHVN9GGv/4RLpwVVRgqhBsuaI
+   CF+lPG652PLs+6g4zOIldwnGv5lGqtcGRRNEBU9lw3onOCgOBtU7hUCVS
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="306818990"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="310909163"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 10:42:36 -0700
+   d="scan'208";a="306818990"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 10:47:49 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="667272870"
+X-IronPort-AV: E=McAfee;i="6500,9779,10518"; a="963206366"
 X-IronPort-AV: E=Sophos;i="5.95,231,1661842800"; 
-   d="scan'208";a="667272870"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 01 Nov 2022 10:42:34 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id F008F155; Tue,  1 Nov 2022 19:42:57 +0200 (EET)
+   d="scan'208";a="963206366"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Nov 2022 10:47:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1opvMY-005hWx-1m;
+        Tue, 01 Nov 2022 19:47:46 +0200
+Date:   Tue, 1 Nov 2022 19:47:46 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/3] pwm: core: Remove S_IFREG from debugfs_create_file()
-Date:   Tue,  1 Nov 2022 19:42:55 +0200
-Message-Id: <20221101174255.54452-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221101174255.54452-1-andriy.shevchenko@linux.intel.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v1 2/3] pwm: core: Drop unneeded casting in pwm_seq_show()
+Message-ID: <Y2Fbwg99BWJ54q/w@smile.fi.intel.com>
 References: <20221101174255.54452-1-andriy.shevchenko@linux.intel.com>
+ <20221101174255.54452-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221101174255.54452-2-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-8.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,28 +66,14 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The debugfs_create_file() already has a check and adds S_IFREG
-automatically. Remove unneeded flag.
+On Tue, Nov 01, 2022 at 07:42:54PM +0200, Andy Shevchenko wrote:
+> The casting form void * to char * is not needed and done implicitly.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pwm/core.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This patch is wrong and it seems I have tried something like this in the past.
+The rest in the series is okay.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 36128f3301ac..c004a8a662d6 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -1179,8 +1179,7 @@ DEFINE_SEQ_ATTRIBUTE(pwm_debugfs);
- 
- static int __init pwm_debugfs_init(void)
- {
--	debugfs_create_file("pwm", S_IFREG | 0444, NULL, NULL,
--			    &pwm_debugfs_fops);
-+	debugfs_create_file("pwm", 0444, NULL, NULL, &pwm_debugfs_fops);
- 
- 	return 0;
- }
 -- 
-2.35.1
+With Best Regards,
+Andy Shevchenko
+
 
