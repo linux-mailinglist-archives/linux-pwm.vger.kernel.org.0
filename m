@@ -2,102 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58CAE613E27
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Oct 2022 20:23:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B0D614739
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Nov 2022 10:52:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbiJaTXq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Oct 2022 15:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43118 "EHLO
+        id S229487AbiKAJwI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Nov 2022 05:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230012AbiJaTXp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Oct 2022 15:23:45 -0400
-Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CF212AE0;
-        Mon, 31 Oct 2022 12:23:41 -0700 (PDT)
-Received: from local
-        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.94.2)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1opaNj-0008Uc-L3; Mon, 31 Oct 2022 20:23:35 +0100
-Date:   Mon, 31 Oct 2022 19:23:28 +0000
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Fabien Parent <fparent@baylibre.com>,
-        Zhi Mao <zhi.mao@mediatek.com>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v2] dt-bindings: pwm: mediatek: Add compatible for MT7986
-Message-ID: <e2170b37f28238c59b2f43309822b63a4d0ac9b1.1667243978.git.daniel@makrotopia.org>
-References: <6f28ccf3-ea27-9d5e-bd67-14f7729f713f@linaro.org>
+        with ESMTP id S229641AbiKAJwG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Nov 2022 05:52:06 -0400
+Received: from twspam01.aspeedtech.com (twspam01.aspeedtech.com [211.20.114.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8A319031;
+        Tue,  1 Nov 2022 02:52:04 -0700 (PDT)
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 2A19RBEV025158;
+        Tue, 1 Nov 2022 17:27:11 +0800 (GMT-8)
+        (envelope-from billy_tsai@aspeedtech.com)
+Received: from BillyTsai-pc.aspeed.com (192.168.2.149) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 1 Nov
+ 2022 17:50:21 +0800
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>,
+        <joel@jms.id.au>, <andrew@aj.id.au>, <lee.jones@linaro.org>,
+        <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <p.zabel@pengutronix.de>, <billy_tsai@aspeedtech.com>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <BMC-SW@aspeedtech.com>,
+        <garnermic@meta.com>
+Subject: [v2 0/3] upport pwm/tach driver for aspeed ast26xx
+Date:   Tue, 1 Nov 2022 17:51:53 +0800
+Message-ID: <20221101095156.30591-1-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f28ccf3-ea27-9d5e-bd67-14f7729f713f@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.2.149]
+X-ClientProxiedBy: TWMBX02.aspeed.com (192.168.0.24) To TWMBX02.aspeed.com
+ (192.168.0.24)
+X-DNSRBL: 
+X-MAIL: twspam01.aspeedtech.com 2A19RBEV025158
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add new compatible string for MT7986 PWM and list compatible units for
-existing entries. Also make sure the number of pwm1-X clocks is listed
-for all supported units.
+Unlike the old design that the register setting of the TACH should based
+on the configure of the PWM. In ast26xx, the dependency between pwm and
+tach controller is eliminated and becomes a separate hardware block. One
+is used to provide pwm output and another is used to monitor the frequency
+of the input. Therefore, this patch serials implements them by writing the
+two driver "pwm-aspeed-ast2600.c" and "tach-aspeed-ast2600.c". The former
+is following the pwm subsystem which can apply the existed driver to
+controller the fan(pwm-fan.c), beeper(pwm-beeper.c) and so on. The latter
+is following the sysfs interface of hwmon to creat the node for fan
+monitor.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
----
- .../devicetree/bindings/pwm/pwm-mediatek.txt  | 20 +++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+Changes since v1:
+- tach:
+  - Add the document tach-aspeed-ast2600.rst
+  - Use devm_* api to simplify the error cleanup.
+  - Change hwmon register api to devm_hwmon_device_register_with_info
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index 554c96b6d0c3e0..952a338e06e7c5 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -2,14 +2,15 @@ MediaTek PWM controller
- 
- Required properties:
-  - compatible: should be "mediatek,<name>-pwm":
--   - "mediatek,mt2712-pwm": found on mt2712 SoC.
-+   - "mediatek,mt2712-pwm", "mediatek,mt6795-pwm": found on mt2712 SoC.
-    - "mediatek,mt6795-pwm": found on mt6795 SoC.
--   - "mediatek,mt7622-pwm": found on mt7622 SoC.
--   - "mediatek,mt7623-pwm": found on mt7623 SoC.
-+   - "mediatek,mt7622-pwm", "mediatek,mt8195-pwm", "mediatek,mt8183-pwm", "mediatek,mt7986-pwm": found on mt7622 SoC.
-+   - "mediatek,mt7623-pwm", "mediatek,mt7628-pwm": found on mt7623 SoC.
-    - "mediatek,mt7628-pwm": found on mt7628 SoC.
-    - "mediatek,mt7629-pwm": found on mt7629 SoC.
--   - "mediatek,mt8183-pwm": found on mt8183 SoC.
--   - "mediatek,mt8195-pwm", "mediatek,mt8183-pwm": found on mt8195 SoC.
-+   - "mediatek,mt7986-pwm": found on mt7986 SoC.
-+   - "mediatek,mt8183-pwm", "mediatek,mt7986-pwm": found on mt8183 SoC.
-+   - "mediatek,mt8195-pwm", "mediatek,mt8183-pwm", "mediatek,mt7986-pwm": found on mt8195 SoC.
-    - "mediatek,mt8365-pwm": found on mt8365 SoC.
-    - "mediatek,mt8516-pwm": found on mt8516 SoC.
-  - reg: physical base address and length of the controller's registers.
-@@ -20,11 +21,14 @@ Required properties:
-                 has no clocks
-    - "top": the top clock generator
-    - "main": clock used by the PWM core
-+   - "pwm1"  : the PWM1 clock for mt7629
-+   - "pwm1-2": the two per PWM clocks for mt7986
-    - "pwm1-3": the three per PWM clocks for mt8365
--   - "pwm1-8": the eight per PWM clocks for mt2712
-+   - "pwm1-4": the four per PWM clocks for mt7628 or mt8183
-+   - "pwm1-5": the five per PWM clocks for mt7623 or mt8516
-    - "pwm1-6": the six per PWM clocks for mt7622
--   - "pwm1-5": the five per PWM clocks for mt7623
--   - "pwm1"  : the PWM1 clock for mt7629
-+   - "pwm1-7": the seven per PWM clocks for mt6795
-+   - "pwm1-8": the eight per PWM clocks for mt2712
-  - pinctrl-names: Must contain a "default" entry.
-  - pinctrl-0: One property must exist for each entry in pinctrl-names.
-    See pinctrl/pinctrl-bindings.txt for details of the property values.
+Billy Tsai (3):
+  dt-bindings: Add bindings for aspeed pwm-tach.
+  pwm: Add Aspeed ast2600 PWM support
+  hwmon: Add Aspeed ast2600 TACH support
+
+ .../bindings/hwmon/aspeed,ast2600-tach.yaml   |  48 ++
+ .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml |  76 +++
+ .../bindings/pwm/aspeed,ast2600-pwm.yaml      |  64 +++
+ Documentation/hwmon/tach-aspeed-ast2600.rst   |  28 +
+ drivers/hwmon/Kconfig                         |   9 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/tach-aspeed-ast2600.c           | 484 ++++++++++++++++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-aspeed-ast2600.c              | 325 ++++++++++++
+ 10 files changed, 1046 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+ create mode 100644 Documentation/hwmon/tach-aspeed-ast2600.rst
+ create mode 100644 drivers/hwmon/tach-aspeed-ast2600.c
+ create mode 100644 drivers/pwm/pwm-aspeed-ast2600.c
+
 -- 
-2.38.1
+2.25.1
 
