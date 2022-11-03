@@ -2,141 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A3E7617AE5
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Nov 2022 11:36:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 465A3617C14
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Nov 2022 13:01:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbiKCKgs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Nov 2022 06:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51878 "EHLO
+        id S230315AbiKCMBm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Nov 2022 08:01:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230072AbiKCKgq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Nov 2022 06:36:46 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2104.outbound.protection.outlook.com [40.107.215.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B2AD103;
-        Thu,  3 Nov 2022 03:36:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q0vNsDJeK6q908TgyepedYMVdJKHnVddhke0GvfqTx/hY4F0wBk3oEwoPy0pnCvDTCMaHntnxzdMEVfpeLD/KAu+k+wanhnJOqm3RG5fUw6JufM0S/A25necJH7MxbnFAtfw7pVe2+pXtcD+Gx99fR/9Cd+AZ/Q7vWz37GFz6KUYKz1ot6Sg30zCL15SnpX06RrCttlpeGYE1MbKGl4CyVOXzViB914Jy3sq6KDE85F87pafqFB0Lph12pV2JD+1n2sd4kB8OyeOF8bkP6+O6E8VxE4jAezyj/Euy7zupm1Q5CtaCpw+g0FpItXHt22isk9c5JjeC1VEbKH+sqNtaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FBhokYf6DFiIFGISReTfA3zALBCAuQJLjZRCmbPdsQE=;
- b=Y7RrwGPn5fCsk5TJ7YfU1nBy5cd3QxhdSvebmejrBhW6WyZDrnEKQyoNKNvpM4z6MVjEZRMwuogmqky5U2/YxIstRwLbhH6wtIt2RpTef08kWnpvsuxCyAFjf/pQhDMKwsg3EoVVxmKXsIX8WH7CsGVFitFHeUlqOQ9pcCd+E1jKrkPwPvSjVVpGqbFjey0X08VNI415Dlf8DPkahPDQ1VNpg0hc+STKCgquxrThuHI9tyB5hK0xp7A/qqk+PNcPEuAiHL2P9dtzDb4OE3qZT6VR6h+HnxlwQkbOIcmWizZh+4VpX4lmOqZSlEEw5FPfOz7uhos8Ym8XmsIBMSrRkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FBhokYf6DFiIFGISReTfA3zALBCAuQJLjZRCmbPdsQE=;
- b=PghWQtRzIUp2x0hl70QrKeKKB7yxS0Rk6Ao3Oa8s95k0/60pmzpoJRhG/6230XU9v5BgwkniqEMa96W8+sqNRGqxZzblH//bO9lXHeG6Ekeu1xtqLrkjokIKvYlXDbtCaVjAbDYOonfIEwLhEoaorlDPWah2dmD3sBkErgwuloLmiVObXcNhCplmymDUTxE5Zdgb+VAgvr9cCJcFnw2IjEhs+cXKg1kw6TPacXmt7ekGZAuigA3NdxHcn6uOKLqxlMhC/6OAwrZmyT/wXupEdLnyMCRWh9NtwTEryYyU+9oLNcmwHr7pF83fJGJVh19cYAs9Jqjpv3dBISU1SFpYNA==
-Received: from SG2PR06MB3365.apcprd06.prod.outlook.com (2603:1096:4:69::12) by
- SI2PR06MB5171.apcprd06.prod.outlook.com (2603:1096:4:1ed::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5769.16; Thu, 3 Nov 2022 10:36:34 +0000
-Received: from SG2PR06MB3365.apcprd06.prod.outlook.com
- ([fe80::dd5d:e720:e00f:831]) by SG2PR06MB3365.apcprd06.prod.outlook.com
- ([fe80::dd5d:e720:e00f:831%6]) with mapi id 15.20.5769.019; Thu, 3 Nov 2022
- 10:36:34 +0000
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>,
-        "garnermic@meta.com" <garnermic@meta.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add bindings for aspeed pwm-tach.
-Thread-Topic: [PATCH 1/3] dt-bindings: Add bindings for aspeed pwm-tach.
-Thread-Index: AQHY7RSrQ+K+O9R23EOsQ/fWozuSOq4sJ8SAgAFkd4A=
-Date:   Thu, 3 Nov 2022 10:36:33 +0000
-Message-ID: <2508B515-E153-42C2-B013-2A64A110BCF2@aspeedtech.com>
-References: <20221031103809.20225-1-billy_tsai@aspeedtech.com>
- <20221031103809.20225-2-billy_tsai@aspeedtech.com>
- <ee6c5a96-81c4-5729-f623-4b23bc3b8e0a@kernel.org>
-In-Reply-To: <ee6c5a96-81c4-5729-f623-4b23bc3b8e0a@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/16.66.22101101
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SG2PR06MB3365:EE_|SI2PR06MB5171:EE_
-x-ms-office365-filtering-correlation-id: bc91ae84-d47a-4973-238d-08dabd874757
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: V/wQ+05HWL0R4yK30dC2eocDlJ8LBB3kHPN7R2+8/widP1FGFoU3Ss4BDzAOhPJSHZCrEu4RsntNs1Xvxw2QotincSHlwhrWZjmqleJ036qaR9BkmmFKEMQIhXvXdkBf45QAm+grEVo3vaF/YpwoTiBai9umYXhAIGHjUjA6f9m4AQ8pSmgGO65g8a/7v61z5aopIFEGFekSvBSWBaIrrJdC1LZ2p31Hx4ymqZfeL01p61Tobmlp61BbCudgTQLFs8FNXJFWY1GyO/u/KPMWCPSNnVZ50bJfZEkWIKo2/oIJdL+KTWxmqx2PDfUfK7giQJvLCHPXzm9eJc4iuLAHUUM9QF2U8NcFJNvpb/cjg0lEMQCgTEVJXxUPzpptLlyDfnX/ifJEiHZ0Fwcv1nQmf33+qE+mKLaKeYVpGgWdUwSMtavrIoJ+zRdkupXegUVNNmu5uMibfeAyfb6L2AqrkbVi471I1bkisjAfTfcnq0VyygD6BchpOwu2vr6kmYmunE3iID4Ob6Q+u08/gy0tF0eQuG9TUPiAw4/aEWPwDd3LAVCMYTUQnI0GU5NZQIxte8EmSUvj5Wd1tPbXgD9Sv5u9Gd/fjmWyudU3b9UVk1hj6z5PHRWV1JgcMcEEwXU4qthIXSZ2ET/9DOtpX0+96ZYiFRzkm+80ODUl2f/bOIz0pDEI8dYS8FESWFI0mD2a6c+kOEvNefzrF+sAVejNRNrqBz3GxSElmpjkv4UqRJqOsLJF5TvjvOCXKDGGQyjwbigDuSjnbzqbQLnzX55HFg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3365.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(366004)(396003)(39850400004)(346002)(136003)(451199015)(8676002)(86362001)(36756003)(33656002)(110136005)(66476007)(186003)(5660300002)(41300700001)(2906002)(66946007)(66446008)(66556008)(38070700005)(122000001)(7416002)(316002)(6506007)(76116006)(91956017)(64756008)(38100700002)(921005)(8936002)(26005)(478600001)(53546011)(6486002)(6512007)(71200400001)(966005)(2616005)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Y094Q2J5UEVZeHRZU0xTZS9KcUNWTGNTVi9pdjBTNFo5cjFpa0w0VjRleEZW?=
- =?utf-8?B?eEdxVHRtU2IrVGM3WjVsWkJlOHVVTmZNUTR2emlodk53YmY0UmhDNWpqL0Zi?=
- =?utf-8?B?Snp5S1NQK3hhS2FIM1hUeUdmY01GdVFZSjREZVJjMDZwQmxIRjBMenRMMThC?=
- =?utf-8?B?T0szMFdNVUF2TmJ5MkdPYVhtcFAyVXdNSWNta0tldjZHa1owWHRESCtFUEhl?=
- =?utf-8?B?cHp4UHpHRnUwTCt4VmJmWjZ1TWYxTVlFc3Vvdk9ONlVxNjRkNEJVWEt5N1kx?=
- =?utf-8?B?RkV1SzZhVTlKbVQ1WnNVRjdaT1UyRU84clk1L0Flc0NIc2RiWXhoMjhQck90?=
- =?utf-8?B?a0xKbkNpSGR3SFVGZFplNGJCR1ArUWd1NUY5YjJzNjM2alNIOWh4WERreEJq?=
- =?utf-8?B?eHFkMkJuNkhnbGhKSWYwRVl1MnlZbW5BcFgxQ3o0QVVUWGt0Wk9WNFBUMmVz?=
- =?utf-8?B?UGlQZFlIMVdCamFIMUJqeXZRNndhYnhjcmR1ZUhwenJGWkRXZGxOQmhjNnVm?=
- =?utf-8?B?aGIvZjJtZmxlOUoyK3d1MCtTRTNPdS9jYXR6K2JBR2pIemR3czh2QytxQjV6?=
- =?utf-8?B?U3JybDlyQk9DL0JKeWpxNzF0ZE1mYXRyaWhCZ2lTTVVnYktwL0tUd3dJTk12?=
- =?utf-8?B?eEx0dVVVTEt0S0ZMaE0xWFNHM2ZhWFd3d0hRVklUSkFac1Z3MWxpVVN1UFd1?=
- =?utf-8?B?WGtHSGFOSWUyYXFxWFJ5L1I2UXdvV2hjcW9tVHBhODZyeER6UURudkhVL2or?=
- =?utf-8?B?aFV5bEZ6ZEtId1VJcE42VUw0dmRvUkU2cFRWbTRkNWs3MldYSVI2ZHI5N2pI?=
- =?utf-8?B?MHNQdlNteTFjQ0poWngvNmV2WUtwemM3eGNtdUlZa1RtU0FpOEk0VmN0bEZ5?=
- =?utf-8?B?SHMzczhFMlU5Z256ZjdCODNxcklZN2JGZEVZRitXRXVOSEFReGs0UlF1dUxC?=
- =?utf-8?B?Nk5Sc1ZjVTdqWU94ZnFBT244NkR5eDFyQjU1RzNmYXJUN0duQlFVVnNod0FX?=
- =?utf-8?B?aFlIL05YMzladko1K2dkeXZBWE9JT1lzL1pjalRoWSthaFRCajhlZlM1VzFX?=
- =?utf-8?B?b20vK09QdTFOdHFYTUdnZjNDZ2N0MW5KTjYybEtZT0NXRCtLaUUxUUpqaWtN?=
- =?utf-8?B?L1FQcS9UYkFFSmJRRFBUbGsxd0J5M2JPWmhuWjk3RnczcUFzVXpQKzMzSkxD?=
- =?utf-8?B?ZWkxTkJmeThRdWpPdjBFdGJhYkR6RHNXSmpxd0ZFUHBSTnhtd0RzWFFMNTJt?=
- =?utf-8?B?ZWVsNUlkQWI2bjVodjVtMEdOQTI0cy9GYWxNdWVJZ3FBTDRONDlTLzh6MFpD?=
- =?utf-8?B?UlUwWTV0NkpqRXprTVJyN082SkxHTEVFNE8vOElWckdaby9EYlovUWE0MTlr?=
- =?utf-8?B?ZEkreENZR1VyU3RwY3VLUW84a0NGeXlqU3hLb3R6R21UenB5VmtrcnowMi92?=
- =?utf-8?B?bERtY1VPZ2hhbXA1Ti9icVFhNXBacHIvV1FqODIrSjBhRmdXSFoyMHNpemJL?=
- =?utf-8?B?ZzNrSHUxQittZCtmT3JWbmhqTTNvd3lwY21UaHVFUjl3aUc4SjQrRWxKa05R?=
- =?utf-8?B?amJMSUFReExSb2F2TmJCNEpZM05KNFhubTNUcG9EVXRtZTdTTmljelBCM1ZM?=
- =?utf-8?B?UE53WnBFeWlHQjFLa0p3M0d2Z3pVS3QzQTFzMEpIMUg0S0kxQUxTTXVQTkFO?=
- =?utf-8?B?MTk5TnBhN05jempuUEpGOUk3NjBTMk5zTUdEUnJISGZxR3Q3NG5qRUNwUG1S?=
- =?utf-8?B?YjZ2THJFc2VrajR4KzFWSUc0T3pjNldQS3Q5anhFVkxJV0ozNGRUSHhZS1lt?=
- =?utf-8?B?aXM4UDdGZm1MeURrOHVtMUFGSy9lK2ZqR2ptTmZ4eFBiUmJubWFsOXhhOThm?=
- =?utf-8?B?NHJlcTJEeWtCWUVqdnMzVkRwdEJ5bXN2ZTA1UFhyK2JyVDlJMUlKWEIxWmVC?=
- =?utf-8?B?V2x1QXBkVWNxYlJxVUt1YXdTMnIyNnU5U3lVcExubHg1NmxvSnN5ZzRWSHNZ?=
- =?utf-8?B?eFJqeFFDTTJGU3BPTk9mbXlnR2hoNEFmOHVqdW5maUg1SDZwdi9DTFhqREQv?=
- =?utf-8?B?aTRwVnpzbWl4T1JtWGNscFZsaUs3NkhLVjh4UWJVNVFZQ2RpeXV3cTg4UURr?=
- =?utf-8?B?MGY4ZGZxVWxWYnBSVkVOZlBhSWs2dXpqQ1hMaGUzZFQwcU04Tll3NUc3amw4?=
- =?utf-8?B?c0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8EFB69F3AA72E344B06A0DC3F2278569@apcprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229935AbiKCMBl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Nov 2022 08:01:41 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00826DF11;
+        Thu,  3 Nov 2022 05:01:39 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id f7so2621523edc.6;
+        Thu, 03 Nov 2022 05:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4IQVmkJIfw+G4+zEwXF78WRi81YVym7RqqN9ditiGR8=;
+        b=TaNdyEtKa8K1l5TrTQk2XV0W1b3PzqvsN2Lk8J0y6odluB6ib+TZQvGS61ahyrCdPe
+         TgvYEf/idRaUC5aGbV4+Q8Sy7HksLdzJdwix+oPCRjjFk5W0Ygsv806WZAfnxLNKMNtC
+         Oj6DNwxhsfRRj1AJdktzoIgCy+2WlNaq7t2QHFtBWsHmlED9oy3BJVpZRHosrEyP4Xec
+         aWgjwBvWnA9KIvvCAK0JMAOFcAXkJz1gVL8O5HbIHVXA2CFIIUHaRbNra+E7zZRP75Mm
+         og00eEcGwLEJCJ31wB2VaRqrKzhhclgdNRyx4Um8JfG0SJIYRO7nE5kEWN9GuTNCG25R
+         ScGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4IQVmkJIfw+G4+zEwXF78WRi81YVym7RqqN9ditiGR8=;
+        b=Tm9ihkPVQ7eEqAyYhwtZpoxA6zGEKhc5LR5GVEGrhxZieT+GTAEkeOYunLX/bPKKpr
+         968y3w7ktdBV7prbRpq5CMw22KWtyd/z90cnk+wUbxVF4T4OJz3d0DJNFEwh5CHJsT4M
+         HC0WDQyZptvi4fWrb+o0ccWQWRRw6c6jKG+jgcX8Rr7r5b+DSBLi3tDoDHD37YZ3M8Si
+         quzuYbCV5OqtMpwmJEjE5HUd77hXKLZSNtrUntMugCZjwYSWmYIiE+kJWAHJW5lprCMv
+         YlATeVfAX8bGIJwrD/v+1btabyCzk+JgzkvGhu3TMi74LhK9RKT0JHj41aBRC+HSHR8k
+         hn6w==
+X-Gm-Message-State: ACrzQf1LVv/ELOego7AKRqWtMRyPsOEMR6aLWEvcuxaG5VKGhLg3re6r
+        5DayzHyAAbEcKw/gMSYJeMM=
+X-Google-Smtp-Source: AMsMyM4wATwlk4RPzcgKvOZwf5w68fr1EQLtWQEbJimqtPpuKgIfUB7wEIzz5GV/vTRA5xxHcfZkdQ==
+X-Received: by 2002:aa7:d385:0:b0:461:8cd3:b38b with SMTP id x5-20020aa7d385000000b004618cd3b38bmr29914191edq.172.1667476898409;
+        Thu, 03 Nov 2022 05:01:38 -0700 (PDT)
+Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id qq18-20020a17090720d200b0077016f4c6d4sm423983ejb.55.2022.11.03.05.01.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 05:01:37 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH] dt-bindings: pwm: tegra: Convert to json-schema
+Date:   Thu,  3 Nov 2022 13:01:37 +0100
+Message-Id: <20221103120137.1467905-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3365.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc91ae84-d47a-4973-238d-08dabd874757
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2022 10:36:34.0849
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JDO29h5dfWJ8osOEWHrkICIhfqDaCycc2ZqmzmT2uuD7w1GkqC8Av0rlbdYr7IjAtJK0OVYRlrXQaC+0xrWtHknqa7aGx5MnQ7hJtM62zJU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB5171
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -144,29 +72,252 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-DQpPbiAyMDIyLzExLzMsIDU6MjAgQU0sICJLcnp5c3p0b2YgS296bG93c2tpIiA8a3J6a0BrZXJu
-ZWwub3JnPiB3cm90ZToNCg0KICAgIE9uIDMxLzEwLzIwMjIgMDY6MzgsIEJpbGx5IFRzYWkgd3Jv
-dGU6DQogICAgPiA+ICtwYXR0ZXJuUHJvcGVydGllczoNCiAgICA+ID4gKyAgIl5wd20oQFswLTlh
-LWZdKyk/JCI6DQogICAgPiA+ICsgICAgJHJlZjogLi4vcHdtL2FzcGVlZCxhc3QyNjAwLXB3bS55
-YW1sDQoNCiAgICA+IEZ1bGwgcGF0aCwgc286IC9zY2hlbWFzL3B3bS9hc3BlZWQsYXN0MjYwMC1w
-d20ueWFtbA0KDQogICAgPiBXaHkgdW5pdCBhZGRyZXNzZXMgYXJlIG9wdGlvbmFsPw0KDQogICAg
-PiA+ICsNCiAgICA+ID4gKyAgIl50YWNoKEBbMC05YS1mXSspPyQiOg0KICAgID4gPiArICAgICRy
-ZWY6IC4uL2h3bW9uL2FzcGVlZCxhc3QyNjAwLXRhY2gueWFtbA0KDQogICAgPiBEaXR0bw0KDQog
-ICAgPiBXaHkgdW5pdCBhZGRyZXNzZXMgYXJlIG9wdGlvbmFsPw0KDQpUaGUgcHdtX3RhY2ggaXMg
-bm90IHRoZSBidXMuIEkgd2lsbCB1c2UNCnB3bToNCiAgICB0eXBlOiBvYmplY3QNCiAgICAkcmVm
-OiAiL3NjaGVtYXMvcHdtL2FzcGVlZCxhc3QyNjAwLXB3bS55YW1sIg0KDQp0YWNoOg0KICAgIHR5
-cGU6IG9iamVjdA0KICAgICRyZWY6ICIvc2NoZW1hcy9od21vbi9hc3BlZWQsYXN0MjYwMC10YWNo
-LnlhbWwiDQp0byByZXBsYWNlIGl0Lg0KDQogICAgPiA+ICsNCiAgICA+ID4gK2FkZGl0aW9uYWxQ
-cm9wZXJ0aWVzOiBmYWxzZQ0KICAgID4gPiArDQogICAgPiA+ICtleGFtcGxlczoNCiAgICA+ID4g
-KyAgLSB8DQogICAgPiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL2FzdDI2MDAt
-Y2xvY2suaD4NCiAgICA+ID4gKyAgICBwd21fdGFjaDogcHdtX3RhY2hAMWU2MTAwMDAgew0KDQog
-ICAgPiBOb2RlIG5hbWVzIHNob3VsZCBiZSBnZW5lcmljLg0KICAgID4gaHR0cHM6Ly9kZXZpY2V0
-cmVlLXNwZWNpZmljYXRpb24ucmVhZHRoZWRvY3MuaW8vZW4vbGF0ZXN0L2NoYXB0ZXIyLWRldmlj
-ZXRyZWUtYmFzaWNzLmh0bWwjZ2VuZXJpYy1uYW1lcy1yZWNvbW1lbmRhdGlvbg0KDQpUaGlzIGlz
-IHRoZSBtZmQgd2l0aCBwd20gYW5kIHRhY2gsIHNvIHRoZXkgYXJlIGNvbWJpbmVkIGFzIHRoZSBu
-b2RlIG5hbWUuDQoNCiAgICA+IE5vIHVuZGVyc2NvcmVzIGluIG5vZGUgbmFtZXMuDQoNCmh0dHBz
-Oi8vZGV2aWNldHJlZS1zcGVjaWZpY2F0aW9uLnJlYWR0aGVkb2NzLmlvL2VuL2xhdGVzdC9jaGFw
-dGVyMi1kZXZpY2V0cmVlLWJhc2ljcy5odG1sI3RhYmxlLTENCkkgc2VlIHRoYXQgdGhlIHVuZGVy
-c2NvcmUgaXMgdGhlIHZhbGlkIGNoYXJhY3RlcnMgZm9yIG5vZGUgbmFtZXMuDQpEaWQgSSBtaXNz
-IGFueSBpbmZvcm1hdGlvbj8NCg0KVGhhbmtzDQoNCkJlc3QgUmVnYXJkcywNCkJpbGx5IFRzYWkN
-Cg0K
+From: Thierry Reding <treding@nvidia.com>
+
+Convert the Tegra PWFM bindings from the free-form text format to
+json-schema.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ .../bindings/pwm/nvidia,tegra20-pwm.txt       |  77 ----------
+ .../bindings/pwm/nvidia,tegra20-pwm.yaml      | 144 ++++++++++++++++++
+ 2 files changed, 144 insertions(+), 77 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+deleted file mode 100644
+index 74c41e34c3b6..000000000000
+--- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
++++ /dev/null
+@@ -1,77 +0,0 @@
+-Tegra SoC PWFM controller
+-
+-Required properties:
+-- compatible: Must be:
+-  - "nvidia,tegra20-pwm": for Tegra20
+-  - "nvidia,tegra30-pwm", "nvidia,tegra20-pwm": for Tegra30
+-  - "nvidia,tegra114-pwm", "nvidia,tegra20-pwm": for Tegra114
+-  - "nvidia,tegra124-pwm", "nvidia,tegra20-pwm": for Tegra124
+-  - "nvidia,tegra132-pwm", "nvidia,tegra20-pwm": for Tegra132
+-  - "nvidia,tegra210-pwm", "nvidia,tegra20-pwm": for Tegra210
+-  - "nvidia,tegra186-pwm": for Tegra186
+-  - "nvidia,tegra194-pwm": for Tegra194
+-- reg: physical base address and length of the controller's registers
+-- #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
+-  the cells format.
+-- clocks: Must contain one entry, for the module clock.
+-  See ../clocks/clock-bindings.txt for details.
+-- resets: Must contain an entry for each entry in reset-names.
+-  See ../reset/reset.txt for details.
+-- reset-names: Must include the following entries:
+-  - pwm
+-
+-Optional properties:
+-============================
+-In some of the interface like PWM based regulator device, it is required
+-to configure the pins differently in different states, especially in suspend
+-state of the system. The configuration of pin is provided via the pinctrl
+-DT node as detailed in the pinctrl DT binding document
+-	Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-
+-The PWM node will have following optional properties.
+-pinctrl-names:	Pin state names. Must be "default" and "sleep".
+-pinctrl-0:	phandle for the default/active state of pin configurations.
+-pinctrl-1:	phandle for the sleep state of pin configurations.
+-
+-Example:
+-
+-	pwm: pwm@7000a000 {
+-		compatible = "nvidia,tegra20-pwm";
+-		reg = <0x7000a000 0x100>;
+-		#pwm-cells = <2>;
+-		clocks = <&tegra_car 17>;
+-		resets = <&tegra_car 17>;
+-		reset-names = "pwm";
+-	};
+-
+-
+-Example with the pin configuration for suspend and resume:
+-=========================================================
+-Suppose pin PE7 (On Tegra210) interfaced with the regulator device and
+-it requires PWM output to be tristated when system enters suspend.
+-Following will be DT binding to achieve this:
+-
+-#include <dt-bindings/pinctrl/pinctrl-tegra.h>
+-
+-	pinmux@700008d4 {
+-		pwm_active_state: pwm_active_state {
+-                        pe7 {
+-                                nvidia,pins = "pe7";
+-                                nvidia,tristate = <TEGRA_PIN_DISABLE>;
+-			};
+-		};
+-
+-		pwm_sleep_state: pwm_sleep_state {
+-                        pe7 {
+-                                nvidia,pins = "pe7";
+-                                nvidia,tristate = <TEGRA_PIN_ENABLE>;
+-			};
+-		};
+-	};
+-
+-	pwm@7000a000 {
+-		/* Mandatory PWM properties */
+-		pinctrl-names = "default", "sleep";
+-		pinctrl-0 = <&pwm_active_state>;
+-		pinctrl-1 = <&pwm_sleep_state>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
+new file mode 100644
+index 000000000000..9c73e78ff434
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
+@@ -0,0 +1,144 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/nvidia,tegra20-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NVIDIA Tegra PWFM controller
++
++maintainers:
++  - Thierry Reding <thierry.reding@gmail.com>
++  - Jon Hunter <jonathanh@nvidia.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - const: nvidia,tegra20-pwm
++
++      - items:
++          - enum:
++              - nvidia,tegra30-pwm
++              - nvidia,tegra114-pwm
++              - nvidia,tegra124-pwm
++              - nvidia,tegra132-pwm
++              - nvidia,tegra210-pwm
++          - enum:
++              - nvidia,tegra20-pwm
++
++      - items:
++          - const: nvidia,tegra186-pwm
++
++      - items:
++          - const: nvidia,tegra194-pwm
++          - const: nvidia,tegra186-pwm
++
++      - items:
++          - const: nvidia,tegra234-pwm
++          - const: nvidia,tegra194-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: module clock
++
++  clock-names:
++    items:
++      - const: pwm
++
++  resets:
++    items:
++      - description: module reset
++
++  reset-names:
++    items:
++      - const: pwm
++
++  "#pwm-cells":
++    const: 2
++
++  pinctrl-names:
++    items:
++      - const: default
++      - const: sleep
++
++  pinctrl-0:
++    description: configuration for the default/active state
++
++  pinctrl-1:
++    description: configuration for the sleep state
++
++  operating-points-v2:
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  power-domains:
++    items:
++      - description: phandle to the core power domain
++
++allOf:
++  - $ref: pwm.yaml
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/tegra20-car.h>
++
++    pwm: pwm@7000a000 {
++        compatible = "nvidia,tegra20-pwm";
++        reg = <0x7000a000 0x100>;
++        #pwm-cells = <2>;
++        clocks = <&tegra_car TEGRA20_CLK_PWM>;
++        resets = <&tegra_car 17>;
++        reset-names = "pwm";
++    };
++
++  # Example with the pin configuration for suspend and resume:
++  # ==========================================================
++  # Suppose pin PE7 (On Tegra210) interfaced with the regulator device and it requires PWM output
++  # to be tristated when system enters suspend.
++  - |
++    #include <dt-bindings/clock/tegra210-car.h>
++    #include <dt-bindings/pinctrl/pinctrl-tegra.h>
++
++    pinmux@700008d4 {
++        compatible = "nvidia,tegra210-pinmux";
++        reg = <0x700008d4 0x29c>, /* Pad control registers */
++              <0x70003000 0x294>; /* Mux registers */
++
++        pwm_active_state: pwm_active_state {
++            pe7 {
++                nvidia,pins = "pe7";
++                nvidia,tristate = <TEGRA_PIN_DISABLE>;
++            };
++        };
++
++        pwm_sleep_state: pwm_sleep_state {
++            pe7 {
++                nvidia,pins = "pe7";
++                nvidia,tristate = <TEGRA_PIN_ENABLE>;
++            };
++        };
++    };
++
++    pwm@7000a000 {
++        compatible = "nvidia,tegra210-pwm", "nvidia,tegra20-pwm";
++        reg = <0x7000a000 0x100>;
++        clocks = <&tegra_car TEGRA210_CLK_PWM>;
++        clock-names = "pwm";
++        resets = <&tegra_car 17>;
++        reset-names = "pwm";
++        #pwm-cells = <2>;
++        pinctrl-names = "default", "sleep";
++        pinctrl-0 = <&pwm_active_state>;
++        pinctrl-1 = <&pwm_sleep_state>;
++    };
+-- 
+2.38.1
+
