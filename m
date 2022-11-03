@@ -2,92 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BD0617F93
-	for <lists+linux-pwm@lfdr.de>; Thu,  3 Nov 2022 15:31:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF3C3617FB5
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Nov 2022 15:39:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbiKCObF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 3 Nov 2022 10:31:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
+        id S231154AbiKCOjF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 3 Nov 2022 10:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229935AbiKCObE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Nov 2022 10:31:04 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB6EFF5D;
-        Thu,  3 Nov 2022 07:31:03 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id p127so2101156oih.9;
-        Thu, 03 Nov 2022 07:31:03 -0700 (PDT)
+        with ESMTP id S229667AbiKCOjE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 3 Nov 2022 10:39:04 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DD21126;
+        Thu,  3 Nov 2022 07:39:03 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id ud5so5843257ejc.4;
+        Thu, 03 Nov 2022 07:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wTr6gc/qL3/cvufhP664wBsVqSVnACz7cyfjWA6pJ/A=;
-        b=inEVvhjX66DeMO1AjWgK9izci/93Si0haRH+O02Xndneum6cFm49kmaOrUGUUxKJqO
-         lGq+ITuxZHEN8pV5mQBAofz07U0AStDDR0AztGlLRFALigFRhIhtGWKlbjyefVCZpPU0
-         MlFVxEnlgqY8A2SoyoGcz1ToGr1SysyXMgHvr7f1quTkQokhds1LRRNaLZh2X3wofiPQ
-         HRPDK+iHw8/H/037UV2x+YJ6ijcgTQgrzxA0NHL22dOnnj9MkI3lVOZ/FV3wPX1teER3
-         mPtZNuEQzmGuhXoOeXzYARJFxID/jfhanw9oWrzFCJk9AjtxhFoIKisjmGZG7w5cP/mX
-         8Q4Q==
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qIyKCJxZIuG+RhhbIO3I6/NX9wqTTWIgzBI4Scnntow=;
+        b=X+PJ7NLjR55zsmdJrTwNlBoxEeIt65Gvw0z4ZrzHMsUtbyrFmPVo2wK84AAtdPS6+X
+         sJ4jYgcf6IbcXpUkRPDAlcyMb1bL66qi7qQ71JttX6zp3GWAL7sV1RE1sllI0czBTmUv
+         oamlh8/jLTEr2ijpyVmZwX+SezbQ29ccGGlb+pajytekdsJ+UkEn3jIoXOAH61YWm7ae
+         471118CGS7rvn+YsLYUuznxKxHK0iqcwl0IkLF9quvbGkory+k5n2vU20FdXoFr1k4Zf
+         0YnNAQctNZjWpiZ3tDVv3X8nnRGpqJfzSRgXKktWR6WheNRUwHYSC8SamGwAAt94fZuB
+         o+/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wTr6gc/qL3/cvufhP664wBsVqSVnACz7cyfjWA6pJ/A=;
-        b=lDmg2AZDrq0CxtRaogRpl1EonEoOBz5h+auusZTydGklAJCUMXjyRwX2uMOfZmk/tH
-         bZ+2nTR18bLcg2NxH+bdOV30wPiBwKcT/Yxaab+bYcX2DlvOouwVuk3EAFEbRb9cFkmR
-         mtMN6VFGCC/HAcf3XR59xzYpWmcUoK6IcyxPeDkvvCz54EBSh96tGwBYxHbLmFX2RPi0
-         /gmw/CQYuRWt6qqG/dzDyHF3f4KxIauLPbrQKBSynfCNPSPlVRFG78cIjNRshffn+2zM
-         4o3rO3M5FSk6nskUBpcZP4kQx2SjWE0a1M8jNoWO0uGEu19KZk2IuMyvrL9NV5wCTbp8
-         VpUA==
-X-Gm-Message-State: ACrzQf1uhBvIP50GVbrIob1reG2r0s8xYqSGSuXup51qYczXFSa86rya
-        H/P7ZsoLGfAXGbe0mDOrZhw=
-X-Google-Smtp-Source: AMsMyM6kiE1p+72Nbb5v+BVoVNZhakWQwxVmLMnU2jpvd+wAruwzA58msN/e0z+ahu5+6GQaCdfr+A==
-X-Received: by 2002:a05:6808:19a6:b0:355:3ac8:8386 with SMTP id bj38-20020a05680819a600b003553ac88386mr23002209oib.229.1667485863264;
-        Thu, 03 Nov 2022 07:31:03 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w9-20020a9d6749000000b00660e833baddsm387598otm.29.2022.11.03.07.31.01
+        bh=qIyKCJxZIuG+RhhbIO3I6/NX9wqTTWIgzBI4Scnntow=;
+        b=7Tmrtld6QYik04o9VCEYLjKc9gZ4xO34Jw2+bLjypVeaeiT2imXS9A+rkfh+YByQY1
+         dmBMzAdwDENrS3hi3+p/OEQhcZOmMIIDS3RLbaxsMOvAOlVNgSuOW0tItCsEPwsogoTT
+         XaKT4tja991/xyuPfBZ8KHMr1Je0Rp5cFxhuPriQnkI6mWuESEHgI/AWBmkDiv+eOOTz
+         7o2DIKTUI1HyGEPXFsQqjOyj3D96/lKymbwAhCyXebLM+a+QWecfktGhQAlPftE9Fz6Y
+         qHuaagyESYaYe0+9Lk7cWbTtDjtWpXEIlXgNF/EcMRkd5T/oQ+8KihtkOU5aWmcD4A/z
+         8Fuw==
+X-Gm-Message-State: ACrzQf2cQaIreGTeA3/WefiMV6lknmbWjhdoWDTsvvJOuh/LyVyT5n5+
+        CnWmAi1hcsvDXBAFpAZMpak=
+X-Google-Smtp-Source: AMsMyM4S+CzD5Jpllv9opC/WA5fBHIeN3TJT0BaCXQR1t4DW8DiiMB/zLHU/POLrWcuy5BmnuFm88g==
+X-Received: by 2002:a17:907:2bd7:b0:7ad:9ada:a6f3 with SMTP id gv23-20020a1709072bd700b007ad9adaa6f3mr28419195ejc.355.1667486341683;
+        Thu, 03 Nov 2022 07:39:01 -0700 (PDT)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id r13-20020aa7d58d000000b004616cce0a26sm598397edq.24.2022.11.03.07.39.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Nov 2022 07:31:01 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Thu, 3 Nov 2022 07:30:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     "jdelvare@suse.com" <jdelvare@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>,
-        "garnermic@meta.com" <garnermic@meta.com>
-Subject: Re: [v2 3/3] hwmon: Add Aspeed ast2600 TACH support
-Message-ID: <20221103143059.GB145042@roeck-us.net>
-References: <20221101095156.30591-1-billy_tsai@aspeedtech.com>
- <20221101095156.30591-4-billy_tsai@aspeedtech.com>
- <20221101131456.GA1310110@roeck-us.net>
- <271C521D-8F20-4C86-B3DA-9C0AD74242D4@aspeedtech.com>
- <20221102170138.GA2913353@roeck-us.net>
- <F1166366-99CC-4A36-A0A2-4965C787E60B@aspeedtech.com>
- <20221103043034.GA2113834@roeck-us.net>
- <E9E92BC7-CB1A-487F-9E5D-2A403A01CB17@aspeedtech.com>
+        Thu, 03 Nov 2022 07:39:00 -0700 (PDT)
+Date:   Thu, 3 Nov 2022 15:38:59 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: tegra: Convert to json-schema
+Message-ID: <Y2PSgwfqZ9BfXSFw@orome>
+References: <20221103120137.1467905-1-thierry.reding@gmail.com>
+ <18d66cce-64ae-aeaa-e9cf-9426c5d214f5@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yaZ6CGl2KxtPFIjN"
 Content-Disposition: inline
-In-Reply-To: <E9E92BC7-CB1A-487F-9E5D-2A403A01CB17@aspeedtech.com>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+In-Reply-To: <18d66cce-64ae-aeaa-e9cf-9426c5d214f5@linaro.org>
+User-Agent: Mutt/2.2.7 (2022-08-07)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -95,49 +78,317 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 05:40:44AM +0000, Billy Tsai wrote:
-> On 2022/11/3, 12:30 PM, "Guenter Roeck" <groeck7@gmail.com on behalf of linux@roeck-us.net> wrote:
-> 
->     On Thu, Nov 03, 2022 at 03:52:59AM +0000, Billy Tsai wrote:
->     > > 
->     > > Can't I use a min/max RPM to let the driver know a reasonable timeout/polling period when
->     > > the driver is trying to get RPM?
->     > > Beacause that our tach controller have the falg to indicates the hardware detected the change
->     > > in the input signal. I need the proper timout to rule out slow RPMs.
-> 
->     > If the chip measures the fan speed continuously, why would that ever be a
->     > problem, and why wait in the first place instead of just taking the most
->     > recent result ?
-> 
->     > Pretty much every other driver is doing that, so I really don't understand
->     > why that would not work here.
-> 
-> When the fan speed drop from a very fast RPM to a very slow RPM. Especially when it is close to stopping.
-> The most recent result will be no meaningful value. The slower RPM needs more time to sample it. E.g., If
-> we want to measure the fan with 600 RPM, the controller needs at least 100ms. During this time period, we
-> will always get the wrong value. So, our tach controller have the flag to avoid this problem:
-> TACH_ASPEED_VALUE_UPDATE: tach value updated since last read
-> This flag will be set when the controller detected the change of the signal and clear by read it.
-> In order to use this flag, the controller needs the proper timeout based on minimum RPM to avoid waiting forever.
-> 
 
-I am not going to accept this patch as-is. If userspace wants to have
-values accurate down to ms, this kind of approach is just wrong. Users
-will have to live with the fact that measurements may be a bit (in the 
-< 1 second range) out of date. Many older drivers even implement code
-which avoids reading registers again for a second or longer. Older
-temperature sensors may take several seconds to provide new readings.
-That is not a reason to block userspace until a new value is available.
-I do not see that as a problem. In my opinion it is much more of a
-problem if the driver returns a completely bad value such as 0 or even
-an error code because its software parameters did not match reality and
-the driver didn't wait long enough for a new value. That would be _much_
-worse than providing a value which is a few 100 ms out of date, and your
-code is vulnerable to that problem.
+--yaZ6CGl2KxtPFIjN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Besides, for a fan to reduce its speed that quickly, it has to be manually
-stopped. Normally fans take several seconds to stop if power is taken away
-completely. Your code is adding a lot of complexity (and unnecessary
-attributes) for no good reason.
+On Thu, Nov 03, 2022 at 10:14:04AM -0400, Krzysztof Kozlowski wrote:
+> On 03/11/2022 08:01, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > Convert the Tegra PWFM bindings from the free-form text format to
+> > json-schema.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  .../bindings/pwm/nvidia,tegra20-pwm.txt       |  77 ----------
+> >  .../bindings/pwm/nvidia,tegra20-pwm.yaml      | 144 ++++++++++++++++++
+> >  2 files changed, 144 insertions(+), 77 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pwm/nvidia,tegra2=
+0-pwm.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/nvidia,tegra2=
+0-pwm.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.t=
+xt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+> > deleted file mode 100644
+> > index 74c41e34c3b6..000000000000
+> > --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
+> > +++ /dev/null
+> > @@ -1,77 +0,0 @@
+> > -Tegra SoC PWFM controller
+> > -
+> > -Required properties:
+> > -- compatible: Must be:
+> > -  - "nvidia,tegra20-pwm": for Tegra20
+> > -  - "nvidia,tegra30-pwm", "nvidia,tegra20-pwm": for Tegra30
+> > -  - "nvidia,tegra114-pwm", "nvidia,tegra20-pwm": for Tegra114
+> > -  - "nvidia,tegra124-pwm", "nvidia,tegra20-pwm": for Tegra124
+> > -  - "nvidia,tegra132-pwm", "nvidia,tegra20-pwm": for Tegra132
+> > -  - "nvidia,tegra210-pwm", "nvidia,tegra20-pwm": for Tegra210
+> > -  - "nvidia,tegra186-pwm": for Tegra186
+> > -  - "nvidia,tegra194-pwm": for Tegra194
+> > -- reg: physical base address and length of the controller's registers
+> > -- #pwm-cells: should be 2. See pwm.yaml in this directory for a descri=
+ption of
+> > -  the cells format.
+> > -- clocks: Must contain one entry, for the module clock.
+> > -  See ../clocks/clock-bindings.txt for details.
+> > -- resets: Must contain an entry for each entry in reset-names.
+> > -  See ../reset/reset.txt for details.
+> > -- reset-names: Must include the following entries:
+> > -  - pwm
+> > -
+> > -Optional properties:
+> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> > -In some of the interface like PWM based regulator device, it is requir=
+ed
+> > -to configure the pins differently in different states, especially in s=
+uspend
+> > -state of the system. The configuration of pin is provided via the pinc=
+trl
+> > -DT node as detailed in the pinctrl DT binding document
+> > -	Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> > -
+> > -The PWM node will have following optional properties.
+> > -pinctrl-names:	Pin state names. Must be "default" and "sleep".
+> > -pinctrl-0:	phandle for the default/active state of pin configurations.
+> > -pinctrl-1:	phandle for the sleep state of pin configurations.
+> > -
+> > -Example:
+> > -
+> > -	pwm: pwm@7000a000 {
+> > -		compatible =3D "nvidia,tegra20-pwm";
+> > -		reg =3D <0x7000a000 0x100>;
+> > -		#pwm-cells =3D <2>;
+> > -		clocks =3D <&tegra_car 17>;
+> > -		resets =3D <&tegra_car 17>;
+> > -		reset-names =3D "pwm";
+> > -	};
+> > -
+> > -
+> > -Example with the pin configuration for suspend and resume:
+> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > -Suppose pin PE7 (On Tegra210) interfaced with the regulator device and
+> > -it requires PWM output to be tristated when system enters suspend.
+> > -Following will be DT binding to achieve this:
+> > -
+> > -#include <dt-bindings/pinctrl/pinctrl-tegra.h>
+> > -
+> > -	pinmux@700008d4 {
+> > -		pwm_active_state: pwm_active_state {
+> > -                        pe7 {
+> > -                                nvidia,pins =3D "pe7";
+> > -                                nvidia,tristate =3D <TEGRA_PIN_DISABLE=
+>;
+> > -			};
+> > -		};
+> > -
+> > -		pwm_sleep_state: pwm_sleep_state {
+> > -                        pe7 {
+> > -                                nvidia,pins =3D "pe7";
+> > -                                nvidia,tristate =3D <TEGRA_PIN_ENABLE>;
+> > -			};
+> > -		};
+> > -	};
+> > -
+> > -	pwm@7000a000 {
+> > -		/* Mandatory PWM properties */
+> > -		pinctrl-names =3D "default", "sleep";
+> > -		pinctrl-0 =3D <&pwm_active_state>;
+> > -		pinctrl-1 =3D <&pwm_sleep_state>;
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.y=
+aml b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
+> > new file mode 100644
+> > index 000000000000..9c73e78ff434
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
+> > @@ -0,0 +1,144 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pwm/nvidia,tegra20-pwm.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NVIDIA Tegra PWFM controller
+> > +
+> > +maintainers:
+> > +  - Thierry Reding <thierry.reding@gmail.com>
+> > +  - Jon Hunter <jonathanh@nvidia.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - const: nvidia,tegra20-pwm
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - nvidia,tegra30-pwm
+> > +              - nvidia,tegra114-pwm
+> > +              - nvidia,tegra124-pwm
+> > +              - nvidia,tegra132-pwm
+> > +              - nvidia,tegra210-pwm
+> > +          - enum:
+> > +              - nvidia,tegra20-pwm
+> > +
+> > +      - items:
+> > +          - const: nvidia,tegra186-pwm
+>=20
+> I guess you wanted to keep some order between nvidia,tegra20-pwm and
+> nvidia,tegra186-pwm, but this creates impression you will have here more
+> items, which of course cannot happen. So either keep this one with
+> tegra20 as one enum or drop "items".
 
-Guenter
+Done.
+
+>=20
+> > +
+> > +      - items:
+> > +          - const: nvidia,tegra194-pwm
+> > +          - const: nvidia,tegra186-pwm
+> > +
+> > +      - items:
+> > +          - const: nvidia,tegra234-pwm
+> > +          - const: nvidia,tegra194-pwm
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: module clock
+>=20
+> Just maxItems: 1, because description is not really helping.
+
+Okay, seems fine.
+
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: pwm
+>=20
+> This wasn't in original binding and does not look needed. Mention
+> changes from pure conversion.
+
+At some point (looks like with the switch to 64-bit ARM) we started
+adding these for consistency because we were noticing that sometimes
+either we were missing clock entries or newer SoC generations gained
+additional clocks. Whenever that happened it would become somewhat
+cumbersome to describe this in device tree bindings and/or driver
+code, so consistently adding a clock-names property preventively
+even if only a single clock was used in the first iteration seemed a
+prudent thing to do.
+
+So these are not technically necessary, but many device tree files will
+have these entries, so this is here for those to pass validation.
+
+Note that the property doesn't show up along the "clocks" property in
+"required:" below.
+
+>=20
+> > +
+> > +  resets:
+> > +    items:
+> > +      - description: module reset
+> > +
+> > +  reset-names:
+> > +    items:
+> > +      - const: pwm
+> > +
+> > +  "#pwm-cells":
+> > +    const: 2
+> > +
+> > +  pinctrl-names:
+> > +    items:
+> > +      - const: default
+> > +      - const: sleep
+> > +
+> > +  pinctrl-0:
+> > +    description: configuration for the default/active state
+> > +
+> > +  pinctrl-1:
+> > +    description: configuration for the sleep state
+> > +
+> > +  operating-points-v2:
+> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+>=20
+> Drop quotes. We should actually define it in some common schema.
+
+Yeah, good idea. I'll drop the quotes for now and see if I can find a
+good place to add this in dt-schema.
+
+> > +
+> > +  power-domains:
+> > +    items:
+> > +      - description: phandle to the core power domain
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - resets
+> > +  - reset-names
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/tegra20-car.h>
+> > +
+> > +    pwm: pwm@7000a000 {
+> > +        compatible =3D "nvidia,tegra20-pwm";
+> > +        reg =3D <0x7000a000 0x100>;
+> > +        #pwm-cells =3D <2>;
+> > +        clocks =3D <&tegra_car TEGRA20_CLK_PWM>;
+> > +        resets =3D <&tegra_car 17>;
+> > +        reset-names =3D "pwm";
+> > +    };
+> > +
+> > +  # Example with the pin configuration for suspend and resume:
+> > +  # =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +  # Suppose pin PE7 (On Tegra210) interfaced with the regulator device=
+ and it requires PWM output
+> > +  # to be tristated when system enters suspend.
+> > +  - |
+> > +    #include <dt-bindings/clock/tegra210-car.h>
+> > +    #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+> > +
+> > +    pinmux@700008d4 {
+> > +        compatible =3D "nvidia,tegra210-pinmux";
+> > +        reg =3D <0x700008d4 0x29c>, /* Pad control registers */
+> > +              <0x70003000 0x294>; /* Mux registers */
+> > +
+> > +        pwm_active_state: pwm_active_state {
+>=20
+> No underscores in node names.
+
+I've dropped the entire example, but I may want to put it back once the
+pinmux conversion is done, in which case I'll make sure to replace the
+underscores.
+
+Thanks,
+Thierry
+
+--yaZ6CGl2KxtPFIjN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNj0oAACgkQ3SOs138+
+s6FcoQ//ULkcBhhyh6sOEeam6JT70izc3ITIqW8iNAgcYaWVN4672F7M3bucUyIO
+sq/b4GYV+2G8KoRkk5+NIudEWxoSTaStDPKPWeSAG5gY+gSiU1kmsGRYy83yVNwf
+nyVUa0zUoQxL/wmsYM8D2VVHSFmTEwroA+XFrFHm1G3B7jlLxo2AELTe4TORA7MX
+Oeg4oMl1diJgDkVr33p629OMGmG36H30HC6+c6YvGysyCmfKJxsGBRQH2oycaufL
+4yz58M1ohNl9guYkgSRkhCH9+GbzCziSM9fQT5l+YvlY1X0KKcoNBLQ+i4L1hfrZ
+R4jZKylfB4Vn+ZsRQzx+1AIMGFv5MKdTD2UFaf0Q0gmza+/BvGIXst2px6yBQxhV
+x3OjvAXKggRoSu3U2iZKIzEhwPfA8ANZ+4N/SLilLoamVeiNxZ0mjXvDJ+LYP0Tu
+8MYCg4JHLEfCA13fC5u6mE6dK+cHLnriuTT+JjmIM+SVvTfGtx6pGk9xu/Kby2cP
+mqoJBrjGp4tBTpY4hN3Qq+spI2bE4g1nr0KonPcxPScPKJOaRv8kVSptGtBs3i0r
+9eGi8ZbOYqHajUPKMZlIbTWlGohtkio/YKur30cwBuQTsUqz0MH4BHuELQ1jlK0l
+gLYeb1fDAQ5X/wEv7ErHsru9q5o6UEYWE2e3V3pEuRVuQ5HfC2M=
+=PaY0
+-----END PGP SIGNATURE-----
+
+--yaZ6CGl2KxtPFIjN--
