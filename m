@@ -2,185 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F740619AD9
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Nov 2022 16:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4BE619ADE
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Nov 2022 16:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232388AbiKDPCe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Nov 2022 11:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42084 "EHLO
+        id S232153AbiKDPDZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Nov 2022 11:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232386AbiKDPCQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Nov 2022 11:02:16 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2BA0D121259;
-        Fri,  4 Nov 2022 07:59:56 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.96,137,1665414000"; 
-   d="scan'208";a="141509584"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 04 Nov 2022 23:59:55 +0900
-Received: from localhost.localdomain (unknown [10.226.93.164])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6819A4358A4D;
-        Fri,  4 Nov 2022 23:59:53 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        with ESMTP id S232307AbiKDPDD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Nov 2022 11:03:03 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12640DB0
+        for <linux-pwm@vger.kernel.org>; Fri,  4 Nov 2022 08:02:51 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id l15so3175229qtv.4
+        for <linux-pwm@vger.kernel.org>; Fri, 04 Nov 2022 08:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NXpJ0TQUpxsncyPGT+WrGCwDjQwyOyScZvMWbiWmnqQ=;
+        b=BTL7O5jCNWCOVPuY/W40A9ZQpJfM1th2R1rLnajP5f+y61WwyFbrbuDfXZllXv3nOw
+         EaxLzQqMTBPWjreEnFuO489x41xDipMLGIUF3aPN3DXO3r8Nzm5Qi+gCRji21E1SvZBc
+         qFPh6a1SFScn8hdSQ97lFfZB4UroUGC0JyB5x5cZiXlBoNjRPqirSLrCvcrDTdS5rLEp
+         vFtiEs05Qnk8upbNKke7jCYnCwFmrlokkq+ugOi6yOdVFNYdu5D5lO4dkuTk5xx6/xw5
+         odgfl6nt2QbirMsBcWl/2EcIru/BnQA1XG/fnvG9TeCf+1/EnoWwpihfEieSn11hQVqC
+         RNlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NXpJ0TQUpxsncyPGT+WrGCwDjQwyOyScZvMWbiWmnqQ=;
+        b=xoVL6sosoXMpAk0d7FS4Z+vEoelMI15XCX3AkXtoBlli1XjACKn7SvO5vCqwyvVScb
+         NmrkI6gQwke8tYzteF/t4M1LgT1iT6Ym9dbuUIGSbuWHqn4MvpUWrdtHbSq4vbQQYAZZ
+         e1HXPcqRpMTPyjR7FwMItnSiPROXVWskM0MMcHA6w59ypY6rw6g7HfKjXWQOhTAjel9F
+         kYZIWCBSGWVIT+22SGt0ia0rkpya0TLkZ0a2fSs3T4CtPjI72k2W51pGKzdX/vCWZjPa
+         mxg4qfmW0zs0J3vRck7Z7CftpBVvAsSQky2u8+WFeySXvPxTDPjXZCZV/F4M8sBBrT49
+         h9tg==
+X-Gm-Message-State: ACrzQf2w+R+cE5n2UJffqihiTdn1Kzg3/To4GsoAH9Vs874UmygyHhZU
+        S1Yh+A43ps8MOBwKsDbbx9aAHQ==
+X-Google-Smtp-Source: AMsMyM4QZrngiG0bu3jk1wIYWPjd1b8g3GWApE0yPPTfPQmCWWgetB8x0HMeHLzSqxFQgwGjQJRn5Q==
+X-Received: by 2002:ac8:1e90:0:b0:3a5:6891:3488 with SMTP id c16-20020ac81e90000000b003a568913488mr2315350qtm.49.1667574170399;
+        Fri, 04 Nov 2022 08:02:50 -0700 (PDT)
+Received: from ?IPV6:2601:586:5000:570:aad6:acd8:4ed9:299b? ([2601:586:5000:570:aad6:acd8:4ed9:299b])
+        by smtp.gmail.com with ESMTPSA id d11-20020a05620a240b00b006b95b0a714esm3203256qkn.17.2022.11.04.08.02.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Nov 2022 08:02:50 -0700 (PDT)
+Message-ID: <dc6b70bc-c82d-9540-5cb7-e7a249359a78@linaro.org>
+Date:   Fri, 4 Nov 2022 11:02:49 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: Add RZ/G2L GPT binding
+Content-Language: en-US
+To:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Chris Paterson <chris.paterson2@renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 3/3] pwm: rzg2l-gpt: Add support for linking with poeg
-Date:   Fri,  4 Nov 2022 14:59:38 +0000
-Message-Id: <20221104145938.1782464-4-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221104145938.1782464-1-biju.das.jz@bp.renesas.com>
+        linux-renesas-soc@vger.kernel.org, Rob Herring <robh@kernel.org>
 References: <20221104145938.1782464-1-biju.das.jz@bp.renesas.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20221104145938.1782464-2-biju.das.jz@bp.renesas.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221104145938.1782464-2-biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patch add support for linking poeg group with gpt, so that
-gpt can control the output disable function.
+On 04/11/2022 10:59, Biju Das wrote:
+> Add device tree bindings for the General PWM Timer (GPT).
+> 
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  sending to avoid bot error for the next patch.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-This patch depend upon [1]
-[1] https://lore.kernel.org/linux-renesas-soc/20221028104231.220426-3-biju.das.jz@bp.renesas.com/T/#u
----
- drivers/pwm/pwm-rzg2l-gpt.c | 69 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Then subject maybe:
+[DO NOT APPLY PATCH 1/3]
+?
 
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-index 3c13c4129c22..336120f381f0 100644
---- a/drivers/pwm/pwm-rzg2l-gpt.c
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -31,6 +31,7 @@
- #define RZG2L_GTCR		0x2c
- #define RZG2L_GTUDDTYC		0x30
- #define RZG2L_GTIOR		0x34
-+#define RZG2L_GTINTAD		0x38
- #define RZG2L_GTBER		0x40
- #define RZG2L_GTCNT		0x48
- #define RZG2L_GTCCRA		0x4c
-@@ -48,9 +49,15 @@
- #define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
- 
- #define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
-+#define RZG2L_GTIOR_OADF	GENMASK(10, 9)
- #define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
-+#define RZG2L_GTIOR_OBDF	GENMASK(26, 25)
- #define RZG2L_GTIOR_OAE		BIT(8)
- #define RZG2L_GTIOR_OBE		BIT(24)
-+#define RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE	BIT(9)
-+#define RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE	BIT(25)
-+#define RZG2L_GTIOR_PIN_DISABLE_SETTING \
-+	(RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE | RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE)
- 
- #define RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
- #define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
-@@ -64,12 +71,16 @@
- #define RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH \
- 	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE) | RZG2L_GTIOR_OBE)
- 
-+#define RZG2L_GTINTAD_GRP_MASK			GENMASK(25, 24)
-+
- #define RZG2L_GTCCR(i) (0x4c + 4 * (i))
- 
- #define RZG2L_MAX_HW_CHANNELS	(8)
- #define RZG2L_CHANNELS_PER_IO	(2)
- #define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_PER_IO)
- 
-+#define RZG2L_MAX_POEG_GROUPS	(4)
-+
- #define RZG2L_IS_IOB(a) ((a) & 0x1)
- #define RZG2L_GET_CH_INDEX(a) ((a) / 2)
- 
-@@ -85,6 +96,7 @@ struct rzg2l_gpt_chip {
- 	u32 md_prescale;
- 	unsigned long rate;
- 	u32 user_count[RZG2L_MAX_HW_CHANNELS];
-+	DECLARE_BITMAP(poeg_gpt_link, RZG2L_MAX_POEG_GROUPS * RZG2L_MAX_HW_CHANNELS);
- };
- 
- static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct pwm_chip *chip)
-@@ -443,6 +455,62 @@ static void rzg2l_gpt_reset_assert_pm_disable(void *data)
- 	reset_control_assert(rzg2l_gpt->rstc);
- }
- 
-+static void rzg2l_gpt_parse_properties(struct platform_device *pdev,
-+				       struct rzg2l_gpt_chip *rzg2l_gpt)
-+{
-+	struct of_phandle_args of_args;
-+	unsigned int i;
-+	u32 poeg_grp;
-+	int cells;
-+	u32 offs;
-+	int ret;
-+
-+	cells = of_property_count_u32_elems(pdev->dev.of_node, "renesas,poegs");
-+	if (cells == -EINVAL)
-+		return;
-+
-+	cells >>= 1;
-+	for (i = 0; i < cells; i++) {
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						       "renesas,poegs", 1, i,
-+						       &of_args);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Failed to parse 'renesas,poegs' property\n");
-+			return;
-+		}
-+
-+		if (of_args.args[0] >= RZG2L_MAX_HW_CHANNELS) {
-+			dev_err(&pdev->dev,
-+				"Invalid channel %d > 7\n", of_args.args[0]);
-+			return;
-+		}
-+
-+		if (!of_device_is_available(of_args.np)) {
-+			/* It's fine to have a phandle to a non-enabled poeg. */
-+			of_node_put(of_args.np);
-+			continue;
-+		}
-+
-+		if (!of_property_read_u32(of_args.np, "renesas,id", &poeg_grp)) {
-+			offs = RZG2L_GET_CH_OFFS(of_args.args[0]);
-+
-+			set_bit(poeg_grp * RZG2L_MAX_HW_CHANNELS + of_args.args[0],
-+				rzg2l_gpt->poeg_gpt_link);
-+
-+			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTINTAD,
-+					 RZG2L_GTINTAD_GRP_MASK,
-+					 poeg_grp << 24);
-+
-+			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTIOR,
-+					 RZG2L_GTIOR_OBDF | RZG2L_GTIOR_OADF,
-+					 RZG2L_GTIOR_PIN_DISABLE_SETTING);
-+		}
-+
-+		of_node_put(of_args.np);
-+	}
-+}
-+
- static int rzg2l_gpt_probe(struct platform_device *pdev)
- {
- 	bool ch_en[RZG2L_MAX_PWM_CHANNELS];
-@@ -484,6 +552,7 @@ static int rzg2l_gpt_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	rzg2l_gpt_parse_properties(pdev, rzg2l_gpt);
- 	mutex_init(&rzg2l_gpt->lock);
- 	platform_set_drvdata(pdev, rzg2l_gpt);
- 
--- 
-2.25.1
+Best regards,
+Krzysztof
 
