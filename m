@@ -2,81 +2,98 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7F2161E806
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Nov 2022 01:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4266061EA86
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Nov 2022 06:38:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229876AbiKGA4J (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 6 Nov 2022 19:56:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58674 "EHLO
+        id S230421AbiKGFie (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Nov 2022 00:38:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiKGA4I (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 6 Nov 2022 19:56:08 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A394A1A7;
-        Sun,  6 Nov 2022 16:56:07 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63C3513D5;
-        Sun,  6 Nov 2022 16:56:13 -0800 (PST)
-Received: from slackpad.fritz.box (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B2A53F703;
-        Sun,  6 Nov 2022 16:56:05 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Chen-Yu Tsai <wens@csie.org>, Samuel Holland <samuel@sholland.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Icenowy Zheng <uwu@icenowy.me>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: [PATCH v2 02/10] ARM: dts: suniv: f1c100s: add PWM node
-Date:   Mon,  7 Nov 2022 00:54:25 +0000
-Message-Id: <20221107005433.11079-3-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.35.5
-In-Reply-To: <20221107005433.11079-1-andre.przywara@arm.com>
-References: <20221107005433.11079-1-andre.przywara@arm.com>
+        with ESMTP id S230343AbiKGFic (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Nov 2022 00:38:32 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3122D38A7
+        for <linux-pwm@vger.kernel.org>; Sun,  6 Nov 2022 21:38:30 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id z14so14558630wrn.7
+        for <linux-pwm@vger.kernel.org>; Sun, 06 Nov 2022 21:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/fuJxEvQ8hWJBVA+YQn5WV9w4flp3A4j0tI4rSSd1Ck=;
+        b=CPJknGh76GKBqj/JyzrYpfhZTA4iLOZ7pJx8SQi6I9UWC5yUQMpW16eNZKtSj1pHns
+         MxabvoZfAispcp4LT9u7H76KkohJEq+W1LOk7tp+rdt2UeJNaaqabgllcnG7+0wV3DKS
+         E3CI+4Fo1UvFZt+OetXKS1zqc9h4aEFJfQ2JibgX550/Ah9y/5o7KaTEeZUW6BGYcOmK
+         l7UISNPT8V+NkmCarotVjJVsCuoc5ydJ8yZOodm5O6FLxOY+86cPGmRQ9l3HA0PDBUCj
+         8C7yOfSdUCec7RqHH9C0uuHHlHW3tqR//xHBnzOyD5zwbn98F4B1IWNcLFIt+Qlybh26
+         6apQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/fuJxEvQ8hWJBVA+YQn5WV9w4flp3A4j0tI4rSSd1Ck=;
+        b=3PdkNKR56kZ8gHWCsiQw7nmgiArv03VvtzM062eXiRLBDtC1LikduzAKD/E8XZDzR3
+         FgomeZ/8Le7i592IFXUwKAUP2zDhEvFRNVzPZBRVuIrDfTSpawUx+L5cOMll8w3fyGH8
+         iCXLLYqIPyIHedBVE4ayG4WHssxwdeDDxLNSE1KAI1nHyHtzlIKOTHB5yXiWHWVZny7I
+         uS7RoRTWs7mdwlL88+7++P7zhnk7B2Kxfpmm0eoW92Q7Bj/68Fw8iG8X+iXM+jZpeLwa
+         iG6bcfN4AIY32ftqutJKJzzI1hZJX0yRRruYpPBttEY9sKMmx2uJKHWMZ1wzpCyuG0Mk
+         nx4g==
+X-Gm-Message-State: ACrzQf1lJHErZ/EDW+ohxz3h7AcE0Kx6ZQGzNvAHHebjOy3ggT5SWNuP
+        BWuOm2zKF5LKONAB+4kF/HpfAjyRfCTxqTmIJF4=
+X-Google-Smtp-Source: AMsMyM6+M2K/rpCN/oYhU/3GtXRvPMP688eLkiH5jTpblIC8wN5UdW0f/9qta3jzxbRjKwe06xPLl3fydUe2rzMVCKw=
+X-Received: by 2002:a5d:47aa:0:b0:236:7a97:7dde with SMTP id
+ 10-20020a5d47aa000000b002367a977ddemr30073051wrb.625.1667799509089; Sun, 06
+ Nov 2022 21:38:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6000:15ca:0:0:0:0 with HTTP; Sun, 6 Nov 2022 21:38:28
+ -0800 (PST)
+Reply-To: seyba_daniel@yahoo.com
+From:   Seyba Daniel <latifatonde4@gmail.com>
+Date:   Mon, 7 Nov 2022 06:38:28 +0100
+Message-ID: <CAFBpD=O_oWBM3Jd24LGPjrfN1QvDPqX2NMXcnXOiPQmgLR5VZw@mail.gmail.com>
+Subject: HELLO,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_60,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:444 listed in]
+        [list.dnswl.org]
+        *  1.5 BAYES_60 BODY: Bayes spam probability is 60 to 80%
+        *      [score: 0.7576]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [latifatonde4[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [latifatonde4[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The Allwinner F1C100s family of SoCs contain a PWM controller compatible
-to the one used in the A20 chip.
-Add the DT node so that any users can simply enable it in their board
-DT.
+I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it, which you will
+be communicated in details upon response.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm/boot/dts/suniv-f1c100s.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+My dearest regards
 
-diff --git a/arch/arm/boot/dts/suniv-f1c100s.dtsi b/arch/arm/boot/dts/suniv-f1c100s.dtsi
-index a01541ba42c5..81749d5da12f 100644
---- a/arch/arm/boot/dts/suniv-f1c100s.dtsi
-+++ b/arch/arm/boot/dts/suniv-f1c100s.dtsi
-@@ -218,6 +218,15 @@ wdt: watchdog@1c20ca0 {
- 			clocks = <&osc32k>;
- 		};
- 
-+		pwm: pwm@1c21000 {
-+			compatible = "allwinner,suniv-f1c100s-pwm",
-+				     "allwinner,sun7i-a20-pwm";
-+			reg = <0x01c21000 0x400>;
-+			clocks = <&osc24M>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		uart0: serial@1c25000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c25000 0x400>;
--- 
-2.35.5
-
+Seyba Daniel
