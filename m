@@ -2,44 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F400C61FFE2
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Nov 2022 21:56:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 703A261FFF2
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Nov 2022 21:57:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231887AbiKGU4R (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Nov 2022 15:56:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
+        id S231887AbiKGU5w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Nov 2022 15:57:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231481AbiKGU4Q (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Nov 2022 15:56:16 -0500
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08FD2B620;
-        Mon,  7 Nov 2022 12:56:13 -0800 (PST)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-13bef14ea06so14116268fac.3;
-        Mon, 07 Nov 2022 12:56:13 -0800 (PST)
+        with ESMTP id S232936AbiKGU5v (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Nov 2022 15:57:51 -0500
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E640C2B610;
+        Mon,  7 Nov 2022 12:57:48 -0800 (PST)
+Received: by mail-oi1-f174.google.com with SMTP id n205so2424968oib.1;
+        Mon, 07 Nov 2022 12:57:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Mqygz+AwBgs9VWg0nK3QIhzMHWxsGM/+YbQMo/qaLoA=;
-        b=bVNVGFdQcfkywkZjtQKe0WhBTbF4CwCN6139R5ir0V7fU5bUbirCJ6RhsZ9ZIZWOS8
-         WxoHiOsD0L0MEaSDB/5beNOWsVa3uZXU380DgbQh0LdpztlB81qCpwLQv6xv9t1PzDOC
-         pICbVUiMAUGn0AEyJ6IQfV7mdK1aUsZbwmU+dgD2Y3DTbU5SfboJ/Qv6gddylqYuMhd7
-         HY6Iw5xekZ47XEX8WiXMBxwLYpjZHmNwyR117Ev7ozBdL6cHCyY2ybu5S8THJ6slx0Or
-         Zh0lM2NVmDNLzI9oLkTfXt08BCO7lAFomCh++zPvpNyYON55dd3vme3gU4wRWCvXB6tZ
-         WhFg==
-X-Gm-Message-State: ACrzQf0EDFthut3EpMOjFlNZO+OtnbU7Ma8EiWFngL4X+UPbq3KKBqIT
-        lrnOyXSW478gTtT45Md8ng==
-X-Google-Smtp-Source: AMsMyM6Gf5fZli0JXcxXW8pOeQLSyMdps/r8/dfQGZCF/gd4+Wo2STtJmjGH93cwS+qXBw2JrWmnvw==
-X-Received: by 2002:a05:6870:f70f:b0:13d:843c:c818 with SMTP id ej15-20020a056870f70f00b0013d843cc818mr16611266oab.17.1667854572973;
-        Mon, 07 Nov 2022 12:56:12 -0800 (PST)
+        bh=4CDr8yZr6hW9e3uL8vYKI/3NRYVUIB08ipYQx+5js9Q=;
+        b=nofmWUpZiXrrAbczrnmual3AY3Xw9K5rlQ7PtfAeMuD5BvDPjGZo7ol4EyiDL1gTdN
+         kAmosnGEgz2N/c7loU9LRJ7Ui3OGjwRha0SIVRrO5vqWg18kYy1b0Y5lzruDxjA7TrKZ
+         SXGkg7VFa6T1/Bka9hW6UT5fx+VW+MzBCreL2Pu0/YfAqytw+D+wZkecIB4qlRKIoOl2
+         Uph+Ny7khIqROYbnfpemr8X4f2hu6bmJwBw13ehF+iYQvEs0M6YhhnKeRO5dkungxX/+
+         vr+fjLtjxVanPa3BDdpES2FMfjVhZFjFyrab68P/SdD6cFI1IoDbD/NKYzqP5sTYZvQ9
+         mkdw==
+X-Gm-Message-State: ACrzQf2t2ijlefGlmSjNvaJ6S1enh6zyvIxhVnQyC+8F7XrEcpt7tUlJ
+        mEtmFansayQVWKaSqjJr1Q==
+X-Google-Smtp-Source: AMsMyM6Y15P3ah4FNhDGYhQ+NkhX1odCbNINsFFkaKaURBfMwaqjw7RzHLttW0Ut83/Q54Q255Giow==
+X-Received: by 2002:a05:6808:190f:b0:35a:6b1a:500 with SMTP id bf15-20020a056808190f00b0035a6b1a0500mr8747930oib.138.1667854668086;
+        Mon, 07 Nov 2022 12:57:48 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id z9-20020a4ade49000000b0049ef7712ee5sm872782oot.11.2022.11.07.12.56.11
+        by smtp.gmail.com with ESMTPSA id u16-20020a4ad0d0000000b0049ea9654facsm2532817oor.32.2022.11.07.12.57.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 12:56:12 -0800 (PST)
-Received: (nullmailer pid 1616165 invoked by uid 1000);
-        Mon, 07 Nov 2022 20:56:14 -0000
-Date:   Mon, 7 Nov 2022 14:56:14 -0600
+        Mon, 07 Nov 2022 12:57:47 -0800 (PST)
+Received: (nullmailer pid 1617841 invoked by uid 1000);
+        Mon, 07 Nov 2022 20:57:49 -0000
+Date:   Mon, 7 Nov 2022 14:57:49 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Biju Das <biju.das.jz@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -54,7 +54,7 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG
  binding
-Message-ID: <20221107205614.GA1610785-robh@kernel.org>
+Message-ID: <20221107205749.GB1610785-robh@kernel.org>
 References: <20221104151935.1783791-1-biju.das.jz@bp.renesas.com>
  <20221104151935.1783791-2-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
@@ -63,9 +63,8 @@ Content-Disposition: inline
 In-Reply-To: <20221104151935.1783791-2-biju.das.jz@bp.renesas.com>
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -145,55 +144,9 @@ On Fri, Nov 04, 2022 at 03:19:34PM +0000, Biju Das wrote:
 > +    maxItems: 1
 > +
 > +  companion:
+
+Also, needs a vendor prefix. The companion is the GPT, right? Perhaps 
+'renesas,gpt' instead.
+
 > +    $ref: /schemas/types.yaml#/definitions/phandle
 > +    description: phandle of a companion.
-> +
-> +  renesas,id:
-
-Perhaps 'poeg' in the name.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [ 0, 1, 2, 3 ]
-> +    description: |
-> +      POEG group index. Valid values are:
-> +        <0> : POEG group A (default)
-
-default: 0
-
-Though a default for a required property doesn't make much sense...
-
-> +        <1> : POEG group B
-> +        <2> : POEG group C
-> +        <3> : POEG group D
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - power-domains
-> +  - resets
-> +  - renesas,id
-> +  - companion
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r9a07g044-cpg.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    poeggd: poeg@10049400 {
-> +        compatible = "renesas,r9a07g044-poeg", "renesas,rzg2l-poeg";
-> +        reg = <0x10049400 0x400>;
-> +        interrupts = <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&cpg CPG_MOD R9A07G044_POEG_D_CLKP>;
-> +        power-domains = <&cpg>;
-> +        resets = <&cpg R9A07G044_POEG_D_RST>;
-> +        renesas,id = <3>;
-> +        companion = <&gpt>;
-> +    };
-> -- 
-> 2.25.1
-> 
-> 
