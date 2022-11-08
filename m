@@ -2,105 +2,114 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 717B2620E9F
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Nov 2022 12:21:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DD1C620F6E
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Nov 2022 12:48:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233897AbiKHLVM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Nov 2022 06:21:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60482 "EHLO
+        id S233635AbiKHLs3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Nov 2022 06:48:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234077AbiKHLVJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Nov 2022 06:21:09 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1793049B44
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Nov 2022 03:21:09 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id k13so13165999ybk.2
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Nov 2022 03:21:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jD/YBCtOhOa1ipEyheDVa6geA3XolzkSqDbroMLmTEw=;
-        b=GUxI4j6deoOLvskfcxOAacPXYy0iC2fNeb+ijy+BQHkJEFNnhgkcEJzDjh+nzWEPv8
-         d9wknxZUE/0e+iv/PlaR5UlPzhWCO2j1GIEamPhm/JkeXmxSGY007nkEliCRNFZF9yJo
-         qlanCExK/GpgMfA5/riloseNZ+fFUvFHdD4h6tBF9Vf9toKh8QVVTX/2lq1WpHir/t7r
-         t5x318icOhiaYhK98x8oPzSGiq/VQ4yMTqcPPS5KL3PLZDr1F/OT43qs/D8i9+ZIDA7a
-         JBAm7U0O8fujxztoQ/c+B9NFAGEHsb1UhFIx3MUIv2KM9SQs8V3DpMnnTN2LmHMBNNa0
-         SvNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jD/YBCtOhOa1ipEyheDVa6geA3XolzkSqDbroMLmTEw=;
-        b=zmpq4wpwJwR8oNztnmUnmmYNzG7Wvc95IKXwehepGRvjYNQU7md7sBhca8tNItqqpk
-         wIV3Id2Nu/b6PBGNObpmpMnrINaDpGl6i7wxUIyHyQCSp1wfblYJ2NER82xJMlBOPG5T
-         sHB+lCvGgDAI5OV6dsAmShUeB94qdcHEb31UPLSkrimDr/CxUysnPWZ5rMNHKsOatzIw
-         KsawdvXCvlU5Scxw/Hkle86w5PdmtRMUZiZhznMjsNLsObOyYD3PzS4klJxKSGYR22e7
-         0QuLYNXG2zDHuNvhh+turVBkKQxt9rbdW3cm4kHBJxVwtE48gP+D8bO1qlTPwaDZYXfb
-         PLyw==
-X-Gm-Message-State: ACrzQf2Tv9JoUhWI3mLv902PA1phjbA029plNRsOpgZju09NRfgavJ7k
-        n2ejFZs8sfaL+i4pHo6+N5qlvczwKSLK5d7C48o=
-X-Google-Smtp-Source: AMsMyM53Tuy1uMOgbaJOsr203CIke0n/6WpB5PRBf/ygJRv8n7QNRICVqEs2RpX9yk7uFRy90cpsnSHrl1RE3OoXY0k=
-X-Received: by 2002:a25:be03:0:b0:6d2:5835:301f with SMTP id
- h3-20020a25be03000000b006d25835301fmr758388ybk.336.1667906468325; Tue, 08 Nov
- 2022 03:21:08 -0800 (PST)
+        with ESMTP id S233876AbiKHLs2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Nov 2022 06:48:28 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1110236
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Nov 2022 03:48:26 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1osN5c-0004G3-TY; Tue, 08 Nov 2022 12:48:24 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1osN5a-0032nL-Gu; Tue, 08 Nov 2022 12:48:23 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1osN5a-00FAkq-8O; Tue, 08 Nov 2022 12:48:22 +0100
+Date:   Tue, 8 Nov 2022 12:48:22 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Ben Dooks <ben.dooks@sifive.com>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
+Subject: Re: [PATCH v6 00/10] Designware PWM driver updates for OF
+Message-ID: <20221108114822.7aktlzgbz7xziudb@pengutronix.de>
+References: <20221020151610.59443-1-ben.dooks@sifive.com>
+ <623284c8-f4bb-1020-2f2e-a475f424c5b5@linux.intel.com>
+ <bcd96d79-71b2-9d6a-6397-a47162e52acc@sifive.com>
 MIME-Version: 1.0
-Received: by 2002:a05:7010:a38a:b0:313:c983:1d7e with HTTP; Tue, 8 Nov 2022
- 03:21:07 -0800 (PST)
-Reply-To: mrinvest1010@gmail.com
-From:   "K. A. Mr. Kairi" <ctocik2@gmail.com>
-Date:   Tue, 8 Nov 2022 03:21:07 -0800
-Message-ID: <CAC9COZfcn4Z4pvY7wMShb0=-8JKT9cj0t-+kbiiyfHMnsKe+ZA@mail.gmail.com>
-Subject: Re: My Response..
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b2b listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mrinvest1010[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [ctocik2[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [ctocik2[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uk7th4v7jksyqa5r"
+Content-Disposition: inline
+In-Reply-To: <bcd96d79-71b2-9d6a-6397-a47162e52acc@sifive.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
--- 
-Hi
 
-How are you with your family, I have a serious client, whom will be
-interested to invest in your country, I got your Details through the
-Investment Network and world Global Business directory.
+--uk7th4v7jksyqa5r
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If you are interested for more details.....
+On Tue, Nov 08, 2022 at 11:19:44AM +0000, Ben Dooks wrote:
+> On 24/10/2022 09:39, Jarkko Nikula wrote:
+> > Hi
+> >=20
+> > On 10/20/22 18:16, Ben Dooks wrote:
+> > > This is an updated version of the Designware PWM driver updates
+> > > for OF support, which now splits the driver into PCI and OF parts
+> > > as well as tries to sort out the review comments.
+> > >=20
+> > > Hopefully this can now be queued for the next kernel version.
+> > >=20
+> > > v6:
+> > > =A0 - fix removal ordering of DWC_PERIOD_NS
+> >=20
+> > I did a quick test on our HW and PWM was counting as before.
+> >=20
+> > Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+>=20
+> Just to follow up on this, should I post a v7 of this (given
+> I think it is all just updates for review/tested) ?
 
-Sincerely,
-Kairi Andrew
+Just to add the tags doesn't justify a resend.
+
+Reviewing this is in my todo list, I hope to come to it later this week.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uk7th4v7jksyqa5r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNqQgMACgkQwfwUeK3K
+7AkETQf/RblT34D1zc1x6a69+2ynE5hvgoKtdk6F0NfPyZwUe4GP67DEtg6NMvOw
+mhpqrVNR8LlxZ1RT55YruAJMGDaoCYaw6syw3KOyVU0d9vlDh8wJ7IUsBUADtxzY
+uGhPmqoa2DdghZZj1Pk4fwr9KL52pB0bh8ciUK+899e53nb632fIk0daicYtXrWO
+HiatrZIlxfr/7x5W7IzqnssTOTHP89RigbDfOoG4bYG5yN/++IxzhCYAfUmJ4n4J
+T0BZhL7Qul3YDzdc58pKQ0YxAWeQwjt3IWeluTT+UZdTEflwhOzHCinRiZ5IZYpm
+DU6DBQT/01s8L0lQuqcUUAGIPTV1lw==
+=5KdU
+-----END PGP SIGNATURE-----
+
+--uk7th4v7jksyqa5r--
