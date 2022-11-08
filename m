@@ -2,145 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1944B621616
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Nov 2022 15:22:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47CE162166E
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Nov 2022 15:27:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234240AbiKHOWo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Nov 2022 09:22:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
+        id S234130AbiKHO1W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Nov 2022 09:27:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234674AbiKHOWK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Nov 2022 09:22:10 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323C254B1D;
-        Tue,  8 Nov 2022 06:22:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667917330; x=1699453330;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vyYkmlrH3FTwJFyY/NU3XVwDT0lsgxH2Rn0Y02epYKs=;
-  b=G1+TTT565RKy1lMiBsTNmEHn5iMOuM8unZyEpMe+MWemIzobWOPfbfC8
-   Sf+QGiIRCuaIvGJmctei9VJl8rRomJCnx25omWEVtZ+HWykVCsqtb0dm7
-   eMSH658/teUTWEwbdD2q8QMKHFAH7p4LsjevAGxPN7qI/0ZNPWxnl0dI0
-   OC8+Pe6UxF6Wd26EcUDhOb2ZE7D5I4/jC+97KpvSzKjtZ0kdvfiAp/hye
-   03gtvqqoeQPMVhL1/VbyHojmli/bBXKf+N1PDa9w03hgiztobDtSUrgBO
-   2BaqU96GIKZyr4nzdzMwGdB5PFUL0LEomCDapyxOtqcr+yYrvtODfRGjF
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="298219291"
-X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="298219291"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 06:22:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="761506504"
-X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="761506504"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 08 Nov 2022 06:22:07 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9945657A; Tue,  8 Nov 2022 16:22:27 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 6/6] pinctrl: intel: Enumerate PWM device when community has a capabilitty
-Date:   Tue,  8 Nov 2022 16:22:26 +0200
-Message-Id: <20221108142226.63161-7-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
-References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S234467AbiKHO0x (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Nov 2022 09:26:53 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCB516589
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Nov 2022 06:25:45 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id k5so13932303pjo.5
+        for <linux-pwm@vger.kernel.org>; Tue, 08 Nov 2022 06:25:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=frTjEIHTlXO6v5jJNflbe46il1dUjxah1hmkPCKJYy1/f6aaVZ96YwVNT21c8Mx+VL
+         R0PVu5F+awlay7dv8uEqG3mfQMZaN+xEIbVs3zUJk90rHuBTfTbUKI9ehW1dX10rlbxd
+         mQXXSvWli42inJrLM2g6PhN5xYN7/tmPsk29sFPQYGlAj5/CDrj8p18q2KOhwzU0yn1Z
+         U66f4vHTq4ebadAs2QjhqyxxvIbo8plXAHwfVczpBCyZj8AfWtsEsZzbPdDqwFqP6y9l
+         dnCncy0D5q5jmwTVNrSaXkMoaoWTcIIADYOaYowOD+gdgXtrIbBhvp2gXI2k+n6CIgmW
+         oJxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=syVKkO/4LyHc9evkCoMMJ3zKWzWAgyL1rKYIW4wbMkrtWtKVrr0kmu7ZBYao2KQxHj
+         dEYjrZQIFbs/QdeVdAbEFl0MBIR9nANMFY2qzqPmXC9e0n8Otw1xjmu7L39hVgL6vtQF
+         l+Txfzn71p+CNJ1BDDawkThQu8L/3pjB9VAOIaC9ztS8OM6hAYIWO23UOo38tV+hEfWd
+         ll0lbUFzn1xLVAx21REcReJvc4r2TrK83IpN9wJYShAHT6CrqzxPuvqxDy6lCFhpUHDt
+         1GC4LZ3iJ6//Q0O70js9LxvEuAVIQBaNOPSPrK4FcWZSDAMBBwTh+lZQ49jePBUMxN5A
+         qZsw==
+X-Gm-Message-State: ACrzQf17K3KJdYKORkmPsJ9aHJTgiV+CgQncv93i3EDhJ7pprVd7J7Lq
+        Yaj9aqux7Z2hZ5A40RM3j4WtRdXgRwpTIsbL/nI=
+X-Google-Smtp-Source: AMsMyM7i+ouk6KB7gDQcijSLT+5BFPLxz5mMKwdHu69kXLREkeFp6kif+v8n3IHurpTlIb3CZV20pcw+4UqMuGNpObo=
+X-Received: by 2002:a17:902:b581:b0:186:fb90:1151 with SMTP id
+ a1-20020a170902b58100b00186fb901151mr56255957pls.43.1667917544943; Tue, 08
+ Nov 2022 06:25:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7300:5388:b0:85:81c6:896c with HTTP; Tue, 8 Nov 2022
+ 06:25:44 -0800 (PST)
+Reply-To: mr.abraham022@gmail.com
+From:   "Mr.Abraham" <davidkekeli11@gmail.com>
+Date:   Tue, 8 Nov 2022 14:25:44 +0000
+Message-ID: <CAPBO+FLJ4NDKP9BsZOPRz6jaWhgZgOACSy5HwxhJ-yxSoaUS2A@mail.gmail.com>
+Subject: Greeting
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1029 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4984]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mr.abraham022[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [davidkekeli11[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [davidkekeli11[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Some of the Communities may have PWM capability. In such cases,
-enumerate PWM device via respective driver. User is still responsible
-for setting correct pin muxing for the line that needs to output the
-signal.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 29 +++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 6e630e87fed6..6b685ff7041f 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -24,6 +24,8 @@
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
- 
-+#include <linux/platform_data/x86/pwm-lpss.h>
-+
- #include "../core.h"
- #include "pinctrl-intel.h"
- 
-@@ -49,6 +51,8 @@
- #define PADOWN_MASK(p)			(GENMASK(3, 0) << PADOWN_SHIFT(p))
- #define PADOWN_GPP(p)			((p) / 8)
- 
-+#define PWMC				0x204
-+
- /* Offset from pad_regs */
- #define PADCFG0				0x000
- #define PADCFG0_RXEVCFG_SHIFT		25
-@@ -1502,6 +1506,27 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 	return 0;
- }
- 
-+static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
-+				   struct intel_community *community)
-+{
-+	static const struct pwm_lpss_boardinfo info = {
-+		.clk_rate = 19200000,
-+		.npwm = 1,
-+		.base_unit_bits = 22,
-+		.bypass = true,
-+	};
-+	struct pwm_lpss_chip *pwm;
-+
-+	if (!(community->features & PINCTRL_FEATURE_PWM))
-+		return 0;
-+
-+	pwm = pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
-+	if (IS_ERR(pwm) && PTR_ERR(pwm) != -ENODEV)
-+		return PTR_ERR(pwm);
-+
-+	return 0;
-+}
-+
- static int intel_pinctrl_probe(struct platform_device *pdev,
- 			       const struct intel_pinctrl_soc_data *soc_data)
- {
-@@ -1588,6 +1613,10 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
- 			ret = intel_pinctrl_add_padgroups_by_size(pctrl, community);
- 		if (ret)
- 			return ret;
-+
-+		ret = intel_pinctrl_probe_pwm(pctrl, community);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--- 
-2.35.1
-
+My Greeting, Did you receive the letter i sent to you. Please answer me.
+Regard, Mr.Abraham
