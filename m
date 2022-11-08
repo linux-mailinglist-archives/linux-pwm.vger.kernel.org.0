@@ -2,190 +2,100 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9CE6621BEF
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Nov 2022 19:32:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB3C8621C6C
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Nov 2022 19:50:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbiKHScm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Nov 2022 13:32:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
+        id S229607AbiKHSuK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Nov 2022 13:50:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230425AbiKHScl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Nov 2022 13:32:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBFF5B857;
-        Tue,  8 Nov 2022 10:32:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229638AbiKHStw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Nov 2022 13:49:52 -0500
+X-Greylist: delayed 502 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 08 Nov 2022 10:48:59 PST
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275A15E9E9
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Nov 2022 10:48:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+        t=1667932835; bh=ip+zIiFa6OmX3QdLTDbIxcLSa7l8jkE+o/hv5f2dDmw=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=jdAgEB+aUz4n64NAGHOA3jIEYLiT1UvGjvJBAj7jlJEi0je1CtvpT58/+nJMQa52Q
+         xAvLE6+IUOE7NodqFW8xRxtwB0+tA6tMuy1pdjIfImqpYXBNa0T7t/ywD3Dujl10Wf
+         SMSPOrKoHCuUmsZh9ysmvaLvgMl/i2e0kBAI+zBQYuFe6IFsdBp/h7SOHTpz34UY7B
+         bvR2AnqXIWixfTmj1XpCY8Sa6eZvoJwnqlGkGhXEoagAYwyE6zliE8wPcxQGnUUqqB
+         oQk/qo+1Qjr82AtPHYYHA4E3lW2Tsr08A+W4vatExFO0HS2x8SD0n3Qt4lGf9r/EWq
+         HQEGuvvmZTjyA==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id 7E9783E9897;
+        Tue,  8 Nov 2022 18:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+        t=1667932835; bh=ip+zIiFa6OmX3QdLTDbIxcLSa7l8jkE+o/hv5f2dDmw=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=jdAgEB+aUz4n64NAGHOA3jIEYLiT1UvGjvJBAj7jlJEi0je1CtvpT58/+nJMQa52Q
+         xAvLE6+IUOE7NodqFW8xRxtwB0+tA6tMuy1pdjIfImqpYXBNa0T7t/ywD3Dujl10Wf
+         SMSPOrKoHCuUmsZh9ysmvaLvgMl/i2e0kBAI+zBQYuFe6IFsdBp/h7SOHTpz34UY7B
+         bvR2AnqXIWixfTmj1XpCY8Sa6eZvoJwnqlGkGhXEoagAYwyE6zliE8wPcxQGnUUqqB
+         oQk/qo+1Qjr82AtPHYYHA4E3lW2Tsr08A+W4vatExFO0HS2x8SD0n3Qt4lGf9r/EWq
+         HQEGuvvmZTjyA==
+Received: from [192.168.1.102] (88-112-131-206.elisa-laajakaista.fi [88.112.131.206])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36DCF6172D;
-        Tue,  8 Nov 2022 18:32:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BF60C433D6;
-        Tue,  8 Nov 2022 18:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667932359;
-        bh=icGd5GPv/GdZwBY/786e7bQnWud2lRKv3P3CCjaRWwE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a/QCsyZVFIsh05wFYGWDM5HvOPRftrE/fzPySxFQ1QLZO5vPvCQzLjemwA6U40rDN
-         6eRue9wigTFnq1mnUKNWvYJbTvuPk5+oxl7fu1l41VXw54zXZ58d/ohmgRHKXllanJ
-         rsHfhvV4RwTTky8/LlBWWA+b0PMg0Mm7Z2JsJTtkq+6WLSSNaYFTbuRM2lndXwwaqk
-         VCZCJ/Bedf3tFCCzc0auvYy3jA7hvxazGUvCG+KnFEECTFdx5GZ6YEKT4OYmeqk+bE
-         2P8ZsA4FJPAsOmqkUFhsx4XuDXmIX+yllRNvCE1ec0m5bEwsatB7mpn8brQXTLgUN2
-         609wVqoWlAMSQ==
-Date:   Tue, 8 Nov 2022 18:32:35 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v11 3/4] pwm: add microchip soft ip corePWM driver
-Message-ID: <Y2qgw2wAezkHSgg5@spud>
-References: <20221007113512.91501-1-conor.dooley@microchip.com>
- <20221007113512.91501-4-conor.dooley@microchip.com>
- <20221108155041.t4oppot5wy77jzgd@pengutronix.de>
+        by mail.mleia.com (Postfix) with ESMTPSA id 2B0203E96EB;
+        Tue,  8 Nov 2022 18:40:35 +0000 (UTC)
+Message-ID: <87c27860-d6ff-7e2e-60c7-22f20fd3b715@mleia.com>
+Date:   Tue, 8 Nov 2022 20:40:33 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0.2
+Subject: Re: [PATCH] pwm: lpc18xx-sct: Fix a comment to match code
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de
+References: <20221108153013.132514-1-u.kleine-koenig@pengutronix.de>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <20221108153013.132514-1-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221108155041.t4oppot5wy77jzgd@pengutronix.de>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20221108_184035_538180_25113273 
+X-CRM114-Status: GOOD (  12.19  )
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 04:50:41PM +0100, Uwe Kleine-K�nig wrote:
-> Hello,
-
-Hello! Thanks for the review Uwe :)
-
-> On Fri, Oct 07, 2022 at 12:35:12PM +0100, Conor Dooley wrote:
-
-> > +static int mchp_core_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *pwm,
-> > +				      const struct pwm_state *state)
-> > +{
-> > +	struct mchp_core_pwm_chip *mchp_core_pwm = to_mchp_core_pwm(chip);
-> > +	struct pwm_state current_state = pwm->state;
-> > +	bool period_locked;
-> > +	u64 duty_steps;
-> > +	u16 prescale;
-> > +	u8 period_steps;
-> > +
-> > +	if (!state->enabled) {
-> > +		mchp_core_pwm_enable(chip, pwm, false, current_state.period);
-> > +		return 0;
-> > +	}
-> > +
-> > +	/*
-> > +	 * If the only thing that has changed is the duty cycle or the polarity,
-> > +	 * we can shortcut the calculations and just compute/apply the new duty
-> > +	 * cycle pos & neg edges
-> > +	 * As all the channels share the same period, do not allow it to be
-> > +	 * changed if any other channels are enabled.
-> > +	 * If the period is locked, it may not be possible to use a period
-> > +	 * less than that requested. In that case, we just abort.
-> > +	 */
-> > +	period_locked = mchp_core_pwm->channel_enabled & ~(1 << pwm->hwpwm);
-> > +
-> > +	if (period_locked) {
-> > +		u16 hw_prescale;
-> > +		u8 hw_period_steps;
-> > +
-> > +		mchp_core_pwm_calc_period(chip, state, &prescale, &period_steps);
-> > +		hw_prescale = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_PRESCALE);
-> > +		hw_period_steps = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_PERIOD);
-> > +
-> > +		if ((period_steps + 1) * (prescale + 1) <
-> > +		    (hw_period_steps + 1) * (hw_prescale + 1))
-> > +			return -EINVAL;
-> > +
-> > +		/*
-> > +		 * It is possible that something could have set the period_steps
-> > +		 * register to 0xff, which would prevent us from setting a 100%
-> > +		 * or 0% relative duty cycle, as explained above in
-> > +		 * mchp_core_pwm_calc_period().
-> > +		 * The period is locked and we cannot change this, so we abort.
-> > +		 */
-> > +		if (hw_period_steps == MCHPCOREPWM_PERIOD_STEPS_MAX)
-> > +			return -EINVAL;
-> > +
-> > +		prescale = hw_prescale;
-> > +		period_steps = hw_period_steps;
-> > +	} else {
-> > +		int ret;
-> > +
-> > +		ret = mchp_core_pwm_calc_period(chip, state, &prescale, &period_steps);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		mchp_core_pwm_apply_period(mchp_core_pwm, prescale, period_steps);
-> > +	}
-> > +
-> > +	duty_steps = mchp_core_pwm_calc_duty(chip, pwm, state, prescale, period_steps);
+On 11/8/22 17:30, Uwe Kleine-König wrote:
+> lpc18xx_pwm_probe() only ensures clk_rate <= NSEC_PER_SEC, the following
+> reasoning is right even under this slightly lesser condition.
 > 
-> Both mchp_core_pwm_calc_period and mchp_core_pwm_calc_duty call
-> clk_get_rate(), I suggest call this only once and pass the rate to these
-> two functions.
+> Fixes: 8933d30c5f46 ("pwm: lpc18xx: Fix period handling")
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>   drivers/pwm/pwm-lpc18xx-sct.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+> index 763f2e3a146d..378e1df944dc 100644
+> --- a/drivers/pwm/pwm-lpc18xx-sct.c
+> +++ b/drivers/pwm/pwm-lpc18xx-sct.c
+> @@ -175,7 +175,7 @@ static void lpc18xx_pwm_config_duty(struct pwm_chip *chip,
+>   	u32 val;
+>   
+>   	/*
+> -	 * With clk_rate < NSEC_PER_SEC this cannot overflow.
+> +	 * With clk_rate <= NSEC_PER_SEC this cannot overflow.
+>   	 * With duty_ns <= period_ns < max_period_ns this also fits into an u32.
+>   	 */
+>   	val = mul_u64_u64_div_u64(duty_ns, lpc18xx_pwm->clk_rate, NSEC_PER_SEC);
 
-Sure. I think the signatures of both of those functions could be reduced
-in the process which would be nice.
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
 
-> Both branches of the if above start with calling
-> mchp_core_pwm_calc_period, this could be simplified, too.
-
-	ret = mchp_core_pwm_calc_period(chip, state, &prescale, &period_steps);
-	if (ret)
-		return ret;
-
-	period_locked = mchp_core_pwm->channel_enabled & ~(1 << pwm->hwpwm);
-
-	if (period_locked) {
-		u16 hw_prescale;
-		u8 hw_period_steps;
-
-		hw_prescale = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_PRESCALE);
-		hw_period_steps = readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_PERIOD);
-
-		if ((period_steps + 1) * (prescale + 1) <
-		    (hw_period_steps + 1) * (hw_prescale + 1))
-			return -EINVAL;
-
-		/*
-		 * It is possible that something could have set the period_steps
-		 * register to 0xff, which would prevent us from setting a 100%
-		 * or 0% relative duty cycle, as explained above in
-		 * mchp_core_pwm_calc_period().
-		 * The period is locked and we cannot change this, so we abort.
-		 */
-		if (hw_period_steps == MCHPCOREPWM_PERIOD_STEPS_MAX)
-			return -EINVAL;
-
-		prescale = hw_prescale;
-		period_steps = hw_period_steps;
-	} else {
-		mchp_core_pwm_apply_period(mchp_core_pwm, prescale, period_steps);
-	}
-
-	duty_steps = mchp_core_pwm_calc_duty(chip, pwm, state, prescale, period_steps);
-
-I'll aim for something like the (absolutely untested) above then when I
-respin.
-
-> (Hmm, in
-> exactly one of them you check the return code, wouldn't that be sensible
-> for both callers?)
-
-Been messing with rust a bit of late, I love the #[must_use] attribute.
-Looks to be an oversight since it's only going to return an error if the
-clock rate exceeds what the FPGA is actually capable of.
-
-Thanks again,
-Conor.
-
+--
+Best wishes,
+Vladimir
