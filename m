@@ -2,134 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD6BA6228A8
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Nov 2022 11:40:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9D96228F5
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Nov 2022 11:48:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbiKIKkQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Nov 2022 05:40:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
+        id S230329AbiKIKs0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Nov 2022 05:48:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229802AbiKIKkP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Nov 2022 05:40:15 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739FB1C10D;
-        Wed,  9 Nov 2022 02:40:14 -0800 (PST)
+        with ESMTP id S231225AbiKIKsF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Nov 2022 05:48:05 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D6452648C;
+        Wed,  9 Nov 2022 02:48:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667990414; x=1699526414;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1667990882; x=1699526882;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5bHYyqP5M5DI4ZLT2QWbl6fGoRoL44686dEs/SdCwz0=;
-  b=bFQK1aWJdnVgaD2k3h4NeEcAMbqMD5gmkE62yR6cbvWpOobTKcmYwekw
-   YgbfFRAZNnyqUssYRFbOsbDNjRIUXJnGKxgR/rNUb1bPPEtjsWTVngZfm
-   1Gk1aJiTrwzC8N6zw3y1CgkSuckFDArH7+you43MTAMBKAC2+/WcgYzYR
-   Vu/m0Srgb5zsl2eWzVd+i3rSGkKkLfGGUD4mVRN2zXk8Y99l56Fv3vhBq
-   vtj6BAk3Hc2r161gKSSpmuf9porbBcjvTIkB69lvCDHS51RjKBln3iXla
-   AXnkKLXsNuOcpUgQA12pZvS3SFAxKo4grqLh7WJne2FXCeRxUiWiaUz26
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=OpLpfKgFncaOypu/Y4C5vCxOS6jzJd+feOYi1RLb4lY=;
+  b=ue/pWzw6a8CXhJZ0FZP/EV+LW2hnsHfSUWqqOhbMAV0B6PSNYCwmV2cV
+   +iwzKUg7RdeEmY+ud7IU74XSJAxftAfbK8IeTafo2Cm7ZBiO1UEdti3EM
+   F5KdMeUhJ5kd2WXkss7WAb86syJcvo9RgpU4DcE6Wv+OPnO696BqkjCIj
+   xIWK8EgMAEmVwG5oCIPECX4h9uE1FgL3QQASUnq3cOxz+A0e+zMjsu160
+   MprmkqyL0X4L81DH+yFoRVbCkfgpop9HrCN5oEShn0iqzwVv/a4QbwqTv
+   eiCRizIsFS9rzTuj2jDFO6R2T20Jg1uyJ0gp5mqwPwSuj0eypjVBUBttm
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="298467163"
 X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
-   d="scan'208";a="298467163"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 02:40:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="811587922"
-X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
-   d="scan'208";a="811587922"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 09 Nov 2022 02:40:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1osiV7-009hZ3-29;
-        Wed, 09 Nov 2022 12:40:09 +0200
-Date:   Wed, 9 Nov 2022 12:40:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] pinctrl: intel: Enumerate PWM device when
- community has a capabilitty
-Message-ID: <Y2uDifs0CkPl+P0X@smile.fi.intel.com>
-References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
- <20221108142226.63161-7-andriy.shevchenko@linux.intel.com>
- <CACRpkdbVekP0kFpwexpb3NhqRSouNW7FhhRpSK0yRQTrJAGt4A@mail.gmail.com>
- <Y2t5ZXM0Oihz/LDK@smile.fi.intel.com>
- <CACRpkda6uDOEXybduFbTe0yXzLMaQ8x0UORZAH-U0SOTWHkF-Q@mail.gmail.com>
+   d="scan'208";a="186093230"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Nov 2022 03:48:01 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Wed, 9 Nov 2022 03:47:58 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
+ Transport; Wed, 9 Nov 2022 03:47:57 -0700
+Date:   Wed, 9 Nov 2022 10:47:40 +0000
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v11 4/4] MAINTAINERS: add pwm to PolarFire SoC entry
+Message-ID: <Y2uFTM/O0b39greO@wendy>
+References: <20221007113512.91501-1-conor.dooley@microchip.com>
+ <20221007113512.91501-5-conor.dooley@microchip.com>
+ <20221109093525.kx4tyvha7y3sikxw@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <CACRpkda6uDOEXybduFbTe0yXzLMaQ8x0UORZAH-U0SOTWHkF-Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221109093525.kx4tyvha7y3sikxw@pengutronix.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 11:08:04AM +0100, Linus Walleij wrote:
-> On Wed, Nov 9, 2022 at 10:56 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Nov 09, 2022 at 10:08:51AM +0100, Linus Walleij wrote:
-
-...
-
-> > > I guess I can be convinced that this hack is the lesser evil :D
-> > >
-> > > What is it in the platform that makes this kind of hacks necessary?
-> >
-> > The PWM capability is discoverable by the looking for it in the pin
-> > control IP MMIO, it's not a separate device, but a sibling (child?)
-> > of the pin control, that's not a separate entity.
+On Wed, Nov 09, 2022 at 10:35:25AM +0100, Uwe Kleine-König wrote:
+> On Fri, Oct 07, 2022 at 12:35:13PM +0100, Conor Dooley wrote:
+> > Add the newly introduced pwm driver to the existing PolarFire SoC entry.
+> > 
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 > 
-> OK I get it.
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 > 
-> > Moreover, not every pin control _community_ has that capability (capabilities
-> > are on the Community level and depends on ACPI representation of the
-> > communities themself - single device or device per community - the PWM may or
-> > may not be easily attached.
+> I assume you will rework the series and resend this one with the driver
+> patche. Applying patch #4 alone doesn't make sense, so I'm marking this
+> one as "changes requested", too, in the PWM patchwork instance.
 > 
-> OK I think I understand it a bit, if ACPI thinks about the PWM
-> as "some feature of the community" then that is how it is, we have
-> this bad fit between device tree and Linux internals at times as well,
-> then spawning a device from another one is the way to go, we need
-> to consider the option that it is Linux that is weird at times, not the
-> HW description.
+> IMHO patches #1 and #2 make sense to be applied already without the
+> driver given the binding is already there. I assume they will go in via
+> the riscv tree, so I will mark these two as "handled elsewhere".
 
-The problem here is not the impossibility to do the things. The problem is
-that things are done and validated on a Windows system. After that it close
-to impossible to update the firmware or perform any architectural changes.
+Right. Makes sense to me - I'll take the dt-binding & the dt via the
+riscv (or soc, we're changing things up there [a]) tree.
 
-OTOH, announcing the separate device out of the existing MMIO space doesn't
-sound right from the software point of view that should follow the hardware
-representation.
+Thanks,
+Conor.
 
-Ideally, this should be an adaptive MFD-like device, but it makes things
-even more complicated than has been discussed already. (Note, that some
-of the pin control drivers are enumerated as platform devices, and that
-code should also be taken into account)
-
-...
-
-> > That said, I agree that this looks not nice, but that's all what
-> > Mika and me can come up with to make all this as little ugly and
-> > intrusive as possible.
-> 
-> I can live with it, rough consensus and running code.
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+[a] - https://lore.kernel.org/linux-riscv/mhng-e4210f56-fcc3-4db8-abdb-d43b3ebe695d@palmer-ri-x1c9a/
