@@ -2,99 +2,150 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 752C362274E
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Nov 2022 10:41:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 367226227B8
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Nov 2022 10:57:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbiKIJl2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Nov 2022 04:41:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45640 "EHLO
+        id S230008AbiKIJ5D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Nov 2022 04:57:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbiKIJlR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Nov 2022 04:41:17 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A9B1F9DD
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Nov 2022 01:41:15 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1osha3-0007X8-V5; Wed, 09 Nov 2022 10:41:11 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1osha2-003DyK-1x; Wed, 09 Nov 2022 10:41:11 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1osha2-00FOBJ-Bn; Wed, 09 Nov 2022 10:41:10 +0100
-Date:   Wed, 9 Nov 2022 10:41:10 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: renesas,tpu: Add r8a779g0 support
-Message-ID: <20221109094110.5btcckv7t76acidq@pengutronix.de>
-References: <f5ad691051f69f2dbfcb5c5a722960bd9cd41b06.1665156364.git.geert+renesas@glider.be>
+        with ESMTP id S229517AbiKIJ5C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Nov 2022 04:57:02 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F386119C1B;
+        Wed,  9 Nov 2022 01:57:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667987821; x=1699523821;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3wbN0WcvS6dfHyHMWrZth2dMe4EhIChvyffidy9u7Io=;
+  b=DPKiMjrtYkrpZJPcpR9GUps3UOqZy1u9V9YJiI1K8HaYtintdIgoJa2G
+   o3oSjfWjnN9760nbbbQWOep3qvrdQwtxg8oQ/5TZetESyDVNjaoZdvrtA
+   ZOf6mOTYRWZMhIcZTIFUKk3YEn8uOvZg4hMu+GKqccldE0ZKLwEtRxS+o
+   4/3w6a/pSIOnrXtStYTcstT61QzUpRk9F7kIfQI7Wfzk3G0zAe6g+68EO
+   5nPqjSS1XdxDtChukhNCRJuVh7u0vKCYH6gUS+qTMeht9X3r9A6SB2Hqo
+   Ul5fwSSuWox+bjiNMtrBulSk4bkEued9mKz51mHBVJFJvuByBoSH5V7/C
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="309649602"
+X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
+   d="scan'208";a="309649602"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 01:57:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="779286525"
+X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
+   d="scan'208";a="779286525"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Nov 2022 01:56:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oshpG-009dTN-0e;
+        Wed, 09 Nov 2022 11:56:54 +0200
+Date:   Wed, 9 Nov 2022 11:56:53 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] pinctrl: intel: Enumerate PWM device when
+ community has a capabilitty
+Message-ID: <Y2t5ZXM0Oihz/LDK@smile.fi.intel.com>
+References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-7-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbVekP0kFpwexpb3NhqRSouNW7FhhRpSK0yRQTrJAGt4A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4vbctexf7nhbsgzr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f5ad691051f69f2dbfcb5c5a722960bd9cd41b06.1665156364.git.geert+renesas@glider.be>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkdbVekP0kFpwexpb3NhqRSouNW7FhhRpSK0yRQTrJAGt4A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, Nov 09, 2022 at 10:08:51AM +0100, Linus Walleij wrote:
+> On Tue, Nov 8, 2022 at 3:22 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
---4vbctexf7nhbsgzr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hello,
+> > +       static const struct pwm_lpss_boardinfo info = {
+> > +               .clk_rate = 19200000,
+> > +               .npwm = 1,
+> > +               .base_unit_bits = 22,
+> > +               .bypass = true,
+> > +       };
+> > +       struct pwm_lpss_chip *pwm;
+> > +
+> > +       if (!(community->features & PINCTRL_FEATURE_PWM))
+> > +               return 0;
+> > +
+> > +       pwm = pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
+> > +       if (IS_ERR(pwm) && PTR_ERR(pwm) != -ENODEV)
+> > +               return PTR_ERR(pwm);
+> 
+> This is alike a boardfile embedded into the pin control driver.
 
-On Fri, Oct 07, 2022 at 05:26:37PM +0200, Geert Uytterhoeven wrote:
-> Document support for the 16-Bit Timer Pulse Unit (TPU) in the Renesas
-> R-Car V4H (R8A779G0) SoC.
->=20
-> Based on a patch in the BSP by CongDang.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Correct.
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> It's a bit backwards since we usually go the other direction, i.e. probe
+> a PWM driver or whatever and then that driver request its resources
+> that are assigned from e.g. DT or ACPI, and in this case that would
+> mean it request its pin control handle and the pins get set up.
+> 
+> I guess I can be convinced that this hack is the lesser evil :D
+> 
+> What is it in the platform that makes this kind of hacks necessary?
 
-Same question as for the renesas,pwm-rcar patch: Who will pick this up?
+The PWM capability is discoverable by the looking for it in the pin
+control IP MMIO, it's not a separate device, but a sibling (child?)
+of the pin control, that's not a separate entity.
 
-Best regards
-Uwe
+Moreover, not every pin control _community_ has that capability (capabilities
+are on the Community level and depends on ACPI representation of the
+communities themself - single device or device per community - the PWM may or
+may not be easily attached.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+What you are proposing is to invent at least two additional properties or so
+for the pin control device description and then to support old platforms,
+create a board file somewhere else, which will go through all pin control
+devices, checks the capabilities, then embeds the properties via properties
+(Either embedded into DSDT, if done in BIOS, or swnodes).
 
---4vbctexf7nhbsgzr
-Content-Type: application/pgp-signature; name="signature.asc"
+Do I get you right?
 
------BEGIN PGP SIGNATURE-----
+If so, in my opinion it's way more ugly and overkill that the current
+approach.
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNrdbMACgkQwfwUeK3K
-7AkNYAf9Grvg0zcs3zy3RJ5sn51EhFGrAIKkZWbhhElOZZ4yNf1H85szMVZMe0vT
-ovuUAGtI2Ol84pSKEoDeIyGxfyObfj2d+vGK1ZTtdgXJtD0CxWc4J+UhBfvx5RIu
-iGAAWR6ir3ae0VnZv1hP58knUInl/UNLXOHTsxs0/OyVwGcsDfD/baVrX2SFxPab
-jgyYER1h0+tmC2PxiECN0hoNug/CznQS+FYxNP0DRTXYBhnvgZrXkgwE7FHP2v8m
-4RLzF7sSivC9zLrXYzHa3GZXumDpqZZskNkNvf38HXY8BkX/i2Wdf9N//ZsNlvWo
-Y1bwa4gTLNh+hfZ5yYWR12FEqLU5Og==
-=I7kE
------END PGP SIGNATURE-----
+> Inconsistent description in ACPI or is the PWM device simply
+> missing from the DSDT (or whatever is the right form in ACPI)
+> in already shipped devices that need it?
 
---4vbctexf7nhbsgzr--
+Right.
+
+> Or is it simply impossible to describe the PWM device in ACPI?
+
+It's a dynamic feature and existing firmwares are carved in stone.
+It might be possible to move the above mentioned uglification to
+the BIOS. But the horizon of that is 5+ years in case I am able
+to convince program managers for it (TBH, I don't believe it's
+feasible, since "Windows works!" mantra, they are not engineers).
+
+That said, I agree that this looks not nice, but that's all what
+Mika and me can come up with to make all this as little ugly and
+intrusive as possible.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
