@@ -2,33 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7318E62462F
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 16:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 709426246F5
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 17:29:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbiKJPmT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Nov 2022 10:42:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
+        id S231759AbiKJQ3s (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 11:29:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231610AbiKJPmS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 10:42:18 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB997669
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Nov 2022 07:42:18 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ot9h2-00053m-FT; Thu, 10 Nov 2022 16:42:16 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ot9h0-003Tql-HD; Thu, 10 Nov 2022 16:42:15 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ot9h0-00Ffwt-Id; Thu, 10 Nov 2022 16:42:14 +0100
-Date:   Thu, 10 Nov 2022 16:42:14 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Ben Dooks <ben.dooks@sifive.com>
+        with ESMTP id S231761AbiKJQ3q (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 11:29:46 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7C531F84
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Nov 2022 08:29:45 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id z14so3038345wrn.7
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Nov 2022 08:29:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KfC4NHpLNHNhyzTRF08RCCNRW08u9pH3N3PQO7wb+1M=;
+        b=V2jTfLGxiiq84cKzlumki7lFSEFp7dsN8FYPyooBltSUNqqmalNRDy5W1gF/Aa3DWC
+         l/ZbX3t99QrB1zfuhkQx8fraZ1E9vDcyEVCCIAwxBZYPH9BbJkaAgN2tQV5ElE5rIPS/
+         OBkdViYmfecftzkRXHmSOWFDlvMQm89tJbSiCTa/fgcI0EPRdZlSi0POgvwuBTT9oh1M
+         kuTaHPenNQg6+n+59LCw9J00OUR2/18ThvBPr4JhxWFvaUK12TumvLwtRZXwn4VeYvfW
+         yE8R+pGQBIPXBQXzSyCG1XIZFnB99NhcxOzwCKgqA6sQilfhGjFMoAAywOw1394z07Gk
+         LZ3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KfC4NHpLNHNhyzTRF08RCCNRW08u9pH3N3PQO7wb+1M=;
+        b=S3BER1fQJK65yDDHH7UiaPByUs/2Vn/iihIEqe+EWzrso9rRxKIN9obL+DesU7jiY8
+         wGtmOdHMqH3RoaUdeJZCP8IfdJFEMqWTOVcKE0PKxykIbdQbEdAJ8kU1pUlBw4Edp6gy
+         PHDQqigPSNLMbQm1z11vl2Dwb0M1LMPWEY4VYDO4x8dqJ+hq/cQ/kLE19DRq95CNkpjp
+         PBYdr5lTOTlVFCdlmJX6ejeNIJlx2JXMXGrLxeTWQBXQSDcwHkp6wjD1QDBtIxz0LUCZ
+         ouTFvrmTjaqtKXmxgfaGNEFCNJJsR13NKq65OpvA0UOTFOd9pmtDnvqA3mXYT1kPgdn0
+         2sIA==
+X-Gm-Message-State: ACrzQf1czKF/be/82gp8lcmLE5beWjk9gJ9krVWEJ6fmAqDEkoRy8pgH
+        94BxOQ+Rn2pyCnIXMYBVcKqAWg==
+X-Google-Smtp-Source: AMsMyM7XA08kW6jyaU7dizex1ODQIaRk//DoX+x3pvH2goOLsg+1/TkGbzKzNU1gDR1iidfE2EdzRQ==
+X-Received: by 2002:adf:de8d:0:b0:236:6087:e07e with SMTP id w13-20020adfde8d000000b002366087e07emr41926568wrl.533.1668097783813;
+        Thu, 10 Nov 2022 08:29:43 -0800 (PST)
+Received: from [192.168.0.17] (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
+        by smtp.gmail.com with ESMTPSA id n19-20020a05600c4f9300b003a83ca67f73sm93592wmq.3.2022.11.10.08.29.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Nov 2022 08:29:43 -0800 (PST)
+Message-ID: <9600a696-c3dd-acc5-3489-569c1590f224@sifive.com>
+Date:   Thu, 10 Nov 2022 16:29:42 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH v6 10/10] pwm: dwc: use clock rate in hz to avoid rounding
+ issues
+Content-Language: en-GB
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -37,21 +66,15 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         jarkko.nikula@linux.intel.com,
         William Salmon <william.salmon@sifive.com>,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: Re: [PATCH v6 10/10] pwm: dwc: use clock rate in hz to avoid
- rounding issues
-Message-ID: <20221110154214.pnv7rqsftomhqvmk@pengutronix.de>
 References: <20221020151610.59443-1-ben.dooks@sifive.com>
  <20221020151610.59443-11-ben.dooks@sifive.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b7hp3kqdeurp4e4j"
-Content-Disposition: inline
-In-Reply-To: <20221020151610.59443-11-ben.dooks@sifive.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+ <20221110154214.pnv7rqsftomhqvmk@pengutronix.de>
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <20221110154214.pnv7rqsftomhqvmk@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,64 +82,41 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 10/11/2022 15:42, Uwe Kleine-König wrote:
+> Hello Ben,
+> 
+> On Thu, Oct 20, 2022 at 04:16:10PM +0100, Ben Dooks wrote:
+>> As noted, the clock-rate when not a nice multiple of ns is probably
+>> going to end up with inacurate caculations, as well as on a non pci
+>> system the rate may change (although we've not put a clock rate
+>> change notifier in this code yet) so we also add some quick checks
+>> of the rate when we do any calculations with it.
+>>
+>> Signed-off-by; Ben Dooks <ben.dooks@sifive.com>
+>> Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+>> ---
+>>   drivers/pwm/pwm-dwc-of.c |  2 +-
+>>   drivers/pwm/pwm-dwc.c    | 29 ++++++++++++++++++++---------
+>>   drivers/pwm/pwm-dwc.h    |  2 +-
+>>   3 files changed, 22 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
+>> index c5b4351cc7b0..5f7f066859d4 100644
+>> --- a/drivers/pwm/pwm-dwc-of.c
+>> +++ b/drivers/pwm/pwm-dwc-of.c
+>> @@ -50,7 +50,7 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
+>>   		return dev_err_probe(dev, PTR_ERR(dwc->clk),
+>>   				     "failed to get timer clock\n");
+>>   
+>> -	dwc->clk_ns = NSEC_PER_SEC / clk_get_rate(dwc->clk);
+>> +	dwc->clk_rate = clk_get_rate(dwc->clk);
+> 
+> Given that clk_ns is introduced only in this series, I suggest to make
+> it right from the start.
 
---b7hp3kqdeurp4e4j
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was trying to keep the splitting of the driver and the clock changes
+separate to make any possible bisection easier.
 
-Hello Ben,
+-- 
+Ben
 
-On Thu, Oct 20, 2022 at 04:16:10PM +0100, Ben Dooks wrote:
-> As noted, the clock-rate when not a nice multiple of ns is probably
-> going to end up with inacurate caculations, as well as on a non pci
-> system the rate may change (although we've not put a clock rate
-> change notifier in this code yet) so we also add some quick checks
-> of the rate when we do any calculations with it.
->=20
-> Signed-off-by; Ben Dooks <ben.dooks@sifive.com>
-> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-dwc-of.c |  2 +-
->  drivers/pwm/pwm-dwc.c    | 29 ++++++++++++++++++++---------
->  drivers/pwm/pwm-dwc.h    |  2 +-
->  3 files changed, 22 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
-> index c5b4351cc7b0..5f7f066859d4 100644
-> --- a/drivers/pwm/pwm-dwc-of.c
-> +++ b/drivers/pwm/pwm-dwc-of.c
-> @@ -50,7 +50,7 @@ static int dwc_pwm_plat_probe(struct platform_device *p=
-dev)
->  		return dev_err_probe(dev, PTR_ERR(dwc->clk),
->  				     "failed to get timer clock\n");
-> =20
-> -	dwc->clk_ns =3D NSEC_PER_SEC / clk_get_rate(dwc->clk);
-> +	dwc->clk_rate =3D clk_get_rate(dwc->clk);
-
-Given that clk_ns is introduced only in this series, I suggest to make
-it right from the start.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---b7hp3kqdeurp4e4j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNtG9MACgkQwfwUeK3K
-7AmxSQgAm6sDT3X6LYX+qAkF3XaQ+EHUYRfFAbPibXVQMzSy0B4wI645bVRO8U+s
-UxMklqwLH1YzxZoAUbPVJCaMM2e3vzv0znu3awzEekMwy4wHkUPAtsOiRFFn/NUh
-GLSMxSZKFiewfXKF1mro54sj5jU/zPW04lI36/uJ9/ezqqLthDCrFGezhRS3H07H
-lWs3934qFzFLATB9FliY6m0FgUG3+2lg3/+YJWV8DacPqp5pYfTZSHnpLRM1B9Jg
-8JDlbBz3bS/TKMMsIMrNS9tuXRlxzrZZliYqlz4i85K1vps2ODYZHFouY4IQ/b+i
-rp9n0o7KIXtcVtkWF238qWx6U8vaRg==
-=vCH3
------END PGP SIGNATURE-----
-
---b7hp3kqdeurp4e4j--
