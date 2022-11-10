@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2961623F1E
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 10:55:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88B53623F38
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 10:59:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbiKJJzZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Nov 2022 04:55:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38842 "EHLO
+        id S229764AbiKJJ7j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 04:59:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbiKJJzY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 04:55:24 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4618C69DE7;
-        Thu, 10 Nov 2022 01:55:24 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id k2so776858qkk.7;
-        Thu, 10 Nov 2022 01:55:24 -0800 (PST)
+        with ESMTP id S229713AbiKJJ7c (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 04:59:32 -0500
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D43E64;
+        Thu, 10 Nov 2022 01:59:30 -0800 (PST)
+Received: by mail-qk1-x730.google.com with SMTP id v8so765921qkg.12;
+        Thu, 10 Nov 2022 01:59:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YQw1KJ5AWDcX1kLbPZYv1EymkpPJcZtJEdFtyQbRpsA=;
-        b=IHhUx/7uO9ULiSPOrRD75OiqqQq4dWCrNZA621PlpaeNxjDf1acz+5I4qcQkvyP/1q
-         ntVDqQFAoQsBWeuBd3Rg0Z5lg42wLxTI5LXOZdTK73OQR3JYVzUJXo5mIbtDsUSHuqr2
-         +/6HMgjyc5SznbOh9/e0KyRW7jl7pTniY7zxyojpwg551PQ66LC44RKmXTHpG+dhLkGd
-         b38hq3q47mWdIWMN+hO8l3Qndbo4IAt6s7UpFcTAsTb3AXlPDeLJm3YMdZD5v7EMpfNl
-         R6BTQee4OeM52FJiju/yn+epc1/JujZY+Ru92StcyJT73UjWIX7MEPTI/M4OrDB2EOhO
-         bkTg==
+        bh=JI7gsZFm9X+F8JKYomVs21XGrqaPCtz3TTsCmMHjVTQ=;
+        b=FxSoVL8UJYuQxAdJ54FBUWZefIyQrD7rWyS4I1xw2FEdUwjhvN3k4nKGeIEtjtUEqx
+         5dzZflR04XUO+mApPT0/oy4gAdWq2ozW1+kaOClh4s50yamZV1tuRUWW8sCfhJqdIaSg
+         0evJGdCNrzWjYsc/puv8TaXSbRt+Eb6TnTyGO2qr9hTsBt8yeglHz8+lGYl7F8ta1w5A
+         Bh+YRpaToPgZKE4YEXyo3A5czpgfRuXmku0Kv6ByZehl/VG0brvlS7IlREDjW052Zilm
+         8toBNfBTtevjy9kkaXEspYCRK4EO2nAtEl96z0xwAAW79Z/HeFcdYCUTW2UruZdILYLz
+         ct7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YQw1KJ5AWDcX1kLbPZYv1EymkpPJcZtJEdFtyQbRpsA=;
-        b=fJazREBEIfFjyN4mtRizmUWsafWyM5mdQHbKgW1R2e7J2c2DQePlNUMXuAkLjN8I89
-         24bS+IdH/blYSkerGcwwJsdg09apOhpsrAlsWqHfQG4NSccQThz9LNUjHaqzdFgbNSNV
-         OuH1eRO6RF1c2UMtyZoPOfbyCEg/JFb+yCQ3Cn9NYKwTJ5XYSCh8wubpL5Co8XyErlxU
-         dCPNiHD/ex4PORqNmY6nBdcsgtmV5jaMQ610GbzuhY0e6BqRFe78iMbW1o6urmSWiMiR
-         MvY8N0XTq0MK4uupJ+g3r0RB6yJfZbmmklWmr1HTM3cN1mQ0wP0QvYAFLGriemoXGD/h
-         HMHw==
-X-Gm-Message-State: ANoB5pn8q52e5YKw2zDbuSLQFR+NR3SGu0xCp1SL5ydPtKOud32q3KBn
-        K9L4/McXwO1QmEg/arWzLU9vvk1DgYxrhnbkjto=
-X-Google-Smtp-Source: AA0mqf4GbxuiT+PsQj+zMXsXu13wwCJnuO0NSB5qh5VrABmCjs/10yLeYfoLUIGav90FCLSqiEJGINLLB4DqqhxvDXQ=
+        bh=JI7gsZFm9X+F8JKYomVs21XGrqaPCtz3TTsCmMHjVTQ=;
+        b=CCYTFTYtKjybcu3Vuhiel8+Ua3hbF6GIQGIOcMz3n/5eMnsyQp0SeKRhOnCMWkJ+cO
+         OGhgKWNaWUJS7FgrZtrGkq9VvaLOtkbb6UNQZz8O/ozoXmjK0UW0MKZerXbhpdQnoUzy
+         MmZqb+8leG0ZDsHe96F1MvMkeI400d1UaAHQRl5zpFqtQIqQt6g2YX16awdqEvSN3HQh
+         UKNxe7OOZmE/5n5KyYNRQo/MoVebmmFZ0ADvhk3er6tUDMaNxe8trU26EUgFoYJ9Z+6M
+         JbJHPXcOLhnS/CiIsORGGLBdJDBc6Yi2A73wWwMbZnyG6S7EkjSEp5MkDp/kJYFMqhYU
+         5pkA==
+X-Gm-Message-State: ANoB5pkQnGdX5l9218Rjd2FJ675a4qQ1t5XljyOFrYQurK7yhFOyIFvC
+        DZ8TmwQ/7BvgRjpT89HvbMxdqRNC4GzlujB3r3M=
+X-Google-Smtp-Source: AA0mqf5OH9HhH+tUHp4JJfPzMjxfFfG/7ff8QEuIWMsrXTUnrPSZxu0n667jvCFblq0sQISICDGGY/OUtb61G8CF+pU=
 X-Received: by 2002:a37:46d3:0:b0:6fb:1454:e2b8 with SMTP id
- t202-20020a3746d3000000b006fb1454e2b8mr4435749qka.383.1668074123297; Thu, 10
- Nov 2022 01:55:23 -0800 (PST)
+ t202-20020a3746d3000000b006fb1454e2b8mr4442050qka.383.1668074369893; Thu, 10
+ Nov 2022 01:59:29 -0800 (PST)
 MIME-Version: 1.0
 References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
- <20221108142226.63161-2-andriy.shevchenko@linux.intel.com> <20221110070718.bqpam7h3hjf2hkip@pengutronix.de>
-In-Reply-To: <20221110070718.bqpam7h3hjf2hkip@pengutronix.de>
+ <20221108142226.63161-5-andriy.shevchenko@linux.intel.com> <20221110072810.meu3cxh5repuglk3@pengutronix.de>
+In-Reply-To: <20221110072810.meu3cxh5repuglk3@pengutronix.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Nov 2022 11:54:46 +0200
-Message-ID: <CAHp75VcQ98Rxxq4Zw0AAp8rEtRg7oAb_eR_hyMFRx7AQnCifCw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] pwm: Add a stub for devm_pwmchip_add()
+Date:   Thu, 10 Nov 2022 11:58:53 +0200
+Message-ID: <CAHp75VeV+ZBQ2M7xrP8o+KxSg9uXbcsDo5=9sU+=WF9muodDvA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] pwm: lpss: Allow other drivers to enable PWM LPSS
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -75,27 +75,22 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 9:07 AM Uwe Kleine-K=C3=B6nig
+On Thu, Nov 10, 2022 at 9:28 AM Uwe Kleine-K=C3=B6nig
 <u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Nov 08, 2022 at 04:22:21PM +0200, Andy Shevchenko wrote:
+> On Tue, Nov 08, 2022 at 04:22:24PM +0200, Andy Shevchenko wrote:
+> > The PWM LPSS device can be embedded in another device.
+> > In order to enable it, allow that drivers to probe
+> > a corresponding device.
 
 ...
 
-> > +static inline int devm_pwmchip_add(struct device *dev, struct pwm_chip=
- *chip)
-> > +{
-> > +     return -EINVAL;
-> > +}
-> > +
->
-> I'm a bit surprised to see this returning -EINVAL and not -ENOSYS. But
-> that's in line with the other stubs, so:
+> Now that pwm_lpss_boardinfo lives in a different file, this makes the
+> move of pwm_lpss_chip in patch 3 somewhat redundant.
 
-Exactly my thoughts when I created such a change.
-
-> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-
-Thank you!
+But they are independent changes. At each stage (after each patch) we
+should have a finished step, right? Not touching that makes me feel
+that the step is half-baked. If you insist I can drop that move from
+the other patch.
 
 --=20
 With Best Regards,
