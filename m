@@ -2,108 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87737623FB5
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 11:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B2366241B5
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 12:46:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230010AbiKJKYz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Nov 2022 05:24:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53854 "EHLO
+        id S230259AbiKJLqW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 06:46:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230000AbiKJKYw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 05:24:52 -0500
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBDD663FA;
-        Thu, 10 Nov 2022 02:24:51 -0800 (PST)
-Received: by mail-qt1-x82e.google.com with SMTP id a27so656751qtw.10;
-        Thu, 10 Nov 2022 02:24:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s7OQDRdg/PBKb75GJhg597BiFzGJdloU/76dILAYuhQ=;
-        b=GVEyzN1eEbMQyQBN2auzyQXHH73BcHa5Fyfr5jepcgR2gPq6KEYPE5FR9JhvJmElyb
-         3FjOFTFg+RfCtXet32H7kvn8eSW+WZa2yFGHIkYKKjeCJgTjQDMOGWTvPguPuAwMtfDD
-         XAALI6jGkEC91xwDh04WLsnQkHoARIXhcSDQak3FygTVJ7nku8lXvq1Z2r68W3BR6GZ6
-         Nu4xI/mGAKSLe0WG19qR/03vYvuLVaSwIjzOR858paVaD2Vgle0dQUv86jCrIbt2VTns
-         T62p3Z+mslNJJ2bAYJRH3OHcKyZjulKCmKq4mCo9jlIbKHxdqu1P11OisilaDagcuvkd
-         Tk8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s7OQDRdg/PBKb75GJhg597BiFzGJdloU/76dILAYuhQ=;
-        b=s5Dcao/YK76j7uzFi1FoWjH9gPf2jOUMfT3QdhKMIZmBIYzkF5XjA6fHQ8fAuHJbkf
-         JJC7spVEWC2KYThU5vu95kIoURvUUomQZpX5vASlvP0xKSFQxpfeE2zUBUj5pdNFSxrR
-         s8o0Kq9VDsHFZhkihehnvQQGeF1xhyeGjxoKfUo1f9CiT5Z0A1avc2fGiEtE/e/20d11
-         IY2ULaGm7b88sv3qMCbbAo6ioIDxQXSM2gdShhk7nZGOv2rkGkIuEcigoKBz+rFhkNuB
-         VileK/8pcttEA4uNFn+/5+fZweK/7ina6vuYrXi4n4c+1SzgsNv7JHdwIiE6wWChm5nH
-         WeNw==
-X-Gm-Message-State: ACrzQf1eN8DVDKPA+u0ML2C4zE3qIJtByKysrrHDZOMgstdCsr/GuoEF
-        PPMXcYfXTIoYClQjObJ7rI22jftGlkHITtXNT7M=
-X-Google-Smtp-Source: AMsMyM717gn40X0LG0YAQOaEOSHzvkaHpEdAOnw0/rGnjLJcED5HZEScxpx7nTTlIhPrLJDUqkSH6Cz5vW2SKA6KO1s=
-X-Received: by 2002:ac8:7152:0:b0:3a5:2fa2:cd1a with SMTP id
- h18-20020ac87152000000b003a52fa2cd1amr40497653qtp.195.1668075890956; Thu, 10
- Nov 2022 02:24:50 -0800 (PST)
+        with ESMTP id S230280AbiKJLqV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 06:46:21 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D0E541F2CE;
+        Thu, 10 Nov 2022 03:46:20 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C93011FB;
+        Thu, 10 Nov 2022 03:46:26 -0800 (PST)
+Received: from e122027.cambridge.arm.com (e122027.cambridge.arm.com [10.1.30.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 958253F534;
+        Thu, 10 Nov 2022 03:46:19 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Steven Price <steven.price@arm.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH] pwm: tegra: Fix 32 bit build
+Date:   Thu, 10 Nov 2022 11:45:48 +0000
+Message-Id: <20221110114549.34121-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
- <20221108142226.63161-4-andriy.shevchenko@linux.intel.com>
- <20221110072144.2s37r52qcpi6utgh@pengutronix.de> <CAHp75VenLc-QfuD3rHPh=5nu_SqWvEnsePbNMsBA4R-Zs+nvrw@mail.gmail.com>
- <20221110102025.2tqdb3v6ndg6vyqk@pengutronix.de>
-In-Reply-To: <20221110102025.2tqdb3v6ndg6vyqk@pengutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Nov 2022 12:24:14 +0200
-Message-ID: <CAHp75Vdmr8X1iWqtCZ3b1G+GE0KQFJDVr=f26v_2Y5G1AhRZMg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] pwm: lpss: Include headers we are direct user of
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 12:20 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Thu, Nov 10, 2022 at 11:53:59AM +0200, Andy Shevchenko wrote:
-> > On Thu, Nov 10, 2022 at 9:22 AM Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Tue, Nov 08, 2022 at 04:22:23PM +0200, Andy Shevchenko wrote:
+The value of NSEC_PER_SEC << PWM_DUTY_WIDTH doesn't fix within a 32 bit
+integer causing a build warning/error (and the value truncated):
 
-...
+  drivers/pwm/pwm-tegra.c: In function ‘tegra_pwm_config’:
+  drivers/pwm/pwm-tegra.c:148:53: error: result of ‘1000000000 << 8’ requires 39 bits to represent, but ‘long int’ only has 32 bits [-Werror=shift-overflow=]
+    148 |   required_clk_rate = DIV_ROUND_UP_ULL(NSEC_PER_SEC << PWM_DUTY_WIDTH,
+        |                                                     ^~
 
-> > > > Replace device.h with a forward declaration in order to improve
-> > > > the compilation time due to reducing overhead of device.h parsing
-> > > > with entire train of dependencies.
-> > >
-> > > Together with "For the sake of integrity, include headers we are dire=
-ct
-> > > user of." this makes an a bit schizophrenic impression on me. You add
-> > > <linux/types.h> because the file is a direct user of it, but you drop
-> > > <linux/device.h> despite being a direct user.
-> >
-> > But we don't use device.h.
->
-> What is the canonical header to provide struct device?
+Explicitly cast to a u64 to ensure the correct result.
 
-But we don't use the struct device here. We use _pointer_ to a struct devic=
-e.
+Fixes: cfcb68817fb3 ("pwm: tegra: Improve required rate calculation")
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ drivers/pwm/pwm-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+index 6fc4b69a3ba7..249dc0193297 100644
+--- a/drivers/pwm/pwm-tegra.c
++++ b/drivers/pwm/pwm-tegra.c
+@@ -145,7 +145,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		 * source clock rate as required_clk_rate, PWM controller will
+ 		 * be able to configure the requested period.
+ 		 */
+-		required_clk_rate = DIV_ROUND_UP_ULL(NSEC_PER_SEC << PWM_DUTY_WIDTH,
++		required_clk_rate = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC << PWM_DUTY_WIDTH,
+ 						     period_ns);
+ 
+ 		if (required_clk_rate > clk_round_rate(pc->clk, required_clk_rate))
+-- 
+2.34.1
 
---=20
-With Best Regards,
-Andy Shevchenko
