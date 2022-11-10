@@ -2,58 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 592AF623F48
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 11:02:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67AC8623F53
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 11:04:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbiKJKCe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Nov 2022 05:02:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        id S229680AbiKJKEO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 05:04:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbiKJKCa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 05:02:30 -0500
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A769B6B3B2;
-        Thu, 10 Nov 2022 02:02:27 -0800 (PST)
-Received: by mail-qt1-x82c.google.com with SMTP id hh9so628975qtb.13;
-        Thu, 10 Nov 2022 02:02:27 -0800 (PST)
+        with ESMTP id S229603AbiKJKEN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 05:04:13 -0500
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4376AECA;
+        Thu, 10 Nov 2022 02:04:12 -0800 (PST)
+Received: by mail-qk1-x72a.google.com with SMTP id z17so774468qki.11;
+        Thu, 10 Nov 2022 02:04:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6FttHOwm7yc9wMfWVriclkQhHjfh2wdlqWSk7Onvpq8=;
-        b=CpYG5wHpFAWfwMEJkJ0eHYbZ9DL6XwV2Z/moVEO9AM4ClREtISOeFFzcR0rcxMVz9V
-         g2OxzAjvczR/8MOr1r1UBRKzsiVqV3b6O2ydSAvqXsVQPgcX7L7bW6F/lSzpePH8OJ02
-         8mIGf6EyfxQEo2Zyr1eLGPMFf+tmiZZNje+1FjEBU59ZRLBAxJ6JJVGszx8X7NTncvGv
-         UJVEyGc+3kDwaI7RaqpcSt8wJzU4SgGI8rBR5tS7qLUo966pmdZI4ZZ3LSG5DkuQ07ZC
-         R8ILr3qVPKxVyQfZPNKlATCvpJruYwCrJ2XgU9EFq+Vsj8e2h2kZ3+MfnfNKY2264vaP
-         nSCA==
+        bh=2XV85RM2D5cPjJ+hWNkLRIR1G9UoikIDXt1LLlRhD8A=;
+        b=qwwP6pmhD2bq2AH8IBA0Rh1N4i9O/412YKIKLExn+zHrY9YTlyQ//cUDeOa7bjPHms
+         +L1q0CGTs3b/kyHb3g66t3mRyI49Wob8/nZF59DMBZbsgmzVUh8TFZTWN4Kpqt6+fD1h
+         V3UmjGtJDArMDjkrwQFtOgf3BSObX904yIe8Bs0B4JVQbs1Tko5/cq1yQO/Hd5LvzuG3
+         Xs31Uc41I0GCXlhGg42qUHe+w7n/LxEkGpkztdmPjg8vWRINNpRfsSvq/WZlGrqJKOmz
+         p5OdRwWsjqHlcgF9Vbbxsl29vcgwA5TAdIcfZ6zaTJPpk8Ktnz6TogamhZLEfHkBXZc0
+         C0yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6FttHOwm7yc9wMfWVriclkQhHjfh2wdlqWSk7Onvpq8=;
-        b=hXDDvhum5A258L+bQQh/SsHTkeoPk/tNTNmb7qdKrDUukKqQoue8grdeG1Tbte8lmQ
-         E3vT3CUfSRCkMfCYIIRyfnXwqhD23PVKWJ/K+Dc2U1W4jl3U+A2F3FHko+YfRjzXYVBx
-         OY1eclQ5CokuxGnRfjPJ3hfhMJJ0Oo/nF6TCInNQAB6vfbgmEisQMgRRCv6HZFw4Y1vR
-         e2XqutUb7/Wl7HBJakCXo6XpZBcAwi6v8GBlMb894HqW2dXoU73NNWDAcw7YbQxJoO4G
-         Y0KqS/k8xhFKtZ/LNS2Ttq7BWhiJMRV6Aubdq1lkHcWafuaRdT6wZmRQC8qtIekUmPLc
-         GKsw==
-X-Gm-Message-State: ACrzQf1Ahc63nRwnJDkgiwt80NbPumRacz0+KYODxylUFyxW2llUklSZ
-        Nh658KHie8FEqyEyuJISFIvuFP7GLGgXp6utpd4=
-X-Google-Smtp-Source: AMsMyM5zyKKFkF0k+jBAxhQa09hMD/ILNPqt1IUoUwv+CYksYwl4z51Pjj8Y6qF5FNIYquzMCn/iEQzmc6JmyK82jgE=
-X-Received: by 2002:ac8:7152:0:b0:3a5:2fa2:cd1a with SMTP id
- h18-20020ac87152000000b003a52fa2cd1amr40448801qtp.195.1668074546324; Thu, 10
- Nov 2022 02:02:26 -0800 (PST)
+        bh=2XV85RM2D5cPjJ+hWNkLRIR1G9UoikIDXt1LLlRhD8A=;
+        b=6Cg5nKkLOYq6GyGUJX2xs4trfrU4ijIP1DRQPnTUTuJ0mNs5o84ZOviyKumpZ53pMh
+         9uumbUBu5/JfSoVJsBngiiofj+pARstuQ52LhshjYi9f5kXBrZDJt+52p6tR1gY/zMni
+         4EW6AQ4Dv/DdhrPf40zPrcjF4joQqB60/ffUxN2r3aN0gH5TWpr8O6B/ckRh6XMefDq6
+         FOA9xElh9jIL+6S8T/mXvwOKT9VSBVgt9MAux7mGEYi/UxTu1IuKeJTnUoIKTGc3zkvI
+         00w5KqPoOYSXHpS+K4luNp4VKkEwzZq/w8PiMG0Va6rTCjbKQaYfBl5i+MdRbyLapsjC
+         TKSw==
+X-Gm-Message-State: ANoB5pn1BlVQYA473hZO8GP/hfUGqzDkm52TptrqbO14STLUtgTjHup8
+        CBRclg3yww/lq1YTFMNoLVOGfoRHUDtgko4t5h5VDj3A870bpPM4
+X-Google-Smtp-Source: AA0mqf4zHFh5SBbSfQrtRwY9yFVtZhCvvTx6CtptTUQguahvGhZiglgxtVq1RGQe3ciWfcFRPPydbqdMTqbrOAXLDaI=
+X-Received: by 2002:a37:8784:0:b0:6fb:25ba:3d32 with SMTP id
+ j126-20020a378784000000b006fb25ba3d32mr547170qkd.504.1668074651427; Thu, 10
+ Nov 2022 02:04:11 -0800 (PST)
 MIME-Version: 1.0
 References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
- <20221108142226.63161-6-andriy.shevchenko@linux.intel.com> <20221110073831.ggudvgl6jzgbo2vb@pengutronix.de>
-In-Reply-To: <20221110073831.ggudvgl6jzgbo2vb@pengutronix.de>
+ <20221108142226.63161-7-andriy.shevchenko@linux.intel.com> <20221110074456.hgmu7d5mn5kndc66@pengutronix.de>
+In-Reply-To: <20221110074456.hgmu7d5mn5kndc66@pengutronix.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Nov 2022 12:01:50 +0200
-Message-ID: <CAHp75Ve837d_2UEQRMJEcmOdPVdqSAKv+dJje057uJouCPAe9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] pwm: lpss: Add pwm_lpss_probe() stub
+Date:   Thu, 10 Nov 2022 12:03:35 +0200
+Message-ID: <CAHp75Vcky+1jcjAtQ+RwcnK6TjWrsK8UMSa7hO3wmDL0Eb6beQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] pinctrl: intel: Enumerate PWM device when
+ community has a capabilitty
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -75,28 +76,39 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 9:38 AM Uwe Kleine-K=C3=B6nig
+On Thu, Nov 10, 2022 at 9:45 AM Uwe Kleine-K=C3=B6nig
 <u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Nov 08, 2022 at 04:22:25PM +0200, Andy Shevchenko wrote:
-> > In case the PWM LPSS module is not provided, allow users to be
-> > compiled with a help of a pwm_lpss_probe() stub.
+> On Tue, Nov 08, 2022 at 04:22:26PM +0200, Andy Shevchenko wrote:
+> > Some of the Communities may have PWM capability. In such cases,
+> > enumerate PWM device via respective driver. User is still responsible
+> > for setting correct pin muxing for the line that needs to output the
+> > signal.
 
 ...
 
-> > +static inline
-> > +struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem =
-*base,
-> > +                                  const struct pwm_lpss_boardinfo *inf=
-o)
-> > +{
-> > +     return ERR_PTR(-ENODEV);
+> > +     pwm =3D pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info)=
+;
+> > +     if (IS_ERR(pwm) && PTR_ERR(pwm) !=3D -ENODEV)
+> > +             return PTR_ERR(pwm);
 >
-> Would it be more consistent to return the same value as the pwmchip_add
-> stub does?
+> Linus and Andy already agreed that this patch is ugly. I wonder if this
+> here would be a bit less ugly if you do:
+>
+>         if (IS_REACHABLE(...)) {
+>                 pwm =3D pwm_lpss_probe(...);
+>                 ...
+>
+>
+>         }
+>
+> and drop the check PTR_ERR(pwm) !=3D -ENODEV (which might have a differen=
+t
+> semantic than "the pwm driver isn't available").
 
-Then I will lose the ability to distinguish between absent driver (or
-device) and actual error during the probing of it. Any suggestions on
-how to do that better?
+I will think about it (in such case the comment against the previous
+patch makes more sense to me).
+
+Thank you for the review!
 
 --=20
 With Best Regards,
