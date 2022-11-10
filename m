@@ -2,81 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 798A862362F
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Nov 2022 22:54:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94A5F623C5A
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 08:07:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232196AbiKIVyO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 9 Nov 2022 16:54:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
+        id S232683AbiKJHHj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 02:07:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232024AbiKIVxu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Nov 2022 16:53:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C6216551;
-        Wed,  9 Nov 2022 13:53:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D5F861D0D;
-        Wed,  9 Nov 2022 21:53:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9C2C433D6;
-        Wed,  9 Nov 2022 21:53:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668030797;
-        bh=PrXPuXwUUBkDI5D0DaFW76OD0IFm6T2SflV4GZ2Q03U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bw/fcaXaU4Ze4jADGDsiUDfenIIltXPXDVKXyGOM7Zz0N8yWlx4aPIkSvQmG/mK7H
-         QzrnVa5QVsjjD+Hz6/uPDcxURaJQYgzOMzSflGncOrEeki4J1Xce5Ox+UAc2+8vWaB
-         7z2I+K4l0AqcgkIh8BmstJFpSd3pppYhUqrXNeW1aBVvhlGnEOSlIn3mMyLEsXsCZX
-         AF+s7M+HDhRj1za5yAyqAAJurGOrDg3oKUolUoHgfWjbWuSkxoVpW1tYmqUvsyaCVb
-         lsoKPzISZoWeMMOudV4353T6rrSNPc/WtWLI63dr376UEdIDRXxIMPVDst5gQ42XNJ
-         O4FzmSBRONjWg==
-From:   Conor Dooley <conor@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S232730AbiKJHHh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 02:07:37 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE12CE15
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Nov 2022 23:07:36 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot1ej-0006Ue-Ex; Thu, 10 Nov 2022 08:07:21 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot1eg-003Omm-Vx; Thu, 10 Nov 2022 08:07:19 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot1eh-00FZqn-40; Thu, 10 Nov 2022 08:07:19 +0100
+Date:   Thu, 10 Nov 2022 08:07:18 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org
-Subject: Re: (subset) [PATCH v11 0/4] Microchip soft ip corePWM driver
-Date:   Wed,  9 Nov 2022 21:52:52 +0000
-Message-Id: <166803072013.1609016.4163434263140050032.b4-ty@microchip.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221007113512.91501-1-conor.dooley@microchip.com>
-References: <20221007113512.91501-1-conor.dooley@microchip.com>
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/6] pwm: Add a stub for devm_pwmchip_add()
+Message-ID: <20221110070718.bqpam7h3hjf2hkip@pengutronix.de>
+References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hbekflahz2byd2ag"
+Content-Disposition: inline
+In-Reply-To: <20221108142226.63161-2-andriy.shevchenko@linux.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
 
-On Fri, 7 Oct 2022 12:35:09 +0100, Conor Dooley wrote:
-> Hey Uwe, all,
-> 
-> ~6.0-rc1 has rolled around so here is the promised v8v9~.
-> v11 is based on 6.0 stuff still & there will be a change to the dts
-> patch in v6.1, but I did a test merge and there was nothing to resolve.
-> I'll take the dts change myself just to be on the safe side.
-> 
-> [...]
+--hbekflahz2byd2ag
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied to dt-for-next, thanks!
+Hello=20
 
-[1/4] dt-bindings: pwm: fix microchip corePWM's pwm-cells
-      https://git.kernel.org/conor/c/a62d196e8988
-[2/4] riscv: dts: fix the icicle's #pwm-cells
-      https://git.kernel.org/conor/c/ac2bcd194cc5
+On Tue, Nov 08, 2022 at 04:22:21PM +0200, Andy Shevchenko wrote:
+> devm_pwmchip_add() can be called by a module that optionally
+> instantiates PWM chip. In case of CONFIG_PWM=3Dn, the compilation
+> can't be performed. Hence, add a necessary stub.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  include/linux/pwm.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index d70c6e5a839d..bba492eea96c 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -478,6 +478,11 @@ static inline int pwmchip_remove(struct pwm_chip *ch=
+ip)
+>  	return -EINVAL;
+>  }
+> =20
+> +static inline int devm_pwmchip_add(struct device *dev, struct pwm_chip *=
+chip)
+> +{
+> +	return -EINVAL;
+> +}
+> +
 
-Thanks,
-Conor.
+I'm a bit surprised to see this returning -EINVAL and not -ENOSYS. But
+that's in line with the other stubs, so:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--hbekflahz2byd2ag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNsoyQACgkQwfwUeK3K
+7AkwtAgAlngwWjscEhoQXRiD28VBXc9a5O4+98O/r+kYB2f4/9rN6+2ET0CWOpzd
+8KDQ9B5IuGoSKhII3IwDcM4rRDI3DwECHp23BbLQL6NXjgxtw3eYZ7hJwUDEXpRE
+85aPp4cSqFMMkEpCOx8dLnj6rRxrR+l2kmsonH8ZpOM38kVvvkpD8+UPKFL7X/Kj
+ENy05dR+v2QEWE1UzYNuHHxWS3D61v9+H2Ae2DGHI0JH9+24hSTLwYvAE4SivcIY
+O1mTM7pKNsoFuCORxf1Vit/f8ZDWD+3miMg0cfIU0AgqxaPACkZpjf/7CZ99WjJr
+okFGA+bWbJp7tPxqjDpAhJPJTb7Ctw==
+=4ga8
+-----END PGP SIGNATURE-----
+
+--hbekflahz2byd2ag--
