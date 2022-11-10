@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 590DE62461E
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 16:40:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7318E62462F
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 16:42:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbiKJPj7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Nov 2022 10:39:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55922 "EHLO
+        id S230043AbiKJPmT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 10:42:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231574AbiKJPj4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 10:39:56 -0500
+        with ESMTP id S231610AbiKJPmS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 10:42:18 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4FC02CDDA
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Nov 2022 07:39:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB997669
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Nov 2022 07:42:18 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ot9ej-0004YY-5L; Thu, 10 Nov 2022 16:39:53 +0100
+        id 1ot9h2-00053m-FT; Thu, 10 Nov 2022 16:42:16 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ot9eh-003TqO-3L; Thu, 10 Nov 2022 16:39:52 +0100
+        id 1ot9h0-003Tql-HD; Thu, 10 Nov 2022 16:42:15 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ot9eh-00FfwP-Cs; Thu, 10 Nov 2022 16:39:51 +0100
-Date:   Thu, 10 Nov 2022 16:39:51 +0100
+        id 1ot9h0-00Ffwt-Id; Thu, 10 Nov 2022 16:42:14 +0100
+Date:   Thu, 10 Nov 2022 16:42:14 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Ben Dooks <ben.dooks@sifive.com>
 Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
@@ -37,15 +37,16 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         jarkko.nikula@linux.intel.com,
         William Salmon <william.salmon@sifive.com>,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: Re: [PATCH v6 07/10] pwm: dwc: make timer clock configurable
-Message-ID: <20221110153951.vcxatcfk5pl2vyz5@pengutronix.de>
+Subject: Re: [PATCH v6 10/10] pwm: dwc: use clock rate in hz to avoid
+ rounding issues
+Message-ID: <20221110154214.pnv7rqsftomhqvmk@pengutronix.de>
 References: <20221020151610.59443-1-ben.dooks@sifive.com>
- <20221020151610.59443-8-ben.dooks@sifive.com>
+ <20221020151610.59443-11-ben.dooks@sifive.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r6c6hcjkhlfswnpj"
+        protocol="application/pgp-signature"; boundary="b7hp3kqdeurp4e4j"
 Content-Disposition: inline
-In-Reply-To: <20221020151610.59443-8-ben.dooks@sifive.com>
+In-Reply-To: <20221020151610.59443-11-ben.dooks@sifive.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -59,76 +60,42 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---r6c6hcjkhlfswnpj
+--b7hp3kqdeurp4e4j
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Ben,
 
-On Thu, Oct 20, 2022 at 04:16:07PM +0100, Ben Dooks wrote:
-> Add a configurable clock base rate for the pwm as when being built
-> for non-PCI the block may be sourced from an internal clock.
+On Thu, Oct 20, 2022 at 04:16:10PM +0100, Ben Dooks wrote:
+> As noted, the clock-rate when not a nice multiple of ns is probably
+> going to end up with inacurate caculations, as well as on a non pci
+> system the rate may change (although we've not put a clock rate
+> change notifier in this code yet) so we also add some quick checks
+> of the rate when we do any calculations with it.
 >=20
-> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+> Signed-off-by; Ben Dooks <ben.dooks@sifive.com>
+> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 > ---
-> v6:
->  - removed DWC_CLK_PERIOD_NS as it is now not needed
-> v4:
->  - moved earlier before the of changes to make the of changes one patch
-> v2:
->   - removed the ifdef and merged the other clock patch in here
-> ---
->  drivers/pwm/pwm-dwc-pci.c |  1 +
->  drivers/pwm/pwm-dwc.c     | 10 ++++++----
->  drivers/pwm/pwm-dwc.h     |  3 ++-
->  3 files changed, 9 insertions(+), 5 deletions(-)
+>  drivers/pwm/pwm-dwc-of.c |  2 +-
+>  drivers/pwm/pwm-dwc.c    | 29 ++++++++++++++++++++---------
+>  drivers/pwm/pwm-dwc.h    |  2 +-
+>  3 files changed, 22 insertions(+), 11 deletions(-)
 >=20
-> diff --git a/drivers/pwm/pwm-dwc-pci.c b/drivers/pwm/pwm-dwc-pci.c
-> index 2213d0e7f3c8..949423e368f9 100644
-> --- a/drivers/pwm/pwm-dwc-pci.c
-> +++ b/drivers/pwm/pwm-dwc-pci.c
-> @@ -20,6 +20,7 @@
->  #include <linux/pci.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pwm.h>
-> +#include <linux/clk.h>
+> diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
+> index c5b4351cc7b0..5f7f066859d4 100644
+> --- a/drivers/pwm/pwm-dwc-of.c
+> +++ b/drivers/pwm/pwm-dwc-of.c
+> @@ -50,7 +50,7 @@ static int dwc_pwm_plat_probe(struct platform_device *p=
+dev)
+>  		return dev_err_probe(dev, PTR_ERR(dwc->clk),
+>  				     "failed to get timer clock\n");
 > =20
->  #include "pwm-dwc.h"
-> =20
+> -	dwc->clk_ns =3D NSEC_PER_SEC / clk_get_rate(dwc->clk);
+> +	dwc->clk_rate =3D clk_get_rate(dwc->clk);
 
-I assume this is only needed because pwm-dwc.h now uses struct clk.
-Maybe just add
-
-	struct clk;
-
-to the pwm-dwc.h instead of this hunk?
-
-> [...]
-> diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-> index 68f98eb76152..dc451cb2eff5 100644
-> --- a/drivers/pwm/pwm-dwc.h
-> +++ b/drivers/pwm/pwm-dwc.h
-> @@ -22,7 +22,6 @@
->  #define DWC_TIMERS_COMP_VERSION	0xac
-> =20
->  #define DWC_TIMERS_TOTAL	8
-> -#define DWC_CLK_PERIOD_NS	10
-> =20
->  /* Timer Control Register */
->  #define DWC_TIM_CTRL_EN		BIT(0)
-> @@ -41,6 +40,8 @@ struct dwc_pwm_ctx {
->  struct dwc_pwm {
->  	struct pwm_chip chip;
->  	void __iomem *base;
-> +	struct clk *clk;
-
-This is unsed, please add it in the patch that makes use of it.
-
-> +	unsigned int clk_ns;
->  	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
->  };
->  #define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
+Given that clk_ns is introduced only in this series, I suggest to make
+it right from the start.
 
 Best regards
 Uwe
@@ -137,19 +104,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---r6c6hcjkhlfswnpj
+--b7hp3kqdeurp4e4j
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNtG0QACgkQwfwUeK3K
-7AnSUQf9Hbf2+S7Vrf9NVbC3OqCWgomiwgcDc7O86nD6efoK7pnup5JbRmIpKdT5
-VDbMjK57nsfn+p0zsn5MVu7X6MW1QKi5dU5aEYNVaTpnJT8lFiB/RGrQgaD11TPS
-FZy/Hqgk13fAbeYYTy8q+vR5NRzRgFMmZ2W+qVbhY5Dc+jg+m7NolWGgoy9buWMq
-ZOsiIo8VV+PkN3+EzjRfm0hhUFwZTBH7UKFrSs36pFReWmeHfM4eqZtsgA/eUDph
-pt2H8Yd34PybIJJX+qRKan6g4XxZlSWd2xNwYFwUQ2eUBwMVWXlED1nZCjWgXR0R
-zlNDdW3AU0puY7JVpPt7Gk8MqvvZKg==
-=2U+q
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNtG9MACgkQwfwUeK3K
+7AmxSQgAm6sDT3X6LYX+qAkF3XaQ+EHUYRfFAbPibXVQMzSy0B4wI645bVRO8U+s
+UxMklqwLH1YzxZoAUbPVJCaMM2e3vzv0znu3awzEekMwy4wHkUPAtsOiRFFn/NUh
+GLSMxSZKFiewfXKF1mro54sj5jU/zPW04lI36/uJ9/ezqqLthDCrFGezhRS3H07H
+lWs3934qFzFLATB9FliY6m0FgUG3+2lg3/+YJWV8DacPqp5pYfTZSHnpLRM1B9Jg
+8JDlbBz3bS/TKMMsIMrNS9tuXRlxzrZZliYqlz4i85K1vps2ODYZHFouY4IQ/b+i
+rp9n0o7KIXtcVtkWF238qWx6U8vaRg==
+=vCH3
 -----END PGP SIGNATURE-----
 
---r6c6hcjkhlfswnpj--
+--b7hp3kqdeurp4e4j--
