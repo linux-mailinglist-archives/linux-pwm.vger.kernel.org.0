@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3084B623C88
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 08:22:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58029623C99
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Nov 2022 08:28:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232320AbiKJHWF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Nov 2022 02:22:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41598 "EHLO
+        id S232527AbiKJH2a (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Nov 2022 02:28:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232512AbiKJHWC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 02:22:02 -0500
+        with ESMTP id S232628AbiKJH23 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Nov 2022 02:28:29 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1B02ED54
-        for <linux-pwm@vger.kernel.org>; Wed,  9 Nov 2022 23:22:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD5B63BD
+        for <linux-pwm@vger.kernel.org>; Wed,  9 Nov 2022 23:28:28 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ot1sg-0008CK-SD; Thu, 10 Nov 2022 08:21:46 +0100
+        id 1ot1yu-0000SQ-Lu; Thu, 10 Nov 2022 08:28:12 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ot1se-003PCM-AB; Thu, 10 Nov 2022 08:21:45 +0100
+        id 1ot1ys-003PD0-DD; Thu, 10 Nov 2022 08:28:11 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ot1se-00FaHm-Lv; Thu, 10 Nov 2022 08:21:44 +0100
-Date:   Thu, 10 Nov 2022 08:21:44 +0100
+        id 1ot1ys-00FaM2-GK; Thu, 10 Nov 2022 08:28:10 +0100
+Date:   Thu, 10 Nov 2022 08:28:10 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -35,15 +35,15 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/6] pwm: lpss: Include headers we are direct user of
-Message-ID: <20221110072144.2s37r52qcpi6utgh@pengutronix.de>
+Subject: Re: [PATCH v2 4/6] pwm: lpss: Allow other drivers to enable PWM LPSS
+Message-ID: <20221110072810.meu3cxh5repuglk3@pengutronix.de>
 References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
- <20221108142226.63161-4-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-5-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kl3orhl5l6nepqs2"
+        protocol="application/pgp-signature"; boundary="isolpfvlhxvjwqhj"
 Content-Disposition: inline
-In-Reply-To: <20221108142226.63161-4-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221108142226.63161-5-andriy.shevchenko@linux.intel.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -58,39 +58,74 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---kl3orhl5l6nepqs2
+--isolpfvlhxvjwqhj
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Nov 08, 2022 at 04:22:24PM +0200, Andy Shevchenko wrote:
+> The PWM LPSS device can be embedded in another device.
+> In order to enable it, allow that drivers to probe
+> a corresponding device.
 
-On Tue, Nov 08, 2022 at 04:22:23PM +0200, Andy Shevchenko wrote:
-> For the sake of integrity, include headers we are direct user of.
+"probe" isn't the right term here. The other driver only creates the
+device.
+
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/pwm/pwm-lpss.h                        | 22 +--------------
+>  .../linux/platform_data/x86}/pwm-lpss.h       | 28 ++++---------------
+>  2 files changed, 6 insertions(+), 44 deletions(-)
+>  copy {drivers/pwm =3D> include/linux/platform_data/x86}/pwm-lpss.h (53%)
 >=20
-> While at it, move the struct pwm_lpss_chip to be after
-> the struct pwm_lpss_boardinfo as the former uses pointer
-> to the latter.
+> diff --git a/drivers/pwm/pwm-lpss.h b/drivers/pwm/pwm-lpss.h
+> index 4561d229b27d..b721532c6c3c 100644
+> --- a/drivers/pwm/pwm-lpss.h
+> +++ b/drivers/pwm/pwm-lpss.h
+> @@ -13,27 +13,10 @@
+>  #include <linux/pwm.h>
+>  #include <linux/types.h>
+> =20
+> -struct device;
+> +#include <linux/platform_data/x86/pwm-lpss.h>
+> =20
+>  #define LPSS_MAX_PWMS			4
+> =20
+> -struct pwm_lpss_boardinfo {
+> -	unsigned long clk_rate;
+> -	unsigned int npwm;
+> -	unsigned long base_unit_bits;
+> -	/*
+> -	 * Some versions of the IP may stuck in the state machine if enable
+> -	 * bit is not set, and hence update bit will show busy status till
+> -	 * the reset. For the rest it may be otherwise.
+> -	 */
+> -	bool bypass;
+> -	/*
+> -	 * On some devices the _PS0/_PS3 AML code of the GPU (GFX0) device
+> -	 * messes with the PWM0 controllers state,
+> -	 */
+> -	bool other_devices_aml_touches_pwm_regs;
+> -};
+> -
 
-That part is fine.
+Now that pwm_lpss_boardinfo lives in a different file, this makes the
+move of pwm_lpss_chip in patch 3 somewhat redundant.
 
-> Replace device.h with a forward declaration in order to improve
-> the compilation time due to reducing overhead of device.h parsing
-> with entire train of dependencies.
-
-Together with "For the sake of integrity, include headers we are direct
-user of." this makes an a bit schizophrenic impression on me. You add
-<linux/types.h> because the file is a direct user of it, but you drop
-<linux/device.h> despite being a direct user.
-
-If you adapt the reasoning to something like:
-
-Replace the inclusion of <linux/device.h> by a forward declaration of
-struct device plus a (cheaper) #include of <linux/types.h> as
-<linux/device.h> is an expensive include (measured in compiler effort).
-
-I could better live with it. I would even split this into two patches
-then. (i.e. move struct pwm_lpss_chip vs the include and forward change)
+>  extern const struct pwm_lpss_boardinfo pwm_lpss_byt_info;
+>  extern const struct pwm_lpss_boardinfo pwm_lpss_bsw_info;
+>  extern const struct pwm_lpss_boardinfo pwm_lpss_bxt_info;
+> @@ -45,7 +28,4 @@ struct pwm_lpss_chip {
+>  	const struct pwm_lpss_boardinfo *info;
+>  };
+> =20
+> -struct pwm_lpss_chip *pwm_lpss_probe(struct device *dev, void __iomem *b=
+ase,
+> -				     const struct pwm_lpss_boardinfo *info);
+> -
+>  #endif	/* __PWM_LPSS_H */
 
 Best regards
 Uwe
@@ -99,19 +134,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---kl3orhl5l6nepqs2
+--isolpfvlhxvjwqhj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNspoUACgkQwfwUeK3K
-7Al4jAf+KJNGvp8Rn+uVlNVAhxjiKuIbYR8EWHPnYLHmuS/aIZbajf5eWL/5mFVx
-tVVxe6MgD/wKubSURgJqRfqhn+k+D3AzH/oegvru0QhE//qQ1liKwqsV/A+0CwGB
-Aoue0nW3Fbt/psnD3j6t6J6o0Y7HDUkSYmFDelc9GZxtVlEXABLkUucXRjcSclWo
-dRuVSFYYj+ggI79yMTdU8WpyijehVCKvTULeZSMXJiDR9IieJYikZyIHJuM3if4I
-JXSiD6ihnTpLByKK2ppH1tQO6LlUrJvWWjUD0LIJofQqbEFRSEQ4dag8qf1iR7GV
-HZKl/FYFmJdpIcO6Sxg/621RqQSj5Q==
-=A+z8
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNsqAcACgkQwfwUeK3K
+7AniDwf8CAt4pIjlZJuaECU1H6LjV59v9ejF+7Gjk24cwpEtOLQWyTKZf8zRnCBB
+QRRWH/RklxYYTzdzZNU1374ObPCFzusHBA2qALbdNq/pf8/E1uZ+HlVagGqBxAcA
+f4YKnEiZv5V34+3kE8RI5eS/KaK3BlIne+QL0zMJLwiJoY1MSlzv+F+xxZOQMi/E
+2CYxpRGiz3hV0E1PikDNYYmA/Y54HjhPi2pBuFi7TEROWFYcAxjBiQilv8q124EM
+R1cOMy5uN6X5J+7nGmwEH5kDlDRUFXC5syKJcnX6/6jG7ABOyaqhKs2rPfMvxB7M
+J9v1os3jQEUqxmlzASnSbnGhJGntCA==
+=pvIs
 -----END PGP SIGNATURE-----
 
---kl3orhl5l6nepqs2--
+--isolpfvlhxvjwqhj--
