@@ -2,107 +2,115 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CEB162607F
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Nov 2022 18:34:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A741262618F
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Nov 2022 19:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234116AbiKKRed (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 11 Nov 2022 12:34:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
+        id S234312AbiKKSnT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 11 Nov 2022 13:43:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234137AbiKKRe2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Nov 2022 12:34:28 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FE5657C5;
-        Fri, 11 Nov 2022 09:34:23 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id q9so14249131ejd.0;
-        Fri, 11 Nov 2022 09:34:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WNL6IfTe0wzPq8NWBK/D96/5y8l3oPapGeg3sP1iP80=;
-        b=ZiUNfWdS+2kgkaKJuTKbf+3zGC6VlGeB9T3IBZAioQZkrkhbJwmO60/IQP7d4odxOd
-         UQ9P/NHEflrVY3Um9feS1Tq2bYLLXYUUmZOpTPgtpvRLA1a0cCvcG8zFNIWOKIwtyApR
-         kmw9g2Yj5pzFx2qaZzl2VuzjXA859mMBprMcsy+6rpX8mUKZO2UIi29+pX5+5QinRPnt
-         te6I9Y0Vl5WvYvNH/QQfWUziOp1hqe1GBkRFVW6YDYRjTnAxRe6pblWJkitt61N++Q8W
-         Yky075tee/8i0S7Jdvfa0RullX4+2DxdfuZRmvF2rrsmNWbH72mRmHlzDHiA+ltP6EE2
-         TFPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WNL6IfTe0wzPq8NWBK/D96/5y8l3oPapGeg3sP1iP80=;
-        b=l75qbZwtbERoAe1H1n9d1l9fFuFxVW+r4WTrf94poo8ZSUDhzpEttyk0ED4YkpmB/2
-         H97i5kEgTw6DpFJeWtHow7sqrdKAAPJKXFodtuwVy8WMLWyanLX2ijbd/TiDW6/D2+4L
-         0z4He6iZW7AkA1YVKQJu/K6ycxSXm4yVRHL82tWOk13j6h0sA0D0GtOQeq/htNx5q63I
-         GimMy11Ruk+N5E47FLeQ4Y+jVmrEsMiFjzqVFyrsVy9VXMA21OfLbJGmiHfN4n4FU13n
-         fW+Ot7UQgiqUrqXgSeXcDlMwojP9MDUAgAWIN/0ecCAJkRZ9y6kYSYNrRARcmBy2h+3a
-         4cnA==
-X-Gm-Message-State: ANoB5pke60/kgcviB5fGljVJ7w/OU6CnsY0eblDjxzozvJNOIi/eZOSn
-        0Pou8wsn1H8q3A002+RgnHs=
-X-Google-Smtp-Source: AA0mqf4WNUX8D3AJJ+yKFXFkOeOfQnJkafQvX4JqhdEVmSHraQl66sol6L5QnsfhPdMBvLHU7ww+uQ==
-X-Received: by 2002:a17:906:2852:b0:7ad:9f03:fd44 with SMTP id s18-20020a170906285200b007ad9f03fd44mr2722601ejc.73.1668188063262;
-        Fri, 11 Nov 2022 09:34:23 -0800 (PST)
-Received: from localhost ([85.153.204.139])
-        by smtp.gmail.com with UTF8SMTPSA id lb21-20020a170907785500b0073dbaeb50f6sm1072867ejc.169.2022.11.11.09.34.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Nov 2022 09:34:22 -0800 (PST)
-From:   Sasha Finkelstein <fnkl.kernel@gmail.com>
-To:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>
-Subject: [PATCH v3 4/4] MAINTAINERS: Add entries for Apple PWM driver
-Date:   Fri, 11 Nov 2022 20:33:48 +0300
-Message-Id: <20221111173348.6537-5-fnkl.kernel@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20221111173348.6537-1-fnkl.kernel@gmail.com>
-References: <20221111173348.6537-1-fnkl.kernel@gmail.com>
+        with ESMTP id S234067AbiKKSnN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Nov 2022 13:43:13 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B923B6;
+        Fri, 11 Nov 2022 10:43:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668192192; x=1699728192;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=g2fp4ZjeEc/fAnq0ko+qR0fprFFwUsmoz2HO2reOwM4=;
+  b=Fp11YnQ2EnBe0TceRR2Zyz8x826VDPqAJiWNBjB+bOv1Fn88UILiEKnb
+   +UTppoCJIV/qw5vEt8jibkXFTrSDyiYyo1cO2ADCppiV+rcxJ2i1vQqJg
+   GId3YriF6b4UrRcicTdK7gT+LruFmgJJZkD+daztFfdED7PD0ipCEh9HI
+   YZ5/jQDg9byvyGYkqsnErhejoC9BgimZTY3Locx/NhgawXV9v+ABjqViM
+   1a8dsnoKpQ7LXiFEV7gRRce2cJNzaAItP6z4lQ3ScpOdD+6gOLobpUFj7
+   0CMEvkWC+H4rdqYjWsvNJemKGsn2pJJaLgLV/7Df9sxFWkU3fVqhZvGmQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="309274049"
+X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
+   d="scan'208";a="309274049"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 10:43:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="632103058"
+X-IronPort-AV: E=Sophos;i="5.96,157,1665471600"; 
+   d="scan'208";a="632103058"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 11 Nov 2022 10:43:08 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 04C63F7; Fri, 11 Nov 2022 20:43:31 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v3 0/6] pinctrl: intel: Enable PWM optional feature
+Date:   Fri, 11 Nov 2022 20:43:22 +0200
+Message-Id: <20221111184328.58108-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the MAINTAINERS entries for the driver
+This is a continuation of the previously applied PWM LPSS cleanup series.
+Now, we would like to enable PWM optional feature that may be embedded
+into Intel pin control IPs (starting from Sky Lake platforms).
 
-Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Acked-by: Sven Peter <sven@svenpeter.dev>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+I would like to route this via Intel pin control tree with issuing
+an immutable branch for both PINCTRL and PWM subsystems, but I'm
+open for other suggestions.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 046ff06ff97f..69f56f7cf907 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1908,6 +1908,7 @@ F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
- F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
- F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
- F:	Documentation/devicetree/bindings/power/apple*
-+F:	Documentation/devicetree/bindings/pwm/pwm-apple.yaml
- F:	Documentation/devicetree/bindings/watchdog/apple,wdt.yaml
- F:	arch/arm64/boot/dts/apple/
- F:	drivers/clk/clk-apple-nco.c
-@@ -1921,6 +1922,7 @@ F:	drivers/mailbox/apple-mailbox.c
- F:	drivers/nvme/host/apple.c
- F:	drivers/nvmem/apple-efuses.c
- F:	drivers/pinctrl/pinctrl-apple-gpio.c
-+F:	drivers/pwm/pwm-apple.c
- F:	drivers/soc/apple/*
- F:	drivers/watchdog/apple_wdt.c
- F:	include/dt-bindings/interrupt-controller/apple-aic.h
+Hans, I dared to leave your Rb tags, however the patches are slightly
+differ, because of the Uwe's suggestion on how to handle the missing
+headers. I hope you are okay with that. If not, please comment what
+must be amended then.
+
+Changelog v3:
+- added tags (Uwe, Linus, Thierry)
+- fixed some spelling issues in the commit messages
+- changed a paragraph in the commit message of the patch 3 (Uwe)
+- replaced -ENODEV check with IS_REACHABLE() in the patch 6 (Uwe)
+
+Changelog v2:
+- added tag (Mika)
+- added base-commit to the series, to make sure LKP can test it
+
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Andy Shevchenko (6):
+  pwm: Add a stub for devm_pwmchip_add()
+  pwm: lpss: Rename MAX_PWMS --> LPSS_MAX_PWMS
+  pwm: lpss: Include headers we are the direct user of
+  pwm: lpss: Allow other drivers to enable PWM LPSS
+  pwm: lpss: Add pwm_lpss_probe() stub
+  pinctrl: intel: Enumerate PWM device when community has a capability
+
+ drivers/pinctrl/intel/pinctrl-intel.c         | 32 +++++++++++++++
+ drivers/pwm/pwm-lpss.c                        |  2 +-
+ drivers/pwm/pwm-lpss.h                        | 34 ++++-----------
+ .../linux/platform_data/x86}/pwm-lpss.h       | 41 ++++++++-----------
+ include/linux/pwm.h                           |  5 +++
+ 5 files changed, 64 insertions(+), 50 deletions(-)
+ copy {drivers/pwm => include/linux/platform_data/x86}/pwm-lpss.h (51%)
+
+
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
 -- 
-2.38.1
+2.35.1
 
