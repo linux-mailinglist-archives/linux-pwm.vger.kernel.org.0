@@ -2,251 +2,581 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 418E0626889
-	for <lists+linux-pwm@lfdr.de>; Sat, 12 Nov 2022 10:33:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 388AB627139
+	for <lists+linux-pwm@lfdr.de>; Sun, 13 Nov 2022 18:16:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234728AbiKLJdW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 12 Nov 2022 04:33:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33384 "EHLO
+        id S235388AbiKMRQM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 13 Nov 2022 12:16:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234683AbiKLJdT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 12 Nov 2022 04:33:19 -0500
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2128.outbound.protection.outlook.com [40.107.114.128])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329C5F14;
-        Sat, 12 Nov 2022 01:33:18 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W6Y4DDx/WQr0skrCJ1yRtXxU7y0i6YUdtNK/yTRO/OTPbJDhncmrzVjmMkAl18Tuvuk10kcbWqu14sRmeRLrJoc9zzZqvqP/eyOTApZi5BsI+G9G5HCvVEzQsD5e7UC00ABenQT3RQTfSPoO0CQADj8zWsaGAHzdRlO7UJlnuUNGtlJqmuWH7Dlull4JuH88hfqHYngRJiIpoo6J7JwDYd5L5amzKww+dtJxxEGK7NdgYRXLAz9v13BWzOYY5KZwnjIG4e7t5WGbaWq9FzyLJOqhquZVp9YN9p3kshDYP8lh3DIgVUXp8YMsvuEwdUUrdkDLyVR5AJU5oODFuVkLxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UFpndfVyDBYHOE06Q3gTWB8qpEeZVAEFwsIiL0LjEUk=;
- b=R3D5pKxW3jUFtnQNM4Bw6GmD5LO5PE6/F3GIQcZ2Cr+cKR+Hs0qVAWhe1Ly7qu6af0zMOlhpP7VW56l3322cH7f+tvLk7SKnQI+s4XerhLEP0f8BaY3RaYql20D201nrJ2JZFeiFpnC8frxH4vU5zL6hr3GXiLaWWOAlXLilerLyPDm9flOsrTZNxfcILCUQg+Wa3Plg7aQKTrB9u09iw90vIw8v1qEt2jxHfT7fm8JRMOh7YkWkbIKuuGakx2lzYZ9XJLcP0P5irKILxBay9uu7wFvrPG4QHQ7SRU2HmC9VRWAlysz2DnNYtL4SRn0IN8EVAPk1JeCSKv+4w0q0xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UFpndfVyDBYHOE06Q3gTWB8qpEeZVAEFwsIiL0LjEUk=;
- b=HT3XoXI0t5PRlAMJPf783BJJ4jgBbNcMxgjNpbidykPiSRbefBaFklcEomK/GNK4kb5yWLySfENDJEFqI9WwscAHm9JYYtEb/apIzgnWOhRVBicS2EVsB1WTcSdLwwZZWnj8kk98n7w5S8P3LQ5mXXNhsVQcdwfmAuwafL09BxA=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by OSZPR01MB9331.jpnprd01.prod.outlook.com (2603:1096:604:1d6::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.14; Sat, 12 Nov
- 2022 09:33:16 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::5b24:f581:85bd:6ce2]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::5b24:f581:85bd:6ce2%3]) with mapi id 15.20.5813.016; Sat, 12 Nov 2022
- 09:33:14 +0000
+        with ESMTP id S235400AbiKMRQL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 13 Nov 2022 12:16:11 -0500
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2ADB4DFE4;
+        Sun, 13 Nov 2022 09:16:09 -0800 (PST)
+X-IronPort-AV: E=Sophos;i="5.96,161,1665414000"; 
+   d="scan'208";a="139869905"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 14 Nov 2022 02:16:08 +0900
+Received: from localhost.localdomain (unknown [10.226.92.50])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 746224032A20;
+        Mon, 14 Nov 2022 02:16:06 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC:     Chris Paterson <Chris.Paterson2@renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Chris Paterson <chris.paterson2@renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: RE: [PATCH v2 2/3] dt-bindings: pwm: rzg2l-gpt: Document
- renesas,poegs property
-Thread-Topic: [PATCH v2 2/3] dt-bindings: pwm: rzg2l-gpt: Document
- renesas,poegs property
-Thread-Index: AQHY9gP9Y6ABJ6CNo0KfXhDTinrESa46ajWAgACb6EA=
-Date:   Sat, 12 Nov 2022 09:33:14 +0000
-Message-ID: <OS0PR01MB59229314C88BF8B6734076F386039@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20221111192942.717137-1-biju.das.jz@bp.renesas.com>
- <20221111192942.717137-3-biju.das.jz@bp.renesas.com>
- <166821148218.241040.12720094893409312973.robh@kernel.org>
-In-Reply-To: <166821148218.241040.12720094893409312973.robh@kernel.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|OSZPR01MB9331:EE_
-x-ms-office365-filtering-correlation-id: 3a0e0375-4195-4f6d-8c38-08dac490ec3c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p8TG22VsxThh0j4NIbkZSXZN1LHZ5eidnDpJPKrE2SiEAeTNmeJaxPjGhnIEoUXh9p+0rNVz8YLvbdH2UnPHn5ZaQwEOjm5VRCjwgBw7GH+Xm0XEW+7OmodwS7RNNOmFaGS9LDEWmIw2kl88evqtiTPlfH906S/6dkE4s/9YMIZx3S13ymOk913uj53+qLKNDCHoTY1NWhwaQ03M55pzWFwK16zBq5z9lJIQVF0tKSVn294gictVcJMsrdCW+KnfeKLot4vkVMK2k3uinvWnJ/wRVqXodDqY680M1iDgqBwkp7rDt/KVRwfRgsQJgqcg054gMRfyVGxdpT1NMeMm7QrHhlZXFaXWh6aMeHXc5TySt6jk8wUjDzoRp+Qjd3TH8HGabpCgU881sy6dGY/suPJKdHfe4omZQEbWupjXfQWvOUV9QLo9+j8vwQVqwN3QEquOYdvDzcnc90bKjElm6ucOkys6hGM07KoPl5jmF7t3pYcUS8WCEI8WeLlfM8kan5zP6nQbkfEAWDfN46nB2b1332DguYS5eVomU/vKclyiPz1pvMESMAFXTG5PULIlK6kTNj9IlWv20pn7s/S/ohMAdHIeoiHPiRLiC97L54rgFaNAQTy/48vVOP5rLQLMjlTtsJJ0+KM1ZhT4S9J3x+cN0w+XVKSd8tWxGRlpM4ZbQu0R7XjWS+dkOA5p2BDLDD1+XX1faNkFI0724cpADV/+iVhBOTa04T6jIkO+HZfX9iOnPXcU6born0LriQ0ETxnvybzOW4wM0mSiIbarw57piMZk29CcmN7Yft3jJ2w=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(366004)(136003)(376002)(396003)(451199015)(33656002)(316002)(2906002)(54906003)(110136005)(86362001)(55016003)(38070700005)(4326008)(52536014)(5660300002)(122000001)(8936002)(38100700002)(66946007)(64756008)(8676002)(66446008)(66556008)(186003)(76116006)(966005)(9686003)(66476007)(26005)(478600001)(83380400001)(41300700001)(7696005)(71200400001)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?ON3YVLCVG3wf6pjNsqhfdESx0nZQgIAMOQm4hKm280xuCibJ+L5OY5g7UY?=
- =?iso-8859-1?Q?fS/o3i1g+wiI52eoQ+IG0C1OKJesgX/rRhhFHtwgAszEHzQlBmLegw9LeA?=
- =?iso-8859-1?Q?SNO9vpyeVDF1InKimyhpFqn+dmLtWQNZsK77V3Kwlin8dL57JrYaDeOHvt?=
- =?iso-8859-1?Q?YF5nMuEFTMFcaNh8+YtF8GYvAUWoK7t1psAPOR5ZFkMJ43ujqBNzj2rvDh?=
- =?iso-8859-1?Q?9JclmpSr7HC2CQrszYa7cT4wGBa5TNFFM2veH/MpUH51SsG20UwdyIOrms?=
- =?iso-8859-1?Q?9sfqKpTS1KB9B3HCgRfAaRwKjRVL6Qk9aSZ4uUmfQbCXpkLXhWSj0iIIYM?=
- =?iso-8859-1?Q?8kZPALi9qU5GL+aAWDvb0biGaEeO4Cv6sdSOI84EzeLp5hjY8AqFziqvgf?=
- =?iso-8859-1?Q?rHLqbF9NTya+3oo6bY8n4uJA7J4cQ3tw3gIqxhGmQwd3DjY5cZwEoi+Jcy?=
- =?iso-8859-1?Q?hIGU1c1AvKbZ7hCG4YLG316E8vCGLdtzTTCm6YEl4CuM3rqX7e9O4b8CeE?=
- =?iso-8859-1?Q?e+dTcTlGmRL4v1hHFFWZe9frgFvbXACevq1JHdpxD+MHpCQsafZbjIoLaD?=
- =?iso-8859-1?Q?kkcfcECJxYwW6C5H8nXd5jjJYW1aL91fn2MNRG1DkaLAS6xoZb20KBWBf5?=
- =?iso-8859-1?Q?LY7pl+9dAGN2HVf5Rd9HBDvu/KYv1SgnS7+wm8MbYBo0lHK2KrErAsfZ2e?=
- =?iso-8859-1?Q?yJaDV1WtCwN6/0LSlIiIO6awCR2o8T/VV7UA3CHpS78PGuIbu9B8SITjby?=
- =?iso-8859-1?Q?LBPeSUOBnzVUDHFIgEuGLK/Aj+3t/+kSsbL45qrEl2gF23zwOPrVPLAYeM?=
- =?iso-8859-1?Q?ZHrljfB+Jid+zA6gENAEZ1OOoFum/Ravch8OYSB+ZLvmmitsjXU3SNLCOM?=
- =?iso-8859-1?Q?qCvruu9yi0ZFCDqUwKtAY40lwXbhJiRaxiY49ITHKMfDFddDd8m5hZk0xy?=
- =?iso-8859-1?Q?7zSApsSfesoW3QeF7ClIHDyAlG2+qpwRBVY1QZmHodO3GHXZVTBRtaIj6H?=
- =?iso-8859-1?Q?yuC+8kQnE+xsv0P07ppqALOXQ54vBkd7Gvhx+0GB+GfIWk8ebu0db9l1+C?=
- =?iso-8859-1?Q?t8XPMDwcF1LfLg9Q/IDjLyAfq3NOdPrBfXfx9Nlfhu0gqV1F8SM52ZAnR+?=
- =?iso-8859-1?Q?iF5z2Mhwxe8QmGM7Yh26IyvD2gsTh2e3w1BkpX20lQVsDeIoQhOyOmV28q?=
- =?iso-8859-1?Q?VGEJmWIrgKt36hCVo7DivgsSOk0J05i0oGv/N1IK3pi5naLnCeuOUQXn8t?=
- =?iso-8859-1?Q?hk+d3z7AGgrA8p6oWwjecmNfA4IYzXI2OeXIY5LPSdgqGs5aVHwKHwJNt7?=
- =?iso-8859-1?Q?ont41pukezia+8A/ilDWX69RzLF6cglN6waR7XHyzhJWXPKGQNK41kWAvK?=
- =?iso-8859-1?Q?yDwdASq7ANjU7Iy3LTkcU6w68cIEGfY5TJi+BjwzDRePVobLfE26SFE+Vy?=
- =?iso-8859-1?Q?h7OccHSjNp3H5w+s49YmslOkd2r1iTCZGnN4FRqCDD9fLImRYImyYvM8Rk?=
- =?iso-8859-1?Q?Zc/s4bxeWCVm5Gm81oT7Gwd46C+ugLHsmvqGQ1nhXfb7u6WflKf2EFPwWq?=
- =?iso-8859-1?Q?yASLG9kTfpx69sDxPHHFdn1tOV/VyI8pfaAQVyEtgJ7ecpPG9rTz8qqeX/?=
- =?iso-8859-1?Q?F/e9LJQ1KVYpOBVJdkbyYFaSkqEod+JkZTlZAkCmUd7tXPHFoTAlUAeA?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v6 5/5] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+Date:   Sun, 13 Nov 2022 17:15:45 +0000
+Message-Id: <20221113171545.282457-6-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221113171545.282457-1-biju.das.jz@bp.renesas.com>
+References: <20221113171545.282457-1-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a0e0375-4195-4f6d-8c38-08dac490ec3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2022 09:33:14.3915
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6P9748Vz0WbvKbI9Cac6qKyURVPdLdDXeSgIjKqLkARqi65YVZ5jIoRtcAS22X93veP4f2/kxzDkU2gZRC46fQPFVVlFUuO7EA/3ld4g0GU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB9331
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Rob and Krzysztof Kozlowski,
+Add support for RZ/G2L MTU3a PWM driver. The IP supports
+following PWM modes
 
-> Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: rzg2l-gpt: Document
-> renesas,poegs property
->=20
->=20
-> On Fri, 11 Nov 2022 19:29:41 +0000, Biju Das wrote:
-> > RZ/G2L GPT IP supports output pin disable function by dead time error
-> > and detecting short-circuits between output pins.
-> >
-> > Add documentation for the optional property renesas,poegs to link a
-> > pair of GPT IOs with POEG.
-> >
-> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > v1->v2:
-> >  * removed quotes from ref
-> >  * Added maxItems and minItems for renesas,poegs property
-> >  * Added enums for gpt index
-> > ---
-> >  .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 23 +++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
->=20
-> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
->=20
-> yamllint warnings/errors:
->=20
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-
-> ci/linux/Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml:
-> properties:renesas,poegs:items: 'oneOf' conditional failed, one must be
-> fixed:
-> 	{'maxItems': 8, 'minItems': 1, 'items': [{'description': 'phandle to
-> POEG instance that serves the output disable'}, {'enum': [0, 1, 2, 3, 4, =
-5,
-> 6, 7], 'description': 'An index identifying pair of GPT channels.\n  <0> =
-:
-> GPT channels 0 and 1\n  <1> : GPT channels 2 and 3\n  <2> : GPT channels =
-4
-> and 5\n  <3> : GPT channels 6 and 7\n  <4> : GPT channels 8 and 9\n  <5> =
-:
-> GPT channels 10 and 11\n  <6> : GPT channels 12 and 13\n  <7> : GPT chann=
-els
-> 14 and 15\n'}]} should not be valid under {'required': ['maxItems']}
-> 		hint: "maxItems" is not needed with an "items" list
-> 	{'maxItems': 8, 'minItems': 1, 'items': [{'description': 'phandle to
-> POEG instance that serves the output disable'}, {'enum': [0, 1, 2, 3, 4, =
-5,
-> 6, 7], 'description': 'An index identifying pair of GPT channels.\n  <0> =
-:
-> GPT channels 0 and 1\n  <1> : GPT channels 2 and 3\n  <2> : GPT channels =
-4
-> and 5\n  <3> : GPT channels 6 and 7\n  <4> : GPT channels 8 and 9\n  <5> =
-:
-> GPT channels 10 and 11\n  <6> : GPT channels 12 and 13\n  <7> : GPT chann=
-els
-> 14 and 15\n'}]} is not of type 'array'
-> 	from schema $id:
->=20
-> This check can fail if there are any dependencies. The base for a patch
-> series is generally the most recent rc1.
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above error=
-(s),
-> then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->=20
-> pip3 install dtschema --upgrade
->=20
-> Please check and re-submit.
+1) PWM mode{1,2}
+2) Reset-synchronized PWM mode
+3) Complementary PWM mode{1,2,3}
 
-I am able to reproduce the issue reported by bot[1]. Looks like we should n=
-ot add maxItems for Items.
-The check is passing, if we just add minItems for Items.
+This patch adds basic pwm mode 1 support for RZ/G2L MTU3a pwm driver
+by creating separate logical channels for each IOs.
 
-Please let me know shall I drop maxItems and just add minItems with an "ite=
-ms" list?
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+v5->v6:
+ * Updated commit and Kconfig description
+ * Sorted the header
+ * Replaced dev_get_drvdata from rz_mtu3_pwm_pm_disable()
+ * Replaced SET_RUNTIME_PM_OPS->DEFINE_RUNTIME_DEV_PM_OPS and removed
+   __maybe_unused from suspend/resume()
+v4->v5:
+ * pwm device is instantiated by mtu3a core driver.
+v3->v4:
+ * There is no resource associated with "rz-mtu3-pwm" compatible
+   and moved the code to mfd subsystem as it binds against "rz-mtu".
+ * Removed struct platform_driver rz_mtu3_pwm_driver.
+v2->v3:
+ * No change.
+v1->v2:
+ * Modelled as a single PWM device handling multiple channles.
+ * Used PM framework to manage the clocks.
+---
+ drivers/pwm/Kconfig       |  11 +
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-rz-mtu3.c | 455 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 467 insertions(+)
+ create mode 100644 drivers/pwm/pwm-rz-mtu3.c
 
-Or
-
-Drop both from "items" list.
-
-
-[1]
-~/dt-binding-check.sh Documentation/devicetree/bindings/pwm/renesas,rzg2l-g=
-pt.yaml
-bindings file ###  Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.=
-yaml ####
-checking bindings
-  LINT    Documentation/devicetree/bindings
-  CHKDT   Documentation/devicetree/bindings/processed-schema.json
-/home/biju/renesas-devel/Documentation/devicetree/bindings/pwm/renesas,rzg2=
-l-gpt.yaml: properties:renesas,poegs:items: 'oneOf' conditional failed, one=
- must be fixed:
-	{'maxItems': 8, 'minItems': 1, 'items': [{'description': 'phandle to POEG =
-instance that serves the output disable'}, {'enum': [0, 1, 2, 3, 4, 5, 6, 7=
-], 'description': 'An index identifying pair of GPT channels.\n  <0> : GPT =
-channels 0 and 1\n  <1> : GPT channels 2 and 3\n  <2> : GPT channels 4 and =
-5\n  <3> : GPT channels 6 and 7\n  <4> : GPT channels 8 and 9\n  <5> : GPT =
-channels 10 and 11\n  <6> : GPT channels 12 and 13\n  <7> : GPT channels 14=
- and 15\n'}]} should not be valid under {'required': ['maxItems']}
-		hint: "maxItems" is not needed with an "items" list
-	{'maxItems': 8, 'minItems': 1, 'items': [{'description': 'phandle to POEG =
-instance that serves the output disable'}, {'enum': [0, 1, 2, 3, 4, 5, 6, 7=
-], 'description': 'An index identifying pair of GPT channels.\n  <0> : GPT =
-channels 0 and 1\n  <1> : GPT channels 2 and 3\n  <2> : GPT channels 4 and =
-5\n  <3> : GPT channels 6 and 7\n  <4> : GPT channels 8 and 9\n  <5> : GPT =
-channels 10 and 11\n  <6> : GPT channels 12 and 13\n  <7> : GPT channels 14=
- and 15\n'}]} is not of type 'array'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-  DTC_CHK Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.example.d=
-tb
-
-Cheers,
-Biju
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 60d13a949bc5..18a7cc6a7fc9 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -481,6 +481,17 @@ config PWM_ROCKCHIP
+ 	  Generic PWM framework driver for the PWM controller found on
+ 	  Rockchip SoCs.
+ 
++config PWM_RZ_MTU3
++	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
++	depends on RZ_MTU3 || COMPILE_TEST
++	depends on HAS_IOMEM
++	help
++	  This driver exposes the MTU3a PWM Timer controller found in Renesas
++	  RZ/G2L like chips through the PWM API.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-rz-mtu3.
++
+ config PWM_SAMSUNG
+ 	tristate "Samsung PWM support"
+ 	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 7bf1a29f02b8..b85fc9fba326 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -44,6 +44,7 @@ obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+= pwm-raspberrypi-poe.o
+ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
+ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
++obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
+ obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+ obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+ obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
+new file mode 100644
+index 000000000000..838d94604788
+--- /dev/null
++++ b/drivers/pwm/pwm-rz-mtu3.c
+@@ -0,0 +1,455 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Renesas RZ/G2L MTU3a PWM Timer driver
++ *
++ * Copyright (C) 2022 Renesas Electronics Corporation
++ *
++ * Hardware manual for this IP can be found here
++ * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-users-manual-hardware-0?language=en
++ *
++ * Limitations:
++ * - When PWM is disabled, the output is driven to Hi-Z.
++ * - While the hardware supports both polarities, the driver (for now)
++ *   only handles normal polarity.
++ * - While the hardware supports pwm mode{1,2}, reset-synchronized pwm and
++ *   complementary pwm modes, the driver (for now) only handles pwm mode1.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/limits.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pwm.h>
++#include <linux/time.h>
++
++#include <clocksource/rz-mtu3.h>
++
++#define RZ_MTU3_TMDR1_MD_NORMAL		(0)
++#define RZ_MTU3_TMDR1_MD_PWM_MODE_1	(2)
++
++#define RZ_MTU3_TIOR_OC_RETAIN		(0)
++#define RZ_MTU3_TIOR_OC_0_H_COMP_MATCH	(2)
++#define RZ_MTU3_TIOR_OC_1_TOGGLE	(7)
++#define RZ_MTU3_TIOR_OC_IOA		GENMASK(3, 0)
++
++#define RZ_MTU3_TCR_CCLR_TGRC		(5 << 5)
++#define RZ_MTU3_TCR_CKEG_RISING		(0 << 3)
++
++#define RZ_MTU3_TCR_TPCS		GENMASK(2, 0)
++
++#define RZ_MTU3_MAX_PWM_MODE1_CHANNELS	(12)
++
++#define RZ_MTU3_MAX_HW_PWM_CHANNELS	(7)
++
++static const u8 rz_mtu3_pwm_mode1_num_ios[] = { 2, 1, 1, 2, 2, 2, 2 };
++
++/**
++ * struct rz_mtu3_pwm_chip - MTU3 pwm private data
++ *
++ * @chip: MTU3 pwm chip data
++ * @clk: MTU3 module clock
++ * @lock: Lock to prevent concurrent access for usage count
++ * @rate: MTU3 clock rate
++ * @user_count: MTU3 usage count
++ * @rz_mtu3_channel: HW channels for the PWM
++ */
++
++struct rz_mtu3_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	struct mutex lock;
++	unsigned long rate;
++	u32 user_count[RZ_MTU3_MAX_HW_PWM_CHANNELS];
++	struct rz_mtu3_channel *ch[RZ_MTU3_MAX_HW_PWM_CHANNELS];
++};
++
++static inline struct rz_mtu3_pwm_chip *to_rz_mtu3_pwm_chip(struct pwm_chip *chip)
++{
++	return container_of(chip, struct rz_mtu3_pwm_chip, chip);
++}
++
++static u8 rz_mtu3_pwm_calculate_prescale(struct rz_mtu3_pwm_chip *rz_mtu3,
++					 u64 period_cycles)
++{
++	u32 prescaled_period_cycles;
++	u8 prescale;
++
++	prescaled_period_cycles = period_cycles >> 16;
++	if (prescaled_period_cycles >= 16)
++		prescale = 3;
++	else
++		prescale = (fls(prescaled_period_cycles) + 1) / 2;
++
++	return prescale;
++}
++
++static struct rz_mtu3_channel *
++rz_mtu3_get_hw_channel(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u32 channel)
++{
++	unsigned int i, ch_index = 0;
++
++	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
++		ch_index += rz_mtu3_pwm_mode1_num_ios[i];
++
++		if (ch_index > channel)
++			break;
++	}
++
++	return rz_mtu3_pwm->ch[i];
++}
++
++static u32 rz_mtu3_get_hw_channel_index(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++					struct rz_mtu3_channel *ch)
++{
++	u32 i;
++
++	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
++		if (ch == rz_mtu3_pwm->ch[i])
++			break;
++	}
++
++	return i;
++}
++
++static bool rz_mtu3_pwm_is_second_channel(u32 ch_index, u32 hwpwm)
++{
++	u32 i, pwm_ch_index = 0;
++
++	for (i = 0; i < ch_index; i++)
++		pwm_ch_index += rz_mtu3_pwm_mode1_num_ios[i];
++
++	return pwm_ch_index != hwpwm;
++}
++
++static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++				      u32 hwpwm)
++{
++	struct rz_mtu3_channel *ch;
++	bool is_channel_en;
++	u32 ch_index;
++	u8 val;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	is_channel_en = rz_mtu3_is_enabled(ch);
++
++	if (rz_mtu3_pwm_is_second_channel(ch_index, hwpwm))
++		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORL);
++	else
++		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORH);
++
++	return (is_channel_en && (val & RZ_MTU3_TIOR_OC_IOA));
++}
++
++static int rz_mtu3_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++
++	mutex_lock(&rz_mtu3_pwm->lock);
++	rz_mtu3_pwm->user_count[ch_index]++;
++	mutex_unlock(&rz_mtu3_pwm->lock);
++
++	ch->function = RZ_MTU3_PWM_MODE_1;
++
++	return 0;
++}
++
++static void rz_mtu3_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++
++	mutex_lock(&rz_mtu3_pwm->lock);
++	rz_mtu3_pwm->user_count[ch_index]--;
++	mutex_unlock(&rz_mtu3_pwm->lock);
++
++	if (!rz_mtu3_pwm->user_count[ch_index])
++		ch->function = RZ_MTU3_NORMAL;
++}
++
++static int rz_mtu3_pwm_enable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++			      struct pwm_device *pwm)
++{
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++	u8 val;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	val = (RZ_MTU3_TIOR_OC_1_TOGGLE << 4) | RZ_MTU3_TIOR_OC_0_H_COMP_MATCH;
++
++	rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_PWM_MODE_1);
++	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, val);
++	else
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, val);
++
++	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
++		rz_mtu3_enable(ch);
++
++	return 0;
++}
++
++static void rz_mtu3_pwm_disable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++				struct pwm_device *pwm)
++{
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++
++	/* Return to normal mode and disable output pins of MTU3 channel */
++	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_NORMAL);
++
++	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, RZ_MTU3_TIOR_OC_RETAIN);
++	else
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, RZ_MTU3_TIOR_OC_RETAIN);
++
++	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
++		rz_mtu3_disable(ch);
++}
++
++static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			      const struct pwm_state *state)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	unsigned long pv, dc;
++	u64 period_cycles;
++	u64 duty_cycles;
++	u32 ch_index;
++	u8 prescale;
++	u8 val;
++
++	/*
++	 * Refuse clk rates > 1 GHz to prevent overflowing the following
++	 * calculation.
++	 */
++	if (rz_mtu3_pwm->rate > NSEC_PER_SEC)
++		return -EINVAL;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	duty_cycles = state->duty_cycle;
++	if (!state->enabled)
++		duty_cycles = 0;
++
++	period_cycles = mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
++					NSEC_PER_SEC);
++	prescale = rz_mtu3_pwm_calculate_prescale(rz_mtu3_pwm, period_cycles);
++
++	if (period_cycles >> (2 * prescale) <= U16_MAX)
++		pv = period_cycles >> (2 * prescale);
++	else
++		pv = U16_MAX;
++
++	duty_cycles = mul_u64_u32_div(duty_cycles, rz_mtu3_pwm->rate,
++				      NSEC_PER_SEC);
++	if (duty_cycles >> (2 * prescale) <= U16_MAX)
++		dc = duty_cycles >> (2 * prescale);
++	else
++		dc = U16_MAX;
++
++	val = RZ_MTU3_TCR_CKEG_RISING | prescale;
++	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
++				      RZ_MTU3_TCR_CCLR_TGRC | val);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRD, dc);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRC, pv);
++	} else {
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
++				      RZ_MTU3_TCR_CCLR_TGRA | val);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRB, dc);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRA, pv);
++	}
++
++	return 0;
++}
++
++static void rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				  struct pwm_state *state)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	u8 prescale, val;
++	u32 ch_index;
++	u16 dc, pv;
++	u64 tmp;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	pm_runtime_get_sync(chip->dev);
++	state->enabled = rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, pwm->hwpwm);
++	if (state->enabled) {
++		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TCR);
++		prescale = FIELD_GET(RZ_MTU3_TCR_TPCS, val);
++
++		if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
++			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRD);
++			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRC);
++		} else {
++			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRB);
++			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRA);
++		}
++
++		tmp = NSEC_PER_SEC * (u64)pv << (2 * prescale);
++		state->period = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
++
++		tmp = NSEC_PER_SEC * (u64)dc << (2 * prescale);
++		state->duty_cycle = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
++	}
++
++	state->polarity = PWM_POLARITY_NORMAL;
++	pm_runtime_put(chip->dev);
++}
++
++static int rz_mtu3_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			     const struct pwm_state *state)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct pwm_state cur_state;
++	bool enabled;
++	int ret;
++
++	cur_state = pwm->state;
++	enabled = cur_state.enabled;
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (!enabled && state->enabled)
++		pm_runtime_get_sync(chip->dev);
++
++	ret = rz_mtu3_pwm_config(chip, pwm, state);
++	if (ret && state->enabled)
++		goto done;
++
++	if (!state->enabled) {
++		if (enabled)
++			rz_mtu3_pwm_disable(rz_mtu3_pwm, pwm);
++		ret = 0;
++		goto done;
++	}
++
++	return rz_mtu3_pwm_enable(rz_mtu3_pwm, pwm);
++done:
++	if (enabled && !state->enabled)
++		pm_runtime_put(chip->dev);
++	return ret;
++}
++
++static const struct pwm_ops rz_mtu3_pwm_ops = {
++	.request = rz_mtu3_pwm_request,
++	.free = rz_mtu3_pwm_free,
++	.get_state = rz_mtu3_pwm_get_state,
++	.apply = rz_mtu3_pwm_apply,
++	.owner = THIS_MODULE,
++};
++
++static int rz_mtu3_pwm_pm_runtime_suspend(struct device *dev)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(dev);
++
++	clk_disable_unprepare(rz_mtu3_pwm->clk);
++
++	return 0;
++}
++
++static int rz_mtu3_pwm_pm_runtime_resume(struct device *dev)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(dev);
++
++	clk_prepare_enable(rz_mtu3_pwm->clk);
++
++	return 0;
++}
++
++static DEFINE_RUNTIME_DEV_PM_OPS(rz_mtu3_pwm_pm_ops,
++				 rz_mtu3_pwm_pm_runtime_suspend,
++				 rz_mtu3_pwm_pm_runtime_resume, NULL);
++
++static void rz_mtu3_pwm_pm_disable(void *data)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = data;
++
++	pm_runtime_disable(rz_mtu3_pwm->chip.dev);
++	pm_runtime_set_suspended(rz_mtu3_pwm->chip.dev);
++}
++
++static int rz_mtu3_pwm_probe(struct platform_device *pdev)
++{
++	struct rz_mtu3 *ddata = dev_get_drvdata(pdev->dev.parent);
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm;
++	struct device *dev = &pdev->dev;
++	int num_pwm_hw_ch = 0;
++	unsigned int i;
++	int ret;
++
++	rz_mtu3_pwm = devm_kzalloc(&pdev->dev, sizeof(*rz_mtu3_pwm), GFP_KERNEL);
++	if (!rz_mtu3_pwm)
++		return -ENOMEM;
++
++	rz_mtu3_pwm->clk = ddata->clk;
++	rz_mtu3_pwm->rate = clk_get_rate(rz_mtu3_pwm->clk);
++	for (i = 0; i < RZ_MTU_NUM_CHANNELS; i++) {
++		if (i == RZ_MTU5 || i == RZ_MTU8)
++			continue;
++
++		rz_mtu3_pwm->ch[num_pwm_hw_ch] = &ddata->channels[i];
++		rz_mtu3_pwm->ch[num_pwm_hw_ch]->dev = dev;
++		num_pwm_hw_ch++;
++	}
++
++	mutex_init(&rz_mtu3_pwm->lock);
++	platform_set_drvdata(pdev, rz_mtu3_pwm);
++	clk_prepare_enable(rz_mtu3_pwm->clk);
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++	ret = devm_add_action_or_reset(&pdev->dev,
++				       rz_mtu3_pwm_pm_disable,
++				       rz_mtu3_pwm);
++	if (ret < 0)
++		goto disable_clock;
++
++	rz_mtu3_pwm->chip.dev = &pdev->dev;
++	rz_mtu3_pwm->chip.ops = &rz_mtu3_pwm_ops;
++	rz_mtu3_pwm->chip.npwm = RZ_MTU3_MAX_PWM_MODE1_CHANNELS;
++	ret = devm_pwmchip_add(&pdev->dev, &rz_mtu3_pwm->chip);
++	if (ret) {
++		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
++		goto disable_clock;
++	}
++
++	return 0;
++
++disable_clock:
++	clk_disable_unprepare(rz_mtu3_pwm->clk);
++	return ret;
++}
++
++static struct platform_driver rz_mtu3_pwm_driver = {
++	.driver = {
++		.name = "pwm-rz-mtu3",
++		.pm = pm_ptr(&rz_mtu3_pwm_pm_ops),
++	},
++	.probe = rz_mtu3_pwm_probe,
++};
++module_platform_driver(rz_mtu3_pwm_driver);
++
++MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
++MODULE_ALIAS("platform:pwm-rz-mtu3");
++MODULE_DESCRIPTION("Renesas RZ/G2L MTU3a PWM Timer Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
