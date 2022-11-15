@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D1962961F
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Nov 2022 11:41:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34D7B62965E
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Nov 2022 11:52:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238210AbiKOKlQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Nov 2022 05:41:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
+        id S232197AbiKOKwp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Nov 2022 05:52:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiKOKlC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Nov 2022 05:41:02 -0500
+        with ESMTP id S238384AbiKOKvl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Nov 2022 05:51:41 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2562126A
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Nov 2022 02:41:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6404926AC6
+        for <linux-pwm@vger.kernel.org>; Tue, 15 Nov 2022 02:51:23 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1outNC-0008RG-0W; Tue, 15 Nov 2022 11:40:58 +0100
+        id 1outXE-00026F-LC; Tue, 15 Nov 2022 11:51:20 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1outN9-004QDI-TC; Tue, 15 Nov 2022 11:40:56 +0100
+        id 1outXC-004QF8-Tg; Tue, 15 Nov 2022 11:51:19 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1outN9-00GlmM-PO; Tue, 15 Nov 2022 11:40:55 +0100
-Date:   Tue, 15 Nov 2022 11:40:55 +0100
+        id 1outXD-00GlyV-13; Tue, 15 Nov 2022 11:51:19 +0100
+Date:   Tue, 15 Nov 2022 11:51:18 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org
-Subject: Re: [PATCH 4/5] pwm: jz4740: Depend on MACH_INGENIC instead of MIPS
-Message-ID: <20221115104055.3fd4eucczdyis35x@pengutronix.de>
+Subject: Re: [PATCH 5/5] pwm: jz4740: Use regmap_{set,clear}_bits
+Message-ID: <20221115105118.l6lbxml555wsymwh@pengutronix.de>
 References: <20221024205213.327001-1-paul@crapouillou.net>
- <20221024205213.327001-5-paul@crapouillou.net>
+ <20221024205213.327001-6-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="atoqpczjl5krckc7"
+        protocol="application/pgp-signature"; boundary="gnihahu4i6fskmsc"
 Content-Disposition: inline
-In-Reply-To: <20221024205213.327001-5-paul@crapouillou.net>
+In-Reply-To: <20221024205213.327001-6-paul@crapouillou.net>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -54,26 +54,64 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---atoqpczjl5krckc7
+--gnihahu4i6fskmsc
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 24, 2022 at 09:52:12PM +0100, Paul Cercueil wrote:
-> The MACH_INGENIC Kconfig option will be selected when building a kernel
-> targeting Ingenic SoCs, but also when compiling a generic MIPS kernel
-> that happens to support Ingenic SoCs.
->=20
-> Therefore, if MACH_INGENIC is not set, we know that we're not even
-> trying to build a generic kernel that supports these SoCs, and we can
-> hide the options to compile the SoC-specific drivers.
+Hello,
+
+On Mon, Oct 24, 2022 at 09:52:13PM +0100, Paul Cercueil wrote:
+> Simplify a bit the code by using regmap_set_bits() and
+> regmap_clear_bits() instead of regmap_update_bits() when possible.
 >=20
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/pwm/pwm-jz4740.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+> index c0afc0c316a8..22fcdca66081 100644
+> --- a/drivers/pwm/pwm-jz4740.c
+> +++ b/drivers/pwm/pwm-jz4740.c
+> @@ -88,8 +88,7 @@ static int jz4740_pwm_enable(struct pwm_chip *chip, str=
+uct pwm_device *pwm)
+>  	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
+> =20
+>  	/* Enable PWM output */
+> -	regmap_update_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm),
+> -			   TCU_TCSR_PWM_EN, TCU_TCSR_PWM_EN);
+> +	regmap_set_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm), TCU_TCSR_PWM_EN);
+> =20
+>  	/* Start counter */
+>  	regmap_write(jz->map, TCU_REG_TESR, BIT(pwm->hwpwm));
+> @@ -129,8 +128,7 @@ static void jz4740_pwm_disable(struct pwm_chip *chip,=
+ struct pwm_device *pwm)
+>  	 * In TCU2 mode (channel 1/2 on JZ4750+), this must be done before the
+>  	 * counter is stopped, while in TCU1 mode the order does not matter.
+>  	 */
+> -	regmap_update_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm),
+> -			   TCU_TCSR_PWM_EN, 0);
+> +	regmap_clear_bits(jz->map, TCU_REG_TCSRc(pwm->hwpwm), TCU_TCSR_PWM_EN);
+> =20
+>  	/* Stop counter */
+>  	regmap_write(jz->map, TCU_REG_TECR, BIT(pwm->hwpwm));
+> @@ -204,8 +202,8 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  	regmap_write(jz4740->map, TCU_REG_TDFRc(pwm->hwpwm), period);
+> =20
+>  	/* Set abrupt shutdown */
+> -	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+> -			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
+> +	regmap_set_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+> +			TCU_TCSR_PWM_SD);
+
+Nitpick: the regmap_set_bits call is short enough to be put on a single
+line.
+
+Other than that (and even if the line is kept as is):
 
 Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-(This patch even makes sense to apply independent of the other patches
-in this series.)
 
 Best regards
 Uwe
@@ -82,19 +120,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---atoqpczjl5krckc7
+--gnihahu4i6fskmsc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNzbLQACgkQwfwUeK3K
-7Alzogf+ILMdlQn3A08HYWQlRyMzbsMF0SqYrmQUinxxIUy8OYSIKdw0qjLPbRcx
-sbDdBZrIVUo7GLxaYz6Eq5zwxdJOADFzAWvfXHt1gPhgIx6oQJst/jvgfxGM2PBd
-yhdsjFntgYBUFiEGRJkviooq6J2C8YlmvLCAVgkH7gRAFlgBq84zcg42dc/35Xli
-gsyeVPjaOTqeHxP3X7eRBf0MtjGRpb0jfhUys0HF+ZxKjOCaPn0F+JFBY+8CHuB9
-fWB17dxA75H7C9ZCPUfo+RsI3RVds8Emjezy4XLNAxIQ0dHxQBMy2+Lct3ekmisw
-MmsaccOJP6vqRG5InoCANNqQqtSQAQ==
-=k2OR
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNzbyQACgkQwfwUeK3K
+7AmbSwf/Vbly63K/TVaQF/YqwCnO4NaI6X6YWFJGufARIlaIZaZrEjKE6vNPlZ9N
+oY5JFoew3R8sORqUkCd5NYoj6I4MObKpbXYqfI3Ws23JEbdAXxNWdAmcCTJoajeu
+1pT8AoKG/2oGjJymU+sX4G++cbxayOfS1C+osRll+fqJSoBibQaL8n6wu3kxp4iy
+aTMHB2RMrZucPHOnGzz8tpUiiGwAT60YCiEN/bGWjen43qWxiR0F933jJXqcx2qM
+ofCPSYmp1tRxdfQDXj5j4S9z4OFnIfEoTwOMJL02aXukqbZZhVELu6RjKVuQsGYF
+SV3kNxtNNYUzhjfvsM5B1Kt6KiHyyw==
+=CVFN
 -----END PGP SIGNATURE-----
 
---atoqpczjl5krckc7--
+--gnihahu4i6fskmsc--
