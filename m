@@ -2,91 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD85662A3D3
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Nov 2022 22:15:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0815362A45B
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Nov 2022 22:41:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231196AbiKOVPi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Nov 2022 16:15:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42802 "EHLO
+        id S238900AbiKOVlW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Nov 2022 16:41:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbiKOVPg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Nov 2022 16:15:36 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A6D1F629
-        for <linux-pwm@vger.kernel.org>; Tue, 15 Nov 2022 13:15:35 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ov3HJ-0005C2-FR; Tue, 15 Nov 2022 22:15:33 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ov3HH-004WcV-Tr; Tue, 15 Nov 2022 22:15:32 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ov3HI-00GukD-2s; Tue, 15 Nov 2022 22:15:32 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH 4/4] pwm: Don't initialize list head before calling list_add()
-Date:   Tue, 15 Nov 2022 22:15:15 +0100
-Message-Id: <20221115211515.3750209-5-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221115211515.3750209-1-u.kleine-koenig@pengutronix.de>
-References: <20221115211515.3750209-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S238858AbiKOVkw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Nov 2022 16:40:52 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62823303C5;
+        Tue, 15 Nov 2022 13:40:45 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id i10so30809756ejg.6;
+        Tue, 15 Nov 2022 13:40:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FN9fNzRPynZshOvz1sD/ekra6/Y60pLuVwbdRfSMmpY=;
+        b=AoTcG+nryjYFo/HbwfQFUiJOx+15cUyilJQXqytwKEHJWeBZxJwrM5AZPu0Baq6IpV
+         2ognOIa39AcdG8uRG8kyzv4XuFgsqa/ODt5i4O3FgjjrmqNguDDWu/tssEVMIU0mzGGG
+         l4VK3XWP1clx6o8B7yuHxkfa4aNgXaFBUx/ekapGUGzmu65Vj9tmLqVZ9uE5/50ygavn
+         BivPC7YkH/NNV805A3bf72LSZdqN4iIzB83iJtSBoREHhtjMzieQ5Uwcf25+ZYIpmpDN
+         kPCwcbw8Y0bnT9xrEiPUoRjG/d8cSGSSqiJMvV+nmdx/LlEDofbSfzOsZHTDRcAB0eYg
+         N9EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FN9fNzRPynZshOvz1sD/ekra6/Y60pLuVwbdRfSMmpY=;
+        b=DyIV/x4FD5fGDVW5RdS6SxQqe79Rs332PRe1W46lHiP2ghbkrZf/WIGtEUyEHpsv6G
+         aVj6wxorfhWkW+QWBTzH7YxZTYpy5TKUFW1M5OGwjnA1yCrOTpS3ezrZWSNKK3z+TE9d
+         5DPB9I6gxQDM7T4WWBR1KFWUXGpiLbPHIOTvFJz6IGI8+JhGTjUlMpnTl4diWLvf+ZRq
+         6xsBKLe3sO+u/oMBzg/UI2bi+g/j9/vhsRZR3f6v6Rgu7mNl/ArHuLJwD2YcCdkUVOTJ
+         o6Dke1+hsSL2SiDO97n4I2wX8zYGq29G0f2+1qc9MggARX94hZt9PBmT1kV8T0Yxqcmy
+         9h1Q==
+X-Gm-Message-State: ANoB5pmK0WVwg7QLzJam/jjIRJDNYJ60UtisX0BqbXbdHPWIVbSWHA6k
+        5iyPoNQV5gM241G9GwYzQrU=
+X-Google-Smtp-Source: AA0mqf5OJQW6ihS4SMk+yXRV3FrfzvFIX29Ff9k1lefBMoiTwIoglHQEOV9MXsYoGW0Vf5MAwvwakA==
+X-Received: by 2002:a17:906:a1d9:b0:78d:b371:16e5 with SMTP id bx25-20020a170906a1d900b0078db37116e5mr14993448ejb.456.1668548443979;
+        Tue, 15 Nov 2022 13:40:43 -0800 (PST)
+Received: from jernej-laptop.localnet (82-149-19-102.dynamic.telemach.net. [82.149.19.102])
+        by smtp.gmail.com with ESMTPSA id kx7-20020a170907774700b00787f91a6b16sm6025823ejc.26.2022.11.15.13.40.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 13:40:43 -0800 (PST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Icenowy Zheng <uwu@icenowy.me>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] ARM: dts: suniv: f1c100s: add PWM node
+Date:   Tue, 15 Nov 2022 22:40:42 +0100
+Message-ID: <7449883.EvYhyI6sBW@jernej-laptop>
+In-Reply-To: <Y3NpCKONx/0/COAv@orome>
+References: <20221107005433.11079-1-andre.przywara@arm.com> <20221115101926.dldj6ralahdzhj7k@pengutronix.de> <Y3NpCKONx/0/COAv@orome>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1012; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=YW3mBqZ7La41Wb9SLeoLhl8wDMBGwJ2RzU7YOl5SQBE=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjdAFgbOa95Z13KU1LcmxBWu5VVZjas+KtO3JBsMPy r20F8yeJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY3QBYAAKCRDB/BR4rcrsCRwQB/ 938DL+ClTjEMeI52IZYFZL9fNc3sjnhVOmJbLUpSL+Wv++06cCZ6hGinZZ8eeWHQDz816frRz0igny oJVKSvPnO7Ofr6UJLBtVgmlDAELssuh3NgOJ1McbjxlTRvwz3EMfK8hZlWGSEsWVyN5Kb4RCZKogEm x4t2kXSLwlZgQCUC0MNe+ZgKU++fVlU5ZDGX5pydpN0bxPAPCQud4lgnKitu2EZSB+/ODU9YVZAhCg XMPni2CEu9CtncF2CnSSlcrc+srROSJhZ3aXHDwYFSQVANzRwMLwELA0kG8dbKIGIpS1THCY+K6Fi+ HNeeWQYngSsa3XPhuJsYrqVGFMVvyl
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-list_add() just overwrites the members of the element to add (here:
-chip->list) without any checks, even in the DEBUG_LIST case. So save the
-effort to initialize the list.
+Dne torek, 15. november 2022 ob 11:25:12 CET je Thierry Reding napisal(a):
+> On Tue, Nov 15, 2022 at 11:19:26AM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Nov 07, 2022 at 12:54:25AM +0000, Andre Przywara wrote:
+> > > The Allwinner F1C100s family of SoCs contain a PWM controller compati=
+ble
+> > > to the one used in the A20 chip.
+> > > Add the DT node so that any users can simply enable it in their board
+> > > DT.
+> > >=20
+> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> >=20
+> > I checked "by hand" that this matches the modified binding in patch
+> > 01/10.
+> >=20
+> > Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > I assume the whole series will go in via a tree different from the PWM
+> > tree? While this is Thierry's area of maintenance, I'd be surprised if
+> > he had concerns about that.
+>=20
+> Yeah, it's probably best for the Allwinner maintainers to pick this up
+> into their tree so that the bindings changes go along with the DT
+> changes.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+Yeah, that's the plan. I'll merge it in following days.
 
-this patch I'm not sure about. A quick grep shows there are (only?) 40
-more code locations that call INIT_LIST_HEAD just before list_add().
-In my understanding INIT_LIST_HEAD is only to initialize lists, but
-chip->list is not a list, but the data needed to track chip as a list
-member.
+Best regards,
+Jernej
 
-Best regards
-Uwe
+>=20
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
- drivers/pwm/core.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index b43b24bd3c9f..61bacd8d9b44 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -299,7 +299,6 @@ int pwmchip_add(struct pwm_chip *chip)
- 		radix_tree_insert(&pwm_tree, pwm->pwm, pwm);
- 	}
- 
--	INIT_LIST_HEAD(&chip->list);
- 	list_add(&chip->list, &pwm_chips);
- 
- 	mutex_unlock(&pwm_lock);
--- 
-2.38.1
+
 
