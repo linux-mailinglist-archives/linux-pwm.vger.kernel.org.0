@@ -2,329 +2,144 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3577C62C6B1
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Nov 2022 18:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B7E862CAA5
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Nov 2022 21:20:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238806AbiKPRqj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Nov 2022 12:46:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59118 "EHLO
+        id S233801AbiKPUUq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Nov 2022 15:20:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238910AbiKPRqb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Nov 2022 12:46:31 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD84606BA
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 09:46:30 -0800 (PST)
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com [209.85.128.200])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 9C0E93F118
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 17:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1668620788;
-        bh=4AikLGaaRUfhbk2bEF5rHdnylOb482nhbBui5gJ2EGE=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=mCAxYyeUK9qT0Wzoq6t7z0cINL4sn3OXfWuqH1OIg+qQwpx1UzRWTeQjRWRX/wo56
-         m9Mw8rP/9ZotFIU7IiRsFLdSC1mF/3I5zfEo0FiBvyMYId5rvROMzsUjE0gQQcP0sQ
-         D7kTDClhaB5DGAfMf+VzimZiPERCRKmgQHGH8id0fB8q4Kp/HYKo4T37JCgQhknOvh
-         982RrPCerziPsseNvB+OTW31Jnr25VbQcWggEvJWRCI28dISLk0UF3dhKKDTeyfimh
-         H5WJ0XshqwlnA3mEW3n8Rj8S9Io26YxYFaIz5sDfwFztFcIlljF+y27QoiA9fF5rzI
-         wrguZhCuDkmXg==
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-37010fefe48so168889297b3.19
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 09:46:28 -0800 (PST)
+        with ESMTP id S229863AbiKPUUo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Nov 2022 15:20:44 -0500
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9312349B49;
+        Wed, 16 Nov 2022 12:20:43 -0800 (PST)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-13b103a3e5dso21486084fac.2;
+        Wed, 16 Nov 2022 12:20:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4AikLGaaRUfhbk2bEF5rHdnylOb482nhbBui5gJ2EGE=;
-        b=G6a88n4e5/cG6tZ4YlV1Qk3hLfP0zgrabotjjKgR81Ova7ffq7OvFK8biF7cQlZS6r
-         qmOpqgAmAgLPx3Sfm1Fq6Z+0xAA7G8eHHJUFQk87eJpQvsY4yznnwLFgHcdG27EeCDeM
-         oIPrvqUAQ7uXn1Q+Lptkd5l2ULjQh746+pX14Dx4GrpxMfUc3XWT5mnWoRourrICl7Q4
-         iTGtTUebTZkTgHyFtr2bcLR2ef5NG0l9k5T5QxcqFXoIFFmYbPnRBU2l59nOfKwN83mC
-         kBxyrPx+nYaHn2bkEIjUPRdbytM8KZ9NSDkhdLARhPtHwaHfcdanJUsLjDW9zKgyx0y7
-         lCYA==
-X-Gm-Message-State: ANoB5pkoZCVzoU3IenahvXrUCPbc6mauGgXrkqGzXj5Qc+xAlwF+Iy3m
-        eUXAo+TAaLs+gXgnrnjO/aAANScoo+nwcsul+aPzs4SoK08g4fgMcuuEOcSaxzS8An6iROKbaGv
-        ye451FMDP21pFJWpMG+rpRzUeN1esVUa5iEajtE2G+qjz84RfHnzJhg==
-X-Received: by 2002:a25:3497:0:b0:6de:39c1:9cb3 with SMTP id b145-20020a253497000000b006de39c19cb3mr22057426yba.469.1668620787621;
-        Wed, 16 Nov 2022 09:46:27 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7RNs66NDb3yC0x90rriGZ5DsnRW6Xa2raxaqyUNgcN4zYhnONnWEP/fltQqyK9JobEXZnAXqTmdFhVCFKan3o=
-X-Received: by 2002:a25:3497:0:b0:6de:39c1:9cb3 with SMTP id
- b145-20020a253497000000b006de39c19cb3mr22057403yba.469.1668620787354; Wed, 16
- Nov 2022 09:46:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20221109113724.519021-1-emil.renner.berthing@canonical.com>
- <20221109120102.ylnseq2w33rvt7fz@pengutronix.de> <CAJM55Z-EVXB6FTWwh_vY_B3LoVv+b7TCQCE7asB8G8wkEwui_g@mail.gmail.com>
- <20221109153311.cszr7fgfmyelwra3@pengutronix.de> <CAJM55Z8vpJ0XtQqnsFMLE4rkyV11ePbNjtYx0u4pgM9-MT=Kvg@mail.gmail.com>
-In-Reply-To: <CAJM55Z8vpJ0XtQqnsFMLE4rkyV11ePbNjtYx0u4pgM9-MT=Kvg@mail.gmail.com>
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Date:   Wed, 16 Nov 2022 18:46:10 +0100
-Message-ID: <CAJM55Z_g=fnDQbtupXs7W6Sb7BCMdn9cks9JFhQ_Enu8g8X91g@mail.gmail.com>
-Subject: Re: [PATCH v2] pwm: sifive: Always let the first pwm_apply_state succeed
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Atish Patra <atishp@atishpatra.org>,
-        "Wesley W. Terpstra" <wesley@sifive.com>,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XEQuGcKL75SJczpS8n3Wx3/MDRco2lY+FUfcllX1Fmg=;
+        b=SYYbnH81xqmqe5j9ZKjhT3nrVzuw+cLd1nwf3N2xz/xgfYD/Fey9uoqHCSBaZr2WTJ
+         X+EjI8PSP4MhhoaTbkgqvE0Whf788Bgy9raJF0fSCz2f2dlS/hw+CSN0djoaFVX562ph
+         RSWXQaZk9LE8l6fjMSlOVIaB2tLL1Yg4dvn9ox3HgFYWqkN33K2idTy8IbLm/pcGklYQ
+         xJrD2iwWSgAUhtxygOLTSBg4LhuMDeV/c+lfoRJ63N55b8NPtu+BPRRoAgtaGqksz8Zf
+         ujjcO1ENsGfRkXtD8dH9ZU8eKS3QTHMPe6JZGtcC6xpY6nUnBFq3P5hYxU1qMwF3+6QT
+         /sxw==
+X-Gm-Message-State: ANoB5plqwe07ShMjPTvAv0tuMPKKtpkFQLs6kGPfGGk4xX2UlBwhOfg8
+        sq5l+XTT+++ZtNsNTo5xAA==
+X-Google-Smtp-Source: AA0mqf6cJM8UL+owIfHmCPWPItUvIBfxXKxwkUk4EzquvxuK3D23pz6qif7/7Xu0ndIBjdOUngQVhw==
+X-Received: by 2002:a05:6870:da0f:b0:13b:ab0d:d3ee with SMTP id go15-20020a056870da0f00b0013bab0dd3eemr2675118oab.207.1668630042753;
+        Wed, 16 Nov 2022 12:20:42 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t9-20020a056870638900b0013c955f64dbsm8461765oap.41.2022.11.16.12.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 12:20:42 -0800 (PST)
+Received: (nullmailer pid 823176 invoked by uid 1000);
+        Wed, 16 Nov 2022 20:20:44 -0000
+Date:   Wed, 16 Nov 2022 14:20:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc:     thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+        marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 1/4] dt-bindings: pwm: Add Apple PWM controller
+Message-ID: <20221116202044.GA817431-robh@kernel.org>
+References: <20221111173348.6537-1-fnkl.kernel@gmail.com>
+ <20221111173348.6537-2-fnkl.kernel@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221111173348.6537-2-fnkl.kernel@gmail.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 16 Nov 2022 at 18:41, Emil Renner Berthing
-<emil.renner.berthing@canonical.com> wrote:
->
-> On Wed, 9 Nov 2022 at 16:33, Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > On Wed, Nov 09, 2022 at 01:45:43PM +0100, Emil Renner Berthing wrote:
-> > > On Wed, 9 Nov 2022 at 13:01, Uwe Kleine-K=C3=B6nig
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > >
-> > > > Hello Emil,
-> > > >
-> > > > On Wed, Nov 09, 2022 at 12:37:24PM +0100, Emil Renner Berthing wrot=
-e:
-> > > > > Commit 2cfe9bbec56ea579135cdd92409fff371841904f added support for=
- the
-> > > > > RGB and green PWM controlled LEDs on the HiFive Unmatched board
-> > > > > managed by the leds-pwm-multicolor and leds-pwm drivers respectiv=
-ely.
-> > > > > All three colours of the RGB LED and the green LED run from diffe=
-rent
-> > > > > lines of the same PWM, but with the same period so this works fin=
-e when
-> > > > > the LED drivers are loaded one after the other.
-> > > > >
-> > > > > Unfortunately it does expose a race in the PWM driver when both L=
-ED
-> > > > > drivers are loaded at roughly the same time. Here is an example:
-> > > > >
-> > > > >   |          Thread A           |          Thread B           |
-> > > > >   |  led_pwm_mc_probe           |  led_pwm_probe              |
-> > > > >   |    devm_fwnode_pwm_get      |                             |
-> > > > >   |      pwm_sifive_request     |                             |
-> > > > >   |        ddata->user_count++  |                             |
-> > > > >   |                             |    devm_fwnode_pwm_get      |
-> > > > >   |                             |      pwm_sifive_request     |
-> > > > >   |                             |        ddata->user_count++  |
-> > > > >   |         ...                 |          ...                |
-> > > > >   |    pwm_state_apply          |    pwm_state_apply          |
-> > > > >   |      pwm_sifive_apply       |      pwm_sifive_apply       |
-> > > > >
-> > > > > Now both calls to pwm_sifive_apply will see that ddata->approx_pe=
-riod,
-> > > > > initially 0, is different from the requested period and the clock=
- needs
-> > > > > to be updated. But since ddata->user_count >=3D 2 both calls will=
- fail
-> > > > > with -EBUSY, which will then cause both LED drivers to fail to pr=
-obe.
-> > > > >
-> > > > > Fix it by letting the first call to pwm_sifive_apply update the c=
-lock
-> > > > > even when ddata->user_count !=3D 1.
-> > > > >
-> > > > > Fixes: 9e37a53eb051 ("pwm: sifive: Add a driver for SiFive SoC PW=
-M")
-> > > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonic=
-al.com>
-> > > > > ---
-> > > > >  drivers/pwm/pwm-sifive.c | 8 +++++++-
-> > > > >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > > > > index 2d4fa5e5fdd4..b3c60ec72a6e 100644
-> > > > > --- a/drivers/pwm/pwm-sifive.c
-> > > > > +++ b/drivers/pwm/pwm-sifive.c
-> > > > > @@ -159,7 +159,13 @@ static int pwm_sifive_apply(struct pwm_chip =
-*chip, struct pwm_device *pwm,
-> > > > >
-> > > > >       mutex_lock(&ddata->lock);
-> > > > >       if (state->period !=3D ddata->approx_period) {
-> > > > > -             if (ddata->user_count !=3D 1) {
-> > > > > +             /*
-> > > > > +              * Don't let a 2nd user change the period underneat=
-h the 1st user.
-> > > > > +              * However if ddate->approx_period =3D=3D 0 this is=
- the first time we set
-> > > > > +              * any period, so let whoever gets here first set t=
-he period so other
-> > > > > +              * users who agree on the period won't fail.
-> > > > > +              */
-> > > > > +             if (ddata->user_count !=3D 1 && ddata->approx_perio=
-d) {
-> > > >
-> > > > While I'm convinced this works, we'd get some more uniform behaviou=
-r
-> > > > compared to other hardwares with similar restrictions if you lock t=
-he
-> > > > period on enabling the PWM instead of at request time. See for exam=
-ple
-> > > > drivers/pwm/pwm-pca9685.c.
-> > >
-> > > Hmm.. that driver uses a pwms_enabled bitmap rather than a user count=
-,
-> > > but it still sets the bit in the request method and refuses to change
-> > > period in the apply method if more than 1 bit is set.
-> >
-> > Note there are two different bitmaps. The one modified in .request is
-> > for gpio stuff and the other in .apply() for locking the common period
-> > length.
->
-> Yeah, there is the pwms_enabled and pwms_inuse bitmaps, but
-> pwms_enabled is used both in .request and .apply.
+On Fri, Nov 11, 2022 at 08:33:45PM +0300, Sasha Finkelstein wrote:
+> Apple SoCs such as the M1 contain a PWM controller used
+> among other things to control the keyboard backlight.
+> 
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> Reviewed-by: Krzyszstof Kozlowski <krzyszstof.kozlowski@linaro.org>
 
-Oh, I think you might have looked at the pca9685_pwm_gpio_request
-function and not pca9685_pwm_request.
+I assume you got a bounce on this as you got Krzysztof's name wrong 
+(krzysztof.kozlowski@linaro.org). You should have either resent this or 
+replied pointing out the typo.
 
-> > > So as far as I
-> > > can tell it still suffers from the same race. However using a bitmap
-> > > instead of a user count would let us handle everything in the apply
-> > > method if we don't set the bit in the request method, but then the
-> > > behaviour would still be different. In any case it would still be a
-> > > large change to this driver.
-> > >
-> > > How about we merge this bug fix that can easily be backported first
-> > > and then look at how it should be handled properly?
-> >
-> > I thought it wouldn't be that hard to do it right from the start,
-> > but I admit it's harder than I expected to get right. My prototype look=
-s
-> > as follows:
->
-> This works for me (modulo the two extra {'s). I'd still prefer merging
-> the simpler version and then this on top for ease of backporting, but
-> as long as the race is fixed I'm fine. Will you send a cleaned up
-> version of this?
->
-> /Emil
->
-> > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > index 2d4fa5e5fdd4..89846d95bfc0 100644
-> > --- a/drivers/pwm/pwm-sifive.c
-> > +++ b/drivers/pwm/pwm-sifive.c
-> > @@ -41,13 +41,13 @@
-> >
-> >  struct pwm_sifive_ddata {
-> >         struct pwm_chip chip;
-> > -       struct mutex lock; /* lock to protect user_count and approx_per=
-iod */
-> > +       struct mutex lock; /* lock to protect approx_period */
-> >         struct notifier_block notifier;
-> >         struct clk *clk;
-> >         void __iomem *regs;
-> >         unsigned int real_period;
-> >         unsigned int approx_period;
-> > -       int user_count;
-> > +       DECLARE_BITMAP(pwms_enabled, 4);
-> >  };
-> >
-> >  static inline
-> > @@ -59,10 +59,16 @@ struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(s=
-truct pwm_chip *c)
-> >  static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device=
- *pwm)
-> >  {
-> >         struct pwm_sifive_ddata *ddata =3D pwm_sifive_chip_to_ddata(chi=
-p);
-> > +       u32 val =3D readl(ddata->regs + PWM_SIFIVE_PWMCFG);
-> >
-> > -       mutex_lock(&ddata->lock);
-> > -       ddata->user_count++;
-> > -       mutex_unlock(&ddata->lock);
-> > +       if (val & PWM_SIFIVE_PWMCFG_EN_ALWAYS) {
-> > +               val =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpw=
-m));
-> > +               if (val > 0) {
-> > +                       mutex_lock(&ddata->lock);
-> > +                       __set_bit(pwm->hwpwm, ddata->pwms_enabled);
-> > +                       mutex_unlock(&ddata->lock);
-> > +               }
-> > +       }
-> >
-> >         return 0;
-> >  }
-> > @@ -72,7 +78,7 @@ static void pwm_sifive_free(struct pwm_chip *chip, st=
-ruct pwm_device *pwm)
-> >         struct pwm_sifive_ddata *ddata =3D pwm_sifive_chip_to_ddata(chi=
-p);
-> >
-> >         mutex_lock(&ddata->lock);
-> > -       ddata->user_count--;
-> > +       __clear_bit(pwm->hwpwm, ddata->pwms_enabled);
-> >         mutex_unlock(&ddata->lock);
-> >  }
-> >
-> > @@ -158,11 +164,18 @@ static int pwm_sifive_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> >         frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-> >
-> >         mutex_lock(&ddata->lock);
-> > +
-> > +       if (state->enabled) {
-> > +               __set_bit(pwm->hwpwm, ddata->pwms_enabled);
-> > +
-> >         if (state->period !=3D ddata->approx_period) {
-> > -               if (ddata->user_count !=3D 1) {
-> > +               if (bitmap_weight(ddata->pwms_enabled, 4) > 1) {
-> > +                       if (!enabled) {
-> > +                               __clear_bit(pwm->hwpwm, ddata->pwms_ena=
-bled);
-> >                         mutex_unlock(&ddata->lock);
-> >                         return -EBUSY;
-> >                 }
-> > +
-> >                 ddata->approx_period =3D state->period;
-> >                 pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk)=
-);
-> >         }
-> > @@ -177,14 +190,23 @@ static int pwm_sifive_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> >                 ret =3D clk_enable(ddata->clk);
-> >                 if (ret) {
-> >                         dev_err(ddata->chip.dev, "Enable clk failed\n")=
-;
-> > +                       if (state->enabled) {
-> > +                               mutex_lock(&ddata->lock);
-> > +                               __clear_bit(pwm->hwpwm, ddata->pwms_ena=
-bled);
-> > +                               mutex_unlock(&ddata->lock);
-> > +                       }
-> >                         return ret;
-> >                 }
-> >         }
-> >
-> >         writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-> >
-> > -       if (!state->enabled)
-> > +       if (!state->enabled) {
-> > +               mutex_lock(&ddata->lock);
-> > +               __clear_bit(pwm->hwpwm, ddata->pwms_enabled);
-> > +               mutex_unlock(&ddata->lock);
-> >                 clk_disable(ddata->clk);
-> > +       }
-> >
-> >         return 0;
-> >  }
-> >
-> > Best regards
-> > Uwe
-> >
-> > --
-> > Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
-       |
-> > Industrial Linux Solutions                 | https://www.pengutronix.de=
-/ |
+> Acked-by: Sven Peter <sven@svenpeter.dev>
+> ---
+>  .../bindings/pwm/apple,s5l-fpwm.yaml          | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml b/Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+> new file mode 100644
+> index 000000000000..142157bff0cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/apple,s5l-fpwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Apple FPWM controller
+> +
+> +maintainers:
+> +  - asahi@lists.linux.dev
+> +  - Sasha Finkelstein <fnkl.kernel@gmail.com>
+> +
+> +description: PWM controller used for keyboard backlight on ARM Macs
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - apple,t8103-fpwm
+> +          - apple,t6000-fpwm
+> +          - apple,t8112-fpwm
+> +      - const: apple,s5l-fpwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwm@235044000 {
+> +      compatible = "apple,t8103-fpwm", "apple,s5l-fpwm";
+> +      reg = <0x35044000 0x4000>;
+> +      power-domains = <&ps_fpwm1>;
+> +      clocks = <&clkref>;
+> +      #pwm-cells = <2>;
+> +    };
+> -- 
+> 2.38.1
+> 
+> 
