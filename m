@@ -2,134 +2,315 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D38862C666
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Nov 2022 18:32:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B21B562C689
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Nov 2022 18:41:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234333AbiKPRc0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 16 Nov 2022 12:32:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46354 "EHLO
+        id S233705AbiKPRlb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 16 Nov 2022 12:41:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234114AbiKPRc0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Nov 2022 12:32:26 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C60932BAC;
-        Wed, 16 Nov 2022 09:32:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668619945; x=1700155945;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U3Mt2zvxz7/ueWTGbr7K4kLTgJ3MbCP5UiSfr+GFz54=;
-  b=Fp0KF7YojpblEyNWVh4+IrePsTrhIMnGqSg3pFs/yIDPakxep3tPNS6M
-   fORFg+2MwMQufv8oSFx+J+0AGcd67ahpoiEf5dlg+rlve3sqqss8xjC6f
-   NTlC9n2wLDS1M47L+yoYjBeVWsnWjWEwqaGnG2xvzoghpBtRS6L3WQOkK
-   +udLzzbrlgMalEjxUPV4u2UQv8vzA+XPhMfQGvsHpR067JQPFcLdD2ege
-   ezkUFjYNS0SN7/IsaCTmOsmh516jCu25YElVY6lrn49MM9QiIkN8o+/zv
-   28jiAeLhYrKW12ewbUK6mKJim5UQjSRd5Jd0o10Dp+Vth06odwR7Z62jq
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="312617427"
-X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="312617427"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 09:32:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="672472288"
-X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="672472288"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 16 Nov 2022 09:32:17 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ovMGl-00DF0p-0q;
-        Wed, 16 Nov 2022 19:32:15 +0200
-Date:   Wed, 16 Nov 2022 19:32:14 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/7] pinctrl: intel: Enable PWM optional feature
-Message-ID: <Y3Uenh/U2WPPARds@smile.fi.intel.com>
-References: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230205AbiKPRla (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 16 Nov 2022 12:41:30 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D0A57B50
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 09:41:27 -0800 (PST)
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 36EED3F11B
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 17:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1668620484;
+        bh=xz4EiCr6ZuWL/U16EFiHXOXw+kW3GS1JYc7thj3Y4eY=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=KiflCoESWWPSb8CVCL5927nohGvNoBsYXI+fmmVmlYmQ2rwwriIKt28WpF+/NPh9H
+         iLs5YkwBgMZ/VlEOudSbrZeUdV5UqY+ghva7GEVNRVyjO8m1ASLeCwo6Sam36B3DKG
+         r8CDkUURvDF649Hx23KXceeq0PL4GbcF3rK08NAnZsJE7+5Zx5cYlOJFWmAAluQdoq
+         7TuYfV6j3qHxAvRf01V6RYnbAHkqSCwpRfuJGXCZwJEn0drLXm3F8upOnJNE7s1My0
+         3cPXHyK4bVtNCSvCs9Zv05CLEDPMxlSYUFyFEW+wODVvWnkUvfvFAo4kS8/AsYgl4x
+         NXmVrSpuPvSxg==
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-373582569edso166900817b3.2
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 09:41:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xz4EiCr6ZuWL/U16EFiHXOXw+kW3GS1JYc7thj3Y4eY=;
+        b=vD8givDXNZI0WaOdKbd6U3tWKNzWI5299h5aTmHMo6DxTRtIcLVuF6o5Gvt0Sbopzb
+         917ryOnREZwynmyXjYpWixWftJPE5Z7cgB3WPMv44S5sRKZyOeQz2Bj4P3P3T/lsvyvL
+         +8WyvGj1pKjiRHzzMCtk2cMI39G3Ja+69JtUApeFEDdVb1bxW52W/dHcLxg+yy18mEBC
+         POj2JFYiUgo0DkKuo1dYRUSgVOS+w40uDQcRuunvr1s9Qi7YBnIPNd36QHgL+NhlcJnx
+         T1CzrW8EPWNwXy2z2nETk7cJIDxAM3usD9Y1MNBiyVshl1I6R2Lstp2e36R/BWre/24w
+         nQEw==
+X-Gm-Message-State: ANoB5pkhfeivCXIW45kZ+53nOuonIcWNDxE1YYGkOPnh9Mhy7oURBX0C
+        eoJeGh7gY26V4z/jiZl7wKvSIEctH63BcRPCtubPml214gH0T7vvi4Wkq8nm9KZkNeXgJq33gHh
+        TSgf5/vMTcgdqDQenAHovZP4nViQo12TThRirSEXXiy+ZT/1yzErG5g==
+X-Received: by 2002:a0d:d78c:0:b0:357:94cb:7a8 with SMTP id z134-20020a0dd78c000000b0035794cb07a8mr22043893ywd.326.1668620482724;
+        Wed, 16 Nov 2022 09:41:22 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf4WVbP7g9iQI9RHRyPHivBQ4DhEh1eC80B9tJcCzYio/ZUwo5VpBylCewZZWyJBrgUqUhtOBDp0n5rmefHi9+M=
+X-Received: by 2002:a0d:d78c:0:b0:357:94cb:7a8 with SMTP id
+ z134-20020a0dd78c000000b0035794cb07a8mr22043875ywd.326.1668620482437; Wed, 16
+ Nov 2022 09:41:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221109113724.519021-1-emil.renner.berthing@canonical.com>
+ <20221109120102.ylnseq2w33rvt7fz@pengutronix.de> <CAJM55Z-EVXB6FTWwh_vY_B3LoVv+b7TCQCE7asB8G8wkEwui_g@mail.gmail.com>
+ <20221109153311.cszr7fgfmyelwra3@pengutronix.de>
+In-Reply-To: <20221109153311.cszr7fgfmyelwra3@pengutronix.de>
+From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Date:   Wed, 16 Nov 2022 18:41:06 +0100
+Message-ID: <CAJM55Z8vpJ0XtQqnsFMLE4rkyV11ePbNjtYx0u4pgM9-MT=Kvg@mail.gmail.com>
+Subject: Re: [PATCH v2] pwm: sifive: Always let the first pwm_apply_state succeed
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Atish Patra <atishp@atishpatra.org>,
+        "Wesley W. Terpstra" <wesley@sifive.com>,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 06:55:38PM +0200, Andy Shevchenko wrote:
-> This is a continuation of the previously applied PWM LPSS cleanup series.
-> Now, we would like to enable PWM optional feature that may be embedded
-> into Intel pin control IPs (starting from Sky Lake platforms).
-> 
-> I would like to route this via Intel pin control tree with issuing
-> an immutable branch for both PINCTRL and PWM subsystems, but I'm
-> open for other suggestions.
-> 
-> Hans, I dared to leave your Rb tags, however the patches are slightly
-> differ, because of the Uwe's suggestion on how to handle the missing
-> headers. I hope you are okay with that. If not, please comment what
-> must be amended then.
+On Wed, 9 Nov 2022 at 16:33, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Wed, Nov 09, 2022 at 01:45:43PM +0100, Emil Renner Berthing wrote:
+> > On Wed, 9 Nov 2022 at 13:01, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > Hello Emil,
+> > >
+> > > On Wed, Nov 09, 2022 at 12:37:24PM +0100, Emil Renner Berthing wrote:
+> > > > Commit 2cfe9bbec56ea579135cdd92409fff371841904f added support for t=
+he
+> > > > RGB and green PWM controlled LEDs on the HiFive Unmatched board
+> > > > managed by the leds-pwm-multicolor and leds-pwm drivers respectivel=
+y.
+> > > > All three colours of the RGB LED and the green LED run from differe=
+nt
+> > > > lines of the same PWM, but with the same period so this works fine =
+when
+> > > > the LED drivers are loaded one after the other.
+> > > >
+> > > > Unfortunately it does expose a race in the PWM driver when both LED
+> > > > drivers are loaded at roughly the same time. Here is an example:
+> > > >
+> > > >   |          Thread A           |          Thread B           |
+> > > >   |  led_pwm_mc_probe           |  led_pwm_probe              |
+> > > >   |    devm_fwnode_pwm_get      |                             |
+> > > >   |      pwm_sifive_request     |                             |
+> > > >   |        ddata->user_count++  |                             |
+> > > >   |                             |    devm_fwnode_pwm_get      |
+> > > >   |                             |      pwm_sifive_request     |
+> > > >   |                             |        ddata->user_count++  |
+> > > >   |         ...                 |          ...                |
+> > > >   |    pwm_state_apply          |    pwm_state_apply          |
+> > > >   |      pwm_sifive_apply       |      pwm_sifive_apply       |
+> > > >
+> > > > Now both calls to pwm_sifive_apply will see that ddata->approx_peri=
+od,
+> > > > initially 0, is different from the requested period and the clock n=
+eeds
+> > > > to be updated. But since ddata->user_count >=3D 2 both calls will f=
+ail
+> > > > with -EBUSY, which will then cause both LED drivers to fail to prob=
+e.
+> > > >
+> > > > Fix it by letting the first call to pwm_sifive_apply update the clo=
+ck
+> > > > even when ddata->user_count !=3D 1.
+> > > >
+> > > > Fixes: 9e37a53eb051 ("pwm: sifive: Add a driver for SiFive SoC PWM"=
+)
+> > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical=
+.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-sifive.c | 8 +++++++-
+> > > >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > > > index 2d4fa5e5fdd4..b3c60ec72a6e 100644
+> > > > --- a/drivers/pwm/pwm-sifive.c
+> > > > +++ b/drivers/pwm/pwm-sifive.c
+> > > > @@ -159,7 +159,13 @@ static int pwm_sifive_apply(struct pwm_chip *c=
+hip, struct pwm_device *pwm,
+> > > >
+> > > >       mutex_lock(&ddata->lock);
+> > > >       if (state->period !=3D ddata->approx_period) {
+> > > > -             if (ddata->user_count !=3D 1) {
+> > > > +             /*
+> > > > +              * Don't let a 2nd user change the period underneath =
+the 1st user.
+> > > > +              * However if ddate->approx_period =3D=3D 0 this is t=
+he first time we set
+> > > > +              * any period, so let whoever gets here first set the=
+ period so other
+> > > > +              * users who agree on the period won't fail.
+> > > > +              */
+> > > > +             if (ddata->user_count !=3D 1 && ddata->approx_period)=
+ {
+> > >
+> > > While I'm convinced this works, we'd get some more uniform behaviour
+> > > compared to other hardwares with similar restrictions if you lock the
+> > > period on enabling the PWM instead of at request time. See for exampl=
+e
+> > > drivers/pwm/pwm-pca9685.c.
+> >
+> > Hmm.. that driver uses a pwms_enabled bitmap rather than a user count,
+> > but it still sets the bit in the request method and refuses to change
+> > period in the apply method if more than 1 bit is set.
+>
+> Note there are two different bitmaps. The one modified in .request is
+> for gpio stuff and the other in .apply() for locking the common period
+> length.
 
-Uwe, it would be nice if you have a chance to look at this one more time.
-If it is okay, I can push it to an immutable branch and send out for all
-stakeholders.
+Yeah, there is the pwms_enabled and pwms_inuse bitmaps, but
+pwms_enabled is used both in .request and .apply.
 
-> Changelog v4:
-> - added patch "Rename pwm_lpss_probe() --> devm_pwm_lpss_probe()"
-> 
-> Changelog v3:
-> - added tags (Uwe, Linus, Thierry)
-> - fixed some spelling issues in the commit messages
-> - changed a paragraph in the commit message of the patch 3 (Uwe)
-> - replaced -ENODEV check with IS_REACHABLE() in the patch 6 (Uwe)
-> 
-> Changelog v2:
-> - added tag (Mika)
-> - added base-commit to the series, to make sure LKP can test it
-> 
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> Andy Shevchenko (7):
->   pwm: Add a stub for devm_pwmchip_add()
->   pwm: lpss: Rename MAX_PWMS --> LPSS_MAX_PWMS
->   pwm: lpss: Include headers we are the direct user of
->   pwm: lpss: Allow other drivers to enable PWM LPSS
->   pwm: lpss: Rename pwm_lpss_probe() --> devm_pwm_lpss_probe()
->   pwm: lpss: Add devm_pwm_lpss_probe() stub
->   pinctrl: intel: Enumerate PWM device when community has a capability
-> 
->  drivers/pinctrl/intel/pinctrl-intel.c      | 32 ++++++++++++++++
->  drivers/pwm/pwm-lpss-pci.c                 |  2 +-
->  drivers/pwm/pwm-lpss-platform.c            |  2 +-
->  drivers/pwm/pwm-lpss.c                     |  8 ++--
->  drivers/pwm/pwm-lpss.h                     | 34 ++++-------------
->  include/linux/platform_data/x86/pwm-lpss.h | 44 ++++++++++++++++++++++
->  include/linux/pwm.h                        |  5 +++
->  7 files changed, 95 insertions(+), 32 deletions(-)
->  create mode 100644 include/linux/platform_data/x86/pwm-lpss.h
-> 
-> 
-> base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
-> -- 
-> 2.35.1
-> 
+> > So as far as I
+> > can tell it still suffers from the same race. However using a bitmap
+> > instead of a user count would let us handle everything in the apply
+> > method if we don't set the bit in the request method, but then the
+> > behaviour would still be different. In any case it would still be a
+> > large change to this driver.
+> >
+> > How about we merge this bug fix that can easily be backported first
+> > and then look at how it should be handled properly?
+>
+> I thought it wouldn't be that hard to do it right from the start,
+> but I admit it's harder than I expected to get right. My prototype looks
+> as follows:
 
--- 
-With Best Regards,
-Andy Shevchenko
+This works for me (modulo the two extra {'s). I'd still prefer merging
+the simpler version and then this on top for ease of backporting, but
+as long as the race is fixed I'm fine. Will you send a cleaned up
+version of this?
 
+/Emil
 
+> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> index 2d4fa5e5fdd4..89846d95bfc0 100644
+> --- a/drivers/pwm/pwm-sifive.c
+> +++ b/drivers/pwm/pwm-sifive.c
+> @@ -41,13 +41,13 @@
+>
+>  struct pwm_sifive_ddata {
+>         struct pwm_chip chip;
+> -       struct mutex lock; /* lock to protect user_count and approx_perio=
+d */
+> +       struct mutex lock; /* lock to protect approx_period */
+>         struct notifier_block notifier;
+>         struct clk *clk;
+>         void __iomem *regs;
+>         unsigned int real_period;
+>         unsigned int approx_period;
+> -       int user_count;
+> +       DECLARE_BITMAP(pwms_enabled, 4);
+>  };
+>
+>  static inline
+> @@ -59,10 +59,16 @@ struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(str=
+uct pwm_chip *c)
+>  static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device *=
+pwm)
+>  {
+>         struct pwm_sifive_ddata *ddata =3D pwm_sifive_chip_to_ddata(chip)=
+;
+> +       u32 val =3D readl(ddata->regs + PWM_SIFIVE_PWMCFG);
+>
+> -       mutex_lock(&ddata->lock);
+> -       ddata->user_count++;
+> -       mutex_unlock(&ddata->lock);
+> +       if (val & PWM_SIFIVE_PWMCFG_EN_ALWAYS) {
+> +               val =3D readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm)=
+);
+> +               if (val > 0) {
+> +                       mutex_lock(&ddata->lock);
+> +                       __set_bit(pwm->hwpwm, ddata->pwms_enabled);
+> +                       mutex_unlock(&ddata->lock);
+> +               }
+> +       }
+>
+>         return 0;
+>  }
+> @@ -72,7 +78,7 @@ static void pwm_sifive_free(struct pwm_chip *chip, stru=
+ct pwm_device *pwm)
+>         struct pwm_sifive_ddata *ddata =3D pwm_sifive_chip_to_ddata(chip)=
+;
+>
+>         mutex_lock(&ddata->lock);
+> -       ddata->user_count--;
+> +       __clear_bit(pwm->hwpwm, ddata->pwms_enabled);
+>         mutex_unlock(&ddata->lock);
+>  }
+>
+> @@ -158,11 +164,18 @@ static int pwm_sifive_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>         frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+>
+>         mutex_lock(&ddata->lock);
+> +
+> +       if (state->enabled) {
+> +               __set_bit(pwm->hwpwm, ddata->pwms_enabled);
+> +
+>         if (state->period !=3D ddata->approx_period) {
+> -               if (ddata->user_count !=3D 1) {
+> +               if (bitmap_weight(ddata->pwms_enabled, 4) > 1) {
+> +                       if (!enabled) {
+> +                               __clear_bit(pwm->hwpwm, ddata->pwms_enabl=
+ed);
+>                         mutex_unlock(&ddata->lock);
+>                         return -EBUSY;
+>                 }
+> +
+>                 ddata->approx_period =3D state->period;
+>                 pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk));
+>         }
+> @@ -177,14 +190,23 @@ static int pwm_sifive_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>                 ret =3D clk_enable(ddata->clk);
+>                 if (ret) {
+>                         dev_err(ddata->chip.dev, "Enable clk failed\n");
+> +                       if (state->enabled) {
+> +                               mutex_lock(&ddata->lock);
+> +                               __clear_bit(pwm->hwpwm, ddata->pwms_enabl=
+ed);
+> +                               mutex_unlock(&ddata->lock);
+> +                       }
+>                         return ret;
+>                 }
+>         }
+>
+>         writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
+>
+> -       if (!state->enabled)
+> +       if (!state->enabled) {
+> +               mutex_lock(&ddata->lock);
+> +               __clear_bit(pwm->hwpwm, ddata->pwms_enabled);
+> +               mutex_unlock(&ddata->lock);
+>                 clk_disable(ddata->clk);
+> +       }
+>
+>         return 0;
+>  }
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
