@@ -2,283 +2,257 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45F4162E732
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 22:43:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 738A162E7AF
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 23:05:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235133AbiKQVnN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 16:43:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56054 "EHLO
+        id S241235AbiKQWFR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 17:05:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240928AbiKQVmw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 16:42:52 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B04B68C50;
-        Thu, 17 Nov 2022 13:42:51 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id gv23so8492999ejb.3;
-        Thu, 17 Nov 2022 13:42:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WU2FtKz2cQUGKZlIODWTKfxDXDSrXrZii2EAiH6b2SY=;
-        b=XCEAWPRv/khshr0AUdo0MZLOaCnjU8u2XmEzlMWPTscjgepeUipdmhuuYY7ePSmXFV
-         hFzASZFgPgiR9eA3nxh89cUH0rs+KrbaNYHWshXdM4RWzyY7Pw98Uk8YR96cNBYIkBJH
-         U2qLaPv7tn4v8phnhqyqfVvYDqDdSZBkm52q/ZG7xto7PglVZw27m+9W+ZNjZvR36G2n
-         X1fw0B+qhQSRabWbR28i2IuTFz99QdboxOeqlvPepNIhs1sxlj/1JmKAo0BtmX6d/QqN
-         XmO5Q0dZJXM4AoTejbuEc37VflPA6P77NQ4bqVbMHJ7Yp5CfmWfQ6jWUMCAqNl6Hlfyn
-         plVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WU2FtKz2cQUGKZlIODWTKfxDXDSrXrZii2EAiH6b2SY=;
-        b=4khzee5DLY6W3m26V8Nj749ksDwpag/drZvtUyDfCDrJ7+B0Ii4jXPK1kr7+ORtfk8
-         G0ax7kvdLPtZWii2SLqrvsxoey9Idc7GTe+dF/1HiPH8Db/fUqoXhzHuAbkoBAlKy8ZX
-         I/RxahdL5IRMTZPOmumjX2uokSExBEme7cEkzqP85V+IqzYRZS1T2DsmFPTnq05nuPWS
-         QyR1gBkEwoWbGua3iXjxy81RJOab/cHca+7kck3oGw0o2LnvrxuEiNBKEbW+QaDCOo3J
-         OQrSw6Xtfa+ISU3RlnrW6LL6+j47oOt2g/2v12c+WJ0107+igvuHvwzB+1hkfZ2WpvZa
-         6XnQ==
-X-Gm-Message-State: ANoB5pno/LlLO0WPgFjA9Dflj/bJU0mb02X/76KcOA23j8wI4Gh5VCkY
-        mFMIUxA7FUdy+n8MG0iR8pI=
-X-Google-Smtp-Source: AA0mqf6ejPg8pXDTuDhUQHYoqW6llWNB4o/HdjxTJBbH5Gn/02dhI2debUVLj9v0eB9tUJzTgigLQg==
-X-Received: by 2002:a17:906:19d2:b0:78e:11ea:8528 with SMTP id h18-20020a17090619d200b0078e11ea8528mr3832415ejd.190.1668721369551;
-        Thu, 17 Nov 2022 13:42:49 -0800 (PST)
-Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id qp25-20020a170907207900b007081282cbd8sm854074ejb.76.2022.11.17.13.42.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 13:42:49 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: pwm: tegra: Convert to json-schema
-Date:   Thu, 17 Nov 2022 22:42:48 +0100
-Message-Id: <20221117214248.2365983-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.38.1
+        with ESMTP id S241176AbiKQWEw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 17:04:52 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0777C469;
+        Thu, 17 Nov 2022 14:03:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E85FA62290;
+        Thu, 17 Nov 2022 22:03:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD0C6C433C1;
+        Thu, 17 Nov 2022 22:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668722597;
+        bh=zxGAvysgvDa0F1r7JtPcsHQ+BRG06zOKEyrd7h90Erk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h7Vp0nm/RovxRpyyC3S8m26a/4LNQCFXKVe7vfEmwT6sVFVVYFSRTiW6rvAMFXJE+
+         wHtn1/B25UNQSTQLG9hHYtRQzBdMZLKkBGbJENDn5y8aX7TR9zCuXwx6J4H7ufRJen
+         k00gAu/IVzZ92Q7VBFvlelzZZPMH9g6FFSGfKvnorUffpVSWeDIdIWkHxNFCYkzEWP
+         li3Rkvjr+h6X9fX8zmymnO+Wld31ejV6ZpoGF6+trBws/xW79gCkowwuiIeoRmn+qy
+         0SkBnSqxM76RmRgimTDgH3anklH0F9TpOPmw/Sr2OD+8uUSKvzXVEs3vwXKt0fM4qY
+         KvaoM9++19kRw==
+Date:   Thu, 17 Nov 2022 22:03:13 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <Y3avobkvYK3ydKTS@spud>
+References: <20221110093512.333881-1-conor.dooley@microchip.com>
+ <20221110093512.333881-2-conor.dooley@microchip.com>
+ <20221117164950.cssukd63fywzuwua@pengutronix.de>
+ <Y3Zxkt3OSPQc46Q2@spud>
+ <20221117210433.n5j7upqqksld42mu@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20221117210433.n5j7upqqksld42mu@pengutronix.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, Nov 17, 2022 at 10:04:33PM +0100, Uwe Kleine-König wrote:
+> On Thu, Nov 17, 2022 at 05:38:26PM +0000, Conor Dooley wrote:
+> > On Thu, Nov 17, 2022 at 05:49:50PM +0100, Uwe Kleine-König wrote:
+> > > Hello Conor,
+> > 
+> > Hello Uwe,
+> > 
+> > > On Thu, Nov 10, 2022 at 09:35:12AM +0000, Conor Dooley wrote:
+> > > > [...]
+> > > > +
+> > > > +static void mchp_core_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > > +				 bool enable, u64 period)
+> > > > +{
+> > > > +	struct mchp_core_pwm_chip *mchp_core_pwm = to_mchp_core_pwm(chip);
+> > > > +	u8 channel_enable, reg_offset, shift;
+> > > > +
+> > > > +	/*
+> > > > +	 * There are two adjacent 8 bit control regs, the lower reg controls
+> > > > +	 * 0-7 and the upper reg 8-15. Check if the pwm is in the upper reg
+> > > > +	 * and if so, offset by the bus width.
+> > > > +	 */
+> > > > +	reg_offset = MCHPCOREPWM_EN(pwm->hwpwm >> 3);
+> > > > +	shift = pwm->hwpwm & 7;
+> > > > +
+> > > > +	channel_enable = readb_relaxed(mchp_core_pwm->base + reg_offset);
+> > > > +	channel_enable &= ~(1 << shift);
+> > > > +	channel_enable |= (enable << shift);
+> > > > +
+> > > > +	writel_relaxed(channel_enable, mchp_core_pwm->base + reg_offset);
+> > > > +	mchp_core_pwm->channel_enabled &= ~BIT(pwm->hwpwm);
+> > > > +	mchp_core_pwm->channel_enabled |= enable << pwm->hwpwm;
+> > > > +
+> > > > +	/*
+> > > > +	 * Notify the block to update the waveform from the shadow registers.
+> > > > +	 * The updated values will not appear on the bus until they have been
+> > > > +	 * applied to the waveform at the beginning of the next period. We must
+> > > > +	 * write these registers and wait for them to be applied before
+> > > > +	 * considering the channel enabled.
+> > > > +	 * If the delay is under 1 us, sleep for at least 1 us anyway.
+> > > > +	 */
+> > > > +	if (mchp_core_pwm->sync_update_mask & (1 << pwm->hwpwm)) {
+> > > > +		u64 delay;
+> > > > +
+> > > > +		delay = div_u64(period, 1000u) ? : 1u;
+> > > > +		writel_relaxed(1U, mchp_core_pwm->base + MCHPCOREPWM_SYNC_UPD);
+> > > > +		usleep_range(delay, delay * 2);
+> > > > +	}
+> > > 
+> > > In some cases the delay could be prevented. e.g. when going from one
+> > > disabled state to another. If you don't want to complicate the driver
+> > > here, maybe point it out in a comment at least?
+> > 
+> > Maybe this is my naivity talking, but I'd rather wait. Is there not the
+> > chance that we re-enter pwm_apply() before the update has actually gone
+> > through?
+> 
+> My idea was to do something like that:
+> 
+> 	int mchp_core_pwm_apply(....)
+> 	{
+> 		if (mchp_core_pwm->sync_update_mask & (1 << pwm->hwpwm)) {
+> 			/*
+> 			 * We're still waiting for an update, don't
+> 			 * interfer until it's completed.
+> 			 */
+> 			while (readl_relaxed(mchp_core_pwm->base + MCHPCOREPWM_SYNC_UPD)) {
+> 				cpu_relax();
+> 				if (waited_unreasonably_long())
+> 					return -ETIMEOUT;
+> 			}
+> 		}
+> 
+> 		update_period_and_duty(...);
+> 		return 0;
+> 	}
+> 
+> This way you don't have to wait at all if the calls to pwm_apply() are
+> infrequent. Of course this only works this way, if you can determine if
+> there is a pending update.
 
-Convert the Tegra PWFM bindings from the free-form text format to
-json-schema.
+Ah I think I get what you mean now about waiting for completion &
+reading the bit. I don't know off the top of my head if that bit is
+readable. Docs say that they're R/W but I don't know if that means that
+an AXI read works or if the value is actually readable. I'll try
+something like this if I can.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v2:
-- drop Tegra210 example so that validation doesn't fail due to missing
-  pinmux json-schema conversion
-- combine Tegra20 and Tegra186 compatible strings
-- drop useless description of the single clock
-- remove clock-names property
-- remove unnecessary quotes
+> From a simplicity POV always waiting is fine. But if you consider
+> periods of say 5s, letting a call to pwm_apply() do a sleep between 5
+> and 10 seconds at the end is quite long and blocks the caller
+> considerably.
 
- .../bindings/pwm/nvidia,tegra20-pwm.txt       | 78 ---------------
- .../bindings/pwm/nvidia,tegra20-pwm.yaml      | 96 +++++++++++++++++++
- 2 files changed, 96 insertions(+), 78 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
+Yeah, I know. At the end of the day, you're the one familiar with what
+PWM consumers expect. If things go the wait-but-maybe-exit-early
+direction I think I'll add something to the limitations to cover that.
 
-diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-deleted file mode 100644
-index 47f1abf20118..000000000000
---- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-+++ /dev/null
-@@ -1,78 +0,0 @@
--Tegra SoC PWFM controller
--
--Required properties:
--- compatible: Must be:
--  - "nvidia,tegra20-pwm": for Tegra20
--  - "nvidia,tegra30-pwm", "nvidia,tegra20-pwm": for Tegra30
--  - "nvidia,tegra114-pwm", "nvidia,tegra20-pwm": for Tegra114
--  - "nvidia,tegra124-pwm", "nvidia,tegra20-pwm": for Tegra124
--  - "nvidia,tegra132-pwm", "nvidia,tegra20-pwm": for Tegra132
--  - "nvidia,tegra210-pwm", "nvidia,tegra20-pwm": for Tegra210
--  - "nvidia,tegra186-pwm": for Tegra186
--  - "nvidia,tegra194-pwm": for Tegra194
--  - "nvidia,tegra234-pwm", "nvidia,tegra194-pwm": for Tegra234
--- reg: physical base address and length of the controller's registers
--- #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
--  the cells format.
--- clocks: Must contain one entry, for the module clock.
--  See ../clocks/clock-bindings.txt for details.
--- resets: Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names: Must include the following entries:
--  - pwm
--
--Optional properties:
--============================
--In some of the interface like PWM based regulator device, it is required
--to configure the pins differently in different states, especially in suspend
--state of the system. The configuration of pin is provided via the pinctrl
--DT node as detailed in the pinctrl DT binding document
--	Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
--The PWM node will have following optional properties.
--pinctrl-names:	Pin state names. Must be "default" and "sleep".
--pinctrl-0:	phandle for the default/active state of pin configurations.
--pinctrl-1:	phandle for the sleep state of pin configurations.
--
--Example:
--
--	pwm: pwm@7000a000 {
--		compatible = "nvidia,tegra20-pwm";
--		reg = <0x7000a000 0x100>;
--		#pwm-cells = <2>;
--		clocks = <&tegra_car 17>;
--		resets = <&tegra_car 17>;
--		reset-names = "pwm";
--	};
--
--
--Example with the pin configuration for suspend and resume:
--=========================================================
--Suppose pin PE7 (On Tegra210) interfaced with the regulator device and
--it requires PWM output to be tristated when system enters suspend.
--Following will be DT binding to achieve this:
--
--#include <dt-bindings/pinctrl/pinctrl-tegra.h>
--
--	pinmux@700008d4 {
--		pwm_active_state: pwm_active_state {
--                        pe7 {
--                                nvidia,pins = "pe7";
--                                nvidia,tristate = <TEGRA_PIN_DISABLE>;
--			};
--		};
--
--		pwm_sleep_state: pwm_sleep_state {
--                        pe7 {
--                                nvidia,pins = "pe7";
--                                nvidia,tristate = <TEGRA_PIN_ENABLE>;
--			};
--		};
--	};
--
--	pwm@7000a000 {
--		/* Mandatory PWM properties */
--		pinctrl-names = "default", "sleep";
--		pinctrl-0 = <&pwm_active_state>;
--		pinctrl-1 = <&pwm_sleep_state>;
--	};
-diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
-new file mode 100644
-index 000000000000..739d3155dd32
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/nvidia,tegra20-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NVIDIA Tegra PWFM controller
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Jon Hunter <jonathanh@nvidia.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - nvidia,tegra20-pwm
-+          - nvidia,tegra186-pwm
-+
-+      - items:
-+          - enum:
-+              - nvidia,tegra30-pwm
-+              - nvidia,tegra114-pwm
-+              - nvidia,tegra124-pwm
-+              - nvidia,tegra132-pwm
-+              - nvidia,tegra210-pwm
-+          - enum:
-+              - nvidia,tegra20-pwm
-+
-+      - items:
-+          - const: nvidia,tegra194-pwm
-+          - const: nvidia,tegra186-pwm
-+
-+      - items:
-+          - const: nvidia,tegra234-pwm
-+          - const: nvidia,tegra194-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    items:
-+      - description: module reset
-+
-+  reset-names:
-+    items:
-+      - const: pwm
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+  pinctrl-names:
-+    items:
-+      - const: default
-+      - const: sleep
-+
-+  pinctrl-0:
-+    description: configuration for the default/active state
-+
-+  pinctrl-1:
-+    description: configuration for the sleep state
-+
-+  operating-points-v2:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  power-domains:
-+    items:
-+      - description: phandle to the core power domain
-+
-+allOf:
-+  - $ref: pwm.yaml
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/tegra20-car.h>
-+
-+    pwm: pwm@7000a000 {
-+        compatible = "nvidia,tegra20-pwm";
-+        reg = <0x7000a000 0x100>;
-+        #pwm-cells = <2>;
-+        clocks = <&tegra_car TEGRA20_CLK_PWM>;
-+        resets = <&tegra_car 17>;
-+        reset-names = "pwm";
-+    };
--- 
-2.38.1
+> > IIRC, but I'll have to confirm it, when the "shadow registers" are
+> > enabled reads show the values that the hardware is using rather than the
+> > values that are queued in the shadow registers. I'd rather avoid that
+> > sort of mess and always sleep.
+> > 
+> > Now that I think of it, the reason I moved to unconditionally sleeping
+> > was that if I turned on the PWM debugging it'd get tripped up. When it
+> > tried to read the state, it got the old one rather than what'd just been
+> > written.
+> > 
+> > Pasting my comment from above:
+> > > > +	/*
+> > > > +	 * Notify the block to update the waveform from the shadow registers.
+> > > > +	 * The updated values will not appear on the bus until they have been
+> > 
+> > By "bus" in this statement, I meant on the AXI/AHB etc bus that the IP
+> > core is connected to the CPUs on rather than the output. Perhaps my
+> > wording of the comment could be improved and replace the word "bus" with
+> > some wording containing "CPU" instead. "The updated values will not
+> > appear to the CPU until" maybe.
+> 
+> I'd write: Reading the registers yields the currently implemented
+> settings, the new ones are only readable once the current period ended.
+
+Cool, will use that so.
+
+> > I can also add some words relating to unconditionally sleeping w.r.t to
+> > disabled states.
+> > 
+> > > > +	 * applied to the waveform at the beginning of the next period. We must
+> > > > +	 * write these registers and wait for them to be applied before
+> > > > +	 * considering the channel enabled.
+> > > > +	 * If the delay is under 1 us, sleep for at least 1 us anyway.
+> > > > +	 */
+> > 
+> > > It's not well defined if pwm_apply should only return when the new
+> > > setting is actually active. (e.g. mxs doesn't wait)
+> > > So I wonder: Are there any hardware restrictions between setting the
+> > > SYNC_UPD flag and modifying the registers for duty and period? (I assume
+> > > writing a new duty and period might then result in a glitch if the
+> > > period just ends between the two writes.) Can you check if the hardware
+> > > waits on such a completion, e.g. by reading that register?
+> > 
+> > Not entirely sure by what you mean: "waits on such a completion".
+> 
+> I wanted to say that it's okish to return from .apply() without the
+> sleep and so return to the caller before the requested setting appears
+> on the output. At least your driver wouldn't be the first to do it that
+> way.
+
+I'd be more comfortable with it if the readable registers didn't hold
+the old value. 
+
+> > The hardware updates the registers at the first end-of-period after
+> > SYNC_UPD is set. Don't write the bit, nothing happens. From the docs:
+> > 
+> > > > A shadow register holds all values and writes them when the SYNC_UPDATE
+> > > > register is set to 1. In other words, for all channel synchronous
+> > > > updates, write a "1" to the SYNC_UPDATE register after writing to all
+> > > > the channel registers.
+> > 
+> > The docs also say:
+> > > > SYNC_UPDATE: When this bit is set to "1" and SHADOW_REG_EN
+> > > > is selected, all POSEDGE and NEGEDGE registers are updated
+> > > > synchronously. Synchronous updates to the PWM waveform occur only
+> > > > when SHADOW_REG_EN is asserted and SYNC_UPDATE is set to “1”.
+> > > >
+> > > > When this bit is set to "0", all the POSEDGE and NEGEDGE registers
+> > > > are updated asynchronously
+> > 
+> > The second statement is at best vague (if the this bit in "when this
+> > bit" refers to the bit in SHADOW_REG_EN) or contradictory at worse.
+> > I suspect it's the former meaning, as shadow registers are a per-channel
+> > thing. I suppose I have to go get some docs changed, **sigh**. It
+> > doesn't make all that much sense to me, SHADOW_REG_EN is a RTL parameter
+> > not a register that can be accessed from the AXI interface.
+> > 
+> > Anyways, back to the topic at hand.. if you were to do the following
+> > (in really pseudocode form..):
+> > 	write(SYNC_UPD)
+> > 	write(period)
+> > 	<end-of-period>
+> > 	write(duty)
+> > 
+> > Then the duty cycle would not get updated, ever. At least, per doc
+> > comment #1 & my "experimental" data. The RTL is rather dumb, since
+> > AFAICT, this is meant to be cheap to implement in FPGA fabric.
+> > Hence the default core configuration option is no shadow registers
+> > & just immediately updates the output, waveform glitches be damned.
+> > 
+> > Hopefully that all helps?
+> 
+> I already understood it that way. I hope I was able to clarify my
+> thoughts above.
+
+Yeah, I think you did!
+
+Thanks again,
+Conor.
 
