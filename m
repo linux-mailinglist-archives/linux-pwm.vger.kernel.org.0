@@ -2,96 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB6C962D584
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 09:52:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4987062D5BD
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 10:03:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234669AbiKQIwh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 03:52:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
+        id S239401AbiKQJDt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 04:03:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239419AbiKQIwe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 03:52:34 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB174FFBE
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 00:52:33 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovadF-0001mh-Ml; Thu, 17 Nov 2022 09:52:25 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovadE-004obE-3p; Thu, 17 Nov 2022 09:52:25 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovadE-00HEV8-13; Thu, 17 Nov 2022 09:52:24 +0100
-Date:   Thu, 17 Nov 2022 09:52:23 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S239394AbiKQJDs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 04:03:48 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1125A3F045;
+        Thu, 17 Nov 2022 01:03:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668675827; x=1700211827;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=x7nxFgEVjow5vF1ZtZgrRtidFMoD/jvUa6AYtcXYANc=;
+  b=PCjRtbp89TbBGWSehXvLpMsqNm8E4Z7RURbSVzE4V4iJV9uq5Qqisccc
+   aWIAU8zV/2D9QeRdMVm6uitPe8F/tDxJVOGrPktX0HOeNqYaKQqXWwS5C
+   QUPnj694kfHSpqrcQ+GS9Xx5FZ8OeC0OvSSg2gtUXcg29CHxLe5XLSgaY
+   J0+25hZ64QUNH14b5NM+DEbGzO8UnBuywCF8AHSfWeQhDZEsHcq05Drpe
+   eCN588GJGFncozytJ9wsuw4IGD9b0evRD6B7lrHyGadbZoRWZ2awuyctZ
+   MVH3gT+59lNuyKh68/jQ2KUyBCIwq7Rx7C1ziAjC6XPhkSo0TKbmlo4Hm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="296163359"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="296163359"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 01:03:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="670850555"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="670850555"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP; 17 Nov 2022 01:03:44 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ovaoA-00DVUa-1j;
+        Thu, 17 Nov 2022 11:03:42 +0200
+Date:   Thu, 17 Nov 2022 11:03:42 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 5/7] pwm: lpss: Rename pwm_lpss_probe() -->
- devm_pwm_lpss_probe()
-Message-ID: <20221117085223.ywm6nezg77dp5j73@pengutronix.de>
+        linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 3/7] pwm: lpss: Include headers we are the direct user
+ of
+Message-ID: <Y3X47vdt8MpHNzcB@smile.fi.intel.com>
 References: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
- <20221114165545.56088-6-andriy.shevchenko@linux.intel.com>
+ <20221114165545.56088-4-andriy.shevchenko@linux.intel.com>
+ <20221117085027.f5qy5rsauo7vhvw2@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wblbqrwyuidijwb6"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20221114165545.56088-6-andriy.shevchenko@linux.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221117085027.f5qy5rsauo7vhvw2@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Nov 17, 2022 at 09:50:27AM +0100, Uwe Kleine-König wrote:
+> On Mon, Nov 14, 2022 at 06:55:41PM +0200, Andy Shevchenko wrote:
+> > For the sake of integrity, include headers we are the direct
+> > user of.
+> > 
+> > Replace the inclusion of device.h by a forward declaration
+> > of struct device plus a (cheaper) of types.h as device.h is
+> > an expensive include (measured in compiler effort).
+> > 
+> > While at it, move the struct pwm_lpss_chip to be after
+> > the struct pwm_lpss_boardinfo as the former uses pointer
+> > to the latter.
+> 
+> I stand by my feedback that this change is irrelevant in the end. If you
+> drop it here, the patch gets a bit nicer.
 
---wblbqrwyuidijwb6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, since you are insisting, I will modify this in v5.
 
-On Mon, Nov 14, 2022 at 06:55:43PM +0200, Andy Shevchenko wrote:
-> The pwm_lpss_probe() uses managed resources. Show this to
-> the users explicitly by adding devm prefix to its name.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wblbqrwyuidijwb6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN19kQACgkQwfwUeK3K
-7AnrRwf5AQJPG56y93WTIFRwjrx3bhaqfkAx8Tax12aRsUVuIXTQOCW7vRkxgFCy
-RRaR8HKoqYNLyKcCgfN7JdBhKSk6VUcqmWPUT03PP2Xf97YpYGcWHzMNsU7QVprn
-b417UBiu7tXUbWLXxpUwUKy+GvA2KwdMfMDbNkX7W/n/Wy3TA+bkz9z02IjiTfhJ
-9kkFnwKz/2D1rXft1lOl23n3gY4PNkT05L9X6lYUK08kF3aFq1weVLzOlYXa9Bpt
-8orutQ/udzRJ6q1wvLk9QPTTh6PyMxjqfyjWjlzVUUVzTgenzgqojA/J43jvVTfB
-g5er4S03FngL4vToPSBfY4u3L07J+A==
-=KiN3
------END PGP SIGNATURE-----
-
---wblbqrwyuidijwb6--
