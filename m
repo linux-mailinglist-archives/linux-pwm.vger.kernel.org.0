@@ -2,96 +2,197 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4987062D5BD
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 10:03:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE2F62D5D7
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 10:06:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239401AbiKQJDt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 04:03:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
+        id S239627AbiKQJGX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 04:06:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239394AbiKQJDs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 04:03:48 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1125A3F045;
-        Thu, 17 Nov 2022 01:03:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668675827; x=1700211827;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=x7nxFgEVjow5vF1ZtZgrRtidFMoD/jvUa6AYtcXYANc=;
-  b=PCjRtbp89TbBGWSehXvLpMsqNm8E4Z7RURbSVzE4V4iJV9uq5Qqisccc
-   aWIAU8zV/2D9QeRdMVm6uitPe8F/tDxJVOGrPktX0HOeNqYaKQqXWwS5C
-   QUPnj694kfHSpqrcQ+GS9Xx5FZ8OeC0OvSSg2gtUXcg29CHxLe5XLSgaY
-   J0+25hZ64QUNH14b5NM+DEbGzO8UnBuywCF8AHSfWeQhDZEsHcq05Drpe
-   eCN588GJGFncozytJ9wsuw4IGD9b0evRD6B7lrHyGadbZoRWZ2awuyctZ
-   MVH3gT+59lNuyKh68/jQ2KUyBCIwq7Rx7C1ziAjC6XPhkSo0TKbmlo4Hm
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="296163359"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="296163359"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 01:03:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="670850555"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="670850555"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 17 Nov 2022 01:03:44 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ovaoA-00DVUa-1j;
-        Thu, 17 Nov 2022 11:03:42 +0200
-Date:   Thu, 17 Nov 2022 11:03:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S233899AbiKQJGR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 04:06:17 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119885A6C0
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 01:06:17 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovaqV-0004HD-N6; Thu, 17 Nov 2022 10:06:07 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovaqT-004p0y-Tx; Thu, 17 Nov 2022 10:06:06 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovaqT-00HEYW-UH; Thu, 17 Nov 2022 10:06:05 +0100
+Date:   Thu, 17 Nov 2022 10:06:05 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 3/7] pwm: lpss: Include headers we are the direct user
- of
-Message-ID: <Y3X47vdt8MpHNzcB@smile.fi.intel.com>
+        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 7/7] pinctrl: intel: Enumerate PWM device when
+ community has a capability
+Message-ID: <20221117090605.ktgyaverpzl3irjo@pengutronix.de>
 References: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
- <20221114165545.56088-4-andriy.shevchenko@linux.intel.com>
- <20221117085027.f5qy5rsauo7vhvw2@pengutronix.de>
+ <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jmyufltz4xble7qf"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221117085027.f5qy5rsauo7vhvw2@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 09:50:27AM +0100, Uwe Kleine-König wrote:
-> On Mon, Nov 14, 2022 at 06:55:41PM +0200, Andy Shevchenko wrote:
-> > For the sake of integrity, include headers we are the direct
-> > user of.
-> > 
-> > Replace the inclusion of device.h by a forward declaration
-> > of struct device plus a (cheaper) of types.h as device.h is
-> > an expensive include (measured in compiler effort).
-> > 
-> > While at it, move the struct pwm_lpss_chip to be after
-> > the struct pwm_lpss_boardinfo as the former uses pointer
-> > to the latter.
-> 
-> I stand by my feedback that this change is irrelevant in the end. If you
-> drop it here, the patch gets a bit nicer.
 
-OK, since you are insisting, I will modify this in v5.
+--jmyufltz4xble7qf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hello,
+
+On Mon, Nov 14, 2022 at 06:55:45PM +0200, Andy Shevchenko wrote:
+> Some of the Communities may have PWM capability. In such cases,
+
+Is "Communities" is proper name in this context? If not, I'd not
+capitalize it.
+
+> enumerate the PWM device via respective driver. User is still
+
+s/User/A user/ ?
+
+> responsible for setting correct pin muxing for the line that
+> needs to output the signal.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/pinctrl/intel/pinctrl-intel.c | 32 +++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/inte=
+l/pinctrl-intel.c
+> index 52ecd66ce357..d61c22e9d531 100644
+> --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+> =20
+> +#include <linux/platform_data/x86/pwm-lpss.h>
+> +
+>  #include "../core.h"
+>  #include "pinctrl-intel.h"
+> =20
+> @@ -46,6 +48,8 @@
+>  #define PADOWN_MASK(p)			(GENMASK(3, 0) << PADOWN_SHIFT(p))
+>  #define PADOWN_GPP(p)			((p) / 8)
+> =20
+> +#define PWMC				0x204
+> +
+>  /* Offset from pad_regs */
+>  #define PADCFG0				0x000
+>  #define PADCFG0_RXEVCFG_SHIFT		25
+> @@ -1499,6 +1503,30 @@ static int intel_pinctrl_pm_init(struct intel_pinc=
+trl *pctrl)
+>  	return 0;
+>  }
+> =20
+> +static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
+> +				   struct intel_community *community)
+> +{
+> +	static const struct pwm_lpss_boardinfo info =3D {
+> +		.clk_rate =3D 19200000,
+> +		.npwm =3D 1,
+> +		.base_unit_bits =3D 22,
+> +		.bypass =3D true,
+> +	};
+> +	struct pwm_lpss_chip *pwm;
+> +
+> +	if (!(community->features & PINCTRL_FEATURE_PWM))
+> +		return 0;
+> +
+> +	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
+> +		return 0;
+> +
+> +	pwm =3D devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
+> +	if (IS_ERR(pwm))
+> +		return PTR_ERR(pwm);
+> +
+> +	return 0;
+
+The last 3 codelines can be replaced by
+
+	return PTR_ERR_OR_ZERO(pwm);
+
+(but I know it's subjective if you like that or not, so I won't insist;
+see also b784c77075023e1a71bc06e6b4f711acb99e9c73).
+
+> +}
+> +
+>  static int intel_pinctrl_probe(struct platform_device *pdev,
+>  			       const struct intel_pinctrl_soc_data *soc_data)
+>  {
+> @@ -1584,6 +1612,10 @@ static int intel_pinctrl_probe(struct platform_dev=
+ice *pdev,
+>  			ret =3D intel_pinctrl_add_padgroups_by_size(pctrl, community);
+>  		if (ret)
+>  			return ret;
+> +
+> +		ret =3D intel_pinctrl_probe_pwm(pctrl, community);
+> +		if (ret)
+> +			return ret;
+>  	}
+> =20
+>  	irq =3D platform_get_irq(pdev, 0);
+
+intel_pinctrl_add_padgroups_by_size() doesn't need cleanup in the error
+path, so this hunk is fine.
+
+All in all this is all very minor, so:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+even if you keep the patch as is.
+
+Best regards
+Uwe
 
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--jmyufltz4xble7qf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN1+XoACgkQwfwUeK3K
+7An41Qf9H02Ebbtnsoac/a/Q2UCAszSvtVhYehJVq0uC9RJYSyNVchLpxavRk4rV
+NGb6mfjl7A6OgS1gqoyQtqt0VP64FGKlp9YTNA+1AJvl6lvwcyNqgQ4nN3slp0pj
+sennz3ouKLREc3mSorDAz1tgr09xqU9etJYHDPUo4oipv74QGFT6KjWqr9bVE/yR
+5b1LYYvy8to+/tQwwt8FdnJmiP7TrtNz6LcEAH6BmmKw4/bMFFHAshHVlZTvINVZ
+q/D+qqzfrvD2evY/LOopcOCdl9movJwkltHbHhsJ4qODZjTIj2oJ39O9PgVf5V7V
++1Vi14LTUaPMblRWJe7tNhCP2H9v0g==
+=TlVN
+-----END PGP SIGNATURE-----
+
+--jmyufltz4xble7qf--
