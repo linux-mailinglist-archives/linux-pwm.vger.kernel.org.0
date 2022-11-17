@@ -2,52 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D36F762DD6F
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 15:00:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02DDD62DD93
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 15:09:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240290AbiKQOAa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 09:00:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38504 "EHLO
+        id S239766AbiKQOJ3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 09:09:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231463AbiKQOA2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 09:00:28 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA76419BC
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 06:00:27 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovfRJ-0001Mv-Cl; Thu, 17 Nov 2022 15:00:25 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovfRH-004rcq-Rw; Thu, 17 Nov 2022 15:00:24 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovfRI-00HIJJ-6F; Thu, 17 Nov 2022 15:00:24 +0100
-Date:   Thu, 17 Nov 2022 15:00:24 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 2/4] pwm: Reduce time the pwm_lock mutex is held in
- pwmchip_add()
-Message-ID: <20221117140024.o77f5prewt5clgyh@pengutronix.de>
-References: <20221115211515.3750209-1-u.kleine-koenig@pengutronix.de>
- <20221115211515.3750209-3-u.kleine-koenig@pengutronix.de>
- <Y3SbNM8H3QxY0XF2@smile.fi.intel.com>
+        with ESMTP id S239819AbiKQOJ2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 09:09:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BD964555
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 06:09:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C278861E4C
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 14:09:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BAF1C4347C
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 14:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668694165;
+        bh=kFf1BlsqbF1snd//p2/5Vu67tJrV3hvqaTBuSJNFgvI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mboiqzYSv3Rx3DUZ/wncnUqNB+B/B5RZbn4qWafuoclv73FZ7k1sTs/k6gVyjoxcl
+         dU9ygRV3Yz/jlFZVp+LHg7zvxw5VVt0iovApN9NUI0v8tR3y72OO2ubZQwsdjiI+sR
+         e2qPNtDQNK62CuUmRrt635M42eMLg/PGX1xikcMn4Sa641e07MNeY7+D2HwnDf1f5n
+         R7W80ggvJzNpCOyllUn9Ow1HfrnQyx8l1Pcdt4crNgxTEhj950sE17CQY8nWdDR+0H
+         TdNSzWR04/A5ei3VGVtU7LIESqw7LdXFB3eL3ffv+QkwFU6ErHhRWoPkjbzCI1GAE8
+         glbW1kCKzL3YQ==
+Received: by mail-lj1-f178.google.com with SMTP id u11so2835382ljk.6
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 06:09:25 -0800 (PST)
+X-Gm-Message-State: ANoB5pn0rwUaWX0dvTXjsmn49AtIiFOB6FBzDNUKHgPGPrlQotVSoB48
+        gc9vw9Cy8/N0g6ECTu8Ks7jHN4DrAI4UFgOb8A==
+X-Google-Smtp-Source: AA0mqf5l2P0RRR5SLIW4f3fCD4PvOX7KfiHWNX0OJEbN7B90KmsUZ14+NJybDy2pQp4UqdK2cHuOu7VD0n9MGdhrnB0=
+X-Received: by 2002:a05:651c:2328:b0:277:14cf:6da2 with SMTP id
+ bi40-20020a05651c232800b0027714cf6da2mr1021629ljb.94.1668694163167; Thu, 17
+ Nov 2022 06:09:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xlvi67qwyjkzh2na"
-Content-Disposition: inline
-In-Reply-To: <Y3SbNM8H3QxY0XF2@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+References: <20221117083111.1260643-1-Naresh.Solanki@9elements.com> <20221117091803.zy42s3qd5bo4r6et@pengutronix.de>
+In-Reply-To: <20221117091803.zy42s3qd5bo4r6et@pengutronix.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 17 Nov 2022 08:09:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLQ2Q2XGTxSjCi8nWqFVTURViDUrZMWKHUHp1CNyL+bbQ@mail.gmail.com>
+Message-ID: <CAL_JsqLQ2Q2XGTxSjCi8nWqFVTURViDUrZMWKHUHp1CNyL+bbQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pwm: core: Do not create device link for same consumer
+ & supplier
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Naresh Solanki <naresh.solanki@9elements.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,57 +64,37 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Nov 17, 2022 at 3:18 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> On Thu, Nov 17, 2022 at 09:31:11AM +0100, Naresh Solanki wrote:
+> > If the PWM consumer is the child DT device of PWM supplier, i.e., the
+> > same 'struct device' then do not create device link.
+> >
+> > Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
+>
+> In a private conversation I learned that this is needed for
+> https://lore.kernel.org/all/20221116213615.1256297-1-Naresh.Solanki@9elem=
+ents.com/
+>
+> Given the series above is broken without this patch, I suggest to
+> discuss these in a single series.
+>
+> I still think the provider shouldn't consume it's own PWM. Either the
+> PWM is usable for other purposes, then it should be a proper device on
+> its own, or it isn't and then please don't expose it.
 
---xlvi67qwyjkzh2na
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+TBC, none of this should affect the binding because this is all kernel
+implementation decisions. In the binding, the consumer is a proper
+device (node).
 
-Hello Andy,
+Unless there's some automatic h/w feedback controlling the pwm, the
+fan controller needs to do normal PWM control like any other client.
+Not exposing as a PWM means reimplementing everything the PWM
+subsystem does including parsing the pwms properties itself. That
+doesn't seem great. Long term, perhaps there should be fan driver(s)
+separate from a fan controller.
 
-On Wed, Nov 16, 2022 at 10:11:32AM +0200, Andy Shevchenko wrote:
-> On Tue, Nov 15, 2022 at 10:15:13PM +0100, Uwe Kleine-K=F6nig wrote:
-> > This simplifies error handling as the need for goto error handling goes
-> > away and at the end of the function the code can be simplified as this
-> > code isn't used in the error case any more.
->=20
-> ...
->=20
-> > +	mutex_unlock(&pwm_lock);
-> > =20
-> >  	if (IS_ENABLED(CONFIG_OF))
-> >  		of_pwmchip_add(chip);
->=20
-> Why calling this without a lock is not a problem? Commit message doesn't =
-share
-> a bit about this change.
-
-Maybe add another paragraph at the end reading:
-
-Now memory allocation and the call to of_pwmchip_add() are done without
-holding the lock. Both don't access the data structures protected by
-&pwm_lock.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xlvi67qwyjkzh2na
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN2PnQACgkQwfwUeK3K
-7AlD9Af/V9thrUEFDVkdjbTeHHndr863OXZqosxUiaKfo6HtBsqPxycbu/i2NqnH
-zjil8JpD32Ez5CwmGun5xyLrX/8D/7TO+G8B+l/nLOne+tDRUZEb6o0uGSBhNJA6
-pA7XbTALYcZk82lmAvxgEZrItH28m3PkdZ8IM/mgOGomcgzD08wne8VmfildH0e/
-ZF4nLcLTqB1LiRx+lGgIld8dT9AQN/r+5Y+2d68IM/IW4SObexD09nvL4fwW9bFq
-bA/pywV/Zl5U9bq1CQTGbqjNnQpuASQY8v3Jj5V8KjexPiKC7hYAUbmlajfmwExX
-S4dOsHUg4r5WfJSMHNHcjFdBS7rEVw==
-=QrhV
------END PGP SIGNATURE-----
-
---xlvi67qwyjkzh2na--
+Rob
