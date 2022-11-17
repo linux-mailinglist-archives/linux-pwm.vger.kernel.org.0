@@ -2,46 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 843E662D42A
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 08:36:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E75062D456
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 08:45:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239376AbiKQHgA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 02:36:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36584 "EHLO
+        id S239378AbiKQHpi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 02:45:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239372AbiKQHf7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 02:35:59 -0500
+        with ESMTP id S239392AbiKQHpf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 02:45:35 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B2766C8A
-        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 23:35:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE0C450BF
+        for <linux-pwm@vger.kernel.org>; Wed, 16 Nov 2022 23:45:34 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ovZRA-0008RP-CB; Thu, 17 Nov 2022 08:35:52 +0100
+        id 1ovZaH-0000v6-1X; Thu, 17 Nov 2022 08:45:17 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ovZR8-004o4G-EG; Thu, 17 Nov 2022 08:35:51 +0100
+        id 1ovZaC-004o5M-UR; Thu, 17 Nov 2022 08:45:13 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ovZR8-00HDoK-Km; Thu, 17 Nov 2022 08:35:50 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee@kernel.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id 1ovZaD-00HDqE-7v; Thu, 17 Nov 2022 08:45:13 +0100
+Date:   Thu, 17 Nov 2022 08:45:10 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Naresh Solanki <naresh.solanki@9elements.com>
+Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] Input: max8997 - Convert to modern way to get a reference to a PWM
-Date:   Thu, 17 Nov 2022 08:35:43 +0100
-Message-Id: <20221117073543.3790449-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.38.1
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Marcello Sylvester Bauer <sylv@sylv.io>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] hwmon: (max6639) Change from pdata to dt
+ configuration
+Message-ID: <20221117074510.qqtjc6h3bnh5rccx@pengutronix.de>
+References: <20221116213615.1256297-1-Naresh.Solanki@9elements.com>
+ <20221116213615.1256297-4-Naresh.Solanki@9elements.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2605; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=RHUmdzfS5kgAw35yKuhCfScFTp9Q8XCBrifuzdw6358=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjdeRLyfYtfTatFvl7PMR56JYJU0K6IP3AgD3Gy09t YyL2qMuJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY3XkSwAKCRDB/BR4rcrsCYQdB/ 0ehWkn9MuqC7K+sPOxCxJ8i1ags3ILTQSanRJXX4cVaAq2D0Eb35ylKQ7VaPMmJy8BXtNTNMA3gk1u OjKPNNiCaHm6opTw0r/FL+nGBZK2kJ3TfSsfn4cKdFZeCKBWTu+xPoW36amKwUd+dSSd1oU+5soiPO RlmdNteN8DlHEMn997BMgEdYXPqPNfBDwxO/CRCCGLUMaOsMj7/hH47WDw6r+8/9eaTRHKwoCxXo8A XKSKy+ybWZTyja586mAL3m5/FQUBZcI374ut9d5YCm8+Cdk9r/YxloAAuvFRuQpmxUCTPp8Hx8CHJE mnl4p8M8irEa05QNJQtfSB4ivFPteg
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ka6u4pp26b6usojr"
+Content-Disposition: inline
+In-Reply-To: <20221116213615.1256297-4-Naresh.Solanki@9elements.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -55,78 +59,52 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-pwm_request() isn't recommended to be used any more because it relies on
-global IDs for the PWM which comes with different difficulties.
 
-The new way to do things is to find the right PWM using a reference from
-the platform device. (This can be created either using a device-tree
-or a platform lookup table, see e.g. commit 5a4412d4a82f ("ARM: pxa:
-tavorevb: Use PWM lookup table") how to do this.)
+--ka6u4pp26b6usojr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There are no in-tree users, so there are no other code locations that need
-adaption.
+Hello,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/input/misc/max8997_haptic.c | 7 +++----
- include/linux/mfd/max8997.h         | 3 ---
- 2 files changed, 3 insertions(+), 7 deletions(-)
+On Wed, Nov 16, 2022 at 10:36:15PM +0100, Naresh Solanki wrote:
+> max6639_platform_data is not used by any in-kernel driver and does not
+> address the MAX6639 fans separately.
+> Move to device tree configuration with explicit properties to configure
+> each fan.
+>=20
+> Non-DT platform can still use this module with its default
+> configuration.
+>=20
+> Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
+> Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
 
-diff --git a/drivers/input/misc/max8997_haptic.c b/drivers/input/misc/max8997_haptic.c
-index cd5e99ec1d3c..99cbc5ee89d1 100644
---- a/drivers/input/misc/max8997_haptic.c
-+++ b/drivers/input/misc/max8997_haptic.c
-@@ -278,8 +278,7 @@ static int max8997_haptic_probe(struct platform_device *pdev)
- 		break;
- 
- 	case MAX8997_EXTERNAL_MODE:
--		chip->pwm = pwm_request(haptic_pdata->pwm_channel_id,
--					"max8997-haptic");
-+		chip->pwm = pwm_get(&pdev->dev, NULL);
- 		if (IS_ERR(chip->pwm)) {
- 			error = PTR_ERR(chip->pwm);
- 			dev_err(&pdev->dev,
-@@ -344,7 +343,7 @@ static int max8997_haptic_probe(struct platform_device *pdev)
- 	regulator_put(chip->regulator);
- err_free_pwm:
- 	if (chip->mode == MAX8997_EXTERNAL_MODE)
--		pwm_free(chip->pwm);
-+		pwm_put(chip->pwm);
- err_free_mem:
- 	input_free_device(input_dev);
- 	kfree(chip);
-@@ -360,7 +359,7 @@ static int max8997_haptic_remove(struct platform_device *pdev)
- 	regulator_put(chip->regulator);
- 
- 	if (chip->mode == MAX8997_EXTERNAL_MODE)
--		pwm_free(chip->pwm);
-+		pwm_put(chip->pwm);
- 
- 	kfree(chip);
- 
-diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
-index 6c98edcf4b0b..6193905abbb5 100644
---- a/include/linux/mfd/max8997.h
-+++ b/include/linux/mfd/max8997.h
-@@ -110,8 +110,6 @@ enum max8997_haptic_pwm_divisor {
- 
- /**
-  * max8997_haptic_platform_data
-- * @pwm_channel_id: channel number of PWM device
-- *		    valid for MAX8997_EXTERNAL_MODE
-  * @pwm_period: period in nano second for PWM device
-  *		valid for MAX8997_EXTERNAL_MODE
-  * @type: motor type
-@@ -128,7 +126,6 @@ enum max8997_haptic_pwm_divisor {
-  *     [0 - 255]: available period
-  */
- struct max8997_haptic_platform_data {
--	unsigned int pwm_channel_id;
- 	unsigned int pwm_period;
- 
- 	enum max8997_haptic_motor_type type;
+What changed here since v5? Please either add a changelog below the
+tripple-dash for a new revision, or make sure that all relevant people
+get the cover letter.
 
-base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
--- 
-2.38.1
+It seems you didn't address my comments for v5 :-\
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ka6u4pp26b6usojr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN15oMACgkQwfwUeK3K
+7AmqXAf/VDOQ7mnov3rgf8/GY+ERfUHmK13LG3T9l7PjEcDOYnnBpmjIfb46EAQe
+knIQpR4Hur3Oy6TDvQ6BEzNeqaY8uelToGLeQCPY629HPd8nBGDTOf49A7eAWKdv
+UhhNkqPWZZSEpGN989ITsutCS3KklmdROR7mQbSLBvU+dMb5bhVgDz1vkNxa9aJ1
+p5hWQjSPWnYOW8ZI0UfXgkCESDdOASeuPhxRq2YX/GM7gUgiJlUD9vm40xAt2N8v
+p8FxVsEBJPw4b8+AZmdEz/EjrOjdmqRrsiEbyk0Ik65U+w3jopKq5Is9HyR8BJBo
+ewRscdLuuLMT9Xsq3IaRYhwfhXet6w==
+=HbtU
+-----END PGP SIGNATURE-----
+
+--ka6u4pp26b6usojr--
