@@ -2,49 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FE2F62D5D7
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 10:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3882962D62F
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 10:13:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239627AbiKQJGX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 04:06:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
+        id S239800AbiKQJNv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 04:13:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233899AbiKQJGR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 04:06:17 -0500
+        with ESMTP id S233900AbiKQJNt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 04:13:49 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119885A6C0
-        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 01:06:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFB15B861
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 01:13:48 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ovaqV-0004HD-N6; Thu, 17 Nov 2022 10:06:07 +0100
+        id 1ovaxc-0005Sg-6M; Thu, 17 Nov 2022 10:13:28 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ovaqT-004p0y-Tx; Thu, 17 Nov 2022 10:06:06 +0100
+        id 1ovaxY-004p1e-EC; Thu, 17 Nov 2022 10:13:25 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1ovaqT-00HEYW-UH; Thu, 17 Nov 2022 10:06:05 +0100
-Date:   Thu, 17 Nov 2022 10:06:05 +0100
+        id 1ovaxY-00HF1m-OS; Thu, 17 Nov 2022 10:13:24 +0100
+Date:   Thu, 17 Nov 2022 10:13:24 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+To:     Naresh Solanki <naresh.solanki@9elements.com>
+Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 7/7] pinctrl: intel: Enumerate PWM device when
- community has a capability
-Message-ID: <20221117090605.ktgyaverpzl3irjo@pengutronix.de>
-References: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
- <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Marcello Sylvester Bauer <sylv@sylv.io>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] hwmon: (max6639) Change from pdata to dt
+ configuration
+Message-ID: <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
+References: <20221116213615.1256297-1-Naresh.Solanki@9elements.com>
+ <20221116213615.1256297-4-Naresh.Solanki@9elements.com>
+ <20221117074510.qqtjc6h3bnh5rccx@pengutronix.de>
+ <81cd642f-c5fb-77ec-a634-5655d5b6088c@9elements.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jmyufltz4xble7qf"
+        protocol="application/pgp-signature"; boundary="lbqlkkiplftnkolk"
 Content-Disposition: inline
-In-Reply-To: <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <81cd642f-c5fb-77ec-a634-5655d5b6088c@9elements.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -59,140 +62,90 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---jmyufltz4xble7qf
+--lbqlkkiplftnkolk
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Mon, Nov 14, 2022 at 06:55:45PM +0200, Andy Shevchenko wrote:
-> Some of the Communities may have PWM capability. In such cases,
-
-Is "Communities" is proper name in this context? If not, I'd not
-capitalize it.
-
-> enumerate the PWM device via respective driver. User is still
-
-s/User/A user/ ?
-
-> responsible for setting correct pin muxing for the line that
-> needs to output the signal.
+On Thu, Nov 17, 2022 at 02:10:45PM +0530, Naresh Solanki wrote:
 >=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/intel/pinctrl-intel.c | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
 >=20
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/inte=
-l/pinctrl-intel.c
-> index 52ecd66ce357..d61c22e9d531 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -21,6 +21,8 @@
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinconf-generic.h>
-> =20
-> +#include <linux/platform_data/x86/pwm-lpss.h>
-> +
->  #include "../core.h"
->  #include "pinctrl-intel.h"
-> =20
-> @@ -46,6 +48,8 @@
->  #define PADOWN_MASK(p)			(GENMASK(3, 0) << PADOWN_SHIFT(p))
->  #define PADOWN_GPP(p)			((p) / 8)
-> =20
-> +#define PWMC				0x204
-> +
->  /* Offset from pad_regs */
->  #define PADCFG0				0x000
->  #define PADCFG0_RXEVCFG_SHIFT		25
-> @@ -1499,6 +1503,30 @@ static int intel_pinctrl_pm_init(struct intel_pinc=
-trl *pctrl)
->  	return 0;
->  }
-> =20
-> +static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
-> +				   struct intel_community *community)
-> +{
-> +	static const struct pwm_lpss_boardinfo info =3D {
-> +		.clk_rate =3D 19200000,
-> +		.npwm =3D 1,
-> +		.base_unit_bits =3D 22,
-> +		.bypass =3D true,
-> +	};
-> +	struct pwm_lpss_chip *pwm;
-> +
-> +	if (!(community->features & PINCTRL_FEATURE_PWM))
-> +		return 0;
-> +
-> +	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
-> +		return 0;
-> +
-> +	pwm =3D devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
-> +	if (IS_ERR(pwm))
-> +		return PTR_ERR(pwm);
-> +
-> +	return 0;
+> On 17-11-2022 01:15 pm, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > On Wed, Nov 16, 2022 at 10:36:15PM +0100, Naresh Solanki wrote:
+> > > max6639_platform_data is not used by any in-kernel driver and does not
+> > > address the MAX6639 fans separately.
+> > > Move to device tree configuration with explicit properties to configu=
+re
+> > > each fan.
+> > >=20
+> > > Non-DT platform can still use this module with its default
+> > > configuration.
+> > >=20
+> > > Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
+> > > Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
+> >=20
+> > What changed here since v5? Please either add a changelog below the
+> > tripple-dash for a new revision, or make sure that all relevant people
+> > get the cover letter.
+> >=20
+> > It seems you didn't address my comments for v5 :-\
+> Not sure what I missed but did following changes:
+> Removed unused header max6639.h
+> Used dev_err_probe instead,
+> Removed of_pwm_n_cells,
+> if condition for freq_table
+> removed pwm_get_state & instead use pwm->state
+> division/multiplication optimizations,
+> indentation of freq_table,
 
-The last 3 codelines can be replaced by
+In the cover letter you just wrote:
 
-	return PTR_ERR_OR_ZERO(pwm);
+| Changes in V6:
+| - Remove unused header file
+| - minor cleanup
 
-(but I know it's subjective if you like that or not, so I won't insist;
-see also b784c77075023e1a71bc06e6b4f711acb99e9c73).
+which is too short in my eyes. If you wrote instead:
 
-> +}
-> +
->  static int intel_pinctrl_probe(struct platform_device *pdev,
->  			       const struct intel_pinctrl_soc_data *soc_data)
->  {
-> @@ -1584,6 +1612,10 @@ static int intel_pinctrl_probe(struct platform_dev=
-ice *pdev,
->  			ret =3D intel_pinctrl_add_padgroups_by_size(pctrl, community);
->  		if (ret)
->  			return ret;
-> +
-> +		ret =3D intel_pinctrl_probe_pwm(pctrl, community);
-> +		if (ret)
-> +			return ret;
->  	}
-> =20
->  	irq =3D platform_get_irq(pdev, 0);
+	Address review feedback by Uwe Kleine-K=F6nig in patch #3, patches #1 and
+	#2 unchanged.
 
-intel_pinctrl_add_padgroups_by_size() doesn't need cleanup in the error
-path, so this hunk is fine.
+This would be much more helpful as people that were already happy with
+v5 wouldn't need to look at the first two patches and I would know that
+you addressed my feedback and would have looked in more detail.
 
-All in all this is all very minor, so:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-even if you keep the patch as is.
+What I miss is the most critical part of my feedback, i.e.:
+| My overall impression is that this patch mixes too much things. IMHO it
+| should be split in (at least)
+|=20
+|  - Add dt support
+|  - Drop platform support
+|  - Add PWM provider support
+|  - Make use of the PWM API
+|
+| maybe also add the 2nd PWM in a separate step.
 
 Best regards
 Uwe
-
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---jmyufltz4xble7qf
+--lbqlkkiplftnkolk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN1+XoACgkQwfwUeK3K
-7An41Qf9H02Ebbtnsoac/a/Q2UCAszSvtVhYehJVq0uC9RJYSyNVchLpxavRk4rV
-NGb6mfjl7A6OgS1gqoyQtqt0VP64FGKlp9YTNA+1AJvl6lvwcyNqgQ4nN3slp0pj
-sennz3ouKLREc3mSorDAz1tgr09xqU9etJYHDPUo4oipv74QGFT6KjWqr9bVE/yR
-5b1LYYvy8to+/tQwwt8FdnJmiP7TrtNz6LcEAH6BmmKw4/bMFFHAshHVlZTvINVZ
-q/D+qqzfrvD2evY/LOopcOCdl9movJwkltHbHhsJ4qODZjTIj2oJ39O9PgVf5V7V
-+1Vi14LTUaPMblRWJe7tNhCP2H9v0g==
-=TlVN
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN1+zEACgkQwfwUeK3K
+7AkGRwgAllZK66a+YhErW6Qlvi+M9Bd/nwKnyEiAsvmyQ2IadpKiThbMr6uw0y5/
+qlrC3gMnhKzY8u0AFTFGnZlQOS+fCVeopgahPdA5ZJNW4GvNcPXB8qHDXwdzVQOf
+yRQkbpYnu9Pt8Wtxew0QWnCeW+s/BVbJJSrWJYWZgonp+OX0dl19Su2yO+H6agHF
+TDExZrPMv8ds4Nxj7TM5V7MJn8TZ9pxecfJjFcudvTEMTkgPZ5R+EY45+L8Jg29l
+b1BRWtoDEwku4K1GTIb1BRMJ3JRS3pJVunj3R88/E128yY3vno9TownFtSSG5s/1
++RsohjtFf/cRwzqaoYdWALCulw4anQ==
+=MgIF
 -----END PGP SIGNATURE-----
 
---jmyufltz4xble7qf--
+--lbqlkkiplftnkolk--
