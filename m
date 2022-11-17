@@ -2,148 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C3A162D900
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 12:09:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0031E62D95F
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 12:28:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239653AbiKQLIv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 06:08:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54466 "EHLO
+        id S239261AbiKQL2G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 06:28:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239848AbiKQLII (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 06:08:08 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317095C74F;
-        Thu, 17 Nov 2022 03:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668683282; x=1700219282;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=RK+XGHZ2BELVVYkxCYeGM6RfxC8qsuOPoluHIaCRq2s=;
-  b=R+iJ5Cvo2Mki1IeRdhrlzG7Eu5NnQ6aEVYbVUCy5L5fXluZerCkwd8+r
-   9GKChPwrLeju5+dy0T2TNJEOYx4hEipV+XDBKjJ0Y7f0USWzipBfXaYwX
-   UkePNZBJsMYmb3KNSvaUhyz/VEgNbkbvogjM5YktSTtS/4jz5MkIv0h7f
-   aFgZK/vLqxrZ+GVl9qBX18+VPsvA//poqAN2x5IdiyR1tzvkEt1pdVft4
-   VtFdOdTwItiEwicb61V/M7J+H6dYr9wXUQbY3q2MRYYXN0QA3dQYC+qJd
-   JFk7bSukzzWKIinkCLEsPpQi6Q4EodErZSImjf8b6hPLRt9rSDUN9BSIr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="314638732"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="314638732"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 03:08:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="617572346"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="617572346"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 17 Nov 2022 03:07:59 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 99CDF2B7; Thu, 17 Nov 2022 13:08:24 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v5 7/7] pinctrl: intel: Enumerate PWM device when community has a capability
-Date:   Thu, 17 Nov 2022 13:08:06 +0200
-Message-Id: <20221117110806.65470-8-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
-References: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S239203AbiKQL2F (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 06:28:05 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93EB745A24
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 03:28:03 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovd3o-0002Xd-9s; Thu, 17 Nov 2022 12:28:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovd3m-004q6e-8H; Thu, 17 Nov 2022 12:27:59 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovd3m-00HGXm-Gu; Thu, 17 Nov 2022 12:27:58 +0100
+Date:   Thu, 17 Nov 2022 12:27:58 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: Add missing dummy for devm_pwmchip_add()
+Message-ID: <20221117112758.nsxfwh4ck23uln5a@pengutronix.de>
+References: <12f2142991690d2b1d6890821f6e7779a4d4bdc0.1666706435.git.geert+renesas@glider.be>
+ <20221026001713.kuu5mj6kogosvqnk@pengutronix.de>
+ <CAMuHMdW=h922855yyiiR2Bo+P2Dg7S7r1pVBF56S+Z0ytng3fA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4oa35okzj2bp3axr"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW=h922855yyiiR2Bo+P2Dg7S7r1pVBF56S+Z0ytng3fA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Some of the Communities may have PWM capability. In such cases,
-enumerate the PWM device via respective driver. A user is still
-responsible for setting correct pin muxing for the line that
-needs to output the signal.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 29 +++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+--4oa35okzj2bp3axr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 52ecd66ce357..d74c8b650aa7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -21,6 +21,8 @@
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinconf-generic.h>
- 
-+#include <linux/platform_data/x86/pwm-lpss.h>
-+
- #include "../core.h"
- #include "pinctrl-intel.h"
- 
-@@ -46,6 +48,8 @@
- #define PADOWN_MASK(p)			(GENMASK(3, 0) << PADOWN_SHIFT(p))
- #define PADOWN_GPP(p)			((p) / 8)
- 
-+#define PWMC				0x204
-+
- /* Offset from pad_regs */
- #define PADCFG0				0x000
- #define PADCFG0_RXEVCFG_SHIFT		25
-@@ -1499,6 +1503,27 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 	return 0;
- }
- 
-+static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
-+				   struct intel_community *community)
-+{
-+	static const struct pwm_lpss_boardinfo info = {
-+		.clk_rate = 19200000,
-+		.npwm = 1,
-+		.base_unit_bits = 22,
-+		.bypass = true,
-+	};
-+	struct pwm_lpss_chip *pwm;
-+
-+	if (!(community->features & PINCTRL_FEATURE_PWM))
-+		return 0;
-+
-+	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
-+		return 0;
-+
-+	pwm = devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
-+	return PTR_ERR_OR_ZERO(pwm);
-+}
-+
- static int intel_pinctrl_probe(struct platform_device *pdev,
- 			       const struct intel_pinctrl_soc_data *soc_data)
- {
-@@ -1584,6 +1609,10 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
- 			ret = intel_pinctrl_add_padgroups_by_size(pctrl, community);
- 		if (ret)
- 			return ret;
-+
-+		ret = intel_pinctrl_probe_pwm(pctrl, community);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--- 
-2.35.1
+Hello,
 
+On Wed, Oct 26, 2022 at 09:05:42AM +0200, Geert Uytterhoeven wrote:
+> On Wed, Oct 26, 2022 at 2:17 AM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Oct 25, 2022 at 04:03:42PM +0200, Geert Uytterhoeven wrote:
+> > > The PWM subsystem supports compile-testing if CONFIG_PWM is disabled.
+> > > However, no dummy is provided for devm_pwmchip_add(), which may lead =
+to
+> > > build failures.
+> > >
+> > > Fixes: bcda91bf86c1ff76 ("pwm: Add a device-managed function to add P=
+WM chips")
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Is this a problem that today yields a failure to compile? As of v6.1-rc1
+> > and also in next all callers are below drivers/pwm/ which isn't included
+> > in the build without PWM=3Dy.
+>=20
+> So none of these support compile-testing with CONFIG_PWM=3Dn...
+
+There are not many pwm providers outside of drivers/pwm:
+
+ - drivers/gpio/gpio-mvebu.c
+ - drivers/gpu/drm/bridge/ti-sn65dsi86.c
+ - drivers/leds/rgb/leds-qcom-lpg.c
+ - drivers/staging/greybus/pwm.c
+
+These all call pwmchip_add() which has a dummy.
+
+gpio-mvebu only uses it in an if (IS_ENABLED(CONFIG_PWM)) block.
+ti-sn65dsi86 has it in a big #ifdef CONFIG_PWM block (and in a dedicated
+driver such that the returned error doesn't hurt).
+
+leds-qcom-lpg.c depends on PWM as does the greybus stuff.
+
+So the dummy isn't even needed. (Unless for the corner case GPIO_MVEBU=3Dy
++ PWM=3Dm which is probably a bug worth fixing. Maybe a similar issue
+exists for ti-sn65dsi86.)
+
+> > Am I missing something or is this just preparing that one of the drivers
+> > that doesn't live in drivers/pwm might call devm_pwmchip_add in the
+> > future?
+>=20
+> I saw it with the RZ/G2L MTU3 PWM driver[1], which is not yet applied.
+> After noticing its sibling counter driver lacked a dependency on
+> CONFIG_COUNTER, I tried disabling CONFIG_PWM...
+>=20
+> > In that case I wouldn't add that Fixes: line (and also oppose to
+> > backporting that commit to stable).
+>=20
+> I tend to disagree: more drivers may be converted to devm_pwmchip_add()
+> in the future, possibly as part of a fix, causing troubles for the
+> stable team when backporting such fixes.
+
+Please don't backport as a precaution not to miss to backport it in case
+there is another patch that depends on it. In my experience the stable
+maintainers are good at identifying such dependencies.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4oa35okzj2bp3axr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN2GrsACgkQwfwUeK3K
+7AlxUwgAoI6Bmom9R1BQ6dVKKaQSiiL4Q5yxOafXc1axVKC/IUCX60/RvBFUwEWq
+ABqvQ4ZqmDv+k24vyMHgnO4qcT4fBog9MFNReXm1won9Zkr1Sw0h0olvERymjiHj
+8CdXXXEMvjg6IOAbQ8jC3ZjU355baYdFVflRTO1k52dPRMzP32zBIF/avcRcrTaT
+YnKGw9wmDfZdIGWx5vfokNmSzYLGsZSNxv2SsBWXf3QJRWC6reBaAalL8AZkzXq+
+hqQDHwV7OQSZMc7UkQfoQmHvznyg/fPQxL2qIImziwgRN9+rvuWgVqrAJjcj8New
+DfMBkJnfxbqv4pHoqmKS3rL0MBiz9Q==
+=4Qj1
+-----END PGP SIGNATURE-----
+
+--4oa35okzj2bp3axr--
