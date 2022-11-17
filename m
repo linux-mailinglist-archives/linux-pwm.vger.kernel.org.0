@@ -2,150 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 445B562E66A
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 22:09:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 557AC62E681
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Nov 2022 22:12:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240618AbiKQVJp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Nov 2022 16:09:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
+        id S240606AbiKQVMG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Nov 2022 16:12:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240624AbiKQVJZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 16:09:25 -0500
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCA87722F;
-        Thu, 17 Nov 2022 13:08:04 -0800 (PST)
-Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 4969620007;
-        Thu, 17 Nov 2022 21:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1668719281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=72JrUM6NacHh18cxNPJTokOPFIy2MlvUmUZu6AVg77s=;
-        b=kQ3WnKEHtW817TTGo/51w1BLV9fElm+d4PRny19l0Xo5WVvRKUWbYa4RLUCeb4hzAu+blU
-        gN78c5WiYd88yo78Tac1K8UgLdjF8sGEUg2eG4K4KIGZ2aSd/NCisT3pEqKgpi8MG9t8wo
-        Mhed7VoKwoPF1Ad6rnk8zscQKUda7EVdabBo89uHsVUfKLNbVRCzBabKqvqOG3TKdkeI5N
-        elXTmNOrt8pOHvUy7n2mYZBmGVFue71mi4Gp0X7blRdSkQQj+FNRIx2l1Hm3E/1dFZjljQ
-        ITXz8XlIez/SUSB6b7UDZFkg18YUByW5VovCJRgF+828mYPwuo2FHFq7f7zwSg==
-Date:   Thu, 17 Nov 2022 22:07:56 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
- shared bindings
-Message-ID: <20221117220756.7a1bf734@xps-13>
-In-Reply-To: <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
-References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
-        <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S240671AbiKQVLy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Nov 2022 16:11:54 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0337620182
+        for <linux-pwm@vger.kernel.org>; Thu, 17 Nov 2022 13:11:54 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovmAp-0007Om-Uf; Thu, 17 Nov 2022 22:11:51 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovmAn-004v5i-VG; Thu, 17 Nov 2022 22:11:50 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ovmAo-00HN0C-7m; Thu, 17 Nov 2022 22:11:50 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH v2 0/4] pwm: Some refactoring of pwmchip_add()
+Date:   Thu, 17 Nov 2022 22:11:39 +0100
+Message-Id: <20221117211143.3817381-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=597; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=aKdTZtwl9XGWY0ES2jremYshZeBwEU3FkygP8AbmADQ=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjdqN6vngz0LjirqUblfu69s/DY/NTHk0KMrteH8pI EuwuFHyJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY3ajegAKCRDB/BR4rcrsCSFSB/ 9RWVXu+0qWl4ouuFja11ps95FnIX5u8L9NUNBjAE0yDr8LumSchx92oac19awp16Tlwjy783qXOU9i KNcqht6N6z0w3IiSORqntZ11WvqAgVQCtY98V2o9QYCPlZCPyq1x5goLGdspO/gxHyFqrODvi2Jw7c tQQ161wyuFGgjRVt2WipsAo2+5sDOet14cr3DU+FPTWDZjtgquvVap9XJquE8ipb6pJGOsPXdDmVKZ YODB3xKIMU1pWOm8QuX0is2Vp7+J82x+h1eoTjGBweUt9OXHDhlJQjBKMj18B7jNO8fT5lFSQ59cPd ruPasoIwNqKJYrV9YqlGdZFDPp6gwm
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Krzysztof,
+Hello,
 
-krzysztof.kozlowski@linaro.org wrote on Thu, 17 Nov 2022 13:38:42 +0100:
+Compared to (implicit) v1, this amends the commit log as agreed upon
+with Andy and adds his tags.
 
-> The Devicetree bindings document does not have to say in the title that
-> it is a "binding", but instead just describe the hardware.  For shared
-> (re-usable) schemas, name them all as "common properties".
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
->  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
->  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
->  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
->  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
->  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
->  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
->  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
->  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
->  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
->  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
->  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
->  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
->  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
->  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
->  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
->  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
->  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
->  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
->  21 files changed, 23 insertions(+), 23 deletions(-)
->=20
+Thanks for the review!
 
-[...]
+Best regards
+Uwe
 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Docum=
-entation/devicetree/bindings/mtd/nand-chip.yaml
-> index 97ac3a3fbb52..20b195ef9b70 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: NAND Chip and NAND Controller Generic Binding
-> +title: NAND Chip and NAND Controller common properties
+Uwe Kleine-König (4):
+  pwm: Document variables protected by pwm_lock
+  pwm: Reduce time the pwm_lock mutex is held in pwmchip_add()
+  pwm: Mark free pwm IDs as used in alloc_pwms()
+  pwm: Don't initialize list head before calling list_add()
 
-I only see this now but the title should be
+ drivers/pwm/core.c | 37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
-	"NAND chip common properties"
 
-> =20
->  maintainers:
->    - Miquel Raynal <miquel.raynal@bootlin.com>
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b=
-/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> index 359a015d4e5a..a004efc42842 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -4,7 +4,7 @@
->  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
-> -title: NAND Chip and NAND Controller Generic Binding
-> +title: NAND Chip and NAND Controller common properties
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+-- 
+2.38.1
 
-And here just "NAND controller..."
-
-Of course the original purpose of your series is more to clean those
-titles rather than fixing them and if you disagree I am fine doing it
-myself aside, but if you could at the same time make the title more
-accurate that would be perfect.
-
-Either ways:
-
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Cheers,
-Miqu=C3=A8l
