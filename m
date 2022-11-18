@@ -2,50 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E92E662F1EE
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Nov 2022 10:55:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66D4562F27C
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Nov 2022 11:25:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241463AbiKRJzx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Nov 2022 04:55:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
+        id S235171AbiKRKZn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Nov 2022 05:25:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235099AbiKRJzw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Nov 2022 04:55:52 -0500
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6BE78E0AA;
-        Fri, 18 Nov 2022 01:55:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1668765350; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6XNQnzVk9riDdeXq+9UMc2lKBE5CylsUGgRXuU/IvoA=;
-        b=lP8PARIJ1MGPuSFRXoZdjDQldeDX9gaAL8k6+ck7PFoPEr/pfVYxjDVHYtpLT9/6oltISw
-        axe4KwYExIC3fbuX3Vdw5FQcDGfcZA+AoBUTXzpwPyVmEacl1F7QisvJtCY7T79sG17bb5
-        b4/03lyP69aMqj4L9x1xBzMC6qdib+c=
-Date:   Fri, 18 Nov 2022 09:55:40 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/5] pwm: jz4740: Fix pin level of disabled TCU2 channels,
- part 1
-To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, stable@vger.kernel.org
-Message-Id: <SKFJLR.07UMT1VWJOD52@crapouillou.net>
-In-Reply-To: <20221117132927.mom5klfd4eww5amk@pengutronix.de>
-References: <20221024205213.327001-1-paul@crapouillou.net>
-        <20221024205213.327001-2-paul@crapouillou.net>
-        <20221025062129.drzltbavg6hrhv7r@pengutronix.de>
-        <CVZAKR.06MA7BGA170W3@crapouillou.net>
-        <20221117132927.mom5klfd4eww5amk@pengutronix.de>
+        with ESMTP id S241556AbiKRKZm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Nov 2022 05:25:42 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6A691536
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Nov 2022 02:25:39 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id v3-20020a17090ac90300b00218441ac0f6so7866406pjt.0
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Nov 2022 02:25:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hXadzGYPg8gH/D/ejsAudxwOh/sdzLX/WQ5IeL1dRw0=;
+        b=JGk8asImdMRrc822FzFzvhcgClh/yYcuFhUtuJtf/Pzp8GzJbTMuqESibrrlaqv2Mv
+         TrIpsJ2M4gzg6kfJFKtXezlWRA7u1ihsrCaK/CpqHbQy7LCfFI5cyZ2R8noGDg3p8h6Y
+         HBXlcLTd9xvR8XJLF90QFCVCcmiQpRC57IUQDMWtPoCmx2wVmACfETCt9ZpxyzAb15gc
+         0JKSZJ7TcvC8mD++2pRyZdwgTMbt5fvmrjuRCa04kCsSJhKtXF0pte+phFxWmUoflwEV
+         2Z0SPAIKliKI41i7C8pDcD5zSJGaH8Egzk6E26mvCa1zn8YVXz+Vp1VLtqoNLz3EzrMF
+         kbLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hXadzGYPg8gH/D/ejsAudxwOh/sdzLX/WQ5IeL1dRw0=;
+        b=aqRCW16JndhM78D8Z9pMPw2o+FKSBGWgViimAoXTxke6LQWz1dorJOSsMVz2KOX8FM
+         Oa4VuadGsWJhQ5cFq1lbIf8DmpGyOdsXqZSkr8pi/bF1ctlHCFxKBrx+4GJQYWysxLle
+         aXAQo/1K1/2tRShocHH8yJ1C3HeJcAPQMooEtriOL2eRzDqo9eMKzRD1WsI8HziyqbQD
+         QkXVODd+zLFMbZhV9OS/pcflvQ8/9SHHHYc/X6DfIsLyeXRYOJ5pL5sXWhro7L5paTBh
+         eoe9WJigNOTbkhEggdXHyJyV34YgKqnt/OzIhbIoXFh8MJRZK30N4a8Hnfysj+K1wjPw
+         GR7g==
+X-Gm-Message-State: ANoB5pmy9Gib3bs3krl9yb+fkQGTO90ahi5iSwVNEp9iePMQhmupWAnH
+        fSHPdMyQluPfEghDYVsE/TNzZEUOUXZ7W7ZQ
+X-Google-Smtp-Source: AA0mqf6Kna3GdFEECz4tQtAZxJtjO29EWzBbOP3NaB+37qQM7I/xTegkTunGCitNt08e7Ajd8vYduw==
+X-Received: by 2002:a17:90a:bf13:b0:213:5d6:8280 with SMTP id c19-20020a17090abf1300b0021305d68280mr12801182pjs.185.1668767139196;
+        Fri, 18 Nov 2022 02:25:39 -0800 (PST)
+Received: from ?IPV6:2405:201:d02f:d899:2028:7962:400:43b6? ([2405:201:d02f:d899:2028:7962:400:43b6])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170903234500b001806445887asm3218915plh.223.2022.11.18.02.25.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Nov 2022 02:25:38 -0800 (PST)
+Message-ID: <5d8f8ed5-f0ee-9ed1-1b9f-aed2ab18c26b@9elements.com>
+Date:   Fri, 18 Nov 2022 15:55:33 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v6 3/3] hwmon: (max6639) Change from pdata to dt
+ configuration
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Marcello Sylvester Bauer <sylv@sylv.io>,
+        linux-pwm@vger.kernel.org
+References: <20221116213615.1256297-1-Naresh.Solanki@9elements.com>
+ <20221116213615.1256297-4-Naresh.Solanki@9elements.com>
+ <20221117074510.qqtjc6h3bnh5rccx@pengutronix.de>
+ <81cd642f-c5fb-77ec-a634-5655d5b6088c@9elements.com>
+ <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
+From:   Naresh Solanki <naresh.solanki@9elements.com>
+In-Reply-To: <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,119 +86,69 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 Hi Uwe,
 
-Le jeu. 17 nov. 2022 =E0 14:29:27 +0100, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> a =E9crit :
-> Hello Paul,
->=20
-> On Tue, Oct 25, 2022 at 11:02:00AM +0100, Paul Cercueil wrote:
->>  Le mar. 25 oct. 2022 =E0 08:21:29 +0200, Uwe Kleine-K=F6nig
->>  <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > Hello,
->>  >
->>  > On Mon, Oct 24, 2022 at 09:52:09PM +0100, Paul Cercueil wrote:
->>  > >  The "duty > cycle" trick to force the pin level of a disabled=20
->> TCU2
->>  > >  channel would only work when the channel had been enabled
->>  > > previously.
->>  > >
->>  > >  Address this issue by enabling the PWM mode in=20
->> jz4740_pwm_disable
->>  > >  (I know, right) so that the "duty > cycle" trick works before
->>  > > disabling
->>  > >  the PWM channel right after.
->>  > >
->>  > >  This issue went unnoticed, as the PWM pins on the majority of=20
->> the
->>  > > boards
->>  > >  tested would default to the inactive level once the=20
->> corresponding
->>  > > TCU
->>  > >  clock was enabled, so the first call to jz4740_pwm_disable()=20
->> would
->>  > > not
->>  > >  actually change the pin levels.
->>  > >
->>  > >  On the GCW Zero however, the PWM pin for the backlight (PWM1,=20
->> which
->>  > > is
->>  > >  a TCU2 channel) goes active as soon as the timer1 clock is=20
->> enabled.
->>  > >  Since the jz4740_pwm_disable() function did not work on=20
->> channels not
->>  > >  previously enabled, the backlight would shine at full=20
->> brightness
->>  > > from
->>  > >  the moment the backlight driver would probe, until the=20
->> backlight
->>  > > driver
->>  > >  tried to *enable* the PWM output.
->>  > >
->>  > >  With this fix, the PWM pins will be forced inactive as soon as
->>  > >  jz4740_pwm_apply() is called (and might be reconfigured to=20
->> active if
->>  > >  dictated by the pwm_state). This means that there is still a=20
->> tiny
->>  > > time
->>  > >  frame between the .request() and .apply() callbacks where the=20
->> PWM
->>  > > pin
->>  > >  might be active. Sadly, there is no way to fix this issue: it=20
->> is
->>  > >  impossible to write a PWM channel's registers if the=20
->> corresponding
->>  > > clock
->>  > >  is not enabled, and enabling the clock is what causes the PWM=20
->> pin
->>  > > to go
->>  > >  active.
->>  > >
->>  > >  There is a workaround, though, which complements this fix:=20
->> simply
->>  > >  starting the backlight driver (or any PWM client driver) with a
->>  > > "init"
->>  > >  pinctrl state that sets the pin as an inactive GPIO. Once the
->>  > > driver is
->>  > >  probed and the pinctrl state switches to "default", the=20
->> regular PWM
->>  > > pin
->>  > >  configuration can be used as it will be properly driven.
->>  > >
->>  > >  Fixes: c2693514a0a1 ("pwm: jz4740: Obtain regmap from parent=20
->> node")
->>  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > >  Cc: stable@vger.kernel.org
->>  >
->>  > OK, understood the issue. I think there is another similar issue:=20
->> The
->>  > clk is get and enabled only in the .request() callback. The=20
->> result is (I
->>  > think---depends on a few further conditions) that if you have the
->>  > backlight driver as a module and the bootloader enables the=20
->> backlight to
->>  > show a splash screen, the backlight goes off because of the
->>  > clk_disable_unused initcall.
->>=20
->>  I will have to verify, but I'm pretty sure disabling the clock=20
->> doesn't
->>  change the pin level back to inactive.
->=20
-> Given that you set the clk's rate depending on the period to apply,=20
-> I'd
-> claim that you need to keep the clk on. Maybe it doesn't hurt, because
-> another component of the system keeps the clk running, but it's wrong
-> anyhow. Assumptions like these tend to break on new chip revisions.
-
-If the backlight driver is a module then it will probe before the=20
-clk_disable_unused initcall, unless something is really wrong. So the=20
-backlight would stay ON if it was enabled by the bootloader, unless the=20
-DTB decides it doesn't have to be.
-
-Anyway, I can try your suggestion, and move the trick to force-disable=20
-PWM pins in the probe(). After that, the clocks can be safely disabled,=20
-so I can disable them (for the disabled PWMs) at the end of the probe=20
-and re-enable them again in their respective .request() callback.
-
-Cheers,
--Paul
-
-
+On 17-11-2022 02:43 pm, Uwe Kleine-König wrote:
+> On Thu, Nov 17, 2022 at 02:10:45PM +0530, Naresh Solanki wrote:
+>>
+>>
+>> On 17-11-2022 01:15 pm, Uwe Kleine-König wrote:
+>>> Hello,
+>>>
+>>> On Wed, Nov 16, 2022 at 10:36:15PM +0100, Naresh Solanki wrote:
+>>>> max6639_platform_data is not used by any in-kernel driver and does not
+>>>> address the MAX6639 fans separately.
+>>>> Move to device tree configuration with explicit properties to configure
+>>>> each fan.
+>>>>
+>>>> Non-DT platform can still use this module with its default
+>>>> configuration.
+>>>>
+>>>> Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
+>>>> Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
+>>>
+>>> What changed here since v5? Please either add a changelog below the
+>>> tripple-dash for a new revision, or make sure that all relevant people
+>>> get the cover letter.
+>>>
+>>> It seems you didn't address my comments for v5 :-\
+>> Not sure what I missed but did following changes:
+>> Removed unused header max6639.h
+>> Used dev_err_probe instead,
+>> Removed of_pwm_n_cells,
+>> if condition for freq_table
+>> removed pwm_get_state & instead use pwm->state
+>> division/multiplication optimizations,
+>> indentation of freq_table,
+> 
+> In the cover letter you just wrote:
+> 
+> | Changes in V6:
+> | - Remove unused header file
+> | - minor cleanup
+> 
+> which is too short in my eyes. If you wrote instead:
+> 
+> 	Address review feedback by Uwe Kleine-König in patch #3, patches #1 and
+> 	#2 unchanged.
+> 
+> This would be much more helpful as people that were already happy with
+> v5 wouldn't need to look at the first two patches and I would know that
+> you addressed my feedback and would have looked in more detail.
+Sure will keep it this way next time.
+> 
+> What I miss is the most critical part of my feedback, i.e.:
+> | My overall impression is that this patch mixes too much things. IMHO it
+> | should be split in (at least)
+> |
+> |  - Add dt support
+> |  - Drop platform support
+> |  - Add PWM provider support
+> |  - Make use of the PWM API
+> |
+> | maybe also add the 2nd PWM in a separate step.
+Sure can do that.
+> 
+> Best regards
+> Uwe
+> 
+Thanks,
+Naresh
