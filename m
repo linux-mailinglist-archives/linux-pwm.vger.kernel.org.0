@@ -2,176 +2,171 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D29D062EF55
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Nov 2022 09:29:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E92E662F1EE
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Nov 2022 10:55:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241106AbiKRI27 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Nov 2022 03:28:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        id S241463AbiKRJzx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Nov 2022 04:55:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241460AbiKRI2g (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Nov 2022 03:28:36 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513AB2ED73
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Nov 2022 00:28:32 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id h12so5866773ljg.9
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Nov 2022 00:28:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DZabo7ibEwOOw8J7VwUfivpQWJQQOqpTQOP6qmrwcFs=;
-        b=c0DwlSGGZnpMt70g7cvHCqqLtClo+HqnYC/KDMQT/2C4Kgme2ED6Ajko4OIXpmbeXS
-         m5SIke4QdtVszOu65Cv1AnF200xxc1a/iy1cj+W/4WPUi1idnzCq3jL3rOCyXQ/Sy7Xo
-         FhxYYZmL7CP0ofdSTlNio6J4qvL4Gb4QE7SbMbyvGwdcz0q2lnaiEphLSDGuz3cWY979
-         gQT9VdBtzdRs59dL/dUgCq5BV84WRT+Q7ok8jIBAq5G8XWvjz6kIifP/efd7/+/UMkZu
-         +qzJPaRvsSeqy/GGhmsAycmFzituYnYzJUATh2BkazIz98eeuD3Eq9fkv2cSDtBNQpLB
-         eqpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZabo7ibEwOOw8J7VwUfivpQWJQQOqpTQOP6qmrwcFs=;
-        b=pbD8UIHQw5Hb9OCHOEizb5dFopFfLI1CZ+o6nUX9O8vlsCgDDeEIjxcQborHFFkt4O
-         aNvpY2V/kqcMY7V+YBXTp/0lXVS9r1PYejMFuYstU5gt7mvA5yTb+jk4qmOEWDMbDbcZ
-         4uvaaYo+R4CdXz9sW0jP3EklrlI/MX0nJvYnmfP3e733VjDj1EjBX2L/ukv300MetoED
-         QZPF1FHRSO+h2eG2Iaz6F90krgjU8v0YSNZ+zQ+5d62qlLBCDuKFjOxvNn3pDT+NLteG
-         Kzq+A0dZuun0Bbm/NUv6sK1RE2iGClm7Ud4Acl1CFiQ6H4m35w3oOL01p/lt6UCwy1Eq
-         DCaA==
-X-Gm-Message-State: ANoB5pnPiLyBH8GEe5n5HLByw8scGWdte1LhzDEksPzThFU+5QnwapkA
-        TXT+uujW8nhBY2Z32ZiooeiQXA==
-X-Google-Smtp-Source: AA0mqf5FUU/an0yPckwGnu0iJ8FLtTfHewcyaiyp5w+c6ymGf8LMkNj5Lkw1yXdUuHVX3l3x9IvIFA==
-X-Received: by 2002:a2e:a5c7:0:b0:277:8d48:27dd with SMTP id n7-20020a2ea5c7000000b002778d4827ddmr2207144ljp.192.1668760111721;
-        Fri, 18 Nov 2022 00:28:31 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id d24-20020a056512369800b0049b8c0571e5sm564273lfs.113.2022.11.18.00.28.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 00:28:31 -0800 (PST)
-Message-ID: <578b686e-8461-a959-86c5-83a8be1dc981@linaro.org>
-Date:   Fri, 18 Nov 2022 09:28:29 +0100
+        with ESMTP id S235099AbiKRJzw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Nov 2022 04:55:52 -0500
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6BE78E0AA;
+        Fri, 18 Nov 2022 01:55:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1668765350; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6XNQnzVk9riDdeXq+9UMc2lKBE5CylsUGgRXuU/IvoA=;
+        b=lP8PARIJ1MGPuSFRXoZdjDQldeDX9gaAL8k6+ck7PFoPEr/pfVYxjDVHYtpLT9/6oltISw
+        axe4KwYExIC3fbuX3Vdw5FQcDGfcZA+AoBUTXzpwPyVmEacl1F7QisvJtCY7T79sG17bb5
+        b4/03lyP69aMqj4L9x1xBzMC6qdib+c=
+Date:   Fri, 18 Nov 2022 09:55:40 +0000
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/5] pwm: jz4740: Fix pin level of disabled TCU2 channels,
+ part 1
+To:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, stable@vger.kernel.org
+Message-Id: <SKFJLR.07UMT1VWJOD52@crapouillou.net>
+In-Reply-To: <20221117132927.mom5klfd4eww5amk@pengutronix.de>
+References: <20221024205213.327001-1-paul@crapouillou.net>
+        <20221024205213.327001-2-paul@crapouillou.net>
+        <20221025062129.drzltbavg6hrhv7r@pengutronix.de>
+        <CVZAKR.06MA7BGA170W3@crapouillou.net>
+        <20221117132927.mom5klfd4eww5amk@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
- shared bindings
-Content-Language: en-US
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org
-References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
- <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
- <20221117220756.7a1bf734@xps-13>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221117220756.7a1bf734@xps-13>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17/11/2022 22:07, Miquel Raynal wrote:
-> Hi Krzysztof,
-> 
-> krzysztof.kozlowski@linaro.org wrote on Thu, 17 Nov 2022 13:38:42 +0100:
-> 
->> The Devicetree bindings document does not have to say in the title that
->> it is a "binding", but instead just describe the hardware.  For shared
->> (re-usable) schemas, name them all as "common properties".
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
->>  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
->>  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
->>  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
->>  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
->>  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
->>  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
->>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
->>  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
->>  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
->>  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
->>  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
->>  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
->>  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
->>  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
->>  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
->>  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
->>  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
->>  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
->>  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
->>  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
->>  21 files changed, 23 insertions(+), 23 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> index 97ac3a3fbb52..20b195ef9b70 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> @@ -4,7 +4,7 @@
->>  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
->>  $schema: http://devicetree.org/meta-schemas/core.yaml#
->>  
->> -title: NAND Chip and NAND Controller Generic Binding
->> +title: NAND Chip and NAND Controller common properties
-> 
-> I only see this now but the title should be
-> 
-> 	"NAND chip common properties"
-> 
->>  
->>  maintainers:
->>    - Miquel Raynal <miquel.raynal@bootlin.com>
->> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> index 359a015d4e5a..a004efc42842 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> @@ -4,7 +4,7 @@
->>  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
->>  $schema: http://devicetree.org/meta-schemas/core.yaml#
->>  
->> -title: NAND Chip and NAND Controller Generic Binding
->> +title: NAND Chip and NAND Controller common properties
-> 
-> And here just "NAND controller..."
-> 
-> Of course the original purpose of your series is more to clean those
-> titles rather than fixing them and if you disagree I am fine doing it
-> myself aside, but if you could at the same time make the title more
-> accurate that would be perfect.
-> 
-> Either ways:
-> 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Hi Uwe,
 
-Thanks, I update these manually, so I can correct the names to ones you
-mentioned. Thanks.
+Le jeu. 17 nov. 2022 =E0 14:29:27 +0100, Uwe Kleine-K=F6nig=20
+<u.kleine-koenig@pengutronix.de> a =E9crit :
+> Hello Paul,
+>=20
+> On Tue, Oct 25, 2022 at 11:02:00AM +0100, Paul Cercueil wrote:
+>>  Le mar. 25 oct. 2022 =E0 08:21:29 +0200, Uwe Kleine-K=F6nig
+>>  <u.kleine-koenig@pengutronix.de> a =E9crit :
+>>  > Hello,
+>>  >
+>>  > On Mon, Oct 24, 2022 at 09:52:09PM +0100, Paul Cercueil wrote:
+>>  > >  The "duty > cycle" trick to force the pin level of a disabled=20
+>> TCU2
+>>  > >  channel would only work when the channel had been enabled
+>>  > > previously.
+>>  > >
+>>  > >  Address this issue by enabling the PWM mode in=20
+>> jz4740_pwm_disable
+>>  > >  (I know, right) so that the "duty > cycle" trick works before
+>>  > > disabling
+>>  > >  the PWM channel right after.
+>>  > >
+>>  > >  This issue went unnoticed, as the PWM pins on the majority of=20
+>> the
+>>  > > boards
+>>  > >  tested would default to the inactive level once the=20
+>> corresponding
+>>  > > TCU
+>>  > >  clock was enabled, so the first call to jz4740_pwm_disable()=20
+>> would
+>>  > > not
+>>  > >  actually change the pin levels.
+>>  > >
+>>  > >  On the GCW Zero however, the PWM pin for the backlight (PWM1,=20
+>> which
+>>  > > is
+>>  > >  a TCU2 channel) goes active as soon as the timer1 clock is=20
+>> enabled.
+>>  > >  Since the jz4740_pwm_disable() function did not work on=20
+>> channels not
+>>  > >  previously enabled, the backlight would shine at full=20
+>> brightness
+>>  > > from
+>>  > >  the moment the backlight driver would probe, until the=20
+>> backlight
+>>  > > driver
+>>  > >  tried to *enable* the PWM output.
+>>  > >
+>>  > >  With this fix, the PWM pins will be forced inactive as soon as
+>>  > >  jz4740_pwm_apply() is called (and might be reconfigured to=20
+>> active if
+>>  > >  dictated by the pwm_state). This means that there is still a=20
+>> tiny
+>>  > > time
+>>  > >  frame between the .request() and .apply() callbacks where the=20
+>> PWM
+>>  > > pin
+>>  > >  might be active. Sadly, there is no way to fix this issue: it=20
+>> is
+>>  > >  impossible to write a PWM channel's registers if the=20
+>> corresponding
+>>  > > clock
+>>  > >  is not enabled, and enabling the clock is what causes the PWM=20
+>> pin
+>>  > > to go
+>>  > >  active.
+>>  > >
+>>  > >  There is a workaround, though, which complements this fix:=20
+>> simply
+>>  > >  starting the backlight driver (or any PWM client driver) with a
+>>  > > "init"
+>>  > >  pinctrl state that sets the pin as an inactive GPIO. Once the
+>>  > > driver is
+>>  > >  probed and the pinctrl state switches to "default", the=20
+>> regular PWM
+>>  > > pin
+>>  > >  configuration can be used as it will be properly driven.
+>>  > >
+>>  > >  Fixes: c2693514a0a1 ("pwm: jz4740: Obtain regmap from parent=20
+>> node")
+>>  > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  > >  Cc: stable@vger.kernel.org
+>>  >
+>>  > OK, understood the issue. I think there is another similar issue:=20
+>> The
+>>  > clk is get and enabled only in the .request() callback. The=20
+>> result is (I
+>>  > think---depends on a few further conditions) that if you have the
+>>  > backlight driver as a module and the bootloader enables the=20
+>> backlight to
+>>  > show a splash screen, the backlight goes off because of the
+>>  > clk_disable_unused initcall.
+>>=20
+>>  I will have to verify, but I'm pretty sure disabling the clock=20
+>> doesn't
+>>  change the pin level back to inactive.
+>=20
+> Given that you set the clk's rate depending on the period to apply,=20
+> I'd
+> claim that you need to keep the clk on. Maybe it doesn't hurt, because
+> another component of the system keeps the clk running, but it's wrong
+> anyhow. Assumptions like these tend to break on new chip revisions.
 
-Best regards,
-Krzysztof
+If the backlight driver is a module then it will probe before the=20
+clk_disable_unused initcall, unless something is really wrong. So the=20
+backlight would stay ON if it was enabled by the bootloader, unless the=20
+DTB decides it doesn't have to be.
+
+Anyway, I can try your suggestion, and move the trick to force-disable=20
+PWM pins in the probe(). After that, the clocks can be safely disabled,=20
+so I can disable them (for the disabled PWMs) at the end of the probe=20
+and re-enable them again in their respective .request() callback.
+
+Cheers,
+-Paul
+
 
