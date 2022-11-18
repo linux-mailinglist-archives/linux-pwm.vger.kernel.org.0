@@ -2,153 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66D4562F27C
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Nov 2022 11:25:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACDAF62F5BD
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Nov 2022 14:17:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235171AbiKRKZn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Nov 2022 05:25:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51242 "EHLO
+        id S242057AbiKRNRA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Nov 2022 08:17:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241556AbiKRKZm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Nov 2022 05:25:42 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6A691536
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Nov 2022 02:25:39 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id v3-20020a17090ac90300b00218441ac0f6so7866406pjt.0
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Nov 2022 02:25:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hXadzGYPg8gH/D/ejsAudxwOh/sdzLX/WQ5IeL1dRw0=;
-        b=JGk8asImdMRrc822FzFzvhcgClh/yYcuFhUtuJtf/Pzp8GzJbTMuqESibrrlaqv2Mv
-         TrIpsJ2M4gzg6kfJFKtXezlWRA7u1ihsrCaK/CpqHbQy7LCfFI5cyZ2R8noGDg3p8h6Y
-         HBXlcLTd9xvR8XJLF90QFCVCcmiQpRC57IUQDMWtPoCmx2wVmACfETCt9ZpxyzAb15gc
-         0JKSZJ7TcvC8mD++2pRyZdwgTMbt5fvmrjuRCa04kCsSJhKtXF0pte+phFxWmUoflwEV
-         2Z0SPAIKliKI41i7C8pDcD5zSJGaH8Egzk6E26mvCa1zn8YVXz+Vp1VLtqoNLz3EzrMF
-         kbLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hXadzGYPg8gH/D/ejsAudxwOh/sdzLX/WQ5IeL1dRw0=;
-        b=aqRCW16JndhM78D8Z9pMPw2o+FKSBGWgViimAoXTxke6LQWz1dorJOSsMVz2KOX8FM
-         Oa4VuadGsWJhQ5cFq1lbIf8DmpGyOdsXqZSkr8pi/bF1ctlHCFxKBrx+4GJQYWysxLle
-         aXAQo/1K1/2tRShocHH8yJ1C3HeJcAPQMooEtriOL2eRzDqo9eMKzRD1WsI8HziyqbQD
-         QkXVODd+zLFMbZhV9OS/pcflvQ8/9SHHHYc/X6DfIsLyeXRYOJ5pL5sXWhro7L5paTBh
-         eoe9WJigNOTbkhEggdXHyJyV34YgKqnt/OzIhbIoXFh8MJRZK30N4a8Hnfysj+K1wjPw
-         GR7g==
-X-Gm-Message-State: ANoB5pmy9Gib3bs3krl9yb+fkQGTO90ahi5iSwVNEp9iePMQhmupWAnH
-        fSHPdMyQluPfEghDYVsE/TNzZEUOUXZ7W7ZQ
-X-Google-Smtp-Source: AA0mqf6Kna3GdFEECz4tQtAZxJtjO29EWzBbOP3NaB+37qQM7I/xTegkTunGCitNt08e7Ajd8vYduw==
-X-Received: by 2002:a17:90a:bf13:b0:213:5d6:8280 with SMTP id c19-20020a17090abf1300b0021305d68280mr12801182pjs.185.1668767139196;
-        Fri, 18 Nov 2022 02:25:39 -0800 (PST)
-Received: from ?IPV6:2405:201:d02f:d899:2028:7962:400:43b6? ([2405:201:d02f:d899:2028:7962:400:43b6])
-        by smtp.gmail.com with ESMTPSA id c5-20020a170903234500b001806445887asm3218915plh.223.2022.11.18.02.25.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 02:25:38 -0800 (PST)
-Message-ID: <5d8f8ed5-f0ee-9ed1-1b9f-aed2ab18c26b@9elements.com>
-Date:   Fri, 18 Nov 2022 15:55:33 +0530
+        with ESMTP id S242051AbiKRNQv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Nov 2022 08:16:51 -0500
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DDB6A7CB8B;
+        Fri, 18 Nov 2022 05:16:49 -0800 (PST)
+X-IronPort-AV: E=Sophos;i="5.96,174,1665414000"; 
+   d="scan'208";a="143137440"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 18 Nov 2022 22:16:49 +0900
+Received: from localhost.localdomain (unknown [10.226.92.26])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id DBB5943651B3;
+        Fri, 18 Nov 2022 22:16:44 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Subject: [PATCH 0/5] Add RZ/V2{M, MA} driver support
+Date:   Fri, 18 Nov 2022 13:16:36 +0000
+Message-Id: <20221118131641.469238-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v6 3/3] hwmon: (max6639) Change from pdata to dt
- configuration
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Marcello Sylvester Bauer <sylv@sylv.io>,
-        linux-pwm@vger.kernel.org
-References: <20221116213615.1256297-1-Naresh.Solanki@9elements.com>
- <20221116213615.1256297-4-Naresh.Solanki@9elements.com>
- <20221117074510.qqtjc6h3bnh5rccx@pengutronix.de>
- <81cd642f-c5fb-77ec-a634-5655d5b6088c@9elements.com>
- <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
-From:   Naresh Solanki <naresh.solanki@9elements.com>
-In-Reply-To: <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+The RZ/V2{M, MA} PWM Timer (PWM) is composed of 16 channels. Linux is only
+allowed access to channels 8 to 14 on RZ/V2M, while there is no restriction
+for RZ/V2MA.
 
-On 17-11-2022 02:43 pm, Uwe Kleine-König wrote:
-> On Thu, Nov 17, 2022 at 02:10:45PM +0530, Naresh Solanki wrote:
->>
->>
->> On 17-11-2022 01:15 pm, Uwe Kleine-König wrote:
->>> Hello,
->>>
->>> On Wed, Nov 16, 2022 at 10:36:15PM +0100, Naresh Solanki wrote:
->>>> max6639_platform_data is not used by any in-kernel driver and does not
->>>> address the MAX6639 fans separately.
->>>> Move to device tree configuration with explicit properties to configure
->>>> each fan.
->>>>
->>>> Non-DT platform can still use this module with its default
->>>> configuration.
->>>>
->>>> Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
->>>> Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
->>>
->>> What changed here since v5? Please either add a changelog below the
->>> tripple-dash for a new revision, or make sure that all relevant people
->>> get the cover letter.
->>>
->>> It seems you didn't address my comments for v5 :-\
->> Not sure what I missed but did following changes:
->> Removed unused header max6639.h
->> Used dev_err_probe instead,
->> Removed of_pwm_n_cells,
->> if condition for freq_table
->> removed pwm_get_state & instead use pwm->state
->> division/multiplication optimizations,
->> indentation of freq_table,
-> 
-> In the cover letter you just wrote:
-> 
-> | Changes in V6:
-> | - Remove unused header file
-> | - minor cleanup
-> 
-> which is too short in my eyes. If you wrote instead:
-> 
-> 	Address review feedback by Uwe Kleine-König in patch #3, patches #1 and
-> 	#2 unchanged.
-> 
-> This would be much more helpful as people that were already happy with
-> v5 wouldn't need to look at the first two patches and I would know that
-> you addressed my feedback and would have looked in more detail.
-Sure will keep it this way next time.
-> 
-> What I miss is the most critical part of my feedback, i.e.:
-> | My overall impression is that this patch mixes too much things. IMHO it
-> | should be split in (at least)
-> |
-> |  - Add dt support
-> |  - Drop platform support
-> |  - Add PWM provider support
-> |  - Make use of the PWM API
-> |
-> | maybe also add the 2nd PWM in a separate step.
-Sure can do that.
-> 
-> Best regards
-> Uwe
-> 
-Thanks,
-Naresh
+The RZ/V2{M, MA} PWM Timer (PWM) supports the following functions:
+ * The PWM has 24-bit counters which operate at PWM_CLK (48 MHz).
+ * The frequency division ratio for internal counter operation is selectable
+    as PWM_CLK divided by 1, 16, 256, or 2048.
+ * The period as well as the duty cycle is adjustable.
+ * The low-level and high-level order of the PWM signals can be inverted.
+ * The duty cycle of the PWM signal is selectable in the range from 0 to 100%.
+ * The minimum resolution is 20.83 ns.
+ * Three interrupt sources: Rising and falling edges of the PWM signal and
+   clearing of the counter
+ * Counter operation and the bus interface are asynchronous and both can
+   operate independently of the magnitude relationship of the respective
+   clock periods.
+
+Note:
+ Hardware manual for this IP can be found here
+ https://www.renesas.com/in/en/document/mah/rzv2m-users-manual-hardware?language=en
+
+Biju Das (5):
+  clk: renesas: r9a09g011: Add PWM clock entries
+  dt-bindings: pwm: Add RZ/V2M PWM binding
+  pwm: Add support for RZ/V2M PWM driver
+  arm64: dts: renesas: r9a09g011: Add pwm nodes
+  arm64: dts: renesas: rzv2m evk: Enable pwm
+
+ .../bindings/pwm/renesas,rzv2m-pwm.yaml       |  98 +++++
+ .../boot/dts/renesas/r9a09g011-v2mevk2.dts    |  70 ++++
+ arch/arm64/boot/dts/renesas/r9a09g011.dtsi    |  91 ++++
+ drivers/clk/renesas/r9a09g011-cpg.c           |   9 +
+ drivers/pwm/Kconfig                           |  11 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-rzv2m.c                       | 390 ++++++++++++++++++
+ 7 files changed, 670 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzv2m-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-rzv2m.c
+
+-- 
+2.25.1
+
