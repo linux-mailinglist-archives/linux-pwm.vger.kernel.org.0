@@ -2,151 +2,163 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1C9E630E45
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Nov 2022 12:10:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C406314D4
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Nov 2022 16:19:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232018AbiKSLKX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 19 Nov 2022 06:10:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        id S229478AbiKTPTv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 20 Nov 2022 10:19:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiKSLKS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Nov 2022 06:10:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F3F6B9E9;
-        Sat, 19 Nov 2022 03:10:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 99C4960A1F;
-        Sat, 19 Nov 2022 11:10:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 763BCC433C1;
-        Sat, 19 Nov 2022 11:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668856217;
-        bh=ene1SzTvsJEbW7r9yE4HzkF6rHfAR+aLIm+4UV/wgpo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AwWwg8hTEvU1lRotHevSh1bppQ+LWfLwM9aU/yyuaFSoeFCmSwjJ4hNXPYNKPqyxF
-         RwoQt69tGMzjEml+0YwDwVnLfETtKSINebD6ZDDIjJG2YZ26iP67zsjgz4cgG6uGnz
-         NeH6bx6FUo9hgiiy06aaBkM2k9pRw5peXY9fXGbpIdefsltNF4FVq05z66zkCjnicj
-         f/YnghTN3aq/ykMs6EmMfO5tnMvkQz4JaZBC1pmyIfU8l5HPFc7Qkk3nYySibldc2a
-         4zm4rXtEkUSkKLdGBy0DoGhHf7XI5Gph/tChnTnqwzMKjNhd3aisTxqnB1pP+2RhuX
-         Z5WZrjjMLqJaQ==
-Date:   Sat, 19 Nov 2022 12:10:11 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>,
-        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-actions@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-pm@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net
-Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Message-ID: <Y3i5kz6IL7tFbVwX@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>, linux-i2c@vger.kernel.org,
-        kernel@pengutronix.de, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-actions@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-pm@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+        with ESMTP id S229454AbiKTPTv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 20 Nov 2022 10:19:51 -0500
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B181F626;
+        Sun, 20 Nov 2022 07:19:49 -0800 (PST)
+Received: by mail-qt1-x832.google.com with SMTP id jr19so5985257qtb.7;
+        Sun, 20 Nov 2022 07:19:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3ypUtPNoFB3mh/CgcevncMX24Xjrk6w7DdryFib7Qc4=;
+        b=dC2aH075LenVNqxDeXxCqwPz5MkHpWiGlISkPXGX38TTdBRH4JDO4bfpyw8mdPIBrs
+         M5kebHp1Ih0nu1UQjWylwaTkpCveHF3sZ7cbI3tR+sb3Q3Zqklwfyo/NOpi/QLGqvLY5
+         pq+xZJ5tnj0NDk7noyMGA7HPEjUAaoaB9xaDdNFKkYhdjDg0G/tyCjpyQ4F1C2tb6p2Y
+         xDis9w3CdKOygUlou3f/73343sRw6kDzr5ITPmlxcjWFYNFrHvpahyFiBUnn1yR8aEOj
+         MYnWvIl4txjNoVLkFkm8SeuVp2l3lE3LlCYNK7tn/XmPh3jNURjFWg0XeeqOP4PhE8VZ
+         fdxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ypUtPNoFB3mh/CgcevncMX24Xjrk6w7DdryFib7Qc4=;
+        b=AeT/SIXjicSoihglQHqV/Vuc91x8RYPvCw/o152PkhcehCwjUYC0uXTmaRRqr+2tbu
+         JqPp81gWe2olLLfuQFh8L8bQwqzupNTscvvCm3QFzg6gs2YhUPRemez39nEvh5lI0sHf
+         /B7IEBu5Scb50v73sgFfE1nPaER6/AzM5XTLV/QJUxaBeOFhpDIw1GNoih7TA9krD3i4
+         2p8VcghOm2H/uk9zow5GJFZmajwXImpy4e0V0lT5GPdZXdXkF/OcvSMhw9VsVy3qNo2j
+         talj5EKASDxe3Kpqcux7EHrsEgg5AfOzTh9PHLC5rtYPrc2Ufd61+s/WssNPGp8GTvfR
+         dnxg==
+X-Gm-Message-State: ANoB5pl75thDwxB2P8wpmqiUMcBXuUWvG8WKqfJwwN+egmbfuN5CQo8e
+        +NvUCegMbxei4hKjLjURElc=
+X-Google-Smtp-Source: AA0mqf5FCrqtE30Vj+40bPh/FgYC4XSyMx2nJKIWQmhx3Q936ygj74daBnDo3FcwEIULt5Q9rW1PNQ==
+X-Received: by 2002:ac8:7285:0:b0:3a5:9dc:d83f with SMTP id v5-20020ac87285000000b003a509dcd83fmr14147149qto.28.1668957588182;
+        Sun, 20 Nov 2022 07:19:48 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id gd10-20020a05622a5c0a00b003a5c6ad428asm5262511qtb.92.2022.11.20.07.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Nov 2022 07:19:47 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Sun, 20 Nov 2022 07:19:46 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Naresh Solanki <naresh.solanki@9elements.com>,
+        devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Marcello Sylvester Bauer <sylv@sylv.io>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] hwmon: (max6639) Change from pdata to dt
+ configuration
+Message-ID: <20221120151946.GA1791682@roeck-us.net>
+References: <20221116213615.1256297-1-Naresh.Solanki@9elements.com>
+ <20221116213615.1256297-4-Naresh.Solanki@9elements.com>
+ <20221117074510.qqtjc6h3bnh5rccx@pengutronix.de>
+ <81cd642f-c5fb-77ec-a634-5655d5b6088c@9elements.com>
+ <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xRatB1/o2GNYTDWD"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221117091324.h7etwyzckzvpoa4p@pengutronix.de>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Nov 17, 2022 at 10:13:24AM +0100, Uwe Kleine-König wrote:
+> On Thu, Nov 17, 2022 at 02:10:45PM +0530, Naresh Solanki wrote:
+> > 
+> > 
+> > On 17-11-2022 01:15 pm, Uwe Kleine-König wrote:
+> > > Hello,
+> > > 
+> > > On Wed, Nov 16, 2022 at 10:36:15PM +0100, Naresh Solanki wrote:
+> > > > max6639_platform_data is not used by any in-kernel driver and does not
+> > > > address the MAX6639 fans separately.
+> > > > Move to device tree configuration with explicit properties to configure
+> > > > each fan.
+> > > > 
+> > > > Non-DT platform can still use this module with its default
+> > > > configuration.
+> > > > 
+> > > > Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
+> > > > Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
+> > > 
+> > > What changed here since v5? Please either add a changelog below the
+> > > tripple-dash for a new revision, or make sure that all relevant people
+> > > get the cover letter.
+> > > 
+> > > It seems you didn't address my comments for v5 :-\
+> > Not sure what I missed but did following changes:
+> > Removed unused header max6639.h
+> > Used dev_err_probe instead,
+> > Removed of_pwm_n_cells,
+> > if condition for freq_table
+> > removed pwm_get_state & instead use pwm->state
+> > division/multiplication optimizations,
+> > indentation of freq_table,
+> 
+> In the cover letter you just wrote:
+> 
+> | Changes in V6:
+> | - Remove unused header file
+> | - minor cleanup
+> 
+> which is too short in my eyes. If you wrote instead:
+> 
+> 	Address review feedback by Uwe Kleine-König in patch #3, patches #1 and
+> 	#2 unchanged.
+> 
+> This would be much more helpful as people that were already happy with
+> v5 wouldn't need to look at the first two patches and I would know that
+> you addressed my feedback and would have looked in more detail.
+> 
+> What I miss is the most critical part of my feedback, i.e.:
+> | My overall impression is that this patch mixes too much things. IMHO it
+> | should be split in (at least)
+> | 
+> |  - Add dt support
+> |  - Drop platform support
+> |  - Add PWM provider support
+> |  - Make use of the PWM API
+> |
+> | maybe also add the 2nd PWM in a separate step.
 
---xRatB1/o2GNYTDWD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Those will definitely need to be separate patches. I am far from convinced
+that all fan controllers in the hwmon subsystem should implement pwm
+providers just to match devicetree requirements. That adds zero value in
+99% of all use cases. Actually, I don't know of any use cases where it
+would add value or even make sense.
 
-Hi Uwe,
-
-> This series completes all drivers to this new callback (unless I missed
-> something). It's based on current next/master.
-
-Thanks for this work, really, but oh my poor inbox...
-
-> I don't think it's feasable to apply this series in one go, so I ask the
-> maintainers of the changed files to apply via their tree.
-
-This seems reasonable. It would have made sense to send "patch series
-per subsystem" then. So people only see the subset they are interested
-in. I know filename-to-subsys mapping is hardly ever perfect. But in my
-experience, even imperfect, it is more convenient than such a huge patch
-series.
-
-Happy hacking,
-
-   Wolfram
+Guenter
 
 
---xRatB1/o2GNYTDWD
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Best regards
+> Uwe
+> 
+> -- 
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmN4uY8ACgkQFA3kzBSg
-KbYEfw/+L6nVN4bUDqiN6AeU0yv+Wq/oAFkIUgM8TLT/4gzeEwPsCcTwHBaHQFEF
-sO9yZWukjVYlt2YlcEZglBVIAl7Ha17oQfv2HbWzZXl4cv8PEMfodh6PuOpcPuna
-P+RjiB40nPPxUt5hZ7EjiOpqML0Xy9G8X9Uzs5rA4Yt2OSXcGSYhCZb+U/Vygwlo
-VmLhSQhUnluCyhMZlbTn+bnmVCSHW8Bk5YBKOWygj8K7/LRYKfcNKXjMV35OsBix
-3rezawgwT9KZlZ6ABJZ6U/o5Lp91OP/XeUfhMp76fmAOBcrh25HhWcunmbfRNto7
-gsYho2Ov6yLtz3/Gq4gsDB2HULSajZW1behtfyfufpmkyGd8+C5+/uUjfltWtpqm
-qaAL4YC+kjzarFDRKtIINCqlixjh0VUUKCkf6c4IDCNoLD4HW5KGevjvMvG0kJ9S
-ftPKDwBpZ+cMZtpTcYgRQRiEb30VekQVyWM8SL+350sLO2dVhy7tjAX1jTnWZ843
-4L3c6tSTioFtNmuIREzKl4EX2xkZUq6ajI4QeAcleHXAsBKHB5kvDpfKYIfGZ49X
-mvIEEWRaUXGZAyqx2tMBXvuSA2aL+Gk9hrW3cvCHoBh6EkGfa6R4flw7yN0RkYHR
-Fzq+Jpg1jOHfQhNDoZ8yqFo2xQZQpp1oDdVAjW70IRrE5KPvV0k=
-=eSNj
------END PGP SIGNATURE-----
-
---xRatB1/o2GNYTDWD--
