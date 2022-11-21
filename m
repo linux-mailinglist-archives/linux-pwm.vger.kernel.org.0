@@ -2,40 +2,38 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C0566315ED
-	for <lists+linux-pwm@lfdr.de>; Sun, 20 Nov 2022 20:43:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44A1B631D75
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 10:54:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbiKTTnw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 20 Nov 2022 14:43:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
+        id S231216AbiKUJyJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Nov 2022 04:54:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiKTTns (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 20 Nov 2022 14:43:48 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 703BD1EC46;
-        Sun, 20 Nov 2022 11:43:47 -0800 (PST)
-Received: from mercury (unknown [185.209.196.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        with ESMTP id S230493AbiKUJxj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 04:53:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E226FA1B4;
+        Mon, 21 Nov 2022 01:53:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 981D16602381;
-        Sun, 20 Nov 2022 19:43:45 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1668973425;
-        bh=T3nU7r4TDRBfUE21qBPtx6/vbbqNd5aTZrUhEKVEpe8=;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44AFD60F9B;
+        Mon, 21 Nov 2022 09:53:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F83C433C1;
+        Mon, 21 Nov 2022 09:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669024397;
+        bh=m9yZHwnTEqGasYZNomMe1mRJHVzf8B7M3LDSNHYcXeA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eTDOl2wCVRsu/tyZH+YPJZtqzX+lTk+zyDWIOt7B5OERtVQXV05JqgkECzvZaxhvq
-         GWHynwzbAdTGjQc4EiizPb4JzuNJErOOA6MGMcIE1OOBJsR2nJxdyKqik4rZXW8I8S
-         YL9hLYJH9B0qYNlv0ofE25pkedfO3Zr0ukRr6nTWoiYIF0ElBn0uG1ehB/KKpnJkB6
-         LmHZCe95IKsjPugXIHsbUyR3TPbe/Uz/FTgEe5YV5fHfIiRZ+dwYB8lU4/MgAmu4vM
-         BZjO4bgM9A0wAKu6Ub+wy7zE/lgrgtzyeA/1iFwakjmg/vd8UL0auYvToqpQCZqsxv
-         +Bmg67/Ow+Rwg==
-Received: by mercury (Postfix, from userid 1000)
-        id 1C1D2106F223; Sun, 20 Nov 2022 20:43:43 +0100 (CET)
-Date:   Sun, 20 Nov 2022 20:43:43 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+        b=Opj/itLbJtFE0syJxd+qkemdvm+GfbfZ1pccF1SGR++3DJnkeyD3YQtGhN+blIjub
+         US8fX8iushvScwunkPr7LKirCchaNKKAU/twl0oVnqHEwdHsHxi0M0d/wgtlpEZqG7
+         k4ovt/Znm0DICj47Y+N6I+Yw47E1MyyiN0e/92S2h9qHrb149jszKe3FalK/2rVJQ+
+         ZppAyMp4v8rjq+XBX9JSBl1ysXWpcIvX0EVYeK13kfbg9IEzo070nVbf9UiCPP9DpS
+         bXABnzNPLB0lPKqHS3KQR0EQyUsQW7BynY23b8Z2+QTbLFxJQgHRN0fjhkCpVJB9+z
+         k93zjyweI0uEQ==
+Date:   Mon, 21 Nov 2022 09:53:05 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
 Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
         Lee Jones <lee.jones@linaro.org>,
         Grant Likely <grant.likely@linaro.org>,
@@ -63,114 +61,145 @@ Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
         linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
         openipmi-developer@lists.sourceforge.net
 Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Message-ID: <20221120194343.nnpzhgjapep7iwqk@mercury.elektranox.org>
+Message-ID: <Y3tKgXPJP7S48i3j@google.com>
 References: <20221118224540.619276-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wvm2z6appxwdd5fa"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, 18 Nov 2022, Uwe Kleine-König wrote:
 
---wvm2z6appxwdd5fa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, Nov 18, 2022 at 11:35:34PM +0100, Uwe Kleine-K=F6nig wrote:
 > Hello,
->=20
+> 
 > since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
 > call-back type") from 2016 there is a "temporary" alternative probe
 > callback for i2c drivers.
->=20
+
+Oh yeah, this!  Thanks for picking this up Uwe, I guess I've been
+distracted for the past 6 years or so. :)
+
 > This series completes all drivers to this new callback (unless I missed
 > something). It's based on current next/master.
 > A part of the patches depend on commit 662233731d66 ("i2c: core:
-> Introduce i2c_client_get_device_id helper function"), there is a branch t=
-hat
+> Introduce i2c_client_get_device_id helper function"), there is a branch that
 > you can pull into your tree to get it:
->=20
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/client=
-_device_id_helper-immutable
->=20
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/client_device_id_helper-immutable
+> 
 > I don't think it's feasable to apply this series in one go, so I ask the
 > maintainers of the changed files to apply via their tree. I guess it
 > will take a few kernel release iterations until all patch are in, but I
 > think a single tree creates too much conflicts.
->=20
+> 
 > The last patch changes i2c_driver::probe, all non-converted drivers will
 > fail to compile then. So I hope the build bots will tell me about any
 > driver I missed to convert. This patch is obviously not for application
 > now.
->=20
+> 
 > I dropped most individuals from the recipents of this mail to not
 > challenge the mail servers and mailing list filters too much. Sorry if
 > you had extra efforts to find this mail.
->=20
-> Best regards
-> Uwe
 
-=2E..
+[...]
 
->   power: supply: adp5061: Convert to i2c's .probe_new()
->   power: supply: bq2415x: Convert to i2c's .probe_new()
->   power: supply: bq24190: Convert to i2c's .probe_new()
->   power: supply: bq24257: Convert to i2c's .probe_new()
->   power: supply: bq24735: Convert to i2c's .probe_new()
->   power: supply: bq2515x: Convert to i2c's .probe_new()
->   power: supply: bq256xx: Convert to i2c's .probe_new()
->   power: supply: bq25890: Convert to i2c's .probe_new()
->   power: supply: bq25980: Convert to i2c's .probe_new()
->   power: supply: bq27xxx: Convert to i2c's .probe_new()
->   power: supply: ds2782: Convert to i2c's .probe_new()
->   power: supply: lp8727: Convert to i2c's .probe_new()
->   power: supply: ltc2941: Convert to i2c's .probe_new()
->   power: supply: ltc4162-l: Convert to i2c's .probe_new()
->   power: supply: max14656: Convert to i2c's .probe_new()
->   power: supply: max17040: Convert to i2c's .probe_new()
->   power: supply: max17042_battery: Convert to i2c's .probe_new()
->   power: supply: rt5033_battery: Convert to i2c's .probe_new()
->   power: supply: rt9455: Convert to i2c's .probe_new()
->   power: supply: sbs: Convert to i2c's .probe_new()
->   power: supply: sbs-manager: Convert to i2c's .probe_new()
->   power: supply: smb347: Convert to i2c's .probe_new()
->   power: supply: ucs1002: Convert to i2c's .probe_new()
->   power: supply: z2_battery: Convert to i2c's .probe_new()
->   [...]
+>  drivers/mfd/88pm800.c                            |  5 ++---
+>  drivers/mfd/88pm805.c                            |  5 ++---
+>  drivers/mfd/aat2870-core.c                       |  5 ++---
+>  drivers/mfd/act8945a.c                           |  5 ++---
+>  drivers/mfd/adp5520.c                            |  6 +++---
+>  drivers/mfd/arizona-i2c.c                        |  6 +++---
+>  drivers/mfd/as3711.c                             |  5 ++---
+>  drivers/mfd/as3722.c                             |  5 ++---
+>  drivers/mfd/atc260x-i2c.c                        |  5 ++---
+>  drivers/mfd/axp20x-i2c.c                         |  5 ++---
+>  drivers/mfd/bcm590xx.c                           |  5 ++---
+>  drivers/mfd/bd9571mwv.c                          |  5 ++---
+>  drivers/mfd/da903x.c                             |  6 +++---
+>  drivers/mfd/da9052-i2c.c                         |  6 +++---
+>  drivers/mfd/da9055-i2c.c                         |  5 ++---
+>  drivers/mfd/da9062-core.c                        |  6 +++---
+>  drivers/mfd/da9063-i2c.c                         |  6 +++---
+>  drivers/mfd/da9150-core.c                        |  5 ++---
+>  drivers/mfd/khadas-mcu.c                         |  5 ++---
+>  drivers/mfd/lm3533-core.c                        |  5 ++---
+>  drivers/mfd/lp3943.c                             |  4 ++--
+>  drivers/mfd/lp873x.c                             |  5 ++---
+>  drivers/mfd/lp87565.c                            |  5 ++---
+>  drivers/mfd/lp8788.c                             |  4 ++--
+>  drivers/mfd/madera-i2c.c                         |  6 +++---
+>  drivers/mfd/max14577.c                           |  6 +++---
+>  drivers/mfd/max77620.c                           |  6 +++---
+>  drivers/mfd/max77693.c                           |  6 +++---
+>  drivers/mfd/max77843.c                           |  6 +++---
+>  drivers/mfd/max8907.c                            |  5 ++---
+>  drivers/mfd/max8925-i2c.c                        |  5 ++---
+>  drivers/mfd/max8997.c                            |  6 +++---
+>  drivers/mfd/max8998.c                            |  6 +++---
+>  drivers/mfd/mc13xxx-i2c.c                        |  6 +++---
+>  drivers/mfd/menelaus.c                           |  5 ++---
+>  drivers/mfd/menf21bmc.c                          |  4 ++--
+>  drivers/mfd/palmas.c                             |  5 ++---
+>  drivers/mfd/pcf50633-core.c                      |  5 ++---
+>  drivers/mfd/rc5t583.c                            |  5 ++---
+>  drivers/mfd/retu-mfd.c                           |  4 ++--
+>  drivers/mfd/rk808.c                              |  5 ++---
+>  drivers/mfd/rohm-bd718x7.c                       |  5 ++---
+>  drivers/mfd/rsmu_i2c.c                           |  6 +++---
+>  drivers/mfd/rt5033.c                             |  5 ++---
+>  drivers/mfd/sec-core.c                           |  5 ++---
+>  drivers/mfd/si476x-i2c.c                         |  6 +++---
+>  drivers/mfd/sky81452.c                           |  5 ++---
+>  drivers/mfd/stmfx.c                              |  5 ++---
+>  drivers/mfd/stmpe-i2c.c                          |  5 +++--
+>  drivers/mfd/stpmic1.c                            |  5 ++---
+>  drivers/mfd/stw481x.c                            |  5 ++---
+>  drivers/mfd/tc3589x.c                            |  6 +++---
+>  drivers/mfd/ti-lmu.c                             |  5 +++--
+>  drivers/mfd/tps6105x.c                           |  5 ++---
+>  drivers/mfd/tps65010.c                           |  6 +++---
+>  drivers/mfd/tps6507x.c                           |  5 ++---
+>  drivers/mfd/tps65086.c                           |  5 ++---
+>  drivers/mfd/tps65090.c                           |  5 ++---
+>  drivers/mfd/tps65218.c                           |  5 ++---
+>  drivers/mfd/tps6586x.c                           |  5 ++---
+>  drivers/mfd/tps65910.c                           |  6 +++---
+>  drivers/mfd/tps65912-i2c.c                       |  5 ++---
+>  drivers/mfd/twl-core.c                           |  5 +++--
+>  drivers/mfd/twl6040.c                            |  5 ++---
+>  drivers/mfd/wl1273-core.c                        |  5 ++---
+>  drivers/mfd/wm831x-i2c.c                         |  6 +++---
+>  drivers/mfd/wm8350-i2c.c                         |  5 ++---
+>  drivers/mfd/wm8400-core.c                        |  5 ++---
+>  drivers/mfd/wm8994-core.c                        |  6 +++---
 
-Thanks, I queued patches 513-536 to the power-supply subsystem.
+For my own reference (apply this as-is to your sign-off block):
 
--- Sebastian
+  Acked-for-MFD-by: Lee Jones <lee@kernel.org>
 
---wvm2z6appxwdd5fa
-Content-Type: application/pgp-signature; name="signature.asc"
+>  drivers/video/backlight/adp8860_bl.c             |  6 +++---
+>  drivers/video/backlight/adp8870_bl.c             |  6 +++---
+>  drivers/video/backlight/arcxcnn_bl.c             |  4 ++--
+>  drivers/video/backlight/bd6107.c                 |  5 ++---
+>  drivers/video/backlight/lm3630a_bl.c             |  5 ++---
+>  drivers/video/backlight/lm3639_bl.c              |  5 ++---
+>  drivers/video/backlight/lp855x_bl.c              |  5 +++--
+>  drivers/video/backlight/lv5207lp.c               |  5 ++---
+>  drivers/video/backlight/tosa_bl.c                |  5 ++---
+>  drivers/video/fbdev/matrox/matroxfb_maven.c      |  5 ++---
 
------BEGIN PGP SIGNATURE-----
+For my own reference (apply this as-is to your sign-off block):
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmN6g2YACgkQ2O7X88g7
-+pocPA/+MG7rp45xJuAH0zlIFTM8ovBviXnLvra0hpvK+vMB8SVdh4K8vRCAoeoT
-lxML9oRVfhraHzo/3X6+7V87cw+QzEx3GZbYsIasGqic46MoFYkbA2i3Q8s8hS5y
-qpAcKn/efXJaBtdIxWQnOc0xU0YCiteiIik8Idb9MjHFupUspLxtIjCzTAmvKQ0k
-hJ5u5cqv3d/MP6VpsOCUYPDet9nS9ByPeg8Kr9Ux1a0WEldPYUO+dU0ObqRdhliZ
-agftaEtCvFYkfO9k8ubBL/x00gTn002xOB7gp+5s0V0D3wKfT5EPVYOoUZbeYMIu
-QOZaLHkNkBtV85kGm18h7IFdQZQY9ahcaGTYZplyz/YzHlK/AlfjA2umKS1+rs5m
-A+DDqnAkuWw9fLg0MJ4dLSPwOSPX3VfgmVS3By3Do2gotQkCqXsRdhrG1cIoE1aL
-AZYpSwLTn2rAYF59poL3rgSqx/MhgrLwmKQOH3fjwZ3R7PIAWFhYP1We2UtKdCEM
-Gjpr7QfAUiOuXDKi5OrBbWr4m2eX26A4uifwR62OyldwH8pUWAq3umgkw3rotQAA
-hdwOOPM+cHTyLbtP8kaP1XSR6u0ybuTbw8OQE/XPDNVceoMqR4XxUSYbs0Q0UzY6
-fwljGfbakuGbaNlb7s2LBsy0ESZuiz64Za/0gfJhI5rP1eNRR1U=
-=Dh+o
------END PGP SIGNATURE-----
+  Acked-for-Backlight-by: Lee Jones <lee@kernel.org>
 
---wvm2z6appxwdd5fa--
+-- 
+Lee Jones [李琼斯]
