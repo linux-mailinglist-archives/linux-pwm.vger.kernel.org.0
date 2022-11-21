@@ -2,89 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D81E631FE6
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 12:11:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D5963220C
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 13:31:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbiKULK5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Nov 2022 06:10:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
+        id S231379AbiKUMaE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Nov 2022 07:30:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230400AbiKULJu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 06:09:50 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0999B54E0
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 03:07:15 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id s8so18267354lfc.8
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 03:07:15 -0800 (PST)
+        with ESMTP id S230516AbiKUM3u (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 07:29:50 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999BCDB6
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 04:29:48 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id o30so8362707wms.2
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 04:29:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=9elements.com; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vt/Wa0oZhOf8fgPaUT9nYutANNXrYJ1M3EC69Oc6bKY=;
-        b=dkjpcM/pO1IKb6CkVrne1aMXK5pKU0cbTJhHKlkx02vkdPOtEnSa8DcY0ZNFQ/Aai2
-         qH8lEQpCvc0P3JcOHif7m8xCUExRkW/i8XEAk8Xd4nF6WUgIbY7pTaOw296tyj9d0s5S
-         49bYPkzl2sPqUHIasE8UjxvT6H2A4jv1BVUikormOKd/yX2YAHV4NTeUqY3JsiBuSZsv
-         +9IxEfLYGIRpoF01ldIPFQS4uTCNTZT7q0WF2ueSIYt48kH9zXpMEhn2lViD/abJfvRE
-         ZQuEKSQZMi0x8fDazXqUX1ZYHspCB+iO3RQZ9pNytp+96JUXrCzq0pmB0EWAToKjCK2P
-         pNqA==
+        bh=42FU8QS0Q4hrQTp2XxYMrcn/SR5rM3XxkeVj0MMdKrY=;
+        b=dG3v2v4PjTz3kjJE8b9TPnYKKcmh+t6AdR/E6kkhSDOyF0l3dEYN1LvO7Yw13zZ3C3
+         nAgtV9V4Nbn+SYFKBt6/Vi8tOoSIw1Q+tNPf8Ugd28kJpg/mNPmFZAWLxuRoWcfrK1dC
+         R9WiCDKi2HcxotAgCk/y5w+rf/1Q7/HSqmkdI3R5dTESWTODdiiY6b7iApygXC9fh4v2
+         kdo1YJpDeRrpDKdimUhqn4OMnGwNh9wYLi21x0qedlEoLRmyTBfdNY4CrLhA0TvwRhTp
+         x7VmyiXQHsyD97xthh0aBXQrWWyOYY7J2FgL47/UlpWZYuY4MhEJUYqAaXyFUZM9zv6E
+         hy3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vt/Wa0oZhOf8fgPaUT9nYutANNXrYJ1M3EC69Oc6bKY=;
-        b=t+M4cMEMaB1KFkG4MiauzZnbr2YwJZMsuLYEyD1wRwPnvITrXac+7MY7ZkVGlwNfLA
-         Bro6y2eOiwAqLIOVzPbrW4DAOx59Keik6h/aWBCEi5kgGSKo59xG5BNf/0LeT2H9jffD
-         q6emcpkczxJXA+5pQcUrAg9TTd+0q4QECoxLF8j5+GOU7sBUki9WLlijy+nTn0JDvNkp
-         O7P20YlDfam18YWYGLC9hYP83D7SQoo9b4sobj31qyGeuPEdAbjwwwlfIIbwvDL0S+e2
-         iyTIizufgrviQoKhDxIFvhGBgDzZckUWAiYDRKRK5iMAuTdwWqWph8Vjbu1eKZtSvDyd
-         rlYw==
-X-Gm-Message-State: ANoB5plrUX2efLOpbcALTdcqZhCWQkmMkE+CUimpQ9gOVSR7S6FwXvxu
-        aED+w+xChkoplb40VXujO38gGg==
-X-Google-Smtp-Source: AA0mqf5nUBeMC8Y3mQrtIk7tF8Nu1KTg6JLn6oA018LE9kb9lE6jW7NgPef3dUXhGdN0anp1mO8BbA==
-X-Received: by 2002:a05:6512:15a6:b0:4a2:3d2c:34ac with SMTP id bp38-20020a05651215a600b004a23d2c34acmr5515193lfb.41.1669028801206;
-        Mon, 21 Nov 2022 03:06:41 -0800 (PST)
-Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id n1-20020a05651203e100b0049313f77755sm1991521lfq.213.2022.11.21.03.06.39
+        bh=42FU8QS0Q4hrQTp2XxYMrcn/SR5rM3XxkeVj0MMdKrY=;
+        b=c3HNCA4mEsb3wqemfnWo9IVcjAnf6kt1laQIFB+GdZe5azS96M5gG6sQwewEd1YTlh
+         GYmYkKdO4EqOzVZaiZd6wELUEl0jwha0edcxZkWmbvobJsDgyzyLJ/AlnD2byR4hFSTP
+         LAbIgOjn0mSl4pl0TifqyjhfqaTfDkvd2iz6FQu5+Df6qVTaQxNDar7xuHBZwGHVuF63
+         03jJVPn4lD0ChZ+7yrGjZzLilKgCOimWJ0KgqmcywSWus6rlcJo5kQh0QwrT7LfQfZJv
+         iemISlIGYFa/FRTTKAgPPdK3/1fJUKYMdJpt1BlctioGTUvTcAsXcOlYjZ5zBzmV3F9U
+         Z5BQ==
+X-Gm-Message-State: ANoB5pkEDOd1Vmd4pe1vcjjRHAj68JlQuGICkQEL3ZrJVrq9FPkiEwrD
+        AABDN3AbaIIdGilMVpPgaT5nlg==
+X-Google-Smtp-Source: AA0mqf4DBZ+gKSFqXf5BdUHVPZjHturZePf7SeldkGwvxtTIIrLWH5tljSR7LY0iMPcUTwFZdCDTxQ==
+X-Received: by 2002:a7b:cd85:0:b0:3cf:931c:3cfa with SMTP id y5-20020a7bcd85000000b003cf931c3cfamr3726623wmj.203.1669033786957;
+        Mon, 21 Nov 2022 04:29:46 -0800 (PST)
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id dn12-20020a05600c654c00b003cf6c2f9513sm13929015wmb.2.2022.11.21.04.29.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 03:06:40 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 9/9] dt-bindings: drop redundant part of title (manual)
-Date:   Mon, 21 Nov 2022 12:06:15 +0100
-Message-Id: <20221121110615.97962-10-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
-References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+        Mon, 21 Nov 2022 04:29:46 -0800 (PST)
+From:   Naresh Solanki <naresh.solanki@9elements.com>
+X-Google-Original-From: Naresh Solanki <Naresh.Solanki@9elements.com>
+To:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        Naresh Solanki <Naresh.Solanki@9elements.com>,
+        linux-pwm@vger.kernel.org
+Subject: [PATCH v7 4/4] hwmon: (max6639) Add pwm support
+Date:   Mon, 21 Nov 2022 13:29:32 +0100
+Message-Id: <20221121122932.2493174-5-Naresh.Solanki@9elements.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20221121122932.2493174-1-Naresh.Solanki@9elements.com>
+References: <20221121122932.2493174-1-Naresh.Solanki@9elements.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -97,340 +78,351 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The Devicetree bindings document does not have to say in the title that
-it is a "Devicetree binding" or a "schema", but instead just describe
-the hardware.
+Add pwm support for max6639. Also configure pwm fan speed based on pwm
+provided in DT.
 
-Manual updates to various binding titles, including capitalizing them.
-
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
 ---
- Documentation/devicetree/bindings/clock/cirrus,cs2000-cp.yaml   | 2 +-
- Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml        | 2 +-
- .../devicetree/bindings/clock/qcom,dispcc-sc8280xp.yaml         | 2 +-
- Documentation/devicetree/bindings/example-schema.yaml           | 2 +-
- Documentation/devicetree/bindings/input/fsl,scu-key.yaml        | 2 +-
- Documentation/devicetree/bindings/input/matrix-keymap.yaml      | 2 +-
- Documentation/devicetree/bindings/leds/issi,is31fl319x.yaml     | 2 +-
- Documentation/devicetree/bindings/net/asix,ax88178.yaml         | 2 +-
- Documentation/devicetree/bindings/net/microchip,lan95xx.yaml    | 2 +-
- Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml      | 2 +-
- Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml    | 2 +-
- Documentation/devicetree/bindings/pci/pci-ep.yaml               | 2 +-
- Documentation/devicetree/bindings/phy/calxeda-combophy.yaml     | 2 +-
- Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml  | 2 +-
- Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml      | 2 +-
- Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml      | 2 +-
- Documentation/devicetree/bindings/power/fsl,scu-pd.yaml         | 2 +-
- Documentation/devicetree/bindings/riscv/cpus.yaml               | 2 +-
- Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml          | 2 +-
- Documentation/devicetree/bindings/spi/omap-spi.yaml             | 2 +-
- Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml  | 2 +-
- Documentation/devicetree/bindings/usb/usb-device.yaml           | 2 +-
- Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml     | 2 +-
- 23 files changed, 23 insertions(+), 23 deletions(-)
+ drivers/hwmon/Kconfig   |   1 +
+ drivers/hwmon/max6639.c | 229 +++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 216 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/cirrus,cs2000-cp.yaml b/Documentation/devicetree/bindings/clock/cirrus,cs2000-cp.yaml
-index 82836086cac1..d416c374e853 100644
---- a/Documentation/devicetree/bindings/clock/cirrus,cs2000-cp.yaml
-+++ b/Documentation/devicetree/bindings/clock/cirrus,cs2000-cp.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/clock/cirrus,cs2000-cp.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 3176c33af6c6..56d9004b7a38 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1115,6 +1115,7 @@ config SENSORS_MAX6621
+ config SENSORS_MAX6639
+ 	tristate "Maxim MAX6639 sensor chip"
+ 	depends on I2C
++	depends on PWM
+ 	help
+ 	  If you say yes here you get support for the MAX6639
+ 	  sensor chips.
+diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
+index feafa3511297..5bfeee35abf0 100644
+--- a/drivers/hwmon/max6639.c
++++ b/drivers/hwmon/max6639.c
+@@ -19,6 +19,7 @@
+ #include <linux/hwmon-sysfs.h>
+ #include <linux/err.h>
+ #include <linux/mutex.h>
++#include <linux/pwm.h>
  
--title: Binding CIRRUS LOGIC Fractional-N Clock Synthesizer & Clock Multiplier
-+title: CIRRUS LOGIC Fractional-N Clock Synthesizer & Clock Multiplier
+ /* Addresses to scan */
+ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
+@@ -61,6 +62,10 @@ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
+ /* Tach supported range. This internally controls tach frequency */
+ static const int rpm_ranges[] = { 2000, 4000, 8000, 16000 };
  
- maintainers:
-   - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-diff --git a/Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml b/Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml
-index f2c48460a399..36d4cfc3c2f8 100644
---- a/Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml
-+++ b/Documentation/devicetree/bindings/clock/fsl,scu-clk.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/clock/fsl,scu-clk.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
++/* Supported PWM frequency */
++static const unsigned int freq_table[] = { 20, 33, 50, 100, 5000, 8333, 12500,
++					   25000 };
++
+ #define FAN_FROM_REG(val, rpm_range)	((val) == 0 || (val) == 255 ? \
+ 				0 : (rpm_ranges[rpm_range] * 30) / (val))
+ #define TEMP_LIMIT_TO_REG(val)	clamp_val((val) / 1000, 0, 255)
+@@ -78,9 +83,9 @@ struct max6639_data {
+ 	u16 temp[2];		/* Temperature, in 1/8 C, 0..255 C */
+ 	bool temp_fault[2];	/* Detected temperature diode failure */
+ 	u8 fan[2];		/* Register value: TACH count for fans >=30 */
++	struct pwm_device	*pwmd[2]; /* max6639 has two pwm device */
+ 	u32 target_rpm[2];
+ 	u32 max_rpm[2];
+-	u8 pwm[2];
  
--title: i.MX SCU Client Device Node - Clock bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - Clock Controller Based on SCU Message Protocol
+ 	u8 status;		/* Detected channel alarms and fan failures */
  
- maintainers:
-   - Abel Vesa <abel.vesa@nxp.com>
-diff --git a/Documentation/devicetree/bindings/clock/qcom,dispcc-sc8280xp.yaml b/Documentation/devicetree/bindings/clock/qcom,dispcc-sc8280xp.yaml
-index 28c13237059f..3cb996b2c9d5 100644
---- a/Documentation/devicetree/bindings/clock/qcom,dispcc-sc8280xp.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,dispcc-sc8280xp.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/clock/qcom,dispcc-sc8280xp.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+@@ -92,9 +97,10 @@ struct max6639_data {
+ 	/* Register values initialized only once */
+ 	u8 ppr[2];		/* Pulses per rotation 0..3 for 1..4 ppr */
+ 	u8 rpm_range[2];	/* Index in above rpm_ranges table */
+-	u8 pwm_polarity[2];
+ 	/* Optional regulator for FAN supply */
+ 	struct regulator *reg;
++	/* max6639 pwm chip */
++	struct pwm_chip chip;
+ };
  
--title: Qualcomm Display Clock & Reset Controller Binding for SC8280XP
-+title: Qualcomm Display Clock & Reset Controller on SC8280XP
+ static struct max6639_data *max6639_update_device(struct device *dev)
+@@ -285,8 +291,11 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *dev_attr,
+ {
+ 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+ 	struct max6639_data *data = dev_get_drvdata(dev);
++	struct pwm_state state;
++
++	pwm_get_state(data->pwmd[attr->index], &state);
  
- maintainers:
-   - Bjorn Andersson <bjorn.andersson@linaro.org>
-diff --git a/Documentation/devicetree/bindings/example-schema.yaml b/Documentation/devicetree/bindings/example-schema.yaml
-index 8e1a8b19d429..dfcf4c27d44a 100644
---- a/Documentation/devicetree/bindings/example-schema.yaml
-+++ b/Documentation/devicetree/bindings/example-schema.yaml
-@@ -11,7 +11,7 @@ $id: http://devicetree.org/schemas/example-schema.yaml#
- # $schema is the meta-schema this schema should be validated with.
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+-	return sprintf(buf, "%d\n", data->pwm[attr->index] * 255 / 120);
++	return sprintf(buf, "%d\n", pwm_get_relative_duty_cycle(&state, 255));
  
--title: An example schema annotated with jsonschema details
-+title: An Example Device
+ }
  
- maintainers:
-   - Rob Herring <robh@kernel.org>
-diff --git a/Documentation/devicetree/bindings/input/fsl,scu-key.yaml b/Documentation/devicetree/bindings/input/fsl,scu-key.yaml
-index e6266d188266..e5a3c355ee1f 100644
---- a/Documentation/devicetree/bindings/input/fsl,scu-key.yaml
-+++ b/Documentation/devicetree/bindings/input/fsl,scu-key.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/input/fsl,scu-key.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+@@ -296,9 +305,9 @@ static ssize_t pwm_store(struct device *dev,
+ {
+ 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
+ 	struct max6639_data *data = dev_get_drvdata(dev);
+-	struct i2c_client *client = data->client;
+ 	unsigned long val;
+ 	int res;
++	struct pwm_state state;
  
--title: i.MX SCU Client Device Node - SCU key bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - SCU Key Based on SCU Message Protocol
+ 	res = kstrtoul(buf, 10, &val);
+ 	if (res)
+@@ -306,11 +315,11 @@ static ssize_t pwm_store(struct device *dev,
  
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
-diff --git a/Documentation/devicetree/bindings/input/matrix-keymap.yaml b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
-index 6699d5e32dca..4d6dbe91646d 100644
---- a/Documentation/devicetree/bindings/input/matrix-keymap.yaml
-+++ b/Documentation/devicetree/bindings/input/matrix-keymap.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/input/matrix-keymap.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 	val = clamp_val(val, 0, 255);
  
--title: Common key matrices binding for matrix-connected key boards
-+title: Common Key Matrices on Matrix-connected Key Boards
+-	mutex_lock(&data->update_lock);
+-	data->pwm[attr->index] = (u8)(val * 120 / 255);
+-	i2c_smbus_write_byte_data(client, MAX6639_REG_TARGTDUTY(attr->index),
+-				 data->pwm[attr->index]);
+-	mutex_unlock(&data->update_lock);
++	pwm_get_state(data->pwmd[attr->index], &state);
++	pwm_set_relative_duty_cycle(&state, val, 255);
++	res = pwm_apply_state(data->pwmd[attr->index], &state);
++	if (res)
++		return res;
  
- maintainers:
-   - Olof Johansson <olof@lixom.net>
-diff --git a/Documentation/devicetree/bindings/leds/issi,is31fl319x.yaml b/Documentation/devicetree/bindings/leds/issi,is31fl319x.yaml
-index 940333f2d69c..eebe372ea463 100644
---- a/Documentation/devicetree/bindings/leds/issi,is31fl319x.yaml
-+++ b/Documentation/devicetree/bindings/leds/issi,is31fl319x.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/leds/issi,is31fl319x.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 	return count;
+ }
+@@ -426,6 +435,7 @@ static int max6639_init_client(struct i2c_client *client,
+ 			       struct max6639_data *data)
+ {
+ 	int i, err;
++	struct pwm_state state;
  
--title: ISSI LED controllers bindings for IS31FL319{0,1,3,6,9}
-+title: ISSI LED Controllers for IS31FL319{0,1,3,6,9}
+ 	/* Reset chip to default values, see below for GCONFIG setup */
+ 	err = i2c_smbus_write_byte_data(client, MAX6639_REG_GCONFIG,
+@@ -479,10 +489,11 @@ static int max6639_init_client(struct i2c_client *client,
+ 		if (err)
+ 			goto exit;
  
- maintainers:
-   - Vincent Knecht <vincent.knecht@mailoo.org>
-diff --git a/Documentation/devicetree/bindings/net/asix,ax88178.yaml b/Documentation/devicetree/bindings/net/asix,ax88178.yaml
-index a81dbc4792f6..768504ccbf74 100644
---- a/Documentation/devicetree/bindings/net/asix,ax88178.yaml
-+++ b/Documentation/devicetree/bindings/net/asix,ax88178.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/net/asix,ax88178.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+-		/* PWM 120/120 (i.e. 100%) */
+-		data->pwm[i] = data->target_rpm[i];
+-		err = i2c_smbus_write_byte_data(client, MAX6639_REG_TARGTDUTY(i), data->pwm[i]);
+-
++		/* Configure PWM controller */
++		pwm_get_state(data->pwmd[i], &state);
++		pwm_set_relative_duty_cycle(&state, data->target_rpm[i],
++					    data->max_rpm[i]);
++		err = pwm_apply_state(data->pwmd[i], &state);
+ 		if (err)
+ 			goto exit;
  
--title: The device tree bindings for the USB Ethernet controllers
-+title: ASIX AX88172/AX88772 USB Ethernet Controllers
+@@ -576,7 +587,22 @@ static int max6639_probe_child_from_dt(struct i2c_client *client,
+ 	else
+ 		data->target_rpm[i] = maxrpm;
  
- maintainers:
-   - Oleksij Rempel <o.rempel@pengutronix.de>
-diff --git a/Documentation/devicetree/bindings/net/microchip,lan95xx.yaml b/Documentation/devicetree/bindings/net/microchip,lan95xx.yaml
-index 3715c5f8f0e0..0b97e14d947f 100644
---- a/Documentation/devicetree/bindings/net/microchip,lan95xx.yaml
-+++ b/Documentation/devicetree/bindings/net/microchip,lan95xx.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/net/microchip,lan95xx.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+-	return 0;
++	/* Get pwms property for PWM control */
++	data->pwmd[i] = devm_fwnode_pwm_get(dev, &child->fwnode, NULL);
++
++	if (!IS_ERR(data->pwmd[i]))
++		return 0;
++
++	if (PTR_ERR(data->pwmd[i]) == -EPROBE_DEFER)
++		return PTR_ERR(data->pwmd[i]);
++
++	dev_dbg(dev, "Using chip default PWM");
++	data->pwmd[i] = pwm_request_from_chip(&data->chip, i, NULL);
++	if (!IS_ERR(data->pwmd[i]))
++		return 0;
++
++	dev_dbg(dev, "Failed to configure pwm for fan %d", i);
++	return PTR_ERR_OR_ZERO(data->pwmd[i]);
+ }
  
--title: The device tree bindings for the USB Ethernet controllers
-+title: Microchip SMSC9500/LAN9530/LAN9730 USB Ethernet Controllers
+ static int max6639_probe_from_dt(struct i2c_client *client,
+@@ -605,6 +631,172 @@ static int max6639_probe_from_dt(struct i2c_client *client,
+ 	return 0;
+ }
  
- maintainers:
-   - Oleksij Rempel <o.rempel@pengutronix.de>
-diff --git a/Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml
-index 682688299b26..f0a49283649d 100644
---- a/Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/fsl,scu-ocotp.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/nvmem/fsl,scu-ocotp.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
++static struct max6639_data *to_max6639_pwm(struct pwm_chip *chip)
++{
++	return container_of(chip, struct max6639_data, chip);
++}
++
++static void max6639_pwm_get_state(struct pwm_chip *chip,
++				  struct pwm_device *pwm,
++				  struct pwm_state *state)
++{
++
++	struct max6639_data *data = to_max6639_pwm(chip);
++	struct i2c_client *client = data->client;
++	int value, i = pwm->hwpwm, x;
++	unsigned int freq;
++
++	mutex_lock(&data->update_lock);
++
++	value = i2c_smbus_read_byte_data(client, MAX6639_REG_FAN_CONFIG1(i));
++	if (value < 0)
++		goto abort;
++
++	if (value & MAX6639_FAN_CONFIG1_PWM) {
++		state->enabled = true;
++
++		/* Determine frequency from respective registers */
++		value = i2c_smbus_read_byte_data(client,
++						 MAX6639_REG_FAN_CONFIG3(i));
++		if (value < 0)
++			goto abort;
++		x = value & MAX6639_FAN_CONFIG3_FREQ_MASK;
++
++		value = i2c_smbus_read_byte_data(client, MAX6639_REG_GCONFIG);
++		if (value < 0)
++			goto abort;
++		if (value & MAX6639_GCONFIG_PWM_FREQ_HI)
++			x |= 0x4;
++		x &= 0x7;
++		freq = freq_table[x];
++
++		state->period = DIV_ROUND_UP(NSEC_PER_SEC, freq);
++
++		value = i2c_smbus_read_byte_data(client,
++						 MAX6639_REG_TARGTDUTY(i));
++		if (value < 0)
++			goto abort;
++		/* max6639 supports 120 slots only */
++		state->duty_cycle = mul_u64_u32_div(state->period, value, 120);
++
++		value = i2c_smbus_read_byte_data(client,
++						 MAX6639_REG_FAN_CONFIG2a(i));
++		if (value < 0)
++			goto abort;
++		value &= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
++		state->polarity = (value != 0);
++	} else
++		state->enabled = false;
++
++abort:
++	mutex_unlock(&data->update_lock);
++
++}
++
++static int max6639_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			     const struct pwm_state *state)
++{
++	struct max6639_data *data = to_max6639_pwm(chip);
++	struct i2c_client *client = data->client;
++	int value = 0, i = pwm->hwpwm, x;
++	unsigned int freq;
++	struct pwm_state cstate;
++
++	cstate = pwm->state;
++
++	mutex_lock(&data->update_lock);
++
++	if (state->period != cstate.period) {
++		/* Configure frequency */
++		freq = DIV_ROUND_UP_ULL(NSEC_PER_SEC, state->period);
++		/* Chip supports limited number of frequency */
++		for (x = 0; x < sizeof(freq_table); x++)
++			if (freq <= freq_table[x])
++				break;
++
++		value = i2c_smbus_read_byte_data(client,
++						 MAX6639_REG_FAN_CONFIG3(i));
++		if (value < 0)
++			goto abort;
++		value &= ~MAX6639_FAN_CONFIG3_FREQ_MASK;
++		value |= (x & MAX6639_FAN_CONFIG3_FREQ_MASK);
++		value = i2c_smbus_write_byte_data(client,
++						  MAX6639_REG_FAN_CONFIG3(i),
++						  value);
++
++		value = i2c_smbus_read_byte_data(client, MAX6639_REG_GCONFIG);
++		if (value < 0)
++			goto abort;
++
++		if (x >> 2)
++			value &= ~MAX6639_GCONFIG_PWM_FREQ_HI;
++		else
++			value |= MAX6639_GCONFIG_PWM_FREQ_HI;
++		value = i2c_smbus_write_byte_data(client, MAX6639_REG_GCONFIG,
++						  value);
++		if (value < 0)
++			goto abort;
++	}
++
++	/* Configure dutycycle */
++	if (state->duty_cycle != cstate.duty_cycle ||
++	    state->period != cstate.period) {
++		value = DIV_ROUND_DOWN_ULL(
++				state->duty_cycle * MAX6639_REG_TARGTDUTY_SLOT,
++				state->period);
++		value = i2c_smbus_write_byte_data(client,
++						  MAX6639_REG_TARGTDUTY(i),
++						  value);
++		if (value < 0)
++			goto abort;
++	}
++
++	/* Configure polarity */
++	if (state->polarity != cstate.polarity) {
++		value = i2c_smbus_read_byte_data(client,
++						 MAX6639_REG_FAN_CONFIG2a(i));
++		if (value < 0)
++			goto abort;
++		if (state->polarity == PWM_POLARITY_NORMAL)
++			value |= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
++		else
++			value &= ~MAX6639_REG_FAN_CONFIG2a_PWM_POL;
++		value = i2c_smbus_write_byte_data(client,
++						  MAX6639_REG_FAN_CONFIG2a(i),
++						  value);
++		if (value < 0)
++			goto abort;
++	}
++
++	if (state->enabled == cstate.enabled)
++		goto abort;
++
++	value = i2c_smbus_read_byte_data(client, MAX6639_REG_FAN_CONFIG1(i));
++	if (value < 0)
++		goto abort;
++	if (state->enabled)
++		value |= MAX6639_FAN_CONFIG1_PWM;
++	else
++		value &= ~MAX6639_FAN_CONFIG1_PWM;
++
++	value = i2c_smbus_write_byte_data(client, MAX6639_REG_FAN_CONFIG1(i),
++					  value);
++	if (value < 0)
++		goto abort;
++	value = 0;
++
++abort:
++	mutex_unlock(&data->update_lock);
++
++	return value;
++}
++
++static const struct pwm_ops max6639_pwm_ops = {
++	.apply = max6639_pwm_apply,
++	.get_state = max6639_pwm_get_state,
++	.owner = THIS_MODULE,
++};
++
+ static int max6639_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+@@ -618,6 +810,15 @@ static int max6639_probe(struct i2c_client *client)
  
--title: i.MX SCU Client Device Node - OCOTP bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - OCOTP Based on SCU Message Protocol
+ 	data->client = client;
  
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
-diff --git a/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml b/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
-index df8442fb11f0..b9ce2e099ce9 100644
---- a/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
-+++ b/Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/opp/opp-v2-qcom-level.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Qualcomm OPP bindings to describe OPP nodes.
-+title: Qualcomm OPP
- 
- maintainers:
-   - Niklas Cassel <nks@flawful.org>
-diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-index ccec51ab5247..d1eef4825207 100644
---- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/pci/pci-ep.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: PCI Endpoint Controller Schema
-+title: PCI Endpoint Controller
- 
- description: |
-   Common properties for PCI Endpoint Controller Nodes.
-diff --git a/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml b/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
-index 41ee16e21f8d..d05a7c793035 100644
---- a/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
-+++ b/Documentation/devicetree/bindings/phy/calxeda-combophy.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/phy/calxeda-combophy.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Calxeda Highbank Combination PHYs binding for SATA
-+title: Calxeda Highbank Combination PHYs for SATA
- 
- description: |
-   The Calxeda Combination PHYs connect the SoC to the internal fabric
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-index 45ea565ce238..fcd729afeee1 100644
---- a/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,scu-pinctrl.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/pinctrl/fsl,scu-pinctrl.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: i.MX SCU Client Device Node - Pinctrl bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - Pinctrl Based on SCU Message Protocol
- 
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
-diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-index f5a121311f61..be81ed22a036 100644
---- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/pinctrl/pincfg-node.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Generic pin configuration node schema
-+title: Generic Pin Configuration Node
- 
- maintainers:
-   - Linus Walleij <linus.walleij@linaro.org>
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-index 551df3d9b809..008c3ab7f1bb 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/pinctrl/pinmux-node.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Generic pin multiplexing node schema
-+title: Generic Pin Multiplexing Node
- 
- maintainers:
-   - Linus Walleij <linus.walleij@linaro.org>
-diff --git a/Documentation/devicetree/bindings/power/fsl,scu-pd.yaml b/Documentation/devicetree/bindings/power/fsl,scu-pd.yaml
-index 1f72b18ca0fc..407b7cfec783 100644
---- a/Documentation/devicetree/bindings/power/fsl,scu-pd.yaml
-+++ b/Documentation/devicetree/bindings/power/fsl,scu-pd.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/power/fsl,scu-pd.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: i.MX SCU Client Device Node - Power domain bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - Power Domain Based on SCU Message Protocol
- 
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index 83ad177a9043..c6720764e765 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/riscv/cpus.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: RISC-V bindings for 'cpus' DT nodes
-+title: RISC-V CPUs
- 
- maintainers:
-   - Paul Walmsley <paul.walmsley@sifive.com>
-diff --git a/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml b/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
-index 8c102b70d735..dd1b1abf1e1b 100644
---- a/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
-+++ b/Documentation/devicetree/bindings/rtc/fsl,scu-rtc.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/rtc/fsl,scu-rtc.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: i.MX SCU Client Device Node - RTC bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - RTC Based on SCU Message Protocol
- 
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
-diff --git a/Documentation/devicetree/bindings/spi/omap-spi.yaml b/Documentation/devicetree/bindings/spi/omap-spi.yaml
-index 9952199cae11..352affa4b7f8 100644
---- a/Documentation/devicetree/bindings/spi/omap-spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/omap-spi.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/spi/omap-spi.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: SPI controller bindings for OMAP and K3 SoCs
-+title: SPI Controller on OMAP and K3 SoCs
- 
- maintainers:
-   - Aswath Govindraju <a-govindraju@ti.com>
-diff --git a/Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml b/Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml
-index f9e4b3c8d0ee..3721c8c8ec64 100644
---- a/Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/fsl,scu-thermal.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/thermal/fsl,scu-thermal.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: i.MX SCU Client Device Node - Thermal bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - Thermal Based on SCU Message Protocol
- 
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.yaml b/Documentation/devicetree/bindings/usb/usb-device.yaml
-index b77960a7a37b..7a771125ec76 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.yaml
-+++ b/Documentation/devicetree/bindings/usb/usb-device.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/usb/usb-device.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: The device tree bindings for the Generic USB Device
-+title: Generic USB Device
- 
- maintainers:
-   - Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-diff --git a/Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml
-index f84c45d687d7..47701248cd8d 100644
---- a/Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml
-+++ b/Documentation/devicetree/bindings/watchdog/fsl,scu-wdt.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/watchdog/fsl,scu-wdt.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: i.MX SCU Client Device Node - Watchdog bindings based on SCU Message Protocol
-+title: i.MX SCU Client Device Node - Watchdog Based on SCU Message Protocol
- 
- maintainers:
-   - Dong Aisheng <aisheng.dong@nxp.com>
++	/* Add PWM controller of max6639 */
++	data->chip.dev = dev;
++	data->chip.ops = &max6639_pwm_ops;
++	data->chip.npwm = 2;
++
++	err = devm_pwmchip_add(dev, &data->chip);
++	if (err < 0)
++		return dev_err_probe(dev, err, "failed to add PWM chip\n");
++
+ 	data->reg = devm_regulator_get_optional(dev, "fan");
+ 	if (IS_ERR(data->reg)) {
+ 		if (PTR_ERR(data->reg) != -ENODEV) {
 -- 
-2.34.1
+2.37.3
 
