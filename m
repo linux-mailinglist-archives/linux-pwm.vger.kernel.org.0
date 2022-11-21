@@ -2,95 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4CCA63292C
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 17:15:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7F2E632B48
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 18:44:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229915AbiKUQPr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Nov 2022 11:15:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
+        id S229904AbiKURon (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Nov 2022 12:44:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbiKUQPq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 11:15:46 -0500
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3F7D3393
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 08:15:45 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:4821:1ba5:2638:5c3a])
-        by laurent.telenet-ops.be with bizsmtp
-        id n4Fj2800Y5WXlCv014Fjsj; Mon, 21 Nov 2022 17:15:43 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ox9SR-0019aB-5j; Mon, 21 Nov 2022 17:15:43 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ox9SQ-00BS6W-Bu; Mon, 21 Nov 2022 17:15:42 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] pwm: Move pwm_capture() dummy to restore order
-Date:   Mon, 21 Nov 2022 17:15:41 +0100
-Message-Id: <96b39e1fe0e0c239d56ce321ccbf62cd38133803.1669047294.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229456AbiKURom (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 12:44:42 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5452C131;
+        Mon, 21 Nov 2022 09:44:40 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id f27so30350832eje.1;
+        Mon, 21 Nov 2022 09:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RLnharg7HDG4tuhJcBKXRgEiJmoIlGVpeHO4ji1PupQ=;
+        b=QMxs7gt0GdJyUwOlWlUC7k8EYUiuFa2UjgYIVh3FqAjs64LLxkxattfbJ6q9RN1/Xt
+         UjgjDR2kn7+E1O5kJc+eIcAE2y5BELiDUH2a5ShKVTlU2XfWFWS8b9U615oGAaOZlu5W
+         +zPWFpWn/EWRE8EgId63QukTU3LKvFicXp387MXKZtE87pailleizraUkcGWBTKwCAP2
+         jVfbC4J410Qr6kd/PVSo3cLwXm7N5Zg/bADMRrhobWTBlJ6CZV9WQQY/dObzVCwiJ7cZ
+         /4xtai8Q71kHnPOjG0zCZtJTbCs07MeXUTmettAKy84z8xbSjOX/O2zHh+BZm0mB4WyV
+         UmRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RLnharg7HDG4tuhJcBKXRgEiJmoIlGVpeHO4ji1PupQ=;
+        b=3E2kCkA2nrF5rK9QKcf5AKl+W+6VJzM1Cei5oTHsbNUxPuxwtBKsfREq+oPAflkwf8
+         +jQe+KdRcXjiz6ekaf7jriez/bUcmxjiqhGuaL8IlxiEpvAiF7rQGCsw+ldFR8oynHNV
+         zdbqGy4QHXWiTLbX58VDTAtbslIPIMK2nXJ28dUjlRvfxip7pifNnyjdTOf/NS8P+/0+
+         b9E5CNi+QZEOxwcPXJ4WN3CkqrM+sAto1UJ2kI97N63wTbeoJsrSuiLDF/JPp004T6KC
+         5hrTtwq/0+CqK2aM/EHIug3+PovRTxiCbnAwpqFaiHWy5uCGsbZun8QKbuTlr3UOAo1m
+         Xeew==
+X-Gm-Message-State: ANoB5pkuCkIr+5nAoNfus34wE96VYwS7aunqkifHXRD8aw47B3RfWPSB
+        H8XtLuTM8OwG9MkR2SC6zBE=
+X-Google-Smtp-Source: AA0mqf5hbgaT1LTR83Rgz0E8eKtIWdVjV/lZPLQv/7DyuZ4ztHtH3rHY0A0ZW3+Vs7MM7VoXiPYOwQ==
+X-Received: by 2002:a17:906:85d2:b0:78e:ebd:bf96 with SMTP id i18-20020a17090685d200b0078e0ebdbf96mr16597014ejy.625.1669052678827;
+        Mon, 21 Nov 2022 09:44:38 -0800 (PST)
+Received: from localhost ([217.131.81.52])
+        by smtp.gmail.com with UTF8SMTPSA id 14-20020a170906308e00b007b29a6bec24sm5172485ejv.32.2022.11.21.09.44.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Nov 2022 09:44:38 -0800 (PST)
+From:   Sasha Finkelstein <fnkl.kernel@gmail.com>
+To:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sasha Finkelstein <fnkl.kernel@gmail.com>
+Subject: [PATCH RESEND v3 0/4] PWM and keyboard backlight driver for ARM Macs
+Date:   Mon, 21 Nov 2022 20:42:24 +0300
+Message-Id: <20221121174228.93670-1-fnkl.kernel@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Move the dummy pwm_capture(), to make the declaration order of all
-dummies to match the declaration order of the real functions.
+Hi,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-v2:
-  - Add Acked-by.
----
- include/linux/pwm.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+This is a resend of the v3 of the patch series to add PWM and keyboard
+backlight driver for ARM macs.
 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index bba492eea96c5552..991ecfe1a85d3a98 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -440,13 +440,6 @@ static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
- 	return -EINVAL;
- }
- 
--static inline int pwm_capture(struct pwm_device *pwm,
--			      struct pwm_capture *result,
--			      unsigned long timeout)
--{
--	return -EINVAL;
--}
--
- static inline int pwm_enable(struct pwm_device *pwm)
- {
- 	might_sleep();
-@@ -458,6 +451,13 @@ static inline void pwm_disable(struct pwm_device *pwm)
- 	might_sleep();
- }
- 
-+static inline int pwm_capture(struct pwm_device *pwm,
-+			      struct pwm_capture *result,
-+			      unsigned long timeout)
-+{
-+	return -EINVAL;
-+}
-+
- static inline int pwm_set_chip_data(struct pwm_device *pwm, void *data)
- {
- 	return -EINVAL;
+Changes in v1:
+Addressing the review comments.
+
+Changes in v2:
+Added the reviewed-by and acked-by tags.
+Addressing a review comment.
+
+v1: https://www.spinics.net/lists/linux-pwm/msg19500.html
+v2: https://www.spinics.net/lists/linux-pwm/msg19562.html
+
+
+Sasha Finkelstein (4):
+  dt-bindings: pwm: Add Apple PWM controller
+  pwm: Add Apple PWM controller
+  arm64: dts: apple: t8103: Add PWM controller
+  MAINTAINERS: Add entries for Apple PWM driver
+
+ .../bindings/pwm/apple,s5l-fpwm.yaml          |  51 +++++++
+ MAINTAINERS                                   |   2 +
+ arch/arm64/boot/dts/apple/t8103-j293.dts      |  20 +++
+ arch/arm64/boot/dts/apple/t8103-j313.dts      |  20 +++
+ arch/arm64/boot/dts/apple/t8103.dtsi          |   9 ++
+ drivers/pwm/Kconfig                           |  12 ++
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-apple.c                       | 127 ++++++++++++++++++
+ 8 files changed, 242 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+ create mode 100644 drivers/pwm/pwm-apple.c
+
 -- 
-2.25.1
+2.38.1
 
