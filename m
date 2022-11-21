@@ -2,133 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2902632904
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 17:09:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E142A63291E
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 17:13:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231636AbiKUQJT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Nov 2022 11:09:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39686 "EHLO
+        id S230228AbiKUQNQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Nov 2022 11:13:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbiKUQJR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 11:09:17 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291DCC72F0;
-        Mon, 21 Nov 2022 08:09:16 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id CE8B91F899;
-        Mon, 21 Nov 2022 16:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1669046954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KyfNmcPz42geDnL1EI62RbwuzIIJ0tLz64n6CtQSE5I=;
-        b=AxHbtyPn8fCOhgK03LCj+hsL1iGrhbOLg2ykdln3BBS3q2x7elr/R6Wkj8m8fCJB79AUQP
-        TOo27oxKLH65LRjtrQ+L6EdBKjjw3ZmyOpQm4+8uuLj7DX6fpb/ELJR+mmOP/hLjP7zDe3
-        sAjsRdxOJVrHnS/UvbnGwyl80SfCkSo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1669046954;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KyfNmcPz42geDnL1EI62RbwuzIIJ0tLz64n6CtQSE5I=;
-        b=ko02FeoOF0N1Xxryj1kDA6bduoJiMktnvqb0DEqehmw5HBSDGM7KzAbEwQVMazZJ/tynFq
-        BVT6DLS1yOOHlECw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8EBD21377F;
-        Mon, 21 Nov 2022 16:09:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id y0E0Iaqie2N7VwAAMHmgww
-        (envelope-from <jdelvare@suse.de>); Mon, 21 Nov 2022 16:09:14 +0000
-Date:   Mon, 21 Nov 2022 17:09:11 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Sean Young <sean@mess.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=" 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH] media: rc: Drop obsolete dependencies on COMPILE_TEST
-Message-ID: <20221121170911.7cd72bfc@endymion.delvare>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        with ESMTP id S230222AbiKUQNN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 11:13:13 -0500
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30178D2DF7
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 08:13:11 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:4821:1ba5:2638:5c3a])
+        by michel.telenet-ops.be with bizsmtp
+        id n4D8280055WXlCv064D83p; Mon, 21 Nov 2022 17:13:09 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ox9Ps-0019J7-Am; Mon, 21 Nov 2022 17:13:04 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ox9Pr-00BS1U-HA; Mon, 21 Nov 2022 17:13:03 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a779g0 support
+Date:   Mon, 21 Nov 2022 17:13:02 +0100
+Message-Id: <2d1732595327307080c57e201a7f029f8adeabf3.1669047149.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), it
-is possible to test-build any driver which depends on OF on any
-architecture by explicitly selecting OF. Therefore depending on
-COMPILE_TEST as an alternative is no longer needed.
+Document support for the PWM timers in the Renesas R-Car V4H (R8A779G0)
+SoC.
 
-It is actually better to always build such drivers with OF enabled,
-so that the test builds are closer to how each driver will actually be
-built on its intended target. Building them without OF may not test
-much as the compiler will optimize out potentially large parts of the
-code. In the worst case, this could even pop false positive warnings.
-Dropping COMPILE_TEST here improves the quality of our testing and
-avoids wasting time on non-existent issues.
+Based on a patch in the BSP by CongDang.
 
-As a minor optimization, this also lets us drop of_match_ptr(), as we
-now know what it will resolve to, we might as well save cpp some work.
-
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: Sean Young <sean@mess.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/media/rc/Kconfig     |    4 ++--
- drivers/media/rc/pwm-ir-tx.c |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+v2:
+  - Add Acked-by, Reviewed-by.
+---
+ Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
---- linux-6.0.orig/drivers/media/rc/Kconfig
-+++ linux-6.0/drivers/media/rc/Kconfig
-@@ -314,7 +314,7 @@ config IR_PWM_TX
- 	tristate "PWM IR transmitter"
- 	depends on LIRC
- 	depends on PWM
--	depends on OF || COMPILE_TEST
-+	depends on OF
- 	help
- 	   Say Y if you want to use a PWM based IR transmitter. This is
- 	   more power efficient than the bit banging gpio driver.
-@@ -361,7 +361,7 @@ config IR_SERIAL_TRANSMITTER
- config IR_SPI
- 	tristate "SPI connected IR LED"
- 	depends on SPI && LIRC
--	depends on OF || COMPILE_TEST
-+	depends on OF
- 	help
- 	  Say Y if you want to use an IR LED connected through SPI bus.
-=20
---- linux-6.0.orig/drivers/media/rc/pwm-ir-tx.c
-+++ linux-6.0/drivers/media/rc/pwm-ir-tx.c
-@@ -120,7 +120,7 @@ static struct platform_driver pwm_ir_dri
- 	.probe =3D pwm_ir_probe,
- 	.driver =3D {
- 		.name	=3D DRIVER_NAME,
--		.of_match_table =3D of_match_ptr(pwm_ir_of_match),
-+		.of_match_table =3D pwm_ir_of_match,
- 	},
- };
- module_platform_driver(pwm_ir_driver);
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+index 1c94acbc2b4a0384..4c80970106877e55 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
++++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+@@ -35,6 +35,7 @@ properties:
+           - renesas,pwm-r8a77980  # R-Car V3H
+           - renesas,pwm-r8a77990  # R-Car E3
+           - renesas,pwm-r8a77995  # R-Car D3
++          - renesas,pwm-r8a779g0  # R-Car V4H
+       - const: renesas,pwm-rcar
+ 
+   reg:
+-- 
+2.25.1
 
-
---=20
-Jean Delvare
-SUSE L3 Support
