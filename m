@@ -2,107 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C21C4632B57
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 18:45:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01420632E6D
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Nov 2022 22:08:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbiKURp0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Nov 2022 12:45:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36470 "EHLO
+        id S229482AbiKUVIB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Nov 2022 16:08:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230115AbiKURpV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 12:45:21 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB6B057B69;
-        Mon, 21 Nov 2022 09:45:19 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id v8so6285261edi.3;
-        Mon, 21 Nov 2022 09:45:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WNL6IfTe0wzPq8NWBK/D96/5y8l3oPapGeg3sP1iP80=;
-        b=dLhwAvRFJe9dchF5SlF7ogMjH13Pn6iK4bxfoIQiE97ocKlAgrKq3Ar3GgtgtJKfGJ
-         s/O72OTVsNvv/EiYuci7viuu6cDSVg22gjpQLhVYJHIlvsVhHPTbmiber2ea9U9GrLb3
-         JsVBE1OojpPa1oX3NA0Bk1bmjuH/4QGz35S4ErMgIwB7uRJ8VKuFHWGECFZOB1dM6QcM
-         u8P32EeuImZq7VHnVYE0Ity0o12rE81sECLWAV5Z+2oKSbokt9Rxkn/lq8ymXNoZORno
-         RA/kd0GE//5CNTFYaKh0Ox/dgx1dQYtgjQN1ilhQil8pIApqLdb6WEkjdYHpG+p36LzT
-         TogQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WNL6IfTe0wzPq8NWBK/D96/5y8l3oPapGeg3sP1iP80=;
-        b=AbaM6D/ukKbftvZX0twQfL93er2P7ivN+I/aqDDWCMLJpesLJTCE+C7J4lJL7fgCeW
-         JWjqbz5A+358e8SMEex+rrCWPEzrOJO4WBF72LhTXCWiniCedc6tS9GvS0qV+556vzSY
-         6IpScXvekBSrrZnUzZT0iikf3mw53tr3eY0ByLH0xObpddsrdZb+5L4GhDIZOEN3mRsw
-         YCBAwUFih/4/qesZGTGAVBnPbCMbTOE+xsTYUPeqQKBYZFWsVilDB52RoI4LN9nWV+kX
-         jy+vJ4QXWUnid3Qh5AqRD1xcWPjUVmQSTHkpKP5kko6UYdeURd3KU2QFlMnuomYPsUdt
-         NCtw==
-X-Gm-Message-State: ANoB5plmhIqrGY+lTY1g9k7kliHu167TIWNfZsinmMnuHic4bLnPC8D+
-        MTSBLdSrNKuzgnglBmtj/Xg=
-X-Google-Smtp-Source: AA0mqf5tktH45X/K7WSst1WSDXG6NCTfMsMwbFnE94eu773Cg61+GPcdMqm0ADWd+wNyEsvR1EuCxg==
-X-Received: by 2002:aa7:db90:0:b0:459:aa70:d4fd with SMTP id u16-20020aa7db90000000b00459aa70d4fdmr16907330edt.162.1669052717948;
-        Mon, 21 Nov 2022 09:45:17 -0800 (PST)
-Received: from localhost ([217.131.81.52])
-        by smtp.gmail.com with UTF8SMTPSA id g2-20020a056402428200b0046146c730easm5464345edc.75.2022.11.21.09.45.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 09:45:17 -0800 (PST)
-From:   Sasha Finkelstein <fnkl.kernel@gmail.com>
-To:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>
-Subject: [PATCH RESEND v3 4/4] MAINTAINERS: Add entries for Apple PWM driver
-Date:   Mon, 21 Nov 2022 20:42:28 +0300
-Message-Id: <20221121174228.93670-5-fnkl.kernel@gmail.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221121174228.93670-1-fnkl.kernel@gmail.com>
-References: <20221121174228.93670-1-fnkl.kernel@gmail.com>
+        with ESMTP id S229502AbiKUVIA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Nov 2022 16:08:00 -0500
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B52F1EAC2
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Nov 2022 13:07:59 -0800 (PST)
+Received: from localhost (unknown [IPv6:2601:281:8300:73:8b7:7001:c8aa:b65f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 49C64377;
+        Mon, 21 Nov 2022 21:07:56 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 49C64377
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1669064876; bh=yCT3qdPFZMMbQpyOfNtkv+ATOSt2TdhUrsnjVpcdEz8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Dh2SOPTCgrXma6eV3275pl6aT2I1xqIvtqXx2TkLA5niucFJWHpSrUEdZxjDo328U
+         qq0IcUbeXJGSXTCNZmyw7aJSjlyNbdr/Gm6d/DvmcMQXosJFFZ2JtLinXjLzRG7wOE
+         jKcXHFvsOKwwwL+W0LB2JcV7SuGI0znjEYGOJ5EfEZpA+BNMVnGXdhR9Q9bOcA6+o4
+         /QnG9ORRB/Jr9I95MtuMztMWD9+nbMz0iS4DmAA0bk6wXnjttwKRVjZvZ6PDY/nqYs
+         kAoC6RRPvuOWcYFKhdWeWEN3SUgiDdVCw16cfy70nLgVORTJIpNbnLgvIBEy6tFwdf
+         dJKldibQugDcQ==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] Documentation: devres: add missing PWM helper
+In-Reply-To: <20221117115950.mlzkipddy3qwwp2k@pengutronix.de>
+References: <20221102024430.1444714-1-yangyingliang@huawei.com>
+ <20221117115950.mlzkipddy3qwwp2k@pengutronix.de>
+Date:   Mon, 21 Nov 2022 14:07:55 -0700
+Message-ID: <87k03o9ftg.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the MAINTAINERS entries for the driver
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> writes:
 
-Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Acked-by: Sven Peter <sven@svenpeter.dev>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+> On Wed, Nov 02, 2022 at 10:44:30AM +0800, Yang Yingliang wrote:
+>> Add missing devm_pwmchip_add() to devres.rst. It's introduced by
+>> commit bcda91bf86c1 ("pwm: Add a device-managed function to add
+>> PWM chips").
+>>=20
+>> Fixes: bcda91bf86c1 ("pwm: Add a device-managed function to add PWM chip=
+s")
+>> Cc: Thierry Reding <thierry.reding@gmail.com>
+>> Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+>> Cc: Jonathan Corbet <corbet@lwn.net>
+>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>> ---
+>>  Documentation/driver-api/driver-model/devres.rst | 1 +
+>>  1 file changed, 1 insertion(+)
+>>=20
+>> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Document=
+ation/driver-api/driver-model/devres.rst
+>> index aac9c1e39ebc..2bea236d6919 100644
+>> --- a/Documentation/driver-api/driver-model/devres.rst
+>> +++ b/Documentation/driver-api/driver-model/devres.rst
+>> @@ -402,6 +402,7 @@ POWER
+>>    devm_reboot_mode_unregister()
+>>=20=20
+>>  PWM
+>> +  devm_pwmchip_add()
+>>    devm_pwm_get()
+>>    devm_fwnode_pwm_get()
+>
+> Oh, didn't know that doc list.
+>
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+>
+> Is this expected to go via the pwm tree, or will Jonathan pick it up?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 046ff06ff97f..69f56f7cf907 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1908,6 +1908,7 @@ F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
- F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
- F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
- F:	Documentation/devicetree/bindings/power/apple*
-+F:	Documentation/devicetree/bindings/pwm/pwm-apple.yaml
- F:	Documentation/devicetree/bindings/watchdog/apple,wdt.yaml
- F:	arch/arm64/boot/dts/apple/
- F:	drivers/clk/clk-apple-nco.c
-@@ -1921,6 +1922,7 @@ F:	drivers/mailbox/apple-mailbox.c
- F:	drivers/nvme/host/apple.c
- F:	drivers/nvmem/apple-efuses.c
- F:	drivers/pinctrl/pinctrl-apple-gpio.c
-+F:	drivers/pwm/pwm-apple.c
- F:	drivers/soc/apple/*
- F:	drivers/watchdog/apple_wdt.c
- F:	include/dt-bindings/interrupt-controller/apple-aic.h
--- 
-2.38.1
+I've applied it.
 
+Thanks,
+
+jon
