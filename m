@@ -2,97 +2,94 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CBFB633CD6
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Nov 2022 13:49:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A851633D03
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Nov 2022 14:01:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233250AbiKVMtS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Nov 2022 07:49:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54486 "EHLO
+        id S232828AbiKVNA6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Nov 2022 08:00:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233072AbiKVMtM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 07:49:12 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42596606AC
-        for <linux-pwm@vger.kernel.org>; Tue, 22 Nov 2022 04:49:11 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id r8so7216474ljn.8
-        for <linux-pwm@vger.kernel.org>; Tue, 22 Nov 2022 04:49:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BKKhKb5Gs5Frt6QdrTXva2XYvf3P1wraxWYylueZjts=;
-        b=vROLuRMtSqcLs1vlki0d4Ne+UuwsQbEAY11V9y2sDHUGQI21crDHZJ0tXsuLE9VtKp
-         N2Q4+Y6IUjbnBrY500Tf762D8wED2XgZtptJAxv3FDcvzZY/Wunw/aA8FlnzWTLzI2ax
-         GEFLAcEKzlSOXMdqVs5jPTh+0TlUc7GCVQ6bG2KJASiozOKfojeO/A3IjuIVGIrVYtL9
-         bmmDAQSoJjiRYxMlfYVdXX/BVXZWi+6yAS9h4uSlIB4lhisB4BsIzws0KXXnyrumElRm
-         sXM+e+23Hl1PJkhflw3fYIN/lni5xF2hnK4bUyv3j76scCac5Legy7zYPCyyE+3VXZ60
-         8/MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BKKhKb5Gs5Frt6QdrTXva2XYvf3P1wraxWYylueZjts=;
-        b=Q7DZZSTjYKrd9VrOtLkqoW2RryG7vA6UG+OOTpMbMXzMocoQe6dZGVsfLuTYi9M4Vq
-         e/h1m/w45QjFzxFaRo1KS1j3ZJRzLbh1yN9xAuiRKHcJMa/5/aT/MMNx3rtuHEznDayS
-         V1XRm9SDVtX6RUgOw7/7EySDt1Z3rlp8GW2OUIQM4vVlPjzy/vcRBz3OxRPybVer/5rx
-         08FeCs69lfenpySBBCwZ06QmcPIoZ4A3Cez6TD6gcIeM4eO/nv4Ep8n92r4NYj+pTPJb
-         ne88T8tJ0BYhwcDl1rY5yUNPqn8bDcgPY92HxsjBsm9yRAOCJe9pXLrRoc/qWMhuG90J
-         6Axg==
-X-Gm-Message-State: ANoB5pkSLpX1Z/p629f4swhzvwRd0h9dmxovxJ+HF7FbHR6G9KeOCr8Q
-        zmKRQ4HoHdyqjgqndw/5ceZQxA==
-X-Google-Smtp-Source: AA0mqf5sBXpQ0lraqYbLN3Pt9WJ/0BS7mciGklDZFRVVoBTpC5iowYQuF9T/Uuqg6Tc0kDYLXXQ8fA==
-X-Received: by 2002:a2e:2c05:0:b0:277:13ef:53ad with SMTP id s5-20020a2e2c05000000b0027713ef53admr1396802ljs.327.1669121349652;
-        Tue, 22 Nov 2022 04:49:09 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id w26-20020a05651c119a00b0027730261350sm1853863ljo.131.2022.11.22.04.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Nov 2022 04:49:09 -0800 (PST)
-Message-ID: <bee157b1-e05f-7f64-61bf-8d6796dd1336@linaro.org>
-Date:   Tue, 22 Nov 2022 13:49:08 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Allow decimal format in addition
- to hex format
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org,
+        with ESMTP id S232252AbiKVNAz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 08:00:55 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3D661BAE;
+        Tue, 22 Nov 2022 05:00:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669122054; x=1700658054;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MmhbBkqNMvSGc76GKa0mJ/p1EKwUawSKuKvJH3qKXFA=;
+  b=MFfL2EZ901M+nnDfMD15Y7DqyLHvvcrUZVpXyYNZDfCetvkVqbsBs6UL
+   QhrEg7mjSYqsif0NODFCMCRppw7SWj9ByZ29oVzGzTymV5N4mHr+L2DbS
+   q/UEBZUwlD0VvTZG374Tlpop9wn6Tg+1UwGvSx3ANxx9YKinnk6WqOhMR
+   c1JUpEdZuMoFxdrrfUKAizxegtUW+ORm0SahebpdrSsf2VhBPhkcpkQXj
+   F77eQ3ZEJadtoTHW9kzJ873GJbsHftlifUuLG9aS0Q3OLkJGk1Rl+DLr6
+   GZML5uYJ7c5dqMXD7HQVFJ9wWOmGcSyvigbTbTf1n8A1WlFX/D4fu3kKM
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="315626941"
+X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
+   d="scan'208";a="315626941"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 05:00:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="747342883"
+X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
+   d="scan'208";a="747342883"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Nov 2022 05:00:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oxStJ-00Fpwi-3B;
+        Tue, 22 Nov 2022 15:00:45 +0200
+Date:   Tue, 22 Nov 2022 15:00:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Hans de Goede <hdegoede@redhat.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <20221122123225.59106-1-tony@atomide.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221122123225.59106-1-tony@atomide.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 0/7] pinctrl: intel: Enable PWM optional feature
+Message-ID: <Y3zH/etMuIQ5l+SK@smile.fi.intel.com>
+References: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 22/11/2022 13:32, Tony Lindgren wrote:
-> Let's allow node numbering in decimal format too.
+On Thu, Nov 17, 2022 at 01:07:59PM +0200, Andy Shevchenko wrote:
 > 
-> Simple human-readable increments/IDs are usually decimal, hex is only for
-> addresses as noted by Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>.
+> This is a continuation of the previously applied PWM LPSS cleanup series.
+> Now, we would like to enable PWM optional feature that may be embedded
+> into Intel pin control IPs (starting from Sky Lake platforms).
 > 
-> Let's use an improved match suggested by Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> and improved a bit by Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de>.
+> I would like to route this via Intel pin control tree with issuing
+> an immutable branch for both PINCTRL and PWM subsystems, but I'm
+> open for other suggestions.
 > 
+> Hans, I dared to leave your Rb tags, however the patches are slightly
+> differ, because of the Uwe's suggestion on how to handle the missing
+> headers. I hope you are okay with that. If not, please comment what
+> must be amended then.
+> 
+> Uwe, the patches 3 and 6 still need your blessing.
 
+Uwe, do you think they are ready to go?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Best regards,
-Krzysztof
 
