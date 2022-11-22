@@ -2,123 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0E7763429E
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Nov 2022 18:40:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C29B463436E
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Nov 2022 19:15:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233878AbiKVRkz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Nov 2022 12:40:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
+        id S232685AbiKVSPE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Nov 2022 13:15:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232660AbiKVRkx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 12:40:53 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159DE77228;
-        Tue, 22 Nov 2022 09:40:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669138853; x=1700674853;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=upNGSzzhJG+Wkw5diZX6WcxCtGWqwnN1eIHljJzi8h8=;
-  b=iS80+t+Big4Iwer3KWUihlqd8vNY7KKD1WKZoUkXb4379WwDP7UOUiCQ
-   MXS3yP9YNn9eHCEIs0wQCCBiUY3HuRWtAe5r07U00k1REcNEwg0k3DPQI
-   FcPGqlr5g3qDT7V+OLUsmOagrfYenQMoTlFe3yko1elpirD1DgDRH2J9R
-   0QlDXamngmige1OxSsIS8NoPPYcv856JwKjIaYpzIW92cu8jx7Fu2Qnwk
-   BDvUlbUr7sUWBFsv80xwwbl/+rJenz3Mtve/j/GLflQY8i+fsSsUZtWDQ
-   gkmuJc5d+0wmQ3yg42sP4uLe98Uq7G2gpScS7B6kQ0nXkTS6c4MZtawQj
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="340743558"
-X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
-   d="scan'208";a="340743558"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 09:35:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="619295185"
-X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
-   d="scan'208";a="619295185"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP; 22 Nov 2022 09:35:40 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oxXBL-00FvoQ-01;
-        Tue, 22 Nov 2022 19:35:39 +0200
-Date:   Tue, 22 Nov 2022 19:35:38 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S233942AbiKVSPB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 13:15:01 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC144C26B
+        for <linux-pwm@vger.kernel.org>; Tue, 22 Nov 2022 10:15:00 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxXnC-0000br-SB; Tue, 22 Nov 2022 19:14:46 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxXnA-005u2M-LT; Tue, 22 Nov 2022 19:14:45 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxXnA-000r1s-Pe; Tue, 22 Nov 2022 19:14:44 +0100
+Date:   Tue, 22 Nov 2022 19:14:44 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v5 6/7] pwm: lpss: Add devm_pwm_lpss_probe() stub
-Message-ID: <Y30IaslnbeKBkMhM@smile.fi.intel.com>
+Message-ID: <20221122181444.m74fa47ejp7nvgxj@pengutronix.de>
 References: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
  <20221117110806.65470-7-andriy.shevchenko@linux.intel.com>
  <20221122164703.e3z42rou7ivu3djv@pengutronix.de>
+ <Y30IaslnbeKBkMhM@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3226vdxlzkg52b57"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221122164703.e3z42rou7ivu3djv@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y30IaslnbeKBkMhM@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 05:47:03PM +0100, Uwe Kleine-König wrote:
-> On Thu, Nov 17, 2022 at 01:08:05PM +0200, Andy Shevchenko wrote:
-> > In case the PWM LPSS module is not provided, allow users to be
-> > compiled with the help of the devm_pwm_lpss_probe() stub.
 
-...
+--3226vdxlzkg52b57
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +static inline
-> > +struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iomem *base,
-> > +					  const struct pwm_lpss_boardinfo *info)
-> > +{
-> > +	return ERR_PTR(-ENODEV);
-> > +}
-> > +#endif	/* CONFIG_PWM_LPSS */
-> 
-> Hmm, this is actually never used, because if
-> !IS_REACHABLE(CONFIG_PWM_LPSS), the only caller (that is added in patch
-> 7) has:
-> 
-> 	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
-> 		return 0;
-> 
-> before devm_pwm_lpss_probe() is called.
-> 
-> Not sure if it's safe to just drop this patch.
+Hello Andy,
 
-How is it supposed to be compiled and linked then?
+On Tue, Nov 22, 2022 at 07:35:38PM +0200, Andy Shevchenko wrote:
+> On Tue, Nov 22, 2022 at 05:47:03PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Nov 17, 2022 at 01:08:05PM +0200, Andy Shevchenko wrote:
+> > > In case the PWM LPSS module is not provided, allow users to be
+> > > compiled with the help of the devm_pwm_lpss_probe() stub.
+>=20
+> ...
+>=20
+> > > +static inline
+> > > +struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void _=
+_iomem *base,
+> > > +					  const struct pwm_lpss_boardinfo *info)
+> > > +{
+> > > +	return ERR_PTR(-ENODEV);
+> > > +}
+> > > +#endif	/* CONFIG_PWM_LPSS */
+> >=20
+> > Hmm, this is actually never used, because if
+> > !IS_REACHABLE(CONFIG_PWM_LPSS), the only caller (that is added in patch
+> > 7) has:
+> >=20
+> > 	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
+> > 		return 0;
+> >=20
+> > before devm_pwm_lpss_probe() is called.
+> >=20
+> > Not sure if it's safe to just drop this patch.
+>=20
+> How is it supposed to be compiled and linked then?
 
->	The return value is
-> neither -ENOSYS (which I would expect for a stub function like that)
+The compiler optimizes everything away after that return 0 and so
+doesn't need that symbol at all.
 
-This is not a generic library registration / addition of the device.
-I don't see how ENOSYS and esp. EINVAL fits here.
+I just tested compiling your series without patch #6, x86_64 allmodconfig +=
+ PWM=3Dn.
 
->	nor
-> -EINVAL (which for reasons unknown to me is used in the stub for
-> pwmchip_add()).
+nm doesn't report the need for devm_pwm_lpss_probe in
+drivers/pinctrl/intel/pinctrl-intel.o.
 
-This I explained already that _add() != _probe() semantically, I do not see the
-link between their error codes.
+The build isn't done yet, but I don't expect surprises.
 
-> I would have a better feeling with -ENOSYS in your stub, but I don't
-> feel really strong here.
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
--- 
-With Best Regards,
-Andy Shevchenko
+--3226vdxlzkg52b57
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN9EZEACgkQwfwUeK3K
+7Ak9SAf8DRmODSMzUTDmQjfOqHL4+NhfOIoWfEnkga9JVZLhIw8tsY8oeac2xxA6
+OzRR2oFShKuM1qu/ZNh5osbX+zQrUatamL6mWewELBC5ZInewwpUTrWcBa+fu8hx
+0VjXZZeuxNyPVn0ebWN9LWG/5WtLYTMAykelXOkGjjXmGzix9ksSQIqTTzHpVBS0
+3QISI90z7VN0MB2+zy5hX250xNaGOvrsMET5BLEecFRH7t9GhLzCu5CcuQ6c+FXm
+pFDBXIPf6sSlCVLbg0yF9fOTNfbSV7iMtyb6qXBz7dqo5VhBr85b1WBSidHbEGJ4
+3JQTpHDv62RtBfeVbJuLKv/jMgMiMQ==
+=BukI
+-----END PGP SIGNATURE-----
+
+--3226vdxlzkg52b57--
