@@ -2,105 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72D54634DEE
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 03:37:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DEDD634DF1
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 03:38:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234718AbiKWChU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Nov 2022 21:37:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48320 "EHLO
+        id S235438AbiKWCiR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Nov 2022 21:38:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234684AbiKWChT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 21:37:19 -0500
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1548725E7;
-        Tue, 22 Nov 2022 18:37:17 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 0E319420CF;
-        Wed, 23 Nov 2022 02:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-        t=1669171034; bh=Yn5X5ms6gE6PGm6GarmnveA4sX7BBMwg+HOe4jvW0eE=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To;
-        b=Vi1oe3ru2bHkTXegGyGHCEmv0Cx0JRyzJI01GIOUmw8mMbFZcvFs6w6azWgEVI2wX
-         hiHe0i1GIA9eb2UYUBKXApDPgM4CregUwPx+fkWxBL6aqjD6rsCRBvIPJKg2KXj5rO
-         zwG8Keynicpky04kylEvvezcpH9qO8erqMytnWqBqRBQdhkyPeADXt1DEOaaueexv7
-         EWg0NTrt51nFJXfJd6i34i+kTK7CpqdNW/rHNijk0xVWlRO1zDg5PptoxBZK//GHR1
-         FjfrXjGzIxvwo2BBdkgoisYjdLQeiZ0SuWBiVgUz45YyghFLxDPHpk9+jHcXgyqgAK
-         hgDPgaTldNrcg==
-Message-ID: <29c800dd-efdf-ddab-3ad2-466e1a8eb7d2@marcan.st>
-Date:   Wed, 23 Nov 2022 11:37:08 +0900
+        with ESMTP id S235422AbiKWCiP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 21:38:15 -0500
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170596D496;
+        Tue, 22 Nov 2022 18:38:15 -0800 (PST)
+Received: by mail-io1-f42.google.com with SMTP id i85so1041168ioa.5;
+        Tue, 22 Nov 2022 18:38:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EUCkOlHnbf0RGMMarg0kKY6VYKEKcAOkoBffam39m+E=;
+        b=5zaJsbgZIG2pXDvD3xZAl/I13ctGY1/ThShAPA1JXKpuGf8yzz0e2iXfqbbWpzCxor
+         zubsB4J02LzFNGNHrE0MWAkqTMbCgYyWamwaI2nUYF6qOoDKgpvp8hRD6AuSnFOfK8MQ
+         quv01Z8oRVWG3RCBU2hTlsRRVGK9pS8SirBGNbht8wppcN7vEYmq3fao91fuHPXUVWHN
+         XwmgNBnLSuEZB/V6yNHeA90iM1hyO1u5i6223Fz5/g/VusZ4j3nhbqRvAmuHDVGrfzna
+         8kpZpPVI4uq3uBct9Nyb/5RSOCHSIvtb+hqF+uUUx150O0Ird6i7F6nJxe3JcBRZ790x
+         pJOw==
+X-Gm-Message-State: ANoB5pnk9z6lBhhrvsWhmc3tbclshhdfCS63MlyWWP9YmgLJtfTpaUNS
+        +A73/y9GbZmY0s5+MBFbQA==
+X-Google-Smtp-Source: AA0mqf6qotcHGpq8zIuW2HhoJpNTCHIunf2EygOd6Pv0MUV9RtFYJBFEpPDMOB9tOnvQ8JiY/3VgSw==
+X-Received: by 2002:a02:3b2b:0:b0:375:9edc:532d with SMTP id c43-20020a023b2b000000b003759edc532dmr11548887jaa.13.1669171094302;
+        Tue, 22 Nov 2022 18:38:14 -0800 (PST)
+Received: from robh_at_kernel.org ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id y14-20020a927d0e000000b00302b066d502sm1751976ilc.1.2022.11.22.18.38.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Nov 2022 18:38:13 -0800 (PST)
+Received: (nullmailer pid 1036274 invoked by uid 1000);
+        Wed, 23 Nov 2022 02:38:14 -0000
+Date:   Tue, 22 Nov 2022 20:38:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Allow decimal format in
+ addition to hex format
+Message-ID: <20221123023814.GA1026269-robh@kernel.org>
+References: <20221122123225.59106-1-tony@atomide.com>
+ <20221122133825.d67q4q6k3wkncucj@pengutronix.de>
+ <Y3zRpgY1cXCKsJCu@atomide.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc:     thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
-        sven@svenpeter.dev, alyssa@rosenzweig.io, asahi@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221121174228.93670-1-fnkl.kernel@gmail.com>
- <20221121174228.93670-3-fnkl.kernel@gmail.com>
- <20221123022438.GA1006695-robh@kernel.org>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH RESEND v3 2/4] pwm: Add Apple PWM controller
-In-Reply-To: <20221123022438.GA1006695-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y3zRpgY1cXCKsJCu@atomide.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 23/11/2022 11.24, Rob Herring wrote:
-> On Mon, Nov 21, 2022 at 08:42:26PM +0300, Sasha Finkelstein wrote:
->> diff --git a/drivers/pwm/pwm-apple.c b/drivers/pwm/pwm-apple.c
->> new file mode 100644
->> index 000000000000..b0c3f86fd578
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-apple.c
->> @@ -0,0 +1,127 @@
->> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+On Tue, Nov 22, 2022 at 03:41:58PM +0200, Tony Lindgren wrote:
+> * Uwe Kleine-König <u.kleine-koenig@pengutronix.de> [221122 13:28]:
+> > On Tue, Nov 22, 2022 at 02:32:24PM +0200, Tony Lindgren wrote:
+> > > Let's allow node numbering in decimal format too.
+> > > 
+> > > Simple human-readable increments/IDs are usually decimal, hex is only for
+> > > addresses as noted by Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>.
+> > > 
+> > > Let's use an improved match suggested by Krzysztof Kozlowski
+> > > <krzysztof.kozlowski@linaro.org> and improved a bit by Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de>.
+> > > 
+> > > Cc: linux-pwm@vger.kernel.org
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > 
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > 
+> > Which tree should this merged through? The obvious candidates are pwm,
+> > dt and omap.
 > 
-> Kernel code is generally GPL-2.0 only. No other PWM driver is MIT 
-> licensed. So why this one.
-> 
-> Mixing licenses is a problem because few people look at the licenses 
-> when copying code around.
+> The dt folks usually queue the binding patches separately.
 
-*Sigh*. We encourage the use of MIT dual-licensing as a project to allow
-other OSes to port the drivers over without having to rewrite them, for
-any driver written from scratch. We've had this conversation quite a few
-times already...
+The default is they go thru the subsystem trees, and I mainly pickup 
+what has not after some time (and is standalone binding change).
 
->> +
->> +	ret = devm_pwmchip_add(&pdev->dev, &pwm->chip);
-> 
-> This symbol is EXPORT_SYMBOL_GPL. So how can this module be MIT 
-> licensed?
-
-Because they are compatible licenses. The combination of this driver and
-the kernel is GPL, but this driver itself is MIT. People are free to
-port it to other OSes and reimplement devm_pwmchip_add or replace the
-call with something else.
-
-The EXPORT_SYMBOL_GPL stuff is about blocking *proprietary*
-GPL-incompatible modules from using those symbols. This is a
-GPL-compatible, explicitly dual-licensed module.
-
-In this case the driver is trivial enough there isn't much to gain from
-dual-licensing since the parts that matter (the reverse engineering) are
-not copyrightable, but I still find it silly that we keep getting told
-more permissive licensing is a problem. People are free to dual-license
-their work as they see fit, it's a fundamental freedom in free software,
-and plenty of kernel code is dual-licensed like this (including much of
-DRM and entire GPU drivers).
-
-- Hector
+Rob
