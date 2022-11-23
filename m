@@ -2,100 +2,110 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D779636057
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 14:48:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 861DE6360B2
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 14:57:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237915AbiKWNsU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Nov 2022 08:48:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57178 "EHLO
+        id S236987AbiKWN5m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Nov 2022 08:57:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237634AbiKWNrc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 08:47:32 -0500
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEF4429AA;
-        Wed, 23 Nov 2022 05:37:12 -0800 (PST)
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AND8Qp3022759;
-        Wed, 23 Nov 2022 14:37:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=43DBf8OtjFvR9aatD+0pcM+rPZ03EasEqHg9movlJfk=;
- b=iGFQ3b/nlXp/OQhxguV0KJedGxSFHpJ0M5WQj7h+KuS73fijiOHE/ROCjUAvaScWwYG4
- tSC1WoZZBw0mQgsYeo/Ke0pBxkpvdX8y56o/LJdwTV47OQ1fpmNif3VI8s7ynlP6Ld9g
- c+LR+t2sPjQTQ3jluh4jiccOl3geBfnBgfpjhcVS+uSlUqDRH9mbUY8GKGx0X+BM0OeM
- 2xSwSFoyqAwylxrB0WoJhGx7yUkLPNoHHmXhM/OwY6ZH44vyMgdREqzexDrzYbQKRW3i
- yi4pYm6eMh/1/tWNhYVGluM2jLNWNbqevX9GPBJxBE4otpaH9VEP2xQYhja9sGpKQ5hj Rw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3kxrdch3uh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Nov 2022 14:37:03 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D900010002A;
-        Wed, 23 Nov 2022 14:37:00 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D2658226FCB;
-        Wed, 23 Nov 2022 14:37:00 +0100 (CET)
-Received: from localhost (10.48.1.102) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.13; Wed, 23 Nov
- 2022 14:36:58 +0100
-From:   Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
-CC:     <alexandre.torgue@foss.st.com>, <fabrice.gasnier@foss.st.com>,
-        <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <olivier.moysan@foss.st.com>
-Subject: [PATCH] pwm: stm32-lp: fix the check on arr and cmp registers update
-Date:   Wed, 23 Nov 2022 14:36:52 +0100
-Message-ID: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S236767AbiKWN4v (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 08:56:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBB3101F;
+        Wed, 23 Nov 2022 05:51:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED9E961CEC;
+        Wed, 23 Nov 2022 13:51:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B70F3C433D6;
+        Wed, 23 Nov 2022 13:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669211504;
+        bh=yn6IQg9xUUV9CgWL40Zq6y52rg1mn5sa8oD03o5v7Xs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UKfpNKKUztgIyNLf4JyG/Wh9x1SnC70ZZ6CMkTeLD14mkOzGlAm4+qghDz9TTaJEY
+         oavU1DO373ElaIHQhIEpVZi9OKHf+AB7y5AZ3a0QM4K6Mda5mlxZI6uj77Y+34o3+z
+         tC1+zaqNCkF1IRGWjNnvY9xTloZLlUjIwvwDNzzHVs6iAjJgjo18LVCElB+Z+suDGy
+         RWQBO44v5C47KQUPl5LJXsrQ6VqWTj1W9The96h2CM4sfIP1b0DOy3ZhTq1Wp6bXDL
+         C50DRWElKcd6PEaRVrgU5hEWY/A3MmvIZ+aqD+I2bHVUKaydHWSJ+FVF1rDhM8vyJp
+         Av8NqbWSqNyRA==
+Date:   Wed, 23 Nov 2022 13:51:32 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: drop redundant part of title of
+ shared bindings
+Message-ID: <Y34lZFSBEwuI6G+a@sirena.org.uk>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.48.1.102]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-23_07,2022-11-23_01,2022-06-22_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sez8m7aAndejrS5d"
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
+X-Cookie: I'm rated PG-34!!
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The ARR (auto reload register) and CMP (compare) registers are
-successively written. The status bits to check the update of these
-registers are polled together with regmap_read_poll_timeout().
-The condition to end the loop may become true, even if one of the
-register isn't correctly updated.
-So ensure both status bits are set before clearing them.
 
-Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
----
- drivers/pwm/pwm-stm32-lp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--sez8m7aAndejrS5d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 3115abb3f52a..61a1c87cd501 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -127,7 +127,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	/* ensure CMP & ARR registers are properly written */
- 	ret = regmap_read_poll_timeout(priv->regmap, STM32_LPTIM_ISR, val,
--				       (val & STM32_LPTIM_CMPOK_ARROK),
-+				       (val & STM32_LPTIM_CMPOK_ARROK) == STM32_LPTIM_CMPOK_ARROK,
- 				       100, 1000);
- 	if (ret) {
- 		dev_err(priv->chip.dev, "ARR/CMP registers write issue\n");
--- 
-2.25.1
+On Mon, Nov 21, 2022 at 12:06:07PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "binding", but instead just describe the hardware.  For shared
+> (re-usable) schemas, name them all as "common properties".
 
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--sez8m7aAndejrS5d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+JWMACgkQJNaLcl1U
+h9CJ0gf/ajSRpLgN3RoHR7wLxFr99y5vWRywVoOaKU+lLq3UY2O6a9ssY8wOblzx
+J9LbUP4Acep2fofTZCX1Ks2sTUHXNBB95SaeCwpSD/MX2HltHr0QvTGh8Lc9EfRf
+f4l/ayjov4DbVsOJ019O7MKSgyuKezLb6Rj/5S38OrqdREbbzDoFe2ah8rSxpA8m
+OQPEsY4eAbVfELEo/JQ86QYXN8gT6p3qA0+8IxDb0D+iLi3JCIz3GTrn+ZCudWRS
+DkbD00vhGbeEaAbI/ufYp/KUWT0wfIoONENSAdGhmGMd+deqbmOt1Ryt+YoEt49j
+pRMeSDCxuBZIpBjQfw7H+5ofOT8jsg==
+=hoZL
+-----END PGP SIGNATURE-----
+
+--sez8m7aAndejrS5d--
