@@ -2,217 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD2E635A59
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 11:41:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4AE635B95
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 12:24:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236065AbiKWKkH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Nov 2022 05:40:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44064 "EHLO
+        id S237328AbiKWLYX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Nov 2022 06:24:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237642AbiKWKjf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 05:39:35 -0500
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E62114ECAA
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 02:23:54 -0800 (PST)
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AN9OPFc021301;
-        Wed, 23 Nov 2022 11:23:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=SGry+RXaYobNxy94dZwABKmwWE82iqGqvu00CijFF8M=;
- b=GpGtTYpFtxCpqHIlejYPePZfPJ5MY2h6GVphcH1wfLwAuTF4NjoUL5w/Ah8dVtUEubJ6
- zLO7GOjHsFxvOPfaAX3uLQT822tlVn3gLk3dpJzgcNoVsgTSm2jqE2Jc4wnjVYbmZlDP
- 6YdqctjGM3XFKHkn3BwLq6C+h8zlMLbVZskc+P+crJrYiT5zRTx//SS+WNarktoUB2r6
- L9m9lBC7K655OqyAjnDi7Xos4Txs1W4u6WooEXSf32O3cqG2GULbuPtLz3NzMbiF7qu2
- cyQvtIXCb7DWsIdnZZ4+19wfXMLdISE2dyDyk9lRAMbrh6jBKxrbB3VmWfqgv0ZJ6SB6 3Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3kxrax7xh0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Nov 2022 11:23:34 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 598A1100039;
-        Wed, 23 Nov 2022 11:23:31 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 52CBB218CFF;
-        Wed, 23 Nov 2022 11:23:31 +0100 (CET)
-Received: from [10.48.1.102] (10.48.1.102) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.13; Wed, 23 Nov
- 2022 11:23:28 +0100
-Message-ID: <11ecd39d-af16-ed8e-6d70-cbb369e387c5@foss.st.com>
-Date:   Wed, 23 Nov 2022 11:23:28 +0100
+        with ESMTP id S237373AbiKWLYA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 06:24:00 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1F4102E61;
+        Wed, 23 Nov 2022 03:23:28 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id ud5so42051429ejc.4;
+        Wed, 23 Nov 2022 03:23:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8E3HfKqpI7OPKMpyZd0aAajsv0bkMn9cWxEfRq/Jexs=;
+        b=S75Rq8lR46tMXia66z0bag4+iCEPjiOF29vJ4f/d9XmTqxByrmRDlJEY4PEHfujyr7
+         3iSruSGx+Od/ROcQpcRX5L5P2cTbwM+v+F+vwC4SwkVBxQwXe5u3Y/rFpf3d06ryu/tu
+         niIZV05v7O7fTlS/fjkCLSWkktRHWiRGT2jPTd9oiQhqfieNgOZcMTkgf6MwrMJXLale
+         c1x4xo36zcBnAebY6q85YVJQxFtc6asFl1SnmkR6k4CaWCLV5HsO7YnouSORPhVk752+
+         lvWFDUUEn9oxMFlJrcd3kdfqxad4Z1MY4wfqrv8naYXI6gpO7nnBrIzTsaY+fhmqH4xb
+         wigA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8E3HfKqpI7OPKMpyZd0aAajsv0bkMn9cWxEfRq/Jexs=;
+        b=d2BUEFfkLDN+IIadQ3YEbK+eoZYZUv1kXcI0wuJekKebcaT2JOchbTQtLMTZlJz5FH
+         74i3erNTM5Jocw4qtPDAvmksFDFYCLAdF8hYNrW2K7JiaiCRujCp+MKCL2dLu03jlSlT
+         tv2bH9E60W4gXvNpiWQNRQHZOdbaD2T0mxX+biBXxhhRwpoPWAFx5Gf3Ers9f+GXmwrt
+         L3W9s9iCWfAd+O+qDFGj/kDiGNeennlIZayMO1w+P9Klc7h8MtIptXEJy1VjUFYCeIQn
+         BQ9x8E8M2SibftWDjR7GdS5xEHd/eU/X1jP420Xy6KbjE2584/Nu0Ia8E/srlBJ9c1FL
+         E3yw==
+X-Gm-Message-State: ANoB5pkfRukJP5+UTTevgEJVFOxmKd3hep2f5SaJgQRHEYMjxtdiyaEp
+        NyN+pHt8Vc8tCJs/Z1bJvbk=
+X-Google-Smtp-Source: AA0mqf6JNLeF8BQxBTQEN4OYB4XAlsusO8D5L5Frr6SYljvV1WXopKgkTBJpsD0A7oGpJeeO7LpjHQ==
+X-Received: by 2002:a17:906:bcc1:b0:73d:715c:5730 with SMTP id lw1-20020a170906bcc100b0073d715c5730mr23101781ejb.293.1669202606864;
+        Wed, 23 Nov 2022 03:23:26 -0800 (PST)
+Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id l9-20020a1709065a8900b00773c60c2129sm7187189ejq.141.2022.11.23.03.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 03:23:26 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a779g0 support
+Date:   Wed, 23 Nov 2022 12:23:22 +0100
+Message-Id: <166920257255.1455112.3556103275813437388.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <2d1732595327307080c57e201a7f029f8adeabf3.1669047149.git.geert+renesas@glider.be>
+References: <2d1732595327307080c57e201a7f029f8adeabf3.1669047149.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 5/5] pwm: stm32: Use regmap_clear_bits and regmap_set_bits
- where applicable
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     Mark Brown <broonie@kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>
-References: <20221115111347.3705732-1-u.kleine-koenig@pengutronix.de>
- <20221115111347.3705732-6-u.kleine-koenig@pengutronix.de>
-From:   Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20221115111347.3705732-6-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.48.1.102]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-23_04,2022-11-23_01,2022-06-22_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 11/15/22 12:13, Uwe Kleine-König wrote:
-> Found using coccinelle and the following semantic patch:
+On Mon, 21 Nov 2022 17:13:02 +0100, Geert Uytterhoeven wrote:
+> Document support for the PWM timers in the Renesas R-Car V4H (R8A779G0)
+> SoC.
 > 
-> @@
-> expression map, reg, bits;
-> @@
+> Based on a patch in the BSP by CongDang.
 > 
-> - regmap_update_bits(map, reg, bits, bits)
-> + regmap_set_bits(map, reg, bits)
 > 
-> @@
-> expression map, reg, bits;
-> @@
-> 
-> - regmap_update_bits(map, reg, bits, 0)
-> + regmap_clear_bits(map, reg, bits)
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-stm32.c | 34 ++++++++++++++++------------------
->  1 file changed, 16 insertions(+), 18 deletions(-)
 
-Hi Uwe,
+Applied, thanks!
 
-You can add my:
-Tested-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+[1/1] dt-bindings: pwm: renesas,pwm-rcar: Add r8a779g0 support
+      commit: 5719efcc5abb34ceb47b03e58709d99713f80db1
 
-Best Regards,
-Thanks
-Fabrice
-
-> 
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 794ca5b02968..21e4a34dfff3 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -115,14 +115,14 @@ static int stm32_pwm_raw_capture(struct stm32_pwm *priv, struct pwm_device *pwm,
->  	int ret;
->  
->  	/* Ensure registers have been updated, enable counter and capture */
-> -	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
-> -	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
-> +	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
-> +	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
->  
->  	/* Use cc1 or cc3 DMA resp for PWM input channels 1 & 2 or 3 & 4 */
->  	dma_id = pwm->hwpwm < 2 ? STM32_TIMERS_DMA_CH1 : STM32_TIMERS_DMA_CH3;
->  	ccen = pwm->hwpwm < 2 ? TIM_CCER_CC12E : TIM_CCER_CC34E;
->  	ccr = pwm->hwpwm < 2 ? TIM_CCR1 : TIM_CCR3;
-> -	regmap_update_bits(priv->regmap, TIM_CCER, ccen, ccen);
-> +	regmap_set_bits(priv->regmap, TIM_CCER, ccen);
->  
->  	/*
->  	 * Timer DMA burst mode. Request 2 registers, 2 bursts, to get both
-> @@ -160,8 +160,8 @@ static int stm32_pwm_raw_capture(struct stm32_pwm *priv, struct pwm_device *pwm,
->  	}
->  
->  stop:
-> -	regmap_update_bits(priv->regmap, TIM_CCER, ccen, 0);
-> -	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-> +	regmap_clear_bits(priv->regmap, TIM_CCER, ccen);
-> +	regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
->  
->  	return ret;
->  }
-> @@ -359,7 +359,7 @@ static int stm32_pwm_config(struct stm32_pwm *priv, int ch,
->  
->  	regmap_write(priv->regmap, TIM_PSC, prescaler);
->  	regmap_write(priv->regmap, TIM_ARR, prd - 1);
-> -	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, TIM_CR1_ARPE);
-> +	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE);
->  
->  	/* Calculate the duty cycles */
->  	dty = prd * duty_ns;
-> @@ -377,7 +377,7 @@ static int stm32_pwm_config(struct stm32_pwm *priv, int ch,
->  	else
->  		regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
->  
-> -	regmap_update_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE, TIM_BDTR_MOE);
-> +	regmap_set_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE);
->  
->  	return 0;
->  }
-> @@ -411,13 +411,13 @@ static int stm32_pwm_enable(struct stm32_pwm *priv, int ch)
->  	if (priv->have_complementary_output)
->  		mask |= TIM_CCER_CC1NE << (ch * 4);
->  
-> -	regmap_update_bits(priv->regmap, TIM_CCER, mask, mask);
-> +	regmap_set_bits(priv->regmap, TIM_CCER, mask);
->  
->  	/* Make sure that registers are updated */
-> -	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
-> +	regmap_set_bits(priv->regmap, TIM_EGR, TIM_EGR_UG);
->  
->  	/* Enable controller */
-> -	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
-> +	regmap_set_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
->  
->  	return 0;
->  }
-> @@ -431,11 +431,11 @@ static void stm32_pwm_disable(struct stm32_pwm *priv, int ch)
->  	if (priv->have_complementary_output)
->  		mask |= TIM_CCER_CC1NE << (ch * 4);
->  
-> -	regmap_update_bits(priv->regmap, TIM_CCER, mask, 0);
-> +	regmap_clear_bits(priv->regmap, TIM_CCER, mask);
->  
->  	/* When all channels are disabled, we can disable the controller */
->  	if (!active_channels(priv))
-> -		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-> +		regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN);
->  
->  	clk_disable(priv->clk);
->  }
-> @@ -568,10 +568,9 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
->  	 * If complementary bit doesn't exist writing 1 will have no
->  	 * effect so we can detect it.
->  	 */
-> -	regmap_update_bits(priv->regmap,
-> -			   TIM_CCER, TIM_CCER_CC1NE, TIM_CCER_CC1NE);
-> +	regmap_set_bits(priv->regmap, TIM_CCER, TIM_CCER_CC1NE);
->  	regmap_read(priv->regmap, TIM_CCER, &ccer);
-> -	regmap_update_bits(priv->regmap, TIM_CCER, TIM_CCER_CC1NE, 0);
-> +	regmap_clear_bits(priv->regmap, TIM_CCER, TIM_CCER_CC1NE);
->  
->  	priv->have_complementary_output = (ccer != 0);
->  }
-> @@ -585,10 +584,9 @@ static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
->  	 * If channels enable bits don't exist writing 1 will have no
->  	 * effect so we can detect and count them.
->  	 */
-> -	regmap_update_bits(priv->regmap,
-> -			   TIM_CCER, TIM_CCER_CCXE, TIM_CCER_CCXE);
-> +	regmap_set_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
->  	regmap_read(priv->regmap, TIM_CCER, &ccer);
-> -	regmap_update_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE, 0);
-> +	regmap_clear_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
->  
->  	if (ccer & TIM_CCER_CC1E)
->  		npwm++;
+Best regards,
+-- 
+Thierry Reding <thierry.reding@gmail.com>
