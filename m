@@ -2,53 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9667F6360C1
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 14:59:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7A26362D2
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 16:07:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235409AbiKWN7E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Nov 2022 08:59:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47576 "EHLO
+        id S238126AbiKWPHr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Nov 2022 10:07:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238079AbiKWN6o (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 08:58:44 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6960B5A6EA
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 05:52:58 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxqBL-0000GM-HC; Wed, 23 Nov 2022 14:52:55 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxqBJ-0063uu-5s; Wed, 23 Nov 2022 14:52:54 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxqBJ-0011bN-B2; Wed, 23 Nov 2022 14:52:53 +0100
-Date:   Wed, 23 Nov 2022 14:52:53 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc:     thierry.reding@gmail.com, alexandre.torgue@foss.st.com,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        olivier.moysan@foss.st.com
-Subject: Re: [PATCH] pwm: stm32-lp: fix the check on arr and cmp registers
- update
-Message-ID: <20221123135253.dcuxxuyqvqtdwz5b@pengutronix.de>
-References: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
+        with ESMTP id S238589AbiKWPH0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 10:07:26 -0500
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13382286DE;
+        Wed, 23 Nov 2022 07:07:24 -0800 (PST)
+Received: by mail-io1-f51.google.com with SMTP id n188so13334363iof.8;
+        Wed, 23 Nov 2022 07:07:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mEKRRENqRMYufrIxQe5nh4pku7YdsEXR7GLENp5qxds=;
+        b=7HYCzPeRz6R67eBGjx8AK+E+VUMgd5IrFWPHPLhDVlqjIKFF0TwZq+jy1XH/YHyOFI
+         /s04lzpFRnkRoEtNS87RN8G5N4hNtyrabYQhs0onSjQjkP2bcRFHmgS3W2sW2BQqRRuT
+         jL1ofvoFknurGJwpKg5GpcGDsZjvfjY19wlOfCZQsZ1DEgljA+evs+T/sieyuH7IlYPI
+         n99DmNd1stgEUbQy32tAbyNssioQpSQpO8A9phBN+V3yON1Kvxywia0D+a1OL759V9bS
+         N1OXIXAOaIH70LeJPdqZKjTTHfIzSfOo5rCo9Nb+6PbfQ1pqqeAmWVqS1PxDPSnVksbu
+         ZRJA==
+X-Gm-Message-State: ANoB5pkSeGRO8yvB1kKu1MpvPzmzDflMW7JPk/qZQFODoJjSJrRwzDWE
+        g7uJMn4bd/YqDR9TMdR2Lg==
+X-Google-Smtp-Source: AA0mqf5WEOGwgDMNRRrW1Nl5ZZQrwr9oGk58/ul6P+DcjJ/FKrD+KR+qn5EypzZ/kztelu0r7NW1nA==
+X-Received: by 2002:a5e:8302:0:b0:6de:4dce:37ef with SMTP id x2-20020a5e8302000000b006de4dce37efmr4093910iom.68.1669216043222;
+        Wed, 23 Nov 2022 07:07:23 -0800 (PST)
+Received: from robh_at_kernel.org ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u28-20020a02cbdc000000b003757ab96c08sm6561820jaq.67.2022.11.23.07.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 07:07:22 -0800 (PST)
+Received: (nullmailer pid 2005408 invoked by uid 1000);
+        Wed, 23 Nov 2022 15:07:21 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cvhlradggud6ocvy"
-Content-Disposition: inline
-In-Reply-To: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
+        lee@kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com,
+        linux-pwm@vger.kernel.org, linux@roeck-us.net, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, u.kleine-koenig@pengutronix.de,
+        linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
+        thierry.reding@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, corbet@lwn.net,
+        andrew@aj.id.au, joel@jms.id.au
+In-Reply-To: <20221123061635.32025-2-billy_tsai@aspeedtech.com>
+References: <20221123061635.32025-1-billy_tsai@aspeedtech.com>
+ <20221123061635.32025-2-billy_tsai@aspeedtech.com>
+Message-Id: <166921592541.2001852.8427859391374590200.robh@kernel.org>
+Subject: Re: [v4 1/5] dt-bindings: mfd: Add aspeed pwm-tach binding
+Date:   Wed, 23 Nov 2022 09:07:21 -0600
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,46 +69,43 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---cvhlradggud6ocvy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 23 Nov 2022 14:16:31 +0800, Billy Tsai wrote:
+> Add device binding for aspeed pwm-tach device which is a multi-function
+> device include pwm and tach function.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml | 73 +++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+> 
 
-On Wed, Nov 23, 2022 at 02:36:52PM +0100, Fabrice Gasnier wrote:
-> The ARR (auto reload register) and CMP (compare) registers are
-> successively written. The status bits to check the update of these
-> registers are polled together with regmap_read_poll_timeout().
-> The condition to end the loop may become true, even if one of the
-> register isn't correctly updated.
-> So ensure both status bits are set before clearing them.
->=20
-> Fixes: e70a540b4e02 ("pwm: Add STM32 LPTimer PWM driver")
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Looks reasonable
+yamllint warnings/errors:
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/pwm/aspeed,ast2600-pwm.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: pwm-tach@1e610000: pwm: False schema does not allow {'compatible': ['aspeed,ast2600-pwm'], '#pwm-cells': [[3]], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: pwm-tach@1e610000: tach: False schema does not allow {'compatible': ['aspeed,ast2600-tach'], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb:0:0: /example-0/pwm-tach@1e610000/pwm: failed to match any schema with compatible: ['aspeed,ast2600-pwm']
+Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb:0:0: /example-0/pwm-tach@1e610000/tach: failed to match any schema with compatible: ['aspeed,ast2600-tach']
 
-Best regards
-Uwe
+doc reference errors (make refcheckdocs):
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20221123061635.32025-2-billy_tsai@aspeedtech.com
 
---cvhlradggud6ocvy
-Content-Type: application/pgp-signature; name="signature.asc"
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
------BEGIN PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN+JbIACgkQwfwUeK3K
-7AnTrAf9H/ODBQF61mFT1V6ZbR5uR/JCsCZBHrsNck9itpnzc6LvJO8K68jaVEVj
-2c58ekTJ7mhqz/UF7tk5fNdQlUDvLRPG8IX3LDWjrEDSQVaEH30nw4y0CBKU8lVh
-5LcMu/oe7KtSAj/bxp1AdYViZ/YHMZPPDJgpqgrQPxAWWQAcZRj0aRsEgPdi0FTU
-DD+wCZTfu5NgVgHvH2rEF+AqEE1L2dU1TU5FSLN2gUTWsBKgqJyQheebazCJkC6H
-vR3vLWxSRtxhs59VZdXxdyJ5m+s4aWzsroclCFtu8A0ubijprskO5aAtef8MJhMy
-wCymEGzXOGRdQNHgJ8RGfqo2acVpsg==
-=LlXc
------END PGP SIGNATURE-----
+pip3 install dtschema --upgrade
 
---cvhlradggud6ocvy--
+Please check and re-submit after running the above command.
+
