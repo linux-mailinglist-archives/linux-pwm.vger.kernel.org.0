@@ -2,61 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5ED4635293
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 09:28:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BD8D6352B1
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 09:32:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236522AbiKWI1Y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Nov 2022 03:27:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34760 "EHLO
+        id S236489AbiKWIaR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Nov 2022 03:30:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236529AbiKWI1Y (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 03:27:24 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B2BFC72F
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 00:27:20 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id d6so27074630lfs.10
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 00:27:20 -0800 (PST)
+        with ESMTP id S236147AbiKWIaQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 03:30:16 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CE4205F9
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 00:30:14 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id j16so27078938lfe.12
+        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 00:30:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HcQzfS4Peg1BcWVPqA3r5THwZqoD6UuyTScyPfW0+gk=;
-        b=wwsMJSLDaFLkDmDTXJtxCSc0Yi9K/FrzEMP5aqu+f3DlffmLcAneNewS0AeVoruiVA
-         P/UeSJbrk0e1LjmHE43sKXJW9qWXGXevFE80Yxar8Exmw3uJKnxVTottlDgGYvfxX1/s
-         kk/OnKpMdejE9stbilHmFZz4R3CIxE1s4wpsH9FS4U5W8TyTm0TL7e6WX0mvjJwrnPmC
-         comRH/5ZY+VXajexEne/REUOPAHJTj5ssKXbUQNCdIH6VEVSqy2k9eXfiU/TeNpHNTlK
-         viWQ8x4OUOwoHLQCwSs8gLKi2Ggzr70p/tUZPb0B/V1fqvIzQrXjxXdhq9uro2PbBj3C
-         Ra2A==
+        bh=so2oxuQ4Y7a0f26n1k3pKbLKlCZdT3KjE4FqYS40eg8=;
+        b=zIKOQLWS42fFmJhVRRmxrUjpau1bS4ATAyMBrR1xPqJZy+k6yCWZqTOOTzvDV4a9Yg
+         Y++393P9WhJldpuJrNUmZjLm67LM/aen3AYMtBE4XybhQZ3PmkWpsh3CX+2QzmH/LhEc
+         c48yVznBlXf3dx/pfoTgD95g7Jr/kfumTRPWAEeEz/HNsA8eVPwcjqq6ocu8h5rXAEdL
+         5JCigU1/grJHK2RMfTeAaxaVi03R7JfCop/K71tlNYNHXT3ATw8FsF/T+yN/UqDm0gar
+         vS00COq+uTf/xAFzBt7o//Kmnn72FOQuXgEj45tZCMuSO/Pvd9OSRLd9PTowMuJIi/FT
+         3SVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
+        h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HcQzfS4Peg1BcWVPqA3r5THwZqoD6UuyTScyPfW0+gk=;
-        b=zGWMAM2UPPfdnfniANTGOBU5y0kFutecpdMtjyQDzSz4pMFB0X282mbKv2qlSZTTL1
-         nywieWSR0fthoekphNV9+0wSiWSLWc3ztmPQEkUWNf35ikWC88kNFCebQBMpG+Blecu7
-         PH5jGhAJB/YHYuD7Zw4/uqe9jwqrW14j++8WX/4sPe9CnJhksgfTuEOxC/Q3yUQLQ3bq
-         Q/a/bN4/szrAwQDeTVCbpOaZ+/ui3kyjvtWqAEf1DWXsxV/n4NZvOmEAj384y0tueXXh
-         xrFyTp/akaEUGGVYEcDcUMN8tYJdZ9bsT3+8UvnuAVE6EwwfTfT8VAIF9a3lO03ZHvoz
-         +ljw==
-X-Gm-Message-State: ANoB5pmSY2xXJPe1VVQHiOhIvJE00KtFeQRjE9kc2Ci2L2Yv3PI1lnYx
-        ZVGmII6XnPDeLa7GQO/uFvFcvg==
-X-Google-Smtp-Source: AA0mqf43Wrz+lScpnmQazgR9edsrHf8CWzNzDGSguKpLX4o0m+7qhfGZ6s4+ZcKOiUFO9TVR0WiMOw==
-X-Received: by 2002:a05:6512:2a89:b0:4b4:dffc:62a8 with SMTP id dt9-20020a0565122a8900b004b4dffc62a8mr2147155lfb.585.1669192039230;
-        Wed, 23 Nov 2022 00:27:19 -0800 (PST)
+        bh=so2oxuQ4Y7a0f26n1k3pKbLKlCZdT3KjE4FqYS40eg8=;
+        b=kPTzTH8e4MVZGJWnp/s5XGJcGvFm3e1D5+2NIoUWJF37/SS/HhyJO9+/R+g7Tch3vo
+         SAjHMh8M40tH4T/RcIHBBW2/L0sh7pL8uEK2EYNONF8FRpvze2aSaopG5ZCvaRslx73E
+         fN+gAf4GsJK1BVwkXGgnCU+lPvx5P+MkThhUCa9QmOpkEp6YaoUUoSq2wEx9DePq8Fjn
+         P6N7EuvWsi0jXJGuiOG4w/NFGA8uAMYWs0JeXT81+DPJ05ESmCJ8LalpbFXNY4Y2dviP
+         fNnID+K72pCTtbGkwJUkS4PRTitIwPNCLdqhQep3BDlZSgQEhDocb/+C6Hn7Bwm4j8QU
+         iKzw==
+X-Gm-Message-State: ANoB5pkPn1LGgjNdk44Nfq0XFRv5nk9QkwjLVi4voID4yJN4MjjxlQJP
+        nCBS/+sLDFPLztD/O3PGTnmcLA==
+X-Google-Smtp-Source: AA0mqf69iu9qQh6fCA6UDIq1hcLsriLuOE6oSPhjtXZDsQsFgavDS6cW7I/64DKInOEgrT2IoBd0kQ==
+X-Received: by 2002:ac2:434d:0:b0:4a2:51a2:9326 with SMTP id o13-20020ac2434d000000b004a251a29326mr8767700lfl.594.1669192213077;
+        Wed, 23 Nov 2022 00:30:13 -0800 (PST)
 Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id f16-20020a05651c03d000b0026dffd032b8sm2110336ljp.2.2022.11.23.00.27.17
+        by smtp.gmail.com with ESMTPSA id c12-20020a056512324c00b0048af3c090f8sm2809369lfr.13.2022.11.23.00.30.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Nov 2022 00:27:18 -0800 (PST)
-Message-ID: <27055c13-11ab-cc73-f2ba-c269785b0e28@linaro.org>
-Date:   Wed, 23 Nov 2022 09:27:17 +0100
+        Wed, 23 Nov 2022 00:30:12 -0800 (PST)
+Message-ID: <3d689f8e-ae2d-2b3e-e783-94b8e6ba8aa0@linaro.org>
+Date:   Wed, 23 Nov 2022 09:30:10 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [v4 1/5] dt-bindings: mfd: Add aspeed pwm-tach binding
+Subject: Re: [v4 2/5] dt-bindings: pwm: Add bindings for aspeed pwm controller
 Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
         linux@roeck-us.net, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
@@ -67,86 +66,105 @@ To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
 References: <20221123061635.32025-1-billy_tsai@aspeedtech.com>
- <20221123061635.32025-2-billy_tsai@aspeedtech.com>
- <c4b188b1-06a4-3cb0-a758-e12942e1f67b@linaro.org>
-In-Reply-To: <c4b188b1-06a4-3cb0-a758-e12942e1f67b@linaro.org>
+ <20221123061635.32025-3-billy_tsai@aspeedtech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221123061635.32025-3-billy_tsai@aspeedtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 23/11/2022 09:24, Krzysztof Kozlowski wrote:
-> On 23/11/2022 07:16, Billy Tsai wrote:
->> Add device binding for aspeed pwm-tach device which is a multi-function
->> device include pwm and tach function.
-> 
-> Subject: drop second, redundant "bindings".
-> Also use proper PATCH prefix.
-> 
->>
->> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
->> ---
->>  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml | 73 +++++++++++++++++++
->>  1 file changed, 73 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml b/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
->> new file mode 100644
->> index 000000000000..e2a7be2e0a18
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
->> @@ -0,0 +1,73 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) 2021 Aspeed, Inc.
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/aspeed,ast2600-pwm-tach.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: PWM Tach controller
->> +
->> +description: |
->> +  The PWM Tach controller is represented as a multi-function device which
->> +  includes:
->> +    PWM
->> +    Tach
->> +
->> +maintainers:
->> +  - Billy Tsai <billy_tsai@aspeedtech.com>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - aspeed,ast2600-pwm-tach
->> +      - const: syscon
->> +      - const: simple-mfd
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  resets:
->> +    maxItems: 1
-> 
-> If this is simple-mfd then it cannot take clocks or resets.  Usually the
-> recommendation for such case is: This is not simple-mfd, drop it. Drop
-> also syscon and make a proper device.
-> 
-> However I am surprised to see such change, so I have no clue why this
-> was done.
+On 23/11/2022 07:16, Billy Tsai wrote:
+> Add the aspeed pwm device bindings which should be the child-node of
+> pwm-tach mfd.
 
-Actually now I see it was like that in previous patch, I just missed it
-during previous review. Anyway this must be fixed.
+Subject: drop second, redundant "bindings".
+
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/pwm/aspeed,ast2600-pwm.yaml      | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml b/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> new file mode 100644
+> index 000000000000..68a60fc73902
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2021 Aspeed, Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/aspeed,ast2600-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed Ast2600 PWM controller
+> +
+> +maintainers:
+> +  - Billy Tsai <billy_tsai@aspeedtech.com>
+> +
+> +description: |
+> +  The Aspeed PWM controller supports up to 16 PWM outputs.
+> +  This module is part of the ast2600-pwm-tach multi-function device. For more
+> +  details see ../mfd/aspeed,ast2600-pwm-tach.yaml.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pwm
+> +
+> +  "#pwm-cells":
+> +    const: 3
+
+Blank line.
+
+> +patternProperties:
+> +  "^pwm@[a-z0-9]+$":
+> +    description: Set extend properties for each pwm channel.
+
+Description is not a correct sentence. Description explains the hardware
+property you have here.
+
+> +    type: object
+> +    properties:
+> +      reg:
+> +        description:
+> +          The pwm channel index.
+> +        maxItems: 1
+> +
+> +      aspeed,wdt-reload-enable:
+> +        type: boolean
+> +        description:
+> +          Enable the function of wdt reset reload duty point.
+> +
+> +      aspeed,wdt-reload-duty-point:
+> +        description:
+> +          Define the duty point after wdt reset, 0 = 100%
+> +        minimum: 0
+> +        maximum: 255
+
+Why maximum is 255? Why 0=100%? 0 should be equal to 0 and maximum to
+some maximum value (e.g. 100%). If these are percents, use appropriate
+units. If these are not - what are these? You need a $ref in such case.
+
+> +    required:
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
 
 Best regards,
 Krzysztof
