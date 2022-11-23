@@ -2,123 +2,88 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7866763481A
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Nov 2022 21:26:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ECD3634C17
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 02:08:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234151AbiKVU0z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Nov 2022 15:26:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36398 "EHLO
+        id S235446AbiKWBIV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Nov 2022 20:08:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234684AbiKVU0l (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 15:26:41 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA8F45BD6F
-        for <linux-pwm@vger.kernel.org>; Tue, 22 Nov 2022 12:26:40 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxZqg-0007mI-Mb; Tue, 22 Nov 2022 21:26:30 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxZqe-005v29-6E; Tue, 22 Nov 2022 21:26:29 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxZqe-000s99-Gn; Tue, 22 Nov 2022 21:26:28 +0100
-Date:   Tue, 22 Nov 2022 21:26:24 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Allow decimal format in
- addition to hex format
-Message-ID: <20221122202624.zsudqa2azpdw22gx@pengutronix.de>
-References: <20221122123225.59106-1-tony@atomide.com>
- <20221122133825.d67q4q6k3wkncucj@pengutronix.de>
- <Y3zRpgY1cXCKsJCu@atomide.com>
+        with ESMTP id S235443AbiKWBII (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 20:08:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C238525F3;
+        Tue, 22 Nov 2022 17:08:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7BBF9B81DDD;
+        Wed, 23 Nov 2022 01:08:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33D46C433B5;
+        Wed, 23 Nov 2022 01:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669165685;
+        bh=qTQ21cFsHNaq36zv0IktHLxNFPVLWU4zT0U5TeMVodI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=t1GF3SzcQqEax6YraA5cSidEEBrY+t9CKMvXX1RB2OIOQGszcdQKKFeS2makpGNNh
+         e4I4P34f0tkGChp7gb47xQ/AGIz3FYUjxTW2+uMyfIWKA/DqFQbQRgua2C8UYfCQ8H
+         LUD9FfLW3L0tpgSJxKD6isoQQEkiA79vLzeZkQWRdmvpXdYAjqtPxd49k0qPQ+Wp30
+         DhjwqykE7JWbCdDok81NTKOLoNJQevNoBRbcazCXpjtjCDJPo+kV+m2Jkl2prEKmAW
+         W2RbDr28IQOUcmdrWeOyl/WRLLZSR9ClBHGr6O6aJQnPsTDE9+nb7rS/f6xsjvKfLe
+         Zz4cyioi1Jocg==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="flij3xzkn4w2n4q5"
-Content-Disposition: inline
-In-Reply-To: <Y3zRpgY1cXCKsJCu@atomide.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20221121110615.97962-4-krzysztof.kozlowski@linaro.org>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org> <20221121110615.97962-4-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 3/9] dt-bindings: clock: st,stm32mp1-rcc: add proper title
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, netdev@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Date:   Tue, 22 Nov 2022 17:08:03 -0800
+User-Agent: alot/0.10
+Message-Id: <20221123010805.33D46C433B5@smtp.kernel.org>
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---flij3xzkn4w2n4q5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Tony,
-
-On Tue, Nov 22, 2022 at 03:41:58PM +0200, Tony Lindgren wrote:
-> * Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> [221122 13:28]:
-> > On Tue, Nov 22, 2022 at 02:32:24PM +0200, Tony Lindgren wrote:
-> > > Let's allow node numbering in decimal format too.
-> > >=20
-> > > Simple human-readable increments/IDs are usually decimal, hex is only=
- for
-> > > addresses as noted by Krzysztof Kozlowski <krzysztof.kozlowski@linaro=
-=2Eorg>.
-> > >=20
-> > > Let's use an improved match suggested by Krzysztof Kozlowski
-> > > <krzysztof.kozlowski@linaro.org> and improved a bit by Uwe Kleine-K=
-=F6nig
-> > > <u.kleine-koenig@pengutronix.de>.
-> > >=20
-> > > Cc: linux-pwm@vger.kernel.org
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > > Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >=20
-> > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> >=20
-> > Which tree should this merged through? The obvious candidates are pwm,
-> > dt and omap.
+Quoting Krzysztof Kozlowski (2022-11-21 03:06:09)
+> Add device name in the title, because "Reset Clock Controller" sounds
+> too generic.
 >=20
-> The dt folks usually queue the binding patches separately.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
 
-fine, so I marked your series in the PWM patchwork as "handled-elsewhere".
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---flij3xzkn4w2n4q5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN9MG0ACgkQwfwUeK3K
-7AmjBAgAkc70OZy1zQfFXnIQH4R9fKwJmpAJJuhUAWdB9RvUERDB3VU0iFvQAZyJ
-j4WoDWfKt3lnPknZSIvpogOOaxHGiCKXB1dfupTuCp20Cf7iu1T6Goz9Hv4NnPfm
-JfPAttsCYUSeBOBLsW94INRn90CWSXOr7IqLIi1eoi8JaNIqR/qHmxiE6OZOQBMB
-eXczP75rgiZqAww+jsy/bG4fjtfEMhCyAJ63/4sxiAvJh8M/RkA0RsDmmGquIAsa
-1RwXrGilZRRFkECS5mSki0TEsZQ2930gadQPmNzwRE9QXtGE6lEvB3IFdDNpNa1Y
-1rXaBtUibezAPqGa23I3WMWgFLWy5g==
-=Far5
------END PGP SIGNATURE-----
-
---flij3xzkn4w2n4q5--
+Acked-by: Stephen Boyd <sboyd@kernel.org>
