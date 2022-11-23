@@ -2,176 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A961634DDD
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 03:28:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72D54634DEE
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 03:37:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234875AbiKWC2q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Nov 2022 21:28:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
+        id S234718AbiKWChU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Nov 2022 21:37:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234023AbiKWC2p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 21:28:45 -0500
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A942CE0688;
-        Tue, 22 Nov 2022 18:28:44 -0800 (PST)
-Received: by mail-io1-f48.google.com with SMTP id d123so12304692iof.7;
-        Tue, 22 Nov 2022 18:28:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zj/cHXoWYv8o+sJtjgpTEuZhl2QFJwpoNEmZc0bJX4o=;
-        b=LZNzM8+JJ7lrE8r/ulXIQJp0xYR08MeWSqUzfe0HPVcyZbTRP13D56g80prls5L+Dt
-         GyF2RoXg7N8ev+YzmiyP0E34kFpJZtGJGH3dAuYAtt/5IWLF7SeGIUL/L48hnPW6qFnP
-         4J5hIloqlrJAdbvbOEbmyHkvKBqIDwW0h0Duj6eNV0orhooPktoM5rq9BgqZCFnWJoSh
-         mnnW9lAyQ4kqbHLuzixcapcQTdIMsX2EH89g+zCFOqkfVHDWh+y8lBer/pKlfnGNWmfg
-         dAuULYayAVzIOapTgiTWOw+8FabAIE+QkyOB8RhS1h/nyG4jaKtz4YmDsZVTfKTuciWB
-         cahQ==
-X-Gm-Message-State: ANoB5plsG92ku+NJK5jOll8RJlFo//25b07YHYMuuwaIvjhQfKEHnGZX
-        CFoY1IpLFX1puuH/qfw2HA==
-X-Google-Smtp-Source: AA0mqf5ZqoZAZyZrDERM++koEMloL+V38iwkLLRL0dZkuFkaBLcJ31HFzf+6xYoJWh5V3n3G2HUkzQ==
-X-Received: by 2002:a05:6638:440f:b0:375:1820:bb85 with SMTP id bp15-20020a056638440f00b003751820bb85mr11758692jab.46.1669170523964;
-        Tue, 22 Nov 2022 18:28:43 -0800 (PST)
-Received: from robh_at_kernel.org ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l18-20020a02a892000000b003636cb862d0sm5949379jam.42.2022.11.22.18.28.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Nov 2022 18:28:43 -0800 (PST)
-Received: (nullmailer pid 1022635 invoked by uid 1000);
-        Wed, 23 Nov 2022 02:28:45 -0000
-Date:   Tue, 22 Nov 2022 20:28:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc:     thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
-        marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 3/4] arm64: dts: apple: t8103: Add PWM
- controller
-Message-ID: <20221123022845.GB1006695-robh@kernel.org>
-References: <20221121174228.93670-1-fnkl.kernel@gmail.com>
- <20221121174228.93670-4-fnkl.kernel@gmail.com>
+        with ESMTP id S234684AbiKWChT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Nov 2022 21:37:19 -0500
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1548725E7;
+        Tue, 22 Nov 2022 18:37:17 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 0E319420CF;
+        Wed, 23 Nov 2022 02:37:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+        t=1669171034; bh=Yn5X5ms6gE6PGm6GarmnveA4sX7BBMwg+HOe4jvW0eE=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To;
+        b=Vi1oe3ru2bHkTXegGyGHCEmv0Cx0JRyzJI01GIOUmw8mMbFZcvFs6w6azWgEVI2wX
+         hiHe0i1GIA9eb2UYUBKXApDPgM4CregUwPx+fkWxBL6aqjD6rsCRBvIPJKg2KXj5rO
+         zwG8Keynicpky04kylEvvezcpH9qO8erqMytnWqBqRBQdhkyPeADXt1DEOaaueexv7
+         EWg0NTrt51nFJXfJd6i34i+kTK7CpqdNW/rHNijk0xVWlRO1zDg5PptoxBZK//GHR1
+         FjfrXjGzIxvwo2BBdkgoisYjdLQeiZ0SuWBiVgUz45YyghFLxDPHpk9+jHcXgyqgAK
+         hgDPgaTldNrcg==
+Message-ID: <29c800dd-efdf-ddab-3ad2-466e1a8eb7d2@marcan.st>
+Date:   Wed, 23 Nov 2022 11:37:08 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221121174228.93670-4-fnkl.kernel@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>,
+        Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc:     thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+        sven@svenpeter.dev, alyssa@rosenzweig.io, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221121174228.93670-1-fnkl.kernel@gmail.com>
+ <20221121174228.93670-3-fnkl.kernel@gmail.com>
+ <20221123022438.GA1006695-robh@kernel.org>
+From:   Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH RESEND v3 2/4] pwm: Add Apple PWM controller
+In-Reply-To: <20221123022438.GA1006695-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 08:42:27PM +0300, Sasha Finkelstein wrote:
-> Adds PWM controller and keyboard backlight bindings for M1 MacBooks
+On 23/11/2022 11.24, Rob Herring wrote:
+> On Mon, Nov 21, 2022 at 08:42:26PM +0300, Sasha Finkelstein wrote:
+>> diff --git a/drivers/pwm/pwm-apple.c b/drivers/pwm/pwm-apple.c
+>> new file mode 100644
+>> index 000000000000..b0c3f86fd578
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-apple.c
+>> @@ -0,0 +1,127 @@
+>> +// SPDX-License-Identifier: GPL-2.0 OR MIT
 > 
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> Acked-by: Sven Peter <sven@svenpeter.dev>
-> ---
->  arch/arm64/boot/dts/apple/t8103-j293.dts | 20 ++++++++++++++++++++
->  arch/arm64/boot/dts/apple/t8103-j313.dts | 20 ++++++++++++++++++++
->  arch/arm64/boot/dts/apple/t8103.dtsi     |  9 +++++++++
->  3 files changed, 49 insertions(+)
+> Kernel code is generally GPL-2.0 only. No other PWM driver is MIT 
+> licensed. So why this one.
 > 
-> diff --git a/arch/arm64/boot/dts/apple/t8103-j293.dts b/arch/arm64/boot/dts/apple/t8103-j293.dts
-> index ecb10d237a05..0b4b7e8e0726 100644
-> --- a/arch/arm64/boot/dts/apple/t8103-j293.dts
-> +++ b/arch/arm64/boot/dts/apple/t8103-j293.dts
-> @@ -11,6 +11,7 @@
->  
->  #include "t8103.dtsi"
->  #include "t8103-jxxx.dtsi"
-> +#include <dt-bindings/leds/common.h>
->  
->  / {
->  	compatible = "apple,j293", "apple,t8103", "apple,arm-platform";
-> @@ -43,3 +44,22 @@ &i2c2 {
->  &i2c4 {
->  	status = "okay";
->  };
-> +
-> +/ {
-> +	led-controller {
-> +		compatible = "pwm-leds";
-> +		led-0 {
-> +			pwms = <&fpwm1 0 40000>;
-> +			pwm-names = "kbd-backlight";
+> Mixing licenses is a problem because few people look at the licenses 
+> when copying code around.
 
-While allowed pwm-names isn't really needed here as there is only ever 1 
-PWM and it is redundant with 'label'.
+*Sigh*. We encourage the use of MIT dual-licensing as a project to allow
+other OSes to port the drivers over without having to rewrite them, for
+any driver written from scratch. We've had this conversation quite a few
+times already...
 
-> +			label = "kbd_backlight";
-> +			function = LED_FUNCTION_KBD_BACKLIGHT;
-> +			color = <LED_COLOR_ID_WHITE>;
-> +			max-brightness = <255>;
-> +			default-state = "keep";
-> +		};
-> +	};
-> +};
-> +
-> +&fpwm1 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/apple/t8103-j313.dts b/arch/arm64/boot/dts/apple/t8103-j313.dts
-> index df741737b8e6..0e0f57dee96b 100644
-> --- a/arch/arm64/boot/dts/apple/t8103-j313.dts
-> +++ b/arch/arm64/boot/dts/apple/t8103-j313.dts
-> @@ -11,6 +11,7 @@
->  
->  #include "t8103.dtsi"
->  #include "t8103-jxxx.dtsi"
-> +#include <dt-bindings/leds/common.h>
->  
->  / {
->  	compatible = "apple,j313", "apple,t8103", "apple,arm-platform";
-> @@ -35,3 +36,22 @@ &pcie0_dart_2 {
->  
->  /delete-node/ &port01;
->  /delete-node/ &port02;
-> +
-> +/ {
-> +	led-controller {
-> +		compatible = "pwm-leds";
-> +		led-0 {
-> +			pwms = <&fpwm1 0 40000>;
-> +			pwm-names = "kbd-backlight";
-> +			label = "kbd_backlight";
-> +			function = LED_FUNCTION_KBD_BACKLIGHT;
-> +			color = <LED_COLOR_ID_WHITE>;
-> +			max-brightness = <255>;
-> +			default-state = "keep";
-> +		};
-> +	};
-> +};
-> +
-> +&fpwm1 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-> index 51a63b29d404..ccdb26ef6b22 100644
-> --- a/arch/arm64/boot/dts/apple/t8103.dtsi
-> +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-> @@ -191,6 +191,15 @@ i2c4: i2c@235020000 {
->  			status = "disabled"; /* only used in J293 */
->  		};
->  
-> +		fpwm1: pwm@235044000 {
-> +			compatible = "apple,t8103-fpwm", "apple,s5l-fpwm";
-> +			reg = <0x2 0x35044000 0x0 0x4000>;
-> +			power-domains = <&ps_fpwm1>;
-> +			clocks = <&clkref>;
-> +			#pwm-cells = <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		serial0: serial@235200000 {
->  			compatible = "apple,s5l-uart";
->  			reg = <0x2 0x35200000 0x0 0x1000>;
-> -- 
-> 2.38.1
+>> +
+>> +	ret = devm_pwmchip_add(&pdev->dev, &pwm->chip);
 > 
-> 
+> This symbol is EXPORT_SYMBOL_GPL. So how can this module be MIT 
+> licensed?
+
+Because they are compatible licenses. The combination of this driver and
+the kernel is GPL, but this driver itself is MIT. People are free to
+port it to other OSes and reimplement devm_pwmchip_add or replace the
+call with something else.
+
+The EXPORT_SYMBOL_GPL stuff is about blocking *proprietary*
+GPL-incompatible modules from using those symbols. This is a
+GPL-compatible, explicitly dual-licensed module.
+
+In this case the driver is trivial enough there isn't much to gain from
+dual-licensing since the parts that matter (the reverse engineering) are
+not copyrightable, but I still find it silly that we keep getting told
+more permissive licensing is a problem. People are free to dual-license
+their work as they see fit, it's a fundamental freedom in free software,
+and plenty of kernel code is dual-licensed like this (including much of
+DRM and entire GPU drivers).
+
+- Hector
