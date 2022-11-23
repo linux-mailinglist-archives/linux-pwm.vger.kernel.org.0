@@ -2,146 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADE64636349
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 16:22:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02EBC6363F4
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Nov 2022 16:37:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236498AbiKWPWU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Nov 2022 10:22:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58064 "EHLO
+        id S238971AbiKWPhv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Nov 2022 10:37:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236185AbiKWPVu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 10:21:50 -0500
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C78063BAD;
-        Wed, 23 Nov 2022 07:21:49 -0800 (PST)
-Received: by mail-ot1-x332.google.com with SMTP id t19-20020a9d7753000000b0066d77a3d474so11387720otl.10;
-        Wed, 23 Nov 2022 07:21:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=4aoLHgFE05riq4cmWmfmiT+Ki6XAw13WHmlMKR+7aRQ=;
-        b=FIYqM2Z4zwJkd03cpZExtLXs5D1EcfVfgDi3wMib43kPB9h2immK0hfK6fkkeHo4Vk
-         TQKdVEI1YB2me/wkf6fCRFIWhRWI3rLYQaoLoRgUB16YDck5XXxim6rYlrAFr9oz7fNL
-         3lDvd8XxA9Xv3uSCXIG8QuprUR794x5W8tS9mgQtBmc5AgUxHKhBSiQOVWekB7Unut1h
-         2lY8Mu3WyCGJrY5cKTbd6XYkk+DPzMm3ANgc/h/F8b6CXAchJF4XYtCqpsBWewSuSMDi
-         m8xQtks+78XXRnWu1aDcUIl8TBFPJUpSaEHE75WhpWiNGxMgAFAJiz98+HI7A8kZwB6Z
-         pnOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4aoLHgFE05riq4cmWmfmiT+Ki6XAw13WHmlMKR+7aRQ=;
-        b=UI7VD19P9v+82zQAonkAzhGOS9cn+3c0cfCvYQNiA/qO8wN8S3cmoYYAdRUdaLK5XT
-         Ja3Db8jlGk6hvLdqhe2uXNFdyOyqYqNq5uhZ+CAQQI2uZYwiKTpjg/oVK5LyXjUAwLCG
-         7PoGbQYVWNxpDtgIsd400A4S+ma7wVO727k3v8ZNScvgIAzpA8zZf2e62GFPAWPKOwTE
-         PwVwZJJNIXS8zXhQmqORqzDp4I+DH5jHnbT82f0Hd2gNv3lXPcmiQNbpSMR9OFhStd9n
-         WS9dhk2jPr7X5kSXoHQ7QDqcsM0yf8DKSwZBpfkg8jodR35p4+Yed7iHjrUbGYyoB2Zc
-         NcZw==
-X-Gm-Message-State: ANoB5pl/7m4Qk6kFvvYc19Llt8WXM6tLS5mzPz/gXgTFCoUKuWbGOXJB
-        JLx15oxbNr9isOEC2oxtJCU=
-X-Google-Smtp-Source: AA0mqf6j3JfOqMGcXTRxGtsdc4OmDhJ+STJS3nrH05Ko1b+ciKHvjsbwSDRblJz5KBqDhemfYIO3AA==
-X-Received: by 2002:a9d:4c84:0:b0:66b:34bd:772b with SMTP id m4-20020a9d4c84000000b0066b34bd772bmr15089714otf.276.1669216908871;
-        Wed, 23 Nov 2022 07:21:48 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id el33-20020a056870f6a100b0013bc95650c8sm9263267oab.54.2022.11.23.07.21.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Nov 2022 07:21:48 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <979b192d-7011-680e-0e0d-d70519bec2b1@roeck-us.net>
-Date:   Wed, 23 Nov 2022 07:21:45 -0800
+        with ESMTP id S238825AbiKWPh3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Nov 2022 10:37:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FF0626A;
+        Wed, 23 Nov 2022 07:37:27 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8DB27B8216D;
+        Wed, 23 Nov 2022 15:37:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47180C433D6;
+        Wed, 23 Nov 2022 15:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669217845;
+        bh=UanCtzyfyh7s6GC+lB/BgGuUYEuJMVRrxquRNUED7QE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m6P+8V1/dZMe1Sdy38Jer2Kq0kWOQcWPpch/6FCsgX7mogbRiZx+nRYmaqo4cOT5c
+         2VBhRCgyAp1QZeQHA3EETx8HSmmQjCOuPPa172HaY1MAN9akX9CNVq37lxVTz8BMr8
+         BBLccHPaIU6D7mYb41M582jELquyQZxntjmwvKYXyotA//5tW/2MbJATyer9nFW/f0
+         ufcjB46KzIThaQo20IBXLl20DeebxUayijZK5CPRM4y+7O6LBfTdsu4RRUcLHP5KOK
+         b4r/lHFcNKfmA5EJjEfSCvbMR52QJimK5ICXr91dLn0KonGcS4j6q3bU+aNI+8DhYx
+         YzSjHFJvVHfAg==
+Date:   Wed, 23 Nov 2022 15:37:13 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 4/9] dt-bindings: drop redundant part of title (end)
+Message-ID: <Y34+KaMMI5H/qBlI@sirena.org.uk>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-5-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [v4 3/5] dt-bindings: hwmon: Add bindings for aspeed tach
- controller
-Content-Language: en-US
-To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        joel@jms.id.au, andrew@aj.id.au, lee@kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        corbet@lwn.net, p.zabel@pengutronix.de,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20221123061635.32025-1-billy_tsai@aspeedtech.com>
- <20221123061635.32025-4-billy_tsai@aspeedtech.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <20221123061635.32025-4-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="c3/TYdFfqHAXL0OZ"
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-5-krzysztof.kozlowski@linaro.org>
+X-Cookie: I'm rated PG-34!!
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 11/22/22 22:16, Billy Tsai wrote:
-> Add the aspeed tach device bindings which should be the child-node of
-> pwm-tach mfd.
-> 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->   .../bindings/hwmon/aspeed,ast2600-tach.yaml   | 36 +++++++++++++++++++
->   1 file changed, 36 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
-> new file mode 100644
-> index 000000000000..f42114f8e3c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
-> @@ -0,0 +1,36 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2021 Aspeed, Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/aspeed,ast2600-tach.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Aspeed Ast2600 Tach controller
-> +
-> +maintainers:
-> +  - Billy Tsai <billy_tsai@aspeedtech.com>
-> +
-> +description: |
-> +  The Aspeed Tach controller can support upto 16 fan input.
-> +  This module is part of the ast2600-pwm-tach multi-function device. For more
-> +  details see ../mfd/aspeed,ast2600-pwm-tach.yaml.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2600-tach
-> +patternProperties:
-> +  "^fan@[a-z0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        description:
-> +          The tach channel used for this node.
-> +        maxItems: 1
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +
-> +additionalProperties: false
 
-I am not a devicetree expert, but I have to say I find it confusing that
-there is no clear explanation that this is for a single fan channel
-which is really a child of aspeed,ast2600-tach. An example might be
-helpful.
+--c3/TYdFfqHAXL0OZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Guenter
+On Mon, Nov 21, 2022 at 12:06:10PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "Devicetree binding", but instead just describe the hardware.
 
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--c3/TYdFfqHAXL0OZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+PikACgkQJNaLcl1U
+h9Axvwf9HW9i1/TYYTLxyy8fUtu5a3P9a9v1aqZ5Vk5GOoY4gLBJ+Nn6TQz4e3WA
+B/mLs0ELXPm3nJVTGPQfpqgCN3STLaUwDcVJIskltCSFn08YUWFcyfkQWyBkAWym
+cNTiF+sk8z6Aw5orSNcjJFWhpEZejA/1yQ+eBJbfm3d44vR/G2D5tMGJXmbE3rEA
+bRa98QZef1l34JDi6+gadC0w7LX4jj8Q41K/mjRuLqdmV6BUstQvCsKC/8YIeoua
+G3jLmit5vd8KXG2eEiqK2lY2t5FBYlNLXqLoaE2yjZFcmvABd6Vh/2JDcOOFeBpK
+sPr6SAIesrsLQzCHS/nuT/saF9E/UA==
+=p0qY
+-----END PGP SIGNATURE-----
+
+--c3/TYdFfqHAXL0OZ--
