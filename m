@@ -2,108 +2,180 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0949E6372BF
-	for <lists+linux-pwm@lfdr.de>; Thu, 24 Nov 2022 08:22:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42F1E637443
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Nov 2022 09:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbiKXHMa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 24 Nov 2022 02:12:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44258 "EHLO
+        id S229819AbiKXInT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 24 Nov 2022 03:43:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiKXHMQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Nov 2022 02:12:16 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52786CFB9D
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 23:16:36 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id f9so871319pgf.7
-        for <linux-pwm@vger.kernel.org>; Wed, 23 Nov 2022 23:16:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9beI1qbDaBEZGBMzOodYXezAJNnkCn943LXJypsps08=;
-        b=jN9Iu2JG6Jbf9f/Vtx6/x8W99mbfvmkmA5JpUTuuOhHuX9hE65G+zwT360z98Yxh2l
-         i6PqDF91yJmzwCKNYEVFuLVfqGCqoHx9I7wNV8pa819eMDoiMR27SZF1GHdGnGDHcMWz
-         pqI4i03rsZDpQ60ONyvQHuYR+N3femATVqrSC4hLc3ih0MmJpf23tjAqEmigk+Q4lN5p
-         TjriD73VK+kqD8Wil5LA1NXQ4waHtGM3IZBFIczk95hCWTGki63dLVXFv0wvyqKSahPp
-         nd3iHhwTtHF7fG/CtXcp1E5PNjqsgHvp71L23Lt4pdmYQDMtQS6xnA3gM9hUIGynee9E
-         kaMQ==
+        with ESMTP id S229962AbiKXInS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 24 Nov 2022 03:43:18 -0500
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CDCE8EB7D;
+        Thu, 24 Nov 2022 00:43:17 -0800 (PST)
+Received: by mail-qt1-f170.google.com with SMTP id c15so694216qtw.8;
+        Thu, 24 Nov 2022 00:43:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9beI1qbDaBEZGBMzOodYXezAJNnkCn943LXJypsps08=;
-        b=O+PtkUBznUnPrIOvH1QNUq2emMc+Q57Ky0/WgrgaINqNx2v6YDefWQJoc9vvymsVh5
-         G3PUmjOSVHJaNurb/WTAd9K9p5q4cyEW1KpDzIKfouR+lQ1XXOo3RRQwIbeLxUBCqz9d
-         5Bp/fcETKXUHDleqmRDp4eNYIb63CVPLfbRtd3h5ErWrvqrt7ANgXRPWHkTc3Bg6uBT+
-         l+MI1g24xjKaFgU4qMgvUKbw448+ph8xdLCBfS+rjcfGITXTc/8DJKvYRRQHLshODlCp
-         rxPMExo2CfQ/Z8JpjeO9Qw+rSUI2qwMduCtsFUQn4VyUZ8SU6zXebMeWTn9/wicXwysR
-         IQUg==
-X-Gm-Message-State: ANoB5plxqEoOsfGJUnOYM/GL0Temu6tCb3TWr9TKGD0PJPuyojIzhlMy
-        RPBdelAilIjTi762qnp73bOPJw==
-X-Google-Smtp-Source: AA0mqf539xW7yp+XmSaeh7QyKEx/uI4+Px0TRaTKiiPa7cXAYmK2DoSN46/6FwkQRO+vECyNwcPwTg==
-X-Received: by 2002:aa7:8c19:0:b0:573:620a:3b1c with SMTP id c25-20020aa78c19000000b00573620a3b1cmr13160104pfd.50.1669274195379;
-        Wed, 23 Nov 2022 23:16:35 -0800 (PST)
-Received: from localhost ([122.172.85.60])
-        by smtp.gmail.com with ESMTPSA id k4-20020a170902c40400b001867fdec154sm414181plk.224.2022.11.23.23.16.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 23:16:34 -0800 (PST)
-Date:   Thu, 24 Nov 2022 12:46:32 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 0/9] dt-bindings: cleanup titles
-Message-ID: <20221124071632.5cadtc6pbdvdv3xb@vireshk-i7>
-References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MeX5JiNwOtG5KDFqFaTJsCq21klhOXLTy4lehVodWKI=;
+        b=8FmM/IxbtIrWu0uQFR09psEBh19P4+O7tJtmw3qhK17JH6VYR1oaoZm2iramHsAZdF
+         MFPqcYJ1NG06bHzEPfFMHuTzLv5pJ0tVPVLQRYV958ZPJlh+5RLtKPidMKdFjApJbqsN
+         6JAWfmukIBX9uryjIWzkh81122PFSiRQ3EMYVPdxIMVtypBWfz808qHHAql0L25jGtK/
+         UN466jO2dphYoT8PBQIIgzDaRrlVjTGMjvAfFeEQ+JmLlb7srn6JFq3L+gUebETNsCV8
+         54sGV8rhfSj6K9EmcnMhMbzm9YhMB5HeIQ6h3Oau2sx+MKia9pKGuzOIe0yWCVPNNhrP
+         ElCQ==
+X-Gm-Message-State: ANoB5plf9uwFLBWT9CDPMtxCzdQGDL7JynMH75ViVXQd+CEeN2kbzbIS
+        QjtjGxim+AYwj8jGkU+R3R2J72t9dun3WQ==
+X-Google-Smtp-Source: AA0mqf4OCwUeGg3dFPJKH16DU4sxkW0jA6DeTaFV77RKy7ikk6CDKDn0EiiHpPyMPSn8dj8ewsLgow==
+X-Received: by 2002:ac8:44cb:0:b0:3a5:259f:bacb with SMTP id b11-20020ac844cb000000b003a5259fbacbmr29725212qto.569.1669279396526;
+        Thu, 24 Nov 2022 00:43:16 -0800 (PST)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id r25-20020ac85219000000b003a5172220dbsm310092qtn.8.2022.11.24.00.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Nov 2022 00:43:15 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-3b56782b3f6so8782517b3.13;
+        Thu, 24 Nov 2022 00:43:14 -0800 (PST)
+X-Received: by 2002:a0d:fec2:0:b0:36b:56d3:71b8 with SMTP id
+ o185-20020a0dfec2000000b0036b56d371b8mr29937985ywf.384.1669279394668; Thu, 24
+ Nov 2022 00:43:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20221118131641.469238-1-biju.das.jz@bp.renesas.com> <20221118131641.469238-3-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20221118131641.469238-3-biju.das.jz@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 24 Nov 2022 09:43:03 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXtKTgUEZWHuS3=KB9w-uCrbWgeRW27yQNw6u_1sq1dzA@mail.gmail.com>
+Message-ID: <CAMuHMdXtKTgUEZWHuS3=KB9w-uCrbWgeRW27yQNw6u_1sq1dzA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] dt-bindings: pwm: Add RZ/V2M PWM binding
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 21-11-22, 12:06, Krzysztof Kozlowski wrote:
->  .../devicetree/bindings/cpufreq/cpufreq-mediatek-hw.yaml        | 2 +-
->  .../devicetree/bindings/cpufreq/qcom-cpufreq-nvmem.yaml         | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v1.yaml               | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v2-base.yaml          | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v2-kryo-cpu.yaml      | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v2-qcom-level.yaml    | 2 +-
->  Documentation/devicetree/bindings/opp/opp-v2.yaml               | 2 +-
+Hi Biju,
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On Fri, Nov 18, 2022 at 2:16 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> Add device tree bindings for the RZ/V2{M, MA} PWM Timer (PWM).
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 
--- 
-viresh
+Thanks for your patch!
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,rzv2m-pwm.yaml
+> @@ -0,0 +1,98 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/renesas,rzv2m-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/V2{M, MA} PWM Timer (PWM)
+> +
+> +maintainers:
+> +  - Biju Das <biju.das.jz@bp.renesas.com>
+> +
+> +description: |
+> +  The RZ/V2{M, MA} PWM Timer (PWM) composed of 16 channels. It supports the
+> +  following functions
+> +  * The PWM has 24-bit counters which operate at PWM_CLK (48 MHz).
+> +  * The frequency division ratio for internal counter operation is selectable
+> +    as PWM_CLK divided by 1, 16, 256, or 2048.
+> +  * The period as well as the duty cycle is adjustable.
+> +  * The low-level and high-level order of the PWM signals can be inverted.
+> +  * The duty cycle of the PWM signal is selectable in the range from 0 to 100%.
+> +  * The minimum resolution is 20.83 ns.
+> +  * Three interrupt sources: Rising and falling edges of the PWM signal and
+> +    clearing of the counter
+> +  * Counter operation and the bus interface are asynchronous and both can
+> +    operate independently of the magnitude relationship of the respective
+> +    clock periods.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - renesas,r9a09g011-pwm  # RZ/V2M
+> +          - renesas,r9a09g055-pwm  # RZ/V2MA
+> +      - const: renesas,rzv2m-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#pwm-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: CPU Peripheral Group F APB clock
+
+"APB clock"
+
+PWM0-7] are part of Peripheral Group E, and the block might be
+reused on SoCs not using CPU Peripheral Group clock signals.
+
+> +      - description: PWM clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: pwm
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - power-domains
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - renesas,r9a09g055-pwm
+> +then:
+> +  required:
+> +    - resets
+
+I think you should make the resets property required unconditionally.
+DT describes hardware, not software policy.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
