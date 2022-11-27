@@ -2,131 +2,159 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB1506396DB
-	for <lists+linux-pwm@lfdr.de>; Sat, 26 Nov 2022 16:44:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99194639C45
+	for <lists+linux-pwm@lfdr.de>; Sun, 27 Nov 2022 19:22:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbiKZPoK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 26 Nov 2022 10:44:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
+        id S229538AbiK0SWg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 27 Nov 2022 13:22:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiKZPoI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 26 Nov 2022 10:44:08 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E0EF7A;
-        Sat, 26 Nov 2022 07:44:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669477447; x=1701013447;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=TYZva1qhZaDDzx7ssD6565IlpCg24ayIFbcaC7tY8Tc=;
-  b=afaV5wieNPUjxu0caJC6JdakAXQOqaG+mJP11E9sBOfdvxW/FCdDmoSq
-   uszGkpjb5nf3De548PRwyr8tA0gjYkdzZijT5eCkTI9MaUL7wuDEK5FNd
-   DHxxEedinEuG50v1wryTy8tuS2GfxLpPE0gycyCpJAkwIvhrwC+gn8YZP
-   vqGEDAZKZz5uKM+4zWczaOB+RJUrHWVl1v9DiPG/G1MsaoSG/5NPhScuG
-   JcNKVf2MOUenZM/iTJdfierEPIRgcSWgA7CVeokYeMdRvPe3t3BpDN/xD
-   57LDEQ+dPBOukc9S9pF7aZDWoHCdzdL+VmK/32YN6VaBwDrOJGpoZ9vaZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10543"; a="376747252"
-X-IronPort-AV: E=Sophos;i="5.96,196,1665471600"; 
-   d="scan'208";a="376747252"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2022 07:44:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10543"; a="620587303"
-X-IronPort-AV: E=Sophos;i="5.96,196,1665471600"; 
-   d="scan'208";a="620587303"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP; 26 Nov 2022 07:43:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1oyxLL-000Bco-1n;
-        Sat, 26 Nov 2022 17:43:51 +0200
-Date:   Sat, 26 Nov 2022 17:43:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        alsa-devel@alsa-project.org, linux-staging@lists.linux.dev,
-        linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
-        Grant Likely <grant.likely@linaro.org>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        gregkh@linuxfoundation.org, linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Purism Kernel Team <kernel@puri.sm>,
-        patches@opensource.cirrus.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>, linux-crypto@vger.kernel.org,
-        kernel@pengutronix.de, netdev@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Message-ID: <Y4I0N3KpU/LSJYpd@smile.fi.intel.com>
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221122185818.3740200d@jic23-huawei>
- <20221122201654.5rdaisqho33buibj@pengutronix.de>
+        with ESMTP id S229509AbiK0SWf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 27 Nov 2022 13:22:35 -0500
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5D5D6C;
+        Sun, 27 Nov 2022 10:22:33 -0800 (PST)
+Received: by mail-io1-f48.google.com with SMTP id e189so6219449iof.1;
+        Sun, 27 Nov 2022 10:22:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vukWGyYF9LYnWEtUXZi++E5sJfGRcnavjJ89dxRwcfA=;
+        b=NX9rsp6+QjC1mPtLbdgo8pFJ1CiwpUJabVGx9r4r5SBk4YxtS3JdKGx7BbBMduDVUE
+         NnyDbDR3aVLuAvUhCCRUwtPHzdSsGqSx8hkShKLeU+NDYP15nIt06hH1YDr3rOVpOV61
+         +eC0DldiZZ65BI8NPFSQdJDunX8hPsESCF2KJDvaSG6zCTWl8S0z68xLyCpmsjhjuwng
+         NkdIGlYm/4+DvzgeHH6GLY/2v5lkxfMGPmGfu0eEJpqMqzPkfmKOnoe8CB8QLjfnh+00
+         5Bg5+jkujIvBNXO8NJ5vNuyHoYCG9pcNcHvGulPpsgDooyLudPD0Wf/OtMhXVbxc5Yp7
+         m05Q==
+X-Gm-Message-State: ANoB5plYTMf+BcgcAVCavTH+Mc37bpOiojQbMngxBSYtf/imLqeg1eab
+        Sp2QDU6css+jQmKwcL8rXw==
+X-Google-Smtp-Source: AA0mqf52id4ogOIrUkQbo6wDm6Jj1UbJySa/csflYIxoWGpZdD7lafsWa0xqORF+oFNfTceNY8Asbg==
+X-Received: by 2002:a02:9547:0:b0:375:3dd1:743c with SMTP id y65-20020a029547000000b003753dd1743cmr14810797jah.281.1669573353061;
+        Sun, 27 Nov 2022 10:22:33 -0800 (PST)
+Received: from robh_at_kernel.org ([2605:ef80:80c1:3b80:81db:640f:ef27:c9e2])
+        by smtp.gmail.com with ESMTPSA id u13-20020a056638304d00b00372bbd04b75sm3611473jak.87.2022.11.27.10.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Nov 2022 10:22:32 -0800 (PST)
+Received: (nullmailer pid 144847 invoked by uid 1000);
+        Sun, 27 Nov 2022 18:22:32 -0000
+Date:   Sun, 27 Nov 2022 12:22:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Allow decimal format in
+ addition to hex format
+Message-ID: <20221127182232.GA128974-robh@kernel.org>
+References: <20221122123225.59106-1-tony@atomide.com>
+ <20221123024153.GB1026269-robh@kernel.org>
+ <Y33ErrigR4II6EYH@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221122201654.5rdaisqho33buibj@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y33ErrigR4II6EYH@atomide.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 09:16:54PM +0100, Uwe Kleine-König wrote:
-> On Tue, Nov 22, 2022 at 06:58:18PM +0000, Jonathan Cameron wrote:
-
-> > Queued all of the below:
-> > with one tweaked as per your suggestion and the highlighted one dropped on basis
-> > I was already carrying the equivalent - as you pointed out.
+On Wed, Nov 23, 2022 at 08:58:54AM +0200, Tony Lindgren wrote:
+> * Rob Herring <robh@kernel.org> [221123 02:31]:
+> > On Tue, Nov 22, 2022 at 02:32:24PM +0200, Tony Lindgren wrote:
+> > > Let's allow node numbering in decimal format too.
+> > > 
+> > > Simple human-readable increments/IDs are usually decimal, hex is only for
+> > > addresses as noted by Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>.
+> > > 
+> > > Let's use an improved match suggested by Krzysztof Kozlowski
+> > > <krzysztof.kozlowski@linaro.org> and improved a bit by Uwe Kleine-König
+> > > <u.kleine-koenig@pengutronix.de>.
+> > > 
+> > > Cc: linux-pwm@vger.kernel.org
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > > ---
+> > > 
+> > > Changes since v2:
+> > > 
+> > > - Use pattern suggested by Krzysztof and Uwe
+> > > 
+> > > Changes since v1:
+> > > 
+> > > - New patch added to deal with pwm-omap-dmtimer binding
+> > > 
+> > > ---
+> > >  Documentation/devicetree/bindings/pwm/pwm.yaml | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.yaml b/Documentation/devicetree/bindings/pwm/pwm.yaml
+> > > --- a/Documentation/devicetree/bindings/pwm/pwm.yaml
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
+> > > @@ -13,7 +13,7 @@ select: false
+> > >  
+> > >  properties:
+> > >    $nodename:
+> > > -    pattern: "^pwm(@.*|-[0-9a-f])*$"
+> > > +    pattern: "^pwm(@.+|-[0-9a-f]+)?$"
 > > 
-> > I was already carrying the required dependency.
-> > 
-> > Includes the IIO ones in staging.
-> > 
-
-> > p.s. I perhaps foolishly did this in a highly manual way so as to
-> > also pick up Andy's RB.  So might have dropped one...
+> > So now pwm-10 could be either?
 > 
-> You could have done:
+> Yes.
 > 
-> 	H=$(git rev-parse @)
-> 	b4 am -P 49-190 20221118224540.619276-1-uwe@kleine-koenig.org
-> 	git am ...
-> 	git filter-branch -f --msg-filter "grep -v 'Signed-off-by: Jonathan'; echo 'Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>'; echo 'Signed-off-by: Jonathan Cameron <jic23@kernel.org>'" $H..
+> > I'm fine with decimal, but can we do that everywhere we do this -N 
+> > naming?
 > 
-> (untested, but you get the idea).
+> Do you mean the '[0-9a-f]' users that don't use '[0-9af]+'?
 
-That's, for example (just last from the history as is), how I usually do it
-(tested):
+No, I mean for all cases of <nodename>-N, can be we consistent. Either 
+we use hex or we use decimal.
+ 
+> 
+> These can be found with:
+> 
+> $ find Documentation/devicetree/bindings/ -name \*.yaml | \
+> 	xargs grep pattern: | grep '\[0-9a-f\]' | grep -v '\[0-9a-f\]+'
 
- git filter-branch --msg-filter 'sed -e "/Signed-off-by: Andy Shevchenko/ a Tested-by: Daniel Scally <dan.scally@ideasonboard.com>"' -f HEAD~4..HEAD
+Not quite. It's just cases of '-N':
+
+$ find Documentation/devicetree/bindings/ -name \*.yaml |         xargs grep pattern: | grep '\-\[0-9a-f\]' | grep -v '\[0-9a-f\]+'
+Documentation/devicetree/bindings/phy/intel,combo-phy.yaml:    pattern: "combophy(@.*|-[0-9a-f])*$"
+Documentation/devicetree/bindings/pwm/pwm.yaml:    pattern: "^pwm(@.*|-[0-9a-f])*$"
+Documentation/devicetree/bindings/timestamp/hardware-timestamps-common.yaml:    pattern: "^timestamp(@.*|-[0-9a-f])?$"
+Documentation/devicetree/bindings/watchdog/watchdog.yaml:    pattern: "^watchdog(@.*|-[0-9a-f])?$"
+Documentation/devicetree/bindings/spi/spi-controller.yaml:    pattern: "^spi(@.*|-[0-9a-f])*$"
+Documentation/devicetree/bindings/rtc/rtc.yaml:    pattern: "^rtc(@.*|-[0-9a-f])*$"
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+And there's probably some more in dtschema.
 
+> 
+> Not sure if some of these need to intentionally limit the node numbering
+> to 15.
 
+No, I think it was all just cases of 15 should be enough for anyone.
+
+> 
+> If you have some other criteria in mind, let me know :)
+
+If the numbering is hex, then it is as you have it. (Though we can't 
+enforce that.
+
+If it is decimal, then the regex should be ([0-9]|[1-9][0-9]+). 
+
+Rob
