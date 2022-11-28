@@ -2,58 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1305363A268
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Nov 2022 09:00:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49EAF63A27F
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Nov 2022 09:11:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbiK1IAJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Nov 2022 03:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
+        id S229730AbiK1ILB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 28 Nov 2022 03:11:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiK1IAI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Nov 2022 03:00:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A0711A3E;
-        Mon, 28 Nov 2022 00:00:03 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B5EF61018;
-        Mon, 28 Nov 2022 08:00:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFB0C433C1;
-        Mon, 28 Nov 2022 08:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669622402;
-        bh=sSP+y58dUYdr/Ye6OLHQOoGvusu/KoVqOieYdy6sw9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dU8AM9dy2tYGxHKw1fk6Zik0APTZu5x6iKL3BDP2vPnO+Xm9Rcr15Dp7HStEgXKPM
-         4wKyn5Ghl+x4pCCmKt4BAT9RJmM2dszRnm8CkdtDf92CfPXjm5KtsSSKB2r1brXFGT
-         PAeqqoZRT0AQ2TZbqM8HhRLK3mpX6lfhFjbaPbs+O57O2gfHmAqJ+HUoaPi+DcAGQd
-         xBSnS0TABr23O549lTBGLHH4DabQkk9aFf5XX//X2D5Ze/Cj5RDlZxuD83Foitm0L7
-         xA+TvvkzMTfYycZzFJ5TNeoP5TI8BvMMekUQV55fNJsKC5dS8WWY3DuDeLoHwe243x
-         hRGKFhQ4fbxeg==
-Received: by pali.im (Postfix)
-        id 900AD87A; Mon, 28 Nov 2022 08:59:59 +0100 (CET)
-Date:   Mon, 28 Nov 2022 08:59:59 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        andrew@lunn.ch, thomas.petazzoni@free-electrons.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] dt-bindings: gpio: gpio-mvebu: deprecate
- armadaxp-gpio
-Message-ID: <20221128075959.3a3io5nhaizm7uxj@pali>
-References: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
- <20220526012946.3862776-3-chris.packham@alliedtelesis.co.nz>
+        with ESMTP id S229723AbiK1ILA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Nov 2022 03:11:00 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B925167E6
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Nov 2022 00:11:00 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ozZEA-0003af-2n; Mon, 28 Nov 2022 09:10:58 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ozZE8-000mMW-DY; Mon, 28 Nov 2022 09:10:57 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ozZE8-000sKM-5l; Mon, 28 Nov 2022 09:10:56 +0100
+Date:   Mon, 28 Nov 2022 09:10:56 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Doug Brown <doug@schmorgal.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] pwm: pxa: Set duty cycle to 0 when disabling PWM
+Message-ID: <20221128081056.klews27j6ngwtgi4@pengutronix.de>
+References: <20221113233639.24244-1-doug@schmorgal.com>
+ <20221113233639.24244-3-doug@schmorgal.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wmab3e3ta4s4ndtj"
 Content-Disposition: inline
-In-Reply-To: <20220526012946.3862776-3-chris.packham@alliedtelesis.co.nz>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20221113233639.24244-3-doug@schmorgal.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,89 +52,110 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thursday 26 May 2022 13:29:45 Chris Packham wrote:
-> Commit 5f79c651e81e ("arm: mvebu: use global interrupts for GPIOs on
-> Armada XP") the marvell,armadaxp-gpio compatible obsolete.
 
-No, marvell,armadaxp-gpio is required for per-cpu interrupt support. I fixed it recently:
-https://lore.kernel.org/linux-devicetree/20220714115515.5748-2-pali@kernel.org/
-https://lore.kernel.org/linux-devicetree/20220714183328.4137-3-pali@kernel.org/
+--wmab3e3ta4s4ndtj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The driver code still exists to handle the armadaxp behaviour but all
-> the in-tree boards use the marvell,armada-370-gpio.  Document the
-> marvell,armadaxp-gpio compatible as deprecated.
+Hello,
 
-For per-cpu interrupt support is marvell,armadaxp-gpio needed and
-therefore it cannot be deprecated.
-
-What can be deprecated is marvell,armada-370-gpio and it can be replaced
-by marvell,orion-gpio, which covers _all_ SoCs starting from the oldest
-one = Orion. See discussion for more details:
-https://lore.kernel.org/linux-devicetree/20220725200417.nwthxzvdv2bzd5ej@pengutronix.de/
-
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+On Sun, Nov 13, 2022 at 03:36:35PM -0800, Doug Brown wrote:
+> When disabling PWM, the duty cycle needs to be set to 0. This prevents
+> the previous duty cycle from showing up momentarily when the clock is
+> re-enabled next time.
+>=20
+> Because the clock has to be running in order to configure the duty
+> cycle, unconditionally enable it early in pxa_pwm_apply and account for
+> the correct enable count at the end.
+>=20
+> Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Doug Brown <doug@schmorgal.com>
 > ---
-> 
-> Notes:
->     This could potentially be squashed into the first commit but it seemed
->     more proper to do a straight 1:1 conversion of the old binding then
->     clean things up to match reality.
->     
->     Changes in v4:
->     - New
-> 
->  .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 24 +++++++------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> index d1695e7bd825..459ec35864fe 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> @@ -21,17 +21,21 @@ properties:
->            - enum:
->                - marvell,mv78200-gpio
->                - marvell,armada-370-gpio
-> -              - marvell,armadaxp-gpio
->            - const: marvell,orion-gpio
->  
-> +      - description: Deprecated binding
-> +        items:
-> +          - const: marvell,armadaxp-gpio
-> +          - const: marvell,orion-gpio
-> +        deprecated: true
+>  drivers/pwm/pwm-pxa.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+> index 0ac052652c62..9ee9b41d62b8 100644
+> --- a/drivers/pwm/pwm-pxa.c
+> +++ b/drivers/pwm/pwm-pxa.c
+> @@ -105,24 +105,31 @@ static int pxa_pwm_apply(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+>  			 const struct pwm_state *state)
+>  {
+>  	struct pxa_pwm_chip *pc =3D to_pxa_pwm_chip(chip);
+> +	u64 duty_cycle;
+>  	int err;
+> =20
+>  	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+>  		return -EINVAL;
+> =20
+> -	if (!state->enabled) {
+> -		if (pwm->state.enabled)
+> -			clk_disable_unprepare(pc->clk);
+> +	err =3D clk_prepare_enable(pc->clk);
+> +	if (err)
+> +		return err;
+> =20
+> -		return 0;
+> -	}
+> +	duty_cycle =3D state->enabled ? state->duty_cycle : 0;
+> =20
+> -	err =3D pxa_pwm_config(chip, pwm, state->duty_cycle, state->period);
+> -	if (err)
+> +	err =3D pxa_pwm_config(chip, pwm, duty_cycle, state->period);
+> +	if (err) {
+> +		clk_disable_unprepare(pc->clk);
+>  		return err;
+> +	}
 > +
->    reg:
->      description: |
->        Address and length of the register set for the device. Not used for
->        marvell,armada-8k-gpio.
->  
-> -      For the "marvell,armadaxp-gpio" variant a second entry is expected for
-> -      the per-cpu registers. For other variants second entry can be provided,
-> -      for the PWM function using the GPIO Blink Counter on/off registers.
-> +      A second entry can be provided, for the PWM function using the GPIO Blink
-> +      Counter on/off registers.
->      minItems: 1
->      maxItems: 2
->  
-> @@ -103,18 +107,6 @@ allOf:
->        required:
->          - reg
->  
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          contains:
-> -            const: marvell,armadaxp-gpio
-> -    then:
-> -      properties:
-> -        reg:
-> -          minItems: 2
-> -        reg-names:
-> -          minItems: 2
-> -
->  unevaluatedProperties: true
->  
->  examples:
-> -- 
-> 2.36.1
-> 
+> +	if (state->enabled && !pwm->state.enabled)
+> +		return 0;
+> +
+> +	clk_disable_unprepare(pc->clk);
+> =20
+> -	if (!pwm->state.enabled)
+> -		return clk_prepare_enable(pc->clk);
+> +	if (!state->enabled && pwm->state.enabled)
+> +		clk_disable_unprepare(pc->clk);
+> =20
+>  	return 0;
+>  }
+
+This has the side effect that when going from
+
+	.duty_cycle =3D A, .period =3D B, .enabled =3D false
+
+to
+
+	.duty_cycle =3D C, .period =3D D, .enabled =3D false
+
+the register values for C and D are calculated and written into the
+hardware without any win, but the net gain is still positive I think.
+So:
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wmab3e3ta4s4ndtj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOEbQwACgkQwfwUeK3K
+7Ane1ggAml3aeJS+phBaSu4MiQoSo/Qti9s+NKR1SvibDSTabhLpgFyVHslyeSW8
+pZErrItmMko88wY48Y+j9txYyDrkVfgE6g1Leybq4bRpNI2Zp2vIRDCBrMaYNvKD
+Jf1dlL1nwbLdy4L5IY7z2FKi94Zi+7zdp2ofPxAL+e9ZcQ2tAkT7Un/gj+qJC9J/
+L6QCrYTvvojyOEfeBaNbpfb6Ypsr2qWqqSvhbSCs2NOE/tnvCxPpMOXmJqqAnfQ/
+jfBXsD2vkZr9LXo3spctwz6SbyAbBEK2m9toT390EUAzPUGhH4WVNe0JJE04F+yY
+N2ifpXI28t5umzEh4hxehLqY0Bh19w==
+=blcp
+-----END PGP SIGNATURE-----
+
+--wmab3e3ta4s4ndtj--
