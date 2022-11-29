@@ -2,259 +2,99 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3AFD63C023
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Nov 2022 13:35:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 004EC63C190
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Nov 2022 14:59:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234335AbiK2MfC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 29 Nov 2022 07:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
+        id S232609AbiK2N64 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 29 Nov 2022 08:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231238AbiK2MfB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 29 Nov 2022 07:35:01 -0500
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033745DBAF;
-        Tue, 29 Nov 2022 04:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1669725294; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eL6pPI+L/7yl681MBLlj5aEBo5qXXri4yiHQVrloheo=;
-        b=gfjFN19UdzVsZboD3kNO1sYaHzs288HSiwbKnSYYScz/0ftxmJu0snh0T+SRwZsYsXoRGH
-        WRXde81kPbQc7PuZtiuwtMk0LQqmYvefga+WI2PXVwPp+SIqlmGWLb7UqWOqUl7waSDyhV
-        19KTRmx5n6jfF2OqJ9GWXFe+ShxTMHs=
-Date:   Tue, 29 Nov 2022 12:34:44 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/5] pwm: jz4740: Fix pin level of disabled TCU2 channels,
- part 2
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?iso-8859-1?q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, od@opendingux.net,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, stable@vger.kernel.org
-Message-Id: <W904MR.3RUCK63YXZDN1@crapouillou.net>
-In-Reply-To: <Y4X4BQ7t2OnH+OGb@orome>
-References: <20221024205213.327001-1-paul@crapouillou.net>
-        <20221024205213.327001-3-paul@crapouillou.net>
-        <20221025064410.brrx5faa4jtwo67b@pengutronix.de>
-        <Y90BKR.1BA4VWKIBIKU@crapouillou.net>
-        <20221128143911.n3woy6mjom5n4sad@pengutronix.de> <Y4X4BQ7t2OnH+OGb@orome>
+        with ESMTP id S232523AbiK2N6w (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 29 Nov 2022 08:58:52 -0500
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF1E2AE1D
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Nov 2022 05:58:50 -0800 (PST)
+Received: by mail-lj1-x22a.google.com with SMTP id r8so17181748ljn.8
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Nov 2022 05:58:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H2pPVev3RCLudXV+llX32MLBUni5nh/cZHxB+M0bkvM=;
+        b=waDyAGc0fv9NY23aBVzUNd67+z6i2Ph8TR02pjEtX5Gw3qHQxpk4I+q34Asfp8aKNJ
+         K+p4L/Ml0yzueqtCa9osb/bhNa/kqof6YmJg2Q5S8Y+0DICAkYA8fMfbkRI8ZnSxYkM4
+         InYBUxsj890TCUfs+3S7EDh/6ReIQeF8cKTBHCMk/oaNxo9cWTdc+fxUVG/bOiC6Kiw2
+         rgsvViSG2SjV9iykoPSrywu5EBj8dGiO7TYJaJ9JKlPrBdzkxakmpzU0fcl/SVySif7y
+         2ZfIsW9Tg0qlbX0ag0PrmhQjv0R9em3kkW1j9A/CTsecvxMHbOKX+DBlFKq36PmtG5EH
+         BnQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H2pPVev3RCLudXV+llX32MLBUni5nh/cZHxB+M0bkvM=;
+        b=UJa+hgXGUS6s8Z5VQzoZhlJeIpKFAxtYSqUy1bJb8HRTULq9L+RKE2jSz/9lYWrCD7
+         RFrBSCcliqrncSV0zXddYrw359c1sZWliOwAPVHlzo43dO3B7gH3lC92Zem8B4oKeakt
+         SxeFPZ9SSpjKmanSuOx/TUN2JrYbmEU2IJaEJNUqsq1upvX8OnZ/jrCM1lNvQRRd4vwK
+         iAt/dmY3GPkTFSs7KKO0XVQWbBdVdwwOqHWPyggYEIviLsG3TfrCEW37KpzNxsBAiFbv
+         TOHfyim9kErXeVUyLXKFtBcX/E+8U2YAPB91gU/RiS4EgFHuc4mAAkTiO3HXEuPO9dAO
+         sEPw==
+X-Gm-Message-State: ANoB5plroRo4ZGFIYGcMmJEEl2hadMrL0wmg3KJBlud+tWTovokkcjR8
+        rVTQoV9GmnyenhWEhdd3pvh7gA==
+X-Google-Smtp-Source: AA0mqf5RacO/5cMNhLm9XvyvLvezEAskC3Cmkn9WrJJSxE0ZF2oNEfvjLLTyegDa4KnVOBnfDjlaqw==
+X-Received: by 2002:a05:6512:13a5:b0:4ad:70f0:c7c with SMTP id p37-20020a05651213a500b004ad70f00c7cmr17467048lfa.190.1669730329197;
+        Tue, 29 Nov 2022 05:58:49 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id 11-20020a05651c128b00b0026fc8855c20sm1548349ljc.19.2022.11.29.05.58.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 05:58:48 -0800 (PST)
+Message-ID: <bf91aac5-7d9a-245f-7c97-b8be901cf538@linaro.org>
+Date:   Tue, 29 Nov 2022 14:58:47 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v1 2/2] dt-bindings: pwm: mediatek: Convert pwm-mediatek
+ to dt schema
+Content-Language: en-US
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org,
+        sean.wang@mediatek.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <20221128112028.58021-1-angelogioacchino.delregno@collabora.com>
+ <20221128112028.58021-3-angelogioacchino.delregno@collabora.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221128112028.58021-3-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
+On 28/11/2022 12:20, AngeloGioacchino Del Regno wrote:
+> This converts pwm-mediatek.txt to mediatek,mt2712-pwm.yaml schema;
+> while at it, the clock names were clarified as previously they were
+> documented as "pwmX-Y", but valid names are "pwmN" only.
+> Also, the example was changed to use "mediatek,mt2712-pwm" instead
+> for consistency with the schema filename.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
 
-Le mar. 29 nov. 2022 =E0 13:16:05 +0100, Thierry Reding=20
-<thierry.reding@gmail.com> a =E9crit :
-> On Mon, Nov 28, 2022 at 03:39:11PM +0100, Uwe Kleine-K=F6nig wrote:
->>  Hello,
->>=20
->>  On Tue, Oct 25, 2022 at 11:10:46AM +0100, Paul Cercueil wrote:
->>  > Le mar. 25 oct. 2022 =E0 08:44:10 +0200, Uwe Kleine-K=F6nig
->>  > <u.kleine-koenig@pengutronix.de> a =E9crit :
->>  > > On Mon, Oct 24, 2022 at 09:52:10PM +0100, Paul Cercueil wrote:
->>  > > >  After commit a020f22a4ff5 ("pwm: jz4740: Make PWM start with=20
->> the
->>  > > > active part"),
->>  > > >  the trick to set duty > period to properly shut down TCU2=20
->> channels
->>  > > > did
->>  > > >  not work anymore, because of the polarity inversion.
->>  > > >
->>  > > >  Address this issue by restoring the proper polarity before
->>  > > > disabling the
->>  > > >  channels.
->>  > > >
->>  > > >  Fixes: a020f22a4ff5 ("pwm: jz4740: Make PWM start with the=20
->> active
->>  > > > part")
->>  > > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > > >  Cc: stable@vger.kernel.org
->>  > > >  ---
->>  > > >   drivers/pwm/pwm-jz4740.c | 62
->>  > > > ++++++++++++++++++++++++++--------------
->>  > > >   1 file changed, 40 insertions(+), 22 deletions(-)
->>  > > >
->>  > > >  diff --git a/drivers/pwm/pwm-jz4740.c=20
->> b/drivers/pwm/pwm-jz4740.c
->>  > > >  index 228eb104bf1e..65462a0052af 100644
->>  > > >  --- a/drivers/pwm/pwm-jz4740.c
->>  > > >  +++ b/drivers/pwm/pwm-jz4740.c
->>  > > >  @@ -97,6 +97,19 @@ static int jz4740_pwm_enable(struct=20
->> pwm_chip
->>  > > > *chip, struct pwm_device *pwm)
->>  > > >   	return 0;
->>  > > >   }
->>  > > >
->>  > > >  +static void jz4740_pwm_set_polarity(struct jz4740_pwm_chip=20
->> *jz,
->>  > > >  +				    unsigned int hwpwm,
->>  > > >  +				    enum pwm_polarity polarity)
->>  > > >  +{
->>  > > >  +	unsigned int value =3D 0;
->>  > > >  +
->>  > > >  +	if (polarity =3D=3D PWM_POLARITY_INVERSED)
->>  > > >  +		value =3D TCU_TCSR_PWM_INITL_HIGH;
->>  > > >  +
->>  > > >  +	regmap_update_bits(jz->map, TCU_REG_TCSRc(hwpwm),
->>  > > >  +			   TCU_TCSR_PWM_INITL_HIGH, value);
->>  > > >  +}
->>  > > >  +
->>  > > >   static void jz4740_pwm_disable(struct pwm_chip *chip, struct
->>  > > > pwm_device *pwm)
->>  > > >   {
->>  > > >   	struct jz4740_pwm_chip *jz =3D to_jz4740(chip);
->>  > > >  @@ -130,6 +143,7 @@ static int jz4740_pwm_apply(struct=20
->> pwm_chip
->>  > > > *chip, struct pwm_device *pwm,
->>  > > >   	unsigned long long tmp =3D 0xffffull * NSEC_PER_SEC;
->>  > > >   	struct clk *clk =3D pwm_get_chip_data(pwm);
->>  > > >   	unsigned long period, duty;
->>  > > >  +	enum pwm_polarity polarity;
->>  > > >   	long rate;
->>  > > >   	int err;
->>  > > >
->>  > > >  @@ -169,6 +183,9 @@ static int jz4740_pwm_apply(struct=20
->> pwm_chip
->>  > > > *chip, struct pwm_device *pwm,
->>  > > >   	if (duty >=3D period)
->>  > > >   		duty =3D period - 1;
->>  > > >
->>  > > >  +	/* Restore regular polarity before disabling the channel.=20
->> */
->>  > > >  +	jz4740_pwm_set_polarity(jz4740, pwm->hwpwm,=20
->> state->polarity);
->>  > > >  +
->>  > >
->>  > > Does this introduce a glitch?
->>  >
->>  > Maybe. But the PWM is shut down before finishing its period=20
->> anyway, so there
->>  > was already a glitch.
->>  >
->>  > > >   	jz4740_pwm_disable(chip, pwm);
->>  > > >
->>  > > >   	err =3D clk_set_rate(clk, rate);
->>  > > >  @@ -190,29 +207,30 @@ static int jz4740_pwm_apply(struct=20
->> pwm_chip
->>  > > > *chip, struct pwm_device *pwm,
->>  > > >   	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
->>  > > >   			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
->>  > > >
->>  > > >  -	/*
->>  > > >  -	 * Set polarity.
->>  > > >  -	 *
->>  > > >  -	 * The PWM starts in inactive state until the internal=20
->> timer
->>  > > > reaches the
->>  > > >  -	 * duty value, then becomes active until the timer reaches=20
->> the
->>  > > > period
->>  > > >  -	 * value. In theory, we should then use (period - duty) as=20
->> the
->>  > > > real duty
->>  > > >  -	 * value, as a high duty value would otherwise result in=20
->> the PWM
->>  > > > pin
->>  > > >  -	 * being inactive most of the time.
->>  > > >  -	 *
->>  > > >  -	 * Here, we don't do that, and instead invert the polarity=20
->> of the
->>  > > > PWM
->>  > > >  -	 * when it is active. This trick makes the PWM start with=20
->> its
->>  > > > active
->>  > > >  -	 * state instead of its inactive state.
->>  > > >  -	 */
->>  > > >  -	if ((state->polarity =3D=3D PWM_POLARITY_NORMAL) ^=20
->> state->enabled)
->>  > > >  -		regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
->>  > > >  -				   TCU_TCSR_PWM_INITL_HIGH, 0);
->>  > > >  -	else
->>  > > >  -		regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
->>  > > >  -				   TCU_TCSR_PWM_INITL_HIGH,
->>  > > >  -				   TCU_TCSR_PWM_INITL_HIGH);
->>  > > >  -
->>  > > >  -	if (state->enabled)
->>  > > >  +	if (state->enabled) {
->>  > > >  +		/*
->>  > > >  +		 * Set polarity.
->>  > > >  +		 *
->>  > > >  +		 * The PWM starts in inactive state until the internal=20
->> timer
->>  > > >  +		 * reaches the duty value, then becomes active until the=20
->> timer
->>  > > >  +		 * reaches the period value. In theory, we should then use
->>  > > >  +		 * (period - duty) as the real duty value, as a high duty=20
->> value
->>  > > >  +		 * would otherwise result in the PWM pin being inactive=20
->> most of
->>  > > >  +		 * the time.
->>  > > >  +		 *
->>  > > >  +		 * Here, we don't do that, and instead invert the=20
->> polarity of
->>  > > >  +		 * the PWM when it is active. This trick makes the PWM=20
->> start
->>  > > >  +		 * with its active state instead of its inactive state.
->>  > > >  +		 */
->>  > > >  +		if (state->polarity =3D=3D PWM_POLARITY_NORMAL)
->>  > > >  +			polarity =3D PWM_POLARITY_INVERSED;
->>  > > >  +		else
->>  > > >  +			polarity =3D PWM_POLARITY_NORMAL;
->>  > > >  +
->>  > > >  +		jz4740_pwm_set_polarity(jz4740, pwm->hwpwm, polarity);
->>  > > >  +
->>  > > >   		jz4740_pwm_enable(chip, pwm);
->>  > > >  +	}
->>  > >
->>  > > Note that for disabled PWMs there is no official guaranty about=20
->> the pin
->>  > > state. So it would be ok (but admittedly not great) to simplify=20
->> the
->>  > > driver and accept that the pinstate is active while the PWM is=20
->> off.
->>  > > IMHO this is also better than a glitch.
->>  > >
->>  > > If a consumer wants the PWM to be in its inactive state, they=20
->> should
->>  > > not disable it.
->>  >
->>  > Completely disagree. I absolutely do not want the backlight to go=20
->> full
->>  > bright mode when the PWM pin is disabled. And disabling the=20
->> backlight is a
->>  > thing (for screen blanking and during mode changes).
->>=20
->>  For some hardwares there is no pretty choice. So the gist is: If the
->>  backlight driver wants to ensure that the PWM pin is driven to its
->>  inactive level, it should use:
->>=20
->>  	pwm_apply(pwm, { .period =3D ..., .duty_cycle =3D 0, .enabled =3D true=
-=20
->> });
->>=20
->>  and better not
->>=20
->>  	pwm_apply(pwm, { ..., .enabled =3D false });
->=20
-> Depending on your hardware capabilities you may also be able to use
-> pinctrl to configure the pin to behave properly when the PWM is
-> disabled. Not all hardware can do that, though.
 
-Been there, done that. It got refused.
-https://lkml.org/lkml/2019/5/22/607
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Cheers,
--Paul
-
+Best regards,
+Krzysztof
 
