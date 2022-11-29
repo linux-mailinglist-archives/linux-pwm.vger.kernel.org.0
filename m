@@ -2,442 +2,171 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90B7763C4D3
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Nov 2022 17:11:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C598763C510
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Nov 2022 17:25:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235517AbiK2QLw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 29 Nov 2022 11:11:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
+        id S233273AbiK2QZA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 29 Nov 2022 11:25:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235277AbiK2QLt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 29 Nov 2022 11:11:49 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF9A59846
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Nov 2022 08:11:47 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id bx10so10802517wrb.0
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Nov 2022 08:11:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7XHqJCL0YK4FWR7GzNLRu43PKAghRuEUD3cVbOeK4pc=;
-        b=G1ulTJ7wmHFUAtNopaArrimu8+9gMcFZmLmG608Ew2qPwxeismvzMnCz1iScxGxGh8
-         mSvMMabT+KyIGA8ynlBwzIgayHbodGMrpO6QKNoOU+/BYi0vPZy0DO49jrFSBOSNOZAb
-         o6srRoJiKmbtMKLZBrOEMKAZ3sEq158ATr1cgsdZMs/cZ18lwiCzriu/Sms3LnN7mCVu
-         AX3spXVw4a+LWCFTlWDnx6DiV9RtQXFvNVbvJCzDFIMi+NiFQDQJ12FOZiFikoh2jUj6
-         zgVJBYhMLTXOVlIuvrgdBJDZeBGAh9+G+AvLciJIMfZLoUVYntljkK2FGmxVdr7E8KnG
-         xqaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7XHqJCL0YK4FWR7GzNLRu43PKAghRuEUD3cVbOeK4pc=;
-        b=26NFz9m+UrDvQbQZi3FdUxISGVXtPMlXyseVQspgKngFacliVIsNV+GEMO5itHZfc0
-         m6BkGF9ZwPMiEwELyipuS1mK/jkJUi4umfCcodU4R4V/g03PBhFKLy3psk8b2lyvXWj0
-         YZHlDCEQxOt2ZLSIZm0nasE1e7juHP+xY1KD05LIvAv/OUsjF2FQtyxXdCiTu7UDPXCU
-         0dpkRUkr3REkd7YrMr/G+SLbE+i7WJRJnCvCX3dmQ+0mhuv+F2y3MOOyN29TI9vq9wUi
-         ZMofm6pKBzXjya93f6czgBKqp25mWaGgJFK8A/lS7NSmunZb6bsGM6YdC6OdzBC3UDW4
-         u7AA==
-X-Gm-Message-State: ANoB5pnN1L8Drb0cWY1OIHP2KkZBC7/blPyU5aqKFnsy015mSX2iqUf0
-        I66U52mi3T1rgQgPXLr0cOx9PA==
-X-Google-Smtp-Source: AA0mqf6pdFfstKJyCAQ+qo2FaE+Oe7pKTfzd5xV3uB77OxzJDzvCKK6xDxHPqab+QlA2Ia026Y5tNw==
-X-Received: by 2002:adf:e7cd:0:b0:236:960f:161d with SMTP id e13-20020adfe7cd000000b00236960f161dmr28379737wrn.376.1669738305611;
-        Tue, 29 Nov 2022 08:11:45 -0800 (PST)
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id n26-20020a05600c3b9a00b003c6b70a4d69sm3144522wms.42.2022.11.29.08.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Nov 2022 08:11:45 -0800 (PST)
-From:   Naresh Solanki <naresh.solanki@9elements.com>
-X-Google-Original-From: Naresh Solanki <Naresh.Solanki@9elements.com>
-To:     devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Naresh Solanki <Naresh.Solanki@9elements.com>,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH v8 4/4] hwmon: (max6639) Add pwm support
-Date:   Tue, 29 Nov 2022 17:11:34 +0100
-Message-Id: <20221129161134.2672474-5-Naresh.Solanki@9elements.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20221129161134.2672474-1-Naresh.Solanki@9elements.com>
-References: <20221129161134.2672474-1-Naresh.Solanki@9elements.com>
+        with ESMTP id S235626AbiK2QYy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 29 Nov 2022 11:24:54 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4912EF43
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Nov 2022 08:24:53 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p03Pd-0002zD-JP; Tue, 29 Nov 2022 17:24:49 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p03Pb-0017EK-U5; Tue, 29 Nov 2022 17:24:48 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p03Pb-001Gn4-Jm; Tue, 29 Nov 2022 17:24:47 +0100
+Date:   Tue, 29 Nov 2022 17:24:47 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/5] pwm: jz4740: Fix pin level of disabled TCU2
+ channels, part 2
+Message-ID: <20221129162447.sqa6veugc2xn6vui@pengutronix.de>
+References: <20221024205213.327001-1-paul@crapouillou.net>
+ <20221024205213.327001-3-paul@crapouillou.net>
+ <20221025064410.brrx5faa4jtwo67b@pengutronix.de>
+ <Y90BKR.1BA4VWKIBIKU@crapouillou.net>
+ <20221128143911.n3woy6mjom5n4sad@pengutronix.de>
+ <8VZ3MR.B9R316RWSFMQ@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qrmmrpl6dvcpt7ff"
+Content-Disposition: inline
+In-Reply-To: <8VZ3MR.B9R316RWSFMQ@crapouillou.net>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add pwm support for max6639. Also configure pwm fan speed based on pwm
-provided in DT.
 
-Signed-off-by: Naresh Solanki <Naresh.Solanki@9elements.com>
----
- drivers/hwmon/Kconfig   |   1 +
- drivers/hwmon/max6639.c | 243 +++++++++++++++++++++++++++++++++++++---
- 2 files changed, 230 insertions(+), 14 deletions(-)
+--qrmmrpl6dvcpt7ff
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 3176c33af6c6..56d9004b7a38 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1115,6 +1115,7 @@ config SENSORS_MAX6621
- config SENSORS_MAX6639
- 	tristate "Maxim MAX6639 sensor chip"
- 	depends on I2C
-+	depends on PWM
- 	help
- 	  If you say yes here you get support for the MAX6639
- 	  sensor chips.
-diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
-index e09358713bef..302186532e0f 100644
---- a/drivers/hwmon/max6639.c
-+++ b/drivers/hwmon/max6639.c
-@@ -19,6 +19,7 @@
- #include <linux/hwmon-sysfs.h>
- #include <linux/err.h>
- #include <linux/mutex.h>
-+#include <linux/pwm.h>
- 
- /* Addresses to scan */
- static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
-@@ -53,11 +54,17 @@ static const unsigned short normal_i2c[] = { 0x2c, 0x2e, 0x2f, I2C_CLIENT_END };
- #define MAX6639_GCONFIG_PWM_FREQ_HI		0x08
- 
- #define MAX6639_FAN_CONFIG1_PWM			0x80
--
-+#define MAX6639_REG_FAN_CONFIG2a_PWM_POL	0x02
- #define MAX6639_FAN_CONFIG3_THERM_FULL_SPEED	0x40
-+#define MAX6639_FAN_CONFIG3_FREQ_MASK		0x03
-+#define MAX6639_REG_TARGTDUTY_SLOT		120
- 
- static const int rpm_ranges[] = { 2000, 4000, 8000, 16000 };
- 
-+/* Supported PWM frequency */
-+static const unsigned int freq_table[] = { 20, 33, 50, 100, 5000, 8333, 12500,
-+					   25000 };
-+
- #define FAN_FROM_REG(val, rpm_range)	((val) == 0 || (val) == 255 ? \
- 				0 : (rpm_ranges[rpm_range] * 30) / (val))
- #define TEMP_LIMIT_TO_REG(val)	clamp_val((val) / 1000, 0, 255)
-@@ -75,6 +82,9 @@ struct max6639_data {
- 	u16 temp[2];		/* Temperature, in 1/8 C, 0..255 C */
- 	bool temp_fault[2];	/* Detected temperature diode failure */
- 	u8 fan[2];		/* Register value: TACH count for fans >=30 */
-+	struct pwm_device *pwmd[2]; /* max6639 has two pwm device */
-+	u32 target_rpm[2];
-+	u32 max_rpm[2];
- 	u8 status;		/* Detected channel alarms and fan failures */
- 
- 	/* Register values only written to */
-@@ -89,6 +99,8 @@ struct max6639_data {
- 
- 	/* Optional regulator for FAN supply */
- 	struct regulator *reg;
-+	/* max6639 pwm chip */
-+	struct pwm_chip chip;
- };
- 
- static struct max6639_data *max6639_update_device(struct device *dev)
-@@ -279,8 +291,11 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *dev_attr,
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
- 	struct max6639_data *data = dev_get_drvdata(dev);
-+	struct pwm_state state;
-+
-+	pwm_get_state(data->pwmd[attr->index], &state);
- 
--	return sprintf(buf, "%d\n", data->pwm[attr->index] * 255 / 120);
-+	return sprintf(buf, "%d\n", pwm_get_relative_duty_cycle(&state, 255));
- }
- 
- static ssize_t pwm_store(struct device *dev,
-@@ -289,9 +304,9 @@ static ssize_t pwm_store(struct device *dev,
- {
- 	struct sensor_device_attribute *attr = to_sensor_dev_attr(dev_attr);
- 	struct max6639_data *data = dev_get_drvdata(dev);
--	struct i2c_client *client = data->client;
- 	unsigned long val;
- 	int res;
-+	struct pwm_state state;
- 
- 	res = kstrtoul(buf, 10, &val);
- 	if (res)
-@@ -299,12 +314,12 @@ static ssize_t pwm_store(struct device *dev,
- 
- 	val = clamp_val(val, 0, 255);
- 
--	mutex_lock(&data->update_lock);
--	data->pwm[attr->index] = (u8)(val * 120 / 255);
--	i2c_smbus_write_byte_data(client,
--				  MAX6639_REG_TARGTDUTY(attr->index),
--				  data->pwm[attr->index]);
--	mutex_unlock(&data->update_lock);
-+	pwm_get_state(data->pwmd[attr->index], &state);
-+	pwm_set_relative_duty_cycle(&state, val, 255);
-+	res = pwm_apply_state(data->pwmd[attr->index], &state);
-+	if (res)
-+		return res;
-+
- 	return count;
- }
- 
-@@ -404,6 +419,7 @@ static int max6639_init_client(struct i2c_client *client,
- 			       struct max6639_data *data)
- {
- 	int i, err;
-+	struct pwm_state state;
- 
- 	/* Reset chip to default values, see below for GCONFIG setup */
- 	err = i2c_smbus_write_byte_data(client, MAX6639_REG_GCONFIG,
-@@ -457,10 +473,11 @@ static int max6639_init_client(struct i2c_client *client,
- 		if (err)
- 			goto exit;
- 
--		/* PWM 120/120 (i.e. 100%) */
--		data->pwm[i] = 120;
--		err = i2c_smbus_write_byte_data(client,
--				MAX6639_REG_TARGTDUTY(i), data->pwm[i]);
-+		/* Configure PWM controller */
-+		pwm_get_state(data->pwmd[i], &state);
-+		pwm_set_relative_duty_cycle(&state, data->target_rpm[i],
-+					   data->max_rpm[i]);
-+		err = pwm_apply_state(data->pwmd[i], &state);
- 		if (err)
- 			goto exit;
- 	}
-@@ -539,8 +556,31 @@ static int max6639_probe_child_from_dt(struct i2c_client *client,
- 	}
- 
- 	data->rpm_range[i] = rpm_range_to_reg(maxrpm);
-+	data->max_rpm[i] = maxrpm;
- 
--	return 0;
-+	err = of_property_read_u32(child, "target-rpm", &val);
-+	/* Use provided target RPM else default to maxrpm */
-+	if (!err)
-+		data->target_rpm[i] = val;
-+	else
-+		data->target_rpm[i] = maxrpm;
-+
-+	/* Get pwms property for PWM control */
-+	data->pwmd[i] = devm_fwnode_pwm_get(dev, &child->fwnode, NULL);
-+
-+	if (!IS_ERR(data->pwmd[i]))
-+		return 0;
-+
-+	if (PTR_ERR(data->pwmd[i]) == -EPROBE_DEFER)
-+		return PTR_ERR(data->pwmd[i]);
-+
-+	dev_dbg(dev, "Using chip default PWM");
-+	data->pwmd[i] = pwm_request_from_chip(&data->chip, i, NULL);
-+	if (!IS_ERR(data->pwmd[i]))
-+		return 0;
-+
-+	dev_dbg(dev, "Failed to configure pwm for fan %d", i);
-+	return PTR_ERR_OR_ZERO(data->pwmd[i]);
- }
- static int max6639_probe_from_dt(struct i2c_client *client,
- 				struct max6639_data *data)
-@@ -568,6 +608,172 @@ static int max6639_probe_from_dt(struct i2c_client *client,
- 	return 0;
- }
- 
-+static struct max6639_data *to_max6639_pwm(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct max6639_data, chip);
-+}
-+
-+static void max6639_pwm_get_state(struct pwm_chip *chip,
-+				  struct pwm_device *pwm,
-+				  struct pwm_state *state)
-+{
-+
-+	struct max6639_data *data = to_max6639_pwm(chip);
-+	struct i2c_client *client = data->client;
-+	int value, i = pwm->hwpwm, x;
-+	unsigned int freq;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	value = i2c_smbus_read_byte_data(client, MAX6639_REG_FAN_CONFIG1(i));
-+	if (value < 0)
-+		goto abort;
-+
-+	if (value & MAX6639_FAN_CONFIG1_PWM) {
-+		state->enabled = true;
-+
-+		/* Determine frequency from respective registers */
-+		value = i2c_smbus_read_byte_data(client,
-+						 MAX6639_REG_FAN_CONFIG3(i));
-+		if (value < 0)
-+			goto abort;
-+		x = value & MAX6639_FAN_CONFIG3_FREQ_MASK;
-+
-+		value = i2c_smbus_read_byte_data(client, MAX6639_REG_GCONFIG);
-+		if (value < 0)
-+			goto abort;
-+		if (value & MAX6639_GCONFIG_PWM_FREQ_HI)
-+			x |= 0x4;
-+		x &= 0x7;
-+		freq = freq_table[x];
-+
-+		state->period = DIV_ROUND_UP(NSEC_PER_SEC, freq);
-+
-+		value = i2c_smbus_read_byte_data(client,
-+						 MAX6639_REG_TARGTDUTY(i));
-+		if (value < 0)
-+			goto abort;
-+		/* max6639 supports 120 slots only */
-+		state->duty_cycle = mul_u64_u32_div(state->period, value, 120);
-+
-+		value = i2c_smbus_read_byte_data(client,
-+						 MAX6639_REG_FAN_CONFIG2a(i));
-+		if (value < 0)
-+			goto abort;
-+		value &= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		state->polarity = (value != 0);
-+	} else
-+		state->enabled = false;
-+
-+abort:
-+	mutex_unlock(&data->update_lock);
-+
-+}
-+
-+static int max6639_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct max6639_data *data = to_max6639_pwm(chip);
-+	struct i2c_client *client = data->client;
-+	int value = 0, i = pwm->hwpwm, x;
-+	unsigned int freq;
-+	struct pwm_state cstate;
-+
-+	cstate = pwm->state;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	if (state->period != cstate.period) {
-+		/* Configure frequency */
-+		freq = DIV_ROUND_UP_ULL(NSEC_PER_SEC, state->period);
-+		/* Chip supports limited number of frequency */
-+		for (x = 0; x < sizeof(freq_table); x++)
-+			if (freq <= freq_table[x])
-+				break;
-+
-+		value = i2c_smbus_read_byte_data(client,
-+						 MAX6639_REG_FAN_CONFIG3(i));
-+		if (value < 0)
-+			goto abort;
-+		value &= ~MAX6639_FAN_CONFIG3_FREQ_MASK;
-+		value |= (x & MAX6639_FAN_CONFIG3_FREQ_MASK);
-+		value = i2c_smbus_write_byte_data(client,
-+						  MAX6639_REG_FAN_CONFIG3(i),
-+						  value);
-+
-+		value = i2c_smbus_read_byte_data(client, MAX6639_REG_GCONFIG);
-+		if (value < 0)
-+			goto abort;
-+
-+		if (x >> 2)
-+			value &= ~MAX6639_GCONFIG_PWM_FREQ_HI;
-+		else
-+			value |= MAX6639_GCONFIG_PWM_FREQ_HI;
-+		value = i2c_smbus_write_byte_data(client, MAX6639_REG_GCONFIG,
-+						  value);
-+		if (value < 0)
-+			goto abort;
-+	}
-+
-+	/* Configure dutycycle */
-+	if (state->duty_cycle != cstate.duty_cycle ||
-+	    state->period != cstate.period) {
-+		value = DIV_ROUND_DOWN_ULL(
-+				state->duty_cycle * MAX6639_REG_TARGTDUTY_SLOT,
-+				state->period);
-+		value = i2c_smbus_write_byte_data(client,
-+						  MAX6639_REG_TARGTDUTY(i),
-+						  value);
-+		if (value < 0)
-+			goto abort;
-+	}
-+
-+	/* Configure polarity */
-+	if (state->polarity != cstate.polarity) {
-+		value = i2c_smbus_read_byte_data(client,
-+						 MAX6639_REG_FAN_CONFIG2a(i));
-+		if (value < 0)
-+			goto abort;
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			value |= MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		else
-+			value &= ~MAX6639_REG_FAN_CONFIG2a_PWM_POL;
-+		value = i2c_smbus_write_byte_data(client,
-+						  MAX6639_REG_FAN_CONFIG2a(i),
-+						  value);
-+		if (value < 0)
-+			goto abort;
-+	}
-+
-+	if (state->enabled == cstate.enabled)
-+		goto abort;
-+
-+	value = i2c_smbus_read_byte_data(client, MAX6639_REG_FAN_CONFIG1(i));
-+	if (value < 0)
-+		goto abort;
-+	if (state->enabled)
-+		value |= MAX6639_FAN_CONFIG1_PWM;
-+	else
-+		value &= ~MAX6639_FAN_CONFIG1_PWM;
-+
-+	value = i2c_smbus_write_byte_data(client, MAX6639_REG_FAN_CONFIG1(i),
-+					  value);
-+	if (value < 0)
-+		goto abort;
-+	value = 0;
-+
-+abort:
-+	mutex_unlock(&data->update_lock);
-+
-+	return value;
-+}
-+
-+static const struct pwm_ops max6639_pwm_ops = {
-+	.apply = max6639_pwm_apply,
-+	.get_state = max6639_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
- static int max6639_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
-@@ -581,6 +787,15 @@ static int max6639_probe(struct i2c_client *client)
- 
- 	data->client = client;
- 
-+	/* Add PWM controller of max6639 */
-+	data->chip.dev = dev;
-+	data->chip.ops = &max6639_pwm_ops;
-+	data->chip.npwm = 2;
-+
-+	err = devm_pwmchip_add(dev, &data->chip);
-+	if (err < 0)
-+		return dev_err_probe(dev, err, "failed to add PWM chip\n");
-+
- 	data->reg = devm_regulator_get_optional(dev, "fan");
- 	if (IS_ERR(data->reg)) {
- 		if (PTR_ERR(data->reg) != -ENODEV)
--- 
-2.37.3
+Hello Paul,
 
+On Tue, Nov 29, 2022 at 12:25:56PM +0000, Paul Cercueil wrote:
+> Hi Uwe,
+>=20
+> Le lun. 28 nov. 2022 =E0 15:39:11 +0100, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> a =E9crit :
+> > Hello,
+> >=20
+> > On Tue, Oct 25, 2022 at 11:10:46AM +0100, Paul Cercueil wrote:
+> > > > Note that for disabled PWMs there is no official guaranty about the=
+ pin
+> > > > state. So it would be ok (but admittedly not great) to simplify the
+> > > > driver and accept that the pinstate is active while the PWM is off.
+> > > > IMHO this is also better than a glitch.
+> > > >
+> > > > If a consumer wants the PWM to be in its inactive state, they should
+> > > > not disable it.
+> > >=20
+> > > Completely disagree. I absolutely do not want the backlight to go full
+> > > bright mode when the PWM pin is disabled. And disabling the backlight=
+ is a
+> > > thing (for screen blanking and during mode changes).
+> >=20
+> > For some hardwares there is no pretty choice. So the gist is: If the
+> > backlight driver wants to ensure that the PWM pin is driven to its
+> > inactive level, it should use:
+> >=20
+> > 	pwm_apply(pwm, { .period =3D ..., .duty_cycle =3D 0, .enabled =3D true=
+ });
+> >=20
+> > and better not
+> >=20
+> > 	pwm_apply(pwm, { ..., .enabled =3D false });
+>=20
+> Well that sounds pretty stupid to me; why doesn't the PWM subsystem enfor=
+ce
+> that the pins must be driven to their inactive level when the PWM function
+> is disabled?
+>=20
+> Then for such hardware you describe, the corresponding PWM
+> driver could itself apply a duty_cycle =3D 0 if that's what it takes to g=
+et an
+> inactive state.
+
+Let's assume we claim that on disable the pin is driven to the inactive lev=
+el.
+
+The (bad) effect is that for a use case where the pin state doesn't
+matter (e.g. a backlight where the power regulator is off), the PWM
+keeps running even though it could be disabled and so save some power.
+
+So to make this use case properly supported, we need another flag in
+struct pwm_state that allows the consumer to tell the lowlevel driver
+that it's ok to disable the hardware even with the output being UB.
+Let's call this new flag "spam" and the pin is allowed to do whatever it
+wants with .spam =3D false.
+
+After that you can realize that applying any state with:
+
+	.duty_cycle =3D A,
+	.period =3D B,
+	.polarity =3D C,
+	.enabled =3D false,
+	.spam =3D true,
+
+semantically (i.e. just looking at the output) has the same effect as
+
+	.duty_cycle =3D 0,
+	.period =3D $something,
+	.polarity =3D C,
+	.enabled =3D true,
+	.spam =3D true,
+
+So having .enabled doesn't add to the expressiveness of pwm_apply(),
+because you can specify any configuration without having to resort to
+=2Eenabled =3D false. So the enabled member of struct pwm_state can be
+dropped.
+
+Then we end up with the exact scenario we have now, just that the flag
+that specifies if the output should be held in the inactive state has a
+bad name.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qrmmrpl6dvcpt7ff
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOGMkwACgkQwfwUeK3K
+7AlUsgf+LpMJoHdd3/SM9UwRd04VHIptKQn1IOnh8MRrgFEppdeUpA8csEChotzb
+6DuYP2hId2a0PsZNssjURCX7LWsuLsqhIyXlsu8XcwAUgVEd/eBQ9rp3oV+BJWfs
+Agfcxm5INTB7+8FfUf1f57K1El+1wwft34zovBAP8zcP7kBgkGObwFVptSXJaIgx
+qOsD087Y+765gyFU9wvAbptR2DRhAGYifjrgxcE08uy36Kg1Kvm8MxHgKJKnBoQB
+3CC1eplbmKUallLkelCnWFCxFdGbgWkMQbfDVrFDVSojAaYPR9H5Is35UbBIR5uG
+YHJ4oX/otJ7ERN7wtiZybpgOWo4tKg==
+=/C6a
+-----END PGP SIGNATURE-----
+
+--qrmmrpl6dvcpt7ff--
