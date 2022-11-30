@@ -2,128 +2,195 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE73F63D41D
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Nov 2022 12:15:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D88B63D944
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Nov 2022 16:22:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbiK3LPg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 30 Nov 2022 06:15:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
+        id S229823AbiK3PWt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 30 Nov 2022 10:22:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbiK3LPf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Nov 2022 06:15:35 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DE728E14;
-        Wed, 30 Nov 2022 03:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1669806932; x=1701342932;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=h8e+dDcveIhXtv4l23Jh2CJfpqVLFmQPAuoBcBH7Hyk=;
-  b=tFwxku4b3ckw94Obe6IOGzG0ixxBoiGXkGEVNBSN6JhfSEIVr83ikMQv
-   xlVe0N5xREFbja6KY/4uNiHCd2QUZeN8sDMdgf1tbHgummOEvRr0XF5Xb
-   hnF3DBNHsp90X1G094SKYMAQKEt6FbLCjhbreJLR9K0Lc4s7kPwQ7LkCn
-   1/vVIkTAzVmwJSQRSgbBl4wAdh4kasQXbMdhbgFCQo1CFKxSOxIhXURMP
-   wXl0rl10wXtWW9fE+IpnSgK47v7zRSxGfRlXkBjb7/x5V/RmFQIQwnsIO
-   tGSLV5SGjJGgrqb5k8/mGSRgV2efcNG+L2OFRLtFwgdhrHqaEK/mNfl+9
-   A==;
-X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="189334692"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Nov 2022 04:15:31 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 30 Nov 2022 04:15:30 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Wed, 30 Nov 2022 04:15:29 -0700
-Date:   Wed, 30 Nov 2022 11:15:10 +0000
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        with ESMTP id S229768AbiK3PWs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Nov 2022 10:22:48 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D27C42A94D
+        for <linux-pwm@vger.kernel.org>; Wed, 30 Nov 2022 07:22:45 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p0OuS-00009r-WF; Wed, 30 Nov 2022 16:22:05 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p0OuI-001LdM-Fl; Wed, 30 Nov 2022 16:21:55 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p0OuI-001VqY-Bk; Wed, 30 Nov 2022 16:21:54 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-CC:     Conor Dooley <conor@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v12 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <Y4c7PpgzAi+HPrET@wendy>
-References: <20221110093512.333881-1-conor.dooley@microchip.com>
- <20221110093512.333881-2-conor.dooley@microchip.com>
- <20221117164950.cssukd63fywzuwua@pengutronix.de>
- <Y3Zxkt3OSPQc46Q2@spud>
- <20221117210433.n5j7upqqksld42mu@pengutronix.de>
- <Y3avobkvYK3ydKTS@spud>
- <Y3uZY5mt/ZIWk3sS@wendy>
- <Y4coL74qQX80TNaT@wendy>
- <20221130103755.lhil2jaw3oufr2sf@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Douglas Anderson <dianders@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Walle <michael@walle.cc>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Satya Priya <quic_c_skakit@quicinc.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>
+Subject: [PATCH v2 00/11] pwm: Allow .get_state to fail
+Date:   Wed, 30 Nov 2022 16:21:37 +0100
+Message-Id: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4201; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=OJndCEVt3aO3P0WDGIcSb4svVqFYr4L7BRkc05e7KK8=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjh3TeeKE42zO/dADA8GIRueUo9ayiBLrzlu5BRvEE w4nESiyJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY4d03gAKCRDB/BR4rcrsCSMiB/ 9P92eEh5i/ykm3IhBfm7shzbMkb/wG7nDkc+vvv70Z73UbyxFvKLzsJ+xK5VXqTCLlo8DUkfo9BJPh gr8T1RvP6HUtOELqCuQE6ruqv9wlN28AYIytMCoO+QvOqLdbM84LW89W1fK1B6ImECmggYrGw60CXE f7Rv+b9z4cETy+dLsOSVyQ0zsix7/7HyoqlinRbwr3R1SJewjSjU++PJ6H8LCe6DcYMwdJkpBaC2Ol hVLwWlo1eF82Cow8M5bd0+XSEZXpG5oFaf6CebgL+JYlfUHRWLzOpJpq6RAXCmfilUqisk0cROhhop q2OYuXh1amqkiMJYz8hRni9/YulIOt
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221130103755.lhil2jaw3oufr2sf@pengutronix.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 11:37:55AM +0100, Uwe Kleine-König wrote:
-> Hello Conor,
+Hello,
 
-> > > get_state() returns void though, is it valid behaviour to wait for the
-> > > timeout there?
-> 
-> There was an approach to change that, see
-> https://lore.kernel.org/linux-pwm/20220916151506.298488-1-u.kleine-koenig@pengutronix.de
-> 
-> I need to send a v2.
+I forgot about this series and was remembered when I talked to Conor
+Dooley about how .get_state() should behave in an error case.
 
-Ahh, yeah. That looks like a better idea. I'd much rather be able to
-return an actual error.
+Compared to (implicit) v1, sent with Message-Id: 20220916151506.298488-1-u.kleine-koenig@pengutronix.de
+I changed:
 
-> > > I had a check in the core code and found some places where the call in
-> > > looks like:
-> > > 	struct pwm_state s1, s2; 
-> > > 	chip->ops->get_state(chip, pwm, &s1);
-> > > In this case, exiting early would leave us with a completely wrong
-> > > idead of the state, if it was to time out.
-> > > 
-> > > Either way, it seems like either way we would be misleading the caller
-> > > of get_state() - perhaps the way around that is to do the wait & then
-> > > just carry on with get_state()?
-> > > In that scenario, you'd get the new settings where possible and the old ones
-> > > otherwise.
-> > > Returning if the timeout is hit would give you the new settings where possible
-> > > & otherwise you'd get whatever was passed to get_state().
-> > > I'm not really sure which of those two situations would be preferred?
-> 
-> Hmm, .get_state should not return the old state. We really want
-> .get_state to return an error code. Maybe postpone that question until
-> we have that?
+ - Patch #1 which does the prototype change now just adds "return 0" to
+   all implementations and so gets simpler and doesn't change behaviour.
+   The adaptions to the different .get_state() implementations are split
+   out into individual patches to ease review.
+ - One minor inconsistency fixed in "pwm: Handle .get_state() failures"
+   that I noticed while looking into this patch.
+ - I skipped changing sun4i.c as I don't know how to handle the error
+   there. Someone might want to have a look. (That's not ideal, but it's
+   not worse than the same issue before this series.)
 
-If get_state() can return an error, there's no need for the question I
-think. I'd rather return what's in the shadow registers *and* on the bus
-or an error than an inconsistent state.
+In v1 Thierry had the concern:
 
-I'll send a v(N+1) based on the non-void get_state() at some point
-soon-ish.
+| That raises the question about what to do in these cases. If we return
+| an error, that could potentially throw off consumers. So perhaps the
+| closest would be to return a disabled PWM? Or perhaps it'd be up to the
+| consumer to provide some fallback configuration for invalidly configured
+| or unconfigured PWMs.
 
-> > Apologies for bumping this, I was wondering if any thoughts on the
-> > above? I'm not sure which is the lesser evil here (or if I have
-> > misunderstood something).
-> 
-> That's fine. I'm sorry to be not more responsive. This development cycle
-> is somehow crazy and there are so many open mails in my inbox ... :-\
+.get_state() is only called in pwm_device_request on a pwm_state that a
+consumer might see. Before my series a consumer might have seen a
+partial modified pwm_state (because .get_state() might have modified
+.period, then stumbled and returned silently). The last patch ensures
+that this partial modification isn't given out to the consumer. Instead
+they now see the same as if .get_state wasn't implemented at all.
 
-Oh nw about that at all. I feel bad pinging stuff since I know everyone
-is busy.
+Best regards
+Uwe
 
-Thanks,
-Conor.
+Uwe Kleine-KÃ¶nig (11):
+  pwm: Make .get_state() callback return an error code
+  pwm/tracing: Also record trace events for failed API calls
+  drm/bridge: ti-sn65dsi86: Propagate errors in .get_state() to the
+    caller
+  leds: qcom-lpg: Propagate errors in .get_state() to the caller
+  pwm: crc: Propagate errors in .get_state() to the caller
+  pwm: cros-ec: Propagate errors in .get_state() to the caller
+  pwm: imx27: Propagate errors in .get_state() to the caller
+  pwm: mtk-disp: Propagate errors in .get_state() to the caller
+  pwm: rockchip: Propagate errors in .get_state() to the caller
+  pwm: sprd: Propagate errors in .get_state() to the caller
+  pwm: Handle .get_state() failures
+
+ drivers/gpio/gpio-mvebu.c             |  9 ++++++---
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
+ drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
+ drivers/pwm/core.c                    | 28 +++++++++++++++++----------
+ drivers/pwm/pwm-atmel.c               |  6 ++++--
+ drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
+ drivers/pwm/pwm-crc.c                 | 10 ++++++----
+ drivers/pwm/pwm-cros-ec.c             |  8 +++++---
+ drivers/pwm/pwm-dwc.c                 |  6 ++++--
+ drivers/pwm/pwm-hibvt.c               |  6 ++++--
+ drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
+ drivers/pwm/pwm-imx27.c               |  8 +++++---
+ drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
+ drivers/pwm/pwm-iqs620a.c             |  6 ++++--
+ drivers/pwm/pwm-keembay.c             |  6 ++++--
+ drivers/pwm/pwm-lpss.c                |  6 ++++--
+ drivers/pwm/pwm-meson.c               |  8 +++++---
+ drivers/pwm/pwm-mtk-disp.c            | 12 +++++++-----
+ drivers/pwm/pwm-pca9685.c             |  8 +++++---
+ drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
+ drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
+ drivers/pwm/pwm-sifive.c              |  6 ++++--
+ drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
+ drivers/pwm/pwm-sprd.c                |  8 +++++---
+ drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
+ drivers/pwm/pwm-sun4i.c               | 12 +++++++-----
+ drivers/pwm/pwm-sunplus.c             |  6 ++++--
+ drivers/pwm/pwm-visconti.c            |  6 ++++--
+ drivers/pwm/pwm-xilinx.c              |  8 +++++---
+ include/linux/pwm.h                   |  4 ++--
+ include/trace/events/pwm.h            | 20 +++++++++----------
+ 31 files changed, 174 insertions(+), 109 deletions(-)
+
+
+base-commit: 50315945d178eebec4e8e2c50c265767ddb926eb
+-- 
+2.38.1
 
