@@ -2,145 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4050063F170
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 14:19:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C40963F199
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 14:29:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbiLANTh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 1 Dec 2022 08:19:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33294 "EHLO
+        id S231217AbiLAN3Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 1 Dec 2022 08:29:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbiLANTf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 08:19:35 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5569A1C2E
-        for <linux-pwm@vger.kernel.org>; Thu,  1 Dec 2022 05:19:34 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p0jT6-0005zw-Lz; Thu, 01 Dec 2022 14:19:12 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p0jT1-001alJ-Sp; Thu, 01 Dec 2022 14:19:08 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p0jT1-001ng9-TI; Thu, 01 Dec 2022 14:19:07 +0100
-Date:   Thu, 1 Dec 2022 14:19:07 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S231164AbiLAN3Y (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 08:29:24 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC008A9CFB;
+        Thu,  1 Dec 2022 05:29:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1669901362; x=1701437362;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=uzYyfpe5ovcmHtziruShrAihFDRO3ojyXNM6UnYgYzM=;
+  b=tmHPurYXVLVpFYdLIqgvPMlbkSnnU1cf61uor8EnedPd6W6EiRJ2/9L2
+   9LYu66/FnTpawxLZnYi2WzvCsOGfqeX9ruSm2407lvDaG6+BoIL7cvnoW
+   j3ag1ouTyhU2k0qPX43lzIKbY0jDEBbV6JUldQ0trVVpFBqBD5PcGGiH9
+   ehspGwxj8pjoNHlohJCQrR5qDO0lWu9bVWCvBXQuxgw3tBY1DT6+ZfMRZ
+   rshnmCO43TlbTZNjAnXrIdJniAsnLRFj2Idg4Zh7I0GAYn9HMnhHZ4uXq
+   juXqDDqIcDdjlUgIjc0OKzTvwwZ2lC+E+kp4N+8lBZf58cwmfjUbX16FQ
+   g==;
+X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
+   d="scan'208";a="125998122"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Dec 2022 06:29:21 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Thu, 1 Dec 2022 06:29:09 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
+ Transport; Thu, 1 Dec 2022 06:29:01 -0700
+Date:   Thu, 1 Dec 2022 13:28:42 +0000
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        dri-devel@lists.freedesktop.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <dri-devel@lists.freedesktop.org>,
+        "Douglas Anderson" <dianders@chromium.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Satya Priya <quic_c_skakit@quicinc.com>,
         Pavel Machek <pavel@ucw.cz>,
-        Guenter Roeck <groeck@chromium.org>,
+        "Guenter Roeck" <groeck@chromium.org>,
         Marijn Suijten <marijn.suijten@somainline.org>,
         Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-riscv@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        chrome-platform@lists.linux.dev,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        <linux-riscv@lists.infradead.org>, <linux-leds@vger.kernel.org>,
+        "Jerome Brunet" <jbrunet@baylibre.com>,
+        <chrome-platform@lists.linux.dev>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
         Samuel Holland <samuel@sholland.org>,
-        Sean Anderson <sean.anderson@seco.com>,
+        "Sean Anderson" <sean.anderson@seco.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Michal Simek <michal.simek@xilinx.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
+        <linux-stm32@st-md-mailman.stormreply.com>,
         Hammer Hsieh <hammerh0314@gmail.com>,
-        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        <linux-rockchip@lists.infradead.org>, Chen-Yu Tsai <wens@csie.org>,
         Matthias Kaehlcke <mka@chromium.org>,
-        Broadcom internal kernel review list 
+        "Broadcom internal kernel review list" 
         <bcm-kernel-feedback-list@broadcom.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Orson Zhai <orsonzhai@gmail.com>, linux-sunxi@lists.linux.dev,
-        linux-pwm@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        <linux-sunxi@lists.linux.dev>, <linux-pwm@vger.kernel.org>,
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
+        "Stephen Boyd" <swboyd@chromium.org>, <linux-gpio@vger.kernel.org>,
         Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
         Baolin Wang <baolin.wang@linux.alibaba.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-amlogic@lists.infradead.org,
-        Benson Leung <bleung@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
         Scott Branden <sbranden@broadcom.com>,
         Bjorn Andersson <andersson@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Michael Walle <michael@walle.cc>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Michael Walle" <michael@walle.cc>,
         Palmer Dabbelt <palmer@dabbelt.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
 Subject: Re: [PATCH v2 00/11] pwm: Allow .get_state to fail
-Message-ID: <20221201131907.bmrenldnua7uaeab@pengutronix.de>
+Message-ID: <Y4isCnKP9pTacksl@wendy>
 References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
  <Y4iL9xf5bJM5pyeR@wendy>
+ <20221201131907.bmrenldnua7uaeab@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="twdnam2bj5te67tc"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <Y4iL9xf5bJM5pyeR@wendy>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221201131907.bmrenldnua7uaeab@pengutronix.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Dec 01, 2022 at 02:19:07PM +0100, Uwe Kleine-König wrote:
+> Hello Conor,
+> 
+> On Thu, Dec 01, 2022 at 11:11:51AM +0000, Conor Dooley wrote:
+> > TL;DR, I quite like the ability to return an error and not mislead the
+> > caller.
+> 
+> Is this an Ack?
 
---twdnam2bj5te67tc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is if you want it to be! I didn't really feel qualified to do so
+which is why I gave some context etc.
 
-Hello Conor,
+I did check out the callsites for the non-void returning op, and it
+looked good to me, so sure, why not:
 
-On Thu, Dec 01, 2022 at 11:11:51AM +0000, Conor Dooley wrote:
-> TL;DR, I quite like the ability to return an error and not mislead the
-> caller.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Is this an Ack?
+Thanks,
+Conor.
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---twdnam2bj5te67tc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOIqcgACgkQwfwUeK3K
-7Am3+gf9HQlrVI1DS5daIvtH5ajPj10gQCf7wUVcwdDqDzHuJW7mEQVvG1vEEaVC
-1sZxg13cFekIRhMzVMDj6JMG7MCuBqT0KWFDrstMLC2g7ot2+xZ6iJXXJL/3AQSm
-pf/UiOQYYN7VXn0Wpf8L2FkfFuTglAuZE6bLdE2t1/+pQnp9oR81aoPWJgZ8vhax
-WOkQYiH16UpgLNbhu7dV4133nkA6dfsSG+DrZjPy9vDdjCyDXUpxPnldpcHu+KCh
-zRNQ9gX0bYT60vQejp9169VriwhcHhts0uT6AnSYVw/MzYrwx/pJu9bdq+iq86Uc
-bMsdCWzzY9XerANJF7JdTMcJrfah8w==
-=luMq
------END PGP SIGNATURE-----
-
---twdnam2bj5te67tc--
