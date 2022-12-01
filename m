@@ -2,53 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E5163EA24
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 08:09:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1A1763EAC4
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 09:03:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbiLAHJ6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 1 Dec 2022 02:09:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
+        id S229671AbiLAIDx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 1 Dec 2022 03:03:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229678AbiLAHJ5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 02:09:57 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8998A45A2A
-        for <linux-pwm@vger.kernel.org>; Wed, 30 Nov 2022 23:09:56 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p0dhd-0003np-8T; Thu, 01 Dec 2022 08:09:49 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p0dha-001VIm-T0; Thu, 01 Dec 2022 08:09:47 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p0dhb-001gym-0c; Thu, 01 Dec 2022 08:09:47 +0100
-Date:   Thu, 1 Dec 2022 08:09:38 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 02/11] pwm/tracing: Also record trace events for
- failed API calls
-Message-ID: <20221201070938.nk2ifi52dwtuenq7@pengutronix.de>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
- <20221130152148.2769768-3-u.kleine-koenig@pengutronix.de>
- <20221130151511.7f0d4fa3@gandalf.local.home>
+        with ESMTP id S229593AbiLAIDw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 03:03:52 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167AD2EF7D
+        for <linux-pwm@vger.kernel.org>; Thu,  1 Dec 2022 00:03:50 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id h12so1348065wrv.10
+        for <linux-pwm@vger.kernel.org>; Thu, 01 Dec 2022 00:03:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:reply-to:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=RAIQbbxtK2nJ1NbUghrZ93yJMEm2LyReQuktQwQ+yXw=;
+        b=Lo8p+aDFlKlZfG6pP0n7RZNEjwZK+wrouNetRK3rZv63MbeCUctT1ieDjkKZxl3LvQ
+         1IUxcYuylIWjoy7vKgfrNL5bEmzdei5+43ayKtzqRIyOjWYlsoDieQD7IgspPDeYN4Rg
+         g0Tg2r6urLUhUddkFA8F1g+Y6MZ6LYzNVPQKNUdc62bCqGXALe+tEuJdy6U6nHFQ1VTs
+         pd9A/smgMPI5kbQN+yqEnGZNPKCbNRwE4VhlqdS4p01McAPr9GKRJDIzQjVNyphai7am
+         M+pt/qh8ja70rWDWaq5xcHGdzPkZEr0JVoVeIN0FLdIf+5vnAZEi/TDzF6dIxj4puvKU
+         V1rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:reply-to:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RAIQbbxtK2nJ1NbUghrZ93yJMEm2LyReQuktQwQ+yXw=;
+        b=CmRzIvFk04Y/LZ4xqMtdb8wJMXyFEUZysghDDI67ZtM1LbJBsS30u7iBqYMNhsXgtH
+         M45mZYSy5QpJgupShTL1ed3WaFLtJj65Z23VCIVAeaBbI3rP+Eh3bGQZJnI8Xc6PnCt1
+         HStbTM4tCwX7inEozNZIVXkNfHJV+cfaK6Ow2PsOi6JVe2H6ee5RDjNasb3UXNoaTtTU
+         wqT/PJtLlMjkO/Eyl//oaW2G5xrswPrM1cDU8/a0tsaXkCvNukdLb5NS1W/JJY06z6qP
+         A2WGYtyrgulPc6mNRFQBO2mkzch5U+xAeIrBNbCsAoJr8iIW5//einV3f37R76vTAkBR
+         IDww==
+X-Gm-Message-State: ANoB5pkxlBkxKa+zyLyjM8/IHQNxdtlvFI37VXM2OQcrob66BBl4QLUj
+        9PYrDKzps15AjaJOCoRbuO99zA==
+X-Google-Smtp-Source: AA0mqf54lvafHdVKKM2CGBzb3Ly91fbeS37TZTU/o75hgaix+kcG2rGxchFiaWC/vEjl7eP4KzxYJQ==
+X-Received: by 2002:a05:6000:1d92:b0:241:6e0a:bfe6 with SMTP id bk18-20020a0560001d9200b002416e0abfe6mr31726074wrb.34.1669881828568;
+        Thu, 01 Dec 2022 00:03:48 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:bec0:73a:70e1:228f? ([2a01:e0a:982:cbb0:bec0:73a:70e1:228f])
+        by smtp.gmail.com with ESMTPSA id az39-20020a05600c602700b003cf78aafdd7sm4517313wmb.39.2022.12.01.00.03.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Dec 2022 00:03:48 -0800 (PST)
+Message-ID: <b19c4956-3f92-f6be-7d61-9b826e5d6fe1@linaro.org>
+Date:   Thu, 1 Dec 2022 09:03:45 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5hvcugvraf4vk4xu"
-Content-Disposition: inline
-In-Reply-To: <20221130151511.7f0d4fa3@gandalf.local.home>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an error
+ code
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Douglas Anderson <dianders@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Walle <michael@walle.cc>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Satya Priya <quic_c_skakit@quicinc.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev
+References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+ <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Organization: Linaro Developer Services
+In-Reply-To: <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,117 +131,116 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 30/11/2022 16:21, Uwe Kleine-König wrote:
+> .get_state() might fail in some cases. To make it possible that a driver
+> signals such a failure change the prototype of .get_state() to return an
+> error code.
+> 
+> This patch was created using coccinelle and the following semantic patch:
+> 
+> @p1@
+> identifier getstatefunc;
+> identifier driver;
+> @@
+>   struct pwm_ops driver = {
+>          ...,
+>          .get_state = getstatefunc
+>          ,...
+>   };
+> 
+> @p2@
+> identifier p1.getstatefunc;
+> identifier chip, pwm, state;
+> @@
+> -void
+> +int
+>   getstatefunc(struct pwm_chip *chip, struct pwm_device *pwm, struct pwm_state *state)
+>   {
+>     ...
+> -  return;
+> +  return 0;
+>     ...
+>   }
+> 
+> plus the actual change of the prototype in include/linux/pwm.h (plus some
+> manual fixing of indentions and empty lines).
+> 
+> So for now all drivers return success unconditionally. They are adapted
+> in the following patches to make the changes easier reviewable.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>   drivers/gpio/gpio-mvebu.c             |  9 ++++++---
+>   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
+>   drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
+>   drivers/pwm/pwm-atmel.c               |  6 ++++--
+>   drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
+>   drivers/pwm/pwm-crc.c                 | 10 ++++++----
+>   drivers/pwm/pwm-cros-ec.c             |  8 +++++---
+>   drivers/pwm/pwm-dwc.c                 |  6 ++++--
+>   drivers/pwm/pwm-hibvt.c               |  6 ++++--
+>   drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
+>   drivers/pwm/pwm-imx27.c               |  8 +++++---
+>   drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
+>   drivers/pwm/pwm-iqs620a.c             |  6 ++++--
+>   drivers/pwm/pwm-keembay.c             |  6 ++++--
+>   drivers/pwm/pwm-lpss.c                |  6 ++++--
+>   drivers/pwm/pwm-meson.c               |  8 +++++---
+>   drivers/pwm/pwm-mtk-disp.c            | 12 +++++++-----
+>   drivers/pwm/pwm-pca9685.c             |  8 +++++---
+>   drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
+>   drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
+>   drivers/pwm/pwm-sifive.c              |  6 ++++--
+>   drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
+>   drivers/pwm/pwm-sprd.c                |  8 +++++---
+>   drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
+>   drivers/pwm/pwm-sun4i.c               | 12 +++++++-----
+>   drivers/pwm/pwm-sunplus.c             |  6 ++++--
+>   drivers/pwm/pwm-visconti.c            |  6 ++++--
+>   drivers/pwm/pwm-xilinx.c              |  8 +++++---
+>   include/linux/pwm.h                   |  4 ++--
+>   29 files changed, 146 insertions(+), 89 deletions(-)
+> 
 
---5hvcugvraf4vk4xu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<snip>
 
-Hello Steven,
+> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> index 57112f438c6d..16d79ca5d8f5 100644
+> --- a/drivers/pwm/pwm-meson.c
+> +++ b/drivers/pwm/pwm-meson.c
+> @@ -318,8 +318,8 @@ static unsigned int meson_pwm_cnt_to_ns(struct pwm_chip *chip,
+>   	return cnt * fin_ns * (channel->pre_div + 1);
+>   }
+>   
+> -static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> -				struct pwm_state *state)
+> +static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			       struct pwm_state *state)
+>   {
+>   	struct meson_pwm *meson = to_meson_pwm(chip);
+>   	struct meson_pwm_channel_data *channel_data;
+> @@ -327,7 +327,7 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	u32 value, tmp;
+>   
+>   	if (!state)
+> -		return;
+> +		return 0;
+>   
+>   	channel = &meson->channels[pwm->hwpwm];
+>   	channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
+> @@ -357,6 +357,8 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>   		state->period = 0;
+>   		state->duty_cycle = 0;
+>   	}
+> +
+> +	return 0;
+>   }
+>   
+>   static const struct pwm_ops meson_pwm_ops = {
 
-On Wed, Nov 30, 2022 at 03:15:11PM -0500, Steven Rostedt wrote:
-> On Wed, 30 Nov 2022 16:21:39 +0100
-> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote:
->=20
-> > diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
-> > index cf243de41cc8..12b35e4ff917 100644
-> > --- a/include/trace/events/pwm.h
-> > +++ b/include/trace/events/pwm.h
-> > @@ -10,9 +10,9 @@
-> > =20
-> >  DECLARE_EVENT_CLASS(pwm,
-> > =20
-> > -	TP_PROTO(struct pwm_device *pwm, const struct pwm_state *state),
-> > +	TP_PROTO(struct pwm_device *pwm, const struct pwm_state *state, int e=
-rr),
-> > =20
-> > -	TP_ARGS(pwm, state),
-> > +	TP_ARGS(pwm, state, err),
-> > =20
-> >  	TP_STRUCT__entry(
-> >  		__field(struct pwm_device *, pwm)
-> > @@ -20,6 +20,7 @@ DECLARE_EVENT_CLASS(pwm,
-> >  		__field(u64, duty_cycle)
-> >  		__field(enum pwm_polarity, polarity)
-> >  		__field(bool, enabled)
-> > +		__field(int, err)
-> >  	),
->=20
-> If you are changing this, perhaps order it a bit like:
->=20
->         TP_STRUCT__entry(
->                 __field(u64, period)
->                 __field(u64, duty_cycle)
->                 __field(struct pwm_device *, pwm)
->                 __field(enum pwm_polarity, polarity)
->                 __field(bool, enabled)
->                 __field(int, err)
->         ),
->=20
-> And that way the struct pwm_device pointer will not cause a 4 byte hole on
-> 32bit architectures.
+<snip>
 
-I'd do that in a separate patch, thanks for the feedback.
+For pwm-meson:
 
-> >  	TP_fast_assign(
-> > @@ -28,28 +29,27 @@ DECLARE_EVENT_CLASS(pwm,
-> >  		__entry->duty_cycle =3D state->duty_cycle;
-> >  		__entry->polarity =3D state->polarity;
-> >  		__entry->enabled =3D state->enabled;
-> > +		__entry->err =3D err;
-> >  	),
-> > =20
-> > -	TP_printk("%p: period=3D%llu duty_cycle=3D%llu polarity=3D%d enabled=
-=3D%d",
-> > +	TP_printk("%p: period=3D%llu duty_cycle=3D%llu polarity=3D%d enabled=
-=3D%d err=3D%d",
-> >  		  __entry->pwm, __entry->period, __entry->duty_cycle,
-> > -		  __entry->polarity, __entry->enabled)
-> > +		  __entry->polarity, __entry->enabled, __entry->err)
->=20
-> Hmm, and why not show the values here:
->=20
-> TRACE_DEFINE_ENUM(PWM_POLARITY_NORMAL);
-> TRACE_DEFINE_ENUM(PWM_POLARITY_INVERSED);
->=20
-> 	TP_printk("%p: period=3D%llu duty_cycle=3D%llu polarity=3D%s enabled=3D%=
-d err=3D%d",
->  		  __entry->pwm, __entry->period, __entry->duty_cycle,
-> 		  __print_symbolic(__entry->polarity,
-> 			{PWM_POLARITY_NORMAL, "normal"},
-> 			{PWM_POLARITY_INVERSED, "inversed"}),
-> 			__entry->enabled, __entry->err)
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-Ditto.
-
-@Thierry: While the suggestions by Steven are cleanups that usually come
-first in a series and only then new stuff is added, I suggest to be not
-religious about that and implement these in patches based on this
-series.
-
-Independent of that, I'll wait some time to give others a change for
-feedback.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5hvcugvraf4vk4xu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOIUyYACgkQwfwUeK3K
-7AnAxAf+JpaxZFRXjH2HhlBtXTk+VpVrGLusHs9xIQ/cE10v7oVBlzdS3I/vqaLI
-KOBwyvax+o/f5XI6nwGFDFFqLmlRrDbpeJ5/8lawi03I6UngYHW1AWaiOALun6DU
-OW1xgAJLIT4yI1a89RWSaY6CVCzOWiCuSRF/g5oS2Yk+oTlzqMeYp+wddZ9oenXA
-XvBNM15ipn4tKUQaHTolaaWM2CHqWb5R5YzAaCQnX4ecO9pEMXT76Uez9MyNFxFW
-wn7V0eG7hJLxrBXHAYcv5Tq0Mwwf4ABJ2kNxpNCxV1EibU5GOUaFSNj/fwCMlayn
-PkpySfBAAhTxCB+d+tkCvosx30vgGg==
-=jZeJ
------END PGP SIGNATURE-----
-
---5hvcugvraf4vk4xu--
