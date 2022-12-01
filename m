@@ -2,66 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1A1763EAC4
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 09:03:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5812B63ED95
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 11:23:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbiLAIDx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 1 Dec 2022 03:03:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
+        id S230318AbiLAKXF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 1 Dec 2022 05:23:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbiLAIDw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 03:03:52 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167AD2EF7D
-        for <linux-pwm@vger.kernel.org>; Thu,  1 Dec 2022 00:03:50 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id h12so1348065wrv.10
-        for <linux-pwm@vger.kernel.org>; Thu, 01 Dec 2022 00:03:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAIQbbxtK2nJ1NbUghrZ93yJMEm2LyReQuktQwQ+yXw=;
-        b=Lo8p+aDFlKlZfG6pP0n7RZNEjwZK+wrouNetRK3rZv63MbeCUctT1ieDjkKZxl3LvQ
-         1IUxcYuylIWjoy7vKgfrNL5bEmzdei5+43ayKtzqRIyOjWYlsoDieQD7IgspPDeYN4Rg
-         g0Tg2r6urLUhUddkFA8F1g+Y6MZ6LYzNVPQKNUdc62bCqGXALe+tEuJdy6U6nHFQ1VTs
-         pd9A/smgMPI5kbQN+yqEnGZNPKCbNRwE4VhlqdS4p01McAPr9GKRJDIzQjVNyphai7am
-         M+pt/qh8ja70rWDWaq5xcHGdzPkZEr0JVoVeIN0FLdIf+5vnAZEi/TDzF6dIxj4puvKU
-         V1rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RAIQbbxtK2nJ1NbUghrZ93yJMEm2LyReQuktQwQ+yXw=;
-        b=CmRzIvFk04Y/LZ4xqMtdb8wJMXyFEUZysghDDI67ZtM1LbJBsS30u7iBqYMNhsXgtH
-         M45mZYSy5QpJgupShTL1ed3WaFLtJj65Z23VCIVAeaBbI3rP+Eh3bGQZJnI8Xc6PnCt1
-         HStbTM4tCwX7inEozNZIVXkNfHJV+cfaK6Ow2PsOi6JVe2H6ee5RDjNasb3UXNoaTtTU
-         wqT/PJtLlMjkO/Eyl//oaW2G5xrswPrM1cDU8/a0tsaXkCvNukdLb5NS1W/JJY06z6qP
-         A2WGYtyrgulPc6mNRFQBO2mkzch5U+xAeIrBNbCsAoJr8iIW5//einV3f37R76vTAkBR
-         IDww==
-X-Gm-Message-State: ANoB5pkxlBkxKa+zyLyjM8/IHQNxdtlvFI37VXM2OQcrob66BBl4QLUj
-        9PYrDKzps15AjaJOCoRbuO99zA==
-X-Google-Smtp-Source: AA0mqf54lvafHdVKKM2CGBzb3Ly91fbeS37TZTU/o75hgaix+kcG2rGxchFiaWC/vEjl7eP4KzxYJQ==
-X-Received: by 2002:a05:6000:1d92:b0:241:6e0a:bfe6 with SMTP id bk18-20020a0560001d9200b002416e0abfe6mr31726074wrb.34.1669881828568;
-        Thu, 01 Dec 2022 00:03:48 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:bec0:73a:70e1:228f? ([2a01:e0a:982:cbb0:bec0:73a:70e1:228f])
-        by smtp.gmail.com with ESMTPSA id az39-20020a05600c602700b003cf78aafdd7sm4517313wmb.39.2022.12.01.00.03.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Dec 2022 00:03:48 -0800 (PST)
-Message-ID: <b19c4956-3f92-f6be-7d61-9b826e5d6fe1@linaro.org>
-Date:   Thu, 1 Dec 2022 09:03:45 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an error
- code
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        with ESMTP id S230262AbiLAKXE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 05:23:04 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC5E810A1;
+        Thu,  1 Dec 2022 02:23:02 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A95EED1;
+        Thu,  1 Dec 2022 02:23:09 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4DF93F67D;
+        Thu,  1 Dec 2022 02:22:55 -0800 (PST)
+Date:   Thu, 1 Dec 2022 10:22:52 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Douglas Anderson <dianders@chromium.org>,
@@ -115,23 +79,30 @@ Cc:     Conor Dooley <conor.dooley@microchip.com>,
         linux-riscv@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-sunxi@lists.linux.dev
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
- <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Organization: Linaro Developer Services
+Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an
+ error code
+Message-ID: <20221201102252.52ace284@donnerap.cambridge.arm.com>
 In-Reply-To: <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+        <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 30/11/2022 16:21, Uwe Kleine-König wrote:
+On Wed, 30 Nov 2022 16:21:38 +0100
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+
+Hi,
+
 > .get_state() might fail in some cases. To make it possible that a driver
 > signals such a failure change the prototype of .get_state() to return an
 > error code.
@@ -142,11 +113,11 @@ On 30/11/2022 16:21, Uwe Kleine-König wrote:
 > identifier getstatefunc;
 > identifier driver;
 > @@
->   struct pwm_ops driver = {
->          ...,
->          .get_state = getstatefunc
->          ,...
->   };
+>  struct pwm_ops driver = {
+>         ...,
+>         .get_state = getstatefunc
+>         ,...
+>  };
 > 
 > @p2@
 > identifier p1.getstatefunc;
@@ -154,13 +125,13 @@ On 30/11/2022 16:21, Uwe Kleine-König wrote:
 > @@
 > -void
 > +int
->   getstatefunc(struct pwm_chip *chip, struct pwm_device *pwm, struct pwm_state *state)
->   {
->     ...
+>  getstatefunc(struct pwm_chip *chip, struct pwm_device *pwm, struct pwm_state *state)
+>  {
+>    ...
 > -  return;
 > +  return 0;
->     ...
->   }
+>    ...
+>  }
 > 
 > plus the actual change of the prototype in include/linux/pwm.h (plus some
 > manual fixing of indentions and empty lines).
@@ -170,77 +141,95 @@ On 30/11/2022 16:21, Uwe Kleine-König wrote:
 > 
 > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 > ---
->   drivers/gpio/gpio-mvebu.c             |  9 ++++++---
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
->   drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
->   drivers/pwm/pwm-atmel.c               |  6 ++++--
->   drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
->   drivers/pwm/pwm-crc.c                 | 10 ++++++----
->   drivers/pwm/pwm-cros-ec.c             |  8 +++++---
->   drivers/pwm/pwm-dwc.c                 |  6 ++++--
->   drivers/pwm/pwm-hibvt.c               |  6 ++++--
->   drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
->   drivers/pwm/pwm-imx27.c               |  8 +++++---
->   drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
->   drivers/pwm/pwm-iqs620a.c             |  6 ++++--
->   drivers/pwm/pwm-keembay.c             |  6 ++++--
->   drivers/pwm/pwm-lpss.c                |  6 ++++--
->   drivers/pwm/pwm-meson.c               |  8 +++++---
->   drivers/pwm/pwm-mtk-disp.c            | 12 +++++++-----
->   drivers/pwm/pwm-pca9685.c             |  8 +++++---
->   drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
->   drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
->   drivers/pwm/pwm-sifive.c              |  6 ++++--
->   drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
->   drivers/pwm/pwm-sprd.c                |  8 +++++---
->   drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
->   drivers/pwm/pwm-sun4i.c               | 12 +++++++-----
->   drivers/pwm/pwm-sunplus.c             |  6 ++++--
->   drivers/pwm/pwm-visconti.c            |  6 ++++--
->   drivers/pwm/pwm-xilinx.c              |  8 +++++---
->   include/linux/pwm.h                   |  4 ++--
->   29 files changed, 146 insertions(+), 89 deletions(-)
+>  drivers/gpio/gpio-mvebu.c             |  9 ++++++---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
+>  drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
+>  drivers/pwm/pwm-atmel.c               |  6 ++++--
+>  drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
+>  drivers/pwm/pwm-crc.c                 | 10 ++++++----
+>  drivers/pwm/pwm-cros-ec.c             |  8 +++++---
+>  drivers/pwm/pwm-dwc.c                 |  6 ++++--
+>  drivers/pwm/pwm-hibvt.c               |  6 ++++--
+>  drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
+>  drivers/pwm/pwm-imx27.c               |  8 +++++---
+>  drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
+>  drivers/pwm/pwm-iqs620a.c             |  6 ++++--
+>  drivers/pwm/pwm-keembay.c             |  6 ++++--
+>  drivers/pwm/pwm-lpss.c                |  6 ++++--
+>  drivers/pwm/pwm-meson.c               |  8 +++++---
+>  drivers/pwm/pwm-mtk-disp.c            | 12 +++++++-----
+>  drivers/pwm/pwm-pca9685.c             |  8 +++++---
+>  drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
+>  drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
+>  drivers/pwm/pwm-sifive.c              |  6 ++++--
+>  drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
+>  drivers/pwm/pwm-sprd.c                |  8 +++++---
+>  drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
+>  drivers/pwm/pwm-sun4i.c               | 12 +++++++-----
+>  drivers/pwm/pwm-sunplus.c             |  6 ++++--
+>  drivers/pwm/pwm-visconti.c            |  6 ++++--
+>  drivers/pwm/pwm-xilinx.c              |  8 +++++---
+>  include/linux/pwm.h                   |  4 ++--
+>  29 files changed, 146 insertions(+), 89 deletions(-)
 > 
 
-<snip>
-
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 57112f438c6d..16d79ca5d8f5 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -318,8 +318,8 @@ static unsigned int meson_pwm_cnt_to_ns(struct pwm_chip *chip,
->   	return cnt * fin_ns * (channel->pre_div + 1);
->   }
->   
-> -static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+[ ... ]
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index c8445b0a3339..37d75e252d4e 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -108,9 +108,9 @@ static inline void sun4i_pwm_writel(struct sun4i_pwm_chip *chip,
+>  	writel(val, chip->base + offset);
+>  }
+>  
+> -static void sun4i_pwm_get_state(struct pwm_chip *chip,
+> -				struct pwm_device *pwm,
 > -				struct pwm_state *state)
-> +static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +static int sun4i_pwm_get_state(struct pwm_chip *chip,
+> +			       struct pwm_device *pwm,
 > +			       struct pwm_state *state)
->   {
->   	struct meson_pwm *meson = to_meson_pwm(chip);
->   	struct meson_pwm_channel_data *channel_data;
-> @@ -327,7 +327,7 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->   	u32 value, tmp;
->   
->   	if (!state)
+>  {
+>  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+>  	u64 clk_rate, tmp;
+> @@ -132,7 +132,7 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>  		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
+>  		state->polarity = PWM_POLARITY_NORMAL;
+>  		state->enabled = true;
 > -		return;
 > +		return 0;
->   
->   	channel = &meson->channels[pwm->hwpwm];
->   	channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
-> @@ -357,6 +357,8 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->   		state->period = 0;
->   		state->duty_cycle = 0;
->   	}
+>  	}
+>  
+>  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+> @@ -142,7 +142,7 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>  		prescaler = prescaler_table[PWM_REG_PRESCAL(val, pwm->hwpwm)];
+>  
+>  	if (prescaler == 0)
+> -		return;
+> +		return 0;
+>  
+>  	if (val & BIT_CH(PWM_ACT_STATE, pwm->hwpwm))
+>  		state->polarity = PWM_POLARITY_NORMAL;
+> @@ -162,6 +162,8 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>  
+>  	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
+>  	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
 > +
 > +	return 0;
->   }
->   
->   static const struct pwm_ops meson_pwm_ops = {
+>  }
+>  
+>  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
 
-<snip>
+For sunxi:
 
-For pwm-meson:
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Just one comment: I don't see a sunxi specific patch later in the series,
+though it seems we have at least one error error exit (see prescaler == 0
+above). Plus potentially another exit if clk_get_rate() (at the very
+beginning) fails.
+Shall I send a patch for that?
+
+Cheers,
+Andre.
+
 
