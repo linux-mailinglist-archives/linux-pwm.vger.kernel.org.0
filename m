@@ -2,97 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06BDB63F529
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Dec 2022 17:23:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EE32640CB0
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Dec 2022 18:57:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231262AbiLAQXi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 1 Dec 2022 11:23:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40492 "EHLO
+        id S233959AbiLBR53 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 2 Dec 2022 12:57:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiLAQXg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Dec 2022 11:23:36 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD8F15713;
-        Thu,  1 Dec 2022 08:23:35 -0800 (PST)
-Received: by mail-qt1-f176.google.com with SMTP id cg5so1342920qtb.12;
-        Thu, 01 Dec 2022 08:23:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NmTEUnhGG9xmVuyhLp+T5UJoMV6vOQdMIsCsbd0HNis=;
-        b=g7CBPnry2hrWGQCYHez2q/fC67fVDKD+PeUN51vf/OMiyzGpCcaQM497d87HOJRcDF
-         H4/Is74O69VBME/YtkqZTC4FMxsm0BptRaGqTdvuR73MwjjhXJlhkA5APyNzbUwVUTfy
-         F8QdY0f1yg9K3NxE2bl848JsW1+3Ox7GPoz2XdD8yFFKD+gnYTmv11Pydbe9rkRHM6oQ
-         yT8Ivn9Zy9wuOCw877mhNMjGDy7N5enbDupqsV8XJkiC+/5W6JBiMvS5aeQfVQyI9bnA
-         DJ1JgAKg5mG62U/7Aq+t6G31al3Hw+KKqk98bCwbYKdIiUkbwqVV/wAIOGJ+teS7wyND
-         bk8g==
-X-Gm-Message-State: ANoB5plBki8BAGshGOMCZ2WQaTsxHtS9bfIHsYZP0ld+AATEawoqc5gF
-        0pVeqZVVU++ZVhLuJVpvMsmlGPjuTnXoGg==
-X-Google-Smtp-Source: AA0mqf6ziAeqpEMbmJwZwGcyspYAcM8yney7KTa1OBBB7Qc/omL89MRwEX9IWJi9zQtoMgxWBGYMhw==
-X-Received: by 2002:ac8:6742:0:b0:3a6:8922:b71c with SMTP id n2-20020ac86742000000b003a68922b71cmr10423490qtp.559.1669911814796;
-        Thu, 01 Dec 2022 08:23:34 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id f4-20020ac80684000000b0039cc64bcb53sm2725992qth.27.2022.12.01.08.23.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Dec 2022 08:23:34 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-3bfd998fa53so22409707b3.5;
-        Thu, 01 Dec 2022 08:23:34 -0800 (PST)
-X-Received: by 2002:a81:a148:0:b0:3b4:8af5:48e with SMTP id
- y69-20020a81a148000000b003b48af5048emr35487304ywg.383.1669911813908; Thu, 01
- Dec 2022 08:23:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20221124191643.3193423-1-biju.das.jz@bp.renesas.com> <20221124191643.3193423-3-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20221124191643.3193423-3-biju.das.jz@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 1 Dec 2022 17:23:22 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVQUN0Tsn7KEsZDWkMcgG+i-SokSa39Tq06AOMzxQNpcg@mail.gmail.com>
-Message-ID: <CAMuHMdVQUN0Tsn7KEsZDWkMcgG+i-SokSa39Tq06AOMzxQNpcg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: pwm: Add RZ/V2M PWM binding
-To:     Biju Das <biju.das.jz@bp.renesas.com>
+        with ESMTP id S234370AbiLBR5V (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 2 Dec 2022 12:57:21 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDBFE61DF
+        for <linux-pwm@vger.kernel.org>; Fri,  2 Dec 2022 09:57:20 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p1AHk-0003dK-AZ; Fri, 02 Dec 2022 18:57:16 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p1AHh-001qqf-Ln; Fri, 02 Dec 2022 18:57:14 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p1AHg-0025zX-W2; Fri, 02 Dec 2022 18:57:13 +0100
+Date:   Fri, 2 Dec 2022 18:57:12 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        kernel@pengutronix.de, linux-pwm@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/5] pwm: stm32-lp: Use regmap_clear_bits and
+ regmap_set_bits where applicable
+Message-ID: <20221202175712.tz6uwalr6d46r2ad@pengutronix.de>
+References: <20221115111347.3705732-1-u.kleine-koenig@pengutronix.de>
+ <20221115111347.3705732-5-u.kleine-koenig@pengutronix.de>
+ <b474ef48-f77b-807b-ce12-f5a200459933@foss.st.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dnx7n762zixpg7wt"
+Content-Disposition: inline
+In-Reply-To: <b474ef48-f77b-807b-ce12-f5a200459933@foss.st.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Nov 24, 2022 at 8:17 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> Add device tree bindings for the RZ/V2{M, MA} PWM Timer (PWM).
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-> v1->v2:
->  * Added Rb tag from Krzysztof and the keep the Rb tag as the below changes
->    are trivial
->  * Updated the description for APB clock
->  * Added resets required property
->  * Updated the example with resets property
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--dnx7n762zixpg7wt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gr{oetje,eeting}s,
+On Wed, Nov 23, 2022 at 11:23:14AM +0100, Fabrice Gasnier wrote:
+> On 11/15/22 12:13, Uwe Kleine-K=F6nig wrote:
+> > Found using coccinelle and the following semantic patch:
+> >=20
+> > @@
+> > expression map, reg, bits;
+> > @@
+> >=20
+> > - regmap_update_bits(map, reg, bits, bits)
+> > + regmap_set_bits(map, reg, bits)
+> >=20
+> > @@
+> > expression map, reg, bits;
+> > @@
+> >=20
+> > - regmap_update_bits(map, reg, bits, 0)
+> > + regmap_clear_bits(map, reg, bits)
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/pwm/pwm-stm32-lp.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+> > index 3115abb3f52a..212bdc7d51ee 100644
+> > --- a/drivers/pwm/pwm-stm32-lp.c
+> > +++ b/drivers/pwm/pwm-stm32-lp.c
+> > @@ -140,9 +140,8 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> > =20
+> >  	if (reenable) {
+> >  		/* Start LP timer in continuous mode */
+> > -		ret =3D regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
+> > -					 STM32_LPTIM_CNTSTRT,
+> > -					 STM32_LPTIM_CNTSTRT);
+> > +		ret =3D regmap_set_bits(priv->regmap, STM32_LPTIM_CR,
+> > +				      STM32_LPTIM_CNTSTRT);
+>=20
+> Hi Uwe,
+>=20
+> One minor suggestion here: could fit into a single line.
 
-                        Geert
+That would make the line 89 chars long (counting tag as usual as 8). Up
+to now there is no line longer than 78 chars. So I'd not join the two
+lines.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Best regards
+Uwe
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--dnx7n762zixpg7wt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOKPHUACgkQwfwUeK3K
+7AkThQf/azjMPUOcji5c6MwxyjUEpcAH+50ie5NEeDZGr3m9Cr/AMBErl9F15Yyu
+yfmo4A/szg/Yn71jvCgRBY45yWImxAGPV4zW9UMK9vdh3skZuvqstmk8GRRDTtV3
+0bHKIpvAuk1D7TqrA4sPVc05RkizDpDX0+CN97fDoZkFhBWSKCsz8bFRaBy1/6BH
+UbydfZnnnza7qlem4O8Ux3iZqHBqETJfz1GHVOA8oP5akCYhHAH5CEimdXrDlHXM
+netetHku4Sy64xsdICXmGb75Ey4/J+nbs7LoIwP7fXV2YnkuwYi+w0uR3Gs3kYuz
+VoIVur7FA41pAqJznPx20g89ufZb+w==
+=gDKC
+-----END PGP SIGNATURE-----
+
+--dnx7n762zixpg7wt--
