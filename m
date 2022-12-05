@@ -2,77 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82FEC642DC0
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Dec 2022 17:50:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDE03642E6D
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Dec 2022 18:13:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230254AbiLEQuu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 5 Dec 2022 11:50:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47684 "EHLO
+        id S230375AbiLERNt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 5 Dec 2022 12:13:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231906AbiLEQuO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Dec 2022 11:50:14 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425ADD2CA
-        for <linux-pwm@vger.kernel.org>; Mon,  5 Dec 2022 08:49:15 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id p13-20020a05600c468d00b003cf8859ed1bso10538202wmo.1
-        for <linux-pwm@vger.kernel.org>; Mon, 05 Dec 2022 08:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
-        b=Z2wBWagY9UnEZ+M5YPDdGkg6nVUsQfYS1BhjpcwGEao2GhG01+Mm/qvV+1fKOq1lbu
-         EFS78qR+UGfEwXQVt6IRXk6jTGT8mo+KAwwjj0fZxBmjE1jztugOoJP4/rka0x6XFhxu
-         W6iUCvsIDO6eHcdCHFvdIDlIVpJCsES5SD3xSnapoHClZmLcHlXbjXoeix+TX99ab7ry
-         BqOOHDFzUlmJeyU3OvUitATOsPkFA0DOczbi/Afsjm9NHI/YtApk72ny0qjFhFTXO+XP
-         yKXAtBeMHMlIwSKvmuRpEfOfWiK9b959mo8P7Fx64Ot+uHxQXUUrd10S+RG2s/yWLOX2
-         BSUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
-        b=YahKuzl8t9EqW908ixx/rFfJiZCvjL9jUOzioh3xjmbeKSprBvZ6DzNGPmXUsGnBwc
-         uxlL1wHlA7ZQ6yMt2MiERK1E7gXdOO2IrulFVQvIrIqAaNjb+cIl9jWrdS1vy33dM90N
-         qQ3LeL3/zRhA/bXt9TDgvvixalILckYd7/2F0diqj83X3JuhCa/KKd+l7kYH9/S3avZm
-         zOznuHDh988zkkgNl+KzpfjDsd8DVHtL+sKzzVdTHPxp4UU5Yvm7HsQFZr4ycy9TtXEn
-         /TLYZk9Yk6QUe6fDNNfRP555apbdPwQDl+PRxVk96uK0iUeKa7uFgXkyuCKWpQI5eJTZ
-         Xydg==
-X-Gm-Message-State: ANoB5plQ8ibdnPtHrJ8/BJ2VETp7yX/OCHgeObyQb5ToidixKzELSsOi
-        apADzFMSzEOrU4NZFJrGvUyjwKakPiKKKqnwLKlL1nFc6hw=
-X-Google-Smtp-Source: AA0mqf6LlThRqxALxahU+d5CDCL5XgA0Iri4oQFEx6hETTBFBZxUw9iI5CXyM5b3WvWotoaM22oBvK+CwFtVO/zgxX4=
-X-Received: by 2002:a7b:c8d0:0:b0:3cf:ca91:7094 with SMTP id
- f16-20020a7bc8d0000000b003cfca917094mr60628535wml.24.1670258943314; Mon, 05
- Dec 2022 08:49:03 -0800 (PST)
+        with ESMTP id S230123AbiLERNs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Dec 2022 12:13:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9881B1C7;
+        Mon,  5 Dec 2022 09:13:47 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CE6FB61253;
+        Mon,  5 Dec 2022 17:13:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44BAC433D6;
+        Mon,  5 Dec 2022 17:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670260426;
+        bh=nfwijOP+YknJ/BJyL3BCk2K9XJLKuE3s+gxi7Re4mMI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jn4RfWrItXV350OYscEJW9mDXwxsFr18oiqh0LZwV2EY89iy+sPQwEVvVqWti+uud
+         C+szYcTcXri5/HOlO/YEI2qMgLQxT1yrClDCRyjHUhcT6PT5M7LIvOpP1ksPj062mb
+         eP5R7R6zwdgdXjRxQCnwUQYNzA1tLVjQsYXBGablczconecKiKuylW70yDgeIikGbc
+         vo7Z/ZdMMTIMGn4JnhixjgS74gDhYJmqpFdnvqnBC9h8jiErXe+2U1KJugdPtQohDk
+         wqEmvHFQ/6de4PjkFy4d47k8t2/VIXqbqlNM0NbKO+6c5AQPYqD5QOzyLF4TAO26pE
+         8YN4ciFAZXu9A==
+Date:   Mon, 5 Dec 2022 17:13:42 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <Y44mxp9Wr/aEdaxE@spud>
+References: <20221110093512.333881-2-conor.dooley@microchip.com>
+ <20221117164950.cssukd63fywzuwua@pengutronix.de>
+ <Y3Zxkt3OSPQc46Q2@spud>
+ <20221117210433.n5j7upqqksld42mu@pengutronix.de>
+ <Y3avobkvYK3ydKTS@spud>
+ <Y3uZY5mt/ZIWk3sS@wendy>
+ <Y4coL74qQX80TNaT@wendy>
+ <20221130103755.lhil2jaw3oufr2sf@pengutronix.de>
+ <Y44Mk2nGu1Zeq7QQ@wendy>
+ <20221205160328.wn4rcs6uxuuaxftd@pengutronix.de>
 MIME-Version: 1.0
-Received: by 2002:a05:6000:5c1:0:0:0:0 with HTTP; Mon, 5 Dec 2022 08:49:02
- -0800 (PST)
-Reply-To: phmanu14@hotmail.com
-From:   Philip Manul <zagbamdjala@gmail.com>
-Date:   Mon, 5 Dec 2022 08:49:02 -0800
-Message-ID: <CAPCnorG0wZz4L65xmUUzHEvxvuhrsq0nQnSPJqno3Ah89AhSwA@mail.gmail.com>
-Subject: REP:
-To:     in <in@proposal.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XYWjmEvx4GFEt7/b"
+Content-Disposition: inline
+In-Reply-To: <20221205160328.wn4rcs6uxuuaxftd@pengutronix.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
---=20
-Guten tag,
-Mein Name ist Philip Manul. Ich bin von Beruf Rechtsanwalt. Ich habe
-einen verstorbenen Kunden, der zuf=C3=A4llig denselben Namen mit Ihnen
-teilt. Ich habe alle Papierdokumente in meinem Besitz. Ihr Verwandter,
-mein verstorbener Kunde, hat hier in meinem Land einen nicht
-beanspruchten Fonds zur=C3=BCckgelassen. Ich warte auf Ihre Antwort zum
-Verfahren.
-Philip Manul.
+
+--XYWjmEvx4GFEt7/b
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Dec 05, 2022 at 05:03:28PM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello Conor,
+>=20
+> On Mon, Dec 05, 2022 at 03:21:55PM +0000, Conor Dooley wrote:
+> > I came into work today thinking that I could just rebase on top of your
+> > patchset and send out a v13, but that was unfortunately not the case :/
+> >=20
+> > So uh, it turns out that I was wrong about the behaviour of the
+> > sync_update register's bit.
+> > It turns out that that bit holds it's value until the IP block is reset,
+> > and /does not/ get cleared at the start of the next period.
+> > I'm really not sure how it worked when I tested the other week [0], so I
+> > spent the first half of the day trying to figure out what on earth had
+> > happened to my FPGA image. I must've picked the wrong image when I went
+> > to test it the other week that had the wrong configuration somehow.
+> >=20
+> > As a result, I've gone and hacked up another way of transferring the
+> > burden of waiting - setting a timer for the period, backed by a
+> > completion. get_state() and apply() now both check for the completion
+> > and time out otherwise. I'm half tempted to tack RFC back onto the
+> > series as I have not really messed with timers at all before and may
+> > have done something off the wall.
+> >=20
+> > I pushed it out (see [1] in case you'd like to look) so that the bots
+> > can have a play with it, since it'll be a few weeks before I'll have a
+> > chance to properly test that I've broken nothing with this.
+>=20
+> I didn't look, but I'm convinced you don't need a timer. Something like
+> the following should work, shouldn't it?:
+
+Yeah & I did think of something along these lines. I was torn between
+something that seemed heavy handed (timers) and calculating if enough
+time had elapsed, which seemed a bit hacky.
+
+Figured I was better off doing something quickly & asking rather than
+polishing only to find out it was disliked ;)
+
+>=20
+>  - in .apply() check the current time, add the current period and store
+>    the result to ddata->updatetimestamp
+>  - in .get_state do:
+>      if (current_time >=3D ddata->updatetimestamp)
+>        process fine
+>      else:
+>        timeout (or wait until ddata->updatetimestamp?)
+>=20
+> Actually I'd prefer to wait instead of -ETIMEOUT.
+
+Prefer to wait in get_state() or in both it & apply()?
+Depending on how far away updatetimestamp is, would we still not want to
+time out if it is going to be a long time, no?
+
+Thanks again Uwe,
+Conor.
+
+--XYWjmEvx4GFEt7/b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY44mswAKCRB4tDGHoIJi
+0hYNAPwNShBFmDyuWg7PaIUavpTz8+mejzOVXbkpobCNkxtsTgD6AyEygndAq/lE
+o20KrHrwDw/UrorhjSX/v2kzwcZjdA4=
+=589v
+-----END PGP SIGNATURE-----
+
+--XYWjmEvx4GFEt7/b--
