@@ -2,135 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2187642C75
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Dec 2022 17:03:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82FEC642DC0
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Dec 2022 17:50:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232383AbiLEQDr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 5 Dec 2022 11:03:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38902 "EHLO
+        id S230254AbiLEQuu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 5 Dec 2022 11:50:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbiLEQDp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Dec 2022 11:03:45 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EF913FA4
-        for <linux-pwm@vger.kernel.org>; Mon,  5 Dec 2022 08:03:44 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p2DwJ-0001gk-7V; Mon, 05 Dec 2022 17:03:31 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p2DwH-002VOo-9V; Mon, 05 Dec 2022 17:03:30 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p2DwG-002pBF-Tw; Mon, 05 Dec 2022 17:03:28 +0100
-Date:   Mon, 5 Dec 2022 17:03:28 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     Conor Dooley <conor@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <20221205160328.wn4rcs6uxuuaxftd@pengutronix.de>
-References: <20221110093512.333881-1-conor.dooley@microchip.com>
- <20221110093512.333881-2-conor.dooley@microchip.com>
- <20221117164950.cssukd63fywzuwua@pengutronix.de>
- <Y3Zxkt3OSPQc46Q2@spud>
- <20221117210433.n5j7upqqksld42mu@pengutronix.de>
- <Y3avobkvYK3ydKTS@spud>
- <Y3uZY5mt/ZIWk3sS@wendy>
- <Y4coL74qQX80TNaT@wendy>
- <20221130103755.lhil2jaw3oufr2sf@pengutronix.de>
- <Y44Mk2nGu1Zeq7QQ@wendy>
+        with ESMTP id S231906AbiLEQuO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 5 Dec 2022 11:50:14 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425ADD2CA
+        for <linux-pwm@vger.kernel.org>; Mon,  5 Dec 2022 08:49:15 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id p13-20020a05600c468d00b003cf8859ed1bso10538202wmo.1
+        for <linux-pwm@vger.kernel.org>; Mon, 05 Dec 2022 08:49:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
+        b=Z2wBWagY9UnEZ+M5YPDdGkg6nVUsQfYS1BhjpcwGEao2GhG01+Mm/qvV+1fKOq1lbu
+         EFS78qR+UGfEwXQVt6IRXk6jTGT8mo+KAwwjj0fZxBmjE1jztugOoJP4/rka0x6XFhxu
+         W6iUCvsIDO6eHcdCHFvdIDlIVpJCsES5SD3xSnapoHClZmLcHlXbjXoeix+TX99ab7ry
+         BqOOHDFzUlmJeyU3OvUitATOsPkFA0DOczbi/Afsjm9NHI/YtApk72ny0qjFhFTXO+XP
+         yKXAtBeMHMlIwSKvmuRpEfOfWiK9b959mo8P7Fx64Ot+uHxQXUUrd10S+RG2s/yWLOX2
+         BSUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
+        b=YahKuzl8t9EqW908ixx/rFfJiZCvjL9jUOzioh3xjmbeKSprBvZ6DzNGPmXUsGnBwc
+         uxlL1wHlA7ZQ6yMt2MiERK1E7gXdOO2IrulFVQvIrIqAaNjb+cIl9jWrdS1vy33dM90N
+         qQ3LeL3/zRhA/bXt9TDgvvixalILckYd7/2F0diqj83X3JuhCa/KKd+l7kYH9/S3avZm
+         zOznuHDh988zkkgNl+KzpfjDsd8DVHtL+sKzzVdTHPxp4UU5Yvm7HsQFZr4ycy9TtXEn
+         /TLYZk9Yk6QUe6fDNNfRP555apbdPwQDl+PRxVk96uK0iUeKa7uFgXkyuCKWpQI5eJTZ
+         Xydg==
+X-Gm-Message-State: ANoB5plQ8ibdnPtHrJ8/BJ2VETp7yX/OCHgeObyQb5ToidixKzELSsOi
+        apADzFMSzEOrU4NZFJrGvUyjwKakPiKKKqnwLKlL1nFc6hw=
+X-Google-Smtp-Source: AA0mqf6LlThRqxALxahU+d5CDCL5XgA0Iri4oQFEx6hETTBFBZxUw9iI5CXyM5b3WvWotoaM22oBvK+CwFtVO/zgxX4=
+X-Received: by 2002:a7b:c8d0:0:b0:3cf:ca91:7094 with SMTP id
+ f16-20020a7bc8d0000000b003cfca917094mr60628535wml.24.1670258943314; Mon, 05
+ Dec 2022 08:49:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4zwxtzrofb5skakh"
-Content-Disposition: inline
-In-Reply-To: <Y44Mk2nGu1Zeq7QQ@wendy>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6000:5c1:0:0:0:0 with HTTP; Mon, 5 Dec 2022 08:49:02
+ -0800 (PST)
+Reply-To: phmanu14@hotmail.com
+From:   Philip Manul <zagbamdjala@gmail.com>
+Date:   Mon, 5 Dec 2022 08:49:02 -0800
+Message-ID: <CAPCnorG0wZz4L65xmUUzHEvxvuhrsq0nQnSPJqno3Ah89AhSwA@mail.gmail.com>
+Subject: REP:
+To:     in <in@proposal.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=1.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---4zwxtzrofb5skakh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hello Conor,
-
-On Mon, Dec 05, 2022 at 03:21:55PM +0000, Conor Dooley wrote:
-> I came into work today thinking that I could just rebase on top of your
-> patchset and send out a v13, but that was unfortunately not the case :/
->=20
-> So uh, it turns out that I was wrong about the behaviour of the
-> sync_update register's bit.
-> It turns out that that bit holds it's value until the IP block is reset,
-> and /does not/ get cleared at the start of the next period.
-> I'm really not sure how it worked when I tested the other week [0], so I
-> spent the first half of the day trying to figure out what on earth had
-> happened to my FPGA image. I must've picked the wrong image when I went
-> to test it the other week that had the wrong configuration somehow.
->=20
-> As a result, I've gone and hacked up another way of transferring the
-> burden of waiting - setting a timer for the period, backed by a
-> completion. get_state() and apply() now both check for the completion
-> and time out otherwise. I'm half tempted to tack RFC back onto the
-> series as I have not really messed with timers at all before and may
-> have done something off the wall.
->=20
-> I pushed it out (see [1] in case you'd like to look) so that the bots
-> can have a play with it, since it'll be a few weeks before I'll have a
-> chance to properly test that I've broken nothing with this.
-
-I didn't look, but I'm convinced you don't need a timer. Something like
-the following should work, shouldn't it?:
-
- - in .apply() check the current time, add the current period and store
-   the result to ddata->updatetimestamp
- - in .get_state do:
-     if (current_time >=3D ddata->updatetimestamp)
-       process fine
-     else:
-       timeout (or wait until ddata->updatetimestamp?)
-
-Actually I'd prefer to wait instead of -ETIMEOUT.
-=20
-Best regards
-Uwe
-
-
-
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4zwxtzrofb5skakh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOOFk0ACgkQwfwUeK3K
-7Am4Lgf/fv9edPfJKrkZU9qkFGEmRFODwJ7+JvDFuOvR0sZmDxn9JIDIn5kLQNoD
-4WDDJM8i8PQvzDBlSy4wJ+hn9Gm9D6F9WgIRRHTmcc5RdN/csoM/cmFkbNonmZZC
-lOaEbX1I02orVuen7mkBzWrwM5WBOsCm3Vmn0oaNeXFlnM2GXlR2zjKFoa5aEC9l
-qjQ63WX6Jcp7KBMlfRxOuOUhykFYosE+zEPoTFz7nI4uL4w1QhSyINk8SDkNzcDH
-c0/X2ATGj9hmZTOatujovzWVAZEPNeqd4j51+0+lU+jHlUgcxm0gvgZVy7HE4keR
-r5gqCh0sz0azMsfDjKtaMz8qLd7V/A==
-=3pIO
------END PGP SIGNATURE-----
-
---4zwxtzrofb5skakh--
+Guten tag,
+Mein Name ist Philip Manul. Ich bin von Beruf Rechtsanwalt. Ich habe
+einen verstorbenen Kunden, der zuf=C3=A4llig denselben Namen mit Ihnen
+teilt. Ich habe alle Papierdokumente in meinem Besitz. Ihr Verwandter,
+mein verstorbener Kunde, hat hier in meinem Land einen nicht
+beanspruchten Fonds zur=C3=BCckgelassen. Ich warte auf Ihre Antwort zum
+Verfahren.
+Philip Manul.
