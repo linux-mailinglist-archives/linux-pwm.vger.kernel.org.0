@@ -2,250 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D378C6449EA
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Dec 2022 18:06:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64030644A8D
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Dec 2022 18:45:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232825AbiLFRG2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Dec 2022 12:06:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
+        id S229479AbiLFRpi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Dec 2022 12:45:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232604AbiLFRGK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Dec 2022 12:06:10 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4B71134
-        for <linux-pwm@vger.kernel.org>; Tue,  6 Dec 2022 09:06:08 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id q7so24418568wrr.8
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Dec 2022 09:06:08 -0800 (PST)
+        with ESMTP id S229445AbiLFRph (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Dec 2022 12:45:37 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E321237209
+        for <linux-pwm@vger.kernel.org>; Tue,  6 Dec 2022 09:45:36 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so6755071pjj.2
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Dec 2022 09:45:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q6M7e/S92ILa/eR6YDG0IPwQRk6DwRDkQxOGoYIQCY4=;
-        b=Hrl+MzsshnLgGnyl2nZ/IQj4ymOv6W0AiJYOU36CgUb/SsuVwU7tvtTptgvb4dPyDQ
-         WqkkrFx/eg+GnD1pqr/aIgG63/ZDq2RuZHMvVJrvX0uFBvIzTBu2BZOgTRpU+uWPVkRu
-         Zgji9lOmeEu1xEKYVLIAEIQrvwuRSTJSacq3rMsoVJfcNC6f95G4/rtriBKsWIR2N3Kz
-         1zDXX+ve5WKJdG9Z+fL7ygIMm7cHPilW94YPk2Qrc7aiMKO3AtzhNjr8i8+ZfFw2yDet
-         qJXbSZ7tynw4XibBG+lR1FxSU0uokUlp0ZvzhfRT/yOzl+RjNaLbGkkezUrUg/dxmyOq
-         nm8A==
+        d=9elements.com; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QnXuCMBJLGvaQ8GD/oAIn2hbJLbNYlY5oG7JUQ6WrZs=;
+        b=Car3FCxir2IE4cCpDcdBvjDJODCtqU/FMnhPBQ2ZChw6LybsvXbSbeYIgCEpqS8zBk
+         O/bxcfu3V4iJBezsRvo6tIt26lzNsUEkzolUMvX8tnvcPUJZpNENQ3KuIYGEltvAbESe
+         kGByCtOcbf6ztbG7j7qI6gqmxiGXN2o8iBeVpgxkU/yXsZgsWcESWVqEhLhg0gCMgVFo
+         GpMQ9XoKlYkEhnvfY6KNa+LUfgqA1AyKMhMA7rnAObIHx2v/TzBYVoj3TobWg81LDXTs
+         epubBmQA9sYHkjid0ofIfDBnrGw4+sDXl/t30F4bxM97+yppivRJV0AgegKWVHoEKA1X
+         X+nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q6M7e/S92ILa/eR6YDG0IPwQRk6DwRDkQxOGoYIQCY4=;
-        b=WPkXzfWTR9Gu7Wq/hXjJDEn0t14Qx1gzYAJKyhz5i7CkSqGsOB/wo8vcfXhtBVUrHC
-         Wf4n/CHVN8arxqEt82dThyElQbePEQGkFWDehgf56ENktM+EiA82PanEMGFRZ5Nivco7
-         S4vZNoRShK9Hn8T9N1hvKxR23eF8BrTsJ2+sroWFIZyQ17pclK03xyT4lC8vwOg8xrrj
-         lgydrke66ZHoFwtv00B0exS6RPL0RMoQm68XpjEvKAYziZgMDt/lMl4Gwv3SOzSmsFZ1
-         Y+liup8dhLq+8VmfE55UK1P+u4xJDkrpF1lfy0xutNEhUxwpL7EX5hrneDt6rakiPKLa
-         sOWQ==
-X-Gm-Message-State: ANoB5pmR0iE6X8ufS9SimriG4gwJ6ksf5Vwsh/suRb69V59rw3N2bFsB
-        qRpUOaKlp5DcJyY77S99GtmVnGbnMuk=
-X-Google-Smtp-Source: AA0mqf6RsL+pGgOPBohfxZpz+s66bIgebVMVS2gDVqw4JdBeCJo/B/gsjShKiH9/JCj6ddmR/smzEw==
-X-Received: by 2002:a5d:440b:0:b0:241:f901:a7e3 with SMTP id z11-20020a5d440b000000b00241f901a7e3mr36641993wrq.511.1670346367372;
-        Tue, 06 Dec 2022 09:06:07 -0800 (PST)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id n186-20020a1ca4c3000000b003d1cf67460esm6803938wme.40.2022.12.06.09.06.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 09:06:06 -0800 (PST)
-Date:   Tue, 6 Dec 2022 18:06:05 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PULL] pwm changes for 6.2 for Thierry
-Message-ID: <Y492fQi3oSgr39O7@orome>
-References: <20221202183504.rhz5meomd4a4t7am@pengutronix.de>
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QnXuCMBJLGvaQ8GD/oAIn2hbJLbNYlY5oG7JUQ6WrZs=;
+        b=zLpgDqiN0WPVKyYA3pWrA52OxWGsQOw5dP8HYsVTVQzA7twhontEiHRbzAZ9YLi4Nq
+         h6yKMAnyMsFi31vyMcvk45xbhFurwUbaWViuzeT+hU1UGcjRPUQ0Fglu1Ac+fWf+oc79
+         U1Qf4s/KmqhbmP8h7rY+KNilJwp8xZ+0hB5e/1nae+BkDWy0wqHYYXgm2DDMjMCXSgnJ
+         v6ngrKJRDr+9Xs+RWbt+hjNIc31zf1uXkBtw+byCTPrWAWdvwMEJde6I1u3utfEUoXOO
+         hW/ti032wLNf7QMl4AiXFbEA9Rf7wRCuT+VZPqoAqP5cybR6r6fzmyRSYLaJhhml1Dec
+         9gZg==
+X-Gm-Message-State: ANoB5pl0n+dgcxZK9jI9JHixM6q5NLQAJKHiJxnXaX+34LrTnR1uUhCx
+        hldGeg6obkyEeHYaQEP0ShpYrw==
+X-Google-Smtp-Source: AA0mqf63M5QudRaFUyWkka3wLk0yj7w6tH3rMCRjclZAEfsaj6iitdAM4YgOb8a9ZCk928yrZDL1Ig==
+X-Received: by 2002:a05:6a20:441e:b0:ac:16ae:1082 with SMTP id ce30-20020a056a20441e00b000ac16ae1082mr795935pzb.32.1670348736388;
+        Tue, 06 Dec 2022 09:45:36 -0800 (PST)
+Received: from ?IPV6:2405:201:d02f:d899:2028:7962:400:43b6? ([2405:201:d02f:d899:2028:7962:400:43b6])
+        by smtp.gmail.com with ESMTPSA id s1-20020a635241000000b0046ff3634a78sm10143474pgl.71.2022.12.06.09.45.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Dec 2022 09:45:35 -0800 (PST)
+Message-ID: <77c5a9e2-ce25-df19-1eba-ba4808bbeb9d@9elements.com>
+Date:   Tue, 6 Dec 2022 23:15:31 +0530
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wVPgfoWgF052pWLL"
-Content-Disposition: inline
-In-Reply-To: <20221202183504.rhz5meomd4a4t7am@pengutronix.de>
-User-Agent: Mutt/2.2.9 (2022-11-12)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v8 4/4] hwmon: (max6639) Add pwm support
+To:     Guenter Roeck <linux@roeck-us.net>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de
+References: <20221129161134.2672474-1-Naresh.Solanki@9elements.com>
+ <20221129161134.2672474-5-Naresh.Solanki@9elements.com>
+ <20221129163427.dxnqfay6ur6mvivu@pengutronix.de>
+ <d2d54a34-56dc-df83-5fde-ad0a9a73a9e0@roeck-us.net>
+Content-Language: en-US
+From:   Naresh Solanki <naresh.solanki@9elements.com>
+In-Reply-To: <d2d54a34-56dc-df83-5fde-ad0a9a73a9e0@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Guenter, Rob
 
---wVPgfoWgF052pWLL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 29-11-2022 10:11 pm, Guenter Roeck wrote:
+> On 11/29/22 08:34, Uwe Kleine-König wrote:
+>> On Tue, Nov 29, 2022 at 05:11:34PM +0100, Naresh Solanki wrote:
+>>> Add pwm support for max6639. Also configure pwm fan speed based on pwm
+>>> provided in DT.
+>>
+>> Did you do anything to resolve the questions I had in reply to v5? If
+>> yes, I must have missed it.
+>>
+> 
+> I don't see a response to my concerns either, especially regarding fan mode
+> (dc vs. pwm) in the bindings. For that reason, I won't even look at the 
+> series.
+Best I can think of regulator with voltage control. Because as per my 
+understanding, DC control fan essentially control DC voltage on negative 
+pin of fan.
 
-On Fri, Dec 02, 2022 at 07:35:04PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Thierry,
->=20
-> there are quite some patches still marked as "new" in our patchwork and
-> a bit part of them is ready in my eyes on top of your for-next branch.
-> Given that Linus Torvalds indicated to want the pull requests for 6.2
-> ready early[1] I thought I collect the patches I consider good for
-> application.
->=20
-> Feel free to do whatever you want with this pull request. If you find
-> the time to pick up patches yourself that's just fine for me. And in
-> case Linus doesn't to a -rc8 but cuts 6.1 this weekend, we have at least
-> a tree with non-faked timestamps older than the v6.1 tag. :-)
->=20
-> One thing I considered was pulling in Andy's PR[2], just to have it.
-> But I didn't as you signalled it to be not necessary. (And it merges
-> just fine into the changes from this PR.)
->=20
-> Best regards and a nice week-end
-> Uwe
->=20
-> [1] https://lore.kernel.org/lkml/CAHk-=3DwgUZwX8Sbb8Zvm7FxWVfX6CGuE7x+E16=
-VKoqL7Ok9vv7g@mail.gmail.com/
-> [2] https://lore.kernel.org/linux-pwm/Y30YOvHpqvte9otX@black.fi.intel.com
->=20
-> The following changes since commit 50315945d178eebec4e8e2c50c265767ddb926=
-eb:
->=20
->   dt-bindings: pwm: renesas,tpu: Add r8a779g0 support (2022-11-23 12:22:3=
-5 +0100)
->=20
-> are available in the Git repository at:
->=20
->   https://git.pengutronix.de/git/ukl/linux pwm-6.2
->=20
-> for you to fetch changes up to 145e5425eb85fc833d4b5d983cffa9ef1acd6c16:
->=20
->   pwm: pca9685: Convert to i2c's .probe_new() (2022-12-02 19:16:30 +0100)
->=20
-> ----------------------------------------------------------------
-> Andre Przywara (1):
->       pwm: sun4i: Propagate errors in .get_state() to the caller
->=20
-> Andy Shevchenko (1):
->       pwm: core: Remove S_IFREG from debugfs_create_file()
->=20
-> Daniel Golle (2):
->       pwm: mediatek: always use bus clock for PWM on MT7622
->       pwm: mediatek: Add support for MT7986
->=20
-> Doug Brown (6):
->       pwm: pxa: Remove pxa_pwm_enable/disable
->       pwm: pxa: Set duty cycle to 0 when disabling PWM
->       pwm: pxa: Remove clk enable/disable from pxa_pwm_config
->       pwm: pxa: Use abrupt shutdown mode
->       pwm: pxa: Add reference manual link and limitations
->       pwm: pxa: Enable for MMP platform
->=20
-> Fabrice Gasnier (1):
->       pwm: stm32-lp: fix the check on arr and cmp registers update
->=20
-> Uwe Kleine-K=C3=B6nig (23):
->       pwm: sifive: Call pwm_sifive_update_clock() while mutex is held
->       pwm: lpc18xx-sct: Fix a comment to match code
->       pwm: Document variables protected by pwm_lock
->       pwm: Reduce time the pwm_lock mutex is held in pwmchip_add()
->       pwm: Mark free pwm IDs as used in alloc_pwms()
->       pwm: Don't initialize list head before calling list_add()
->       pwm: fsl-ftm: Use regmap_clear_bits and regmap_set_bits where appli=
-cable
->       pwm: img: Use regmap_clear_bits and regmap_set_bits where applicable
->       pwm: iqs620a: Use regmap_clear_bits and regmap_set_bits where appli=
-cable
->       pwm: stm32-lp: Use regmap_clear_bits and regmap_set_bits where appl=
-icable
->       pwm: stm32: Use regmap_clear_bits and regmap_set_bits where applica=
-ble
->       pwm: Make .get_state() callback return an error code
->       pwm/tracing: Also record trace events for failed API calls
->       drm/bridge: ti-sn65dsi86: Propagate errors in .get_state() to the c=
-aller
->       leds: qcom-lpg: Propagate errors in .get_state() to the caller
->       pwm: crc: Propagate errors in .get_state() to the caller
->       pwm: cros-ec: Propagate errors in .get_state() to the caller
->       pwm: imx27: Propagate errors in .get_state() to the caller
->       pwm: mtk-disp: Propagate errors in .get_state() to the caller
->       pwm: rockchip: Propagate errors in .get_state() to the caller
->       pwm: sprd: Propagate errors in .get_state() to the caller
->       pwm: Handle .get_state() failures
->       pwm: pca9685: Convert to i2c's .probe_new()
->=20
-> xinlei lee (1):
->       pwm: mtk-disp: Fix the parameters calculated by the enabled flag of=
- disp_pwm
->=20
->  drivers/gpio/gpio-mvebu.c             |  9 ++++++---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
->  drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
->  drivers/pwm/Kconfig                   |  2 +-
->  drivers/pwm/core.c                    | 68 +++++++++++++++++++++++++++++=
-+++++++++------------------------------
->  drivers/pwm/pwm-atmel.c               |  6 ++++--
->  drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
->  drivers/pwm/pwm-crc.c                 | 10 ++++++----
->  drivers/pwm/pwm-cros-ec.c             |  8 +++++---
->  drivers/pwm/pwm-dwc.c                 |  6 ++++--
->  drivers/pwm/pwm-fsl-ftm.c             | 18 +++++++-----------
->  drivers/pwm/pwm-hibvt.c               |  6 ++++--
->  drivers/pwm/pwm-img.c                 | 15 +++++++--------
->  drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
->  drivers/pwm/pwm-imx27.c               |  8 +++++---
->  drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
->  drivers/pwm/pwm-iqs620a.c             | 10 ++++++----
->  drivers/pwm/pwm-keembay.c             |  6 ++++--
->  drivers/pwm/pwm-lpc18xx-sct.c         |  2 +-
->  drivers/pwm/pwm-lpss.c                |  6 ++++--
->  drivers/pwm/pwm-mediatek.c            |  9 ++++++++-
->  drivers/pwm/pwm-meson.c               |  8 +++++---
->  drivers/pwm/pwm-mtk-disp.c            | 17 ++++++++++-------
->  drivers/pwm/pwm-pca9685.c             | 13 +++++++------
->  drivers/pwm/pwm-pxa.c                 | 58 +++++++++++++++++++++++++----=
------------------------------
->  drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
->  drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
->  drivers/pwm/pwm-sifive.c              | 11 ++++++++---
->  drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
->  drivers/pwm/pwm-sprd.c                |  8 +++++---
->  drivers/pwm/pwm-stm32-lp.c            | 15 ++++++++-------
->  drivers/pwm/pwm-stm32.c               | 34 ++++++++++++++++-------------=
------
->  drivers/pwm/pwm-sun4i.c               | 14 +++++++++-----
->  drivers/pwm/pwm-sunplus.c             |  6 ++++--
->  drivers/pwm/pwm-visconti.c            |  6 ++++--
->  drivers/pwm/pwm-xilinx.c              |  8 +++++---
->  include/linux/pwm.h                   |  4 ++--
->  include/trace/events/pwm.h            | 20 ++++++++++----------
->  38 files changed, 275 insertions(+), 214 deletions(-)
 
-I had gotten partially through this set and b4 wasn't happy letting me
-pull this directly since the commit in the pull request didn't match the
-commit in the remote, so I ended up grabbing the patches based on this
-list and that seems to have worked. Build tests all check out (modulo
-some egrep vs. grep -E warnings on MIPS) so I've pushed these out.
-
-The branch also contains a few more that I had already applied before
-taking the above patches.
-
-Thanks,
-Thierry
-
---wVPgfoWgF052pWLL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmOPdn0ACgkQ3SOs138+
-s6G4kg/+Oy7/63EpcLr7jTkNw1yTVV1dqPe/GDXTsGCKRbnD9BZ4VXRamck9fqCR
-1+koE8swym42BG/Sx5ON6778G37vTZ5DzDdNXwx/MalmIyx+8L11xdvW5CxotDFk
-wEAz9cW7wL3O8K86mo4g0NZQ6Pf7UFx8qOxFf5wCadgVK1ftO71za2uA37RxCVp2
-WPiEJKLk9mEpfN0n3NNDc/3/rnJZliPfbmAlsT4vrAqkoYipcE7LuN8kfbGOF6M/
-Rc0y6U4Lx1/nFc2D9OPiZuWTLCKusl5qBNkFwLl/54P+NRtb7Nobv9twInAjQmg7
-I29FxhKUvi5nXJTJ+kJxvvGhNWHeLqw7J8hMAoSJfF5RXSnM8M7MWgpfELGN8gof
-Q0Tga5FJTMchO84yqqxN4hzLDGmzB/OIQmtNvR+teIYRaF1WL+RM7fjeCnMg0XLb
-ZbarIgDt+bREwp1zIZ1VXstx8XcTNEmRKjYVUyVVvXhttLDlWzMznGiWeB1xg35P
-S99XBYmarY0VLkGWYCBMleSuY01WO/BSQ7RDtCJtUmGBO1kBgQ0gLwCFZxfwPOfp
-AhHSHwrqtzsXd2UmTIVHyfJBK+27Azc4CO7h2WFlagn9RyBuwdfonw4ggpKqzlf1
-VHI9wVt4tnQ1R7EDyCVM7HgHuIQrYIPW0ku+D6IV+K2vujfzJ8w=
-=IJEV
------END PGP SIGNATURE-----
-
---wVPgfoWgF052pWLL--
+Regards,
+Naresh
+> 
+> Guenter
+> 
+>> Note that maintainer time is scarce and with sending new versions of a
+>> patch with no sign that you improved in the aspects that were critized
+>> before, you're burning that scarce time and loosing the good will of the
+>> responsible maintainers.
+>>
+>> Best regards
+>> Uwe
+>>
+> 
