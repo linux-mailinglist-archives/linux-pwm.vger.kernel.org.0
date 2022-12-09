@@ -2,115 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0964E647EBD
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Dec 2022 08:48:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77AB2648163
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Dec 2022 12:14:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbiLIHsW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Dec 2022 02:48:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47904 "EHLO
+        id S229530AbiLILOn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Dec 2022 06:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbiLIHsV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Dec 2022 02:48:21 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A618B4FF96
-        for <linux-pwm@vger.kernel.org>; Thu,  8 Dec 2022 23:48:17 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id g7so5787920lfv.5
-        for <linux-pwm@vger.kernel.org>; Thu, 08 Dec 2022 23:48:17 -0800 (PST)
+        with ESMTP id S229488AbiLILOm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Dec 2022 06:14:42 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02B31F9DF;
+        Fri,  9 Dec 2022 03:14:41 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id m4-20020a05600c3b0400b003d1cb516ce0so5510279wms.4;
+        Fri, 09 Dec 2022 03:14:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=NsuZyFPaWs/2xOslubtL3bTv7xZraftR6tRWln/UHA0=;
-        b=L0ObW+6jVYepqRQlOuSGYejbeGJxoK2QtyeJ8hUusQv0T1wIqZbpYlI1rbKASAM82q
-         Tsuu631UcDvh3dpORs7Dkq6MOiW73wcKDfoQqx2+ex12mu7QgOIgpy8L0iKqc/Y2wxeO
-         MVlQwsOrl86I/ULPLD5Pmu636m8TPx3+MzPsQbLfKWcWvb8+e2RX2P9dsW+aRBdh2nQw
-         DlcubyQYjk9X3/XCK41jJeOSxOV+V69sKUyp2q1ON3R4oX9jMkWZ3rAazapizSgNtGUq
-         jaN3VrungIzhOox1TjRfJNmXEPsdB51mws3POhJ7RwD/NlZ/U4kiQJ7aigL6pnMTbGMa
-         lVyw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aptsriDL75Ig6gjid308/Jf1kFuZ73/LpGcnByUwftU=;
+        b=Tc35s68OF5v/x5JicHtvMLmwSH8H8p5eYTwOaTIPhnSP8L3O4gM+ZWgXAqgbmMWT6I
+         +LQ3awlxrnDCU1IkqCWUKc5co5vIituYd4IaOGiXt2GXLJLF4mT3OpErbIfjjbX4jwqa
+         ukD5OwKhFtqys/G5DSP1uCXyAT6H6lwqWCEuB2qyIvbM9AMuCKuq+Y1UhNR7OPrGOYzq
+         4X3pS+Nns9YEJTxQAsjiXjvu4R4K6db8McQ+uzd641csHEpgzAIr030PogKu+8MuvaKC
+         JpnehUiyhcRAA1fTEQIyg2/Krxw9Wn17It8sjZ1tvIr1Wp55h93x9w63jvqWi5usu188
+         CEuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsuZyFPaWs/2xOslubtL3bTv7xZraftR6tRWln/UHA0=;
-        b=zLH4L92ofl8fqG+dNk+KdcIzhtSdb75V1ZM/gDIB90BcktxgXeEwk1LM34RZ18Yi8I
-         o4TvuEuoI9WkIhHV7ml8ybYOT/W2Wi5I3CeUXYAG+6nwwJV3RFowsvbAQAH35FUmHXqG
-         c9OpD8mLTVVi/80tjoYV7M+SHnKwXRsB6DlTiEE2HPtNJa5dvmO+tpKtVyP9vOdWodKH
-         J0JMtwm/bmNR6sTFOO3hmpyCYXBFFRETVxaUpih/2pjJKdNw78JVFZ67iMSKM5IyGdNS
-         2rLHbp9xGyM/mF2p4B26ULH6n6WuvdChdx5LQ7gxSzFcoV3nmYqSC396RflPIf4gguIy
-         W0aQ==
-X-Gm-Message-State: ANoB5pkI5uQ/jdG2i98QXYIYgwrIpJf7p+xf4f2M+b8Ky1S4IKHZ49hj
-        CoX4trOF5b360nEg9tYC9Svjgg==
-X-Google-Smtp-Source: AA0mqf50R8kzIqUKGZ8njOLQTZPpV95PUHF/rpYhGJtY+iZVQ8Z32kmn45AQFCSJtdOmMzqch/n1Uw==
-X-Received: by 2002:a05:6512:16a1:b0:4a4:68b8:f4d6 with SMTP id bu33-20020a05651216a100b004a468b8f4d6mr1739705lfb.28.1670572096037;
-        Thu, 08 Dec 2022 23:48:16 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id a6-20020a19f806000000b004b5766f48d8sm155053lff.19.2022.12.08.23.48.14
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aptsriDL75Ig6gjid308/Jf1kFuZ73/LpGcnByUwftU=;
+        b=jfKjZXgpX96UqSNvSoD/FU8KOrw14CnVAe1Eey7Z0oFykHqsG/Gm2z82cL8RPaYUui
+         PbVp60xgSRPIM8L948Jszoq0MsargCDf7Q2NjJQx6jOFkLXo6nnsVOYj2Mh341cFpQO2
+         01bF/j12l589mZiSB379NghIFIPyp3xCDEjmBpdiCzVDNQMhUTEmAaq6r9mM2q9oSdBT
+         AcP2L5oXdUD3rJ9iuLz37G6MDeTS2cBjfoLouBoyj3h7PSKoqdjbDHNJZAp/qk2wgW7M
+         O080aPC/q6qjir58KiYrE2fcLFkzz8EpBWV2QgdC809f8ZBwZBaqNfb4Zk8mQaigWPsV
+         gTsQ==
+X-Gm-Message-State: ANoB5pkTdHCUYAgcUhq7kEGtcv+asC2aEF2GbygKkHpYr6Q+qNPQO646
+        ox4UfQX89TpwjdVIQT7nP64=
+X-Google-Smtp-Source: AA0mqf6vJvsHf/sOnwWAxNsXK0x2d6BbzHfgigIkSOCuPrOv+Y6tlWVGrIjefUs5N4uvSBIzkS2A+Q==
+X-Received: by 2002:a05:600c:4e54:b0:3cf:51cf:91c with SMTP id e20-20020a05600c4e5400b003cf51cf091cmr4503087wmq.11.1670584480443;
+        Fri, 09 Dec 2022 03:14:40 -0800 (PST)
+Received: from localhost ([217.131.81.52])
+        by smtp.gmail.com with UTF8SMTPSA id bg9-20020a05600c3c8900b003c6f3f6675bsm9149366wmb.26.2022.12.09.03.14.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Dec 2022 23:48:15 -0800 (PST)
-Message-ID: <41500a04-b004-0e2c-20a1-3a3092b90e6d@linaro.org>
-Date:   Fri, 9 Dec 2022 08:48:13 +0100
+        Fri, 09 Dec 2022 03:14:39 -0800 (PST)
+From:   Sasha Finkelstein <fnkl.kernel@gmail.com>
+To:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sasha Finkelstein <fnkl.kernel@gmail.com>
+Subject: [PATCH v4 0/4] PWM and keyboard backlight driver for ARM Macs
+Date:   Fri,  9 Dec 2022 14:13:09 +0300
+Message-Id: <20221209111313.2701-1-fnkl.kernel@gmail.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [v4 1/5] dt-bindings: mfd: Add aspeed pwm-tach binding
-To:     Billy Tsai <billy_tsai@aspeedtech.com>,
-        "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lee@kernel.org" <lee@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-References: <20221123061635.32025-1-billy_tsai@aspeedtech.com>
- <20221123061635.32025-2-billy_tsai@aspeedtech.com>
- <c4b188b1-06a4-3cb0-a758-e12942e1f67b@linaro.org>
- <27055c13-11ab-cc73-f2ba-c269785b0e28@linaro.org>
- <A5EA19E5-21D8-4954-9636-9B28AC8D946A@aspeedtech.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <A5EA19E5-21D8-4954-9636-9B28AC8D946A@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 09/12/2022 01:54, Billy Tsai wrote:
->     > > However I am surprised to see such change, so I have no clue why this
->     > > was done.
-> 
->     > Actually now I see it was like that in previous patch, I just missed it
->     > during previous review. Anyway this must be fixed.
-> 
-> I have two module (PWM and TACH) but share with the same base address,
-> The PWM will use the offset (N*0x10) + 0x0 and 0x04.
-> The TACH will use the offset (N*0x10) + 0x8 and 0x0c.
-> The range of the N is 0~15.
-> Can you give me some advice to fix this problem without using simple-mfd?
+Hi,
 
+This is the v4 of the patch series to add PWM and keyboard
+backlight driver for ARM macs.
 
-Use regular driver which populates children.
+Changes in v1:
+Addressing the review comments.
 
-Best regards,
-Krzysztof
+Changes in v2:
+Added the reviewed-by and acked-by tags.
+Addressing a review comment.
+
+Changes in v3:
+Addressing the review comments.
+
+v1: https://www.spinics.net/lists/linux-pwm/msg19500.html
+v2: https://www.spinics.net/lists/linux-pwm/msg19562.html
+v3: https://www.spinics.net/lists/linux-pwm/msg19901.html
+
+Sasha Finkelstein (4):
+  dt-bindings: pwm: Add Apple PWM controller
+  pwm: Add Apple PWM controller
+  arm64: dts: apple: t8103: Add PWM controller
+  MAINTAINERS: Add entries for Apple PWM driver
+
+ .../bindings/pwm/apple,s5l-fpwm.yaml          |  51 ++++++
+ MAINTAINERS                                   |   2 +
+ arch/arm64/boot/dts/apple/t8103-j293.dts      |  19 +++
+ arch/arm64/boot/dts/apple/t8103-j313.dts      |  19 +++
+ arch/arm64/boot/dts/apple/t8103.dtsi          |   9 ++
+ drivers/pwm/Kconfig                           |  12 ++
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-apple.c                       | 150 ++++++++++++++++++
+ 8 files changed, 263 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+ create mode 100644 drivers/pwm/pwm-apple.c
+
+-- 
+2.37.1 (Apple Git-137.1)
 
