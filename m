@@ -2,33 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8742A64910E
-	for <lists+linux-pwm@lfdr.de>; Sat, 10 Dec 2022 23:42:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFA09649471
+	for <lists+linux-pwm@lfdr.de>; Sun, 11 Dec 2022 14:31:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbiLJWmK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 10 Dec 2022 17:42:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48106 "EHLO
+        id S230031AbiLKNbe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 11 Dec 2022 08:31:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiLJWmI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 10 Dec 2022 17:42:08 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E642610FE2
-        for <linux-pwm@vger.kernel.org>; Sat, 10 Dec 2022 14:42:07 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p48Xi-0008S6-Bo; Sat, 10 Dec 2022 23:42:02 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p48Xe-003fjR-2X; Sat, 10 Dec 2022 23:41:58 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p48Xe-0046bD-4d; Sat, 10 Dec 2022 23:41:58 +0100
-Date:   Sat, 10 Dec 2022 23:41:54 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+        with ESMTP id S229845AbiLKNbd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 11 Dec 2022 08:31:33 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C260FD02;
+        Sun, 11 Dec 2022 05:31:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670765493; x=1702301493;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=mzHG/pVGmg236g4ocCottXwf/Vck+AOplcQMPTkzoug=;
+  b=LFRuBEdhdHhddmTY9KdMavYFbOK4EmjwhccQC5PxLgLjjwLXiC62Z4Yv
+   +Y0mXzfPRqIYX+lxZzSMbxKxTY8NbJcaiKTHJPKEXR6YXznIyDUrfnfpr
+   nMqT025Aet/Fy8TAZD7UbhC5nnyeMIJ5iaSB1ZqTccZ5Wy08pc5XtZNGG
+   HZw/gg6VA65Yh2u+PF6lNzx50VkKAgUK0mhba1CuBehktJ/+qgEuC1DQK
+   7dnUN+T7C1I7UhjBm/yZSfrC3Fncei9s0ZkCMvF/Iw+RMjGAin2B4LFln
+   rxxU9oNBF5rJ0qPkvU6sXSEZ7uvhADQy1wo1B496Qy419Ossn53F3M8fM
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="318847050"
+X-IronPort-AV: E=Sophos;i="5.96,236,1665471600"; 
+   d="scan'208";a="318847050"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2022 05:31:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="678628772"
+X-IronPort-AV: E=Sophos;i="5.96,236,1665471600"; 
+   d="scan'208";a="678628772"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP; 11 Dec 2022 05:31:28 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1p4MQQ-0080Nz-0b;
+        Sun, 11 Dec 2022 15:31:26 +0200
+Date:   Sun, 11 Dec 2022 15:31:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
@@ -41,78 +58,59 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-sunxi@lists.linux.dev
 Subject: Re: [PATCH v2 00/11] pwm: Allow .get_state to fail
-Message-ID: <20221210224154.733cd5qnrkpexq22@pengutronix.de>
+Message-ID: <Y5XbrWTicuTxPLwN@smile.fi.intel.com>
 References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
  <Y5OtCjQOQjjltGPa@smile.fi.intel.com>
  <20221210091833.vdfir63nq4kpj5cm@pengutronix.de>
  <Y5TyrO5maz5VYic3@smile.fi.intel.com>
+ <20221210224154.733cd5qnrkpexq22@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7qhswmbpkvtzgvtu"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <Y5TyrO5maz5VYic3@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221210224154.733cd5qnrkpexq22@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        SUSPICIOUS_RECIPS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sat, Dec 10, 2022 at 11:41:54PM +0100, Uwe Kleine-König wrote:
+> On Sat, Dec 10, 2022 at 10:57:16PM +0200, Andy Shevchenko wrote:
+> > On Sat, Dec 10, 2022 at 10:18:33AM +0100, Uwe Kleine-König wrote:
+> > > On Fri, Dec 09, 2022 at 11:47:54PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Nov 30, 2022 at 04:21:37PM +0100, Uwe Kleine-König wrote:
 
---7qhswmbpkvtzgvtu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hello Andy,
+> > > > I'm wondering why we didn't see a compiler warning about mistyped function
+> > > > prototypes in some drivers.
+> > > 
+> > > I don't understand where you expected a warning. Care to elaborate?
+> > 
+> > intel-lpss.c has the prototype that returns an int. IIRC it was like this
+> 
+> Do you mean drivers/mfd/intel-lpss.c? That one doesn't implement a PWM?!
 
-On Sat, Dec 10, 2022 at 10:57:16PM +0200, Andy Shevchenko wrote:
-> On Sat, Dec 10, 2022 at 10:18:33AM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Dec 09, 2022 at 11:47:54PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Nov 30, 2022 at 04:21:37PM +0100, Uwe Kleine-K=F6nig wrote:
->=20
-> ...
->=20
-> > > I'm wondering why we didn't see a compiler warning about mistyped fun=
-ction
-> > > prototypes in some drivers.
-> >=20
-> > I don't understand where you expected a warning. Care to elaborate?
->=20
-> intel-lpss.c has the prototype that returns an int. IIRC it was like this
+Nope, I meant pwm-lpss.c.
 
-Do you mean drivers/mfd/intel-lpss.c? That one doesn't implement a PWM?!
+> And drivers/pwm/pwm-lpss.c is adapted by this series.
 
-And drivers/pwm/pwm-lpss.c is adapted by this series.
+That's what I didn't see how.
 
-One of us is confused ...
+> One of us is confused ...
 
-Best regards
-Uwe
+Yes, because when I have checked the branch based on Linux Next I already saw
+that get_state() returns a code and I wasn't aware that the series is already
+there.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+-- 
+With Best Regards,
+Andy Shevchenko
 
---7qhswmbpkvtzgvtu
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOVCy8ACgkQwfwUeK3K
-7Amqbgf7B9CvBJP4sV+MCHwNOkar+hN65y/IFZl8+KJEQzokHbdag/I7vBvxqm0q
-cOWhTR13j1UZBW5bl06bB5K03JJLpAqFVemlvCMxww0G9e7f5gJ+UkkFy64Wg5eN
-S9IGKBbgBZqZIpEpYNRSatcmsUacaV1aKHKYrOkgrkFno+a3jk9SGNUtdwvLyvwW
-6rpJPqUEOQo4dqB3YPj/VZL13P7B92K3qIsBu0lxz20qstp5wjIpMF1Gsky+6Sf+
-WgVSbrTrTjMwtDpEfb9/ZMXWohTWu0FeaTliafQxjCiNCIgmejFgLEdmalOZ4NXx
-gh5E3k8VT1fe4RAogpC5ofieweL1YA==
-=ikaL
------END PGP SIGNATURE-----
-
---7qhswmbpkvtzgvtu--
