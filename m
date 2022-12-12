@@ -2,56 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22DA86499D4
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Dec 2022 08:59:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C88649B0D
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Dec 2022 10:24:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbiLLH7S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Dec 2022 02:59:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
+        id S231600AbiLLJYa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Dec 2022 04:24:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230504AbiLLH7R (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Dec 2022 02:59:17 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C35CE2C
-        for <linux-pwm@vger.kernel.org>; Sun, 11 Dec 2022 23:59:16 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p4diQ-0004yz-2t; Mon, 12 Dec 2022 08:59:10 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p4diO-003yFt-8I; Mon, 12 Dec 2022 08:59:09 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p4diO-004QD2-3K; Mon, 12 Dec 2022 08:59:08 +0100
-Date:   Mon, 12 Dec 2022 08:59:07 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     Sean Young <sean@mess.org>,
+        with ESMTP id S231157AbiLLJYL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Dec 2022 04:24:11 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 610E7F53;
+        Mon, 12 Dec 2022 01:24:10 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="319665590"
+X-IronPort-AV: E=Sophos;i="5.96,237,1665471600"; 
+   d="scan'208";a="319665590"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2022 01:24:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="736903233"
+X-IronPort-AV: E=Sophos;i="5.96,237,1665471600"; 
+   d="scan'208";a="736903233"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 12 Dec 2022 01:24:07 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1p4f2b-008Oim-0a;
+        Mon, 12 Dec 2022 11:24:05 +0200
+Date:   Mon, 12 Dec 2022 11:24:04 +0200
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jean Delvare <jdelvare@suse.de>, Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        Andy Shevchenko <andy@kernel.org>
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
 Subject: Re: [PATCH] media: rc: Drop obsolete dependencies on COMPILE_TEST
-Message-ID: <20221212075907.4iwjsib5nrk7eqr2@pengutronix.de>
+Message-ID: <Y5bzNH2tYeFUIGnI@smile.fi.intel.com>
 References: <20221121170911.7cd72bfc@endymion.delvare>
  <20221211205648.hdv5haufqwfoxzu2@pengutronix.de>
  <20221211231435.43c4f361@endymion.delvare>
+ <20221212075907.4iwjsib5nrk7eqr2@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cv6bebqzuvvfminx"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20221211231435.43c4f361@endymion.delvare>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221212075907.4iwjsib5nrk7eqr2@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,69 +60,56 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Dec 12, 2022 at 08:59:07AM +0100, Uwe Kleine-König wrote:
+> On Sun, Dec 11, 2022 at 11:14:35PM +0100, Jean Delvare wrote:
+> > On Sun, 11 Dec 2022 21:56:48 +0100, Uwe Kleine-König wrote:
+> > > On Mon, Nov 21, 2022 at 05:09:11PM +0100, Jean Delvare wrote:
 
---cv6bebqzuvvfminx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-Hello,
+> > > > -		.of_match_table = of_match_ptr(pwm_ir_of_match),
+> > > > +		.of_match_table = pwm_ir_of_match,
 
-[expanded Cc: for the acpi topic]
+> > > That hunk makes sense even without the Kconfig change. ACPI makes use of
+> > > .of_match_table, so
+> > > 
+> > > 	.of_match_table = of_match_ptr(pwm_ir_of_match),
+> > > 
+> > > is (almost?) always wrong.
+> > 
+> > Should we just get rid of this macro altogether then?
+> > 
+> > (Somehow I have a strange feeling that we already had this
+> > discussion...)
+> 
+> Might be. But for me this is only second hand knowledge, too. Maybe
+> someone of the new recipents in this thread feels competent to comment
+> here?!
 
-On Sun, Dec 11, 2022 at 11:14:35PM +0100, Jean Delvare wrote:
-> Hallo Uwe,
->=20
-> On Sun, 11 Dec 2022 21:56:48 +0100, Uwe Kleine-K=F6nig wrote:
-> > On Mon, Nov 21, 2022 at 05:09:11PM +0100, Jean Delvare wrote:
-> > > --- linux-6.0.orig/drivers/media/rc/pwm-ir-tx.c
-> > > +++ linux-6.0/drivers/media/rc/pwm-ir-tx.c
-> > > @@ -120,7 +120,7 @@ static struct platform_driver pwm_ir_dri
-> > >  	.probe =3D pwm_ir_probe,
-> > >  	.driver =3D {
-> > >  		.name	=3D DRIVER_NAME,
-> > > -		.of_match_table =3D of_match_ptr(pwm_ir_of_match),
-> > > +		.of_match_table =3D pwm_ir_of_match,
-> > >  	},
-> > >  };
-> > >  module_platform_driver(pwm_ir_driver); =20
-> >=20
-> > That hunk makes sense even without the Kconfig change. ACPI makes use of
-> > .of_match_table, so
-> >=20
-> > 	.of_match_table =3D of_match_ptr(pwm_ir_of_match),
-> >=20
-> > is (almost?) always wrong.
->=20
-> Should we just get rid of this macro altogether then?
->=20
-> (Somehow I have a strange feeling that we already had this
-> discussion...)
+Pros of of_match_ptr() / ACPI_PTR():
+- saves a few dozens of bytes in the module ID tables
+- doesn't show ACPI ID for non-ACPI platform or OF ID on non-OF platforms
 
-Might be. But for me this is only second hand knowledge, too. Maybe
-someone of the new recipents in this thread feels competent to comment
-here?!
+Cons:
+- prevents from using OF IDs on ACPI platforms
+- doesn't show ACPI ID for non-ACPI platform or OF ID on non-OF platforms
+- makes error prone for the compiler to have the variable unused
+- makes code uglier
 
-Best regards
-Uwe
+(I left the second in the both because I find useful to have all supported IDs
+ to be listed even if the system is compiled with OF/ACPI opted-out.)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Personally I remove the of_match_ptr()/ACPI_PTR() from drivers that can be used
+on OF or ACPI platforms, which leaves us only with the drivers we are 100% sure
+that they won't ever be used on non-OF platforms. BUT, I do not see any sense
+to have of_match_ptr() that either in use, because the driver in question is
+100% for OF platform, or not when it's compile tested, which means it reduces
+test coverage anyway. All the same for ACPI_PTR().
 
---cv6bebqzuvvfminx
-Content-Type: application/pgp-signature; name="signature.asc"
+TL;DR: I don't see any [big] usefulness of keeping those macros.
 
------BEGIN PGP SIGNATURE-----
+-- 
+With Best Regards,
+Andy Shevchenko
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOW30gACgkQwfwUeK3K
-7Al+PQf/VXKiZSEbz9veUhPADc4e7eTXsGKpPppWsW/wvDtQFEGUk6yB8rJ0hy81
-N2X4icO4obevvDgB0GTUVHVP1SU355xozl+ckEnkIlvsdeP/+oua1pbBJLZsUEYx
-AbNCkghiikvvNIqdomlc04xpkwVXBVPLg6Uy52TkUJ5ybCPqQO/FqhZ2Ylm+yPZM
-YJPLol/Cjo/BPiZCFvSHvKPWLxs1aUnCyNvbs013TxKYcqvOpvSbHySibe/KRQMt
-bnCTn+aBYnxauC/7xgj3bEs/88LE+uEqCdNfylqLQ3bQrozkKw9hqt/z3z7Rdecq
-gHr8YSi94xPieZnq0O9z3mpGCLLJzw==
-=2vY1
------END PGP SIGNATURE-----
 
---cv6bebqzuvvfminx--
