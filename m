@@ -2,57 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09C88649B0D
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Dec 2022 10:24:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0646564A52F
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Dec 2022 17:42:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231600AbiLLJYa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Dec 2022 04:24:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50074 "EHLO
+        id S232906AbiLLQj2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Dec 2022 11:39:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231157AbiLLJYL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Dec 2022 04:24:11 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 610E7F53;
-        Mon, 12 Dec 2022 01:24:10 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="319665590"
-X-IronPort-AV: E=Sophos;i="5.96,237,1665471600"; 
-   d="scan'208";a="319665590"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2022 01:24:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10558"; a="736903233"
-X-IronPort-AV: E=Sophos;i="5.96,237,1665471600"; 
-   d="scan'208";a="736903233"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 12 Dec 2022 01:24:07 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1p4f2b-008Oim-0a;
-        Mon, 12 Dec 2022 11:24:05 +0200
-Date:   Mon, 12 Dec 2022 11:24:04 +0200
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jean Delvare <jdelvare@suse.de>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] media: rc: Drop obsolete dependencies on COMPILE_TEST
-Message-ID: <Y5bzNH2tYeFUIGnI@smile.fi.intel.com>
-References: <20221121170911.7cd72bfc@endymion.delvare>
- <20221211205648.hdv5haufqwfoxzu2@pengutronix.de>
- <20221211231435.43c4f361@endymion.delvare>
- <20221212075907.4iwjsib5nrk7eqr2@pengutronix.de>
+        with ESMTP id S232763AbiLLQis (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Dec 2022 11:38:48 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2337314D17
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Dec 2022 08:37:11 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id i15so13675670edf.2
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Dec 2022 08:37:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lvYON1Uq6UT3Qph7OPPr0NH47G6rUYR8O1BO9MFwJow=;
+        b=lIFXcScE+1mmzH1SBNLfPzmU2yyZ22FDa7zo6/O0Bw9aIOxDeXxYkEVfus52JWuhda
+         4ouELocZnEhmnwFppolEYq4c3c7RHYAqD4pax4M3unQDLONiM/9+ejXSM9E2FE+Z0v02
+         plxbNMhSLCExfq6g58BwEJLatQLzpt/xLWOhKWfMwSgaHbhPuPfGnoShEU2Q/8V0GhBe
+         I8mO/6POKEHTvHhiQrSmT3i/DlcfyH1o4pAMtSuNXvNoHj+mOy3GKKCsRTSQGVPFd3Z7
+         AQYI0FN6wamo3RnZf0VXDCwVvMRjPWjYDkKYXDeP5o/vQIFIn9FanCQzU/XNFNQHrfWF
+         2geA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lvYON1Uq6UT3Qph7OPPr0NH47G6rUYR8O1BO9MFwJow=;
+        b=6L6YBMhqhnj/MF3Cw5o1hT85uwV2PF8g49qwF0qMIBxgXXOCqjxWcEVXhplxkxnmA2
+         tGbPJ/obja3efikAl0dO8ip2dEjOY08xkWfSrGde6ZHTCfPBz78zvbptTLI26vPv9R6+
+         2ofNKjFJ0INsR/Ojq6g/gR+wo+2Vb7eeK6+SRkftqoe/B1sUw0Z4yQNZB+BRlYSXzqk/
+         odUWEqOJRy5J1RjiCMs0KQt+xO65M9D40aRn5UqSuwy9836mw3VSivLYkU2SYtyvoyy4
+         DvpGV/JM5MTYG5P4Uhu8V2VVuWvyyvaVZi68CA1t/cHj7Y92WPvM/2pK2rFnCxZnq+dU
+         DHxw==
+X-Gm-Message-State: ANoB5pmYJRQxqHKTlb4Eb4dvbsZrT5WVFL7qaSCw5OhaeZBqnSLmae40
+        WKRQN5KTxIJJ1zABS+KfoMEZtw==
+X-Google-Smtp-Source: AA0mqf5ppTTyM6N0bPOAfBX//eKXVRPakyRimeYdkY/8NocUbAvjnOSiYLmQOcD2W7tmhBu2XO410g==
+X-Received: by 2002:a05:6402:702:b0:46f:68d0:76 with SMTP id w2-20020a056402070200b0046f68d00076mr10093614edx.34.1670863020790;
+        Mon, 12 Dec 2022 08:37:00 -0800 (PST)
+Received: from prec5560.. ([2001:bf7:830:a7a8:ff97:7d8d:1f2e:ffaa])
+        by smtp.gmail.com with ESMTPSA id m15-20020a50930f000000b00463597d2c25sm4051979eda.74.2022.12.12.08.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Dec 2022 08:37:00 -0800 (PST)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Angel Iglesias <ang.iglesiasg@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Grant Likely <grant.likely@linaro.org>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-actions@lists.infradead.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-crypto@vger.kernel.org, chrome-platform@lists.linux.dev,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-input@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-integrity@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-serial@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
+        linux-staging@lists.linux.dev, alsa-devel@alsa-project.org,
+        linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        kernel@pengutronix.de, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-fbdev@vger.kernel.org
+Subject: Re: (subset) [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
+Date:   Mon, 12 Dec 2022 17:36:51 +0100
+Message-Id: <167086288411.3041259.17824406556561546642.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221212075907.4iwjsib5nrk7eqr2@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,56 +98,32 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 08:59:07AM +0100, Uwe Kleine-König wrote:
-> On Sun, Dec 11, 2022 at 11:14:35PM +0100, Jean Delvare wrote:
-> > On Sun, 11 Dec 2022 21:56:48 +0100, Uwe Kleine-König wrote:
-> > > On Mon, Nov 21, 2022 at 05:09:11PM +0100, Jean Delvare wrote:
-
-...
-
-> > > > -		.of_match_table = of_match_ptr(pwm_ir_of_match),
-> > > > +		.of_match_table = pwm_ir_of_match,
-
-> > > That hunk makes sense even without the Kconfig change. ACPI makes use of
-> > > .of_match_table, so
-> > > 
-> > > 	.of_match_table = of_match_ptr(pwm_ir_of_match),
-> > > 
-> > > is (almost?) always wrong.
-> > 
-> > Should we just get rid of this macro altogether then?
-> > 
-> > (Somehow I have a strange feeling that we already had this
-> > discussion...)
+On Fri, 18 Nov 2022 23:35:34 +0100, Uwe Kleine-KÃ¶nig wrote:
+> since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
+> call-back type") from 2016 there is a "temporary" alternative probe
+> callback for i2c drivers.
 > 
-> Might be. But for me this is only second hand knowledge, too. Maybe
-> someone of the new recipents in this thread feels competent to comment
-> here?!
+> This series completes all drivers to this new callback (unless I missed
+> something). It's based on current next/master.
+> A part of the patches depend on commit 662233731d66 ("i2c: core:
+> Introduce i2c_client_get_device_id helper function"), there is a branch that
+> you can pull into your tree to get it:
+> 
+> [...]
 
-Pros of of_match_ptr() / ACPI_PTR():
-- saves a few dozens of bytes in the module ID tables
-- doesn't show ACPI ID for non-ACPI platform or OF ID on non-OF platforms
+Applied, thanks!
 
-Cons:
-- prevents from using OF IDs on ACPI platforms
-- doesn't show ACPI ID for non-ACPI platform or OF ID on non-OF platforms
-- makes error prone for the compiler to have the variable unused
-- makes code uglier
+Repo: https://cgit.freedesktop.org/drm/drm-misc/
 
-(I left the second in the both because I find useful to have all supported IDs
- to be listed even if the system is compiled with OF/ACPI opted-out.)
 
-Personally I remove the of_match_ptr()/ACPI_PTR() from drivers that can be used
-on OF or ACPI platforms, which leaves us only with the drivers we are 100% sure
-that they won't ever be used on non-OF platforms. BUT, I do not see any sense
-to have of_match_ptr() that either in use, because the driver in question is
-100% for OF platform, or not when it's compile tested, which means it reduces
-test coverage anyway. All the same for ACPI_PTR().
+[014/606] drm/bridge: adv7511: Convert to i2c's .probe_new()
+          commit: 1c546894ff82f8b7c070998c03f9b15a3499f326
+[028/606] drm/bridge: parade-ps8622: Convert to i2c's .probe_new()
+          commit: d6b522e9bbb0cca1aeae4ef6188800534794836f
+[035/606] drm/bridge: ti-sn65dsi83: Convert to i2c's .probe_new()
+          commit: 0f6548807fa77e87bbc37964c6b1ed9ba6e1155d
 
-TL;DR: I don't see any [big] usefulness of keeping those macros.
 
--- 
-With Best Regards,
-Andy Shevchenko
 
+rob
 
