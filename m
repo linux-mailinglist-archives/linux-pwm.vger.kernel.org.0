@@ -2,128 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0646564A52F
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Dec 2022 17:42:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F31C564B340
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Dec 2022 11:28:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbiLLQj2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Dec 2022 11:39:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41096 "EHLO
+        id S234980AbiLMK2x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Dec 2022 05:28:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232763AbiLLQis (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Dec 2022 11:38:48 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2337314D17
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Dec 2022 08:37:11 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id i15so13675670edf.2
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Dec 2022 08:37:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lvYON1Uq6UT3Qph7OPPr0NH47G6rUYR8O1BO9MFwJow=;
-        b=lIFXcScE+1mmzH1SBNLfPzmU2yyZ22FDa7zo6/O0Bw9aIOxDeXxYkEVfus52JWuhda
-         4ouELocZnEhmnwFppolEYq4c3c7RHYAqD4pax4M3unQDLONiM/9+ejXSM9E2FE+Z0v02
-         plxbNMhSLCExfq6g58BwEJLatQLzpt/xLWOhKWfMwSgaHbhPuPfGnoShEU2Q/8V0GhBe
-         I8mO/6POKEHTvHhiQrSmT3i/DlcfyH1o4pAMtSuNXvNoHj+mOy3GKKCsRTSQGVPFd3Z7
-         AQYI0FN6wamo3RnZf0VXDCwVvMRjPWjYDkKYXDeP5o/vQIFIn9FanCQzU/XNFNQHrfWF
-         2geA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lvYON1Uq6UT3Qph7OPPr0NH47G6rUYR8O1BO9MFwJow=;
-        b=6L6YBMhqhnj/MF3Cw5o1hT85uwV2PF8g49qwF0qMIBxgXXOCqjxWcEVXhplxkxnmA2
-         tGbPJ/obja3efikAl0dO8ip2dEjOY08xkWfSrGde6ZHTCfPBz78zvbptTLI26vPv9R6+
-         2ofNKjFJ0INsR/Ojq6g/gR+wo+2Vb7eeK6+SRkftqoe/B1sUw0Z4yQNZB+BRlYSXzqk/
-         odUWEqOJRy5J1RjiCMs0KQt+xO65M9D40aRn5UqSuwy9836mw3VSivLYkU2SYtyvoyy4
-         DvpGV/JM5MTYG5P4Uhu8V2VVuWvyyvaVZi68CA1t/cHj7Y92WPvM/2pK2rFnCxZnq+dU
-         DHxw==
-X-Gm-Message-State: ANoB5pmYJRQxqHKTlb4Eb4dvbsZrT5WVFL7qaSCw5OhaeZBqnSLmae40
-        WKRQN5KTxIJJ1zABS+KfoMEZtw==
-X-Google-Smtp-Source: AA0mqf5ppTTyM6N0bPOAfBX//eKXVRPakyRimeYdkY/8NocUbAvjnOSiYLmQOcD2W7tmhBu2XO410g==
-X-Received: by 2002:a05:6402:702:b0:46f:68d0:76 with SMTP id w2-20020a056402070200b0046f68d00076mr10093614edx.34.1670863020790;
-        Mon, 12 Dec 2022 08:37:00 -0800 (PST)
-Received: from prec5560.. ([2001:bf7:830:a7a8:ff97:7d8d:1f2e:ffaa])
-        by smtp.gmail.com with ESMTPSA id m15-20020a50930f000000b00463597d2c25sm4051979eda.74.2022.12.12.08.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 08:37:00 -0800 (PST)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Grant Likely <grant.likely@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-actions@lists.infradead.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, chrome-platform@lists.linux.dev,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-input@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-serial@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        linux-staging@lists.linux.dev, alsa-devel@alsa-project.org,
-        linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        kernel@pengutronix.de, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-fbdev@vger.kernel.org
-Subject: Re: (subset) [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Date:   Mon, 12 Dec 2022 17:36:51 +0100
-Message-Id: <167086288411.3041259.17824406556561546642.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+        with ESMTP id S235172AbiLMK2W (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Dec 2022 05:28:22 -0500
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8680E62
+        for <linux-pwm@vger.kernel.org>; Tue, 13 Dec 2022 02:28:20 -0800 (PST)
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BDAJBHq020788;
+        Tue, 13 Dec 2022 11:27:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=selector1;
+ bh=BWg+HDZmgPHQRKWNccXLhmf8oUCWCRsnu09e0ZlymTo=;
+ b=4mrgnWCizqeYbazHpFTds6hvlbnjWXTOQSLaJkeucw+0yoMJPbrXB35y2FRLxvNlSXWN
+ Bk00nf/CUxuFFm6cH86wDxIjyF/AzDZ21uJAO5iuGwMqZzMpzYynbvTOjC1LINyMiZcP
+ VVwj/kZARciT8gH+86iAaYkQt8knT/DdudfsSXI4q4tkKfZ65dYHOaD1qPH23DSUyVNf
+ m5Z+b4dtl23+4tb2ADK5AdSOPVBeA29IOTlrZgVxIF5wkKGt2nXwNlJC1634y0GqoE8v
+ cB+P9BoNZ7yr81QFE+PZvU1OgytmjgRtP2ISM5RjrVxleBQY0GwT8/E5Kl80tCPk4mvM ow== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3mcgdphmf6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Dec 2022 11:27:56 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E76610002A;
+        Tue, 13 Dec 2022 11:27:49 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 841A321A211;
+        Tue, 13 Dec 2022 11:27:49 +0100 (CET)
+Received: from localhost (10.201.20.178) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.13; Tue, 13 Dec
+ 2022 11:27:49 +0100
+From:   Olivier Moysan <olivier.moysan@foss.st.com>
+To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Lee Jones <lee@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>
+CC:     Olivier Moysan <olivier.moysan@foss.st.com>,
+        <linux-pwm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] pwm: stm32: enforce settings for pwm capture
+Date:   Tue, 13 Dec 2022 11:27:07 +0100
+Message-ID: <20221213102707.1096345-1-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.178]
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-13_03,2022-12-13_01,2022-06-22_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 18 Nov 2022 23:35:34 +0100, Uwe Kleine-König wrote:
-> since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
-> call-back type") from 2016 there is a "temporary" alternative probe
-> callback for i2c drivers.
-> 
-> This series completes all drivers to this new callback (unless I missed
-> something). It's based on current next/master.
-> A part of the patches depend on commit 662233731d66 ("i2c: core:
-> Introduce i2c_client_get_device_id helper function"), there is a branch that
-> you can pull into your tree to get it:
-> 
-> [...]
+The PWM capture assumes that the input selector is set to default
+input and that the slave mode is disabled. Force reset state for
+TISEL and SMCR registers to match this requirement.
 
-Applied, thanks!
+Note that slave mode disabling is not a pre-requisite by itself
+for capture mode, as hardware supports it for PWM capture.
+However, the current implementation of the driver does not
+allow slave mode for PWM capture. Setting slave mode for PWM
+capture results in wrong capture values.
 
-Repo: https://cgit.freedesktop.org/drm/drm-misc/
+Fixes: 53e38fe73f94 ("pwm: stm32: Add capture support")
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+---
+ drivers/pwm/pwm-stm32.c          | 4 ++++
+ include/linux/mfd/stm32-timers.h | 1 +
+ 2 files changed, 5 insertions(+)
 
-
-[014/606] drm/bridge: adv7511: Convert to i2c's .probe_new()
-          commit: 1c546894ff82f8b7c070998c03f9b15a3499f326
-[028/606] drm/bridge: parade-ps8622: Convert to i2c's .probe_new()
-          commit: d6b522e9bbb0cca1aeae4ef6188800534794836f
-[035/606] drm/bridge: ti-sn65dsi83: Convert to i2c's .probe_new()
-          commit: 0f6548807fa77e87bbc37964c6b1ed9ba6e1155d
-
-
-
-rob
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index 794ca5b02968..24aab0450c78 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -207,6 +207,10 @@ static int stm32_pwm_capture(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	regmap_write(priv->regmap, TIM_ARR, priv->max_arr);
+ 	regmap_write(priv->regmap, TIM_PSC, psc);
+ 
++	/* Reset input selector to its default input and disable slave mode */
++	regmap_write(priv->regmap, TIM_TISEL, 0x0);
++	regmap_write(priv->regmap, TIM_SMCR, 0x0);
++
+ 	/* Map TI1 or TI2 PWM input to IC1 & IC2 (or TI3/4 to IC3 & IC4) */
+ 	regmap_update_bits(priv->regmap,
+ 			   pwm->hwpwm < 2 ? TIM_CCMR1 : TIM_CCMR2,
+diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
+index 5f5c43fd69dd..1b94325febb3 100644
+--- a/include/linux/mfd/stm32-timers.h
++++ b/include/linux/mfd/stm32-timers.h
+@@ -31,6 +31,7 @@
+ #define TIM_BDTR	0x44	/* Break and Dead-Time Reg */
+ #define TIM_DCR		0x48	/* DMA control register    */
+ #define TIM_DMAR	0x4C	/* DMA register for transfer */
++#define TIM_TISEL	0x68	/* Input Selection         */
+ 
+ #define TIM_CR1_CEN	BIT(0)	/* Counter Enable	   */
+ #define TIM_CR1_DIR	BIT(4)  /* Counter Direction	   */
+-- 
+2.25.1
 
