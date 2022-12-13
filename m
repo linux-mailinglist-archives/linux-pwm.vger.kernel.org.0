@@ -2,25 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9340664BC65
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Dec 2022 19:52:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DD1064BC79
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Dec 2022 19:58:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235923AbiLMSwd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 13 Dec 2022 13:52:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
+        id S236650AbiLMS6k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Dec 2022 13:58:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236460AbiLMSwc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Dec 2022 13:52:32 -0500
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 085E123E91;
-        Tue, 13 Dec 2022 10:52:30 -0800 (PST)
+        with ESMTP id S236556AbiLMS6h (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Dec 2022 13:58:37 -0500
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61FBC218A5;
+        Tue, 13 Dec 2022 10:58:35 -0800 (PST)
 X-IronPort-AV: E=Sophos;i="5.96,242,1665414000"; 
-   d="scan'208";a="143217876"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Dec 2022 03:52:30 +0900
+   d="scan'208";a="146047105"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 14 Dec 2022 03:58:34 +0900
 Received: from localhost.localdomain (unknown [10.226.93.72])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A3CAC400B9CB;
-        Wed, 14 Dec 2022 03:52:25 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2F61A40B1019;
+        Wed, 14 Dec 2022 03:58:29 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,8 +37,8 @@ Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         linux-clk@vger.kernel.org,
         Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 Subject: [PATCH v3 0/4] Add RZ/V2{M, MA} PWM driver support
-Date:   Tue, 13 Dec 2022 18:52:19 +0000
-Message-Id: <20221213185223.2011600-1-biju.das.jz@bp.renesas.com>
+Date:   Tue, 13 Dec 2022 18:58:23 +0000
+Message-Id: <20221213185827.2012004-1-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
