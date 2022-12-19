@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB53B650C6A
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Dec 2022 14:06:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9556F650CA4
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Dec 2022 14:30:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231863AbiLSNGk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Dec 2022 08:06:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33146 "EHLO
+        id S229618AbiLSNaw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Dec 2022 08:30:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbiLSNGj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Dec 2022 08:06:39 -0500
+        with ESMTP id S231877AbiLSNau (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Dec 2022 08:30:50 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87DB65E6
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Dec 2022 05:06:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1C26418
+        for <linux-pwm@vger.kernel.org>; Mon, 19 Dec 2022 05:30:49 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1p7FqU-0006uP-H0; Mon, 19 Dec 2022 14:06:18 +0100
+        id 1p7GE2-0001Ma-6s; Mon, 19 Dec 2022 14:30:38 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1p7FqR-000Kxh-SW; Mon, 19 Dec 2022 14:06:15 +0100
+        id 1p7GE0-000LSN-QW; Mon, 19 Dec 2022 14:30:36 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1p7FqQ-006JrB-MX; Mon, 19 Dec 2022 14:06:14 +0100
-Date:   Mon, 19 Dec 2022 14:06:10 +0100
+        id 1p7GDz-006KMX-Qh; Mon, 19 Dec 2022 14:30:35 +0100
+Date:   Mon, 19 Dec 2022 14:30:34 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
 Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
@@ -35,12 +35,12 @@ Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v4 2/4] pwm: Add Apple PWM controller
-Message-ID: <20221219130610.yxggztlqnssm4k7c@pengutronix.de>
+Message-ID: <20221219133034.3ikaxesgfc6znbrs@pengutronix.de>
 References: <20221209111313.2701-1-fnkl.kernel@gmail.com>
  <20221209111313.2701-3-fnkl.kernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cybldnmdxrk2dtsd"
+        protocol="application/pgp-signature"; boundary="vram75tz7mrsla2b"
 Content-Disposition: inline
 In-Reply-To: <20221209111313.2701-3-fnkl.kernel@gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -56,23 +56,58 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---cybldnmdxrk2dtsd
+--vram75tz7mrsla2b
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-over all the driver looks good. Just a few smaller issues below.
-
-I wonder if it's a good idea to call this driver "apple". SoC vendors
-seem to reinvent their peripherals (or buy them somewhere else) for
-their different generations of processors. Maybe call it "apple-s5l"
-already today and not only when the next generation SoC appears?
-(I don't feel strong here, if you want to delay that renaming until
-there is an incompatible SoC that's fine for me.)
-
 On Fri, Dec 09, 2022 at 02:13:11PM +0300, Sasha Finkelstein wrote:
+> Adds the Apple PWM controller driver.
+>=20
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> Acked-by: Sven Peter <sven@svenpeter.dev>
+> ---
+>  drivers/pwm/Kconfig     |  12 ++++
+>  drivers/pwm/Makefile    |   1 +
+>  drivers/pwm/pwm-apple.c | 150 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 163 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-apple.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 60d13a949bc5..c3be11468414 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -51,6 +51,18 @@ config PWM_AB8500
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-ab8500.
+> =20
+> +config PWM_APPLE
+> +	tristate "Apple SoC PWM support"
+> +	depends on ARCH_APPLE || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for PWM controller present on
+> +	  Apple SoCs
+> +
+> +	  Say Y here if you have an ARM Apple laptop, otherwise say N
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-apple.
+> +
+>  config PWM_ATMEL
+>  	tristate "Atmel PWM support"
+>  	depends on ARCH_AT91 || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 7bf1a29f02b8..19899b912e00 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -2,6 +2,7 @@
+>  obj-$(CONFIG_PWM)		+=3D core.o
+>  obj-$(CONFIG_PWM_SYSFS)		+=3D sysfs.o
+>  obj-$(CONFIG_PWM_AB8500)	+=3D pwm-ab8500.o
+> +obj-$(CONFIG_PWM_APPLE)		+=3D pwm-apple.o
+>  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
+>  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+=3D pwm-atmel-hlcdc.o
+>  obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
 > diff --git a/drivers/pwm/pwm-apple.c b/drivers/pwm/pwm-apple.c
 > new file mode 100644
 > index 000000000000..a85fecb20105
@@ -99,10 +134,7 @@ On Fri, Dec 09, 2022 at 02:13:11PM +0300, Sasha Finkelstein wrote:
 > +#include <linux/clk.h>
 > +#include <linux/pm_runtime.h>
 > +#include <linux/math64.h>
-
-I didn't test, but I think you don't need pm_runtime.h here. Also maybe
-the of headers are not needed?
-
+> +
 > +#define APPLE_PWM_CONTROL     0x00
 > +#define APPLE_PWM_ON_CYCLES   0x1c
 > +#define APPLE_PWM_OFF_CYCLES  0x18
@@ -113,11 +145,6 @@ the of headers are not needed?
 > +#define APPLE_CTRL_TRIGGER       BIT(9)
 > +#define APPLE_CTRL_INVERT        BIT(10)
 > +#define APPLE_CTRL_OUTPUT_ENABLE BIT(14)
-
-Would be nice if the register prefix would match the register name. That
-is please either rename APPLE_PWM_CONTROL to APPLE_PWM_CTRL or use
-APPLE_PWM_CONTROL as prefix for the bit fields in that register.
-
 > +
 > +struct apple_pwm {
 > +	struct pwm_chip chip;
@@ -135,10 +162,20 @@ APPLE_PWM_CONTROL as prefix for the bit fields in that register.
 > +{
 > +	struct apple_pwm *fpwm;
 > +	u64 on_cycles, off_cycles;
-
-The declaration can move into the if block below.
-
 > +
+
+polarity handling is missing here and in .get_state(). I assume you
+want:
+
+	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+		return -EINVAL;
+
+here and
+
+	state->polarity =3D PWM_POLARITY_NORMAL;
+
+in .get_state().
+
 > +	fpwm =3D to_apple_pwm(chip);
 > +	if (state->enabled) {
 > +		on_cycles =3D mul_u64_u64_div_u64(fpwm->clkrate,
@@ -160,42 +197,6 @@ E,
 > +		writel(0, fpwm->base + APPLE_PWM_CONTROL);
 > +	}
 > +	return 0;
-
-Assuming clkrate =3D 24000000, I wonder what happens if (duty_cycle and)
-period are so small that on_cycles and off_cycles are both zero. How
-does the hardware behave in this case?
-
-> +}
-> +
-> +static void apple_pwm_get_state(struct pwm_chip *chip, struct pwm_device=
- *pwm,
-> +			   struct pwm_state *state)
-> +{
-> +	struct apple_pwm *fpwm;
-> +	u32 on_cycles, off_cycles, ctrl;
-> +
-> +	fpwm =3D to_apple_pwm(chip);
-> +
-> +	ctrl =3D readl(fpwm->base + APPLE_PWM_CONTROL);
-> +	on_cycles =3D readl(fpwm->base + APPLE_PWM_ON_CYCLES);
-> +	off_cycles =3D readl(fpwm->base + APPLE_PWM_OFF_CYCLES);
-> +
-> +	state->enabled =3D (ctrl & APPLE_CTRL_ENABLE) && (ctrl & APPLE_CTRL_OUT=
-PUT_ENABLE);
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +	state->duty_cycle =3D mul_u64_u64_div_u64(on_cycles, NSEC_PER_SEC, fpwm=
-->clkrate);
-> +	state->period =3D mul_u64_u64_div_u64(off_cycles + on_cycles,
-> +					    NSEC_PER_SEC, fpwm->clkrate);
-
-Wrong rounding direction, you need to round up. Did you test with
-PWM_DEBUG on? This should point out the more obvious cases. Assuming
-clkrate =3D 24000000 for example setting .duty_cycle =3D 3 should trigger a
-warning.
-
-Unfortunately there is no variant of mul_u64_u64_div_u64 that rounds up,
-maybe we need to introduce one.
-
 > +}
 
 Best regards
@@ -205,19 +206,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---cybldnmdxrk2dtsd
+--vram75tz7mrsla2b
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOgYb8ACgkQwfwUeK3K
-7AmyGgf/ZLtQ8j885QI9iI+qjelPALAIjeT2vq38/e9XPENLAGqMsl2+Fi9hgqEC
-fVv6/DhQyKJpvtcjjZIAnr7yBNXFSSAOoCgcNQ5RekuJ4PLW0Bh3yvOA4rf34Ilv
-N/pH5R1CVD1+nRP9VnfctX8cSG1a/fNhuXiSz47Fr2vhvHUGj8x2eLpD+NYZQhzN
-Nn0IQK6T5TQ5m45269jzJgfnoNFDaNQsUkW9BkveIBiIfuwzccdyGu1W0U6dwX6e
-MWaVcHSOtOl55ijXCtDBg4H6AdYiAgAdD7vyYS4sOZsix+cKoAVvl5bAjhDhTmro
-guHL50ggTuXTF6uizUOVGEGUUB1/xw==
-=+xU3
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOgZ3cACgkQwfwUeK3K
+7AlxYQf/YOLbw1yO2jBlVQEjyOtuOia2YlkAog7s7FlPoS8ngtUMT+T770LKj35M
+YgpfVMdR5jVbnjaojsF6WU4IcPyrg1CnaqU2SinaWfsKToWRkkBanb+0NZ8rN7gP
+jhOg9tbPnNt139EvZlP0FNoo+9Cs0orP0Q3lOQ9JXcMzgT+CwlumClwuDuTJQC+q
+kMUfvOw0aiS1X5T3dpiOih9Cl8vHvdX9IEdvYWmFSAeUPV9LSvcXPh+vKpUR+Bxs
+tmZ69lI576BB/W/F9AL0oos6Ps3/irJsw2bVUfl+ffx9u4mJEo5B4nbnLStU6p4H
+gbbPQIUGYaVHim3wT08zgK2A99Y/Qw==
+=teLZ
 -----END PGP SIGNATURE-----
 
---cybldnmdxrk2dtsd--
+--vram75tz7mrsla2b--
