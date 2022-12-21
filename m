@@ -2,199 +2,174 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B91652F06
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Dec 2022 10:58:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CF1D653043
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Dec 2022 12:29:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234701AbiLUJ62 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 21 Dec 2022 04:58:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34964 "EHLO
+        id S229652AbiLUL3i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 21 Dec 2022 06:29:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234719AbiLUJ54 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 21 Dec 2022 04:57:56 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D302E2330D;
-        Wed, 21 Dec 2022 01:53:03 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id m21so10746966edc.3;
-        Wed, 21 Dec 2022 01:53:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oj+ZK3/L1t/Bik0ZdQdR6nSS40R6NxUejB4tVSPhHV0=;
-        b=Oah5VuGCZtF4gNDGjzK/tEU5QDQdg9En2tMucfllm80hKMn+BqLvmyDOmLVqnQ06vU
-         3JX4J/KK3meD6sYLfmsCsIExBGW/bY/zcpAjK652U0o56aE+ikktpfZfqydi3ZpF+Pcs
-         DCi37ARvpUOtUJjgnX6JBvKRM2oMC3+xh36qYa9AHD4QuZlzNvMNOCa60ROUO9nOl5jn
-         nLfwmzN4qMZFB3Q97CypJ8tTto3vZmqZ2w5xipy+KjG8Pzvxkgd0Qdgt/ktyVXIWG6YZ
-         hEeJTbgnYcnqP0erZtoRtOqPJTv4JWVtA3X36uDOrAj4TBbfbG9v7/JvWjn09LilPEQ/
-         MMCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oj+ZK3/L1t/Bik0ZdQdR6nSS40R6NxUejB4tVSPhHV0=;
-        b=52IDGHBr+cyonwxAfxfkGGCKmozSPMAr1OnYhM7Cws0VC0pf4k5jSIR1doHSpi2jG2
-         +6uIqCgpqa+cOw653+gmuTeeVTd4GyPwGXT3qafBY9ZRsmVtREifFcsbrbxgyGOe1GHy
-         RZEI6uU3z/OYVToL1ZUG6A8iIx434a8Vwf5woqTzCt1ImQyNCh2UHfAtE980WWmMKI3/
-         EfK4p3sJv9W1uV5gMEDb/O384OtmPozdrlHMFQvrVlq5zZrgLpJiKmM9eyygR4jp02E+
-         /p8OmhvTkxTGay+5XaCvgrdESBwYoT95NsoxeJMWmXo8ipE792ovzg7NOlX5gkp7Keaz
-         wDGw==
-X-Gm-Message-State: AFqh2koYgetD0HJJ5muFEcJiDzLL0hXiYcoJRGgI2TSY2zv+Q5WHCZLN
-        smTXCdS9CbzMAHaPweBTKnt29EkpxuM=
-X-Google-Smtp-Source: AMrXdXtGc83AfaO+vwtsYai2XDmV5ufjF4p6zv2MY57G7ew5elGpEI2v2VWe0mhUlLhp4pHYfvAQsQ==
-X-Received: by 2002:a05:6402:3998:b0:46b:203:f388 with SMTP id fk24-20020a056402399800b0046b0203f388mr5824167edb.39.1671616382290;
-        Wed, 21 Dec 2022 01:53:02 -0800 (PST)
-Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id dm4-20020a05640222c400b004589da5e5cesm6821209edb.41.2022.12.21.01.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Dec 2022 01:53:01 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v6.2-rc1
-Date:   Wed, 21 Dec 2022 10:52:58 +0100
-Message-Id: <20221221095258.952766-1-thierry.reding@gmail.com>
+        with ESMTP id S229558AbiLUL3i (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 21 Dec 2022 06:29:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F377C10AF;
+        Wed, 21 Dec 2022 03:29:36 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A7EB5B81B60;
+        Wed, 21 Dec 2022 11:29:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94F1C433D2;
+        Wed, 21 Dec 2022 11:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671622174;
+        bh=443F1rXQ30ch6Cy/GlKbcogz3u7FhMGEWGxIcKOK4t4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RMQAbseOtZa8WnF7g64duHVqiPvpaz4vk/HCxQcnoF99qtJFZqXyXpMtBDogLXsEU
+         A5vrCM2HHH1xjU8p5tLDtA5Yx9Yuuf93425ODKcveJ7OcnVykYZKSJ4bgvbj/5mUGj
+         f3DUUSl4byj9snhlTAQON39F6d4/3Y4ONkYzvl2PuPz9YJHa0xBIlCoXJpc1MKMHhd
+         6fZIsO41hp/swRnbefRDICf9m390vn0a5QZcC5IBg/7ahN3/jSjCYL17W+uFMhdunD
+         NVW4+T7mzsbk1DTLXMeRHCYYDiX72OszCzzzYgXAqwiJTIVuOs3UlRWPzbsj1GX2W6
+         FfYlksOyDMgqA==
+From:   Conor Dooley <conor@kernel.org>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>
+Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v13 0/2] Microchip Soft IP corePWM driver
+Date:   Wed, 21 Dec 2022 11:29:11 +0000
+Message-Id: <20221221112912.147210-1-conor@kernel.org>
 X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+From: Conor Dooley <conor.dooley@microchip.com>
 
-The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
+Hey,
 
-  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
+v13 is rebased on top of Uwe's series converting get_state() to return
+int instead of void. Given other changes here, it turns out that I do
+not need it at all unfortunately!
 
-are available in the Git repository at:
+I was wrong about the behaviour of the sync-update bit:
+It /does not/ get cleared at the start of a new period. I did actually
+modify the driver to do a read_poll_timeout() on that bit which seemed
+to work [0], but it turns out that that bit holds it's value until the
+IP block is reset. I'm really not sure how it worked when I tested the
+other week...
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.2-rc1
+I initially implemented a wait with timers and a timeout - but Uwe
+suggested dropping the timeouts entirely & instead going back to
+waiting. The driver now waits in apply() & get_state() for a update to
+have been applied to the waveform before allowing further modification.
+Doing so is required as the applied state doesn't appear in the
+registers until it has appeared at the output.
+I yoinked the msleep/udelay stuff from the sun4i that you mentioned &
+modified it a little as the cost of waiting has been placed on
+subsequent calls.
 
-for you to fetch changes up to 8fa22f4b88e877c0811d2a0e506cf56755add554:
-
-  pwm: pca9685: Convert to i2c's .probe_new() (2022-12-06 12:46:31 +0100)
+Other than that, v13 has some minor bits of cleanup that Uwe suggested
+in mchp_core_pwm_apply_locked().
 
 Thanks,
-Thierry
+Conor.
 
-----------------------------------------------------------------
-pwm: Changes for v6.2-rc1
+0 - https://lore.kernel.org/linux-riscv/Y3uZY5mt%2FZIWk3sS@wendy/
 
-Various changes across the board, mostly improvements and cleanups.
+Changes since v13:
+- couple bits of cleanup to apply_locked(), suggested by Uwe: getting
+  rid of a variable & using unsigned long for another.
+- move the overhead waiting for a change to be applied, for channels
+  with shadow registers, to subsequent calls to apply(). This has the
+  benefit of only waiting when two calls to apply() are close in time
+  rather than eating the delay in every call.
 
-----------------------------------------------------------------
-Andre Przywara (1):
-      pwm: sun4i: Propagate errors in .get_state() to the caller
+Changes since v11:
+- swap a "bare" multiply & divide for the corresponding helper to
+  prevent overflow
+- factor out duplicate clk rate acquisition & period calculation
+- make the period calculation return void by checking the validity of
+  the clock rate in the caller
+- drop the binding & dt patch, they're on-track for v6.2 via my tree
 
-Andy Shevchenko (1):
-      pwm: core: Remove S_IFREG from debugfs_create_file()
+Changes since v10:
+- reword some comments
+- try to assign the period if a disable is requested
+- drop a cast around a u8 -> u16 conversion
+- fix a check on period_steps that should be on the hw_ variant
+- split up the period calculation in get_state() to fix the result on
+  32 bit
+- add a rate variable in get_state() to only call get_rate() once
+- redo the locking as suggested to make it more straightforward.
+- stop checking for enablement in get_state() that was working around
+ intended behaviour of the sysfs interface
 
-Daniel Golle (2):
-      pwm: mediatek: always use bus clock for PWM on MT7622
-      pwm: mediatek: Add support for MT7986
+Changes since v9:
+- fixed the missing unlock that Dan reported
 
-Doug Brown (6):
-      pwm: pxa: Remove pxa_pwm_enable/disable
-      pwm: pxa: Set duty cycle to 0 when disabling PWM
-      pwm: pxa: Remove clk enable/disable from pxa_pwm_config
-      pwm: pxa: Use abrupt shutdown mode
-      pwm: pxa: Add reference manual link and limitations
-      pwm: pxa: Enable for MMP platform
+Changes since v8:
+- fixed a(nother) raw 64 bit division (& built it for riscv32!)
+- added a check to make sure we don't try to sleep for 0 us
 
-Geert Uytterhoeven (2):
-      dt-bindings: pwm: renesas,pwm-rcar: Add r8a779g0 support
-      dt-bindings: pwm: renesas,tpu: Add r8a779g0 support
+Changes since v7:
+- rebased on 6.0-rc1
+- reworded comments you highlighted in v7
+- fixed the overkill sleeping
+- removed the unused variables in calc_duty
+- added some extra comments to explain behaviours you questioned in v7
+- make the mutexes un-interruptible
+- fixed added the 1s you suggested for the if(period_locked) logic
+- added setup of the channel_enabled shadowing
+- fixed the period reporting for the negedge == posedge case in
+  get_state() I had to add the enabled check, as otherwise it broke
+  setting the period for the first time out of reset.
+- added a test for invalid PERIOD_STEPS values, in which case we abort
+  if we cannot fix the period
 
-Jon Hunter (2):
-      pwm: tegra: Improve required rate calculation
-      pwm: tegra: Ensure the clock rate is not less than needed
+Changes from v6:
+- Dropped an unused variable that I'd missed
+- Actually check the return values of the mutex lock()s
+- Re-rebased on -next for the MAINTAINERS patch (again...)
 
-Paul Cercueil (3):
-      pwm: jz4740: Force dependency on Device Tree
-      pwm: jz4740: Depend on MACH_INGENIC instead of MIPS
-      pwm: jz4740: Use regmap_{set,clear}_bits
+Changes from v5:
+- switched to a mutex b/c we must sleep with the lock taken
+- simplified the locking in apply() and added locking to get_state()
+- reworked apply() as requested
+- removed the loop in the period calculation (thanks Uwe!)
+- add a copy of the enable registers in the driver to save on reads.
+- remove the second (useless) write to sync_update
+- added some missing rounding in get_state()
+- couple other minor cleanups as requested in:
+https://lore.kernel.org/linux-riscv/20220709160206.cw5luo7kxdshoiua@pengutronix.de/
 
-Steven Price (1):
-      pwm: tegra: Fix 32 bit build
+Changes from v4:
+- dropped some accidentally added files
 
-Uwe Kleine-König (23):
-      pwm: sifive: Call pwm_sifive_update_clock() while mutex is held
-      pwm: lpc18xx-sct: Fix a comment to match code
-      pwm: Document variables protected by pwm_lock
-      pwm: Reduce time the pwm_lock mutex is held in pwmchip_add()
-      pwm: Mark free pwm IDs as used in alloc_pwms()
-      pwm: Don't initialize list head before calling list_add()
-      pwm: fsl-ftm: Use regmap_clear_bits and regmap_set_bits where applicable
-      pwm: img: Use regmap_clear_bits and regmap_set_bits where applicable
-      pwm: iqs620a: Use regmap_clear_bits and regmap_set_bits where applicable
-      pwm: stm32-lp: Use regmap_clear_bits and regmap_set_bits where applicable
-      pwm: stm32: Use regmap_clear_bits and regmap_set_bits where applicable
-      pwm: Make .get_state() callback return an error code
-      pwm/tracing: Also record trace events for failed API calls
-      drm/bridge: ti-sn65dsi86: Propagate errors in .get_state() to the caller
-      leds: qcom-lpg: Propagate errors in .get_state() to the caller
-      pwm: crc: Propagate errors in .get_state() to the caller
-      pwm: cros-ec: Propagate errors in .get_state() to the caller
-      pwm: imx27: Propagate errors in .get_state() to the caller
-      pwm: mtk-disp: Propagate errors in .get_state() to the caller
-      pwm: rockchip: Propagate errors in .get_state() to the caller
-      pwm: sprd: Propagate errors in .get_state() to the caller
-      pwm: Handle .get_state() failures
-      pwm: pca9685: Convert to i2c's .probe_new()
+Changes before v4:
+https://lore.kernel.org/linux-pwm/20220721172109.941900-1-mail@conchuod.ie
 
-xinlei lee (1):
-      pwm: mtk-disp: Fix the parameters calculated by the enabled flag of disp_pwm
+Conor Dooley (2):
+  pwm: add microchip soft ip corePWM driver
+  MAINTAINERS: add pwm to PolarFire SoC entry
 
- .../devicetree/bindings/pwm/renesas,pwm-rcar.yaml  |  1 +
- .../devicetree/bindings/pwm/renesas,tpu-pwm.yaml   |  1 +
- drivers/gpio/gpio-mvebu.c                          |  9 ++-
- drivers/gpu/drm/bridge/ti-sn65dsi86.c              | 14 +++--
- drivers/leds/rgb/leds-qcom-lpg.c                   | 14 +++--
- drivers/pwm/Kconfig                                |  6 +-
- drivers/pwm/core.c                                 | 68 ++++++++++++----------
- drivers/pwm/pwm-atmel.c                            |  6 +-
- drivers/pwm/pwm-bcm-iproc.c                        |  8 ++-
- drivers/pwm/pwm-crc.c                              | 10 ++--
- drivers/pwm/pwm-cros-ec.c                          |  8 ++-
- drivers/pwm/pwm-dwc.c                              |  6 +-
- drivers/pwm/pwm-fsl-ftm.c                          | 18 +++---
- drivers/pwm/pwm-hibvt.c                            |  6 +-
- drivers/pwm/pwm-img.c                              | 15 +++--
- drivers/pwm/pwm-imx-tpm.c                          |  8 ++-
- drivers/pwm/pwm-imx27.c                            |  8 ++-
- drivers/pwm/pwm-intel-lgm.c                        |  6 +-
- drivers/pwm/pwm-iqs620a.c                          | 10 ++--
- drivers/pwm/pwm-jz4740.c                           | 20 +++----
- drivers/pwm/pwm-keembay.c                          |  6 +-
- drivers/pwm/pwm-lpc18xx-sct.c                      |  2 +-
- drivers/pwm/pwm-lpss.c                             |  6 +-
- drivers/pwm/pwm-mediatek.c                         |  9 ++-
- drivers/pwm/pwm-meson.c                            |  8 ++-
- drivers/pwm/pwm-mtk-disp.c                         | 17 +++---
- drivers/pwm/pwm-pca9685.c                          | 13 +++--
- drivers/pwm/pwm-pxa.c                              | 58 ++++++++----------
- drivers/pwm/pwm-raspberrypi-poe.c                  |  8 ++-
- drivers/pwm/pwm-rockchip.c                         | 12 ++--
- drivers/pwm/pwm-sifive.c                           | 11 +++-
- drivers/pwm/pwm-sl28cpld.c                         |  8 ++-
- drivers/pwm/pwm-sprd.c                             |  8 ++-
- drivers/pwm/pwm-stm32-lp.c                         | 13 +++--
- drivers/pwm/pwm-stm32.c                            | 34 +++++------
- drivers/pwm/pwm-sun4i.c                            | 14 +++--
- drivers/pwm/pwm-sunplus.c                          |  6 +-
- drivers/pwm/pwm-tegra.c                            | 15 ++++-
- drivers/pwm/pwm-visconti.c                         |  6 +-
- drivers/pwm/pwm-xilinx.c                           |  8 ++-
- include/linux/pwm.h                                |  4 +-
- include/trace/events/pwm.h                         | 20 +++----
- 42 files changed, 299 insertions(+), 229 deletions(-)
+ MAINTAINERS                      |   1 +
+ drivers/pwm/Kconfig              |  10 +
+ drivers/pwm/Makefile             |   1 +
+ drivers/pwm/pwm-microchip-core.c | 436 +++++++++++++++++++++++++++++++
+ 4 files changed, 448 insertions(+)
+ create mode 100644 drivers/pwm/pwm-microchip-core.c
+
+-- 
+2.38.1
+
