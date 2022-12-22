@@ -2,126 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA325653F2D
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Dec 2022 12:43:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 766EF6547C8
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Dec 2022 22:21:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235212AbiLVLnF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 22 Dec 2022 06:43:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
+        id S229603AbiLVVVz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 22 Dec 2022 16:21:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229707AbiLVLnE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Dec 2022 06:43:04 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C7D27DF3
-        for <linux-pwm@vger.kernel.org>; Thu, 22 Dec 2022 03:43:02 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id o6so2342586lfi.5
-        for <linux-pwm@vger.kernel.org>; Thu, 22 Dec 2022 03:43:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uBssYKk9hpir98GZNc3X97bkakcTPDPCU4naoK/NGGo=;
-        b=XR2eZCbx4dsgBUb6vwlxECw+klSMHSrF09709Wo7wjpVKkuCubKGWmwzrxVQ+Se/8H
-         Vfu/0HrD3BqhP4cZere5W/wA33Lkt7qDSY/+IYZoIurqWZ0bMcsqL+XChiHBXj2MqGe3
-         LJ3tlZvyoE2QfEgli6XACN/GDykZNIYy4zk2IU7NqyLvb7snekSe0BE2njGJtnu61rmD
-         fLBI50uWm7dg5+EuIVQunAnGwGi3SJA12epLTz1y6Za9HxwKChoRlLZKadj2Zy9A6kS8
-         gdiMeZUiPFBrqWzi5nmO0BZM1/L/be6tcvXh+vTc2jdz7p9GnIZvoSNJVKj8U/g59NNv
-         TrDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uBssYKk9hpir98GZNc3X97bkakcTPDPCU4naoK/NGGo=;
-        b=oW9WCcFp1nsWn5+bX1PncmtqYVWolZkk+CBQ0oueRMRqXyDlEtuv7jm7B4W6eJEtXJ
-         TC7LppV+a2f9+LC+XCJQxE7Cs1zQUhy8144WgA0WdB2JJnUv1ac/aVUM+xqBG3CLb21c
-         AMCXQf0hQ7Vg0La3bhGTkR0JisVao142dW5EbAjzpNjJZ7uc57/iOtjG5NhKv5DJWzRk
-         deiTI8LgrqEmsrTCajND2tkxN8p9MKBv/VgO2qtsX7R99bRPpL6kKtOizDmYNaMnx4gK
-         /ibuVVE8E4NXmAF5kj0qwEYH6NkEuzJ+ggY7SBs3LK2v6TCoWavO5Fpw//ydGsXV5Oeu
-         SkDw==
-X-Gm-Message-State: AFqh2kromn2hcBjPJTrZVMdsNQ0ABSrINvlvsyJvEMzmRhnTbk6HODPG
-        RXYCUL2XCGPDLVsbZP6SBMML2w==
-X-Google-Smtp-Source: AMrXdXvLfKc+k8RmiuBHFNyAQ524e5bDOX3M+swEQ1cHK4veuXqknCBBo60j48VHboDSr5k1MJkAhg==
-X-Received: by 2002:a05:6512:b9d:b0:4b9:e305:90eb with SMTP id b29-20020a0565120b9d00b004b9e30590ebmr2140888lfv.13.1671709380951;
-        Thu, 22 Dec 2022 03:43:00 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id z1-20020a0565120c0100b004b4b600c093sm45535lfu.92.2022.12.22.03.42.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Dec 2022 03:43:00 -0800 (PST)
-Message-ID: <abeb6ee7-9771-ea0c-fdf8-71f50bd8ac5b@linaro.org>
-Date:   Thu, 22 Dec 2022 12:42:59 +0100
+        with ESMTP id S235084AbiLVVVx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 22 Dec 2022 16:21:53 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAB2F5BB
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Dec 2022 13:21:52 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p8T0a-0005AL-1C; Thu, 22 Dec 2022 22:21:44 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p8T0Z-0015fM-0S; Thu, 22 Dec 2022 22:21:43 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p8T0X-007DDs-R7; Thu, 22 Dec 2022 22:21:41 +0100
+Date:   Thu, 22 Dec 2022 22:21:41 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] media: rc: Drop obsolete dependencies on COMPILE_TEST
+Message-ID: <20221222212141.yhn7xazsphtmiint@pengutronix.de>
+References: <20221121170911.7cd72bfc@endymion.delvare>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v5 3/4] arm64: dts: apple: t8103: Add PWM controller
-Content-Language: en-US
-To:     Sasha Finkelstein <fnkl.kernel@gmail.com>,
-        u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221221210648.2735-1-fnkl.kernel@gmail.com>
- <20221221210648.2735-4-fnkl.kernel@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221221210648.2735-4-fnkl.kernel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y5vizb7n5hvnx3ao"
+Content-Disposition: inline
+In-Reply-To: <20221121170911.7cd72bfc@endymion.delvare>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 21/12/2022 22:06, Sasha Finkelstein wrote:
-> Adds PWM controller and keyboard backlight bindings for M1 MacBooks
-> 
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> Acked-by: Sven Peter <sven@svenpeter.dev>
-> ---
->  arch/arm64/boot/dts/apple/t8103-j293.dts | 19 +++++++++++++++++++
->  arch/arm64/boot/dts/apple/t8103-j313.dts | 19 +++++++++++++++++++
->  arch/arm64/boot/dts/apple/t8103.dtsi     |  9 +++++++++
->  3 files changed, 47 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/apple/t8103-j293.dts b/arch/arm64/boot/dts/apple/t8103-j293.dts
-> index ecb10d237a05..43f79570b458 100644
-> --- a/arch/arm64/boot/dts/apple/t8103-j293.dts
-> +++ b/arch/arm64/boot/dts/apple/t8103-j293.dts
-> @@ -11,6 +11,7 @@
->  
->  #include "t8103.dtsi"
->  #include "t8103-jxxx.dtsi"
-> +#include <dt-bindings/leds/common.h>
->  
->  / {
->  	compatible = "apple,j293", "apple,t8103", "apple,arm-platform";
-> @@ -43,3 +44,21 @@ &i2c2 {
->  &i2c4 {
->  	status = "okay";
->  };
-> +
-> +/ {
-> +	led-controller {
-> +		compatible = "pwm-leds";
-> +		led-0 {
-> +			pwms = <&fpwm1 0 40000>;
-> +			label = "kbd_backlight";
-> +			function = LED_FUNCTION_KBD_BACKLIGHT;
-> +			color = <LED_COLOR_ID_WHITE>;
-> +			max-brightness = <255>;
-> +			default-state = "keep";
-> +		};
-> +	};
-> +};
-{ goes to the top, not in the middle of DTS. Don't add stuff at the end
-of DTS.
 
-Best regards,
-Krzysztof
+--y5vizb7n5hvnx3ao
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
+
+On Mon, Nov 21, 2022 at 05:09:11PM +0100, Jean Delvare wrote:
+> Since commit 0166dc11be91 ("of: make CONFIG_OF user selectable"), it
+> is possible to test-build any driver which depends on OF on any
+> architecture by explicitly selecting OF. Therefore depending on
+> COMPILE_TEST as an alternative is no longer needed.
+>=20
+> It is actually better to always build such drivers with OF enabled,
+> so that the test builds are closer to how each driver will actually be
+> built on its intended target. Building them without OF may not test
+> much as the compiler will optimize out potentially large parts of the
+> code. In the worst case, this could even pop false positive warnings.
+> Dropping COMPILE_TEST here improves the quality of our testing and
+> avoids wasting time on non-existent issues.
+>=20
+> As a minor optimization, this also lets us drop of_match_ptr(), as we
+> now know what it will resolve to, we might as well save cpp some work.
+>=20
+> Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> Cc: Sean Young <sean@mess.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: "Uwe Kleine-K=F6nig" <u.kleine-koenig@pengutronix.de>
+
+FTR: I discard this patch from the PWM patchwork as "handled elsewhere".
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--y5vizb7n5hvnx3ao
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOkymIACgkQwfwUeK3K
+7An8NAf/Z6B3fRFOKcJStjrDLjG8JX6fW3yclViwo4hKEHsODYu5PiEMkd+vo9Q5
+EAHYY3k5hHJO3RBvhZ9Pz9srXZhVazyskV/0OToryX9GOiYxYd4VzB8/1+AoPN1D
+gqF35c0idYMwf9oiU9Wer9alm89Sy7I0+V/QsFZpN/DH8cdpx5AISP0Q2OhKmc9T
+UerviITyf387X+Gxy/xLiZ7ayuu+OWolFaB9i215sIoa81vUOdqv5bgeeNE9YoP6
+YlQ8fzJvEiJzczZ8NUnBTcxduXWLpye9TD1qxBEwOetWYVKfxZ7fluksg5L5053q
+8nMMy6cBt+c0XLwck9fno1ukKw1QiA==
+=rGaE
+-----END PGP SIGNATURE-----
+
+--y5vizb7n5hvnx3ao--
