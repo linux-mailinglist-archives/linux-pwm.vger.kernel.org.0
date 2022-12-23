@@ -2,55 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D78D65522C
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Dec 2022 16:38:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49C5865522E
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Dec 2022 16:38:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236399AbiLWPi2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Dec 2022 10:38:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
+        id S230124AbiLWPi3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Dec 2022 10:38:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236241AbiLWPi1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Dec 2022 10:38:27 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F82C37F9B
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Dec 2022 07:38:26 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id a17so4878538wrt.11
+        with ESMTP id S236328AbiLWPi2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Dec 2022 10:38:28 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F6637F90
+        for <linux-pwm@vger.kernel.org>; Fri, 23 Dec 2022 07:38:27 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id co23so4907521wrb.4
         for <linux-pwm@vger.kernel.org>; Fri, 23 Dec 2022 07:38:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EtWGiVmifJ/p5NoM/SB2O4ZTTUxKNKwZjVeO5da62YQ=;
-        b=eoViL67CheerY/GJogWInFCx8oEhaNaDJ48UxfpAPT6Yx1Y3wpgYmwCqQY/xro+8Nk
-         H9dXTVmTUgsTw2FmT5LZlxfSMFMWIbXtJ4RYhSeeTeo1PP2XjumDJ2sAHQ+I+wY72ZTB
-         kOWuDIydGIx04Z0lWdp7/qceGwBiUhEMZlalMIiXHPCKQjvpjB/QmpiVSGGOncGFzvxV
-         cimB5EyTLlFkGxKuQiDyQ9TgimBARZj86hcn8gCvF6k/+IXAFtB53QDSYj3sRTbI+Ajt
-         ManLmmEbaMQIgpLPmLUrgLhSxuRUakauAa8DMaeKWu65TnEteoditriEs6unm9um9EGN
-         kMZA==
+        bh=LaKMC7NJJS8Y0MMlr5K0QsyzZJpC85cOVEafIt4Qty0=;
+        b=V1l553I7oXg2C4qHnYmFpqG503sjIbNgnxto6sYHsaO6xODmi2RhQG3hUeJIQMhxil
+         ienlHVx59OcUQoZAFPhXm0SvnJzf4HPu05gMUSEw18ld1kIqzuyQUxq+xZZWx7xlC+rz
+         yNhsjYUMEzQHfyAHBaYRj1ReZWj+ldX8KfK0aJwMXEQ7UVT77SNAI6YkyfbsznrceyuY
+         u55Q0IsrCnclU7f+E+N6Hfrwz9eLkG6yn0sviThtmL7YuPys4HJmiNTRpW31SopmUxSZ
+         0JBZrrxWaEfiq8QFob3Ba27uPL+xK4p13H3SoiBwORvRyC2RAwqRBq1+7o6QBy+6U4HF
+         1NAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EtWGiVmifJ/p5NoM/SB2O4ZTTUxKNKwZjVeO5da62YQ=;
-        b=uTPwA+zcV/4s4K5M3DbbSVKKFB+uaDCDuaFpcirfGaS42atGzK/XxqdGMFeIQWVGev
-         AC78L43v6LiDg8M2/c/Eg/PtpqG0heFUW9ZXnz9euIKODORQ1hiZ9SSzurevhz6XoUCX
-         AWR+XPTy9VntgNtUywlP7r9yIcgNPhtSg0eDzuKt+lZmoOoaju8m9s1r8+/ibm+decFK
-         NugsjPgved0v8TeVTjGAhRMYY+6Ok5PqQN45QjrRvEq89D83hdzWGU7jl2ksPGYBuoZh
-         LeLjpFH4kCDGK5HbDh8u9H4V4n2GyRjYI9x0CSm6QZ2v/hu3hYWKkSDl7lfl7/HzYG8j
-         upVQ==
-X-Gm-Message-State: AFqh2kroax+LIthrPtaFsMTGl0s3VdV+jiKnf0c8V2vedmQHCWhjF+Wo
-        h730VPyBjg9oVYbV/DPM8fXvg8BJXmB/cpgwv0m8z9qzO588BkBrrGZu09p8tP1Zn2E6vkAGDXj
-        DVL+3nQxEXE9QwcBFAHCYQbQK8yH4/KO1kJeHjycuENqE08h67c7txJqfBgEOxPeXWhsIaTMolO
-        v66w==
-X-Google-Smtp-Source: AMrXdXsvyUizrp/5r9cTIoO918Nf7mGbUC58pP5NYbsh3QY2qzUAyosHyR6+vtJwjBjRFlLuAnqMCQ==
-X-Received: by 2002:adf:eb08:0:b0:242:e73:f636 with SMTP id s8-20020adfeb08000000b002420e73f636mr7834154wrn.4.1671809904392;
-        Fri, 23 Dec 2022 07:38:24 -0800 (PST)
+        bh=LaKMC7NJJS8Y0MMlr5K0QsyzZJpC85cOVEafIt4Qty0=;
+        b=cBQ2MRIsTdB/JYgsX0uDKjPAuBhFeBMPfbG9LTvOhIrHf8PyKORDwI6h5/h/Yjd3eK
+         qtES0L2KbiDvn8HMnOX8O8grZJEvBbVsGHFXxtuXepVtdzzu7k3hwHu4n8AGynbK/o2n
+         d3zwrcaSesvuGTITy2fk5ElfzGslsJShE90EbT9kd5aqtE/GM8Su7WgXMn94ZD7guEMe
+         sJLxbBNydFDadN7x0de/gJ+EoA1SqFB0v3R9WPsT8BPfRCCvyyrX4ImHHlozjjFrpASP
+         X8h0LSTz5+sebSe4+D4ZWMh5GNSqGz/ncMWGJcoM0MdT4Zpk/LAwFCz3bd8mDqzAH+f6
+         tWug==
+X-Gm-Message-State: AFqh2kpHkDWQ2NyQNH+fEuWpV0pLZSQa5MsVNBePoKrfKKNwyhUZMF+t
+        SXqyuBxAXG5P05BjbZhM8fiztCEqunBnSauF0OR22IKJt46BjvfCfIClCVaB9FPa6bCIkdYIj1I
+        +vJKFmnYXRbpDrYATfifoc4v7np+nZb6uMT0Tsp86SuwSw7BIj923UlRd3HEw4Jckap4UXupNjW
+        ZlaA==
+X-Google-Smtp-Source: AMrXdXtsOoK7IIaJwi0rQ/Qg1U1ANupeWnCz12A+frhdNo1KNGXo1GQqy7SEtL7EEzLMqGDMLwRHAA==
+X-Received: by 2002:a5d:46c3:0:b0:242:404c:2039 with SMTP id g3-20020a5d46c3000000b00242404c2039mr6729654wrs.34.1671809905358;
+        Fri, 23 Dec 2022 07:38:25 -0800 (PST)
 Received: from rainbowdash.. (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id m5-20020adfc585000000b00236488f62d6sm3491610wrg.79.2022.12.23.07.38.23
+        by smtp.gmail.com with ESMTPSA id m5-20020adfc585000000b00236488f62d6sm3491610wrg.79.2022.12.23.07.38.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 07:38:24 -0800 (PST)
+        Fri, 23 Dec 2022 07:38:25 -0800 (PST)
 From:   Ben Dooks <ben.dooks@sifive.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,11 +62,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         jarkko.nikula@linux.intel.com,
         William Salmon <william.salmon@sifive.com>,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Ben Dooks <ben.dooks@sifive.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 01/10] dt-bindings: pwm: Document Synopsys DesignWare snps,pwm-dw-apb-timers-pwm2
-Date:   Fri, 23 Dec 2022 15:38:11 +0000
-Message-Id: <20221223153820.404565-2-ben.dooks@sifive.com>
+        Ben Dooks <ben.dooks@sifive.com>
+Subject: [PATCH v7 02/10] pwm: dwc: allow driver to be built with COMPILE_TEST
+Date:   Fri, 23 Dec 2022 15:38:12 +0000
+Message-Id: <20221223153820.404565-3-ben.dooks@sifive.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20221223153820.404565-1-ben.dooks@sifive.com>
 References: <20221223153820.404565-1-ben.dooks@sifive.com>
@@ -83,104 +82,34 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add documentation for the bindings for Synopsys' DesignWare PWM block
-as we will be adding DT/platform support to the Linux driver soon.
+Allow dwc driver to be built with COMPILE_TEST should allow
+better coverage when build testing.
 
 Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
-v5:
- - fixed order of properties
- - corrected clock to two items
 v4:
- - fixed typos, added reg
+ - moved to earlier in the series
 v3:
- - add description and example
- - merge the snps,pwm-number into this patch
- - rename snps,pwm to snps,dw-apb-timers-pwm2
-v2:
- - fix #pwm-cells to be 3
- - fix indentation and ordering issues
+ - add HAS_IOMEM depdency for compile testing
 ---
- .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml | 68 +++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+ drivers/pwm/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-new file mode 100644
-index 000000000000..9aabdb373afa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2022 SiFive, Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/snps,dw-apb-timers-pwm2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synopsys DW-APB timers PWM controller
-+
-+maintainers:
-+  - Ben Dooks <ben.dooks@sifive.com>
-+
-+description:
-+  This describes the DesignWare APB timers module when used in the PWM
-+  mode. The IP core can be generated with various options which can
-+  control the functionality, the number of PWMs available and other
-+  internal controls the designer requires.
-+
-+  The IP block has a version register so this can be used for detection
-+  instead of having to encode the IP version number in the device tree
-+  comaptible.
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: snps,dw-apb-timers-pwm2
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+  clocks:
-+    items:
-+      - description: Interface bus clock
-+      - description: PWM reference clock
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: timer
-+
-+  snps,pwm-number:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: The number of PWM channels configured for this instance
-+    enum: [1, 2, 3, 4, 5, 6, 7, 8]
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#pwm-cells"
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm: pwm@180000 {
-+      compatible = "snps,dw-apb-timers-pwm2";
-+      reg = <0x180000 0x200>;
-+      #pwm-cells = <3>;
-+      clocks = <&bus>, <&timer>;
-+      clock-names = "bus", "timer";
-+    };
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 60d13a949bc5..3f3c53af4a56 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -176,7 +176,8 @@ config PWM_CROS_EC
+ 
+ config PWM_DWC
+ 	tristate "DesignWare PWM Controller"
+-	depends on PCI
++	depends on PCI || COMPILE_TEST
++	depends on HAS_IOMEM
+ 	help
+ 	  PWM driver for Synopsys DWC PWM Controller attached to a PCI bus.
+ 
 -- 
 2.35.1
 
