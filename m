@@ -2,207 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDFB9655243
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Dec 2022 16:38:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9822F656749
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 Dec 2022 06:02:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236560AbiLWPiu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Dec 2022 10:38:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        id S229478AbiL0FCx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 27 Dec 2022 00:02:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236517AbiLWPij (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Dec 2022 10:38:39 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2462A46651
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Dec 2022 07:38:33 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id w15so4892495wrl.9
-        for <linux-pwm@vger.kernel.org>; Fri, 23 Dec 2022 07:38:33 -0800 (PST)
+        with ESMTP id S229447AbiL0FCw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Dec 2022 00:02:52 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2045.outbound.protection.outlook.com [40.107.94.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D345FE2
+        for <linux-pwm@vger.kernel.org>; Mon, 26 Dec 2022 21:02:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dN3NfN6CHbYBOpKT1z9EXnjKLaC/hyqizl78QZBR6KRHmTUn1SOaHqSvu1Z2Eln1zO7lxo5lReMeQJBfmL4GvNrYG+OgCa4rrSsmBMDfZ8an2Wx/SFR4TUc7FLmJWu/W9OLB8W9jnfqJ24WcEQZ+Lv8vZZ4o9cSB4dOR6yu1VO9oRBEBwxRmsryTA8QQN47r6ZVU1GqX2K0RMRKuIxnpu5oc49SI7jxZcON65u2MkogXy1QOiqUMUstMuXmjvbBpVMHLecIOaiH/zjwBcGrTx4bQBSA3YRGJ4GeCMiYM/tSahZPcgxTBvD1kcoEouwQDn2Uzvgj8qARn0yWClmcERg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=92ehzQ1E/14SItnPOcebITi/dM4soEbWUCEJIqGyHnE=;
+ b=K1VKsN9uixxGeZjj4OkP52UCKADFqlncRmsmP90DNwbl3b1ZUUccdTJgfC7ljTFHuAqlQW4AyXoZ/sgOG79O8KiwGlpmIlIGAvav9tSBnu0P1KWH/nK07s4j0orvq+i8YMQ93obfZXQa/U6U95GlYJet5zZFRJDQWi9g0pFPMwwaHnWBzXEHqr2RR0dY9mUYsiHziPTOJpa7NjRHnsT3h2uvKKl6Rc5iXBO3QT86pTwP4fEag1gVL/t3Y5tOsAbT2bHYf20a30zE5v0tPQCcwlNOzB2/Tc1avgMZlvLGIYawI4thAFgeiXPg5zX2eoytOqKDlmLLftrrou+ZHzzlwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MuQJZUiYgsrv6ydPrE/ryH64TRoc2yWi4dM3ARWJNR4=;
-        b=RTjhswt+6tiiYquqWIf1Bv153VnSU5lDEY/YBSphlnlos0M3DB13yo7Hh+2JH2ey+Y
-         1Ymok9XvOR/yPOU0DYRS5sk8YHSlt6OBr9V3sCmo8ujrt6odD5XcgfuoUzb9+BBU/iZd
-         AgFVwYFMQWZUWh4OGWuCgczBV3lRP+qNQSHciNEps3oi4wSyxKE1Hku5Xq/XJsq1wqVg
-         KZJvbjVHNElq3pyjVIF5WJjtUEizlrUOrf/M/cXR2296ja2hQget+VGe1YJ8sIHnzSUy
-         FVswQmXyWDODAv2PevUwlny7tYq4kJP8sQiyc4UQjba38d9U4qXJtndmu2UAvOYWu1m2
-         MhEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MuQJZUiYgsrv6ydPrE/ryH64TRoc2yWi4dM3ARWJNR4=;
-        b=ICfyuMzav1HR+OsSqsEJROa4icpxbUBisE+fga+gvHdh6mYASIm96grie6L0RUZLs/
-         eMUdghNlc3PwbI4AzEY6lXMkuZzbHsNJw1CMrpOHFzKTIfUra1CiOgiRerfEMDUAZl7f
-         rIcf3+I7WrUcP1vFOvfgEgdsJwfeMWC24X44hTSFXk7ayYZN6N6mWUHriUVx5CQpNlZG
-         X5u0zauHFC9NhDXmDPIDVuJWE8fsXjiZj/gQE0cLaYsh7Kw2zF4o3cUmgpUFeDbMT3t/
-         FaotNxNF2P3ZdQGcE06eUqBxQVggLX5ugjqHoadKP0k3wGtsyo5xsiWRiKPhONr/l3hu
-         MSEw==
-X-Gm-Message-State: AFqh2ko0iFryMzv9ytWB1UvDpG5/iKJhZ0A0MC27R20LP4L3Vy/Cd1iN
-        9v5WaHTWkQugfDOwEacvfxq+toyxhuI6c3WJppxz+5Kv8aEAJWlM/gNXO5kehRZoOzGgJ6goMpc
-        ChhzoIYwwpTV6K+RA2oVzsRzyZNjp2NiFLSdbppfa6TLvcZW27OZ1N5tdBzb061bsAexy1/osh/
-        rnDg==
-X-Google-Smtp-Source: AMrXdXt+D8+ShGwprnyREr39W/oKiY2rcuXwLgfb5FfMzfQ33k2idZKt03tPoJi/+kllQcoCQDJupQ==
-X-Received: by 2002:a5d:470a:0:b0:242:22e4:998f with SMTP id y10-20020a5d470a000000b0024222e4998fmr6055124wrq.55.1671809912419;
-        Fri, 23 Dec 2022 07:38:32 -0800 (PST)
-Received: from rainbowdash.. (cpc152649-stkp13-2-0-cust121.10-2.cable.virginm.net. [86.15.83.122])
-        by smtp.gmail.com with ESMTPSA id m5-20020adfc585000000b00236488f62d6sm3491610wrg.79.2022.12.23.07.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Dec 2022 07:38:32 -0800 (PST)
-From:   Ben Dooks <ben.dooks@sifive.com>
-To:     linux-pwm@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        u.kleine-koenig@pengutronix.de,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        jarkko.nikula@linux.intel.com,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Ben Dooks <ben.dooks@sifive.com>
-Subject: [PATCH v7 10/10] pwm: dwc: use clock rate in hz to avoid rounding issues
-Date:   Fri, 23 Dec 2022 15:38:20 +0000
-Message-Id: <20221223153820.404565-11-ben.dooks@sifive.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221223153820.404565-1-ben.dooks@sifive.com>
-References: <20221223153820.404565-1-ben.dooks@sifive.com>
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=92ehzQ1E/14SItnPOcebITi/dM4soEbWUCEJIqGyHnE=;
+ b=ablJmRerbbWcWOPWWKArx2gFU4WQe9Y6Q4iuO5era1FBMFhfFjXtdUQSWH1FwZ5l8NnP5FMJiE4mGt856eMbHcr0KxsWIDP3FsYtEeffS6mx1AD9B4UVzmU0lEbI5Y7uEDmgbuDcBSyWGNvS3xztarBOkz9VzzvQTzhryMQKuHw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=labundy.com;
+Received: from SN4PR0801MB3774.namprd08.prod.outlook.com
+ (2603:10b6:803:43::21) by CO1PR08MB7063.namprd08.prod.outlook.com
+ (2603:10b6:303:da::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.16; Tue, 27 Dec
+ 2022 05:02:47 +0000
+Received: from SN4PR0801MB3774.namprd08.prod.outlook.com
+ ([fe80::ea42:ebaf:dd18:6a4c]) by SN4PR0801MB3774.namprd08.prod.outlook.com
+ ([fe80::ea42:ebaf:dd18:6a4c%6]) with mapi id 15.20.5944.016; Tue, 27 Dec 2022
+ 05:02:46 +0000
+Date:   Mon, 26 Dec 2022 23:02:41 -0600
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        jeff@labundy.com
+Subject: [PATCH] pwm: iqs620a: Replace one remaining instance of
+ regmap_update_bits()
+Message-ID: <Y6p8cSYK+QKaKe7B@nixie71>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: SA9P221CA0024.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:806:25::29) To SN4PR0801MB3774.namprd08.prod.outlook.com
+ (2603:10b6:803:43::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN4PR0801MB3774:EE_|CO1PR08MB7063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 70a481eb-f91d-4a92-77b8-08dae7c79821
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jfo8VHSFXGfosqgHw31ic+XSfMMiOSYUZOD/t1JnM4DNL6A64MI4YazQPu9kqtvdwlheGcMpr13DxeLMr/r1ljD5sP54s2ZVr81Kjb010zqcmdWHSPNicrWVblHW++fp6qzwPIltklEG5Gd4TVtXQnlAndu6F33B+OEn1Fl/Q6VHeyhZ1T7iSzJjbbp7++omyzc79bY5Jj0qYixoafAJDr3JrBVuh2SkgGcik1stCthgeE14jx949vGgXJCCJ/INNPF4A1V+mqaQZGQ+p/NrUdYVU3dbXbzPnahzGtldnG22qcAAUnChuQpM3id3XufhCN65VasLWRBbck0zhqXm8q5g97zI6Tu7mlqdrNicUzlP24wqawnAAky5q2QXnncRX7bSe3ptcHAKwoaZEA2u+wn5c0i7e2YrAricFHMpT7kQ1w6AQ8FafiPbmsSQ8BD/Tp6qUcuFagmexXR5qkB3UvnRMdiFqT/zU8fcXnSKCvJv9iP0EDuWoD4eRi30E9rM/cRb2A8SdQwstqpUF/pCXfVCatMCCNWj61PH/TU8TDnoLfiszWrOBJ9oxVwr05mgAI2NMQB47tCz8T9778c6wcR9F2NSQ5JSRQ+/aP4PefwYrZEIYNeAyrXQ5yt2zArAcZaixFsI7rVMEorsOJCOc/qZown7eZKzQnjw8RSsyZNONVvbzjxnXbmdWmd3kYB8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0801MB3774.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(39830400003)(346002)(366004)(136003)(396003)(376002)(451199015)(83380400001)(86362001)(38100700002)(8936002)(2906002)(41300700001)(5660300002)(33716001)(6666004)(478600001)(6506007)(186003)(26005)(6486002)(9686003)(107886003)(4326008)(6512007)(8676002)(316002)(6916009)(66946007)(66556008)(66476007)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+5DEQMltdVcsKALuy12ky4usTvEw6KzJhZzrAPKpjglKkelDiwrAimv5imnM?=
+ =?us-ascii?Q?vDn7mUN21bndicGBhvABmLGoC9fYlt5fJT4Go455gu69E1bk2U9aCw98uJM6?=
+ =?us-ascii?Q?CGrJF8x3v7t/DQvmFLbE/jx6pJNY0G1g5QjCMoGkE7ry8SUMqJY16nkwZn4T?=
+ =?us-ascii?Q?oqg95cCA5DplnGXxQdF3zk7Q/uYZEV1FiIpN3Z46O9eJ5FxhmiSk5V+DR5rp?=
+ =?us-ascii?Q?G4Vte/Ribkz1QEwtOHGDh4a8qUXa5I6j3DgGKk6Wgp2WNHUga5WrvqKrZa6P?=
+ =?us-ascii?Q?6CLavj+32wJckHcmWpyCF2CTzVcjqK+K0PEWM3NvQJ/LxwJ+12HRb6XaZIrl?=
+ =?us-ascii?Q?V7ddXXGkqToDbNwD5A7ys/D2zMo1Fyc8EKqGtOLv6JQJp4SipJAXWpXiy9ur?=
+ =?us-ascii?Q?k1EFzKOfcYU4GxzSRYmkSebNrDgYpNf1idSjaS+2Xfk96Bb/bLawCTij0REE?=
+ =?us-ascii?Q?PZdyyEq5FHzQEzAoigjLqFl/RUUdKAQso34sXu7ydJuJkAtFoGep8o+QvFOs?=
+ =?us-ascii?Q?vJqNe53N27zDASRmv9AXkXbf+kQCBQrHUmR7v2sRLsU0DfJ94ljX1kInguQP?=
+ =?us-ascii?Q?pbi0lqBohlgi8HBN4WXSl1bFumF1DL5IKXvnZGXqXXMjajLmlSO5vuxtUYrX?=
+ =?us-ascii?Q?ma28brvjhLyoWoSRVmgURCb6ffF3XlTMbKBY9RX+gmY4Bv3JWKBcdnEtLFcw?=
+ =?us-ascii?Q?Q2bMk/1yh8Fd8edzhYYMnUmfEtcFgJ7YV9eRyCvsodG4i84nId7FN/d9afjd?=
+ =?us-ascii?Q?I9zirDef9Pi5CbsZbpw3g3/t3QTOu+1qhvSqM1mZMrRwJ3C7wmQVawwiYDkJ?=
+ =?us-ascii?Q?g2RRMxXwaxAeczvFcgaRHgFn0U4uB7OY7YWENJbw83PU7xdxmA73Z6Hr84zP?=
+ =?us-ascii?Q?zBCrctzV0dj4l1CLgMoa/LNIU5LRJkZr69diwypshFLz7d3Y0Gg5QuNAnNVH?=
+ =?us-ascii?Q?8joSldPsZrFwhk7MvMab/pJbNRsrQR6T6/uL+NEB8DZ1Flgfdbrel94qhaL2?=
+ =?us-ascii?Q?pTaLQUnOjWJHHhWRHVZroSdhKV9Gi3Q0i13RV1gGZPX6F+uhSN+eCDuQVCq8?=
+ =?us-ascii?Q?IEOg8iQeWIMQXux8fpSqObylQzA4nJpg7RH0Ulm1I/Rhu6WUt1OQ+YwhzRMe?=
+ =?us-ascii?Q?v21dstdG9WeFbRs9aBK2I8YZvb5Vzfq9vnWf/4KeIiJdCEBdqbVJazJ7T6Lf?=
+ =?us-ascii?Q?SgQbYQ5CQG3wlbECSeEXNaY1ZJsYFoEnckDNzDuRcS78+hVBSVFhbky3nf3U?=
+ =?us-ascii?Q?Ji8155lh+d/QjvtypRwNiqzAfo+MORULiSgm24lv+3eeXHpm2Ka15vcSJg5f?=
+ =?us-ascii?Q?GP0mdfAcuT7cIqK6f6lCfDWdpt/LPjnpNkdMewxrgvrnjDYiZGUky/oNvpte?=
+ =?us-ascii?Q?IKIabfgDdkmR9Qx2+gZYP9XV9qsR7wBtLpBMQQueut314t9OQQAlbhIx1RJz?=
+ =?us-ascii?Q?YFvAFnWOkNhwf8tYuyE/YV5tK/rPF/SJllUbfpFL59zBHfKfVK8FWrWpT6Bd?=
+ =?us-ascii?Q?BVPcICYkdy2kI2kJWju0YcAuqs6Y4rpqgmm6wHr4P7UWKPJ7VTrXF69wQ55e?=
+ =?us-ascii?Q?hFDYVDVcFsNgo8t+hTWsW/e+QVubeEOE8nItxVUd?=
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 70a481eb-f91d-4a92-77b8-08dae7c79821
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0801MB3774.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2022 05:02:46.6465
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J94QXAVHmBiUw66v9Ov5z1LivFLGNVskNqSPhcqVhybFqux31VpkSZc2g+yD2ZNjsaw8bWV8XMvbncniqyCEgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR08MB7063
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-As noted, the clock-rate when not a nice multiple of ns is probably
-going to end up with inacurate caculations, as well as on a non pci
-system the rate may change (although we've not put a clock rate
-change notifier in this code yet) so we also add some quick checks
-of the rate when we do any calculations with it.
+The call to regmap_update_bits() which was responsible for clearing
+the PWM output enable register bit was recently dropped in favor of
+a call to regmap_clear_bits(), thereby simplifying the code.
 
-Signed-off-by; Ben Dooks <ben.dooks@sifive.com>
-Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Similarly, the call to regmap_update_bits() which sets the same bit
+can be simplified with a call to regmap_set_bits().
+
+Fixes: 2c85895bf3d2 ("pwm: iqs620a: Use regmap_clear_bits and regmap_set_bits where applicable")
+Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 ---
- drivers/pwm/pwm-dwc-of.c |  2 +-
- drivers/pwm/pwm-dwc.c    | 29 ++++++++++++++++++++---------
- drivers/pwm/pwm-dwc.h    |  2 +-
- 3 files changed, 22 insertions(+), 11 deletions(-)
+ drivers/pwm/pwm-iqs620a.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
-index c5b4351cc7b0..5f7f066859d4 100644
---- a/drivers/pwm/pwm-dwc-of.c
-+++ b/drivers/pwm/pwm-dwc-of.c
-@@ -50,7 +50,7 @@ static int dwc_pwm_plat_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(dwc->clk),
- 				     "failed to get timer clock\n");
+diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
+index 4987ca940b64..8362b4870c66 100644
+--- a/drivers/pwm/pwm-iqs620a.c
++++ b/drivers/pwm/pwm-iqs620a.c
+@@ -55,8 +55,8 @@ static int iqs620_pwm_init(struct iqs620_pwm_private *iqs620_pwm,
+ 	if (ret)
+ 		return ret;
  
--	dwc->clk_ns = NSEC_PER_SEC / clk_get_rate(dwc->clk);
-+	dwc->clk_rate = clk_get_rate(dwc->clk);
- 	return devm_pwmchip_add(dev, &dwc->chip);
+-	return regmap_update_bits(iqs62x->regmap, IQS620_PWR_SETTINGS,
+-				  IQS620_PWR_SETTINGS_PWM_OUT, 0xff);
++	return regmap_set_bits(iqs62x->regmap, IQS620_PWR_SETTINGS,
++			       IQS620_PWR_SETTINGS_PWM_OUT);
  }
  
-diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
-index 5ef0fe7ea3e9..f48a6245a3b5 100644
---- a/drivers/pwm/pwm-dwc.c
-+++ b/drivers/pwm/pwm-dwc.c
-@@ -43,18 +43,22 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	u32 high;
- 	u32 low;
- 
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
- 	/*
- 	 * Calculate width of low and high period in terms of input clock
- 	 * periods and check are the result within HW limits between 1 and
- 	 * 2^32 periods.
- 	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
-+	tmp = state->duty_cycle * dwc->clk_rate;
-+	tmp = DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
- 	if (tmp < 1 || tmp > (1ULL << 32))
- 		return -ERANGE;
- 	low = tmp - 1;
- 
--	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
--				    dwc->clk_ns);
-+	tmp = (state->period - state->duty_cycle) * dwc->clk_rate;
-+	tmp = DIV_ROUND_CLOSEST_ULL(tmp, NSEC_PER_SEC);
- 	if (tmp < 1 || tmp > (1ULL << 32))
- 		return -ERANGE;
- 	high = tmp - 1;
-@@ -120,6 +124,7 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 			      struct pwm_state *state)
- {
- 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned long clk_rate;
- 	u64 duty, period;
- 	u32 ctrl, ld, ld2;
- 
-@@ -129,22 +134,28 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	ld2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
- 
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	clk_rate = dwc->clk_rate;
- 	state->enabled = !!(ctrl & DWC_TIM_CTRL_EN);
- 
- 	/* If we're not in PWM, technically the output is a 50-50
- 	 * based on the timer load-count only.
- 	 */
- 	if (ctrl & DWC_TIM_CTRL_PWM) {
--		duty = (ld + 1) * dwc->clk_ns;
--		period = (ld2 + 1)  * dwc->clk_ns;
-+		duty = ld + 1;
-+		period = ld2 + 1;
- 		period += duty;
- 	} else {
--		duty = (ld + 1) * dwc->clk_ns;
-+		duty = ld + 1;
- 		period = duty * 2;
- 	}
- 
--	state->period = period;
--	state->duty_cycle = duty;
-+	duty *= NSEC_PER_SEC;
-+	period *= NSEC_PER_SEC;
-+	state->period = DIV_ROUND_CLOSEST_ULL(period, clk_rate);
-+	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(duty, clk_rate);
- 	state->polarity = PWM_POLARITY_INVERSED;
- 
- 	pm_runtime_put_sync(chip->dev);
-@@ -164,7 +175,7 @@ struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
- 	if (!dwc)
- 		return NULL;
- 
--	dwc->clk_ns = 10;
-+	dwc->clk_rate = NSEC_PER_SEC / 10;
- 	dwc->chip.dev = dev;
- 	dwc->chip.ops = &dwc_pwm_ops;
- 	dwc->chip.npwm = DWC_TIMERS_TOTAL;
-diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-index dc451cb2eff5..19bdc2224690 100644
---- a/drivers/pwm/pwm-dwc.h
-+++ b/drivers/pwm/pwm-dwc.h
-@@ -41,7 +41,7 @@ struct dwc_pwm {
- 	struct pwm_chip chip;
- 	void __iomem *base;
- 	struct clk *clk;
--	unsigned int clk_ns;
-+	unsigned long clk_rate;
- 	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
- };
- #define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
+ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 -- 
-2.35.1
+2.34.1
 
