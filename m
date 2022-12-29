@@ -2,93 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E25C65700C
-	for <lists+linux-pwm@lfdr.de>; Tue, 27 Dec 2022 22:39:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A37C658851
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Dec 2022 02:18:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbiL0VjH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 27 Dec 2022 16:39:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57664 "EHLO
+        id S230328AbiL2BSU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 28 Dec 2022 20:18:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbiL0VjG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Dec 2022 16:39:06 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036E3E44
-        for <linux-pwm@vger.kernel.org>; Tue, 27 Dec 2022 13:39:00 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pAHf0-0004Tq-Ho; Tue, 27 Dec 2022 22:38:58 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pAHez-0029Qd-2P; Tue, 27 Dec 2022 22:38:57 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pAHey-008Nlb-93; Tue, 27 Dec 2022 22:38:56 +0100
-Date:   Tue, 27 Dec 2022 22:38:37 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: iqs620a: Replace one remaining instance of
- regmap_update_bits()
-Message-ID: <20221227213837.phoyx3z6c6ubisse@pengutronix.de>
-References: <Y6r7jSs3dFw0KZOP@nixie71>
+        with ESMTP id S231351AbiL2BSS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 28 Dec 2022 20:18:18 -0500
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E0213F5D
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Dec 2022 17:18:17 -0800 (PST)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-15027746720so5245023fac.13
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Dec 2022 17:18:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tF88S2Hv4sGeYM0IJIhlaIGexQCWBfknOiRvMdfr8IQ=;
+        b=ErJOFlw0/sxpSqS5/yP6KnCa/ipcN5aykXU3V/tUmwx5KFRj7Xlc7+PimX2rk3AbZa
+         nvYV82wqQgN42DHllbPXiPLydrZBhAGJbHPYlN/GDgX071J4I1uSqGJNGVH1OMrk9Q8U
+         QXKbdbVAlD5AAMieHpAKJ/nNtyI2+v0KsAuP9nfC8J9+im7sN0imPVgdSNBME2Tz4K0J
+         wSMT2j2IbN23iejfo9O/2LzVuGOP0IgR5rBVmJ68DHvY0keaqzIs93EPyfd72GHTJ551
+         7pp2p15x7RPeugYnimzuygdWdQHb07QT8ymXvlg++xza77108AVviR7rfT0s/g8h53pq
+         2GFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tF88S2Hv4sGeYM0IJIhlaIGexQCWBfknOiRvMdfr8IQ=;
+        b=GzxTvqXukV8BjPIcuc4SKii3+M7xDfQ/f0vtRnZPmRs2tIhP+40lEsaKEoC/Wb1ppc
+         WHyhl4v6I0kD+MfkfNLrqEgkgsJkZ9mZn6BpIWZkuKmJL85M7dWGe7FlczAAXeXVwnbM
+         pPZ+6Fwpc5atgftNTJ2+gtMIHAUGv1MnbnKzmdVnJaLnhl5r0N4XW6XnXG0fBNHCotE6
+         vO4Zmjr6imIDSdywqIcZ1m9XFyylY1PgvMVTPDURWasIDkvSkX3ZbTTsvcbWd4+02f0Q
+         UDuAzs5PckauWnxNEJFUwH/HFtRrlkyJlIYLYi90qJtP/1kx9eTpwqHDJQmTrXz1yM06
+         M7qg==
+X-Gm-Message-State: AFqh2krSAgzDVAlrbrm9jOe331VNGR2LMQ1vrsAdIvtm40Q326FJ1Lgk
+        /KAJMUnnsyGrCWw+DVmCfUp1LkCh7tg3U0uSP3jmPA==
+X-Google-Smtp-Source: AMrXdXsVwziQundR1fwbIB4yBVcJ+hmaEtqLmbyZ5bauQjKbV7xMCLbbZvo+Th31AipBIbAj3PSQkJCNE/ow1xf8mmw=
+X-Received: by 2002:a05:6870:fd89:b0:14f:ede2:db25 with SMTP id
+ ma9-20020a056870fd8900b0014fede2db25mr904396oab.42.1672276696527; Wed, 28 Dec
+ 2022 17:18:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xortgp2g5ewbwxae"
-Content-Disposition: inline
-In-Reply-To: <Y6r7jSs3dFw0KZOP@nixie71>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221215213206.56666-1-biju.das.jz@bp.renesas.com> <20221215213206.56666-2-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20221215213206.56666-2-biju.das.jz@bp.renesas.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 29 Dec 2022 02:20:10 +0100
+Message-ID: <CACRpkdbBua9-0o+vK1mWeQV9pr=1DE100AE7cdymEyhZQY39QA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/9] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG binding
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Dec 15, 2022 at 10:32 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
 
---xortgp2g5ewbwxae
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add device tree bindings for the RZ/G2L Port Output Enable for GPT (POEG).
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-On Tue, Dec 27, 2022 at 08:05:01AM -0600, Jeff LaBundy wrote:
-> The call to regmap_update_bits() which was responsible for clearing
-> the PWM output enable register bit was recently dropped in favor of
-> a call to regmap_clear_bits(), thereby simplifying the code.
->=20
-> Similarly, the call to regmap_update_bits() which sets the same bit
-> can be simplified with a call to regmap_set_bits().
->=20
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+Patch applied!
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xortgp2g5ewbwxae
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOrZdsACgkQwfwUeK3K
-7AlrHwf+InzHYv4V80xBiYMWeHBqG8IAHkBqSli6Tddd9lBR81NMBgcTWvxGEMWl
-rQcQsUzyzsCUa67LWOS0ELNkfy9psIV/BxLe92N7aOABIslDcIAlymqxDRrMA/Mb
-kiLaeNqesNYrnJp08X8bYsgcYZweOB2YqJksU8BuXve9gnr0FJM90uOdRA3QjQ4M
-Eysji0rAqgWd77rNpQBl++S4zNxzgB8NLFvMp7GMwxGo8niYDFVjzmUkrc2fDwl3
-mC434zsDrs4FpptwzEHlzEjeNza4KAHBp4UxxF/dgp2sZPyeRLV0HTRglbEkNGpI
-L17RzbR7XABt5DQoX6/k6jmvrERx5A==
-=7stA
------END PGP SIGNATURE-----
-
---xortgp2g5ewbwxae--
+Yours,
+Linus Walleij
