@@ -2,64 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED3066213B
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Jan 2023 10:18:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D80876621B4
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Jan 2023 10:37:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237035AbjAIJRv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Jan 2023 04:17:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48992 "EHLO
+        id S233699AbjAIJhU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Jan 2023 04:37:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237087AbjAIJR1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Jan 2023 04:17:27 -0500
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2122.outbound.protection.outlook.com [40.107.114.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A78719C07;
-        Mon,  9 Jan 2023 01:13:27 -0800 (PST)
+        with ESMTP id S233396AbjAIJhS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Jan 2023 04:37:18 -0500
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2129.outbound.protection.outlook.com [40.107.114.129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2F0645D;
+        Mon,  9 Jan 2023 01:37:16 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MhJxjqUHBZRZz5fOjc4IepZ0rPRwltQvSIBg2JV5nzK8poo08YeoV1ihPKAzSjmGVxNJE0DQyNqkB+jAVLE4adt5uHCC0HFyPFAuosS5m7ZhxPZsmImlZZn3oSJSNCIHY++59NMYtLU4/BxXL2anj2f5sDXzYeIohDysGHJzrnpN57WLgDP1iZaRDBCFL8gXnxwfezhqjggZWE7fXUY6S/RbFykOxatsri0QKek+15+9KA5vidaXQNIdvS8/piuv7BbTkBTHQO/a/zGVICbcOyjx9Ffy++Pf9rtO4jK4C+sJtujmvYwGaQk8kKsSX+vietmem8gC5aKzlfXUtNIJxA==
+ b=KpWo5qwIkciXMIopITSbSf1zX7JCr1/AjB+vh9ZAudtEjAMJGlrDY0OGQWF5M29hxvAsIAJk+xexXZe4bfb0YOLYK41cuXyC4eT1Je521B9Pc1pxUseS63vrHBYAxV0Tx1+aF5bPjhA1pJtvCX8RWe4EjM1r3FD/zhFzQhfFBVAwPVk8GjrC/84AqFodooV9txkDepWVDk/1niwwgUI0jPmkF84kk1jIN8ILIV5oJydBjzC048kDsEdwh59jCu6rplQrxvcvqrxBV5I3CJ78MlGfA1Z3Uxo9XJ/MHIODDr8ph156o2V5Bz5cwoWMKEEHdSxyEb+aV1TMEAct8lPz0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TNZ8jcevdL81Od67+iMw3841zMxKZ05oDhnu38iWciU=;
- b=AwrnOFvK5arAkS0JQoTslDfj/bGBtLf9517iaIZVDRLLBQtgpKcCQoYcAhzQBhuY661gB4FtN8xvTp34aSV6EOnXfz4vka1xt97KOwTZNYV1WwBxvFsH/mr6AiMsMaLrMZe8Nf6Jbsry73ZSNznPzTPA4n5hh+QGLXRwOzFyQdWxvz2RRnGezhBL+iso5PmzrgRZO01eAivHmDBIUs+4wnJ15JvdJgchZt/40J+WSzORB6qHFSkoogagNUxTBQYn9U4OAr2AIbtu8YTcFsqm3O/db840LSC6XL6/DBqb/Xhuc5evemt5KLypYUOYEj/M7eEbjCQBjEoc2vIF42/jOg==
+ bh=/igtteuPJQVk1Pc8zPzfxFbBYXtGx4sXxOOL5SuJD0k=;
+ b=BuGcxZd/aXw/4gnPoe1NG3GAmjNMJsqXf715mHl+4qXqKofSV+cbaBkLP2cYnFa4rzCsYfJUvHjqOlm/9giXBJTJwwhicj7SH3WRfAUDtHzM0sDTZTQA6lam46vak9J+k+7ku2EcQ2Uiry1f2tOKjhQFJ0P4PiytECCoaAkUIr+w14r6uEnM5ihuhK7KpAJOD/DRvCVrnV6NeT2o9jZhiV50nqoFTlaPODWSi/H1Mhi6OmfmNmgCJWK6eoRHJjGi94+ehSzEeY1eDxfHRuJtLMM0O+x1vpFHgXayojFrzyjWK03/WHTisYhxF8pXiFHKcGc3oS1Fec4KnfB2R0XVjQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
  header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TNZ8jcevdL81Od67+iMw3841zMxKZ05oDhnu38iWciU=;
- b=k0P8RNR/fRQx4r8jyF44QyRZI0JG/1+eYwgsgr115urVkTYQDC8ZRUXr6Um1ckn2ChLv3k9TcqOf16QuIShai4GFZ3MBRR/HbkuEHms8QCXiR5aErJ1sSDgEwzEktVSj3OPzCSJ9srk/IPPSLdzHN9mzy3Wu1rxjitskNVrih1c=
+ bh=/igtteuPJQVk1Pc8zPzfxFbBYXtGx4sXxOOL5SuJD0k=;
+ b=rKyws127cz4MoN+JP9Cy4esaOIg2mWlvBupTsOV6vUyjqLfo38O3ITq/9OxxCgCj6gGpue5MofHkrwuVyA4zEWFr6rWsiR8Sa5eXnskNqMYH0k6BWGdVGkXRhG5FyC4gKe4wOijydgo423b7juZbLnHQ5JL8uSuWItaM3r2BYtQ=
 Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TYBPR01MB5376.jpnprd01.prod.outlook.com (2603:1096:404:8021::14) with
+ by OS3PR01MB5990.jpnprd01.prod.outlook.com (2603:1096:604:d3::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18; Mon, 9 Jan
- 2023 09:13:24 +0000
+ 2023 09:37:14 +0000
 Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
  ([fe80::343d:7339:78e5:a46e]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
  ([fe80::343d:7339:78e5:a46e%3]) with mapi id 15.20.5986.018; Mon, 9 Jan 2023
- 09:13:24 +0000
+ 09:37:14 +0000
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v12 0/2] Add support for RZ/G2L GPT
-Thread-Topic: [PATCH v12 0/2] Add support for RZ/G2L GPT
-Thread-Index: AQHZD78kcJ2lt4Fb/0OmygdyX7iJWa6V9JSA
-Date:   Mon, 9 Jan 2023 09:13:24 +0000
-Message-ID: <OS0PR01MB5922046A0C08D732681E36E386FE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20221214132232.2835828-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20221214132232.2835828-1-biju.das.jz@bp.renesas.com>
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Subject: RE: [PATCH v3 0/4] Add RZ/V2{M, MA} PWM driver support
+Thread-Topic: [PATCH v3 0/4] Add RZ/V2{M, MA} PWM driver support
+Thread-Index: AQHZDyToB3Uyho0w1UCooeXFse0vf66V/UYQ
+Date:   Mon, 9 Jan 2023 09:37:14 +0000
+Message-ID: <OS0PR01MB592242AAB70CFF0DA3EDEC8086FE9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20221213185827.2012004-1-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20221213185827.2012004-1-biju.das.jz@bp.renesas.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -67,42 +69,42 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=bp.renesas.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYBPR01MB5376:EE_
-x-ms-office365-filtering-correlation-id: fc690d47-6cfb-4909-7433-08daf221c301
+x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|OS3PR01MB5990:EE_
+x-ms-office365-filtering-correlation-id: b61f5f9e-cd01-4a51-0239-08daf2251762
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Jdm1GlksWeOerVxaFV+e/v/xSYFI8CT6KadvpQvo1mmiHy+mu6rG+vPS49961IeqdCu9rIfJ2jpsSbCFRL9voMQYXXp58uhrEDgzaNzE7zcVv0pbQDU9CzI49GYD7pnZFrHfsXjcYhe9+coA0ZeQ3ojX6IFQpX//ppOevtESrFFq4m6yud3mmrFKOEf71hTGHfw5vtCUmp+GTz55M0N3f0kIP3PKfy0RQjYy+cCEswlRE3vEV8JhBIiE4qlbdJEoeekG+CtEj3m/LGadQtdSSRyBo7F4cuRAxqzsrRmFykTTSHWDCdHa97DrKy586+WbQqXfzM+PVlIdMsPkqzHYSCKk/W/RGSP355LpBLfD49gw0uEzLhQ67V55f/fFhZcrSYy2ngxjZiM7is0v4wvBIydsVUd6byF0GtJaeeGw/4/1gY+8ZgLETAwJBwmMdRQGPXApQbnhMdyDUzH5PpdWimbWb4A/URf9AvBn48+CeTwsRvgX9EQXH7kFogFqBIHmOG/xKAraoz94RN/Idvcl4dhsatVrlQwUvQ6qWQkCxx0aYjAh2dNUCnQrXahEehpVNy6HlFz7nAz5SFLxLdMGtPf5cnFjvbDCR6OKk5XPTjmZSfKFLZN6xMFD+VnfxoLI1+BQaMGwQLLdhW/YSul43UhhjBYzsk9wE3t+w0sPNIUD7GBEBJ3Bvi4hIgNNzdE3FzDiqefqK0MA3iCSbnvaDuXSP+ja+GsmpEcuu3wT7j0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(451199015)(52536014)(41300700001)(8936002)(5660300002)(2906002)(66946007)(8676002)(66446008)(64756008)(66556008)(66476007)(76116006)(45080400002)(316002)(7696005)(71200400001)(110136005)(54906003)(33656002)(966005)(6506007)(478600001)(26005)(9686003)(4326008)(186003)(55016003)(86362001)(83380400001)(38100700002)(38070700005)(122000001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: NazMuGueY7BBUHmM6RunassO0ZxjgLxv8iWYhM6XTdT0IApkjTSmMk9hiydGIAqpzDVrEVidcen8cU0CA7S4zxc/o32ubd3ifmjlkhP5DVSO98zxwLi7Ro2/xBSvIssgHi8GEN75U7immz4n6eUlGXZO+saleFtTqrTsgIpmB8SePKGazYlLLzQwycbiEaVzWYtgbKDglu6vLrb+WSvRL4XHUIieW3I/uA0kw70lFnnL/5b7vIn0gq7Ey/yFnGmBG24s2b29tnA65QXDM3kcLkDIQz4FCEHwexjvm4lHDhxC5RQtvLhKODmk/oc/OAlu5jyEw4MTwVKZDVDHTSlkg7sNpcZcEsqiHgTyzio7ZCc5eqjZyCf0nf7Gfw7Rr34fVeO6KS2wMwBHWcQjJe8mcPnou+R7e9WQQdhbx2PqjEoeF1saNQCqrmCRKMhbpnqNBqgo1FaiEF+oTtEBggLKGpL68VbteK+MzWjyTWVYBGGzr/Lm5wzS2fFQDtaINLzDCOXoI9H7w+xjuf//IlN4wrcMSHAtm5vpG1+dm9EtwZOzw3+QC3P2WcKJo4AROaWK9YUHiU/KGfKgRKK7Kvb77iwlfd7VKPwAtOvhC4fuTtXzSjBN7xkZkse3UGUiS3uFCk4L9PbnyKBjn5PlXrJMBM+ZI/Xd7aMwNUIfDgIO7UWGBpS8qxXU3qGNmMGjkINlfHbgI9ONPDvnUXOrXAxfRSTIs2aJoIB67FWP53+1Yjo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(136003)(396003)(376002)(346002)(39860400002)(451199015)(33656002)(86362001)(2906002)(8936002)(5660300002)(7416002)(41300700001)(52536014)(83380400001)(66574015)(122000001)(110136005)(66946007)(71200400001)(7696005)(54906003)(76116006)(38070700005)(66556008)(53546011)(6506007)(107886003)(55016003)(186003)(38100700002)(966005)(8676002)(26005)(66476007)(4326008)(316002)(64756008)(66446008)(9686003)(478600001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?zDcZAJZFgEacBrsKGg3zhhYsymLer5c7zJJi84htQ32z4qjoKQtfhgyavz?=
- =?iso-8859-1?Q?r2ndmb6kNdBh6DDDasqnfESyAs6akFduIB9FaRE/ATY7fDy01cgsc+CqIF?=
- =?iso-8859-1?Q?iO1o03MrKv8DIC/eyMg9f9RYdPS0QBnkFRU15R2JzeHpO+J5VCpUes5pic?=
- =?iso-8859-1?Q?2ue0pHxmq2Wn4BhIyyJuxdOMEPQHtEqi8OywsTfw7wpza3oy+BO9vR3SsF?=
- =?iso-8859-1?Q?L0UOFYHnPbEyG83M7vg437RYmUTzpHcSfA4n/pHqwnmKts9blMGCe/Juej?=
- =?iso-8859-1?Q?wMpP3ccAgRxdXbZQ8UUvR7YDjl7rI8gvBDHtGGmj3Bd/6Vp7QZ1jYDqVRe?=
- =?iso-8859-1?Q?dQ8wdym0pTHvATaTmU3IjvQ7hqw4R7NryrcpzOHfB+AcrM8kNMrdU9+x6j?=
- =?iso-8859-1?Q?slSJos867geJwIsdaXGfnxN7re2zJo/yuB9mW5flnkunLDx0rFn75TiIWq?=
- =?iso-8859-1?Q?0QPTgE9hOw+ofXYF9a92b85vGYeNec+SM1hcRSCBTjU1bmvQw4Fjw2n9Tx?=
- =?iso-8859-1?Q?o6yJrUjZw55posktdpHbFA+zO40b2FFuCGrpnlSb774gpeIBSS17r4QXUh?=
- =?iso-8859-1?Q?trUYRf6HXr1EgoJ4gqsYVFpc+J80zrILweYForx1DdKC8khlB9kRjzN9G+?=
- =?iso-8859-1?Q?YJJ9QUUoVJT1ysyBA65lZaXIj/DqHiciskEqipf6mTqRFEQojhGzkMvvRn?=
- =?iso-8859-1?Q?kG9NcrhYIGyk5qtG2fx0eF8GwRJeWOFDRHllgdcKdoqhzNzxrJQ/6hbkXE?=
- =?iso-8859-1?Q?YUKKD3F02+u6m/3M5I0GjO40n5tNufdRrlBF+HOFSxWLfwBuXDwOyO8Y1S?=
- =?iso-8859-1?Q?UkDnxo+rGz7NJTPDrErtGyVJMMuHgLLLisSjYR2XloG0lxVMmV+wupetWY?=
- =?iso-8859-1?Q?JYSsb2R0fBiJ+47LV3w1sLU5kABM8/XiytVKmtxf2oVvokWrrOdgbaFKCj?=
- =?iso-8859-1?Q?DDfL6kHjq2gYEW0itVua3JvYk+Vg2DCHEGWcsmbthe+zX0CUo8gi1hfxKh?=
- =?iso-8859-1?Q?nievpnSRUtNlpDanafXkmrv0GubffNNPcYw1bZHRum2weknG/+54lRGbDK?=
- =?iso-8859-1?Q?fB4MXkEUHt92EMaEgzBrtXxt47JEalnf2B5VIEjG1rHIRM8mrfTE78NZlx?=
- =?iso-8859-1?Q?rt3M9F/vGL/bgNJaI3OWbRn6zYxTHN+EMiigo86/e6T6q3omvN0XUv/T96?=
- =?iso-8859-1?Q?KCW53sLHXxPwZDMXDjWYp/HfArEgJaEjE5nz8yYYW2kIEmS5oRs5zrbpTL?=
- =?iso-8859-1?Q?LCoDSeYbsL8sM0keL6INRViP68kRop/b+xTneu+/AzvpeElhvtOXhAUnBw?=
- =?iso-8859-1?Q?WuvTODzOUU/5ZULR4x3wpM3y+wl2jlicEHe1WEohgbNkQsT9TT+qqDYf54?=
- =?iso-8859-1?Q?UMxE3IKmGtrJpW50hHblAxZEBu+6jAwZAMYQDGTEtHtBax92XCFWoFr4C5?=
- =?iso-8859-1?Q?nrVuH9wCz6ZuICTERmLIOxQlRnjGSbJ26Mpdy1L7DuVSFuI2mMHjpyG2vk?=
- =?iso-8859-1?Q?DaHT4dLvqEprjumJnyIDOZmT3Lc+t9AMXggL05qQxz5gtIuIbTGncYpGFo?=
- =?iso-8859-1?Q?BrglNglYZqkaDDGJ80+i/qThmQijLVB0ylGqtyXsZQ+RaNDGxXmWYr/5Yw?=
- =?iso-8859-1?Q?stnqBmunL0ZnC7Cgl7CmKxNrIgf3ip2AMNOP3y/nExVmO+5mvQyxsN0A?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?8NOj5Obepg09PSaXJiq+1g1+bW2dMgi0fGJ1iXSCyJBq4dm+ksgKzZb+eT?=
+ =?iso-8859-1?Q?KHRVYg/SREgvlYip5HbRrEXgwIRU+FVvCO4H6deThVrcDq6D9dtusDxdWr?=
+ =?iso-8859-1?Q?4pENLRKCSrUMkNmBcjprO04LCgqkfzAqyKyCR2eH/TGqV7N8wEiZbcTZgY?=
+ =?iso-8859-1?Q?pqYLhOimiES9wrhCgXSFu80+VZHNKRsB6seltaV7GsjeF8wirl2JlIiQTG?=
+ =?iso-8859-1?Q?j8vpv3XBgqHBUqHzpN/Hy/8OZ7HIaEpU+TJnjRrLmpWz2nFT0bPEMQtzQL?=
+ =?iso-8859-1?Q?AwzdGorUZVsFrdrrIew5WBYgr597zbYqdws+g6ZsZtAvv/EMs61+cz2upA?=
+ =?iso-8859-1?Q?wWY5IgxarbvaekU3sp10VzRD3wXqZYhIjM+xjNRTr9glmPJ13pP3U4oTZc?=
+ =?iso-8859-1?Q?L5WnGq6XWGR8V+9VwhyZpsauaT+1Varx3Pf18EKxzDWOywDlRnv1sM48a9?=
+ =?iso-8859-1?Q?EgUHAfTAGr8l+7+WptpwLBWYFO3sWjXDfqA5qrdfJdTp07bVIEYLl8iy8u?=
+ =?iso-8859-1?Q?ew1nDju6euoE/RheNQv4no1uSMIlkefA0Tbo018y5JayWivLBM/OvZAH64?=
+ =?iso-8859-1?Q?xGTzpHtGhykyLkxsG4ZN1vZKLMSTZPVSf4GUdLVVQjqI5hclYy3ZH+IVt0?=
+ =?iso-8859-1?Q?1IsS1/VOMkOsrU/lpSRREcWffXBWhxgotDJ3aNvIyhio9D00mPJQGu2NGe?=
+ =?iso-8859-1?Q?/RxMRWamaQtjb1z9SepVkEfFubsp5dmJkagWMAj3JYkLWEFtwWDKpxnqQp?=
+ =?iso-8859-1?Q?wtR2/7HeV2zKNwHrZR/FiffHWjqdYsxWwgsrt0vpT3Sxa2NpiApZH7Xhgz?=
+ =?iso-8859-1?Q?EorGq/O+mX1LMEQaAoRKb2jM32lKKOlTq8GvTVgT6n5x9DzlU4O78E7XyG?=
+ =?iso-8859-1?Q?eA94HmjVnZYtaHfqHiMneQlfKOr0xhczq50IvJNFwxQXpVouKQ2jHKTHVX?=
+ =?iso-8859-1?Q?8HYSUiq/QE4JSoJBeyKPdVzUNzV5GyNh3iNuD5OXLTEaYkWMqKaQGaJsAG?=
+ =?iso-8859-1?Q?aUhZTLa8is16Wx2HyHEzbN/Vj6WVB091PHVv7Kca+69XytbJBezMjHTPPj?=
+ =?iso-8859-1?Q?9y8w36XDk2NVKWM4zr6cy+leSijBo0xVa+IVUqhYU6qFLN0tBgQL0Vw/FU?=
+ =?iso-8859-1?Q?cZNaUwAoHGrkcnxeBro7khZ4rqbR3dGEY1mbLmQjgs1DjDdCChvGAzrKyt?=
+ =?iso-8859-1?Q?8sbCmi998NnMbfjd8CIPOYG1pd4AW/mGRuzUnbftYzEc5bN9uzpvI4y9vH?=
+ =?iso-8859-1?Q?wGMYVstWZ2QKNbDwtmKYRHRWps42trAlUDH00DzEXDY2a40AuduG9zRZui?=
+ =?iso-8859-1?Q?QDf0+aCkSVr+BX6czKYeCtvuklgI1u7A2ZHvkhTCQ9oltsridry0JYAVtK?=
+ =?iso-8859-1?Q?4O5hzRqK9GvHiSfcru9tTi6OQ9rhZ6Zp2wCeSBR0dpMQlJgHSNHaA20HbE?=
+ =?iso-8859-1?Q?IlXA6azYeZ00bvt6vAQfxtle/O0NnBSJqMBXdOjJlHPZebfCZ2XPWE27no?=
+ =?iso-8859-1?Q?8hRBHO64hlYTNW06iBnTqX2i+uEYNtFizUjyEWyRMh97ONiYbRwVxplGm2?=
+ =?iso-8859-1?Q?clQ/P9c0PCBwcX2m/h6PjqhuF07wv1h4exXsEeAuqR7WxioBvtM3/1tAvG?=
+ =?iso-8859-1?Q?+7oSyAC5BhpILNC7/K3su2RRe0RcfBimCQ2gpdRAPlMHWJgK8Cy3/yvw?=
  =?iso-8859-1?Q?=3D=3D?=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -110,14 +112,14 @@ MIME-Version: 1.0
 X-OriginatorOrg: bp.renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc690d47-6cfb-4909-7433-08daf221c301
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2023 09:13:24.5528
+X-MS-Exchange-CrossTenant-Network-Message-Id: b61f5f9e-cd01-4a51-0239-08daf2251762
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2023 09:37:14.5732
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hu7Wo9AwSoIlIwo+wXDPGV/0DA/2dGRYRuHuiP7rl/C4lSESwtZosJK3tdDXIl3QYBHPO/dws2gFxZ6aX8YwbDN5iKPcgPE7+tN+Q+waG38=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYBPR01MB5376
+X-MS-Exchange-CrossTenant-userprincipalname: Ex9GjlXefkvxiZUVcX/eWNnZvVYWN0e7l++H5YJartBWULF8q3vLPjLVJHu3vj6D4y6UeClY/Y9kVwt4Xa77aM1B/vS4Gbk+E/UuXrDplW4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB5990
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
         SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -134,208 +136,84 @@ Gentle ping for review.=20
 Cheers,
 Biju
 
-> Subject: [PATCH v12 0/2] Add support for RZ/G2L GPT
+> -----Original Message-----
+> From: Biju Das <biju.das.jz@bp.renesas.com>
+> Sent: 13 December 2022 18:58
+> To: Thierry Reding <thierry.reding@gmail.com>; Rob Herring
+> <robh+dt@kernel.org>; Krzysztof Kozlowski
+> <krzysztof.kozlowski+dt@linaro.org>; Michael Turquette
+> <mturquette@baylibre.com>; Stephen Boyd <sboyd@kernel.org>; Philipp Zabel
+> <p.zabel@pengutronix.de>
+> Cc: Biju Das <biju.das.jz@bp.renesas.com>; Uwe Kleine-K=F6nig <u.kleine-
+> koenig@pengutronix.de>; Geert Uytterhoeven <geert+renesas@glider.be>; Mag=
+nus
+> Damm <magnus.damm@gmail.com>; linux-pwm@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
+> clk@vger.kernel.org; Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Subject: [PATCH v3 0/4] Add RZ/V2{M, MA} PWM driver support
 >=20
-> RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
-> (GPT32E). It supports the following functions
->  * 32 bits =D7 8 channels
->  * Up-counting or down-counting (saw waves) or up/down-counting
->    (triangle waves) for each counter.
->  * Clock sources independently selectable for each channel
->  * Two I/O pins per channel
->  * Two output compare/input capture registers per channel
->  * For the two output compare/input capture registers of each channel,
->    four registers are provided as buffer registers and are capable of
->    operating as comparison registers when buffering is not in use.
->  * In output compare operation, buffer switching can be at crests or
->    troughs, enabling the generation of laterally asymmetric PWM waveforms=
-.
->  * Registers for setting up frame cycles in each channel (with capability
->    for generating interrupts at overflow or underflow)
->  * Generation of dead times in PWM operation
->  * Synchronous starting, stopping and clearing counters for arbitrary
->    channels
->  * Starting, stopping, clearing and up/down counters in response to input
->    level comparison
->  * Starting, clearing, stopping and up/down counters in response to a
->    maximum of four external triggers
->  * Output pin disable function by dead time error and detected
->    short-circuits between output pins
->  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
->  * Enables the noise filter for input capture and external trigger
->    operation
+> The RZ/V2{M, MA} PWM Timer (PWM) is composed of 16 channels. Linux is onl=
+y
+> allowed access to channels 8 to 14 on RZ/V2M, while there is no restricti=
+on
+> for RZ/V2MA.
 >=20
-> This patch series aims to add basic pwm support for RZ/G2L GPT driver by
-> creating separate logical channels for each IOs.
+> The RZ/V2{M, MA} PWM Timer (PWM) supports the following functions:
+>  * The PWM has 24-bit counters which operate at PWM_CLK (48 MHz).
+>  * The frequency division ratio for internal counter operation is selecta=
+ble
+>     as PWM_CLK divided by 1, 16, 256, or 2048.
+>  * The period as well as the duty cycle is adjustable.
+>  * The low-level and high-level order of the PWM signals can be inverted.
+>  * The duty cycle of the PWM signal is selectable in the range from 0 to
+> 100%.
+>  * The minimum resolution is 20.83 ns.
+>  * Three interrupt sources: Rising and falling edges of the PWM signal an=
+d
+>    clearing of the counter
+>  * Counter operation and the bus interface are asynchronous and both can
+>    operate independently of the magnitude relationship of the respective
+>    clock periods.
 >=20
-> v11->v12:
->  * Added return code for get_state()
->  * Cache duty cycle/prescale as the driver cannot read the current duty
->    cycle/prescale from the hardware if the hardware is disabled. Cache th=
-e
->    last programmed duty cycle/prescale value to return in that case.
->  * Updated rzg2l_gpt_enable to enable the clocks.
->  * Updated rzg2l_gpt_disable to disable the clocks.
->  * Updated rzg2l_gpt_config() to cache duty cucle/prescale value
->  * Updated rzg2l_gpt_get_state to use cached value of duty cycle/prescale=
-,If
-> the PWM
->    is disabled.
->  * Simplified rzg2l_gpt_apply()
->  * Added comments in rzg2l_gpt_reset_assert_pm_disable()
-> v10->v11:
->  * Used bitmap_zero for initializing bitmap varable.
->  * Fixed clock imbalance during remove for the case bootloader turning
->    on PWM and module unload is called just after the boot.
->  * Fixed over flow condition in get_state() for a prescale value of 2 &
-> more.
->  * Improved rzg2l_gpt_cntr_need_stop() based on prescale as it is the
->    only runtime variable.
->  * Added array for Cache variables state_period and prescale
->  * Probe caches the prescale value set by the bootloader.
->  * Updated rzg2l_gpt_config() to make use of array variables.
-> v9->v10:
->  * Updated the example gpt4: pwm@10048400-> gpt: pwm@10048000
->  * Keep Rb tag from Rob as the above change is trivial one.
->  * Updated the error handling in probe(), clk_disable_unprepare called
->    on the error path.
->  * Removed ch_en array and started using bitmask instead.
-> v8->v9:
->  * Added Rb tag from Rob.
->  * deassert after devm_clk_get() to avoid reset stays deasserted,in case
->    clk_get() fails.
->  * Removed ch_offs from struct rzg2l_gpt_chip and use macro instead.
->  * Updated error handling in probe()
-> v7->v8:
->  * Removed Rb tags from Rob and Geert as it modelled as single GPT
->    device handling multiple channels.
->  * Updated description
->  * Updated interrupts and interrupt-names properties
->  * Updated binding example
->  * Modelled as single PWM device handling multiple channels
->  * Replaced shared reset->devm_reset_control_get_exclusive()
->  * Added PM runtime callbacks
->  * Updated PM handling and removed "pwm_enabled_by_bootloader" variable
->  * Replaced iowrite32->writel and ioread32->readl
->  * Updated prescale calculation
->  * Introduced rzg2l_gpt_is_ch_enabled for checking enable status on both
->    IO's
->  * Moved enable/disable output pins from config->enable/disable.
->  * Added rzg2l_gpt_cntr_need_stop() for caching prescalar/mode values.
-> v6->v7:
->  * Added the comment for cacheing rzg2l_gpt->state_period.
->  * Fixed boundary values for pv and dc.
->  * Added comment for modifying mode, prescaler, timer counter and buffer
-> enable
->    registers.
->  * Fixed buffer overflow in get_state()
->  * Removed unnecessary assignment of state->period value in get_state().
->  * Fixed state->duty_cycle value in get_state().
->  * Added a limitation for disabling the channels, when both channels used
-> v5->v6:
->  * Updated macros RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH and
->    RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH with computation
->    involving FIELD_PREP macro.
->  * Removed struct rzg2l_gpt_phase and started using RZG2L_GTCCR macro
->    for duty_offset.
->  * replaced misnomer real_period->state_period.
->  * Added handling for values >=3D (1024 << 32) for both period
->    and duty cycle.
->  * Added comments for pwm {en,dis}abled by bootloader during probe.
-> v4->v5:
->  * Added Hardware manual details
->  * Replaced the comment GTCNT->Counter
->  * Removed the macros RZG2L_GPT_IO_PER_CHANNEL and chip.npwm directly
->    used in probe.
->  * Removed the unsed macro RZG2L_GTPR_MAX_VALUE
->  * Added driver prefix for the type name and the variable.
->  * Initialization of per_channel data moved from request->probe.
->  * Updated clr parameter for rzg2l_gpt_modify for Start count.
->  * Started using mutex and usage_count for handling shared
->    period and prescalar for the 2 channels.
->  * Updated the comment cycle->period.
->  * Removed clk_disable from rzg2l_gpt_reset_assert_pm_disable()
->  * Replaced pc->rzg2l_gpt.
->  * Updated prescale calculation.
->  * Moved pm_runtime_{get_sync,put} from {request,free}->{enable,disable}
->  * Removed platform_set_drvdata as it is unused
->  * Removed the variable pwm_enabled_by_bootloader
->  * Added dev_err_probe in various probe error path.
->  * Added an error message, if devm_pwmchip_add fails.
-> v3->v4:
->  * Changed the local variable type i from u16->u8 and prescaled_period_
->    cycles from u64->u32 in calculate_prescale().
->  * Replaced mul_u64_u64_div_u64()->mul_u64_u32_div()
->  * Dropped the comma after the sentinel.
->  * Add a variable to track pwm enabled by bootloader and added comments
->    in probe().
->  * Removed unnecessary rzg2l_gpt_reset_assert_pm_disable() from probe.
->  * Replaced devm_clk_get()->devm_clk_get_prepared()
->  * Removed devm_clk_get_optional_enabled()
 > v2->v3:
->  * Added Rb tag from Rob for the bindings.
->  * Updated limitation section
->  * Added prefix "RZG2L_" for all macros
->  * Modified prescale calculation
->  * Removed pwm_set_chip_data
->  * Updated comment related to modifying Mode and Prescaler
->  * Updated setting of prescale value in rzg2l_gpt_config()
->  * Removed else branch from rzg2l_gpt_get_state()
->  * removed the err label from rzg2l_gpt_apply()
->  * Added devm_clk_get_optional_enabled() to retain clk on status,
->    in case bootloader turns on the clk of pwm.
->  * Replaced devm_reset_control_get_exclusive->devm_reset_control_get_shar=
-ed
->    as single reset shared between 8 channels.
-> V1->v2:
->  * Added '|' after 'description:' to preserve formatting.
->  * Removed description for pwm_cells as it is common property.
->  * Changed the reg size in example from 0xa4->0x100
->  * Added Rb tag from Geert for bindings.
->  * Added Limitations section
->  * dropped "_MASK" from the define names.
->  * used named initializer for struct phase
->  * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
->  * Revised the logic for prescale
->  * Added .get_state callback
->  * Improved error handling in rzg2l_gpt_apply
->  * Removed .remove callback
->  * Tested the driver with PWM_DEBUG enabled.
+>  * Removed clock patch#1 as it is queued for 6.3 renesas-clk
+>  * Added Rb tag from Geert for bindings and dt patches
+>  * Added return code for rzv2m_pwm_get_state()
+>  * Added comment in rzv2m_pwm_reset_assert_pm_disable()
+> v1->v2:
+>  * Updated commit description
+>  * Replaced pwm8_15_pclk->cperi_grpf
+>  * Added reset entry R9A09G011_PWM_GPF_PRESETN
+>  * Added Rb tag from Krzysztof for bindings and the keep the Rb tag as
+>    the below changes are trivial
+>  * Updated the description for APB clock
+>  * Added resets required property
+>  * Updated the example with resets property
+>  * Replaced devm_reset_control_get_optional_shared-
+> >devm_reset_control_get_shared
+>  * Added resets property in pwm nodes.
 >=20
-> RFC->v1:
->  * Added Description in binding patch
->  * Removed comments from reg and clock
->  * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
->  * Added rzg2l_gpt_read() and updated macros
->  * Removed dtsi patches, will send it separately
+> Note:
+>  Hardware manual for this IP can be found here
+> https://www.renesas.com/in/en/document/mah/rzv2m-users-manual-
+> hardware?language=3Den
 >=20
-> RFC:
->  *
-> https://jpn01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kerne
-> l.org%2Flinux-renesas-soc%2F20220430075915.5036-1-
-> biju.das.jz%40bp.renesas.com%2FT%2F%23t&data=3D05%7C01%7Cbiju.das.jz%40bp=
-.rene
-> sas.com%7C7c8baf2b02984371f2c308daddd64607%7C53d82571da1947e49cb4625a166a=
-4a2
-> a%7C0%7C0%7C638066209617005815%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD=
-AiL
-> CJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=3DUmY=
-bVZnI
-> qFciTNH2VvVMviGWZrNNLu412C2yhzt%2FnkA%3D&reserved=3D0
+> Biju Das (4):
+>   dt-bindings: pwm: Add RZ/V2M PWM binding
+>   pwm: Add support for RZ/V2M PWM driver
+>   arm64: dts: renesas: r9a09g011: Add pwm nodes
+>   arm64: dts: renesas: rzv2m evk: Enable pwm
 >=20
-> Biju Das (2):
->   dt-bindings: pwm: Add RZ/G2L GPT binding
->   pwm: Add support for RZ/G2L GPT
->=20
->  .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 378 ++++++++++++
+>  .../bindings/pwm/renesas,rzv2m-pwm.yaml       |  90 ++++
+>  .../boot/dts/renesas/r9a09g011-v2mevk2.dts    |  70 +++
+>  arch/arm64/boot/dts/renesas/r9a09g011.dtsi    |  98 +++++
 >  drivers/pwm/Kconfig                           |  11 +
 >  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-rzg2l-gpt.c                   | 570 ++++++++++++++++++
->  4 files changed, 960 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l-
-> gpt.yaml
->  create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
+>  drivers/pwm/pwm-rzv2m.c                       | 398 ++++++++++++++++++
+>  6 files changed, 668 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzv2m-
+> pwm.yaml
+>  create mode 100644 drivers/pwm/pwm-rzv2m.c
 >=20
 > --
 > 2.25.1
