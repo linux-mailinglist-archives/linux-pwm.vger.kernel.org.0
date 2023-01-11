@@ -2,52 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D58664F94
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jan 2023 00:07:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 084F566504C
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Jan 2023 01:16:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232021AbjAJXHZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 Jan 2023 18:07:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37348 "EHLO
+        id S235517AbjAKAPl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Jan 2023 19:15:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235159AbjAJXHR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Jan 2023 18:07:17 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA3B4EC98
-        for <linux-pwm@vger.kernel.org>; Tue, 10 Jan 2023 15:06:42 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pFNhL-0002oM-5n; Wed, 11 Jan 2023 00:06:27 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pFNhG-005Ai6-Sd; Wed, 11 Jan 2023 00:06:22 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pFNhF-00BpK3-Vd; Wed, 11 Jan 2023 00:06:22 +0100
-Date:   Wed, 11 Jan 2023 00:06:18 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, marcan@marcan.st,
-        sven@svenpeter.dev, alyssa@rosenzweig.io, asahi@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/5] pwm: Add Apple PWM controller
-Message-ID: <20230110230618.pfz267jj5ne34ava@pengutronix.de>
-References: <20230106135839.18676-1-fnkl.kernel@gmail.com>
- <20230106135839.18676-3-fnkl.kernel@gmail.com>
+        with ESMTP id S235669AbjAKAPf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Jan 2023 19:15:35 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 996A41B9EB;
+        Tue, 10 Jan 2023 16:15:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0BBF6617F1;
+        Wed, 11 Jan 2023 00:15:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA43AC433EF;
+        Wed, 11 Jan 2023 00:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673396133;
+        bh=S8NALjqA1f9q2qsyutdUstZwUdlgPhnHQ8ChH2jhBM4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ls3LRdB8UnvmaIGCqcbdiGYlSrFpOt/wlyzqMQ+vIgqo/xSmseexLIOeh+ZcOpkBl
+         Tmr/FbThk1VjVU6FuexmJaCjEaDYKyBO0PHOqoe5u7zI5r0TvKzHIGBpNO4XRDVYSK
+         2epowly4t5XLw1xvBq3BzJz8xmbrNFI3WG/Y49bYB7ZKfLDXj96uhwMMSEaK7x2qgZ
+         q1epxeyEJvoesP44P9vOJPkKbrwJegg4SKaL0ZFOGUt4jtdg46k0LWo1mn0HISlOnP
+         AVkxYfPO2exSk4gp+hAV3WXNEzFN6HrRxUOOWjWoJ7LVy6V0S1HThUcSPqy7hfNsXo
+         4i35pqlFLQIzA==
+Date:   Wed, 11 Jan 2023 00:15:29 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v13 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <Y73/oUwuOwQFR0NZ@spud>
+References: <20221221112912.147210-1-conor@kernel.org>
+ <20221221112912.147210-2-conor@kernel.org>
+ <20230110224805.3pqxd3yv4wyci2zj@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nhj3lt2xyxvt3eo2"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yEYmw9zT0Jb9K0Do"
 Content-Disposition: inline
-In-Reply-To: <20230106135839.18676-3-fnkl.kernel@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230110224805.3pqxd3yv4wyci2zj@pengutronix.de>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,181 +60,275 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---nhj3lt2xyxvt3eo2
+--yEYmw9zT0Jb9K0Do
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Sasha,
+On Tue, Jan 10, 2023 at 11:48:05PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Wed, Dec 21, 2022 at 11:29:12AM +0000, Conor Dooley wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
 
-On Fri, Jan 06, 2023 at 04:58:39PM +0300, Sasha Finkelstein wrote:
-> Adds the Apple PWM controller driver.
+> > +		delay_us =3D DIV_ROUND_UP_ULL(remaining_ns, NSEC_PER_USEC);
+> > +		if ((delay_us / 1000) > MAX_UDELAY_MS)
+> > +			msleep(delay_us / 1000 + 1);
 >=20
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> Acked-by: Sven Peter <sven@svenpeter.dev>
-> ---
->  drivers/pwm/Kconfig     |  12 ++++
->  drivers/pwm/Makefile    |   1 +
->  drivers/pwm/pwm-apple.c | 156 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 169 insertions(+)
->  create mode 100644 drivers/pwm/pwm-apple.c
+> Is this better than
 >=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index dae023d783a2..8df861b1f4a3 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -51,6 +51,18 @@ config PWM_AB8500
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-ab8500.
-> =20
-> +config PWM_APPLE
-> +	tristate "Apple SoC PWM support"
-> +	depends on ARCH_APPLE || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for PWM controller present on
-> +	  Apple SoCs
-> +
-> +	  Say Y here if you have an ARM Apple laptop, otherwise say N
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-apple.
-> +
->  config PWM_ATMEL
->  	tristate "Atmel PWM support"
->  	depends on ARCH_AT91 || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 7bf1a29f02b8..19899b912e00 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -2,6 +2,7 @@
->  obj-$(CONFIG_PWM)		+=3D core.o
->  obj-$(CONFIG_PWM_SYSFS)		+=3D sysfs.o
->  obj-$(CONFIG_PWM_AB8500)	+=3D pwm-ab8500.o
-> +obj-$(CONFIG_PWM_APPLE)		+=3D pwm-apple.o
->  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
->  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+=3D pwm-atmel-hlcdc.o
->  obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
-> diff --git a/drivers/pwm/pwm-apple.c b/drivers/pwm/pwm-apple.c
-> new file mode 100644
-> index 000000000000..5360583a5fa6
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-apple.c
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> +/*
-> + * Driver for the Apple SoC PWM controller
-> + *
-> + * Copyright The Asahi Linux Contributors
-> + *
-> + * Limitations:
-> + * - The writes to cycle registers are shadowed until a write to
-> + *   the control register.
-> + * - If both OFF_CYCLES and ON_CYCLES are set to 0, the output
-> + *   is a constant off signal.
+> 	msleep(DIV_ROUND_UP(delay_us, 1000);
+>=20
+> ? Also I wonder about your usage of MAX_UDELAY_MS. This is about
 
-How does the PWM behave with *APPLE_PWM_CTRLAPPLE_PWM_CTRL =3D 0?
-(typically: drives constant low)
+I probably started hacking on the example you gave and didn't notice
+the U. What I have here is ~what you suggested last time.
 
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/io.h>
-> +#include <linux/clk.h>
-> +#include <linux/math64.h>
-> +
-> +#define APPLE_PWM_CTRL        0x00
-> +#define APPLE_PWM_ON_CYCLES   0x1c
-> +#define APPLE_PWM_OFF_CYCLES  0x18
-> +
-> +#define APPLE_CTRL_ENABLE        BIT(0)
-> +#define APPLE_CTRL_MODE          BIT(2)
-> +#define APPLE_CTRL_UPDATE        BIT(5)
-> +#define APPLE_CTRL_TRIGGER       BIT(9)
-> +#define APPLE_CTRL_INVERT        BIT(10)
-> +#define APPLE_CTRL_OUTPUT_ENABLE BIT(14)
+> udelay() but you're using usleep_range()?
+>=20
+> > +		else
+> > +			usleep_range(delay_us, delay_us * 2);
+>=20
+> I wonder if there isn't a function that implements something like
+>=20
+> 	wait_until(mchp_core_pwm->update_timestamp);
+>=20
+> which would be a bit nicer than doing this by hand. Maybe fsleep()?
 
-In reply to v4 I wrote:
+That'd be fsleep(delay_us), but does at least clean up some of the
+messing.
 
-| Would be nice if the register prefix would match the register name. That
-| is please either rename APPLE_PWM_CONTROL to APPLE_PWM_CTRL or use
-| APPLE_PWM_CONTROL as prefix for the bit fields in that register.
+> > +static void mchp_core_pwm_apply_duty(struct pwm_chip *chip, struct pwm=
+_device *pwm,
+> > +				     const struct pwm_state *state, u64 duty_steps,
+> > +				     u8 period_steps)
+> > +{
+> > +	struct mchp_core_pwm_chip *mchp_core_pwm =3D to_mchp_core_pwm(chip);
+> > +	u8 posedge, negedge;
+> > +	u8 period_steps_val =3D PREG_TO_VAL(period_steps);
+> > +
+> > +	/*
+> > +	 * Setting posedge =3D=3D negedge doesn't yield a constant output,
+> > +	 * so that's an unsuitable setting to model duty_steps =3D 0.
+> > +	 * In that case set the unwanted edge to a value that never
+> > +	 * triggers.
+> > +	 */
+> > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED) {
+> > +		negedge =3D !duty_steps ? period_steps_val : 0u;
+>=20
+> IMHO
+>=20
+> 		negedge =3D duty_steps ? 0 : period_steps_val;
+>=20
+> is a bit easier to parse.
+>=20
+> > +		posedge =3D duty_steps;
+> > +	} else {
+> > +		posedge =3D !duty_steps ? period_steps_val : 0u;
+> > +		negedge =3D duty_steps;
+> > +	}
+>=20
+> The following code is equivalent:
+>=20
+> 	u8 first_edge =3D 0, second_edge =3D duty_steps;
+>=20
+> 	/*
+> 	 * Setting posedge =3D=3D negedge doesn't yield a constant output,
+> 	 * so that's an unsuitable setting to model duty_steps =3D 0.
+> 	 * In that case set the unwanted edge to a value that never
+> 	 * triggers.
+> 	 */
+> 	if (duty_steps =3D=3D 0)
+> 		first_edge =3D period_steps_val;
+>=20
+> 	if (state->polarity =3D=3D PWM_POLARITY_INVERSED) {
+> 		negedge =3D first_edge;
+> 		posedge =3D second_edge;
+> 	} else {
+> 		posedge =3D first_edge;
+> 		negedge =3D second_edge;
+> 	}
+>=20
+> I'm not sure if it's easier to understand. What do you think?
 
-well, one of the two options was bogus because it doesn't result in the
-intended effect. You picked that broken option :-\
-Can you please rename such that the (maybe new) name for APPLE_PWM_CTRL
-is a prefix for the (maybe new) APPLE_CTRL_ENABLE and the other register
-bit definitions?
+Despite having used them, I dislike ternary statements.
 
-> [...]
-> +static int apple_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct apple_pwm *fpwm;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	fpwm =3D devm_kzalloc(&pdev->dev, sizeof(*fpwm), GFP_KERNEL);
-> +	if (!fpwm)
-> +		return -ENOMEM;
-> +
-> +	fpwm->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(fpwm->base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(fpwm->base), "unable to map m=
-mio");
+> > +	writel_relaxed(posedge, mchp_core_pwm->base + MCHPCOREPWM_POSEDGE(pwm=
+->hwpwm));
+> > +	writel_relaxed(negedge, mchp_core_pwm->base + MCHPCOREPWM_NEGEDGE(pwm=
+->hwpwm));
+> > +}
+> > +
+> > +static void mchp_core_pwm_calc_period(const struct pwm_state *state, u=
+nsigned long clk_rate,
+> > +				      u16 *prescale, u8 *period_steps)
+> > +{
+> > +	u64 tmp;
+> > +
+> > +	/*
+> > +	 * Calculate the period cycles and prescale values.
+> > +	 * The registers are each 8 bits wide & multiplied to compute the per=
+iod
+> > +	 * using the formula:
+> > +	 * (clock_period) * (prescale + 1) * (period_steps + 1)
+> > +	 * so the maximum period that can be generated is 0x10000 times the
+> > +	 * period of the input clock.
+> > +	 * However, due to the design of the "hardware", it is not possible to
+> > +	 * attain a 100% duty cycle if the full range of period_steps is used.
+> > +	 * Therefore period_steps is restricted to 0xFE and the maximum multi=
+ple
+> > +	 * of the clock period attainable is 0xFF00.
+> > +	 */
+> > +	tmp =3D mul_u64_u64_div_u64(state->period, clk_rate, NSEC_PER_SEC);
+> > +
+> > +	/*
+> > +	 * The hardware adds one to the register value, so decrement by one to
+> > +	 * account for the offset
+> > +	 */
+> > +	if (tmp >=3D MCHPCOREPWM_PERIOD_MAX) {
+> > +		*prescale =3D MCHPCOREPWM_PRESCALE_MAX - 1;
+> > +		*period_steps =3D MCHPCOREPWM_PERIOD_STEPS_MAX - 1;
+> > +
+> > +		return;
+> > +	}
+> > +
+> > +	*prescale =3D div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX);
+> > +	/* PREG_TO_VAL() can produce a value larger than UINT8_MAX */
+> > +	*period_steps =3D div_u64(tmp, PREG_TO_VAL(*prescale)) - 1;
+>=20
+> This looks wrong, but I didn't think long about that. Did we discuss
+> this already and/or are you sure this is correct?
 
-devm_platform_ioremap_resource() already emits an error message if there
-is a problem. So please don't add another message here.
+We did discuss it previously AFAICT;
+https://lore.kernel.org/linux-pwm/896d73ac-05af-8673-8379-29011800be83@micr=
+ochip.com/
 
-> +	clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "unable to get the cloc=
-k");
-> +
-> +	/*
-> +	 * uses the 24MHz system clock on all existing devices, can only
-> +	 * happen if the device tree is broken
-> +	 */
-> +	fpwm->clkrate =3D clk_get_rate(clk);
-> +	if (fpwm->clkrate > NSEC_PER_SEC)
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "pwm clock out of range");
+In that version of the code, prescale_val meant the mathematical value
+used for calculations & "prescale" was the value written into the
+register.
 
-This check is done to prevent an overflow in .apply, right? Please point
-that out in a comment.
+Now, we have ditched prescale_val and operate directly with what gets
+written into the register.
 
-> +	fpwm->chip.dev =3D &pdev->dev;
-> +	fpwm->chip.npwm =3D 1;
-> +	fpwm->chip.ops =3D &apple_pwm_ops;
-> +
-> +	ret =3D devm_pwmchip_add(&pdev->dev, &fpwm->chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(&pdev->dev, ret, "unable to add pwm chip");
-> +
-> +	return 0;
-> +}
-> +
-> [...]
+I ran a test case through the calculation, and it seemed to work out?
 
-Best regards
-Uwe
+> (We have:
+> 	          (prescale + 1) * (period_steps + 1)
+> 	period =3D ------------------------------------
+> 	                       clk_rate
+>=20
+> You calculate
+> 	            period * clk_rate
+> 	prescale =3D -------------------
+> 	           NSEC_PER_SEC * 0xff
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Say period =3D 2000 ns, clk_rate =3D 62.5 Mhz, giving a register value for
+prescale of 0.49019...=20
 
---nhj3lt2xyxvt3eo2
+> 	                     period * clk_rate
+> 	period_steps =3D ----------------------------- - 1
+> 	               NSEC_PER_SEC * (prescale + 1)
+
+Same numbers, but we use the PREG_TO_VAL() macro so the mathematical value
+is 1.49019.
+
+     2000 * 62.5E6
+--------------------- - 1 =3D 82.88360....
+  1E9 * (0.49016 + 1)
+
+>=20
+> assuming exact arithmetic putting these into the above equation we get:
+>=20
+>=20
+>     period * clk_rate                period * clk_rate
+>   (------------------- + 1) * (-----------------------------) / clk_rate
+>    NSEC_PER_SEC * 0xff         NSEC_PER_SEC * (prescale + 1)
+>=20
+> and then substituting prescale this doesn't resolve to period, does it?
+> Correct me if I'm wrong.)
+
+(0.49016 + 1) * (82.88360 + 1)      124.99...
+------------------------------ =3D ------------- =3D 0.00000199999
+            62.5E6                  62.5E6
+
+And then accounting for that fact that 2000 was really 2000E-9,
+we arrive back where we started, give or take some rounding?
+
+Doing that with integer maths works out more cleanly since 0.49016
+becomes 0.
+   2000 * 62.5E6
+------------------ - 1 =3D 124
+  1E9 * (0 + 1)
+
+(0 + 1) * (124 + 1)      125
+------------------- =3D --------- =3D 0.000002
+      62.5E6            62.5E6
+
+Unfortunately, I don't think I am seeing what you're seeing.
+
+>     period * clk_rate                period * clk_rate
+>   (------------------- + 1) * (-----------------------------) / clk_rate
+>    NSEC_PER_SEC * 0xff         NSEC_PER_SEC * (prescale + 1)
+                          ^
+It may be this + 1, which I don't seem to have accounted for in my quick
+run through a calculation?
+
+*prescale =3D div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX);
+
+*period_steps =3D div_u64(tmp, PREG_TO_VAL(*prescale)) - 1;
+
+The code does not add a 1 when it calculates prescale, only when it uses
+the result to calculate period_steps, since prescale & period_steps are
+the register values, not the "mathematical" ones.
+
+Hopefully I've not gone and made a fool of myself...
+
+> > +static inline void mchp_core_pwm_apply_period(struct mchp_core_pwm_chi=
+p *mchp_core_pwm,
+> > +					      u8 prescale, u8 period_steps)
+> > +{
+> > +	writel_relaxed(prescale, mchp_core_pwm->base + MCHPCOREPWM_PRESCALE);
+> > +	writel_relaxed(period_steps, mchp_core_pwm->base + MCHPCOREPWM_PERIOD=
+);
+> > +}
+>=20
+> There is only one caller for this two-line function. I suggest to unroll =
+it?
+
+Sure.
+
+> > +	ret =3D devm_pwmchip_add(&pdev->dev, &mchp_core_pwm->chip);
+> > +	if (ret < 0)
+> > +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
+> > +
+> > +	/*
+> > +	 * Enabled synchronous update for channels with shadow registers
+> > +	 * enabled. For channels without shadow registers, this has no effect
+> > +	 * at all so is unconditionally enabled.
+> > +	 */
+> > +	writel_relaxed(1U, mchp_core_pwm->base + MCHPCOREPWM_SYNC_UPD);
+> > +	mchp_core_pwm->update_timestamp =3D ktime_get();
+>=20
+> This needs to be done before devm_pwmchip_add().
+
+Makes sense, woops. I think I've revised this to the point that my
+blinkers have turned on & I'll wait a while before resubmitting in order
+to hopefully reset that.
+
+Perhaps I need to watch a lecture on how to write a PWM driver since I
+am clearly no good at it, given the 15 revisions. Do you know of any?
+
+Thanks,
+Conor.
+
+
+--yEYmw9zT0Jb9K0Do
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmO972cACgkQwfwUeK3K
-7AlyMQf/fr+3quRS974KGObjeliI2qcMCqP2Tq0qjhRCKGwEsHMEFKPg7ixkOJko
-oRly+N3zqIs6S+b0eo2MObRMB9ABl3+42m7V5jLiGDiIEJzoBESE1/9XqwgQKISO
-p8CgaHZktwFIZoMOTakjuTJA7UNmGnB/JsQaSWnh2pi1qYfE2Ft4U18pTZNcSijv
-Eq4oY/3UNZV9+MCtB/EC6g9d3Mvi7fEkLdgp5OVZ4Z0NJqDFUz+klIDIfBiS7n+U
-u/heswafcPYiKo88tKKZcC449+1se/kX6+kwDUWIvdp2fKLhaWaX+jlgtCcMs9R7
-AUaPg6vD6bqhRtIWGP7r0ZfDO/eH/w==
-=Nwbo
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY73/oQAKCRB4tDGHoIJi
+0kQtAP47wEjbwJd3pqvMM8aYpo0ysWTee61SPJg27vpz12bCrwD/StvsZMJkR1dh
+Ls8jUMWX6cGvz11le4mdYEXFoH/EIQo=
+=YK4p
 -----END PGP SIGNATURE-----
 
---nhj3lt2xyxvt3eo2--
+--yEYmw9zT0Jb9K0Do--
