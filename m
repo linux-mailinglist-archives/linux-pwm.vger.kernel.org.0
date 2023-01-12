@@ -2,149 +2,167 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A6FA666F2D
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Jan 2023 11:12:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2ED6671AD
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Jan 2023 13:08:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239693AbjALKMD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Jan 2023 05:12:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46392 "EHLO
+        id S233335AbjALMIK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Jan 2023 07:08:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230522AbjALKL1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Jan 2023 05:11:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A2A2E6;
-        Thu, 12 Jan 2023 02:11:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 20D2161FCC;
-        Thu, 12 Jan 2023 10:11:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF3AC433D2;
-        Thu, 12 Jan 2023 10:10:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673518259;
-        bh=jHnN5TpjDsuEmpEXoiNJ8vZOnsWHRV/v7Jjf9zxez+c=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=TGVnq9Iqk9wH7rfxSRBa4J2HpxstIG4Z5WKyITO+s65XJkUX/avf0hrFttJytcQON
-         ZHhnQbJFrndso01+aTlXR4YwkIyCq9ld+l/ujWp5YpecmleYso4IHCoZ+r0182gAWZ
-         ZlKPeren892boP6XKvRxWMt+5TpjaW/y4MYJKPk7EVWIXzaPGjg2BDW66qfLKBrwIC
-         5zNO9PJ8laBGAWwAHUvx2uqu+EV0Qc2P4PiIEV+eYh9J9QRqzmD6rnZr0gOVsUOcR2
-         DXZeyGRn11V4+P8Tmz8nS5HuqC6NNqKOqC5FoddN9ZPljiX7QSbKgVGOHlQx/KcFU+
-         +myzC5Gn5/zTw==
-Message-ID: <06144828-d1c4-7423-81e3-9c35df996da7@kernel.org>
-Date:   Thu, 12 Jan 2023 11:10:52 +0100
+        with ESMTP id S233393AbjALMHE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Jan 2023 07:07:04 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC0F564CB
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Jan 2023 04:02:00 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pFwH9-0005Oy-92; Thu, 12 Jan 2023 13:01:43 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pFwH8-005WoO-9s; Thu, 12 Jan 2023 13:01:42 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pFwH7-00CFus-H2; Thu, 12 Jan 2023 13:01:41 +0100
+Date:   Thu, 12 Jan 2023 13:01:41 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v13 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <20230112120141.fpjwhtjuaxrwqt5m@pengutronix.de>
+References: <20221221112912.147210-1-conor@kernel.org>
+ <20221221112912.147210-2-conor@kernel.org>
+ <20230110224805.3pqxd3yv4wyci2zj@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [LINUX PATCH 2/3] dt-bindings: timer: Update device tree bindings
- for cadence TTC PWM
-To:     Mubin Sayyed <mubin.sayyed@amd.com>, robh+dt@kernel.org,
-        treding@nvidia.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, git@amd.com, michal.simek@amd.com,
-        siva.durga.prasad.paladugu@amd.com, mubin10@gmail.com
-References: <20230112071526.3035949-1-mubin.sayyed@amd.com>
- <20230112071526.3035949-3-mubin.sayyed@amd.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230112071526.3035949-3-mubin.sayyed@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4lhg7s5jl5wrhlm7"
+Content-Disposition: inline
+In-Reply-To: <20230110224805.3pqxd3yv4wyci2zj@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 12/01/2023 08:15, Mubin Sayyed wrote:
-> Cadence TTC can act as PWM device, it is supported through
 
-Subject: drop second/last, redundant "device tree bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
+--4lhg7s5jl5wrhlm7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Anyway subject is poor - every commit is an "update", so basically you
-said there nothing...
+Hello,
 
-> separate PWM framework based driver. Decision to configure
-> specific TTC device as PWM or clocksource/clockevent would
-> be done based on presence of "#pwm-cells" property.
-> 
-> Also, interrupt property is not required for TTC PWM driver.
-> Updated bindings to support TTC PWM configuration.
+On Tue, Jan 10, 2023 at 11:48:05PM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello Conor,
+>=20
+> On Wed, Dec 21, 2022 at 11:29:12AM +0000, Conor Dooley wrote:
+> > +static void mchp_core_pwm_calc_period(const struct pwm_state *state, u=
+nsigned long clk_rate,
+> > +				      u16 *prescale, u8 *period_steps)
+> > +{
+> > +	u64 tmp;
+> > +
+> > +	/*
+> > +	 * Calculate the period cycles and prescale values.
+> > +	 * The registers are each 8 bits wide & multiplied to compute the per=
+iod
+> > +	 * using the formula:
+> > +	 * (clock_period) * (prescale + 1) * (period_steps + 1)
+> > +	 * so the maximum period that can be generated is 0x10000 times the
+> > +	 * period of the input clock.
+> > +	 * However, due to the design of the "hardware", it is not possible to
+> > +	 * attain a 100% duty cycle if the full range of period_steps is used.
+> > +	 * Therefore period_steps is restricted to 0xFE and the maximum multi=
+ple
+> > +	 * of the clock period attainable is 0xFF00.
+> > +	 */
+> > +	tmp =3D mul_u64_u64_div_u64(state->period, clk_rate, NSEC_PER_SEC);
+> > +
+> > +	/*
+> > +	 * The hardware adds one to the register value, so decrement by one to
+> > +	 * account for the offset
+> > +	 */
+> > +	if (tmp >=3D MCHPCOREPWM_PERIOD_MAX) {
+> > +		*prescale =3D MCHPCOREPWM_PRESCALE_MAX - 1;
+> > +		*period_steps =3D MCHPCOREPWM_PERIOD_STEPS_MAX - 1;
+> > +
+> > +		return;
+> > +	}
+> > +
+> > +	*prescale =3D div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX);
+> > +	/* PREG_TO_VAL() can produce a value larger than UINT8_MAX */
+> > +	*period_steps =3D div_u64(tmp, PREG_TO_VAL(*prescale)) - 1;
+>=20
+> This looks wrong, but I didn't think long about that. Did we discuss
+> this already and/or are you sure this is correct?
+>=20
+> (We have:
+> 	          (prescale + 1) * (period_steps + 1)
+> 	period =3D ------------------------------------
+> 	                       clk_rate
+>=20
 
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC.  It might happen, that command when run on an older
-kernel, gives you outdated entries.  Therefore please be sure you base
-your patches on recent Linux kernel.
+We want prescale small such that period_steps can be big to give
+fine-grained control over the available duty_cycles. period_steps is a
+8-bit value < 0xff, so we get:
 
-> 
-> Signed-off-by: Mubin Sayyed <mubin.sayyed@amd.com>
-> ---
->  .../devicetree/bindings/timer/cdns,ttc.yaml   | 25 ++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/cdns,ttc.yaml b/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
-> index 7d821fd480f6..2855e92e02e3 100644
-> --- a/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
-> +++ b/Documentation/devicetree/bindings/timer/cdns,ttc.yaml
-> @@ -32,12 +32,26 @@ properties:
->      description: |
->        Bit width of the timer, necessary if not 16.
->  
-> +  "#pwm-cells":
-> +    description: |
-> +      Required to configure TTC as PWM device, supported cells are 0 to 3.
-> +    minimum: 0
-> +    maximum: 3
+                    period * clk_rate  =20
+	prescale =3D ------------------- - 1
+                   NSEC_PER_SEC * 0xff
 
-Better make it const. What's the benefit of flexible cells? You also
-should describe the arguments.
+which in code then reads:
 
-> +
->  required:
->    - compatible
->    - reg
-> -  - interrupts
->    - clocks
->  
-> +allOf:
-> +  - if:
-> +      not:
-> +        required:
-> +          - "#pwm-cells"
-> +    then:
-> +      required:
-> +        - interrupts
-> +
->  additionalProperties: false
->  
->  examples:
-> @@ -50,3 +64,12 @@ examples:
->          clocks = <&cpu_clk 3>;
->          timer-width = <32>;
->      };
-> +
-> +  - |
-> +    ttc1: ttc1@f8002000 {
+	*prescale =3D div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX)
+	if (*prescale)
+		*prescale -=3D 1;
 
-Node names should be generic.
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
-> +        compatible = "cdns,ttc";
-> +        reg = <0xF8002000 0x1000>;
+> You calculate
+> 	            period * clk_rate
+> 	prescale =3D -------------------
+> 	           NSEC_PER_SEC * 0xff
+>=20
+> 	                     period * clk_rate
+> 	period_steps =3D ----------------------------- - 1
+> 	               NSEC_PER_SEC * (prescale + 1)
 
-lowercase hex
+The formula for period_steps is right.
 
-> +        clocks = <&cpu_clk 3>;
-> +        timer-width = <32>;
-> +        #pwm-cells = <3>;
-> +    };
+Please double-check!
 
-Best regards,
-Krzysztof
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4lhg7s5jl5wrhlm7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmO/9qIACgkQwfwUeK3K
+7AmFOAf+LcIW/Q/o41Jo0SYTIKqNiVc8MCJ8FSZ5v0SSqxa4ucwpuLJub1/1dJQq
+cGWtSHYNYfGguHiOa0vThFj4khBmXNqrnd87loLrKUJudDghyDOkeg78tdFBmUkR
+Ha7gBC8VgtVevpY5ovGfx3vvNmqR4pw1rfin31XX6ZZ1CgQ7Wgi94rOev/DDzmbF
+TD35FRy8IR95bbtXN7Rjr7UoulZakG1I32fDIV8UBCnWbNdjW35iJ43nX/ZCroNw
+DgaRMyARSEbk8nZUWS2/3xl4CuPpbJFFW8MaKUoJRzgUKU8gu4ssVNPxtqmfDMhC
+jQTFIN9SQbXfO02y36hg64cBQ5DcOA==
+=xjC9
+-----END PGP SIGNATURE-----
+
+--4lhg7s5jl5wrhlm7--
