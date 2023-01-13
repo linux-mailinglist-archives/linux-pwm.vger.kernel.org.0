@@ -2,55 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70DEB66A22A
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jan 2023 19:36:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1ED66A239
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jan 2023 19:39:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230241AbjAMSgF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 13 Jan 2023 13:36:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
+        id S229931AbjAMSjh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Jan 2023 13:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231286AbjAMSfh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Jan 2023 13:35:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D78209;
-        Fri, 13 Jan 2023 10:32:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 078C7B82198;
-        Fri, 13 Jan 2023 18:32:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7C0C433D2;
-        Fri, 13 Jan 2023 18:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673634766;
-        bh=LMQX4Yk9JoDU1EK8Wku4zAgoynNv0qGCi+JVZ96WGAM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xt31pQVRh5BHWgj1bYntbih7Zsf1SbsQB/pBqL19TA5lLR45CbM2Zhaf1apqmt2L5
-         Dn/YVTdiBrW1pxrI839F2pTvgfmukmQSKVTYHP14korUvBeUk95wUCVsZQoAPK4Vwj
-         3eHdUg7uBvUzo+WFUnXL3F71WT6xtSUl1ykPY8VhBztyb65sNl9tBDw9A2MxxMIZJC
-         r2USHW70NUOzjZtYtORHCJdVw1qkvfq1h5XSXi/JWx1dUTsPWMab9/5MDtihdpTIWl
-         iEN0ccZtCX7tdYKT1iQ20EveNbVN+tvEKlouhPjbp+U/tHoY/VGmwMyekOq3EfjiBo
-         1XG0rgSh3N6kA==
-Date:   Fri, 13 Jan 2023 18:32:41 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     Nylon Chen <nylon.chen@sifive.com>
-Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        nylon7717@gmail.com, zong.li@sifive.com, greentime.hu@sifive.com,
-        vincent.chen@sifive.com, Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/2] Change PWM-controlled LED pin active mode and
- algorithm
-Message-ID: <Y8GjySjm9OjoZvCF@spud>
-References: <20230113083115.2590-1-nylon.chen@sifive.com>
+        with ESMTP id S230022AbjAMSj0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Jan 2023 13:39:26 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA70BF69
+        for <linux-pwm@vger.kernel.org>; Fri, 13 Jan 2023 10:39:21 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pGOxI-0003Gm-8t; Fri, 13 Jan 2023 19:39:08 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pGOxD-005pLl-Fq; Fri, 13 Jan 2023 19:39:03 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pGOxC-00CamQ-Tu; Fri, 13 Jan 2023 19:39:02 +0100
+Date:   Fri, 13 Jan 2023 19:39:01 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, marcan@marcan.st,
+        sven@svenpeter.dev, alyssa@rosenzweig.io, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/5] pwm: Add Apple PWM controller
+Message-ID: <20230113183901.gt5vdmidprxbzzer@pengutronix.de>
+References: <20230106135839.18676-1-fnkl.kernel@gmail.com>
+ <20230106135839.18676-3-fnkl.kernel@gmail.com>
+ <20230110230618.pfz267jj5ne34ava@pengutronix.de>
+ <CAMT+MTToR+0_CmVBuGfLemALUv1XuevObAMB=TQXV0Vd7HdW5Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="8H29E2czozb1Ysd/"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nmof7qq6mclq3tlw"
 Content-Disposition: inline
-In-Reply-To: <20230113083115.2590-1-nylon.chen@sifive.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <CAMT+MTToR+0_CmVBuGfLemALUv1XuevObAMB=TQXV0Vd7HdW5Q@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,94 +58,69 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---8H29E2czozb1Ysd/
-Content-Type: text/plain; charset=us-ascii
+--nmof7qq6mclq3tlw
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-+CC Uwe, Thierry, linux-pwm
+On Fri, Jan 13, 2023 at 09:25:08PM +0300, Sasha Finkelstein wrote:
+> On Wed, 11 Jan 2023 at 02:06, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > > + * Limitations:
+> > > + * - The writes to cycle registers are shadowed until a write to
+> > > + *   the control register.
+> > > + * - If both OFF_CYCLES and ON_CYCLES are set to 0, the output
+> > > + *   is a constant off signal.
+> >
+> > How does the PWM behave with *APPLE_PWM_CTRLAPPLE_PWM_CTRL =3D 0?
+> > (typically: drives constant low)
+> >
+> APPLE_PWM_CTRL =3D 0 implies that the APPLE_CTRL_ENABLE bit is set low, w=
+hich
+> turns off the pwm signal (constant low). I do not think that it is
+> necessary to explicitly
+> specify that case in the comments.
 
-Hey Nylon,
+This is an information that I want to have available. Ideally easily
+greppable by using the format that other drivers use for that, too.
+(The command I usually use is:
 
-Please run scripts/get_maintainer.pl before sending patches, you missed
-both me & the PWM maintainers unfortunately!
-AFAIK, the PWM maintainers use patchwork, so you will probably have to
-resend this patchset so that it is on their radar.
-I've marked the series as "Changes Requested" on the RISC-V one.
+	sed -rn '/Limitations:/,/\*\/?$/p' drivers/pwm/*.c
 
-On Fri, Jan 13, 2023 at 04:31:13PM +0800, Nylon Chen wrote:
+so if you make sure your info is added accordingly that would be good.)
 
-> According to the circuit diagram of User LEDs - RGB described in the
-> manual hifive-unmatched-schematics-v3.pdf[0].
-> The behavior of PWM is acitve-high.
->=20
-> According to the descriptionof PWM for pwmcmp in SiFive FU740-C000
-> Manual[1].
-> The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period[2].
-> The `frac` variable is pulse "inactive" time so we need to invert it.
->=20
-> So this patchset removes active-low in DTS and adds reverse logic to
-> the driver.
->=20
-> [0]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Unmatch=
-ed/hifive-unmatched-schematics-v3.pdf
-> [1]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Unmatch=
-ed/fu740-c000-manual-v1p2.pdf
-> [2]:https://en.wikipedia.org/wiki/Duty_cycle
+This is useful to answer questions like: Can I reasonably expect that a
+disabled PWM respects the configured polarity.
 
-Please delete link 2, convert the other two to standard Link: tags and
-put this information in the dts patch. Possibly into the PWM patch too,
-depending on what the PWM maintainers think.
-This info should be in the commit history IMO and the commit message for
-the dts patch says what's obvious from the diff without any explanation
-as to why.
+> > Can you please rename such that the (maybe new) name for APPLE_PWM_CTRL
+> > is a prefix for the (maybe new) APPLE_CTRL_ENABLE and the other register
+> > bit definitions?
+> To make sure, you want the register named APPLE_PWM_CTRL, and the bits na=
+med
+> APPLE_PWM_CTRL_ENABLE, APPLE_PWM_CTRL_MODE and so on?
 
-I did a bit of looking around on lore, to see if I could figure out
-why it was done like this in the first place, and I found:
-https://lore.kernel.org/linux-pwm/CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG97eSX70=
-=3DUaSbGCMMF_g@mail.gmail.com/
+Yes.
 
-That doesn't explain the driver, but it does explain the dts being that
-way. Perhaps a Fixes tag is also in order? But only if both patches get
-one, otherwise backporting would lead to breakage.
+Best regards
+Uwe
 
-The min() construct appears to have been there since the RFC driver was
-first posted.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Thanks,
-Conor.
-
->=20
-> Nylon Chen (2):
->   riscv: dts: sifive unmatched: Remove PWM controlled LED's active-low
-
-nit: s/sifive unmatched:/sifive: unmatched:/
-
->     properties
->   pwm: sifive: change the PWM controlled LED algorithm
->=20
->  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 4 ----
->  drivers/pwm/pwm-sifive.c                            | 1 +
->  2 files changed, 1 insertion(+), 4 deletions(-)
->=20
-> --=20
-> 2.36.1
->=20
->=20
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
---8H29E2czozb1Ysd/
+--nmof7qq6mclq3tlw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY8GjyQAKCRB4tDGHoIJi
-0te3AQCOUP2q+X8xQoPB6gQEJSA6kxsp3o3UBJtLo2y3rj1ghgEAv5fpkfmkc7fM
-XrAwr8T1JhNctwLAS7OsG6CQibVFcQ0=
-=wA6w
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPBpUIACgkQwfwUeK3K
+7AnWsggAk/ifPGzsZY/5XaujVz/l2za+R4K7un5xaWTjbba1YwhEvJJcLl0LNJbQ
+vIqOfST9nif+KCixGcdeSZDkMLMC0GPYU/VRnuaWPkSkAMt0yGrdOUkiiFfSgqC4
+UB8F7NfJX5nE2zWVIsspjI7liC5r68tH0mmy7Sjmi93Ux3e32WXCyNUoXR9h5Gt9
+ZcNmSvBhVqmpMOORK7uPL0jC7RRTr+TWd2I1dfmJ7jOuWpxSDzpN40wcCe1ih3U3
+R2O8GstPfM5CeXWRkXzktKUqk+oCOy2G0JWPTIlztyETKBfVqimJ/C+0VQP1hedI
+hqlDcd1ZngxvKk5+scRf+OzQhg8L8g==
+=ocLx
 -----END PGP SIGNATURE-----
 
---8H29E2czozb1Ysd/--
+--nmof7qq6mclq3tlw--
