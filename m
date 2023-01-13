@@ -2,102 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEC82668EFD
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jan 2023 08:21:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DAB2669055
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Jan 2023 09:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240905AbjAMHVO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 13 Jan 2023 02:21:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52636 "EHLO
+        id S231342AbjAMIOp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Jan 2023 03:14:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240906AbjAMHUm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Jan 2023 02:20:42 -0500
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 45914755D6;
-        Thu, 12 Jan 2023 23:06:08 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 5E21E80FA;
-        Fri, 13 Jan 2023 07:06:07 +0000 (UTC)
-Date:   Fri, 13 Jan 2023 09:06:06 +0200
-From:   Tony Lindgren <tony@atomide.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pwm: Allow decimal format in
- addition to hex format
-Message-ID: <Y8EC3jB2317ohUIB@atomide.com>
-References: <20221122123225.59106-1-tony@atomide.com>
- <20221123024153.GB1026269-robh@kernel.org>
- <Y33ErrigR4II6EYH@atomide.com>
- <20221127182232.GA128974-robh@kernel.org>
+        with ESMTP id S234653AbjAMINz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Jan 2023 03:13:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2948259F91;
+        Fri, 13 Jan 2023 00:13:11 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DA78AB820CA;
+        Fri, 13 Jan 2023 08:13:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42048C433EF;
+        Fri, 13 Jan 2023 08:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673597588;
+        bh=e82KldTW+22fw/XcEjwHA5r/L+QWcGUnApIZctnI2r8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=pFvAD7+HgskunVyZIJftYy/Kr42SX8kJb0fTZB/CsxX9m2hooZbzHnMhQZyF+P/Gj
+         /6RfuJHBOWfRbgjC2azK7UPHY3pACMMi6L2jHHiDc78WhTrBtL4wcKougRh2GvJu4E
+         hKcr5lHt0qG0AQfCTDUQiU2ZW5jqpU5h5xGsW5cL/sWE6Pwxd++yIdJyVYglkPKiHP
+         2x5xOb4r9vtqmDNJdorQSwN6OMKy9wH7l9znXClPEqLCDzn8vCxZmPMY2LgKT9Hl44
+         fV3dq07IsQKZRhQmYF2t+4Ibt3wrMEaW9Cfh4n3MuyXB9ktCcyaUyWHF+2h5mv9PyQ
+         YA279FKhJBPTQ==
+Message-ID: <a4bb91b5-a0c9-a81f-cdf8-7ce75552eacb@kernel.org>
+Date:   Fri, 13 Jan 2023 09:13:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221127182232.GA128974-robh@kernel.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [LINUX PATCH 3/3] pwm: pwm-cadence: Add support for TTC PWM
+Content-Language: en-US
+To:     Mubin Sayyed <mubin.sayyed@amd.com>, robh+dt@kernel.org,
+        treding@nvidia.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, git@amd.com, michal.simek@amd.com,
+        siva.durga.prasad.paladugu@amd.com, mubin10@gmail.com
+References: <20230112071526.3035949-1-mubin.sayyed@amd.com>
+ <20230112071526.3035949-4-mubin.sayyed@amd.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20230112071526.3035949-4-mubin.sayyed@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Rob,
-
-* Rob Herring <robh@kernel.org> [221127 18:22]:
-> On Wed, Nov 23, 2022 at 08:58:54AM +0200, Tony Lindgren wrote:
-> > * Rob Herring <robh@kernel.org> [221123 02:31]:
-> > > On Tue, Nov 22, 2022 at 02:32:24PM +0200, Tony Lindgren wrote:
-> > > > --- a/Documentation/devicetree/bindings/pwm/pwm.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.yaml
-> > > > @@ -13,7 +13,7 @@ select: false
-> > > >  
-> > > >  properties:
-> > > >    $nodename:
-> > > > -    pattern: "^pwm(@.*|-[0-9a-f])*$"
-> > > > +    pattern: "^pwm(@.+|-[0-9a-f]+)?$"
-> > > 
-> > > So now pwm-10 could be either?
-> > 
-> > Yes.
-> > 
-> > > I'm fine with decimal, but can we do that everywhere we do this -N 
-> > > naming?
-> > 
-> > Do you mean the '[0-9a-f]' users that don't use '[0-9af]+'?
+On 12/01/2023 08:15, Mubin Sayyed wrote:
+> Cadence TTC timer can be configured as clocksource/clockevent
+> or PWM device. Specific TTC device would be configured as PWM
+> device, if pwm-cells property is present in the device tree
+> node.
 > 
-> No, I mean for all cases of <nodename>-N, can be we consistent. Either 
-> we use hex or we use decimal.
->  
-> > 
-> > These can be found with:
-> > 
-> > $ find Documentation/devicetree/bindings/ -name \*.yaml | \
-> > 	xargs grep pattern: | grep '\[0-9a-f\]' | grep -v '\[0-9a-f\]+'
-> 
-> Not quite. It's just cases of '-N':
-> 
-> $ find Documentation/devicetree/bindings/ -name \*.yaml |         xargs grep pattern: | grep '\-\[0-9a-f\]' | grep -v '\[0-9a-f\]+'
-> Documentation/devicetree/bindings/phy/intel,combo-phy.yaml:    pattern: "combophy(@.*|-[0-9a-f])*$"
-> Documentation/devicetree/bindings/pwm/pwm.yaml:    pattern: "^pwm(@.*|-[0-9a-f])*$"
-> Documentation/devicetree/bindings/timestamp/hardware-timestamps-common.yaml:    pattern: "^timestamp(@.*|-[0-9a-f])?$"
-> Documentation/devicetree/bindings/watchdog/watchdog.yaml:    pattern: "^watchdog(@.*|-[0-9a-f])?$"
-> Documentation/devicetree/bindings/spi/spi-controller.yaml:    pattern: "^spi(@.*|-[0-9a-f])*$"
-> Documentation/devicetree/bindings/rtc/rtc.yaml:    pattern: "^rtc(@.*|-[0-9a-f])*$"
-> 
-> 
-> And there's probably some more in dtschema.
 
-Looking at this again, not exactly sure still what you want..
+(...)
 
-Can you please post some initial patch maybe, verbal patches are
-a bit tricky :)
+> +
+> +static const struct of_device_id ttc_pwm_of_match[] = {
+> +	{ .compatible = "cdns,ttc"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ttc_pwm_of_match);
+> +
+> +static struct platform_driver ttc_pwm_driver = {
+> +	.probe = ttc_pwm_probe,
+> +	.remove = ttc_pwm_remove,
+> +	.driver = {
+> +		.name = "ttc-pwm",
+> +		.of_match_table = of_match_ptr(ttc_pwm_of_match),
 
-Regards,
+This leads to warnings. Drop it or use maybe_unused.
 
-Tony
+Best regards,
+Krzysztof
+
