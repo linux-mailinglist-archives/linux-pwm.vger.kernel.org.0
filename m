@@ -2,51 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98D1D670C35
-	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jan 2023 23:55:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30E2C670C2C
+	for <lists+linux-pwm@lfdr.de>; Tue, 17 Jan 2023 23:53:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjAQWz2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Jan 2023 17:55:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51404 "EHLO
+        id S229528AbjAQWxT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Jan 2023 17:53:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbjAQWyw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Jan 2023 17:54:52 -0500
+        with ESMTP id S230009AbjAQWwv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Jan 2023 17:52:51 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6E34A1C2
-        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 13:39:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16BDB13D5F
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 13:43:50 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pHtg0-0003Ts-5Q; Tue, 17 Jan 2023 22:39:28 +0100
+        id 1pHtk7-00048K-3O; Tue, 17 Jan 2023 22:43:43 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pHtfv-006lgx-TT; Tue, 17 Jan 2023 22:39:23 +0100
+        id 1pHtk5-006lhK-4N; Tue, 17 Jan 2023 22:43:41 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pHtfv-00DhU5-7L; Tue, 17 Jan 2023 22:39:23 +0100
-Date:   Tue, 17 Jan 2023 22:39:19 +0100
+        id 1pHtk4-00DhUn-CH; Tue, 17 Jan 2023 22:43:40 +0100
+Date:   Tue, 17 Jan 2023 22:43:37 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org
-Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, john@phrozen.org,
-        sean.wang@mediatek.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v1 1/2] arm64: dts: mediatek: mt7622: Add missing
- pwm-cells to pwm node
-Message-ID: <20230117213919.56cl74ffxzdpdcgp@pengutronix.de>
-References: <20221128112028.58021-1-angelogioacchino.delregno@collabora.com>
- <20221128112028.58021-2-angelogioacchino.delregno@collabora.com>
- <20221202180932.5k3vymrwds5ssivq@pengutronix.de>
+To:     Olivier MOYSAN <olivier.moysan@foss.st.com>
+Cc:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Lee Jones <lee@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        linux-pwm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pwm: stm32: enforce settings for pwm capture
+Message-ID: <20230117214337.vgvduhiltzczra6l@pengutronix.de>
+References: <20221213102707.1096345-1-olivier.moysan@foss.st.com>
+ <20221213105128.74skjowy5v7dlaf6@pengutronix.de>
+ <2ab70bb7-dbf1-5f19-8118-6cfd9b5dc278@foss.st.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="reopnm6bu5cdz26m"
+        protocol="application/pgp-signature"; boundary="xnrlbqkomeenntxh"
 Content-Disposition: inline
-In-Reply-To: <20221202180932.5k3vymrwds5ssivq@pengutronix.de>
+In-Reply-To: <2ab70bb7-dbf1-5f19-8118-6cfd9b5dc278@foss.st.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -60,46 +62,59 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---reopnm6bu5cdz26m
+--xnrlbqkomeenntxh
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Fri, Dec 02, 2022 at 07:09:32PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Mon, Nov 28, 2022 at 12:20:27PM +0100, AngeloGioacchino Del Regno wrot=
-e:
-> > Specify #pwm-cells on pwm@11006000 to make it actually usable.
+On Wed, Dec 14, 2022 at 04:09:08PM +0100, Olivier MOYSAN wrote:
+> Hello Uwe,
+>=20
+> On 12/13/22 11:51, Uwe Kleine-K=F6nig wrote:
+> > Hello Olivier,
 > >=20
-> > Fixes: ae457b7679c4 ("arm64: dts: mt7622: add SoC and peripheral relate=
-d device nodes")
-> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@co=
-llabora.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
+> > [Cc: +=3D William Breathitt Gray, linux-iio@v.k.o]
 > >=20
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot=
-/dts/mediatek/mt7622.dtsi
-> > index 146e18b5b1f4..f321c6d0fd7c 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > @@ -435,6 +435,7 @@ uart3: serial@11005000 {
-> >  	pwm: pwm@11006000 {
-> >  		compatible =3D "mediatek,mt7622-pwm";
-> >  		reg =3D <0 0x11006000 0 0x1000>;
-> > +		#pwm-cells =3D <2>;
+> > On Tue, Dec 13, 2022 at 11:27:07AM +0100, Olivier Moysan wrote:
+> > > The PWM capture assumes that the input selector is set to default
+> > > input and that the slave mode is disabled. Force reset state for
+> > > TISEL and SMCR registers to match this requirement.
+> >=20
+> > When does the problem occur? Only if the bootloader changed that
+> > setting? Regarding the urgency: With the current knowledge I'd say this
+> > patch is material for the next merge window. Do you recommend
+> > backporting to stable?
+> >=20
 >=20
-> 3 should be possible, too. The driver does only support one
-> polarity, so it's not really needed, but would be nice for consistency?
->=20
-> Thierry, what's your take here?
->=20
-> Other than that: Who would pick this up, I assume it to go via an ARM
-> tree together with the 2nd patch in this series?
+> Yes, the PWM may not be in the default expected state, if the configurati=
+on
+> has been changed in the bootloader. This is not an actual case today, so
+> this patch can wait the next merge window and there is no
+> urgency to have it in stable.
 
-The questions here are still open and both patches unapplied. :-\
+Then I'd drop the fixes line.
+
+> > > Note that slave mode disabling is not a pre-requisite by itself
+> > > for capture mode, as hardware supports it for PWM capture.
+> > > However, the current implementation of the driver does not
+> > > allow slave mode for PWM capture. Setting slave mode for PWM
+> > > capture results in wrong capture values.
+> >=20
+> > What is your usecase for PWM capture support? I didn't double check, but
+> > I think you're the first contributor to PWM capture since 2018 (i.e. the
+> > commit you're fixing).
+> >=20
+> > Did you check if the counter subsystem would solve your problems? If it
+> > doesn't I assume William would like to hear about that.
+> >=20
+> > Looking at drivers/counter/stm32-timer-cnt.c it does seem to work in
+> > slave mode, TISEL isn't touched though. So maybe this driver needs a
+> > similar fix?
+
+I want to come back to this question. I only checked lightly, but I
+guess the counter patch needs the same patch.
 
 Best regards
 Uwe
@@ -108,19 +123,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---reopnm6bu5cdz26m
+--xnrlbqkomeenntxh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPHFYQACgkQwfwUeK3K
-7Akv5gf/SJFYiqZQ3e3k7+kMNq/B+6Dm6vLLOrHhY7dXMcF3Xl9CD/eMuHJ3f23K
-J99iGKEB0DLxV5P33FS7xbJKdCUc9LuZSdVJyn0O38dbk3r0JkWRuVyU03KbQ1F5
-bklzciXjRNjn0GjeZVVNKt77U27aQvYCH6sTf3pwm3Daswr2sZLczSApMP/Hxmo4
-4JUU7HoWFUyFekbH1Sdc/b2eFi8gTgSMsfQ2tCjmwsIDYuvEKJag7VKn91D3SZhL
-/YZD5rSW+enlPaLQPqgl3LblyW7eyaaCnjwdY8VTNKzKqEHdxfDywhkD0uNMNzR5
-L/3BJO7uE2sGE+y9hMx8I6jtMiCRzw==
-=m6Kf
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPHFoYACgkQwfwUeK3K
+7Ana4wf/cy8/TezZWsDyRxH3u4x4x5iGUiJ52kMloAXFi4rQ9qrcH2Aclx/4v9Qr
+weZ6nfN0VUu6UDQ7+U3dBoGnB79L2l7X6/nyJzNMGgF0U+yRHFTggARzfsM6xkdA
+dtLJdy56dsYka+0eY2OySDmKIKDAnIO2mzbvsyls9WwgMIHO++ZGnO/L2Y3aiy+f
+H4wQJyu+RZ/w4HJRVcJuJOf1AJrnbJn9gTYm/XhMPylTurSuFk2QVibWKk/IRDCW
+JTcvM7Jwfhqv6TiAyZ/25rD0iOCllNWXQg69Aadl4UWHz1sMI9srUi7NkU2Innue
+pmFgsVTv1k4F9mc1rcf+Awo3cOXDtg==
+=TCRH
 -----END PGP SIGNATURE-----
 
---reopnm6bu5cdz26m--
+--xnrlbqkomeenntxh--
