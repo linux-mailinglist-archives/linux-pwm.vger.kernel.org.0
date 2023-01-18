@@ -2,52 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC49D6716CB
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 10:00:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9E767220E
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 16:50:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbjARJAU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Jan 2023 04:00:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
+        id S229620AbjARPus (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Jan 2023 10:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbjARI6p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Jan 2023 03:58:45 -0500
+        with ESMTP id S230238AbjARPuF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Jan 2023 10:50:05 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00921558C
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Jan 2023 00:17:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E9A30B37
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Jan 2023 07:48:26 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pI3cu-0005iS-4F; Wed, 18 Jan 2023 09:16:56 +0100
+        id 1pIAfo-0000Ak-3e; Wed, 18 Jan 2023 16:48:24 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pI3ct-006rqX-8R; Wed, 18 Jan 2023 09:16:55 +0100
+        id 1pIAfm-006wQ3-Vy; Wed, 18 Jan 2023 16:48:22 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pI3cs-00Do1d-I9; Wed, 18 Jan 2023 09:16:54 +0100
-Date:   Wed, 18 Jan 2023 09:16:54 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/5] pwm: jz4740: Fix pin level of disabled TCU2
- channels, part 1
-Message-ID: <20230118081654.qggjaockxwg2u2sg@pengutronix.de>
-References: <20221024205213.327001-1-paul@crapouillou.net>
- <20221024205213.327001-2-paul@crapouillou.net>
- <20221025062129.drzltbavg6hrhv7r@pengutronix.de>
- <CVZAKR.06MA7BGA170W3@crapouillou.net>
- <20221117132927.mom5klfd4eww5amk@pengutronix.de>
- <SKFJLR.07UMT1VWJOD52@crapouillou.net>
- <20230117213556.vdurctncvnjom62g@pengutronix.de>
- <846b27400a72db8ca9b7497a6c032bdaacd62fc6.camel@crapouillou.net>
+        id 1pIAfm-00Du2d-DP; Wed, 18 Jan 2023 16:48:22 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] pwm: ab8500: Fix .apply() and implement .get_state()
+Date:   Wed, 18 Jan 2023 16:48:15 +0100
+Message-Id: <20230118154817.97364-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j264dxttbxzuunju"
-Content-Disposition: inline
-In-Reply-To: <846b27400a72db8ca9b7497a6c032bdaacd62fc6.camel@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=809; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=YAs5YAq6L7laZZa7NvQbZ3lbUvzorsFuGiH7G8PtkAk=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjyBS0DS/Lc7+pPhOwGoTq6ziMwIifwC/BcMZ9ZThi jIIvMVWJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY8gUtAAKCRDB/BR4rcrsCcM+B/ 9F35rkNzyK4z7CSA3dVCnWn7JNPBT9C4Rz8jWnqRMR9MrYKC3GfBK9hDljY25RGoOErIY90UErRZu0 dpbZYMR+dJXrXchxCpivTJYLkN/8yFIVVXNmQSUm0m5G4JEmjXUsxkcSDNNcCGY8RZmRFvMiCBcbZw tOsZkxgMkM4QUbPWCknxQtd2KpUn0TmoSIT8yfvAn2rYbZCSfBSaEHtzL01SqF4E0wvpaxE2OVOKrM XUxke+ZhAky6ExClZ2vAdqQwKXxrLFwgkPO/Rr4GGkslvbclhYkw5k0wnjyizAk4JYIQBpKVJhCONO Sc+POkVTO3pfQB1S7irJ1luReKvBRq
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -60,46 +53,28 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello,
 
---j264dxttbxzuunju
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+during review of my previous pwm-ab8500 patch I learned that there is a
+(somewhat) publically available reference manual. Reading in it showed
+that .apply() is still more broken that I assumed by just reading the
+code.
 
-Hello Paul,
+This series first fixes .apply() to not be off by a factor of ~3000 and
+then adds a .get_state() callback.
 
-On Tue, Jan 17, 2023 at 11:05:10PM +0000, Paul Cercueil wrote:
-> > I really lost track of the problem here and would appreciate a new
-> > submission of the remaining (and improved?) patches.
->=20
-> Sure. I still have the patchset on the backburner and plan to
-> (eventually) send an updated version.
->=20
-> If you are fishing for patches I think you can take patches 3/5 and 4/5
-> of this patchset. Then I won't have to send them again in v2.
+Note this is only compile tested as I don't have the hardware.
+Also note this breaks all consumers that relied on the previously broken
+behaviour.
 
-These are already in Linus' tree :-)
+Uwe Kleine-König (2):
+  pwm: ab8500: Fix calculation of duty and period
+  pwm: ab8500: Implement .get_state()
 
-Best regards
-Uwe
+ drivers/pwm/pwm-ab8500.c | 112 +++++++++++++++++++++++++++++++++++----
+ 1 file changed, 103 insertions(+), 9 deletions(-)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+-- 
+2.39.0
 
---j264dxttbxzuunju
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPHqvMACgkQwfwUeK3K
-7AmjYQf/WDoRbGo4RiKUlL/jqsaejKvM+ue+qPcwVdGY4h9cxjc4Gn4B9atEPSoB
-sPQpq1or9Zz5YwRRVeNTrLl386e0HzoKJXJl9lc+bdIjweHZCr1XvW2naauqtwjP
-pXaDGv2YJrCzbIl4qIrFSsu2xO+B68UVocfAF93jEaNJqdgD7UvDSjhAf9MIuryV
-SpCK3vIyUrkEdNY7TnRQFKprUE47XzoE6IUrMnqeaTN+i2IKKTPHnDYvD33axQ3v
-9vOC9NDpGCqxgwo8moEO5ESaUvbgVr8wX54ar/Z2pH1opR/WQ382S92SmO0d/cCs
-zTFvsc+MzysY135/3omJsXTfHuO4HQ==
-=V8+j
------END PGP SIGNATURE-----
-
---j264dxttbxzuunju--
