@@ -2,51 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BBFB6729AA
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 21:49:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DA5672B3E
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 23:25:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbjARUtP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Jan 2023 15:49:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51968 "EHLO
+        id S229686AbjARWZn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Jan 2023 17:25:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbjARUtM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Jan 2023 15:49:12 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4A9470A9
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Jan 2023 12:49:11 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pIFMr-0005hf-Tk; Wed, 18 Jan 2023 21:49:09 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pIFMq-006zZg-Sz; Wed, 18 Jan 2023 21:49:08 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pIFMq-00DxmX-4l; Wed, 18 Jan 2023 21:49:08 +0100
-Date:   Wed, 18 Jan 2023 21:49:07 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Axel Lin <axel.lin@ingics.com>, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: ab8500:
-Message-ID: <20230118204907.jtjdfyqvw4pbl23n@pengutronix.de>
-References: <20230103231841.1548913-1-u.kleine-koenig@pengutronix.de>
- <CACRpkdYMUBGOPoS3BUhwv=pwhnPfq94VLsanyBs0J_ajrsq30Q@mail.gmail.com>
- <20230105210215.4ov3erqpyib2ah6f@pengutronix.de>
+        with ESMTP id S229618AbjARWZm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Jan 2023 17:25:42 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F41764DAF
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Jan 2023 14:25:40 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id 188so275788ybi.9
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Jan 2023 14:25:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uJRlUJgto8uB5cGkRdE7zVVbQyEtoN07TyJzGKXUrGM=;
+        b=cOiYLD26GMRo0sNZd8nju2ANkQ+n3qs8Xjf5D7XTwBgaPEvmZz9M1Z27xdRO85T2FM
+         xExT7Rjf7Y6CNd8+OAZrG6hsCG8G+r+uQZx/eAXNCCaYYfC1z+pp99Ld0GcOx+rlL3ve
+         TzfoVnhIYEHpZwVXwdbdWcuFLOeJUWSWTHdULy/DKVTs30/a4k+cZFX/EIdVAOik7NfT
+         581mEfAXBvXkZm66DT0dp2web4Si4t34BPfC1T6H/p5xSYTAYQS6+uZXKY7okji3z55v
+         kj2sBaQcK9Rd/aSl2v98RAzHqUQ5rx2TAeo+1Arm1Hp5LAxaygH/kQyKZjfUSz+lhHjl
+         QWjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uJRlUJgto8uB5cGkRdE7zVVbQyEtoN07TyJzGKXUrGM=;
+        b=1Sj5wPJf07+o7y1HV5IvTc3LD+DrRh8Mpg5N73bc7XkWUfRAaJZDNJb9J8eRNAGhiA
+         FWTkJhSOC8QC2jRqaRt5DDVrDKe7ZVxYEljyby4R3JFHoJPebKOTxmUos2xfy6+/UaNn
+         /AQX+1GhKKJ6BL1ExTZtV/uI20btKEwuzMqO+MHyRK9RiquJX9sJ88VuxQPIzftbYKJX
+         gw/1RjWqMT5kU1OdkJWJTC+8EZ/gqEPgAAYpURwXpyPdlSN/SlITRQTeSh4oSzNqIfkB
+         jSOblzyx3qr+r99yNPlBRZDLEpw4a0smNOrq5x0W5duGpOTRjWIJNDeIMXdDQXhKa8TY
+         wW8g==
+X-Gm-Message-State: AFqh2kohud5BOIegfQ6pfMaBid+/weYHwqNQ43rRSZc5M6JxE4mWQWKR
+        eAtFkBYho9dydn9NPT86z94YEle2GQ5lp+UQIJUZ0A==
+X-Google-Smtp-Source: AMrXdXuI5hg5AIFwh0/mT980lHJf5WTph67P2AuKuLGHPSAAZV2ksJng7e5hfUWSF+/PtO/j5sWYbhLL4bpWiw9PsAk=
+X-Received: by 2002:a25:8746:0:b0:70b:87d5:4a73 with SMTP id
+ e6-20020a258746000000b0070b87d54a73mr772093ybn.584.1674080739210; Wed, 18 Jan
+ 2023 14:25:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5yoafnpbxh5f4hml"
-Content-Disposition: inline
-In-Reply-To: <20230105210215.4ov3erqpyib2ah6f@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+References: <20230118154817.97364-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20230118154817.97364-1-u.kleine-koenig@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 18 Jan 2023 23:25:28 +0100
+Message-ID: <CACRpkdZHqn9Pma1jUG-16S6ygJkemgk6KwS=owovn5K6JRVFYQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pwm: ab8500: Fix .apply() and implement .get_state()
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,69 +69,26 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Uwe,
 
---5yoafnpbxh5f4hml
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 18, 2023 at 4:48 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-Hello,
+> during review of my previous pwm-ab8500 patch I learned that there is a
+> (somewhat) publically available reference manual. Reading in it showed
+> that .apply() is still more broken that I assumed by just reading the
+> code.
+>
+> This series first fixes .apply() to not be off by a factor of ~3000 and
+> then adds a .get_state() callback.
+>
+> Note this is only compile tested as I don't have the hardware.
+> Also note this breaks all consumers that relied on the previously broken
+> behaviour.
 
-On Thu, Jan 05, 2023 at 10:02:15PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Thu, Jan 05, 2023 at 01:14:33AM +0100, Linus Walleij wrote:
-> > Believe it or not but there is a hard-to-find public datasheet:
-> > https://web.archive.org/web/20130614115108/http://www.stericsson.com/de=
-velopers/CD00291561_UM1031_AB8500_user_manual-rev5_CTDS_public.pdf
-> >=20
-> > These register bits are described on page 282-283.
->=20
-> Hmm, there are three settings related to the PWM (page 70):
->=20
->  EnaPWMOut(i)
->  FreqPWMOut(i)
->  DutyPWMOut(i)
->=20
-> If I understand the manual correctly, the driver is totaly bogous.
-> With FreqPWMOut the period is defined, this is always set to 4b0, so the
-> frequency is 293 Hz =E2=89=83 3412969 ns. So if .duty_cycle =3D 1 ns is r=
-equested,
-> we currently get 2 * 3412969 / 1024 ns =E2=89=83 6666 ns?!
->=20
-> The EnaPWMOut bits are not handled at all. I assume when this is unset,
-> the output is inactive?
+I looked over the patch and I can't find anything to comment on
+it just seems well researched and correct so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-That's wrong, the EnaPWMOut bit is handled. Don't know why I missed
-that.
-=20
-> Probably the three PWMs are better represented as one chip with 3
-> outputs instead of three chips with one PWM each, given there is only
-> one register for the EnaPWMOut bits.
-
-Earlier today I looked again into this driver and (I hope) fixed the
-problems I was seening. I'm marking the patch in this thread as
-superseeded.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5yoafnpbxh5f4hml
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPIW0AACgkQwfwUeK3K
-7Am6pQf/bD6KoiXTz8C+5VtWCpF52Xcl2t1Sd9fgSkKe3mC+dlU2f18wBDMa/8Oe
-q8x1TbBQgfEz8NGony5x5CK8IOrIPp1IbahnUR8OUrBckg34NU2mQTmcG/zPVnqP
-5sZtXFN0mtV5tXTziBlLLpydE4HcUA6+PSU4jqtWMqjgtw77rdKdetxzl78Nky9c
-WU2zI+jblfsO4rWdCjcjxBu1CCiOZ4W/7ZX1r9uugJLOSDfTZtU62xKwPh+qHTR+
-y6ltGahev2goBKdtm9B6trp2n1Z7mZXizlCoHW3RmeJgOVInlWYCIY4OGahZ5Vhw
-uvIv73eR7nG+NQ9rSNZ/r2IW5ogCAA==
-=UFWJ
------END PGP SIGNATURE-----
-
---5yoafnpbxh5f4hml--
+Yours,
+Linus Walleij
