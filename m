@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C720C67112D
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 03:31:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B12B1671135
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 03:32:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjARCbJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Jan 2023 21:31:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56952 "EHLO
+        id S229379AbjARCcl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Jan 2023 21:32:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjARCbI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Jan 2023 21:31:08 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059994FAF5
-        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 18:31:05 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id 66so1311331yba.4
-        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 18:31:04 -0800 (PST)
+        with ESMTP id S229455AbjARCcj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Jan 2023 21:32:39 -0500
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0092F4FAE3
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 18:32:37 -0800 (PST)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-4d59d518505so280774077b3.1
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 18:32:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UnaUf3QSVN2saLT2ffyfJ60ASojbZ1sd/IBl8PiiSXs=;
-        b=SJwcydLYElPFNUtH9vShrHDvyVLBsxBJ4Tbx9UF+Cj+Fka+ZodXAQccK+rD6Tvrvre
-         WBwvq2CvH2p44bHs9kM3p6pxcQ3iQ9OL0FtCP/YoVSxgii4oj3OKcTe5YF3a0uqjR28c
-         dgRPdqgDrkYZqvylRNmUupYXs4J0OG64qJPelFwR+94bRwlFhIRu8EXO5aDcfduMQlJj
-         eIvNjQcMDqQe9/tPwjzPiueUi0aTKjMhdTN91iq9hIW7HL6pepDiH+OiK9fWdoQTBmC/
-         Pp9+qLpaHZoQt52AdthBDx8+wjR3l0E+zPA9DvvP0EUDa/QXOOa7L50GhQxsRXXDL3Bt
-         N/pA==
+        bh=qhVRdi04ykAfBKvh2XosikgPFb7sAZbc1JGthKJqlS4=;
+        b=Xsfz/HHBDO/vDBykab7FsTxQ82hjIhSdfx0E/zL+3YXYxMdPCwksOi8E1/nqlOb7v4
+         Y/y+0A4dmitkt2zcYOuAEuIwjfYP8CbQYLo7znzidRpFEUpMm9nc1FTkj7YN0GBfizPH
+         1AZ35hc9Abk2cT75pqRwbuBN50r7mYOrOgv51wT91c4vqJyxqnfOP8NjTroHhwjHt0bT
+         QAwFtUqOtRPOv4sTrZE4IZlZ0GRLGCRQkuG8+HkitDgNLIC7O9kk4MWtFqGIyn5Kv3NO
+         2i17tWm5g4dJh3IxoksPy8Uw7xjpkAzAoO/32zkSPqKV0556sLX4hP3P9O+C4mw6VLXV
+         B7hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UnaUf3QSVN2saLT2ffyfJ60ASojbZ1sd/IBl8PiiSXs=;
-        b=7UD9orMYpWUduMMWdp70sA6m9nyhYdPbw8ngWkfuudEDJ3ihQiZE9+Ut6haDGewZoZ
-         Ivzvo1gM+XVoR8l4qdKsnV1+edeJzecx8vIFE6Kl3e4WzDZMn/bO8tkPJbieuAm62bPi
-         oEEQh9ubsfviC31MajRIE0jvgMkT7bdCsbM02/L+uutjw+jtX71BWXVluOOlKGy4td+q
-         F7Bh7iJ3DFldhLvqvV1c8k8tOpbVwKGG4Fh3c47LzFKPF4EdETUl6W2FxqjoPpotz/Lg
-         J1ZJtImmxEKA1QAndQ4q4yIzDOjrZ0PY+lEDlkGjbfzvHZSE0ydEJNEEFmXCzJlzMabC
-         DbDw==
-X-Gm-Message-State: AFqh2koZBB2vW829+q4mYs5uBphh2WrcgLI+uNPeOo+zUPT2+/fufxk7
-        ylZWL9kPXfVqwNcRtqH3CZUW4cOO2iFziWvZptOiMA==
-X-Google-Smtp-Source: AMrXdXs1lNfCBcr7LYUIuPyvtZB23DXwSuKFBjAl9Hh1uvQ+oOlwxrTdcHGJ40bPv+te+6cIe/6LJ2EFM5yG+OQHSS4=
-X-Received: by 2002:a5b:f11:0:b0:7f3:de9b:de11 with SMTP id
- x17-20020a5b0f11000000b007f3de9bde11mr315627ybr.544.1674009064182; Tue, 17
- Jan 2023 18:31:04 -0800 (PST)
+        bh=qhVRdi04ykAfBKvh2XosikgPFb7sAZbc1JGthKJqlS4=;
+        b=74hPvC02pOe4l5ekYUlJHN3B4jQXnZV6+mCJ9/xHkQe7Zl8FExKcLbcrEJ4mRHpLF8
+         GK5UurxkbacUpz3VKUzXdfUrvP90wv2SmQ8iv2TqdvMBZA/1C0Y43oWc9gNakh5lbI8l
+         mcJyIYX+wpibmWmqCqyK51IsMmlZW0iTLDBSCKOuYMQ90NDnt2TeDA2vW9j+aPv9Sva6
+         Q0KHg/bHmYZ8pCFbIAkIvcYMzWPzarWQ0fyEI40dvOb/ub/ZRJnpzYqKjcRyGZDIrHfe
+         r8dd7w5OGkQuILWRbl6lx+1g0M3+SUQdz1eQ9rgYTEmnjW9A5mbFVOQ3/Csglfm+156Y
+         yqdQ==
+X-Gm-Message-State: AFqh2kq+GoIYenAJDhVWUjfbC0+CqpFx6y9g8Y44wT8h0XtqhrNMi66V
+        RHxXfT48t9scc17DU1Sulrtls22LCQvnzsE6MQxW/Q==
+X-Google-Smtp-Source: AMrXdXupPoFgOwerETPCheh2dd9flISZCoiKBPocpXAh78KmGug8wpLEHcBdK2SAvDjD/HXUyWDuSMhRqrjDKbftW2Q=
+X-Received: by 2002:a81:5246:0:b0:3d0:c950:c581 with SMTP id
+ g67-20020a815246000000b003d0c950c581mr505917ywb.304.1674009157129; Tue, 17
+ Jan 2023 18:32:37 -0800 (PST)
 MIME-Version: 1.0
 References: <20230113083115.2590-1-nylon.chen@sifive.com> <Y8GjySjm9OjoZvCF@spud>
- <95F1EAA0-D8D6-4F8A-8049-5E7BFDE4C06C@jrtc27.com>
-In-Reply-To: <95F1EAA0-D8D6-4F8A-8049-5E7BFDE4C06C@jrtc27.com>
+ <95F1EAA0-D8D6-4F8A-8049-5E7BFDE4C06C@jrtc27.com> <Y8K1a+xs6tbo7kV4@spud>
+In-Reply-To: <Y8K1a+xs6tbo7kV4@spud>
 From:   Nylon Chen <nylon.chen@sifive.com>
-Date:   Wed, 18 Jan 2023 10:30:52 +0800
-Message-ID: <CAHh=Yk8=-LvJ3ygC8aK6y7FBFaOyiZ1UQY9PSXWwNwJAWYJW8w@mail.gmail.com>
+Date:   Wed, 18 Jan 2023 10:32:25 +0800
+Message-ID: <CAHh=Yk9jUFiwzw+RQDoyb7xDoHGXFzNprdXn8szmMZb5FB4jLw@mail.gmail.com>
 Subject: Re: [PATCH 0/2] Change PWM-controlled LED pin active mode and algorithm
-To:     Jessica Clarke <jrtc27@jrtc27.com>
-Cc:     Conor Dooley <conor@kernel.org>,
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Jessica Clarke <jrtc27@jrtc27.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -75,127 +75,97 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Jess,
-
-as you said, I use LED directly connected to PWM logic to modify it.
-
-As I stated in my previous article, the key is that the lower the PWM
-output is, the brighter the LED light is(active-low), the higher the
-PWM output is, the brighter the LED light is(active-high).
-
-Therefore, I would point out the waveform diagram below, the output
-result remains the same for the circuit, but when you use
-active-low/active-high to look at it, you will get two completely
-different results of brightness.
-
-e.g. duty=3D30s, period=3D100s, actvie-high =3D 30%, active-low =3D 70%
-
-V
-^
-|
-| ----------|
-|             |
-|             |
-|______ |__________ > t
-
-Jessica Clarke <jrtc27@jrtc27.com> =E6=96=BC 2023=E5=B9=B41=E6=9C=8814=E6=
-=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:24=E5=AF=AB=E9=81=93=EF=BC=9A
+Conor Dooley <conor@kernel.org> =E6=96=BC 2023=E5=B9=B41=E6=9C=8814=E6=97=
+=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On 13 Jan 2023, at 18:32, Conor Dooley <conor@kernel.org> wrote:
-> >
-> > +CC Uwe, Thierry, linux-pwm
-> >
-> > Hey Nylon,
-> >
-> > Please run scripts/get_maintainer.pl before sending patches, you missed
-> > both me & the PWM maintainers unfortunately!
-> > AFAIK, the PWM maintainers use patchwork, so you will probably have to
-> > resend this patchset so that it is on their radar.
-> > I've marked the series as "Changes Requested" on the RISC-V one.
-> >
-> > On Fri, Jan 13, 2023 at 04:31:13PM +0800, Nylon Chen wrote:
-> >
-> >> According to the circuit diagram of User LEDs - RGB described in the
-> >> manual hifive-unmatched-schematics-v3.pdf[0].
-> >> The behavior of PWM is acitve-high.
-> >>
-> >> According to the descriptionof PWM for pwmcmp in SiFive FU740-C000
-> >> Manual[1].
-> >> The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period=
-[2].
-> >> The `frac` variable is pulse "inactive" time so we need to invert it.
-> >>
-> >> So this patchset removes active-low in DTS and adds reverse logic to
-> >> the driver.
-> >>
-> >> [0]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Unma=
-tched/hifive-unmatched-schematics-v3.pdf
-> >> [1]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Unma=
-tched/fu740-c000-manual-v1p2.pdf
-> >> [2]:https://en.wikipedia.org/wiki/Duty_cycle
-> >
-> > Please delete link 2, convert the other two to standard Link: tags and
-> > put this information in the dts patch. Possibly into the PWM patch too,
-> > depending on what the PWM maintainers think.
-> > This info should be in the commit history IMO and the commit message fo=
-r
-> > the dts patch says what's obvious from the diff without any explanation
-> > as to why.
-> >
-> > I did a bit of looking around on lore, to see if I could figure out
-> > why it was done like this in the first place, and I found:
-> > https://lore.kernel.org/linux-pwm/CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG97eSX=
-70=3DUaSbGCMMF_g@mail.gmail.com/
+> Hi Jess!
 >
-> That DTS documentation makes no sense to me, why does what the LED is
-> wired to matter? Whether you have your transistor next to ground or
-> next to Vdd doesn=E2=80=99t matter, what matters is whether the transisto=
-r is
-> on or off. Maybe what they mean is whether the *PWM's output* / *the
-> transistor's input* is pulled to ground or Vdd? In which case the
-> property would indeed not apply here.
+> On Fri, Jan 13, 2023 at 07:24:56PM +0000, Jessica Clarke wrote:
+> > On 13 Jan 2023, at 18:32, Conor Dooley <conor@kernel.org> wrote:
+> > >
 >
-> Unless that=E2=80=99s written assuming the LED is wired directly to the P=
-WM, in
-> which case it would make sense, but that=E2=80=99s a very narrow-minded v=
-iew of
-> what the PWM output is (directly) driving.
+> > > Please run scripts/get_maintainer.pl before sending patches, you miss=
+ed
+> > > both me & the PWM maintainers unfortunately!
+> > > AFAIK, the PWM maintainers use patchwork, so you will probably have t=
+o
+> > > resend this patchset so that it is on their radar.
+> > > I've marked the series as "Changes Requested" on the RISC-V one.
+> > >
+> > > On Fri, Jan 13, 2023 at 04:31:13PM +0800, Nylon Chen wrote:
+> > >
+> > >> According to the circuit diagram of User LEDs - RGB described in the
+> > >> manual hifive-unmatched-schematics-v3.pdf[0].
+> > >> The behavior of PWM is acitve-high.
+> > >>
+> > >> According to the descriptionof PWM for pwmcmp in SiFive FU740-C000
+> > >> Manual[1].
+> > >> The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) peri=
+od[2].
+> > >> The `frac` variable is pulse "inactive" time so we need to invert it=
+.
+> > >>
+> > >> So this patchset removes active-low in DTS and adds reverse logic to
+> > >> the driver.
+> > >>
+> > >> [0]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Un=
+matched/hifive-unmatched-schematics-v3.pdf
+> > >> [1]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Un=
+matched/fu740-c000-manual-v1p2.pdf
+> > >> [2]:https://en.wikipedia.org/wiki/Duty_cycle
+> > >
+> > > Please delete link 2, convert the other two to standard Link: tags an=
+d
+> > > put this information in the dts patch. Possibly into the PWM patch to=
+o,
+> > > depending on what the PWM maintainers think.
+> > > This info should be in the commit history IMO and the commit message =
+for
+> > > the dts patch says what's obvious from the diff without any explanati=
+on
+> > > as to why.
+> > >
+> > > I did a bit of looking around on lore, to see if I could figure out
+> > > why it was done like this in the first place, and I found:
+> > > https://lore.kernel.org/linux-pwm/CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG97e=
+SX70=3DUaSbGCMMF_g@mail.gmail.com/
+> >
+> > That DTS documentation makes no sense to me, why does what the LED is
+> > wired to matter?
 >
-> Jess
+> ```
+>       active-low:
+>         description:
+>           For PWMs where the LED is wired to supply rather than ground.
+> ```
 >
-> > That doesn't explain the driver, but it does explain the dts being that
-> > way. Perhaps a Fixes tag is also in order? But only if both patches get
-> > one, otherwise backporting would lead to breakage.
+> > Whether you have your transistor next to ground or
+> > next to Vdd doesn=E2=80=99t matter, what matters is whether the transis=
+tor is
+> > on or off. Maybe what they mean is whether the *PWM's output* / *the
+> > transistor's input* is pulled to ground or Vdd? In which case the
+> > property would indeed not apply here.
 > >
-> > The min() construct appears to have been there since the RFC driver was
-> > first posted.
-> >
-> > Thanks,
-> > Conor.
-> >
-> >>
-> >> Nylon Chen (2):
-> >>  riscv: dts: sifive unmatched: Remove PWM controlled LED's active-low
-> >
-> > nit: s/sifive unmatched:/sifive: unmatched:/
-> >
-> >>    properties
-> >>  pwm: sifive: change the PWM controlled LED algorithm
-> >>
-> >> arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 4 ----
-> >> drivers/pwm/pwm-sifive.c                            | 1 +
-> >> 2 files changed, 1 insertion(+), 4 deletions(-)
-> >>
-> >> --
-> >> 2.36.1
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-riscv mailing list
-> >> linux-riscv@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > Unless that=E2=80=99s written assuming the LED is wired directly to the=
+ PWM, in
+> > which case it would make sense, but that=E2=80=99s a very narrow-minded=
+ view of
+> > what the PWM output is (directly) driving.
+>
+> I would suspect that it was written with that assumption.
+> Probably was the case on the specific board this property was originally
+> added for.
+>
+Hi Conor
+
+As you can see, there is also the same description in U-Boot.
+
+But in U-Boot, the DTS of Unmatched/Unleashed has not been added active-low=
+.
+
+This is because active-high should be correct if we look at the circuit dia=
+gram.
+> Maybe it'd be a bit more foolproof written as "For LEDs that are
+> illuminated while the PWM output is low. For example, where an LED is
+> wired between supply and the PWM output."?
 >
