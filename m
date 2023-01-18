@@ -2,62 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F6BE6716B9
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 09:59:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC49D6716CB
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 10:00:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjARI6z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Jan 2023 03:58:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56956 "EHLO
+        id S230121AbjARJAU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Jan 2023 04:00:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjARI5t (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Jan 2023 03:57:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9815CE5A;
-        Wed, 18 Jan 2023 00:13:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4BF83B81A3D;
-        Wed, 18 Jan 2023 08:13:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63BA3C433F0;
-        Wed, 18 Jan 2023 08:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674029634;
-        bh=SYTtZk6ZSgVx/WFOeJ0MBaOx5z4XpMo/GMukzlopQ7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RZ+gqP708YJcXRbNEKgEOJgh4FsiLreIMg4DIMMZcpCcXbV9MfVlW4027owp82HOb
-         NtCFsnWqhVM5aJjqL47BJuPrd0dhRrYyVp2QFCPpdXqTO2yxwRqn78EB/T9pEIg1Mf
-         EmkmS0dRr6bmxEQXgj42wtc7it3nMRorG92rH0MgD6lzskvR4btzfkSBxdR34hLwWq
-         fS5QELQ98/PPMP0xynZvsvpQEW9oYyX1LTKbmyL4IHCoeZ8ZGq61Uv39SRUFNeCCAg
-         Z+Nk/JLiDL+T0zstLgv9N45jbSeHtLnGA1fe9aUG6mox1Y16YjMZ1N3bQEmFqy3ODc
-         G4wVd1BD+v/lg==
-Date:   Wed, 18 Jan 2023 08:13:49 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     Nylon Chen <nylon.chen@sifive.com>
-Cc:     Jessica Clarke <jrtc27@jrtc27.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        nylon7717@gmail.com, zong.li@sifive.com, greentime.hu@sifive.com,
-        vincent.chen@sifive.com, Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/2] Change PWM-controlled LED pin active mode and
- algorithm
-Message-ID: <Y8eqPdifnWbMQI/T@spud>
-References: <20230113083115.2590-1-nylon.chen@sifive.com>
- <Y8GjySjm9OjoZvCF@spud>
- <95F1EAA0-D8D6-4F8A-8049-5E7BFDE4C06C@jrtc27.com>
- <Y8K1a+xs6tbo7kV4@spud>
- <CAHh=Yk9jUFiwzw+RQDoyb7xDoHGXFzNprdXn8szmMZb5FB4jLw@mail.gmail.com>
+        with ESMTP id S229967AbjARI6p (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Jan 2023 03:58:45 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00921558C
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Jan 2023 00:17:00 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pI3cu-0005iS-4F; Wed, 18 Jan 2023 09:16:56 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pI3ct-006rqX-8R; Wed, 18 Jan 2023 09:16:55 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pI3cs-00Do1d-I9; Wed, 18 Jan 2023 09:16:54 +0100
+Date:   Wed, 18 Jan 2023 09:16:54 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@opendingux.net,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/5] pwm: jz4740: Fix pin level of disabled TCU2
+ channels, part 1
+Message-ID: <20230118081654.qggjaockxwg2u2sg@pengutronix.de>
+References: <20221024205213.327001-1-paul@crapouillou.net>
+ <20221024205213.327001-2-paul@crapouillou.net>
+ <20221025062129.drzltbavg6hrhv7r@pengutronix.de>
+ <CVZAKR.06MA7BGA170W3@crapouillou.net>
+ <20221117132927.mom5klfd4eww5amk@pengutronix.de>
+ <SKFJLR.07UMT1VWJOD52@crapouillou.net>
+ <20230117213556.vdurctncvnjom62g@pengutronix.de>
+ <846b27400a72db8ca9b7497a6c032bdaacd62fc6.camel@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KB0jfWFHyOhAHNFP"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="j264dxttbxzuunju"
 Content-Disposition: inline
-In-Reply-To: <CAHh=Yk9jUFiwzw+RQDoyb7xDoHGXFzNprdXn8szmMZb5FB4jLw@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <846b27400a72db8ca9b7497a6c032bdaacd62fc6.camel@crapouillou.net>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,92 +61,45 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---KB0jfWFHyOhAHNFP
-Content-Type: text/plain; charset=utf-8
+--j264dxttbxzuunju
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hey Nylon,
+Hello Paul,
 
-On Wed, Jan 18, 2023 at 10:32:25AM +0800, Nylon Chen wrote:
-> Conor Dooley <conor@kernel.org> =E6=96=BC 2023=E5=B9=B41=E6=9C=8814=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=81=93=EF=BC=9A
-> > On Fri, Jan 13, 2023 at 07:24:56PM +0000, Jessica Clarke wrote:
-> > > On 13 Jan 2023, at 18:32, Conor Dooley <conor@kernel.org> wrote:
-
-> > > > Please delete link 2, convert the other two to standard Link: tags =
-and
-> > > > put this information in the dts patch. Possibly into the PWM patch =
-too,
-> > > > depending on what the PWM maintainers think.
-> > > > This info should be in the commit history IMO and the commit messag=
-e for
-> > > > the dts patch says what's obvious from the diff without any explana=
-tion
-> > > > as to why.
-> > > >
-> > > > I did a bit of looking around on lore, to see if I could figure out
-> > > > why it was done like this in the first place, and I found:
-> > > > https://lore.kernel.org/linux-pwm/CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG9=
-7eSX70=3DUaSbGCMMF_g@mail.gmail.com/
-> > >
-> > > That DTS documentation makes no sense to me, why does what the LED is
-> > > wired to matter?
-> >
-> > ```
-> >       active-low:
-> >         description:
-> >           For PWMs where the LED is wired to supply rather than ground.
-> > ```
-> >
-> > > Whether you have your transistor next to ground or
-> > > next to Vdd doesn=E2=80=99t matter, what matters is whether the trans=
-istor is
-> > > on or off. Maybe what they mean is whether the *PWM's output* / *the
-> > > transistor's input* is pulled to ground or Vdd? In which case the
-> > > property would indeed not apply here.
-> > >
-> > > Unless that=E2=80=99s written assuming the LED is wired directly to t=
-he PWM, in
-> > > which case it would make sense, but that=E2=80=99s a very narrow-mind=
-ed view of
-> > > what the PWM output is (directly) driving.
-> >
-> > I would suspect that it was written with that assumption.
-> > Probably was the case on the specific board this property was originally
-> > added for.
-
-> As you can see, there is also the same description in U-Boot.
+On Tue, Jan 17, 2023 at 11:05:10PM +0000, Paul Cercueil wrote:
+> > I really lost track of the problem here and would appreciate a new
+> > submission of the remaining (and improved?) patches.
 >=20
-> But in U-Boot, the DTS of Unmatched/Unleashed has not been added active-l=
-ow.
+> Sure. I still have the patchset on the backburner and plan to
+> (eventually) send an updated version.
 >=20
-> This is because active-high should be correct if we look at the circuit d=
-iagram.
+> If you are fishing for patches I think you can take patches 3/5 and 4/5
+> of this patchset. Then I won't have to send them again in v2.
 
-I am loathe to speak for Jess, but I don't think either of us are
-disagreeing with your patches. I was just trying to understand why it was
-wrong in the first place to see if it was intentionally inverted, or if
-there was something that could be improve to stop it happening again.
-Apologies if that got lost in translation.
+These are already in Linus' tree :-)
 
-> > Maybe it'd be a bit more foolproof written as "For LEDs that are
-> > illuminated while the PWM output is low. For example, where an LED is
-> > wired between supply and the PWM output."?
+Best regards
+Uwe
 
-Thanks,
-Conor.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-
---KB0jfWFHyOhAHNFP
+--j264dxttbxzuunju
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY8eqPQAKCRB4tDGHoIJi
-0l1NAP4hoQtZQkitKUCK7iMO1hSdPTd/IA6bhrI7bWiQNAnlKQD+MVDCawwKnyHs
-GVs7HhE/g6s3aK6sBM0Gi3kXEppZCwE=
-=zYGs
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPHqvMACgkQwfwUeK3K
+7AmjYQf/WDoRbGo4RiKUlL/jqsaejKvM+ue+qPcwVdGY4h9cxjc4Gn4B9atEPSoB
+sPQpq1or9Zz5YwRRVeNTrLl386e0HzoKJXJl9lc+bdIjweHZCr1XvW2naauqtwjP
+pXaDGv2YJrCzbIl4qIrFSsu2xO+B68UVocfAF93jEaNJqdgD7UvDSjhAf9MIuryV
+SpCK3vIyUrkEdNY7TnRQFKprUE47XzoE6IUrMnqeaTN+i2IKKTPHnDYvD33axQ3v
+9vOC9NDpGCqxgwo8moEO5ESaUvbgVr8wX54ar/Z2pH1opR/WQ382S92SmO0d/cCs
+zTFvsc+MzysY135/3omJsXTfHuO4HQ==
+=V8+j
 -----END PGP SIGNATURE-----
 
---KB0jfWFHyOhAHNFP--
+--j264dxttbxzuunju--
