@@ -2,161 +2,200 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89948671065
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 02:48:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C720C67112D
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Jan 2023 03:31:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229575AbjARBsb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 17 Jan 2023 20:48:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
+        id S229549AbjARCbJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 17 Jan 2023 21:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjARBs3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Jan 2023 20:48:29 -0500
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2126.outbound.protection.outlook.com [40.107.117.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A1640BF5;
-        Tue, 17 Jan 2023 17:48:23 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ny91GDU6K/SETDNxffNEE0HY9njDPv65ayOIUx1NDahHIUr+FZAMCbSZWiGV4oAW6gye5CUlkwZyJPK7Bo2xC8YoG6CtPZ4XRk2f6feSq584DbY8f+fQ7mbZlejRP3qUZ536kLekSfPv7m4TuaK7CGsp6utj2U6P7p7mIJc8qqWACbJXVJBUYbDZkL1dB4zxDfrbq+aWLCVfFJfI8UFhPr7b2e6JIaYpvjLP6CqoyAH+fRyNBF9dJXvJF612YL3J+iRigXWWUKf1Qdms6q3nK/Icex+V7L98HxUUYCcBph7Zxil0r3oGdNsJusOLGPavT7juG6HJX2JDRuB2Vntawg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6GHDZ5APjQCq8RKYkK6sIHSvTGCVX4qR1wiH3ssX67M=;
- b=EfSHCzA6ugO9niL2ybY90p6cWE2KO8H0R3IrX9FEIUHbmIzVltzkaT36C8rL4GHJfDdeqyvzJ2JIMHyFTNC4kNPd+SE0O2BLt5KbvjNcdLdq069yw2DLJj5TkaBQmXrEYcvqznWZaBu8WQmxpgRFCyiRbJ3yu07iwNfgVisPx/0aIx0EFbgCh6qhk90la7bgeSqK/+W/QWZHNOeOLUp0viPvEYYlxEdN1c8FAGXdNyxgqqHQepJwfLnmCaWhx1RGtAQm+LjwL/SsAzkvTHdsPTq1YcchserG4iVa4+IgaRQK29lzWPXiQg2kl9JHn5UEEF9ntvGVOVsFOLeEWn3r0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6GHDZ5APjQCq8RKYkK6sIHSvTGCVX4qR1wiH3ssX67M=;
- b=rtIGTVpeOmg+nXJ1my2fP9/jSYAPcUsHjUdFYty2pDHVUv0sTNASqkIQXST9SAEdH1eor/S7ItyX1xbN+j4Oev8s7NdsKaOm2e+xeVog4eqk9BAlo7r7EP0a37MtdHVQZdM5nPkR8sFjcbxpX1uv1wWnn77UxGtGoA1I7PkmuoWM3rcYIvW0mNkZ6pgKdiJwZFgu/GNDr1vVSULlmUf+futELXs2NBBAxzBXUnRnafOP73TPG4t0IyQU8n4IwffWMq5H+tTCeXINLWJvGjyYgBjIKwEXUmanjjY3+VuuurWe2H+Qol5x3+aLRxtNr5nhssX8FyLQ9MrObW2ThbYgDQ==
-Received: from SG2PR06MB3365.apcprd06.prod.outlook.com (2603:1096:4:69::12) by
- SI2PR06MB4581.apcprd06.prod.outlook.com (2603:1096:4:141::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6002.12; Wed, 18 Jan 2023 01:48:20 +0000
-Received: from SG2PR06MB3365.apcprd06.prod.outlook.com
- ([fe80::b56:707c:e7a1:2e90]) by SG2PR06MB3365.apcprd06.prod.outlook.com
- ([fe80::b56:707c:e7a1:2e90%3]) with mapi id 15.20.6002.010; Wed, 18 Jan 2023
- 01:48:20 +0000
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lee@kernel.org" <lee@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [v4 0/5] Support pwm/tach driver for aspeed ast26xx
-Thread-Topic: [v4 0/5] Support pwm/tach driver for aspeed ast26xx
-Thread-Index: AQHY/wMMG5E8YIXyWkafMTNbA8kidK6jfL0AgADJOwA=
-Date:   Wed, 18 Jan 2023 01:48:20 +0000
-Message-ID: <C2AA4099-CD24-4D28-8A91-F1D7EF1BC564@aspeedtech.com>
-References: <20221123061635.32025-1-billy_tsai@aspeedtech.com>
- <20230117214806.ptnnhgxmlvyzjdzp@pengutronix.de>
-In-Reply-To: <20230117214806.ptnnhgxmlvyzjdzp@pengutronix.de>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/16.69.23010700
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SG2PR06MB3365:EE_|SI2PR06MB4581:EE_
-x-ms-office365-filtering-correlation-id: a93cf478-9773-4a2a-e4be-08daf8f613c3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 7kX9UVq89w0iwLj+DYdsMW4W7tfA+UrILcSO2suVggNxhzx1PvE5MfNug42INS9MzIn8/qVQdI69qa8e+EvcE4HPyqngX0ATs6Gr7GYCW3qjJC7WxGdlVxtarzhRLU87e3/Rb1f3R9Qhd4nXbpr8iT3gx9jcyDq6RaeIhuir4PRBlhAAaMQSe8mIZVGgh781bSXnAsqrqBonlJ7IIZ35uzMmqouXdrKOnYn9kdXtruzSe+ET3L10zosQlSi/VrMqWN1xEqSMYhb1aVlJrpFsUbfO4W87XYRoOm/KKZc3mZkC+RCfVhhcbPVX/NLw8MFReEW2RbfRflCbfSqEJYYr6CgYxqU31wFgIXi8VcPuWsUeybWwhJzR7XYhFzHAUwZZyikLYAUotviVicDNkazmffPA1+lm4M+SMQfeBV9jZYXMXwbu2wKFyYZN9ySLcMDDTJJr//AY3oA3HMtK2TZvYvdPdWMd//qpXSnK0W2wkdvJOlVVWzr3UhiSzDml6aMBhNyELj/h7qjjuuqJA0Hh2jiCMIV7RMR4+KJb3WJfPTYMLLnIJvpK2vNEVF2f/mQck8vbHTcpL/GoMdqPYUYagz6sjMXHMieiJu1eR6PWvG+in1Ll7rAvKZsoLI76c60OVisTbrZ6I9dD4GOtrSIfX4UQYKkeLlc8VRautde8IAD15SAuM/OxzcA+Xo27vKTT3QgmINGxkrwx8SQCK/sX04TFDgngYdKmQtB+WKRT41o=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3365.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(39850400004)(376002)(346002)(136003)(366004)(451199015)(38100700002)(83380400001)(122000001)(33656002)(66446008)(86362001)(38070700005)(5660300002)(4744005)(4326008)(66556008)(7416002)(66946007)(76116006)(8936002)(6916009)(8676002)(2906002)(66476007)(64756008)(91956017)(41300700001)(186003)(6506007)(6512007)(26005)(53546011)(2616005)(66574015)(478600001)(6486002)(54906003)(71200400001)(316002)(36756003)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d1BFeUkwL0Q5dm9EZXFBWjJuY1ZxYUU0enlyY2o2Z3R1Rjc4WCthSUVKMEtJ?=
- =?utf-8?B?VDEvY2xZSk1laHZ0Vko2b2VoWCt1S0hBUUYzcUdCTjRyOEpFU25EMUExMDdt?=
- =?utf-8?B?V1JYM1dpcnF5T3hKcWtGYjE0THhRcFROZWtTSFZHQ1dZd1huSkg2eit3bUtR?=
- =?utf-8?B?OFo1ZjhDekU3cUVkTGpMNjhMMS9hZThWb3IxbUdXNHlDN3Q1ckNCMlJxalhm?=
- =?utf-8?B?LzIrcXhTZmxVand2bmZObUNyYk1peitOVG5qRmYrbURIZWoxUmhDQ0g0anNK?=
- =?utf-8?B?eTd0NDhVNzdXZ3RtQkRGNDJlVTFIZm1UL0dsKzJUbzFkUGhVZ2RzYlpaMEFi?=
- =?utf-8?B?WDF4bllQWHZ0bGJOd25oMVhmYjM5OGQvSVpFcm9ZV2hIcVZTS1U0MC92TW45?=
- =?utf-8?B?SHV3UEx6aXQ4QkFLYm45NUdJRjJ5ZWpvZkR6OWhVWDZaWlFicTdnUVhEWHp0?=
- =?utf-8?B?bmozekJKTDNrL0FHQTZldHNvVEQ2VDRoVExISHVPczNPNjM5VzZzS0xWMk5Y?=
- =?utf-8?B?bUFVeUVpMEhvT3p0Y2doY0FiT3RXbFNpL0hkVTQrajUxUFkxaU5vZE5JQVlu?=
- =?utf-8?B?NEpKWHJFMjBlZ1BDL2JPa2VNcm9wMlFjZ2EyWm5obDQrQ08zam9HcGNXNTR2?=
- =?utf-8?B?YnRvQ1FJR25QdjFSVjVCeWNpODdYcXpLQkdjWTd3QUdIS3k5S2NZQ1pQcGJH?=
- =?utf-8?B?eXlBMkxCZy9vUFVpcExCczNyL3ZCa00zZUdXQ1prUnpPRjRrOUNRV0N1TnNB?=
- =?utf-8?B?VWVJaUVPSVlGOTBXSjY1MmxuRTJqZ1gzTDIreThxZUNlZ0JDL25wck1md1Rm?=
- =?utf-8?B?dlJqMGxBb2dvRk1DUWJ0M1RDQ3JyWWJtenFJazRoWm92OGlaSjZocDlzQ0JL?=
- =?utf-8?B?eXFsQVFxeXFhRHVid3BGcVEvUVRWWnZ1RXJ1alpIb2lIWWFtU01mNVphWXpO?=
- =?utf-8?B?Ym1uM3hCbVU0VHk2MnNyb3dQcm5CclhuaG5OUk0xRk1jQ3RES3BlZjViNUJT?=
- =?utf-8?B?M0Y4TVE4bXVPakRLTEdvVnhTaHVDeDBqTU9SZWR2cGhaTFRxbk5LRDJNSTFu?=
- =?utf-8?B?QmdsUVR1WjVSR3VYWE1pVitLa2RhdG9ZVXl4bldWbHFwN1pjYzdxODUyYWxa?=
- =?utf-8?B?d2lUbmsvdG5OU21YT1pHMEUrZjdHdGRjM0IyY2FQbjkvZGJzWVJESm42ZW8x?=
- =?utf-8?B?NFdyUVYrM2MxazlCaHB2ODFQMHJEYXZhalRHQktnY2VOamQyQmtnM1ZwYkdw?=
- =?utf-8?B?MlgwYi9GRVpGa2M5M1dReERGQUEvZ1pqQVp2bGIwemNpN2VHd3Rza1FodmVM?=
- =?utf-8?B?QW5tRCtnVHdiMWFjQXc5cFJuWEpZU2lkcmU3N3NMczBJT3Y1Z0djNEVPMXJU?=
- =?utf-8?B?MjlkRmdSRXBUbmdScTF1b2M4TXVSSUdlSGpIRlhmc0FETVVDeDJieXhuWUZo?=
- =?utf-8?B?TytoaEZSa0xiVTFEMmRyMUJFSThHYjhiWUNRU3hGekZnWW5Xekxpc3hFdXBV?=
- =?utf-8?B?ajVzL29BdHVkaXZza1ZYSnJ4TDJLcXVSZmZSQjE4a3owVzlSTGpFTW9NWTd3?=
- =?utf-8?B?NzI4cU5kdnIwc1NDcS9ickp3VStXTGh1dSs3NS9ZTW1pUTlhQjJ5eUFTbGt5?=
- =?utf-8?B?enYrc2VweW9kSFNuM0I0dk4rZW1hdThUSDRrTVp6TVdqa05OaVBDWDRiVXF5?=
- =?utf-8?B?UDZKNHI2VEU3bS93QkZLYldvcGpobmEwSUZjeVgyTFZCTVFidVdyeVdXZTNi?=
- =?utf-8?B?bk1JSWVVOGtEYTU1U0FKS3JBS1JrMUg0djZ4KzRJSjd6ODhuOGNrQ3ozR0FK?=
- =?utf-8?B?dXMwU2t5YzdaWWdtRDhnbkY5NCtSaHJNbnVMenZGMy8yL290YU0rdXVLWHcy?=
- =?utf-8?B?cVVxc21PR2pZZzBROEdzSmVSN2YwcWNHYzhrSW1Ob1hhUy9BMWE3R3BWYnJ4?=
- =?utf-8?B?bVpHUndCRlJUVER0RlNITEFKOTl5eHgvMS9pK0hIYWhrWGFIK2xtaXYvbUpt?=
- =?utf-8?B?MWhMVVZsc25OSnR6S3pYOGFRY2h4dmJnelpINmRMY3B5L1dPUGwzeUsydllt?=
- =?utf-8?B?VEZYbnB5VGxOUUpMRDN6ZVBpSFFzejAyL3A4L0tnRWFDeEJvVGpRekd4MGxI?=
- =?utf-8?B?SVBRQjF6WC9OU3ptTXhQa01MMUdtTEp3TWpGQ2ZYSEpwZVlTdjJEVUVnMXJQ?=
- =?utf-8?B?T2c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FEA228E10DFF7C499D5088309820E1B4@apcprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229450AbjARCbI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 17 Jan 2023 21:31:08 -0500
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059994FAF5
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 18:31:05 -0800 (PST)
+Received: by mail-yb1-xb34.google.com with SMTP id 66so1311331yba.4
+        for <linux-pwm@vger.kernel.org>; Tue, 17 Jan 2023 18:31:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UnaUf3QSVN2saLT2ffyfJ60ASojbZ1sd/IBl8PiiSXs=;
+        b=SJwcydLYElPFNUtH9vShrHDvyVLBsxBJ4Tbx9UF+Cj+Fka+ZodXAQccK+rD6Tvrvre
+         WBwvq2CvH2p44bHs9kM3p6pxcQ3iQ9OL0FtCP/YoVSxgii4oj3OKcTe5YF3a0uqjR28c
+         dgRPdqgDrkYZqvylRNmUupYXs4J0OG64qJPelFwR+94bRwlFhIRu8EXO5aDcfduMQlJj
+         eIvNjQcMDqQe9/tPwjzPiueUi0aTKjMhdTN91iq9hIW7HL6pepDiH+OiK9fWdoQTBmC/
+         Pp9+qLpaHZoQt52AdthBDx8+wjR3l0E+zPA9DvvP0EUDa/QXOOa7L50GhQxsRXXDL3Bt
+         N/pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UnaUf3QSVN2saLT2ffyfJ60ASojbZ1sd/IBl8PiiSXs=;
+        b=7UD9orMYpWUduMMWdp70sA6m9nyhYdPbw8ngWkfuudEDJ3ihQiZE9+Ut6haDGewZoZ
+         Ivzvo1gM+XVoR8l4qdKsnV1+edeJzecx8vIFE6Kl3e4WzDZMn/bO8tkPJbieuAm62bPi
+         oEEQh9ubsfviC31MajRIE0jvgMkT7bdCsbM02/L+uutjw+jtX71BWXVluOOlKGy4td+q
+         F7Bh7iJ3DFldhLvqvV1c8k8tOpbVwKGG4Fh3c47LzFKPF4EdETUl6W2FxqjoPpotz/Lg
+         J1ZJtImmxEKA1QAndQ4q4yIzDOjrZ0PY+lEDlkGjbfzvHZSE0ydEJNEEFmXCzJlzMabC
+         DbDw==
+X-Gm-Message-State: AFqh2koZBB2vW829+q4mYs5uBphh2WrcgLI+uNPeOo+zUPT2+/fufxk7
+        ylZWL9kPXfVqwNcRtqH3CZUW4cOO2iFziWvZptOiMA==
+X-Google-Smtp-Source: AMrXdXs1lNfCBcr7LYUIuPyvtZB23DXwSuKFBjAl9Hh1uvQ+oOlwxrTdcHGJ40bPv+te+6cIe/6LJ2EFM5yG+OQHSS4=
+X-Received: by 2002:a5b:f11:0:b0:7f3:de9b:de11 with SMTP id
+ x17-20020a5b0f11000000b007f3de9bde11mr315627ybr.544.1674009064182; Tue, 17
+ Jan 2023 18:31:04 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3365.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a93cf478-9773-4a2a-e4be-08daf8f613c3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2023 01:48:20.3438
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gH9EpOBdmaQJPPwoFaqQ0Sq4PGlh8Gu7LJfFulfg6vZ7agM/IfoGVz+G87+OLZumcSPpFqpxw7XnWDyIkXUWuYPiWVXCdnC4Ovn6kNHwUiw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB4581
+References: <20230113083115.2590-1-nylon.chen@sifive.com> <Y8GjySjm9OjoZvCF@spud>
+ <95F1EAA0-D8D6-4F8A-8049-5E7BFDE4C06C@jrtc27.com>
+In-Reply-To: <95F1EAA0-D8D6-4F8A-8049-5E7BFDE4C06C@jrtc27.com>
+From:   Nylon Chen <nylon.chen@sifive.com>
+Date:   Wed, 18 Jan 2023 10:30:52 +0800
+Message-ID: <CAHh=Yk8=-LvJ3ygC8aK6y7FBFaOyiZ1UQY9PSXWwNwJAWYJW8w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Change PWM-controlled LED pin active mode and algorithm
+To:     Jessica Clarke <jrtc27@jrtc27.com>
+Cc:     Conor Dooley <conor@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        nylon7717@gmail.com, zong.li@sifive.com, greentime.hu@sifive.com,
+        vincent.chen@sifive.com, Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgVXdlLA0KDQogIE9uIDIwMjMvMS8xOCwgNTo0OCBBTSwgIlV3ZSBLbGVpbmUtS8O2bmlnIiA8
-dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlIDxtYWlsdG86dS5rbGVpbmUta29lbmlnQHBl
-bmd1dHJvbml4LmRlPj4gd3JvdGU6DQoNCg0KICA+IEhlbGxvIEJpbGx5LA0KDQoNCiAgPiBJIHdv
-bmRlciBpZiB5b3UgYWRkcmVzcyB0aGUgZmVlZGJhY2sgeW91IGdvdCBmb3IgdGhpcyBzZXJpZXMu
-IEkgdGhpbmsNCiAgPiB0aGVyZSBhcmUgbm8gYmlnIGlzc3VlcyBsZWZ0LCBhcmUgdGhlcmU/DQoN
-ClRoYW5rcyBmb3IgeW91ciBoZWxwLiBZZXMsIHRoZXJlIGlzIG5vIGlzc3VlIHdpdGggdGhlIFBX
-TSBkcml2ZXIgYXQgdGhlDQptb21lbnQuIFRoZSByZW1haW5pbmcgdGFzayBvZiB0aGlzIHNlcmll
-cyBpcyBkdC1iaW5kaW5nIGFuZCBJIGFtIHdhaXRpbmcNCnRoZSBmZWVkYmFjayBmcm9tIHJldmll
-d2VyLg0KDQogID4gVGhlcmUgaXMgb25seSBvbmUgcGF0Y2ggbGVmdCBvcGVuIGluIHRoZSBQV00g
-cGF0Y2h3b3JrIChpLmUuIHRoZSBwYXRjaA0KICA+IGltcGxlbWVudGluZyB0aGUgZHJpdmVyIHRo
-YXQgYWxyZWFkeSBoYXMgbXkgUmV2aWV3ZWQtYnkgdGFnKS4gSSdsbA0KICA+IGRpc2NhcmQgdGhh
-dCBvbmUsIHRvbywgYXMgImNoYW5nZXMgcmVxdWVzdGVkIiBhbmQgaG9wZSB5b3Ugd2lsbCBzZW5k
-IGENCiAgPiB2NS4NCg0KSSB3aWxsIHNlbmQgYSB2NSB3aGVuIHRoZSBpc3N1ZSBhYm91dCB0aGUg
-ZHQtYmluZGluZyBpcyByZXNsb3ZlZC4NClRoYW5rcyBhZ2FpbiBmb3IgeW91ciBoZWxwIQ0KDQpC
-ZXN0IFJlZ2FyZHMsIA0KQmlsbHkgVHNhaQ0KDQo=
+Hi Jess,
+
+as you said, I use LED directly connected to PWM logic to modify it.
+
+As I stated in my previous article, the key is that the lower the PWM
+output is, the brighter the LED light is(active-low), the higher the
+PWM output is, the brighter the LED light is(active-high).
+
+Therefore, I would point out the waveform diagram below, the output
+result remains the same for the circuit, but when you use
+active-low/active-high to look at it, you will get two completely
+different results of brightness.
+
+e.g. duty=3D30s, period=3D100s, actvie-high =3D 30%, active-low =3D 70%
+
+V
+^
+|
+| ----------|
+|             |
+|             |
+|______ |__________ > t
+
+Jessica Clarke <jrtc27@jrtc27.com> =E6=96=BC 2023=E5=B9=B41=E6=9C=8814=E6=
+=97=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:24=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On 13 Jan 2023, at 18:32, Conor Dooley <conor@kernel.org> wrote:
+> >
+> > +CC Uwe, Thierry, linux-pwm
+> >
+> > Hey Nylon,
+> >
+> > Please run scripts/get_maintainer.pl before sending patches, you missed
+> > both me & the PWM maintainers unfortunately!
+> > AFAIK, the PWM maintainers use patchwork, so you will probably have to
+> > resend this patchset so that it is on their radar.
+> > I've marked the series as "Changes Requested" on the RISC-V one.
+> >
+> > On Fri, Jan 13, 2023 at 04:31:13PM +0800, Nylon Chen wrote:
+> >
+> >> According to the circuit diagram of User LEDs - RGB described in the
+> >> manual hifive-unmatched-schematics-v3.pdf[0].
+> >> The behavior of PWM is acitve-high.
+> >>
+> >> According to the descriptionof PWM for pwmcmp in SiFive FU740-C000
+> >> Manual[1].
+> >> The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period=
+[2].
+> >> The `frac` variable is pulse "inactive" time so we need to invert it.
+> >>
+> >> So this patchset removes active-low in DTS and adds reverse logic to
+> >> the driver.
+> >>
+> >> [0]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Unma=
+tched/hifive-unmatched-schematics-v3.pdf
+> >> [1]:https://sifive-china.oss-cn-zhangjiakou.aliyuncs.com/HiFIve%20Unma=
+tched/fu740-c000-manual-v1p2.pdf
+> >> [2]:https://en.wikipedia.org/wiki/Duty_cycle
+> >
+> > Please delete link 2, convert the other two to standard Link: tags and
+> > put this information in the dts patch. Possibly into the PWM patch too,
+> > depending on what the PWM maintainers think.
+> > This info should be in the commit history IMO and the commit message fo=
+r
+> > the dts patch says what's obvious from the diff without any explanation
+> > as to why.
+> >
+> > I did a bit of looking around on lore, to see if I could figure out
+> > why it was done like this in the first place, and I found:
+> > https://lore.kernel.org/linux-pwm/CAJ2_jOG2M03aLBgUOgGjWH9CUxq2aTG97eSX=
+70=3DUaSbGCMMF_g@mail.gmail.com/
+>
+> That DTS documentation makes no sense to me, why does what the LED is
+> wired to matter? Whether you have your transistor next to ground or
+> next to Vdd doesn=E2=80=99t matter, what matters is whether the transisto=
+r is
+> on or off. Maybe what they mean is whether the *PWM's output* / *the
+> transistor's input* is pulled to ground or Vdd? In which case the
+> property would indeed not apply here.
+>
+> Unless that=E2=80=99s written assuming the LED is wired directly to the P=
+WM, in
+> which case it would make sense, but that=E2=80=99s a very narrow-minded v=
+iew of
+> what the PWM output is (directly) driving.
+>
+> Jess
+>
+> > That doesn't explain the driver, but it does explain the dts being that
+> > way. Perhaps a Fixes tag is also in order? But only if both patches get
+> > one, otherwise backporting would lead to breakage.
+> >
+> > The min() construct appears to have been there since the RFC driver was
+> > first posted.
+> >
+> > Thanks,
+> > Conor.
+> >
+> >>
+> >> Nylon Chen (2):
+> >>  riscv: dts: sifive unmatched: Remove PWM controlled LED's active-low
+> >
+> > nit: s/sifive unmatched:/sifive: unmatched:/
+> >
+> >>    properties
+> >>  pwm: sifive: change the PWM controlled LED algorithm
+> >>
+> >> arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 4 ----
+> >> drivers/pwm/pwm-sifive.c                            | 1 +
+> >> 2 files changed, 1 insertion(+), 4 deletions(-)
+> >>
+> >> --
+> >> 2.36.1
+> >>
+> >>
+> >> _______________________________________________
+> >> linux-riscv mailing list
+> >> linux-riscv@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
