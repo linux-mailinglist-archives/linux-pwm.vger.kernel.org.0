@@ -2,76 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5FD9675810
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Jan 2023 16:04:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA5CE675A18
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Jan 2023 17:36:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjATPEy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Jan 2023 10:04:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
+        id S230085AbjATQga (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Jan 2023 11:36:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231304AbjATPEv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Jan 2023 10:04:51 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F18D88D8
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Jan 2023 07:04:43 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id y1so614092wru.2
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Jan 2023 07:04:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uM/AZbTE0N3wZ9K7Id9185G9SFTYGVUQ4zyUZJh9c2w=;
-        b=CMZNxqXQ9bGvQVB4/W/6bW3PRwNIRC70HtD6CJVTdSa9HMXFonB3kv/2HjpA3yAJYZ
-         2Eej0Hg0oKuHk7A7GvhK911K0PUvz6QcPBrxWwUzAmK1zU7vF8JS0A4dTmjdTVo0WLxz
-         bMao64u/Dkp3wTuQpMD898RVrGzo2AYyEll6Yg1fjU1Sm6o2M6W7181K66UiYEufB089
-         I3SjVlGJ+o3k1ujThb7R7A+ZvC7uYm3vOdHlq+Y68eAhAkRjQpnzCpU5sfCZZw5P84OY
-         yxBmT1RS1Kv5Ywa4oW1Hg9Y95w9I2ZogmB+44X6Gf6eVa/FkQW+I3vOT+PNh6u8GpUMe
-         hLNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uM/AZbTE0N3wZ9K7Id9185G9SFTYGVUQ4zyUZJh9c2w=;
-        b=ZtRGTHpreNkcIhmvL/5QYJXUIDNaCboZ6faG+h9kx4eOd8UgA+Y0x0hGh4dvfOap2K
-         TRCP4fgd3ax1dRox6OBH4Yx3Y7Ce8LzXfC08k2g3MVN6w+jgsfpeX2MlgUv8ksJbR7+B
-         BMeX3DNXJyjErXF9F86C2Mcggzi2reO9w5JAqhTJb5zjPxN7VS/3OaLKqJVK0k8c1sD1
-         QlwEfncAxnb+7UH177mAVYtOLW1cPeclKeVyq+COxnAUHBd5xod9H0lbgmG//UzYYFN0
-         1gr+qxQQn1s7Mv6SHQqwqRMvclCG7PnRtjdSBqwgvRM7clpbrvVXWq/ULjWLYQ5nk71c
-         fpRA==
-X-Gm-Message-State: AFqh2kqDWzS8vqXOpESbvjgsB1cgvENr3JDcnvgD7Lkan6zzFVfC2jWq
-        yed6nfsXtA0tz9NohH2wHCKVAw==
-X-Google-Smtp-Source: AMrXdXsPQxYA6ZUOJLdOPKyWDyB3wvLu9sSjvk0brOwg0HIxvtJpTyjbgqStno4YTK6idzKQeiT5Sw==
-X-Received: by 2002:a5d:5190:0:b0:2bd:fde4:885c with SMTP id k16-20020a5d5190000000b002bdfde4885cmr12005062wrv.63.1674227081607;
-        Fri, 20 Jan 2023 07:04:41 -0800 (PST)
-Received: from aspen.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id j15-20020adfd20f000000b002be2a4b521fsm8858850wrh.45.2023.01.20.07.04.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jan 2023 07:04:40 -0800 (PST)
-Date:   Fri, 20 Jan 2023 15:04:38 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v2 2/2] backlight: pwm_bl: Don't rely on a disabled PWM
- emiting inactive state
-Message-ID: <Y8qthjHiCTO3OK/R@aspen.lan>
-References: <20230120120018.161103-1-u.kleine-koenig@pengutronix.de>
- <20230120120018.161103-3-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229808AbjATQg3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Jan 2023 11:36:29 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67963917E9
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Jan 2023 08:35:59 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pIuMT-0004Z9-BT; Fri, 20 Jan 2023 17:35:29 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pIuMQ-007PdM-S8; Fri, 20 Jan 2023 17:35:26 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pIuMQ-00ES5w-1c; Fri, 20 Jan 2023 17:35:26 +0100
+Date:   Fri, 20 Jan 2023 17:35:25 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-pwm@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] pwm: Add support for RZ/V2M PWM driver
+Message-ID: <20230120163525.rhtgexzmizotnvrg@pengutronix.de>
+References: <20221213185827.2012004-1-biju.das.jz@bp.renesas.com>
+ <20221213185827.2012004-3-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="56qs72c4mf6yg5ye"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230120120018.161103-3-u.kleine-koenig@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <20221213185827.2012004-3-biju.das.jz@bp.renesas.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,31 +56,70 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 01:00:18PM +0100, Uwe Kleine-König wrote:
-> Most but not all PWMs drive the PWM pin to its inactive state when
-> disabled. However if there is no enable_gpio and no regulator the PWM
-> must drive the inactive state to actually disable the backlight.
->
-> So keep the PWM on in this case.
->
-> Note that to determine if there is a regulator some effort is required
-> because it might happen that there isn't actually one but the regulator
-> core gave us a dummy. (A nice side effect is that this makes the
-> regulator actually optional even on fully constrained systems.)
->
-> This fixes backlight disabling e.g. on i.MX6 when an inverted PWM is
-> used.
->
-> Hint for the future: If this change results in a regression, the bug is
-> in the lowlevel PWM driver.
 
-:-)
+--56qs72c4mf6yg5ye
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hello,
 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> + * https://www.renesas.com/in/en/document/mah/rzv2m-users-manual-hardwar=
+e?language=3Den
 
-Thanks for the changes. Looks good:
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+I took a look into that now, and there are a few things I noticed.
 
+The PWMCYC register description has:
 
-Daniel.
+	To change the setting value of the PWM cycle setting register
+	(PWMm_PWMCYC), set the PWME bit of the PWM control register
+	(PWMm_PWMCTR) to 0b and stop the counter operation. If it is
+	changed during counter operation, PWM output may not be
+	performed correctly.
+
+This isn't repected in the driver. Please either fix that or add a
+comment why you think this is not necessary. If you choose to adhere to
+that, also note it in the Limitations section that I asked you to add.
+
+In .apply() you subtract 1 from the calculated value of PWMCYC. When
+looking through section 17.4 Function Details I don't see this
+justified. However in 17.3.2.2 the formula is as you quoted in the
+driver (i.e. PWMm_PWMCYC =3D (PWM period (ns) / (PWM_CLK period (ns) =C3=97
+Division ratio)) =E2=88=92 1). Can you maybe test which of the two is corre=
+ct,
+maybe adapt the driver code and note in a comment about the difference?
+
+Also comment would be nice about the fact that the native polarity of
+the hardware is inverted (i.e. it starts with the low part). I didn't
+recheck, maybe the inversion bit handling must be switched?
+
+A 100% duty cycle is only possible (according to Figure 17.4-2) with
+PWMLOW > PWMCYC. Assuming this is correct, there is the problem that the
+two registers have the same width, so if PWMCYC is 0xffffff a 100% duty
+isn't possible. So please stick to only using values < 0xffffff for
+PWMCYC.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--56qs72c4mf6yg5ye
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPKwsoACgkQwfwUeK3K
+7AlLCAf+OKlR9sJ1tjp34aw4HwLcNrATLOFtLz1YYfFimIxIK7yjXgvjYmCSUVH5
+7gzzYPa8kjLkthEbe6s8/GBbeLHrEyIDT3Z/+58Ij2dV7hKI/V5doXqFXjl5jPAJ
+qGftAqkpnXt4lLxwVIvJ/NdL60RGbYuGtVbPLYaykMurmfh7d2SBe+iByWbiNCsp
+2Mj16rWwP8YH54zOQ/XXmM1ONKpIAbm7wNLC3yDNYmPhl4hApt6Mzc5CyQzaDDmw
+BdATaMznRXrvFBICvtIN6alGJBtSF6nPBhSOtaL73AlTcZacSGdcUVP1s0NxDteK
+9dqK8kZrff7o7/yYJWFzztOXpIG6Lw==
+=edq4
+-----END PGP SIGNATURE-----
+
+--56qs72c4mf6yg5ye--
