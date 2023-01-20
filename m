@@ -2,129 +2,101 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A97E674002
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Jan 2023 18:33:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C76B9674EB1
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Jan 2023 08:53:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229796AbjASRdl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Jan 2023 12:33:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41684 "EHLO
+        id S229450AbjATHxm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Jan 2023 02:53:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjASRdk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Jan 2023 12:33:40 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDDC4742E;
-        Thu, 19 Jan 2023 09:33:36 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id d4-20020a05600c3ac400b003db1de2aef0so1821645wms.2;
-        Thu, 19 Jan 2023 09:33:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HRkHxltOADy9ynfqvAg9dqzLPh81gN0Pd9b3KEsiRcI=;
-        b=pGwcN8w2cNHtPOjLhb/xHdlexc8kF1Umz+hd6UPmihuPQ4CJlyjDxot5gJT6uZoL15
-         EXEIikiO4T4xVDbPMpcFMFqGtxm9/cSYmGC3iSSKzwpRwTwQb4NuvpRYy4uAjUrrhT8E
-         CZDi5r6xOu+KgIT/93EGOtrNFI7jCDGZEyH+1ZxmfuR2Har04fhiXFfcfo9FP0ni18zs
-         AABofBkOysQnILml+tMmEneuD6doMu2yZAOrj3H0J3lTMImIUVivnuYInSLiZfoPxmg4
-         3Dbw8D1rzxRIjbQuX9495G8tmsmbnADmD1tk5wRRIXnbFWvC3PDAuiq5JCLpFlh79+8q
-         3PUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HRkHxltOADy9ynfqvAg9dqzLPh81gN0Pd9b3KEsiRcI=;
-        b=oGgyBbyLGRk1yT4riubUIqzatZdqh3Q0TzC0NIh/qQmRHZDBrZZraqFwQf3W5Ags8W
-         yQ6drDetYcaTbzA936iyyN5ePJseGJNiSey0H5S5HEGSqVzLRN/DODjALmkEtlRXRcB0
-         XIIjQhNwNW5ZE2ya35Pb7qWSO8tMdBKc5+3V5ifUpjOvdjeU5AEuUmExZwHT5vC7XRQw
-         u8F9AbtKFqxEvDKF7fg/aLZbCcXy+KKgSAMjvna/ho/JYvVIoq5L4za0BB7SgqU9v4fU
-         UTJgiJXdb+n+WMv34ViaQd0RYvpXiI3QK9F0ldGW0SKxee+5LtxHSlVlFWnVaVPecxcv
-         TBrQ==
-X-Gm-Message-State: AFqh2kprSBJZq3D2qkbKbxLU6U/c72zSc+dsZQXsJDlzcxPX1wg+mCZS
-        LqoLfx+mgx2lueAgJXMtHMfVLhrw5U9OQg==
-X-Google-Smtp-Source: AMrXdXv2+4MHflMXeHtA9NOmShcNOhoq7h9Pm3HghF12eXjmubTmiKbdJIrzRJazNaZnB8yCo/n5tg==
-X-Received: by 2002:a05:600c:198c:b0:3db:392:ecee with SMTP id t12-20020a05600c198c00b003db0392eceemr7141224wmq.31.1674149614566;
-        Thu, 19 Jan 2023 09:33:34 -0800 (PST)
-Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id f24-20020a05600c491800b003db0ad636d1sm4995466wmp.28.2023.01.19.09.33.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jan 2023 09:33:34 -0800 (PST)
-Message-ID: <fe2e5a9c-2505-5a95-d65a-bac387f4ea71@gmail.com>
-Date:   Thu, 19 Jan 2023 18:33:32 +0100
+        with ESMTP id S229513AbjATHxm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Jan 2023 02:53:42 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DC8360AD
+        for <linux-pwm@vger.kernel.org>; Thu, 19 Jan 2023 23:53:41 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pImDS-0005yP-Uz; Fri, 20 Jan 2023 08:53:38 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pImDR-007K62-HQ; Fri, 20 Jan 2023 08:53:37 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pImDQ-00EKwo-Nj; Fri, 20 Jan 2023 08:53:36 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] gpio: mvebu: Use IS_REACHABLE instead of IS_ENABLED for CONFIG_PWM
+Date:   Fri, 20 Jan 2023 08:53:33 +0100
+Message-Id: <20230120075333.142223-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v1 1/2] arm64: dts: mediatek: mt7622: Add missing
- pwm-cells to pwm node
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org
-Cc:     robh+dt@kernel.org, john@phrozen.org, sean.wang@mediatek.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20221128112028.58021-1-angelogioacchino.delregno@collabora.com>
- <20221128112028.58021-2-angelogioacchino.delregno@collabora.com>
- <20221202180932.5k3vymrwds5ssivq@pengutronix.de>
- <20230117213919.56cl74ffxzdpdcgp@pengutronix.de>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20230117213919.56cl74ffxzdpdcgp@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1481; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=USu3DUBJDrfJf+3pujPCoB/v8LwNdQJnO9NlK868guA=; b=owGbwMvMwMV48I9IxdpTbzgZT6slMSSf8qi0O7dsq//nJ3mZP8+Grmy2V/1vpfvEw4q9lmPhVPtn ziEHOxmNWRgYuRhkxRRZ6oq0xCZIrPlvV7KEG2YQKxPIFAYuTgGYSME29v9195ynNavq5oWoBT1fMq MhqM/9yVMpJ8bVjXxmYTt77Xm1BYzVGfMTBVY3BbZZ5GjE3PRY2DJXQjnyWHuEYLeYZXvcwjlrkp/e kPsgm/jo+NPU3auKXHxLQ/ZfLTTaPq1wcfTk5fURv1oF39k8mWzVHibpNuWmb96JHYlcb+pUFjKl31 xwMfrwUZUL3Ak7qgs0YoPEFywwtPrTMm1LwyoVDwmBV4z29aLMKfeFMv4VcTaedg4Ot3OZ0Vh6KejJ rjiLC3cYeedtvak6oTG4Yda36LeeTn77oz6bnVpzUur3LM9vEiZmAcan3ef2cHfI+2kvCGUKm31C7d 0WmU8ZllWiQcumiAXqz9yccqAKAA==
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+To check if a certain function (here e.g. pwmchip_add()) can be called
+IS_REACHABLE is the better check. The relevant difference to IS_ENABLED
+is that IS_REACHABLE evaluates to 0 if the current code is builtin but the
+checked symbol is =m and so must not be used.
 
+Today there is no practical impact as CONFIG_PWM is a bool.
 
-On 17/01/2023 22:39, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Fri, Dec 02, 2022 at 07:09:32PM +0100, Uwe Kleine-König wrote:
->> On Mon, Nov 28, 2022 at 12:20:27PM +0100, AngeloGioacchino Del Regno wrote:
->>> Specify #pwm-cells on pwm@11006000 to make it actually usable.
->>>
->>> Fixes: ae457b7679c4 ("arm64: dts: mt7622: add SoC and peripheral related device nodes")
->>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>> ---
->>>   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> index 146e18b5b1f4..f321c6d0fd7c 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> @@ -435,6 +435,7 @@ uart3: serial@11005000 {
->>>   	pwm: pwm@11006000 {
->>>   		compatible = "mediatek,mt7622-pwm";
->>>   		reg = <0 0x11006000 0 0x1000>;
->>> +		#pwm-cells = <2>;
->>
->> 3 should be possible, too. The driver does only support one
->> polarity, so it's not really needed, but would be nice for consistency?
->>
->> Thierry, what's your take here?
->>
->> Other than that: Who would pick this up, I assume it to go via an ARM
->> tree together with the 2nd patch in this series?
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-mvebu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The DT patch should go through my tree once all questions are answered and the 
-dt-binding patch got accpeted by PWM maintainer.
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 91a4232ee58c..a68f682aec01 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -1002,7 +1002,7 @@ static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
+ 		BUG();
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_PWM))
++	if (IS_REACHABLE(CONFIG_PWM))
+ 		mvebu_pwm_suspend(mvchip);
+ 
+ 	return 0;
+@@ -1054,7 +1054,7 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
+ 		BUG();
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_PWM))
++	if (IS_REACHABLE(CONFIG_PWM))
+ 		mvebu_pwm_resume(mvchip);
+ 
+ 	return 0;
+@@ -1228,7 +1228,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
+ 
+ 	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+-	if (IS_ENABLED(CONFIG_PWM)) {
++	if (IS_REACHABLE(CONFIG_PWM)) {
+ 		err = mvebu_pwm_probe(pdev, mvchip, id);
+ 		if (err)
+ 			return err;
+-- 
+2.39.0
 
-Regards,
-Matthias
-
-> 
-> The questions here are still open and both patches unapplied. :-\
-> 
-> Best regards
-> Uwe
-> 
