@@ -2,59 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B8F4678970
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jan 2023 22:22:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC4F678991
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jan 2023 22:31:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232297AbjAWVW2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Jan 2023 16:22:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50672 "EHLO
+        id S231933AbjAWVbF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Jan 2023 16:31:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232107AbjAWVW2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Jan 2023 16:22:28 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE563526C;
-        Mon, 23 Jan 2023 13:22:26 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id y19so16230732edc.2;
-        Mon, 23 Jan 2023 13:22:26 -0800 (PST)
+        with ESMTP id S230224AbjAWVbF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Jan 2023 16:31:05 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21297126FF;
+        Mon, 23 Jan 2023 13:31:04 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id g11so10742553eda.12;
+        Mon, 23 Jan 2023 13:31:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O/m9fxwpEbZpN8X/D6lwA+MFLaC8U37ezUMxtxmuH1s=;
-        b=nHYnC2veAbsrTjlHDQZR0BhSSYSQHFBMBLaA06XtKf/JcBy5o8Qo7rR09XYFpWbUEQ
-         zUOF/c0nEFw/jpxdxY0TfQt3XGGuupq5k+GM3BFNMVNokLyG6Kk1IjtfDSXvHP48ZG13
-         jdOgZSqvN3oJXcHwsBtb9UDARHudBrRRed8l6Isn9nuA4nQuuylTDdPnfDcXiZqSEILN
-         gWO7GzisBtbyiAwsbduiUw3652oAUhn8vy/MxZKL9AZXx0cbkrVRsYgm9na9wU7vZ5Fs
-         WThJGOxnqxCx06877AWz0wv5I7DlCBeQVyGjt7IoWTH2E3KUbvDlkObUuIZjI+xI/qTV
-         YVpg==
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tGy0L8FYKqoa2JKT2+lRKom4fwae0WN7DTnvx0E4Uzc=;
+        b=g3yJTOA2nZO0Dnf/q+WUQ17ab7h55P+/OqcdQBpFGQp6h3UtMIeFE9zmNJLc3X9fj6
+         C590kHQzH+fsVFJW1mzraHaBRoZJCUAZBsrQliiapxjd7tgxsgSnDf5HWyCJFssUI5nX
+         pbu3jwxkuA5AFPM5TcOj7frMlzIiJzWuyqCXuxAT8YrYSc39/yiwYut3kURTI0yeaf/g
+         faXzt2kIsdCyDiqHcDLixXZHcwQI9AXfa0x4cdMe9RR5qWnbuZuII5E17z/OzMP1jCde
+         baofBmX/duEWiPMyw8LfDVnM8qzLepwnPkNtLQgYsm8oA/4Vk1CFJryPS2QsxeiCOhAz
+         rO+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=O/m9fxwpEbZpN8X/D6lwA+MFLaC8U37ezUMxtxmuH1s=;
-        b=hGifrAa0OWc5cLMtG4cxl1MC5lqEOWp8v4/khIuELyK4FonZ43BF2GXdiqNB4gtRSG
-         +FXnhTwaNCYiyUBo950QENaOhQAWGkTWgB1s+gr36YtZDH7luGRd40pUtxleeMV2Wmjl
-         OhLQaB5iDylddhPRkxVTN2tDWwGXAmp/STdpDkv2dctb+aDkJ1Bh6fIlluFRMXBhD9Kl
-         uBAgd4yP0yW2k1GjqM5dCrNChtGUHWuxtJP9TYlakAUo/M04i/3xxTAAnE+vEQAQkyj/
-         SI5M5nVQMnJ/qitwsk85wctLhnjaiV+YCraVU6GCpzwwaga/sj6T3CVdlWZKHC9wJpa8
-         AQcg==
-X-Gm-Message-State: AFqh2koOwsoXdHVXDaqP3ajgMXIalNtkWuUorPC8T7stvi31+wR+ezSD
-        EBysxTeF67wBXEPvAmxvMyk=
-X-Google-Smtp-Source: AMrXdXsecJ0Lmw0T6hteu5NgTW5sF1ad5h25d+1oE8fDr0Fwmliz4MOIjn5MfXF/7fkBbotfYHdm0g==
-X-Received: by 2002:a05:6402:5296:b0:49c:3cf4:d9ed with SMTP id en22-20020a056402529600b0049c3cf4d9edmr30260243edb.23.1674508945276;
-        Mon, 23 Jan 2023 13:22:25 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tGy0L8FYKqoa2JKT2+lRKom4fwae0WN7DTnvx0E4Uzc=;
+        b=cxAV3dWByiVjV2tIUN09TmERC6+6bI90GCuJ7qVq6so4viDXKYZ6AAJNJvX2Qp4/E8
+         Kf+K44XI7iMp7bxGxXRz+nkYLh3LccQBnKIf2cyC72AOZhFdVvbKJ/6Tan6pNOkPZ7zQ
+         J6nLEUy2FF9IzCWcszj05bXWnF+pN6mIhR1+6KZ3CIujxBID/A2293x/M10n/Lj1qYNF
+         5AEEO1R19vC0e7qv8jmy9bVtkL4uZ5HlxJKS25bznHCHB3/UkqZVMcQnCCguxWsMOx6z
+         AuJnQn6NKs3cqqa5MmaEQkyAqXIO5JcUylYPePL33iAS92Q+WjuWcZ1RiyZxzDmblm3w
+         69og==
+X-Gm-Message-State: AFqh2kq3ndzK8M03LaUIWHm/dJo1uLNd59h0l6fIGHACvpYFNNMad+TY
+        6+kzX8yeW0ATyLC1b2/1M4g=
+X-Google-Smtp-Source: AMrXdXtDrtFMC+Krfg/TfV027iJVS6WEimm/PnKTdIxeQra5m4weBTCn+UTAXPU83PrQ9lDliTU/zg==
+X-Received: by 2002:a05:6402:401d:b0:49b:5a1c:9cb5 with SMTP id d29-20020a056402401d00b0049b5a1c9cb5mr29220354eda.16.1674509462545;
+        Mon, 23 Jan 2023 13:31:02 -0800 (PST)
 Received: from ?IPV6:2a01:c23:bc5b:9400:dc4c:6fb7:47b2:beb7? (dynamic-2a01-0c23-bc5b-9400-dc4c-6fb7-47b2-beb7.c23.pool.telefonica.de. [2a01:c23:bc5b:9400:dc4c:6fb7:47b2:beb7])
-        by smtp.googlemail.com with ESMTPSA id cm28-20020a0564020c9c00b0049e9fe9abcasm213409edb.44.2023.01.23.13.22.23
+        by smtp.googlemail.com with ESMTPSA id u10-20020aa7db8a000000b00487b73912c2sm230560edt.12.2023.01.23.13.31.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 13:22:24 -0800 (PST)
-Message-ID: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
-Date:   Mon, 23 Jan 2023 22:22:15 +0100
+        Mon, 23 Jan 2023 13:31:02 -0800 (PST)
+Message-ID: <0fab069e-dc03-783e-e4f9-d49f96669328@gmail.com>
+Date:   Mon, 23 Jan 2023 22:23:57 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
+Subject: [PATCH 1/8] arm64: dts: meson-gx: Remove invalid pwm compatible
 Content-Language: en-US
+From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Neil Armstrong <neil.armstrong@linaro.org>,
@@ -74,9 +76,8 @@ Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 0/8] soc: amlogic: switch bindings to yaml and adjust some
- dtbs's
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -89,49 +90,54 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-At first adjust some existing dtbs's so that they pass dtbs_check
-after switching bindings to yaml.
+amlogic,meson-gx-pwm isn't a valid compatible string, so remove it.
+See drivers/pwm/pwm-meson.c.
 
-Then switch further Amlogic Meson bindings to yaml.
-Tested with make targets dt_binding_check and dtbs_check.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Heiner Kallweit (8):
-  arm64: dts: meson-gx: Remove invalid pwm compatible
-  arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
-  arm64: dts: meson-gx: Set only one compatible string for mmc
-  arm64: dts: amlogic: Remove invalid compatible string
-    amlogic,meson-gpio-intc
-  dt-bindings: rtc: Add Amlogic Meson vrtc controller binding
-  dt-bindings: pwm: Add Amlogic Meson PWM binding
-  dt-bindings: interrupt-controller: Add Amlogic Meson GPIO interrupt
-    controller binding
-  dt-bindings: pinctrl: Add Amlogic Meson pinctrl binding
-
- .../amlogic,meson-gpio-intc.txt               |  38 ------
- .../amlogic,meson-gpio-intc.yaml              |  72 +++++++++++
- .../pinctrl/amlogic,meson-pinctrl.yaml        | 121 ++++++++++++++++++
- .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
- .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  61 +++++++++
- .../devicetree/bindings/pwm/pwm-meson.txt     |  29 -----
- .../bindings/rtc/amlogic,meson-vrtc.yaml      |  50 ++++++++
- .../bindings/rtc/rtc-meson-vrtc.txt           |  22 ----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   5 +-
- .../boot/dts/amlogic/meson-g12-common.dtsi    |   7 +-
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  15 +--
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |   3 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |   3 +-
- arch/arm64/boot/dts/amlogic/meson-s4.dtsi     |   3 +-
- arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |   3 +-
- 15 files changed, 320 insertions(+), 206 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml
- delete mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson-vrtc.txt
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index a79a35e84..75d35dcfe 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -328,14 +328,14 @@ i2c_A: i2c@8500 {
+ 			};
+ 
+ 			pwm_ab: pwm@8550 {
+-				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
++				compatible = "amlogic,meson-gxbb-pwm";
+ 				reg = <0x0 0x08550 0x0 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+ 			};
+ 
+ 			pwm_cd: pwm@8650 {
+-				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
++				compatible = "amlogic,meson-gxbb-pwm";
+ 				reg = <0x0 0x08650 0x0 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+@@ -350,7 +350,7 @@ saradc: adc@8680 {
+ 			};
+ 
+ 			pwm_ef: pwm@86c0 {
+-				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
++				compatible = "amlogic,meson-gxbb-pwm";
+ 				reg = <0x0 0x086c0 0x0 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+@@ -497,7 +497,7 @@ i2c_AO: i2c@500 {
+ 			};
+ 
+ 			pwm_AO_ab: pwm@550 {
+-				compatible = "amlogic,meson-gx-ao-pwm", "amlogic,meson-gxbb-ao-pwm";
++				compatible = "amlogic,meson-gxbb-ao-pwm";
+ 				reg = <0x0 0x00550 0x0 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
 -- 
 2.39.1
+
 
