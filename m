@@ -2,113 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C73F26780E4
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jan 2023 17:06:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F60F678966
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jan 2023 22:20:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbjAWQGZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Jan 2023 11:06:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42324 "EHLO
+        id S231933AbjAWVUo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Jan 2023 16:20:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231674AbjAWQGY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Jan 2023 11:06:24 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE0EAD529;
-        Mon, 23 Jan 2023 08:06:23 -0800 (PST)
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 270926602E39;
-        Mon, 23 Jan 2023 16:06:22 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1674489982;
-        bh=a//s0VQPI4VdLC1yskDrbe3IDSo3z5asw/jCKWGhMlQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3V1YsI/b+cbffNHubYqbr0HJ7rUbYaejxLw+JGWCgYDdM4NWGo0N/D08482o4TqI
-         Q7R9Lgt+M023xCUnAiQW3HEviuOqk69dXNzV4ufWXNyeu2bsGKhruDo+bTCOmEEge0
-         XNdHYZvCYM6D5fd5MjSgG5CET4ba2iqhmaL5xOuzGhhZg/41scThqm58W/HPG/1m/h
-         DpRqNnV9teGc9T/zLhYqu0wF63mlmAgNUuZcPofkwCBGTPJyUlbQuuSR2a0JwCqCRi
-         QNSOCcBPUNP61fNPQT1XTA5TvaOp/SmZuLGfROcw6GrKnoRbNit1RyeEcXivfrdb1A
-         6yW8j4K1va6JQ==
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-To:     thierry.reding@gmail.com
-Cc:     u.kleine-koenig@pengutronix.de, matthias.bgg@gmail.com,
-        weiqing.kong@mediatek.com, jitao.shi@mediatek.com,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH 2/2] pwm: mtk-disp: Configure double buffering before reading in .get_state()
-Date:   Mon, 23 Jan 2023 17:06:15 +0100
-Message-Id: <20230123160615.375969-3-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230123160615.375969-1-angelogioacchino.delregno@collabora.com>
-References: <20230123160615.375969-1-angelogioacchino.delregno@collabora.com>
+        with ESMTP id S229930AbjAWVUm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Jan 2023 16:20:42 -0500
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E011ABF0;
+        Mon, 23 Jan 2023 13:20:39 -0800 (PST)
+Received: by mail-oi1-f169.google.com with SMTP id p185so11596935oif.2;
+        Mon, 23 Jan 2023 13:20:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UJETK3OSsznW7YVJ84aqO5Pm3VovO6KPLRPmFaeGzU8=;
+        b=xo+j1wWbOAgopWBLhc2RMVlS/ylXH0Wj93ImWz3bu2v221bkDTP20QwlqSkcF/pk7G
+         7VBbNIcuGG1t7vOaQnnKFkROtVqIDvkN8gzcS46ndjbBELjbqa1SbKLrdKlmvldNCreo
+         NHGfU2Mogp9hgt5vEeZlAofa5iODky+NI6s3YC4w1xr7pK8NYTzT4Vtbs8em+hxXneYu
+         9u3IkXf9HXPsiVkLnZqDDsB3xXX9f250ayy3wtvPK5LQwZ6Wr0XgOkZ6lOpsTFTzuSMV
+         oTPZ1dbLBiWMgAQh5YS2l356hr5ZgIst2gntqWOcQAWinUTRaTGORjJ+6Tiz52Cot7xZ
+         1BtQ==
+X-Gm-Message-State: AFqh2krf8zqL9WOcL+/z0pcsKV4PNYjsaYkbZBpr1r2lXV2aoj78Vuhx
+        O66QItm53tqYBrMtMfdxAg==
+X-Google-Smtp-Source: AMrXdXtJ9Hc6xSNFXIXyN/NZ/8XRuK8JDpzti/x/t7iLm86yGhXfW5m3KZ4+rQbjzmzC3AT4qN3p0g==
+X-Received: by 2002:a05:6808:404b:b0:36c:cc25:8bc4 with SMTP id cz11-20020a056808404b00b0036ccc258bc4mr9393700oib.26.1674508838860;
+        Mon, 23 Jan 2023 13:20:38 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id o8-20020a0568080bc800b003646062e83bsm218464oik.29.2023.01.23.13.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jan 2023 13:20:38 -0800 (PST)
+Received: (nullmailer pid 2659455 invoked by uid 1000);
+        Mon, 23 Jan 2023 21:20:37 -0000
+Date:   Mon, 23 Jan 2023 15:20:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?q?=2C?=linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        freedreno@lists.freedesktop.org, linux-pm@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        David Airlie <airlied@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        ", Kevin Hilman" <khilman@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: [PATCH] dt-bindings: drop type for operating-points-v2
+Message-ID: <167450883575.2659375.17323544164739111670.robh@kernel.org>
+References: <20230119131033.117324-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230119131033.117324-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The DISP_PWM controller's default behavior is to always use register
-double buffering: all reads/writes are then performed on shadow
-registers instead of working registers and this becomes an issue
-in case our chosen configuration in Linux is different from the
-default (or from the one that was pre-applied by the bootloader).
 
-An example of broken behavior is when the controller is configured
-to use shadow registers, but this driver wants to configure it
-otherwise: what happens is that the .get_state() callback is called
-right after registering the pwmchip and checks whether the PWM is
-enabled by reading the DISP_PWM_EN register;
-At this point, if shadow registers are enabled but their content
-was not committed before booting Linux, we are *not* reading the
-current PWM enablement status, leading to the kernel knowing that
-the hardware is actually enabled when, in reality, it's not.
+On Thu, 19 Jan 2023 14:10:33 +0100, Krzysztof Kozlowski wrote:
+> The type for operating-points-v2 property is coming from dtschema
+> (/schemas/opp/opp.yaml), so individual bindings can just use simple
+> "true".
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> This depends on my pull request, at least logically:
+> https://github.com/devicetree-org/dt-schema/pull/95
+> 
+> Patch could be applied in parallel but only if above PULL is
+> accepted/correct.
+> ---
+>  .../devicetree/bindings/display/msm/dp-controller.yaml         | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-dc.yaml   | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-dsi.yaml  | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-epp.yaml  | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-gr2d.yaml | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-gr3d.yaml | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-hdmi.yaml | 3 +--
+>  .../bindings/display/tegra/nvidia,tegra20-host1x.yaml          | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-mpe.yaml  | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-tvo.yaml  | 3 +--
+>  .../devicetree/bindings/display/tegra/nvidia,tegra20-vi.yaml   | 3 +--
+>  .../devicetree/bindings/fuse/nvidia,tegra20-fuse.yaml          | 3 +--
+>  .../devicetree/bindings/mmc/nvidia,tegra20-sdhci.yaml          | 3 +--
+>  Documentation/devicetree/bindings/power/power-domain.yaml      | 3 ---
+>  Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.yaml  | 3 +--
+>  15 files changed, 14 insertions(+), 31 deletions(-)
+> 
 
-The aforementioned issue emerged since this driver was fixed with
-commit 0b5ef3429d8f ("pwm: mtk-disp: Fix the parameters calculated
-by the enabled flag of disp_pwm") making it to read the enablement
-status from the right register.
-
-Configure the controller in the .get_state() callback to avoid
-this desync issue and get the backlight properly working again.
-
-Fixes: 3f2b16734914 ("pwm: mtk-disp: Implement atomic API .get_state()")
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/pwm/pwm-mtk-disp.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-index 82b430d881a2..fe9593f968ee 100644
---- a/drivers/pwm/pwm-mtk-disp.c
-+++ b/drivers/pwm/pwm-mtk-disp.c
-@@ -196,6 +196,16 @@ static int mtk_disp_pwm_get_state(struct pwm_chip *chip,
- 		return err;
- 	}
- 
-+	/*
-+	 * Apply DISP_PWM_DEBUG settings to choose whether to enable or disable
-+	 * registers double buffer and manual commit to working register before
-+	 * performing any read/write operation
-+	 */
-+	if (mdp->data->bls_debug)
-+		mtk_disp_pwm_update_bits(mdp, mdp->data->bls_debug,
-+					 mdp->data->bls_debug_mask,
-+					 mdp->data->bls_debug_mask);
-+
- 	rate = clk_get_rate(mdp->clk_main);
- 	con0 = readl(mdp->base + mdp->data->con0);
- 	con1 = readl(mdp->base + mdp->data->con1);
--- 
-2.39.0
-
+Applied, thanks!
