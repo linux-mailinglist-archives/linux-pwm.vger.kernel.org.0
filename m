@@ -2,59 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC4F678991
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jan 2023 22:31:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C39F9678994
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Jan 2023 22:31:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231933AbjAWVbF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Jan 2023 16:31:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55686 "EHLO
+        id S232967AbjAWVbH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Jan 2023 16:31:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230224AbjAWVbF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Jan 2023 16:31:05 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21297126FF;
-        Mon, 23 Jan 2023 13:31:04 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id g11so10742553eda.12;
-        Mon, 23 Jan 2023 13:31:04 -0800 (PST)
+        with ESMTP id S230224AbjAWVbH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Jan 2023 16:31:07 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1194A126FF;
+        Mon, 23 Jan 2023 13:31:06 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id v30so16226779edb.9;
+        Mon, 23 Jan 2023 13:31:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tGy0L8FYKqoa2JKT2+lRKom4fwae0WN7DTnvx0E4Uzc=;
-        b=g3yJTOA2nZO0Dnf/q+WUQ17ab7h55P+/OqcdQBpFGQp6h3UtMIeFE9zmNJLc3X9fj6
-         C590kHQzH+fsVFJW1mzraHaBRoZJCUAZBsrQliiapxjd7tgxsgSnDf5HWyCJFssUI5nX
-         pbu3jwxkuA5AFPM5TcOj7frMlzIiJzWuyqCXuxAT8YrYSc39/yiwYut3kURTI0yeaf/g
-         faXzt2kIsdCyDiqHcDLixXZHcwQI9AXfa0x4cdMe9RR5qWnbuZuII5E17z/OzMP1jCde
-         baofBmX/duEWiPMyw8LfDVnM8qzLepwnPkNtLQgYsm8oA/4Vk1CFJryPS2QsxeiCOhAz
-         rO+A==
+        h=content-transfer-encoding:in-reply-to:subject:references:cc:to:from
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Az6/+eS6ijz6i/CMKCOR2HNf4utXJX9P0GxQzD5Ytps=;
+        b=BR34zr7979WtSxuJfQQmHhscCCpGpa4wPeRndQwBkQf1VMoF+o36ZcPm8SB67r8Iau
+         OlRhq8rzcHbAgK4GsQ0khz1LmHmM5fdLW/03hzQjHmSGXTTGxvadi2faCaI6RTs4NOJN
+         UTsrTFgx4/+2MIXmcbagLLCCtIES4Q2P57BgUi6XW1GUyJMm+xQmjW1tvauwtms1RlhF
+         zDdPmb1JGtdbtZ9B1kNQFJ7dfS2wwwpGIpbkSpoT/1UlS3NjLfx3/V8tI3AFRXFLFtDI
+         bXvNTw4kGgPOH3sR6UiEIv1ldSZ6bUq0AO2K0Qw27LLovvjOX6AWtZFIAEZTnnC4zoTl
+         Hcjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:subject:references:cc:to:from
+         :content-language:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tGy0L8FYKqoa2JKT2+lRKom4fwae0WN7DTnvx0E4Uzc=;
-        b=cxAV3dWByiVjV2tIUN09TmERC6+6bI90GCuJ7qVq6so4viDXKYZ6AAJNJvX2Qp4/E8
-         Kf+K44XI7iMp7bxGxXRz+nkYLh3LccQBnKIf2cyC72AOZhFdVvbKJ/6Tan6pNOkPZ7zQ
-         J6nLEUy2FF9IzCWcszj05bXWnF+pN6mIhR1+6KZ3CIujxBID/A2293x/M10n/Lj1qYNF
-         5AEEO1R19vC0e7qv8jmy9bVtkL4uZ5HlxJKS25bznHCHB3/UkqZVMcQnCCguxWsMOx6z
-         AuJnQn6NKs3cqqa5MmaEQkyAqXIO5JcUylYPePL33iAS92Q+WjuWcZ1RiyZxzDmblm3w
-         69og==
-X-Gm-Message-State: AFqh2kq3ndzK8M03LaUIWHm/dJo1uLNd59h0l6fIGHACvpYFNNMad+TY
-        6+kzX8yeW0ATyLC1b2/1M4g=
-X-Google-Smtp-Source: AMrXdXtDrtFMC+Krfg/TfV027iJVS6WEimm/PnKTdIxeQra5m4weBTCn+UTAXPU83PrQ9lDliTU/zg==
-X-Received: by 2002:a05:6402:401d:b0:49b:5a1c:9cb5 with SMTP id d29-20020a056402401d00b0049b5a1c9cb5mr29220354eda.16.1674509462545;
-        Mon, 23 Jan 2023 13:31:02 -0800 (PST)
+        bh=Az6/+eS6ijz6i/CMKCOR2HNf4utXJX9P0GxQzD5Ytps=;
+        b=b0MgGxXPI7d/rAHnspi1HX53iB6xk/stxdtijT83Sri2vDeFV9NazBBsHqT4C4iGFI
+         psCajbtK9+eKhKnEJO0wQWAYJ1dmmFlc66JQ1+Gg5r47IXnPDwG8VUbXReSLp+Ze17NC
+         0YOExQF6XbBQsR7F058uUyVWZsarF/jkeE+zdWO2QdnRQXA/ne7ztBO2ImK2XQD8Xw36
+         3K+3zBfqEbQfaR3f/31ip94XmostK2YnhZ3TzK38hMqkoSY/DKBepnTYa5l0GxP0lVHw
+         CiR1t+lGWoHST/rt25dbEyZjZfH/7gscWd9+bJIu4YltXCL8Qz9w4tx0qid4g4EbD1w1
+         N/KQ==
+X-Gm-Message-State: AFqh2kpdKTs4svQAMWZuRC6tCM+2NI1eArg8+uvBDcMtawPv4+e486/J
+        YdJn/1fAJENBT5mJCc1Nxs8=
+X-Google-Smtp-Source: AMrXdXvBhhFAnlGDpShjqyTOqXfCsXipvqGMLgY5DjYtYmmrUoMO9uh7PEYOVRplnKyaHNRjwS9RZQ==
+X-Received: by 2002:a05:6402:388c:b0:49a:6a2:6f2f with SMTP id fd12-20020a056402388c00b0049a06a26f2fmr31501205edb.4.1674509464518;
+        Mon, 23 Jan 2023 13:31:04 -0800 (PST)
 Received: from ?IPV6:2a01:c23:bc5b:9400:dc4c:6fb7:47b2:beb7? (dynamic-2a01-0c23-bc5b-9400-dc4c-6fb7-47b2-beb7.c23.pool.telefonica.de. [2a01:c23:bc5b:9400:dc4c:6fb7:47b2:beb7])
-        by smtp.googlemail.com with ESMTPSA id u10-20020aa7db8a000000b00487b73912c2sm230560edt.12.2023.01.23.13.31.01
+        by smtp.googlemail.com with ESMTPSA id u16-20020aa7d550000000b004873927780bsm228573edr.20.2023.01.23.13.31.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 13:31:02 -0800 (PST)
-Message-ID: <0fab069e-dc03-783e-e4f9-d49f96669328@gmail.com>
-Date:   Mon, 23 Jan 2023 22:23:57 +0100
+        Mon, 23 Jan 2023 13:31:04 -0800 (PST)
+Message-ID: <55c53e8d-6b30-51bf-edf6-b5b67887bd0a@gmail.com>
+Date:   Mon, 23 Jan 2023 22:24:40 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: [PATCH 1/8] arm64: dts: meson-gx: Remove invalid pwm compatible
 Content-Language: en-US
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -77,6 +76,7 @@ Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+Subject: [PATCH 2/8] arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
 In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -90,53 +90,51 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-amlogic,meson-gx-pwm isn't a valid compatible string, so remove it.
-See drivers/pwm/pwm-meson.c.
+mmc-controller.yaml defines "^mmc(@.*)?$" as node name pattern.
+In preparation of adding schema-based validation fix the node name
+in two affected files.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi        | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index a79a35e84..75d35dcfe 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -328,14 +328,14 @@ i2c_A: i2c@8500 {
- 			};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 1648e67af..ed895fb32 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1883,7 +1883,7 @@ apb: bus@ffe00000 {
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x200000>;
  
- 			pwm_ab: pwm@8550 {
--				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
-+				compatible = "amlogic,meson-gxbb-pwm";
- 				reg = <0x0 0x08550 0x0 0x10>;
- 				#pwm-cells = <3>;
- 				status = "disabled";
+-			sd_emmc_b: sd@5000 {
++			sd_emmc_b: mmc@5000 {
+ 				compatible = "amlogic,meson-axg-mmc";
+ 				reg = <0x0 0x5000 0x0 0x800>;
+ 				interrupts = <GIC_SPI 217 IRQ_TYPE_EDGE_RISING>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index 1a931d5c2..80d82f739 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -2321,7 +2321,7 @@ uart_A: serial@24000 {
  			};
+ 		};
  
- 			pwm_cd: pwm@8650 {
--				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
-+				compatible = "amlogic,meson-gxbb-pwm";
- 				reg = <0x0 0x08650 0x0 0x10>;
- 				#pwm-cells = <3>;
- 				status = "disabled";
-@@ -350,7 +350,7 @@ saradc: adc@8680 {
- 			};
+-		sd_emmc_a: sd@ffe03000 {
++		sd_emmc_a: mmc@ffe03000 {
+ 			compatible = "amlogic,meson-axg-mmc";
+ 			reg = <0x0 0xffe03000 0x0 0x800>;
+ 			interrupts = <GIC_SPI 189 IRQ_TYPE_EDGE_RISING>;
+@@ -2333,7 +2333,7 @@ sd_emmc_a: sd@ffe03000 {
+ 			resets = <&reset RESET_SD_EMMC_A>;
+ 		};
  
- 			pwm_ef: pwm@86c0 {
--				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
-+				compatible = "amlogic,meson-gxbb-pwm";
- 				reg = <0x0 0x086c0 0x0 0x10>;
- 				#pwm-cells = <3>;
- 				status = "disabled";
-@@ -497,7 +497,7 @@ i2c_AO: i2c@500 {
- 			};
- 
- 			pwm_AO_ab: pwm@550 {
--				compatible = "amlogic,meson-gx-ao-pwm", "amlogic,meson-gxbb-ao-pwm";
-+				compatible = "amlogic,meson-gxbb-ao-pwm";
- 				reg = <0x0 0x00550 0x0 0x10>;
- 				#pwm-cells = <3>;
- 				status = "disabled";
+-		sd_emmc_b: sd@ffe05000 {
++		sd_emmc_b: mmc@ffe05000 {
+ 			compatible = "amlogic,meson-axg-mmc";
+ 			reg = <0x0 0xffe05000 0x0 0x800>;
+ 			interrupts = <GIC_SPI 190 IRQ_TYPE_EDGE_RISING>;
 -- 
 2.39.1
 
