@@ -2,53 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0333A67B592
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jan 2023 16:11:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4E367B595
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jan 2023 16:11:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235989AbjAYPL1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Jan 2023 10:11:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39422 "EHLO
+        id S235994AbjAYPLf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Jan 2023 10:11:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235992AbjAYPL0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Jan 2023 10:11:26 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1C05974A;
-        Wed, 25 Jan 2023 07:11:13 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id b7so17384754wrt.3;
-        Wed, 25 Jan 2023 07:11:13 -0800 (PST)
+        with ESMTP id S236010AbjAYPLd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Jan 2023 10:11:33 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF40358662;
+        Wed, 25 Jan 2023 07:11:15 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id l8so14001255wms.3;
+        Wed, 25 Jan 2023 07:11:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=I/Fxp0KlTmBwEo1nLuzPHrie4d14h9A0j9bTIw7gzKw=;
-        b=CtGwkl+IS46rp3qQgGyErQWm/hgEB6SyCGQkoL1x+tBLynIrmC7mEtQgDewk4s45Tx
-         HzrwbYIx3LH+JJhQmpwBYvSKaHQ5bTcoMeYGkHdek5p9vGBkgF/SRw8oKYNTHb0kQcV/
-         DNdar1mAUffK1FG/eh6TsGdscVDdaGEHF/ZkP0ByjX1yDgkKTd9nqCts9tmH/nv1ADL1
-         JbZXQnnBt5VeJPTeIa2xQqxjDvOa03K3iwOUXZfLNKIjldQ0Z1kl+vmWz65QDiS1q7C9
-         bUN+1F5AaXjddy9O61D4zWUQL03JteKpoI/aN6rK3t4LvNmE0arodkP7iwVIcLrqdcz2
-         IYCw==
+        bh=kTaBsHHaxY4hxEZyw1070cz+vHDzIdLfWWrgADCbRU8=;
+        b=BRnb5DYVXtWCtvc3qdQxtfQDSxjmp+yfOM2pXEVaEXc37OixGwC1jFBPFhmKTx4PoM
+         cphL1s7CofBvz5JRbnWE6RQqU6B4RL5Umhs+nBBVGb+ijp8jDNNvX5ik1SUFv9XCg1BF
+         nuNwfWqorONjLl4u53U774sFsM/0aCGUxeRaILHFFBh5SbBGYExmc/Lk52S9RAgt7m4z
+         5H8oQszL77/msmmj8xT9qURuXzeNvUYbdIqW4wgm4N3ci2pRXIOfanmDlu3loqIzIEzs
+         wXoD8IBN/nCKqB1owFuvw267FFffKotZDSwEPcp1M49ubhfphBeY+axb5FSCnGPNSZyn
+         eycg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=I/Fxp0KlTmBwEo1nLuzPHrie4d14h9A0j9bTIw7gzKw=;
-        b=5QnfP5ul6dpctzHHrpGyUdvpYL1UpNbIHSaVlBKJ+nP1Sbg9WWr4I7yl4SYUSr8lWs
-         4Wfk7ODT322BSfFEpxAXjvM7I9wYCWlDtG5EmBHnGQoP/Z4bllj0FoB26gzYpIXOLseK
-         eIyUGvzXRInYu1sL8rahpiC/XxnMm1BUAU5fz91OPlO6RDK0PK9NiDejwbmPYnznkrOy
-         vSbgUJAFyIsBfoPZhm3oxhYso94CLv3wsbws+SFrQtSiGj7nkv5l04+JzYMUuWxX8fot
-         lKb48opAYWtzLQXv3ATS4QHclXGQvT+jPo2xyw3EzQ6Sxoacnaxz41Aex6BQ35ErcDbW
-         wFQQ==
-X-Gm-Message-State: AFqh2kp35QaJ2giltUQsPnZ199gNY7OSuCjGDSJinJN9FFY5jzNdz0R2
-        GnpAd9bKnbYblqEwOPDwE0k=
-X-Google-Smtp-Source: AMrXdXuMkOQtZcZ4+FN91hG07gKC0iqbiy2giQLh12TtWsSBclabn/wzC+MMIA1i0c6/GJZ1lWA1mA==
-X-Received: by 2002:adf:eec6:0:b0:2be:57b9:f569 with SMTP id a6-20020adfeec6000000b002be57b9f569mr17246547wrp.23.1674659471989;
-        Wed, 25 Jan 2023 07:11:11 -0800 (PST)
+        bh=kTaBsHHaxY4hxEZyw1070cz+vHDzIdLfWWrgADCbRU8=;
+        b=N3kS5i/cI01Y1JxbRxAHJXbVLaE2YhqhMKFfK4kbML805KoFphCQ8LR9X0PldmgDDK
+         aWwqmgqHa1YEavMKnHOfX+m7djqMLPd49KEWGaD/P2XTAKSJWEUsxg3Zlv1rjsTvtO/o
+         XPACxHVP44Q4mEBM9lwmOhd/qq5gRS9QVrlOKFqALuyslaJpUDsVa2q8Kr2N/iTd2Uh3
+         t2348T+ccdBC5rIJKhgOSR2GUSyp/G3Nr9aYmRZDFPNUzr/8ol/isKB6tAov4U+jfEYG
+         E0rq9j/T0Qv2KyuGqtEJ67BdkxTR9FBYKLGaXiaJkSdgbnj/bQTxC//0V43SgwPX76IH
+         Of4Q==
+X-Gm-Message-State: AFqh2kpWFi1EZ/KqYUcX1GmLouVXd4vaV4WGiX+mC0ddsuC1sJOCKsI2
+        Jlq/ohuRZurGSyIQDneKItM=
+X-Google-Smtp-Source: AMrXdXsVMi89xiI+4LxZntiDgxj2YfyHgKghAGbA2sAo4gVujJ7zwlCxsirbMUpVHQC35a6Lk+uuNA==
+X-Received: by 2002:a05:600c:1d22:b0:3d9:6bc3:b8b9 with SMTP id l34-20020a05600c1d2200b003d96bc3b8b9mr32542581wms.9.1674659474298;
+        Wed, 25 Jan 2023 07:11:14 -0800 (PST)
 Received: from localhost ([82.222.96.52])
-        by smtp.gmail.com with UTF8SMTPSA id t9-20020adff049000000b002bddaea7a0bsm4672475wro.57.2023.01.25.07.11.10
+        by smtp.gmail.com with UTF8SMTPSA id f39-20020a05600c492700b003dc0cb5e3f1sm2003392wmp.46.2023.01.25.07.11.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jan 2023 07:11:11 -0800 (PST)
+        Wed, 25 Jan 2023 07:11:13 -0800 (PST)
 From:   Sasha Finkelstein <fnkl.kernel@gmail.com>
 To:     u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
         robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
@@ -56,11 +56,10 @@ Cc:     marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io,
         asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Sasha Finkelstein <7d578vix8hzw@opayq.net>,
         Sasha Finkelstein <fnkl.kernel@gmail.com>
-Subject: [PATCH v7 4/5] arm64: dts: apple: t600x: Add PWM controller
-Date:   Wed, 25 Jan 2023 18:10:40 +0300
-Message-Id: <20230125151041.55483-5-fnkl.kernel@gmail.com>
+Subject: [PATCH v7 5/5] MAINTAINERS: Add entries for Apple PWM driver
+Date:   Wed, 25 Jan 2023 18:10:41 +0300
+Message-Id: <20230125151041.55483-6-fnkl.kernel@gmail.com>
 X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 In-Reply-To: <20230125151041.55483-1-fnkl.kernel@gmail.com>
 References: <20230125151041.55483-1-fnkl.kernel@gmail.com>
@@ -76,79 +75,34 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Sasha Finkelstein <7d578vix8hzw@opayq.net>
-
-Adds PWM controller and keyboard backlight bindings for M1 Pro/Max MacBook Pros
+Add the MAINTAINERS entries for the driver
 
 Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Acked-by: Hector Martin <marcan@marcan.st>
+Acked-by: Sven Peter <sven@svenpeter.dev>
 ---
- arch/arm64/boot/dts/apple/t600x-die0.dtsi      |  9 +++++++++
- arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi | 18 ++++++++++++++++++
- 2 files changed, 27 insertions(+)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-index 1c41954e3899..9157ae2a9f7f 100644
---- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-+++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-@@ -71,6 +71,15 @@ sio_dart_1: iommu@39b008000 {
- 		power-domains = <&ps_sio_cpu>;
- 	};
- 
-+	fpwm0: pwm@39b030000 {
-+		compatible = "apple,t6000-fpwm", "apple,s5l-fpwm";
-+		reg = <0x3 0x9b030000 0x0 0x4000>;
-+		power-domains = <&ps_fpwm0>;
-+		clocks = <&clkref>;
-+		#pwm-cells = <2>;
-+		status = "disabled";
-+	};
-+
- 	i2c0: i2c@39b040000 {
- 		compatible = "apple,t6000-i2c", "apple,i2c";
- 		reg = <0x3 0x9b040000 0x0 0x4000>;
-diff --git a/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi b/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
-index 34906d522f0a..96de7165df6d 100644
---- a/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
-+++ b/arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
-@@ -9,6 +9,8 @@
-  * Copyright The Asahi Linux Contributors
-  */
- 
-+#include <dt-bindings/leds/common.h>
-+
- / {
- 	aliases {
- 		serial0 = &serial0;
-@@ -34,6 +36,18 @@ memory@10000000000 {
- 		device_type = "memory";
- 		reg = <0x100 0 0x2 0>; /* To be filled by loader */
- 	};
-+
-+	led-controller {
-+		compatible = "pwm-leds";
-+		led-0 {
-+			pwms = <&fpwm0 0 40000>;
-+			label = "kbd_backlight";
-+			function = LED_FUNCTION_KBD_BACKLIGHT;
-+			color = <LED_COLOR_ID_WHITE>;
-+			max-brightness = <255>;
-+			default-state = "keep";
-+		};
-+	};
- };
- 
- &serial0 {
-@@ -110,5 +124,9 @@ &pcie0_dart_3 {
- 	status = "disabled";
- };
- 
-+&fpwm0 {
-+	status = "okay";
-+};
-+
- /delete-node/ &port02;
- /delete-node/ &port03;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7f86d02cb427..75bda5ab704d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1970,6 +1970,7 @@ F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
+ F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ F:	Documentation/devicetree/bindings/power/apple*
++F:	Documentation/devicetree/bindings/pwm/pwm-apple.yaml
+ F:	Documentation/devicetree/bindings/watchdog/apple,wdt.yaml
+ F:	arch/arm64/boot/dts/apple/
+ F:	drivers/bluetooth/hci_bcm4377.c
+@@ -1985,6 +1986,7 @@ F:	drivers/mailbox/apple-mailbox.c
+ F:	drivers/nvme/host/apple.c
+ F:	drivers/nvmem/apple-efuses.c
+ F:	drivers/pinctrl/pinctrl-apple-gpio.c
++F:	drivers/pwm/pwm-apple.c
+ F:	drivers/soc/apple/*
+ F:	drivers/watchdog/apple_wdt.c
+ F:	include/dt-bindings/interrupt-controller/apple-aic.h
 -- 
 2.37.1 (Apple Git-137.1)
 
