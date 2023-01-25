@@ -2,55 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8189767B715
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jan 2023 17:43:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E08A67B721
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jan 2023 17:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235078AbjAYQn1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Jan 2023 11:43:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38272 "EHLO
+        id S235615AbjAYQqk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Jan 2023 11:46:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjAYQn1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Jan 2023 11:43:27 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A175618B
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Jan 2023 08:43:25 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pKirm-0007UT-Gu; Wed, 25 Jan 2023 17:43:18 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pKirm-000NMW-7g; Wed, 25 Jan 2023 17:43:17 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pKirk-00FpCl-Fz; Wed, 25 Jan 2023 17:43:16 +0100
-Date:   Wed, 25 Jan 2023 17:43:16 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Leif Middelschulte <leif.middelschulte@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Leif Middelschulte <Leif.Middelschulte@klsmartin.com>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: imx27: fix race condition .apply,.get_state
-Message-ID: <20230125164316.wkoi4qfzbhna3h6g@pengutronix.de>
-References: <20230125160142.586358-1-Leif.Middelschulte@gmail.com>
+        with ESMTP id S235589AbjAYQqi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Jan 2023 11:46:38 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8114159564;
+        Wed, 25 Jan 2023 08:46:36 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 287156155C;
+        Wed, 25 Jan 2023 16:46:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFFAC433D2;
+        Wed, 25 Jan 2023 16:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674665195;
+        bh=xfla28zJBRsWQXlBseFrkXF56zvwRirAY/10+O6Gusg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dlm6sDlROFpggiDg+SA67d6opXGecZCzhdxg7YeK/ToJXgpYMtPrjPZnPNswbiNQO
+         RU3i9whhAz/orOrH/Z4Xhfgiu7svabkuoqJJVe1CZPd/YtzbF3Sf3JwH5fz+1Lprny
+         IECDs6KubJB6cjehtcbUdoveg5kLh++iTN88G+VafS9z9QzecwVqV/O9lIbT71yZ/O
+         1W2efdb1/nLx8hsKhQWusZmyC+4ymleM7BeWWBXD0PKd5r6CvzX6tK34fPYZWJfhoM
+         HNHspSWjR/GPEKJ/iHfjDgV3Eji7kG6zPNztQO9g2YsyMR8LOqzu+gNxwDKD3FLm5I
+         YmOW1D8PfpcDg==
+Received: by mail-vs1-f51.google.com with SMTP id k6so20378731vsk.1;
+        Wed, 25 Jan 2023 08:46:35 -0800 (PST)
+X-Gm-Message-State: AFqh2kr7Q33XUvaQamy8B7FHagWBB5ubhPrA7gOSgCnGwyKQS906V1W3
+        AzeKVVn80aQaeDTmJbjg89ZPvCQiIOAvFYsjQA==
+X-Google-Smtp-Source: AMrXdXukkClxVJmORCFGUtNIYT840ix5e1Pd5Glna3rS2gUNazjUpgsHwDnIQtt7qoedMPCgyP02fjS7IrIEoFB0Z1Y=
+X-Received: by 2002:a67:f506:0:b0:3d3:c767:4570 with SMTP id
+ u6-20020a67f506000000b003d3c7674570mr4933608vsn.85.1674665194514; Wed, 25 Jan
+ 2023 08:46:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uvrf6a7ado3ttiqh"
-Content-Disposition: inline
-In-Reply-To: <20230125160142.586358-1-Leif.Middelschulte@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+ <06289641-18b1-320d-6162-7ae176452f31@gmail.com> <167452325371.3118653.16373677195744392136.robh@kernel.org>
+ <d8f0a5a9-5a16-1f63-8444-86434ff52e34@gmail.com>
+In-Reply-To: <d8f0a5a9-5a16-1f63-8444-86434ff52e34@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 25 Jan 2023 10:46:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKgo65fiE8+dzMHNRu3XJ8eBm43w8MoQdCwwm2zvxJeFA@mail.gmail.com>
+Message-ID: <CAL_JsqKgo65fiE8+dzMHNRu3XJ8eBm43w8MoQdCwwm2zvxJeFA@mail.gmail.com>
+Subject: Re: [PATCH 7/8] dt-bindings: interrupt-controller: Add Amlogic Meson
+ GPIO interrupt controller binding
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-rtc@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Marc Zyngier <maz@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,76 +80,44 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, Jan 24, 2023 at 1:04 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> On 24.01.2023 02:22, Rob Herring wrote:
+> >
+> > On Mon, 23 Jan 2023 22:30:08 +0100, Heiner Kallweit wrote:
+> >> Add Amlogic Meson GPIO interrupt controller binding.
+> >> Tested with make targets dt_binding_check and dtbs_check.
+> >>
+> >> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> >> ---
+> >>  .../amlogic,meson-gpio-intc.txt               | 38 ----------
+> >>  .../amlogic,meson-gpio-intc.yaml              | 72 +++++++++++++++++++
+> >>  2 files changed, 72 insertions(+), 38 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+> >>
+> >
+> > Running 'make dtbs_check' with the schema in this patch gives the
+> > following warnings. Consider if they are expected or the schema is
+> > incorrect. These may not be new warnings.
+> >
+>
+> Patch 4 of the series fixes these warnings.
 
---uvrf6a7ado3ttiqh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Then you can ignore them.
 
-Hello Leif,
+You did change the binding somewhat and that should be detailed in the
+commit message. Granted, the original details on 'compatible' seem to
+have a typo and are ambiguous on the order of entries.
 
-first of all thanks for the patch.
+> Did you apply the full series?
 
-On Wed, Jan 25, 2023 at 05:01:42PM +0100, Leif Middelschulte wrote:
-> From: Leif Middelschulte <Leif.Middelschulte@klsmartin.com>
->=20
-> A race condition might occur, ultimately leading to switching off the
-> PWM that is supposed to be turned on.
-> The condition is more likely, if `CONFIG_PWM_DEBUG` is set and the PWM
-> has been enabled before Linux is booted.
+No, because patchwork doesn't get the full series nor do I see the
+full thread when reviewing these bot emails before sending them. If I
+see a conversion and warnings that look like the schema should be
+fixed rather than the dts files, then you get this email. Though on
+further review, dropping 'amlogic,meson-gpio-intc' seems fine given it
+is often in the wrong spot (it should be last as it is least
+specific).
 
-As I understand it there is no problem if PWM_DEBUG is off, isn't it?
-
-> After writing some value to the register linked to the duty cycle
-> (`MX3_PWMSAR`), the related debug function
-> (`core.c:pwm_apply_state_debug`) reads back (`.get_state`)
-> a wrong value (`0`) as the configured duty cycle. This value is stored
-> as part of a temporary state variable that it subsequently reapplies
-> to the PWM for testing purposes. Which, effectively, turns off the PWM.
-
-I thought the thing is: Reading PWMSAR yields the duty_cycle that is
-currently in use. Now if .apply() is called with a new value for PWMSAR
-and immediately after that .get_state() reads out PWMSAR the previous
-period (with the previous duty_cycle) probably isn't completed yet and
-so the old value is read.
-
-In this case it wouldn't always be 0 which is read. (Hmm, but with the
-conversion we had about this issue, my theory sounds wrong?!)
-
-Maybe instead of waiting in .apply() (which hurts active consumers),
-only wait in .get_state() until MX3_PWMSR_FIFOAV drops to zero?
-
-Apart from that, the markdown(?) style you use is unusual for kernel
-commit logs and comments. I'd write:
-
-	With CONFIG_PWM_DEBUG=3Dy after writing a value to the PWMSAR
-	register in .apply(), the register is read in .get_state().
-	Unless a period completed in the meantime, this read yields the
-	previously used duty cycle configuration. As the PWM_DEBUG code
-	applies the read out configuration for testing purposes this
-	effectively undoes the intended effect by rewriting the previous
-	hardware state.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---uvrf6a7ado3ttiqh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPRXCEACgkQwfwUeK3K
-7AlQ4AgAmsfy5HdrI09lwL9J4CWmlIOxXCTTTv5sWiO06Uv/jUOQl02P1haQkrY6
-CT2BYjJLTaTHJQcIWV5UQ9Ce6Zy2Z2F/Fssf06AWwRen561thW+YoNoMFnOQtCVN
-fA1e4SzyWd+m7dTY0aDUuh7bBivtvd7mYU+Uuyc/zqkiMpMdgb0KJFM0PfwtfSZc
-8LgOJDp4Ovt3cy3Vycs90v611HM2f8qigNu9ooIlqju2iLTXq7OxLBULUCUoMBQg
-IF8Z8ymrR+1PMNNj2a9KkbSSLoSfk8KIORJUW/9UUpcbhPz8iGl7vb/wLMG7L9lQ
-QCvIwYzWCyrDUzhWKqaIhaad+D9YnA==
-=+hro
------END PGP SIGNATURE-----
-
---uvrf6a7ado3ttiqh--
+Rob
