@@ -2,130 +2,134 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 695DE67CFFB
-	for <lists+linux-pwm@lfdr.de>; Thu, 26 Jan 2023 16:20:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C800567CFFE
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Jan 2023 16:21:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231274AbjAZPUw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 26 Jan 2023 10:20:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
+        id S231837AbjAZPV3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 26 Jan 2023 10:21:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbjAZPUe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 26 Jan 2023 10:20:34 -0500
+        with ESMTP id S231266AbjAZPVW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 26 Jan 2023 10:21:22 -0500
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F94E59FE;
-        Thu, 26 Jan 2023 07:20:05 -0800 (PST)
-Received: from notapiano (unknown [IPv6:2600:4041:5b1a:cd00:524d:e95d:1a9c:492a])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B704A22A0E;
+        Thu, 26 Jan 2023 07:20:54 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: nfraprado)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 807096602E70;
-        Thu, 26 Jan 2023 15:19:33 +0000 (GMT)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id A20E16602E71;
+        Thu, 26 Jan 2023 15:20:13 +0000 (GMT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1674746374;
-        bh=l+dG1+VfMLladOpGvwYLAbQvrePHxVLAdbwPmfde2YA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lSJVPzkyX4fiuCaj9jOnTUmwMWeh/vmm6URP6uwwdXdPvM5TDJ51TZQ6vjH1j3uAa
-         PnZKEKLjekZhEkDxkrTz3lnk4G4HqeQQjzvZZarL2h/CaenULnIWERmKmg1e3hGrYg
-         6dQEhbeHdIbE67VR2l9XIePu964Bnqm7Ovd6SelZL85fprMOC2ypBzjM+e+VPyCXLc
-         g7WRSNuDNSDWXufzQdiLpB3vqkfZjakwdh2FJbO2G3nR86qM2Pbbld55YbkV5+tGjI
-         yqwRjKm1CXHoHkUUTldKyI7k+4Bs+t5IRj5E7fPjij9rlLpl9xUufvuhCsyF0h4X0X
-         EK5X2vEhiz2Ug==
-Date:   Thu, 26 Jan 2023 10:19:14 -0500
-From:   =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado 
+        s=mail; t=1674746414;
+        bh=OywIBlYA1AVg3BlrPI6L6pWZL4oBO4rPFqy2frGycWI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=KiXMxmmruai7/eenLApiVXIE+CXu0LMn3aKg4yB2g1ygPM/ZWlO4q4SFJnGsJUXSH
+         Br7as0ozqq6NM6O4FvJIHj6YxpUHfBXXvEe4+EDd+xiCB5rGmJ9FpdK1E+t6TuWeyH
+         LhMgFsTHP+sSAQfcQL844PnHHxZyI5r8fZD0PH2dDbIji0mpDI0n91T0jBuIIkK4sr
+         +RNobIRQ/Ts5GWsJb1L8LcKdI0AcWxaAN04klcOhOaCc9l5i5CJCmRaB1oj6gH3EjG
+         tvDT26nwSSCi7J8iYWzKz5YuO4h/W4xrO5HuVg0hVMvZ0guUdyWezdA865oDOzJsLk
+         oAGUoNH4GRkgQ==
+Message-ID: <231dc0a2-c900-1c71-49e2-d9fe55bc8af1@collabora.com>
+Date:   Thu, 26 Jan 2023 16:20:11 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH 1/2] pwm: mtk-disp: Disable shadow registers before
+ setting backlight values
+Content-Language: en-US
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
         <nfraprado@collabora.com>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
 Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
         matthias.bgg@gmail.com, weiqing.kong@mediatek.com,
         jitao.shi@mediatek.com, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel@collabora.com
-Subject: Re: [PATCH 2/2] pwm: mtk-disp: Configure double buffering before
- reading in .get_state()
-Message-ID: <20230126151914.rhwhioz6yyhaq3z2@notapiano>
 References: <20230123160615.375969-1-angelogioacchino.delregno@collabora.com>
- <20230123160615.375969-3-angelogioacchino.delregno@collabora.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+ <20230123160615.375969-2-angelogioacchino.delregno@collabora.com>
+ <20230126150203.dnsbw2l2fzyg3oi5@notapiano>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230126150203.dnsbw2l2fzyg3oi5@notapiano>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230123160615.375969-3-angelogioacchino.delregno@collabora.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 05:06:15PM +0100, AngeloGioacchino Del Regno wrote:
-> The DISP_PWM controller's default behavior is to always use register
-> double buffering: all reads/writes are then performed on shadow
-> registers instead of working registers and this becomes an issue
-> in case our chosen configuration in Linux is different from the
-> default (or from the one that was pre-applied by the bootloader).
+Il 26/01/23 16:06, NÃ­colas F. R. A. Prado ha scritto:
+> On Mon, Jan 23, 2023 at 05:06:14PM +0100, AngeloGioacchino Del Regno wrote:
+>> If shadow registers usage is not desired, disable that before performing
+>> any write to CON0/1 registers in the .apply() callback, otherwise we may
+>> lose clkdiv or period/width updates.
+>>
+>> Fixes: cd4b45ac449a ("pwm: Add MediaTek MT2701 display PWM driver support")
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   drivers/pwm/pwm-mtk-disp.c | 24 +++++++++++++-----------
+>>   1 file changed, 13 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+>> index 692a06121b28..82b430d881a2 100644
+>> --- a/drivers/pwm/pwm-mtk-disp.c
+>> +++ b/drivers/pwm/pwm-mtk-disp.c
+>> @@ -138,6 +138,19 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>>   	high_width = mul_u64_u64_div_u64(state->duty_cycle, rate, div);
+>>   	value = period | (high_width << PWM_HIGH_WIDTH_SHIFT);
+>>   
+>> +	if (mdp->data->bls_debug && !mdp->data->has_commit) {
+>> +		/*
+>> +		 * For MT2701, disable double buffer before writing register
 > 
-> An example of broken behavior is when the controller is configured
-> to use shadow registers, but this driver wants to configure it
-> otherwise: what happens is that the .get_state() callback is called
-> right after registering the pwmchip and checks whether the PWM is
-> enabled by reading the DISP_PWM_EN register;
-> At this point, if shadow registers are enabled but their content
-> was not committed before booting Linux, we are *not* reading the
-> current PWM enablement status, leading to the kernel knowing that
-> the hardware is actually enabled when, in reality, it's not.
-> 
-> The aforementioned issue emerged since this driver was fixed with
-> commit 0b5ef3429d8f ("pwm: mtk-disp: Fix the parameters calculated
-> by the enabled flag of disp_pwm") making it to read the enablement
-> status from the right register.
-> 
-> Configure the controller in the .get_state() callback to avoid
-> this desync issue and get the backlight properly working again.
-> 
-> Fixes: 3f2b16734914 ("pwm: mtk-disp: Implement atomic API .get_state()")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  drivers/pwm/pwm-mtk-disp.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-> index 82b430d881a2..fe9593f968ee 100644
-> --- a/drivers/pwm/pwm-mtk-disp.c
-> +++ b/drivers/pwm/pwm-mtk-disp.c
-> @@ -196,6 +196,16 @@ static int mtk_disp_pwm_get_state(struct pwm_chip *chip,
->  		return err;
->  	}
->  
-> +	/*
-> +	 * Apply DISP_PWM_DEBUG settings to choose whether to enable or disable
-> +	 * registers double buffer and manual commit to working register before
-> +	 * performing any read/write operation
-> +	 */
-> +	if (mdp->data->bls_debug)
+> Not necessarily part of this series, but I guess it would make sense to remove
+> the "For MT2701". It's no longer exclusive to that SoC and the condition in the
+> if above makes it clear when this happens.
 
-I feel like this condition should be the same as in the apply() callback, since
-they're doing the same write operation, so also have '&& !has_commit'.
+Thanks for the review and test!
 
-Reviewed-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-Tested-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Anyway, for that "For MT2701", well, it ... should actually be exclusive to that
+SoC (and some others) because, in reality, MT8183, MT8186, MT8192, MT8195 and
+also almost all MediaTek smartphone SoCs do have shadow registers which we should
+use for the backlight.
 
-On MT8192 Asurada Spherion.
+The bls_debug writes that we do are to disable writing to shadow registers and
+performing commits because this driver does not (yet) support mtk_mutex handling.
 
-Thanks,
-Nícolas
+The right thing to do here would be to grab a mtk_mutex, lock it, write shadow
+registers, perform "backlighting adjustment magic" in mediatek_drm, commit, unlock.
 
-> +		mtk_disp_pwm_update_bits(mdp, mdp->data->bls_debug,
-> +					 mdp->data->bls_debug_mask,
-> +					 mdp->data->bls_debug_mask);
-> +
->  	rate = clk_get_rate(mdp->clk_main);
->  	con0 = readl(mdp->base + mdp->data->con0);
->  	con1 = readl(mdp->base + mdp->data->con1);
-> -- 
-> 2.39.0
+Now, the "backlighting adjustment magic" is something that we do not support (yet?)
+in mediatek_drm, and it's also not really easy to implement: part of that magic
+needs RGB ALS readings and implementation of some more IP, which serves the purpose
+of, for example, adjusting the backlight PWM while taking account of some GAMMA
+adjustments to enhance readability of the screen in direct sunlight, or to decrease
+(slightly) power consumption of a display lit at night.
+
+So... the current way that we're using right now (which is disabling the shadow
+registers and performing direct writes to working registers to atomically set the
+backlight) is something that *should* disappear in *a* future in which that "magic"
+gets somehow properly implemented.
+
+This 9k lines mail, just to say that "For MT2701" is technically exclusive to that
+SoC, between the number of supported SoCs of this driver :-P
+
+Cheers!
+Andlo
+
 > 
+> Reviewed-by: NÃ­colas F. R. A. Prado <nfraprado@collabora.com>
+> Tested-by: NÃ­colas F. R. A. Prado <nfraprado@collabora.com>
 > 
+> On MT8192 Asurada Spherion.
+> 
+> Thanks,
+> NÃ­colas
+> 
+
