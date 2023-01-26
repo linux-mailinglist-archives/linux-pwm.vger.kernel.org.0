@@ -2,217 +2,166 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEB1367BFF4
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Jan 2023 23:29:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B58867C4F6
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Jan 2023 08:41:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbjAYW3D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Jan 2023 17:29:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41968 "EHLO
+        id S232543AbjAZHl3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 26 Jan 2023 02:41:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236087AbjAYW3C (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Jan 2023 17:29:02 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9375E5EFBC;
-        Wed, 25 Jan 2023 14:28:49 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id u21so295105edv.3;
-        Wed, 25 Jan 2023 14:28:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=h9d5CcIPIwAVuZTZA7qCdKWxys5gtGTLaZZHJl5UAVQ=;
-        b=URSHRW2b0I/0QCF62mgR6tevAW3gjPGTB3qqF7779q/46dUO9pTVfqutc3DFRRXITP
-         hb88OLD0M5DjibVZX2gRlkJZkOhQ7fyljLQXGH2mjeHbNyWGdEeUVtWsmSLMzcFED46H
-         BF5Ba+Z3YYrjXhaU0CmSAnyMDTtKLpv47TU6Orrs8CR/Y80BAj8zAD2jxrB9dtYv4gQ7
-         S2IYu2BYTMSqTGFzOnYnALtYGD43HJHhu8MLwRUWRpv5c+X0WvNCG2FhObTuuy7BduNK
-         e1Fej1XcjWL6VLEThuFvTJE7MVl8IG8gicOS/drKyi5p8TNHdeH8DajvbJfCZTEZsCK1
-         FeRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h9d5CcIPIwAVuZTZA7qCdKWxys5gtGTLaZZHJl5UAVQ=;
-        b=vBoIBBdxDjRgPtDJTUGcy1KFFdxzW/tdlYOPHDKSSxe6tc2bL29Oou9XHkY6z2iAvv
-         Hjup3rvNs65jPGBDVgyz4RRDX1YdkVLXM8EgVa0/c32uYkZSscxkieCKJL9VzBmIijMz
-         e1nYRiR1ovQaRHSqrpuLnZV7KDsrjdPIMLBIryUr3MCM6lbb4mAZZBxN/3CpL1/cyHA7
-         rAdUYG1ayiHNjIygSbPxPeX5Y9gixB2+qvv7XuGcj5H4D1hK14ToAvYbqiypaTAmqAqO
-         NVMyn9hhhzxWzb3PYeyhp2Yem0YnY7t04Fnax4gB4oW9ycmpeqJYBkdieTZgBKRdBwP4
-         5TsQ==
-X-Gm-Message-State: AO0yUKVQw0elJu3/y2voZGTdXWcrCeD/yUqsr1Lfx5FvxlPhjDWxzCAK
-        1nxxsCBZvwpedD/9G3F4G3g=
-X-Google-Smtp-Source: AK7set9LLaD+M/2UIwGL68ILsokHpRI+wlZCL/233GwnOyAXCVldAoPaQqkYUSQGPixzU2TUGsmfog==
-X-Received: by 2002:a50:9eef:0:b0:4a0:8fc4:6be8 with SMTP id a102-20020a509eef000000b004a08fc46be8mr6583792edf.26.1674685728057;
-        Wed, 25 Jan 2023 14:28:48 -0800 (PST)
-Received: from ?IPV6:2a01:c22:720f:5a00:b1aa:59d6:6587:3051? (dynamic-2a01-0c22-720f-5a00-b1aa-59d6-6587-3051.c22.pool.telefonica.de. [2a01:c22:720f:5a00:b1aa:59d6:6587:3051])
-        by smtp.googlemail.com with ESMTPSA id s25-20020aa7cb19000000b0047e6fdbf81csm2891373edt.82.2023.01.25.14.28.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jan 2023 14:28:47 -0800 (PST)
-Message-ID: <d37fb6a3-f94e-224a-8829-80cf47412fce@gmail.com>
-Date:   Wed, 25 Jan 2023 23:28:17 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v2] dt-bindings: pwm: Convert Amlogic Meson PWM binding
-To:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229510AbjAZHl1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 26 Jan 2023 02:41:27 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D9B65F2A
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Jan 2023 23:41:26 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pKwsX-0006uE-DD; Thu, 26 Jan 2023 08:41:01 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pKwsV-000Vax-LD; Thu, 26 Jan 2023 08:40:58 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pKwsU-00Fy4h-2i; Thu, 26 Jan 2023 08:40:58 +0100
+Date:   Thu, 26 Jan 2023 08:40:55 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
         Kevin Hilman <khilman@baylibre.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 0/8] soc: amlogic: switch bindings to yaml and adjust
+ some dtbs's
+Message-ID: <20230126074055.7za4nfu6n5kgnqlz@pengutronix.de>
 References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
-Content-Language: en-US
-In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+ <0e48405a-d4e7-92a8-339f-4be2f4ec1378@linaro.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="m3isnjrac4mftej2"
+Content-Disposition: inline
+In-Reply-To: <0e48405a-d4e7-92a8-339f-4be2f4ec1378@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert Amlogic Meson PWM binding to yaml.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
-v2:
-- fix clocks and clock-names
-- consider that more than one compatible may be set
----
- .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 73 +++++++++++++++++++
- .../devicetree/bindings/pwm/pwm-meson.txt     | 29 --------
- 2 files changed, 73 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
+--m3isnjrac4mftej2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-new file mode 100644
-index 000000000..871b24bc2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-amlogic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic PWM
-+
-+maintainers:
-+  - Heiner Kallweit <hkallweit1@gmail.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    minItems: 1
-+    maxItems: 2
-+    oneOf:
-+      - items:
-+          - enum:
-+              - amlogic,meson8b-pwm
-+              - amlogic,meson-gxbb-pwm
-+              - amlogic,meson-gxbb-ao-pwm
-+              - amlogic,meson-axg-ee-pwm
-+              - amlogic,meson-axg-ao-pwm
-+              - amlogic,meson-g12a-ee-pwm
-+              - amlogic,meson-g12a-ao-pwm-ab
-+              - amlogic,meson-g12a-ao-pwm-cd
-+              - amlogic,meson-s4-pwm
-+      - items:
-+          - const: amlogic,meson-gx-pwm
-+          - const: amlogic,meson-gxbb-pwm
-+      - items:
-+          - const: amlogic,meson-gx-ao-pwm
-+          - const: amlogic,meson-gxbb-ao-pwm
-+      - items:
-+          - const: amlogic,meson8-pwm
-+          - const: amlogic,meson8b-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+          - enum: [clkin0, clkin1]
-+      - items:
-+          - const: clkin0
-+          - const: clkin1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm@8550 {
-+      compatible = "amlogic,meson-gxbb-pwm";
-+      reg = <0x08550 0x10>;
-+      clocks = <&xtal>, <&xtal>;
-+      clock-names = "clkin0", "clkin1";
-+      #pwm-cells = <3>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-meson.txt b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
-deleted file mode 100644
-index bd02b0a14..000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-meson.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Amlogic Meson PWM Controller
--============================
--
--Required properties:
--- compatible: Shall contain "amlogic,meson8b-pwm"
--                         or "amlogic,meson-gxbb-pwm"
--                         or "amlogic,meson-gxbb-ao-pwm"
--                         or "amlogic,meson-axg-ee-pwm"
--                         or "amlogic,meson-axg-ao-pwm"
--                         or "amlogic,meson-g12a-ee-pwm"
--                         or "amlogic,meson-g12a-ao-pwm-ab"
--                         or "amlogic,meson-g12a-ao-pwm-cd"
--- #pwm-cells: Should be 3. See pwm.yaml in this directory for a description of
--  the cells format.
--
--Optional properties:
--- clocks: Could contain one or two parents clocks phandle for each of the two
--  PWM channels.
--- clock-names: Could contain at least the "clkin0" and/or "clkin1" names.
--
--Example:
--
--	pwm_ab: pwm@8550 {
--		compatible = "amlogic,meson-gxbb-pwm";
--		reg = <0x0 0x08550 0x0 0x10>;
--		#pwm-cells = <3>;
--		clocks = <&xtal>, <&xtal>;
--		clock-names = "clkin0", "clkin1";
--	}
--- 
-2.39.1
+Hello,
 
+On Tue, Jan 24, 2023 at 08:16:45AM +0100, Neil Armstrong wrote:
+> Le 23/01/2023 =E0 22:22, Heiner Kallweit a =E9crit=A0:
+> > At first adjust some existing dtbs's so that they pass dtbs_check
+> > after switching bindings to yaml.
+>=20
+> Thanks for this patchset, but please drop patches 1, 3 & 4, and take
+> in account the existing compatible usage in your new bindings like
+> I did in my conversion patchset.
+>=20
+> While we did remove some bad compatibles we introduced a few years ago,
+> now the GXBB, GXL & GXM are now stable a aew LTS releases now and
+> a few other projects uses them as-is (U-Boot, BSDs, ...) so changing
+> the compatibles isn't an option anymore... and we can't know which
+> one they use and how the implementation behaves we must document
+> the existing usage without breaking any potential users (including linux).
 
+I only looked into patch #1, and I support dropping it for stronger
+reasons than not breaking things which maybe started to rely on the
+existing contents.
+
+In patch #1 you write:
+
+| amlogic,meson-gx-pwm isn't a valid compatible string, so remove it.
+| See drivers/pwm/pwm-meson.c.
+|=20
+| Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+| ---
+|  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++----
+|  1 file changed, 4 insertions(+), 4 deletions(-)
+|=20
+| diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/=
+dts/amlogic/meson-gx.dtsi
+| index a79a35e84..75d35dcfe 100644
+| --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+| +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+| @@ -328,14 +328,14 @@ i2c_A: i2c@8500 {
+|                         };
+|=20
+|                         pwm_ab: pwm@8550 {
+| -                               compatible =3D "amlogic,meson-gx-pwm", "a=
+mlogic,meson-gxbb-pwm";
+| +                               compatible =3D "amlogic,meson-gxbb-pwm";
+
+There are two issues:
+
+a) drivers/pwm/pwm-meson.c isn't the reference. The driver doesn't
+   justify which compatibles should be used. You should refer to the
+   binding document instead.
+
+b) Having the SoC name as an additional compatible (i.e. the status quo
+   before your patch) is an advantage. While it doesn't hurt (apart from
+   making the dtb a tad bigger) it makes it possible to adapt the driver
+   if in the future someone discovers that the PWM component on GX is a
+   tad different from the GXBB one. In that case you can add a check in
+   the driver =E0 la=20
+
+   	if (of_device_is_compatible(np, amlogic,meson-gx-pwm))
+		do_the_special_gx_handling()
+
+   without having to adapt the device trees then (or use some ugly
+   code that somehow detects if it's running on GX).
+
+So the driver not handling amlogic,meson-gx-pwm today is fine. I expect
+the fix to be: Include that compatible in the binding.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--m3isnjrac4mftej2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPSLoQACgkQwfwUeK3K
+7Akkowf/emZNlTr/+ucs/fg+qTCWpgwgyYENdpjTH/m4tDB3rg4W1f0KXHt8JgxS
+3CnyjJrJfsBBox0FanIwNYfVHrC8KKaRNpanXiEagq2e1zVGy0xFdJkFMuYeDf0X
+8FbIarmwyjwOu1zFoA5j1txfeS1/wRl2SCMsb4tzg5aQDXe24XRc/rHCfl12DbKY
+g45YU3VopNpinmd7n4UCCbQkH6g+RxOxHd0oErdPW1Ii6bsrAzR1lYaOBJnC1esi
+VgHCOvB8bYAq2Oo3aMYj1l98jPlzfb+rv9ZmA4UbrizTvpequKYECnytV+3cd5gl
+8LkL8MWmS6yGUHEdObMCLR5mNuEfqw==
+=HveX
+-----END PGP SIGNATURE-----
+
+--m3isnjrac4mftej2--
