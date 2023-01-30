@@ -2,74 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D7068152E
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jan 2023 16:36:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07376681545
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jan 2023 16:40:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbjA3Pgh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Jan 2023 10:36:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
+        id S229522AbjA3Pkg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Jan 2023 10:40:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbjA3Pgg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Jan 2023 10:36:36 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C35E3B4;
-        Mon, 30 Jan 2023 07:36:35 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id j32-20020a05600c1c2000b003dc4fd6e61dso3461701wms.5;
-        Mon, 30 Jan 2023 07:36:35 -0800 (PST)
+        with ESMTP id S230426AbjA3Pkf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Jan 2023 10:40:35 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22203EC5D;
+        Mon, 30 Jan 2023 07:40:23 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id v10so11325622edi.8;
+        Mon, 30 Jan 2023 07:40:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4dOXRUmBXFiifXvzPC8imf6hOLL/T6qZBqV64N2nOgU=;
-        b=fTQ3P9YCjeLCmcnsVKhrpsPP8aZsKY6HBgLCPuqzSrFWX/iT8Sp44LdM2UB/fyhNMV
-         E66b241sIzZeZ4NCpropV3vUUcZSTPL7mSKjBAx833SMSi7MJqfX8PZWt0+sF5JLx9A3
-         ufIdnyL1VLNXgDPn7Ef9iNvj9t7ZkYeNfFyGlc8OGvuKjuVEGVgwMvACU2gt+bciF8t2
-         sYbfj5SgBQ27AasRjJ2BFXK1cEFTtMG2zXkRWyXJo/J25nesB4xWs26L47z7P39NYVkN
-         EoVaVqbNL8HQ0mwhDPgA6jIC21Rc+xjWhJ2HZJZwtZZUJ9P9xPN0pS57zmHm3e6fS4Ld
-         1jrg==
+        bh=ieB4CoNGYjKWy78CD6Pc+1g7A4ZX0370ZESWNzfeqmU=;
+        b=UmIXA6754haNxru0w2S0/+1sbIVJyzMp4CtMoMyWnZJ0SM0BbgjDnVr3lt1wfvEIp4
+         ebac/X7PeMoyquIkWB91h2ulrzVZq5UuS4PfNFHyBkRlcN8IGs4fhZlfCsoUlUDDAVOV
+         goFISaWPJWK1B7z3KS7ajSth7Pgm1vYukIBFGHWQ9zvwdSt3iTqo9+3wa5GDqgVyO/YX
+         k4kgaBziL24w92FiqkBpFVFJ/jZZUCNQCPdzFa72A/n0Lki8fPqlN/VRJIB5JejA0uRF
+         vsW7SyL5EYfUvShNCtV4ucniC+pze/OvkoDLRsBRzDIcd+SUlLjjyJYSdy2oMyA9XFz+
+         tRxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4dOXRUmBXFiifXvzPC8imf6hOLL/T6qZBqV64N2nOgU=;
-        b=db/xycjH2ZVlVPQ1kBRxfIyckkWsS01zO5zUXtCUz3C6LAR5P5BewE6LbXTNvq/9a5
-         bLXGcqIgsYiOImX7VaXKH351wL/rbzCStQ7RJM0HOkwG5qD5fuBHRcVz1mzum0FCv/6u
-         uMWPp3bgh0hMyDLsTpJ/Ju57gfbZ2/zT8vHcj2XqXG79EU5RQKUt1xEZ7uIAqnwa4kVn
-         r8C36Wq5cN9/EvGQnwzRBrrqWw7JDowForu6Q+FmHS1i5R8WkEC6agaLeUYfomMuoIAX
-         nks8Eebbfunb2JWlwpNBFdT+jxZj6vhWSRpQ065fFekhnLtwN1Q+mbw+7JZ+4YiGTmrF
-         o8PA==
-X-Gm-Message-State: AO0yUKUW0KMPQK9SX83ZKjm+q5dzruDEuu1Ek/mknoeAg3oTywHO6333
-        VyH9vI9DiQnUY5AlWk5ZiL4=
-X-Google-Smtp-Source: AK7set/4JeVm2sUMgE7ALABnOi8bhC2azYZoYx20b9heveQtDktZVPMBf2tjCnHNbw8+1PRZTZeMhQ==
-X-Received: by 2002:a05:600c:3595:b0:3dc:1054:3acd with SMTP id p21-20020a05600c359500b003dc10543acdmr23270906wmq.17.1675092993971;
-        Mon, 30 Jan 2023 07:36:33 -0800 (PST)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id w16-20020a05600c099000b003daf681d05dsm13068005wmp.26.2023.01.30.07.36.33
+        bh=ieB4CoNGYjKWy78CD6Pc+1g7A4ZX0370ZESWNzfeqmU=;
+        b=Ggb0fxET3e7Kj2fy27MpaetNqidgdUZkK3kUtUUMdE7R7qERXfnmF2dgr879c6DyGp
+         MUNoz2Kk17l6r/QJgjs1m8b9ORJqGQyCyGv4ad3oDS8vYT/t1tYC63aTA6AevHNfpHOQ
+         3tJwGJQpa18O95nO26ybEUQXVnFu5lYX39yqgw3i7YdVzChJ3xOQCRaqaTAAmWSpWmSV
+         8AGmuk8M5C8OjGXSomL0eGAdt+Zd+hrsTuZqUQsCgH9EuCpBOLVXaxH751Tkx1R9G3+Y
+         ESE44e+OzmnXzrSHH76kfN04XuR0nkTDCcIu/rZB8rsfEutrV60L0u8qwp8ya8/fVwcS
+         e4vg==
+X-Gm-Message-State: AFqh2kq4iHnaoGZX9eiY5XT27p364AtodeSz/n0bJHGF6vghPNKl6D5d
+        hvJ64eyGfHSVaKo18m79nK4/+NVncwA=
+X-Google-Smtp-Source: AMrXdXubEyEeXpd07VlPWf/PBF8CJ8lChLmPBKvHpFYug52MKwyhhWBZ5Fm/Wub5ZPlr4izqC0ZL6A==
+X-Received: by 2002:a05:6402:10c9:b0:49d:a87f:ba78 with SMTP id p9-20020a05640210c900b0049da87fba78mr51507740edu.35.1675093222203;
+        Mon, 30 Jan 2023 07:40:22 -0800 (PST)
+Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id er12-20020a056402448c00b0049668426aa6sm6874326edb.24.2023.01.30.07.40.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 07:36:33 -0800 (PST)
-Date:   Mon, 30 Jan 2023 16:36:31 +0100
+        Mon, 30 Jan 2023 07:40:21 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Atish Patra <atishp@atishpatra.org>,
-        "Wesley W. Terpstra" <wesley@sifive.com>,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: sifive: Always let the first pwm_apply_state
- succeed
-Message-ID: <Y9fj/72Tl5FN+HSf@orome>
-References: <20221109113724.519021-1-emil.renner.berthing@canonical.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: Move pwm_capture() dummy to restore order
+Date:   Mon, 30 Jan 2023 16:40:21 +0100
+Message-Id: <167509309545.579973.439111499636077734.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <96b39e1fe0e0c239d56ce321ccbf62cd38133803.1669047294.git.geert+renesas@glider.be>
+References: <96b39e1fe0e0c239d56ce321ccbf62cd38133803.1669047294.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ir6Gg7F9FhCRM+tI"
-Content-Disposition: inline
-In-Reply-To: <20221109113724.519021-1-emil.renner.berthing@canonical.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -80,73 +73,17 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 21 Nov 2022 17:15:41 +0100, Geert Uytterhoeven wrote:
+> Move the dummy pwm_capture(), to make the declaration order of all
+> dummies to match the declaration order of the real functions.
+> 
+> 
 
---ir6Gg7F9FhCRM+tI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks!
 
-On Wed, Nov 09, 2022 at 12:37:24PM +0100, Emil Renner Berthing wrote:
-> Commit 2cfe9bbec56ea579135cdd92409fff371841904f added support for the
-> RGB and green PWM controlled LEDs on the HiFive Unmatched board
-> managed by the leds-pwm-multicolor and leds-pwm drivers respectively.
-> All three colours of the RGB LED and the green LED run from different
-> lines of the same PWM, but with the same period so this works fine when
-> the LED drivers are loaded one after the other.
->=20
-> Unfortunately it does expose a race in the PWM driver when both LED
-> drivers are loaded at roughly the same time. Here is an example:
->=20
->   |          Thread A           |          Thread B           |
->   |  led_pwm_mc_probe           |  led_pwm_probe              |
->   |    devm_fwnode_pwm_get      |                             |
->   |      pwm_sifive_request     |                             |
->   |        ddata->user_count++  |                             |
->   |                             |    devm_fwnode_pwm_get      |
->   |                             |      pwm_sifive_request     |
->   |                             |        ddata->user_count++  |
->   |         ...                 |          ...                |
->   |    pwm_state_apply          |    pwm_state_apply          |
->   |      pwm_sifive_apply       |      pwm_sifive_apply       |
->=20
-> Now both calls to pwm_sifive_apply will see that ddata->approx_period,
-> initially 0, is different from the requested period and the clock needs
-> to be updated. But since ddata->user_count >=3D 2 both calls will fail
-> with -EBUSY, which will then cause both LED drivers to fail to probe.
->=20
-> Fix it by letting the first call to pwm_sifive_apply update the clock
-> even when ddata->user_count !=3D 1.
->=20
-> Fixes: 9e37a53eb051 ("pwm: sifive: Add a driver for SiFive SoC PWM")
-> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> ---
->  drivers/pwm/pwm-sifive.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+[1/1] pwm: Move pwm_capture() dummy to restore order
+      commit: ac7b40c554d3683693ca9d1b49708a8888c4f6ad
 
-I've applied this as-is for now. What I'm wondering is if perhaps we
-want to implement something into the PWM core to deal with this, now
-fairly common, situation.
-
-Thierry
-
---ir6Gg7F9FhCRM+tI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPX4/wACgkQ3SOs138+
-s6GN+Q/9GErvttbzCfQ8UlLEkSt6ZyC2QIVVZhEDF7LoH4jprLifKAEsGMR9BK5y
-XS2nldqcUtb9q/p6hVdnGcMjyDmoH9OLoVeM3PX56BaeKYaEBdUeg97uFAwsIJU4
-TdcFpAzIVKNCsPyK0wwPw2P4bWyiEs1+rf6Go4jNu7aZE77yI11TrhjUxXBc++9g
-EcDChQ2pu3PJgCaBx16GZ4RQ5CgkR7JSL50ZohmKbdO/8asYi3aGEBxo5YN6BTaV
-NKI2H1n1XH1KKC6m/3/eIC2fM3bv9q+JqRe7vJ9kalxTdYnwZKglRv2WyFsA0kF1
-e1bTJrq3P3fpZVfY+dH1SfddToqGftPOc5vBd+NnK/brfmX+uCpg+vDoo/YeP+jU
-TDh9FZkWGMJ7XhZh1A65QQazsKfo67gyG5xKZZU/XtT6U9vUXBAffpzWryeS+ulr
-iDo6WjhtqBw+7hk57paDn5f49wVJIRijvNU0dAVIGGxaZceiAo1WJsaC7zUxrvq+
-9fCZb/o7bfsnFd+/QG8tVcuZ41dKTrqlXHU70qzhXJ4tBxE8NVrk0hG8AmghyGt3
-oQiyNw4LJE777ES/OVpkndtr4DMaERL7+e6ZAqJ8w/YQNHEedacHM8KopOrGUTHp
-f33dJEjjcqFU3r0PWfo9mRRaxLF7AeWJxOdlMUK28f1k5fQo+V4=
-=oOaj
------END PGP SIGNATURE-----
-
---ir6Gg7F9FhCRM+tI--
+Best regards,
+-- 
+Thierry Reding <thierry.reding@gmail.com>
