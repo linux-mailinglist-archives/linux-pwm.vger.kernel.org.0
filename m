@@ -2,64 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07376681545
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jan 2023 16:40:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9329681564
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jan 2023 16:45:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjA3Pkg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Jan 2023 10:40:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
+        id S237210AbjA3PpX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Jan 2023 10:45:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjA3Pkf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Jan 2023 10:40:35 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E22203EC5D;
-        Mon, 30 Jan 2023 07:40:23 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id v10so11325622edi.8;
-        Mon, 30 Jan 2023 07:40:23 -0800 (PST)
+        with ESMTP id S236925AbjA3PpO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Jan 2023 10:45:14 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3793EFD4;
+        Mon, 30 Jan 2023 07:45:07 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id mf7so14223606ejc.6;
+        Mon, 30 Jan 2023 07:45:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ieB4CoNGYjKWy78CD6Pc+1g7A4ZX0370ZESWNzfeqmU=;
-        b=UmIXA6754haNxru0w2S0/+1sbIVJyzMp4CtMoMyWnZJ0SM0BbgjDnVr3lt1wfvEIp4
-         ebac/X7PeMoyquIkWB91h2ulrzVZq5UuS4PfNFHyBkRlcN8IGs4fhZlfCsoUlUDDAVOV
-         goFISaWPJWK1B7z3KS7ajSth7Pgm1vYukIBFGHWQ9zvwdSt3iTqo9+3wa5GDqgVyO/YX
-         k4kgaBziL24w92FiqkBpFVFJ/jZZUCNQCPdzFa72A/n0Lki8fPqlN/VRJIB5JejA0uRF
-         vsW7SyL5EYfUvShNCtV4ucniC+pze/OvkoDLRsBRzDIcd+SUlLjjyJYSdy2oMyA9XFz+
-         tRxQ==
+        bh=HPKfZ1FiVPXA8mxWW+VlALwncASGT70c5IKSFv8vcp4=;
+        b=nXk99Juo2mzL5FtOV2x0t3TnMs25UyawxejJYdvMelHJhBfp8KEnWRsFpCIVMW83Ah
+         Fc/RoUy+z38DLgL9IJDhFIxIsB6NgeOou4kHjBtJa4yS7GZV2bM5mp8dnKLpsUOWOXxp
+         GIpSK5Ig+L+XVzKJuCisZpYs5nzAnM+ZN5uz/VKFenaCCgXSMHFO/znewkjGARNJ8pVK
+         qeJ1LhBsq2qXynoC6GylHg6h0FCzWo/eynwDkOr1dtaGFQQZzE5jsYJYrLALJJigpdO1
+         Po4R5awWvA9hUEPI2mqjDO45/h2+cNtrj1DE/DZtWiFSbBpYo1Dd3yCfKasbr8rIOxZu
+         JqAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ieB4CoNGYjKWy78CD6Pc+1g7A4ZX0370ZESWNzfeqmU=;
-        b=Ggb0fxET3e7Kj2fy27MpaetNqidgdUZkK3kUtUUMdE7R7qERXfnmF2dgr879c6DyGp
-         MUNoz2Kk17l6r/QJgjs1m8b9ORJqGQyCyGv4ad3oDS8vYT/t1tYC63aTA6AevHNfpHOQ
-         3tJwGJQpa18O95nO26ybEUQXVnFu5lYX39yqgw3i7YdVzChJ3xOQCRaqaTAAmWSpWmSV
-         8AGmuk8M5C8OjGXSomL0eGAdt+Zd+hrsTuZqUQsCgH9EuCpBOLVXaxH751Tkx1R9G3+Y
-         ESE44e+OzmnXzrSHH76kfN04XuR0nkTDCcIu/rZB8rsfEutrV60L0u8qwp8ya8/fVwcS
-         e4vg==
-X-Gm-Message-State: AFqh2kq4iHnaoGZX9eiY5XT27p364AtodeSz/n0bJHGF6vghPNKl6D5d
-        hvJ64eyGfHSVaKo18m79nK4/+NVncwA=
-X-Google-Smtp-Source: AMrXdXubEyEeXpd07VlPWf/PBF8CJ8lChLmPBKvHpFYug52MKwyhhWBZ5Fm/Wub5ZPlr4izqC0ZL6A==
-X-Received: by 2002:a05:6402:10c9:b0:49d:a87f:ba78 with SMTP id p9-20020a05640210c900b0049da87fba78mr51507740edu.35.1675093222203;
-        Mon, 30 Jan 2023 07:40:22 -0800 (PST)
+        bh=HPKfZ1FiVPXA8mxWW+VlALwncASGT70c5IKSFv8vcp4=;
+        b=CWlakn7Is3plJgZ5hb6+Q7xKzsBdgUU9MqC5TFNkccSMsakLdyWSyPo+OC1l5NcUzo
+         U6c4yL/HEmM8E52uJHI9Q2mPcdzAeEaBy33ELL044yMCjD3AHLCKSMZbo7+cnvQvcQp2
+         DsNRSlEsSxYj9hi1TIix9ZDJSvUarhKH5epESR6XnfRu7oU86myLeLlzMOgo75KXNclh
+         hkhrGQQspM5YbrxtScpyqwsq3PaLTSdBZZPUztXWnaU/1HPbzpImS/geeDurVPO+o/lU
+         xDjVeNNOax6Osxt5TtVaNQxgyWNugeLuQJL28JQL+ii6il6+fS/GkLsh0wyX3zdWnN6+
+         WYtw==
+X-Gm-Message-State: AO0yUKWO4fbYyS2GYAYvcB3gx1CxUmL4O5nlhyQ24GbeCDRhLCxrtbmp
+        btNxw4jPox+m1LJzaXvltm8=
+X-Google-Smtp-Source: AK7set9DF8ufsPfZTTZm6/e1sCFb3FHJ60JMJa9iaMtFSHRgetnOK9UOHule9/s3mYx2Jl6/lsdhvQ==
+X-Received: by 2002:a17:906:4912:b0:878:4e83:b058 with SMTP id b18-20020a170906491200b008784e83b058mr18296813ejq.1.1675093506380;
+        Mon, 30 Jan 2023 07:45:06 -0800 (PST)
 Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id er12-20020a056402448c00b0049668426aa6sm6874326edb.24.2023.01.30.07.40.21
+        by smtp.gmail.com with ESMTPSA id j15-20020aa7c40f000000b0049f88f00f70sm5619884edq.7.2023.01.30.07.45.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 07:40:21 -0800 (PST)
+        Mon, 30 Jan 2023 07:45:05 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: Move pwm_capture() dummy to restore order
-Date:   Mon, 30 Jan 2023 16:40:21 +0100
-Message-Id: <167509309545.579973.439111499636077734.b4-ty@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        u.kleine-koenig@pengutronix.de
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        olivier.moysan@foss.st.com, linux-pwm@vger.kernel.org,
+        alexandre.torgue@foss.st.com
+Subject: Re: [PATCH] pwm: stm32-lp: fix the check on arr and cmp registers update
+Date:   Mon, 30 Jan 2023 16:45:04 +0100
+Message-Id: <167509347310.581147.17334972892537481751.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.39.1
-In-Reply-To: <96b39e1fe0e0c239d56ce321ccbf62cd38133803.1669047294.git.geert+renesas@glider.be>
-References: <96b39e1fe0e0c239d56ce321ccbf62cd38133803.1669047294.git.geert+renesas@glider.be>
+In-Reply-To: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
+References: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -73,16 +75,20 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 21 Nov 2022 17:15:41 +0100, Geert Uytterhoeven wrote:
-> Move the dummy pwm_capture(), to make the declaration order of all
-> dummies to match the declaration order of the real functions.
+On Wed, 23 Nov 2022 14:36:52 +0100, Fabrice Gasnier wrote:
+> The ARR (auto reload register) and CMP (compare) registers are
+> successively written. The status bits to check the update of these
+> registers are polled together with regmap_read_poll_timeout().
+> The condition to end the loop may become true, even if one of the
+> register isn't correctly updated.
+> So ensure both status bits are set before clearing them.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/1] pwm: Move pwm_capture() dummy to restore order
-      commit: ac7b40c554d3683693ca9d1b49708a8888c4f6ad
+[1/1] pwm: stm32-lp: fix the check on arr and cmp registers update
+      commit: 3066bc2d58be31275afb51a589668f265e419c37
 
 Best regards,
 -- 
