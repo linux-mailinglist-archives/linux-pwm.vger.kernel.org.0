@@ -2,66 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9329681564
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jan 2023 16:45:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE58F681575
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Jan 2023 16:46:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237210AbjA3PpX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 30 Jan 2023 10:45:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
+        id S237505AbjA3Pqo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 30 Jan 2023 10:46:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236925AbjA3PpO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Jan 2023 10:45:14 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3793EFD4;
-        Mon, 30 Jan 2023 07:45:07 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id mf7so14223606ejc.6;
-        Mon, 30 Jan 2023 07:45:07 -0800 (PST)
+        with ESMTP id S237541AbjA3PqJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 30 Jan 2023 10:46:09 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F3A3EFC2;
+        Mon, 30 Jan 2023 07:46:05 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id mf7so14233312ejc.6;
+        Mon, 30 Jan 2023 07:46:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HPKfZ1FiVPXA8mxWW+VlALwncASGT70c5IKSFv8vcp4=;
-        b=nXk99Juo2mzL5FtOV2x0t3TnMs25UyawxejJYdvMelHJhBfp8KEnWRsFpCIVMW83Ah
-         Fc/RoUy+z38DLgL9IJDhFIxIsB6NgeOou4kHjBtJa4yS7GZV2bM5mp8dnKLpsUOWOXxp
-         GIpSK5Ig+L+XVzKJuCisZpYs5nzAnM+ZN5uz/VKFenaCCgXSMHFO/znewkjGARNJ8pVK
-         qeJ1LhBsq2qXynoC6GylHg6h0FCzWo/eynwDkOr1dtaGFQQZzE5jsYJYrLALJJigpdO1
-         Po4R5awWvA9hUEPI2mqjDO45/h2+cNtrj1DE/DZtWiFSbBpYo1Dd3yCfKasbr8rIOxZu
-         JqAA==
+        bh=OtnZbZJn7qNpx2WFbnWyJjOFxWWoyjTJRNSLs8byDPo=;
+        b=NiJunNOyCwnkCJjG0thYBSqZO7dQZMrPwN2Tyb8r1J+U6hjCLrVhiLiUFxzA0D2aFS
+         dLMgtLsw8t3DA1b0UJK9eU9e2Hl6EeY81QmYS6t1WU1JBmNDWMY3BLdYZhSttYwvBkBU
+         BEkXWdTBzeMtWby+7O30J8wCrf6CLxp/HyJK9owgQ59tjIP5PMC2SUMqbhEnxCw1r2IW
+         eZZ/YTKZT3NTpNMRkdypVNzuL/QEivLh3GaTb3SRlGiOIHUCil2FbXQrg04+icYa4+/r
+         rxRAO/i3JxrStsLkzpdmxoDbyLdmki9UjX18YLyA2zNw08YcjrICZ9HVvT4Ro/1lXwhy
+         Yfzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HPKfZ1FiVPXA8mxWW+VlALwncASGT70c5IKSFv8vcp4=;
-        b=CWlakn7Is3plJgZ5hb6+Q7xKzsBdgUU9MqC5TFNkccSMsakLdyWSyPo+OC1l5NcUzo
-         U6c4yL/HEmM8E52uJHI9Q2mPcdzAeEaBy33ELL044yMCjD3AHLCKSMZbo7+cnvQvcQp2
-         DsNRSlEsSxYj9hi1TIix9ZDJSvUarhKH5epESR6XnfRu7oU86myLeLlzMOgo75KXNclh
-         hkhrGQQspM5YbrxtScpyqwsq3PaLTSdBZZPUztXWnaU/1HPbzpImS/geeDurVPO+o/lU
-         xDjVeNNOax6Osxt5TtVaNQxgyWNugeLuQJL28JQL+ii6il6+fS/GkLsh0wyX3zdWnN6+
-         WYtw==
-X-Gm-Message-State: AO0yUKWO4fbYyS2GYAYvcB3gx1CxUmL4O5nlhyQ24GbeCDRhLCxrtbmp
-        btNxw4jPox+m1LJzaXvltm8=
-X-Google-Smtp-Source: AK7set9DF8ufsPfZTTZm6/e1sCFb3FHJ60JMJa9iaMtFSHRgetnOK9UOHule9/s3mYx2Jl6/lsdhvQ==
-X-Received: by 2002:a17:906:4912:b0:878:4e83:b058 with SMTP id b18-20020a170906491200b008784e83b058mr18296813ejq.1.1675093506380;
-        Mon, 30 Jan 2023 07:45:06 -0800 (PST)
+        bh=OtnZbZJn7qNpx2WFbnWyJjOFxWWoyjTJRNSLs8byDPo=;
+        b=T9f4b05B0sdfK/plEof4murBHAmS7G+4yUWw7Fz0Yy2DCLiaPOrHfPSqfYFdFr/tVz
+         45XbbPcvcorhZT4x4B9UaabywxNIgMUJHq/9h3wPJKQntPAD89D+6tCeQ2/fEqlzjmyY
+         VgeGtUkbGdtGIaAspqqRNBWHHoSL4TDV691o7Xke1H8p+4RpqhnwiQtPVJXnUFN6xFZC
+         p+w/dQKXTKv4IJwfzXiN5EXZcctC0K5ZgCr+mV2kuHRv+qUFcO6RDk8/a3fR6Bqftq2Y
+         sL9h3V7p4Bb6dy8gVCISPHx79qwdK1thXU98AySwBccz49AGa7+0eRYjng8EJfDZ+TqE
+         kaGQ==
+X-Gm-Message-State: AO0yUKVaSJkXpKJM7E5zDCUTFXZaE9uZgsz+TT3FBa4QtqI5gEt+tOue
+        sVK8viky7yoNdbXoI/kAFGE0pfE7djQ=
+X-Google-Smtp-Source: AK7set8ONfiRFGonYBPV38i9/CXf+w/8U8FKS/LlLh/w/m8eq1UeosyR0ypAdVBUjF1v1S2NnK7q1Q==
+X-Received: by 2002:a17:906:2704:b0:887:dea8:b025 with SMTP id z4-20020a170906270400b00887dea8b025mr4786278ejc.65.1675093564226;
+        Mon, 30 Jan 2023 07:46:04 -0800 (PST)
 Received: from localhost (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id j15-20020aa7c40f000000b0049f88f00f70sm5619884edq.7.2023.01.30.07.45.05
+        by smtp.gmail.com with ESMTPSA id p17-20020a170906b21100b00886c1a02d20sm2719108ejz.47.2023.01.30.07.46.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 07:45:05 -0800 (PST)
+        Mon, 30 Jan 2023 07:46:03 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        u.kleine-koenig@pengutronix.de
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        olivier.moysan@foss.st.com, linux-pwm@vger.kernel.org,
-        alexandre.torgue@foss.st.com
-Subject: Re: [PATCH] pwm: stm32-lp: fix the check on arr and cmp registers update
-Date:   Mon, 30 Jan 2023 16:45:04 +0100
-Message-Id: <167509347310.581147.17334972892537481751.b4-ty@gmail.com>
+To:     krzysztof.kozlowski+dt@linaro.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, john@phrozen.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        sean.wang@mediatek.com, devicetree@vger.kernel.org
+Subject: Re: (subset) [PATCH v1 0/2] pwm-mediatek: Convert to schema and fixes
+Date:   Mon, 30 Jan 2023 16:46:03 +0100
+Message-Id: <167509354269.581356.8213728106190442559.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
-References: <20221123133652.465724-1-fabrice.gasnier@foss.st.com>
+In-Reply-To: <20221128112028.58021-1-angelogioacchino.delregno@collabora.com>
+References: <20221128112028.58021-1-angelogioacchino.delregno@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -75,20 +77,22 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 23 Nov 2022 14:36:52 +0100, Fabrice Gasnier wrote:
-> The ARR (auto reload register) and CMP (compare) registers are
-> successively written. The status bits to check the update of these
-> registers are polled together with regmap_read_poll_timeout().
-> The condition to end the loop may become true, even if one of the
-> register isn't correctly updated.
-> So ensure both status bits are set before clearing them.
+On Mon, 28 Nov 2022 12:20:26 +0100, AngeloGioacchino Del Regno wrote:
+> This series converts pwm-mediatek.txt to schema and fixes
+> mt7622.dtsi to declare the needed #pwm-cells on the pwm node,
+> required to not trigger a dtbs_check warning... and to make
+> that node actually usable.
+> 
+> AngeloGioacchino Del Regno (2):
+>   arm64: dts: mediatek: mt7622: Add missing pwm-cells to pwm node
+>   dt-bindings: pwm: mediatek: Convert pwm-mediatek to dt schema
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] pwm: stm32-lp: fix the check on arr and cmp registers update
-      commit: 3066bc2d58be31275afb51a589668f265e419c37
+[2/2] dt-bindings: pwm: mediatek: Convert pwm-mediatek to dt schema
+      (no commit info)
 
 Best regards,
 -- 
