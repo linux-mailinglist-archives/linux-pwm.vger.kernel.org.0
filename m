@@ -2,110 +2,192 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC3A682F6A
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Jan 2023 15:37:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48ACA68355F
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Jan 2023 19:33:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbjAaOhc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 31 Jan 2023 09:37:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37520 "EHLO
+        id S231795AbjAaSdZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Jan 2023 13:33:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231460AbjAaOha (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Jan 2023 09:37:30 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3C8136;
-        Tue, 31 Jan 2023 06:37:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1675175848; x=1706711848;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0QgTIW/8nGL0dj03k0ypVgrXG9s41tMeuOVlaBrfweE=;
-  b=fYTboIWJRFUcYQRcPBwOyR5UUh9RkTVFEhz+mkUJxMAwwr+X8LdfQBw9
-   2kEX4iPFAMOb/zXnMjR2ofAqIMUTAkRz+W4TM4oQOnNLqSg7Z+Ml8DmsD
-   dGA53CkaT7Y236rcSXQhCHoX+1pjwOMsGNf9aItU362YUReiDbdg5tp4t
-   8u867OpODj7V3JbZEEjV5jrfDamrfXjC9TRVDRwPvRNutb9+uDjJlNWuz
-   RLh9N3Qv2pnOUO1wz6bsga8aHM6T6qh51nI5bwqpzQapbnCBAjXQZ0gzD
-   HvsEUpSaPpgBL1giJ+oTVDRI/wKLkPEnmqQMdyke4wlHMJ4p2vNf8GwZe
-   A==;
-X-IronPort-AV: E=Sophos;i="5.97,261,1669071600"; 
-   d="scan'208";a="28775433"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 31 Jan 2023 15:37:26 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 31 Jan 2023 15:37:26 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 31 Jan 2023 15:37:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1675175846; x=1706711846;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0QgTIW/8nGL0dj03k0ypVgrXG9s41tMeuOVlaBrfweE=;
-  b=ORmRCo6O8RupqMat9Reeql7KrGtIjIJHKYS+oFHQ4z93SDOcikA/evMn
-   vF9RmBe1HWpM8b+Sp8UMIOx2piuXjpsPKCVN+UFov57RhvktqF8O2UA9H
-   i5AFFh4oXdDNUsx0sRXscX679LXpUsrZqM5ilh10rIINB30lY4KhqPs4D
-   fj/rMf5c9K3+bZF7RzMuvKPUHvqD8luR35E2dJyWBF2qnKmWykkekeAm7
-   iyBeIqHR3/FAjSx0R1nR/kZyCKRaOSLjtvb1Qw+kWGzWHE737KDCqFlRw
-   CO7T0/AffMpv71xHYz1sUmReMt3qQRdpFDzjI4qBVg+v4tNKeQmI1z1ck
-   A==;
-X-IronPort-AV: E=Sophos;i="5.97,261,1669071600"; 
-   d="scan'208";a="28775432"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 31 Jan 2023 15:37:26 +0100
-Received: from steina-w.tq-net.de (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        with ESMTP id S231137AbjAaSdK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Jan 2023 13:33:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576635A821;
+        Tue, 31 Jan 2023 10:32:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 3DE67280056;
-        Tue, 31 Jan 2023 15:37:26 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/1] dt-bindings: pwm: imx: add i.MX8QXP compatible
-Date:   Tue, 31 Jan 2023 15:37:20 +0100
-Message-Id: <20230131143720.3250427-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9F4FAB81E54;
+        Tue, 31 Jan 2023 18:32:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E55BC433A0;
+        Tue, 31 Jan 2023 18:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675189926;
+        bh=VHWZ/wBpzz25yASOrx7kkTEU4WZv4A8V9MHXNzW/axE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iZ2CuIIB93ZQkatOQPR8FUia3GQiuqyEXEvLHdvtFYMhZDDoUJaztNrA5pwz5MonL
+         VwlKy8wSLmIEy+MYgXsCJMv1gMUxe+h0uDF9UNsPnxu3D4PT0tkv8RxHH5QOjViiod
+         CAzXrMRb87tGD9HaMbpmhwiNuQfngFOyV3Skqu6bKKRdXIRO4yNL8QFZQu5dZApr1w
+         reY24xd7EYj+yGH/1bIPZ2MV/Vq4xWtGnJm1/ZIqGdWg2CNVGEHhVZqkv6kfPWvIne
+         AJiMoq8Wji/HJw4USdNUKPsq9PUaPOIaUQLobHf+/9M/3czZdHGg4ojAbI2Lp8wE23
+         l1qu8599Pd8DQ==
+Date:   Tue, 31 Jan 2023 18:31:59 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Nylon Chen <nylon.chen@sifive.com>
+Cc:     aou@eecs.berkeley.edu, emil.renner.berthing@canonical.com,
+        geert+renesas@glider.be, heiko@sntech.de,
+        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nylon7717@gmail.com, zong.li@sifive.com, greentime.hu@sifive.com,
+        vincent.chen@sifive.com
+Subject: Re: [PATCH v2 1/2] riscv: dts: sifive: unleashed/unmatched: Remove
+ PWM controlled LED's active-low properties
+Message-ID: <Y9len4GinXQ101xr@spud>
+References: <20230130093229.27489-1-nylon.chen@sifive.com>
+ <20230130093229.27489-2-nylon.chen@sifive.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KT0CNMtZmPOxL+YU"
+Content-Disposition: inline
+In-Reply-To: <20230130093229.27489-2-nylon.chen@sifive.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-i.MX8QXP compatible is missing in the list, add it.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 1 +
- 1 file changed, 1 insertion(+)
+--KT0CNMtZmPOxL+YU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-index b3da4e629341..9270fd40b95b 100644
---- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-@@ -43,6 +43,7 @@ properties:
-               - fsl,imx8mn-pwm
-               - fsl,imx8mp-pwm
-               - fsl,imx8mq-pwm
-+              - fsl,imx8qxp-pwm
-           - const: fsl,imx27-pwm
- 
-   reg:
--- 
-2.34.1
+Hey Nylon,
 
+On Mon, Jan 30, 2023 at 05:32:28PM +0800, Nylon Chen wrote:
+> This removes the active-low properties of the PWM-controlled LEDs in
+> the HiFive Unmatched device tree.
+>=20
+> The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schemat=
+ics-v3.pdf[1].
+>=20
+> [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453=
+f8698_hifive-unleashed-a00-schematics-1.pdf
+> [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76=
+f4192_hifive-unmatched-schematics-v3.pdf
+
+Ideally these would be:
+Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f=
+8698_hifive-unleashed-a00-schematics-1.pdf [0]
+so that they integrate nice with the git trailers mechanism.
+If you resend, please update them to regular link tags.
+
+I checked out the circuits last time around and agreed that they should
+not be active-low.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+I expect that both patches will go through the PWM tree together, so:
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+>=20
+> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> ---
+>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 4 ----
+>  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 4 ----
+>  2 files changed, 8 deletions(-)
+>=20
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/r=
+iscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 900a50526d77..7a9f336a391c 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -50,7 +50,6 @@ led-controller {
+> =20
+>  		led-d1 {
+>  			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
+> -			active-low;
+>  			color =3D <LED_COLOR_ID_GREEN>;
+>  			max-brightness =3D <255>;
+>  			label =3D "d1";
+> @@ -58,7 +57,6 @@ led-d1 {
+> =20
+>  		led-d2 {
+>  			pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
+> -			active-low;
+>  			color =3D <LED_COLOR_ID_GREEN>;
+>  			max-brightness =3D <255>;
+>  			label =3D "d2";
+> @@ -66,7 +64,6 @@ led-d2 {
+> =20
+>  		led-d3 {
+>  			pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
+> -			active-low;
+>  			color =3D <LED_COLOR_ID_GREEN>;
+>  			max-brightness =3D <255>;
+>  			label =3D "d3";
+> @@ -74,7 +71,6 @@ led-d3 {
+> =20
+>  		led-d4 {
+>  			pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
+> -			active-low;
+>  			color =3D <LED_COLOR_ID_GREEN>;
+>  			max-brightness =3D <255>;
+>  			label =3D "d4";
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/r=
+iscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> index 07387f9c135c..11f08a545ee6 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> @@ -52,7 +52,6 @@ led-controller-1 {
+> =20
+>  		led-d12 {
+>  			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
+> -			active-low;
+>  			color =3D <LED_COLOR_ID_GREEN>;
+>  			max-brightness =3D <255>;
+>  			label =3D "d12";
+> @@ -69,19 +68,16 @@ multi-led {
+> =20
+>  			led-red {
+>  				pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
+> -				active-low;
+>  				color =3D <LED_COLOR_ID_RED>;
+>  			};
+> =20
+>  			led-green {
+>  				pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
+> -				active-low;
+>  				color =3D <LED_COLOR_ID_GREEN>;
+>  			};
+> =20
+>  			led-blue {
+>  				pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
+> -				active-low;
+>  				color =3D <LED_COLOR_ID_BLUE>;
+>  			};
+>  		};
+> --=20
+> 2.36.1
+>=20
+
+--KT0CNMtZmPOxL+YU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY9lenwAKCRB4tDGHoIJi
+0kmZAPwOZKVv5DxRGwppcbbAEFp/BZQP4sLaAi21f8bM4+rpcwEA75OgmBTRVxhG
+OIy96MY2XY88gRoHLNgYcBDB3nhfZQ0=
+=Wddn
+-----END PGP SIGNATURE-----
+
+--KT0CNMtZmPOxL+YU--
