@@ -2,59 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48ACA68355F
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Jan 2023 19:33:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB8E6835CA
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Jan 2023 19:56:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231795AbjAaSdZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 31 Jan 2023 13:33:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55398 "EHLO
+        id S231908AbjAaS4H (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Jan 2023 13:56:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbjAaSdK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Jan 2023 13:33:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576635A821;
-        Tue, 31 Jan 2023 10:32:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9F4FAB81E54;
-        Tue, 31 Jan 2023 18:32:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E55BC433A0;
-        Tue, 31 Jan 2023 18:32:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675189926;
-        bh=VHWZ/wBpzz25yASOrx7kkTEU4WZv4A8V9MHXNzW/axE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iZ2CuIIB93ZQkatOQPR8FUia3GQiuqyEXEvLHdvtFYMhZDDoUJaztNrA5pwz5MonL
-         VwlKy8wSLmIEy+MYgXsCJMv1gMUxe+h0uDF9UNsPnxu3D4PT0tkv8RxHH5QOjViiod
-         CAzXrMRb87tGD9HaMbpmhwiNuQfngFOyV3Skqu6bKKRdXIRO4yNL8QFZQu5dZApr1w
-         reY24xd7EYj+yGH/1bIPZ2MV/Vq4xWtGnJm1/ZIqGdWg2CNVGEHhVZqkv6kfPWvIne
-         AJiMoq8Wji/HJw4USdNUKPsq9PUaPOIaUQLobHf+/9M/3czZdHGg4ojAbI2Lp8wE23
-         l1qu8599Pd8DQ==
-Date:   Tue, 31 Jan 2023 18:31:59 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     Nylon Chen <nylon.chen@sifive.com>
-Cc:     aou@eecs.berkeley.edu, emil.renner.berthing@canonical.com,
-        geert+renesas@glider.be, heiko@sntech.de,
-        krzysztof.kozlowski+dt@linaro.org, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        nylon7717@gmail.com, zong.li@sifive.com, greentime.hu@sifive.com,
-        vincent.chen@sifive.com
-Subject: Re: [PATCH v2 1/2] riscv: dts: sifive: unleashed/unmatched: Remove
- PWM controlled LED's active-low properties
-Message-ID: <Y9len4GinXQ101xr@spud>
-References: <20230130093229.27489-1-nylon.chen@sifive.com>
- <20230130093229.27489-2-nylon.chen@sifive.com>
+        with ESMTP id S231936AbjAaS4A (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Jan 2023 13:56:00 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D863B589BE
+        for <linux-pwm@vger.kernel.org>; Tue, 31 Jan 2023 10:55:53 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id h16so15131514wrz.12
+        for <linux-pwm@vger.kernel.org>; Tue, 31 Jan 2023 10:55:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gUdQKI9zSyMIeEoq6H+c/WUp2I2udqEnEyxmZgbVp5Q=;
+        b=tzwztSI4Ew+lg2Gk/EXcGwAD4lbsP4+H7hKnbQvDLJA7gJHvsRN1GR066pofydEg42
+         bOq237mhDGGheQTLB25Vk2C2x7mMZ1aXRYi2xIn7or3L5eLRCeeMEZhZehmzlKC6ucCQ
+         EDGTNmc4OYEcQ5nnofovYDIpzdsuVIepZRTXpmO0tluFmuaBodL9JAYyIMi66OEGwFI2
+         J5F45hUR0YGaqdWR4LeUU/R2Na5KHU9izzTVqvXjI4G6a0W0udee19nkc0ft9Ob/zoW9
+         jifans04Gni+sb9PGVaybURH0QXCe6TqKulvJnMrpG++RDJHkJgrW/jK7CALBWr2VHl/
+         80TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gUdQKI9zSyMIeEoq6H+c/WUp2I2udqEnEyxmZgbVp5Q=;
+        b=11GJQOlQPWMqAIQbCKlRvAsrXN4sVEQ03P+iXEujGSSwVHFxZ3I+TgSF3rdDtRkfsH
+         Gg+GddhGIY+PktjHQTAWbWjO7FRaPlBonUjYxko0fb7EMBXTbiAGcbMBZ3CJuxhaFs6S
+         DvwkBpj6CgjB56w1hgcWqrD0juJH0szY2beb5NBIGSYgh9hi66r4cYmoopR1dLVVLlj1
+         I+fhyIApG42CbZHPlt2ayE566yS7XWkRiTlhR/9bqueh9TFh8B35Kyd4UcXNwWPn8a+8
+         nGjJ30jfRXNKs0mpsiGj0/rBiLSOj5gxWzGCr5048TSfYBSD1tOXCz7UuYqq+rdckZN2
+         zYzQ==
+X-Gm-Message-State: AO0yUKUT4GerlcO0v0tJv0gWoJS7K3CKf8OxMCTIEHf+1/jp5u6yZCVK
+        RfYhWxmR200sNj8JRJZtpkrt4Q==
+X-Google-Smtp-Source: AK7set9VWwr5WXjreYO02wP5uP45RtNxfAGqe/Of4W45cB4xzEpTpH4alVk9kztN3VigQmtf6qB6Bg==
+X-Received: by 2002:a05:6000:1c2:b0:2be:1f34:507f with SMTP id t2-20020a05600001c200b002be1f34507fmr5106wrx.68.1675191352439;
+        Tue, 31 Jan 2023 10:55:52 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id v14-20020adfe4ce000000b002bfafadb22asm15942156wrm.87.2023.01.31.10.55.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Jan 2023 10:55:52 -0800 (PST)
+Message-ID: <99de0305-7519-5c21-d1fc-0886f594ce99@linaro.org>
+Date:   Tue, 31 Jan 2023 19:55:50 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KT0CNMtZmPOxL+YU"
-Content-Disposition: inline
-In-Reply-To: <20230130093229.27489-2-nylon.chen@sifive.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 1/1] dt-bindings: pwm: imx: add i.MX8QXP compatible
+Content-Language: en-US
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20230131143720.3250427-1-alexander.stein@ew.tq-group.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230131143720.3250427-1-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,132 +83,15 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---KT0CNMtZmPOxL+YU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hey Nylon,
-
-On Mon, Jan 30, 2023 at 05:32:28PM +0800, Nylon Chen wrote:
-> This removes the active-low properties of the PWM-controlled LEDs in
-> the HiFive Unmatched device tree.
->=20
-> The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schemat=
-ics-v3.pdf[1].
->=20
-> [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453=
-f8698_hifive-unleashed-a00-schematics-1.pdf
-> [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76=
-f4192_hifive-unmatched-schematics-v3.pdf
-
-Ideally these would be:
-Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f=
-8698_hifive-unleashed-a00-schematics-1.pdf [0]
-so that they integrate nice with the git trailers mechanism.
-If you resend, please update them to regular link tags.
-
-I checked out the circuits last time around and agreed that they should
-not be active-low.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-I expect that both patches will go through the PWM tree together, so:
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
->=20
-> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+On 31/01/2023 15:37, Alexander Stein wrote:
+> i.MX8QXP compatible is missing in the list, add it.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 > ---
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 4 ----
->  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 4 ----
->  2 files changed, 8 deletions(-)
->=20
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/r=
-iscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 900a50526d77..7a9f336a391c 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -50,7 +50,6 @@ led-controller {
-> =20
->  		led-d1 {
->  			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
->  			label =3D "d1";
-> @@ -58,7 +57,6 @@ led-d1 {
-> =20
->  		led-d2 {
->  			pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
->  			label =3D "d2";
-> @@ -66,7 +64,6 @@ led-d2 {
-> =20
->  		led-d3 {
->  			pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
->  			label =3D "d3";
-> @@ -74,7 +71,6 @@ led-d3 {
-> =20
->  		led-d4 {
->  			pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
->  			label =3D "d4";
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/r=
-iscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> index 07387f9c135c..11f08a545ee6 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> @@ -52,7 +52,6 @@ led-controller-1 {
-> =20
->  		led-d12 {
->  			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
->  			label =3D "d12";
-> @@ -69,19 +68,16 @@ multi-led {
-> =20
->  			led-red {
->  				pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
->  				color =3D <LED_COLOR_ID_RED>;
->  			};
-> =20
->  			led-green {
->  				pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
->  				color =3D <LED_COLOR_ID_GREEN>;
->  			};
-> =20
->  			led-blue {
->  				pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
->  				color =3D <LED_COLOR_ID_BLUE>;
->  			};
->  		};
-> --=20
-> 2.36.1
->=20
+>  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 1 +
 
---KT0CNMtZmPOxL+YU
-Content-Type: application/pgp-signature; name="signature.asc"
+Where is the user of this compatible?
 
------BEGIN PGP SIGNATURE-----
+Best regards,
+Krzysztof
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY9lenwAKCRB4tDGHoIJi
-0kmZAPwOZKVv5DxRGwppcbbAEFp/BZQP4sLaAi21f8bM4+rpcwEA75OgmBTRVxhG
-OIy96MY2XY88gRoHLNgYcBDB3nhfZQ0=
-=Wddn
------END PGP SIGNATURE-----
-
---KT0CNMtZmPOxL+YU--
