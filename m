@@ -2,79 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA676864DA
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 11:57:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B492686AE1
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 16:54:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232141AbjBAK5B (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Feb 2023 05:57:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
+        id S232907AbjBAPyo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Feb 2023 10:54:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231799AbjBAK5A (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 05:57:00 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B329CDD7;
-        Wed,  1 Feb 2023 02:56:58 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id iv8-20020a05600c548800b003db04a0a46bso2349439wmb.0;
-        Wed, 01 Feb 2023 02:56:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LinfPfwdc69r+5MS9+W8GWtbQTG5CSXHZBHVy7HHbcc=;
-        b=d9PgESiUcaaRDq+WJ3qIgUQfDcb66ZTE97cDw7SP6ZgJ3dD3SeK72xuDAnSYhmTgnq
-         /wpB10A26l+EJ3cf+WDXXjHtkOZQX+0iGr4nLsuWOH6fZ3ADULkg0w6ayIs+izB5KSi3
-         BilQgqt1RChReSbl/E+QB82h9uyKf+ipLBKu2aLDxw1DHdtsRaKE6d9prSeFiURA7Sds
-         UpTOPVYZicbDAuMSU2Ajfb77KnWRDP3xSOClB6BFn7p2uYWGHRq8sf2qLel5NtGxWeRV
-         1Vpiht2CFIr3Y0u6shqlmXHt0q7gl47P+Hfu4euynXC9rExcBXgf1ooc3cr52Ta87HJ0
-         3F/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LinfPfwdc69r+5MS9+W8GWtbQTG5CSXHZBHVy7HHbcc=;
-        b=Lf1e+6fkJqNq3N9CAsdqCxlMZCaipoFDPZWl71OuZHXg7VfOwKyMGT2tCuZeK5bDSY
-         K3dzEJdPnrOQijw1K/VjoKhT0g1L2BbEEN+HOS7P5NE8LhDm8FP006f7GWoRlajLMr96
-         Kn/ciWepXJXEolG8OJ2BhsiEFMD3w847L8aQCCX7nlTB+yYFg/RgCG976/RTxw1pr/+B
-         68aRAzpsqcrXsHnDxHbXID3Kr1rh9wFOFS8A90akfjyaNtfTBXPmmENnilPcJMR9PPle
-         BPLCX809f5cwHt5wJ6Li92TiBH0KG9VI4g6G8qfGgJar2vi2c22TklDtTzICJ0XWPIX0
-         jbZg==
-X-Gm-Message-State: AO0yUKV4Kh2czdgisTcYl0LIjCfYKLGHZiMVydW62v2Jmt1jebebJkuH
-        My3dc3asRpWk0sE35rzYpss=
-X-Google-Smtp-Source: AK7set/YIe/I+C+MEjw/u4XskuAdX7Srwo/ASJLfYgnYv2wbXKrk75N0foIaGyXaEO3k+QVkOVLCEQ==
-X-Received: by 2002:a05:600c:601b:b0:3dc:557f:6129 with SMTP id az27-20020a05600c601b00b003dc557f6129mr1566953wmb.2.1675249016755;
-        Wed, 01 Feb 2023 02:56:56 -0800 (PST)
-Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id l16-20020a1c7910000000b003dc1d668866sm1357736wme.10.2023.02.01.02.56.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 02:56:56 -0800 (PST)
-Message-ID: <f5e283bf-2cd2-779e-eb2d-ef36f4780153@gmail.com>
-Date:   Wed, 1 Feb 2023 11:56:54 +0100
+        with ESMTP id S232653AbjBAPyV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 10:54:21 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F386BBB5
+        for <linux-pwm@vger.kernel.org>; Wed,  1 Feb 2023 07:53:50 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pNFQb-0004Rc-U7; Wed, 01 Feb 2023 16:53:41 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pNFQa-001wfY-Tl; Wed, 01 Feb 2023 16:53:40 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pNFQZ-0001mB-CB; Wed, 01 Feb 2023 16:53:39 +0100
+Date:   Wed, 1 Feb 2023 16:53:39 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] pwm: rzg2l-gpt: Add support for gpt linking with
+ poeg
+Message-ID: <20230201155339.p523te2bk7y2mv3e@pengutronix.de>
+References: <20221215205843.4074504-1-biju.das.jz@bp.renesas.com>
+ <20221215205843.4074504-4-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v1 1/2] arm64: dts: mediatek: mt7622: Add missing
- pwm-cells to pwm node
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org, john@phrozen.org, sean.wang@mediatek.com,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20221128112028.58021-1-angelogioacchino.delregno@collabora.com>
- <20221128112028.58021-2-angelogioacchino.delregno@collabora.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20221128112028.58021-2-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wytr2fui6jzevql7"
+Content-Disposition: inline
+In-Reply-To: <20221215205843.4074504-4-biju.das.jz@bp.renesas.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -82,28 +58,229 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--wytr2fui6jzevql7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 28/11/2022 12:20, AngeloGioacchino Del Regno wrote:
-> Specify #pwm-cells on pwm@11006000 to make it actually usable.
-> 
-> Fixes: ae457b7679c4 ("arm64: dts: mt7622: add SoC and peripheral related device nodes")
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Hello,
 
-Applied, thanks!
-
+On Thu, Dec 15, 2022 at 08:58:43PM +0000, Biju Das wrote:
+> The General PWM Timer (GPT) is capable of detecting "dead time error
+> and short-circuits between output pins" and send Output disable
+> request to poeg(Port Output Enable for GPT).
+>=20
+> This patch add support for linking poeg group with gpt, so that
+> gpt can control the output disable function.
+>=20
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 > ---
->   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 146e18b5b1f4..f321c6d0fd7c 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -435,6 +435,7 @@ uart3: serial@11005000 {
->   	pwm: pwm@11006000 {
->   		compatible = "mediatek,mt7622-pwm";
->   		reg = <0 0x11006000 0 0x1000>;
-> +		#pwm-cells = <2>;
->   		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
->   		clocks = <&topckgen CLK_TOP_PWM_SEL>,
->   			 <&pericfg CLK_PERI_PWM_PD>,
+> v2->v3:
+>  * Updated commit header and description
+>  * Added check for poeg group in rzg2l_gpt_parse_properties().
+> v1->v2:
+>  * Replaced id->poeg-id as per poeg bindings.
+> This patch depend upon [1]
+> [1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20221214=
+132232.2835828-3-biju.das.jz@bp.renesas.com/
+> ---
+>  drivers/pwm/pwm-rzg2l-gpt.c | 76 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>=20
+> diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+> index fa916f020061..6bf407550326 100644
+> --- a/drivers/pwm/pwm-rzg2l-gpt.c
+> +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> @@ -31,6 +31,7 @@
+>  #define RZG2L_GTCR		0x2c
+>  #define RZG2L_GTUDDTYC		0x30
+>  #define RZG2L_GTIOR		0x34
+> +#define RZG2L_GTINTAD		0x38
+>  #define RZG2L_GTBER		0x40
+>  #define RZG2L_GTCNT		0x48
+>  #define RZG2L_GTCCRA		0x4c
+> @@ -48,9 +49,15 @@
+>  #define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
+> =20
+>  #define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
+> +#define RZG2L_GTIOR_OADF	GENMASK(10, 9)
+>  #define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
+> +#define RZG2L_GTIOR_OBDF	GENMASK(26, 25)
+>  #define RZG2L_GTIOR_OAE		BIT(8)
+>  #define RZG2L_GTIOR_OBE		BIT(24)
+> +#define RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE	BIT(9)
+> +#define RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE	BIT(25)
+> +#define RZG2L_GTIOR_PIN_DISABLE_SETTING \
+> +	(RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE | RZG2L_GTIOR_OBDF_HIGH_IMP_O=
+N_OUT_DISABLE)
+> =20
+>  #define RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
+>  #define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
+> @@ -64,12 +71,16 @@
+>  #define RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH \
+>  	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE) | R=
+ZG2L_GTIOR_OBE)
+> =20
+> +#define RZG2L_GTINTAD_GRP_MASK			GENMASK(25, 24)
+> +
+>  #define RZG2L_GTCCR(i) (0x4c + 4 * (i))
+> =20
+>  #define RZG2L_MAX_HW_CHANNELS	(8)
+>  #define RZG2L_CHANNELS_PER_IO	(2)
+>  #define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_P=
+ER_IO)
+> =20
+> +#define RZG2L_MAX_POEG_GROUPS	(4)
+
+The parenthesis are not needed (ditto for RZG2L_MAX_HW_CHANNELS and
+RZG2L_CHANNELS_PER_IO).
+
+> +
+>  #define RZG2L_IS_IOB(a) ((a) & 0x1)
+>  #define RZG2L_GET_CH_INDEX(a) ((a) / 2)
+> =20
+> @@ -91,6 +102,7 @@ struct rzg2l_gpt_chip {
+>  	 */
+>  	u8 prescale[RZG2L_MAX_HW_CHANNELS];
+>  	unsigned int duty_cycle[RZG2L_MAX_PWM_CHANNELS];
+> +	DECLARE_BITMAP(poeg_gpt_link, RZG2L_MAX_POEG_GROUPS * RZG2L_MAX_HW_CHAN=
+NELS);
+>  };
+> =20
+>  static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct pwm_chip *=
+chip)
+> @@ -470,6 +482,69 @@ static void rzg2l_gpt_reset_assert_pm_disable(void *=
+data)
+>  	reset_control_assert(rzg2l_gpt->rstc);
+>  }
+> =20
+
+A comment here about the purpose of the function would be nice. Just
+=66rom reading the code it's totally unobvious what happens here.
+
+> +static void rzg2l_gpt_parse_properties(struct platform_device *pdev,
+> +				       struct rzg2l_gpt_chip *rzg2l_gpt)
+> +{
+> +	struct of_phandle_args of_args;
+> +	unsigned int i;
+> +	u32 poeg_grp;
+> +	u32 bitpos;
+> +	int cells;
+> +	u32 offs;
+> +	int ret;
+> +
+> +	cells =3D of_property_count_u32_elems(pdev->dev.of_node, "renesas,poegs=
+");
+> +	if (cells =3D=3D -EINVAL)
+> +		return;
+> +
+> +	cells >>=3D 1;
+> +	for (i =3D 0; i < cells; i++) {
+> +		ret =3D of_parse_phandle_with_fixed_args(pdev->dev.of_node,
+> +						       "renesas,poegs", 1, i,
+> +						       &of_args);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"Failed to parse 'renesas,poegs' property\n");
+> +			return;
+> +		}
+> +
+> +		if (of_args.args[0] >=3D RZG2L_MAX_HW_CHANNELS) {
+> +			dev_err(&pdev->dev,
+> +				"Invalid channel %d > 7\n", of_args.args[0]);
+
+this hardcoded 7 is a bit ugly. Something like
+
++			dev_err(&pdev->dev,
++				"Invalid channel %d >=3D %d\n", of_args.args[0], RZG2L_MAX_HW_CHANNELS=
+);
+
+or
+
++			dev_err(&pdev->dev,
++				"Invalid channel %d >=3D " stringify(RZG2L_MAX_HW_CHANNELS)  "\n", of_=
+args.args[0]);
+
+is IMHO nicer.
+
+> +			return;
+> +		}
+> +
+> +		bitpos =3D of_args.args[0];
+> +		if (!of_device_is_available(of_args.np)) {
+> +			/* It's fine to have a phandle to a non-enabled poeg. */
+> +			of_node_put(of_args.np);
+> +			continue;
+> +		}
+> +
+> +		if (!of_property_read_u32(of_args.np, "renesas,poeg-id", &poeg_grp)) {
+> +			offs =3D RZG2L_GET_CH_OFFS(of_args.args[0]);
+> +			if (poeg_grp > 3) {
+
+Maybe a cpp define for this 3?
+
+> +				dev_err(&pdev->dev,
+> +					"Invalid poeg group %d > 3\n", poeg_grp);
+
+You're missing
+
++				of_node_put(of_args.np);
+		=09
+here.
+
+> +				return;
+> +			}
+> +
+> +			bitpos +=3D poeg_grp * RZG2L_MAX_HW_CHANNELS;
+> +			set_bit(bitpos, rzg2l_gpt->poeg_gpt_link);
+> +
+> +			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTINTAD,
+> +					 RZG2L_GTINTAD_GRP_MASK,
+> +					 poeg_grp << 24);
+> +
+> +			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTIOR,
+> +					 RZG2L_GTIOR_OBDF | RZG2L_GTIOR_OADF,
+> +					 RZG2L_GTIOR_PIN_DISABLE_SETTING);
+> +		}
+> +
+> +		of_node_put(of_args.np);
+> +	}
+> +}
+> +
+>  static int rzg2l_gpt_probe(struct platform_device *pdev)
+>  {
+>  	DECLARE_BITMAP(ch_en_bits, RZG2L_MAX_PWM_CHANNELS);
+> @@ -512,6 +587,7 @@ static int rzg2l_gpt_probe(struct platform_device *pd=
+ev)
+>  	if (ret < 0)
+>  		goto clk_disable;
+> =20
+> +	rzg2l_gpt_parse_properties(pdev, rzg2l_gpt);
+
+I don't like the function name. THe function doesn't only parse the
+properties but also implements the needed register writes. Maybe
+rzg2l_gpt_poeg_init()?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wytr2fui6jzevql7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPaiwAACgkQwfwUeK3K
+7AlP6Af/ZvrXzmxeCnVaOJ/AnD9syRrtPiNGb3MzeGVcFCT3zMFFxLFjYRXHkfgs
+V/N/W98hwQjqX348zfZgGbVs61jo5/BKCAdiKkfGjNF5rijMS3lPtmWRDLMf8C08
+57pQVrIK3FBg3WOMo+xFOtDyLQRWmOKzaflg4BY6sDP+k1cL2meTdNIhYN6jWDxo
+5EUMyP0KV09CeS3EpnJ3YtPibd3QceOWigSwGNyOZ5v4Xt3e9Gbtlo3obHjjT1SB
+xfJuhomzOE2et5Ll4jB9sIsWLFUyXlnBnNFB6o7cJT2c2crr4Cq+z7T+ZzDR5f2T
+HKF6IJ2JS/URZ4GhuoxvdtQBBZUxJw==
+=lcFg
+-----END PGP SIGNATURE-----
+
+--wytr2fui6jzevql7--
