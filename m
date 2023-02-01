@@ -2,285 +2,215 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B492686AE1
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 16:54:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82522686D51
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 18:45:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232907AbjBAPyo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Feb 2023 10:54:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56796 "EHLO
+        id S229640AbjBARpv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Feb 2023 12:45:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232653AbjBAPyV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 10:54:21 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F386BBB5
-        for <linux-pwm@vger.kernel.org>; Wed,  1 Feb 2023 07:53:50 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pNFQb-0004Rc-U7; Wed, 01 Feb 2023 16:53:41 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pNFQa-001wfY-Tl; Wed, 01 Feb 2023 16:53:40 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pNFQZ-0001mB-CB; Wed, 01 Feb 2023 16:53:39 +0100
-Date:   Wed, 1 Feb 2023 16:53:39 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] pwm: rzg2l-gpt: Add support for gpt linking with
- poeg
-Message-ID: <20230201155339.p523te2bk7y2mv3e@pengutronix.de>
-References: <20221215205843.4074504-1-biju.das.jz@bp.renesas.com>
- <20221215205843.4074504-4-biju.das.jz@bp.renesas.com>
+        with ESMTP id S229451AbjBARpv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 12:45:51 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29765CD08;
+        Wed,  1 Feb 2023 09:45:48 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id m2so53245502ejb.8;
+        Wed, 01 Feb 2023 09:45:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pme95IJRkV5XLQXbsPO4wq0L5GK5jF10IaE5SUoe0QE=;
+        b=Nsm/KgHKdb5jfv0AWCtWdIaqg1nLXN+X4ml6vEjJdW8zQ9rsLl1hBpTlnupHOK9WfV
+         PvdJZ+0weAv6CE9ngqHpk9THMEyPt3ONsSQ/VRqmrGynZU7XobLdGo2ziBpeX6R25EDa
+         r7bwOPzhIB4TCSw7Iccsl6vpcjfG9HSofd1viA5kk27Too5FvMckCJBiP9mz/nDwdZ/i
+         35SCqEtHn4qLEhW6Rtv4ojfUDx3pd3yAYTYTAwDSWbo/3HxE3/KsTt2ig97mt5+hs1Sh
+         nLlKXMKUXmTnLQCicXwszOqcHxa0tMAvRT2vhtocyJeVuPKrGXIWuy0vq3YOtUmcN+PW
+         I5ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Pme95IJRkV5XLQXbsPO4wq0L5GK5jF10IaE5SUoe0QE=;
+        b=YuFWGbq/Ct6cUNtMpMGpXoWVDmKZ/j1xc5XdY6R+53esIbGMCYz2gGmMHYVZNrrrX+
+         Rgti2K/vyLCrgsbepMDpdLzfCvpXS1HmUlKPX0n49Lpm8rgVS+mPultAeRgw/eUlDplo
+         oIn2Zeh0+5cwLq1x1bTWwTVyhH9GM49Jw6VfkcpKa5U2YETkuCAL1DEGuEaxk7uEog4t
+         X6kEOPbMeQ5WNTCRavPXa/jU/63cxPpcr9//YRaOAXBcpu7X5u1I0dd0odliCXWchiGJ
+         1zFusipv48pSRTon0hdLt8A4eBjey/rh6oOxyUfFQ9Z3f4SeXiABavzBDjl+qaYHn8HP
+         oiCw==
+X-Gm-Message-State: AO0yUKWESJF7EyRiArQy4dSRQhsGWkhnCsUzBE+r+Ns8ndVWiQrF1jkD
+        QBJhOe2jeTV5+dWfULlrObU=
+X-Google-Smtp-Source: AK7set+d1Dsd9a92qBdnIOyZP42sjjCfsTL9ooxVRr+fGgtswYmO5aRgQVz5RhV8RuEpkHPf7lwPgg==
+X-Received: by 2002:a17:906:22c7:b0:877:ef84:c7de with SMTP id q7-20020a17090622c700b00877ef84c7demr2821233eja.61.1675273547111;
+        Wed, 01 Feb 2023 09:45:47 -0800 (PST)
+Received: from ?IPV6:2a01:c23:b912:d400:3963:7bc4:12b:ddb3? (dynamic-2a01-0c23-b912-d400-3963-7bc4-012b-ddb3.c23.pool.telefonica.de. [2a01:c23:b912:d400:3963:7bc4:12b:ddb3])
+        by smtp.googlemail.com with ESMTPSA id dy25-20020a05640231f900b0049e210884dasm10017113edb.15.2023.02.01.09.45.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Feb 2023 09:45:46 -0800 (PST)
+Message-ID: <aaa73903-1837-d9c8-8c45-54b4473fd548@gmail.com>
+Date:   Wed, 1 Feb 2023 18:45:39 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wytr2fui6jzevql7"
-Content-Disposition: inline
-In-Reply-To: <20221215205843.4074504-4-biju.das.jz@bp.renesas.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     linux-pwm@vger.kernel.org,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v4] dt-bindings: pwm: Convert Amlogic Meson PWM binding
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Convert Amlogic Meson PWM binding to yaml.
 
---wytr2fui6jzevql7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- fix clocks and clock-names
+- consider that more than one compatible may be set
+v3:
+- remove minItem/maxItem properties for compatible
+v4:
+- remove not needed "items" before "enum"
+---
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 70 +++++++++++++++++++
+ .../devicetree/bindings/pwm/pwm-meson.txt     | 29 --------
+ 2 files changed, 70 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
 
-Hello,
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+new file mode 100644
+index 000000000..527864a4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/pwm-amlogic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic PWM
++
++maintainers:
++  - Heiner Kallweit <hkallweit1@gmail.com>
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - amlogic,meson8b-pwm
++          - amlogic,meson-gxbb-pwm
++          - amlogic,meson-gxbb-ao-pwm
++          - amlogic,meson-axg-ee-pwm
++          - amlogic,meson-axg-ao-pwm
++          - amlogic,meson-g12a-ee-pwm
++          - amlogic,meson-g12a-ao-pwm-ab
++          - amlogic,meson-g12a-ao-pwm-cd
++          - amlogic,meson-s4-pwm
++      - items:
++          - const: amlogic,meson-gx-pwm
++          - const: amlogic,meson-gxbb-pwm
++      - items:
++          - const: amlogic,meson-gx-ao-pwm
++          - const: amlogic,meson-gxbb-ao-pwm
++      - items:
++          - const: amlogic,meson8-pwm
++          - const: amlogic,meson8b-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    oneOf:
++      - items:
++          - enum: [clkin0, clkin1]
++      - items:
++          - const: clkin0
++          - const: clkin1
++
++  "#pwm-cells":
++    const: 3
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm@8550 {
++      compatible = "amlogic,meson-gxbb-pwm";
++      reg = <0x08550 0x10>;
++      clocks = <&xtal>, <&xtal>;
++      clock-names = "clkin0", "clkin1";
++      #pwm-cells = <3>;
++    };
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-meson.txt b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
+deleted file mode 100644
+index bd02b0a14..000000000
+--- a/Documentation/devicetree/bindings/pwm/pwm-meson.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-Amlogic Meson PWM Controller
+-============================
+-
+-Required properties:
+-- compatible: Shall contain "amlogic,meson8b-pwm"
+-                         or "amlogic,meson-gxbb-pwm"
+-                         or "amlogic,meson-gxbb-ao-pwm"
+-                         or "amlogic,meson-axg-ee-pwm"
+-                         or "amlogic,meson-axg-ao-pwm"
+-                         or "amlogic,meson-g12a-ee-pwm"
+-                         or "amlogic,meson-g12a-ao-pwm-ab"
+-                         or "amlogic,meson-g12a-ao-pwm-cd"
+-- #pwm-cells: Should be 3. See pwm.yaml in this directory for a description of
+-  the cells format.
+-
+-Optional properties:
+-- clocks: Could contain one or two parents clocks phandle for each of the two
+-  PWM channels.
+-- clock-names: Could contain at least the "clkin0" and/or "clkin1" names.
+-
+-Example:
+-
+-	pwm_ab: pwm@8550 {
+-		compatible = "amlogic,meson-gxbb-pwm";
+-		reg = <0x0 0x08550 0x0 0x10>;
+-		#pwm-cells = <3>;
+-		clocks = <&xtal>, <&xtal>;
+-		clock-names = "clkin0", "clkin1";
+-	}
+-- 
+2.39.1
 
-On Thu, Dec 15, 2022 at 08:58:43PM +0000, Biju Das wrote:
-> The General PWM Timer (GPT) is capable of detecting "dead time error
-> and short-circuits between output pins" and send Output disable
-> request to poeg(Port Output Enable for GPT).
->=20
-> This patch add support for linking poeg group with gpt, so that
-> gpt can control the output disable function.
->=20
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v2->v3:
->  * Updated commit header and description
->  * Added check for poeg group in rzg2l_gpt_parse_properties().
-> v1->v2:
->  * Replaced id->poeg-id as per poeg bindings.
-> This patch depend upon [1]
-> [1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20221214=
-132232.2835828-3-biju.das.jz@bp.renesas.com/
-> ---
->  drivers/pwm/pwm-rzg2l-gpt.c | 76 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-> index fa916f020061..6bf407550326 100644
-> --- a/drivers/pwm/pwm-rzg2l-gpt.c
-> +++ b/drivers/pwm/pwm-rzg2l-gpt.c
-> @@ -31,6 +31,7 @@
->  #define RZG2L_GTCR		0x2c
->  #define RZG2L_GTUDDTYC		0x30
->  #define RZG2L_GTIOR		0x34
-> +#define RZG2L_GTINTAD		0x38
->  #define RZG2L_GTBER		0x40
->  #define RZG2L_GTCNT		0x48
->  #define RZG2L_GTCCRA		0x4c
-> @@ -48,9 +49,15 @@
->  #define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
-> =20
->  #define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
-> +#define RZG2L_GTIOR_OADF	GENMASK(10, 9)
->  #define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
-> +#define RZG2L_GTIOR_OBDF	GENMASK(26, 25)
->  #define RZG2L_GTIOR_OAE		BIT(8)
->  #define RZG2L_GTIOR_OBE		BIT(24)
-> +#define RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE	BIT(9)
-> +#define RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE	BIT(25)
-> +#define RZG2L_GTIOR_PIN_DISABLE_SETTING \
-> +	(RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE | RZG2L_GTIOR_OBDF_HIGH_IMP_O=
-N_OUT_DISABLE)
-> =20
->  #define RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
->  #define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
-> @@ -64,12 +71,16 @@
->  #define RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH \
->  	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE) | R=
-ZG2L_GTIOR_OBE)
-> =20
-> +#define RZG2L_GTINTAD_GRP_MASK			GENMASK(25, 24)
-> +
->  #define RZG2L_GTCCR(i) (0x4c + 4 * (i))
-> =20
->  #define RZG2L_MAX_HW_CHANNELS	(8)
->  #define RZG2L_CHANNELS_PER_IO	(2)
->  #define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_P=
-ER_IO)
-> =20
-> +#define RZG2L_MAX_POEG_GROUPS	(4)
-
-The parenthesis are not needed (ditto for RZG2L_MAX_HW_CHANNELS and
-RZG2L_CHANNELS_PER_IO).
-
-> +
->  #define RZG2L_IS_IOB(a) ((a) & 0x1)
->  #define RZG2L_GET_CH_INDEX(a) ((a) / 2)
-> =20
-> @@ -91,6 +102,7 @@ struct rzg2l_gpt_chip {
->  	 */
->  	u8 prescale[RZG2L_MAX_HW_CHANNELS];
->  	unsigned int duty_cycle[RZG2L_MAX_PWM_CHANNELS];
-> +	DECLARE_BITMAP(poeg_gpt_link, RZG2L_MAX_POEG_GROUPS * RZG2L_MAX_HW_CHAN=
-NELS);
->  };
-> =20
->  static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct pwm_chip *=
-chip)
-> @@ -470,6 +482,69 @@ static void rzg2l_gpt_reset_assert_pm_disable(void *=
-data)
->  	reset_control_assert(rzg2l_gpt->rstc);
->  }
-> =20
-
-A comment here about the purpose of the function would be nice. Just
-=66rom reading the code it's totally unobvious what happens here.
-
-> +static void rzg2l_gpt_parse_properties(struct platform_device *pdev,
-> +				       struct rzg2l_gpt_chip *rzg2l_gpt)
-> +{
-> +	struct of_phandle_args of_args;
-> +	unsigned int i;
-> +	u32 poeg_grp;
-> +	u32 bitpos;
-> +	int cells;
-> +	u32 offs;
-> +	int ret;
-> +
-> +	cells =3D of_property_count_u32_elems(pdev->dev.of_node, "renesas,poegs=
-");
-> +	if (cells =3D=3D -EINVAL)
-> +		return;
-> +
-> +	cells >>=3D 1;
-> +	for (i =3D 0; i < cells; i++) {
-> +		ret =3D of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-> +						       "renesas,poegs", 1, i,
-> +						       &of_args);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"Failed to parse 'renesas,poegs' property\n");
-> +			return;
-> +		}
-> +
-> +		if (of_args.args[0] >=3D RZG2L_MAX_HW_CHANNELS) {
-> +			dev_err(&pdev->dev,
-> +				"Invalid channel %d > 7\n", of_args.args[0]);
-
-this hardcoded 7 is a bit ugly. Something like
-
-+			dev_err(&pdev->dev,
-+				"Invalid channel %d >=3D %d\n", of_args.args[0], RZG2L_MAX_HW_CHANNELS=
-);
-
-or
-
-+			dev_err(&pdev->dev,
-+				"Invalid channel %d >=3D " stringify(RZG2L_MAX_HW_CHANNELS)  "\n", of_=
-args.args[0]);
-
-is IMHO nicer.
-
-> +			return;
-> +		}
-> +
-> +		bitpos =3D of_args.args[0];
-> +		if (!of_device_is_available(of_args.np)) {
-> +			/* It's fine to have a phandle to a non-enabled poeg. */
-> +			of_node_put(of_args.np);
-> +			continue;
-> +		}
-> +
-> +		if (!of_property_read_u32(of_args.np, "renesas,poeg-id", &poeg_grp)) {
-> +			offs =3D RZG2L_GET_CH_OFFS(of_args.args[0]);
-> +			if (poeg_grp > 3) {
-
-Maybe a cpp define for this 3?
-
-> +				dev_err(&pdev->dev,
-> +					"Invalid poeg group %d > 3\n", poeg_grp);
-
-You're missing
-
-+				of_node_put(of_args.np);
-		=09
-here.
-
-> +				return;
-> +			}
-> +
-> +			bitpos +=3D poeg_grp * RZG2L_MAX_HW_CHANNELS;
-> +			set_bit(bitpos, rzg2l_gpt->poeg_gpt_link);
-> +
-> +			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTINTAD,
-> +					 RZG2L_GTINTAD_GRP_MASK,
-> +					 poeg_grp << 24);
-> +
-> +			rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTIOR,
-> +					 RZG2L_GTIOR_OBDF | RZG2L_GTIOR_OADF,
-> +					 RZG2L_GTIOR_PIN_DISABLE_SETTING);
-> +		}
-> +
-> +		of_node_put(of_args.np);
-> +	}
-> +}
-> +
->  static int rzg2l_gpt_probe(struct platform_device *pdev)
->  {
->  	DECLARE_BITMAP(ch_en_bits, RZG2L_MAX_PWM_CHANNELS);
-> @@ -512,6 +587,7 @@ static int rzg2l_gpt_probe(struct platform_device *pd=
-ev)
->  	if (ret < 0)
->  		goto clk_disable;
-> =20
-> +	rzg2l_gpt_parse_properties(pdev, rzg2l_gpt);
-
-I don't like the function name. THe function doesn't only parse the
-properties but also implements the needed register writes. Maybe
-rzg2l_gpt_poeg_init()?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wytr2fui6jzevql7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPaiwAACgkQwfwUeK3K
-7AlP6Af/ZvrXzmxeCnVaOJ/AnD9syRrtPiNGb3MzeGVcFCT3zMFFxLFjYRXHkfgs
-V/N/W98hwQjqX348zfZgGbVs61jo5/BKCAdiKkfGjNF5rijMS3lPtmWRDLMf8C08
-57pQVrIK3FBg3WOMo+xFOtDyLQRWmOKzaflg4BY6sDP+k1cL2meTdNIhYN6jWDxo
-5EUMyP0KV09CeS3EpnJ3YtPibd3QceOWigSwGNyOZ5v4Xt3e9Gbtlo3obHjjT1SB
-xfJuhomzOE2et5Ll4jB9sIsWLFUyXlnBnNFB6o7cJT2c2crr4Cq+z7T+ZzDR5f2T
-HKF6IJ2JS/URZ4GhuoxvdtQBBZUxJw==
-=lcFg
------END PGP SIGNATURE-----
-
---wytr2fui6jzevql7--
