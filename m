@@ -2,59 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93965686F74
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 21:02:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4BEF686F76
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 21:02:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbjBAUCN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Feb 2023 15:02:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39918 "EHLO
+        id S231491AbjBAUCO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Feb 2023 15:02:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbjBAUCM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 15:02:12 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09736EBC;
-        Wed,  1 Feb 2023 12:02:11 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id mc11so32261777ejb.10;
-        Wed, 01 Feb 2023 12:02:11 -0800 (PST)
+        with ESMTP id S229929AbjBAUCO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 15:02:14 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FFF06EBC;
+        Wed,  1 Feb 2023 12:02:13 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id me3so54774958ejb.7;
+        Wed, 01 Feb 2023 12:02:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZUwxNJxFlwiJY3LE0c9a6Ul2PZq/gNO1u4vk0lo6jnI=;
-        b=IVLey1eKZEphphuNftYbmy7S1jjoJUqk4PgJK0jUbbm3gYEPerkSIQdBo2Ny1fXClI
-         8neWXXxDRn28q63pPFRneXPzJESFwzBwlzruwVrq1YUdsb5eUKUKSf57XNWn1ZHqzSpw
-         +jkd0YvzOOSX0mkuh0zlp+GSB5ynYsvE/fg2804Dpdr0nbEiGLNdDYEAXlLOyN0tlztr
-         RS6KDUeR33/bPOMblHolVz2eEaLWKVx0BWlpYa79LKGh0nIQfkxG4k8uvaLgfG9TCaJ6
-         Nmt495Lta0Vj6MHnKSU0yntoSFGhW5EyM5JuWpBLtKzy+4g667VYsilKsR9DNSDGAGN3
-         WSHw==
+        bh=qSroPy2WHgGfW4fqnkho5f90ztpMpK7y6tuzoTj/kVc=;
+        b=D8BtHxYRruMEAMT6AyhMVE0cV2GFDa2AjI0UQXoZmCEw5ipyVKHWcEH5fZxqOOexUW
+         vcWG5KdD71WyezR2Mse/Ezb2aYo+HV9x4VnG5uFkKh6vsh6lhIVy0Bt8QptGnqgPuKaQ
+         fnZJhJvEwy2f2LaAs2p46SACCdt/6aow4kEIhN6/jpgJGlRCxDSxR2x0IWauFsBF9j31
+         wYmEx9pcAvblNsWa0NRRV6Rzfcc0RmaeQ6mV56uhUrJNOM1kNRyBsnaZ7vBYHLQLZO6G
+         EdEO6OIuvfxXftC5kRrLJC+Dl48aUQbFK87zNwB0gIs5VRc7yzUTOEgRr261EnJr3was
+         jMRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZUwxNJxFlwiJY3LE0c9a6Ul2PZq/gNO1u4vk0lo6jnI=;
-        b=bCQZ5IgT9ZDGAdl3KxeNkP/+eYiHlh+S0Q54k+/NAtd8suhmpG8mzzbwlDK56EVn0t
-         Dnq159ZjdhFTc+/0voiY0TDGH9ns9I64w3RqgPKVjDYkbMEO+num/KJ20MX01zcVwyFM
-         OAVGcpWS9gKdH7Y5IYYZUD8EM0J08ROgn+H3NCMBijC2BiT9nTp8K4auMs4RZIvcmkvY
-         cfMx7ALJmfHT9nUOabxOzaDx66oEmp34eZE7oFg6FZm1OUQZ2swDx3sZ4UAKkQ8/nFYy
-         f1EAJETpMNoOvo41cVlJIqvkSUEAnsAJWNfLtIL+iJM9sJ4VUTRDRxaFCd/vFwuybcPC
-         h3FQ==
-X-Gm-Message-State: AO0yUKVDMjtYRVKXQEsZaXplwlV7cirTDqJn0joMmq3bVHt7vkINYIhf
-        mYv4EKJgBiRkFL3UEVXD4fk=
-X-Google-Smtp-Source: AK7set8h0j6vw0PIPChjn+OwS6+zd1oGxPsJJFo8VoSYCJEhnxWEj0LExbaxskt85Q397EyTALNABw==
-X-Received: by 2002:a17:907:1607:b0:87b:6aa1:c87f with SMTP id hb7-20020a170907160700b0087b6aa1c87fmr4814168ejc.26.1675281730131;
-        Wed, 01 Feb 2023 12:02:10 -0800 (PST)
+        bh=qSroPy2WHgGfW4fqnkho5f90ztpMpK7y6tuzoTj/kVc=;
+        b=EbJ93auvApJAQvH3OQ/16hFqolTsVNlDTpeHDKufWCtINdQo1gS8nXEr/2dJVrJepV
+         GYCCiPlr3OCELpcMyESelBMmvZonQv/kJVljpLXpYJTIT6SIRbeYXzXZZflcU11gUYPC
+         6JFu1Ii821FOlxfL5kAnvDa2WZkB/RxgqePMtdJ/Dz9ysaWUG5zh2BGFMdMaSdS6rBW9
+         7ZiEE7RYlOEuZfZ4/eAttWtpoBC4yjImATH4VAZyrFsNB2Yxls2b+xuWl2/404B7gy+r
+         Ql34JThk2YjwXLYPUC/nywpN1swmuBdjbMfT4XZ88m/dmGKQr3vv88aMQsDHRTJAsF9D
+         wiuQ==
+X-Gm-Message-State: AO0yUKVIOkdtvN+U58ZrDtentSr0QxyZ9aYhemlAjbpTj8HZ4VLcxLJo
+        mPZg4bpF3xKiq2DjAbNGlZg=
+X-Google-Smtp-Source: AK7set83/MjcdNvgrsa/LwVxwaTVpq4xOQwjEfak/z3lA6Jw+klDakt5Xb2m+6JuYulQhsFfPPrrNA==
+X-Received: by 2002:a17:907:8745:b0:882:82b3:58bc with SMTP id qo5-20020a170907874500b0088282b358bcmr4233828ejc.65.1675281731737;
+        Wed, 01 Feb 2023 12:02:11 -0800 (PST)
 Received: from ?IPV6:2a01:c23:b912:d400:3963:7bc4:12b:ddb3? (dynamic-2a01-0c23-b912-d400-3963-7bc4-012b-ddb3.c23.pool.telefonica.de. [2a01:c23:b912:d400:3963:7bc4:12b:ddb3])
-        by smtp.googlemail.com with ESMTPSA id se11-20020a170906ce4b00b0087f68a2681bsm8264924ejb.96.2023.02.01.12.02.08
+        by smtp.googlemail.com with ESMTPSA id d27-20020a170906041b00b00887f6c39ac0sm5660738eja.98.2023.02.01.12.02.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 12:02:09 -0800 (PST)
-Message-ID: <66f77c32-2678-3e31-fb00-1294ccaa6045@gmail.com>
-Date:   Wed, 1 Feb 2023 20:58:47 +0100
+        Wed, 01 Feb 2023 12:02:11 -0800 (PST)
+Message-ID: <1ce888df-6096-73de-a98a-354d086428d4@gmail.com>
+Date:   Wed, 1 Feb 2023 20:59:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: [PATCH 1/4] arm: dts: meson: adjust order of some compatibles
+Subject: [PATCH 2/4] arm64: dts: meson: adjust order of some compatibles
 Content-Language: en-US
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -92,20 +92,36 @@ most specific to least specific.
 Suggested-by: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index d5a3fe21e..5979209fe 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -580,8 +580,8 @@ &ethmac {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 923d2d8bb..12ef6e81c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -300,8 +300,8 @@ &ethmac {
  };
  
  &gpio_intc {
 -	compatible = "amlogic,meson-gpio-intc",
--		     "amlogic,meson8b-gpio-intc";
-+	compatible = "amlogic,meson8b-gpio-intc",
+-		     "amlogic,meson-gxbb-gpio-intc";
++	compatible = "amlogic,meson-gxbb-gpio-intc",
++		     "amlogic,meson-gpio-intc";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 04e9d0f1b..af912f698 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -312,8 +312,8 @@ &clkc_AO {
+ };
+ 
+ &gpio_intc {
+-	compatible = "amlogic,meson-gpio-intc",
+-		     "amlogic,meson-gxl-gpio-intc";
++	compatible = "amlogic,meson-gxl-gpio-intc",
 +		     "amlogic,meson-gpio-intc";
  	status = "okay";
  };
