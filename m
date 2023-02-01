@@ -2,59 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF7F4686F63
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 20:57:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93965686F74
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Feb 2023 21:02:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbjBAT5x (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Feb 2023 14:57:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
+        id S230091AbjBAUCN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Feb 2023 15:02:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230462AbjBAT5x (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 14:57:53 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE82F1E5CF;
-        Wed,  1 Feb 2023 11:57:51 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id f7so11646388edw.5;
-        Wed, 01 Feb 2023 11:57:51 -0800 (PST)
+        with ESMTP id S229929AbjBAUCM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Feb 2023 15:02:12 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09736EBC;
+        Wed,  1 Feb 2023 12:02:11 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id mc11so32261777ejb.10;
+        Wed, 01 Feb 2023 12:02:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nbuyl7LvCUFmULBk+luDWMTsBcFBqdWcL+IpHpfcGe8=;
-        b=YR2Tw7n7yEIg54prt0s3LcXFpSYSBWD38YayxwxASTIO/s4OiwgLtubxtMwcMpH8+S
-         xMCpEUhiezRxTh1x0Std5TnmWm0nyqVE8zFpB5SpjfTnkvSIlTmqbHl9qn6js/hZZf3m
-         p7ou6b7YW/fZKwVJBJCNLlxLFvcdBhxxtjifzN1Y6CqfKqqm7vo4vHRCcGIjgpHVhWfq
-         WI/m0+NSuKdgrfq54Ue739oXqIPyzzfhS0XMZB7bwMuuVt2Esb/Xf8GtQ8ke+c4DfEMl
-         dIFiV2w+0G+aIYVMpV753+GJvS6mUlGP1gMkeNz4InzHIztR6Rj/wLcyhEjupIU0u+1R
-         Cllg==
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZUwxNJxFlwiJY3LE0c9a6Ul2PZq/gNO1u4vk0lo6jnI=;
+        b=IVLey1eKZEphphuNftYbmy7S1jjoJUqk4PgJK0jUbbm3gYEPerkSIQdBo2Ny1fXClI
+         8neWXXxDRn28q63pPFRneXPzJESFwzBwlzruwVrq1YUdsb5eUKUKSf57XNWn1ZHqzSpw
+         +jkd0YvzOOSX0mkuh0zlp+GSB5ynYsvE/fg2804Dpdr0nbEiGLNdDYEAXlLOyN0tlztr
+         RS6KDUeR33/bPOMblHolVz2eEaLWKVx0BWlpYa79LKGh0nIQfkxG4k8uvaLgfG9TCaJ6
+         Nmt495Lta0Vj6MHnKSU0yntoSFGhW5EyM5JuWpBLtKzy+4g667VYsilKsR9DNSDGAGN3
+         WSHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nbuyl7LvCUFmULBk+luDWMTsBcFBqdWcL+IpHpfcGe8=;
-        b=tSxnjKA1+fnjQ58TQKa1ZZ/mchFiWGn2WZdY5hm4JwhzB2oLnLuw4iFiguyduqlKPT
-         l7MrLU953GXMWk4Ns4OLxdo4CGU8UdA+W1iWkAQUMrBm+XTCx1wEx50sW6WgUjxv/Dee
-         jcqFCSsc1Cz26U84VzS7lLKOeHGGKSvK0kxcfGdXh+X0FrVYVFCcLA0z9ttBtsyHgux+
-         EkSfXQMqq3MKQSrtPmfdmpDtd8xq+zs3M5tuHB9Xc5UqZNCkAvl1jLs1eWELUlrCVooz
-         J/RT9O/CQ4gsphYpDYE285CGEk5N5EC0Uwo19WoWbOfIVwYgyvP0/L0HFxMbpxHFWfTq
-         n2Rg==
-X-Gm-Message-State: AO0yUKWPHZ+ZYqfzWsgn4P83pS46sMMoqPUkyykcMdC3yRhFXnlQmlmi
-        t4cngzUaL+do0eTDz4cXB9k=
-X-Google-Smtp-Source: AK7set+GI7HhysY3JX/WRp5iUFfCA+K5YmLjYE53kw7Js72+bUO9lFyXk/XUEc0wQuQNk34amxoXbQ==
-X-Received: by 2002:a05:6402:292a:b0:4a2:471a:4d26 with SMTP id ee42-20020a056402292a00b004a2471a4d26mr3028603edb.10.1675281470074;
-        Wed, 01 Feb 2023 11:57:50 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZUwxNJxFlwiJY3LE0c9a6Ul2PZq/gNO1u4vk0lo6jnI=;
+        b=bCQZ5IgT9ZDGAdl3KxeNkP/+eYiHlh+S0Q54k+/NAtd8suhmpG8mzzbwlDK56EVn0t
+         Dnq159ZjdhFTc+/0voiY0TDGH9ns9I64w3RqgPKVjDYkbMEO+num/KJ20MX01zcVwyFM
+         OAVGcpWS9gKdH7Y5IYYZUD8EM0J08ROgn+H3NCMBijC2BiT9nTp8K4auMs4RZIvcmkvY
+         cfMx7ALJmfHT9nUOabxOzaDx66oEmp34eZE7oFg6FZm1OUQZ2swDx3sZ4UAKkQ8/nFYy
+         f1EAJETpMNoOvo41cVlJIqvkSUEAnsAJWNfLtIL+iJM9sJ4VUTRDRxaFCd/vFwuybcPC
+         h3FQ==
+X-Gm-Message-State: AO0yUKVDMjtYRVKXQEsZaXplwlV7cirTDqJn0joMmq3bVHt7vkINYIhf
+        mYv4EKJgBiRkFL3UEVXD4fk=
+X-Google-Smtp-Source: AK7set8h0j6vw0PIPChjn+OwS6+zd1oGxPsJJFo8VoSYCJEhnxWEj0LExbaxskt85Q397EyTALNABw==
+X-Received: by 2002:a17:907:1607:b0:87b:6aa1:c87f with SMTP id hb7-20020a170907160700b0087b6aa1c87fmr4814168ejc.26.1675281730131;
+        Wed, 01 Feb 2023 12:02:10 -0800 (PST)
 Received: from ?IPV6:2a01:c23:b912:d400:3963:7bc4:12b:ddb3? (dynamic-2a01-0c23-b912-d400-3963-7bc4-012b-ddb3.c23.pool.telefonica.de. [2a01:c23:b912:d400:3963:7bc4:12b:ddb3])
-        by smtp.googlemail.com with ESMTPSA id m5-20020aa7c485000000b0049e19136c22sm10170677edq.95.2023.02.01.11.57.48
+        by smtp.googlemail.com with ESMTPSA id se11-20020a170906ce4b00b0087f68a2681bsm8264924ejb.96.2023.02.01.12.02.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Feb 2023 11:57:49 -0800 (PST)
-Message-ID: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
-Date:   Wed, 1 Feb 2023 20:57:48 +0100
+        Wed, 01 Feb 2023 12:02:09 -0800 (PST)
+Message-ID: <66f77c32-2678-3e31-fb00-1294ccaa6045@gmail.com>
+Date:   Wed, 1 Feb 2023 20:58:47 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
+Subject: [PATCH 1/4] arm: dts: meson: adjust order of some compatibles
 Content-Language: en-US
+From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Neil Armstrong <neil.armstrong@linaro.org>,
@@ -69,9 +71,8 @@ Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 0/4] soc: amlogic: switch bindings to yaml and adjust some
- dtbs's
+References: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
+In-Reply-To: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -84,32 +85,32 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Switch two Amlogic Meson bindings to yaml. As prerequisite adjust the
-order of some compatibles first.
+During review of a new yaml binding, affecting these dts, it turned out
+that some compatibles aren't ordered as they should be. Order should be
+most specific to least specific.
 
-New versions of the bindings have been submitted as individual
-patches in between. Put it into a series again.
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Heiner Kallweit (4):
-  arm: dts: meson: adjust order of some compatibles
-  arm64: dts: meson: adjust order of some compatibles
-  dt-bindings: pwm: Convert Amlogic Meson PWM binding
-  dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO
-    interrupt controller binding
-
- .../amlogic,meson-gpio-intc.txt               | 38 ----------
- .../amlogic,meson-gpio-intc.yaml              | 72 +++++++++++++++++++
- .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 70 ++++++++++++++++++
- .../devicetree/bindings/pwm/pwm-meson.txt     | 29 --------
- arch/arm/boot/dts/meson8b.dtsi                |  4 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |  4 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  4 +-
- 7 files changed, 148 insertions(+), 73 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
-
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index d5a3fe21e..5979209fe 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -580,8 +580,8 @@ &ethmac {
+ };
+ 
+ &gpio_intc {
+-	compatible = "amlogic,meson-gpio-intc",
+-		     "amlogic,meson8b-gpio-intc";
++	compatible = "amlogic,meson8b-gpio-intc",
++		     "amlogic,meson-gpio-intc";
+ 	status = "okay";
+ };
+ 
 -- 
 2.39.1
+
 
