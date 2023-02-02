@@ -2,356 +2,636 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2004D6880D2
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Feb 2023 15:58:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B0D6884F3
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Feb 2023 17:58:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232051AbjBBO6q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Feb 2023 09:58:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38968 "EHLO
+        id S229666AbjBBQ6h (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 2 Feb 2023 11:58:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232156AbjBBO6k (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Feb 2023 09:58:40 -0500
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2117.outbound.protection.outlook.com [40.107.117.117])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110882BEE7;
-        Thu,  2 Feb 2023 06:58:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UzQ+H3B/j8gWzkk0SRORy91hZMHdGxI0PzwMahmRD/3NWLMjjhOoyTXRoyOnCMnN3fCCHj4Kp1dgJyH4AJ7A5dGEx4s6i5/alG26+u1JZ14aj4nZSq5QUIGdEuaj82/z2zhWmDpTxVR02GfkDkeWfUeslCrDFp2MqiCoz9Td1wSKrWNIOLWInpo36ngJxW71Xq8iwQC85Tj5oYsqqrW0mUTAmO+XHGPm5OUkeAvcASuiMTHOvbPfxC78G2Af3PaAMxuvVkzknOutRMYEKGELeytvYrJHZBDeOC4sDyrW4j9dbvYvynGUzbwHpOoEMnGkZsRkH5fUp2Qkn2a6yX27vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VFbfskg6HvTztdAAt/O8Bl5CsyI2Kbv1XNENwuyHsnw=;
- b=KAXrS87xS2oj29rh8QlnyGtmzavmDM0zQGH/pfGSicUMMYJ8anjbtwIL/BDATyBWk8GkJGZ7zqrCH/mCr+wgzJNTqZn7YbxgbojIUbl/Y3IzZXEkDagKrlrMSbQ9f/2qaLJ5dtCiDJjdhgGpJmRpPdhhwfx/QlSwkQb3VUsQPNtE94G5tbJtAyMJmzhLmi2/rBTkrtJPKDM6iD2j3P6FnKhTmmmgMwMsRLbxQiu6oYAee5wvqCR5nrAyZcTGIfykUT5tVuPLuxjP1LC48nKnvSVcPRjDgjoo/rY8C8vyAhXkgmpqRhObg4jCTt0kjo8nCL2snIk0loqkKlSvoX8QbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VFbfskg6HvTztdAAt/O8Bl5CsyI2Kbv1XNENwuyHsnw=;
- b=o5Qrwoa5G8HBbUiCdKhzwMIolzINyefi0NDnAtdPLKI8QKZvRBwI3inp63YhHV/IkU3kquvA4vL8im55BHzhxDGTMrMIk1wTOBIs1rVrSvUDUm0NX6UIBJYjsHKZmwuJ7mSZYKvPczqL2xAvBNENX3aDlJOIcy0fSKINZoLmLu0=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TY1PR01MB10880.jpnprd01.prod.outlook.com (2603:1096:400:323::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.25; Thu, 2 Feb
- 2023 14:58:22 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::343d:7339:78e5:a46e]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::343d:7339:78e5:a46e%8]) with mapi id 15.20.6064.025; Thu, 2 Feb 2023
- 14:58:20 +0000
+        with ESMTP id S232418AbjBBQ6I (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Feb 2023 11:58:08 -0500
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0E491D936;
+        Thu,  2 Feb 2023 08:58:05 -0800 (PST)
+X-IronPort-AV: E=Sophos;i="5.97,267,1669042800"; 
+   d="scan'208";a="151446223"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 03 Feb 2023 01:58:05 +0900
+Received: from localhost.localdomain (unknown [10.226.92.118])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 14D0A402DBB9;
+        Fri,  3 Feb 2023 01:58:01 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Lee Jones <lee@kernel.org>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        "William Breathitt Gray" <william.gray@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v3 2/4] pwm: Add support for RZ/V2M PWM driver
-Thread-Topic: [PATCH v3 2/4] pwm: Add support for RZ/V2M PWM driver
-Thread-Index: AQHZDyTrx1aPUVR9Qk+gIxiBq8WX966nRoAAgBOQMPCAAS7MYA==
-Date:   Thu, 2 Feb 2023 14:58:20 +0000
-Message-ID: <OS0PR01MB5922A8F140997CA935DD062986D69@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20221213185827.2012004-1-biju.das.jz@bp.renesas.com>
- <20221213185827.2012004-3-biju.das.jz@bp.renesas.com>
- <20230120093430.qddre6bxojlcrtkz@pengutronix.de>
- <OS0PR01MB59220D56ADF7543CA200F36A86D19@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-In-Reply-To: <OS0PR01MB59220D56ADF7543CA200F36A86D19@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TY1PR01MB10880:EE_
-x-ms-office365-filtering-correlation-id: f27d0a9c-b931-4f60-8935-08db052decce
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XmvhaftZR8PNQLgewjYwjBn0J9UY9pi39qLlxp2Bk4HmNziEfBFjENUagT3IGM6g/7vtosg8Dnw7/Ew7iu4MKeDAh5sKQUKZpE94+S7QV8E9xgM5CXpLZXCGjexnbTmu2b0TPHghk7nVmclE8LQ5TZmiSBsr1ga1s7PoZqpsG2XR8KycCdP2BHivYx9Tq20P3taWKlgs7Ioav9GOjRnsJpAKM5y3X3MJfcNNB5CBic869dAwVfHf5ixp/q5qwnaN9hRL6xdU12nkzD81QxWS/slSTr4WUAXAymMGsVXG85iXPWfn9AMwNjCks3M/FObhep8HF7IPYLcAqLQBea+BlDQdj/btppJz8mJAyTuA9B2s4zTj7nX/OJDimvxMHhEPXSYYt0jfHakhY3N6dkFIJNlOxM6pHiGfzK+9J2EMFFw36rz3WEjc3iSENT4gxgcV9l5Y8Xl/ImfqHsBhtcPKbjTzzzCGCX22IxghbrvgkOWFGEEhwmZE7O+4OwANTgcPvy0wQdw1dArZxz7Qz4v8VLQV09nSECz0S64PEqiodfo09uAdHMiZ0umL7OAewBjDTP1+Cr2m8SjvYONi2OW/cp6eW+jj2qTJaEZSoJZ6xprYnB8GDMSilPwoJ6w7twCyQ2nHUMrEg4Kn84Q4sJrNeGBXbSx6TgsdpzpudCRoI7TupmZ1icFcSQqUIIpJxQdTDekkGWeenDUwj4ZsXARq+fe6POKaTp1fBs7KihFiovo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(396003)(366004)(376002)(346002)(136003)(451199018)(52536014)(38070700005)(9686003)(5660300002)(8936002)(30864003)(2906002)(6506007)(478600001)(186003)(26005)(71200400001)(41300700001)(33656002)(7696005)(38100700002)(316002)(86362001)(55016003)(122000001)(6916009)(76116006)(4326008)(83380400001)(66556008)(8676002)(66476007)(54906003)(64756008)(66446008)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?STdqcUQ1TkVFcFViSy9VeWtwUzJMenc1Z3ZUOGtQMTFxOGFnV1RKcDk2RnU2?=
- =?utf-8?B?aWFxWUkwNkovakZKbzZHczJpTWNGSUZXMlBrdURYRUdjWG5UTkdFQ0djSmV4?=
- =?utf-8?B?R0ppOXRMMWNJNHBBWVFsQzcvSDQyaHN0RWJiWmdTYmJ1cmYydUNDbkhYNUJW?=
- =?utf-8?B?em9aank3aDliM2RrdnVsN1R2U0lwdkE4dG9mWjFNMTVXRHBLTnRQbmt2T01Z?=
- =?utf-8?B?Z2dYYXVhc09POCtrM25IVU16bXd5RlVKODhYYmVEekZaZlhPdzJRQ3RsaVdQ?=
- =?utf-8?B?ajdZdmt6TkcwcFNRRGJmUVoyWDJaUmVoQ1JUY2JGNFF1dENYazQ0QlJqOXNv?=
- =?utf-8?B?ejA4Q0pzaVFmVGZUd3pwaFU3V2NTREJySWJsdGliM0dPcy92dEdHQi81SWZF?=
- =?utf-8?B?QWN2bVBwaVVWRDQ3TCtGTUVLQWx6ZkF0N1BBaUhTck02QU1meDNkdVJ5REsv?=
- =?utf-8?B?VDR6ODRmc3RjZ1g0UGhKRDRydnJGQUVhZkRVY3EzSytmUjh1d2ZDREVhbXhM?=
- =?utf-8?B?cCsvcS9VNW5Ec3NPYnhONWxwV0pTYWU3UTBaMkMvaUk3TlhMemFjNlhLdXM5?=
- =?utf-8?B?bzNoK21abEh3a1ZJMDFKeVhnYitCVmx4aG0vcEEyKyswUUUrMmVlWVlqeUEr?=
- =?utf-8?B?alE5cE1iS21MRE43cUhmMVpJdzZ4NFZSMVlUWkRWcDJrdWVYbnJISTZIeENq?=
- =?utf-8?B?ZXZzSklSTkpDTzFFYktwRDFxZHFWekpWZ2lISkRRVEwyeHd6ZER2WWVoQzZU?=
- =?utf-8?B?Z3VkRWZRMFhxaks4RHlGN0VUV2tPb09jdm5WNlJIWWVud3hLMGFZbzdKUDF4?=
- =?utf-8?B?S0JJZlBUbUt6WHM4K2tSZWFjNkJIajZhNUtlOGp1bGN0eUZ0NHhDMlJ0M0d2?=
- =?utf-8?B?MktRZWY4MnRZWmFzUm54NlBlVDQvU0hlUWxMOFVlYTFERFVnMTdUdU8yZElI?=
- =?utf-8?B?WSt0ZW5tdGNlb0hHTGFFRktFY3g2ZnEza3BEcUJVUy8va2V0V1lEa2haR0hK?=
- =?utf-8?B?WlUvV0VhUFVZMGpyUlRvOVdPWlExQXpzbUszVFJJNGZ1S2FyM2I3SHB0VHBo?=
- =?utf-8?B?a3RHNTNBTzhJSUpsOVNiTnl5WW9KNExDQmRVNmlJTnpJL0ZRbmFubTh0M3Jm?=
- =?utf-8?B?NVVRa1BSWkYwR1JSK0ZCblEwS2toSmxyZVFveGhHeEJPcUtsMjRxUnJFa0xv?=
- =?utf-8?B?NDF3blRjM3kxNjd1elQrblZJNU4xWmZqeTl2cmwxVWtCLzFEVVFtUnVOTnkw?=
- =?utf-8?B?Y0dWNDNCY1paWlZ4TDhCRDZBbHpOMVZrTHlmemZNUkw1S2Jnd1lEMDZsM0hE?=
- =?utf-8?B?dlJSS0h2YS9UK3k0b2twMmNoUXMyS3BKNmtLVzRSbzR6aDI3K2dkL3RjVTZN?=
- =?utf-8?B?Q1Z1bWtnOU13a2QxS2ZNQlpkTVh0OWRCZ3BDeWt6dFQyRzcwRVVtNzNlZGtR?=
- =?utf-8?B?Q2VKelJCSzhNVG9vY3ozZzdVMkordnFtR3R3SFltRnpuUEhIRXQrVDZ4N0tt?=
- =?utf-8?B?ZnpweXNBQnhTOEZyMHozYy9XazNsOTlRaEcwL2UwNkxrK1JDRENlcVdDOEZD?=
- =?utf-8?B?Q3Qxak1UVHZ0b1U3YUo2WjlvbGwxeFRLa2FHa1NBalBCbUVYRzA3OFlkekJR?=
- =?utf-8?B?eE4wZFJuRXdNayswR3llUjJWMWJvaTdpRXlmSHk1Y3FwTWNtYS94UlVrcDRj?=
- =?utf-8?B?Tit4ZHNSZm5SZmxwb3FtcEp3VkdqRTVidWtKTmlOaUNiTnc1Rmo0ZEdQVGpB?=
- =?utf-8?B?MnZVbmFKZG1qUk5vbG1xbmNYckhiaDdPbGljM2R3aDZia3pZb1BQSUpWUXFh?=
- =?utf-8?B?bGtGdWZLaWxTUHFKemhPZ1ZHallhT1FmT0RQVjZ6MzhndzhLbENtWjBFRGFK?=
- =?utf-8?B?NGp5N1l6emF1UlQ3ZUZmdHpHdEVTK3ZBazBaWEFtcGlyamR4NkJ6TmpsTzBP?=
- =?utf-8?B?Rm9DRk5ma2llN1kxbS9zZUFjNHkyQU5sY3BNd0N2UnY4eC9wMnNwNjBIanoz?=
- =?utf-8?B?ZmJVVk5hM3pVZjRQc05GR1ViUHNKUlZKMWlLM0FwRHJWS09jL1k1eEliciti?=
- =?utf-8?B?VDhMaTFvZ1ZadVVoaUZvaXI3ZTNqWjRodlZsSks1ek50N3EvSTF5L08vc0Fq?=
- =?utf-8?B?cExTYlM5d1NFN1htaURBaEV3N1dOSFFGNXhDREZMRVMrWUEvRjR5TmNaR0lm?=
- =?utf-8?B?cnc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v12 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+Date:   Thu,  2 Feb 2023 16:57:32 +0000
+Message-Id: <20230202165732.305650-7-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230202165732.305650-1-biju.das.jz@bp.renesas.com>
+References: <20230202165732.305650-1-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f27d0a9c-b931-4f60-8935-08db052decce
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2023 14:58:20.7527
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lM9mWjayt0kDHHfOJGOUS4usb+DDl4KtUHLgeMcQiLkn1CxKhzvorN9cMEL9uzb8uelf/dyMTlpbW91zQPvILsgFucXYA5mBxZ03Y8MO+Uk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB10880
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgVXdlLA0KDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjMgMi80XSBwd206IEFkZCBzdXBwb3J0
-IGZvciBSWi9WMk0gUFdNIGRyaXZlcg0KPiANCj4gSGkgVXdlLA0KPiANCj4gVGhhbmtzIGZvciB0
-aGUgZmVlZGJhY2suDQo+IA0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMi80XSBwd206IEFk
-ZCBzdXBwb3J0IGZvciBSWi9WMk0gUFdNIGRyaXZlcg0KPiA+DQo+ID4gSGVsbG8sDQo+ID4NCj4g
-PiBub3cgSSBjb21lIGFyb3VuZCB0byByZXZpZXcgeW91ciBkcml2ZXIuIFNvcnJ5IHRoYXQgaXQg
-dG9vayBzbyBsb25nLCBJDQo+ID4gd2FzIGJ1c3kgd2l0aCBvdGhlciBzdHVmZi4NCj4gPg0KPiA+
-IE9uIFR1ZSwgRGVjIDEzLCAyMDIyIGF0IDA2OjU4OjI1UE0gKzAwMDAsIEJpanUgRGFzIHdyb3Rl
-Og0KPiA+ID4gVGhlIFJaL1Yye00sIE1BfSBQV00gVGltZXIgc3VwcG9ydHMgdGhlIGZvbGxvd2lu
-ZyBmdW5jdGlvbnM6DQo+ID4gPg0KPiA+ID4gICogVGhlIFBXTSBoYXMgMjQtYml0IGNvdW50ZXJz
-IHdoaWNoIG9wZXJhdGUgYXQgUFdNX0NMSyAoNDggTUh6KS4NCj4gPiA+ICAqIFRoZSBmcmVxdWVu
-Y3kgZGl2aXNpb24gcmF0aW8gZm9yIGludGVybmFsIGNvdW50ZXIgb3BlcmF0aW9uIGlzDQo+ID4g
-PiAgICBzZWxlY3RhYmxlIGFzIFBXTV9DTEsgZGl2aWRlZCBieSAxLCAxNiwgMjU2LCBvciAyMDQ4
-Lg0KPiA+ID4gICogVGhlIHBlcmlvZCBhcyB3ZWxsIGFzIHRoZSBkdXR5IGN5Y2xlIGlzIGFkanVz
-dGFibGUuDQo+ID4gPiAgKiBUaGUgbG93LWxldmVsIGFuZCBoaWdoLWxldmVsIG9yZGVyIG9mIHRo
-ZSBQV00gc2lnbmFscyBjYW4gYmUNCj4gPiA+ICAgIGludmVydGVkLg0KPiA+ID4gICogVGhlIGR1
-dHkgY3ljbGUgb2YgdGhlIFBXTSBzaWduYWwgaXMgc2VsZWN0YWJsZSBpbiB0aGUgcmFuZ2UgZnJv
-bQ0KPiA+ID4gICAgMCB0byAxMDAlLg0KPiA+ID4gICogVGhlIG1pbmltdW0gcmVzb2x1dGlvbiBp
-cyAyMC44MyBucy4NCj4gPiA+ICAqIFRocmVlIGludGVycnVwdCBzb3VyY2VzOiBSaXNpbmcgYW5k
-IGZhbGxpbmcgZWRnZXMgb2YgdGhlIFBXTSBzaWduYWwNCj4gPiA+ICAgIGFuZCBjbGVhcmluZyBv
-ZiB0aGUgY291bnRlcg0KPiA+ID4gICogQ291bnRlciBvcGVyYXRpb24gYW5kIHRoZSBidXMgaW50
-ZXJmYWNlIGFyZSBhc3luY2hyb25vdXMgYW5kIGJvdGgNCj4gPiA+ICAgIGNhbiBvcGVyYXRlIGlu
-ZGVwZW5kZW50bHkgb2YgdGhlIG1hZ25pdHVkZSByZWxhdGlvbnNoaXAgb2YgdGhlDQo+ID4gPiAg
-ICByZXNwZWN0aXZlIGNsb2NrIHBlcmlvZHMuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTog
-QmlqdSBEYXMgPGJpanUuZGFzLmp6QGJwLnJlbmVzYXMuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiB2
-Mi0+djM6DQo+ID4gPiAgKiBBZGRlZCByZXR1cm4gY29kZSBmb3Igcnp2Mm1fcHdtX2dldF9zdGF0
-ZSgpDQo+ID4gPiAgKiBBZGRlZCBjb21tZW50IGluIHJ6djJtX3B3bV9yZXNldF9hc3NlcnRfcG1f
-ZGlzYWJsZSgpDQo+ID4gPiB2MS0+djI6DQo+ID4gPiAgKiBSZXBsYWNlZA0KPiA+ID4gZGV2bV9y
-ZXNldF9jb250cm9sX2dldF9vcHRpb25hbF9zaGFyZWQtPmRldm1fcmVzZXRfY29udHJvbF9nZXRf
-c2hhcmUNCj4gPiA+IGQNCj4gPiA+IC0tLQ0KPiA+ID4gIGRyaXZlcnMvcHdtL0tjb25maWcgICAg
-IHwgIDExICsrDQo+ID4gPiAgZHJpdmVycy9wd20vTWFrZWZpbGUgICAgfCAgIDEgKw0KPiA+ID4g
-IGRyaXZlcnMvcHdtL3B3bS1yenYybS5jIHwgMzk4DQo+ID4gPiArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0MTAgaW5zZXJ0
-aW9ucygrKQ0KPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3B3bS9wd20tcnp2Mm0u
-Yw0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9LY29uZmlnIGIvZHJpdmVy
-cy9wd20vS2NvbmZpZyBpbmRleA0KPiA+ID4gZGFlMDIzZDc4M2EyLi4zMWNkYzlkYWUzYzUgMTAw
-NjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3B3bS9LY29uZmlnDQo+ID4gPiArKysgYi9kcml2ZXJz
-L3B3bS9LY29uZmlnDQo+ID4gPiBAQCAtNDczLDYgKzQ3MywxNyBAQCBjb25maWcgUFdNX1JFTkVT
-QVNfVFBVDQo+ID4gPiAgCSAgVG8gY29tcGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hv
-b3NlIE0gaGVyZTogdGhlIG1vZHVsZQ0KPiA+ID4gIAkgIHdpbGwgYmUgY2FsbGVkIHB3bS1yZW5l
-c2FzLXRwdS4NCj4gPiA+DQo+ID4gPiArY29uZmlnIFBXTV9SWlYyTQ0KPiA+ID4gKyAgICAgICB0
-cmlzdGF0ZSAiUmVuZXNhcyBSWi9WMk0gUFdNIHN1cHBvcnQiDQo+ID4gPiArICAgICAgIGRlcGVu
-ZHMgb24gQVJDSF9SOUEwOUcwMTEgfHwgQ09NUElMRV9URVNUDQo+ID4gPiArICAgICAgIGRlcGVu
-ZHMgb24gSEFTX0lPTUVNDQo+ID4gPiArICAgICAgIGhlbHANCj4gPiA+ICsgICAgICAgICBUaGlz
-IGRyaXZlciBleHBvc2VzIHRoZSBQV00gY29udHJvbGxlciBmb3VuZCBpbiBSZW5lc2FzDQo+ID4g
-PiArICAgICAgICAgUlovVjJNIGxpa2UgY2hpcHMgdGhyb3VnaCB0aGUgUFdNIEFQSS4NCj4gPiA+
-ICsNCj4gPiA+ICsgICAgICAgICBUbyBjb21waWxlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxlLCBj
-aG9vc2UgTSBoZXJlOiB0aGUgbW9kdWxlDQo+ID4gPiArICAgICAgICAgd2lsbCBiZSBjYWxsZWQg
-cHdtLXJ6djJtLg0KPiA+ID4gKw0KPiA+ID4gIGNvbmZpZyBQV01fUk9DS0NISVANCj4gPiA+ICAJ
-dHJpc3RhdGUgIlJvY2tjaGlwIFBXTSBzdXBwb3J0Ig0KPiA+ID4gIAlkZXBlbmRzIG9uIEFSQ0hf
-Uk9DS0NISVAgfHwgQ09NUElMRV9URVNUIGRpZmYgLS1naXQNCj4gPiA+IGEvZHJpdmVycy9wd20v
-TWFrZWZpbGUgYi9kcml2ZXJzL3B3bS9NYWtlZmlsZSBpbmRleA0KPiA+ID4gN2JmMWEyOWYwMmI4
-Li5hOTVhYWJhZTkxMTUgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3B3bS9NYWtlZmlsZQ0K
-PiA+ID4gKysrIGIvZHJpdmVycy9wd20vTWFrZWZpbGUNCj4gPiA+IEBAIC00Myw2ICs0Myw3IEBA
-IG9iai0kKENPTkZJR19QV01fUFhBKQkJKz0gcHdtLXB4YS5vDQo+ID4gPiAgb2JqLSQoQ09ORklH
-X1BXTV9SQVNQQkVSUllQSV9QT0UpCSs9IHB3bS1yYXNwYmVycnlwaS1wb2Uubw0KPiA+ID4gIG9i
-ai0kKENPTkZJR19QV01fUkNBUikJCSs9IHB3bS1yY2FyLm8NCj4gPiA+ICBvYmotJChDT05GSUdf
-UFdNX1JFTkVTQVNfVFBVKQkrPSBwd20tcmVuZXNhcy10cHUubw0KPiA+ID4gK29iai0kKENPTkZJ
-R19QV01fUlpWMk0pCQkrPSBwd20tcnp2Mm0ubw0KPiA+ID4gIG9iai0kKENPTkZJR19QV01fUk9D
-S0NISVApCSs9IHB3bS1yb2NrY2hpcC5vDQo+ID4gPiAgb2JqLSQoQ09ORklHX1BXTV9TQU1TVU5H
-KQkrPSBwd20tc2Ftc3VuZy5vDQo+ID4gPiAgb2JqLSQoQ09ORklHX1BXTV9TSUZJVkUpCSs9IHB3
-bS1zaWZpdmUubw0KPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1yenYybS5jIGIv
-ZHJpdmVycy9wd20vcHdtLXJ6djJtLmMgbmV3DQo+ID4gPiBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4
-IDAwMDAwMDAwMDAwMC4uODBmYjM1MjMwMjZkDQo+ID4gPiAtLS0gL2Rldi9udWxsDQo+ID4gPiAr
-KysgYi9kcml2ZXJzL3B3bS9wd20tcnp2Mm0uYw0KPiA+ID4gQEAgLTAsMCArMSwzOTggQEANCj4g
-PiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ID4gKy8qDQo+ID4g
-PiArICogUmVuZXNhcyBSWi9WMk0gUFdNIFRpbWVyIChQV00pIGRyaXZlcg0KPiA+ID4gKyAqDQo+
-ID4gPiArICogQ29weXJpZ2h0IChDKSAyMDIyIFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29ycG9yYXRp
-b24NCj4gPiA+ICsgKg0KPiA+ID4gKyAqIEhhcmR3YXJlIG1hbnVhbCBmb3IgdGhpcyBJUCBjYW4g
-YmUgZm91bmQgaGVyZQ0KPiA+ID4gKyAqDQo+ID4gPiAraHR0cHM6Ly93d3cucmVuZXNhcy5jb20v
-aW4vZW4vZG9jdW1lbnQvbWFoL3J6djJtLXVzZXJzLW1hbnVhbC1oYXJkdw0KPiA+ID4gK2FyDQo+
-ID4gPiArZT9sYW5ndWFnZT1lbg0KPiA+ID4gKyAqDQo+ID4gUGxlYXNlIGRvY3VtZW50IHRoZSBo
-YXJkd2FyZSBwcm9wZXJ0aWVzIGhlcmUgaW4gYSAiTGltaXRhdGlvbnMiDQo+ID4gcGFyYWdyYXBo
-IHNpbWlsYXIgdG8gZS5nLiBwd20tc2wyOGNwbGQuYy4gVGhlIGlkZWEgaXMgdG8gZ2V0IHRoZQ0K
-PiA+IGluZm9ybWF0aW9uIGFib3V0IGhvdyB0aGUgaGFyZHdhcmUgYmVoYXZlcyBvbiAuYXBwbHkg
-KGFyZSB0aGVyZQ0KPiA+IGdsaXRjaGVzPyBDYW4gYSBtaXhlZCBwZXJpb2QgaGFwcGVuIHRoYXQg
-aGFzIHRoZSBwcmV2aW91cyBwZXJpb2QgYnV0DQo+ID4gdGhlIG5ldyBkdXR5X2N5Y2xlPyBPciBt
-YXliZSBkdXR5X2N5Y2xlIGFuZCBwZXJpb2QgYXJlIHNoYWRvd2VkIHVudGlsDQo+ID4gdGhlIGN1
-cnJlbnRseSBydW5uaW5nIHBlcmlvZCBlbmRzLCBidXQgcG9sYXJpdHkgdGFrZXMgZWZmZWN0IGlt
-bWVkaWF0ZWx5Pw0KPiA+IGV0Yy4gcHApIHdoZW4gZG9pbmcNCj4gPg0KPiA+IAlzZWQgLXJuICcv
-TGltaXRhdGlvbnM6LywvXCpcLz8kL3AnIGRyaXZlcnMvcHdtL3B3bS1yenYybS5jDQo+IA0KPiBJ
-IGhhdmUgYWRkZWQgYmVsb3cgbGltaXRhdGlvbnMgbm93DQo+IA0KPiAqIExpbWl0YXRpb25zOg0K
-PiAgKiAtIElmIHRoZSBQV01MT1cgdmFsdWUgaXMgY2hhbmdlZCBkdXJpbmcgUFdNIG9wZXJhdGlv
-biwgdGhlIGNoYW5nZWQNCj4gwqAqIMKgIHZhbHVlIGlzIHJlZmxlY3RlZCBpbiB0aGUgbmV4dCBQ
-V00gY3ljbGUuDQo+IMKgKiAtIFRoZSBkdXR5IGN5Y2xlIGNhbiBiZSBjaGFuZ2VkIG9ubHkgYnkg
-bW9kaWZ5aW5nIHRoZSBQV01MT1cgcmVnaXN0ZXINCj4gwqAqIMKgIHZhbHVlIGFuZCBjaGFuZ2lu
-ZyB0aGUgcHVsc2Ugd2lkdGggYXQgbG93IGxldmVsLiBUaGUgZHV0eSBjeWNsZSBiZWNvbWVzDQo+
-IMKgKiDCoCAwJSBmb3IgdGhlIGxvdyB3aWR0aCB3aGVuIHRoZSB2YWx1ZSBvZiB0aGUgUFdNTE9X
-IHJlZ2lzdGVyIGlzIDB4MGgNCj4gwqAqIMKgIGFuZCAxMDAlIGZvciB0aGUgbG93IHdpZHRoIHdo
-ZW4gdGhlIHZhbHVlIG9mIHRoZSBQV01MT1cgPiBQV01DWUMuDQo+IMKgKiAtIFRvIGNoYW5nZSB0
-aGUgc2V0dGluZyB2YWx1ZSBvZiB0aGUgUFdNIGN5Y2xlIHNldHRpbmcgcmVnaXN0ZXINCj4gwqAq
-IMKgIChQV01tX1BXTUNZQyksIHNldCB0aGUgUFdNRSBiaXQgb2YgdGhlIFBXTSBjb250cm9sIHJl
-Z2lzdGVyDQo+IChQV01tX1BXTUNUUikNCj4gwqAqIMKgIHRvIDBiIGFuZCBzdG9wIHRoZSBjb3Vu
-dGVyIG9wZXJhdGlvbi4gSWYgaXQgaXMgY2hhbmdlZCBkdXJpbmcgY291bnRlcg0KPiDCoCogwqAg
-b3BlcmF0aW9uLCBQV00gb3V0cHV0IG1heSBub3QgYmUgcGVyZm9ybWVkIGNvcnJlY3RseS4NCj4g
-wqAqIC0gVGhlIHJlZ2lzdGVycyBvdGhlciB0aGFuIHRoZSBQV00gaW50ZXJydXB0IHJlZ2lzdGVy
-IChQV01JTlQpIGFyZSBhbHdheXMNCj4gwqAqIMKgIHN5bmNocm9uaXplZCB3aXRoIFBXTV9DTEsg
-YXQgcmVndWxhciBpbnRlcnZhbHMuIEl0IHRha2VzIHNvbWUgdGltZQ0KPiDCoCogwqAgKE1pbjog
-MiDDlyBQQ0xLICsgNCDDlyBQV01fQ0xLIHRvIE1heDogNiDDlyBQQ0xLICsgOSDDlyBQV01fQ0xL
-KSBmb3IgdGhlDQo+IMKgKiDCoCB2YWx1ZSBzZXQgaW4gdGhlIHJlZ2lzdGVyIHRvIGJlIHJlZmxl
-Y3RlZCBpbiB0aGUgUFdNIGNpcmN1aXQgYmVjYXVzZQ0KPiDCoCogwqAgdGhlcmUgaXMgYSBzeW5j
-aHJvbml6ZXIgYmV0d2VlbiB0aGUgcmVnaXN0ZXIgYW5kIHRoZSBQV00gY2lyY3VpdC4NCj4gDQo+
-ID4gPiArCXJ6djJtX3B3bS0+Y2hpcC5kZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ID4gKwlyenYybV9w
-d20tPmNoaXAub3BzID0gJnJ6djJtX3B3bV9vcHM7DQo+ID4gPiArCXJ6djJtX3B3bS0+Y2hpcC5u
-cHdtID0gMTsNCj4gPiA+ICsJcmV0ID0gZGV2bV9wd21jaGlwX2FkZCgmcGRldi0+ZGV2LCAmcnp2
-Mm1fcHdtLT5jaGlwKTsNCj4gPiA+ICsJaWYgKHJldCkgew0KPiA+ID4gKwkJZGV2X2Vycl9wcm9i
-ZSgmcGRldi0+ZGV2LCByZXQsICJmYWlsZWQgdG8gYWRkIFBXTSBjaGlwXG4iKTsNCj4gPiA+ICsJ
-CWdvdG8gY2xrX2Rpc2FibGU7DQo+ID4NCj4gPiBJZiB5b3UgZmFpbCBoZXJlLCByenYybV9wd21f
-cmVzZXRfYXNzZXJ0X3BtX2Rpc2FibGUgaXMgY2FsbGVkIHdoaWNoDQo+ID4gY2FsbHMgcG1fcnVu
-dGltZV9zZXRfc3VzcGVuZGVkKCkuIEkgYXNzdW1lIHRoYXQgcmVzdWx0cyBpbg0KPiA+IHJ6djJt
-X3B3bV9wbV9ydW50aW1lX3N1c3BlbmQoKSBiZWluZyBjYWxsZWQgYW5kIHRvIHRoZSBjbGtzIGFy
-ZQ0KPiA+IGFscmVhZHkgZGlzYWJsZWQ/DQoNCkkgaGF2ZSByZXN0cnVjdHVyZWQgdGhlIHByb2Jl
-KCkgYXMgYmVsb3cgYW5kIHRlc3RlZCB2YXJpb3VzIHNjZW5hcmlvcywgSXQgbG9va3Mgb2sgdG8g
-bWUuDQpQbGVhc2UgbGV0IG1lIGtub3csIGlmIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9ucy4NCg0K
-c3RhdGljIGludCByenYybV9wd21fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
-CnsNCi4uLg0KLi4uDQoJcG1fcnVudGltZV9lbmFibGUoJnBkZXYtPmRldik7DQoJcmV0ID0gcmVz
-ZXRfY29udHJvbF9kZWFzc2VydChyenYybV9wd20tPnJzdGMpOw0KCWlmIChyZXQpIHsNCgkJZGV2
-X2Vycl9wcm9iZSgmcGRldi0+ZGV2LCByZXQsDQoJCQkgICAgICAiY2Fubm90IGRlYXNzZXJ0IHJl
-c2V0IGNvbnRyb2xcbiIpOw0KCQlnb3RvIHBtX2Nsa19kaXNhYmxlOw0KCX0NCg0KCXJ6djJtX3B3
-bS0+Y2hpcC5kZXYgPSAmcGRldi0+ZGV2Ow0KCS8qDQoJICogIFdlIG5lZWQgdG8ga2VlcCB0aGUg
-Y2xvY2sgb24sIGluIGNhc2UgdGhlIGJvb3Rsb2FkZXIgaGFzIGVuYWJsZWQgdGhlDQoJICogIFBX
-TSBhbmQgaXMgcnVubmluZyBkdXJpbmcgcHJvYmUoKS4NCgkgKi8NCglpZiAocnp2Mm1fcHdtX2lz
-X2NoX2VuYWJsZWQocnp2Mm1fcHdtKSkNCgkJcG1fcnVudGltZV9nZXRfc3luYygmcGRldi0+ZGV2
-KTsNCg0KCXJldCA9IGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldCgmcGRldi0+ZGV2LA0KCQkJCSAg
-ICAgICByenYybV9wd21fcmVzZXRfYXNzZXJ0X3BtX2Rpc2FibGUsDQoJCQkJICAgICAgIHJ6djJt
-X3B3bSk7DQoJcmV0ID0gLUVJTlZBTDsNCglpZiAocmV0IDwgMCkNCgkJZ290byBjaGFubmVsX2Rp
-c2FibGU7DQoNCglyenYybV9wd20tPmNoaXAub3BzID0gJnJ6djJtX3B3bV9vcHM7DQoJcnp2Mm1f
-cHdtLT5jaGlwLm5wd20gPSAxOw0KCXJldCA9IGRldm1fcHdtY2hpcF9hZGQoJnBkZXYtPmRldiwg
-JnJ6djJtX3B3bS0+Y2hpcCk7DQoJaWYgKHJldCkgew0KCQlkZXZfZXJyX3Byb2JlKCZwZGV2LT5k
-ZXYsIHJldCwgImZhaWxlZCB0byBhZGQgUFdNIGNoaXBcbiIpOw0KCQlnb3RvIGNoYW5uZWxfZGlz
-YWJsZTsNCgl9DQoNCglyZXR1cm4gMDsNCg0KcG1fY2xrX2Rpc2FibGU6DQoJcG1fcnVudGltZV9k
-aXNhYmxlKCZwZGV2LT5kZXYpOw0KCXBtX3J1bnRpbWVfc2V0X3N1c3BlbmRlZCgmcGRldi0+ZGV2
-KTsNCmNoYW5uZWxfZGlzYWJsZToNCglpZiAocnp2Mm1fcHdtX2lzX2NoX2VuYWJsZWQocnp2Mm1f
-cHdtKSkNCgkJcnp2Mm1fcHdtX21vZGlmeShyenYybV9wd20sIFJaVjJNX1BXTUNUUiwgUlpWMk1f
-UFdNQ1RSX1BXTUUsIDApOw0KDQoJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHJ6djJtX3B3bS0+cHdt
-X2Nsayk7DQoJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHJ6djJtX3B3bS0+YXBiX2Nsayk7DQoJcmV0
-dXJuIHJldDsNCn0NCg0KVGVzdCBjYXNlczoNCg0KMSkgUFdNLWRpc2FibGVkIGJ5IGJvb3Rsb2Fk
-ZXIgb24gY2FzZQ0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0Kcm9vdEByenYy
-bTp+IyBkbWVzZyB8IGdyZXAgcHdtOA0KWyAgICAzLjczOTIzOV0gcnpnMmwtY3BnIGEzNTAwMDAw
-LmNsb2NrLWNvbnRyb2xsZXI6IENMS19PTiAxMDc2L3B3bThfY2xrIE9ODQpbICAgIDMuNzQ3ODA0
-XSByemcybC1jcGcgYTM1MDAwMDAuY2xvY2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYvcHdtOF9j
-bGsgT0ZGDQpyb290QHJ6djJtOn4jIC9wd20tY2xrLWR1bXAuc2gNClJlYWQgYXQgYWRkcmVzcyAg
-MHhBMzUwMDQzNCAoMHhmZmZmYjU1YjY0MzQpOiAweDAwMDAwODAxIC0tPiBCSVQ1IFBXTTggY2xr
-DQpSZWFkIGF0IGFkZHJlc3MgIDB4QTQwMTA0MDAgKDB4ZmZmZjk4YzNmNDAwKTogMHgwMDAwMDAw
-MCAtLT4gQklUMiBQV004IENoYW5uZWwgZW5hYmxlDQoNCnJvb3RAcnp2Mm06fiMgY2QgL3N5cy9i
-dXMvcGxhdGZvcm0vZHJpdmVycy9wd20tcnp2Mm0NCnJvb3RAcnp2Mm06L3N5cy9idXMvcGxhdGZv
-cm0vZHJpdmVycy9wd20tcnp2Mm0jIGVjaG8gYTQwMTA0MDAucHdtID4gdW5iaW5kDQpbICAgODQu
-MDI1MTU1XSByemcybC1jcGcgYTM1MDAwMDAuY2xvY2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYv
-cHdtOF9jbGsgT04NClsgICA4NC4wMzkyMTRdIHJ6ZzJsLWNwZyBhMzUwMDAwMC5jbG9jay1jb250
-cm9sbGVyOiBDTEtfT04gMTA3Ni9wd204X2NsayBPRkYNClsgICA4NC4wNjA5NThdIHJ6ZzJsLWNw
-ZyBhMzUwMDAwMC5jbG9jay1jb250cm9sbGVyOiBDTEtfT04gMTA3Ni9wd204X2NsayBPTg0KWyAg
-IDg0LjA3NDc1OV0gcnpnMmwtY3BnIGEzNTAwMDAwLmNsb2NrLWNvbnRyb2xsZXI6IENMS19PTiAx
-MDc2L3B3bThfY2xrIE9GRg0Kcm9vdEByenYybTovc3lzL2J1cy9wbGF0Zm9ybS9kcml2ZXJzL3B3
-bS1yenYybSMgL3B3bS1jbGstZHVtcC5zaA0KUmVhZCBhdCBhZGRyZXNzICAweEEzNTAwNDM0ICgw
-eGZmZmZiYmQ1ZTQzNCk6IDB4MDAwMDA4MDENClJlYWQgYXQgYWRkcmVzcyAgMHhBNDAxMDQwMCAo
-MHhmZmZmOGE3OTY0MDApOiAweDAwMDAwMDAwDQpyb290QHJ6djJtOi9zeXMvYnVzL3BsYXRmb3Jt
-L2RyaXZlcnMvcHdtLXJ6djJtIw0KDQpyb290QHJ6djJtOi9zeXMvYnVzL3BsYXRmb3JtL2RyaXZl
-cnMvcHdtLXJ6djJtIyBlY2hvIGE0MDEwNDAwLnB3bSA+IGJpbmQNClsgIDEzOS4yNzMyNTBdIHJ6
-ZzJsLWNwZyBhMzUwMDAwMC5jbG9jay1jb250cm9sbGVyOiBDTEtfT04gMTA3Ni9wd204X2NsayBP
-Tg0KWyAgMTM5LjI5OTU4Ml0gcnpnMmwtY3BnIGEzNTAwMDAwLmNsb2NrLWNvbnRyb2xsZXI6IENM
-S19PTiAxMDc2L3B3bThfY2xrIE9GRg0Kcm9vdEByenYybTovc3lzL2J1cy9wbGF0Zm9ybS9kcml2
-ZXJzL3B3bS1yenYybSMgL3B3bS1jbGstZHVtcC5zaA0KUmVhZCBhdCBhZGRyZXNzICAweEEzNTAw
-NDM0ICgweGZmZmZhMGYyODQzNCk6IDB4MDAwMDA4MDENClJlYWQgYXQgYWRkcmVzcyAgMHhBNDAx
-MDQwMCAoMHhmZmZmYTFiNjY0MDApOiAweDAwMDAwMDAwDQpyb290QHJ6djJtOi9zeXMvYnVzL3Bs
-YXRmb3JtL2RyaXZlcnMvcHdtLXJ6djJtIw0KDQoyKSBQV00tZW5hYmxlZCBieSBib290bG9hZGVy
-IG9uIGNhc2UNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0Kcm9vdEByenYybTp+
-IyBkbWVzZyB8IGdyZXAgcHdtOA0KWyAgICAzLjczODc0Ml0gcnpnMmwtY3BnIGEzNTAwMDAwLmNs
-b2NrLWNvbnRyb2xsZXI6IENMS19PTiAxMDc2L3B3bThfY2xrIE9ODQpyb290QHJ6djJtOn4jIC9w
-d20tY2xrLWR1bXAuc2gNClJlYWQgYXQgYWRkcmVzcyAgMHhBMzUwMDQzNCAoMHhmZmZmYTY4ZGU0
-MzQpOiAweDAwMDAwODExDQpSZWFkIGF0IGFkZHJlc3MgIDB4QTQwMTA0MDAgKDB4ZmZmZjllYWFk
-NDAwKTogMHgwMDAwMDAwMw0KDQpyb290QHJ6djJtOn4jIGNkIC9zeXMvYnVzL3BsYXRmb3JtL2Ry
-aXZlcnMvcHdtLXJ6djJtDQpyb290QHJ6djJtOi9zeXMvYnVzL3BsYXRmb3JtL2RyaXZlcnMvcHdt
-LXJ6djJtIyBlY2hvIGE0MDEwNDAwLnB3bSA+IHVuYmluZA0KWyAgMTI1LjU3OTk3MF0gcnpnMmwt
-Y3BnIGEzNTAwMDAwLmNsb2NrLWNvbnRyb2xsZXI6IENMS19PTiAxMDc2L3B3bThfY2xrIE9GRg0K
-cm9vdEByenYybTovc3lzL2J1cy9wbGF0Zm9ybS9kcml2ZXJzL3B3bS1yenYybSMgL3B3bS1jbGst
-ZHVtcC5zaA0KUmVhZCBhdCBhZGRyZXNzICAweEEzNTAwNDM0ICgweGZmZmZiYjRkYjQzNCk6IDB4
-MDAwMDA4MDENClJlYWQgYXQgYWRkcmVzcyAgMHhBNDAxMDQwMCAoMHhmZmZmYTcxOTQ0MDApOiAw
-eDAwMDAwMDAwDQoNCnJvb3RAcnp2Mm06L3N5cy9idXMvcGxhdGZvcm0vZHJpdmVycy9wd20tcnp2
-Mm0jIGVjaG8gYTQwMTA0MDAucHdtID4gYmluZA0KWyAgMTcwLjgzNzI2NF0gcnpnMmwtY3BnIGEz
-NTAwMDAwLmNsb2NrLWNvbnRyb2xsZXI6IENMS19PTiAxMDc2L3B3bThfY2xrIE9ODQpbICAxNzAu
-ODYzMDQ2XSByemcybC1jcGcgYTM1MDAwMDAuY2xvY2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYv
-cHdtOF9jbGsgT0ZGDQpyb290QHJ6djJtOi9zeXMvYnVzL3BsYXRmb3JtL2RyaXZlcnMvcHdtLXJ6
-djJtIyAvcHdtLWNsay1kdW1wLnNoDQpSZWFkIGF0IGFkZHJlc3MgIDB4QTM1MDA0MzQgKDB4ZmZm
-ZjkxZmQ0NDM0KTogMHgwMDAwMDgwMQ0KUmVhZCBhdCBhZGRyZXNzICAweEE0MDEwNDAwICgweGZm
-ZmY5MTAxMDQwMCk6IDB4MDAwMDAwMDANCnJvb3RAcnp2Mm06L3N5cy9idXMvcGxhdGZvcm0vZHJp
-dmVycy9wd20tcnp2Mm0jDQoNCjMpIEVycm9yIGNhc2UgMToNCi0tLS0tLS0tLS0tLS0tLQ0KICAg
-ICAgICByZXQgPSByZXNldF9jb250cm9sX2RlYXNzZXJ0KHJ6djJtX3B3bS0+cnN0Yyk7DQorICAg
-ICAgIHJldCA9IC1FSU5WQUw7DQoNClBXTSBvZmYvT04gZHVyaW5nIGJvb3Q6DQpbICAgIDMuNzA5
-OTEzXSByemcybC1jcGcgYTM1MDAwMDAuY2xvY2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYvcHdt
-OF9jbGsgT04NClsgICAgMy43MTY5NTNdIHB3bS1yenYybSBhNDAxMDQwMC5wd206IGVycm9yIC1F
-SU5WQUw6IGNhbm5vdCBkZWFzc2VydCByZXNldCBjb250cm9sDQpbICAgIDMuNzI1MTg2XSByemcy
-bC1jcGcgYTM1MDAwMDAuY2xvY2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYvcHdtOF9jbGsgT0ZG
-DQpbICAgIDMuNzMyNDI1XSBwd20tcnp2Mm06IHByb2JlIG9mIGE0MDEwNDAwLnB3bSBmYWlsZWQg
-d2l0aCBlcnJvciAtMjINCg0Kcm9vdEByenYybTp+IyAvcHdtLWNsay1kdW1wLnNoDQpSZWFkIGF0
-IGFkZHJlc3MgIDB4QTM1MDA0MzQgKDB4ZmZmZmE1ZGRjNDM0KTogMHgwMDAwMDgwMQ0KUmVhZCBh
-dCBhZGRyZXNzICAweEEzNTAwNjE0ICgweGZmZmZiNTgwMDYxNCk6IDB4MDAwMDAwMDANCg0KNCkg
-RXJyb3IgY2FzZSAyOg0KLS0tLS0tLS0tLS0tLS0tDQoJcmV0ID0gZGV2bV9hZGRfYWN0aW9uX29y
-X3Jlc2V0KCZwZGV2LT5kZXYsDQoJCQkJICAgICAgIHJ6djJtX3B3bV9yZXNldF9hc3NlcnRfcG1f
-ZGlzYWJsZSwNCgkJCQkgICAgICAgcnp2Mm1fcHdtKTsNCisJcmV0ID0gLUVJTlZBTDsNCg0KUFdN
-IG9uL29mZiBkdXJpbmcgYm9vdDoNClsgICAgMy43MTQxODJdIHJ6ZzJsLWNwZyBhMzUwMDAwMC5j
-bG9jay1jb250cm9sbGVyOiBDTEtfT04gMTA3Ni9wd204X2NsayBPTg0KWyAgICAzLjcyMTc5OF0g
-cnpnMmwtY3BnIGEzNTAwMDAwLmNsb2NrLWNvbnRyb2xsZXI6IENMS19PTiAxMDc2L3B3bThfY2xr
-IE9GRg0KWyAgICAzLjczMDY2Ml0gcHdtLXJ6djJtOiBwcm9iZSBvZiBhNDAxMDQwMC5wd20gZmFp
-bGVkIHdpdGggZXJyb3IgLTIyDQpbICAgIDMuNzM5OTU2XSByemcybC1jcGcgYTM1MDAwMDAuY2xv
-Y2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYvcHdtOF9jbGsgT04NClsgICAgMy43NTUyMzhdIHJ6
-ZzJsLWNwZyBhMzUwMDAwMC5jbG9jay1jb250cm9sbGVyOiBDTEtfT04gMTA3Ni9wd204X2NsayBP
-RkYNCg0Kcm9vdEByenYybTp+IyAvcHdtLWNsay1kdW1wLnNoDQpSZWFkIGF0IGFkZHJlc3MgIDB4
-QTM1MDA0MzQgKDB4ZmZmZjkyZGZjNDM0KTogMHgwMDAwMDgwMQ0KUmVhZCBhdCBhZGRyZXNzICAw
-eEE0MDEwNDAwICgweGZmZmZhNzAyMTQwMCk6IDB4MDAwMDAwMDANCg0KNSkgRXJyb3IgY2FzZSAz
-Og0KLS0tLS0tLS0tLS0tLS0tLQ0KCXJldCA9IGRldm1fcHdtY2hpcF9hZGQoJnBkZXYtPmRldiwg
-JnJ6djJtX3B3bS0+Y2hpcCk7DQorCXJldCA9IC1FSU5WQUw7DQoJDQpQV00gb24vb2ZmIGR1cmlu
-ZyBib290Og0KWyAgICAzLjcxMjczMl0gcnpnMmwtY3BnIGEzNTAwMDAwLmNsb2NrLWNvbnRyb2xs
-ZXI6IENMS19PTiAxMDc2L3B3bThfY2xrIE9ODQpbICAgIDMuNzIwNDA4XSBwd20tcnp2Mm0gYTQw
-MTA0MDAucHdtOiBlcnJvciAtRUlOVkFMOiBmYWlsZWQgdG8gYWRkIFBXTSBjaGlwDQpbICAgIDMu
-NzMxOTkxXSByemcybC1jcGcgYTM1MDAwMDAuY2xvY2stY29udHJvbGxlcjogQ0xLX09OIDEwNzYv
-cHdtOF9jbGsgT0ZGDQpbICAgIDMuNzM5MjM3XSBwd20tcnp2Mm06IHByb2JlIG9mIGE0MDEwNDAw
-LnB3bSBmYWlsZWQgd2l0aCBlcnJvciAtMjINClsgICAgMy43NTQzNjldIHJ6ZzJsLWNwZyBhMzUw
-MDAwMC5jbG9jay1jb250cm9sbGVyOiBDTEtfT04gMTA3Ni9wd204X2NsayBPTg0KWyAgICAzLjc2
-MTY4NF0gcnpnMmwtY3BnIGEzNTAwMDAwLmNsb2NrLWNvbnRyb2xsZXI6IENMS19PTiAxMDc2L3B3
-bThfY2xrIE9GRg0KDQpyb290QHJ6djJtOn4jIC9wd20tY2xrLWR1bXAuc2gNClJlYWQgYXQgYWRk
-cmVzcyAgMHhBMzUwMDQzNCAoMHhmZmZmOTJkZmM0MzQpOiAweDAwMDAwODAxDQpSZWFkIGF0IGFk
-ZHJlc3MgIDB4QTQwMTA0MDAgKDB4ZmZmZmE3MDIxNDAwKTogMHgwMDAwMDAwMA0KDQpDaGVlcnMs
-DQpCaWp1DQo=
+Add support for RZ/G2L MTU3a PWM driver. The IP supports
+following PWM modes
+
+1) PWM mode{1,2}
+2) Reset-synchronized PWM mode
+3) Complementary PWM mode{1,2,3}
+
+This patch adds basic pwm mode 1 support for RZ/G2L MTU3a pwm driver
+by creating separate logical channels for each IOs.
+
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+v11->v12:
+ * Updated header file to <linux/mfd/rz-mtu3.h> as core driver is in MFD.
+ * Reordered get_state()
+v10->v11:
+ * No change.
+v9->v10:
+ * No change.
+v8->v9:
+ * Added prescale/duty_cycle variables to struct rz_mtu3_pwm_chip and
+   cached this values in rz_mtu3_pwm_config and used this cached values
+   in get_state(), if PWM is disabled.
+ * Added return code for get_state()
+v7->v8:
+ * Simplified rz_mtu3_pwm_request by calling rz_mtu3_request_channel()
+ * Simplified rz_mtu3_pwm_free by calling rz_mtu3_release_channel()
+v6->v7:
+ * Added channel specific mutex lock to avoid race between counter
+   device and rz_mtu3_pwm_{request,free}
+ * Added pm_runtime_resume_and_get in rz_mtu3_pwm_enable()
+ * Added pm_runtime_put_sync in rz_mtu3_pwm_disable()
+ * Updated rz_mtu3_pwm_config()
+ * Updated rz_mtu3_pwm_apply()
+v5->v6:
+ * Updated commit and Kconfig description
+ * Sorted the header
+ * Replaced dev_get_drvdata from rz_mtu3_pwm_pm_disable()
+ * Replaced SET_RUNTIME_PM_OPS->DEFINE_RUNTIME_DEV_PM_OPS and removed
+   __maybe_unused from suspend/resume()
+v4->v5:
+ * pwm device is instantiated by mtu3a core driver.
+v3->v4:
+ * There is no resource associated with "rz-mtu3-pwm" compatible
+   and moved the code to mfd subsystem as it binds against "rz-mtu".
+ * Removed struct platform_driver rz_mtu3_pwm_driver.
+v2->v3:
+ * No change.
+v1->v2:
+ * Modelled as a single PWM device handling multiple channles.
+ * Used PM framework to manage the clocks.
+---
+ drivers/pwm/Kconfig       |  11 +
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-rz-mtu3.c | 485 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 497 insertions(+)
+ create mode 100644 drivers/pwm/pwm-rz-mtu3.c
+
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 31cdc9dae3c5..c54cbeabe093 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -492,6 +492,17 @@ config PWM_ROCKCHIP
+ 	  Generic PWM framework driver for the PWM controller found on
+ 	  Rockchip SoCs.
+ 
++config PWM_RZ_MTU3
++	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
++	depends on RZ_MTU3 || COMPILE_TEST
++	depends on HAS_IOMEM
++	help
++	  This driver exposes the MTU3a PWM Timer controller found in Renesas
++	  RZ/G2L like chips through the PWM API.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-rz-mtu3.
++
+ config PWM_SAMSUNG
+ 	tristate "Samsung PWM support"
+ 	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index a95aabae9115..6b75c0145336 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -45,6 +45,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
+ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+ obj-$(CONFIG_PWM_RZV2M)		+= pwm-rzv2m.o
+ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
++obj-$(CONFIG_PWM_RZ_MTU3)	+= pwm-rz-mtu3.o
+ obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
+ obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+ obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
+new file mode 100644
+index 000000000000..d94e3fc36dfb
+--- /dev/null
++++ b/drivers/pwm/pwm-rz-mtu3.c
+@@ -0,0 +1,485 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Renesas RZ/G2L MTU3a PWM Timer driver
++ *
++ * Copyright (C) 2022 Renesas Electronics Corporation
++ *
++ * Hardware manual for this IP can be found here
++ * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-users-manual-hardware-0?language=en
++ *
++ * Limitations:
++ * - When PWM is disabled, the output is driven to Hi-Z.
++ * - While the hardware supports both polarities, the driver (for now)
++ *   only handles normal polarity.
++ * - While the hardware supports pwm mode{1,2}, reset-synchronized pwm and
++ *   complementary pwm modes, the driver (for now) only handles pwm mode1.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/limits.h>
++#include <linux/mfd/rz-mtu3.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pwm.h>
++#include <linux/time.h>
++
++#define RZ_MTU3_TMDR1_MD_NORMAL		(0)
++#define RZ_MTU3_TMDR1_MD_PWM_MODE_1	(2)
++
++#define RZ_MTU3_TIOR_OC_RETAIN		(0)
++#define RZ_MTU3_TIOR_OC_0_H_COMP_MATCH	(2)
++#define RZ_MTU3_TIOR_OC_1_TOGGLE	(7)
++#define RZ_MTU3_TIOR_OC_IOA		GENMASK(3, 0)
++
++#define RZ_MTU3_TCR_CCLR_TGRC		(5 << 5)
++#define RZ_MTU3_TCR_CKEG_RISING		(0 << 3)
++
++#define RZ_MTU3_TCR_TPCS		GENMASK(2, 0)
++
++#define RZ_MTU3_MAX_PWM_MODE1_CHANNELS	(12)
++
++#define RZ_MTU3_MAX_HW_PWM_CHANNELS	(7)
++
++static const u8 rz_mtu3_pwm_mode1_num_ios[] = { 2, 1, 1, 2, 2, 2, 2 };
++
++/**
++ * struct rz_mtu3_pwm_chip - MTU3 pwm private data
++ *
++ * @chip: MTU3 pwm chip data
++ * @clk: MTU3 module clock
++ * @lock: Lock to prevent concurrent access for usage count
++ * @rate: MTU3 clock rate
++ * @user_count: MTU3 usage count
++ * @rz_mtu3_channel: HW channels for the PWM
++ */
++
++struct rz_mtu3_pwm_chip {
++	struct pwm_chip chip;
++	struct clk *clk;
++	struct mutex lock;
++	unsigned long rate;
++	u32 user_count[RZ_MTU3_MAX_HW_PWM_CHANNELS];
++	struct rz_mtu3_channel *ch[RZ_MTU3_MAX_HW_PWM_CHANNELS];
++
++	/*
++	 * The driver cannot read the current duty cycle/prescale from the
++	 * hardware if the hardware is disabled. Cache the last programmed
++	 * duty cycle/prescale value to return in that case.
++	 */
++	u8 prescale[RZ_MTU3_MAX_HW_PWM_CHANNELS];
++	unsigned int duty_cycle[RZ_MTU3_MAX_PWM_MODE1_CHANNELS];
++};
++
++static inline struct rz_mtu3_pwm_chip *to_rz_mtu3_pwm_chip(struct pwm_chip *chip)
++{
++	return container_of(chip, struct rz_mtu3_pwm_chip, chip);
++}
++
++static u8 rz_mtu3_pwm_calculate_prescale(struct rz_mtu3_pwm_chip *rz_mtu3,
++					 u64 period_cycles)
++{
++	u32 prescaled_period_cycles;
++	u8 prescale;
++
++	prescaled_period_cycles = period_cycles >> 16;
++	if (prescaled_period_cycles >= 16)
++		prescale = 3;
++	else
++		prescale = (fls(prescaled_period_cycles) + 1) / 2;
++
++	return prescale;
++}
++
++static struct rz_mtu3_channel *
++rz_mtu3_get_hw_channel(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u32 channel)
++{
++	unsigned int i, ch_index = 0;
++
++	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
++		ch_index += rz_mtu3_pwm_mode1_num_ios[i];
++
++		if (ch_index > channel)
++			break;
++	}
++
++	return rz_mtu3_pwm->ch[i];
++}
++
++static u32 rz_mtu3_get_hw_channel_index(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++					struct rz_mtu3_channel *ch)
++{
++	u32 i;
++
++	for (i = 0; i < ARRAY_SIZE(rz_mtu3_pwm_mode1_num_ios); i++) {
++		if (ch == rz_mtu3_pwm->ch[i])
++			break;
++	}
++
++	return i;
++}
++
++static bool rz_mtu3_pwm_is_second_channel(u32 ch_index, u32 hwpwm)
++{
++	u32 i, pwm_ch_index = 0;
++
++	for (i = 0; i < ch_index; i++)
++		pwm_ch_index += rz_mtu3_pwm_mode1_num_ios[i];
++
++	return pwm_ch_index != hwpwm;
++}
++
++static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++				      u32 hwpwm)
++{
++	struct rz_mtu3_channel *ch;
++	bool is_channel_en;
++	u32 ch_index;
++	u8 val;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	is_channel_en = rz_mtu3_is_enabled(ch);
++
++	if (rz_mtu3_pwm_is_second_channel(ch_index, hwpwm))
++		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORL);
++	else
++		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORH);
++
++	return (is_channel_en && (val & RZ_MTU3_TIOR_OC_IOA));
++}
++
++static int rz_mtu3_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	if (!rz_mtu3_pwm->user_count[ch_index] && !rz_mtu3_request_channel(ch))
++		return -EBUSY;
++
++	mutex_lock(&rz_mtu3_pwm->lock);
++	rz_mtu3_pwm->user_count[ch_index]++;
++	mutex_unlock(&rz_mtu3_pwm->lock);
++
++	return 0;
++}
++
++static void rz_mtu3_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++
++	mutex_lock(&rz_mtu3_pwm->lock);
++	rz_mtu3_pwm->user_count[ch_index]--;
++	mutex_unlock(&rz_mtu3_pwm->lock);
++
++	if (!rz_mtu3_pwm->user_count[ch_index])
++		rz_mtu3_release_channel(ch);
++}
++
++static int rz_mtu3_pwm_enable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++			      struct pwm_device *pwm)
++{
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++	u8 val;
++	int rc;
++
++	rc = pm_runtime_resume_and_get(rz_mtu3_pwm->chip.dev);
++	if (rc)
++		return rc;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	val = (RZ_MTU3_TIOR_OC_1_TOGGLE << 4) | RZ_MTU3_TIOR_OC_0_H_COMP_MATCH;
++
++	rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_PWM_MODE_1);
++	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, val);
++	else
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, val);
++
++	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
++		rz_mtu3_enable(ch);
++
++	return 0;
++}
++
++static void rz_mtu3_pwm_disable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
++				struct pwm_device *pwm)
++{
++	struct rz_mtu3_channel *ch;
++	u32 ch_index;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++
++	/* Return to normal mode and disable output pins of MTU3 channel */
++	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_NORMAL);
++
++	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, RZ_MTU3_TIOR_OC_RETAIN);
++	else
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, RZ_MTU3_TIOR_OC_RETAIN);
++
++	if (rz_mtu3_pwm->user_count[ch_index] <= 1)
++		rz_mtu3_disable(ch);
++
++	pm_runtime_put_sync(rz_mtu3_pwm->chip.dev);
++}
++
++static int rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	u8 prescale, val;
++	u32 ch_index;
++	u16 dc, pv;
++	u64 tmp;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	pm_runtime_get_sync(chip->dev);
++	state->enabled = rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, pwm->hwpwm);
++	if (state->enabled) {
++		val = rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TCR);
++		prescale = FIELD_GET(RZ_MTU3_TCR_TPCS, val);
++
++		if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
++			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRD);
++			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRC);
++		} else {
++			dc = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRB);
++			pv = rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRA);
++		}
++
++		tmp = NSEC_PER_SEC * (u64)pv << (2 * prescale);
++		state->period = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
++	} else {
++		/* If the PWM is disabled, use the cached value. */
++		prescale = rz_mtu3_pwm->prescale[ch_index];
++		dc = rz_mtu3_pwm->duty_cycle[pwm->hwpwm];
++	}
++
++	tmp = NSEC_PER_SEC * (u64)dc << (2 * prescale);
++	state->duty_cycle = DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
++	state->polarity = PWM_POLARITY_NORMAL;
++	pm_runtime_put(chip->dev);
++
++	return 0;
++}
++
++static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
++			      const struct pwm_state *state)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	struct rz_mtu3_channel *ch;
++	unsigned long pv, dc;
++	u64 period_cycles;
++	u64 duty_cycles;
++	u32 ch_index;
++	u8 prescale;
++	int err;
++	u8 val;
++
++	/*
++	 * Refuse clk rates > 1 GHz to prevent overflowing the following
++	 * calculation.
++	 */
++	if (rz_mtu3_pwm->rate > NSEC_PER_SEC)
++		return -EINVAL;
++
++	ch = rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
++	ch_index = rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
++	period_cycles = mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
++					NSEC_PER_SEC);
++	prescale = rz_mtu3_pwm_calculate_prescale(rz_mtu3_pwm, period_cycles);
++
++	if (period_cycles >> (2 * prescale) <= U16_MAX)
++		pv = period_cycles >> (2 * prescale);
++	else
++		pv = U16_MAX;
++
++	duty_cycles = mul_u64_u32_div(state->duty_cycle, rz_mtu3_pwm->rate,
++				      NSEC_PER_SEC);
++	if (duty_cycles >> (2 * prescale) <= U16_MAX)
++		dc = duty_cycles >> (2 * prescale);
++	else
++		dc = U16_MAX;
++
++	/*
++	 * Store the duty cycle/prescale for future reference in cases where the
++	 * corresponding registers can't be read (i.e. when the PWM is disabled).
++	 */
++	rz_mtu3_pwm->prescale[ch_index] = prescale;
++	rz_mtu3_pwm->duty_cycle[pwm->hwpwm] = dc;
++
++	/*
++	 * If the PWM channel is disabled, make sure to turn on the clock
++	 * before writing the register.
++	 */
++	if (!pwm->state.enabled) {
++		err = pm_runtime_resume_and_get(chip->dev);
++		if (err)
++			return err;
++	}
++
++	val = RZ_MTU3_TCR_CKEG_RISING | prescale;
++	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
++				      RZ_MTU3_TCR_CCLR_TGRC | val);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRD, dc);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRC, pv);
++	} else {
++		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
++				      RZ_MTU3_TCR_CCLR_TGRA | val);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRB, dc);
++		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRA, pv);
++	}
++
++	/* If the PWM is not enabled, turn the clock off again to save power. */
++	if (!pwm->state.enabled)
++		pm_runtime_put(chip->dev);
++
++	return 0;
++}
++
++static int rz_mtu3_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			     const struct pwm_state *state)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
++	bool enabled = pwm->state.enabled;
++	int ret;
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (!state->enabled) {
++		if (enabled)
++			rz_mtu3_pwm_disable(rz_mtu3_pwm, pwm);
++
++		return 0;
++	}
++
++	ret = rz_mtu3_pwm_config(chip, pwm, state);
++	if (ret)
++		return ret;
++
++	if (!enabled)
++		ret = rz_mtu3_pwm_enable(rz_mtu3_pwm, pwm);
++
++	return ret;
++}
++
++static const struct pwm_ops rz_mtu3_pwm_ops = {
++	.request = rz_mtu3_pwm_request,
++	.free = rz_mtu3_pwm_free,
++	.get_state = rz_mtu3_pwm_get_state,
++	.apply = rz_mtu3_pwm_apply,
++	.owner = THIS_MODULE,
++};
++
++static int rz_mtu3_pwm_pm_runtime_suspend(struct device *dev)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(dev);
++
++	clk_disable_unprepare(rz_mtu3_pwm->clk);
++
++	return 0;
++}
++
++static int rz_mtu3_pwm_pm_runtime_resume(struct device *dev)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = dev_get_drvdata(dev);
++
++	clk_prepare_enable(rz_mtu3_pwm->clk);
++
++	return 0;
++}
++
++static DEFINE_RUNTIME_DEV_PM_OPS(rz_mtu3_pwm_pm_ops,
++				 rz_mtu3_pwm_pm_runtime_suspend,
++				 rz_mtu3_pwm_pm_runtime_resume, NULL);
++
++static void rz_mtu3_pwm_pm_disable(void *data)
++{
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = data;
++
++	pm_runtime_disable(rz_mtu3_pwm->chip.dev);
++	pm_runtime_set_suspended(rz_mtu3_pwm->chip.dev);
++}
++
++static int rz_mtu3_pwm_probe(struct platform_device *pdev)
++{
++	struct rz_mtu3 *ddata = dev_get_drvdata(pdev->dev.parent);
++	struct rz_mtu3_pwm_chip *rz_mtu3_pwm;
++	struct device *dev = &pdev->dev;
++	int num_pwm_hw_ch = 0;
++	unsigned int i;
++	int ret;
++
++	rz_mtu3_pwm = devm_kzalloc(&pdev->dev, sizeof(*rz_mtu3_pwm), GFP_KERNEL);
++	if (!rz_mtu3_pwm)
++		return -ENOMEM;
++
++	rz_mtu3_pwm->clk = ddata->clk;
++	rz_mtu3_pwm->rate = clk_get_rate(rz_mtu3_pwm->clk);
++	for (i = 0; i < RZ_MTU_NUM_CHANNELS; i++) {
++		if (i == RZ_MTU5 || i == RZ_MTU8)
++			continue;
++
++		rz_mtu3_pwm->ch[num_pwm_hw_ch] = &ddata->channels[i];
++		rz_mtu3_pwm->ch[num_pwm_hw_ch]->dev = dev;
++		num_pwm_hw_ch++;
++	}
++
++	mutex_init(&rz_mtu3_pwm->lock);
++	platform_set_drvdata(pdev, rz_mtu3_pwm);
++	clk_prepare_enable(rz_mtu3_pwm->clk);
++	pm_runtime_set_active(&pdev->dev);
++	pm_runtime_enable(&pdev->dev);
++	ret = devm_add_action_or_reset(&pdev->dev,
++				       rz_mtu3_pwm_pm_disable,
++				       rz_mtu3_pwm);
++	if (ret < 0)
++		goto disable_clock;
++
++	rz_mtu3_pwm->chip.dev = &pdev->dev;
++	rz_mtu3_pwm->chip.ops = &rz_mtu3_pwm_ops;
++	rz_mtu3_pwm->chip.npwm = RZ_MTU3_MAX_PWM_MODE1_CHANNELS;
++	ret = devm_pwmchip_add(&pdev->dev, &rz_mtu3_pwm->chip);
++	if (ret) {
++		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
++		goto disable_clock;
++	}
++
++	return 0;
++
++disable_clock:
++	clk_disable_unprepare(rz_mtu3_pwm->clk);
++	return ret;
++}
++
++static struct platform_driver rz_mtu3_pwm_driver = {
++	.driver = {
++		.name = "pwm-rz-mtu3",
++		.pm = pm_ptr(&rz_mtu3_pwm_pm_ops),
++	},
++	.probe = rz_mtu3_pwm_probe,
++};
++module_platform_driver(rz_mtu3_pwm_driver);
++
++MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
++MODULE_ALIAS("platform:pwm-rz-mtu3");
++MODULE_DESCRIPTION("Renesas RZ/G2L MTU3a PWM Timer Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
+
