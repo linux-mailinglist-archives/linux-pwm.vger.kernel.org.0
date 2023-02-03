@@ -2,96 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1A82688B2A
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Feb 2023 00:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DACC4689199
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Feb 2023 09:08:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233200AbjBBXy3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Feb 2023 18:54:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36042 "EHLO
+        id S232772AbjBCIHy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Feb 2023 03:07:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233065AbjBBXy2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Feb 2023 18:54:28 -0500
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48CB6B000;
-        Thu,  2 Feb 2023 15:54:27 -0800 (PST)
-Received: by mail-oo1-f44.google.com with SMTP id h12-20020a4a940c000000b004fa81915b1cso351568ooi.4;
-        Thu, 02 Feb 2023 15:54:27 -0800 (PST)
+        with ESMTP id S232784AbjBCIHU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Feb 2023 03:07:20 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CCF746168
+        for <linux-pwm@vger.kernel.org>; Fri,  3 Feb 2023 00:05:39 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id a2so3605524wrd.6
+        for <linux-pwm@vger.kernel.org>; Fri, 03 Feb 2023 00:05:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mv17eaJFCI/w5Z3xek3QoJZ92Bm1fO3+e35K6LedY2Y=;
+        b=jq4WMr89+a3LJs6QVU01tpxjfScM//lo2OEWbtPxzvN2uv2MGVaLwCrfjvRmaMHS1F
+         /54JqjyzVFWlhc/0mnNfsNSLHqLOs2EO5bq+VxhiZ8/OgfDwxlRm5JFc5uEAHlbn6CBc
+         GuWa+ZJUDbFSKTUBHCnjOmYkk/c/Gpraq6QsD7uBPKXlytiSib5OHMW7jV2X6ROd6Ld4
+         YTVgcfUJE2jGT9MtT0PeZ5aiIZOdYkNesNx5Px5e8JiST0ACi1ld5GLuWT7oQm/4qMlX
+         V/eOjBw/nKRnlbEYTJExB6+cxZv34u1S+0Bct76h979ZgPWxzpLuZDY/AN12/TjSe3Rs
+         KRLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2VCS0pNVsYt06k5zDzEs8Faz6RYiYEqDWO9Bf/Yg0I8=;
-        b=Bn+Dt83dfXsoHxh8RIUHG5sSci8x15LMlExOxSWVvqOLjo9BpUFSV+rYw9bhg6POZv
-         JgnyWerdnFr7NGuIxRizGSgixdwpchu+J67IRHH+4iPfxY54DauZ3pNzk1Z0lmItw/Om
-         ECrh+YJNF/L5BdWdyjvnSVIXMiEY83k5a5+oUR7MDOFhOU0J5sSrti6xdAtS+tRbN4/1
-         zEQsUV1/b6yneHKWo5Chdr1xt0J21NFBgPG3Leg90upNsVs4PM0cjWLzO1dOQGGKgU8R
-         QQYKZvr4dpMSh9pXDS090U5SKxHl/ZLggYWqKtIy161g9ks3LN+Euys8Ifa2yVzQcGhA
-         nl3A==
-X-Gm-Message-State: AO0yUKXC0974HlEm4tBjgfcadr1cu2Zl6elBm+nQUIOcMcS6GQTwAkHS
-        C+ls3Xmhoo/IOcfYkAVCKnpY0RR2Fw==
-X-Google-Smtp-Source: AK7set/IDqDAsp6U6ML93g2sfU2nPieiugA5msOO5zUoE4jwCL7JJkY0/XOQ1c4zWBeAr6DVlhzrNg==
-X-Received: by 2002:a4a:948e:0:b0:51a:35de:d4c1 with SMTP id k14-20020a4a948e000000b0051a35ded4c1mr1502653ooi.5.1675382067058;
-        Thu, 02 Feb 2023 15:54:27 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id i5-20020a4aa6c5000000b004f241603c49sm397199oom.20.2023.02.02.15.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Feb 2023 15:54:26 -0800 (PST)
-Received: (nullmailer pid 2927110 invoked by uid 1000);
-        Thu, 02 Feb 2023 23:54:25 -0000
-Date:   Thu, 2 Feb 2023 17:54:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mv17eaJFCI/w5Z3xek3QoJZ92Bm1fO3+e35K6LedY2Y=;
+        b=RbJETxN5m3TRLCmeGVLZh73knZgBKuALYlC2XRdSD72EmqKGTw7+XXvYOhapuFsmTs
+         HMgCr82d67yAZaMcXSv+jiGn+qPI+lJyluNehF6GVkxNEZlj9atwGgHRKgwPZpqHE4sD
+         cf5jQQ6Fs8eABcBTpgNb5FqwM2sktAYf0/L1UlaNEz4h6VPvuguIuC0FajSh2IXVeA5o
+         iGFUtn6FeEwreXOBpL7eFXrSLOYJp1AZz9YGLtwPfbg1ixr3O3vKn/3N5zgfvDN0cpqC
+         CRTTvQbQcmTHbbS5DxQYBJAAYZGrHzcl7dClyoVZiqe6tj8dfgbfSpw4zlGNuhtVKJWF
+         wAAw==
+X-Gm-Message-State: AO0yUKWX2HHgxx9M1qA5vtuSZ+xw2yuaQAUsNWWAWn+TEFpVq9tr3QOW
+        cm5V9D2CtEkcVHSsXlVg2ODXPQ==
+X-Google-Smtp-Source: AK7set/TiiQhfEWBSxtDxQuC1mikiRX+6Zo9nA6ypZA5geunkb+DGH0j7NUGqgG82UrhrwUXLJb7Nw==
+X-Received: by 2002:a5d:4e02:0:b0:2bf:e1f8:c4b6 with SMTP id p2-20020a5d4e02000000b002bfe1f8c4b6mr7969162wrt.52.1675411537589;
+        Fri, 03 Feb 2023 00:05:37 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:7407:d8b9:ec7a:537? ([2a01:e0a:982:cbb0:7407:d8b9:ec7a:537])
+        by smtp.gmail.com with ESMTPSA id l2-20020a05600002a200b002bfd687a96dsm1467430wry.16.2023.02.03.00.05.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Feb 2023 00:05:36 -0800 (PST)
+Message-ID: <204f71e1-d98d-9aa7-4848-663e22332c69@linaro.org>
+Date:   Fri, 3 Feb 2023 09:05:35 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 1/4] arm: dts: meson: adjust order of some compatibles
+Content-Language: en-US
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pwm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
         Jerome Brunet <jbrunet@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 4/4] dt-bindings: interrupt-controller: Convert Amlogic
- Meson GPIO interrupt controller binding
-Message-ID: <167538206470.2927056.7621098912599548470.robh@kernel.org>
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
 References: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
- <8cae0b08-8040-ef7b-da0e-92d9b3695249@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8cae0b08-8040-ef7b-da0e-92d9b3695249@gmail.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+ <66f77c32-2678-3e31-fb00-1294ccaa6045@gmail.com>
+Organization: Linaro Developer Services
+In-Reply-To: <66f77c32-2678-3e31-fb00-1294ccaa6045@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
-On Wed, 01 Feb 2023 21:02:02 +0100, Heiner Kallweit wrote:
-> Convert Amlogic Meson GPIO interrupt controller binding to yaml.
+On 01/02/2023 20:58, Heiner Kallweit wrote:
+> During review of a new yaml binding, affecting these dts, it turned out
+> that some compatibles aren't ordered as they should be. Order should be
+> most specific to least specific.
 > 
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
 > Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 > ---
-> - consider that more than one compatible may be set
-> - remove bus part from example
-> - remove minItem/maxItem properties for compatible
-> - reduce compatible fallback complexity
-> ---
->  .../amlogic,meson-gpio-intc.txt               | 38 ----------
->  .../amlogic,meson-gpio-intc.yaml              | 72 +++++++++++++++++++
->  2 files changed, 72 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+>   arch/arm/boot/dts/meson8b.dtsi | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index d5a3fe21e..5979209fe 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -580,8 +580,8 @@ &ethmac {
+>   };
+>   
+>   &gpio_intc {
+> -	compatible = "amlogic,meson-gpio-intc",
+> -		     "amlogic,meson8b-gpio-intc";
+> +	compatible = "amlogic,meson8b-gpio-intc",
+> +		     "amlogic,meson-gpio-intc";
+>   	status = "okay";
+>   };
+>   
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
