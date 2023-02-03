@@ -2,149 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D70F6891A1
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Feb 2023 09:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07578689C52
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Feb 2023 15:57:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232085AbjBCIJ3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 3 Feb 2023 03:09:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45940 "EHLO
+        id S233608AbjBCO4Y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Feb 2023 09:56:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232749AbjBCII4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Feb 2023 03:08:56 -0500
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2767953F5
-        for <linux-pwm@vger.kernel.org>; Fri,  3 Feb 2023 00:06:51 -0800 (PST)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-51ba4b1b9feso58362757b3.11
-        for <linux-pwm@vger.kernel.org>; Fri, 03 Feb 2023 00:06:51 -0800 (PST)
+        with ESMTP id S233389AbjBCO4T (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Feb 2023 09:56:19 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7859F9F7
+        for <linux-pwm@vger.kernel.org>; Fri,  3 Feb 2023 06:56:14 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id r2so4876098wrv.7
+        for <linux-pwm@vger.kernel.org>; Fri, 03 Feb 2023 06:56:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vsQ1fz/5ts1oSbk5jHHBvcB4Ie2MesFk+szUUh6A4jY=;
-        b=LrIwQLQExZfBlHn96+8T9yAYVF7blScAuSGTxSWxoA4gsaRWuliWlI/EmEpMiQszqy
-         ItKdQsPVYDFI28Tee4ozKKOFmJpNbUFnzqLlySzvHIFtJMmeYJEU/FQDQPxO9tGnWImb
-         ChxHReQT5QbqbWjN8sBcG4F9yrFw8JdAZ/oJRU2puvshBFvS43slCt/lWOAXEoBsrYSQ
-         zLyAozAoYMY8rclOnYjO6ztyX7NdziBo1sVv9jsOBETK/jrWOGrchy1uLIGUrODiaV46
-         Jmu17ImPhr9sA4dYAIyM8v/9YE1/IZlGVvl5wislwhzJmfmZs3Yz7Cg4FgPWs61G7dUH
-         Y35A==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GE8LRefBbCr+vfDK+OAPRXSUgs+NOR142JeKY5u24zc=;
+        b=lQ+Bfh6OkWkCBU99Jb4AoJvJIG7HKtjAaLqAEaz2ki2xFEV18ywmHNcz5VmpBDmjmJ
+         SXtSu30qXHHM+Udai2mJHBuBUC7LChxZMBrDiJXjE99Li5JAznexcjJX449U96AFIssl
+         jThvEaitV1aiToqDuEiKLWc1n1+h1/JdtRq/ie3dNJF3DbTX9ycYSzLaNnpAaU49/Ftx
+         pZBkJQgONJawVE3PgRv1N5Wz9xxO4VeLm0JEbus+Ir+YzE42tl4pgeEAJh2tEj+cR6N5
+         /x/FRUtqP9cUFaBVwIa3I5zkSbNXH7ovXJ5dJ988FbHmoKLCkWmjQhGP0rCl6+biA9aV
+         gaHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vsQ1fz/5ts1oSbk5jHHBvcB4Ie2MesFk+szUUh6A4jY=;
-        b=nZT0QJSR0iYfmsssTLxNGAEphb03gCi315d+vzpbLm8VZ6yqH7vhkF0l30SSQvAiK1
-         71oLYV/vIBijXX1nSPTATxIQYD2ljMudQSBPzuuqxfy0IjqAvV0uCEWBOPS9HFikDgpJ
-         xlxtVW5b7jGK5Mb8Vrtm11p+JNGWjYcpl7k8c4MZXUtV44dAvSr6qhWCKT5hAbVB8GqZ
-         t/3OzPuINGXggK3Q4l1+lDEFRfCUsMu+ks5r3tq/9sMzHBb1emhdwHU/BPIzJXwUf9NT
-         AHRMPWmsT2v0hdcCd8N02Zclv/yiUtOm1iEdNs0dtusINJ5bjQLDJaHSArCsiX3pd5ME
-         j08w==
-X-Gm-Message-State: AO0yUKWtM8OKXrdLB5/ZtEX4m/3GVIjDqTGRNVmpW1DAkinQxZ2cXRQP
-        m2lhxEHeSuVdJLobTMfmlEhw1WzC+RoomQpqXU0YSQ==
-X-Google-Smtp-Source: AK7set/o+IabmEdqaU/6vnUZGJwr98FRwvsJQoYCYLMkAqoqU7g2zvHizcifaV74heDDmMnxUXCX16hSI10n6ex5G1g=
-X-Received: by 2002:a81:2515:0:b0:4fd:417b:7b8a with SMTP id
- l21-20020a812515000000b004fd417b7b8amr1014395ywl.404.1675411611090; Fri, 03
- Feb 2023 00:06:51 -0800 (PST)
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GE8LRefBbCr+vfDK+OAPRXSUgs+NOR142JeKY5u24zc=;
+        b=voGl5MaheOwgXCF1FfYy4PfK9xUrKsB96rfytV/2G3kBeFE84vQH+56SlCOMBaTmRQ
+         wl1yWHN5Ss1mp46yW9POEf6u6v7NcTrx7XY+i+xYQmYDl6udTUvIvIqe2Q0p20eEWhne
+         +9pVx0s3lOP5bK46Fvha5AdGmDDiyE7LhyPdsHVnUphCqg0iogfvWruoiYJv4ufWTTUX
+         8duRkg0d8L/rt8nzZS5oFVJgrYBis7pO+Ovsm9yGhGBkaeJioTMz2PBmmgWAhSJn/Yj0
+         srfVdYN83StwwaxbxsNP3LHqm3TE6jRqH2oG1fPEXfkKpzHxDYqcOb0/MeYci6kT2Arv
+         +GYQ==
+X-Gm-Message-State: AO0yUKUEVah2Zy0uISD9bxUof/qJoPpIV8oK76bf/251B7/sBZk6B2uu
+        BHtD4GhiDC+eNP4QKXdDCEZiRCFuPvlWsp5SkpM=
+X-Google-Smtp-Source: AK7set/hydzP0dXLoWgVSTnW+bbYDLJg0Zp3X0fwDhpfSHGwr5RZxb4gFuIIBVQQ1gks/JrOIf9JxjGcoq9+9rZXulo=
+X-Received: by 2002:a5d:6481:0:b0:2bf:b373:149a with SMTP id
+ o1-20020a5d6481000000b002bfb373149amr397802wri.355.1675436172859; Fri, 03 Feb
+ 2023 06:56:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20230130093229.27489-1-nylon.chen@sifive.com> <20230130093229.27489-3-nylon.chen@sifive.com>
- <20230130101707.pdvabl3na2wpwxqu@pengutronix.de>
-In-Reply-To: <20230130101707.pdvabl3na2wpwxqu@pengutronix.de>
-From:   Nylon Chen <nylon.chen@sifive.com>
-Date:   Fri, 3 Feb 2023 16:06:38 +0800
-Message-ID: <CAHh=Yk85NHbm9eUKLm75GUP4gSP5eYFjVabTUXseyB6wHD4D=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pwm: sifive: change the PWM controlled LED algorithm
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     aou@eecs.berkeley.edu, conor@kernel.org,
-        emil.renner.berthing@canonical.com, geert+renesas@glider.be,
-        heiko@sntech.de, krzysztof.kozlowski+dt@linaro.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, nylon7717@gmail.com,
-        zong.li@sifive.com, greentime.hu@sifive.com,
-        vincent.chen@sifive.com
+Sender: dareadja5@gmail.com
+Received: by 2002:a05:6020:4710:b0:259:ad88:21bb with HTTP; Fri, 3 Feb 2023
+ 06:56:12 -0800 (PST)
+From:   Kayla Manthey <sergeantkayllamanthey@gmail.com>
+Date:   Fri, 3 Feb 2023 14:56:12 +0000
+X-Google-Sender-Auth: XsYMg48CSVVgdrD4EWG4jSd7Jsw
+Message-ID: <CAE9bZtNJU58hibyfSYAcMuTSc1B_Qq0rag54mPxZC9pGq_MD8g@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
-
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=E5=B9=
-=B41=E6=9C=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:17=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> On Mon, Jan 30, 2023 at 05:32:29PM +0800, Nylon Chen wrote:
-> > The `frac` variable represents the pulse inactive time, and the result =
-of
-> > this algorithm is the pulse active time. Therefore, we must reverse the
-> > result.
-> >
-> > The reference is SiFive FU740-C000 Manual[0].
-> >
-> > [0]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8=
-b16acba_fu740-c000-manual-v1p6.pdf
-> >
-> > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > ---
-> >  drivers/pwm/pwm-sifive.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > index 62b6acc6373d..a5eda165d071 100644
-> > --- a/drivers/pwm/pwm-sifive.c
-> > +++ b/drivers/pwm/pwm-sifive.c
-> > @@ -158,6 +158,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, =
-struct pwm_device *pwm,
-> >       frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
-> >       /* The hardware cannot generate a 100% duty cycle */
-> >       frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-> > +     frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
->
-> The same problem exists in pwm_sifive_get_state(), doesn't it?
->
-> As fixing this is an interruptive change anyhow, this is the opportunity
-> to align the driver to the rules tested by PWM_DEBUG.
->
-> The problems I see in the driver (only checked quickly, so I might be
-> wrong):
->
-
->  - state->period !=3D ddata->approx_period isn't necessarily a problem. I=
-f
->    state->period > ddata->real_period that's fine and the driver should
->    continue
->
->  - frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
->    is wrong for two reasons:
->    it should round down and use the real period.
-are you mean state->period is a redundancy variable so we can use
-ddata->real_period directly?
-
-it seems reasonable, but I don't get your point, why do we need to
-change the algorithm to DIV_ROUND_DOWN_ULL() and change the if-else
-condition.
-
-frac =3D DIV_ROUND_DOWN_ULL(num, ddata->real_period);
-if (state->period < ddata->approx_period) {
-    ...
-}
-
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+Dia duit a st=C3=B3r, an bhfuair t=C3=BA mo theachtaireacht roimhe seo?, Go
+raibh maith agat.
