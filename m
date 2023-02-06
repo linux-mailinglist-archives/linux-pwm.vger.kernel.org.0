@@ -2,36 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5AE968B7C5
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Feb 2023 09:55:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5B0768C859
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Feb 2023 22:13:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbjBFIzG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Feb 2023 03:55:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
+        id S229661AbjBFVNn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Feb 2023 16:13:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbjBFIzF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Feb 2023 03:55:05 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394C512857
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Feb 2023 00:55:04 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pOxGz-00035S-1S; Mon, 06 Feb 2023 09:54:49 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pOxGw-0031Jx-N4; Mon, 06 Feb 2023 09:54:47 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pOxGw-001Exq-V6; Mon, 06 Feb 2023 09:54:46 +0100
-Date:   Mon, 6 Feb 2023 09:54:46 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
+        with ESMTP id S229654AbjBFVNn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Feb 2023 16:13:43 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507534218;
+        Mon,  6 Feb 2023 13:13:42 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id lu11so38093185ejb.3;
+        Mon, 06 Feb 2023 13:13:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VZtS5vyMO1j5bifjBnwS+OCCtmHppSGHkVWDdflpcgQ=;
+        b=oP0XSEHQC5aWdClkeRnAbGc7ZoYQnto0IF7DVciCduEdRoBXp7b6ibFnUX2+EQTUzi
+         lcXMi28emzQ8NkxhAv03VfY3uYx33fkMRhSGV1wUtOzRVVmXI5PT5InZ/30pLPmOetz8
+         JCoOEl5fYU4NlBcuqU7PAzTDvlY+3HI0TKTnoMJZigL1uRPZjI8dHbh4DcPNCjijJpIk
+         zpMFWbyFMitMbdV7UysPYr19tVmtWaFh/KQ9uws/dvT2LfVf3SqWNlzW+KgGQTFd4+pU
+         6/T31ATcW82RKJM4zpGwFlDnBXJk5Wfv1jvrTbr1jg5o8jyQPxiwOyLUjaNjMMy2jRln
+         1jwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VZtS5vyMO1j5bifjBnwS+OCCtmHppSGHkVWDdflpcgQ=;
+        b=ip2KndtHLF0bJ3z8NFRLUDWribl4xe2X7xhrZ46mUbmed6icGhdhWJtinNy8lnwbKR
+         qRkZEyAsmyI+zqZ3LHHDz3uvoq74c2i2BKNzg/TeHBUkFoC9l8PjZfviJt7fDSHiSOhk
+         UHud6LRnBNuhDPV+RFfQhxSvkrYpJJAsdB6m9AoNVYcAe8qI3H+A3MKZNCDiT9Z6Ai2B
+         2CWl2jQx1ItjzmTYwITe5J068gDKhiRukYbQUjFumS8TrlP+FTh3LeveVI/De7PpzaGj
+         Cr7IGdplpWiU9Ri029M0EU+D98ukYZlMnuZSTIqzlz2obrnn1WO8meObpPtDy0fl/W5Z
+         blog==
+X-Gm-Message-State: AO0yUKUBv0Deq30Vu4AbJ4oCtOJPWfePR1gPTQ9Sh2LO2bie7/WZB0OE
+        7HEnXA9os55+UGgfY+7utW4=
+X-Google-Smtp-Source: AK7set+3+FsYuhkU78K71Ir/e1the4l9Da6i5qqPjBJa0HxQQTAfi7NQdSv/CePdjqnOZ734eAFJVw==
+X-Received: by 2002:a17:906:a102:b0:878:5e84:e1da with SMTP id t2-20020a170906a10200b008785e84e1damr804504ejy.27.1675718020715;
+        Mon, 06 Feb 2023 13:13:40 -0800 (PST)
+Received: from ?IPV6:2a01:c23:c485:9100:38f3:3203:b326:71ab? (dynamic-2a01-0c23-c485-9100-38f3-3203-b326-71ab.c23.pool.telefonica.de. [2a01:c23:c485:9100:38f3:3203:b326:71ab])
+        by smtp.googlemail.com with ESMTPSA id d20-20020a17090694d400b0088e682e3a4csm5877799ejy.185.2023.02.06.13.13.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Feb 2023 13:13:40 -0800 (PST)
+Message-ID: <63b86083-1b05-d851-d141-d3578e4dc724@gmail.com>
+Date:   Mon, 6 Feb 2023 22:13:34 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 3/4] dt-bindings: pwm: Convert Amlogic Meson PWM binding
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Neil Armstrong <neil.armstrong@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
         Kevin Hilman <khilman@baylibre.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
@@ -42,74 +70,41 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: pwm: Convert Amlogic Meson PWM binding
-Message-ID: <20230206085446.rf3rqgaoktwrnr2e@pengutronix.de>
 References: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
  <5b83767e-c53d-316f-df10-45a39dbd9c88@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pqcbke23quziawtk"
-Content-Disposition: inline
-In-Reply-To: <5b83767e-c53d-316f-df10-45a39dbd9c88@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <20230206082317.ygvixvhjqppz4nmy@pengutronix.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <20230206082317.ygvixvhjqppz4nmy@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 06.02.2023 09:23, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Wed, Feb 01, 2023 at 09:00:21PM +0100, Heiner Kallweit wrote:
+>> Convert Amlogic Meson PWM binding to yaml.
+>>
+>> Reviewed-by: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> 
+> How is supposed to pick up this patch? Does it go in together with the
+> other patches in this series via amlogic/arm; or is there an expectation
+> that it enters via PWM?
+> 
+Neil,
+are you going to take this via the amlogic tree?
 
---pqcbke23quziawtk
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Best regards
+> Uwe
+> 
+Heiner
 
-Hello,
-
-On Wed, Feb 01, 2023 at 09:00:21PM +0100, Heiner Kallweit wrote:
-> Convert Amlogic Meson PWM binding to yaml.
->=20
-> Reviewed-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-this is effectively v4 of
-
-	https://lore.kernel.org/linux-pwm/c92b9e51-bb69-0712-0b29-3db3c9a29f8b@gma=
-il.com
-
-and the ony change compared to v3 is that you dropped "items:" (and
-reindented). I'll mark above v3 as superseeded in our patchwork, please
-scream if I got that wrong.
-
-Other than that:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---pqcbke23quziawtk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPgwFQACgkQwfwUeK3K
-7Ak7Twf/Yk3+SICeBOjvdNeJZ8KDEJlLmf7bUz16JZE5bEIgjYM2SxDI1+n/g6ap
-orITRLE+vI0KaUcZYOpx/aTQ3Hh3Tzn9i1odaVCUTs11GFJcP/9unu6KlibqEjYi
-fbt6ZuLYVepmhn6RZexmWCHzOZdepljJZwZfpP3VgyYs1rwBbBZzEx27L1P+UcHb
-Kbt9XQjSoQoddq+jdTk0ldnAxNeXKTCKRym5mtObYgY3oUUAHpuVQzgbmN2n7RSr
-vbDUpRmlnIlbcjenWnlknjg7Cqb4YgBygkgX/ihptNAhgPCnUk7JevJ2HkoHDKmd
-j4Ji4gCm71X+k02/efApnitsOkajBw==
-=WWKj
------END PGP SIGNATURE-----
-
---pqcbke23quziawtk--
