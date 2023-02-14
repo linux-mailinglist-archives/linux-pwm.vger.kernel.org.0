@@ -2,158 +2,133 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E826954D7
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Feb 2023 00:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E1EC69689A
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Feb 2023 16:58:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbjBMXho (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 13 Feb 2023 18:37:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
+        id S232882AbjBNP56 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Feb 2023 10:57:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbjBMXho (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 13 Feb 2023 18:37:44 -0500
-X-Greylist: delayed 61 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Feb 2023 15:37:43 PST
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01693AD3C
-        for <linux-pwm@vger.kernel.org>; Mon, 13 Feb 2023 15:37:42 -0800 (PST)
-Received: from localhost (88-113-24-128.elisa-laajakaista.fi [88.113.24.128])
-        by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-        id 42a68002-abf7-11ed-a738-005056bdd08f;
-        Tue, 14 Feb 2023 01:36:38 +0200 (EET)
-From:   andy.shevchenko@gmail.com
-Date:   Tue, 14 Feb 2023 01:36:38 +0200
-To:     Nicola Di Lieto <nicola.dilieto@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-Message-ID: <Y+rJhvpgJkU2uBvF@surfacebook>
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com>
- <20201211170432.6113-2-nicola.dilieto@gmail.com>
+        with ESMTP id S232979AbjBNP5z (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Feb 2023 10:57:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D4B27D52;
+        Tue, 14 Feb 2023 07:57:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AC12C61744;
+        Tue, 14 Feb 2023 15:57:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 10B93C433D2;
+        Tue, 14 Feb 2023 15:57:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676390262;
+        bh=W8XkJNoaiihOtRWm+VY9HVS5fVLKZtL0zeEomIi3nCs=;
+        h=From:Subject:Date:To:Cc:Reply-To:From;
+        b=CDTX9AItrfb+4lVJwXQ+OrFDRUYWY7x0vmazF8sdMWoV/EwbXKkRa7dkDTql9rIP/
+         GMgFXsKfTE516pBd/6wCMjcRLpZj5ALRZFVJoLQipNbSmIGhxyT1R34QgpObzR4AE7
+         CEeCWOZQUbTrtjsn0XeexCMCOCO5yHbC1tpkOwDMw3gqmwkUP9pXLVXQ4cXnhNMcBx
+         L479J9proNQRNTvGkgOn/0/oNvC4MEEbqeMOmcCJvRl9mxupaa6XEPSRBurvM7+82a
+         FOhEC4Z1pqgituikztLpZDSB+PMOhXrzTPDrk5T7BWbord9l7a5lQ4YXsV1Tte0cpg
+         vlXFIgaQNpo1A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id F0337C61DA4;
+        Tue, 14 Feb 2023 15:57:41 +0000 (UTC)
+From:   Sasha Finkelstein via B4 Submission Endpoint 
+        <devnull+fnkl.kernel.gmail.com@kernel.org>
+Subject: [PATCH RESEND 2 v7 0/5] PWM and keyboard backlight driver for ARM
+ Macs
+Date:   Tue, 14 Feb 2023 16:57:22 +0100
+Message-Id: <20230214-fpwm-v7-0-fb0a6bfbd037@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201211170432.6113-2-nicola.dilieto@gmail.com>
-X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGKv62MC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyzHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDI0MT3bSC8lzdFIs0c7OkZIuUlGRDJaDSpMTiVN2kosS85AyQ4tzE4pL
+ UIpBEQVFqWmYF2PxopSDXYFc/FwUjpdjaWgAskuCreQAAAA==
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        - <asahi@lists.linux.dev>,
+        Sasha Finkelstein <fnkl.kernel@gmail.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sasha Finkelstein <7d578vix8hzw@opayq.net>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1676390260; l=1884;
+ i=fnkl.kernel@gmail.com; s=20230213; h=from:subject:message-id;
+ bh=W8XkJNoaiihOtRWm+VY9HVS5fVLKZtL0zeEomIi3nCs=;
+ b=NNzni8bsONdHN+vK075/ukK3vHLt6lXE29h50S9lr03r5LdR0Vz2QqGwkelViFa7HJbypuvD9
+ n7xtlxPq2dgCIwU7Y6oGOwsQpiAkHBT7vF5sRq3j/IVAG8gWA9cnby0
+X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
+ pk=7LFSAJtxIWAs9LzCIyX0sSvCZy2wQTyEIu1zch6o804=
+X-Endpoint-Received: by B4 Submission Endpoint for fnkl.kernel@gmail.com/20230213 with auth_id=28
+X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Reply-To: <fnkl.kernel@gmail.com>
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Fri, Dec 11, 2020 at 06:04:31PM +0100, Nicola Di Lieto kirjoitti:
-> This new driver allows pulse width modulating any GPIOs using
-> a high resolution timer. It is fully generic and can be useful
-> in a variety of situations. As an example I used it to provide
-> a pwm to the pwm-beeper driver so that my embedded system can
-> produce tones through a piezo buzzer connected to a GPIO which
-> unfortunately is not hardware PWM capable.
+Hi,
 
-...
+This is the second resend of the v7 of the patch series to add PWM and keyboard
+backlight driver for ARM macs. No significant changes this time.
 
-> +#include <linux/atomic.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/hrtimer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
+Changes in v1:
+Addressing the review comments.
 
-> +#include <linux/of.h>
+Changes in v2:
+Added the reviewed-by and acked-by tags.
+Addressing a review comment.
 
-No need (instead use mod_devicetable.h). See below.
+Changes in v3 and v4:
+Addressing the review comments.
 
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/workqueue.h>
+Changes in v5:
+Added t600x device tree changes
 
-...
+v1: https://www.spinics.net/lists/linux-pwm/msg19500.html
+v2: https://www.spinics.net/lists/linux-pwm/msg19562.html
+v3: https://www.spinics.net/lists/linux-pwm/msg19901.html
+v4: https://www.spinics.net/lists/linux-pwm/msg20093.html
+v5: https://www.spinics.net/lists/linux-pwm/msg20150.html
+v6: https://www.spinics.net/lists/linux-pwm/msg20190.html
 
-> +struct pwm_gpio {
-> +	struct pwm_chip chip;
-> +	struct gpio_desc *desc;
-> +	struct work_struct work;
-> +	struct hrtimer timer;
-> +	atomic_t enabled;
-> +	spinlock_t lock;
+---
+Sasha Finkelstein (5):
+      dt-bindings: pwm: Add Apple PWM controller
+      pwm: Add Apple PWM controller
+      arm64: dts: apple: t8103: Add PWM controller
+      arm64: dts: apple: t600x: Add PWM controller
+      MAINTAINERS: Add entries for Apple PWM driver
 
-> +	struct {
-> +		u64 ton_ns;
-> +		u64 toff_ns;
-> +		bool invert;
-> +	} cur, new;
+ .../devicetree/bindings/pwm/apple,s5l-fpwm.yaml    |  51 +++++++
+ MAINTAINERS                                        |   2 +
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi          |   9 ++
+ arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi     |  18 +++
+ arch/arm64/boot/dts/apple/t8103-j293.dts           |  17 +++
+ arch/arm64/boot/dts/apple/t8103-j313.dts           |  17 +++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |   9 ++
+ drivers/pwm/Kconfig                                |  12 ++
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-apple.c                            | 159 +++++++++++++++++++++
+ 10 files changed, 295 insertions(+)
+---
+base-commit: ceaa837f96adb69c0df0397937cd74991d5d821a
+change-id: 20230214-fpwm-d8f76bc8ddc1
 
-Can we instead have two struct pwm_state members?
-
-> +	bool state;
-> +	bool output;
-> +};
-
-...
-
-> +enum hrtimer_restart pwm_gpio_do_timer(struct hrtimer *handle)
-> +{
-> +	struct pwm_gpio *pwm_gpio = container_of(handle, struct pwm_gpio, timer);
-> +	u64 ns;
-> +
-> +	if (!atomic_read(&pwm_gpio->enabled))
-> +		return HRTIMER_NORESTART;
-> +
-> +	if (pwm_gpio->state) {
-> +		ns = pwm_gpio->cur.toff_ns;
-> +		pwm_gpio->state = false;
-> +	} else {
-
-> +		if (spin_trylock(&pwm_gpio->lock)) {
-
-What does this mean? So, if we don't get a lock, it doesn't imply we won't get
-it locked below...
-
-> +			pwm_gpio->cur = pwm_gpio->new;
-> +			spin_unlock(&pwm_gpio->lock);
-> +		}
-
-...i.e. here...
-
-> +		ns = pwm_gpio->cur.ton_ns;
-
-...or here.
-
-> +		pwm_gpio->state = true;
-
-So the trylock needs a good comment explaining why it's not a problem.
-
-> +	}
-> +	pwm_gpio->output = pwm_gpio->state ^ pwm_gpio->cur.invert;
-
-...
-
-> +#ifdef CONFIG_OF
-
-Drop this ifdeffery.
-
-> +static const struct of_device_id pwm_gpio_of_match[] = {
-> +	{ .compatible = "pwm-gpio", },
-
-Inner comma is not needed.
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pwm_gpio_of_match);
-> +#endif
-
-...
-
-> +		.of_match_table = of_match_ptr(pwm_gpio_of_match),
-
-No of_match_ptr(), please.
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Sasha Finkelstein <fnkl.kernel@gmail.com>
 
