@@ -2,54 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CCB8697A48
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Feb 2023 11:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0897697A68
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Feb 2023 12:08:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233739AbjBOK5r (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Feb 2023 05:57:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42828 "EHLO
+        id S229532AbjBOLIH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Feb 2023 06:08:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230053AbjBOK5q (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Feb 2023 05:57:46 -0500
+        with ESMTP id S229493AbjBOLIG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Feb 2023 06:08:06 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7A02594D
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Feb 2023 02:57:45 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9CB28D1A
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Feb 2023 03:08:04 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pSFTi-0005Hn-FB; Wed, 15 Feb 2023 11:57:34 +0100
+        id 1pSFdd-000773-ES; Wed, 15 Feb 2023 12:07:49 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pSFTe-0055WA-TP; Wed, 15 Feb 2023 11:57:32 +0100
+        id 1pSFdY-0055yy-OJ; Wed, 15 Feb 2023 12:07:45 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pSFTf-003j7E-9m; Wed, 15 Feb 2023 11:57:31 +0100
-Date:   Wed, 15 Feb 2023 11:57:31 +0100
+        id 1pSFdZ-003j8R-9y; Wed, 15 Feb 2023 12:07:45 +0100
+Date:   Wed, 15 Feb 2023 12:07:45 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        William Breathitt Gray <william.gray@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v12 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
-Message-ID: <20230215105731.4yhwgdbux7mogf4j@pengutronix.de>
-References: <20230202165732.305650-1-biju.das.jz@bp.renesas.com>
- <20230202165732.305650-7-biju.das.jz@bp.renesas.com>
- <20230215083037.ivlmqhp4xngnexca@pengutronix.de>
- <OS0PR01MB59227E0E659C292D775474BF86A39@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+To:     Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, marcan@marcan.st,
+        sven@svenpeter.dev, alyssa@rosenzweig.io, asahi@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] pwm: Add Apple PWM controller
+Message-ID: <20230215110745.2csbrbh2z7zz5fw7@pengutronix.de>
+References: <20230114132508.96600-1-fnkl.kernel@gmail.com>
+ <20230114132508.96600-3-fnkl.kernel@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b4ly3tz3y5q36lp7"
+        protocol="application/pgp-signature"; boundary="cwuokv3rl32le6xt"
 Content-Disposition: inline
-In-Reply-To: <OS0PR01MB59227E0E659C292D775474BF86A39@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <20230114132508.96600-3-fnkl.kernel@gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -63,128 +56,237 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---b4ly3tz3y5q36lp7
+--cwuokv3rl32le6xt
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Biju,
+Hello,
 
-On Wed, Feb 15, 2023 at 10:31:20AM +0000, Biju Das wrote:
-> > On Thu, Feb 02, 2023 at 04:57:32PM +0000, Biju Das wrote:
-> > > Add support for RZ/G2L MTU3a PWM driver. The IP supports following PWM
-> > > modes
-> > >
-> > > 1) PWM mode{1,2}
-> > > 2) Reset-synchronized PWM mode
-> > > 3) Complementary PWM mode{1,2,3}
-> >=20
-> > It's unclear to me what "PWM mode1" and the other modes are. I suspect =
-this
-> > is some chip specific naming that isn't understandable for outsiders? W=
-ould
-> > be great to explain that a bit more.
+On Sat, Jan 14, 2023 at 04:25:05PM +0300, Sasha Finkelstein wrote:
+> Adds the Apple PWM controller driver.
 >=20
-> I will give some details about PWM modes mentioned in the HW manual here.
-> I will respond to other comments later.
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> Acked-by: Sven Peter <sven@svenpeter.dev>
+> ---
+>  drivers/pwm/Kconfig     |  12 +++
+>  drivers/pwm/Makefile    |   1 +
+>  drivers/pwm/pwm-apple.c | 159 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 172 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-apple.c
 >=20
-> PWM Mode 1
-> ------------
-> n =3D {0,1,2,3,4,6,7}
-> MTIOC0A:-MTU0 TGRA input capture input/output compare output/PWM output p=
-in
-> TGRA: Timer General Register A
-> TIOR: Timer I/O control register
-> In PWM mode 1, PWM waveforms in up to 12 phases can be output
->=20
-> PWM waveforms are output from the MTIOCnA and MTIOCnC pins by pairing TGRA
-> with TGRB and TGRC with TGRD. The levels specified by the TIOR.IOA[3:0] a=
-nd
-> IOC[3:0] bits are output from the MTIOCnA and MTIOCnC pins at compare mat=
-ches
-> A and C, and the level specified by the TIOR.IOB[3:0] and IOD[3:0] bits a=
-re
-> output at compare matches B and D (n =3D 0 to 4, 6, 7). The initial outpu=
-t value
-> is set in TGRA or TGRC. If the values set in paired TGRs are identical, t=
-he
-> output value does not change even when a compare match occurs.
->=20
-> PWM Mode 2
-> ----------
-> n =3D {0,1,2}
->=20
-> PWM waveform output is generated using one TGR as the cycle register and =
-the
-> others as duty registers. The level specified in TIOR is output at compar=
-e matches.
-> Upon counter clearing by a cycle register compare match, the initial valu=
-e set
-> in TIOR is output from each pin. If the values set in the cycle and duty =
-registers
-> are identical, the output value does not change even when a compare match=
- occurs.
->=20
-> In PWM mode 2, up to eight phases of PWM waveforms can be output when syn=
-chronous
-> clearing is used as synchronous operation in the channels that cannot be =
-placed in
-> PWM mode 2.
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index dae023d783a2..8df861b1f4a3 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -51,6 +51,18 @@ config PWM_AB8500
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-ab8500.
+> =20
+> +config PWM_APPLE
+> +	tristate "Apple SoC PWM support"
+> +	depends on ARCH_APPLE || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for PWM controller present on
+> +	  Apple SoCs
+> +
+> +	  Say Y here if you have an ARM Apple laptop, otherwise say N
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-apple.
+> +
+>  config PWM_ATMEL
+>  	tristate "Atmel PWM support"
+>  	depends on ARCH_AT91 || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 7bf1a29f02b8..19899b912e00 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -2,6 +2,7 @@
+>  obj-$(CONFIG_PWM)		+=3D core.o
+>  obj-$(CONFIG_PWM_SYSFS)		+=3D sysfs.o
+>  obj-$(CONFIG_PWM_AB8500)	+=3D pwm-ab8500.o
+> +obj-$(CONFIG_PWM_APPLE)		+=3D pwm-apple.o
+>  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
+>  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+=3D pwm-atmel-hlcdc.o
+>  obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
+> diff --git a/drivers/pwm/pwm-apple.c b/drivers/pwm/pwm-apple.c
+> new file mode 100644
+> index 000000000000..551e07d49bf7
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-apple.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> +/*
+> + * Driver for the Apple SoC PWM controller
+> + *
+> + * Copyright The Asahi Linux Contributors
+> + *
+> + * Limitations:
+> + * - The writes to cycle registers are shadowed until a write to
+> + *   the control register.
+> + * - If both OFF_CYCLES and ON_CYCLES are set to 0, the output
+> + *   is a constant off signal.
+> + * - When APPLE_PWM_CTRL is set to 0, the output is constant low
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/io.h>
+> +#include <linux/clk.h>
+> +#include <linux/math64.h>
+> +
+> +#define APPLE_PWM_CTRL        0x00
+> +#define APPLE_PWM_ON_CYCLES   0x1c
+> +#define APPLE_PWM_OFF_CYCLES  0x18
+> +
+> +#define APPLE_PWM_CTRL_ENABLE        BIT(0)
+> +#define APPLE_PWM_CTRL_MODE          BIT(2)
+> +#define APPLE_PWM_CTRL_UPDATE        BIT(5)
+> +#define APPLE_PWM_CTRL_TRIGGER       BIT(9)
+> +#define APPLE_PWM_CTRL_INVERT        BIT(10)
+> +#define APPLE_PWM_CTRL_OUTPUT_ENABLE BIT(14)
+> +
+> +struct apple_pwm {
+> +	struct pwm_chip chip;
+> +	void __iomem *base;
+> +	u64 clkrate;
+> +};
+> +
+> +static inline struct apple_pwm *to_apple_pwm(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct apple_pwm, chip);
+> +}
+> +
+> +static int apple_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   const struct pwm_state *state)
+> +{
+> +	struct apple_pwm *fpwm;
+> +
+> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	fpwm =3D to_apple_pwm(chip);
+> +	if (state->enabled) {
+> +		u64 on_cycles, off_cycles;
+> +
+> +		on_cycles =3D mul_u64_u64_div_u64(fpwm->clkrate,
+> +						state->duty_cycle, NSEC_PER_SEC);
+> +		if (on_cycles > 0xFFFFFFFF)
+> +			return -ERANGE;
+> +
+> +		off_cycles =3D mul_u64_u64_div_u64(fpwm->clkrate,
+> +						 state->period, NSEC_PER_SEC) - on_cycles;
+> +		if (off_cycles > 0xFFFFFFFF)
+> +			return -ERANGE;
+> +
+> +		writel(on_cycles, fpwm->base + APPLE_PWM_ON_CYCLES);
+> +		writel(off_cycles, fpwm->base + APPLE_PWM_OFF_CYCLES);
+> +		writel(APPLE_PWM_CTRL_ENABLE | APPLE_PWM_CTRL_OUTPUT_ENABLE | APPLE_PW=
+M_CTRL_UPDATE,
+> +		       fpwm->base + APPLE_PWM_CTRL);
+> +	} else {
+> +		writel(0, fpwm->base + APPLE_PWM_CTRL);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int apple_pwm_get_state(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> +			   struct pwm_state *state)
+> +{
+> +	struct apple_pwm *fpwm;
+> +	u32 on_cycles, off_cycles, ctrl;
+> +
+> +	fpwm =3D to_apple_pwm(chip);
+> +
+> +	ctrl =3D readl(fpwm->base + APPLE_PWM_CTRL);
+> +	on_cycles =3D readl(fpwm->base + APPLE_PWM_ON_CYCLES);
+> +	off_cycles =3D readl(fpwm->base + APPLE_PWM_OFF_CYCLES);
+> +
+> +	state->enabled =3D (ctrl & APPLE_PWM_CTRL_ENABLE) && (ctrl & APPLE_PWM_=
+CTRL_OUTPUT_ENABLE);
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> +	// on_cycles + off_cycles is 33 bits, NSEC_PER_SEC is 30, there is no o=
+verflow
+> +	state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)on_cycles * NSEC_PER_SEC,=
+ fpwm->clkrate);
+> +	state->period =3D DIV64_U64_ROUND_UP(((u64)off_cycles + (u64)on_cycles)=
+ *
+> +					    NSEC_PER_SEC, fpwm->clkrate);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops apple_pwm_ops =3D {
+> +	.apply =3D apple_pwm_apply,
+> +	.get_state =3D apple_pwm_get_state,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int apple_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct apple_pwm *fpwm;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	fpwm =3D devm_kzalloc(&pdev->dev, sizeof(*fpwm), GFP_KERNEL);
+> +	if (!fpwm)
+> +		return -ENOMEM;
+> +
+> +	fpwm->base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(fpwm->base))
+> +		return PTR_ERR(fpwm->base);
+> +
+> +	clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(clk), "unable to get the cloc=
+k");
+> +
 
-Why is PWM Mode 1 about two outputs? These could be abstracted as two
-individual PWMs, couldn't they? In this mode you could implement a phase
-shift, but the period is limited to the overflow time of the timers.
+I'd add a call to clk_rate_exclusive_get() here to justify that you
+determine clkrate here and don't recheck later (and also to make sure
+that your PWM output doesn't change for reasons out of your control).
+(Even though the rate might be fixed on your platform, doing it right for
+the benefit of people using your driver as a template is nice.)
 
-In Mode 2 the period is more flexible, but no phase shift is possible
-(apart from inversed polarity).
+But I intend to go over the PWM drivers and add such a call where
+appropriate, so IMHO this doesn't need to delay application of this
+driver.
 
-Did I get this right?
+> +	/*
+> +	 * Uses the 24MHz system clock on all existing devices, can only
+> +	 * happen if the device tree is broken
+> +	 *
+> +	 * This check is done to prevent an overflow in .apply
+> +	 */
+> +	fpwm->clkrate =3D clk_get_rate(clk);
+> +	if (fpwm->clkrate > NSEC_PER_SEC)
+> +		return dev_err_probe(&pdev->dev, -EINVAL, "pwm clock out of range");
+> +
+> +	fpwm->chip.dev =3D &pdev->dev;
+> +	fpwm->chip.npwm =3D 1;
+> +	fpwm->chip.ops =3D &apple_pwm_ops;
+> +
+> +	ret =3D devm_pwmchip_add(&pdev->dev, &fpwm->chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(&pdev->dev, ret, "unable to add pwm chip");
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id apple_pwm_of_match[] =3D {
+> +	{ .compatible =3D "apple,s5l-fpwm" },
 
-> Reset-Synchronized PWM Mode:
-> ---------------------------
-> In the reset-synchronized PWM mode, three phases of positive and negative=
- PWM
-> waveforms (six phases in total) that share a common wave transition point=
- can
-> be output by combining MTU3 and MTU4 and MTU6 and MTU7.
->=20
-> When set for reset-synchronized PWM mode, the MTIOC3B, MTIOC3D, MTIOC4A, =
-MTIOC4C,
-> MTIOC4B, MTIOC4D, MTIOC6B, MTIOC6D, MTIOC7A, MTIOC7C, MTIOC7B, and MTIOC7=
-D pins
-> function as PWM output pins and timer counters 6 and 12 (MTU3.TCNT and MT=
-U6.TCNT)
-> functions as an up-counter
->=20
->=20
-> Complementary PWM Mode:
-> ----------------------
->=20
-> In complementary PWM mode, dead time can be set for PWM waveforms to be o=
-utput.
-> The dead time is the period during which the upper and lower arm transist=
-ors are
-> set to the inactive level in order to prevent short-circuiting of the arm=
-s.
-> Six positive-phase and six negative-phase PWM waveforms (12 phases in tot=
-al)=20
-> with dead time can be output by combining MTU3/ MTU4 and MTU6/MTU7. PWM w=
-aveforms
-> without dead time can also be output.
->=20
-> In complementary PWM mode, nine registers (compare registers, buffer regi=
-sters,
-> and temporary registers) are used to control the duty ratio for the PWM o=
-utput.
->=20
-> Complementary PWM mode 1 (transfer at crest)
-> Complementary PWM mode 2 (transfer at trough)
-> Complementary PWM mode 3 (transfer at crest and trough)
+Out of interest: What does the f in fpwm stand for?
 
-These two modes are more general than the PWM framework supports. There
-was a series some time ago to implement settings with two outputs, but
-we didn't agree on an abstraction and the effort died. So for now these
-are out of scope, right?
+Otherwise:
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+FTR: You resent v7, I'll discard that from patchwork in the expectation
+that Thierry will pick up the original v7.)
 
 Best regards
 Uwe
@@ -193,19 +295,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---b4ly3tz3y5q36lp7
+--cwuokv3rl32le6xt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPsupcACgkQwfwUeK3K
-7AmbVwf9EQPzyfcDCH93ywofZkSk35/TNZC9n4BbiLbpE7va5/m1ytts9QMYsbYw
-T6Tbt0q3E2TJzVGd1+a4gfAWm76Fc3dx8mOVQnqzkwK1ws87qB2vYbUKOqvrhJ5d
-A9jjSsZrqIhi2FD08sIiaKBDI/jvLzjh2XeoU8JnmEVN69KEz8GZCuP/9gYD+qsx
-DRcP8HrpkrJa9+gfhbPKd045AO3WRLuT5ykbVqWmkRAqB5J0uYoWRo4zJ4IsiS5B
-psLpxCGWTeVSjSb0sbFS5HgPFFIPzfnWHZKHvu+LvYObo/YL+MYoMvJ1t8PnQPeE
-z7zs34qX5aCNXZWEm6CalqfvMp4sQg==
-=/XXg
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmPsvP4ACgkQwfwUeK3K
+7AlqJgf9GUq02UVLT14umt0XN+Y3Zsq9dCl2ixsxwtqWmIg83Ffy9yY04g27oaVa
+l4PeDJu0gxmLTfbRn6TIeGPE4Wz17MeZlPgufVKsnSUbiDhtdkGAyvIhCuu9eNNs
+yNlpKsRo+WjLS2YfUlEL/k9TyXRn01KJHCB7LaXVxIy2FY3goLlsi+GnSWeLH3UR
+QaHmNS5Yz+vBHG8IrPIcIJUf3ud8oN8pF0HyN9cePXoVb1cCGDqXxzGoXq6jvtaL
+7mMEIYjJ/e++QSqiV0DaZNdFS3NDQMe2upLtEHG8R11uY33TDPCkW3cFSYtAQvSd
+PSAAizHBSzLy0gLlNSDd1F8jSQSYlA==
+=YIF1
 -----END PGP SIGNATURE-----
 
---b4ly3tz3y5q36lp7--
+--cwuokv3rl32le6xt--
