@@ -2,115 +2,169 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91D1F69B522
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 22:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D1D69B66B
+	for <lists+linux-pwm@lfdr.de>; Sat, 18 Feb 2023 00:23:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbjBQVxr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Feb 2023 16:53:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60104 "EHLO
+        id S229978AbjBQXXc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Feb 2023 18:23:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjBQVxr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 16:53:47 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163DA4FCAE
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Feb 2023 13:53:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676670826; x=1708206826;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=d/ouMf+/n6H9YOcrk81UbPaxHszdsDffyZ2+lUPOVyU=;
-  b=f8h6nTVgcTtkQl65pbOTwOuAzRySSvaEJVuQb7erDwpHfUgjJsnUvFdM
-   efNQRuEPu3CbVCwUY4giHFomzHPysymln2mtH1PAA7NsBdx7zoxvPPwUO
-   pc31S/1oLtO5JuAPSs/asdH9Wu0kOPeEqVnUA9aQm6HLtDU2ZDQpts2Qy
-   YKjYZOV/Bsf80ezd1OIlXinBOwbktcAO0RkbMso8SYQ/XTyt+KUoA0VvY
-   PDpN/+5OvCDH/+5MGfMBWnrr+SZ/vlf5/gvtaLhpUzZQ+p5QYj4Ju0Ytq
-   4Au1H/4gZYFblTR0PCLIrtOr1kHGqqLGl82x2L8OjCX1nB+KRvunDftUg
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="418320155"
-X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="418320155"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 13:53:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="664008588"
-X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="664008588"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 17 Feb 2023 13:53:35 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pT8fe-000BqT-2g;
-        Fri, 17 Feb 2023 21:53:34 +0000
-Date:   Sat, 18 Feb 2023 05:53:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [thierry-reding-pwm:for-next 10/13] drivers/pwm/pwm-dwc.c:314:1:
- warning: data definition has no type or storage class
-Message-ID: <202302180504.FZilVS8T-lkp@intel.com>
+        with ESMTP id S229980AbjBQXXa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 18:23:30 -0500
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C2D11EA1;
+        Fri, 17 Feb 2023 15:23:29 -0800 (PST)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-171872a792fso2972583fac.3;
+        Fri, 17 Feb 2023 15:23:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H6Yd+sodJQYe42BYBBvb8iBAW4GssmfegnCeFVst0HU=;
+        b=WisbSKRmORIbfDrzOjBrCHCU2xsuu2nbcI+yUjuPhSGCcKv2zFXwKmFZHpG0xFOKxo
+         2qCku0hcOPhN/AMq8RfyqVEKFSffLM256RoPyZD58nwRPgrJkoqccxw3/5JIOuXY5Oix
+         VYByzhdM06JQ2CPRbc4Jxc0ijfxuA8X9ZO10UBuafuHi0zQE3oFXUEyVsDkIqvwLqOkZ
+         nyBtoULeaIgz0oHrUH7i1kUCCSB682SPyN1t5IPWAsHGJowSKMq25DY25bXSj5hc5/Ed
+         SV6YxK70CTJNj6bnB2xcy3J25Gkeb8w8Pp1V7YPIIG/2eoOTo8TMSqIGNADXs39f2yAH
+         I2NQ==
+X-Gm-Message-State: AO0yUKXJoxY72oOiF/mcm9E6NwLNuJUig2iBegvAzs78i6Fs5AkpbcUU
+        Vr+tyZssylbNg6OUjZNRLw==
+X-Google-Smtp-Source: AK7set9uI4W1g2C/4zLiiVPKiVE1XhOgTAe+PEaeY8yYLkF4qDghjty3XEUYzNeEr5fw7J5mdUp28w==
+X-Received: by 2002:a05:6870:78e:b0:16e:19a7:6241 with SMTP id en14-20020a056870078e00b0016e19a76241mr1218711oab.10.1676676208681;
+        Fri, 17 Feb 2023 15:23:28 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id u3-20020a05687036c300b00171920ca53esm515359oak.0.2023.02.17.15.23.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 15:23:28 -0800 (PST)
+Received: (nullmailer pid 2254552 invoked by uid 1000);
+        Fri, 17 Feb 2023 23:23:27 -0000
+Date:   Fri, 17 Feb 2023 17:23:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     Angelo Compagnucci <angelo@amarulasolutions.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] dt-bindings: leds: servo-pwm: Add new bindings
+ for servo-pwm
+Message-ID: <20230217232327.GA2243296-robh@kernel.org>
+References: <20230217145731.3018148-1-angelo@amarulasolutions.com>
+ <20230217145731.3018148-3-angelo@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230217145731.3018148-3-angelo@amarulasolutions.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Ben,
+On Fri, Feb 17, 2023 at 03:57:30PM +0100, Angelo Compagnucci wrote:
+> This binding describes the binding for controlling servo motors through
+> pwm.
+> 
+> Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
+> ---
+>  .../devicetree/bindings/misc/servo-pwm.yaml   | 59 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/servo-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/servo-pwm.yaml b/Documentation/devicetree/bindings/misc/servo-pwm.yaml
+> new file mode 100644
+> index 000000000000..faa8d4734817
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/servo-pwm.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/misc/servo-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Servo motor connected to PWM
+> +
+> +maintainers:
+> +  - Angelo Compagnucci <angelo@amarulasolutions.com>
+> +
+> +description:
+> +  Each servo is represented as a servo-pwm device.
+> +  The 20ms period is the accepted standard and so most of the motors
+> +  support it, while the positioning min/max duty cycle or the motor
+> +  degrees aperture vary lot between manufacturers.
+> +  The most common type of servo (SG90) has 180 degrees of movement
+> +  and moves between 0.5ms and 2.5ms duty cycle.
+> +
+> +properties:
+> +  compatible:
+> +    const: servo-pwm
+> +
+> +patternProperties:
+> +  properties:
+> +    pwms:
+> +      maxItems: 1
+> +
+> +    pwm-names: true
 
-FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
+Drop. '-names' is for when there is more than 1.
+> +
+> +    degrees:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-head:   7a77daf8223e772a225d6aa6202a5b1ae2392caf
-commit: c901a57e39db555ad7950fd61e1470cdecc8e654 [10/13] pwm: dwc: allow driver to be built with COMPILE_TEST
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230218/202302180504.FZilVS8T-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git/commit/?id=c901a57e39db555ad7950fd61e1470cdecc8e654
-        git remote add thierry-reding-pwm https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
-        git fetch --no-tags thierry-reding-pwm for-next
-        git checkout c901a57e39db555ad7950fd61e1470cdecc8e654
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/pwm/
+Kind of vague: servo-degrees
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302180504.FZilVS8T-lkp@intel.com/
+> +      description:
+> +        How many degrees the motor can move.
+> +      $ref: /schemas/types.yaml#/definitions/uint32
 
-All warnings (new ones prefixed by >>):
+0-2^32 are valid degrees?
 
->> drivers/pwm/pwm-dwc.c:314:1: warning: data definition has no type or storage class
-     314 | module_pci_driver(dwc_pwm_driver);
-         | ^~~~~~~~~~~~~~~~~
-   drivers/pwm/pwm-dwc.c:314:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
->> drivers/pwm/pwm-dwc.c:314:1: warning: parameter names (without types) in function declaration
-   drivers/pwm/pwm-dwc.c:304:26: warning: 'dwc_pwm_driver' defined but not used [-Wunused-variable]
-     304 | static struct pci_driver dwc_pwm_driver = {
-         |                          ^~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+> +
+> +    duty-min:
+> +      description:
+> +        Duty cycle for position the motor at 0 degrees.
 
+Units are ms? percent? Use standard unit suffix.
 
-vim +314 drivers/pwm/pwm-dwc.c
-
-1ed2b3fca64516 Jarkko Nikula 2020-10-02  313  
-1ed2b3fca64516 Jarkko Nikula 2020-10-02 @314  module_pci_driver(dwc_pwm_driver);
-1ed2b3fca64516 Jarkko Nikula 2020-10-02  315  
-
-:::::: The code at line 314 was first introduced by commit
-:::::: 1ed2b3fca64516d1b3503ef21929f3b5f4f41cc6 pwm: Add DesignWare PWM Controller Driver
-
-:::::: TO: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-:::::: CC: Thierry Reding <thierry.reding@gmail.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> +      $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +    duty-max:
+> +      description:
+> +        Duty cycle for positioning the motor at "degrees" angle.
+> +      $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    servo: servo@0 {
+> +      compatible = "servo-pwm";
+> +      pwms = <&pwm 0 20000000 0>;
+> +      degrees = <180>;
+> +      duty-min = <500000>;
+> +      duty-max = <2500000>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 356daea0861d..8f41daee62fc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8742,6 +8742,7 @@ M:	"Angelo Compagnucci" <angelo@amarulasolutions.com>
+>  L:	linux-pwm@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-driver-servo-pwm
+> +F:	Documentation/devicetree/bindings/misc/servo-pwm.yaml
+>  F:	drivers/misc/servo-pwm.c
+>  
+>  GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
+> -- 
+> 2.34.1
+> 
