@@ -2,143 +2,162 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BF5E69B225
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 19:01:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC41E69B46D
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 22:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbjBQSBU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Feb 2023 13:01:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
+        id S229568AbjBQVMj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Feb 2023 16:12:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjBQSBT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 13:01:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FD029E3A;
-        Fri, 17 Feb 2023 10:01:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F0C9D61F1E;
-        Fri, 17 Feb 2023 18:01:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A06C433D2;
-        Fri, 17 Feb 2023 18:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676656876;
-        bh=9IlSeuq9CAxECTILWyWm/AaYhbpQX8KMl7DQW/S45fw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TtYfXVs6f4cTXtZTzgxFox8eqLBulwVarNzV1junGS9C2DGYyVh0Hz53t+jB1QyQ3
-         sRAU4BxlcMiG/9LYJNWVvMK9mAletuA2L0ilRmtd2xBEKCAlBHtYhJRxUlMY9/8s4N
-         Z9TORfvYJ/D4SZlOuk+5mRk6ysWMc4kCsdREvV6hwTnl9UzGaQyBAAvcvksIgQkIt2
-         gUBtaK33ITjlLRX0yMpcz/fvNMdfF4t1cBe5d0UjsNn41uIBFqP4vLmNSDDQqR9t2/
-         YXbkb+Ixqk3ReB98w6Jb9Qgr1y4wSlnPRfEvDSj9+EikmGiuoUTy58OPYuHaVLRLs8
-         c9QIsfgtfJAgQ==
-From:   Conor Dooley <conor@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     conor@kernel.org, Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
+        with ESMTP id S229482AbjBQVMj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 16:12:39 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 066B45DE35;
+        Fri, 17 Feb 2023 13:12:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676668358; x=1708204358;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vVOC50k+elFfOk8KDTPGK7o6CIxERD5MbuPu66bNn5A=;
+  b=RkqCGWw5wpW8RlQ48Pvf2qtJkFlq4bBcuPe6Uij9MKlGOdpXIffObcX3
+   Sb0RnFA41kt/TeZmjDaCn5Ad1DAGppNSEELzncNS/rLrrWEvmYijIUalx
+   sG/BuCEjR16PzcKkUQMPgNiwPUYNJxoKbKfTH+juZJC9qW4TvV9ZjZnTk
+   l56swbo7UIXW/NOgAgM8wwjRtu2Ehq+NevqCGsHlXoZgTgaWx6GoRUqGc
+   3UylA+Ilg1mBCfSXUSmoxAnU2SkLEz/ebt/wtQu+0KbRkxn+/1Rud4JYc
+   x9vYCeSCU1jXFSVQmVmAvZEC6CMiSUyhrG4teKi/kGvfnMy8DWRgLZQ9Y
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="311719403"
+X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
+   d="scan'208";a="311719403"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 13:12:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="739382937"
+X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
+   d="scan'208";a="739382937"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Feb 2023 13:12:35 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pT81y-000BpH-0j;
+        Fri, 17 Feb 2023 21:12:34 +0000
+Date:   Sat, 18 Feb 2023 05:12:20 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Angelo Compagnucci <angelo@amarulasolutions.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Albert Ou <aou@eecs.berkeley.edu>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Sagar Kadam <sagar.kadam@openfive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH] dt-bindings: drop Sagar Kadam from SiFive binding maintainership
-Date:   Fri, 17 Feb 2023 18:00:36 +0000
-Message-Id: <20230217180035.39658-1-conor@kernel.org>
-X-Mailer: git-send-email 2.39.1
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] misc: servo-pwm: driver for controlling servo
+ motors via PWM
+Message-ID: <202302180429.NvI1mwuf-lkp@intel.com>
+References: <20230217161038.3130053-1-angelo@amarulasolutions.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3439; i=conor.dooley@microchip.com; h=from:subject; bh=nhdSMpAMHcDxZQ/G9fKc2bxint/gSH+fhiDQTwTY+dM=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDMnvDxxet0Qq9OYUtjIF+YPbTy3dWHe3ct2aXeseJXkoXMuv PK43p6OUhUGMg0FWTJEl8XZfi9T6Py47nHvewsxhZQIZwsDFKQATmanO8M8w4umr3fe2nJj14Cj37f ZaJhuGY/fWH3z9stbvZJ76XuvLDP/rJrNI3zpvpvzw3kyDnHedXx5O3uehJr2z9fcau0/51Tl8AA==
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230217161038.3130053-1-angelo@amarulasolutions.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+Hi Angelo,
 
-Sagar's email listed in maintainers is bouncing as his division was sold
-off by the company. I attempted to contact him some days ago on what the
-bounce email told me was his new contact information, but am yet to
-receive a response.
+I love your patch! Perhaps something to improve:
 
-Paul and Palmer are listed on each of the bindings, both of whom were
-alive & well as of Wednesday so the bindings remain maintained.
+[auto build test WARNING on char-misc/char-misc-linus]
+[also build test WARNING on linus/master v6.2-rc8]
+[cannot apply to char-misc/char-misc-testing char-misc/char-misc-next next-20230217]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-CC: Sagar Kadam <sagar.kadam@openfive.com>
-CC: Sagar Kadam <sagar.kadam@sifive.com>
-Link: https://lore.kernel.org/all/785425ca-4000-a7e4-16d6-4d68c91b158d@kernel.org/
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-Palmer/Paul, as mentioned Wednesday, here you go!
----
- Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml | 1 -
- .../bindings/interrupt-controller/sifive,plic-1.0.0.yaml       | 1 -
- Documentation/devicetree/bindings/pwm/pwm-sifive.yaml          | 1 -
- Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml    | 3 +--
- 4 files changed, 1 insertion(+), 5 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Angelo-Compagnucci/misc-servo-pwm-Add-sysfs-entries-to-control-motor-angle/20230218-001254
+patch link:    https://lore.kernel.org/r/20230217161038.3130053-1-angelo%40amarulasolutions.com
+patch subject: [PATCH v3 1/3] misc: servo-pwm: driver for controlling servo motors via PWM
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20230218/202302180429.NvI1mwuf-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/0ae16e16da0aa94de0d3ae63166f50a4a6fdef8a
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Angelo-Compagnucci/misc-servo-pwm-Add-sysfs-entries-to-control-motor-angle/20230218-001254
+        git checkout 0ae16e16da0aa94de0d3ae63166f50a4a6fdef8a
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/misc/
 
-diff --git a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml
-index c3be1b600007..c79e752283aa 100644
---- a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml
-+++ b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml
-@@ -8,7 +8,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: SiFive FU540 Power Reset Clock Interrupt Controller (PRCI)
- 
- maintainers:
--  - Sagar Kadam <sagar.kadam@sifive.com>
-   - Paul Walmsley  <paul.walmsley@sifive.com>
- 
- description:
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-index 99e01f4d0a69..63bc89e13480 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-@@ -45,7 +45,6 @@ description:
-   from S-mode. So add thead,c900-plic to distinguish them.
- 
- maintainers:
--  - Sagar Kadam <sagar.kadam@sifive.com>
-   - Paul Walmsley  <paul.walmsley@sifive.com>
-   - Palmer Dabbelt <palmer@dabbelt.com>
- 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-index 605c1766dba8..bae993128981 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
-@@ -8,7 +8,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: SiFive PWM controller
- 
- maintainers:
--  - Sagar Kadam <sagar.kadam@sifive.com>
-   - Paul Walmsley <paul.walmsley@sifive.com>
- 
- description:
-diff --git a/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml b/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml
-index bf3f07421f7e..0551a0d1b3df 100644
---- a/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml
-+++ b/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml
-@@ -8,8 +8,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: SiFive Composable Cache Controller
- 
- maintainers:
--  - Sagar Kadam <sagar.kadam@sifive.com>
--  - Paul Walmsley  <paul.walmsley@sifive.com>
-+  - Paul Walmsley <paul.walmsley@sifive.com>
- 
- description:
-   The SiFive Composable Cache Controller is used to provide access to fast copies
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302180429.NvI1mwuf-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/mm_types_task.h:16,
+                    from include/linux/mm_types.h:5,
+                    from include/linux/buildid.h:5,
+                    from include/linux/module.h:14,
+                    from drivers/misc/servo-pwm.c:7:
+   drivers/misc/servo-pwm.c: In function 'angle_show':
+>> arch/loongarch/include/asm/page.h:23:25: warning: passing argument 2 of 'sysfs_emit' makes pointer from integer without a cast [-Wint-conversion]
+      23 | #define PAGE_SIZE       (_AC(1, UL) << PAGE_SHIFT)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                         |
+         |                         long unsigned int
+   drivers/misc/servo-pwm.c:54:32: note: in expansion of macro 'PAGE_SIZE'
+      54 |         return sysfs_emit(buf, PAGE_SIZE, "%u\n", data->angle);
+         |                                ^~~~~~~~~
+   In file included from include/linux/kobject.h:20,
+                    from include/linux/module.h:21:
+   include/linux/sysfs.h:357:39: note: expected 'const char *' but argument is of type 'long unsigned int'
+     357 | int sysfs_emit(char *buf, const char *fmt, ...);
+         |                           ~~~~~~~~~~~~^~~
+   drivers/misc/servo-pwm.c: In function 'degrees_show':
+>> arch/loongarch/include/asm/page.h:23:25: warning: passing argument 2 of 'sysfs_emit' makes pointer from integer without a cast [-Wint-conversion]
+      23 | #define PAGE_SIZE       (_AC(1, UL) << PAGE_SHIFT)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                         |
+         |                         long unsigned int
+   drivers/misc/servo-pwm.c:84:32: note: in expansion of macro 'PAGE_SIZE'
+      84 |         return sysfs_emit(buf, PAGE_SIZE, "%u\n", data->degrees);
+         |                                ^~~~~~~~~
+   include/linux/sysfs.h:357:39: note: expected 'const char *' but argument is of type 'long unsigned int'
+     357 | int sysfs_emit(char *buf, const char *fmt, ...);
+         |                           ~~~~~~~~~~~~^~~
+
+
+vim +/sysfs_emit +23 arch/loongarch/include/asm/page.h
+
+09cfefb7fa70c3 Huacai Chen 2022-05-31  10  
+09cfefb7fa70c3 Huacai Chen 2022-05-31  11  /*
+09cfefb7fa70c3 Huacai Chen 2022-05-31  12   * PAGE_SHIFT determines the page size
+09cfefb7fa70c3 Huacai Chen 2022-05-31  13   */
+09cfefb7fa70c3 Huacai Chen 2022-05-31  14  #ifdef CONFIG_PAGE_SIZE_4KB
+09cfefb7fa70c3 Huacai Chen 2022-05-31  15  #define PAGE_SHIFT	12
+09cfefb7fa70c3 Huacai Chen 2022-05-31  16  #endif
+09cfefb7fa70c3 Huacai Chen 2022-05-31  17  #ifdef CONFIG_PAGE_SIZE_16KB
+09cfefb7fa70c3 Huacai Chen 2022-05-31  18  #define PAGE_SHIFT	14
+09cfefb7fa70c3 Huacai Chen 2022-05-31  19  #endif
+09cfefb7fa70c3 Huacai Chen 2022-05-31  20  #ifdef CONFIG_PAGE_SIZE_64KB
+09cfefb7fa70c3 Huacai Chen 2022-05-31  21  #define PAGE_SHIFT	16
+09cfefb7fa70c3 Huacai Chen 2022-05-31  22  #endif
+09cfefb7fa70c3 Huacai Chen 2022-05-31 @23  #define PAGE_SIZE	(_AC(1, UL) << PAGE_SHIFT)
+09cfefb7fa70c3 Huacai Chen 2022-05-31  24  #define PAGE_MASK	(~(PAGE_SIZE - 1))
+09cfefb7fa70c3 Huacai Chen 2022-05-31  25  
+
 -- 
-2.39.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
