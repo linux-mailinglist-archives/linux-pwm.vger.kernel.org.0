@@ -2,131 +2,111 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B4F69B04A
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 17:13:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3E3869B1C5
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 18:29:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjBQQNF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Feb 2023 11:13:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
+        id S229816AbjBQR36 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Feb 2023 12:29:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbjBQQNF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 11:13:05 -0500
-Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE41960A4F
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Feb 2023 08:13:03 -0800 (PST)
-Received: by mail-oi1-x22f.google.com with SMTP id bl6so1607388oib.11
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Feb 2023 08:13:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MblW2sV2loFTLuABSqdqJSNKXVRzUfuBHncz/oTZSRQ=;
-        b=OznA7Efy8vo9Ucu2cOrDvM7dOO8B4nKgetAjd9129TnwOAh0dpb31fQM75KmtI3RKS
-         R+40GsPEwLNmbzVET0vBBqtxVflxoe+2LRzTJCPtTIXrlawcJ4iM+G2+bgw6hM0UbgCi
-         TfSjkwLeEN3PaYoLsp+WR7o/frjRMUqfqQ+cc=
+        with ESMTP id S229460AbjBQR35 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 12:29:57 -0500
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6137096B;
+        Fri, 17 Feb 2023 09:29:56 -0800 (PST)
+Received: by mail-oo1-f54.google.com with SMTP id t7-20020a4aa3c7000000b0051fdea932cfso164404ool.10;
+        Fri, 17 Feb 2023 09:29:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MblW2sV2loFTLuABSqdqJSNKXVRzUfuBHncz/oTZSRQ=;
-        b=VKACV/AydQYk9pD5NZr3B90UefEByI+uK1NWey6FSh2gnx6G33ZxVu915UCEWw8IGn
-         inV7iLfC5ZBHf/E/oSUlSJa/6Dnkd16HDVyjRoM4qQo/qUL6ch/ro5HbNWfg0rCfDUrW
-         7b8887+vB+rVIjmeKQCUrPD5skAz/HVrdnHrli4J14QyaK6udkxJjJYa6HpPrmSWi9vI
-         kT2I4M72xNppeld26lMx5i7LOjN95bwLkSM6U58F0ujtp8WUiN38J1Oc95EET/3relkV
-         +vpZgv7aXa86GnbkysQDpGaeqrufjNhgrhSdWGN/accFJs0LkWSPw5ii99PpFTCDzVzD
-         gBFQ==
-X-Gm-Message-State: AO0yUKVCkQdT9LcxkjyZ6PFtN7omxSgmNCimlj2Eq+6bxiPT5hGblHOk
-        0fsKo1LeHG+AkCzyvkLeOB6dkjMLt94+fOyOYoccSA==
-X-Google-Smtp-Source: AK7set9rKqdF8/7hh+h7/TRAjjyVR9dp3jKsIZuiC6sB7XUrW2fWpsJN9H4vtRWeIcDDKS6Gyx8hhbjApK5WSiBl7lk=
-X-Received: by 2002:a05:6808:1512:b0:378:9fb4:8c47 with SMTP id
- u18-20020a056808151200b003789fb48c47mr448637oiw.9.1676650383200; Fri, 17 Feb
- 2023 08:13:03 -0800 (PST)
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9cZG/lvA9tHCJNSrutCVZnf9tIcLiTCzsCmLKnb7VUI=;
+        b=rJHN8bomaNFOa93TcLGgeYFF3w8A/Qvds0WqjBdEoe17i2xLzbcmGPRR0RMkEJePrJ
+         6Cqr3c+XB92rsFyYzZktt1KscRCoMp4aIqXq4a8yV+vRGlWnS4oa5RwaJkZXKiR+fyNn
+         KjMICPDejMFiyRGxeLBrCrqqKTX4pW16C1EGLB0Kn3lfH8of8wTrZtoWvhnF4YQrgk5k
+         Lgs0pub0dLYwjPPC+RsrtVX2iLytmT7aNOnnhSyo3K2fC8rEnjGbM3Ol5ULMHbmUXqEg
+         lkMViSVrCMxcMyLM5TrBPY50J6Pb19B2Yd735ZWiUedWJzTaqKKo9n7Wqof2LJ957F2r
+         h9SA==
+X-Gm-Message-State: AO0yUKWTX7OR6lMCq+dWOCnVb3/gw2xnCACk8DDNq2dIuEta5Z0ksn4p
+        EvwccvVxVWMlCxiKydlS7R5hwauArw==
+X-Google-Smtp-Source: AK7set/EdstLaLZEYSXWiHGnx7oJStKC8g4Jep5CDhUCUnquIC+8EYWRddTvrCdn4J8lqfd6zWKJOw==
+X-Received: by 2002:a4a:978c:0:b0:51f:e2ab:5535 with SMTP id w12-20020a4a978c000000b0051fe2ab5535mr2565996ooi.0.1676654995544;
+        Fri, 17 Feb 2023 09:29:55 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g19-20020a4a8953000000b00500c1100651sm2034737ooi.45.2023.02.17.09.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 09:29:55 -0800 (PST)
+Received: (nullmailer pid 1221642 invoked by uid 1000);
+        Fri, 17 Feb 2023 17:29:54 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-References: <20230217145731.3018148-1-angelo@amarulasolutions.com>
- <Y++e6IMusukWJNw2@kroah.com> <CA+_SqVYMZ7MErNr-HrbHj-=Q-5u1PizHQ_6TFkTOxB5=E8+9Dg@mail.gmail.com>
- <Y++hw3QTma3BGpwB@kroah.com>
-In-Reply-To: <Y++hw3QTma3BGpwB@kroah.com>
-From:   Angelo Compagnucci <angelo@amarulasolutions.com>
-Date:   Fri, 17 Feb 2023 17:12:26 +0100
-Message-ID: <CA+_SqVY7_eNw_MnpxEAxq=0OvfMgD+V5iSaiL_uXC-3aR7o9GA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] misc: servo-pwm: driver for controlling servo
- motors via PWM
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Angelo Compagnucci <angelo.compagnucci@gmail.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Angelo Compagnucci <angelo@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+In-Reply-To: <20230217161038.3130053-3-angelo@amarulasolutions.com>
+References: <20230217161038.3130053-1-angelo@amarulasolutions.com>
+ <20230217161038.3130053-3-angelo@amarulasolutions.com>
+Message-Id: <167665404021.1204417.13145202246528387672.robh@kernel.org>
+Subject: Re: [PATCH v3 3/3] dt-bindings: misc: servo-pwm: Add new bindings
+ for servo-pwm
+Date:   Fri, 17 Feb 2023 11:29:54 -0600
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Feb 17, 2023 at 4:48 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Feb 17, 2023 at 04:39:01PM +0100, Angelo Compagnucci wrote:
-> > On Fri, Feb 17, 2023 at 4:36 PM Greg Kroah-Hartman <
-> > gregkh@linuxfoundation.org> wrote:
-> >
-> > > On Fri, Feb 17, 2023 at 03:57:28PM +0100, Angelo Compagnucci wrote:
-> > > > This patch adds a simple driver to control servo motor position via
-> > > > PWM signal.
-> > > > The driver allows to set the angle from userspace, while min/max
-> > > > positions duty cycle and the motor degrees aperture are defined in
-> > > > the dts.
-> > > >
-> > > > Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
-> > > > ---
-> > > >  MAINTAINERS              |   6 ++
-> > > >  drivers/misc/Kconfig     |  11 +++
-> > > >  drivers/misc/Makefile    |   1 +
-> > > >  drivers/misc/servo-pwm.c | 149 +++++++++++++++++++++++++++++++++++++++
-> > >
-> > > You add sysfs files but do not document them in Documentation/ABI/ which
-> > > is required.  Please do so in your next version of this patch.
-> > >
-> >
-> > https://patchwork.ozlabs.org/project/linux-pwm/patch/20230217145731.3018148-2-angelo@amarulasolutions.com/
-> >
-> > This patch [2/3] should do what you're asking.
->
-> Why was I only cc:ed on this one patch?
 
-It looks like get_maintainers.pl only select you for some patches.
+On Fri, 17 Feb 2023 17:10:37 +0100, Angelo Compagnucci wrote:
+> This binding describes the binding for controlling servo motors through
+> pwm.
+> 
+> Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
+> ---
+> v2:
+> * Converted old txt to yaml
+> v3:
+> * Fixed errors rised by make dt_binding_check
+> 
+>  .../devicetree/bindings/misc/servo-pwm.yaml   | 57 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/servo-pwm.yaml
+> 
 
->
-> confused,
->
-> greg k-h
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
+yamllint warnings/errors:
 
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/misc/servo-pwm.example.dts:19.24-25.11: Warning (unit_address_vs_reg): /example-0/servo@0: node has a unit name, but no reg or ranges property
 
--- 
+doc reference errors (make refcheckdocs):
 
-Angelo Compagnucci
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230217161038.3130053-3-angelo@amarulasolutions.com
 
-Software Engineer
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-angelo@amarulasolutions.com
-__________________________________
-Amarula Solutions SRL
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Via le Canevare 30, 31100 Treviso, Veneto, IT
+pip3 install dtschema --upgrade
 
-T. +39 (0)42 243 5310
-info@amarulasolutions.com
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-www.amarulasolutions.com
-
-[`as] https://www.amarulasolutions.com|
