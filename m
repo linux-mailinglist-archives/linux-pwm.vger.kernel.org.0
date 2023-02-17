@@ -2,111 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3E3869B1C5
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 18:29:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BF5E69B225
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 19:01:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbjBQR36 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Feb 2023 12:29:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
+        id S229597AbjBQSBU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Feb 2023 13:01:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjBQR35 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 12:29:57 -0500
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6137096B;
-        Fri, 17 Feb 2023 09:29:56 -0800 (PST)
-Received: by mail-oo1-f54.google.com with SMTP id t7-20020a4aa3c7000000b0051fdea932cfso164404ool.10;
-        Fri, 17 Feb 2023 09:29:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9cZG/lvA9tHCJNSrutCVZnf9tIcLiTCzsCmLKnb7VUI=;
-        b=rJHN8bomaNFOa93TcLGgeYFF3w8A/Qvds0WqjBdEoe17i2xLzbcmGPRR0RMkEJePrJ
-         6Cqr3c+XB92rsFyYzZktt1KscRCoMp4aIqXq4a8yV+vRGlWnS4oa5RwaJkZXKiR+fyNn
-         KjMICPDejMFiyRGxeLBrCrqqKTX4pW16C1EGLB0Kn3lfH8of8wTrZtoWvhnF4YQrgk5k
-         Lgs0pub0dLYwjPPC+RsrtVX2iLytmT7aNOnnhSyo3K2fC8rEnjGbM3Ol5ULMHbmUXqEg
-         lkMViSVrCMxcMyLM5TrBPY50J6Pb19B2Yd735ZWiUedWJzTaqKKo9n7Wqof2LJ957F2r
-         h9SA==
-X-Gm-Message-State: AO0yUKWTX7OR6lMCq+dWOCnVb3/gw2xnCACk8DDNq2dIuEta5Z0ksn4p
-        EvwccvVxVWMlCxiKydlS7R5hwauArw==
-X-Google-Smtp-Source: AK7set/EdstLaLZEYSXWiHGnx7oJStKC8g4Jep5CDhUCUnquIC+8EYWRddTvrCdn4J8lqfd6zWKJOw==
-X-Received: by 2002:a4a:978c:0:b0:51f:e2ab:5535 with SMTP id w12-20020a4a978c000000b0051fe2ab5535mr2565996ooi.0.1676654995544;
-        Fri, 17 Feb 2023 09:29:55 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id g19-20020a4a8953000000b00500c1100651sm2034737ooi.45.2023.02.17.09.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 09:29:55 -0800 (PST)
-Received: (nullmailer pid 1221642 invoked by uid 1000);
-        Fri, 17 Feb 2023 17:29:54 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S229516AbjBQSBT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 13:01:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FD029E3A;
+        Fri, 17 Feb 2023 10:01:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F0C9D61F1E;
+        Fri, 17 Feb 2023 18:01:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A06C433D2;
+        Fri, 17 Feb 2023 18:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676656876;
+        bh=9IlSeuq9CAxECTILWyWm/AaYhbpQX8KMl7DQW/S45fw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TtYfXVs6f4cTXtZTzgxFox8eqLBulwVarNzV1junGS9C2DGYyVh0Hz53t+jB1QyQ3
+         sRAU4BxlcMiG/9LYJNWVvMK9mAletuA2L0ilRmtd2xBEKCAlBHtYhJRxUlMY9/8s4N
+         Z9TORfvYJ/D4SZlOuk+5mRk6ysWMc4kCsdREvV6hwTnl9UzGaQyBAAvcvksIgQkIt2
+         gUBtaK33ITjlLRX0yMpcz/fvNMdfF4t1cBe5d0UjsNn41uIBFqP4vLmNSDDQqR9t2/
+         YXbkb+Ixqk3ReB98w6Jb9Qgr1y4wSlnPRfEvDSj9+EikmGiuoUTy58OPYuHaVLRLs8
+         c9QIsfgtfJAgQ==
+From:   Conor Dooley <conor@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     conor@kernel.org, Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Albert Ou <aou@eecs.berkeley.edu>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Sagar Kadam <sagar.kadam@openfive.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH] dt-bindings: drop Sagar Kadam from SiFive binding maintainership
+Date:   Fri, 17 Feb 2023 18:00:36 +0000
+Message-Id: <20230217180035.39658-1-conor@kernel.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Angelo Compagnucci <angelo@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <20230217161038.3130053-3-angelo@amarulasolutions.com>
-References: <20230217161038.3130053-1-angelo@amarulasolutions.com>
- <20230217161038.3130053-3-angelo@amarulasolutions.com>
-Message-Id: <167665404021.1204417.13145202246528387672.robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: misc: servo-pwm: Add new bindings
- for servo-pwm
-Date:   Fri, 17 Feb 2023 11:29:54 -0600
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3439; i=conor.dooley@microchip.com; h=from:subject; bh=nhdSMpAMHcDxZQ/G9fKc2bxint/gSH+fhiDQTwTY+dM=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDMnvDxxet0Qq9OYUtjIF+YPbTy3dWHe3ct2aXeseJXkoXMuv PK43p6OUhUGMg0FWTJEl8XZfi9T6Py47nHvewsxhZQIZwsDFKQATmanO8M8w4umr3fe2nJj14Cj37f ZaJhuGY/fWH3z9stbvZJ76XuvLDP/rJrNI3zpvpvzw3kyDnHedXx5O3uehJr2z9fcau0/51Tl8AA==
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Conor Dooley <conor.dooley@microchip.com>
 
-On Fri, 17 Feb 2023 17:10:37 +0100, Angelo Compagnucci wrote:
-> This binding describes the binding for controlling servo motors through
-> pwm.
-> 
-> Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
-> ---
-> v2:
-> * Converted old txt to yaml
-> v3:
-> * Fixed errors rised by make dt_binding_check
-> 
->  .../devicetree/bindings/misc/servo-pwm.yaml   | 57 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/servo-pwm.yaml
-> 
+Sagar's email listed in maintainers is bouncing as his division was sold
+off by the company. I attempted to contact him some days ago on what the
+bounce email told me was his new contact information, but am yet to
+receive a response.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Paul and Palmer are listed on each of the bindings, both of whom were
+alive & well as of Wednesday so the bindings remain maintained.
 
-yamllint warnings/errors:
+CC: Sagar Kadam <sagar.kadam@openfive.com>
+CC: Sagar Kadam <sagar.kadam@sifive.com>
+Link: https://lore.kernel.org/all/785425ca-4000-a7e4-16d6-4d68c91b158d@kernel.org/
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+Palmer/Paul, as mentioned Wednesday, here you go!
+---
+ Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml | 1 -
+ .../bindings/interrupt-controller/sifive,plic-1.0.0.yaml       | 1 -
+ Documentation/devicetree/bindings/pwm/pwm-sifive.yaml          | 1 -
+ Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml    | 3 +--
+ 4 files changed, 1 insertion(+), 5 deletions(-)
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/misc/servo-pwm.example.dts:19.24-25.11: Warning (unit_address_vs_reg): /example-0/servo@0: node has a unit name, but no reg or ranges property
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230217161038.3130053-3-angelo@amarulasolutions.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml
+index c3be1b600007..c79e752283aa 100644
+--- a/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml
++++ b/Documentation/devicetree/bindings/clock/sifive/fu540-prci.yaml
+@@ -8,7 +8,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: SiFive FU540 Power Reset Clock Interrupt Controller (PRCI)
+ 
+ maintainers:
+-  - Sagar Kadam <sagar.kadam@sifive.com>
+   - Paul Walmsley  <paul.walmsley@sifive.com>
+ 
+ description:
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+index 99e01f4d0a69..63bc89e13480 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
+@@ -45,7 +45,6 @@ description:
+   from S-mode. So add thead,c900-plic to distinguish them.
+ 
+ maintainers:
+-  - Sagar Kadam <sagar.kadam@sifive.com>
+   - Paul Walmsley  <paul.walmsley@sifive.com>
+   - Palmer Dabbelt <palmer@dabbelt.com>
+ 
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+index 605c1766dba8..bae993128981 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.yaml
+@@ -8,7 +8,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: SiFive PWM controller
+ 
+ maintainers:
+-  - Sagar Kadam <sagar.kadam@sifive.com>
+   - Paul Walmsley <paul.walmsley@sifive.com>
+ 
+ description:
+diff --git a/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml b/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml
+index bf3f07421f7e..0551a0d1b3df 100644
+--- a/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml
++++ b/Documentation/devicetree/bindings/riscv/sifive,ccache0.yaml
+@@ -8,8 +8,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: SiFive Composable Cache Controller
+ 
+ maintainers:
+-  - Sagar Kadam <sagar.kadam@sifive.com>
+-  - Paul Walmsley  <paul.walmsley@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
+ 
+ description:
+   The SiFive Composable Cache Controller is used to provide access to fast copies
+-- 
+2.39.1
 
