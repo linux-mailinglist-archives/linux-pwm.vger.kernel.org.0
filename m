@@ -2,75 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60DB669AF0A
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 16:08:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA4AC69AF6A
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Feb 2023 16:22:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbjBQPIc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Feb 2023 10:08:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42014 "EHLO
+        id S229555AbjBQPWm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Feb 2023 10:22:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229928AbjBQPIb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 10:08:31 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC5CB6F7FD;
-        Fri, 17 Feb 2023 07:08:11 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id ee31so6911255edb.3;
-        Fri, 17 Feb 2023 07:08:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9XUILxJkgGPNaMRl2JbRx7qYAbvRZIGjpLxeN912ccY=;
-        b=G4X6wgf7AEX//7Db1yuig5RhDz/ee6wAdskoyteqSRR2eG/YE8FdI7IYVazfcHugni
-         fvacc3m2qfGycjJPeLioj1IWhBtVd2uoV9GYHd9bKMP/mlOqicPP+aNZ/70d4GurbLZw
-         g1zPJOd50omQxw+3drQPmJRO2J6uZPEbp2Vhce3GCeO5cwf8Awr9rXcwn2klWt48dV9O
-         2Pg7ecD+Cf75HF530Y1ILKXVWJNcl4hWDyX+WPHL1whLXncbdga8Jgo37IbMX4pnifJr
-         10KOaHQXZtQgp1N2GYtOLWeU6ljFMcsxaMiW7nIRPlX8iFEaiNI6VolqDMPH0aAbeO/Y
-         MHpQ==
+        with ESMTP id S229520AbjBQPWl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Feb 2023 10:22:41 -0500
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 765AE64B1A;
+        Fri, 17 Feb 2023 07:22:39 -0800 (PST)
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-171894cdf02so1256182fac.11;
+        Fri, 17 Feb 2023 07:22:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9XUILxJkgGPNaMRl2JbRx7qYAbvRZIGjpLxeN912ccY=;
-        b=FXfVVQi8DzAZkYCIyQdu8vOgDicjMXORrXjr6tjxp0mKZ4Z2CMDkN6Z9KCHf01JE+g
-         163irNYubtekQgaZs9EF3iItcTr0oD1wQ+jAQjF1ZlFdSMClEOeAfl73D29p/mSUOXQP
-         4aS0eB/isphwTULC6/OgcrfXEMdHKFHZpLP06EYYrlBgNn9sUn7lJ+bNd4t4sR8fg2cW
-         L6orWOocXsbRwQcse7P32Bf6JwCW+r3hVWCbxWs2IifyyfMAkmO6TL2nEar6/DYBjrB+
-         OcDsu/YaebS9FKSbGBFvQsfRiYXtUjG+Zhk6/TXCH3J6BednoxcKJpozYOzoS+dT0u+a
-         gxyA==
-X-Gm-Message-State: AO0yUKXSBA6KV6gtd0Oldr9TpEnvHfX55dqZRKqvyIZqLYCW7Gv0+pvE
-        nePhgzNmhPanu2LYgJIerGo=
-X-Google-Smtp-Source: AK7set8u6obZlXK/SaRdt9ibfXZIbRe2VxSJpVCjm54J7DNn3RllHsKwpaWO3Ucyw9xqCgqLwy5bPw==
-X-Received: by 2002:aa7:cd63:0:b0:4ac:dac1:3f91 with SMTP id ca3-20020aa7cd63000000b004acdac13f91mr1492923edb.18.1676646490338;
-        Fri, 17 Feb 2023 07:08:10 -0800 (PST)
-Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id t10-20020a50c24a000000b004aee5dbabf9sm35555edf.24.2023.02.17.07.08.09
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lL6hsm2eWKzX5rffaK5mdJBLi8Mcc5sKGEpXhxOwRzo=;
+        b=LHKZlKB6out+acI0SOaWU8pVdJ9lW9Od6KGZZiesAfCKgDozytg1AsxtzVaYTAjQ8f
+         HaUWFCYBtAPPJKjg+yfHWNRrG1VnlT2HuJ8gE+Mh97sI9ZyvjcSZ2308CTzni28uQHQ4
+         hBx9U8UNsGu2NoqEQO0sfdPuRWU8+uiNana4HXV5Kl4MoTv9XTsuhuwNQAlMTbk1/gem
+         YU3jk99vgt7QJ4pOfH3d8GsPzS4bRs2LThDvNMybZ8QWRyEuAkpouyUoPa/A+P8lMFiB
+         K89MXuy3/oae+Q9LB3JiIEAkI5fdGKgi6+lDfw9PC49/XIndnGa08o0pev98slWQjesb
+         4L+g==
+X-Gm-Message-State: AO0yUKUETV9RoZ8zQ4LvvUZxrGUaX9DmQ6rLka19Q1sAAMFVEsQct7DV
+        PeWpXAERlcAwvVu+dxOCEg==
+X-Google-Smtp-Source: AK7set8CNcQvPg1UU7tzYE0kfVflLacrKC4W+dAU975rORuG7n5TvQ1POmv7dWmVd7tGCw6MqnaE4Q==
+X-Received: by 2002:a05:6871:14a:b0:16e:8ce5:b98 with SMTP id z10-20020a056871014a00b0016e8ce50b98mr2376754oab.8.1676647357229;
+        Fri, 17 Feb 2023 07:22:37 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id k8-20020a4adfa8000000b005176714c603sm1919545ook.4.2023.02.17.07.22.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 07:08:09 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Ben Dooks <ben.dooks@sifive.com>, linux-pwm@vger.kernel.org
-Cc:     Greentime Hu <greentime.hu@sifive.com>, devicetree@vger.kernel.org,
-        jarkko.nikula@linux.intel.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        William Salmon <william.salmon@sifive.com>,
-        u.kleine-koenig@pengutronix.de,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: (subset) [PATCH v7 00/10] Designware PWM driver updates for OF
-Date:   Fri, 17 Feb 2023 16:08:09 +0100
-Message-Id: <167664644976.3317584.11838750253013149302.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20221223153820.404565-1-ben.dooks@sifive.com>
-References: <20221223153820.404565-1-ben.dooks@sifive.com>
-MIME-Version: 1.0
+        Fri, 17 Feb 2023 07:22:36 -0800 (PST)
+Received: (nullmailer pid 956423 invoked by uid 1000);
+        Fri, 17 Feb 2023 15:22:36 -0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     Angelo Compagnucci <angelo@amarulasolutions.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <20230217145731.3018148-3-angelo@amarulasolutions.com>
+References: <20230217145731.3018148-1-angelo@amarulasolutions.com>
+ <20230217145731.3018148-3-angelo@amarulasolutions.com>
+Message-Id: <167664704533.950732.842407236481610710.robh@kernel.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: leds: servo-pwm: Add new bindings
+ for servo-pwm
+Date:   Fri, 17 Feb 2023 09:22:36 -0600
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,30 +66,66 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, 23 Dec 2022 15:38:10 +0000, Ben Dooks wrote:
-> An updated set of patches for the Designware PWM driver
-> split into PCI and OF versions. I think I got all the
-> review issues in this set.
+
+On Fri, 17 Feb 2023 15:57:30 +0100, Angelo Compagnucci wrote:
+> This binding describes the binding for controlling servo motors through
+> pwm.
 > 
-> Sorry for the delay in getting this out, between conferences
-> and other absences there has been little time to deal with
-> this set. I will be now out of office until 3rd Jan 2023.
+> Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
+> ---
+>  .../devicetree/bindings/misc/servo-pwm.yaml   | 59 +++++++++++++++++++
+>  MAINTAINERS                                   |  1 +
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/servo-pwm.yaml
 > 
-> [...]
 
-Applied, thanks!
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-[01/10] dt-bindings: pwm: Document Synopsys DesignWare snps,pwm-dw-apb-timers-pwm2
-        commit: 0f03bf300833c05d914ab7f5ab3d8bc8564e9912
-[02/10] pwm: dwc: allow driver to be built with COMPILE_TEST
-        commit: c901a57e39db555ad7950fd61e1470cdecc8e654
-[03/10] pwm: dwc: change &pci->dev to dev in probe
-        commit: 8f3c7ab881ed7329003e10a2dd58f735abda2259
-[04/10] pwm: dwc: move memory alloc to own function
-        commit: a4218d7cf8978f397e731d1f15ef33d28f77e42b
-[05/10] pwm: dwc: use devm_pwmchip_add
-        commit: 7a77daf8223e772a225d6aa6202a5b1ae2392caf
+yamllint warnings/errors:
 
-Best regards,
--- 
-Thierry Reding <thierry.reding@gmail.com>
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml: patternProperties: 'properties' should not be valid under {'$ref': '#/definitions/json-schema-prop-names'}
+	hint: A json-schema keyword was found instead of a DT property name.
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml: patternProperties:properties: 'anyOf' conditional failed, one must be fixed:
+	'pwms' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml: patternProperties:properties: 'anyOf' conditional failed, one must be fixed:
+	'pwm-names' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml: patternProperties:properties: 'anyOf' conditional failed, one must be fixed:
+	'degrees' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml: patternProperties:properties: 'anyOf' conditional failed, one must be fixed:
+	'duty-min' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml: patternProperties:properties: 'anyOf' conditional failed, one must be fixed:
+	'duty-max' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'dependentRequired', 'dependentSchemas', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
+	'type' was expected
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+Documentation/devicetree/bindings/misc/servo-pwm.example.dts:19.24-25.11: Warning (unit_address_vs_reg): /example-0/servo@0: node has a unit name, but no reg or ranges property
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.example.dtb: servo@0: 'degrees', 'duty-max', 'duty-min', 'pwms' do not match any of the regexes: 'pinctrl-[0-9]+', 'properties'
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/misc/servo-pwm.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230217145731.3018148-3-angelo@amarulasolutions.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
