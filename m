@@ -2,230 +2,228 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 970F869CA01
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Feb 2023 12:40:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3E2269CA1D
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Feb 2023 12:46:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbjBTLkX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Feb 2023 06:40:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33604 "EHLO
+        id S231452AbjBTLql (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Feb 2023 06:46:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231778AbjBTLkW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Feb 2023 06:40:22 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC271A96B;
-        Mon, 20 Feb 2023 03:40:18 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id cq23so3203939edb.1;
-        Mon, 20 Feb 2023 03:40:18 -0800 (PST)
+        with ESMTP id S230401AbjBTLql (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Feb 2023 06:46:41 -0500
+Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B55D1043A
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Feb 2023 03:46:39 -0800 (PST)
+Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-172129e9cf1so531703fac.8
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Feb 2023 03:46:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7VRCEwvwi2KzPnPQXYXOatI2EQlUGZQ2IotXh1B453Y=;
-        b=YYgFYoQN8cskpSp1FCzyfaPDlY82tlp3k96AIY0b80XP+OFZGPV6Jk+d9KlkPMwDzz
-         1Qw1eBFwYSGycbxgkViUM/4g3JCpJNKOc3n7x62zPBsl7Cv0gnR9c+1I92Z5jEQGlF1k
-         YM89egyppyCFf8078jBpwYZ2wLc8x8Tw2pG29NzshjZccK1QNraV2j2w8vsCfCD3fkLO
-         3XLmGowAbxB8wWTpLwHjEPEJySq09UiyUGNP2lVuO+K7RbMsKv8VhC/5tT6tzb8PkHO4
-         +/gg6jQj+fKzWJKULoqgqDFhn/ifzquqCVwE+d45dsT2w2CF/6oNC0SDA+f7/vj4n70O
-         K01g==
+        d=amarulasolutions.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vPbo+yIARbT7jgf8IQnkjprl/MVbtyH8usepXrQBeJI=;
+        b=CPDcHaLEgeyaQO+4EHsg5O4TIVOU9SyomTQIcWyPyrv+INuZ3eapVql/EQv8eKlzoY
+         f1J5nfMgsXNtk1tJIqRfnEgbXPb6JkOUruEEqO3C3wwEOU4BJpdjN5yB8VS8ka54GpaC
+         5goGHDlHVmE0bLEjw6etGbk1SZ02qW4TkH9NQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7VRCEwvwi2KzPnPQXYXOatI2EQlUGZQ2IotXh1B453Y=;
-        b=uZzqzS6LyXuT+t65PmyEfgw4MJWu27TkgCN56GCxZ4p3tLskYWwRjdn/u4nsAYcKvF
-         LdSSfQEucri6nqTEIu2aPrMdQhREQEXFIoKbjbXFsClpKptOGl4/toHDG/OlAElyAS4y
-         NY6aoS87oWln2GwrnHCqFkFnvb5jtgDwF1IpgXAOedzmKF09fIURAVmcNizcjQMHAoRn
-         XHnag+9qQwsOAOgNHCqlkyow7Txy1OI6VSPeV1nh1CtFmKctDAb61DsbO/qRlNcMK+kx
-         GhV7hSiDRwBv6mcb+RhkdSYpDTBFAPQ9xA6giLIj7MST0VKqCyNi4BNq1OffUdZRbHzr
-         3KLg==
-X-Gm-Message-State: AO0yUKXCBfFpMavePpkR6OGODawY6jeBOJrys7XW8Crsmx9OT81SWS/e
-        LelUDzVLhqzjZqIo/LjteKQLKb6iZl4=
-X-Google-Smtp-Source: AK7set9Uqr1PmUDK49C/r7AJu01IIDDmMlV9UNtrTMl9BG5JWtjbEh6hMUz03a56Cu9/r29IeIe+BA==
-X-Received: by 2002:a17:906:86d4:b0:87b:3d29:2982 with SMTP id j20-20020a17090686d400b0087b3d292982mr9049349ejy.11.1676893216544;
-        Mon, 20 Feb 2023 03:40:16 -0800 (PST)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id e9-20020a170906374900b008cb7473e488sm1968726ejc.12.2023.02.20.03.40.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Feb 2023 03:40:16 -0800 (PST)
-Date:   Mon, 20 Feb 2023 12:40:14 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
-Cc:     Angelo Compagnucci <angelo@amarulasolutions.com>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vPbo+yIARbT7jgf8IQnkjprl/MVbtyH8usepXrQBeJI=;
+        b=UQhJVt3M3qnzc1XTSJLkapvWe5pokcPYGYjlZMUmgFNnj6y3AosCOOLpRLNLAAuLWY
+         STmlAQTWhID/fZoHfYQYha6NEqrzkyMWP6LPd33sTlYHQfRoDVM32THI34+0Zh71E1/A
+         06437Nc4hpnKJCTIaKp659MukkUCLllaWrm/TtORDP5moVkAl4Ddrvaa0zkwFml5YASy
+         w7195ofB0joF86kk1lpwFVm5wQO8W9C0NQp5uMCBWpod5Lsp7c69rhsatn8t8eXPJKIc
+         RwnqXHgiXHTte6+VpGunoVRo4ukvNzyLjNb0p3ZH7zCBtBrAUMRVCAuuNKTedeeVfX74
+         VT/Q==
+X-Gm-Message-State: AO0yUKVU40ILAq78WzGzQYojPSWDZheGKo4egYo5gOqBYGSrvbsKrZfO
+        36uxK0Qi0KFopd1IhS7x2yOmOIGGUQf+3HUksNYz7A==
+X-Google-Smtp-Source: AK7set9RP37kgFyzY6MRlT3RDTJn3/SaIqePohqPE15TE2VUDNda5IF9jZXIfDH9EIvjtg+PB/MCXKWvcPjVVThCf8w=
+X-Received: by 2002:a05:6871:b12:b0:16e:5f2d:2e55 with SMTP id
+ fq18-20020a0568710b1200b0016e5f2d2e55mr1034864oab.9.1676893598440; Mon, 20
+ Feb 2023 03:46:38 -0800 (PST)
+MIME-Version: 1.0
+References: <20230217161038.3130053-1-angelo@amarulasolutions.com> <Y/NcHjpet0DxLJrl@orome>
+In-Reply-To: <Y/NcHjpet0DxLJrl@orome>
+From:   Angelo Compagnucci <angelo@amarulasolutions.com>
+Date:   Mon, 20 Feb 2023 12:46:02 +0100
+Message-ID: <CA+_SqVbs0O5aS8pjAutNY21SxXM=EWiWKunH=-0N9VxMNFKtjQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] misc: servo-pwm: driver for controlling servo
+ motors via PWM
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Angelo Compagnucci <angelo.compagnucci@gmail.com>,
         Derek Kiernan <derek.kiernan@xilinx.com>,
         Dragan Cvetic <dragan.cvetic@xilinx.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         open list <linux-kernel@vger.kernel.org>,
         "open list:GENERIC PWM SERVO DRIVER" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] misc: servo-pwm: driver for controlling servo
- motors via PWM
-Message-ID: <Y/NcHjpet0DxLJrl@orome>
-References: <20230217161038.3130053-1-angelo@amarulasolutions.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IrcY/ZtmnJ+P8XWD"
-Content-Disposition: inline
-In-Reply-To: <20230217161038.3130053-1-angelo@amarulasolutions.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, Feb 20, 2023 at 12:40 PM Thierry Reding
+<thierry.reding@gmail.com> wrote:
+>
+> On Fri, Feb 17, 2023 at 05:10:35PM +0100, Angelo Compagnucci wrote:
+> > This patch adds a simple driver to control servo motor position via
+> > PWM signal.
+> > The driver allows to set the angle from userspace, while min/max
+> > positions duty cycle and the motor degrees aperture are defined in
+> > the dts.
+> >
+> > Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
+> > ---
+> > v2:
+> > * Driver mostly rewritten for kernel 6.2
+> > v3:
+> > * Fixed sysfs_emit (greg k-h)
+> >
+> >  MAINTAINERS              |   6 ++
+> >  drivers/misc/Kconfig     |  11 +++
+> >  drivers/misc/Makefile    |   1 +
+> >  drivers/misc/servo-pwm.c | 149 +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 167 insertions(+)
+> >  create mode 100644 drivers/misc/servo-pwm.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 39ff1a717625..8f4af64deb1b 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8737,6 +8737,12 @@ F:     Documentation/devicetree/bindings/power/power?domain*
+> >  F:   drivers/base/power/domain*.c
+> >  F:   include/linux/pm_domain.h
+> >
+> > +GENERIC PWM SERVO DRIVER
+> > +M:   "Angelo Compagnucci" <angelo@amarulasolutions.com>
+> > +L:   linux-pwm@vger.kernel.org
+> > +S:   Maintained
+> > +F:   drivers/misc/servo-pwm.c
+> > +
+> >  GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
+> >  M:   Eugen Hristev <eugen.hristev@microchip.com>
+> >  L:   linux-input@vger.kernel.org
+> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> > index 9947b7892bd5..8a74087149ac 100644
+> > --- a/drivers/misc/Kconfig
+> > +++ b/drivers/misc/Kconfig
+> > @@ -518,6 +518,17 @@ config VCPU_STALL_DETECTOR
+> >
+> >         If you do not intend to run this kernel as a guest, say N.
+> >
+> > +config SERVO_PWM
+> > +     tristate "Servo motor positioning"
+> > +     depends on PWM
+> > +     help
+> > +       Driver to control generic servo motor positioning.
+> > +       Writing to the "angle" device attribute, the motor will move to
+> > +       the angle position.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called servo-pwm.
+> > +
+> >  source "drivers/misc/c2port/Kconfig"
+> >  source "drivers/misc/eeprom/Kconfig"
+> >  source "drivers/misc/cb710/Kconfig"
+> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> > index 87b54a4a4422..936629b648a9 100644
+> > --- a/drivers/misc/Makefile
+> > +++ b/drivers/misc/Makefile
+> > @@ -64,3 +64,4 @@ obj-$(CONFIG_HI6421V600_IRQ)        += hi6421v600-irq.o
+> >  obj-$(CONFIG_OPEN_DICE)              += open-dice.o
+> >  obj-$(CONFIG_GP_PCI1XXXX)    += mchp_pci1xxxx/
+> >  obj-$(CONFIG_VCPU_STALL_DETECTOR)    += vcpu_stall_detector.o
+> > +obj-$(CONFIG_SERVO_PWM)      += servo-pwm.o
+> > diff --git a/drivers/misc/servo-pwm.c b/drivers/misc/servo-pwm.c
+> > new file mode 100644
+> > index 000000000000..1303ddda8d07
+> > --- /dev/null
+> > +++ b/drivers/misc/servo-pwm.c
+> > @@ -0,0 +1,149 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Copyright (c) 2023 Angelo Compagnucci <angelo@amarulasolutions.com>
+> > + * servo-pwm.c - driver for controlling servo motors via pwm.
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/pwm.h>
+> > +
+> > +#define DEFAULT_DUTY_MIN     500000
+> > +#define DEFAULT_DUTY_MAX     2500000
+> > +#define DEFAULT_DEGREES              175
+> > +#define DEFAULT_ANGLE                0
+> > +
+> > +struct servo_pwm_data {
+> > +     u32 duty_min;
+> > +     u32 duty_max;
+> > +     u32 degrees;
+> > +     u32 angle;
+> > +
+> > +     struct mutex lock;
+> > +     struct pwm_device *pwm;
+> > +     struct pwm_state pwmstate;
+> > +};
+> > +
+> > +static int servo_pwm_set(struct servo_pwm_data *data, int val)
+> > +{
+> > +     u64 new_duty = (((data->duty_max - data->duty_min) /
+> > +                     data->degrees) * val) + data->duty_min;
+>
+> This one formula is basically the only thing that this driver adds. The
+> remaining 150+ lines are essentially boilerplate to expose the "angle"
+> property via sysfs.
+>
+> We can already do everything that this driver does via the PWM sysfs, so
+> I wonder if we really need this.
 
---IrcY/ZtmnJ+P8XWD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's true, but anyway it's a big improvement over writing each one
+of the servo parameters inside the sysfs one by one.
+Moreover, it makes easier to handle a product based on several servo motors.
 
-On Fri, Feb 17, 2023 at 05:10:35PM +0100, Angelo Compagnucci wrote:
-> This patch adds a simple driver to control servo motor position via
-> PWM signal.
-> The driver allows to set the angle from userspace, while min/max
-> positions duty cycle and the motor degrees aperture are defined in
-> the dts.
->=20
-> Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
-> ---
-> v2:
-> * Driver mostly rewritten for kernel 6.2
-> v3:
-> * Fixed sysfs_emit (greg k-h)
->=20
->  MAINTAINERS              |   6 ++
->  drivers/misc/Kconfig     |  11 +++
->  drivers/misc/Makefile    |   1 +
->  drivers/misc/servo-pwm.c | 149 +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 167 insertions(+)
->  create mode 100644 drivers/misc/servo-pwm.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 39ff1a717625..8f4af64deb1b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8737,6 +8737,12 @@ F:	Documentation/devicetree/bindings/power/power?d=
-omain*
->  F:	drivers/base/power/domain*.c
->  F:	include/linux/pm_domain.h
-> =20
-> +GENERIC PWM SERVO DRIVER
-> +M:	"Angelo Compagnucci" <angelo@amarulasolutions.com>
-> +L:	linux-pwm@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/misc/servo-pwm.c
-> +
->  GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
->  M:	Eugen Hristev <eugen.hristev@microchip.com>
->  L:	linux-input@vger.kernel.org
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 9947b7892bd5..8a74087149ac 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -518,6 +518,17 @@ config VCPU_STALL_DETECTOR
-> =20
->  	  If you do not intend to run this kernel as a guest, say N.
-> =20
-> +config SERVO_PWM
-> +	tristate "Servo motor positioning"
-> +	depends on PWM
-> +	help
-> +	  Driver to control generic servo motor positioning.
-> +	  Writing to the "angle" device attribute, the motor will move to
-> +	  the angle position.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called servo-pwm.
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index 87b54a4a4422..936629b648a9 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -64,3 +64,4 @@ obj-$(CONFIG_HI6421V600_IRQ)	+=3D hi6421v600-irq.o
->  obj-$(CONFIG_OPEN_DICE)		+=3D open-dice.o
->  obj-$(CONFIG_GP_PCI1XXXX)	+=3D mchp_pci1xxxx/
->  obj-$(CONFIG_VCPU_STALL_DETECTOR)	+=3D vcpu_stall_detector.o
-> +obj-$(CONFIG_SERVO_PWM)	+=3D servo-pwm.o
-> diff --git a/drivers/misc/servo-pwm.c b/drivers/misc/servo-pwm.c
-> new file mode 100644
-> index 000000000000..1303ddda8d07
-> --- /dev/null
-> +++ b/drivers/misc/servo-pwm.c
-> @@ -0,0 +1,149 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (c) 2023 Angelo Compagnucci <angelo@amarulasolutions.com>
-> + * servo-pwm.c - driver for controlling servo motors via pwm.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/err.h>
-> +#include <linux/pwm.h>
-> +
-> +#define DEFAULT_DUTY_MIN	500000
-> +#define DEFAULT_DUTY_MAX	2500000
-> +#define DEFAULT_DEGREES		175
-> +#define DEFAULT_ANGLE		0
-> +
-> +struct servo_pwm_data {
-> +	u32 duty_min;
-> +	u32 duty_max;
-> +	u32 degrees;
-> +	u32 angle;
-> +
-> +	struct mutex lock;
-> +	struct pwm_device *pwm;
-> +	struct pwm_state pwmstate;
-> +};
-> +
-> +static int servo_pwm_set(struct servo_pwm_data *data, int val)
-> +{
-> +	u64 new_duty =3D (((data->duty_max - data->duty_min) /
-> +			data->degrees) * val) + data->duty_min;
+> Also, how are other aspects of the motor (such as velocity) controlled?
+> Wouldn't you want to expose these other controls as well?
 
-This one formula is basically the only thing that this driver adds. The
-remaining 150+ lines are essentially boilerplate to expose the "angle"
-property via sysfs.
+As far as I can tell, a basic servo motor only offers a way to change
+the angle through PWM duty cycle.
+The speed is controlled by the driver inside the motor: the bigger is
+the angle, the faster it moves.
 
-We can already do everything that this driver does via the PWM sysfs, so
-I wonder if we really need this.
+There are more complex servos out there, but they don't use plain
+simple PWM like those, they usually use some sort of more complex
+digital protocol on busses like I2C, SPI, DMX.
 
-Also, how are other aspects of the motor (such as velocity) controlled?
-Wouldn't you want to expose these other controls as well?
+>
+> Thierry
 
-Thierry
 
---IrcY/ZtmnJ+P8XWD
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+-- 
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPzXBwACgkQ3SOs138+
-s6Ggdw/+KeNkMeFH4jH8So1hgLn8V0bv4fGqFzXhcZ6E46RLb1p8ZIBQ9Wt0YN09
-JORAgEv7+RQJtpeFSLjzHn5jJp1zWFNq2nWYHQj51SfhvvkEcJSSH/Sf4N/npo/g
-Nc72gehTbOh7KCk1NL5bvlCm6hEwCpcJDJ29GZQahzpK9dMQZUEnH3W6D+YO7Gwu
-e9/JLefgoj5CCaMaXkNjXsbijkmwP5uGjBe1Xzj8BQMWv0180dJ+ziTIM55BMNue
-4B1bTaUF75DqXkASsIMYRXBSCdtimtkJJLkjFUR55Ela5y/7OvbLWdqjxVOiP1xS
-YANqrZP5nRCWyZ+eDrtYFGIKWvn6v64sNd7qY9oBUtCxK0YZ7fEEfN02daDkjavg
-K6rSUu/rxmS/9ezNw/GRud622kJ9lP14fDaiCgd91Djg44d6Olddg6bT1p19eIGZ
-rYMpQjC6yclSzfOfWgcuCFuw7G1ixRqDuEADZMpe5xwFp89JsDK6adlM//spcU3o
-5HIdtqjDQTcOMKN+SVihAV41JiFb1EGOHYs6imcL/LCTyNO5JUNSORetbHGnQPkE
-ESKsr2mslqMGQzSLXZQEPkGPJCvTgEC7Nbl7he1+TcWBQaVBcsNEhX9dM9FIO64K
-E89LMnhqjz7+/qoXNXm1eKhWfOeEBGfwDyz83Hi/uhkYJyApP6o=
-=LLou
------END PGP SIGNATURE-----
+Angelo Compagnucci
 
---IrcY/ZtmnJ+P8XWD--
+Software Engineer
+
+angelo@amarulasolutions.com
+__________________________________
+Amarula Solutions SRL
+
+Via le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 (0)42 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
+
+[`as] https://www.amarulasolutions.com|
