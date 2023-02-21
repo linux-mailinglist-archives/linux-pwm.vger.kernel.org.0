@@ -2,219 +2,160 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F1D69D5A7
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Feb 2023 22:19:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C5BB69DA84
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Feb 2023 06:54:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232238AbjBTVTm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 20 Feb 2023 16:19:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
+        id S233209AbjBUFyo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Feb 2023 00:54:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231350AbjBTVTm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Feb 2023 16:19:42 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 585F61DBBF;
-        Mon, 20 Feb 2023 13:19:40 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id g1so9240210edz.7;
-        Mon, 20 Feb 2023 13:19:40 -0800 (PST)
+        with ESMTP id S229835AbjBUFyn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Feb 2023 00:54:43 -0500
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85BD91F4A7
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Feb 2023 21:54:41 -0800 (PST)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-536bbef1c5eso42435107b3.9
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Feb 2023 21:54:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=sifive.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Krn4mdiwPO7RgJcS0ry9rwU7Q7xFzYK+OYfjpV3ivsI=;
-        b=fxUq1YMIrrx79mcA8LAWzyZf/PRVs1AZFAPvTq8diDbB+JJvfNwctNvc4LSXxO9qGO
-         Xz+BDPCKnE0J66iw84XW5+dGolqYlEp0FG9Gtn4QDL7CmxVh/YzZOgTeZd8JyDZjz4gs
-         PGorg0ETawWwwUKAeHQGyC8Ey4O9Btlf/TV7MS9fS8dwJi3Xdex9OmZA8IcwI0a8Srv6
-         sGaE/lwDEYFv/O8uiE9O4VVaupRhIai1YoBeRXDx8ssC/wBR0pxt2JZMWehXi2jWSwBB
-         k+GT72harPeEdc2tEhFKNkO9wERV1gZ4x+oRHlYM3kHRYuugft9fWU5LBaPcJPHBu84i
-         Asow==
+        bh=PKGj+xv4pnpjzxheaocCFzGNsSoHlHMPoKqxiA/28oQ=;
+        b=Wrcoo/GSnOe5mCzRiZ6/3szvx5wT+s10fqZJCl6ef1q5s58EAtSKXNFdYZVZ5hMdsT
+         S55cmjS6se6zJegcFZv6z2w25p9OswIkcQbd14OgUUCycmtT9MPtaIZWRk0We0ca7Vnx
+         9h0zVR9Xf7lKY5K61k/A5oiOGsF4bDN0LLm1R+06e8ilN4DTwEKSbYaVAuaS1M25MlRB
+         5lccXBWM3XyyFKaT8n3/WwYe24fejhnKy+Q0twGjdpfNQolxo5Strm/k0LPfjP1zifPj
+         T34moa9882W6EJ20YpfC3WsoNlQ8Wc/HOI6rn2aYfaT5G2+xAcZALqE+eH6hH10tTLEB
+         eoJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Krn4mdiwPO7RgJcS0ry9rwU7Q7xFzYK+OYfjpV3ivsI=;
-        b=P/ZD0HfBNkEMoC2zlZhBif1mQVcaTaFdDTn8v5QfsRmljJ8OxIhNKLsmkONS32/E/G
-         HpYFJdrhmphoczUjBUtZx5MV/bjLRCDxkMvUUAoNlTT/uCs8ueT08gjb6W/QVPf498iw
-         ghqDdhWUCGt7om87QKT/lAC0M6mRmQIqdfeRz7Esbm4P0GxZ24yAsxFF8z2ZJ7+0xzSM
-         GJ2mmBoW380nSyWWuE/N3BvM2SQLCyhtu0ITAnLELE3GWEkjIh9P+YgvSnoyU6l7MmEn
-         L/gpuseZdqA5WXQN4opRzwsQLyE3zq8ydaG4IbX8N7aH5Qw1AeMwAoVGbkKSzu2aHXo7
-         gngw==
-X-Gm-Message-State: AO0yUKUgRLPXyGb0VM7W8Opkoj718IQem/JmsMb2WJMjxN1F6CZGzAwk
-        t+1S8mxGx0tIYv9zEtLsJmk=
-X-Google-Smtp-Source: AK7set9EeTUNTI2HkoW56+iZZgNRkR4NOCQmig3msSVl0Y2slouobFgE3Rmh9ob6P98UkyScldVLsw==
-X-Received: by 2002:a17:907:3201:b0:888:a32d:b50 with SMTP id xg1-20020a170907320100b00888a32d0b50mr15228948ejb.40.1676927978618;
-        Mon, 20 Feb 2023 13:19:38 -0800 (PST)
-Received: from ?IPV6:2a01:c22:77a6:b600:80c9:a4ca:b3fa:5ed4? (dynamic-2a01-0c22-77a6-b600-80c9-a4ca-b3fa-5ed4.c22.pool.telefonica.de. [2a01:c22:77a6:b600:80c9:a4ca:b3fa:5ed4])
-        by smtp.googlemail.com with ESMTPSA id z11-20020a1709060acb00b008ba9e67ea4asm3997643ejf.133.2023.02.20.13.19.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 13:19:38 -0800 (PST)
-Message-ID: <3edc5ba6-bf3d-e45b-377a-9e7ece7642a7@gmail.com>
-Date:   Mon, 20 Feb 2023 22:19:30 +0100
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PKGj+xv4pnpjzxheaocCFzGNsSoHlHMPoKqxiA/28oQ=;
+        b=PSp8XzEhg2o3O8ChcCHeWNK5WeO0wVr3R/XY5gfEf028UkPsTyKOsUfCDLLbQdtqd2
+         0+dtYvjXj6tdFH7s8EeBnkrjOBYx6LtKfuVd4/lyzg42/iXGWFo1gmgAG1Khw6KRqm77
+         X4mDDJGhFIgZJWymKJxjcSvnSO9gi5YDuofne8wzCUTMzJtVqR0N3RLXx+9XWIOLyYrH
+         3F6Y5Bo1GyZczqhndkRZNA/RjDVBB9+DKZ48m4whPKTFZNEZ0dFnvPwcrOhx+6mcjbjg
+         TcyzbNYndgrRLAExEN0rpqIwmY6iPMMWeUtt/szyakukFOot86R+lVf9MyyXgbM6dXI1
+         LcKg==
+X-Gm-Message-State: AO0yUKX85Em8G/uvLYa/cAkkQYMNL8ZYsRKBU1IZ9hJBvNSox2eqwQUn
+        6n5ZrRtZ8p4L06YsCBc1uhl8pCymPiC4ve21tIB2lw==
+X-Google-Smtp-Source: AK7set9MzBIUkg55oEqbfr3musYCTrXO/xQ5+x4ZGdYrY0pF1B2s0V7v0kWCjZ/rivtWol15XxWbTjtUWPZ6irbBh6Q=
+X-Received: by 2002:a81:b723:0:b0:536:38b4:f50 with SMTP id
+ v35-20020a81b723000000b0053638b40f50mr350484ywh.1.1676958880647; Mon, 20 Feb
+ 2023 21:54:40 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Content-Language: en-US
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     linux-pwm@vger.kernel.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH RESEND v4] dt-bindings: pwm: Convert Amlogic Meson PWM binding
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230130093229.27489-1-nylon.chen@sifive.com> <20230130093229.27489-3-nylon.chen@sifive.com>
+ <20230130101707.pdvabl3na2wpwxqu@pengutronix.de> <CAHh=Yk85NHbm9eUKLm75GUP4gSP5eYFjVabTUXseyB6wHD4D=Q@mail.gmail.com>
+In-Reply-To: <CAHh=Yk85NHbm9eUKLm75GUP4gSP5eYFjVabTUXseyB6wHD4D=Q@mail.gmail.com>
+From:   Nylon Chen <nylon.chen@sifive.com>
+Date:   Tue, 21 Feb 2023 13:54:29 +0800
+Message-ID: <CAHh=Yk-ejA5W=G2Z7L3pVZzUt6DCF+6moJSc4rg0OQWO2fLXZg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pwm: sifive: change the PWM controlled LED algorithm
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     aou@eecs.berkeley.edu, conor@kernel.org,
+        emil.renner.berthing@canonical.com, geert+renesas@glider.be,
+        heiko@sntech.de, krzysztof.kozlowski+dt@linaro.org,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nylon7717@gmail.com,
+        zong.li@sifive.com, greentime.hu@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert Amlogic Meson PWM binding to yaml.
+Hi Uwe,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
-Seems patch got lost over the question who takes it.
-Please apply through the pwm tree.
+Nylon Chen <nylon.chen@sifive.com> =E6=96=BC 2023=E5=B9=B42=E6=9C=883=E6=97=
+=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:06=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Uwe,
+>
+> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=E5=
+=B9=B41=E6=9C=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:17=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+> >
+> > On Mon, Jan 30, 2023 at 05:32:29PM +0800, Nylon Chen wrote:
+> > > The `frac` variable represents the pulse inactive time, and the resul=
+t of
+> > > this algorithm is the pulse active time. Therefore, we must reverse t=
+he
+> > > result.
+> > >
+> > > The reference is SiFive FU740-C000 Manual[0].
+> > >
+> > > [0]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86e=
+d8b16acba_fu740-c000-manual-v1p6.pdf
+> > >
+> > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> > > ---
+> > >  drivers/pwm/pwm-sifive.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > > index 62b6acc6373d..a5eda165d071 100644
+> > > --- a/drivers/pwm/pwm-sifive.c
+> > > +++ b/drivers/pwm/pwm-sifive.c
+> > > @@ -158,6 +158,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> > >       frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+> > >       /* The hardware cannot generate a 100% duty cycle */
+> > >       frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+> > > +     frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
+> >
+> > The same problem exists in pwm_sifive_get_state(), doesn't it?
+> >
+> > As fixing this is an interruptive change anyhow, this is the opportunit=
+y
+> > to align the driver to the rules tested by PWM_DEBUG.
+> >
+> > The problems I see in the driver (only checked quickly, so I might be
+> > wrong):
+> >
+>
+> >  - state->period !=3D ddata->approx_period isn't necessarily a problem.=
+ If
+> >    state->period > ddata->real_period that's fine and the driver should
+> >    continue
+> >
+> >  - frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+> >    is wrong for two reasons:
+> >    it should round down and use the real period.
+I have some results from my observations regarding the questions you raised=
+.
 
-v2:
-- fix clocks and clock-names
-- consider that more than one compatible may be set
-v3:
-- remove minItem/maxItem properties for compatible
-v4:
-- remove not needed "items" before "enum"
----
- .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 70 +++++++++++++++++++
- .../devicetree/bindings/pwm/pwm-meson.txt     | 29 --------
- 2 files changed, 70 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
+I don't know if what we are thinking is the same thing.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-new file mode 100644
-index 000000000..527864a4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-amlogic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic PWM
-+
-+maintainers:
-+  - Heiner Kallweit <hkallweit1@gmail.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - amlogic,meson8b-pwm
-+          - amlogic,meson-gxbb-pwm
-+          - amlogic,meson-gxbb-ao-pwm
-+          - amlogic,meson-axg-ee-pwm
-+          - amlogic,meson-axg-ao-pwm
-+          - amlogic,meson-g12a-ee-pwm
-+          - amlogic,meson-g12a-ao-pwm-ab
-+          - amlogic,meson-g12a-ao-pwm-cd
-+          - amlogic,meson-s4-pwm
-+      - items:
-+          - const: amlogic,meson-gx-pwm
-+          - const: amlogic,meson-gxbb-pwm
-+      - items:
-+          - const: amlogic,meson-gx-ao-pwm
-+          - const: amlogic,meson-gxbb-ao-pwm
-+      - items:
-+          - const: amlogic,meson8-pwm
-+          - const: amlogic,meson8b-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+          - enum: [clkin0, clkin1]
-+      - items:
-+          - const: clkin0
-+          - const: clkin1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm@8550 {
-+      compatible = "amlogic,meson-gxbb-pwm";
-+      reg = <0x08550 0x10>;
-+      clocks = <&xtal>, <&xtal>;
-+      clock-names = "clkin0", "clkin1";
-+      #pwm-cells = <3>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-meson.txt b/Documentation/devicetree/bindings/pwm/pwm-meson.txt
-deleted file mode 100644
-index bd02b0a14..000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-meson.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Amlogic Meson PWM Controller
--============================
--
--Required properties:
--- compatible: Shall contain "amlogic,meson8b-pwm"
--                         or "amlogic,meson-gxbb-pwm"
--                         or "amlogic,meson-gxbb-ao-pwm"
--                         or "amlogic,meson-axg-ee-pwm"
--                         or "amlogic,meson-axg-ao-pwm"
--                         or "amlogic,meson-g12a-ee-pwm"
--                         or "amlogic,meson-g12a-ao-pwm-ab"
--                         or "amlogic,meson-g12a-ao-pwm-cd"
--- #pwm-cells: Should be 3. See pwm.yaml in this directory for a description of
--  the cells format.
--
--Optional properties:
--- clocks: Could contain one or two parents clocks phandle for each of the two
--  PWM channels.
--- clock-names: Could contain at least the "clkin0" and/or "clkin1" names.
--
--Example:
--
--	pwm_ab: pwm@8550 {
--		compatible = "amlogic,meson-gxbb-pwm";
--		reg = <0x0 0x08550 0x0 0x10>;
--		#pwm-cells = <3>;
--		clocks = <&xtal>, <&xtal>;
--		clock-names = "clkin0", "clkin1";
--	}
--- 
-2.39.1
-
+If my assumptions are different from yours, please let me know. Thanks.
+> are you mean state->period is a redundancy variable so we can use
+> ddata->real_period directly?
+>
+> it seems reasonable, but I don't get your point, why do we need to
+> change the algorithm to DIV_ROUND_DOWN_ULL() and change the if-else
+> condition.
+>
+> frac =3D DIV_ROUND_DOWN_ULL(num, ddata->real_period);
+> if (state->period < ddata->approx_period) {
+>     ...
+> }
+>
+> >
+> > Best regards
+> > Uwe
+> >
+> > --
+> > Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
+       |
+> > Industrial Linux Solutions                 | https://www.pengutronix.de=
+/ |
