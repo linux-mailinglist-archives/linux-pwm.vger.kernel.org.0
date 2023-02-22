@@ -2,65 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C991469F07C
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Feb 2023 09:39:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E433169F4E6
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Feb 2023 13:51:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbjBVIj6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 22 Feb 2023 03:39:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58178 "EHLO
+        id S231735AbjBVMvE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 22 Feb 2023 07:51:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231301AbjBVIj5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Feb 2023 03:39:57 -0500
-Received: from mail.crawnon.pl (mail.crawnon.pl [51.68.198.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301CB2D142
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Feb 2023 00:39:56 -0800 (PST)
-Received: by mail.crawnon.pl (Postfix, from userid 1002)
-        id F2C2BA4719; Wed, 22 Feb 2023 08:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=crawnon.pl; s=mail;
-        t=1677055194; bh=C5hX24svv/9/TME4wPCHfYjl17BCtmuxEd1i9B4zdYs=;
-        h=Date:From:To:Subject:From;
-        b=F35E2iK70SPNeBT/+roZR0mPbChwmxxRpIkOGnMZGAfEgYVprly4tCifcwU7D+nON
-         HEE4EKiHatUAt5/Dd2zzmG25xGfM81Qw8f1tG5fjMtIKadXsaed6x2+JZTS4xX7aJ7
-         BJPNDyYFZrrscCyc3fjqAzm/wgYRNKDpP0Le573hY1+TREalHEZP+pFPDq88lun5Yg
-         KINOjtiVae7wIhNXM/bssQmBRObT14s/YEfumB959agPGdISjcTGhR4GqxhunlPr7e
-         01e/LIp74MeP+oBy4f8wwy+4WllwPF4PdyO3ZsAUpIFfa4ijB7NILsJJsopniGsmR8
-         2rLp9nkq6aLzg==
-Received: by mail.crawnon.pl for <linux-pwm@vger.kernel.org>; Wed, 22 Feb 2023 08:39:39 GMT
-Message-ID: <20230222073001-0.1.9b.luq2.0.3apxh8t4er@crawnon.pl>
-Date:   Wed, 22 Feb 2023 08:39:39 GMT
-From:   =?UTF-8?Q? "Miko=C5=82aj_Fiodorczyk" ?= 
-        <mikolaj.fiodorczyk@crawnon.pl>
-To:     <linux-pwm@vger.kernel.org>
-Subject: Fotowoltaika - nowe warunki
-X-Mailer: mail.crawnon.pl
+        with ESMTP id S231931AbjBVMvD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Feb 2023 07:51:03 -0500
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8FB35251
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Feb 2023 04:51:02 -0800 (PST)
+Received: from localhost (88-113-24-128.elisa-laajakaista.fi [88.113.24.128])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id 8ed9ad1e-b2af-11ed-bd9b-005056bd6ce9;
+        Wed, 22 Feb 2023 14:51:00 +0200 (EET)
+From:   andy.shevchenko@gmail.com
+Date:   Wed, 22 Feb 2023 14:51:00 +0200
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Nicola Di Lieto <nicola.dilieto@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
+Message-ID: <Y/YPtJK8nVBthCML@surfacebook>
+References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
+ <20201211170432.6113-1-nicola.dilieto@gmail.com>
+ <20201211170432.6113-2-nicola.dilieto@gmail.com>
+ <20210117130434.663qpp6noujptdyt@pengutronix.de>
+ <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
+ <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ***
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Fri, Feb 10, 2023 at 10:54:49PM +0100, Angelo Compagnucci kirjoitti:
+> Il giorno ven 22 gen 2021 alle ore 11:20 Linus Walleij
+> <linus.walleij@linaro.org> ha scritto:
 
-chcia=C5=82bym poinformowa=C4=87, i=C5=BC mog=C4=85 Pa=C5=84stwo uzyska=C4=
-=87 dofinansowanie na systemy fotowoltaiczne w ramach nowej edycji progra=
-mu M=C3=B3j Pr=C4=85d.
+...
 
-Program zapewnia 6000 z=C5=82 dofinansowania na instalacj=C4=99 paneli i =
-16 000 z=C5=82 na magazyn energii, ni=C5=BCsze cen pr=C4=85du i mo=C5=BCl=
-iwo=C5=9B=C4=87 odliczenia koszt=C3=B3w zwi=C4=85zanych z instalacj=C4=85=
- fotowoltaiki w ramach rozliczenia PIT (tzw. ulga termomodernizacyjna).
+> More than a year passed from the last message, could we reopen the
+> discussion? I'd like to have this upstream!
 
-Czy s=C4=85 Pa=C5=84stwo otwarci na wst=C4=99pn=C4=85 rozmow=C4=99 w tym =
-temacie?
+Seems not much interest neither from community nor from author. Maybe later
+people will look into this?
+
+P.S> FWIW, I have reviewed code more than a week ago.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Pozdrawiam,
-Miko=C5=82aj Fiodorczyk
