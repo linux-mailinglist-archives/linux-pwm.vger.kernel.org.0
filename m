@@ -2,96 +2,103 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 166066A2CF3
-	for <lists+linux-pwm@lfdr.de>; Sun, 26 Feb 2023 02:37:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A35486A2EFA
+	for <lists+linux-pwm@lfdr.de>; Sun, 26 Feb 2023 10:18:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjBZBhk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 25 Feb 2023 20:37:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
+        id S229445AbjBZJSA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 26 Feb 2023 04:18:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjBZBhj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 25 Feb 2023 20:37:39 -0500
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727EB11EA1;
-        Sat, 25 Feb 2023 17:37:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1677375458; x=1708911458;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VN9+lKpIv8OFPEcx6C6zFpPockwjmo2bbc4mI4drChU=;
-  b=agMyv5n/xH0t7jZeTsPah1ijEaVIrVNbDVyS15RkowlqX7z5QGYjcU3N
-   8429CVCwSXf+LP0FTqIprH63V2Ypqw/ztdFN2PfvbbtXP2IKzmG5BsLLJ
-   ApvWSEiSn/JatbzLWXnRIQonJ6/cNhnIpCw7szXtQlfkBNSg2g8QEmH2H
-   s=;
-X-IronPort-AV: E=Sophos;i="5.97,328,1669075200"; 
-   d="scan'208";a="303015007"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2023 01:37:37 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com (Postfix) with ESMTPS id C71F7A2992;
-        Sun, 26 Feb 2023 01:37:35 +0000 (UTC)
-Received: from EX19D010UWA004.ant.amazon.com (10.13.138.204) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.45; Sun, 26 Feb 2023 01:37:34 +0000
-Received: from u9aa42af9e4c55a.ant.amazon.com (10.106.100.27) by
- EX19D010UWA004.ant.amazon.com (10.13.138.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.24; Sun, 26 Feb 2023 01:37:34 +0000
-From:   Munehisa Kamata <kamatam@amazon.com>
-To:     <thierry.reding@gmail.com>
-CC:     <u.kleine-koenig@pengutronix.de>, <tobetter@gmail.com>,
-        <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Munehisa Kamata <kamatam@amazon.com>, <stable@vger.kernel.org>
-Subject: [PATCH] pwm: core: Zero-initialize the temp state
-Date:   Sat, 25 Feb 2023 17:37:21 -0800
-Message-ID: <20230226013722.1802842-1-kamatam@amazon.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229379AbjBZJSA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 26 Feb 2023 04:18:00 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F0F76A6
+        for <linux-pwm@vger.kernel.org>; Sun, 26 Feb 2023 01:17:57 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pWDAH-0008Ad-S8; Sun, 26 Feb 2023 10:17:53 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pWDAG-000MiI-QF; Sun, 26 Feb 2023 10:17:52 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pWDAF-000OyU-HT; Sun, 26 Feb 2023 10:17:51 +0100
+Date:   Sun, 26 Feb 2023 10:17:52 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Munehisa Kamata <kamatam@amazon.com>
+Cc:     thierry.reding@gmail.com, tobetter@gmail.com,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] pwm: core: Zero-initialize the temp state
+Message-ID: <20230226091752.wtnj7oqzmn6azahl@pengutronix.de>
+References: <20230226013722.1802842-1-kamatam@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.106.100.27]
-X-ClientProxiedBy: EX19D031UWC003.ant.amazon.com (10.13.139.252) To
- EX19D010UWA004.ant.amazon.com (10.13.138.204)
-X-Spam-Status: No, score=-11.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5rbivgnxok4x6fcf"
+Content-Disposition: inline
+In-Reply-To: <20230226013722.1802842-1-kamatam@amazon.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Zero-initialize the on-stack structure to avoid unexpected behaviors. Some
-drivers may not set or initialize all the values in pwm_state through their
-.get_state() callback and therefore some random values may remain there and
-be set into pwm->state eventually.
 
-This actually caused regression on ODROID-N2+ as reported in [1]; kernel
-fails to boot due to random panic or hang-up.
+--5rbivgnxok4x6fcf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://forum.odroid.com/viewtopic.php?f=177&t=46360
+Hello,
 
-Fixes: c73a3107624d ("pwm: Handle .get_state() failures")
-Cc: stable@vger.kernel.org # 6.2
-Signed-off-by: Munehisa Kamata <kamatam@amazon.com>
----
- drivers/pwm/core.c | 1 +
- 1 file changed, 1 insertion(+)
+On Sat, Feb 25, 2023 at 05:37:21PM -0800, Munehisa Kamata wrote:
+> Zero-initialize the on-stack structure to avoid unexpected behaviors. Some
+> drivers may not set or initialize all the values in pwm_state through the=
+ir
+> .get_state() callback and therefore some random values may remain there a=
+nd
+> be set into pwm->state eventually.
+>=20
+> This actually caused regression on ODROID-N2+ as reported in [1]; kernel
+> fails to boot due to random panic or hang-up.
+>=20
+> [1] https://forum.odroid.com/viewtopic.php?f=3D177&t=3D46360
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index e01147f66e15..6eac8022a2c2 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -117,6 +117,7 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
- 	if (pwm->chip->ops->get_state) {
- 		struct pwm_state state;
- 
-+		memset(&state, 0, sizeof(struct pwm_state));
- 		err = pwm->chip->ops->get_state(pwm->chip, pwm, &state);
- 		trace_pwm_get(pwm, &state, err);
- 
--- 
-2.25.1
+Looking through the report I wonder what actually made the machine fail
+to boot. Doesn't this paper over a problem that should be fixed (also)
+somewhere else?
 
+Which driver is the one that the problem occur for?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--5rbivgnxok4x6fcf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmP7I70ACgkQwfwUeK3K
+7AkSqQf+PQRB/iBxK2N2bbBFz6/yzLKrxeWeKcrWi5kCfwRHvJSMMmwGNUoq8HBp
+mnNhvceIZDBrRCKcXosWgcUcf8jNFRlUqyLXf58yqIPJ5Tr7UGUBDYPmB6c/OasZ
+CuGMiySQE36V32IvlJAUEIjQ7pnPSrwWg8fE8ZESo7L0hc1I7+XYVQPwJqklOZr3
+OQkIlUKClBoe6Ak4C+dGbXAK8NVWHdRrmGbIWCNsILBM4uQopOXNA7ZWELf9f5m5
+NcOCNkQNghhCMVEVEElcC0fDrV+ilwZJRNy5axMksQdDpPbPoiSs59bNDN9i3fj6
+jn8SCuQbds+QDygig7ltfZB7w27MpA==
+=MkIE
+-----END PGP SIGNATURE-----
+
+--5rbivgnxok4x6fcf--
