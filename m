@@ -2,137 +2,346 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E7C56A5AC9
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 15:26:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 350686A5AE6
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 15:35:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbjB1O06 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Feb 2023 09:26:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51432 "EHLO
+        id S229900AbjB1OfD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Feb 2023 09:35:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjB1O05 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 09:26:57 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FEE1BC9;
-        Tue, 28 Feb 2023 06:26:56 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id j3so6551739wms.2;
-        Tue, 28 Feb 2023 06:26:56 -0800 (PST)
+        with ESMTP id S229871AbjB1OfB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 09:35:01 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C39B30B25
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Feb 2023 06:34:31 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id i34so40836844eda.7
+        for <linux-pwm@vger.kernel.org>; Tue, 28 Feb 2023 06:34:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/tq/zszDMcZ/q4+NmurCt/9UiLLyD1boBQYOIvlny1E=;
-        b=OdqxhqK9TLRXQDeY4kvDV/5/PNlSSqSsW2dwVR+wcKiNh6ED+N5Pivk06LtJSAUEIp
-         HBHOpsrBWvtvvfZIcS6NE2/kfIlMUOMrWDGcIS7lRoK03bSTRGCnMBHqQHtF7zhOU+gS
-         cwkK1G0jE2aJS3NggWztmSS9fiJ29IQV4pafrpTZwU79uPOCnJmszgZgEYx2R58DeDBc
-         NUdVPJ2Ii3FLICIm7kII4x26XxPxo/kxix9ecmc39zEuQMVN5gYMS5/CWU8iw4nhwWkK
-         lTERhbJJJ62ASK3dMr0ZJ2U0g8jLXFh5ZnLmcBhcoNQ8mKW75kLH3SD06z+3GcoYE0OC
-         SMUg==
+        d=linaro.org; s=google; t=1677594867;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uebId/E2MuuN0Eng4ubkqVVfbCw/rWB/uItWH6yqNNk=;
+        b=SI1irGw+2fPr4/IIo5aLmevlsfiWicfh32tSgX+IUYC71HxA75YDUQ9pb8LkiOS8uT
+         FHAFOt8ewX53zbChepayWL7SwPz9Ayns/9NVnNtndQwYoZXeWgyIPXrlfttmYyVNJFk/
+         AwilCDZRVd3j/dyXG0dT2ud2mSMTz1R7BdSKKbJ/ZAVdLxMaanUrKptrFYs7+vBVj5gO
+         Xe0aHcjcZPBPXoCa9iArNaI8zO/hPBBxw6MWO3m4oNZNpNobFTxlKrtPRe3We6L0e9te
+         a4uMGTwfAlRcSU3KGT+iqr6AM1LcZMmRDKHAJrHgNhQEs0KO+yuGHyyYheLBVS58NNfE
+         JEow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/tq/zszDMcZ/q4+NmurCt/9UiLLyD1boBQYOIvlny1E=;
-        b=o1phTk/xod5GbQl3E6bCafoqNySZuuZNpLiNVThTIEzA1hI9IUcTf6mF1/HyeOqYJ2
-         oBGS8YdmB3wOVZLBlQQTDtxoABN4D0yQIE0NPw6pPrFHVIRPa9NL+kjVcZ4nlhIhsr8R
-         F9wiEaX4/fVMasWEeTA5XHJK9Px55M3MV0aRQKHL5h7sDiFF18sXaKL47t2AFPoVsu8P
-         13vfCPJB53Ep4U1RywAIzM3PQTSEr8/+n7rt1H6+FsqWv9IdeGZYl1Lnbj/rF6NERIkc
-         x9qEBG2vdlU6BJFu7Pw0O4YFdbHsCpOdQL5JmboySs+Rnvs+XDPZJXdGtrjHDyB274A5
-         Hkfw==
-X-Gm-Message-State: AO0yUKUneY2GTHFNEA/ws53e6rrDe24mouatP36E8KyxX4q3oJDhFxzx
-        IE24/kdagiega2JoLYMgHCc=
-X-Google-Smtp-Source: AK7set/Njfuc3yKOHWNK5KXQxBrJfvz/OT7fbh+EXYFYdrzRcEvWk4rSnTHuKLQTu25xMxoXo8xxRA==
-X-Received: by 2002:a05:600c:a293:b0:3eb:3e24:59e2 with SMTP id hu19-20020a05600ca29300b003eb3e2459e2mr2258301wmb.25.1677594414614;
-        Tue, 28 Feb 2023 06:26:54 -0800 (PST)
-Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id bi22-20020a05600c3d9600b003dc42d48defsm12822098wmb.6.2023.02.28.06.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 06:26:54 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v6.3-rc1
-Date:   Tue, 28 Feb 2023 15:26:51 +0100
-Message-Id: <20230228142651.3839023-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20210112; t=1677594867;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uebId/E2MuuN0Eng4ubkqVVfbCw/rWB/uItWH6yqNNk=;
+        b=IvgST2YzriMQ1eCpiFNsBSmyRhOOApd25ueHecArY8foynh5fWBOpIDeJIVFjTvh+H
+         eZkpd1k5eX6bSdRkPXtGJ5rZl2F1Ekx1EkGNyHOKrZxDENGnauaRhrQWdLtw3Lo6eFkL
+         KFASgSSo3mbKwMd4v+6np+/evh2RCqkvhDP2ADXUNtAoBdo8vQPL6QvbXbxXeArKj8Yw
+         XmWwcYxVm7WoKSb8FcYkVfpj//Pq7b+oHhnACUFLYBat8fcHYoG8Aed+h2Q8Gp9CawpW
+         Nnqs6aaCMPe6HdD6ZzBijiYfC2muCRZgdIm9Lfol5LQnX0cAKuPL3FrasT1hUi8ungsr
+         DjBg==
+X-Gm-Message-State: AO0yUKUeGb9FJ/LBUh1OwRmKg3vQgG7qh15FDQMlIDqDYELhAJ8ebVCJ
+        Jc5M2lnyuuKSyPqGONhBb1cc8Q==
+X-Google-Smtp-Source: AK7set8kQ9ata6euqo/6Np+cgIW8IeRuMTqmy4tXn4RTpG4UPnLGLKgbZBqE0j7kjRa/ppTVghc7EQ==
+X-Received: by 2002:aa7:c9d9:0:b0:4ab:1c69:5c4 with SMTP id i25-20020aa7c9d9000000b004ab1c6905c4mr3769925edt.26.1677594867546;
+        Tue, 28 Feb 2023 06:34:27 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id qq10-20020a17090720ca00b008e09deb6610sm4518783ejb.200.2023.02.28.06.34.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Feb 2023 06:34:27 -0800 (PST)
+Message-ID: <60496973-5382-14de-6c2d-c60b3556defb@linaro.org>
+Date:   Tue, 28 Feb 2023 15:34:25 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v1 2/2] pwm: starfive: Add PWM driver support
+Content-Language: en-US
+To:     William Qiu <william.qiu@starfivetech.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Hal Feng <hal.feng@starfivetech.com>
+References: <20230228091345.70515-1-william.qiu@starfivetech.com>
+ <20230228091345.70515-3-william.qiu@starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230228091345.70515-3-william.qiu@starfivetech.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+On 28/02/2023 10:13, William Qiu wrote:
+> Add Pulse Width Modulation driver support for StarFive
+> JH7110 soc.
+> 
+> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> ---
+>  MAINTAINERS                    |   7 +
+>  drivers/pwm/Kconfig            |  10 ++
+>  drivers/pwm/Makefile           |   1 +
+>  drivers/pwm/pwm-starfive-ptc.c | 256 +++++++++++++++++++++++++++++++++
+>  4 files changed, 274 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-starfive-ptc.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ac151975d0d3..05b59605d864 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19929,6 +19929,13 @@ F:	drivers/pinctrl/starfive/pinctrl-starfive-jh71*
+>  F:	include/dt-bindings/pinctrl/pinctrl-starfive-jh7100.h
+>  F:	include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
+>  
+> +STARFIVE JH71X0 PWM DRIVERS
+> +M:	William Qiu <william.qiu@starfivetech.com>
+> +M:	Hal Feng <hal.feng@starfivetech.com>
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
+> +F:	drivers/pwm/pwm-starfive-ptc.c
+> +
+>  STARFIVE JH71X0 RESET CONTROLLER DRIVERS
+>  M:	Emil Renner Berthing <kernel@esmil.dk>
+>  M:	Hal Feng <hal.feng@starfivetech.com>
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index dae023d783a2..2307a0099994 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -536,6 +536,16 @@ config PWM_SPRD
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sprd.
+>  
+> +config PWM_STARFIVE_PTC
+> +	tristate "StarFive PWM PTC support"
+> +	depends on OF
+> +	depends on COMMON_CLK
+> +	help
+> +	  Generic PWM framework driver for StarFive SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-starfive-ptc.
+> +
+>  config PWM_STI
+>  	tristate "STiH4xx PWM support"
+>  	depends on ARCH_STI || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 7bf1a29f02b8..577f69904baa 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -49,6 +49,7 @@ obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
+>  obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
+>  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
+>  obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
+> +obj-$(CONFIG_PWM_STARFIVE_PTC)	+= pwm-starfive-ptc.o
+>  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
+>  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
+>  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
+> diff --git a/drivers/pwm/pwm-starfive-ptc.c b/drivers/pwm/pwm-starfive-ptc.c
+> new file mode 100644
+> index 000000000000..58831c600168
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-starfive-ptc.c
+> @@ -0,0 +1,256 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PWM driver for the StarFive JH7110 SoC
+> + *
+> + * Copyright (C) 2018 StarFive Technology Co., Ltd.
+> + */
+> +
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +#include <linux/reset.h>
+> +#include <linux/io.h>
+> +
+> +/* how many parameters can be transferred to ptc */
+> +#define OF_PWM_N_CELLS			3
+> +
+> +/* PTC Register offsets */
+> +#define REG_RPTC_CNTR			0x0
+> +#define REG_RPTC_HRC			0x4
+> +#define REG_RPTC_LRC			0x8
+> +#define REG_RPTC_CTRL			0xC
+> +
+> +/* Bit for PWM clock */
+> +#define BIT_PWM_CLOCK_EN		31
+> +
+> +/* Bit for clock gen soft reset */
+> +#define BIT_CLK_GEN_SOFT_RESET		13
+> +
+> +#define NS_PER_SECOND			1000000000
+> +#define DEFAULT_FREQ_HZ			2000000
 
-The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
+Drop unused defines.
 
-  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+> +
+> +/*
+> + * Access PTC register (cntr hrc lrc and ctrl),
+> + * need to replace PWM_BASE_ADDR
+> + */
+> +#define REG_PTC_BASE_ADDR_SUB(base, N)	\
+> +((base) + (((N) > 3) ? (((N) % 4) * 0x10 + (1 << 15)) : ((N) * 0x10)))
+> +#define REG_PTC_RPTC_CNTR(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N))
+> +#define REG_PTC_RPTC_HRC(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0x4)
+> +#define REG_PTC_RPTC_LRC(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0x8)
+> +#define REG_PTC_RPTC_CTRL(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0xC)
+> +
+> +/* PTC_RPTC_CTRL */
+> +#define PTC_EN      BIT(0)
+> +#define PTC_ECLK    BIT(1)
+> +#define PTC_NEC     BIT(2)
+> +#define PTC_OE      BIT(3)
+> +#define PTC_SIGNLE  BIT(4)
+> +#define PTC_INTE    BIT(5)
+> +#define PTC_INT     BIT(6)
+> +#define PTC_CNTRRST BIT(7)
+> +#define PTC_CAPTE   BIT(8)
+> +
+> +struct starfive_pwm_ptc_device {
+> +	struct pwm_chip		chip;
+> +	struct clk		*clk;
+> +	struct reset_control	*rst;
+> +	void __iomem		*regs;
+> +	int			irq;
+> +	/*pwm apb clock frequency*/
 
-are available in the Git repository at:
+Missing spaces. Use Linux coding style.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.3-rc1
+> +	unsigned int		approx_freq;
+> +};
+> +
+> +static inline struct starfive_pwm_ptc_device *
+> +		chip_to_starfive_ptc(struct pwm_chip *c)
+> +{
+> +	return container_of(c, struct starfive_pwm_ptc_device, chip);
+> +}
+> +
 
-for you to fetch changes up to cf70d01a62c712ee715df1f7892b58c77474bcfb:
+(...)
 
-  pwm: dwc: Use devm_pwmchip_add() (2023-02-20 12:26:35 +0100)
+> +static int starfive_pwm_ptc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct starfive_pwm_ptc_device *pwm;
+> +	struct pwm_chip *chip;
+> +	struct resource *res;
+> +	unsigned int clk_apb_freq;
+> +	int ret;
+> +
+> +	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
+> +	if (!pwm)
+> +		return -ENOMEM;
+> +
+> +	chip = &pwm->chip;
+> +	chip->dev = dev;
+> +	chip->ops = &starfive_pwm_ptc_ops;
+> +	chip->npwm = 8;
+> +
+> +	chip->of_pwm_n_cells = OF_PWM_N_CELLS;
+> +	chip->base = -1;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pwm->regs = devm_ioremap_resource(dev, res);
 
-Thanks,
-Thierry
+Combine these two, there is a helper for it.
 
-----------------------------------------------------------------
-pwm: Changes for v6.3-rc1
+> +	if (IS_ERR(pwm->regs)) {
+> +		dev_err(dev, "Unable to map IO resources\n");
 
-This rather small set of changes includes some minor fixes and
-improvements. The AB8500 driver gained support for reading the initial
-hardware state and the Synopsys DesignWare driver received some work to
-prepare for device tree and platform support.
+return dev_err_probe(), everywhere probably.
 
-----------------------------------------------------------------
-AngeloGioacchino Del Regno (1):
-      dt-bindings: pwm: mediatek: Convert pwm-mediatek to DT schema
+> +		return PTR_ERR(pwm->regs);
+> +	}
+> +
+> +	pwm->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(pwm->clk)) {
+> +		dev_err(dev, "Unable to get pwm clock\n");
+> +		return PTR_ERR(pwm->clk);
+> +	}
+> +
+> +	pwm->rst = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(pwm->rst)) {
+> +		dev_err(dev, "Unable to get pwm reset\n");
+> +		return PTR_ERR(pwm->rst);
+> +	}
+> +
+> +	ret = clk_prepare_enable(pwm->clk);
+> +	if (ret) {
+> +		dev_err(dev,
+> +			"Failed to enable pwm clock, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	reset_control_deassert(pwm->rst);
+> +
+> +	clk_apb_freq = (unsigned int)clk_get_rate(pwm->clk);
 
-Ben Dooks (4):
-      dt-bindings: pwm: Document Synopsys DesignWare snps,pwm-dw-apb-timers-pwm2
-      pwm: dwc: Change &pci->dev to dev in probe
-      pwm: dwc: Move memory allocation to own function
-      pwm: dwc: Use devm_pwmchip_add()
+Why do you need this local variable? And why the cast?
 
-Emil Renner Berthing (1):
-      pwm: sifive: Always let the first pwm_apply_state succeed
+> +	if (!clk_apb_freq)
+> +		dev_warn(dev,
+> +			 "get pwm apb clock rate failed.\n");
 
-Fabrice Gasnier (1):
-      pwm: stm32-lp: fix the check on arr and cmp registers update
+and pwm->approx_freq stays 0 which you later use for dividing. Did you
+actually test it? It should produce big splat...
 
-Geert Uytterhoeven (1):
-      pwm: Move pwm_capture() dummy to restore order
+> +	else
+> +		pwm->approx_freq = clk_apb_freq;
+> +
+> +	ret = pwmchip_add(chip);
 
-Jeff LaBundy (1):
-      pwm: iqs620a: Replace one remaining instance of regmap_update_bits()
+devm
 
-Uwe Kleine-König (3):
-      pwm: lp3943: Drop unused i2c include
-      pwm: ab8500: Fix calculation of duty and period
-      pwm: ab8500: Implement .get_state()
+> +	if (ret < 0) {
+> +		dev_err(dev, "cannot register PTC: %d\n", ret);
+> +		clk_disable_unprepare(pwm->clk);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pwm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int starfive_pwm_ptc_remove(struct platform_device *dev)
+> +{
+> +	struct starfive_pwm_ptc_device *pwm = platform_get_drvdata(dev);
+> +	struct pwm_chip *chip = &pwm->chip;
+> +
+> +	pwmchip_remove(chip);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id starfive_pwm_ptc_of_match[] = {
+> +	{ .compatible = "starfive,jh7110-pwm" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, starfive_pwm_ptc_of_match);
+> +
+> +static struct platform_driver starfive_pwm_ptc_driver = {
+> +	.probe = starfive_pwm_ptc_probe,
+> +	.remove = starfive_pwm_ptc_remove,
+> +	.driver = {
+> +		.name = "pwm-starfive-ptc",
+> +		.of_match_table = of_match_ptr(starfive_pwm_ptc_of_match),
 
- .../bindings/pwm/mediatek,mt2712-pwm.yaml          |  93 +++++++++++++++++
- .../devicetree/bindings/pwm/pwm-mediatek.txt       |  52 ----------
- .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml      |  68 +++++++++++++
- drivers/pwm/pwm-ab8500.c                           | 112 +++++++++++++++++++--
- drivers/pwm/pwm-dwc.c                              |  38 +++----
- drivers/pwm/pwm-iqs620a.c                          |   4 +-
- drivers/pwm/pwm-lp3943.c                           |   1 -
- drivers/pwm/pwm-sifive.c                           |   8 +-
- drivers/pwm/pwm-stm32-lp.c                         |   2 +-
- include/linux/pwm.h                                |  14 +--
- 10 files changed, 302 insertions(+), 90 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+of_match_ptr goes with maybe_unused, which you do not have. Anyway I am
+not sure what's the benefit of having it here, so just drop it.
+
+Best regards,
+Krzysztof
+
