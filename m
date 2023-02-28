@@ -2,346 +2,277 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 350686A5AE6
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 15:35:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67A576A5B56
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 16:08:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjB1OfD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Feb 2023 09:35:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59258 "EHLO
+        id S229496AbjB1PII (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Feb 2023 10:08:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbjB1OfB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 09:35:01 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C39B30B25
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Feb 2023 06:34:31 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id i34so40836844eda.7
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Feb 2023 06:34:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1677594867;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uebId/E2MuuN0Eng4ubkqVVfbCw/rWB/uItWH6yqNNk=;
-        b=SI1irGw+2fPr4/IIo5aLmevlsfiWicfh32tSgX+IUYC71HxA75YDUQ9pb8LkiOS8uT
-         FHAFOt8ewX53zbChepayWL7SwPz9Ayns/9NVnNtndQwYoZXeWgyIPXrlfttmYyVNJFk/
-         AwilCDZRVd3j/dyXG0dT2ud2mSMTz1R7BdSKKbJ/ZAVdLxMaanUrKptrFYs7+vBVj5gO
-         Xe0aHcjcZPBPXoCa9iArNaI8zO/hPBBxw6MWO3m4oNZNpNobFTxlKrtPRe3We6L0e9te
-         a4uMGTwfAlRcSU3KGT+iqr6AM1LcZMmRDKHAJrHgNhQEs0KO+yuGHyyYheLBVS58NNfE
-         JEow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677594867;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uebId/E2MuuN0Eng4ubkqVVfbCw/rWB/uItWH6yqNNk=;
-        b=IvgST2YzriMQ1eCpiFNsBSmyRhOOApd25ueHecArY8foynh5fWBOpIDeJIVFjTvh+H
-         eZkpd1k5eX6bSdRkPXtGJ5rZl2F1Ekx1EkGNyHOKrZxDENGnauaRhrQWdLtw3Lo6eFkL
-         KFASgSSo3mbKwMd4v+6np+/evh2RCqkvhDP2ADXUNtAoBdo8vQPL6QvbXbxXeArKj8Yw
-         XmWwcYxVm7WoKSb8FcYkVfpj//Pq7b+oHhnACUFLYBat8fcHYoG8Aed+h2Q8Gp9CawpW
-         Nnqs6aaCMPe6HdD6ZzBijiYfC2muCRZgdIm9Lfol5LQnX0cAKuPL3FrasT1hUi8ungsr
-         DjBg==
-X-Gm-Message-State: AO0yUKUeGb9FJ/LBUh1OwRmKg3vQgG7qh15FDQMlIDqDYELhAJ8ebVCJ
-        Jc5M2lnyuuKSyPqGONhBb1cc8Q==
-X-Google-Smtp-Source: AK7set8kQ9ata6euqo/6Np+cgIW8IeRuMTqmy4tXn4RTpG4UPnLGLKgbZBqE0j7kjRa/ppTVghc7EQ==
-X-Received: by 2002:aa7:c9d9:0:b0:4ab:1c69:5c4 with SMTP id i25-20020aa7c9d9000000b004ab1c6905c4mr3769925edt.26.1677594867546;
-        Tue, 28 Feb 2023 06:34:27 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id qq10-20020a17090720ca00b008e09deb6610sm4518783ejb.200.2023.02.28.06.34.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Feb 2023 06:34:27 -0800 (PST)
-Message-ID: <60496973-5382-14de-6c2d-c60b3556defb@linaro.org>
-Date:   Tue, 28 Feb 2023 15:34:25 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v1 2/2] pwm: starfive: Add PWM driver support
-Content-Language: en-US
-To:     William Qiu <william.qiu@starfivetech.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229861AbjB1PIH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 10:08:07 -0500
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 298E68A65;
+        Tue, 28 Feb 2023 07:08:03 -0800 (PST)
+X-IronPort-AV: E=Sophos;i="5.98,222,1673881200"; 
+   d="scan'208";a="151063408"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 01 Mar 2023 00:08:03 +0900
+Received: from localhost.localdomain (unknown [10.226.93.131])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 44EAB400F2C8;
+        Wed,  1 Mar 2023 00:07:59 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hal Feng <hal.feng@starfivetech.com>
-References: <20230228091345.70515-1-william.qiu@starfivetech.com>
- <20230228091345.70515-3-william.qiu@starfivetech.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230228091345.70515-3-william.qiu@starfivetech.com>
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v14 0/4] Add support for RZ/G2L GPT
+Date:   Tue, 28 Feb 2023 15:07:52 +0000
+Message-Id: <20230228150756.482432-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.4 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 28/02/2023 10:13, William Qiu wrote:
-> Add Pulse Width Modulation driver support for StarFive
-> JH7110 soc.
-> 
-> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
-> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
-> ---
->  MAINTAINERS                    |   7 +
->  drivers/pwm/Kconfig            |  10 ++
->  drivers/pwm/Makefile           |   1 +
->  drivers/pwm/pwm-starfive-ptc.c | 256 +++++++++++++++++++++++++++++++++
->  4 files changed, 274 insertions(+)
->  create mode 100644 drivers/pwm/pwm-starfive-ptc.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ac151975d0d3..05b59605d864 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19929,6 +19929,13 @@ F:	drivers/pinctrl/starfive/pinctrl-starfive-jh71*
->  F:	include/dt-bindings/pinctrl/pinctrl-starfive-jh7100.h
->  F:	include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
->  
-> +STARFIVE JH71X0 PWM DRIVERS
-> +M:	William Qiu <william.qiu@starfivetech.com>
-> +M:	Hal Feng <hal.feng@starfivetech.com>
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
-> +F:	drivers/pwm/pwm-starfive-ptc.c
-> +
->  STARFIVE JH71X0 RESET CONTROLLER DRIVERS
->  M:	Emil Renner Berthing <kernel@esmil.dk>
->  M:	Hal Feng <hal.feng@starfivetech.com>
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index dae023d783a2..2307a0099994 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -536,6 +536,16 @@ config PWM_SPRD
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-sprd.
->  
-> +config PWM_STARFIVE_PTC
-> +	tristate "StarFive PWM PTC support"
-> +	depends on OF
-> +	depends on COMMON_CLK
-> +	help
-> +	  Generic PWM framework driver for StarFive SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-starfive-ptc.
-> +
->  config PWM_STI
->  	tristate "STiH4xx PWM support"
->  	depends on ARCH_STI || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 7bf1a29f02b8..577f69904baa 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -49,6 +49,7 @@ obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
->  obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
->  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
->  obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
-> +obj-$(CONFIG_PWM_STARFIVE_PTC)	+= pwm-starfive-ptc.o
->  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
->  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
->  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
-> diff --git a/drivers/pwm/pwm-starfive-ptc.c b/drivers/pwm/pwm-starfive-ptc.c
-> new file mode 100644
-> index 000000000000..58831c600168
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-starfive-ptc.c
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PWM driver for the StarFive JH7110 SoC
-> + *
-> + * Copyright (C) 2018 StarFive Technology Co., Ltd.
-> + */
-> +
-> +#include <dt-bindings/pwm/pwm.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/slab.h>
-> +#include <linux/clk.h>
-> +#include <linux/reset.h>
-> +#include <linux/io.h>
-> +
-> +/* how many parameters can be transferred to ptc */
-> +#define OF_PWM_N_CELLS			3
-> +
-> +/* PTC Register offsets */
-> +#define REG_RPTC_CNTR			0x0
-> +#define REG_RPTC_HRC			0x4
-> +#define REG_RPTC_LRC			0x8
-> +#define REG_RPTC_CTRL			0xC
-> +
-> +/* Bit for PWM clock */
-> +#define BIT_PWM_CLOCK_EN		31
-> +
-> +/* Bit for clock gen soft reset */
-> +#define BIT_CLK_GEN_SOFT_RESET		13
-> +
-> +#define NS_PER_SECOND			1000000000
-> +#define DEFAULT_FREQ_HZ			2000000
+RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
+(GPT32E). It supports the following functions
+ * 32 bits × 8 channels
+ * Up-counting or down-counting (saw waves) or up/down-counting
+   (triangle waves) for each counter.
+ * Clock sources independently selectable for each channel
+ * Two I/O pins per channel
+ * Two output compare/input capture registers per channel
+ * For the two output compare/input capture registers of each channel,
+   four registers are provided as buffer registers and are capable of
+   operating as comparison registers when buffering is not in use.
+ * In output compare operation, buffer switching can be at crests or
+   troughs, enabling the generation of laterally asymmetric PWM waveforms.
+ * Registers for setting up frame cycles in each channel (with capability
+   for generating interrupts at overflow or underflow)
+ * Generation of dead times in PWM operation
+ * Synchronous starting, stopping and clearing counters for arbitrary
+   channels
+ * Starting, stopping, clearing and up/down counters in response to input
+   level comparison
+ * Starting, clearing, stopping and up/down counters in response to a
+   maximum of four external triggers
+ * Output pin disable function by dead time error and detected
+   short-circuits between output pins
+ * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
+ * Enables the noise filter for input capture and external trigger
+   operation
 
-Drop unused defines.
+This patch series aims to add basic pwm support for RZ/G2L GPT driver
+by creating separate logical channels for each IOs.
 
-> +
-> +/*
-> + * Access PTC register (cntr hrc lrc and ctrl),
-> + * need to replace PWM_BASE_ADDR
-> + */
-> +#define REG_PTC_BASE_ADDR_SUB(base, N)	\
-> +((base) + (((N) > 3) ? (((N) % 4) * 0x10 + (1 << 15)) : ((N) * 0x10)))
-> +#define REG_PTC_RPTC_CNTR(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N))
-> +#define REG_PTC_RPTC_HRC(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0x4)
-> +#define REG_PTC_RPTC_LRC(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0x8)
-> +#define REG_PTC_RPTC_CTRL(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0xC)
-> +
-> +/* PTC_RPTC_CTRL */
-> +#define PTC_EN      BIT(0)
-> +#define PTC_ECLK    BIT(1)
-> +#define PTC_NEC     BIT(2)
-> +#define PTC_OE      BIT(3)
-> +#define PTC_SIGNLE  BIT(4)
-> +#define PTC_INTE    BIT(5)
-> +#define PTC_INT     BIT(6)
-> +#define PTC_CNTRRST BIT(7)
-> +#define PTC_CAPTE   BIT(8)
-> +
-> +struct starfive_pwm_ptc_device {
-> +	struct pwm_chip		chip;
-> +	struct clk		*clk;
-> +	struct reset_control	*rst;
-> +	void __iomem		*regs;
-> +	int			irq;
-> +	/*pwm apb clock frequency*/
+v13->v14:
+* Moved the patch from series[1] to here.
+ [1] https://lore.kernel.org/linux-renesas-soc/20221215205843.4074504-1-biju.das.jz@bp.renesas.com/T/#t
+ * Add Rb tag from Rob for patch#2
+ * Removed parenthesis for RZG2L_MAX_HW_CHANNELS and RZG2L_CHANNELS_PER_IO
+ * Removed duty_cycle variable from struct rzg2l_gpt_chip and added comment
+   for cache for prescale variable.
+ * Fixed a bug in rzg2l_gpt_cntr_need_stop().
+ * Reordered rzg2l_gpt_config() just above apply()
+ * Replaced pwm_is_enabled()->pwm->state.enabled in config
+ * Replaced pm_runtime_resume_and_get with unconditional pm_runtime_get_sync()
+   in config().
+ * Restored duty_cycle > period check in rzg2l_gpt_get_state().
+ * Added error check for clk_prepare_enable() in probe() and propagating error
+   to the caller for pm_runtime_resume()
+ * clk_get_rate() is called after enabling the clock and clk_rate_exclusive_get()
+ * Simplified rzg2l_gpt_probe() by removing bitmap variables.
+ * Added pm_runtime_idle() to suspend the device during probe.
+ * Moved overflow condition check from config->probe().
+ * Simplified rzg2l_gpt_reset_assert_pm_disable().
+ * Removed the parenthesis for RZG2L_MAX_POEG_GROUPS.
+ * Renamed rzg2l_gpt_parse_properties()->rzg2l_gpt_poeg_init() as it not only parse
+   the properties but also implements the needed register writes.
+ * Added acomment here about the purpose of the function rzg2l_gpt_poeg_init()
+ * Removed magic numbers from rzg2l_gpt_poeg_init()
+ * Fixed resource leak in rzg2l_gpt_poeg_init().
+v12->v13:
+ * Added test logs in [1] below
+ * Replaced Kconfig dependency from ARCH_RENESAS->ARCH_RZG2L
+ * Sorted #include <linux/limits.h> alphabetically
+ * Added a comment for mutex_lock to fix check patch warning
+ * Replaced data type of duty_cycle from unsigned int->u32 as
+   the maximum value stored is U32_MAX.
+ * Improved rzg2l_gpt_config() by removing unwanted duty_cycle related code.
+ * Improved rzg2l_gpt_get_state() by setting "val = rzg2l_gpt->duty_cycle[pwm->hwpwm];", 
+   and factor "tmp = NSEC_PER_SEC * (u64)val;" out of the if-statement.
+ * Started using DEFINE_RUNTIME_DEV_PM_OPS(), and dropped __maybe_unused
+   from the callbacks.
+v11->v12:
+ * Added return code for get_state()
+ * Cache duty cycle/prescale as the driver cannot read the current duty
+   cycle/prescale from the hardware if the hardware is disabled. Cache the
+   last programmed duty cycle/prescale value to return in that case.
+ * Updated rzg2l_gpt_enable to enable the clocks.
+ * Updated rzg2l_gpt_disable to disable the clocks.
+ * Updated rzg2l_gpt_config() to cache duty cucle/prescale value
+ * Updated rzg2l_gpt_get_state to use cached value of duty cycle/prescale,If the PWM
+   is disabled.
+ * Simplified rzg2l_gpt_apply()
+ * Added comments in rzg2l_gpt_reset_assert_pm_disable()
+v10->v11:
+ * Used bitmap_zero for initializing bitmap varable.
+ * Fixed clock imbalance during remove for the case bootloader turning
+   on PWM and module unload is called just after the boot.
+ * Fixed over flow condition in get_state() for a prescale value of 2 & more.
+ * Improved rzg2l_gpt_cntr_need_stop() based on prescale as it is the
+   only runtime variable.
+ * Added array for Cache variables state_period and prescale
+ * Probe caches the prescale value set by the bootloader.
+ * Updated rzg2l_gpt_config() to make use of array variables.
+v9->v10:
+ * Updated the example gpt4: pwm@10048400-> gpt: pwm@10048000
+ * Keep Rb tag from Rob as the above change is trivial one.
+ * Updated the error handling in probe(), clk_disable_unprepare called
+   on the error path.
+ * Removed ch_en array and started using bitmask instead.
+v8->v9:
+ * Added Rb tag from Rob.
+ * deassert after devm_clk_get() to avoid reset stays deasserted,in case
+   clk_get() fails.
+ * Removed ch_offs from struct rzg2l_gpt_chip and use macro instead.
+ * Updated error handling in probe()
+v7->v8:
+ * Removed Rb tags from Rob and Geert as it modelled as single GPT
+   device handling multiple channels.
+ * Updated description
+ * Updated interrupts and interrupt-names properties
+ * Updated binding example
+ * Modelled as single PWM device handling multiple channels
+ * Replaced shared reset->devm_reset_control_get_exclusive()
+ * Added PM runtime callbacks
+ * Updated PM handling and removed "pwm_enabled_by_bootloader" variable
+ * Replaced iowrite32->writel and ioread32->readl
+ * Updated prescale calculation
+ * Introduced rzg2l_gpt_is_ch_enabled for checking enable status on both
+   IO's
+ * Moved enable/disable output pins from config->enable/disable.
+ * Added rzg2l_gpt_cntr_need_stop() for caching prescalar/mode values.
+v6->v7:
+ * Added the comment for cacheing rzg2l_gpt->state_period.
+ * Fixed boundary values for pv and dc.
+ * Added comment for modifying mode, prescaler, timer counter and buffer enable
+   registers.
+ * Fixed buffer overflow in get_state()
+ * Removed unnecessary assignment of state->period value in get_state().
+ * Fixed state->duty_cycle value in get_state().
+ * Added a limitation for disabling the channels, when both channels used
+v5->v6:
+ * Updated macros RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH and
+   RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH with computation
+   involving FIELD_PREP macro.
+ * Removed struct rzg2l_gpt_phase and started using RZG2L_GTCCR macro
+   for duty_offset.
+ * replaced misnomer real_period->state_period.
+ * Added handling for values >= (1024 << 32) for both period
+   and duty cycle.
+ * Added comments for pwm {en,dis}abled by bootloader during probe.
+v4->v5:
+ * Added Hardware manual details
+ * Replaced the comment GTCNT->Counter
+ * Removed the macros RZG2L_GPT_IO_PER_CHANNEL and chip.npwm directly
+   used in probe.
+ * Removed the unsed macro RZG2L_GTPR_MAX_VALUE
+ * Added driver prefix for the type name and the variable.
+ * Initialization of per_channel data moved from request->probe.
+ * Updated clr parameter for rzg2l_gpt_modify for Start count.
+ * Started using mutex and usage_count for handling shared
+   period and prescalar for the 2 channels.
+ * Updated the comment cycle->period.
+ * Removed clk_disable from rzg2l_gpt_reset_assert_pm_disable()
+ * Replaced pc->rzg2l_gpt.
+ * Updated prescale calculation.
+ * Moved pm_runtime_{get_sync,put} from {request,free}->{enable,disable}
+ * Removed platform_set_drvdata as it is unused
+ * Removed the variable pwm_enabled_by_bootloader 
+ * Added dev_err_probe in various probe error path.
+ * Added an error message, if devm_pwmchip_add fails.
+v3->v4:
+ * Changed the local variable type i from u16->u8 and prescaled_period_
+   cycles from u64->u32 in calculate_prescale().
+ * Replaced mul_u64_u64_div_u64()->mul_u64_u32_div()
+ * Dropped the comma after the sentinel.
+ * Add a variable to track pwm enabled by bootloader and added comments
+   in probe().
+ * Removed unnecessary rzg2l_gpt_reset_assert_pm_disable() from probe.
+ * Replaced devm_clk_get()->devm_clk_get_prepared()
+ * Removed devm_clk_get_optional_enabled()
+v2->v3:
+ * Added Rb tag from Rob for the bindings.
+ * Updated limitation section
+ * Added prefix "RZG2L_" for all macros
+ * Modified prescale calculation
+ * Removed pwm_set_chip_data
+ * Updated comment related to modifying Mode and Prescaler
+ * Updated setting of prescale value in rzg2l_gpt_config()
+ * Removed else branch from rzg2l_gpt_get_state()
+ * removed the err label from rzg2l_gpt_apply()
+ * Added devm_clk_get_optional_enabled() to retain clk on status,
+   in case bootloader turns on the clk of pwm.
+ * Replaced devm_reset_control_get_exclusive->devm_reset_control_get_shared
+   as single reset shared between 8 channels.
+v1->v2:
+ * Added '|' after 'description:' to preserve formatting.
+ * Removed description for pwm_cells as it is common property.
+ * Changed the reg size in example from 0xa4->0x100
+ * Added Rb tag from Geert for bindings.
+ * Added Limitations section
+ * dropped "_MASK" from the define names.
+ * used named initializer for struct phase
+ * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
+ * Revised the logic for prescale
+ * Added .get_state callback
+ * Improved error handling in rzg2l_gpt_apply
+ * Removed .remove callback
+ * Tested the driver with PWM_DEBUG enabled.
 
-Missing spaces. Use Linux coding style.
+RFC->v1:
+ * Added Description in binding patch
+ * Removed comments from reg and clock
+ * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
+ * Added rzg2l_gpt_read() and updated macros
+ * Removed dtsi patches, will send it separately
 
-> +	unsigned int		approx_freq;
-> +};
-> +
-> +static inline struct starfive_pwm_ptc_device *
-> +		chip_to_starfive_ptc(struct pwm_chip *c)
-> +{
-> +	return container_of(c, struct starfive_pwm_ptc_device, chip);
-> +}
-> +
+RFC:
+ * https://lore.kernel.org/linux-renesas-soc/20220430075915.5036-1-biju.das.jz@bp.renesas.com/T/#t
 
-(...)
+Biju Das (4):
+  dt-bindings: pwm: Add RZ/G2L GPT binding
+  dt-bindings: pwm: rzg2l-gpt: Document renesas,poegs property
+  pwm: Add support for RZ/G2L GPT
+  pwm: rzg2l-gpt: Add support for gpt linking with poeg
 
-> +static int starfive_pwm_ptc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct starfive_pwm_ptc_device *pwm;
-> +	struct pwm_chip *chip;
-> +	struct resource *res;
-> +	unsigned int clk_apb_freq;
-> +	int ret;
-> +
-> +	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-> +	if (!pwm)
-> +		return -ENOMEM;
-> +
-> +	chip = &pwm->chip;
-> +	chip->dev = dev;
-> +	chip->ops = &starfive_pwm_ptc_ops;
-> +	chip->npwm = 8;
-> +
-> +	chip->of_pwm_n_cells = OF_PWM_N_CELLS;
-> +	chip->base = -1;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pwm->regs = devm_ioremap_resource(dev, res);
+ .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 401 +++++++++++
+ drivers/pwm/Kconfig                           |  11 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-rzg2l-gpt.c                   | 633 ++++++++++++++++++
+ 4 files changed, 1046 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml
+ create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
 
-Combine these two, there is a helper for it.
 
-> +	if (IS_ERR(pwm->regs)) {
-> +		dev_err(dev, "Unable to map IO resources\n");
-
-return dev_err_probe(), everywhere probably.
-
-> +		return PTR_ERR(pwm->regs);
-> +	}
-> +
-> +	pwm->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(pwm->clk)) {
-> +		dev_err(dev, "Unable to get pwm clock\n");
-> +		return PTR_ERR(pwm->clk);
-> +	}
-> +
-> +	pwm->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(pwm->rst)) {
-> +		dev_err(dev, "Unable to get pwm reset\n");
-> +		return PTR_ERR(pwm->rst);
-> +	}
-> +
-> +	ret = clk_prepare_enable(pwm->clk);
-> +	if (ret) {
-> +		dev_err(dev,
-> +			"Failed to enable pwm clock, %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	reset_control_deassert(pwm->rst);
-> +
-> +	clk_apb_freq = (unsigned int)clk_get_rate(pwm->clk);
-
-Why do you need this local variable? And why the cast?
-
-> +	if (!clk_apb_freq)
-> +		dev_warn(dev,
-> +			 "get pwm apb clock rate failed.\n");
-
-and pwm->approx_freq stays 0 which you later use for dividing. Did you
-actually test it? It should produce big splat...
-
-> +	else
-> +		pwm->approx_freq = clk_apb_freq;
-> +
-> +	ret = pwmchip_add(chip);
-
-devm
-
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot register PTC: %d\n", ret);
-> +		clk_disable_unprepare(pwm->clk);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pwm);
-> +
-> +	return 0;
-> +}
-> +
-> +static int starfive_pwm_ptc_remove(struct platform_device *dev)
-> +{
-> +	struct starfive_pwm_ptc_device *pwm = platform_get_drvdata(dev);
-> +	struct pwm_chip *chip = &pwm->chip;
-> +
-> +	pwmchip_remove(chip);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id starfive_pwm_ptc_of_match[] = {
-> +	{ .compatible = "starfive,jh7110-pwm" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, starfive_pwm_ptc_of_match);
-> +
-> +static struct platform_driver starfive_pwm_ptc_driver = {
-> +	.probe = starfive_pwm_ptc_probe,
-> +	.remove = starfive_pwm_ptc_remove,
-> +	.driver = {
-> +		.name = "pwm-starfive-ptc",
-> +		.of_match_table = of_match_ptr(starfive_pwm_ptc_of_match),
-
-of_match_ptr goes with maybe_unused, which you do not have. Anyway I am
-not sure what's the benefit of having it here, so just drop it.
-
-Best regards,
-Krzysztof
+base-commit: cf70d01a62c712ee715df1f7892b58c77474bcfb
+-- 
+2.25.1
 
