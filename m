@@ -2,132 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C78A6A5A8D
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 15:08:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E7C56A5AC9
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 15:26:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbjB1OIE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Feb 2023 09:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38010 "EHLO
+        id S229527AbjB1O06 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Feb 2023 09:26:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbjB1OH7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 09:07:59 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A4A3C31
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Feb 2023 06:07:55 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id bw19so9849486wrb.13
-        for <linux-pwm@vger.kernel.org>; Tue, 28 Feb 2023 06:07:55 -0800 (PST)
+        with ESMTP id S229504AbjB1O05 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 09:26:57 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FEE1BC9;
+        Tue, 28 Feb 2023 06:26:56 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id j3so6551739wms.2;
+        Tue, 28 Feb 2023 06:26:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1677593274;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P5g9gRNHIe9JMT0MKnpe3X0cE+DT49kStiSxHxV8NkU=;
-        b=SlOXtBadlVZhKdyBnuAL+2dZjVpCsR9qXYhOw2/4mso9B4v1GpvUQXfMrDSKdt3X3X
-         wYesoUEYCQ2aunQVGa4uoRcawDEu8bKZBqAwyK6XTSygWjPFerwkQIn4he3W8hDJUd6w
-         krcOUC0cDouy4ckO2VYYSXPyoBo9zSF1cKIhG6xMNxiAtSMCbYVBzASP1n9vYlPfviJt
-         PvfSEHN5pSJ4OKjB7ePJ8iMWboVkZMk2RWdTj8+5TZLzbt5JFhYiGJVsDw2vdB7ypc6d
-         GMTAoDyw3L0UWohXusJy2OObLH5prrRacRSotf5PM7FdGtaRexoGssic1doZN+fWVCKn
-         A5vw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/tq/zszDMcZ/q4+NmurCt/9UiLLyD1boBQYOIvlny1E=;
+        b=OdqxhqK9TLRXQDeY4kvDV/5/PNlSSqSsW2dwVR+wcKiNh6ED+N5Pivk06LtJSAUEIp
+         HBHOpsrBWvtvvfZIcS6NE2/kfIlMUOMrWDGcIS7lRoK03bSTRGCnMBHqQHtF7zhOU+gS
+         cwkK1G0jE2aJS3NggWztmSS9fiJ29IQV4pafrpTZwU79uPOCnJmszgZgEYx2R58DeDBc
+         NUdVPJ2Ii3FLICIm7kII4x26XxPxo/kxix9ecmc39zEuQMVN5gYMS5/CWU8iw4nhwWkK
+         lTERhbJJJ62ASK3dMr0ZJ2U0g8jLXFh5ZnLmcBhcoNQ8mKW75kLH3SD06z+3GcoYE0OC
+         SMUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677593274;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5g9gRNHIe9JMT0MKnpe3X0cE+DT49kStiSxHxV8NkU=;
-        b=emCMlfz0lmxpON+O2WPHS506yW/NFFdz+4/GGMbU42hMh5aQo+ajRgU+JSXRb+jpA4
-         fsUFYEmRX/HGLFhn0xTno81uLibdj7DdsgC6iDPdjrT2lM/fkyLPQD/MEBtko78FWKU8
-         6lGnvSiQcpRziP46a8PTf7yi4velZXkJynEMszHF3u+2tQahlIsLmmsveWZ1ny0McXG6
-         tu5CJ5YbDNAVROor4uLZV4PUhb/mvWHW5iXBZQgDUXe3ZREzi9c7/o5+DC9ftPrpCd6A
-         Fg1KUI7B0j6NFXnRPVW7J6y50FLMacd96GX0yfbQjN4+9CenfxUsTN5Dp/3pAwSuvcpS
-         heXg==
-X-Gm-Message-State: AO0yUKXMoQ+f5CehwLvX3CuYSI8yqaaJjzJ0qDzGdZ4hY+rjtI7XwngQ
-        TZgxl8AU4ZBoOMfEsdAgcmSY5w==
-X-Google-Smtp-Source: AK7set+0gLAM9jPhV4ksrdAN0umrBuavGvvynU37/a3Q6DC3f0MdezS08WF9nEf8RzgiBqAqGEsSEw==
-X-Received: by 2002:adf:e88b:0:b0:2cc:5ee8:feee with SMTP id d11-20020adfe88b000000b002cc5ee8feeemr2472469wrm.33.1677593273978;
-        Tue, 28 Feb 2023 06:07:53 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id q10-20020adfea0a000000b002c567b58e9asm9984551wrm.56.2023.02.28.06.07.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Feb 2023 06:07:53 -0800 (PST)
-Message-ID: <af5fa75b-1831-67cc-f644-33adfd2e1031@linaro.org>
-Date:   Tue, 28 Feb 2023 15:07:51 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v1 1/2] dt-bindings: PWM: Add StarFive PWM module
-Content-Language: en-US
-To:     William Qiu <william.qiu@starfivetech.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/tq/zszDMcZ/q4+NmurCt/9UiLLyD1boBQYOIvlny1E=;
+        b=o1phTk/xod5GbQl3E6bCafoqNySZuuZNpLiNVThTIEzA1hI9IUcTf6mF1/HyeOqYJ2
+         oBGS8YdmB3wOVZLBlQQTDtxoABN4D0yQIE0NPw6pPrFHVIRPa9NL+kjVcZ4nlhIhsr8R
+         F9wiEaX4/fVMasWEeTA5XHJK9Px55M3MV0aRQKHL5h7sDiFF18sXaKL47t2AFPoVsu8P
+         13vfCPJB53Ep4U1RywAIzM3PQTSEr8/+n7rt1H6+FsqWv9IdeGZYl1Lnbj/rF6NERIkc
+         x9qEBG2vdlU6BJFu7Pw0O4YFdbHsCpOdQL5JmboySs+Rnvs+XDPZJXdGtrjHDyB274A5
+         Hkfw==
+X-Gm-Message-State: AO0yUKUneY2GTHFNEA/ws53e6rrDe24mouatP36E8KyxX4q3oJDhFxzx
+        IE24/kdagiega2JoLYMgHCc=
+X-Google-Smtp-Source: AK7set/Njfuc3yKOHWNK5KXQxBrJfvz/OT7fbh+EXYFYdrzRcEvWk4rSnTHuKLQTu25xMxoXo8xxRA==
+X-Received: by 2002:a05:600c:a293:b0:3eb:3e24:59e2 with SMTP id hu19-20020a05600ca29300b003eb3e2459e2mr2258301wmb.25.1677594414614;
+        Tue, 28 Feb 2023 06:26:54 -0800 (PST)
+Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id bi22-20020a05600c3d9600b003dc42d48defsm12822098wmb.6.2023.02.28.06.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Feb 2023 06:26:54 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hal Feng <hal.feng@starfivetech.com>
-References: <20230228091345.70515-1-william.qiu@starfivetech.com>
- <20230228091345.70515-2-william.qiu@starfivetech.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230228091345.70515-2-william.qiu@starfivetech.com>
+Subject: [GIT PULL] pwm: Changes for v6.3-rc1
+Date:   Tue, 28 Feb 2023 15:26:51 +0100
+Message-Id: <20230228142651.3839023-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 28/02/2023 10:13, William Qiu wrote:
-> Add documentation to describe StarFive Pulse Width Modulation
-> controller driver.
-> 
-> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-starfive.yaml | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-starfive.yaml b/Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
-> new file mode 100644
-> index 000000000000..4ba2a8cc5344
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
+Hi Linus,
 
-Filename based on compatible, so starfive,jh7110-pwm.yaml
+The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
 
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-starfive.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: StarFive PWM controller
-> +
-> +maintainers:
-> +  - William Qiu <william.qiu@starfivetech.com>
-> +
-> +description:
-> +  StarFive SoCs contain PWM and when operating in PWM mode, the PTC core generates
-> +  binary signal with user-programmable low and high periods. Clock source for the
-> +  PWM can be either system clockor external clock. Each PWM timer block provides 8
-> +  PWM channels.
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
+  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
 
-Drop items, not a list in your case.
+are available in the Git repository at:
 
-> +      - const: starfive,jh7110-pwm
-> +
+  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.3-rc1
 
+for you to fetch changes up to cf70d01a62c712ee715df1f7892b58c77474bcfb:
 
-Best regards,
-Krzysztof
+  pwm: dwc: Use devm_pwmchip_add() (2023-02-20 12:26:35 +0100)
 
+Thanks,
+Thierry
+
+----------------------------------------------------------------
+pwm: Changes for v6.3-rc1
+
+This rather small set of changes includes some minor fixes and
+improvements. The AB8500 driver gained support for reading the initial
+hardware state and the Synopsys DesignWare driver received some work to
+prepare for device tree and platform support.
+
+----------------------------------------------------------------
+AngeloGioacchino Del Regno (1):
+      dt-bindings: pwm: mediatek: Convert pwm-mediatek to DT schema
+
+Ben Dooks (4):
+      dt-bindings: pwm: Document Synopsys DesignWare snps,pwm-dw-apb-timers-pwm2
+      pwm: dwc: Change &pci->dev to dev in probe
+      pwm: dwc: Move memory allocation to own function
+      pwm: dwc: Use devm_pwmchip_add()
+
+Emil Renner Berthing (1):
+      pwm: sifive: Always let the first pwm_apply_state succeed
+
+Fabrice Gasnier (1):
+      pwm: stm32-lp: fix the check on arr and cmp registers update
+
+Geert Uytterhoeven (1):
+      pwm: Move pwm_capture() dummy to restore order
+
+Jeff LaBundy (1):
+      pwm: iqs620a: Replace one remaining instance of regmap_update_bits()
+
+Uwe Kleine-König (3):
+      pwm: lp3943: Drop unused i2c include
+      pwm: ab8500: Fix calculation of duty and period
+      pwm: ab8500: Implement .get_state()
+
+ .../bindings/pwm/mediatek,mt2712-pwm.yaml          |  93 +++++++++++++++++
+ .../devicetree/bindings/pwm/pwm-mediatek.txt       |  52 ----------
+ .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml      |  68 +++++++++++++
+ drivers/pwm/pwm-ab8500.c                           | 112 +++++++++++++++++++--
+ drivers/pwm/pwm-dwc.c                              |  38 +++----
+ drivers/pwm/pwm-iqs620a.c                          |   4 +-
+ drivers/pwm/pwm-lp3943.c                           |   1 -
+ drivers/pwm/pwm-sifive.c                           |   8 +-
+ drivers/pwm/pwm-stm32-lp.c                         |   2 +-
+ include/linux/pwm.h                                |  14 +--
+ 10 files changed, 302 insertions(+), 90 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
