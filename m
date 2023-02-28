@@ -2,29 +2,29 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7126A5548
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 10:15:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C0E46A5540
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Feb 2023 10:14:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230450AbjB1JPY convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 28 Feb 2023 04:15:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56178 "EHLO
+        id S230169AbjB1JOC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 28 Feb 2023 04:14:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjB1JPX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 04:15:23 -0500
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43FFC2BEEB;
-        Tue, 28 Feb 2023 01:15:21 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        with ESMTP id S229542AbjB1JOB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Feb 2023 04:14:01 -0500
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EAB81E9DA;
+        Tue, 28 Feb 2023 01:13:59 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 1780C24E195;
-        Tue, 28 Feb 2023 17:13:51 +0800 (CST)
-Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 28 Feb
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 0911324E30E;
+        Tue, 28 Feb 2023 17:13:58 +0800 (CST)
+Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 28 Feb
  2023 17:13:47 +0800
 Received: from williamqiu-virtual-machine.starfivetech.com (171.223.208.138)
  by EXMBX068.cuchost.com (172.16.6.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.42; Tue, 28 Feb 2023 17:13:45 +0800
+ 15.0.1497.42; Tue, 28 Feb 2023 17:13:46 +0800
 From:   William Qiu <william.qiu@starfivetech.com>
 To:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -34,10 +34,12 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         William Qiu <william.qiu@starfivetech.com>,
         Hal Feng <hal.feng@starfivetech.com>
-Subject: [PATCH v1 0/2] StarFive's Pulse Width Modulation driver support
-Date:   Tue, 28 Feb 2023 17:13:43 +0800
-Message-ID: <20230228091345.70515-1-william.qiu@starfivetech.com>
+Subject: [PATCH v1 1/2] dt-bindings: PWM: Add StarFive PWM module
+Date:   Tue, 28 Feb 2023 17:13:44 +0800
+Message-ID: <20230228091345.70515-2-william.qiu@starfivetech.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230228091345.70515-1-william.qiu@starfivetech.com>
+References: <20230228091345.70515-1-william.qiu@starfivetech.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [171.223.208.138]
@@ -45,37 +47,83 @@ X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX068.cuchost.com
  (172.16.6.68)
 X-YovoleRuleAgent: yovoleflag
 Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+Add documentation to describe StarFive Pulse Width Modulation
+controller driver.
 
-This patchset adds initial rudimentary support for the StarFive
-Pulse Width Modulation controller driver. And this driver will
-be used in StarFive's VisionFive 2 board.The first patch add
-Documentations for the device and Patch 2 adds device probe for
-the module.
-
-The patch series is based on v6.2.
-
-William Qiu (2):
-  dt-bindings: PWM: Add StarFive PWM module
-  pwm: starfive: Add PWM driver support
-
- .../devicetree/bindings/pwm/pwm-starfive.yaml |  54 ++++
- MAINTAINERS                                   |   7 +
- drivers/pwm/Kconfig                           |  10 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-starfive-ptc.c                | 256 ++++++++++++++++++
- 5 files changed, 328 insertions(+)
+Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+---
+ .../devicetree/bindings/pwm/pwm-starfive.yaml | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
- create mode 100644 drivers/pwm/pwm-starfive-ptc.c
 
---
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-starfive.yaml b/Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
+new file mode 100644
+index 000000000000..4ba2a8cc5344
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/pwm-starfive.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/pwm-starfive.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: StarFive PWM controller
++
++maintainers:
++  - William Qiu <william.qiu@starfivetech.com>
++
++description:
++  StarFive SoCs contain PWM and when operating in PWM mode, the PTC core generates
++  binary signal with user-programmable low and high periods. Clock source for the
++  PWM can be either system clockor external clock. Each PWM timer block provides 8
++  PWM channels.
++
++allOf:
++  - $ref: pwm.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: starfive,jh7110-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    pwm@120d0000 {
++        compatible = "starfive,jh7110-pwm";
++        reg = <0x120d0000 0x10000>;
++        clocks = <&syscrg 121>;
++        resets = <&syscrg 108>;
++        #pwm-cells=<3>;
++    };
+-- 
 2.34.1
 
