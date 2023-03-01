@@ -2,55 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C45746A68B5
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Mar 2023 09:17:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E30EF6A69AE
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Mar 2023 10:21:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjCAIRs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 1 Mar 2023 03:17:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47642 "EHLO
+        id S229525AbjCAJVJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 1 Mar 2023 04:21:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbjCAIRk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Mar 2023 03:17:40 -0500
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E874839CF0;
-        Wed,  1 Mar 2023 00:17:34 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 097A024E261;
-        Wed,  1 Mar 2023 16:17:27 +0800 (CST)
-Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 1 Mar
- 2023 16:17:27 +0800
-Received: from [192.168.120.55] (171.223.208.138) by EXMBX068.cuchost.com
- (172.16.6.68) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 1 Mar
- 2023 16:17:26 +0800
-Message-ID: <a267f495-6a49-dae6-84f0-098e9868840d@starfivetech.com>
-Date:   Wed, 1 Mar 2023 16:17:25 +0800
+        with ESMTP id S229639AbjCAJVH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 1 Mar 2023 04:21:07 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B622DE6B
+        for <linux-pwm@vger.kernel.org>; Wed,  1 Mar 2023 01:21:04 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pXIdp-0004k8-VR; Wed, 01 Mar 2023 10:20:54 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pXIdn-0014Ab-4C; Wed, 01 Mar 2023 10:20:51 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pXIdm-001Fi4-CX; Wed, 01 Mar 2023 10:20:50 +0100
+Date:   Wed, 1 Mar 2023 10:20:50 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Nylon Chen <nylon.chen@sifive.com>
+Cc:     aou@eecs.berkeley.edu, conor@kernel.org,
+        emil.renner.berthing@canonical.com, geert+renesas@glider.be,
+        heiko@sntech.de, krzysztof.kozlowski+dt@linaro.org,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, nylon7717@gmail.com,
+        zong.li@sifive.com, greentime.hu@sifive.com,
+        vincent.chen@sifive.com
+Subject: Re: [PATCH v2 2/2] pwm: sifive: change the PWM controlled LED
+ algorithm
+Message-ID: <20230301092050.gwwbfsltyuow7pq6@pengutronix.de>
+References: <20230130093229.27489-1-nylon.chen@sifive.com>
+ <20230130093229.27489-3-nylon.chen@sifive.com>
+ <20230130101707.pdvabl3na2wpwxqu@pengutronix.de>
+ <CAHh=Yk_hFOjwY1mbmYk8yqH_AKDs1_3J+5pYQStseNsZukPSoA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v1 0/2] StarFive's Pulse Width Modulation driver support
-Content-Language: en-US
-To:     Conor Dooley <conor.dooley@microchip.com>
-CC:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hal Feng <hal.feng@starfivetech.com>
-References: <20230228091345.70515-1-william.qiu@starfivetech.com>
- <Y/8IYSYOsDrGIXzT@wendy>
-From:   William Qiu <william.qiu@starfivetech.com>
-In-Reply-To: <Y/8IYSYOsDrGIXzT@wendy>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [171.223.208.138]
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX068.cuchost.com
- (172.16.6.68)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uloatnw5mqumdhea"
+Content-Disposition: inline
+In-Reply-To: <CAHh=Yk_hFOjwY1mbmYk8yqH_AKDs1_3J+5pYQStseNsZukPSoA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -58,34 +64,106 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--uloatnw5mqumdhea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2023/3/1 16:10, Conor Dooley wrote:
-> Hey William,
-> 
-> On Tue, Feb 28, 2023 at 05:13:43PM +0800, William Qiu wrote:
->> Hi,
->> 
->> This patchset adds initial rudimentary support for the StarFive
->> Pulse Width Modulation controller driver. And this driver will
->> be used in StarFive's VisionFive 2 board.The first patch add
->> Documentations for the device and Patch 2 adds device probe for
->> the module.
->> 
->> The patch series is based on v6.2.
->> 
->> William Qiu (2):
->>   dt-bindings: PWM: Add StarFive PWM module
->>   pwm: starfive: Add PWM driver support
-> 
-> Is there a corresponding dts addition for this driver?
-> 
-> Cheers,
-> Conor
-Hi Conor,
+Hello Nylon,
 
-There is, but after communicating with Hal Feng, I decided to upload
-bindings and driver based on mainline first, and then upload dts after
-Hal Feng's minimal system is merged.
+On Wed, Feb 01, 2023 at 04:56:42PM +0800, Nylon Chen wrote:
+> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=E5=
+=B9=B41=E6=9C=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:17=E5=AF=
+=AB=E9=81=93=EF=BC=9A
+> > On Mon, Jan 30, 2023 at 05:32:29PM +0800, Nylon Chen wrote:
+> > > The `frac` variable represents the pulse inactive time, and the resul=
+t of
+> > > this algorithm is the pulse active time. Therefore, we must reverse t=
+he
+> > > result.
+> > >
+> > > The reference is SiFive FU740-C000 Manual[0].
+> > >
+> > > [0]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86e=
+d8b16acba_fu740-c000-manual-v1p6.pdf
+> > >
+> > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> > > ---
+> > >  drivers/pwm/pwm-sifive.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > > index 62b6acc6373d..a5eda165d071 100644
+> > > --- a/drivers/pwm/pwm-sifive.c
+> > > +++ b/drivers/pwm/pwm-sifive.c
+> > > @@ -158,6 +158,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> > >       frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+> > >       /* The hardware cannot generate a 100% duty cycle */
+> > >       frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+> > > +     frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
+> >
+> > The same problem exists in pwm_sifive_get_state(), doesn't it?
+> >
+> > As fixing this is an interruptive change anyhow, this is the opportunity
+> > to align the driver to the rules tested by PWM_DEBUG.
+> >
+> > The problems I see in the driver (only checked quickly, so I might be
+> > wrong):
+> >
+> >  - state->period !=3D ddata->approx_period isn't necessarily a problem.=
+ If
+> >    state->period > ddata->real_period that's fine and the driver should
+> >    continue
+> >
+> >  - frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+> >    is wrong for two reasons:
+> >    it should round down and use the real period.
+> >
+> I need a little time to clarify your assumptions. If possible, I will
+> make similar changes.
+>=20
+> e.g.
+> rounddown(num, state->period);
+> if (state->period < ddata->approx_period)
+>     ...
 
-Best Regards
-William
+the idea is that for a given request apply should do the following to
+select the hardware setting:
+
+ - Check polarity, if the hardware doesn't support it, return -EINVAL.
+   (A period always starts with the active phase for the duration of
+   duty_cycle. For normal polarity active =3D high.)
+ - Pick the biggest period length possible that is not bigger than the
+   requested period.
+ - For the picked period, select the biggest duty_cycle possible that is
+   not bigger than the requested duty_cycle.
+
+Then if possible switch to the selected setting in an atomic step.
+
+Does this clearify your doubts?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uloatnw5mqumdhea
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmP/GO8ACgkQwfwUeK3K
+7AmiBQf/QkDz4UZYVBJc3n2y9z64RYU6Ri68Em2lO8oxTfUYy7I/4IePztOJf0un
+riimd6Yxxwu7+b+wmtMyaMmHyzIZP+ecScJejXrSedMLGdC+SIvdGtNVEVUa/Lue
+41IHyN6Bv0SgKb7CSNGzo8luaU1n3R2v9pujlMCPW7kaS03SOfEf3TN5ior4DEdt
+9fl5PaVY1OY0M3Y+wkK3QLaD8u4GUkppSknT6tuQ0OP8r8rZil0p173UYRgpQ1rh
+EJt0oVvaSIDRC9oSL4qFqIf8k5sIjvP8rc0c6bfunPNW6saV2DK05Dg7F3A9/NrO
+uyu2CPKCuZ0h82DWo5SHFN3TKgF0QA==
+=5dcD
+-----END PGP SIGNATURE-----
+
+--uloatnw5mqumdhea--
