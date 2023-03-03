@@ -2,30 +2,30 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 970726A9FAB
+	by mail.lfdr.de (Postfix) with ESMTP id E28A96A9FAC
 	for <lists+linux-pwm@lfdr.de>; Fri,  3 Mar 2023 19:55:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231871AbjCCSzT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 3 Mar 2023 13:55:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37024 "EHLO
+        id S231912AbjCCSzU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Mar 2023 13:55:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231721AbjCCSzQ (ORCPT
+        with ESMTP id S231866AbjCCSzQ (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Mar 2023 13:55:16 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EB016325
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9A81B31F
         for <linux-pwm@vger.kernel.org>; Fri,  3 Mar 2023 10:55:02 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pYAYU-0006AT-H1; Fri, 03 Mar 2023 19:54:58 +0100
+        id 1pYAYU-0006AU-Pw; Fri, 03 Mar 2023 19:54:58 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pYAYT-001cTS-T6; Fri, 03 Mar 2023 19:54:57 +0100
+        id 1pYAYU-001cTX-3l; Fri, 03 Mar 2023 19:54:58 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pYAYT-001ujg-6h; Fri, 03 Mar 2023 19:54:57 +0100
+        id 1pYAYT-001ujj-DV; Fri, 03 Mar 2023 19:54:57 +0100
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>,
@@ -34,15 +34,15 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc:     kernel@pengutronix.de, linux-pwm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 01/30] pwm: atmel-hlcdc: Convert to platform remove callback returning void
-Date:   Fri,  3 Mar 2023 19:54:16 +0100
-Message-Id: <20230303185445.2112695-2-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 02/30] pwm: atmel-tcb: Convert to platform remove callback returning void
+Date:   Fri,  3 Mar 2023 19:54:17 +0100
+Message-Id: <20230303185445.2112695-3-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230303185445.2112695-1-u.kleine-koenig@pengutronix.de>
 References: <20230303185445.2112695-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1706; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=TvkQc7PmYfoXX+0CO2pyKboCs6r7E/iQ/09VjFjvOqY=; b=owEBbAGT/pANAwAKAcH8FHityuwJAcsmYgBkAkHkeygGOndPIgCbv+me9mVP9ReuyxtE0i58b WByz6ph4LmJATIEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAJB5AAKCRDB/BR4rcrs CT+lB/jYP8Srt8ZQqyVgB+2fjqkxI7trYgrc12xPNO4gMJpXF54XTxCOQbFbA3ae5y9LXx5Ndop 9MXe9euJB2AVX/uJGZqffr+Hcnw/1gdhkYkFtI8K46XZK7PJPTC2XHSHIJKwLv2KA14DRVC0yU9 Q1ViSw0HWdB4tPyCXm6tWv4d2fBQRQm5n4U0z26u6r2RZM2m3wy7mSg133VEHD7CvIjsymNkw0n w/z8NXuwYZGAWdhLz5gMwoTYbe3kuKIU1I/J5GHoVJxKD811egVRktpFI10dKA2iFHkIBD1uCUi AsZMT+Yg9eynmcYH7FnEdwQMet158P+OUxL9ripaBYObUog=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1777; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=3GlNnOz2MtF+RCy3uc/VVXQMVqysqqFD9V6WoCSxiaQ=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkAkHnNF5rBx7tUYOXq5l5nt6DU0MNQPqJtnNig krJT5kNPYWJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAJB5wAKCRDB/BR4rcrs CfmQB/9fCdplTw5eXzEZwMmtb6QRrt4TsQrTTbtbZAq/T+YniKaEaCU3Lx+yR6CxUIoHXcSaxCR bHBbyAUHDvl8ibQhN2lBpo5KjbCog60nOyL6f2qs3Ea25PDo/ze0jWVzz4mpK1ytxD9x5LM0Nm2 ks8JMKV3rs1I5b3JAeORVeHNxH/tlL1Kjc3CD/+3+WCfDjuLsO+sCV3VTgtH6iIWaQA9eBiwE4M KDKntBP20yNVbQ3XcUwRCK7WNRY0uOwKQugfEui2gNOAq30zVqpcR6uAhrE/P9zygJXZ0eqhFo7 1jgGp1jGfLDh742LxK0hMhaAs+1dsnjiFbhWZVBW+7lixpcU
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -70,38 +70,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-atmel-hlcdc.c | 6 ++----
+ drivers/pwm/pwm-atmel-tcb.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
-index a43b2babc809..96a709a9d49a 100644
---- a/drivers/pwm/pwm-atmel-hlcdc.c
-+++ b/drivers/pwm/pwm-atmel-hlcdc.c
-@@ -278,15 +278,13 @@ static int atmel_hlcdc_pwm_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index 2837b4ce8053..4a116dc44f6e 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -500,7 +500,7 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
+ 	return err;
  }
  
--static int atmel_hlcdc_pwm_remove(struct platform_device *pdev)
-+static void atmel_hlcdc_pwm_remove(struct platform_device *pdev)
+-static int atmel_tcb_pwm_remove(struct platform_device *pdev)
++static void atmel_tcb_pwm_remove(struct platform_device *pdev)
  {
- 	struct atmel_hlcdc_pwm *chip = platform_get_drvdata(pdev);
+ 	struct atmel_tcb_pwm_chip *tcbpwm = platform_get_drvdata(pdev);
  
- 	pwmchip_remove(&chip->chip);
- 
- 	clk_disable_unprepare(chip->hlcdc->periph_clk);
+@@ -509,8 +509,6 @@ static int atmel_tcb_pwm_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(tcbpwm->slow_clk);
+ 	clk_put(tcbpwm->slow_clk);
+ 	clk_put(tcbpwm->clk);
 -
 -	return 0;
  }
  
- static const struct of_device_id atmel_hlcdc_pwm_dt_ids[] = {
-@@ -301,7 +299,7 @@ static struct platform_driver atmel_hlcdc_pwm_driver = {
- 		.pm = &atmel_hlcdc_pwm_pm_ops,
+ static const struct of_device_id atmel_tcb_pwm_dt_ids[] = {
+@@ -564,7 +562,7 @@ static struct platform_driver atmel_tcb_pwm_driver = {
+ 		.pm = &atmel_tcb_pwm_pm_ops,
  	},
- 	.probe = atmel_hlcdc_pwm_probe,
--	.remove = atmel_hlcdc_pwm_remove,
-+	.remove_new = atmel_hlcdc_pwm_remove,
+ 	.probe = atmel_tcb_pwm_probe,
+-	.remove = atmel_tcb_pwm_remove,
++	.remove_new = atmel_tcb_pwm_remove,
  };
- module_platform_driver(atmel_hlcdc_pwm_driver);
+ module_platform_driver(atmel_tcb_pwm_driver);
  
 -- 
 2.39.1
