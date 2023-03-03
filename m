@@ -2,172 +2,186 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFD0B6A8013
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Mar 2023 11:41:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A64BE6A9FCC
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Mar 2023 19:55:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjCBKlt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Mar 2023 05:41:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
+        id S231944AbjCCSzp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 3 Mar 2023 13:55:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCBKls (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Mar 2023 05:41:48 -0500
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDA2D34032
-        for <linux-pwm@vger.kernel.org>; Thu,  2 Mar 2023 02:41:46 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-536c02c9dfbso418816057b3.11
-        for <linux-pwm@vger.kernel.org>; Thu, 02 Mar 2023 02:41:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1677753706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=szoAPIE9RLg8SyW+42dEQKwq5qglsGdZPucFgQhY0/A=;
-        b=gtHXWnWEP7JrkAkqs7UngZsUtO12av+z17lis0xLuEyWguFdxpE7zD4/gRcrSbv4L3
-         yjXXUO9hTUiTmKdAdBlW0gKaBZKKXpX4D9ZpvYvbtZuEJ7p0KaPbfHYaamVpoYgwElQs
-         HiqxuJAHg9Hhc0tp2XQshv04T+2GF8hoXUpGLum0j8N3yDDrfRf3KhXR3OlcvRbEKl5G
-         JU/ka4ea4V8Z0gWbvWteKXgwnZH9Iq2i9aQVK98iAIsZ2Kym5S5PqyxR7WjcaTMFvKVa
-         rc9MVd2v3QVxwnblV2KkIKSNA4SfX8GrWkfeUsplhvLEOWxdYvLAlxJEF4GS9hV5uter
-         pSxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677753706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=szoAPIE9RLg8SyW+42dEQKwq5qglsGdZPucFgQhY0/A=;
-        b=acOB827p82fj5nrsXotXli3hl4qtxF9HoDWJ3/LWeBWIJgFCsjlWAeOagcOWR98mKA
-         CNJ1Nchfok6h+3Eng8alsifEDUqsJjnnGSy0+f3LwhO9XBOLf0XH65qeF8rrjzSaCIM/
-         zL0HpFc0hIlYLyhTrRCZ5Bq31p2ZrhSa2ehb65+D3YuOLkH6HohUbKkm/T8q7ApqpYqs
-         iOLWSYRa9Zl3heQpRtVwXDIomZTTiZrf2AprgidX33E97jRGAWZZgwZZFL8934ThYNUy
-         j3Zvw67mPKsDgnteZuOlk9VLYu9RSS+4mtrvES+m9sNDeeUhYVGEQTqcnDkXX1dRippB
-         3spQ==
-X-Gm-Message-State: AO0yUKW7i8MvqaROU89BYKCVNFJ6YFqOw1yJGOMjeAwnnNpbxVV7V5lo
-        u0hVBrULkK1N0St7CpFyl6tCj6JvBCNO/86U3ISvBg==
-X-Google-Smtp-Source: AK7set87M/AbgxYhMgy1BNJoD32ttiD+1yNN3ghOZW22JFluXJamrHcQOmG2Ay4OU54yPfNiSO4wP3Fp8RerwNWIWtQ=
-X-Received: by 2002:a81:441b:0:b0:52e:d2a7:1ba1 with SMTP id
- r27-20020a81441b000000b0052ed2a71ba1mr5998495ywa.1.1677753706026; Thu, 02 Mar
- 2023 02:41:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20230130093229.27489-1-nylon.chen@sifive.com> <20230130093229.27489-3-nylon.chen@sifive.com>
- <20230130101707.pdvabl3na2wpwxqu@pengutronix.de> <CAHh=Yk_hFOjwY1mbmYk8yqH_AKDs1_3J+5pYQStseNsZukPSoA@mail.gmail.com>
- <20230301092050.gwwbfsltyuow7pq6@pengutronix.de>
-In-Reply-To: <20230301092050.gwwbfsltyuow7pq6@pengutronix.de>
-From:   Nylon Chen <nylon.chen@sifive.com>
-Date:   Thu, 2 Mar 2023 18:41:31 +0800
-Message-ID: <CAHh=Yk-Yt4q78tpThGR=HTz-Rgjp0LsU1H=eULgo3pg8scS=XA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pwm: sifive: change the PWM controlled LED algorithm
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        with ESMTP id S231433AbjCCSzj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 3 Mar 2023 13:55:39 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70D31422A
+        for <linux-pwm@vger.kernel.org>; Fri,  3 Mar 2023 10:55:36 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pYAYY-0006AS-EQ; Fri, 03 Mar 2023 19:55:02 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pYAYT-001cTO-L9; Fri, 03 Mar 2023 19:54:57 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pYAYS-001ujd-Vg; Fri, 03 Mar 2023 19:54:56 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     aou@eecs.berkeley.edu, conor@kernel.org,
-        emil.renner.berthing@canonical.com, geert+renesas@glider.be,
-        heiko@sntech.de, krzysztof.kozlowski+dt@linaro.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, nylon7717@gmail.com,
-        zong.li@sifive.com, greentime.hu@sifive.com,
-        vincent.chen@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     kernel@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org,
+        Guenter Roeck <groeck@chromium.org>,
+        chrome-platform@lists.linux.dev,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org
+Subject: [PATCH 00/30] pwm: Convert to platform remove callback returning void
+Date:   Fri,  3 Mar 2023 19:54:15 +0100
+Message-Id: <20230303185445.2112695-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4518; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=0T84eVJj5zms3XJcCemeo6tbGagiWg7FsqOn9O28VD8=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkAkHgL+hOWzMEGr3pJ+k7l131cW/u0VRGYd/bj C6SJ3/IMe2JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAJB4AAKCRDB/BR4rcrs CaChB/9690Y0j69SwC7ah25tZA8zQepQ8HC5QoKJRtoGAE18zwPCd9i6Ah2GskRAHqpYY0uNm04 Ofb+Baq5kb52LxrrBMQmedZl3aJYZWofch+1g4d/hEf9ipUk1cY0J534mp4cGBxRfPQgNmj16IF Tz/dORDGUT6OLi4ZeGBhKRuh6aZBIqkrcvRyINJxJlgmQA0q2BGM2qwLZ5OSrCnu3bmCMIkxRWw 2x28v+TFl6h7Cz/hIoA/Z/10PnlupKviCktbI5hdQj824S0rA4YCq307ujpcdKH73fHV5YQNuKp y+q2ulHmEZ8gwbJaQYr3UGERAiuKSo1A/FmH1rTX55+FSi4U
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe
+Hello,
 
-Thanks for your reply.
+this patch series adapts the platform drivers below drivers/pwm to use
+the .remove_new() callback. Compared to the traditional .remove()
+callback .remove_new() returns no value. This is a good thing because
+the driver core doesn't (and cannot) cope for errors during remove. The
+only effect of a non-zero return value in .remove() is that the driver
+core emits a warning. The device is removed anyhow and an early return
+from .remove() usually yields a resource leak.
 
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=E5=B9=
-=B43=E6=9C=881=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=885:21=E5=AF=AB=
-=E9=81=93=EF=BC=9A
->
-> Hello Nylon,
->
-> On Wed, Feb 01, 2023 at 04:56:42PM +0800, Nylon Chen wrote:
-> > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=
-=E5=B9=B41=E6=9C=8830=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:17=E5=
-=AF=AB=E9=81=93=EF=BC=9A
-> > > On Mon, Jan 30, 2023 at 05:32:29PM +0800, Nylon Chen wrote:
-> > > > The `frac` variable represents the pulse inactive time, and the res=
-ult of
-> > > > this algorithm is the pulse active time. Therefore, we must reverse=
- the
-> > > > result.
-> > > >
-> > > > The reference is SiFive FU740-C000 Manual[0].
-> > > >
-> > > > [0]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-8=
-6ed8b16acba_fu740-c000-manual-v1p6.pdf
-> > > >
-> > > > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-sifive.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > > > index 62b6acc6373d..a5eda165d071 100644
-> > > > --- a/drivers/pwm/pwm-sifive.c
-> > > > +++ b/drivers/pwm/pwm-sifive.c
-> > > > @@ -158,6 +158,7 @@ static int pwm_sifive_apply(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
-> > > >       frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
-> > > >       /* The hardware cannot generate a 100% duty cycle */
-> > > >       frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-> > > > +     frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
-> > >
-> > > The same problem exists in pwm_sifive_get_state(), doesn't it?
-> > >
-> > > As fixing this is an interruptive change anyhow, this is the opportun=
-ity
-> > > to align the driver to the rules tested by PWM_DEBUG.
-> > >
-> > > The problems I see in the driver (only checked quickly, so I might be
-> > > wrong):
-> > >
-> > >  - state->period !=3D ddata->approx_period isn't necessarily a proble=
-m. If
-> > >    state->period > ddata->real_period that's fine and the driver shou=
-ld
-> > >    continue
-> > >
-> > >  - frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
-> > >    is wrong for two reasons:
-> > >    it should round down and use the real period.
-> > >
-> > I need a little time to clarify your assumptions. If possible, I will
-> > make similar changes.
-> >
-> > e.g.
-> > rounddown(num, state->period);
-> > if (state->period < ddata->approx_period)
-> >     ...
->
-> the idea is that for a given request apply should do the following to
-> select the hardware setting:
->
->  - Check polarity, if the hardware doesn't support it, return -EINVAL.
->    (A period always starts with the active phase for the duration of
->    duty_cycle. For normal polarity active =3D high.)
->  - Pick the biggest period length possible that is not bigger than the
->    requested period.
->  - For the picked period, select the biggest duty_cycle possible that is
->    not bigger than the requested duty_cycle.
->
-> Then if possible switch to the selected setting in an atomic step.
->
-> Does this clearify your doubts?
-I need a little time to clarify your assumptions. Thanks again.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
+By changing the remove callback to return void driver authors cannot
+reasonably assume any more that there is some kind of cleanup later.
+
+All drivers touched here returned zero unconditionally in their remove
+callback, so they could all be converted trivially to .remove_new().
+
+Note that this series depends on commit 5c5a7680e67b ("platform: Provide
+a remove callback that returns no value") that is already in Linus' tree
+but not yet included in a tagged version.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (30):
+  pwm: atmel-hlcdc: Convert to platform remove callback returning void
+  pwm: atmel-tcb: Convert to platform remove callback returning void
+  pwm: atmel: Convert to platform remove callback returning void
+  pwm: bcm-iproc: Convert to platform remove callback returning void
+  pwm: bcm2835: Convert to platform remove callback returning void
+  pwm: berlin: Convert to platform remove callback returning void
+  pwm: brcmstb: Convert to platform remove callback returning void
+  pwm: clk: Convert to platform remove callback returning void
+  pwm: cros-ec: Convert to platform remove callback returning void
+  pwm: hibvt: Convert to platform remove callback returning void
+  pwm: img: Convert to platform remove callback returning void
+  pwm: imx-tpm: Convert to platform remove callback returning void
+  pwm: lpc18xx-sct: Convert to platform remove callback returning void
+  pwm: lpss-platform: Convert to platform remove callback returning void
+  pwm: mtk-disp: Convert to platform remove callback returning void
+  pwm: omap-dmtimer: Convert to platform remove callback returning void
+  pwm: rcar: Convert to platform remove callback returning void
+  pwm: rockchip: Convert to platform remove callback returning void
+  pwm: samsung: Convert to platform remove callback returning void
+  pwm: sifive: Convert to platform remove callback returning void
+  pwm: spear: Convert to platform remove callback returning void
+  pwm: sprd: Convert to platform remove callback returning void
+  pwm: sti: Convert to platform remove callback returning void
+  pwm: stm32: Convert to platform remove callback returning void
+  pwm: sun4i: Convert to platform remove callback returning void
+  pwm: tegra: Convert to platform remove callback returning void
+  pwm: tiecap: Convert to platform remove callback returning void
+  pwm: tiehrpwm: Convert to platform remove callback returning void
+  pwm: vt8500: Convert to platform remove callback returning void
+  pwm: xilinx: Convert to platform remove callback returning void
+
+ drivers/pwm/pwm-atmel-hlcdc.c   | 6 ++----
+ drivers/pwm/pwm-atmel-tcb.c     | 6 ++----
+ drivers/pwm/pwm-atmel.c         | 6 ++----
+ drivers/pwm/pwm-bcm-iproc.c     | 6 ++----
+ drivers/pwm/pwm-bcm2835.c       | 6 ++----
+ drivers/pwm/pwm-berlin.c        | 6 ++----
+ drivers/pwm/pwm-brcmstb.c       | 6 ++----
+ drivers/pwm/pwm-clk.c           | 6 ++----
+ drivers/pwm/pwm-cros-ec.c       | 6 ++----
+ drivers/pwm/pwm-hibvt.c         | 6 ++----
+ drivers/pwm/pwm-img.c           | 6 ++----
+ drivers/pwm/pwm-imx-tpm.c       | 6 ++----
+ drivers/pwm/pwm-lpc18xx-sct.c   | 6 ++----
+ drivers/pwm/pwm-lpss-platform.c | 5 ++---
+ drivers/pwm/pwm-mtk-disp.c      | 6 ++----
+ drivers/pwm/pwm-omap-dmtimer.c  | 6 ++----
+ drivers/pwm/pwm-rcar.c          | 6 ++----
+ drivers/pwm/pwm-rockchip.c      | 6 ++----
+ drivers/pwm/pwm-samsung.c       | 6 ++----
+ drivers/pwm/pwm-sifive.c        | 6 ++----
+ drivers/pwm/pwm-spear.c         | 6 ++----
+ drivers/pwm/pwm-sprd.c          | 6 ++----
+ drivers/pwm/pwm-sti.c           | 6 ++----
+ drivers/pwm/pwm-stm32.c         | 6 ++----
+ drivers/pwm/pwm-sun4i.c         | 6 ++----
+ drivers/pwm/pwm-tegra.c         | 6 ++----
+ drivers/pwm/pwm-tiecap.c        | 6 ++----
+ drivers/pwm/pwm-tiehrpwm.c      | 6 ++----
+ drivers/pwm/pwm-vt8500.c        | 6 ++----
+ drivers/pwm/pwm-xilinx.c        | 5 ++---
+ 30 files changed, 60 insertions(+), 118 deletions(-)
+
+base-commit: 2eb29d59ddf02e39774abfb60b2030b0b7e27c1f
+-- 
+2.39.1
+
