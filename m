@@ -2,130 +2,166 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C336AB999
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:21:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB2EF6ABA55
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:50:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbjCFJV1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Mar 2023 04:21:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59324 "EHLO
+        id S229536AbjCFJuD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Mar 2023 04:50:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbjCFJVY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:21:24 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378AA222DA
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Mar 2023 01:21:20 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id f11so8025206wrv.8
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Mar 2023 01:21:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678094478;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6QTaTg1M82nHPuHpSBS+WU4NCi+YuYDcZym+3+BNoD0=;
-        b=hY3zQEkaEFt7L8jf2l7rZVQ3WSnXzuIYX/YnXzeyUdnnkCARe0Ec4S4+mzCPLpmnga
-         q1OxpBZ3DldwFuzEN95tjGEbuzVKMOsitKZtGkU3ZU8xSr+LBTGGhazcmsd/c80KJ5c+
-         XjYKDAM9Et4UWcA0au7RTZpYuVG7KWUE8LtjsftwbJ/D9fehDjKQEx/W27u5Kv+OP9eB
-         Ko2Fofulg2zHSkYhuIAnnfhU8CY87VprzXN9szg0Ni/j+mTWe4sssCc8y7bScULLVaJy
-         LFGz5/R77awfacg4KoZIkOFdqkeTzrwAx2lkOuZGbpvqjYRBPpMErMMY9zTNy1sTWh2R
-         sGVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678094478;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6QTaTg1M82nHPuHpSBS+WU4NCi+YuYDcZym+3+BNoD0=;
-        b=xylclSUHkPoNaWyTzJL9ZpCJTjYZ/8cm5AkM9yc2OMFdm8wMxwdktqIL7k7qiAKook
-         Fa0LFqBXJRbP0+MVoWC54Ra5TVK803BE1Fy3B37WurorSjWVUMRiVn/koHiM2NTv1ZBM
-         X5/GmiJ6uDMkBBefJ4cM+NDS3HXC0lyMIELAYIvlstB4AX54kTrFFgMt0FYf7lnhG4sl
-         UcgjMlR286vz2RvOfxuntN4nsC6H4GJ8yDlcrXBLT9vDGsOBL+SEmPpKkspbTPbGJLxf
-         oaPhvu22zZDTgR/8/5FClrS/XmCXPY1aSzgIk6rossN44BuHrXRskTToKoaF98WqIx3u
-         dqkg==
-X-Gm-Message-State: AO0yUKXcS4iuqYbAGgddpz2OeB8GS54Wo4eU6VQtV88bKZb/mX4TCClJ
-        8g+aqFkBOjNT4StlGRgiRdNRSQ==
-X-Google-Smtp-Source: AK7set9PhQC/LAWuijBZyi1RnO+m0uSLl7osxh+Et8GDOHCxy9UxpG6DiUCb2nJKyQHWzg5n+chgsQ==
-X-Received: by 2002:a5d:4a51:0:b0:2c7:778:5da6 with SMTP id v17-20020a5d4a51000000b002c707785da6mr6233079wrs.42.1678094478663;
-        Mon, 06 Mar 2023 01:21:18 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id j17-20020adff011000000b002c5a1bd527dsm9235217wro.96.2023.03.06.01.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 01:21:18 -0800 (PST)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
-In-Reply-To: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
-References: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
-Subject: Re: (subset) [PATCH 0/4] soc: amlogic: switch bindings to yaml and
- adjust some dtbs's
-Message-Id: <167809447788.73638.7893425529034972741.b4-ty@linaro.org>
-Date:   Mon, 06 Mar 2023 10:21:17 +0100
+        with ESMTP id S229667AbjCFJuB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:50:01 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E82206B9;
+        Mon,  6 Mar 2023 01:49:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1678096198; x=1709632198;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0SyElCUWTlCle3k2VOdcQEbG3TLOBs5Dv4yCPL7zPl8=;
+  b=bZh9s5VvfIFN/GwOIjIl4IUNGpDRxAby4Bf1QarMRc/v9EnzrTP2CM1L
+   PIWtbc3Opjz1PTH54iWEPrtfLak5FPbkoYk5rSL0K0jFI1q8OR1VuddYT
+   4knEy45EPvd4Pf/tWkdblBtBR7bSijeb/O9WnAh47TzkTOg8xUgKLy8Wo
+   VUkBCwXBkGL+k1HoA6IU07VXsjeGpZMBQPB9lxMiRSBCPAwmDpMWqUDhB
+   WMMy7nnn2GVrIXdexXkeovb3Wc0ft6+PV2o1FG7812di3tFwTH6sSIjVX
+   71NCQOk2u+NZjL8U3S8sF0b1/91z7t9z4SVGm+t9ftamG3q0ez5lRq34N
+   A==;
+X-IronPort-AV: E=Sophos;i="5.98,236,1673938800"; 
+   d="scan'208";a="203807069"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Mar 2023 02:49:57 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 6 Mar 2023 02:49:56 -0700
+Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
+ Transport; Mon, 6 Mar 2023 02:49:55 -0700
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>,
+        Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v14 0/2] Microchip Soft IP corePWM driver
+Date:   Mon, 6 Mar 2023 09:48:57 +0000
+Message-ID: <20230306094858.1614819-1-conor.dooley@microchip.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3956; i=conor.dooley@microchip.com; h=from:subject; bh=0SyElCUWTlCle3k2VOdcQEbG3TLOBs5Dv4yCPL7zPl8=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDCms21lM7Kw27U24bxQnd9xa5Ou7rd314v/LJ63fN3HmzWoT YYP5HaUsDGIcDLJiiiyJt/tapNb/cdnh3PMWZg4rE8gQBi5OAZjIbi2Gv8K1C5+sutZ/+fCF9uao9e XxPV3/Lt3Yd9gzZ3mDt+a5ghCG/yH2/Bf3LZjiw3fHa46D0VtbrsptW85k7k7erbT0cFCxKzMA
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+Hey Uwe, all,
 
-On Wed, 01 Feb 2023 20:57:48 +0100, Heiner Kallweit wrote:
-> Switch two Amlogic Meson bindings to yaml. As prerequisite adjust the
-> order of some compatibles first.
-> 
-> New versions of the bindings have been submitted as individual
-> patches in between. Put it into a series again.
-> 
-> Heiner Kallweit (4):
->   arm: dts: meson: adjust order of some compatibles
->   arm64: dts: meson: adjust order of some compatibles
->   dt-bindings: pwm: Convert Amlogic Meson PWM binding
->   dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO
->     interrupt controller binding
-> 
-> [...]
+v14 is rebased on top of v6.3-rc1.
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.4/arm-dt)
+Uwe & I had a long back and forth about period calculations on v13,
+my ultimate conclusion being that, after some testing of the "corrected"
+calculation in hardware, the original calculation was correct.
+I think we had gotten sucked into discussion the calculation of the
+period itself, when we were in fact trying to calculate a bound on the
+period instead. That discussion is here:
+https://lore.kernel.org/linux-pwm/Y+ow8tfAHo1yv1XL@wendy/
 
-[1/4] arm: dts: meson: adjust order of some compatibles
-      https://git.kernel.org/amlogic/c/0c187cca73291f2c355fae31eed3fc7aa783b2de
+Thanks,
+Conor.
 
-These changes has been applied on the intermediate git tree [1].
+Changes since v13:
+- couple bits of cleanup to apply_locked(), suggested by Uwe
+- move the overhead waiting for a change to be applied, for channels
+  with shadow registers, to subsequent calls to apply(). This has the
+  benefit of only waiting when two calls to apply() are close in time
+  rather than eating the delay in every call.
 
-The v6.4/arm-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
+Changes since v11:
+- swap a "bare" multiply & divide for the corresponding helper to
+  prevent overflow
+- factor out duplicate clk rate acquisition & period calculation
+- make the period calculation return void by checking the validity of
+  the clock rate in the caller
+- drop the binding & dt patch, they're on-track for v6.2 via my tree
 
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
+Changes since v10:
+- reword some comments
+- try to assign the period if a disable is requested
+- drop a cast around a u8 -> u16 conversion
+- fix a check on period_steps that should be on the hw_ variant
+- split up the period calculation in get_state() to fix the result on
+  32 bit
+- add a rate variable in get_state() to only call get_rate() once
+- redo the locking as suggested to make it more straightforward.
+- stop checking for enablement in get_state() that was working around
+ intended behaviour of the sysfs interface
 
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
+Changes since v9:
+- fixed the missing unlock that Dan reported
 
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
+Changes since v8:
+- fixed a(nother) raw 64 bit division (& built it for riscv32!)
+- added a check to make sure we don't try to sleep for 0 us
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+Changes since v7:
+- rebased on 6.0-rc1
+- reworded comments you highlighted in v7
+- fixed the overkill sleeping
+- removed the unused variables in calc_duty
+- added some extra comments to explain behaviours you questioned in v7
+- make the mutexes un-interruptible
+- fixed added the 1s you suggested for the if(period_locked) logic
+- added setup of the channel_enabled shadowing
+- fixed the period reporting for the negedge == posedge case in
+  get_state() I had to add the enabled check, as otherwise it broke
+  setting the period for the first time out of reset.
+- added a test for invalid PERIOD_STEPS values, in which case we abort
+  if we cannot fix the period
+
+Changes from v6:
+- Dropped an unused variable that I'd missed
+- Actually check the return values of the mutex lock()s
+- Re-rebased on -next for the MAINTAINERS patch (again...)
+
+Changes from v5:
+- switched to a mutex b/c we must sleep with the lock taken
+- simplified the locking in apply() and added locking to get_state()
+- reworked apply() as requested
+- removed the loop in the period calculation (thanks Uwe!)
+- add a copy of the enable registers in the driver to save on reads.
+- remove the second (useless) write to sync_update
+- added some missing rounding in get_state()
+- couple other minor cleanups as requested in:
+https://lore.kernel.org/linux-riscv/20220709160206.cw5luo7kxdshoiua@pengutronix.de/
+
+Changes from v4:
+- dropped some accidentally added files
+
+Changes before v4:
+https://lore.kernel.org/linux-pwm/20220721172109.941900-1-mail@conchuod.ie
+
+Conor Dooley (2):
+  pwm: add microchip soft ip corePWM driver
+  MAINTAINERS: add pwm to PolarFire SoC entry
+
+ MAINTAINERS                      |   1 +
+ drivers/pwm/Kconfig              |  10 +
+ drivers/pwm/Makefile             |   1 +
+ drivers/pwm/pwm-microchip-core.c | 441 +++++++++++++++++++++++++++++++
+ 4 files changed, 453 insertions(+)
+ create mode 100644 drivers/pwm/pwm-microchip-core.c
 
 -- 
-Neil
+2.39.2
 
