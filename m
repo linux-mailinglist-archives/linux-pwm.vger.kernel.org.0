@@ -2,90 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06A896ABA56
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:50:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC126ABC45
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 11:26:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230153AbjCFJuG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Mar 2023 04:50:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36614 "EHLO
+        id S231140AbjCFK0g (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Mar 2023 05:26:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230138AbjCFJuD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:50:03 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1F72333B;
-        Mon,  6 Mar 2023 01:50:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1678096201; x=1709632201;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=276T++Ba7jMivtEgAFP836L0rMlfsQm/Se+v+ZQ2unk=;
-  b=TjKN3Jq4S+OMxYAfNWfGHfwzIGiWY5GTIIwbHohPjOJY7o+GW0IVRMlJ
-   zpzQU/8HckXdjFexaEu7bvetodJVOsWqKgPeZTKbjhi0E0vSAGgh47UcA
-   vKQVfR0kxOWB2gsR47G91NHI33iqLsXqjQGgxQyB4AcmpB9yadiA0OT6i
-   /WN7duguXk/ooHV5ZB6T79x5jFTy60ofOo5u7duEZF/PWEetWYGAltKFv
-   XUeMlNT9ZH53XpagkKumvdpX2JC7YcWnRYDWL6JuWZgaHiC4WdDGYCZml
-   QzeznQkP2f9fV4fOYEBjhy4rx6H0uSb8mimjd8JBm13EUOQvcEc/UVluB
-   A==;
-X-IronPort-AV: E=Sophos;i="5.98,236,1673938800"; 
-   d="scan'208";a="203807099"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Mar 2023 02:50:00 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 6 Mar 2023 02:50:00 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.16 via Frontend
- Transport; Mon, 6 Mar 2023 02:49:59 -0700
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v14 2/2] MAINTAINERS: add pwm to PolarFire SoC entry
-Date:   Mon, 6 Mar 2023 09:48:59 +0000
-Message-ID: <20230306094858.1614819-3-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230306094858.1614819-1-conor.dooley@microchip.com>
-References: <20230306094858.1614819-1-conor.dooley@microchip.com>
+        with ESMTP id S230507AbjCFK0S (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 05:26:18 -0500
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABFB265B6
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Mar 2023 02:25:51 -0800 (PST)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-176eae36feaso89298fac.6
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Mar 2023 02:25:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678098351;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
+        b=EDbhPO1WKzSJy97Cp1KR4Ue1wIcLFSscoH9L1E67CyPoJvstONJwP7RxKCqsDiuar/
+         4XZc6UhnyOFrEHlIQ3KmGU6oX8xWOyZpiVA4bD6F27cjopM5KQeiwoXnQq1r2hu/0hkW
+         LgiQ9FGonNq8AsMsEKBqZEvtwgOfW2lv3iUKapY2ocqE+LRWfsVifUNA3eNbIcULbvPT
+         nBBU0ns0xWwmvS7ETCAh5Z5lhdCiLVSRis+m63aq8CObwyUrMLAjGQpDeSf4OVAOQav5
+         5TuEH4NOUnTGCqcHGRIE0/tBavRRplzW4HaWY1DRs+pas+nyfL/37adPjYmqfexbl/Di
+         PS3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678098351;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vh7FN/ulAdnmY8O0LKz7bqpIFk4oOSQ9iCZ8VQ/AkNo=;
+        b=tSnSsCb5GGtxV3SJ0uXWuotvGobCstbagIdskNZN9reQjeimq4n6kNsUgRTJ8NImxy
+         5HSBO6x6WRrIEt1sFjO4ahoDbdjAmcDIi8k99PpIQchMWjU+Nd7PH0INWlyWXUH0hEia
+         PTL6VFi/k/i+EDj8h7Mg6RBUD6VSg07TA8egVxv57vWrrDilABxmbj+8TJQ7sXdE2p0w
+         HIl9gAowH/HBPP7kAmIr6hBQ+woZf1ayz8sWt8j7ZzQcZQlf9qLPjLdtqLIYnP7UYNqc
+         xS1Vvq4lNxjNUtwZ3EaJoi2dWiSkJ6fPrO5D3C/E3MT31XFDkaypdoJH5tI9RNIgdiFK
+         46Gw==
+X-Gm-Message-State: AO0yUKVB1a2emB0y0JMyRLd08rZgdtDFs75bKm9YHeGOdk+8NHvzb1yR
+        QO4OLUX2NLCoVLuU6LVKuyvMqZy7WlBmRQVc3fcgi7qS59k=
+X-Google-Smtp-Source: AK7set9YqazPiOkBuGm+YrFZOLe51O90+qKBrIr6WBjXtnVrmZ9RIOYyWRLBWcHI+/rsVoNhMQhwnCpcR6G8n2Z6mzE=
+X-Received: by 2002:a05:6102:e44:b0:402:999f:44d3 with SMTP id
+ p4-20020a0561020e4400b00402999f44d3mr6975472vst.1.1678098330725; Mon, 06 Mar
+ 2023 02:25:30 -0800 (PST)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=670; i=conor.dooley@microchip.com; h=from:subject; bh=276T++Ba7jMivtEgAFP836L0rMlfsQm/Se+v+ZQ2unk=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDCms2zk3xT39+OXegR1ii8S71rb0VM0rzlm+rpZ979mZWs+e l35V7ihlYRDjYJAVU2RJvN3XIrX+j8sO5563MHNYmUCGMHBxCsBEPgcx/C/fk1O22n7S8+nh0R9tLx jLe/tFiioqVE23jbm49p2IqyfDP+2Z3JIR4WJKFfKno+c93r9mxoW0PaHBu/Q2cE646H37BzsA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Received: by 2002:a59:ce6f:0:b0:3ae:930b:3e70 with HTTP; Mon, 6 Mar 2023
+ 02:25:30 -0800 (PST)
+Reply-To: madis.scarl@terlera.it
+From:   "Ms Eve from U.N" <denisagotou@gmail.com>
+Date:   Mon, 6 Mar 2023 11:25:30 +0100
+Message-ID: <CAD6bNBi6bPCYboaF4-xBgmeUTFn6JMXqU6TNepQig=NRMqhdUg@mail.gmail.com>
+Subject: Re: Claim of Fund:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_SCAM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the newly introduced pwm driver to the existing PolarFire SoC entry.
+Hello Good Morning,
+This is to bring to your notice that all our efforts to contact you
+through this your email ID failed Please Kindly contact Barrister.
+Steven Mike { mbarrsteven@gmail.com } on his private email for the
+claim of your compensation entitlement
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d5bc223f3053..128cc89a47d8e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17993,6 +17993,7 @@ F:	drivers/clk/microchip/clk-mpfs.c
- F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
- F:	drivers/rtc/rtc-mpfs.c
- F:	drivers/soc/microchip/mpfs-sys-controller.c
--- 
-2.39.2
-
+Note: You have to pay for the delivery fee.
+Yours Sincerely
+Mrs EVE LEWIS
