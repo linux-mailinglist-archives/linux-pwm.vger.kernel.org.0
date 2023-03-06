@@ -2,45 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F97B6ACEA9
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 20:56:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C020E6ACEAF
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 20:59:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230344AbjCFT4e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Mar 2023 14:56:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
+        id S229486AbjCFT7L (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Mar 2023 14:59:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbjCFT4Q (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 14:56:16 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8D7664C7;
-        Mon,  6 Mar 2023 11:55:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678132552; x=1709668552;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=z9mXunzTxFtyQxWYx0D3ZdzQzJ0LQXRYVBzePKOyr2Y=;
-  b=Ih5XHDYMjtD0cz0TMSQiXyHKSDKfnufpV//bJv0nhLgh5Wbn6VNAkcXw
-   bpYN+QoLmOa9H7/Lm0940umiZUNAJZIwFQaJ2HcreJpdGOzM5fFaYOHem
-   xiV8QTV28OLCjWT14GoTtXIx4bd4TdYV7Sg7/86jtGwC4CWWa8NCDiwbz
-   3MAGB+5ke+hfAaTIchNwV/1+nfWWu08UXf9sxQpWekfdAfnQliH+Ohy+R
-   6I4g1VUZ4hqLFOk69zK60pfoUz11VVNM32ZIvrk5DENmn9wNxUYOWAB1x
-   2r7bC38Wq2lUyO+R1d64CHuzasZKvhYqHGi6LJ+vXOXjhZBvPIvCRV/68
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="333129039"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="333129039"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 11:55:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="745185205"
-X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
-   d="scan'208";a="745185205"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Mar 2023 11:55:36 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id EDC5787; Mon,  6 Mar 2023 21:56:12 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229457AbjCFT7K (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 14:59:10 -0500
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8131F65070;
+        Mon,  6 Mar 2023 11:58:42 -0800 (PST)
+Received: by mail-qt1-x82f.google.com with SMTP id c3so11930321qtc.8;
+        Mon, 06 Mar 2023 11:58:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678132676;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fcear7SkG9TmnSwIELIrY7+1NyaOV8lflIIPHX2QmK8=;
+        b=WGjLRckl281DCVlHPpmlzGIN/jVrcmhh5kKLciScBCHtk+amtS/6/t4urkFbS2pA3u
+         07on6PPWceK62oGnAqS7/+v+401JZJqNJB6BdVuRObXwOoLqfl/JVBiS3yGP51CqW/I2
+         ZzY9hwn6PSoKgV9iNYZxZFMSZzetb4rtzLQfN2JTeg1+Qx7gM3TGDUHVJZSGANu/w4jH
+         iksTOHuImXCj/V+tdhzbNGhmbtBhx2OHYXc15vI4VBYpk63ZJUcJcsVc4tdP3AN64uKj
+         +mtBCAYTktuAa1f+p5xWuDHFdvrZgW8nv3WFaZtNsQiGVn6q/UPkrSr6DRxIlRcr30Iz
+         JWkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678132676;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fcear7SkG9TmnSwIELIrY7+1NyaOV8lflIIPHX2QmK8=;
+        b=QPtgW46JgV6plpKS+39nbUAEaWZMwRUupjOw66CwXrVPowrKFzJkOU57tLFtIyww2T
+         oh7y09NbUqDAJbUSKRcczMWLXmbvKAImdow0yNEYXmv0njV2Rqm/7g9fCJesgxOibot0
+         +khq14Yqk0X8oPFfy3dsyAFs16nwn7rv/LApk9bIaZ8QbXsLKoSlrUU2ri9XYFgEiPTH
+         5uMgWnYXzEHrN9deUz5CfSbGkcAMdswPg8G/1rMS8lbTXyiP0SlNnG8muBDkszCJmDJ9
+         nxK8EYAnp4qjVSeUtk0h7sEej4v3xEfklVThARe2xF4+KzAbI/FxlFslvbQudhlpgKY/
+         9UrQ==
+X-Gm-Message-State: AO0yUKUPhTk+flBUzK9pimDGBrAVijV9VBTidWRWluZNpzhb+qq1ZlVo
+        ybPxHPbIUwsETpNrDbMj6xE=
+X-Google-Smtp-Source: AK7set/670uYwxALTojyHbMIdyaecZVHhjNJyQIIeA/qSS1xpmTRM60vLEXXjINc/dPl+ojNjtYx/g==
+X-Received: by 2002:ac8:4904:0:b0:3ba:2b4:7b39 with SMTP id e4-20020ac84904000000b003ba02b47b39mr13795686qtq.46.1678132676348;
+        Mon, 06 Mar 2023 11:57:56 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id x8-20020ac87008000000b003b868cdc689sm8203872qtm.5.2023.03.06.11.57.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Mar 2023 11:57:55 -0800 (PST)
+Message-ID: <738a5705-74eb-d339-60ee-6f18a08822a8@gmail.com>
+Date:   Mon, 6 Mar 2023 11:57:50 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v1 07/16] gpio: brcmstb: Utilize helpers from
+ string_choices.h
+Content-Language: en-US
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -50,68 +66,40 @@ To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         patches@opensource.cirrus.com
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
         Andy Shevchenko <andy@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Nandor Han <nandor.han@ge.com>,
         Semi Malinen <semi.malinen@ge.com>
-Subject: [PATCH v1 16/16] gpio: xra1403: Utilize helpers from string_choices.h
-Date:   Mon,  6 Mar 2023 21:55:56 +0200
-Message-Id: <20230306195556.55475-17-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
 References: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+ <20230306195556.55475-8-andriy.shevchenko@linux.intel.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20230306195556.55475-8-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-There are a few helpers available to convert a boolean variable
-to the dedicated string literals depending on the application.
-Use them in the driver.
+On 3/6/23 11:55, Andy Shevchenko wrote:
+> There are a few helpers available to convert a boolean variable
+> to the dedicated string literals depending on the application.
+> Use them in the driver.
+>  > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-xra1403.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-xra1403.c b/drivers/gpio/gpio-xra1403.c
-index 49c878cfd5c6..bc17beaba9e7 100644
---- a/drivers/gpio/gpio-xra1403.c
-+++ b/drivers/gpio/gpio-xra1403.c
-@@ -15,6 +15,7 @@
- #include <linux/seq_file.h>
- #include <linux/spi/spi.h>
- #include <linux/regmap.h>
-+#include <linux/string_choices.h>
- 
- /* XRA1403 registers */
- #define XRA_GSR   0x00 /* GPIO State */
-@@ -140,8 +141,8 @@ static void xra1403_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 	for_each_requested_gpio(chip, i, label) {
- 		seq_printf(s, " gpio-%-3d (%-12s) %s %s\n",
- 			   chip->base + i, label,
--			   (gcr & BIT(i)) ? "in" : "out",
--			   (gsr & BIT(i)) ? "hi" : "lo");
-+			   str_in_out(gcr & BIT(i)),
-+			   str_hi_lo(gsr & BIT(i)));
- 	}
- }
- #else
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.39.1
+Florian
 
