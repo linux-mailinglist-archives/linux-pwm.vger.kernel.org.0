@@ -2,195 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5749C6AB924
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:01:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D7A6AB991
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:19:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbjCFJBV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Mar 2023 04:01:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
+        id S229542AbjCFJTy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Mar 2023 04:19:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229619AbjCFJBU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:01:20 -0500
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 51371227A8;
-        Mon,  6 Mar 2023 01:01:09 -0800 (PST)
-X-IronPort-AV: E=Sophos;i="5.98,236,1673881200"; 
-   d="scan'208";a="151662877"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 06 Mar 2023 18:01:08 +0900
-Received: from localhost.localdomain (unknown [10.226.93.39])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 775C241C9E84;
-        Mon,  6 Mar 2023 18:01:05 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [DO NOT APPLY PATCH v6 13/13] tools/poeg: Add test app for poeg
-Date:   Mon,  6 Mar 2023 09:00:14 +0000
-Message-Id: <20230306090014.128732-14-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
-References: <20230306090014.128732-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S229997AbjCFJTs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:19:48 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36C91E5CF
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Mar 2023 01:19:46 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id bx12so8001356wrb.11
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Mar 2023 01:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678094385;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JTmNLGYu5Mcu9P2jNHBIhC8Wi04M9rJBLk23XMtTHVY=;
+        b=CmkBs+vWBlDaCqs84t52YAjZMnusZpu95a2vLlP42QmVjEgTR2gS56anHe4kAmzUxa
+         7wfejXFKjA1tstajkNkVzhvJoLwT4xHqmPqazFwbEq6rkWW+R7ZRaHKNNWlJDLc7Qt8u
+         9U8wHQybDDyDDj981o37ScOd7XKI/l1cluI1kjMOoGPscG4r6sa+8E++vz1bEcZGd3KE
+         nympXTGHNVAbkptz4Z6vU4fiNEgegs1632HCTLz+wD7mH6XGc/Mh3WHDzNGi2vkCl6mL
+         Kmq/skKEqbwc+0yTNwlbra0ZophJnPDiuArflOcXqOJC13Ss3GVEo7t0RZqwqSTf0ZvG
+         C9Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678094385;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JTmNLGYu5Mcu9P2jNHBIhC8Wi04M9rJBLk23XMtTHVY=;
+        b=SXaT8ivetcXW1cjgJ0Kaev1O3wp0SbPTQyu5VUkY08JpQQSgnMq6m54+OiRLzUL898
+         +5aqedLQTCw63oYe8A02eaEu1Yv479WQ+mIIPMDEGKzEx+uK8xWCC1zaTwrClQMYoBZj
+         z8IAec9zeInfcW/EE/ECfkUBr07rmcdJl0brt0nJz2uze/z8nUaQXMmwNiddRXCqy9tZ
+         YtpYeIHdrinvssNByC6frWJ5a6IqHGIHIgXB1Ht9jmc7YvH8/I6ay+msVKry+jVewUod
+         RaugrVa5wRZllEaO3gkdh+ZC1YRa6WW0pZZ3Y3/8GEn8dONeHa6PPEOejTN8QSQrbjcU
+         HW2w==
+X-Gm-Message-State: AO0yUKUjwUwz8MfPt2NSRZs7i8FaOmhurRJRk9KCvV8DQBM33ICiSj48
+        ZUTBbsjh7JIl5zvb62ye9/OICg==
+X-Google-Smtp-Source: AK7set8LhmIS/Ewr0ABinGsnVv0gYSTQkOzX04VwMgU2SuXX1uxXZJQqh0ye5JCeOBKU0KFVlm1N+w==
+X-Received: by 2002:adf:e908:0:b0:2c3:e0a0:93f with SMTP id f8-20020adfe908000000b002c3e0a0093fmr6170846wrm.8.1678094385375;
+        Mon, 06 Mar 2023 01:19:45 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id k11-20020a5d628b000000b002c707b336c9sm9151304wru.36.2023.03.06.01.19.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Mar 2023 01:19:45 -0800 (PST)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org
+In-Reply-To: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
+References: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
+Subject: Re: (subset) [PATCH 0/4] soc: amlogic: switch bindings to yaml and
+ adjust some dtbs's
+Message-Id: <167809438458.62434.12865612944830154623.b4-ty@linaro.org>
+Date:   Mon, 06 Mar 2023 10:19:44 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add test app for poeg
+Hi,
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- tools/poeg/Build      |  1 +
- tools/poeg/Makefile   | 53 ++++++++++++++++++++++++++++++++++++++
- tools/poeg/poeg_app.c | 60 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 114 insertions(+)
- create mode 100644 tools/poeg/Build
- create mode 100644 tools/poeg/Makefile
- create mode 100644 tools/poeg/poeg_app.c
+On Wed, 01 Feb 2023 20:57:48 +0100, Heiner Kallweit wrote:
+> Switch two Amlogic Meson bindings to yaml. As prerequisite adjust the
+> order of some compatibles first.
+> 
+> New versions of the bindings have been submitted as individual
+> patches in between. Put it into a series again.
+> 
+> Heiner Kallweit (4):
+>   arm: dts: meson: adjust order of some compatibles
+>   arm64: dts: meson: adjust order of some compatibles
+>   dt-bindings: pwm: Convert Amlogic Meson PWM binding
+>   dt-bindings: interrupt-controller: Convert Amlogic Meson GPIO
+>     interrupt controller binding
+> 
+> [...]
 
-diff --git a/tools/poeg/Build b/tools/poeg/Build
-new file mode 100644
-index 000000000000..f960920a4afb
---- /dev/null
-+++ b/tools/poeg/Build
-@@ -0,0 +1 @@
-+poeg_app-y += poeg_app.o
-diff --git a/tools/poeg/Makefile b/tools/poeg/Makefile
-new file mode 100644
-index 000000000000..6946e6956215
---- /dev/null
-+++ b/tools/poeg/Makefile
-@@ -0,0 +1,53 @@
-+# SPDX-License-Identifier: GPL-2.0
-+include ../scripts/Makefile.include
-+
-+bindir ?= /usr/bin
-+
-+ifeq ($(srctree),)
-+srctree := $(patsubst %/,%,$(dir $(CURDIR)))
-+srctree := $(patsubst %/,%,$(dir $(srctree)))
-+endif
-+
-+# Do not use make's built-in rules
-+# (this improves performance and avoids hard-to-debug behaviour);
-+MAKEFLAGS += -r
-+
-+override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
-+
-+ALL_TARGETS := poeg_app
-+ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
-+
-+all: $(ALL_PROGRAMS)
-+
-+export srctree OUTPUT CC LD CFLAGS
-+include $(srctree)/tools/build/Makefile.include
-+
-+#
-+# We need the following to be outside of kernel tree
-+#
-+$(OUTPUT)include/linux/poeg.h: ../../include/linux/soc/renesas/rzg2l-poeg.h
-+	mkdir -p $(OUTPUT)include/linux 2>&1 || true
-+	ln -sf $(CURDIR)/../../include/linux/soc/renesas/rzg2l-poeg.h $@
-+
-+prepare: $(OUTPUT)include/linux/poeg.h
-+
-+COUNTER_EXAMPLE := $(OUTPUT)poeg_app.o
-+$(COUNTER_EXAMPLE): prepare FORCE
-+	$(Q)$(MAKE) $(build)=poeg_app
-+$(OUTPUT)poeg_app: $(COUNTER_EXAMPLE)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
-+clean:
-+	rm -f $(ALL_PROGRAMS)
-+	rm -rf $(OUTPUT)include/linux/counter.h
-+	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
-+
-+install: $(ALL_PROGRAMS)
-+	install -d -m 755 $(DESTDIR)$(bindir);		\
-+	for program in $(ALL_PROGRAMS); do		\
-+		install $$program $(DESTDIR)$(bindir);	\
-+	done
-+
-+FORCE:
-+
-+.PHONY: all install clean FORCE prepare
-diff --git a/tools/poeg/poeg_app.c b/tools/poeg/poeg_app.c
-new file mode 100644
-index 000000000000..79cacb8c60c5
---- /dev/null
-+++ b/tools/poeg/poeg_app.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * POEG - example userspace application
-+ * Copyright (C) 2022 Biju Das
-+ */
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <sys/ioctl.h>
-+#include <linux/ioctl.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <sys/time.h>
-+#include <sys/types.h>
-+#include <poll.h>
-+
-+#include <linux/poeg.h>
-+
-+int main(int argc, char *arg[])
-+{
-+	struct poeg_event event_data;
-+	unsigned int val;
-+	int ret, fd, i;
-+
-+	fd = open("/dev/poeg3", O_RDWR);
-+	if (fd < 0)
-+		perror("open");
-+	else
-+		printf("[POEG]open\n");
-+
-+	for (;;) {
-+		ret = read(fd, &event_data, sizeof(event_data));
-+		if (ret == -1) {
-+			perror("Failed to read event data");
-+			return 1;
-+		}
-+
-+		val = event_data.gpt_disable_irq_status;
-+		if (val) {
-+			/* emulate fault clearing condition by adding delay */
-+			sleep(2);
-+			for (i = 0; i < 8; i++) {
-+				if (val & 7) {
-+					printf("gpt ch:%u, irq=%x\n", i, val & 7);
-+					ret = write(fd, &event_data, sizeof(event_data));
-+				}
-+				val >>= 3;
-+			}
-+		}
-+	}
-+
-+	if (close(fd) != 0)
-+		perror("close");
-+	else
-+		printf("[POEG]close\n");
-+
-+	return 0;
-+}
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.4/arm64-dt)
+
+[2/4] arm64: dts: meson: adjust order of some compatibles
+      https://git.kernel.org/amlogic/c/4dcc844c99d3e47820f574911b495b58f7da1d94
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.4/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
 -- 
-2.25.1
+Neil
 
