@@ -2,63 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C020E6ACEAF
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 20:59:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7426ACF19
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 21:25:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbjCFT7L (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Mar 2023 14:59:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36374 "EHLO
+        id S229715AbjCFUZZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Mar 2023 15:25:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjCFT7K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 14:59:10 -0500
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8131F65070;
-        Mon,  6 Mar 2023 11:58:42 -0800 (PST)
-Received: by mail-qt1-x82f.google.com with SMTP id c3so11930321qtc.8;
-        Mon, 06 Mar 2023 11:58:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678132676;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fcear7SkG9TmnSwIELIrY7+1NyaOV8lflIIPHX2QmK8=;
-        b=WGjLRckl281DCVlHPpmlzGIN/jVrcmhh5kKLciScBCHtk+amtS/6/t4urkFbS2pA3u
-         07on6PPWceK62oGnAqS7/+v+401JZJqNJB6BdVuRObXwOoLqfl/JVBiS3yGP51CqW/I2
-         ZzY9hwn6PSoKgV9iNYZxZFMSZzetb4rtzLQfN2JTeg1+Qx7gM3TGDUHVJZSGANu/w4jH
-         iksTOHuImXCj/V+tdhzbNGhmbtBhx2OHYXc15vI4VBYpk63ZJUcJcsVc4tdP3AN64uKj
-         +mtBCAYTktuAa1f+p5xWuDHFdvrZgW8nv3WFaZtNsQiGVn6q/UPkrSr6DRxIlRcr30Iz
-         JWkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678132676;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fcear7SkG9TmnSwIELIrY7+1NyaOV8lflIIPHX2QmK8=;
-        b=QPtgW46JgV6plpKS+39nbUAEaWZMwRUupjOw66CwXrVPowrKFzJkOU57tLFtIyww2T
-         oh7y09NbUqDAJbUSKRcczMWLXmbvKAImdow0yNEYXmv0njV2Rqm/7g9fCJesgxOibot0
-         +khq14Yqk0X8oPFfy3dsyAFs16nwn7rv/LApk9bIaZ8QbXsLKoSlrUU2ri9XYFgEiPTH
-         5uMgWnYXzEHrN9deUz5CfSbGkcAMdswPg8G/1rMS8lbTXyiP0SlNnG8muBDkszCJmDJ9
-         nxK8EYAnp4qjVSeUtk0h7sEej4v3xEfklVThARe2xF4+KzAbI/FxlFslvbQudhlpgKY/
-         9UrQ==
-X-Gm-Message-State: AO0yUKUPhTk+flBUzK9pimDGBrAVijV9VBTidWRWluZNpzhb+qq1ZlVo
-        ybPxHPbIUwsETpNrDbMj6xE=
-X-Google-Smtp-Source: AK7set/670uYwxALTojyHbMIdyaecZVHhjNJyQIIeA/qSS1xpmTRM60vLEXXjINc/dPl+ojNjtYx/g==
-X-Received: by 2002:ac8:4904:0:b0:3ba:2b4:7b39 with SMTP id e4-20020ac84904000000b003ba02b47b39mr13795686qtq.46.1678132676348;
-        Mon, 06 Mar 2023 11:57:56 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x8-20020ac87008000000b003b868cdc689sm8203872qtm.5.2023.03.06.11.57.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 11:57:55 -0800 (PST)
-Message-ID: <738a5705-74eb-d339-60ee-6f18a08822a8@gmail.com>
-Date:   Mon, 6 Mar 2023 11:57:50 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v1 07/16] gpio: brcmstb: Utilize helpers from
- string_choices.h
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
+        with ESMTP id S229484AbjCFUZY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 15:25:24 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4D9410B7;
+        Mon,  6 Mar 2023 12:25:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678134324; x=1709670324;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bpjTmGt2FFmjIz5dpuGkKtkZK2wYWT5pskh8rVUTPcY=;
+  b=PkFOrTHoEBFlEb4X1fT2cooCRZYq41SKGk0e9r9KH+i4hZjHGnZLS3wQ
+   MhvOegzesTDeoKdE321a+yhmojl4eLxIoYJOCoRrQktcA35MVXBZiQcUD
+   tdjTasXZlFtlu5B6klBy3J8pcfPw55v53O47wuHAG3ZR7RUxEXSBIE8bK
+   GZOK7WM0ZXMbPwwn7PLOcB2ZWdK78zT3z+6fQeUQlvlugKG17UUQAhwcF
+   PYSsXPpO3kC9Am8MNtZf5/D8w5knsjdX5WQeFdyMo3YM4vJo8o++iNDEw
+   cvHUTvqHs7ZHk9mWGeL5czu6qlPNPmhOc0LaOk9x6SmRJfNmA/Y0OMLU9
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="316065427"
+X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
+   d="scan'208";a="316065427"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 12:25:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="745196118"
+X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
+   d="scan'208";a="745196118"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Mar 2023 12:25:18 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pZHOV-00Gbuf-30;
+        Mon, 06 Mar 2023 22:25:15 +0200
+Date:   Mon, 6 Mar 2023 22:25:15 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
@@ -66,40 +52,45 @@ To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         patches@opensource.cirrus.com
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Shevchenko <andy@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Nandor Han <nandor.han@ge.com>,
         Semi Malinen <semi.malinen@ge.com>
+Subject: Re: [PATCH v1 00/16] gpio: Use string_choices.h
+Message-ID: <ZAZMK8YLDN2gDObv@smile.fi.intel.com>
 References: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
- <20230306195556.55475-8-andriy.shevchenko@linux.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20230306195556.55475-8-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 3/6/23 11:55, Andy Shevchenko wrote:
-> There are a few helpers available to convert a boolean variable
-> to the dedicated string literals depending on the application.
-> Use them in the driver.
->  > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Mon, Mar 06, 2023 at 09:55:40PM +0200, Andy Shevchenko wrote:
+> Use string_choices.h in the GPIO drivers and library.
+> It has been tested on x86_64 and (semi-)compile tested
+> over all.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Forgot to mention that this is based on top of the immutable tag I sent PR with
+earlier today.
+
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
+
 
