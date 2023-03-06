@@ -2,53 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17D7A6AB991
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:19:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C336AB999
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Mar 2023 10:21:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjCFJTy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Mar 2023 04:19:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
+        id S229881AbjCFJV1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Mar 2023 04:21:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjCFJTs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:19:48 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36C91E5CF
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Mar 2023 01:19:46 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id bx12so8001356wrb.11
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Mar 2023 01:19:46 -0800 (PST)
+        with ESMTP id S229875AbjCFJVY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Mar 2023 04:21:24 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378AA222DA
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Mar 2023 01:21:20 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id f11so8025206wrv.8
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Mar 2023 01:21:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678094385;
+        d=linaro.org; s=google; t=1678094478;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JTmNLGYu5Mcu9P2jNHBIhC8Wi04M9rJBLk23XMtTHVY=;
-        b=CmkBs+vWBlDaCqs84t52YAjZMnusZpu95a2vLlP42QmVjEgTR2gS56anHe4kAmzUxa
-         7wfejXFKjA1tstajkNkVzhvJoLwT4xHqmPqazFwbEq6rkWW+R7ZRaHKNNWlJDLc7Qt8u
-         9U8wHQybDDyDDj981o37ScOd7XKI/l1cluI1kjMOoGPscG4r6sa+8E++vz1bEcZGd3KE
-         nympXTGHNVAbkptz4Z6vU4fiNEgegs1632HCTLz+wD7mH6XGc/Mh3WHDzNGi2vkCl6mL
-         Kmq/skKEqbwc+0yTNwlbra0ZophJnPDiuArflOcXqOJC13Ss3GVEo7t0RZqwqSTf0ZvG
-         C9Ww==
+        bh=6QTaTg1M82nHPuHpSBS+WU4NCi+YuYDcZym+3+BNoD0=;
+        b=hY3zQEkaEFt7L8jf2l7rZVQ3WSnXzuIYX/YnXzeyUdnnkCARe0Ec4S4+mzCPLpmnga
+         q1OxpBZ3DldwFuzEN95tjGEbuzVKMOsitKZtGkU3ZU8xSr+LBTGGhazcmsd/c80KJ5c+
+         XjYKDAM9Et4UWcA0au7RTZpYuVG7KWUE8LtjsftwbJ/D9fehDjKQEx/W27u5Kv+OP9eB
+         Ko2Fofulg2zHSkYhuIAnnfhU8CY87VprzXN9szg0Ni/j+mTWe4sssCc8y7bScULLVaJy
+         LFGz5/R77awfacg4KoZIkOFdqkeTzrwAx2lkOuZGbpvqjYRBPpMErMMY9zTNy1sTWh2R
+         sGVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678094385;
+        d=1e100.net; s=20210112; t=1678094478;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JTmNLGYu5Mcu9P2jNHBIhC8Wi04M9rJBLk23XMtTHVY=;
-        b=SXaT8ivetcXW1cjgJ0Kaev1O3wp0SbPTQyu5VUkY08JpQQSgnMq6m54+OiRLzUL898
-         +5aqedLQTCw63oYe8A02eaEu1Yv479WQ+mIIPMDEGKzEx+uK8xWCC1zaTwrClQMYoBZj
-         z8IAec9zeInfcW/EE/ECfkUBr07rmcdJl0brt0nJz2uze/z8nUaQXMmwNiddRXCqy9tZ
-         YtpYeIHdrinvssNByC6frWJ5a6IqHGIHIgXB1Ht9jmc7YvH8/I6ay+msVKry+jVewUod
-         RaugrVa5wRZllEaO3gkdh+ZC1YRa6WW0pZZ3Y3/8GEn8dONeHa6PPEOejTN8QSQrbjcU
-         HW2w==
-X-Gm-Message-State: AO0yUKUjwUwz8MfPt2NSRZs7i8FaOmhurRJRk9KCvV8DQBM33ICiSj48
-        ZUTBbsjh7JIl5zvb62ye9/OICg==
-X-Google-Smtp-Source: AK7set8LhmIS/Ewr0ABinGsnVv0gYSTQkOzX04VwMgU2SuXX1uxXZJQqh0ye5JCeOBKU0KFVlm1N+w==
-X-Received: by 2002:adf:e908:0:b0:2c3:e0a0:93f with SMTP id f8-20020adfe908000000b002c3e0a0093fmr6170846wrm.8.1678094385375;
-        Mon, 06 Mar 2023 01:19:45 -0800 (PST)
+        bh=6QTaTg1M82nHPuHpSBS+WU4NCi+YuYDcZym+3+BNoD0=;
+        b=xylclSUHkPoNaWyTzJL9ZpCJTjYZ/8cm5AkM9yc2OMFdm8wMxwdktqIL7k7qiAKook
+         Fa0LFqBXJRbP0+MVoWC54Ra5TVK803BE1Fy3B37WurorSjWVUMRiVn/koHiM2NTv1ZBM
+         X5/GmiJ6uDMkBBefJ4cM+NDS3HXC0lyMIELAYIvlstB4AX54kTrFFgMt0FYf7lnhG4sl
+         UcgjMlR286vz2RvOfxuntN4nsC6H4GJ8yDlcrXBLT9vDGsOBL+SEmPpKkspbTPbGJLxf
+         oaPhvu22zZDTgR/8/5FClrS/XmCXPY1aSzgIk6rossN44BuHrXRskTToKoaF98WqIx3u
+         dqkg==
+X-Gm-Message-State: AO0yUKXcS4iuqYbAGgddpz2OeB8GS54Wo4eU6VQtV88bKZb/mX4TCClJ
+        8g+aqFkBOjNT4StlGRgiRdNRSQ==
+X-Google-Smtp-Source: AK7set9PhQC/LAWuijBZyi1RnO+m0uSLl7osxh+Et8GDOHCxy9UxpG6DiUCb2nJKyQHWzg5n+chgsQ==
+X-Received: by 2002:a5d:4a51:0:b0:2c7:778:5da6 with SMTP id v17-20020a5d4a51000000b002c707785da6mr6233079wrs.42.1678094478663;
+        Mon, 06 Mar 2023 01:21:18 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id k11-20020a5d628b000000b002c707b336c9sm9151304wru.36.2023.03.06.01.19.44
+        by smtp.gmail.com with ESMTPSA id j17-20020adff011000000b002c5a1bd527dsm9235217wro.96.2023.03.06.01.21.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 01:19:45 -0800 (PST)
+        Mon, 06 Mar 2023 01:21:18 -0800 (PST)
 From:   Neil Armstrong <neil.armstrong@linaro.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -67,16 +67,15 @@ In-Reply-To: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
 References: <8df4ceec-663c-dc68-d775-5caeb02c0cca@gmail.com>
 Subject: Re: (subset) [PATCH 0/4] soc: amlogic: switch bindings to yaml and
  adjust some dtbs's
-Message-Id: <167809438458.62434.12865612944830154623.b4-ty@linaro.org>
-Date:   Mon, 06 Mar 2023 10:19:44 +0100
+Message-Id: <167809447788.73638.7893425529034972741.b4-ty@linaro.org>
+Date:   Mon, 06 Mar 2023 10:21:17 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.1
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -101,14 +100,14 @@ On Wed, 01 Feb 2023 20:57:48 +0100, Heiner Kallweit wrote:
 > 
 > [...]
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.4/arm64-dt)
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.4/arm-dt)
 
-[2/4] arm64: dts: meson: adjust order of some compatibles
-      https://git.kernel.org/amlogic/c/4dcc844c99d3e47820f574911b495b58f7da1d94
+[1/4] arm: dts: meson: adjust order of some compatibles
+      https://git.kernel.org/amlogic/c/0c187cca73291f2c355fae31eed3fc7aa783b2de
 
 These changes has been applied on the intermediate git tree [1].
 
-The v6.4/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+The v6.4/arm-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
 for inclusion in their intermediate git branches in order to be sent to Linus during
 the next merge window, or sooner if it's a set of fixes.
 
