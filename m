@@ -2,108 +2,95 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C7126B0000
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Mar 2023 08:40:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 585686B0649
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Mar 2023 12:46:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbjCHHkn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Mar 2023 02:40:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42028 "EHLO
+        id S230071AbjCHLqN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Mar 2023 06:46:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229937AbjCHHki (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Mar 2023 02:40:38 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C057EA80F9
-        for <linux-pwm@vger.kernel.org>; Tue,  7 Mar 2023 23:39:58 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pZoOv-0007S3-9y; Wed, 08 Mar 2023 08:39:53 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pZoOu-002fIm-LH; Wed, 08 Mar 2023 08:39:52 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pZoOt-003EMQ-JK; Wed, 08 Mar 2023 08:39:51 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 10/13] backlight: pwm_bl: Convert to platform remove callback returning void
-Date:   Wed,  8 Mar 2023 08:39:42 +0100
-Message-Id: <20230308073945.2336302-11-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230308073945.2336302-1-u.kleine-koenig@pengutronix.de>
-References: <20230308073945.2336302-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229778AbjCHLqM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Mar 2023 06:46:12 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9351D5CC21;
+        Wed,  8 Mar 2023 03:46:11 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 97D9F660000F;
+        Wed,  8 Mar 2023 11:46:09 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1678275970;
+        bh=Fz4r9E9olNDyPmEeLOcgEBzWwcRZ44On96yQB42TXEw=;
+        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+        b=acrXZejibitZcABdpwyKEZGsbOVzp3Q4HAaFxtm54hQ4rGX4a+KIqL+7z3WHmfpD8
+         ZirF9hYD51MjKGy2CLEVwbgVNu5jT3daVgNvXQDuhiY2p49wRK8Dk0T+ODmy0ZCgLa
+         RVw7A3HWF1cGsyVQVXNnMvYk5X94xti8jRIRoleVb1j7/qUbCQ3vnTmkpVJtlBLphG
+         u+mR5evvfUXZCiuUHU+faC0JhgH9V8I2GIpC0vGDs/Rmduwf6LA+4VC7WF6KDifFt5
+         CkEH82xPXX5AzieR+T+2IVHx9gB1HET8RdXJJTahZWuHvTDkmhbIohQ/CNj5AmrhrF
+         HY8k/P1nr81jQ==
+Message-ID: <06909bd8-3da2-1cf0-82ac-3ed4f3e63def@collabora.com>
+Date:   Wed, 8 Mar 2023 12:46:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1810; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=EyHwZ45DOvCsEOKFuFODC9cTmunjdcxbvJGok00zlVk=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkCDuxvyiycJggmXlrpugayin0HBGPvHbf/m482 JluKQTIn6+JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAg7sQAKCRDB/BR4rcrs CfKMB/9APLRwWUubeqImx/pQHz8/6tXF7AdNZjNV9w9wQHwxWMQHwqIV4XXBLss7rWtSH0iacII yDoS5trYouR3rAaCIpnH7flNHJJ1aJ3saoUWeV5Ad25poHiOgToR5JHHZ4LLYXrdDYWDSHOZSE+ DCqHr8dTEwiRSNWjRrslkNh0SThgUGF9OUZxVszVJSKr8mT++jUL4s7HsXpjIMeFl3NXOxVJErq iR9Y2eeK1gBrnBlIJLvD0awtA8PjjKjN2Ow6I/ixkvWbucfCOl7qS+YnTVwzvW9f0VgRB9yH6y6 4K/+2zIKLgQ+MoXBVdj7mS5O9fOsg+28phdmQ8RY0rC3NmaU
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 0/2] pwm: mtk-disp: Fix backlight configuration at boot
+Content-Language: en-US
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, matthias.bgg@gmail.com,
+        weiqing.kong@mediatek.com, jitao.shi@mediatek.com,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20230123160615.375969-1-angelogioacchino.delregno@collabora.com>
+ <06918fde-64ea-37b2-da1a-1c8316457223@collabora.com>
+In-Reply-To: <06918fde-64ea-37b2-da1a-1c8316457223@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is (mostly) ignored
-and this typically results in resource leaks. To improve here there is a
-quest to make the remove callback return void. In the first step of this
-quest all drivers are converted to .remove_new() which already returns
-void.
+Il 23/02/23 15:16, AngeloGioacchino Del Regno ha scritto:
+> Il 23/01/23 17:06, AngeloGioacchino Del Regno ha scritto:
+>> Since the pwm-mtk-disp driver was fixed to get PWM_EN state from the
+>> right register, an old two-wrongs-make-one-right issue emerged: as a
+>> result, MT8192 Asurada Spherion got no backlight at boot unless a
+>> suspend/resume cycle was performed.
+>> Also, the backlight would sometimes not get updated with the requested
+>> value, requiring the user to change it back and forth until it worked.
+>>
+>> This series fixes both of the aforementioned issues found on MT8192.
+>>
+>> AngeloGioacchino Del Regno (2):
+>>    pwm: mtk-disp: Disable shadow registers before setting backlight
+>>      values
+>>    pwm: mtk-disp: Configure double buffering before reading in
+>>      .get_state()
+>>
+>>   drivers/pwm/pwm-mtk-disp.c | 34 +++++++++++++++++++++++-----------
+>>   1 file changed, 23 insertions(+), 11 deletions(-)
+>>
+> 
+> Gentle ping for this one: this is fixing backlight issues on multiple MediaTek
+> SoCs and was well tested.
+> 
+> Thanks,
+> Angelo
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
+Since this series was sent more than one month ago, and since this fixes broken
+backlight on a number of Chromebooks with MT8183 and MT8192 SoCs, and seen the
+urgency of getting these fixes in, I'm adding Greg to the loop.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/video/backlight/pwm_bl.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index fb388148d98f..fce412234d10 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -625,7 +625,7 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int pwm_backlight_remove(struct platform_device *pdev)
-+static void pwm_backlight_remove(struct platform_device *pdev)
- {
- 	struct backlight_device *bl = platform_get_drvdata(pdev);
- 	struct pwm_bl_data *pb = bl_get_data(bl);
-@@ -635,8 +635,6 @@ static int pwm_backlight_remove(struct platform_device *pdev)
- 
- 	if (pb->exit)
- 		pb->exit(&pdev->dev);
--
--	return 0;
- }
- 
- static void pwm_backlight_shutdown(struct platform_device *pdev)
-@@ -690,7 +688,7 @@ static struct platform_driver pwm_backlight_driver = {
- 		.of_match_table	= of_match_ptr(pwm_backlight_of_match),
- 	},
- 	.probe		= pwm_backlight_probe,
--	.remove		= pwm_backlight_remove,
-+	.remove_new	= pwm_backlight_remove,
- 	.shutdown	= pwm_backlight_shutdown,
- };
- 
--- 
-2.39.1
-
+Regards,
+Angelo
