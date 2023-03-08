@@ -2,53 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96D9C6B0E32
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Mar 2023 17:08:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED406B0F38
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Mar 2023 17:52:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232194AbjCHQIv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 8 Mar 2023 11:08:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58160 "EHLO
+        id S229852AbjCHQwQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 8 Mar 2023 11:52:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232134AbjCHQIH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Mar 2023 11:08:07 -0500
+        with ESMTP id S229869AbjCHQwP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 8 Mar 2023 11:52:15 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C99D5A93D
-        for <linux-pwm@vger.kernel.org>; Wed,  8 Mar 2023 08:07:38 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016C8CB646
+        for <linux-pwm@vger.kernel.org>; Wed,  8 Mar 2023 08:52:10 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pZwK7-00035i-Ai; Wed, 08 Mar 2023 17:07:27 +0100
+        id 1pZx1J-0000QS-Km; Wed, 08 Mar 2023 17:52:05 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pZwK4-002kXG-Q7; Wed, 08 Mar 2023 17:07:24 +0100
+        id 1pZx1G-002l4f-Vd; Wed, 08 Mar 2023 17:52:02 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pZwK4-003KOq-0o; Wed, 08 Mar 2023 17:07:24 +0100
-Date:   Wed, 8 Mar 2023 17:07:23 +0100
+        id 1pZx1G-003Kw8-8O; Wed, 08 Mar 2023 17:52:02 +0100
+Date:   Wed, 8 Mar 2023 17:52:02 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        thierry.reding@gmail.com, matthias.bgg@gmail.com,
-        weiqing.kong@mediatek.com, jitao.shi@mediatek.com,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCH 0/2] pwm: mtk-disp: Fix backlight configuration at boot
-Message-ID: <20230308160723.rhgsghtxxkfhbsu6@pengutronix.de>
-References: <20230123160615.375969-1-angelogioacchino.delregno@collabora.com>
- <06918fde-64ea-37b2-da1a-1c8316457223@collabora.com>
- <06909bd8-3da2-1cf0-82ac-3ed4f3e63def@collabora.com>
- <ZAigsHAgqkLlBD1y@kroah.com>
- <28142704-d82d-d533-d2a8-b1061182f1f6@collabora.com>
- <ZAitHYRCUHsIvZMk@kroah.com>
+To:     George Stark <GNStark@sberdevices.ru>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "krzysztof.kozlowski@linaro.org" <krzysztof.kozlowski@linaro.org>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, kernel <kernel@sberdevices.ru>
+Subject: Re: [RFC PATCH v1] Revert "pwm: Clear chip_data in pwm_put()"
+Message-ID: <20230308165202.gaeziqdncbkeo5l6@pengutronix.de>
+References: <20230307210014.1380102-1-gnstark@sberdevices.ru>
+ <20230307212744.rx2julmzxe7nvhvr@pengutronix.de>
+ <cc73a82d-89fa-1edf-650a-a1a3824cc791@sberdevices.ru>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ktav3puihvogk7lj"
+        protocol="application/pgp-signature"; boundary="ugs5p22gnvewe6b7"
 Content-Disposition: inline
-In-Reply-To: <ZAitHYRCUHsIvZMk@kroah.com>
+In-Reply-To: <cc73a82d-89fa-1edf-650a-a1a3824cc791@sberdevices.ru>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -63,99 +62,44 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---ktav3puihvogk7lj
+--ugs5p22gnvewe6b7
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 08, 2023 at 04:43:25PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Mar 08, 2023 at 03:55:59PM +0100, AngeloGioacchino Del Regno wrot=
-e:
-> > Il 08/03/23 15:50, Greg Kroah-Hartman ha scritto:
-> > > On Wed, Mar 08, 2023 at 12:46:07PM +0100, AngeloGioacchino Del Regno =
-wrote:
-> > > > Il 23/02/23 15:16, AngeloGioacchino Del Regno ha scritto:
-> > > > > Il 23/01/23 17:06, AngeloGioacchino Del Regno ha scritto:
-> > > > > > Since the pwm-mtk-disp driver was fixed to get PWM_EN state fro=
-m the
-> > > > > > right register, an old two-wrongs-make-one-right issue emerged:=
- as a
-> > > > > > result, MT8192 Asurada Spherion got no backlight at boot unless=
- a
-> > > > > > suspend/resume cycle was performed.
-> > > > > > Also, the backlight would sometimes not get updated with the re=
-quested
-> > > > > > value, requiring the user to change it back and forth until it =
-worked.
-> > > > > >=20
-> > > > > > This series fixes both of the aforementioned issues found on MT=
-8192.
-> > > > > >=20
-> > > > > > AngeloGioacchino Del Regno (2):
-> > > > > >  =A0=A0 pwm: mtk-disp: Disable shadow registers before setting =
-backlight
-> > > > > >  =A0=A0=A0=A0 values
-> > > > > >  =A0=A0 pwm: mtk-disp: Configure double buffering before readin=
-g in
-> > > > > >  =A0=A0=A0=A0 .get_state()
-> > > > > >=20
-> > > > > >  =A0 drivers/pwm/pwm-mtk-disp.c | 34 +++++++++++++++++++++++---=
---------
-> > > > > >  =A0 1 file changed, 23 insertions(+), 11 deletions(-)
-> > > > > >=20
-> > > > >=20
-> > > > > Gentle ping for this one: this is fixing backlight issues on mult=
-iple MediaTek
-> > > > > SoCs and was well tested.
-> > > > >=20
-> > > > > Thanks,
-> > > > > Angelo
-> > > >=20
-> > > > Since this series was sent more than one month ago, and since this =
-fixes broken
-> > > > backlight on a number of Chromebooks with MT8183 and MT8192 SoCs, a=
-nd seen the
-> > > > urgency of getting these fixes in, I'm adding Greg to the loop.
-> > >=20
-> > > $ ./scripts/get_maintainer.pl drivers/pwm/pwm-mtk-disp.c
-> > > Thierry Reding <thierry.reding@gmail.com> (maintainer:PWM SUBSYSTEM)
-> > > "Uwe Kleine-K=F6nig" <u.kleine-koenig@pengutronix.de> (reviewer:PWM S=
-UBSYSTEM)
-> > > Matthias Brugger <matthias.bgg@gmail.com> (maintainer:ARM/Mediatek So=
-C support)
-> > > AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> =
-(reviewer:ARM/Mediatek SoC support)
-> > > linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM)
-> > > linux-kernel@vger.kernel.org (open list:ARM/Mediatek SoC support)
-> > > linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC=
- support)
-> > > linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC s=
-upport)
-> > >=20
-> > > I don't see my name in there, did I become the PWM maintainer somehow?
-> > >=20
-> > > What's wrong with Thierry taking this like normal?
-> > >=20
-> >=20
-> > Nothing wrong with that. I felt like this series got ignored as I've ne=
-ver
-> > received any reply from Thierry, even though it's a Fixes series that I=
- deem
-> > to be moderately urgent; that's why I added you to the loop.
->=20
-> Then ask Thierry and Uwe, what would you want to have happen if you were
-> the maintainer of a subsystem?
->=20
-> > If that created unnecessary noise, I'm extremely sorry and won't happen=
- again.
->=20
-> Not noise, just confusion on my part.  I'm glad to take patches that
-> have no obvious maintainers, or maintainers that have disappeared, but
-> that doesn't seem to be the case here.
+Hello George,
 
-I'm aware that there is a big backlog on PWM patches. I'm trying to
-catch up but there is only so much time. Sorry this results in delays
-for you (and others), I'm not happy with this situation either.
+On Wed, Mar 08, 2023 at 12:16:00PM +0000, George Stark wrote:
+> On 3/8/23 00:28, Uwe Kleine-K=F6nig wrote:
+> > If you ask me, better drop pwm_set_chip_data() completely. It adds no
+> > useful value. It's just a variant of driver data and using both
+> > complicates the driver and probably fragments memory allocations. Also
+> > the sematic of driver data is better known as it's the same for all
+> > subsystems.
+> >
+> > Do you use the capture functionality? In my eyes the capture part of the
+> > pwm subsystem is very alien. Only a small subset of the hardware
+> > supports this and the counter framework should be better suited for such
+> > tasks.
+> I don't use pwm-sti driver. I update meson pwm driver for new chips
+> and when started using pwm_set_chip_data in probe I was very surprised th=
+at
+> my data is lost after sysfs export/unexport calls. Then I found the=20
+> patch and
+> checked other drivers for similar usecases.
+
+OK.
+
+> Probably you're right about dropping pwm_set_chip_data.
+
+If you want to tackle that, you might want to take
+
+	https://lore.kernel.org/all/20210504132537.62072-2-u.kleine-koenig@pengutr=
+onix.de/
+
+into account. (Both to reuse this patch to prepare pwm-berlin for
+dropping pwm_set_chip_data and to be prepared that back then Thierry
+opposed to the idea.)
 
 Best regards
 Uwe
@@ -164,19 +108,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ktav3puihvogk7lj
+--ugs5p22gnvewe6b7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQIsrgACgkQwfwUeK3K
-7AmgSwf7B3y69Q4iYv/xi1xc6LYfsDU2LWsLiewM1J93Wig3bmxGsw2xu3z7LefN
-YthxYf2xylEq1KstnkALgviEYrO2YMip5hehZmT0+oU1XV9aqo4MW3J0eGbnFu3H
-B1eh5ek0N7wUoxaiEaAFo760STCtOdXtw1MMaLkw6STdz97Cja53X8B/zUIy7Fcl
-Ptx2FXXXjcO2GE4FZOfaYwKhbxdpRAQ8tmwKq/3bNs2NmQ2vDWEpOkq47chVmx4s
-+EAHKogcbAgHB6brcNqKytU/2G41l1VRNcbiHZsVjZ6cY5kSWVDyLxHG89dtN5Ej
-17nXfuwFkQW7Jr1gGxyfLtx/Oir3AA==
-=Ca5l
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQIvS4ACgkQwfwUeK3K
+7Aku+Qf/QHg35UuTpxFLWrJ9E9/Y+2/XcUMIrE+hHqf7QGTjIgx1KbQskTjF189q
+CkGAUPB4gCjavW+Zcx62RkN/lFHVQVsf38k9u3uanNzxLZcuxGD/spjC7zcKFYTw
+3Noh5AwTGPR5QESVxMSFEqSJ18xO53oKdd4T3WErrPKVZgpzlvR+4TZA8AfODRcj
+etfnLH8oBGJZDsIO2fEHTiYUgWdNEANL8xSRwzArIsIRGx+YTo/mEYHjUFd/wldS
+zMxY+kzDJ0+u1foQ8RrFT2CLGIA0q2IbfvRyh/Jd+1ETei+KXtwxkfpIpW/Ugw4x
+0wllBAFxf1eaocGP0cnlTBbUj+DblQ==
+=d7MT
 -----END PGP SIGNATURE-----
 
---ktav3puihvogk7lj--
+--ugs5p22gnvewe6b7--
