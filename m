@@ -2,50 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 387876B5002
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 19:22:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D94F16B503D
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 19:44:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbjCJSWX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Mar 2023 13:22:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43736 "EHLO
+        id S230185AbjCJSoF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Mar 2023 13:44:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbjCJSWI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 13:22:08 -0500
+        with ESMTP id S229703AbjCJSoE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 13:44:04 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D215138F66
-        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 10:21:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59308117FF8
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 10:44:03 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pahMt-0005Ir-Oi; Fri, 10 Mar 2023 19:21:27 +0100
+        id 1pahif-0007Qj-BF; Fri, 10 Mar 2023 19:43:57 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pahMr-003EWX-GI; Fri, 10 Mar 2023 19:21:25 +0100
+        id 1pahie-003Eag-4u; Fri, 10 Mar 2023 19:43:56 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pahMq-003rZL-SN; Fri, 10 Mar 2023 19:21:24 +0100
-Date:   Fri, 10 Mar 2023 19:21:23 +0100
+        id 1pahic-003re9-9R; Fri, 10 Mar 2023 19:43:54 +0100
+Date:   Fri, 10 Mar 2023 19:43:52 +0100
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, Greentime Hu <greentime.hu@sifive.com>,
-        devicetree@vger.kernel.org, jarkko.nikula@linux.intel.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: (subset) [PATCH v7 00/10] Designware PWM driver updates for OF
-Message-ID: <20230310182123.o5inpde7bvvbzqpr@pengutronix.de>
-References: <20221223153820.404565-1-ben.dooks@sifive.com>
- <167664644976.3317584.11838750253013149302.b4-ty@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Munehisa Kamata <kamatam@amazon.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH 4/4] pwm: sprd: Explicitly set .polarity in .get_state()
+Message-ID: <20230310184352.rqdc7oirzwhtj6fy@pengutronix.de>
+References: <20230228135508.1798428-1-u.kleine-koenig@pengutronix.de>
+ <20230228135508.1798428-5-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ul54juyfdssbpzak"
+        protocol="application/pgp-signature"; boundary="s36ewetkwq53ykaq"
 Content-Disposition: inline
-In-Reply-To: <167664644976.3317584.11838750253013149302.b4-ty@gmail.com>
+In-Reply-To: <20230228135508.1798428-5-u.kleine-koenig@pengutronix.de>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -60,41 +58,21 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---ul54juyfdssbpzak
+--s36ewetkwq53ykaq
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 17, 2023 at 04:08:09PM +0100, Thierry Reding wrote:
-> On Fri, 23 Dec 2022 15:38:10 +0000, Ben Dooks wrote:
-> > An updated set of patches for the Designware PWM driver
-> > split into PCI and OF versions. I think I got all the
-> > review issues in this set.
-> >=20
-> > Sorry for the delay in getting this out, between conferences
-> > and other absences there has been little time to deal with
-> > this set. I will be now out of office until 3rd Jan 2023.
-> >=20
-> > [...]
+On Tue, Feb 28, 2023 at 02:55:08PM +0100, Uwe Kleine-K=F6nig wrote:
+> The driver only supports normal polarity. Complete the implementation of
+> .get_state() by setting .polarity accordingly.
 >=20
-> Applied, thanks!
->=20
-> [01/10] dt-bindings: pwm: Document Synopsys DesignWare snps,pwm-dw-apb-ti=
-mers-pwm2
->         commit: 0f03bf300833c05d914ab7f5ab3d8bc8564e9912
-> [02/10] pwm: dwc: allow driver to be built with COMPILE_TEST
->         commit: c901a57e39db555ad7950fd61e1470cdecc8e654
-> [03/10] pwm: dwc: change &pci->dev to dev in probe
->         commit: 8f3c7ab881ed7329003e10a2dd58f735abda2259
-> [04/10] pwm: dwc: move memory alloc to own function
->         commit: a4218d7cf8978f397e731d1f15ef33d28f77e42b
-> [05/10] pwm: dwc: use devm_pwmchip_add
->         commit: 7a77daf8223e772a225d6aa6202a5b1ae2392caf
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-I had some comments for patches #6 and #10. Patches #7 - #9 are still
-marked as new in the PWM patchwork, but I will mark them as
-changes-requested in the assumption that you'll have to rework them to
-address my feedback for the other two patches anyhow.
+I think we should apply this patch as a fix to prevent similar failures
+as reported for the meson driver. To justify that:
+
+Fixes: 8aae4b02e8a6 ("pwm: sprd: Add Spreadtrum PWM support")
 
 Best regards
 Uwe
@@ -103,19 +81,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ul54juyfdssbpzak
+--s36ewetkwq53ykaq
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQLdSAACgkQwfwUeK3K
-7AmlCQf/ag5HM1MNCGGGZcXkTe/Ws77umzxCHqok6cf07JtNyq1IxL1L25/YIwAg
-46Kq24k59OmkprRS2S9h/tcwm7+5XwnX/PI921kBIer7XSSqG1lOQRu1k+J29us2
-nog8snXGnycefWxy5aHRsrRiM+TgJdRJ0aA9sGA13WdOmtpHYxfjLpqEu5X/Ka6F
-ipHb+Wg1CwF84rP4hO5CIumX8m2VDlvGPhrSrqJnPJ8qy/bhBKI/2aWuJzwSz0CJ
-2ISORXY/lGcGB/fkLYmob5Lswpc32EYMniwaC1d+XfYiqrXgyXIqkOtymKz84rnM
-zRTMdAqDQqH5IKU3xw5HBd4T4VBCxA==
-=c1R2
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQLemUACgkQwfwUeK3K
+7AnxBAf+MMTLjVc9dRtCeZKhwZ8QhBasZzAJnWIhcmFDKtKBuDQiR1f2WDj9S/n9
+2cuyOZwB2PXbVyjbWe2orpcNuno/7xuIIwPbgMhiEUv4+7DM7Yd4Y0rXHJeFx9aO
+ePb8m/WFQwgkGg4D1DTJkuS0MefHAkckMC6BmpQVcdgzJjn59iUaesitUfYHxPoM
+VcY8KPs9MhamccK69Jxe7R3TIpI5kPqFLrM7QC2eGnMpt2TWVh5xh8hh984wiNVO
+yU7w3oJih4oK5LxDpzAhQm1ceUJawNH/5cXOo36dvqZi5gcqgxmcKnLUDX6xtWlx
+RC/aCcZZXvxC94glNsr7tglkvFA6rQ==
+=F3JG
 -----END PGP SIGNATURE-----
 
---ul54juyfdssbpzak--
+--s36ewetkwq53ykaq--
