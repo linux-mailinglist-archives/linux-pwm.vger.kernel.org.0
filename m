@@ -2,115 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 862166B52F2
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 22:40:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFBEE6B53E2
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 23:10:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231863AbjCJVkR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Mar 2023 16:40:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55606 "EHLO
+        id S229968AbjCJWJ5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Mar 2023 17:09:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231426AbjCJVkP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 16:40:15 -0500
+        with ESMTP id S231760AbjCJWJm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 17:09:42 -0500
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6957F12EACB
-        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 13:40:14 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F52BAEFF
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 14:09:26 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pakTE-0002mt-E2; Fri, 10 Mar 2023 22:40:12 +0100
+        id 1paka5-00043Y-LX; Fri, 10 Mar 2023 22:47:17 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pakTD-003GHH-O5; Fri, 10 Mar 2023 22:40:11 +0100
+        id 1paka1-003GHn-RB; Fri, 10 Mar 2023 22:47:13 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1pakTC-003tYx-U0; Fri, 10 Mar 2023 22:40:10 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, Munehisa Kamata <kamatam@amazon.com>,
-        tobetter@gmail.com, kernel@pengutronix.de
-Subject: [PATCH v2] pwm: Zero-initialize the pwm_state passed to driver's .get_state()
-Date:   Fri, 10 Mar 2023 22:40:04 +0100
-Message-Id: <20230310214004.2619480-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.1
+        id 1paka1-003tZx-3f; Fri, 10 Mar 2023 22:47:13 +0100
+Date:   Fri, 10 Mar 2023 22:46:58 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     fnkl.kernel@gmail.com
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        - <asahi@lists.linux.dev>, Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 2/5] pwm: Add Apple PWM controller
+Message-ID: <20230310214658.424vui3frynit437@pengutronix.de>
+References: <20230214-fpwm-v8-0-65518a0d4944@gmail.com>
+ <20230214-fpwm-v8-2-65518a0d4944@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2007; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=robhHBmalGy+K95i0jCM0dQlZc3gTFupV/Uv93kq62o=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBkC6OvpgjLVfukMhemX+667CAToCLToNmk7bA7s l65RAdhEnqJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCZAujrwAKCRDB/BR4rcrs CRvCB/4pldEFzboRpAGFD5Sa0giTISg7fT55wc+TuHBlzvOSrwnA/fcunE43pJLUpgxahm3+1EY utTi5CU2AjOuO8Kg/UXWi9xEya530FL7GU82X7RUNzuR/fZbO35UDLTCJHEJBH43SkSv/SeMGRU 4yGKM0Ka9EqsaZ2mCYkSD9ltKr60bkUZgjbnR21cyP1slFiI9ld7q/+R0tXeGLCSXSLsYhvPIxx LOPXdXmP7MRTPA+2BplOiJZGWjK0aN0IWJznNAdgU6moo3POE3GQ2p8xI3iRibZZHJ5c1dy9KtY BkRERErlrVY8K7atGjEYo2C7l1Fc0ErzbYcdth8UD4GU56wj
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wbrnvcvhbc5cviao"
+Content-Disposition: inline
+In-Reply-To: <20230214-fpwm-v8-2-65518a0d4944@gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This is just to ensure that .usage_power is properly initialized and
-doesn't contain random stack data. The other members of struct pwm_state
-should get a value assigned in a successful call to .get_state(). So in
-the absence of bugs in driver implementations, this is only a safe-guard
-and no fix.
 
-Reported-by: Munehisa Kamata <kamatam@amazon.com>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+--wbrnvcvhbc5cviao
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I found a few more locations where .get_state() is called without
-zero-initializing *state.
+Hello Sascha,
+
+On Fri, Mar 10, 2023 at 07:44:08PM +0100, Sasha Finkelstein via B4 Relay wr=
+ote:
+> +static int apple_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   const struct pwm_state *state)
+> +{
+> +	struct apple_pwm *fpwm;
+> +
+> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	fpwm =3D to_apple_pwm(chip);
+> +	if (state->enabled) {
+> +		u64 on_cycles, off_cycles;
+> +
+> +		on_cycles =3D mul_u64_u64_div_u64(fpwm->clkrate,
+> +						state->duty_cycle, NSEC_PER_SEC);
+> +		if (on_cycles > 0xFFFFFFFF)
+> +			on_cycles =3D 0xFFFFFFFF;
+> +
+> +		off_cycles =3D mul_u64_u64_div_u64(fpwm->clkrate,
+> +						 state->period, NSEC_PER_SEC) - on_cycles;
+> +		if (off_cycles > 0xFFFFFFFF)
+> +			return -ERANGE;
+
+This is still wrong and needs clamping, too.
 
 Best regards
 Uwe
 
- drivers/pwm/core.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index e01147f66e15..474725714a05 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -115,7 +115,14 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
- 	}
- 
- 	if (pwm->chip->ops->get_state) {
--		struct pwm_state state;
-+		/*
-+		 * Zero-initialize state because most drivers are unaware of
-+		 * .usage_power. The other members of state are supposed to be
-+		 * set by lowlevel drivers. We still initialize the whole
-+		 * structure for simplicity even though this might paper over
-+		 * faulty implementations of .get_state().
-+		 */
-+		struct pwm_state state = { 0, };
- 
- 		err = pwm->chip->ops->get_state(pwm->chip, pwm, &state);
- 		trace_pwm_get(pwm, &state, err);
-@@ -448,7 +455,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- {
- 	struct pwm_state *last = &pwm->last;
- 	struct pwm_chip *chip = pwm->chip;
--	struct pwm_state s1, s2;
-+	struct pwm_state s1 = { 0 }, s2 = { 0 };
- 	int err;
- 
- 	if (!IS_ENABLED(CONFIG_PWM_DEBUG))
-@@ -530,6 +537,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 		return;
- 	}
- 
-+	*last = (struct pwm_state){ 0 };
- 	err = chip->ops->get_state(chip, pwm, last);
- 	trace_pwm_get(pwm, last, err);
- 	if (err)
+--wbrnvcvhbc5cviao
+Content-Type: application/pgp-signature; name="signature.asc"
 
-base-commit: cf70d01a62c712ee715df1f7892b58c77474bcfb
--- 
-2.39.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQLpU8ACgkQwfwUeK3K
+7Al6iAf/brzDkPdu7qhixSZXlHEcf+6cCEGjYdch6SwKLkspprLcOrBvHsvEa8ay
+TYG02baQpF4eNbZdPBbBv2b4VOqDOJ92H8Bx7IvfhCQy+fdZkSCiSeXHPteY91Hc
+A56UkrBNesv68qEdfX6e4vtVYZbexHFqgaeTZMPfr8dsqt0ms0RyyMMuT/DhrpPs
+sBTZd7V0IybwXTCEomXUMbxOA1mzWfU05rEz4bPUOS14N9TL8i1Mom8VsZrMD5UH
+bO6F9Y13HCXq8xUgLKZnoxqEEm1E2r6ZunUTSb/RenSaxGE2xx9NlHlTNeyKJR2V
+FYA1FefcQgl8RIZvCowtSH9Y+Lkcvg==
+=MgXN
+-----END PGP SIGNATURE-----
+
+--wbrnvcvhbc5cviao--
