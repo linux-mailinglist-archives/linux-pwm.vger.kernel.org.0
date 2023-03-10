@@ -2,58 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A34736B28B9
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Mar 2023 16:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 373256B376A
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 08:33:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231708AbjCIPX2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Mar 2023 10:23:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44008 "EHLO
+        id S230294AbjCJHdC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Mar 2023 02:33:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbjCIPXD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Mar 2023 10:23:03 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A52F1443
-        for <linux-pwm@vger.kernel.org>; Thu,  9 Mar 2023 07:22:31 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id o6so1919354vsq.10
-        for <linux-pwm@vger.kernel.org>; Thu, 09 Mar 2023 07:22:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112; t=1678375350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wnQ1JLkorEsC0faYzxDw+JFZG2Ei/m3Pat9Daw2w3Gk=;
-        b=Q4LtAtcwLUPWrpzaXeGN56IlGGfWu+kYpEOvHSLS/L4jH1ri6By3E9pqF9M2TdUYbT
-         l30gkFtPBW6LwRTH9Efqo6pOwGoYv/8Jgf1ijfmXIiWOqJKGs+UxQD92eqp6kQuLKVmF
-         lapgpQDEfjPQoL0LG+RQW+qABMNzbhGcOBF33XEfm0aIRsspijGgoE/xRXYMKUrqrK4s
-         aLHab+Itc7i0Lt2vhCR8bSvo5Lt8cXFNzMUY9gjQqweotGH4gbTuMHU3flHb2DDCuoDj
-         kT5evC8vWodEdpmrNIVfgEWgDfE8GHMGg9pv7TIKsKW0PdRCHYgx+Gjc4M4vdEeUXZNR
-         Pceg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678375350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wnQ1JLkorEsC0faYzxDw+JFZG2Ei/m3Pat9Daw2w3Gk=;
-        b=oT+dO2EMfNWAeH8t6xSexIfwB/giPPikbes8BbtG0IqZnqGtfvyoNiYCR7utYUhosm
-         UHKS3Dz+Gm/ysYH5+mubiS7VCRsSq1k4MnnsFVKCwJu7kcY16WCDleiWoV/2M83CgxFH
-         wrEdwC6ouZ2WVFQiBNI9tPT08Rp/Jrq3IRk70Xua550yDSsE1xKKhxhd6IGT2yvn7wnj
-         jfGf0Rw2zdfIsMLhIvKlG8Kjv8aXg3DhKiu9VIhg8ssCO767ClC+gXoRIHEnvMbghpkt
-         hpKDcVRtpc2zu/q/S6jm7SyyV3Ph+Ftyi3zIsAwVnhmo5OzAwgpEm79wGCeb0tIdS7aL
-         fUUA==
-X-Gm-Message-State: AO0yUKWs1yAhg4xUFW76q/hyZ3ctAIp7dnitznGZB6X+piL77P3yATMq
-        gkNuicKEhSe//mC/ttD//fb7I8X/2eTE1AUSVUreVQ==
-X-Google-Smtp-Source: AK7set99Wa14Cl7q41QmEjig3d5y5XriZa4QovGX0AF/AQi3FUH59Z9nsjhzY/teq5TZvqlm1Mn1bo+B5wbkcw5GyVQ=
-X-Received: by 2002:a67:d48c:0:b0:402:999f:44d2 with SMTP id
- g12-20020a67d48c000000b00402999f44d2mr15314715vsj.0.1678375350449; Thu, 09
- Mar 2023 07:22:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 9 Mar 2023 16:22:19 +0100
-Message-ID: <CAMRc=Me-FMZ3e=EaUA1kimEonz=HVHBp7coxCz53bJK9NYBuFg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/16] gpio: Use string_choices.h
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230360AbjCJHcZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 02:32:25 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A362DF0C7A
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Mar 2023 23:32:18 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1paXEX-0002G3-W2; Fri, 10 Mar 2023 08:32:10 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1paXES-0037ox-Nl; Fri, 10 Mar 2023 08:32:04 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1paXES-003jf4-1H; Fri, 10 Mar 2023 08:32:04 +0100
+Date:   Fri, 10 Mar 2023 08:32:03 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
@@ -66,86 +42,89 @@ Cc:     Schspa Shi <schspa@gmail.com>, Marc Zyngier <maz@kernel.org>,
         <bcm-kernel-feedback-list@broadcom.com>,
         Andy Shevchenko <andy@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Nandor Han <nandor.han@ge.com>,
         Semi Malinen <semi.malinen@ge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v1 00/16] gpio: Use string_choices.h
+Message-ID: <20230310073203.2mpd24pxe5rvm4e7@pengutronix.de>
+References: <20230306195556.55475-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Me-FMZ3e=EaUA1kimEonz=HVHBp7coxCz53bJK9NYBuFg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vlcr3xdkx227as3g"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Me-FMZ3e=EaUA1kimEonz=HVHBp7coxCz53bJK9NYBuFg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Mar 6, 2023 at 8:55=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Use string_choices.h in the GPIO drivers and library.
-> It has been tested on x86_64 and (semi-)compile tested
-> over all.
->
-> Andy Shevchenko (16):
->   lib/string_helpers: Add missing header files to MAINTAINERS database
->   lib/string_helpers: Split out string_choices.h
->   lib/string_choices: Add str_high_low() helper
->   lib/string_choices: Add str_input_output() helper
->   gpiolib: Utilize helpers from string_choices.h
->   gpio: adnp: Utilize helpers from string_choices.h
->   gpio: brcmstb: Utilize helpers from string_choices.h
->   gpio: crystalcove: Utilize helpers from string_choices.h
->   gpio: grgpio: Utilize helpers from string_choices.h
->   gpio: mvebu: Utilize helpers from string_choices.h
->   gpio: pl061: Utilize helpers from string_choices.h
->   gpio: stmpe: Utilize helpers from string_choices.h
->   gpio: wcove: Utilize helpers from string_choices.h
->   gpio: wm831x: Utilize helpers from string_choices.h
->   gpio: wm8994: Utilize helpers from string_choices.h
->   gpio: xra1403: Utilize helpers from string_choices.h
->
->  MAINTAINERS                     |  3 ++
->  drivers/gpio/gpio-adnp.c        | 24 ++++----------
->  drivers/gpio/gpio-brcmstb.c     |  3 +-
->  drivers/gpio/gpio-crystalcove.c | 17 +++++-----
->  drivers/gpio/gpio-grgpio.c      |  3 +-
->  drivers/gpio/gpio-mvebu.c       | 27 +++++++---------
->  drivers/gpio/gpio-pl061.c       |  4 +--
->  drivers/gpio/gpio-stmpe.c       | 19 +++++------
->  drivers/gpio/gpio-wcove.c       | 15 ++++-----
->  drivers/gpio/gpio-wm831x.c      |  5 +--
->  drivers/gpio/gpio-wm8994.c      |  6 ++--
->  drivers/gpio/gpio-xra1403.c     |  5 +--
->  drivers/gpio/gpiolib-sysfs.c    |  3 +-
->  drivers/gpio/gpiolib.c          | 13 ++++----
->  include/linux/string_choices.h  | 56 +++++++++++++++++++++++++++++++++
->  include/linux/string_helpers.h  | 26 +--------------
->  16 files changed, 125 insertions(+), 104 deletions(-)
->  create mode 100644 include/linux/string_choices.h
->
-> --
-> 2.39.1
->
 
-I've been thinking about this and I must say it doesn't make much
-sense to me. Not only does it NOT reduce the code size (even if we
-assume the unlikely case where we'd build all those modules that use
-the helpers) but also decreases the readability for anyone not
-familiar with the new interfaces (meaning time spent looking up the
-new function). The "%s", x ? "if" : "else" statement is concise and
-clear already, I don't see much improvement with this series. And I'm
-saying it from the position of someone who loves factoring out common
-code. :)
+--vlcr3xdkx227as3g
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll wait to hear what others have to say but if it were up to me, I'd
-politely say no.
+Hi Bart, hi Andy,
 
-(I mean: I guess, in the end it is up to me, but I'm open to arguments.) :)
+On Thu, Mar 09, 2023 at 04:22:19PM +0100, Bartosz Golaszewski wrote:
+> I've been thinking about this and I must say it doesn't make much
+> sense to me. Not only does it NOT reduce the code size (even if we
+> assume the unlikely case where we'd build all those modules that use
+> the helpers) but also decreases the readability for anyone not
+> familiar with the new interfaces (meaning time spent looking up the
+> new function). The "%s", x ? "if" : "else" statement is concise and
+> clear already, I don't see much improvement with this series. And I'm
+> saying it from the position of someone who loves factoring out common
+> code. :)
+>=20
+> I'll wait to hear what others have to say but if it were up to me, I'd
+> politely say no.
 
-Bart
+Interpreting this as request to share my view: I'm having the same
+doubts. While I'm not a big fan of the ?: operator, it's semantic is
+more obvious here.
+
+What I find most difficult about
+
+	str_high_low(plr & BIT(j))
+
+(from patch #6) is: Does this give me "high" or "low" if the argument is
+zero? You could tell me, and judging from the patch I'd hope that it
+would give me "low". But if I stumble over this code in two weeks I
+have probably forgotten and have to look it up again.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vlcr3xdkx227as3g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQK3PAACgkQwfwUeK3K
+7AmKrQgAi8eFePklYAe1Wkc5DrOA8FgxUuMACZnge32N4GuJ70WGZLkl0kmPTU1b
+ljClqGfUibetO51uLK9T73BwZNJYXSjcEQ70XwdyiSIronRbhlzw13m6+/JdGD6y
+b//gxazdUU3qw70JoLbKZwfBHea/9CPDEJdcb6OvqkrVbH6GMjg5Lsyf3SW4dfRe
+Td4CSACc7My0VurOCjOPWw0Ui3gUws20Zs5/dKgZCHzjYlykGC9rS2mmn5CZP2oB
+L5AriYmEQodEt6FLgbkYhp1gDE2ONqYwm64RsHUJcWcBKZahBDFuXAoGZLVjgeXo
+YMvSCemK36RkwM5w3AHNzK63ETBAIA==
+=s9xY
+-----END PGP SIGNATURE-----
+
+--vlcr3xdkx227as3g--
