@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 641896B38E2
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 09:37:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF4826B38F4
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Mar 2023 09:40:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230417AbjCJIhb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Mar 2023 03:37:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50946 "EHLO
+        id S231318AbjCJIku (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Mar 2023 03:40:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbjCJIg4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 03:36:56 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A4710A139
-        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 00:35:57 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id ec29so17367095edb.6
-        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 00:35:57 -0800 (PST)
+        with ESMTP id S231432AbjCJIkL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Mar 2023 03:40:11 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 051A2B8627
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 00:38:12 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id ay14so17303736edb.11
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Mar 2023 00:38:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678437355;
+        d=linaro.org; s=google; t=1678437491;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mn1vLNX458kljHD+DHfjvMGt/le6hUqQgMBvdIhJEsY=;
-        b=yRSFe7BvYv8hMAHXJ5/M6DA42nlT3ofi5LpTrmTGQbyGZXNYW/pN5FxD/7Ff+wkdOL
-         uIUFfyL5W2t836jKHk11QHvarM59ZWADcKpc7Ektb8AMzpj9NlUf9Q9KRKsZbhey6l4m
-         wwQgDjyXllRc+eA5ipo6kjojzkWoKilJIvdq5uU8erql+I4c6KI8O9b4UZ+g99ZYAZ0/
-         URDnvz0c2J92xxkbheSnP3LIKX27MkRq8PjzN5tUMHTo5fpOdpVaMncSoYTfuyG0H/NL
-         w0iKYcQWClqhTzPChCtCd9gL/HdanmcbfPdrFYSiXOMT3+po3Qff+FcTBnDFEA7tSSXS
-         Dzow==
+        bh=pDVe/ilGCM1upNn+sXA7kF6veY8qJPcVwvcThxhDa6I=;
+        b=Pppuz/JUxawEDgmha2lSlsuKf9XEo5uJceQZxG8fZOdPlDwIRI++f8KUoyTdi1SIHS
+         X4sXlMNXDbkeuKb3jIUN4o7S7NEkEG05vm7lD5PCJnPhjmgOzY89IEQtKS8dxyxk8J1p
+         CfyhenjkMXgLzXcACM5LDZPpRa8/h28POLoty99ux4Xb0Q86qvvbHHOXRmxkf5MV+Kc6
+         QdP7NdvX7H5WiLeysJM+Aj6g9JV9sy6/1kkXK3r7A6IdtKIkQar1kh768C/tV89f1G8l
+         yzL1HXgEv/znoQ72yptz3rHrY2mOypVUIlhUmH9q0mw/tr9JSHfiV630dBNEKEq1uHas
+         L5Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678437355;
+        d=1e100.net; s=20210112; t=1678437491;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mn1vLNX458kljHD+DHfjvMGt/le6hUqQgMBvdIhJEsY=;
-        b=H7dIz4uRLuUoqNn4hT+ZNxlZ8F1vCaDx7DBzmJknPPIlL09jXRJdAqxqO3dS0fXrug
-         +2DvD8CHL3RjTjZk51QpWqewVxqm+tMqvWXF/4eV05MH8Yo3IWgDKAY/LO3m7TXkdHnH
-         t989IAcWJz9NZFZsPIp/fncSLyTS6C9akQ0oPPkx1no4ZiAtnaOq8jxkfAwZW4Dp58D0
-         jTqqFB/RTNM9lY2r90TlCqSv009ORL+pNLvWYSt2VNcyu1UORkbqy0R4Mc1Oxk4CyhF2
-         r60RZsmKPJbvnEshCamscWCjokbkqBnP78Fj0yypisHHqYQBRpi7R1pU6/MCe4d/l2zw
-         yTSA==
-X-Gm-Message-State: AO0yUKXwZww5lO1YsKCFrLcuw+BDmzDFh5nmrswoWUF5NLASc9nHa0lH
-        j+G101vTS6h5PTZ9YuksgKBa7Q==
-X-Google-Smtp-Source: AK7set+B8T3dy99CLujhhEDzNKkfET67hYpQvpYTs6C0Ur74VsFLFiujwxN190X58NvvhEJms9qBIA==
-X-Received: by 2002:a17:906:dacd:b0:88d:ba89:1837 with SMTP id xi13-20020a170906dacd00b0088dba891837mr1006039ejb.8.1678437355374;
-        Fri, 10 Mar 2023 00:35:55 -0800 (PST)
+        bh=pDVe/ilGCM1upNn+sXA7kF6veY8qJPcVwvcThxhDa6I=;
+        b=KkOtla/MMzJvySKLYjz7Gb4ZJQGWvbJ6mtm8Skz3dQAziWl1+ymMYioZCN8JL0CXsf
+         XL6GxsWSjWJN814gK3tN/WpURWke1+KGPh4mJoj0cr2HQDSATguxMOjf1Og2bWrTqQ7/
+         zdQUC8iJgUthlPh7YGnknUUOKuoyv7ek/hltBkIgESiSM2PKVNO+25rZE4g0kYNqQAXD
+         EVOlF+6sM2NpRZ224q1t82KQBrqsYv07mXXQMofdpzgLZMoXtPxm4KA+Ss5i5VHCfRWJ
+         Iqjsmk9na3E/+wA5pbGzK0wOh5YfCGi8tD7imgxDQAc055lTTe+gOWt6/rYms+2Nvefa
+         owVg==
+X-Gm-Message-State: AO0yUKU9l2rXnELlsEsHY4EzGgXRxDd3qRLXBA5X0Ab9SWSzBhOC8jhE
+        dhTLlpL+euv3T5YmEbFfkZFD6Q==
+X-Google-Smtp-Source: AK7set/A9FqHxSnqzhC3hpME6V/vzWuY7o2BpQIjGMxyMR4uXXCeSmQQGuphYw5/Z1RGHpprlaNx2Q==
+X-Received: by 2002:a17:907:1b1e:b0:7c4:fa17:7203 with SMTP id mp30-20020a1709071b1e00b007c4fa177203mr31355684ejc.63.1678437491488;
+        Fri, 10 Mar 2023 00:38:11 -0800 (PST)
 Received: from ?IPV6:2a02:810d:15c0:828:2a59:841a:ebc:7974? ([2a02:810d:15c0:828:2a59:841a:ebc:7974])
-        by smtp.gmail.com with ESMTPSA id z14-20020a170906240e00b008b1779ba3c1sm667385eja.115.2023.03.10.00.35.53
+        by smtp.gmail.com with ESMTPSA id 22-20020a170906319600b008ee5356801dsm661622ejy.187.2023.03.10.00.38.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Mar 2023 00:35:54 -0800 (PST)
-Message-ID: <eef712f9-43c6-d6ba-3ad7-3aff7542bf27@linaro.org>
-Date:   Fri, 10 Mar 2023 09:35:53 +0100
+        Fri, 10 Mar 2023 00:38:11 -0800 (PST)
+Message-ID: <f908e9f1-2cee-8f9f-5da1-f231febf107b@linaro.org>
+Date:   Fri, 10 Mar 2023 09:38:09 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH 05/21] dt-bindings: display: mediatek: dsi: add binding
- for MT8365 SoC
+Subject: Re: [PATCH 07/21] dt-bindings: display: mediatek: dpi: add binding
+ for MT8365
 Content-Language: en-US
 To:     Alexandre Mergnat <amergnat@baylibre.com>,
         Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
@@ -79,15 +79,15 @@ Cc:     Guillaume La Roque <glaroque@baylibre.com>,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20230220-display-v1-0-45cbc68e188b@baylibre.com>
- <20230220-display-v1-5-45cbc68e188b@baylibre.com>
+ <20230220-display-v1-7-45cbc68e188b@baylibre.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230220-display-v1-5-45cbc68e188b@baylibre.com>
+In-Reply-To: <20230220-display-v1-7-45cbc68e188b@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -95,16 +95,92 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 09/03/2023 15:22, Alexandre Mergnat wrote:
-> Display Serial Interface for MT8365 is compatible with another SoC.
-> Then, add MT8365 binding along with MT8183 SoC.
+> From: Fabien Parent <fparent@baylibre.com>
 > 
+> DPI for MT8365 is compatible with MT8192 but requires an additional
+> clock. Modify the documentation to requires this clock only on MT8365 SoCs.
+> 
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
->  .../bindings/display/mediatek/mediatek,dsi.yaml       | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
+>  .../bindings/display/mediatek/mediatek,dpi.yaml    | 48 ++++++++++++++++++----
+>  1 file changed, 39 insertions(+), 9 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> index 56511c4d4b9b..3f6cca81340c 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> @@ -17,15 +17,20 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - mediatek,mt2701-dpi
+> -      - mediatek,mt7623-dpi
+> -      - mediatek,mt8173-dpi
+> -      - mediatek,mt8183-dpi
+> -      - mediatek,mt8186-dpi
+> -      - mediatek,mt8188-dp-intf
+> -      - mediatek,mt8192-dpi
+> -      - mediatek,mt8195-dp-intf
+> +    oneOf:
+> +      - enum:
+> +          - mediatek,mt2701-dpi
+> +          - mediatek,mt7623-dpi
+> +          - mediatek,mt8173-dpi
+> +          - mediatek,mt8183-dpi
+> +          - mediatek,mt8186-dpi
+> +          - mediatek,mt8188-dp-intf
+> +          - mediatek,mt8192-dpi
+> +          - mediatek,mt8195-dp-intf
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt8365-dpi
+> +          - const: mediatek,mt8192-dpi
+>  
+>    reg:
+>      maxItems: 1
+> @@ -34,16 +39,20 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> +    minItems: 3
+>      items:
+>        - description: Pixel Clock
+>        - description: Engine Clock
+>        - description: DPI PLL
+> +      - description: DPI Clock
+>  
+>    clock-names:
+> +    minItems: 3
+>      items:
+>        - const: pixel
+>        - const: engine
+>        - const: pll
+> +      - const: dpi
+>  
+>    pinctrl-0: true
+>    pinctrl-1: true
+> @@ -72,6 +81,27 @@ required:
+>  
+>  additionalProperties: false
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mediatek,mt8365-dpi
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 4
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+We usually set minItems, so it is clear readable that you raise the
+lower bracket. Code should be equivalent, but I would say this is less
+readable (maxItems: 4 was actually implied by top-level list).
+
 
 
 Best regards,
