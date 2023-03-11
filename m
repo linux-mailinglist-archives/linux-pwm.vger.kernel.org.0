@@ -2,75 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFE306B5F3C
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Mar 2023 18:39:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFD636B6047
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Mar 2023 20:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbjCKRjO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 11 Mar 2023 12:39:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
+        id S229450AbjCKTnT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 11 Mar 2023 14:43:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbjCKRjA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Mar 2023 12:39:00 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24ABB13DC0
-        for <linux-pwm@vger.kernel.org>; Sat, 11 Mar 2023 09:38:16 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id g10so4182576eda.1
-        for <linux-pwm@vger.kernel.org>; Sat, 11 Mar 2023 09:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678556258;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IEgoJS3qrsEtaJMFetSvJY9kS8Ao4kP1CN24XfSlZMM=;
-        b=gnJTMg/R/DM4MDRV1H/VEF1WdEk7JlqpqKKwv8TemZESQtQv5gycYDmeGOpnhsmw4C
-         hjmlJydNmTCujjKEUWGov7jPWyWWmuwht47dZgr2jVN0s/DFbws2FyZK8/hletoEFvCh
-         mAvpYsBvdtV++kmwIw4hX7PKnYqMVwAVk2zlc9Ds632IcqnYZel2I0x3cEERhdlKZ0kv
-         ISi0EzHweuKng9p4FXYs6o3Ot6sIv14Kvve7CxfJBY1bku8HTJ0zFPeDH5ZScSGCwIDp
-         G9HfsyiuiCNPFGtfEbNJ7t2z0NwYSi4JqZyZ/mgydtjDxBEaqPo2Kj1MjELpkMyU8L1H
-         GV8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678556258;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IEgoJS3qrsEtaJMFetSvJY9kS8Ao4kP1CN24XfSlZMM=;
-        b=w7Hsm4HofIJa8l3Auota7+/v27Td8pxbVXxACaGKSuUruTxfbyhpUiF4yKBbikoSx3
-         BzES/fuEpNrdeat3XfB5/8OTNcUddMocpaTkQX1ysgzvvoc1hsQBWEwEL4wuzlNEFyhG
-         GFfbZYUMo9iEbsYAuTjq6bYFEQUeLFEx07wNAfAa2xqtWMia5zKjaeDssIONFsNTq7Le
-         sJ0hSFvafTxwCAxfo6yjBrtVUm4x0lmgAk90OWpxO6QcDbe1rEdmty7RKqKYJtUWdQSE
-         4jEZ4MApbh+N+q8uiTewKJGnzib3SqwvUsnMv3wUio/5pm3PZsQeaEti4wUQP9qJoyTM
-         hCeA==
-X-Gm-Message-State: AO0yUKVswQYnU4VJq+KPDGpRYanFZ+zLkFVUX4GGjmf9ljDG0JYVtlBN
-        2gGVhxzPl5goVxnb36Jj62o4Bw==
-X-Google-Smtp-Source: AK7set8xmYF6AhvJ6Vqs03dYavXCjrvSUKQ4YnoBkZt3pwgrd+3nGWiiNNmwUu2NnSSirCtELHMrUA==
-X-Received: by 2002:a17:907:d02:b0:8b1:7eba:de5 with SMTP id gn2-20020a1709070d0200b008b17eba0de5mr6402947ejc.10.1678556258246;
-        Sat, 11 Mar 2023 09:37:38 -0800 (PST)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:6927:e94d:fc63:9d6e])
-        by smtp.gmail.com with ESMTPSA id k15-20020a50ce4f000000b004d8287c775fsm1444903edj.8.2023.03.11.09.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Mar 2023 09:37:37 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] pwm: stm32-lp: drop of_match_ptr for ID table
-Date:   Sat, 11 Mar 2023 18:37:35 +0100
-Message-Id: <20230311173735.263293-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230311173735.263293-1-krzysztof.kozlowski@linaro.org>
-References: <20230311173735.263293-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229509AbjCKTnR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Mar 2023 14:43:17 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8236217CFF
+        for <linux-pwm@vger.kernel.org>; Sat, 11 Mar 2023 11:43:14 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pb57N-0008P4-8p; Sat, 11 Mar 2023 20:43:01 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pb57J-003Szm-3f; Sat, 11 Mar 2023 20:42:57 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pb57I-0047FD-ER; Sat, 11 Mar 2023 20:42:56 +0100
+Date:   Sat, 11 Mar 2023 20:42:54 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     fnkl.kernel@gmail.com
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        - <asahi@lists.linux.dev>, Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sasha Finkelstein <7d578vix8hzw@opayq.net>
+Subject: Re: [PATCH v9 0/5] Hi,
+Message-ID: <20230311194254.lydmh23has2e3flj@pengutronix.de>
+References: <20230214-fpwm-v9-0-364480b0e4bd@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yfmtvikgbkfwkb66"
+Content-Disposition: inline
+In-Reply-To: <20230214-fpwm-v9-0-364480b0e4bd@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -79,30 +60,38 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The driver can match only via the DT table so the table should be always
-used and the of_match_ptr does not have any sense (this also allows ACPI
-matching via PRP0001, even though it might not be relevant here).
 
-  drivers/pwm/pwm-stm32-lp.c:245:34: error: ‘stm32_pwm_lp_of_match’ defined but not used [-Werror=unused-const-variable=]
+--yfmtvikgbkfwkb66
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pwm/pwm-stm32-lp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello,
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index f315fa106be8..bb3a045a7334 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -252,7 +252,7 @@ static struct platform_driver stm32_pwm_lp_driver = {
- 	.probe	= stm32_pwm_lp_probe,
- 	.driver	= {
- 		.name = "stm32-pwm-lp",
--		.of_match_table = of_match_ptr(stm32_pwm_lp_of_match),
-+		.of_match_table = stm32_pwm_lp_of_match,
- 		.pm = &stm32_pwm_lp_pm_ops,
- 	},
- };
--- 
-2.34.1
+apart from the subject this series is the same as the one sent slightly
+later. If you want to reply to the patches, please pick the other thread
+to have all in one. I'll discard this one from the PWM patchwork.
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yfmtvikgbkfwkb66
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQM2bsACgkQwfwUeK3K
+7Aktogf/ZNH0mckncPX69jVwQNe8WsD28BbcNbz87J/7l3czLEOSt7kTd//8CGME
+5RIwS7J2pOIuQC/3rIr4rBLZ0BEPr63Jnc5BZ16963YP+FGAgQfOrJq+BfxjP3Ua
+2ez7UzxNte8AOkMl/9DlsTjrBlmMGUR/iVeRhw5FKpJyZOHMp+DubSNRc1Ve/47z
+bmVc/2oDSd6iD5qNrWiFDzHkxVT1lHS/G+rwvNqc00i+bWq89BU0socJlGy+u1ox
+iY0t0/U4dp9hHvAnFWTK96f4YwJzF5Bw/FAqVvCXnunrrRtdPzUxiik6p0Dub0YT
+fB31MpDPTHpevrq3t3r6+Klg6PTj6Q==
+=QJ99
+-----END PGP SIGNATURE-----
+
+--yfmtvikgbkfwkb66--
