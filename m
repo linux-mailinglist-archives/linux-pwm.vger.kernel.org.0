@@ -2,73 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 021A56B586B
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Mar 2023 06:11:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6377D6B5F3B
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Mar 2023 18:39:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbjCKFLS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 11 Mar 2023 00:11:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37110 "EHLO
+        id S230468AbjCKRjO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 11 Mar 2023 12:39:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbjCKFLP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Mar 2023 00:11:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952F7135B31;
-        Fri, 10 Mar 2023 21:11:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 08C0160BA7;
-        Sat, 11 Mar 2023 05:11:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0E63FC4339E;
-        Sat, 11 Mar 2023 05:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678511473;
-        bh=DxASz2lknCh6bcl9lub36jkmurw78TkqTmOu4olxjho=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-        b=DPIgP4rd3920N27XufeRw2+qPTF5PuD3gMqXC9clFGVPEaWTxHG6kCwEKZTO4Aggk
-         SBPriM5P85IJwVLJ6H3w3C75/KR6nC0tEyB1hfEBMKlHT85jh8a8hNhUyEsK+EIQcb
-         7UXAFdmjQxrO7RGd53PqrQjWQZc+zdGsObBhmb8urxGBo1QjsrL2c3IBj9YfNDQMx4
-         zko3q1Wp4wjK28r3sg9jpT9C3G6lL+OoTO4nLW3L/12BBULbwNskxhrPXtoUbQ6Ikd
-         McZnHF3GR5pl0iGA2ron42vYwa82ewbDWMYALfKC7/oG3kBqIGCQN6XRvCMaBNlIQn
-         GLASpYWqFiH9w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id EC1EDC678D5;
-        Sat, 11 Mar 2023 05:11:12 +0000 (UTC)
-From:   Sasha Finkelstein via B4 Relay 
-        <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date:   Sat, 11 Mar 2023 06:11:13 +0100
-Subject: [PATCH v9 5/5] MAINTAINERS: Add entries for Apple PWM driver
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230214-fpwm-v9-5-dbe26bccabd6@gmail.com>
-References: <20230214-fpwm-v9-0-dbe26bccabd6@gmail.com>
-In-Reply-To: <20230214-fpwm-v9-0-dbe26bccabd6@gmail.com>
+        with ESMTP id S230294AbjCKRi7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Mar 2023 12:38:59 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BC31DBB1
+        for <linux-pwm@vger.kernel.org>; Sat, 11 Mar 2023 09:38:15 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id i34so33006394eda.7
+        for <linux-pwm@vger.kernel.org>; Sat, 11 Mar 2023 09:38:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678556257;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B0p0qqpSJoTCtFb+Kr7i0GNnHTIvTQKai2vdNlxuKcM=;
+        b=WK3QS4sDwcl1MqsLZ8ZlJxBQN83C2NF1ZVUas7Zl16IihZuW8nnIiAdMlXVMQstawm
+         aSFXBEdoeRHAIlLChzTvHtvDu26dyUkunrmDxTMVkpIkxs2BkyC5bOVJyCR0YxQLFJSa
+         x/depFRKep/anvIBotssZD8NTUXO1cfEOd3ZXEFJ+un3wIKGeIS6yibWWrSKqBTEAjOl
+         jMN+Ct87AroeiHIqPLojAgVZZ733+E8IUZ9Ap1uT5gT3PezCbTk4W3g+bIL9RAnHRdMV
+         S8ODEW3VD0b9RaZmdAiddu87FtWTOM6/TrhR9jBcOi7tV9E9yJruCRrsSBcqNiHs7KPm
+         6nxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678556257;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B0p0qqpSJoTCtFb+Kr7i0GNnHTIvTQKai2vdNlxuKcM=;
+        b=KVjppT1QPssvE2nL2C4Bt2hbKfTr4C+GQdzOX+G7XrADRJ+/Bp3+/SdG0g+ue1mDVD
+         2P++wmAkwhCiis6I2DWIKhADfPgztG4ux4YEyZFoaDKsPN+hPtD5Dmow3wZEUCpPy7kE
+         vqfqVNcnzLsklVAxPvb2hf+3G9+va34PRLLmiVVbqdTeJc8Ofc92rkvVroz3XrUpcOd4
+         QZcIAXkGaJPN2EqQNN3/Pjp1Ns9/F0dC/ivQtfW5/FFdpoE8aw60+WplALoP4HEUjOlx
+         LDAXwDf6a3Qfnsu/F4QT5wOk/w7ShjVxPHdSL/Ygf31y6VKGYlMXfyq8zDjTP2oxYcVA
+         fGbA==
+X-Gm-Message-State: AO0yUKX7TsNMMggu1QtkIcFIZhyOPGt65zcB7GLkZGY1CI4u7FSm053A
+        ZabiobhneIPvbnDR4xLLdSBK7Q==
+X-Google-Smtp-Source: AK7set8RZc0nvHdqJFDMyISOImOTBaMDNv5a9BgnTgUHSP/vQIbWUHqUGpilsm9lUqmtf3eDSf0ZFg==
+X-Received: by 2002:a05:6402:10c9:b0:4f9:9be3:a538 with SMTP id p9-20020a05640210c900b004f99be3a538mr3722729edu.13.1678556257370;
+        Sat, 11 Mar 2023 09:37:37 -0800 (PST)
+Received: from krzk-bin.. ([2a02:810d:15c0:828:6927:e94d:fc63:9d6e])
+        by smtp.gmail.com with ESMTPSA id k15-20020a50ce4f000000b004d8287c775fsm1444903edj.8.2023.03.11.09.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Mar 2023 09:37:37 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        - <asahi@lists.linux.dev>,
-        Sasha Finkelstein <fnkl.kernel@gmail.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1678511469; l=1109;
- i=fnkl.kernel@gmail.com; s=20230213; h=from:subject:message-id;
- bh=H0yqy74irk0iRnaCY9EguySiHLNBuNpFanSkZMAqDr0=;
- b=XwoGQYfCG0nhebSIi6bZqylI139vfZRnNb5i3ffwsoD6hC3VPSnJR7/CCGK2csjgK4K8JKrs+
- JkUOEjeyKU4Agrc6a+IceoLTgo8Y+zHDvlWdJixf2xENShxDXGBnZc1
-X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
- pk=7LFSAJtxIWAs9LzCIyX0sSvCZy2wQTyEIu1zch6o804=
-X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20230213 with auth_id=28
-X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Reply-To: <fnkl.kernel@gmail.com>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] pwm: rcar: drop of_match_ptr for ID table
+Date:   Sat, 11 Mar 2023 18:37:34 +0100
+Message-Id: <20230311173735.263293-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,37 +76,30 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+The driver can match only via the DT table so the table should be always
+used and the of_match_ptr does not have any sense (this also allows ACPI
+matching via PRP0001, even though it might not be relevant here).
 
-Add the MAINTAINERS entries for the driver
+  drivers/pwm/pwm-rcar.c:252:34: error: ‘rcar_pwm_of_table’ defined but not used [-Werror=unused-const-variable=]
 
-Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Acked-by: Sven Peter <sven@svenpeter.dev>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pwm/pwm-rcar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d5bc223f305..7c0b7c2bb55f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1955,6 +1955,7 @@ F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
- F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
- F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
- F:	Documentation/devicetree/bindings/power/apple*
-+F:	Documentation/devicetree/bindings/pwm/pwm-apple.yaml
- F:	Documentation/devicetree/bindings/watchdog/apple,wdt.yaml
- F:	arch/arm64/boot/dts/apple/
- F:	drivers/bluetooth/hci_bcm4377.c
-@@ -1970,6 +1971,7 @@ F:	drivers/mailbox/apple-mailbox.c
- F:	drivers/nvme/host/apple.c
- F:	drivers/nvmem/apple-efuses.c
- F:	drivers/pinctrl/pinctrl-apple-gpio.c
-+F:	drivers/pwm/pwm-apple.c
- F:	drivers/soc/apple/*
- F:	drivers/watchdog/apple_wdt.c
- F:	include/dt-bindings/interrupt-controller/apple-aic.h
-
+diff --git a/drivers/pwm/pwm-rcar.c b/drivers/pwm/pwm-rcar.c
+index 55f46d09602b..8f31f3cc93d5 100644
+--- a/drivers/pwm/pwm-rcar.c
++++ b/drivers/pwm/pwm-rcar.c
+@@ -260,7 +260,7 @@ static struct platform_driver rcar_pwm_driver = {
+ 	.remove = rcar_pwm_remove,
+ 	.driver = {
+ 		.name = "pwm-rcar",
+-		.of_match_table = of_match_ptr(rcar_pwm_of_table),
++		.of_match_table = rcar_pwm_of_table,
+ 	}
+ };
+ module_platform_driver(rcar_pwm_driver);
 -- 
-Git-137.1)
+2.34.1
 
