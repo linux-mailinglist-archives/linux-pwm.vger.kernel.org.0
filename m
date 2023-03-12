@@ -2,75 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C38FD6B66FF
-	for <lists+linux-pwm@lfdr.de>; Sun, 12 Mar 2023 14:51:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 704B56B6797
+	for <lists+linux-pwm@lfdr.de>; Sun, 12 Mar 2023 16:42:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbjCLNvl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 12 Mar 2023 09:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        id S229839AbjCLPmX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 12 Mar 2023 11:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbjCLNvi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Mar 2023 09:51:38 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A67B38B47
-        for <linux-pwm@vger.kernel.org>; Sun, 12 Mar 2023 06:51:36 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id cn21so8531656edb.0
-        for <linux-pwm@vger.kernel.org>; Sun, 12 Mar 2023 06:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678629095;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KkVYC+wu1aL5ZaMnE/Wfc7AXFtfPa1srDddtutZjKIg=;
-        b=PBBLFoWjxELJQdQqoNyC8b9CBEZ06P7rxyzovfxm0JB/Fbi4q/v0iFUED2KasnzcOk
-         8p0vSh2PNexacdl0rT66R1xo4xfYHBhAdvmDNLiKo2WyfMimKUWBQwoe+IHH5SR0m8Op
-         5kSdKutzy2mg7yXsS1cQJ3DIpek6WEfkWGS8pfFqcWpDJTyT6JCPMym49C0XeekjoH/H
-         yXua0nfUOtONQikxtKOV5NK3VLk1evSaoYx4DgxD0liykRfJlkOi5qXTrZXB7DmiQtUN
-         llTaSfrEGJiPYgL2KkuOorgc9z2iSasmkoeFWBqb+lg1i0TMkhRlzEbP6TS9duL2rdsY
-         AI6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678629095;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KkVYC+wu1aL5ZaMnE/Wfc7AXFtfPa1srDddtutZjKIg=;
-        b=1Iyv3DN5I2xwwpikXB1GvE39LkDMee2s7IMgyB9eYCgrJLXLgwgc7Z+t33kO7Ip0M6
-         ZyYPBHneMu4WoxfS5e+BKbO0bKItaWh/YJimbmUNEPEiEgquke7ua6z0jAt071hI57PH
-         wEWqBiav53kU4l5PdmiLAuS6ZcQ5XTyy+BXZ6dYAuNHnnL7LH388qtt1hac2k02Yn5bQ
-         hNKuxZO99QZLLJDZ1gD8Sgx9YHQb7BtIlUb06rE9qjUESDDoUlHayDbzn2fkwCFVC/X1
-         bzrGhLoHSmn4XSGV+NseK1i9XzIuq4a7hKci7e2WWtSStR7hbgNcj7yqSUQkCEMBiv6w
-         2F7Q==
-X-Gm-Message-State: AO0yUKXSjGymUbYSB2flawzk8LkTngqn9VzJI1b83WNtWVEqsGWo2q9+
-        x/mk8dsocCXW4VdZOeczoYymWRZMg/uFbj+IzD8=
-X-Google-Smtp-Source: AK7set/IuMUxX046CBxVvW3ePmZ3nQnQZMlQCR0hcIwerZxQ/d61QF6Fl9Vbf2CQ3y4g0fuGBg7g5w==
-X-Received: by 2002:a17:907:ca85:b0:922:3a53:46f8 with SMTP id ul5-20020a170907ca8500b009223a5346f8mr3960276ejc.64.1678629094817;
-        Sun, 12 Mar 2023 06:51:34 -0700 (PDT)
-Received: from krzk-bin.. ([2a02:810d:15c0:828:d9f6:3e61:beeb:295a])
-        by smtp.gmail.com with ESMTPSA id n20-20020a170906701400b008b17fe9ac6csm2263946ejj.178.2023.03.12.06.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Mar 2023 06:51:34 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S229519AbjCLPmW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Mar 2023 11:42:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79B39EF4
+        for <linux-pwm@vger.kernel.org>; Sun, 12 Mar 2023 08:42:21 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pbNpx-0004iu-Dx; Sun, 12 Mar 2023 16:42:17 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pbNpv-003eWq-3a; Sun, 12 Mar 2023 16:42:15 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pbNpu-004Jch-3M; Sun, 12 Mar 2023 16:42:14 +0100
+Date:   Sun, 12 Mar 2023 16:42:10 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 2/2] pwm: stm32-lp: drop of_match_ptr for ID table
-Date:   Sun, 12 Mar 2023 14:51:20 +0100
-Message-Id: <20230312135120.357713-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 1/2] pwm: rcar: drop of_match_ptr for ID table
+Message-ID: <20230312154210.ovm54x2qtcv7fp7r@pengutronix.de>
 References: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dzhk73rozkcsmxbj"
+Content-Disposition: inline
+In-Reply-To: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,36 +56,84 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The driver can match only via the DT table so the table should be always
-used and the of_match_ptr does not have any sense (this also allows ACPI
-matching via PRP0001, even though it might not be relevant here).  This
-also fixes !CONFIG_OF error:
 
-  drivers/pwm/pwm-stm32-lp.c:245:34: error: ‘stm32_pwm_lp_of_match’ defined but not used [-Werror=unused-const-variable=]
+--dzhk73rozkcsmxbj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hello,
 
----
+On Sun, Mar 12, 2023 at 02:51:19PM +0100, Krzysztof Kozlowski wrote:
+> The driver can match only via the DT table so the table should be always
+> used and the of_match_ptr does not have any sense (this also allows ACPI
+> matching via PRP0001, even though it might not be relevant here).  This
+> also fixes !CONFIG_OF error:
+>=20
+>   drivers/pwm/pwm-rcar.c:252:34: error: =E2=80=98rcar_pwm_of_table=E2=80=
+=99 defined but not used [-Werror=3Dunused-const-variable=3D]
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Changes since v1:
-1. Extend commit msg.
----
- drivers/pwm/pwm-stm32-lp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm, I wonder what else is required here to trigger that warning. On
+amd64 I also disabled CONFIG_MODULES as otherwise rcar_pwm_of_table is
+used by
 
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index f315fa106be8..bb3a045a7334 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -252,7 +252,7 @@ static struct platform_driver stm32_pwm_lp_driver = {
- 	.probe	= stm32_pwm_lp_probe,
- 	.driver	= {
- 		.name = "stm32-pwm-lp",
--		.of_match_table = of_match_ptr(stm32_pwm_lp_of_match),
-+		.of_match_table = stm32_pwm_lp_of_match,
- 		.pm = &stm32_pwm_lp_pm_ops,
- 	},
- };
--- 
-2.34.1
+	MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
 
+With that I have:
+
+	uwe@taurus:~/work/kbuild/amd64$ make drivers/pwm/pwm-rcar.o=20
+	  GEN     Makefile
+	  CALL    /home/uwe/gsrc/linux/scripts/checksyscalls.sh
+	  DESCEND objtool
+	  INSTALL libsubcmd_headers
+	  CC      drivers/pwm/pwm-rcar.o
+	uwe@taurus:~/work/kbuild/amd64$ make drivers/pwm/pwm-rcar.i
+	  GEN     Makefile
+	  CALL    /home/uwe/gsrc/linux/scripts/checksyscalls.sh
+	  DESCEND objtool
+	  INSTALL libsubcmd_headers
+	  CPP     drivers/pwm/pwm-rcar.i
+	uwe@taurus:~/work/kbuild/amd64$ grep rcar_pwm_of_table drivers/pwm/pwm-rca=
+r.i
+	static const struct of_device_id rcar_pwm_of_table[] =3D {
+
+=2E.. some time later ...
+
+ah, you also need W=3D1 to get that warning because of
+
+	# These warnings generated too much noise in a regular build.
+	# Use make W=3D1 to enable them (see scripts/Makefile.extrawarn)
+	KBUILD_CFLAGS +=3D $(call cc-disable-warning, unused-but-set-variable)
+	KBUILD_CFLAGS +=3D $(call cc-disable-warning, unused-const-variable)
+
+in the toplevel Makefile.
+
+I guess that explains why there is no previous report by one of the
+build bots about this issue.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--dzhk73rozkcsmxbj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmQN8s4ACgkQwfwUeK3K
+7AmBVgf7BWzGBbyB5eY9U2UaqiiAl/c9xENIkpkw2tYuoglHWE09cMrY/hlqK09q
+vcHFteBiC+YSGAU7zSFi32vQlMtsKfryHrjIviXMzpBIFoILcElV2F+YsLz9hjj7
+eq1q3DWTzmpQRGSi931BW1CnCTuVg63WwxEUPXyN25CijA/jnsiiiZUIMmxqcCso
+KAai0pDUEn+K2KCxU3Tl89cghJu3Ov7J5teDsbqwlmkpywi3Uc7EblFTnjI5Cb6x
+6GHENVTVp2R6Tignc+6O8V8ne1DEdBkMmZp19Cf+g1bdWNWBjvYOFmcaJdYHqPTX
+bfpswuOSYEJEHycPG8AcCJls5KbKpg==
+=7TYH
+-----END PGP SIGNATURE-----
+
+--dzhk73rozkcsmxbj--
