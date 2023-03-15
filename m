@@ -2,83 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DCF56BD163
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Mar 2023 14:51:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFAF6BD9EA
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Mar 2023 21:11:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbjCPNva (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Mar 2023 09:51:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55098 "EHLO
+        id S230274AbjCPULP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Mar 2023 16:11:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230241AbjCPNva (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Mar 2023 09:51:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B710AF6AD;
-        Thu, 16 Mar 2023 06:51:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3675862018;
-        Thu, 16 Mar 2023 13:51:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC016C433D2;
-        Thu, 16 Mar 2023 13:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678974676;
-        bh=GKMOZkwRhkwO4hhXO1753J3aDhOKMxlPzOi8m0NOY1w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VGSy+oIBY5KiJiItId6IIOS1h39A6HcA2LYrNnFVq+SI2QbozAqoYwW3kOQJNsWYs
-         Tj0R8MJ0dlaRNXoHuL4mQZtE1O6zIwCdeJ0HsAXzQR4xR7akYG6ydtryIwVGCmU7Ug
-         LUgRFImWA3dvJT3GW1Q292DfR65JN3aYBKJ2QQGzcSDH+1RL3XhK5jWmEHafzrlZjJ
-         eDBdjEpFDORmPOfdGgMgvZQQrcOeXvHXHYAV8yiQ4bIEiGv2ocvptEkfgPPudyC2pS
-         tPmONTnPfqLY/zH7QmKzfh/nsTJucj3ygZ/1ajyxc2mnoxJjeFoX66TXq+X97M+55r
-         TVmB87XhzwOzw==
-Date:   Thu, 16 Mar 2023 13:51:11 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 10/13] backlight: pwm_bl: Convert to platform remove
- callback returning void
-Message-ID: <20230316135111.GY9667@google.com>
-References: <20230308073945.2336302-1-u.kleine-koenig@pengutronix.de>
- <20230308073945.2336302-11-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S230242AbjCPULJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Mar 2023 16:11:09 -0400
+X-Greylist: delayed 110403 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Mar 2023 13:11:07 PDT
+Received: from sragenkab.go.id (mail.sragenkab.go.id [103.172.109.4])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 24886DDF1D
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Mar 2023 13:11:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sragenkab.go.id;
+         h=mime-version:content-type:content-transfer-encoding:date:from
+        :to:subject:reply-to:message-id; q=dns/txt; s=dkim1; bh=QGcIAmD5
+        O/Y9qXzDV8MxyimbsW3+rMaQ/kz75GzBHbk=; b=VYL051pj6hQl1qbpUWhb696S
+        /ooJkOCL1jrv7X0MeYcQrJNKf/VzepyLRg/b+2XhBgK/aOUjoIFMGjTPIfEDgNRa
+        Ut8kq6HPHhCQIgNZLzV29LFhDDORN+zJMsGHufbgrKi7IRkJWekMgDIndJLUTpxD
+        2/ysQo7pPinIklvPK2ZousX5MkJgBuiZSLTcRHKwPUvWjuqHJ+R1ozp4yOIGBIr4
+        40kD7VAsgaRE3OMPtc1OaVT0bjFXF6YRP9ANjQvhRI6UapCPt7waJajX1PcLFu2t
+        wk3/v0Vb+O1171BjneA7PsNk44Nk6hU3FZjIRHLHHN2cmeiNjwvkLnnMO6FlLQ==
+Received: (qmail 66728 invoked from network); 15 Mar 2023 02:18:13 -0000
+Received: from localhost (HELO mail2.sragenkab.go.id) (127.0.0.1)
+  by localhost with SMTP; 15 Mar 2023 02:18:13 -0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230308073945.2336302-11-u.kleine-koenig@pengutronix.de>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Mar 2023 19:18:12 -0700
+From:   Ibrahim Tafa <jurnalsukowati@sragenkab.go.id>
+To:     undisclosed-recipients:;
+Subject: LOAN OPPORTUNITY AT LOW-INTEREST RATE.!
+Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
+Mail-Reply-To: <ibrahimtafa@abienceinvestmentsfze.com>
+Message-ID: <eb749442f7bb7625d669f7063c52d43c@sragenkab.go.id>
+X-Sender: jurnalsukowati@sragenkab.go.id
+User-Agent: Roundcube Webmail/0.8.1
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        SUBJ_ALL_CAPS,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, 08 Mar 2023, Uwe Kleine-König wrote:
 
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is (mostly) ignored
-> and this typically results in resource leaks. To improve here there is a
-> quest to make the remove callback return void. In the first step of this
-> quest all drivers are converted to .remove_new() which already returns
-> void.
->
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
->
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/video/backlight/pwm_bl.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
 
-Applied, thanks
+-- 
+Greetings,
+   I am contacting you based on the Investment/Loan opportunity for 
+companies in need of financing a project/business, We have developed a 
+new method of financing that doesn't take long to receive financing from 
+our clients.
+    If you are looking for funds to finance your project/Business or if 
+you are willing to work as our agent in your country to find clients in 
+need of financing and earn commissions, then get back to me for more 
+details.
 
---
-Lee Jones [李琼斯]
+Regards,
+Ibrahim Tafa
+ABIENCE INVESTMENT GROUP FZE, United Arab Emirates
