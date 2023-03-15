@@ -2,77 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F0ED6BAACC
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Mar 2023 09:31:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C6D66BAC1A
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Mar 2023 10:26:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231672AbjCOIa7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Mar 2023 04:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57188 "EHLO
+        id S231915AbjCOJ0n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Mar 2023 05:26:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231592AbjCOIaz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Mar 2023 04:30:55 -0400
-Received: from mail.amblevebiz.com (mail.amblevebiz.com [80.211.239.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39E459801
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Mar 2023 01:30:44 -0700 (PDT)
-Received: by mail.amblevebiz.com (Postfix, from userid 1002)
-        id B608C8298E; Wed, 15 Mar 2023 09:30:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=amblevebiz.com;
-        s=mail; t=1678869042;
-        bh=mG5KF9rXIT2hCcIXZaMY449X9Ndwb1czFhgZLlqDg7A=;
-        h=Date:From:To:Subject:From;
-        b=uSU4/Ug22maEb+oLIGpv/eBXeowH8V78tU9duCQWOG8OHqKVMYd37xqcLAx3+Qfew
-         kXZN23w2NNKEKDYDVOetl5O4MmKHR9b5CQlbzwriZKYDIaUfNCDahH6huZ697uEU9h
-         18GhijNIDyXH7LylhcfLorYZEX+OwOiLbj+NOJSg8JTgbrGI2FARiYyR2CZorgtzXj
-         nkcNGsQHhHZzKnoARFsd3dEBHm2xDFzKzay7uaxKpjb2ZcFxrI7XuWtJ/2zCTLTYoD
-         5rCNfjsI172Jnv9TKvK39iR8aLchrSSpByqTRi2Lv+v3MP8GqmLP2To2MWJd7c1npx
-         uChwj5Pg+AcnQ==
-Received: by mail.amblevebiz.com for <linux-pwm@vger.kernel.org>; Wed, 15 Mar 2023 08:30:30 GMT
-Message-ID: <20230315084500-0.1.p.1g8v.0.32xp5hppnn@amblevebiz.com>
-Date:   Wed, 15 Mar 2023 08:30:30 GMT
-From:   =?UTF-8?Q? "Luk=C3=A1=C5=A1_Horv=C3=A1th" ?= 
-        <lukas.horvath@amblevebiz.com>
-To:     <linux-pwm@vger.kernel.org>
-Subject: =?UTF-8?Q?Technick=C3=BD_audit_podlah?=
-X-Mailer: mail.amblevebiz.com
+        with ESMTP id S231706AbjCOJ0l (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Mar 2023 05:26:41 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DF252F75
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Mar 2023 02:26:35 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id p203so11281718ybb.13
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Mar 2023 02:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1678872395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ah3hCHxRKLhXbUb0/zDpGbrf+oZe//U+DP3mMWw+T8c=;
+        b=d5zFDRwPxETDMQPbed+EfhECDqFpfx8TgxdVjJLVO33pllTKXnCeZ6Hk9QAQn7Dw4+
+         oWwetYLyd4CtHpCifM8AroVKcjrw/2ujfEkNx21G9ysAvCmRlxgPsHRPxWKrE2hdexcp
+         2idemqhli6FqtgkUkuZRShsSSKCkHav0hjtzcnLS7vLs5njq0I3+r1M58wEZWZSRe/5w
+         MCX69ZCeDYaPs4V+n656TCYSZm7Bait5OLJkSVV06dPD39msVSlk9Vj+T+JqXAaZEp+K
+         GA8c9VFqG4DPd1462qMWj+Lsk0Zv64cNfsfFiHVdem5Z+73jTMqu/Y35+PZOiQVe4uUq
+         AS9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678872395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ah3hCHxRKLhXbUb0/zDpGbrf+oZe//U+DP3mMWw+T8c=;
+        b=mKdMdFa4G9m21W6gzzMm0KHX884uO0H3id9RK5NHAMEhxCCJ00aBRtrI7h5Xehrqcp
+         HXQzo6jYENh+A8eJt7e2Q2622ks+WSia+cGnQ+faTFBxdtmCVBHcQ1IOr8PTUIfHnCOU
+         baJqgCRk/quH6djdBoFoXw9oTL+drrOtE2xbskKCPTAh8Zo0/OX9RYnX/3d6uvVQXXL6
+         4KcxT0rOe619gluLqbMJ/Gi9CLptn5uUh1Dc/39pLTrLKHja0ybsGKcqjZKeY/E6yHVG
+         JDhJXYo+KznMuAtksCx9HvPl0VmjYms7fZVF/fUQ0+GlnkbrI2hYR3LtPNriM/Xdiq4x
+         foTA==
+X-Gm-Message-State: AO0yUKWEF8HPIiK0MRm0y78M+/rN2gCIx/xpWrz88zFR4lzv+aEseHPe
+        JRKJrg7d+s81Dc9LbtIn8T/YlvIcuoeD4iEFSY1nkA==
+X-Google-Smtp-Source: AK7set85Tksbs5R01RThGTgUkuOcBof0bxceE3ivDeTB4gA3qDm/+jVks8dAQC4UN3fTwJGP5ML+MUn6x7iNEe2KU4g=
+X-Received: by 2002:a05:6902:10e:b0:98e:6280:74ca with SMTP id
+ o14-20020a056902010e00b0098e628074camr23209983ybh.1.1678872394826; Wed, 15
+ Mar 2023 02:26:34 -0700 (PDT)
 MIME-Version: 1.0
+References: <20230220-display-v1-0-45cbc68e188b@baylibre.com>
+ <20230220-display-v1-7-45cbc68e188b@baylibre.com> <CAAOTY_819JuuidLgTOm+Ps=WnueW0Quos+abEDjrx8q8GifGKA@mail.gmail.com>
+In-Reply-To: <CAAOTY_819JuuidLgTOm+Ps=WnueW0Quos+abEDjrx8q8GifGKA@mail.gmail.com>
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Date:   Wed, 15 Mar 2023 10:26:23 +0100
+Message-ID: <CAFGrd9qVhJb--COXJmGHuW6NxDnXZGdQnxbHGRvaA5Jqhx-yNg@mail.gmail.com>
+Subject: Re: [PATCH 07/21] dt-bindings: display: mediatek: dpi: add binding
+ for MT8365
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        David Airlie <airlied@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Xinlei Lee <xinlei.lee@mediatek.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_CSS_A,
-        URIBL_DBL_SPAM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
+Hi Chun-Kuang,
 
-uva=C5=BEujete o bezesp=C3=A1rov=C3=A9 podlaze pro v=C3=BDrobn=C3=AD prov=
-oz?
+Le lun. 13 mars 2023 =C3=A0 16:17, Chun-Kuang Hu <chunkuang.hu@kernel.org> =
+a =C3=A9crit :
+>
+> Hi, Alexandre:
+>
+> Alexandre Mergnat <amergnat@baylibre.com> =E6=96=BC 2023=E5=B9=B43=E6=9C=
+=889=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:23=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> >
+> > From: Fabien Parent <fparent@baylibre.com>
+> >
+> > DPI for MT8365 is compatible with MT8192 but requires an additional
+> > clock. Modify the documentation to requires this clock only on MT8365 S=
+oCs.
+>
+> If MT8365 DPI has additional clock, why it is compatible with MT8192 DPI?
+> I think some part of MT8165 DPI works under the speed control by the
+> DPI clock and this is different with MT8192 DPI, how could these two
+> are compatible?
 
-Jako sv=C4=9Btov=C3=BD l=C3=ADdr ve v=C3=BDrob=C4=9B a pokl=C3=A1dce podl=
-ah =C5=99e=C5=A1=C3=ADme probl=C3=A9my vypl=C3=BDvaj=C3=ADc=C3=AD z vlivu=
- chemick=C3=BDch slou=C4=8Denin, ot=C4=9Bru, n=C3=A1raz=C5=AF, vlhkosti n=
-ebo n=C3=A1hl=C3=BDch zm=C4=9Bn teplot - na=C5=A1e podlahov=C3=A9 syst=C3=
-=A9my jsou p=C5=99izp=C5=AFsobeny nejt=C4=9B=C5=BE=C5=A1=C3=ADm podm=C3=AD=
-nk=C3=A1m prost=C5=99ed=C3=AD.
+AFAII, The mtk_dpi driver manage the 4th clock as optional
+dpi->dpi_clk =3D devm_clk_get_optional(dev, "dpi");
+And all configuration variables for mt8192 are the same for mt8365.
+These configuration clock variables (like cal_factor) aren't
+correlated with the 4th clock.
+The clock number doesn't impact the configuration variable because the
+4th clock is simply retrieved from DTS, saved in the driver structure
+and prepare/unprepare/enable/disable, like other clocks.
 
-Garantujeme v=C3=A1m =C5=99e=C5=A1en=C3=AD, kter=C3=A1 jsou =C5=A1etrn=C3=
-=A1 k =C5=BEivotn=C3=ADmu prost=C5=99ed=C3=AD, odoln=C3=A1 a snadno se =C4=
-=8Dist=C3=AD, hygienick=C3=A1, protiskluzov=C3=A1 a bezpe=C4=8Dn=C3=A1 pr=
-o zam=C4=9Bstnance.
-
-Poskytujeme kr=C3=A1tkou dobu instalace a nep=C5=99etr=C5=BEit=C3=BD prov=
-oz i o v=C3=ADkendech a sv=C3=A1tc=C3=ADch, =C4=8D=C3=ADm=C5=BE eliminuje=
-me riziko prostoj=C5=AF.
-
-Mohu V=C3=A1m zdarma nab=C3=ADdnout technick=C3=BD audit podlah s komplex=
-n=C3=ADm rozborem podkladu.
-
-M=C5=AF=C5=BEeme pro v=C3=A1s mluvit o =C5=99e=C5=A1en=C3=ADch?
-
-
-Luk=C3=A1=C5=A1 Horv=C3=A1th
+Regards,
+Alex
