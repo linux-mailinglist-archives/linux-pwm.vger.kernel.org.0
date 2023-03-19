@@ -2,98 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B2166C0293
-	for <lists+linux-pwm@lfdr.de>; Sun, 19 Mar 2023 16:05:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 940DF6C02C8
+	for <lists+linux-pwm@lfdr.de>; Sun, 19 Mar 2023 16:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbjCSPFz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 19 Mar 2023 11:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41200 "EHLO
+        id S230219AbjCSP30 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 19 Mar 2023 11:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjCSPFy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Mar 2023 11:05:54 -0400
-Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBD7B744;
-        Sun, 19 Mar 2023 08:05:52 -0700 (PDT)
-Received: from local
-        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-         (Exim 4.96)
-        (envelope-from <daniel@makrotopia.org>)
-        id 1pdubU-000246-2r;
-        Sun, 19 Mar 2023 16:05:49 +0100
-Date:   Sun, 19 Mar 2023 15:05:35 +0000
-From:   Daniel Golle <daniel@makrotopia.org>
-To:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        John Crispin <john@phrozen.org>
-Subject: Re: [PATCH RESEND] dt-bindings: pwm: mediatek: add mediatek,mt7986
- compatible
-Message-ID: <ZBckvw5NMihHx0Ja@makrotopia.org>
-References: <Y+zfb2uQyKHng0kS@makrotopia.org>
+        with ESMTP id S230150AbjCSP3Z (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Mar 2023 11:29:25 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08B1B447;
+        Sun, 19 Mar 2023 08:29:23 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id eh3so37783290edb.11;
+        Sun, 19 Mar 2023 08:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679239762;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hHi5+GWz44QI22N2lgNwAXCVNfgTvzls3W9uzDI9R7I=;
+        b=A1K3LhmqfNVSEcgbGX/WGPLi+QBohjU8Z5DHP0patvexQ8cftYKkbJ0n6EBImk5HW6
+         UG3Od9lWQz+pdUobR1WT79K1Vth47r61AMt5plC/fO7k98OkymeUkG/FFpi3yruiXLLe
+         ek6/f+cxrtMdNf5pnqpcJsWYFXATIQYRAncu/xu52HpXK9FuAAQXTfnHVp1sVshk39/y
+         SPzLTA2qgsb1aGWZcI4ESPkW/aT5UpUj3upvbNV4IbukUgevuZXKWukaWhAtA1KxT2sx
+         +a4++/3MBnpA0HcQAhqoI8jBEeOWvRnAORLhu2VmIvl2V6VnzNEL2TjKv5Djdq5OfNfZ
+         HQcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679239762;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hHi5+GWz44QI22N2lgNwAXCVNfgTvzls3W9uzDI9R7I=;
+        b=dF10iT5VJn+isCkSZUQkHmUlPuxeUByJRWlKWXSL7SL/hFDPICmaLxyH/u8gMEB7BB
+         8ACiItVruyr1sF1p44YZSOeBpRIHfuqztetM2VJwk//ZfRSO/MjUax96+0FGq8owm2X0
+         hRRCRRdk8hV9pOe9lXlkZ7MJ1KZn6H1fTneDOO5j6SPexDgn3pycw6xXrvp+1uogEZya
+         KdEPyZwunanh1M4yVczu/i0RHZjZQ+e5pbTtby4kB67i/bSBv4buL9QLP6Ezy4dmBd0Q
+         t5qcffIGzt54d3QOW5PW16MX38sfagpbQ3YGksR0fo9228uxW8jPLY+9oiek8UciJ5Qo
+         b4Tw==
+X-Gm-Message-State: AO0yUKX8gUc3Ae9nFUI2duLqpKg7U5nWXPkwgSDvB9nM7KSnl/8wI9r2
+        PSfRFBuQaHhMfQKPAll8t54=
+X-Google-Smtp-Source: AK7set/E0e+CI78tJzcFXyh5kyZx43f/wgftRrGinMc5pR7pChEra9ob+MPRBBpdNINOjJ8OqOz06g==
+X-Received: by 2002:a17:906:8415:b0:930:3916:df19 with SMTP id n21-20020a170906841500b009303916df19mr5737952ejx.5.1679239762248;
+        Sun, 19 Mar 2023 08:29:22 -0700 (PDT)
+Received: from alaa-emad.. ([41.42.177.251])
+        by smtp.gmail.com with ESMTPSA id ia9-20020a170907a06900b00932b3e2c015sm2425429ejc.51.2023.03.19.08.29.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Mar 2023 08:29:21 -0700 (PDT)
+From:   Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     outreachy@lists.linux.dev, johan@kernel.org, elder@kernel.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        greybus-dev@lists.linaro.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+        eng.mennamahmoud.mm@gmail.com
+Subject: [PATCH] staging: greybus: remove unnecessary blank line
+Date:   Sun, 19 Mar 2023 17:29:09 +0200
+Message-Id: <20230319152909.163598-1-eng.mennamahmoud.mm@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y+zfb2uQyKHng0kS@makrotopia.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 01:34:51PM +0000, Daniel Golle wrote:
-> Since commit 241eab76657f ("pwm: mediatek: Add support for MT7986")
-> support for the 2 PWM channels implemented in MediaTek MT7986 SoCs has
-> been added. Also add the compatible string to dt-bindings now that
-> they have been converted to YAML.
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Remove unnecessary blank line before struct as reported
+by checkpatch:
 
-May I kindly call your attention to this patch please.
+" CHECK: Please don't use multiple blank lines "
 
-It has received reviews and no further comments for more than a month
-now:
-https://patchwork.kernel.org/project/linux-mediatek/patch/Y+zfb2uQyKHng0kS@makrotopia.org/
+Signed-off-by: Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
+---
+ drivers/staging/greybus/pwm.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Follow-up patches adding support for MT7981 are already waiting and to
-avoid conflicts it would be good to have this one merged before.
+diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+index 3fda172239d2..26d39e08c3b6 100644
+--- a/drivers/staging/greybus/pwm.c
++++ b/drivers/staging/greybus/pwm.c
+@@ -24,7 +24,6 @@ struct gb_pwm_chip {
+ #define pwm_chip_to_gb_pwm_chip(chip) \
+ 	container_of(chip, struct gb_pwm_chip, chip)
+ 
+-
+ static int gb_pwm_count_operation(struct gb_pwm_chip *pwmc)
+ {
+ 	struct gb_pwm_count_response response;
+-- 
+2.34.1
 
-Thank you!
-
-> ---
-> Resending this patch as I missed sending it to linux-pwm when first
-> submitted. See also
-> https://patchwork.ozlabs.org/comment/3049442/
-> 
->  Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
-> index dbc974bff9e9..8e176ba7a525 100644
-> --- a/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml
-> @@ -22,6 +22,7 @@ properties:
->            - mediatek,mt7623-pwm
->            - mediatek,mt7628-pwm
->            - mediatek,mt7629-pwm
-> +          - mediatek,mt7986-pwm
->            - mediatek,mt8183-pwm
->            - mediatek,mt8365-pwm
->            - mediatek,mt8516-pwm
-> 
-> base-commit: 9d9019bcea1aac7eed64a1a4966282b6b7b141c8
-> -- 
-> 2.39.1
-> 
