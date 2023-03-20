@@ -2,103 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 870026C0565
-	for <lists+linux-pwm@lfdr.de>; Sun, 19 Mar 2023 22:20:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4223E6C0C28
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Mar 2023 09:24:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230243AbjCSVUv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 19 Mar 2023 17:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
+        id S230375AbjCTIYi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 20 Mar 2023 04:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230181AbjCSVUt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Mar 2023 17:20:49 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43AEF75A
-        for <linux-pwm@vger.kernel.org>; Sun, 19 Mar 2023 14:20:46 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-544f7c176easo48358597b3.9
-        for <linux-pwm@vger.kernel.org>; Sun, 19 Mar 2023 14:20:46 -0700 (PDT)
+        with ESMTP id S229961AbjCTIYh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 20 Mar 2023 04:24:37 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EED1E1FC
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Mar 2023 01:24:22 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so11549556pjz.1
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Mar 2023 01:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679260846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1xVIksZcR76edI4z8mmPrpSpOfu0/pVV80WudQ/Vavs=;
-        b=yxYOpG1BTRH8mP4CO9pabOiIVp8JZr5VwAuFO8HU6vbaqpTxWmCE4iIgG/OVL1bC1K
-         h3LhfvJ9Emngr37qgSs4y3135OyBRvx5CQrGOhqBQ1h52Thw6LlPUCXerXAafRWoy3r/
-         FDFDT9ERbcJkGc+2G4eLkbvA5KcKtQ6KYbmnVg4lq1vniUExZ2sFYpXbvCD7hKDVMLon
-         QLx20N80Tf488Dgbj44gJ9XeDYP2w0y+6+La+/a0ASo0Dh+zkjSg2/P4RcnR2PKoZR8Z
-         jdQ+VbU+0FFOQcGsff14UjVnV15EfKcDuX6yib3W9b/IG0H6KARxUCDOXylMZHreZLWk
-         0npg==
+        d=gmail.com; s=20210112; t=1679300662;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vXJEuXGL6bDH3PwmPPaT3IM8ABOywFoq2Dgyfl9GkNU=;
+        b=n+mfzmqOFxZIaeBGdi7plJsb84IQidbPZCdTZd3c33zPhpNYdRTHw5R6n4tU/aqBz2
+         bIlF6yPcWpdrU/g3uJxxmxqFXvWFHJwthv2ZvqiJo1uyai5EOaWydEr9iA1LQEQhDevP
+         eQPZ/0JnNJfZc6r28fwp0tdAFPjyGdp3SAjHb9588VsJbw/R80KjU3yYsuyFwSiZ9EK9
+         hym+/RJrom2gN96vZNEbf8Oi7hAoj8XAcXJCw+NJ7OtVsYSzD7zd/pLm2kNFQKmA4ZwM
+         npTQlysrZCTJLSU5/KWAL/UpMUHkAvWmjX+0idXBWZNtxKqDy32f09ib/iGUcnpHkuo0
+         HxGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679260846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1xVIksZcR76edI4z8mmPrpSpOfu0/pVV80WudQ/Vavs=;
-        b=3tmcdKiCvzCL6eUgwFnNvP5nuGPgAMZ2ANZXf2RWA0+fi3iWlcckacNL9t0P0Egyz/
-         edbPRImxd4oFjDwFNZNxCy1hIhSVTgmd61fUPEpWG16dnVJQCHKxEvcERX7POYhoBnEK
-         tEFtbS9hmMvJm6U293p1rut0Kk7i+0cdJq8dSzb0GrcBPv+ifW8CC6RSZBaRUGdBf4m6
-         /vSpB/SV/W8CafS6aQiQTW0SQchvx5SxurbgbsU0/8ah/kSNgDvzflmf1LD+5wkqvQvQ
-         pKFHTUtsokLFXwpGbtjhJgNxKutnbOpQhmNzUO5UTHwIrw1K9BWU8Uy25Q0sNh932Lb2
-         EUzg==
-X-Gm-Message-State: AO0yUKWk7KvLLyo2zxSmZKu+yTld04Qwq5B+LKpy+hIT+RCZlQOIsoWx
-        fqcoy3fg3wGRxAPupdmBcUzMiGv7vo9+MSJUGsc7xw==
-X-Google-Smtp-Source: AK7set/4tcKb2KcMcmhkFSECkX9UEXl6Q7CPyM6DmVWY/gBDswc6Du79KNPC9UhC3cNpQzNAw1FAAnNdRAYmdab1914=
-X-Received: by 2002:a81:ae5f:0:b0:532:e887:2c23 with SMTP id
- g31-20020a81ae5f000000b00532e8872c23mr9029129ywk.9.1679260846054; Sun, 19 Mar
- 2023 14:20:46 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679300662;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vXJEuXGL6bDH3PwmPPaT3IM8ABOywFoq2Dgyfl9GkNU=;
+        b=VDFtnGErbHQZZpBV/8oS0DpD9WWVXAyLXBS9n3gjHlVm/sfHkILQm9bL5q8qARmQ73
+         FA+PWx41Q3GzsaGG3ao+91NfxW1s4IoFW9TTThYJ/CZmvoXPLj4JXC15A7TgD4UzjzGw
+         FvWJOQdXy6Urj/Cf5cXzMnW9x7rRLbhhv+GLNN3YqgEyXidopMmUUecMkfz7WLa+Vj8D
+         +5dSNGTqnvSbCevxYrOOM+ATFQsjaZtD+dPa4LDqN2xamj/YBc1ZNCfkaBdOfQrdSmAu
+         tzpJfA2h4ac3Y2B5M2a7VLPA+ZAQ7/y9zr71QCM3Uar2YKByOoUNYaJkKZ88Y3f1SowB
+         PKHg==
+X-Gm-Message-State: AO0yUKW3AH4c5dithHM1fOnRCN7Y3U84yGkcPkbpNipiOaL92ZHrhIdU
+        I9NusjItsR0ZTqazRSDykR3IGKUQrnpS6xuE+/8=
+X-Google-Smtp-Source: AK7set9GzDdYtXbS0Cf4yAA4xqveR5Vmohd0FI0u+fdQW6Ug7dxgg8RitZb0cnV8InVskl+KrxUfwhJXl3LAAiWnvBc=
+X-Received: by 2002:a17:90a:5b01:b0:23c:fa47:e763 with SMTP id
+ o1-20020a17090a5b0100b0023cfa47e763mr4371695pji.0.1679300662083; Mon, 20 Mar
+ 2023 01:24:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230319115925.1317654-1-sensor1010@163.com>
-In-Reply-To: <20230319115925.1317654-1-sensor1010@163.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Mar 2023 22:20:35 +0100
-Message-ID: <CACRpkdbxSNCKNfous7h2dBQ_AW9KS9qyxPfPxOO=3PMDsDxcng@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/gpio : Remove redundant platform_set_drvdata().
-To:     Lizhe <sensor1010@163.com>
-Cc:     brgl@bgdev.pl, geert+renesas@glider.be, info@metux.net,
-        rjui@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        f.fainelli@gmail.com, sbranden@broadcom.com, shc_work@mail.ru,
-        j-keerthy@ti.com, hoan@os.amperecomputing.com,
-        fancer.lancer@gmail.com, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, kaloz@openwrt.org,
-        khalasa@piap.pl, keguang.zhang@gmail.com, daniel@thingy.jp,
-        romain.perier@gmail.com, matthias.bgg@gmail.com,
-        angelogioacchino.delregno@collabora.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org, mani@kernel.org,
-        ludovic.desroches@microchip.com, andy@kernel.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, jonathanh@nvidia.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-tegra@vger.kernel.org
+Sender: anmoniteashale@gmail.com
+Received: by 2002:a05:7300:fc14:b0:b1:4517:6f5a with HTTP; Mon, 20 Mar 2023
+ 01:24:21 -0700 (PDT)
+From:   Miss Sherri <sherrigallagher409@gmail.com>
+Date:   Mon, 20 Mar 2023 08:24:21 +0000
+X-Google-Sender-Auth: -HS-ahRR8J6Jge_3KuHHTR18V9M
+Message-ID: <CAFF8bF4snVpLsT-+vJHgpc1oAR0Qch90pBWD_QX8ogT9DmgOqg@mail.gmail.com>
+Subject: RE: Hello Dear
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 1:02=E2=80=AFPM Lizhe <sensor1010@163.com> wrote:
+Hallo,
 
-> platform_set_drvdata() is redundant in these functions.
-> the purpose of calling this function is to place data
-> in *driver_data. but the data is not retrieved in these
-> functions
->
-> Signed-off-by: Lizhe <sensor1010@163.com>
+Sie haben meine vorherige Nachricht erhalten? Ich habe Sie schon
+einmal kontaktiert, aber die Nachricht ist fehlgeschlagen, also habe
+ich beschlossen, noch einmal zu schreiben. Bitte best=C3=A4tigen Sie, ob
+Sie dies erhalten, damit ich fortfahren kann.
 
-You have to also ascertain that the data is not used elsewhere
-like in some callbacks or even in other drivers in some odd cases.
+warte auf deine Antwort.
 
-Yours,
-Linus Walleij
+Gr=C3=BC=C3=9Fe,
+Fr=C3=A4ulein Sherri
