@@ -2,134 +2,138 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7EF36C378D
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 18:01:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D5246C3816
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 18:21:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjCURBu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Mar 2023 13:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
+        id S230144AbjCURVn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Mar 2023 13:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjCURBt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 13:01:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C19E28846;
-        Tue, 21 Mar 2023 10:01:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D895B61D1A;
-        Tue, 21 Mar 2023 17:01:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE2EC4339B;
-        Tue, 21 Mar 2023 17:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1679418107;
-        bh=wijKgZAZ2VxVg3wUlQIz/KBZ2VVi/2DuE5W458CNj8A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yGJ/UGFAYSIcXhAnT6Z0C0YknK2+H4WD6fsHv3q8VzgO7xbBiUF7Ws5qbngCCfPEg
-         T4ZHHM2Hy18vtHmd36Erqn6lu0j+hPsZMyeK9YmR3Wp988n9/63MhTNwCLB6Q9uLwG
-         CWN8E8y8//3ONxeEYLtAh6CWvzlDTB0Ycix1QaGU=
-Date:   Tue, 21 Mar 2023 18:01:44 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>,
-        outreachy@lists.linux.dev, johan@kernel.org, elder@kernel.org,
-        vireshk@kernel.org, thierry.reding@gmail.com,
-        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
+        with ESMTP id S229550AbjCURVl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 13:21:41 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715E735EF6;
+        Tue, 21 Mar 2023 10:21:40 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id y4so62695691edo.2;
+        Tue, 21 Mar 2023 10:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679419298;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jxmCUAnp9e9FziFUWiKv4WUL7FHpKVhvxafFLIRPWmc=;
+        b=c62x5reMTPanZkCCPANuaXEaxIEyzsh0RKiD00s2hy0xfXAr+FBUD5BG/5gM8dNm3L
+         f4E5WBEP5g74zwMO/XmpRHprR2+o+dWQyxqmABDB2n6BsPSSxFCK0ycS9YmiXMAKATZn
+         JqmLJ+7M+pg13EbhQZmPlzEI4W+NZHVkRnKAu3uePjJApqGNFGNw04C/DcEMWV9nBkXR
+         WRkI1OuvPJzHP5XVhOAx7d9PHaBKhfHm6Z1549JRXLGg56zDGUlZSJhiw9pP94KtfbJm
+         GJwqkrFHe61zId8DqDuGw9IqDh4tu+zbmPoosqVQWXjg9HJ4CBHo41OD8SnGsI09JhIE
+         WUEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679419298;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jxmCUAnp9e9FziFUWiKv4WUL7FHpKVhvxafFLIRPWmc=;
+        b=TwzF2WUjD+2pqkFG64u4w6bk5ZVxhRoR12Vyk23S2nXG2u8kd/gzBgRe9ajJcSM2Vf
+         dZa5imXbT1qhWqgBo/HNa+K6+Uo/PU+vWHMNBkW5zXPjGmzcCnNEzMee2HwSTD6Lvj4+
+         Ybhaehc22Vb3QrNXfPwEdH0FH8op5LkGqIpGAB8VES14Z51s7XNUwT+z3+UrneJYVCeZ
+         zVLghdju9xEJu1jvx9G6tUVsYQyFhxvHVKUt/2aYzeGTZxVRclIz+urERO+i5xLJr64f
+         E6DBsFcbsx5EBaxXsFNSa0A0aROi1rhUZ2x+h2HsWZaSrYeb47roU+crB4GrbVGxQA2u
+         YIsA==
+X-Gm-Message-State: AO0yUKXm2NxetLLx9njhm8V1sm1Bnh3NSfX3V3vpPYiCtcLvKfx8hsVm
+        Gcq1M7FoIiCpEFhUkfLTsj4=
+X-Google-Smtp-Source: AK7set+GyPA3GhnNulm5Xntay49mJMSUxdjIDittGmVP3VNedwmLoL/FJm4jkjZos6vPlQlMdVf0qw==
+X-Received: by 2002:a17:906:46d7:b0:930:7164:e8e5 with SMTP id k23-20020a17090646d700b009307164e8e5mr3095278ejs.38.1679419298063;
+        Tue, 21 Mar 2023 10:21:38 -0700 (PDT)
+Received: from [192.168.1.16] ([41.42.177.251])
+        by smtp.gmail.com with ESMTPSA id m27-20020a170906259b00b0093a3a663ebdsm900446ejb.154.2023.03.21.10.21.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Mar 2023 10:21:37 -0700 (PDT)
+Message-ID: <330d5dd2-c382-4149-07b4-fec23d6611b1@gmail.com>
+Date:   Tue, 21 Mar 2023 19:21:35 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
 Subject: Re: [PATCH 2/3] staging: greybus: use inline function for macros
-Message-ID: <ZBni+Ho63jwZth9F@kroah.com>
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
+        johan@kernel.org, elder@kernel.org, vireshk@kernel.org,
+        thierry.reding@gmail.com, greybus-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-pwm@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>
 References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com>
  <1274302b52ae905dab6f75377d625598facbbdf1.1679352669.git.eng.mennamahmoud.mm@gmail.com>
  <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
- <82a4e5f1-a1f2-c70-3645-9464ccb17bab@inria.fr>
- <20230321162629.rjmivzhbdy4pcgii@pengutronix.de>
- <9a775966-29d4-12b3-e67d-4327194f972@inria.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+ <7c883bac-382c-b429-ab21-4675dce02474@gmail.com>
+ <20230321164259.nt6varbc6v6bavrz@pengutronix.de>
+From:   Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
+In-Reply-To: <20230321164259.nt6varbc6v6bavrz@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9a775966-29d4-12b3-e67d-4327194f972@inria.fr>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 05:35:54PM +0100, Julia Lawall wrote:
-> 
-> 
-> On Tue, 21 Mar 2023, Uwe Kleine-K�nig wrote:
-> 
-> > On Tue, Mar 21, 2023 at 04:59:49PM +0100, Julia Lawall wrote:
-> > >
-> > >
-> > > On Tue, 21 Mar 2023, Uwe Kleine-K�nig wrote:
-> > >
-> > > > Hello,
-> > > >
-> > > > just some nitpicks:
-> > > >
-> > > > On Tue, Mar 21, 2023 at 01:04:33AM +0200, Menna Mahmoud wrote:
-> > > > > Convert `to_gbphy_dev` and `to_gbphy_driver` macros into a
-> > > > > static inline function.
-> > > > >
-> > > > > it is not great to have macro that use `container_of` macro,
-> > > >
-> > > > s/it/It/; s/macro/macros/; s/use/use the/;
-> > > >
-> > > > > because from looking at the definition one cannot tell what type
-> > > > > it applies to.
-> > > > > [...]
-> > > > > -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
-> > > > > +static inline struct gbphy_device *to_gbphy_dev(const struct device *d)
-> > > >
-> > > > drivers/staging/greybus/gbphy.c always passes a variable named
-> > > > "dev" to this macro. So I'd call the parameter "dev", too, instead of
-> > > > "d". This is also a more typical name for variables of that type.
-> > >
-> > > I argued against that.  Because then there are two uses of dev
-> > > in the argument of container_of, and they refer to completely different
-> > > things.  It's true that by the way container_of works, it's fine, but it
-> > > may be misleading.
-> >
-> > Hmm, that seems to be subjective, but I have less problems with that
-> > than with using "d" for a struct device (or a struct device_driver).
-> > I'd even go so far as to consider it nice if they are identical.
-> >
-> > Maybe that's because having the first and third argument identical is
-> > quite common:
-> >
-> > 	$ git grep -P 'container_of\((?<ident>[A-Za-z_0-9-]*)\s*,[^,]*,\s*\g{ident}\s*\)' | wc -l
-> > 	5940
-> >
-> > which is >44% of all the usages
-> >
-> > 	$ git grep -P 'container_of\((?<ident>[A-Za-z_0-9-]*)\s*,[^,]*,\s*(?&ident)\s*\)' | wc -l
-> > 	13362
-> 
-> OK, if people like that, then why not.  But it's dangerous if the call to
-> container_of is in a macro, rather than in a function.
 
-It's not "dangerous" at all, as the macro will enforce type-safety, you
-can't get it wrong when using it.
+On ٢١‏/٣‏/٢٠٢٣ ١٨:٤٢, Uwe Kleine-König wrote:
+> On Tue, Mar 21, 2023 at 06:25:29PM +0200, Menna Mahmoud wrote:
+>> On ٢١‏/٣‏/٢٠٢٣ ١٧:٤٧, Uwe Kleine-König wrote:
+>>> Hello,
+>>>
+>>> just some nitpicks:
+>>>
+>>> On Tue, Mar 21, 2023 at 01:04:33AM +0200, Menna Mahmoud wrote:
+>>>> Convert `to_gbphy_dev` and `to_gbphy_driver` macros into a
+>>>> static inline function.
+>>>>
+>>>> it is not great to have macro that use `container_of` macro,
+>>> s/it/It/; s/macro/macros/; s/use/use the/;
+>> Okay, I will fix it.
+>>>> because from looking at the definition one cannot tell what type
+>>>> it applies to.
+>>>> [...]
+>>>> -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
+>>>> +static inline struct gbphy_device *to_gbphy_dev(const struct device *d)
+>>> drivers/staging/greybus/gbphy.c always passes a variable named
+>>> "dev" to this macro. So I'd call the parameter "dev", too, instead of
+>>> "d". This is also a more typical name for variables of that type.
+>>>
+>>>> +{
+>>>> +	return container_of(d, struct gbphy_device, dev);
+>>>> +}
+>>>> [...]
+>>>>    };
+>>>> -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
+>>>> +static inline struct gbphy_driver *to_gbphy_driver(struct device_driver *d)
+>>>> +{
+>>>> +	return container_of(d, struct gbphy_driver, driver);
+>>>> +}
+>>> With a similar reasoning (and also to not have "d"s that are either
+>>> device or device_driver) I'd recommend "drv" here.
+>>
+>> please check this with Julia, because she said they should different.
+> At least use "_dev" instead of "d" which seems to be a common idiom,
+> too:
+>
+> 	$ git grep -P 'container_of\(_(?<ident>[A-Za-z_0-9-]*)\s*,[^,]*,\s*\g{ident}\s*\)' | wc -l
+> 	570
+>
+> ("drv" should be fine, because the third argument is "driver" there.)
 
-Ideally this is best as a macro as it's just doing pointer math, worst
-case, the compiler turns a function like this into a real function and
-you have a call/subtract/return for every time you make this call.
+Okay, I will do that.
 
-So this conversion to functions feels odd to me, as you potentially are
-making all of this worse overall.
+Thanks,
 
-Wait until people realize that when we eventually turn these into
-container_of_const() you HAVE to go back to using it as a macro instead
-of in a function call wrapper like this...
+Menna
 
-thanks,
-
-greg k-h
+>
+> Best regards
+> Uwe
+>
