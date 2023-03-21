@@ -2,70 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33B346C36D6
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 17:22:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BF026C36DE
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 17:25:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjCUQWv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Mar 2023 12:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
+        id S229776AbjCUQZh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Mar 2023 12:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjCUQWu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 12:22:50 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13445B8D;
-        Tue, 21 Mar 2023 09:22:48 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id t5so25104807edd.7;
-        Tue, 21 Mar 2023 09:22:48 -0700 (PDT)
+        with ESMTP id S229497AbjCUQZg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 12:25:36 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEFAC2CFF9;
+        Tue, 21 Mar 2023 09:25:33 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id i5so15043041eda.0;
+        Tue, 21 Mar 2023 09:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679415767;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20210112; t=1679415932;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QVACjUDTIgBWv8C/PMxK28Am87k7w8br8nJW4GJZZR0=;
-        b=YeKR29GC4ZRYgPv/Y0cozd7GizqxUkCySuYWpgCi+mYAmFiNbkl5JNC/S5e+59E0Ir
-         3N9crSkggg3s1Qfwqc7FQMc98ZT0fiUYezs4MqBULKIEjdDVzgIo4gHMsjJsSMlziF9O
-         j+Cai+bysAZJcryv6aqjP5LPtZncWd9WnfAjagf14wy5jotYNXcSdfPgNZn7mxLIrv71
-         vS2lDoO/I5o8GGcHvvWOTtwUYO2qOnB5+p+Ln9nKNfn1/FnCI8eZaRFmek5CpxKIVM9O
-         +LP/ZorWWdjVc//gw1xoF/Ro2YGuBFz22a/z0PaG+T9KtrPQfWH6z1hr9RD87Z4i6GEU
-         swwg==
+        bh=hHMT9Xr2+W+0aZObi2mrOj/GJsmUfVzdBpDa2xFjqFw=;
+        b=fFzSM5JkCjlmXiD09LOwSN9/IftvYM/eJdR+B6K1aOMJB2NIqughDWOlTBdy53jryF
+         6Zqjemy9MJO0nRzqV0XcXaZg5lLbncmqTAYaA8SBl0fwdqPo7a5oibu9TkvOwnTz5xYS
+         2uKemtqGytoIiQqBSD5Ku4rCma+jT0XbPU44/tCYvM9WypBtgnJCfvq4k6/GRDHKLRLk
+         scK/YfIkqowJ3bVi0wG890w4I2UCIAi+VZKVDtZrziSqv5bQJkB78eoCMnYqcg8yJf3l
+         bUDRQYG0KFAeBFpFj64r5v9UCNr9+Vco/Ra786LiwPpqD4B33raDG85crulo3voxj9tB
+         +tWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679415767;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20210112; t=1679415932;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QVACjUDTIgBWv8C/PMxK28Am87k7w8br8nJW4GJZZR0=;
-        b=MejPA5A2NL7qsWmG/EnKXhej61tVvB6TaZcP44z0AySCdxddjM3pXXFDL+TBXtkenR
-         7yOS+lEQpxBkASLLwGgfO7PX1bUNAXWnT9UxbfUnwbiVcXnRZGEqWT6GDYowE5RqdPZ2
-         CSgZQa9Izkav+xFHRW2Muc7/YgggtRJJ7esExzGzhm7mWHc8TXEexluuyTh2GX173tt8
-         wR52tTuC96eSnauUv9jsNQog/pbEKKSjVhiodLqfxLHJC3I3tnAiwOhCMjS15FMNoWZF
-         xfBbDGx9iVHvAr5DUkNMH8sZggrToqLhfjHu1UJW0M0Vfj2S8sTQvY7QfKpaATOJQRNN
-         6Jag==
-X-Gm-Message-State: AO0yUKV4OwiB9FJ0Esw4hAqE71ymzk5fDhPcDXSkDqApL0Aept/gC1V0
-        3Bko2kbN5EK6zoP0SPSnuJ8=
-X-Google-Smtp-Source: AK7set8xKZE0Kxa4lqQIAdiFOKdoiDSGBpiO/C6qFIaLk47Lyfs7Kd6bg/7JqOnXzrjm5unqdtG+kg==
-X-Received: by 2002:a17:907:6f1b:b0:932:365a:c1e7 with SMTP id sy27-20020a1709076f1b00b00932365ac1e7mr3578251ejc.67.1679415767389;
-        Tue, 21 Mar 2023 09:22:47 -0700 (PDT)
+        bh=hHMT9Xr2+W+0aZObi2mrOj/GJsmUfVzdBpDa2xFjqFw=;
+        b=JUgp+4KPulyrsbr+UdG8QYjK6IRy80/XWawtnRuCswM9rBbyEbYrDC28YRLS0lJcfH
+         HKChMRxZMnWcn5EEvzR6LXIX90xxoc13jYDRSzjtMO4qnzXP0SB3gHkREgZMy1/K+sc/
+         E7ArX60Vazq4bWEnGBy+LEnbQlNOx2/S3ezRvbddVxX9hNCMsrTva/uR3BuKP4gWOUw7
+         YD90xTKPYvisTE+Lpr21y38P32mwqig+a2Cc/z9g5PCVxITVbZvZHeE2tMs51ZUNCU5q
+         cySepNCrNKnwjvZ9k0zajQLrxiDzMoPcFAzhWdYpEpkekyRYwTePhJvc0nim5xseDhv+
+         tfMw==
+X-Gm-Message-State: AO0yUKVRMuaTyUId1zV8CwxWyKfayl4h4Skeq2EeXAwWJDi+USMBGX1Q
+        g63NLnThvKl+z4mrqoyVPyV+NDdzwyk=
+X-Google-Smtp-Source: AK7set9s5dirn8v7ylCH0oBwYIq+eEI2x+SguvYsPnh+vHgtJ9ZDva1ItQo9ylvDURpwutqCgjRDSg==
+X-Received: by 2002:aa7:c7d4:0:b0:4fa:7679:d44c with SMTP id o20-20020aa7c7d4000000b004fa7679d44cmr3402124eds.11.1679415932175;
+        Tue, 21 Mar 2023 09:25:32 -0700 (PDT)
 Received: from [192.168.1.16] ([41.42.177.251])
-        by smtp.gmail.com with ESMTPSA id kb1-20020a1709070f8100b00933c4a25735sm3352516ejc.100.2023.03.21.09.22.45
+        by smtp.gmail.com with ESMTPSA id a13-20020a509e8d000000b00501d73cfc86sm1483658edf.9.2023.03.21.09.25.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Mar 2023 09:22:47 -0700 (PDT)
-Message-ID: <196b5d53-701f-e2dd-596c-9fdb6a59f5cd@gmail.com>
-Date:   Tue, 21 Mar 2023 18:22:44 +0200
+        Tue, 21 Mar 2023 09:25:31 -0700 (PDT)
+Message-ID: <7c883bac-382c-b429-ab21-4675dce02474@gmail.com>
+Date:   Tue, 21 Mar 2023 18:25:29 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH 0/3] edits in greybus driver
-To:     Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH 2/3] staging: greybus: use inline function for macros
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
 Cc:     gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
         johan@kernel.org, elder@kernel.org, vireshk@kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
+        thierry.reding@gmail.com, greybus-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-pwm@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>
 References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com>
- <ee77a227-13bd-70ad-1d8e-f9719970e0f8@inria.fr>
-Content-Language: en-US
+ <1274302b52ae905dab6f75377d625598facbbdf1.1679352669.git.eng.mennamahmoud.mm@gmail.com>
+ <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
 From:   Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
-In-Reply-To: <ee77a227-13bd-70ad-1d8e-f9719970e0f8@inria.fr>
+In-Reply-To: <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -79,51 +80,50 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On ٢١‏/٣‏/٢٠٢٣ ١٣:٤٦, Julia Lawall wrote:
+On ٢١‏/٣‏/٢٠٢٣ ١٧:٤٧, Uwe Kleine-König wrote:
+> Hello,
 >
-> On Tue, 21 Mar 2023, Menna Mahmoud wrote:
+> just some nitpicks:
 >
->> This patchset includes change happened in greybus driver in three
->> different files two of them patch one and three related to
->> checkpatch issue and in second patch convert two
->> `container_of` macros into inline functions.
+> On Tue, Mar 21, 2023 at 01:04:33AM +0200, Menna Mahmoud wrote:
+>> Convert `to_gbphy_dev` and `to_gbphy_driver` macros into a
+>> static inline function.
 >>
->> Menna Mahmoud (3):
->>    staging: greybus: remove unnecessary blank line
->>    staging: greybus: use inline function for macros
->>    staging: greybus: remove unnecessary blank line
-> Different patches should have different subject lines.
-But I have already the same edit in both file, so should I re-write the 
-subject for one of them?
->    You need to either
-> be more specific about the file affected or merge the two patches with the
-> same subject into one.
+>> it is not great to have macro that use `container_of` macro,
+> s/it/It/; s/macro/macros/; s/use/use the/;
+Okay, I will fix it.
+>
+>> because from looking at the definition one cannot tell what type
+>> it applies to.
+>> [...]
+>> -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
+>> +static inline struct gbphy_device *to_gbphy_dev(const struct device *d)
+> drivers/staging/greybus/gbphy.c always passes a variable named
+> "dev" to this macro. So I'd call the parameter "dev", too, instead of
+> "d". This is also a more typical name for variables of that type.
+>
+>> +{
+>> +	return container_of(d, struct gbphy_device, dev);
+>> +}
+>> [...]
+>>   };
+>> -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
+>> +static inline struct gbphy_driver *to_gbphy_driver(struct device_driver *d)
+>> +{
+>> +	return container_of(d, struct gbphy_driver, driver);
+>> +}
+> With a similar reasoning (and also to not have "d"s that are either
+> device or device_driver) I'd recommend "drv" here.
 
-each patch related to different file. So, Can I to merge two commits for 
-different files but have the same edit in one patch?
 
-but in this case no need to create patchset for all changes in `greybus` 
-driver, right?
+please check this with Julia, because she said they should different.
 
-If okay with that, should I versioning the patches to resend them again, 
-or should add "RESEND" subject prefix?
 
-please tell me the best way to resend these patches, appreciate your help.
-
+Thanks,
 
 Menna
 
-
 >
-> julia
+> Best regards
+> Uwe
 >
->>   drivers/staging/greybus/gbphy.h                  | 10 ++++++++--
->>   drivers/staging/greybus/greybus_authentication.h |  1 -
->>   drivers/staging/greybus/pwm.c                    |  1 -
->>   3 files changed, 8 insertions(+), 4 deletions(-)
->>
->> --
->> 2.34.1
->>
->>
->>
