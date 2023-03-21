@@ -2,123 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 846F56C3620
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 16:47:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A67846C366B
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 17:00:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231732AbjCUPrx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Mar 2023 11:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59276 "EHLO
+        id S231466AbjCUQAL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Mar 2023 12:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231718AbjCUPrw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 11:47:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE10C50F9C
-        for <linux-pwm@vger.kernel.org>; Tue, 21 Mar 2023 08:47:51 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1peeCx-0004fu-Rx; Tue, 21 Mar 2023 16:47:31 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1peeCw-005is5-0N; Tue, 21 Mar 2023 16:47:30 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1peeCv-006nh6-05; Tue, 21 Mar 2023 16:47:29 +0100
-Date:   Tue, 21 Mar 2023 16:47:28 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
-Cc:     gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
+        with ESMTP id S231418AbjCUQAE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 12:00:04 -0400
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B40742688;
+        Tue, 21 Mar 2023 08:59:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=aS8MFhdJ30cMvkQgg+DI1ei4jfPRzJJxBGYN5yzRvQk=;
+  b=lDA3lmlX/N08J0TUs7CdbT5vT/WVJNnAUSIOShviI/gS7i5N8yQZLTKy
+   C78MWpZSWw3roLWVMrnfgjs/FFLJUGz5ymy+nnVaVPQAqUfpJKfONQz9X
+   ST29DUpxw8zw7jW5fWSCH1Otr5d0kQOXPBcgiZU+uYX02MCRTWyGGxqC9
+   A=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="5.98,279,1673910000"; 
+   d="scan'208";a="98336204"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 16:59:49 +0100
+Date:   Tue, 21 Mar 2023 16:59:49 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+To:     =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+cc:     Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>,
+        gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
         johan@kernel.org, elder@kernel.org, vireshk@kernel.org,
         thierry.reding@gmail.com, greybus-dev@lists.linaro.org,
         linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-pwm@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>
+        linux-pwm@vger.kernel.org
 Subject: Re: [PATCH 2/3] staging: greybus: use inline function for macros
-Message-ID: <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
-References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com>
- <1274302b52ae905dab6f75377d625598facbbdf1.1679352669.git.eng.mennamahmoud.mm@gmail.com>
+In-Reply-To: <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
+Message-ID: <82a4e5f1-a1f2-c70-3645-9464ccb17bab@inria.fr>
+References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com> <1274302b52ae905dab6f75377d625598facbbdf1.1679352669.git.eng.mennamahmoud.mm@gmail.com> <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="spy665gboibxpu7h"
-Content-Disposition: inline
-In-Reply-To: <1274302b52ae905dab6f75377d625598facbbdf1.1679352669.git.eng.mennamahmoud.mm@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; boundary="8323329-1488484427-1679414389=:10740"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---spy665gboibxpu7h
+--8323329-1488484427-1679414389=:10740
 Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 
-Hello,
 
-just some nitpicks:
 
-On Tue, Mar 21, 2023 at 01:04:33AM +0200, Menna Mahmoud wrote:
-> Convert `to_gbphy_dev` and `to_gbphy_driver` macros into a
-> static inline function.
->=20
-> it is not great to have macro that use `container_of` macro,
+On Tue, 21 Mar 2023, Uwe Kleine-König wrote:
 
-s/it/It/; s/macro/macros/; s/use/use the/;
+> Hello,
+>
+> just some nitpicks:
+>
+> On Tue, Mar 21, 2023 at 01:04:33AM +0200, Menna Mahmoud wrote:
+> > Convert `to_gbphy_dev` and `to_gbphy_driver` macros into a
+> > static inline function.
+> >
+> > it is not great to have macro that use `container_of` macro,
+>
+> s/it/It/; s/macro/macros/; s/use/use the/;
+>
+> > because from looking at the definition one cannot tell what type
+> > it applies to.
+> > [...]
+> > -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
+> > +static inline struct gbphy_device *to_gbphy_dev(const struct device *d)
+>
+> drivers/staging/greybus/gbphy.c always passes a variable named
+> "dev" to this macro. So I'd call the parameter "dev", too, instead of
+> "d". This is also a more typical name for variables of that type.
 
-> because from looking at the definition one cannot tell what type
-> it applies to.
-> [...]
-> -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
-> +static inline struct gbphy_device *to_gbphy_dev(const struct device *d)
+I argued against that.  Because then there are two uses of dev
+in the argument of container_of, and they refer to completely different
+things.  It's true that by the way container_of works, it's fine, but it
+may be misleading.
 
-drivers/staging/greybus/gbphy.c always passes a variable named
-"dev" to this macro. So I'd call the parameter "dev", too, instead of
-"d". This is also a more typical name for variables of that type.
+julia
 
-> +{
-> +	return container_of(d, struct gbphy_device, dev);
-> +}
-> [...]
->  };
-> -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
-> +static inline struct gbphy_driver *to_gbphy_driver(struct device_driver =
-*d)
-> +{
-> +	return container_of(d, struct gbphy_driver, driver);
-> +}
-
-With a similar reasoning (and also to not have "d"s that are either
-device or device_driver) I'd recommend "drv" here.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---spy665gboibxpu7h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQZ0Y8ACgkQj4D7WH0S
-/k4qLAf+OTmsDZSmp40zMixg9DyMOELi6eqVdtJNU0qCtkilPtrhsOc1vhA3SamR
-4rtAve/7j2BN+tb4WuiZ7YwaMXs5KJ3RItbk5imECAeAvRY0BDfHHJUZY2DrBSEY
-LyRButIl87Gx7CVaylbyORucxyTsU1h/Pj94t5kxAp9Xa5zkSaFwBxh3rP2L5bjd
-nxyRUG7tt+LYeR8+53BlcQqRARzpeiunRsIp3HhiPIi819GZEJh6eDEGNbTUYRED
-uzyBRgvEL47X2nJZG6d8TgcGWlUicJyqBMDeQavLQxMlb8URXu2qUCfph/gscRi3
-1xxyP135o/YY4eUmw3946Nxbj2t0oA==
-=eLyP
------END PGP SIGNATURE-----
-
---spy665gboibxpu7h--
+>
+> > +{
+> > +	return container_of(d, struct gbphy_device, dev);
+> > +}
+> > [...]
+> >  };
+> > -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
+> > +static inline struct gbphy_driver *to_gbphy_driver(struct device_driver *d)
+> > +{
+> > +	return container_of(d, struct gbphy_driver, driver);
+> > +}
+>
+> With a similar reasoning (and also to not have "d"s that are either
+> device or device_driver) I'd recommend "drv" here.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-König            |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>
+--8323329-1488484427-1679414389=:10740--
