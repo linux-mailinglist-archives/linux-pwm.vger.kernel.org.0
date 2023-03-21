@@ -2,76 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 489C56C3828
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 18:26:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BE0D6C3905
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 19:17:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230182AbjCUR0J (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Mar 2023 13:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36112 "EHLO
+        id S230283AbjCUSRj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Mar 2023 14:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjCUR0I (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 13:26:08 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DA3199E1;
-        Tue, 21 Mar 2023 10:26:04 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id eg48so62565391edb.13;
-        Tue, 21 Mar 2023 10:26:04 -0700 (PDT)
+        with ESMTP id S230207AbjCUSRi (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 14:17:38 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312A2521D1;
+        Tue, 21 Mar 2023 11:17:37 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id eh3so63203930edb.11;
+        Tue, 21 Mar 2023 11:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679419563;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/SnwtyCeqfxN+W4U7ez13LVb+d2R2LMwy11y/Jz9LSw=;
-        b=litogbTU0fH+k6JlYoZGvbaT5Hq90vpRJXH6co7YHtPjy6GL7l1hcYkbR9W6LJTley
-         /QC3Cm+TaFE531qQTrcwnikTApOJrtVklzYCfYrs6NvTwNKLZqHqKQ8MXRuUbwEL8oM+
-         8fLVJduQ+OTnwBuxEpJ60Vn1XPeV7d5dmW4gWh0YHE5/3VW1ZXHIFh0UniHcoPHGaxHy
-         MR0Nh66FbEL9n1SdmB5B5O1Eka3N858+qEGBwzRV2HWXYAfTTt6uWGtXjJnHwiZsMeBq
-         VCZLadbrdEJyvuiqTQYKOsHIox9IOjOlMK5BOp1cZPxO40YRAa4JKUZOpJTbau7FKB3z
-         tGbg==
+        d=gmail.com; s=20210112; t=1679422655;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2XHYm6132cfvGuV3ZRuw0Q1fBdGTBcOSwhXcyenDK4Q=;
+        b=aNWqkqIv8UByTrLWplFKR85w538weWxpIILjqopAdJvWe0VIpkxfVr0udzl3iCOVvf
+         aHPGs0b8kmWFd9u27OrkzdD8tfsoEn8F0ifHFo5eBsprVl5AGL/LDViiEWDn2lrzfZpA
+         Y3+Luc2w1Y76Nq5CJ7pfxuXUtXPbupL9s1R8QnpVwnYfc+8NL9IQfrZbWP9xClEHvQMK
+         4PPpgolG7lnsn2WFz/wKFQGtejhT5TPzfh+TZ/kA1naexzuzOBbQ5e/DVGNs4HUkkuw6
+         0GS14XA74cSHFkbjzSVUNIl7KunBveHB6tE86caDqhtECFcCCkDSWPN57+IC/eYUC3M+
+         ibww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679419563;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/SnwtyCeqfxN+W4U7ez13LVb+d2R2LMwy11y/Jz9LSw=;
-        b=hncPpfcdRq3FcsemahwYt8pRTkv1Ok8r/TT7xE0bUUwsGdrNPEndFRL/3Ud3uRUOW9
-         5kDGB6THa3y/7PT5/qvEtvJedr31s84CVueCfC1OvTTwrRdycvDeEtwGofg6JHk1U9gP
-         G7jAPPD4XLYxzflcQ135uwXbSJP05WdjfnSL+xzqnzKGcQHuMlxCRL/jnvygN976ktvv
-         w4r13GoQnYcjSgZhAGjt4zPTOajgG7OoGGtx6/l3MFFgyWvqtQH5ccSpSaMQOOSzL2zg
-         S7RFDIqqdIbMFQY0Zr0sW+a8E2N6dgP7ANJKhs8rrht6S6KYGswQHuo/nj8TZy0FjV7w
-         u3yw==
-X-Gm-Message-State: AO0yUKXg9GATv8cBVwnPF1pQGo0g9C451Db5kB7CgZwUkBA9n4FuI+3j
-        i4MOGatSgBSIlhP4EP2tOmk=
-X-Google-Smtp-Source: AK7set+CABg3f1+mYA3u1QDkoUb8lm/4Sppl7dLBmBjX4+Czz1G/Js2gGQwEPDHRJLet/KbaByWEBQ==
-X-Received: by 2002:a17:906:646:b0:8a5:8620:575 with SMTP id t6-20020a170906064600b008a586200575mr3677381ejb.3.1679419563139;
-        Tue, 21 Mar 2023 10:26:03 -0700 (PDT)
-Received: from [192.168.1.16] ([41.42.177.251])
-        by smtp.gmail.com with ESMTPSA id u7-20020a170906b10700b0092f38a6d082sm6043318ejy.209.2023.03.21.10.26.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Mar 2023 10:26:02 -0700 (PDT)
-Message-ID: <d98bd7af-d9f9-bb78-9aad-80c06a7a12a7@gmail.com>
-Date:   Tue, 21 Mar 2023 19:26:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 0/3] edits in greybus driver
-Content-Language: en-US
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
-        johan@kernel.org, elder@kernel.org, vireshk@kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
-References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com>
- <ee77a227-13bd-70ad-1d8e-f9719970e0f8@inria.fr>
- <196b5d53-701f-e2dd-596c-9fdb6a59f5cd@gmail.com>
- <8020f263-158d-db6e-f34-425b72983bb@inria.fr>
+        d=1e100.net; s=20210112; t=1679422655;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2XHYm6132cfvGuV3ZRuw0Q1fBdGTBcOSwhXcyenDK4Q=;
+        b=AosTQvJdwo0Vu9QAfEZQ8tgX9yQSKVTjGmc/EK1Wq0X7MQnihc9Ge/2CEOP0WYJT1j
+         WX7fkuWl+6SJMEYNj6gQookyvybw7f4krT7f9WgG1ARWcgxtxRzFZ7tSYaR+sS2jD72v
+         y5TC6k+8X7ta1JcMbajVFE98uQwGusrneCMnjSgjQr359AFYVLwqvEaqoLe3oKZgZg7D
+         1vhJiExcqKkaRCvkWisq/lWZM2b7wGNpxdypfFtVBnTyIJ1Jfyt8kTMDFu8vF+1e8tTA
+         38MiCOV8c4eGX5sL1YKPW4aEKPz6M615K/fEGYSDtieShqAHNyNJ6oANlbOW7C3kiZzS
+         lcQg==
+X-Gm-Message-State: AO0yUKUwJWANs1Rp4/WxRpgRphreSltwUMOTaUy42oFolCXmVu8utd0D
+        sEW5KVsoZZzZ42cMzxSsXeQ=
+X-Google-Smtp-Source: AK7set8irkZ/caMVldGalTdZB3+euMiXpFwKTTyChrRAC4smAA1fxCXMD/1zrzRADUKnlz606QkTZg==
+X-Received: by 2002:a17:906:228b:b0:932:6601:4910 with SMTP id p11-20020a170906228b00b0093266014910mr4031726eja.54.1679422655754;
+        Tue, 21 Mar 2023 11:17:35 -0700 (PDT)
+Received: from alaa-emad.. ([41.42.177.251])
+        by smtp.gmail.com with ESMTPSA id h25-20020a1709063c1900b008e8e975e185sm6079198ejg.32.2023.03.21.11.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 11:17:35 -0700 (PDT)
 From:   Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
-In-Reply-To: <8020f263-158d-db6e-f34-425b72983bb@inria.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     gregkh@linuxfoundation.org
+Cc:     outreachy@lists.linux.dev, johan@kernel.org, elder@kernel.org,
+        vireshk@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, greybus-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-pwm@vger.kernel.org, eng.mennamahmoud.mm@gmail.com
+Subject: [PATCH v2 1/2] staging: greybus: remove unnecessary blank line
+Date:   Tue, 21 Mar 2023 20:17:25 +0200
+Message-Id: <20230321181725.8691-1-eng.mennamahmoud.mm@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -80,75 +71,65 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Remove unnecessary blank line before struct as reported
+by checkpatch:
 
-On ٢١‏/٣‏/٢٠٢٣ ١٨:٣٩, Julia Lawall wrote:
->
-> On Tue, 21 Mar 2023, Menna Mahmoud wrote:
->
->> On ٢١/٣/٢٠٢٣ ١٣:٤٦, Julia Lawall wrote:
->>> On Tue, 21 Mar 2023, Menna Mahmoud wrote:
->>>
->>>> This patchset includes change happened in greybus driver in three
->>>> different files two of them patch one and three related to
->>>> checkpatch issue and in second patch convert two
->>>> `container_of` macros into inline functions.
->>>>
->>>> Menna Mahmoud (3):
->>>>     staging: greybus: remove unnecessary blank line
->>>>     staging: greybus: use inline function for macros
->>>>     staging: greybus: remove unnecessary blank line
->>> Different patches should have different subject lines.
->> But I have already the same edit in both file, so should I re-write the
->> subject for one of them?
->>>     You need to either
->>> be more specific about the file affected or merge the two patches with the
->>> same subject into one.
->> each patch related to different file. So, Can I to merge two commits for
->> different files but have the same edit in one patch?
-> They are both for greybus, which is what you advertise in the subject
-> line.  And the sense of the changes is the same, and the changes are quite
-> simple.  So I think you could just put them in one patch.  If you find
-> other occurrences of the problem in greybus you could make one patch that
-> fixes all of them.
->
->> but in this case no need to create patchset for all changes in `greybus`
->> driver, right?
-> A patchset is needed if the changes affect the same file, because there
-> might be complications if the patches are applied in the wrong order.
->
->> If okay with that, should I versioning the patches to resend them again, or
->> should add "RESEND" subject prefix?
-> RESEND would be if you send exactly the same thing, because some time has
-> passed and you are worried that the patch has been lost.  Now that you
-> have put these in a series, it is perhaps best to leave them in a series
-> and increase the version number, to avoid confusion on the part of people
-> reading the patches.
->
-> julia
+" CHECK: Please don't use multiple blank lines "
+
+Signed-off-by: Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
+---
+change in v2:
+	add patches that have same edit in sigle patch.
+---
+ drivers/staging/greybus/greybus_authentication.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/staging/greybus/greybus_authentication.h b/drivers/staging/greybus/greybus_authentication.h
+index 7edc7295b7ab..48b4a9794d3c 100644
+--- a/drivers/staging/greybus/greybus_authentication.h
++++ b/drivers/staging/greybus/greybus_authentication.h
+@@ -41,7 +41,6 @@
+ #define CAP_AUTH_RESULT_CR_NO_KEY	0x03
+ #define CAP_AUTH_RESULT_CR_SIG_FAIL	0x04
+ 
+-
+ /* IOCTL support */
+ struct cap_ioc_get_endpoint_uid {
+ 	__u8			uid[8];
+-- 
+2.34.1
 
 
-understood, thanks Julia.
+From 6f56ebcda89f91cdfe6e64c0707dc476ebc1e819 Mon Sep 17 00:00:00 2001
+From: Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
+Date: Tue, 21 Mar 2023 00:03:32 +0200
+Subject: [PATCH v2 2/2] staging: greybus: remove unnecessary blank line
 
+Remove unnecessary blank line before struct as reported
+by checkpatch:
 
-Menna
+" CHECK: Please don't use multiple blank lines "
 
->
->> please tell me the best way to resend these patches, appreciate your help.
->>
->>
->> Menna
->>
->>
->>> julia
->>>
->>>>    drivers/staging/greybus/gbphy.h                  | 10 ++++++++--
->>>>    drivers/staging/greybus/greybus_authentication.h |  1 -
->>>>    drivers/staging/greybus/pwm.c                    |  1 -
->>>>    3 files changed, 8 insertions(+), 4 deletions(-)
->>>>
->>>> --
->>>> 2.34.1
->>>>
->>>>
->>>>
-> >
+Signed-off-by: Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
+---
+change in v2:
+        add patches that have same edit in sigle patch.
+---
+ drivers/staging/greybus/pwm.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+index 3fda172239d2..26d39e08c3b6 100644
+--- a/drivers/staging/greybus/pwm.c
++++ b/drivers/staging/greybus/pwm.c
+@@ -24,7 +24,6 @@ struct gb_pwm_chip {
+ #define pwm_chip_to_gb_pwm_chip(chip) \
+ 	container_of(chip, struct gb_pwm_chip, chip)
+ 
+-
+ static int gb_pwm_count_operation(struct gb_pwm_chip *pwmc)
+ {
+ 	struct gb_pwm_count_response response;
+-- 
+2.34.1
+
