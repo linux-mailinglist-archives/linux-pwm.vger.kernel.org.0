@@ -2,132 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E416C3717
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 17:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D06E36C3737
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Mar 2023 17:43:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbjCUQkF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 21 Mar 2023 12:40:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49212 "EHLO
+        id S229922AbjCUQnq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 21 Mar 2023 12:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbjCUQkC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 12:40:02 -0400
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486F24EED;
-        Tue, 21 Mar 2023 09:39:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PzFbeSMMbS4CC7XY2NIBhcKqrJEORtC8j3V9n4WJKHA=;
-  b=mK6kLhXLytGD1zE70XoQ6WcMB+mJyZieWcb6GqWmQMfOVpN0GBdaE4fg
-   1oU3+eZXBLvCLchaYuZFATS8et4Q+7qxQ7ZV1p29S1a4Art/+eDSPeeo+
-   8HfOFnSJUZZMC/ekg0lpUiwC/tW/C9oBktNSKwlOlb1b1qOWJEJWKMl27
-   c=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.98,279,1673910000"; 
-   d="scan'208";a="98353568"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 17:39:55 +0100
-Date:   Tue, 21 Mar 2023 17:39:55 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
+        with ESMTP id S229853AbjCUQnm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 21 Mar 2023 12:43:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3680C53286
+        for <linux-pwm@vger.kernel.org>; Tue, 21 Mar 2023 09:43:18 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pef4e-0003Cx-Tg; Tue, 21 Mar 2023 17:43:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pef4e-005jSE-25; Tue, 21 Mar 2023 17:43:00 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pef4d-006oRj-BW; Tue, 21 Mar 2023 17:42:59 +0100
+Date:   Tue, 21 Mar 2023 17:42:59 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
-cc:     gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
+Cc:     gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
         johan@kernel.org, elder@kernel.org, vireshk@kernel.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 0/3] edits in greybus driver
-In-Reply-To: <196b5d53-701f-e2dd-596c-9fdb6a59f5cd@gmail.com>
-Message-ID: <8020f263-158d-db6e-f34-425b72983bb@inria.fr>
-References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com> <ee77a227-13bd-70ad-1d8e-f9719970e0f8@inria.fr> <196b5d53-701f-e2dd-596c-9fdb6a59f5cd@gmail.com>
+        thierry.reding@gmail.com, greybus-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-pwm@vger.kernel.org, Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH 2/3] staging: greybus: use inline function for macros
+Message-ID: <20230321164259.nt6varbc6v6bavrz@pengutronix.de>
+References: <cover.1679352669.git.eng.mennamahmoud.mm@gmail.com>
+ <1274302b52ae905dab6f75377d625598facbbdf1.1679352669.git.eng.mennamahmoud.mm@gmail.com>
+ <20230321154728.3r7ut3rl2pccmo2e@pengutronix.de>
+ <7c883bac-382c-b429-ab21-4675dce02474@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1428913748-1679416795=:10740"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ycczzpqu7aadwq6j"
+Content-Disposition: inline
+In-Reply-To: <7c883bac-382c-b429-ab21-4675dce02474@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-1428913748-1679416795=:10740
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+--ycczzpqu7aadwq6j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 21, 2023 at 06:25:29PM +0200, Menna Mahmoud wrote:
+>=20
+> On =D9=A2=D9=A1=E2=80=8F/=D9=A3=E2=80=8F/=D9=A2=D9=A0=D9=A2=D9=A3 =D9=A1=
+=D9=A7:=D9=A4=D9=A7, Uwe Kleine-K=C3=B6nig wrote:
+> > Hello,
+> >=20
+> > just some nitpicks:
+> >=20
+> > On Tue, Mar 21, 2023 at 01:04:33AM +0200, Menna Mahmoud wrote:
+> > > Convert `to_gbphy_dev` and `to_gbphy_driver` macros into a
+> > > static inline function.
+> > >=20
+> > > it is not great to have macro that use `container_of` macro,
+> > s/it/It/; s/macro/macros/; s/use/use the/;
+> Okay, I will fix it.
+> >=20
+> > > because from looking at the definition one cannot tell what type
+> > > it applies to.
+> > > [...]
+> > > -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
+> > > +static inline struct gbphy_device *to_gbphy_dev(const struct device =
+*d)
+> > drivers/staging/greybus/gbphy.c always passes a variable named
+> > "dev" to this macro. So I'd call the parameter "dev", too, instead of
+> > "d". This is also a more typical name for variables of that type.
+> >=20
+> > > +{
+> > > +	return container_of(d, struct gbphy_device, dev);
+> > > +}
+> > > [...]
+> > >   };
+> > > -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driv=
+er)
+> > > +static inline struct gbphy_driver *to_gbphy_driver(struct device_dri=
+ver *d)
+> > > +{
+> > > +	return container_of(d, struct gbphy_driver, driver);
+> > > +}
+> > With a similar reasoning (and also to not have "d"s that are either
+> > device or device_driver) I'd recommend "drv" here.
+>=20
+>=20
+> please check this with Julia, because she said they should different.
 
+At least use "_dev" instead of "d" which seems to be a common idiom,
+too:
 
-On Tue, 21 Mar 2023, Menna Mahmoud wrote:
+	$ git grep -P 'container_of\(_(?<ident>[A-Za-z_0-9-]*)\s*,[^,]*,\s*\g{iden=
+t}\s*\)' | wc -l
+	570
 
->
-> On ٢١/٣/٢٠٢٣ ١٣:٤٦, Julia Lawall wrote:
-> >
-> > On Tue, 21 Mar 2023, Menna Mahmoud wrote:
-> >
-> > > This patchset includes change happened in greybus driver in three
-> > > different files two of them patch one and three related to
-> > > checkpatch issue and in second patch convert two
-> > > `container_of` macros into inline functions.
-> > >
-> > > Menna Mahmoud (3):
-> > >    staging: greybus: remove unnecessary blank line
-> > >    staging: greybus: use inline function for macros
-> > >    staging: greybus: remove unnecessary blank line
-> > Different patches should have different subject lines.
-> But I have already the same edit in both file, so should I re-write the
-> subject for one of them?
-> >    You need to either
-> > be more specific about the file affected or merge the two patches with the
-> > same subject into one.
->
-> each patch related to different file. So, Can I to merge two commits for
-> different files but have the same edit in one patch?
+("drv" should be fine, because the third argument is "driver" there.)
 
-They are both for greybus, which is what you advertise in the subject
-line.  And the sense of the changes is the same, and the changes are quite
-simple.  So I think you could just put them in one patch.  If you find
-other occurrences of the problem in greybus you could make one patch that
-fixes all of them.
+Best regards
+Uwe
 
-> but in this case no need to create patchset for all changes in `greybus`
-> driver, right?
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-A patchset is needed if the changes affect the same file, because there
-might be complications if the patches are applied in the wrong order.
+--ycczzpqu7aadwq6j
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> If okay with that, should I versioning the patches to resend them again, or
-> should add "RESEND" subject prefix?
+-----BEGIN PGP SIGNATURE-----
 
-RESEND would be if you send exactly the same thing, because some time has
-passed and you are worried that the patch has been lost.  Now that you
-have put these in a series, it is perhaps best to leave them in a series
-and increase the version number, to avoid confusion on the part of people
-reading the patches.
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQZ3pIACgkQj4D7WH0S
+/k5pUQf/XJUDV6EvqcrGxi++Gu/Dk83CxxiHdJnuv3linIJyLi93tZYagEMj773b
+zxh1hIg8sW9OY0D/5HIkMjjhziTA432DNiFWW85/B+eOduuRE2fQHZ8kHOMiXH+R
+P2k2cPlJLW9pV3n6odYFqmn0BGoQvgOAgDUfftIgZ6Wfc6bEX7cl7rOAXaPxrz+s
+b0hgLYCkQJ5x19/n6JmO6eQq3IvCZyye8y2NgU28gHQ7tCDy3M4cy4o6rM+45GOP
+QnptwPU1+WnnmOfztzLTGFZwVnQs/t0rKMn7yC6cu0WdbPtILq8ug+ZE5Rx4cRv5
+VmFAwNr1gpOVs8Yix3vuHqXFhvTk6Q==
+=iXWj
+-----END PGP SIGNATURE-----
 
-julia
-
-> please tell me the best way to resend these patches, appreciate your help.
->
->
-> Menna
->
->
-> >
-> > julia
-> >
-> > >   drivers/staging/greybus/gbphy.h                  | 10 ++++++++--
-> > >   drivers/staging/greybus/greybus_authentication.h |  1 -
-> > >   drivers/staging/greybus/pwm.c                    |  1 -
-> > >   3 files changed, 8 insertions(+), 4 deletions(-)
-> > >
-> > > --
-> > > 2.34.1
-> > >
-> > >
-> > >
->
---8323329-1428913748-1679416795=:10740--
+--ycczzpqu7aadwq6j--
