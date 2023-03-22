@@ -2,117 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24CC06C4951
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Mar 2023 12:37:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6B8C6C535A
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Mar 2023 19:12:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjCVLhu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 22 Mar 2023 07:37:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
+        id S230047AbjCVSMQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 22 Mar 2023 14:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjCVLht (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Mar 2023 07:37:49 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43835C9FE;
-        Wed, 22 Mar 2023 04:37:48 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id eg48so71466911edb.13;
-        Wed, 22 Mar 2023 04:37:48 -0700 (PDT)
+        with ESMTP id S229896AbjCVSMP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Mar 2023 14:12:15 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D961364A9D
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Mar 2023 11:12:11 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id o12so76482826edb.9
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Mar 2023 11:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679485067;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufD/aLu42UHkIOODHSMH1/E0WYEbXvQf/CWdu58h154=;
-        b=ompbDY5ua/bSoxyasK11lHpffoErOOwV2sBWnSJqBvy51xtNqXaapwLRZrKeKi3mrR
-         lNAOOm4shWIJvpM5pTscB2jGgPDcmDhRGOyYAHh7lagLbVXoLcedd9ImA98ydNxQ/p7W
-         PAUwOKN9GLggsPbliQrOT+3/ILdW0lbU81Z8+IJGy47eYy7z+Qeogu8inDAqVsx7oa9O
-         3BccEVB5K9DLCK7iQ/p5XuH6qy9D1eDD/ZFJQ7Xl0C3F9S39bYXhzXuoa+yZ7YI/B0i0
-         tKmFyGn5+5a0SBtW8XLOtf9uNtF9s2ch0w7dC0+pcHg1sdvUrrYIdl7YGYXtvVCYMsJ/
-         JLFw==
+        d=linaro.org; s=google; t=1679508730;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=puINCtdjibA0BYbSrHoIfwhwVYXsutPsDY4I7ib4bzM=;
+        b=J7Ks+YQakaDhUbwe8fWKUNhebNRsFdwb/Lt2TOCFMNg+p9GiUx1mGrdm+ePPnPiToA
+         joVvFXZ9IRD5fpifPU4c6U+tOqPfs4b5/hFXOUQXGaHUMdrpDnzHgUfsLtoggBWT7Xzw
+         kmaFq+69ED1xC9xB5ZfCJha8yF5WS0xB1wIu9u74lHB0WBIRKArwWjkMY627UXPANUU1
+         uP8HarJiZUN1dCQqJoR+JCZ26kewvnKyt+h1HlQKFxeH5+SHm71Gdcsao96kZGCJ+d3Y
+         nI00zCQ86niFQuFoR/A54EHftmRZ4p7/FmMiiEStiSS+lFIH+6h35+46PBejBJJrwfGJ
+         g3IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679485067;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ufD/aLu42UHkIOODHSMH1/E0WYEbXvQf/CWdu58h154=;
-        b=UfJkqlm/VXEHFO9L+vP/LzWJqpIP3aW4RZJ2Zd166iDGoN7kh2bUEHmGlq51nm5DFk
-         CYMigSQeRo9porV+RMwoznzNajo5iPUQGVUnxbVcf1ahXOr0Wcr98LSDqZh+U0ReD2KN
-         9o7bcaeo8wGjJw6dDA7QBJJyNUrfq5Sbps8agYGFsfj8TsxgoU5TzfkFbEZS58hIyPs7
-         Q71naMY8oh0HoW0qfop6JI9DJP/fAXEa+KyG20SzH9eiw92wdTuy8DNKpDxQc9OFwqn7
-         NSdj5AKTYIz/dPeJZCS42vxnbslG8pcohXz1VGlLRd9YyxkoIULmRqJx6uU7NYbjOPLZ
-         9gsw==
-X-Gm-Message-State: AO0yUKWE3UMZ9f/htFL748i8rZWtuIGkFe8AwRlJbACBAwv59CxqD6Vq
-        xXp3SNKrwOxEGkZNfW4Dn38=
-X-Google-Smtp-Source: AK7set+QYl632YO7U3z2o4iXfBMBL7347BgKxtJukkmWe5N/saAZ2jkFYmmMBz5K37ItBM9Prns2WQ==
-X-Received: by 2002:a17:906:6450:b0:931:de76:c2e8 with SMTP id l16-20020a170906645000b00931de76c2e8mr7294230ejn.9.1679485067081;
-        Wed, 22 Mar 2023 04:37:47 -0700 (PDT)
-Received: from alaa-emad.. ([41.233.203.65])
-        by smtp.gmail.com with ESMTPSA id ch19-20020a170906c2d300b00933d64cd447sm4412197ejb.121.2023.03.22.04.37.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Mar 2023 04:37:46 -0700 (PDT)
-From:   Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     outreachy@lists.linux.dev, johan@kernel.org, elder@kernel.org,
-        vireshk@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, greybus-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-pwm@vger.kernel.org, eng.mennamahmoud.mm@gmail.com
-Subject: [PATCH v4] staging: greybus: remove unnecessary blank line
-Date:   Wed, 22 Mar 2023 13:37:34 +0200
-Message-Id: <20230322113735.31214-1-eng.mennamahmoud.mm@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20210112; t=1679508730;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=puINCtdjibA0BYbSrHoIfwhwVYXsutPsDY4I7ib4bzM=;
+        b=GHg4p1muC0xcY+Yy+1+VBoy+KOcK8XDaSBBMEGhUDlpVoyQ2t5r3g75QqLrpOn16vI
+         ejocC2YJx8OVxQY83BgKJC/PqO1yAjL5BY/DWe8/qp0H/0fmkgnuJ8xNH+MW4QqO9/i9
+         30hr1U9VTXYxTTYbGlOoiM5Qahw+ku599PeFwpuD7qlPTTbMuqxkFWG/DmXG7Sh3UPgd
+         WO0NXcXvqeP8ksbp0Mhq0l4fxVR+eva2Td4oadjR1snrGRlXc7EQ3Gez2U5FI8wk5PjH
+         72HzbkGEOd7AlPnmyJ6/Vmm0oixgeq+PrzjQnAuYas9f0GzsGNFpgU1MHyyPigbMsrK/
+         1yRw==
+X-Gm-Message-State: AO0yUKUTTKwCrsA93knM7Iz0HlPMPnKfDO/gnN4e0w7b1CXEOmqZfZ8x
+        ytFMQ5NqUFYQpO+dJan7xl3mNw==
+X-Google-Smtp-Source: AK7set+vT8b6vldZsA+TIPblzpsRJ83hqYXESjC2wwa3hOGcErQIr0FtnbAyQvVwSpd8ejjf0q1adQ==
+X-Received: by 2002:a17:906:720f:b0:8b1:2bde:5c70 with SMTP id m15-20020a170906720f00b008b12bde5c70mr7719669ejk.2.1679508730430;
+        Wed, 22 Mar 2023 11:12:10 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:5050:151b:e755:1c6? ([2a02:810d:15c0:828:5050:151b:e755:1c6])
+        by smtp.gmail.com with ESMTPSA id a27-20020a509b5b000000b00501dd53dbfbsm2681070edj.75.2023.03.22.11.12.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Mar 2023 11:12:09 -0700 (PDT)
+Message-ID: <74309bed-e46c-69fc-e0c7-6d06c30fbc4f@linaro.org>
+Date:   Wed, 22 Mar 2023 19:12:08 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 1/2] pwm: rcar: drop of_match_ptr for ID table
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
+ <20230312154210.ovm54x2qtcv7fp7r@pengutronix.de>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230312154210.ovm54x2qtcv7fp7r@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Remove unnecessary blank line before struct as reported
-by checkpatch:
+On 12/03/2023 16:42, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Sun, Mar 12, 2023 at 02:51:19PM +0100, Krzysztof Kozlowski wrote:
+>> The driver can match only via the DT table so the table should be always
+>> used and the of_match_ptr does not have any sense (this also allows ACPI
+>> matching via PRP0001, even though it might not be relevant here).  This
+>> also fixes !CONFIG_OF error:
+>>
+>>   drivers/pwm/pwm-rcar.c:252:34: error: ‘rcar_pwm_of_table’ defined but not used [-Werror=unused-const-variable=]
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Hmm, I wonder what else is required here to trigger that warning. On
+> amd64 I also disabled CONFIG_MODULES as otherwise rcar_pwm_of_table is
+> used by
+> 
+> 	MODULE_DEVICE_TABLE(of, rcar_pwm_of_table);
 
-" CHECK: Please don't use multiple blank lines "
+1. x86_64 allyesconfig, remove CONFIG_OF
+2. Build with W=1 (this was GCC)
 
-Signed-off-by: Menna Mahmoud <eng.mennamahmoud.mm@gmail.com>
----
-change in v4:
-        add version of the patch.
-change in v3:
-        add patches that have same edit in sigle commit.
-change in v2:
-        add patches that have same edit in sigle patch.
----
- drivers/staging/greybus/greybus_authentication.h | 1 -
- drivers/staging/greybus/pwm.c                    | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/drivers/staging/greybus/greybus_authentication.h b/drivers/staging/greybus/greybus_authentication.h
-index 7edc7295b7ab..48b4a9794d3c 100644
---- a/drivers/staging/greybus/greybus_authentication.h
-+++ b/drivers/staging/greybus/greybus_authentication.h
-@@ -41,7 +41,6 @@
- #define CAP_AUTH_RESULT_CR_NO_KEY	0x03
- #define CAP_AUTH_RESULT_CR_SIG_FAIL	0x04
- 
--
- /* IOCTL support */
- struct cap_ioc_get_endpoint_uid {
- 	__u8			uid[8];
-diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-index 3fda172239d2..26d39e08c3b6 100644
---- a/drivers/staging/greybus/pwm.c
-+++ b/drivers/staging/greybus/pwm.c
-@@ -24,7 +24,6 @@ struct gb_pwm_chip {
- #define pwm_chip_to_gb_pwm_chip(chip) \
- 	container_of(chip, struct gb_pwm_chip, chip)
- 
--
- static int gb_pwm_count_operation(struct gb_pwm_chip *pwmc)
- {
- 	struct gb_pwm_count_response response;
--- 
-2.34.1
+Best regards,
+Krzysztof
 
