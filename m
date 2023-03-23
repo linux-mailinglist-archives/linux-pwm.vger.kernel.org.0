@@ -2,57 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EECCA6C599B
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Mar 2023 23:50:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 742906C630A
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Mar 2023 10:14:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbjCVWuD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 22 Mar 2023 18:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45656 "EHLO
+        id S230026AbjCWJOX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 23 Mar 2023 05:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjCVWuC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 22 Mar 2023 18:50:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5545B28E64;
-        Wed, 22 Mar 2023 15:49:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D55E1621CA;
-        Wed, 22 Mar 2023 22:49:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BB2C433D2;
-        Wed, 22 Mar 2023 22:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679525384;
-        bh=yvElztryIE4+jC42pUMbrSDuyuT0kahcEDOY+HjSwcc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P6VD4pqX39vo3VQvEA9jW8sj/FhLzmZ61O9nSQr9L/+30c/4NbVeX0dZytF38vHYf
-         WfzaWUxf6Z/UGdAI0xR9rSJ2kubUHzKlHtR5U2e5rdbHaHWCmtUhdRA6oZMTYvtBHz
-         fbwN2xXZk5zrxx+JTOxYTxeUHW3xJJ0zgvtlaDoLocxocMLSClPE8wYWbZTzUOO5J0
-         dkEO8fV31ymMlMC8+VhxWdFEsOYQOjTMGwph6dWf6064uv04KxZj863s2vDOnoa4wT
-         vKRB8OXy6b9d8Q9Eo7tyR9zLRM+xkb14CI+Si9qLH6dnxUHlFU/pkCPRX1dedFGBiE
-         EnqW26V7bg+Rg==
-Date:   Wed, 22 Mar 2023 22:49:40 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S230495AbjCWJOV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 23 Mar 2023 05:14:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B4B46BA
+        for <linux-pwm@vger.kernel.org>; Thu, 23 Mar 2023 02:14:19 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pfH1O-0002OG-Ka; Thu, 23 Mar 2023 10:14:10 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pfH1N-0067Hp-SS; Thu, 23 Mar 2023 10:14:09 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pfH1N-007IJc-6Q; Thu, 23 Mar 2023 10:14:09 +0100
+Date:   Thu, 23 Mar 2023 10:14:09 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Conor Dooley <conor@kernel.org>
 Cc:     Conor Dooley <conor.dooley@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Daire McNamara <daire.mcnamara@microchip.com>,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-riscv@lists.infradead.org
 Subject: Re: [PATCH v14 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <48c7dbdc-04a2-42de-964f-fd86cf070797@spud>
+Message-ID: <20230323091409.rdi4bqrcsfvxnht5@pengutronix.de>
 References: <20230306094858.1614819-1-conor.dooley@microchip.com>
  <20230306094858.1614819-2-conor.dooley@microchip.com>
  <20230322105536.kgt3ffowefqlg6eu@pengutronix.de>
+ <48c7dbdc-04a2-42de-964f-fd86cf070797@spud>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vC/iEQs36o7KPCrh"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mcpu2vbk2lpe4rlh"
 Content-Disposition: inline
-In-Reply-To: <20230322105536.kgt3ffowefqlg6eu@pengutronix.de>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+In-Reply-To: <48c7dbdc-04a2-42de-964f-fd86cf070797@spud>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,222 +59,179 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---vC/iEQs36o7KPCrh
-Content-Type: text/plain; charset=iso-8859-1
+--mcpu2vbk2lpe4rlh
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 22, 2023 at 11:55:36AM +0100, Uwe Kleine-K=F6nig wrote:
-> On Mon, Mar 06, 2023 at 09:48:58AM +0000, Conor Dooley wrote:
-> > Add a driver that supports the Microchip FPGA "soft" PWM IP core.
+Hello Conor,
 
-> > +static void mchp_core_pwm_calc_period(const struct pwm_state *state, u=
-nsigned long clk_rate,
-> > +				      u16 *prescale, u16 *period_steps)
-> > +{
-> > +	u64 tmp;
-> > +
-> > +	/*
-> > +	 * Calculate the period cycles and prescale values.
-> > +	 * The registers are each 8 bits wide & multiplied to compute the per=
-iod
-> > +	 * using the formula:
-> > +	 *           (prescale + 1) * (period_steps + 1)
-> > +	 * period =3D -------------------------------------
-> > +	 *                      clk_rate
-> > +	 * so the maximum period that can be generated is 0x10000 times the
-> > +	 * period of the input clock.
-> > +	 * However, due to the design of the "hardware", it is not possible to
-> > +	 * attain a 100% duty cycle if the full range of period_steps is used.
-> > +	 * Therefore period_steps is restricted to 0xFE and the maximum multi=
-ple
-> > +	 * of the clock period attainable is 0xFF00.
-> > +	 */
-> > +	tmp =3D mul_u64_u64_div_u64(state->period, clk_rate, NSEC_PER_SEC);
-> > +
-> > +	/*
-> > +	 * The hardware adds one to the register value, so decrement by one to
-> > +	 * account for the offset
-> > +	 */
-> > +	if (tmp >=3D MCHPCOREPWM_PERIOD_MAX) {
-> > +		*prescale =3D MCHPCOREPWM_PRESCALE_MAX - 1;
-> > +		*period_steps =3D MCHPCOREPWM_PERIOD_STEPS_MAX - 1;
-> > +
-> > +		return;
-> > +	}
-> > +
-> > +	/*
-> > +	 * The optimal value for prescale can be calculated using the maximum
-> > +	 * permitted value of period_steps, 0xff.
+On Wed, Mar 22, 2023 at 10:49:40PM +0000, Conor Dooley wrote:
+> On Wed, Mar 22, 2023 at 11:55:36AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > On Mon, Mar 06, 2023 at 09:48:58AM +0000, Conor Dooley wrote:
+> > > Add a driver that supports the Microchip FPGA "soft" PWM IP core.
 >=20
-> I had to think about that one for a while. The maximal value for
-> (period_steps + 1) is 0xff with the reasoning above?! That's also what
-> the code uses.
+> > > +static void mchp_core_pwm_calc_period(const struct pwm_state *state,=
+ unsigned long clk_rate,
+> > > +				      u16 *prescale, u16 *period_steps)
+> > > +{
+> > > +	u64 tmp;
+> > > +
+> > > +	/*
+> > > +	 * Calculate the period cycles and prescale values.
+> > > +	 * The registers are each 8 bits wide & multiplied to compute the p=
+eriod
+> > > +	 * using the formula:
+> > > +	 *           (prescale + 1) * (period_steps + 1)
+> > > +	 * period =3D -------------------------------------
+> > > +	 *                      clk_rate
+> > > +	 * so the maximum period that can be generated is 0x10000 times the
+> > > +	 * period of the input clock.
+> > > +	 * However, due to the design of the "hardware", it is not possible=
+ to
+> > > +	 * attain a 100% duty cycle if the full range of period_steps is us=
+ed.
+> > > +	 * Therefore period_steps is restricted to 0xFE and the maximum mul=
+tiple
+> > > +	 * of the clock period attainable is 0xFF00.
+> > > +	 */
+> > > +	tmp =3D mul_u64_u64_div_u64(state->period, clk_rate, NSEC_PER_SEC);
+> > > +
+> > > +	/*
+> > > +	 * The hardware adds one to the register value, so decrement by one=
+ to
+> > > +	 * account for the offset
+> > > +	 */
+> > > +	if (tmp >=3D MCHPCOREPWM_PERIOD_MAX) {
+> > > +		*prescale =3D MCHPCOREPWM_PRESCALE_MAX - 1;
+> > > +		*period_steps =3D MCHPCOREPWM_PERIOD_STEPS_MAX - 1;
+> > > +
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * The optimal value for prescale can be calculated using the maxim=
+um
+> > > +	 * permitted value of period_steps, 0xff.
+> >=20
+> > I had to think about that one for a while. The maximal value for
+> > (period_steps + 1) is 0xff with the reasoning above?! That's also what
+> > the code uses.
+>=20
+> I've become really disenfranchised with these register/variable names.
+> I feel like just changing them to disconnect the variables used for
+> calculation from the register names a little, so that the "is there a +1
+> needed here or not" stuff becomes a little clearer.
 
-I've become really disenfranchised with these register/variable names.
-I feel like just changing them to disconnect the variables used for
-calculation from the register names a little, so that the "is there a +1
-needed here or not" stuff becomes a little clearer.
-It always makes sense to be when I am in an "I respun the patch today"
-mode, but by the time we're in the review stage I get muddled.
-God forbid I have to look at this in 10 years time.
+Full ack, I considered asking for that, but after some time I was in the
+"I reviewed the patch today"-mode (which is quite similar to the mode
+you described :-) and forgot. (Even in that mode the PREG_TO_VAL macro
+annoyed me a bit.)
 
-That said, there is a bit of a mistake here. The comment two above says
-"Therefore period_steps is restricted to 0xFE" when I'm capping things
-off. Some inaccuracies have probably snuck in during the various
-respins, and I think the comment above is "correct" but misleading, as
-it muddies the waters about variable versus register names.
+> It always makes sense to be when I am in an "I respun the patch today"
+> mode, but by the time we're in the review stage I get muddled.
+> God forbid I have to look at this in 10 years time.
+>=20
+> That said, there is a bit of a mistake here. The comment two above says
+> "Therefore period_steps is restricted to 0xFE" when I'm capping things
+> off. Some inaccuracies have probably snuck in during the various
+> respins, and I think the comment above is "correct" but misleading, as
+> it muddies the waters about variable versus register names.
 
-> Also as the comment is written here, it's wrong (or misleading)
-> depending on the semantic of "optimal". If you want to achive
->=20
-> 	(prescale + 1) * (period_steps + 1) <=3D 64009
->=20
-> you should pick prescale =3D=3D period_steps =3D=3D 252 to get optimally =
-near
-> 64009.
-> However the idea is to pick a set of values with period_steps being big
-> to allow a finegrained selection for the duty cycle, right?
+I think it's sensible to only talk about either the register values or
+the factors. I tend to think that talking about the register values is
+easier at the end and recommend not to hide the +1 (or -1) in a macro.
 
-Correct. I'll update the comments with an explanation as to what the
-objective is, rather than just referring to it as "optimal".
+Having said that here are my results of thinking a bit about how to
+choose register values:
 
-> Consider
->=20
-> 	clk_rate =3D 1000000
-> 	period =3D 64009000
->=20
-> then your code gives:
->=20
->               period * clk_rate
-> 	tmp =3D ----------------- =3D 64009
->                 NSEC_PER_SEC
->=20
-> and so *prescale =3D 251 and *period_steps =3D 253.=20
->=20
-> Wasn't the intention to pick *prescale =3D 250 and then
-> *period_steps =3D 255?
->=20
-> Depending on your semantics of "optimal", either (252, 252) or (250,
-> 255) is better than (251, 253). I think that means you shouldn't ignore
-> the -1?
->=20
-> One thing I think is strange is that with clk_rate =3D 1000001 and your
-> algorithm we get:
->=20
-> requested period =3D 1274998 ns -> real period =3D 1269998.73000127  (pre=
-scale =3D 4, period_steps =3D 253)
-> requested period =3D 1274999 ns -> real period =3D 1271998.728001272 (pre=
-scale =3D 5, period_steps =3D 211)
->=20
-> while 1271998.728001272 would be a better match for a request with
-> period =3D 1274998 than 1269998.73000127.
->=20
-> I spend too much time to think about that now. I'm unsure if this is
-> because the -1 is missing, or if there is a bug in the idea to pick a
-> small prescale to allow a big period_steps value (in combination with
-> the request to pick the biggest possible period).
->=20
-> Hmm, maybe you understand that better than me? I'll have to think about
-> it.
+Let r(p) denote the period that is actually configured if p is
+requested.
 
-I'll have to think about it too, I'll clear a space among the todo-lists
-on my whiteboard tomorrow or Friday and get back to you...
+The nice properties we want (i.e. those a consumer might expect?) are:
 
+ a) =E2=88=80p: r(p) =E2=89=A4 p
+    i.e. never configure a bigger period than requested
+    (This is a bit arbitrary, but nice to get a consistent behaviour for
+    all drivers and easier to handle than requesting the nearest
+    possible period.)
+
+ b) =E2=88=80p, q: p =E2=89=A4 q =E2=9F=B9 r(p) =E2=89=A4 r(q)
+    i.e. monotonicity
+
+ c) =E2=88=80p: r(roundup(r(p))) =3D r(p)
+    i.e. idempotency
+
+ d) =E2=88=80p, q: r(p) =E2=89=A4 q =E2=9F=B9 r(p) =E2=89=A4 r(q)
+    i.e. pick the biggest possible period
+
+(Sidenote: d) and a) imply b) and c))
+
+If you always set period_steps to 0xfe
+(in Python syntax:
+
+	tmp =3D p * clkrate // NSPS
+	period_steps =3D 0xfe
+	prescale =3D tmp // (period_steps + 1) - 1
+
+) you get this consistent behaviour.
+
+This has the upside of being easy to implement and cheap to run.
+Downside is that it's coarse and fails to implement periods that would
+require e.g prescale =3D 0 and period_steps < 0xfe. As period_steps is
+big, the domain to chose the duty cycle from is good.
+
+If you pick period_steps and prescale such that
+	(period_steps + 1) * (prescale + 1)
+is the maximal value that makes r(p) =E2=89=A4 p you have an increased runt=
+ime
+because you have to test multiple values for period_steps. I don't think
+there is an algorithm without a loop to determine an optimal pair?!
+Usually this gives a better match that the easy algorithm above for the
+period, but the domain for duty_cycle is (usually) smaller.
+I think we have a) and d) here, so that's good.
+
+I think for most consumers a big domain for duty_cycle is more important
+that a good match for the requested period. So I tend to recommend the
+easy algorithm, but I'm not religious about that and open for other
+opinion and reasoning.
+
+> > > +	writel_relaxed(1U, mchp_core_pwm->base + MCHPCOREPWM_SYNC_UPD);
+> >=20
+> > This one is just for the case where there is an unapplied configuration
+> > in the registers, right?
 >=20
-> > +	 *
-> > +	 *             period * clk_rate
-> > +	 * prescale =3D ------------------- - 1
-> > +	 *            NSEC_PER_SEC * 0xff
-> > +	 *
-> > +	 * However, we are purely interested in the integer upper bound of th=
-is
-> > +	 * calculation, so ignore the subtraction & rely on the truncation do=
-ne
-> > +	 * by the division.
-> > +	 *
-> > +	 *  period * clk_rate
-> > +	 * ------------------- was precomputed as `tmp`
-> > +	 *    NSEC_PER_SEC
-> > +	 *
-> > +	 * period_steps is then computed using the result:
-> > +	 *                      period * clk_rate
-> > +	 * period_steps =3D ----------------------------- - 1
-> > +	 *                NSEC_PER_SEC * (prescale + 1)
-> > +	 */
-> > +	*prescale =3D div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX);
-> > +	*period_steps =3D div_u64(tmp, PREG_TO_VAL(*prescale)) - 1;
-> > +}
-> > +
-> > [..]
-> > +static int mchp_core_pwm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct mchp_core_pwm_chip *mchp_core_pwm;
-> > +	struct resource *regs;
-> > +
-> > +	mchp_core_pwm =3D devm_kzalloc(&pdev->dev, sizeof(*mchp_core_pwm), GF=
-P_KERNEL);
-> > +	if (!mchp_core_pwm)
-> > +		return -ENOMEM;
-> > +
-> > +	mchp_core_pwm->base =3D devm_platform_get_and_ioremap_resource(pdev, =
-0, &regs);
-> > +	if (IS_ERR(mchp_core_pwm->base))
-> > +		return PTR_ERR(mchp_core_pwm->base);
-> > +
-> > +	mchp_core_pwm->clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
-> > +	if (IS_ERR(mchp_core_pwm->clk))
-> > +		return dev_err_probe(&pdev->dev, PTR_ERR(mchp_core_pwm->clk),
-> > +				     "failed to get PWM clock\n");
-> > +
-> > +	if (of_property_read_u32(pdev->dev.of_node, "microchip,sync-update-ma=
-sk",
-> > +				 &mchp_core_pwm->sync_update_mask))
-> > +		mchp_core_pwm->sync_update_mask =3D 0;
-> > +
-> > +	mutex_init(&mchp_core_pwm->lock);
-> > +
-> > +	mchp_core_pwm->chip.dev =3D &pdev->dev;
-> > +	mchp_core_pwm->chip.ops =3D &mchp_core_pwm_ops;
-> > +	mchp_core_pwm->chip.npwm =3D 16;
-> > +
-> > +	mchp_core_pwm->channel_enabled =3D readb_relaxed(mchp_core_pwm->base =
-+ MCHPCOREPWM_EN(0));
-> > +	mchp_core_pwm->channel_enabled |=3D
-> > +		readb_relaxed(mchp_core_pwm->base + MCHPCOREPWM_EN(1)) << 8;
-> > +
-> > +	writel_relaxed(1U, mchp_core_pwm->base + MCHPCOREPWM_SYNC_UPD);
->=20
-> This one is just for the case where there is an unapplied configuration
-> in the registers, right?
+> No, this is me realising that I had a misconception about how that
+> register works. You write the bit once, and it enables the mode for
+> channels that have been configured that way at synthesis-time, rather
+> than how I somehow thought it worked which was as a "flush" from the
+> shadow registers into the "real" ones.
 
-No, this is me realising that I had a misconception about how that
-register works. You write the bit once, and it enables the mode for
-channels that have been configured that way at synthesis-time, rather
-than how I somehow thought it worked which was as a "flush" from the
-shadow registers into the "real" ones.
+Then I think I got that wrong in the same way.  Should this be better
+described in a comment then? (I didn't recheck, maybe there is a good
+description already?)
 
->=20
-> > +	mchp_core_pwm->update_timestamp =3D ktime_get();
-> > +
-> > +	return devm_pwmchip_add(&pdev->dev, &mchp_core_pwm->chip);
->=20
-> An error message if devm_pwmchip_add() fails would be nice.
+Best regards
+Uwe
 
-Sure, can do!
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Thanks,
-Conor.
-
---vC/iEQs36o7KPCrh
+--mcpu2vbk2lpe4rlh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZBuGBAAKCRB4tDGHoIJi
-0lQEAQCuDds9BF1YtJl7C7phnqB7yEQE6A0sv0dp441JRtgO7gEA8kAGdVEQ706u
-UldTBcE0gdP6obq+YYDpU0H6kE8OVgA=
-=2xlc
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQcGGAACgkQj4D7WH0S
+/k7AyQf/VnxyOnNUOmfJLLttKEx14VUW+0kW/dn5t7afngAGM3RlLwkqrL9Xhct8
+7EyKdqi/ryR0an9FKZZEpQ5C1r84DvY0iA6G5zuh1FmJ2kedAY998etfHX9s6J5s
+wXH3mmnjUgCtTeChJT+F/77vrTbQz30SFbTBPfEAFSiAevVQBcf55PR8tH4TJnEc
+hB7FdJYSIwjnIwehGde4+1h4H8jjRqlicAGkUIFGVfpuvvgdMrnYxheVTLep1E3i
+BJ3HDseOikZ7kEZ6mlssmboSsRGcr/iJowF8DoHJfZNDNCwGcVEsImwE/g1brd0v
+hjqMBNigKpMP2gfrd5oFivgYNmEOoA==
+=eb1f
 -----END PGP SIGNATURE-----
 
---vC/iEQs36o7KPCrh--
+--mcpu2vbk2lpe4rlh--
