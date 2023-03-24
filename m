@@ -2,772 +2,334 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 379BA6C6C8B
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Mar 2023 16:49:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DECC6C8545
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Mar 2023 19:43:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjCWPtO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 23 Mar 2023 11:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58856 "EHLO
+        id S230011AbjCXSnJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 24 Mar 2023 14:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjCWPtN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 23 Mar 2023 11:49:13 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2097.outbound.protection.outlook.com [40.107.114.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873FA30CA;
-        Thu, 23 Mar 2023 08:49:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l9XrvGrcRMjN0oXKOP5WXqcIqrHQjIbIG3PgYHFN/nKxOsPoR8Izrlnb9z4TUJ2Ztc3+xC2uKAmqA4jdukGE3Zvxd1pRoyh1TiR0cbEXraBaSHH43LBT56G6vlXLaJa3OtX7bU0Wdsx24TZsmpDZg+VZGaYUE7Nl8xYLPc9TyH2Lic8tzJF7Xmzge2VME7ltUYq67t/62TtHiQ8ymddoL2VyG/ikygQOOtY5SlMKkeMp6JSdhHNoDxaek5Bdwry5giQRYkXwnKb0ie9PxvzaRAU6eFFrwbDlo44/JySNYMDlOW2WKxfIiRD79NfLn0ItKurXGVNmks/5MzggVAXpjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BG2WjuQCzp/JOtP9szjuONQcRNHLSKDU9tl46rY+tPU=;
- b=GvMrVwPPjBQnBu6Z0H5EvuyqwFf1Y+WRTfyrPymN7gXRodsJD+aD1lpMC13oL6d4JX+C/Iao82VBwd+5xfdt1nTis2dCOYJWFLBuTF1xgFoNt5SxGkjEtHNGBshF69b754L7bhA6ddE+S0hWvuAsNjT/jOFCk8ZcMh7SprN6OG0WpaU38b4YvzGAN8x50QQOtQuK3x4BhFyWTjg1YsV8/zP3lIEyhgXN5GF+zNjhyCwYtO1uFM31SOviD2LybdN3OXHlJEO2jRbbwsfSZ0UP6wDrsDkXCBNXlRgFDRYD0+iZsN/+TRpIgQsUOAbZtxnRHyWD3d4W/OeVy4vzURy8HQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BG2WjuQCzp/JOtP9szjuONQcRNHLSKDU9tl46rY+tPU=;
- b=bMcqW/JicYoc5R9i3ikoSuqJ+LvPP3EmGq1zjTO8hHJpzqYjiqd6U6EtAoGefljTfs//nZtt4A4yoWNs2weRtV6o8Vm69RHk15j08K6+c3fU+i7tEkpBxjIlcZkQDrGsdFJhuAWUpO+3QSdJPnt5uBb9UDYbeQ4+/whVLoRTDRY=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by TYCPR01MB8454.jpnprd01.prod.outlook.com (2603:1096:400:158::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.38; Thu, 23 Mar
- 2023 15:49:01 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::f54c:4b2:9c7d:f207]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::f54c:4b2:9c7d:f207%8]) with mapi id 15.20.6178.038; Thu, 23 Mar 2023
- 15:48:59 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        with ESMTP id S229943AbjCXSnI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 24 Mar 2023 14:43:08 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A083EF1;
+        Fri, 24 Mar 2023 11:43:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 99CFCB822D8;
+        Fri, 24 Mar 2023 18:43:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77FBC433D2;
+        Fri, 24 Mar 2023 18:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679683383;
+        bh=XOze5xfEaeXG7tl2QVLNj58QJByNYir7fp37aPWzP6Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cKA5L+BzmVtm/e+7vqfWHta8ZjFCEMHcmGkC42MkbV+22fxCEICjEWp2dIthTnWUo
+         t5srVhlVEUMDUrOsa+CM3OpOZ9sX48M62UvRsvp/14Aj54FeEnVLiHak83Qt1i+xZ6
+         qm4bpfjbe99zbuqkLwt6/lmJeSYJRFTFqeWBlTJyp4+StCX3AUFQMV+DUOnEehm/Kg
+         YUTYaDOkuJ3n0HdJrzSbfQlC2hpsot3drg39g3nClWDiPT0NOGeqPle4Djr5hgYtoG
+         FBOMF6irBQz0hcTG3fTJ4YUYCP3nfCIcCvHFfIpudylVKVovxO9LYJKCaY81K0TL4h
+         s7oSEK3agLRxw==
+Date:   Fri, 24 Mar 2023 18:42:59 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-CC:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        William Breathitt Gray <william.gray@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v14 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
-Thread-Topic: [PATCH v14 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
-Thread-Index: AQHZU3LMHTd9Hvc0bUWzblzJbkvYRK8IlomQ
-Date:   Thu, 23 Mar 2023 15:48:59 +0000
-Message-ID: <OS0PR01MB5922FCB77CFF0D56E68557F486879@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20230310170654.268047-1-biju.das.jz@bp.renesas.com>
- <20230310170654.268047-7-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20230310170654.268047-7-biju.das.jz@bp.renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYCPR01MB8454:EE_
-x-ms-office365-filtering-correlation-id: 5c4801a0-406d-4031-4f4e-08db2bb61e2b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8gV0wCHT37YF5M638tSQN/IbMPkkev2UaXqX40GXuFXGCNFdGGx6iKvhrFBgnNbdv1A53yB51f0ymYphjDVco46gYY5gr1+Cd2zE2lPh5T/CNrJmjRZQlu7DXu72WGMko2ghD6q2ewxTJBsvt3ZRr66lJVaSVQT4V86GDimVXVhUEPBJiB2OBHIXuCgv5eYXnxGXBx2ulQLpdIleCb4Z2gre2BF77+dJikhf03C+azPX9vYdS3IW85r2na+WYyNhfvaUcQ0uLQKhn1yFnMvFrkPZ6CaQiMpbvfPdvefSN+JX2lKhZq8YcYiFw2fzW5gM1ycjt6m0GD8vrTSNWRkmTTz0BUrM/7LY6qdc7N6l7fWXuW5HYmUz+a/tfxHkLx47Gi8kcJ+2oWSNC/t3li6MtEgxWmHRKjkXPGnPkJ/X6vCtU44ttn5j4+ApFAh028V9WuwlUiVAzOe50CEclDNFLZHshT4rD7It8SwSquuI58pV8OwsYb/w9wNyQ2cUJCMsDM16MqkAa+nduQF5meaZZsZs4oJckAbGOUMjtUzJv9HFqoCbsAOr7mPqhMfPGfQTbu2/Ianv6N1jqwDm0USDBgf6zFwyFbX2dqrF8PeaQQSRfYmCitWmXVoehGXyG5MkDQwV+HP/uew6zUHM9dFLExoAPe2lqS9N13sFI8Pe4U0BJv6XUU2KXbnZ5IHFmedLr6wNhhJBi5JqMMnwhVCIhw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(366004)(136003)(376002)(396003)(346002)(451199018)(33656002)(8676002)(86362001)(4326008)(66946007)(66556008)(66446008)(64756008)(8936002)(66476007)(52536014)(76116006)(41300700001)(71200400001)(7696005)(316002)(478600001)(54906003)(110136005)(5660300002)(2906002)(30864003)(38070700005)(55016003)(26005)(38100700002)(53546011)(9686003)(6506007)(122000001)(186003)(66574015)(83380400001)(32563001)(579004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?OALylhK2OO8yoy9SDlu6VgrE79wpoNTNiHhgrvsn/QaRyC9BS88/CnVDag?=
- =?iso-8859-1?Q?4YBfwQyqko4gmJO5cfV5KYl6YT679fcBWLr7lcuwtwhHzM+2ETyXCYpNGt?=
- =?iso-8859-1?Q?P/WM/ZipHlgBm0pJgKNw9Dq5HI9/4CctCdayERq8NI4/d0mlaConhMKYEx?=
- =?iso-8859-1?Q?A6Wq1W2L4/2UDm2hItKfiXa/kbLkspbZolGbI6zYxWelHjbs4l4PFvrXXL?=
- =?iso-8859-1?Q?/J9GCxPbNjn7texI57VRQPdUWq8IdoGRqSBnFpMEZmBP+HprESGiZMp/HI?=
- =?iso-8859-1?Q?W9FyfWjoaIA7CWzMy22kfaAGO/Ra/mR159+WtoCltKN4z219bvevJiT1Mh?=
- =?iso-8859-1?Q?/kwNVQvefaWSgyRTJQRFi3DfxARPyM7Aw9ITPgiSdHG5W6aTeXISAc3tor?=
- =?iso-8859-1?Q?PlYH05rfE3UKNXR4MzyxcLbB4iDhsTWSz3/QWu3elxgMRwgpD8RBIWXOzm?=
- =?iso-8859-1?Q?KyC9BXBIE6lcD5557p9Nf4+/qA3mhgFgYw+IAstpgmzPh4/DnuZhTGellN?=
- =?iso-8859-1?Q?kwIQZ0Q3lX4G9+pnjS1ptNY4qhirI1LUvoOk1u7B2W3YR2/4LchuBmznNb?=
- =?iso-8859-1?Q?5zAzH9hCWw0hUIRzMA0kBcYmVT4tHDNLNzPF1/Yj8fWXKdrJSeL6Lz01Q9?=
- =?iso-8859-1?Q?dEzRpYF3WLd9neTvdi3HDtsVZUe4b4bqZ0xsKB0MGlGnu2jARTobSrdSno?=
- =?iso-8859-1?Q?i9sjHaFSjWAI2hP4MngOFZGsItCygqJrrnk2d6DHgU21/QoMB2loglwly0?=
- =?iso-8859-1?Q?O650E/H6roMQ5QoSDRTVzqEIUjZYqRncmd4guZ74dFGC5Smc13TirCdoEK?=
- =?iso-8859-1?Q?Du1tl3r9rNanZd0llVrMAhYbNuhlnZNeGCVEO7VNXYfGJxVLvhALr7ox7X?=
- =?iso-8859-1?Q?ofoplBzr41H8RNbPEm1D+dNbm751RWBmPHCKSLDy1L38nnOGc4tMdBokQo?=
- =?iso-8859-1?Q?meHiTirJ1d3otV8VUD+noC556R35ElRVv5O0bw2m0bqCLVBvk/tT2f0ug0?=
- =?iso-8859-1?Q?f5hBjZSwk+NnHIJ8wDAS/8ZaTvgRmCRaDEnerBp30CHA3KW47zjwQh9MGg?=
- =?iso-8859-1?Q?wBEQ3KreZV5TWYbZNJ6ineLJz2pnqxmdBw1ZDGx5hT4cImFL2xjuS6cyZV?=
- =?iso-8859-1?Q?nnfy4gbEmQ6VkMUUCK6GY8dlKMivVhe1KOUkyVwZxknpmi/C3ad0RzTpnm?=
- =?iso-8859-1?Q?dfmy95UCPnAWv3f9btL7WsTy5TK5UaYdMx8p6/J1RNNRIeHp/7NwKcYmnC?=
- =?iso-8859-1?Q?2n32LOIHqCLwBxW8Lq/myYc8LM8XLBkEGjINMRBZJja+mU+Mf8ZDl4/bYg?=
- =?iso-8859-1?Q?XQ32hL5NGSjjfoRAdN3yDw1EHGoFOb3b0di/MT/V8fEJJXcBGK+h+NZeYl?=
- =?iso-8859-1?Q?V8Lgf/Es8AZQ1TyunpNECyAFf0RQZGgfs1HlopN818teyLSsCpE+CGCeqi?=
- =?iso-8859-1?Q?YPQ8UYDpyiF1hPCPvj/NQhuaJt2pEut+30kGenkxVqgrVolZ5hNiBqniqB?=
- =?iso-8859-1?Q?6mWif4toUOwQVVr0IyDYdThOCSyGhDzIA7x/qJyMqCJtZqxNyC/AHunC3K?=
- =?iso-8859-1?Q?3tF4nVKWlkTISnYyhYMEQL+2zBXyKJodOkthr5vCOPecCTEffdWdpIsT75?=
- =?iso-8859-1?Q?rQXruk1UVG4EoNTIz91GYmHF3KUCCnsRmv?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v14 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <142f0d8d-5814-4747-bfac-2479fcee92d3@spud>
+References: <20230306094858.1614819-1-conor.dooley@microchip.com>
+ <20230306094858.1614819-2-conor.dooley@microchip.com>
+ <20230322105536.kgt3ffowefqlg6eu@pengutronix.de>
+ <48c7dbdc-04a2-42de-964f-fd86cf070797@spud>
+ <20230323091409.rdi4bqrcsfvxnht5@pengutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c4801a0-406d-4031-4f4e-08db2bb61e2b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2023 15:48:59.2785
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1kr1hHUh7h+H06B7rkGP4tUX+EjLvHjiVeMIWLuv44pOakLIzy3J5oFH3oH09Lvap0n9Dy9LDMDrA3CSP3jPMX4QQ4jSEKc6B328cJ8szvk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8454
-X-Spam-Status: No, score=1.6 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8cibvK/RgMebX5pn"
+Content-Disposition: inline
+In-Reply-To: <20230323091409.rdi4bqrcsfvxnht5@pengutronix.de>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry and Uwe,
 
-Gentle ping
+--8cibvK/RgMebX5pn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
-Biju
+On Thu, Mar 23, 2023 at 10:14:09AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Wed, Mar 22, 2023 at 10:49:40PM +0000, Conor Dooley wrote:
+> > On Wed, Mar 22, 2023 at 11:55:36AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Mon, Mar 06, 2023 at 09:48:58AM +0000, Conor Dooley wrote:
+> > > > Add a driver that supports the Microchip FPGA "soft" PWM IP core.
 
-> -----Original Message-----
-> From: Biju Das <biju.das.jz@bp.renesas.com>
-> Sent: Friday, March 10, 2023 5:07 PM
-> To: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Biju Das <biju.das.jz@bp.renesas.com>; Uwe Kleine-K=F6nig <u.kleine-
-> koenig@pengutronix.de>; linux-pwm@vger.kernel.org; Lee Jones
-> <lee@kernel.org>; Daniel Lezcano <daniel.lezcano@linaro.org>; William
-> Breathitt Gray <william.gray@linaro.org>; Geert Uytterhoeven
-> <geert+renesas@glider.be>; Chris Paterson <Chris.Paterson2@renesas.com>;
-> Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>; linux-
-> renesas-soc@vger.kernel.org
-> Subject: [PATCH v14 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+> > > > +static void mchp_core_pwm_calc_period(const struct pwm_state *stat=
+e, unsigned long clk_rate,
+> > > > +				      u16 *prescale, u16 *period_steps)
+> > > > +{
+> > > > +	u64 tmp;
+> > > > +
+> > > > +	/*
+> > > > +	 * Calculate the period cycles and prescale values.
+> > > > +	 * The registers are each 8 bits wide & multiplied to compute the=
+ period
+> > > > +	 * using the formula:
+> > > > +	 *           (prescale + 1) * (period_steps + 1)
+> > > > +	 * period =3D -------------------------------------
+> > > > +	 *                      clk_rate
+> > > > +	 * so the maximum period that can be generated is 0x10000 times t=
+he
+> > > > +	 * period of the input clock.
+> > > > +	 * However, due to the design of the "hardware", it is not possib=
+le to
+> > > > +	 * attain a 100% duty cycle if the full range of period_steps is =
+used.
+> > > > +	 * Therefore period_steps is restricted to 0xFE and the maximum m=
+ultiple
+> > > > +	 * of the clock period attainable is 0xFF00.
+> > > > +	 */
+> > > > +	tmp =3D mul_u64_u64_div_u64(state->period, clk_rate, NSEC_PER_SEC=
+);
+> > > > +
+> > > > +	/*
+> > > > +	 * The hardware adds one to the register value, so decrement by o=
+ne to
+> > > > +	 * account for the offset
+> > > > +	 */
+> > > > +	if (tmp >=3D MCHPCOREPWM_PERIOD_MAX) {
+> > > > +		*prescale =3D MCHPCOREPWM_PRESCALE_MAX - 1;
+> > > > +		*period_steps =3D MCHPCOREPWM_PERIOD_STEPS_MAX - 1;
+> > > > +
+> > > > +		return;
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * The optimal value for prescale can be calculated using the max=
+imum
+> > > > +	 * permitted value of period_steps, 0xff.
+> > >=20
+> > > I had to think about that one for a while. The maximal value for
+> > > (period_steps + 1) is 0xff with the reasoning above?! That's also what
+> > > the code uses.
+> >=20
+> > I've become really disenfranchised with these register/variable names.
+> > I feel like just changing them to disconnect the variables used for
+> > calculation from the register names a little, so that the "is there a +1
+> > needed here or not" stuff becomes a little clearer.
 >=20
-> The RZ/G2L Multi-Function Timer Pulse Unit 3 (a.k.a MTU3a) uses one count=
-er
-> and two match components to configure duty_cycle and period to generate P=
-WM
-> output waveform.
+> Full ack, I considered asking for that, but after some time I was in the
+> "I reviewed the patch today"-mode (which is quite similar to the mode
+> you described :-) and forgot. (Even in that mode the PREG_TO_VAL macro
+> annoyed me a bit.)
 >=20
-> Add basic support for RZ/G2L MTU3a PWM driver by creating separate PWM
-> channels for each IOs.
+> > It always makes sense to be when I am in an "I respun the patch today"
+> > mode, but by the time we're in the review stage I get muddled.
+> > God forbid I have to look at this in 10 years time.
+> >=20
+> > That said, there is a bit of a mistake here. The comment two above says
+> > "Therefore period_steps is restricted to 0xFE" when I'm capping things
+> > off. Some inaccuracies have probably snuck in during the various
+> > respins, and I think the comment above is "correct" but misleading, as
+> > it muddies the waters about variable versus register names.
 >=20
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v13->v14:
->  * Updated commit description
->  * Updated Limitations section.
->  * Replaced the macros RZ_MTU*->RZ_MTU3_CHAN_* in probe()
->  * Fixed a kernel crash in error path by moving rz_mtu3_pwm->chip.dev bef=
-ore
->    devm_add_action_or_reset()
->  * Added pm_runtime_idle() and simplified error paths for
-> devm_add_action_or_reset()
->    and devm_pwmchip_add().
->=20
-> v12->v13:
->  * Updated commit description
->  * Moved RZ_MTU3_TMDR1_MD_* macros to rz_mtu3.h
->  * Updated Limitations section.
->  * Removed PWM mode1 references from the driver.
->  * Dropped prescale and duty_cycle from struct rz_mtu3_pwm_chip.
->  * Replaced rz_mtu3_pwm_mode1_num_ios->rz_mtu3_hw_channel_ios.
->  * Avoided race condition in rz_mtu3_pwm_request()/rz_mtu3_pwm_free().
->  * Updated get_state() by adding dc > pv check and added a comment about
->    overflow condition.
->  * Moved overflow condition check from config->probe()
->  * Replaced pm_runtime_resume_and_get with unconditional
-> pm_runtime_get_sync()
->    in config()
->  * Added error check for clk_prepare_enable() in probe() and propagating
-> error
->    to the caller for pm_runtime_resume()
->  * clk_get_rate() is called after enabling the clock and
-> clk_rate_exclusive_put()
-> v11->v12:
->  * Updated header file to <linux/mfd/rz-mtu3.h> as core driver is in MFD.
->  * Reordered get_state()
-> v10->v11:
->  * No change.
-> v9->v10:
->  * No change.
-> v8->v9:
->  * Added prescale/duty_cycle variables to struct rz_mtu3_pwm_chip and
->    cached this values in rz_mtu3_pwm_config and used this cached values
->    in get_state(), if PWM is disabled.
->  * Added return code for get_state()
-> v7->v8:
->  * Simplified rz_mtu3_pwm_request by calling rz_mtu3_request_channel()
->  * Simplified rz_mtu3_pwm_free by calling rz_mtu3_release_channel()
-> v6->v7:
->  * Added channel specific mutex lock to avoid race between counter
->    device and rz_mtu3_pwm_{request,free}
->  * Added pm_runtime_resume_and_get in rz_mtu3_pwm_enable()
->  * Added pm_runtime_put_sync in rz_mtu3_pwm_disable()
->  * Updated rz_mtu3_pwm_config()
->  * Updated rz_mtu3_pwm_apply()
-> v5->v6:
->  * Updated commit and Kconfig description
->  * Sorted the header
->  * Replaced dev_get_drvdata from rz_mtu3_pwm_pm_disable()
->  * Replaced SET_RUNTIME_PM_OPS->DEFINE_RUNTIME_DEV_PM_OPS and removed
->    __maybe_unused from suspend/resume()
-> v4->v5:
->  * pwm device is instantiated by mtu3a core driver.
-> v3->v4:
->  * There is no resource associated with "rz-mtu3-pwm" compatible
->    and moved the code to mfd subsystem as it binds against "rz-mtu".
->  * Removed struct platform_driver rz_mtu3_pwm_driver.
-> v2->v3:
->  * No change.
-> v1->v2:
->  * Modelled as a single PWM device handling multiple channles.
->  * Used PM framework to manage the clocks.
-> ---
->  drivers/pwm/Kconfig       |  11 +
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-rz-mtu3.c | 482 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 494 insertions(+)
->  create mode 100644 drivers/pwm/pwm-rz-mtu3.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig index
-> dae023d783a2..ccc0299fd0dd 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -481,6 +481,17 @@ config PWM_ROCKCHIP
->  	  Generic PWM framework driver for the PWM controller found on
->  	  Rockchip SoCs.
->=20
-> +config PWM_RZ_MTU3
-> +	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
-> +	depends on RZ_MTU3 || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	help
-> +	  This driver exposes the MTU3a PWM Timer controller found in Renesas
-> +	  RZ/G2L like chips through the PWM API.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-rz-mtu3.
-> +
->  config PWM_SAMSUNG
->  	tristate "Samsung PWM support"
->  	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile index
-> 7bf1a29f02b8..b85fc9fba326 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -44,6 +44,7 @@ obj-$(CONFIG_PWM_RASPBERRYPI_POE)	+=3D pwm-raspberrypi-
-> poe.o
->  obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
->  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
->  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
-> +obj-$(CONFIG_PWM_RZ_MTU3)	+=3D pwm-rz-mtu3.o
->  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
->  obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
->  obj-$(CONFIG_PWM_SL28CPLD)	+=3D pwm-sl28cpld.o
-> diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c new fi=
-le
-> mode 100644 index 000000000000..146948656755
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-rz-mtu3.c
-> @@ -0,0 +1,482 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Renesas RZ/G2L MTU3a PWM Timer driver
-> + *
-> + * Copyright (C) 2022 Renesas Electronics Corporation
-> + *
-> + * Hardware manual for this IP can be found here
-> + *
-> +https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-use
-> +rs-manual-hardware-0?language=3Den
-> + *
-> + * Limitations:
-> + * - When PWM is disabled, the output is driven to Hi-Z.
-> + * - While the hardware supports both polarities, the driver (for now)
-> + *   only handles normal polarity.
-> + * - HW uses one counter and two match components to configure duty_cycl=
-e
-> + *   and period.
-> + * - Multi-Function Timer Pulse Unit(a.k.a MTU) has 7 HW channels for PW=
-M
-> + *   operations(The channels are MTU{0..4, 6, 7}).
-> + * - MTU{1, 2} channels have a single IO, whereas all other HW channels
-> have
-> + *   2 IOs.
-> + * - Each IO is modelled as an independent PWM channel.
-> + * - rz_mtu3_hw_channel_ios table is used to map the PWM channel to the
-> + *   corresponding HW channel as there are difference in number of IOs
-> + *   between HW channels.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/limits.h>
-> +#include <linux/mfd/rz-mtu3.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pwm.h>
-> +#include <linux/time.h>
-> +
-> +#define RZ_MTU3_TIOR_OC_RETAIN		(0)
-> +#define RZ_MTU3_TIOR_OC_0_H_COMP_MATCH	(2)
-> +#define RZ_MTU3_TIOR_OC_1_TOGGLE	(7)
-> +#define RZ_MTU3_TIOR_OC_IOA		GENMASK(3, 0)
-> +
-> +#define RZ_MTU3_TCR_CCLR_TGRC		(5 << 5)
-> +#define RZ_MTU3_TCR_CKEG_RISING		(0 << 3)
-> +
-> +#define RZ_MTU3_TCR_TPCS		GENMASK(2, 0)
-> +
-> +#define RZ_MTU3_MAX_PWM_CHANNELS	(12)
-> +
-> +#define RZ_MTU3_MAX_HW_CHANNELS	(7)
-> +
-> +/* The table represents the number of IOs on each MTU HW channel. */
-> +static const u8 rz_mtu3_hw_channel_ios[] =3D { 2, 1, 1, 2, 2, 2, 2 };
-> +
-> +/**
-> + * struct rz_mtu3_pwm_chip - MTU3 pwm private data
-> + *
-> + * @chip: MTU3 pwm chip data
-> + * @clk: MTU3 module clock
-> + * @lock: Lock to prevent concurrent access for usage count
-> + * @rate: MTU3 clock rate
-> + * @user_count: MTU3 usage count
-> + * @rz_mtu3_channel: HW channels for the PWM  */
-> +
-> +struct rz_mtu3_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	struct mutex lock;
-> +	unsigned long rate;
-> +	u32 user_count[RZ_MTU3_MAX_HW_CHANNELS];
-> +	struct rz_mtu3_channel *ch[RZ_MTU3_MAX_HW_CHANNELS]; };
-> +
-> +static inline struct rz_mtu3_pwm_chip *to_rz_mtu3_pwm_chip(struct
-> +pwm_chip *chip) {
-> +	return container_of(chip, struct rz_mtu3_pwm_chip, chip); }
-> +
-> +static u8 rz_mtu3_pwm_calculate_prescale(struct rz_mtu3_pwm_chip *rz_mtu=
-3,
-> +					 u64 period_cycles)
-> +{
-> +	u32 prescaled_period_cycles;
-> +	u8 prescale;
-> +
-> +	prescaled_period_cycles =3D period_cycles >> 16;
-> +	if (prescaled_period_cycles >=3D 16)
-> +		prescale =3D 3;
-> +	else
-> +		prescale =3D (fls(prescaled_period_cycles) + 1) / 2;
-> +
-> +	return prescale;
-> +}
-> +
-> +static struct rz_mtu3_channel *
-> +rz_mtu3_get_hw_channel(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u32
-> +channel) {
-> +	unsigned int i, ch_index =3D 0;
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(rz_mtu3_hw_channel_ios); i++) {
-> +		ch_index +=3D rz_mtu3_hw_channel_ios[i];
-> +
-> +		if (ch_index > channel)
-> +			break;
-> +	}
-> +
-> +	return rz_mtu3_pwm->ch[i];
-> +}
-> +
-> +static u32 rz_mtu3_get_hw_channel_index(struct rz_mtu3_pwm_chip
-> *rz_mtu3_pwm,
-> +					struct rz_mtu3_channel *ch)
-> +{
-> +	u32 i;
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(rz_mtu3_hw_channel_ios); i++) {
-> +		if (ch =3D=3D rz_mtu3_pwm->ch[i])
-> +			break;
-> +	}
-> +
-> +	return i;
-> +}
-> +
-> +static bool rz_mtu3_pwm_is_second_channel(u32 ch_index, u32 hwpwm) {
-> +	u32 i, pwm_ch_index =3D 0;
-> +
-> +	for (i =3D 0; i < ch_index; i++)
-> +		pwm_ch_index +=3D rz_mtu3_hw_channel_ios[i];
-> +
-> +	return pwm_ch_index !=3D hwpwm;
-> +}
-> +
-> +static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_p=
-wm,
-> +				      u32 hwpwm)
-> +{
-> +	struct rz_mtu3_channel *ch;
-> +	bool is_channel_en;
-> +	u32 ch_index;
-> +	u8 val;
-> +
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +	is_channel_en =3D rz_mtu3_is_enabled(ch);
-> +
-> +	if (rz_mtu3_pwm_is_second_channel(ch_index, hwpwm))
-> +		val =3D rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORL);
-> +	else
-> +		val =3D rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TIORH);
-> +
-> +	return (is_channel_en && (val & RZ_MTU3_TIOR_OC_IOA)); }
-> +
-> +static int rz_mtu3_pwm_request(struct pwm_chip *chip, struct pwm_device
-> +*pwm) {
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
-> +	struct rz_mtu3_channel *ch;
-> +	u32 ch_index;
-> +
-> +	mutex_lock(&rz_mtu3_pwm->lock);
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +	if (!rz_mtu3_pwm->user_count[ch_index] &&
-> !rz_mtu3_request_channel(ch)) {
-> +		mutex_unlock(&rz_mtu3_pwm->lock);
-> +		return -EBUSY;
-> +	}
-> +
-> +	rz_mtu3_pwm->user_count[ch_index]++;
-> +	mutex_unlock(&rz_mtu3_pwm->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void rz_mtu3_pwm_free(struct pwm_chip *chip, struct pwm_device
-> +*pwm) {
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
-> +	struct rz_mtu3_channel *ch;
-> +	u32 ch_index;
-> +
-> +	mutex_lock(&rz_mtu3_pwm->lock);
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +
-> +	rz_mtu3_pwm->user_count[ch_index]--;
-> +	if (!rz_mtu3_pwm->user_count[ch_index])
-> +		rz_mtu3_release_channel(ch);
-> +
-> +	mutex_unlock(&rz_mtu3_pwm->lock);
-> +}
-> +
-> +static int rz_mtu3_pwm_enable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-> +			      struct pwm_device *pwm)
-> +{
-> +	struct rz_mtu3_channel *ch;
-> +	u32 ch_index;
-> +	u8 val;
-> +	int rc;
-> +
-> +	rc =3D pm_runtime_resume_and_get(rz_mtu3_pwm->chip.dev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +	val =3D (RZ_MTU3_TIOR_OC_1_TOGGLE << 4) |
-> +RZ_MTU3_TIOR_OC_0_H_COMP_MATCH;
-> +
-> +	rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_PWMMODE1);
-> +	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL, val);
-> +	else
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH, val);
-> +
-> +	if (rz_mtu3_pwm->user_count[ch_index] <=3D 1)
-> +		rz_mtu3_enable(ch);
-> +
-> +	return 0;
-> +}
-> +
-> +static void rz_mtu3_pwm_disable(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-> +				struct pwm_device *pwm)
-> +{
-> +	struct rz_mtu3_channel *ch;
-> +	u32 ch_index;
-> +
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +
-> +	/* Return to normal mode and disable output pins of MTU3 channel */
-> +	if (rz_mtu3_pwm->user_count[ch_index] <=3D 1)
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TMDR1,
-> RZ_MTU3_TMDR1_MD_NORMAL);
-> +
-> +	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm))
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORL,
-> RZ_MTU3_TIOR_OC_RETAIN);
-> +	else
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TIORH,
-> RZ_MTU3_TIOR_OC_RETAIN);
-> +
-> +	if (rz_mtu3_pwm->user_count[ch_index] <=3D 1)
-> +		rz_mtu3_disable(ch);
-> +
-> +	pm_runtime_put_sync(rz_mtu3_pwm->chip.dev);
-> +}
-> +
-> +static int rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_devic=
-e
-> *pwm,
-> +				 struct pwm_state *state)
-> +{
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
-> +	struct rz_mtu3_channel *ch;
-> +	u8 prescale, val;
-> +	u32 ch_index;
-> +	u16 dc, pv;
-> +	u64 tmp;
-> +
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +	pm_runtime_get_sync(chip->dev);
-> +	state->enabled =3D rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, pwm->hwpwm);
-> +	if (state->enabled) {
-> +		val =3D rz_mtu3_8bit_ch_read(ch, RZ_MTU3_TCR);
-> +		prescale =3D FIELD_GET(RZ_MTU3_TCR_TPCS, val);
-> +
-> +		if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
-> +			dc =3D rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRD);
-> +			pv =3D rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRC);
-> +		} else {
-> +			dc =3D rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRB);
-> +			pv =3D rz_mtu3_16bit_ch_read(ch, RZ_MTU3_TGRA);
-> +		}
-> +
-> +		/* With prescale <=3D 7 and pv <=3D 0xffff this doesn't overflow.
-> */
-> +		tmp =3D NSEC_PER_SEC * (u64)pv << (2 * prescale);
-> +		state->period =3D DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
-> +		tmp =3D NSEC_PER_SEC * (u64)dc << (2 * prescale);
-> +		state->duty_cycle =3D DIV_ROUND_UP_ULL(tmp, rz_mtu3_pwm->rate);
-> +	}
-> +
-> +	if (state->duty_cycle > state->period)
-> +		state->duty_cycle =3D state->period;
-> +
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +	pm_runtime_put(chip->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device
-> *pwm,
-> +			      const struct pwm_state *state) {
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
-> +	struct rz_mtu3_channel *ch;
-> +	unsigned long pv, dc;
-> +	u64 period_cycles;
-> +	u64 duty_cycles;
-> +	u32 ch_index;
-> +	u8 prescale;
-> +	u8 val;
-> +
-> +	ch =3D rz_mtu3_get_hw_channel(rz_mtu3_pwm, pwm->hwpwm);
-> +	ch_index =3D rz_mtu3_get_hw_channel_index(rz_mtu3_pwm, ch);
-> +	period_cycles =3D mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
-> +					NSEC_PER_SEC);
-> +	prescale =3D rz_mtu3_pwm_calculate_prescale(rz_mtu3_pwm, period_cycles)=
-;
-> +
-> +	if (period_cycles >> (2 * prescale) <=3D U16_MAX)
-> +		pv =3D period_cycles >> (2 * prescale);
-> +	else
-> +		pv =3D U16_MAX;
-> +
-> +	duty_cycles =3D mul_u64_u32_div(state->duty_cycle, rz_mtu3_pwm->rate,
-> +				      NSEC_PER_SEC);
-> +	if (duty_cycles >> (2 * prescale) <=3D U16_MAX)
-> +		dc =3D duty_cycles >> (2 * prescale);
-> +	else
-> +		dc =3D U16_MAX;
-> +
-> +	/*
-> +	 * If the PWM channel is disabled, make sure to turn on the clock
-> +	 * before writing the register.
-> +	 */
-> +	if (!pwm->state.enabled)
-> +		pm_runtime_get_sync(chip->dev);
-> +
-> +	val =3D RZ_MTU3_TCR_CKEG_RISING | prescale;
-> +	if (rz_mtu3_pwm_is_second_channel(ch_index, pwm->hwpwm)) {
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
-> +				      RZ_MTU3_TCR_CCLR_TGRC | val);
-> +		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRD, dc);
-> +		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRC, pv);
-> +	} else {
-> +		rz_mtu3_8bit_ch_write(ch, RZ_MTU3_TCR,
-> +				      RZ_MTU3_TCR_CCLR_TGRA | val);
-> +		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRB, dc);
-> +		rz_mtu3_16bit_ch_write(ch, RZ_MTU3_TGRA, pv);
-> +	}
-> +
-> +	/* If the PWM is not enabled, turn the clock off again to save power.
-> */
-> +	if (!pwm->state.enabled)
-> +		pm_runtime_put(chip->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rz_mtu3_pwm_apply(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> +			     const struct pwm_state *state)
-> +{
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
-> +	bool enabled =3D pwm->state.enabled;
-> +	int ret;
-> +
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +		return -EINVAL;
-> +
-> +	if (!state->enabled) {
-> +		if (enabled)
-> +			rz_mtu3_pwm_disable(rz_mtu3_pwm, pwm);
-> +
-> +		return 0;
-> +	}
-> +
-> +	ret =3D rz_mtu3_pwm_config(chip, pwm, state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!enabled)
-> +		ret =3D rz_mtu3_pwm_enable(rz_mtu3_pwm, pwm);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct pwm_ops rz_mtu3_pwm_ops =3D {
-> +	.request =3D rz_mtu3_pwm_request,
-> +	.free =3D rz_mtu3_pwm_free,
-> +	.get_state =3D rz_mtu3_pwm_get_state,
-> +	.apply =3D rz_mtu3_pwm_apply,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int rz_mtu3_pwm_pm_runtime_suspend(struct device *dev) {
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D dev_get_drvdata(dev);
-> +
-> +	clk_disable_unprepare(rz_mtu3_pwm->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int rz_mtu3_pwm_pm_runtime_resume(struct device *dev) {
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D dev_get_drvdata(dev);
-> +
-> +	return clk_prepare_enable(rz_mtu3_pwm->clk);
-> +}
-> +
-> +static DEFINE_RUNTIME_DEV_PM_OPS(rz_mtu3_pwm_pm_ops,
-> +				 rz_mtu3_pwm_pm_runtime_suspend,
-> +				 rz_mtu3_pwm_pm_runtime_resume, NULL);
-> +
-> +static void rz_mtu3_pwm_pm_disable(void *data) {
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D data;
-> +
-> +	clk_rate_exclusive_put(rz_mtu3_pwm->clk);
-> +	pm_runtime_disable(rz_mtu3_pwm->chip.dev);
-> +	pm_runtime_set_suspended(rz_mtu3_pwm->chip.dev);
-> +}
-> +
-> +static int rz_mtu3_pwm_probe(struct platform_device *pdev) {
-> +	struct rz_mtu3 *ddata =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct rz_mtu3_pwm_chip *rz_mtu3_pwm;
-> +	struct device *dev =3D &pdev->dev;
-> +	int num_pwm_hw_ch =3D 0;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	rz_mtu3_pwm =3D devm_kzalloc(&pdev->dev, sizeof(*rz_mtu3_pwm),
-> GFP_KERNEL);
-> +	if (!rz_mtu3_pwm)
-> +		return -ENOMEM;
-> +
-> +	rz_mtu3_pwm->clk =3D ddata->clk;
-> +
-> +	for (i =3D 0; i < RZ_MTU_NUM_CHANNELS; i++) {
-> +		if (i =3D=3D RZ_MTU3_CHAN_5 || i =3D=3D RZ_MTU3_CHAN_8)
-> +			continue;
-> +
-> +		rz_mtu3_pwm->ch[num_pwm_hw_ch] =3D &ddata->channels[i];
-> +		rz_mtu3_pwm->ch[num_pwm_hw_ch]->dev =3D dev;
-> +		num_pwm_hw_ch++;
-> +	}
-> +
-> +	mutex_init(&rz_mtu3_pwm->lock);
-> +	platform_set_drvdata(pdev, rz_mtu3_pwm);
-> +	ret =3D clk_prepare_enable(rz_mtu3_pwm->clk);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Clock enable failed\n");
-> +
-> +	clk_rate_exclusive_get(rz_mtu3_pwm->clk);
-> +
-> +	rz_mtu3_pwm->rate =3D clk_get_rate(rz_mtu3_pwm->clk);
-> +	/*
-> +	 * Refuse clk rates > 1 GHz to prevent overflow later for computing
-> +	 * period and duty cycle.
-> +	 */
-> +	if (rz_mtu3_pwm->rate > NSEC_PER_SEC) {
-> +		ret =3D -EINVAL;
-> +		clk_rate_exclusive_put(rz_mtu3_pwm->clk);
-> +		goto disable_clock;
-> +	}
-> +
-> +	pm_runtime_set_active(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +	rz_mtu3_pwm->chip.dev =3D &pdev->dev;
-> +	ret =3D devm_add_action_or_reset(&pdev->dev,
-> +				       rz_mtu3_pwm_pm_disable,
-> +				       rz_mtu3_pwm);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	rz_mtu3_pwm->chip.ops =3D &rz_mtu3_pwm_ops;
-> +	rz_mtu3_pwm->chip.npwm =3D RZ_MTU3_MAX_PWM_CHANNELS;
-> +	ret =3D devm_pwmchip_add(&pdev->dev, &rz_mtu3_pwm->chip);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "failed to add PWM
-> chip\n");
-> +
-> +	pm_runtime_idle(&pdev->dev);
-> +
-> +	return 0;
-> +
-> +disable_clock:
-> +	clk_disable_unprepare(rz_mtu3_pwm->clk);
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver rz_mtu3_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "pwm-rz-mtu3",
-> +		.pm =3D pm_ptr(&rz_mtu3_pwm_pm_ops),
-> +	},
-> +	.probe =3D rz_mtu3_pwm_probe,
-> +};
-> +module_platform_driver(rz_mtu3_pwm_driver);
-> +
-> +MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-> +MODULE_ALIAS("platform:pwm-rz-mtu3");
-> +MODULE_DESCRIPTION("Renesas RZ/G2L MTU3a PWM Timer Driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.25.1
+> I think it's sensible to only talk about either the register values or
+> the factors. I tend to think that talking about the register values is
+> easier at the end and recommend not to hide the +1 (or -1) in a macro.
 
+Yeah, I think the macro had value about 14 versions ago, but the number
+of users has dropped over the revisions.
+I think what I am going to to do for the next version is drop that
+macro, and only ever hold the registers values in variables.
+That had the advantage of making the maths in get_state() better match
+the comments that are now quite prevalent in the driver, as the +1s done
+there are more obvious.
+I'm loathe to link a git tree but, without changes to the period
+calculation logic, this is what it looks like w/ a consistent approach
+to what period_steps and prescale mean:
+https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/tree/driver=
+s/pwm/pwm-microchip-core.c?h=3Dpwm-dev-v15
+[I blindly pushed that before leaving work & without even building it, so
+there's probably some silly mistake in it, but that's besides the point
+of displaying variable/comment changes]
+
+=46rom the chopped out bits of the previous email:
+> Consider
+>=20
+> 	clk_rate =3D 1000000
+> 	period =3D 64009000
+>=20
+> then your code gives:
+>=20
+>               period * clk_rate
+> 	tmp =3D ----------------- =3D 64009
+>                 NSEC_PER_SEC
+>=20
+> and so *prescale =3D 251 and *period_steps =3D 253.=20
+>=20
+> Wasn't the intention to pick *prescale =3D 250 and then
+> *period_steps =3D 255?
+>=20
+> Depending on your semantics of "optimal", either (252, 252) or (250,
+> 255) is better than (251, 253). I think that means you shouldn't ignore
+> the -1?
+
+So, putting this one aside because it merits more thinking about.
+I went through and checked some arbitrary values of tmp, rather than
+dealing with "real" ones computed from frequencies I know are easily
+available for me to use in the FPGA bitstream I use to test this stuff.
+
+I think my "integer maths" truncation approach is not actually valid.
+Consider tmp =3D 255... *prescale gets computed as 255/(254 + 1) =3D 1, per=
+ my
+algorithm. Then, *period_steps is 255/(1 + 1) - 1 =3D 127.
+The period is (1 + 1)(127 + 1), which is not 255.
+
+Or take tmp =3D 510. prescale is 510/(254 + 1) =3D 2. period_steps is then
+510/(2 + 1) - 1 =3D 169. period is (2 + 1)(169 + 1), which is 510. The
+calculated period is right, but that is not the "optimal" value!
+
+I think you're right in that I do actually need to consider the -1, and
+do a ceiling operation, when calculating prescale, IOW:
+	*prescale =3D ceil(div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1)) - 1;
+	*period_steps =3D div_u64(tmp, *prescale + 1) - 1;
+	[I know I can't actually call ceil()]
+
+That'd do the same thing as the truncation where
+div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1) is not a round number,
+but it improves the round number case, eg tmp =3D 510:
+prescale =3D 510/(254 + 1) - 1 =3D 1, period_steps =3D 510/(1 + 1) - 1 =3D =
+254
+period =3D (1 + 1)(254 + 1) =3D 510
+
+It does mean a zero period would need to be special cased, but I don't
+mind that.
+
+> One thing I think is strange is that with clk_rate =3D 1000001 and your
+> algorithm we get:
+>=20
+> requested period =3D 1274998 ns -> real period =3D 1269998.73000127  (pre=
+scale =3D 4, period_steps =3D 253)
+> requested period =3D 1274999 ns -> real period =3D 1271998.728001272 (pre=
+scale =3D 5, period_steps =3D 211)
+
+This second one here, where tmp =3D 1275, is a good example of the above.
+With the ceil() change, this would be prescale =3D 4, period_steps =3D 254
+which I think makes more sense.
+>=20
+> while 1271998.728001272 would be a better match for a request with
+> period =3D 1274998 than 1269998.73000127.
+>=20
+> I spend too much time to think about that now. I'm unsure if this is
+> because the -1 is missing, or if there is a bug in the idea to pick a
+> small prescale to allow a big period_steps value (in combination with
+> the request to pick the biggest possible period).
+
+With the inconsistency fixed, I think getting the slightly less accurate
+period is a byproduct of prioritising the finegrainedness of the duty
+cycle.
+
+> Hmm, maybe you understand that better than me? I'll have to think about
+> it.
+
+[end of snip from the last mail]
+
+>=20
+> Having said that here are my results of thinking a bit about how to
+> choose register values:
+>=20
+> Let r(p) denote the period that is actually configured if p is
+> requested.
+>=20
+> The nice properties we want (i.e. those a consumer might expect?) are:
+>=20
+>  a) =E2=88=80p: r(p) =E2=89=A4 p
+>     i.e. never configure a bigger period than requested
+>     (This is a bit arbitrary, but nice to get a consistent behaviour for
+>     all drivers and easier to handle than requesting the nearest
+>     possible period.)
+>=20
+>  b) =E2=88=80p, q: p =E2=89=A4 q =E2=9F=B9 r(p) =E2=89=A4 r(q)
+>     i.e. monotonicity
+>=20
+>  c) =E2=88=80p: r(roundup(r(p))) =3D r(p)
+>     i.e. idempotency
+>=20
+>  d) =E2=88=80p, q: r(p) =E2=89=A4 q =E2=9F=B9 r(p) =E2=89=A4 r(q)
+>     i.e. pick the biggest possible period
+>=20
+> (Sidenote: d) and a) imply b) and c))
+>=20
+> If you always set period_steps to 0xfe
+> (in Python syntax:
+>=20
+> 	tmp =3D p * clkrate // NSPS
+> 	period_steps =3D 0xfe
+> 	prescale =3D tmp // (period_steps + 1) - 1
+>=20
+> ) you get this consistent behaviour.
+>=20
+> This has the upside of being easy to implement and cheap to run.
+> Downside is that it's coarse and fails to implement periods that would
+> require e.g prescale =3D 0 and period_steps < 0xfe. As period_steps is
+> big, the domain to chose the duty cycle from is good.
+
+I want to maintain support for prescale =3D 0, so I'm not really
+interested in a computation that forsakes that.
+
+> If you pick period_steps and prescale such that
+> 	(period_steps + 1) * (prescale + 1)
+> is the maximal value that makes r(p) =E2=89=A4 p you have an increased ru=
+ntime
+> because you have to test multiple values for period_steps. I don't think
+> there is an algorithm without a loop to determine an optimal pair?!
+> Usually this gives a better match that the easy algorithm above for the
+> period, but the domain for duty_cycle is (usually) smaller.
+> I think we have a) and d) here, so that's good.
+>=20
+> I think for most consumers a big domain for duty_cycle is more important
+> that a good match for the requested period. So I tend to recommend the
+> easy algorithm, but I'm not religious about that and open for other
+> opinion and reasoning.
+
+I'll be honest and say that I am getting a bit fatigued with the way
+that issues w/ the calculations keep cropping up. I'll put a bit of time
+into trying to figure out how to fix the tmp =3D 6400900 case that you
+mentioned above, but if it comes out in the wash that that is a facet of
+the way this stuff is computed, then I might be inclined to forge ahead
+without resolving it... I'd certainly want to explain in a comment
+somewhere (limitations section?) the point at which it starts getting
+less accurate though. I'll write a script to iterate through the values
+of tmp & see if the reason is obvious.
+
+I would like to keep (something resembling) the current simple
+implementation of the period calculation, as simplicity is a significant
+advantage! I do also like the strategy of trying to maximise the number
+of available duty cycle steps, I think it makes perfect sense to make
+that the goal.
+
+Thanks again for spending time on this Uwe,
+Conor.
+
+
+--8cibvK/RgMebX5pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZB3vMwAKCRB4tDGHoIJi
+0v5sAP9F52YEeYkCvuFFznLdZBSOAXFAZRJDNY5M+nI84VWhlQD9E9b4qGV8WyM2
+DHiICd/Jbb+eNHoN2y6iteQpkxrW8QE=
+=tdFS
+-----END PGP SIGNATURE-----
+
+--8cibvK/RgMebX5pn--
