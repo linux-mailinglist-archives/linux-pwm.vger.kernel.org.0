@@ -2,233 +2,362 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B79F6C8CF9
-	for <lists+linux-pwm@lfdr.de>; Sat, 25 Mar 2023 10:43:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 795436C8DA2
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Mar 2023 12:52:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230495AbjCYJn2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 25 Mar 2023 05:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37230 "EHLO
+        id S229505AbjCYLwv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 25 Mar 2023 07:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbjCYJn1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 25 Mar 2023 05:43:27 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F212D46A6
-        for <linux-pwm@vger.kernel.org>; Sat, 25 Mar 2023 02:43:25 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id t10so16791837edd.12
-        for <linux-pwm@vger.kernel.org>; Sat, 25 Mar 2023 02:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679737404;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=irY3kauuEAWHlPP7SIvURQ+4Z1X6TILKILmsrBeQtRc=;
-        b=JubLcFHunBB9x9eRX9pAJjgb7sokIxKieUa++sesvjeX6NBav5M/UGU0LNrhzRvUMs
-         WKXnnU8nAnIGWAjiQUZbdeH6RUBkt4R1pmaD4KKRzPABDQOLII1gw1V/wS1PGMKXh9DT
-         t2o3nUaG1gBPW0wd+/tDw7Thx9xZNu42URMwbPvVjY0Dl4/B0W9P4feTrKXLNaff4Roo
-         8Q1CtprroVK44pxSlg51O21OR/N0vZwxPrmSblKTRfrkQjRvHavm4m6QwgbpxlIJeUFe
-         9+PlJ9FewNj7yFOaXojJSGpCJvAgp2Ib1ZVfo6jA34hExFNIiisDZ1XJZ01oZTg9N/Qe
-         n7EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679737404;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=irY3kauuEAWHlPP7SIvURQ+4Z1X6TILKILmsrBeQtRc=;
-        b=Dbo4T9SFbYIINdA3amCNUXThmKGWo1qlYU3g5UrsunRwsGpclIaoHxgMcHeaWFqsm8
-         CO35eHLk6/xjnswoMT1QAzpX41IXKSaCYVWip/IE8NDM+HvNE921nz2dJRe6XiWNIJJ3
-         tCQBBbOrAJPfahQhM4IqCkg8cCDU4C5Y1y67LMmMGq9ZOXsNYaSL3H72sEI8h/qxR5a0
-         dqm4OaD3r8Ki7Zbhv5+lXeT9v0cWZM2yYaOA36CoxS0+yvTPSlNSgz5YrVwFbXl1Sc4S
-         WAbjQ79xrikYqELlEVu4rmr57lyH8ihMfR5MNsz6j9PQNfCz60XqVt8/FdI5RuFcqS82
-         Vfzg==
-X-Gm-Message-State: AAQBX9fi77RsKdqb0Fnx2CJcf/gCtffNh5yFPznrD9dsg8afOnBppumR
-        h6lEmn7TFRgMqvlLFg9RGcY=
-X-Google-Smtp-Source: AKy350a2XB9kr+MdUkofF+MNfzTczpHuYrOsjmLaI+LACAhF58Qz4bGuhm2/FGETRSAEMlkm/d8VAw==
-X-Received: by 2002:a17:906:9b89:b0:8b2:b711:5e62 with SMTP id dd9-20020a1709069b8900b008b2b7115e62mr7131516ejc.52.1679737403997;
-        Sat, 25 Mar 2023 02:43:23 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:73a5:2800:e59a:ffcb:c722:70cf? (dynamic-2a01-0c22-73a5-2800-e59a-ffcb-c722-70cf.c22.pool.telefonica.de. [2a01:c22:73a5:2800:e59a:ffcb:c722:70cf])
-        by smtp.googlemail.com with ESMTPSA id d13-20020a170906344d00b009318ad4a583sm11565655ejb.210.2023.03.25.02.43.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Mar 2023 02:43:23 -0700 (PDT)
-Message-ID: <654c8fff-9ea7-8f6e-e2ea-5525b175cc1b@gmail.com>
-Date:   Sat, 25 Mar 2023 10:43:20 +0100
+        with ESMTP id S230350AbjCYLwu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 25 Mar 2023 07:52:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5916CA0C;
+        Sat, 25 Mar 2023 04:52:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 107C660C16;
+        Sat, 25 Mar 2023 11:52:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B33C433EF;
+        Sat, 25 Mar 2023 11:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679745167;
+        bh=sXbV/TftLmQpAeNMA8vvVMJeReclVGKSSqB68qrbnuo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ubqWOFT8flEnrgUaz9YwteMc4/d9/scmIctBM3gPDxYj3jR14qeHbOMt2aGGD21IS
+         YwE26lU7nEdeLOBF8pts6rVWF6dsDMXiHoLw50B/+prM7qZtnTSx8Y3KJgfMla4rjq
+         HRD9ZNkMR6+dRchgdhx0vzUb1ox2o/pArKrMSNDl9mauavSk6ZrO8nODiVQMzeFSxF
+         2g+uKsEXPe/FGC+TkYuQZqYjXo8+XS4m3uil78Xx0c2w+5Owyrj80rWMd+tIS+vJT5
+         Z2tVY4oUL90HzwpWgBtGJAhTpwgvjYjZFoDcWlH+dhK6GeFgQLfyyGS+Uf6kEVXOdP
+         GC9ZSXEtNrZqw==
+Date:   Sat, 25 Mar 2023 11:52:43 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v14 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <baea06f3-1a89-4b37-8ac9-120ea7a7e5ff@spud>
+References: <20230306094858.1614819-1-conor.dooley@microchip.com>
+ <20230306094858.1614819-2-conor.dooley@microchip.com>
+ <20230322105536.kgt3ffowefqlg6eu@pengutronix.de>
+ <48c7dbdc-04a2-42de-964f-fd86cf070797@spud>
+ <20230323091409.rdi4bqrcsfvxnht5@pengutronix.de>
+ <142f0d8d-5814-4747-bfac-2479fcee92d3@spud>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pwm@vger.kernel.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
-References: <fad131e9-265f-6c4d-3223-932f69c9a927@gmail.com>
- <20230325082004.q7suqrt2udzgq4mb@pengutronix.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH] pwm: meson: add support for S4 chip family
-In-Reply-To: <20230325082004.q7suqrt2udzgq4mb@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XrvFPcAPd6qmvVig"
+Content-Disposition: inline
+In-Reply-To: <142f0d8d-5814-4747-bfac-2479fcee92d3@spud>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 25.03.2023 09:20, Uwe Kleine-König wrote:
-> Hello,
-> 
-> On Fri, Mar 24, 2023 at 11:23:09PM +0100, Heiner Kallweit wrote:
->> This adds pwm support for (at least) the s4 chip family. The extension
->> is based on the vendor driver that can be found at [0]. There the
->> version with the new clock handling is called meson-v2-pwm.
->> Central change is that the clock is now fully provided by the SoC clock
->> core. The multiplexer isn't any longer part of the pwm block.
->>
->> This was tested on a sc2-based system that uses the same pwm block.
->>
->> [0] https://github.com/khadas/linux/blob/khadas-vims-5.4.y/drivers/pwm/pwm-meson.c
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->> Adding the amlogic,meson-s4-pwm compatible to the documentation was part
->> of the yaml conversion already.
-> 
-> This refers to
-> https://lore.kernel.org/linux-pwm/3edc5ba6-bf3d-e45b-377a-9e7ece7642a7@gmail.com
-> 
-Right
 
-> Does the external mux clk behave in the same way as the internal ones
-> before? (I.e. it can select one of a few parents and has a single
-> divider?)
-> 
-Yes, it's a standard clock with few parents, a mux, and a divider.
+--XrvFPcAPd6qmvVig
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> ---
->>  drivers/pwm/pwm-meson.c | 38 ++++++++++++++++++++++++++++++++++----
->>  1 file changed, 34 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->> index 16d79ca5d..7a93fdada 100644
->> --- a/drivers/pwm/pwm-meson.c
->> +++ b/drivers/pwm/pwm-meson.c
->> @@ -98,6 +98,7 @@ struct meson_pwm_channel {
->>  struct meson_pwm_data {
->>  	const char * const *parent_names;
->>  	unsigned int num_parents;
->> +	unsigned int ext_clk:1;
->>  };
->>  
->>  struct meson_pwm {
->> @@ -158,6 +159,7 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>  	struct meson_pwm_channel *channel = &meson->channels[pwm->hwpwm];
->>  	unsigned int duty, period, pre_div, cnt, duty_cnt;
->>  	unsigned long fin_freq;
->> +	int err;
->>  
->>  	duty = state->duty_cycle;
->>  	period = state->period;
->> @@ -165,6 +167,14 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>  	if (state->polarity == PWM_POLARITY_INVERSED)
->>  		duty = period - duty;
->>  
->> +	if (meson->data->ext_clk) {
-> 
-> err could be local to this block.
-> 
-OK
+On Fri, Mar 24, 2023 at 06:43:03PM +0000, Conor Dooley wrote:
+> On Thu, Mar 23, 2023 at 10:14:09AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > On Wed, Mar 22, 2023 at 10:49:40PM +0000, Conor Dooley wrote:
+> > > On Wed, Mar 22, 2023 at 11:55:36AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > > On Mon, Mar 06, 2023 at 09:48:58AM +0000, Conor Dooley wrote:
+> > > > > Add a driver that supports the Microchip FPGA "soft" PWM IP core.
+>=20
+> > > > > +static void mchp_core_pwm_calc_period(const struct pwm_state *st=
+ate, unsigned long clk_rate,
+> > > > > +				      u16 *prescale, u16 *period_steps)
+> > > > > +{
+> > > > > +	u64 tmp;
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Calculate the period cycles and prescale values.
+> > > > > +	 * The registers are each 8 bits wide & multiplied to compute t=
+he period
+> > > > > +	 * using the formula:
+> > > > > +	 *           (prescale + 1) * (period_steps + 1)
+> > > > > +	 * period =3D -------------------------------------
+> > > > > +	 *                      clk_rate
+> > > > > +	 * so the maximum period that can be generated is 0x10000 times=
+ the
+> > > > > +	 * period of the input clock.
+> > > > > +	 * However, due to the design of the "hardware", it is not poss=
+ible to
+> > > > > +	 * attain a 100% duty cycle if the full range of period_steps i=
+s used.
+> > > > > +	 * Therefore period_steps is restricted to 0xFE and the maximum=
+ multiple
+> > > > > +	 * of the clock period attainable is 0xFF00.
+> > > > > +	 */
+> > > > > +	tmp =3D mul_u64_u64_div_u64(state->period, clk_rate, NSEC_PER_S=
+EC);
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * The hardware adds one to the register value, so decrement by=
+ one to
+> > > > > +	 * account for the offset
+> > > > > +	 */
+> > > > > +	if (tmp >=3D MCHPCOREPWM_PERIOD_MAX) {
+> > > > > +		*prescale =3D MCHPCOREPWM_PRESCALE_MAX - 1;
+> > > > > +		*period_steps =3D MCHPCOREPWM_PERIOD_STEPS_MAX - 1;
+> > > > > +
+> > > > > +		return;
+> > > > > +	}
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * The optimal value for prescale can be calculated using the m=
+aximum
+> > > > > +	 * permitted value of period_steps, 0xff.
+> > > >=20
+> > > > I had to think about that one for a while. The maximal value for
+> > > > (period_steps + 1) is 0xff with the reasoning above?! That's also w=
+hat
+> > > > the code uses.
+> > >=20
+> > > I've become really disenfranchised with these register/variable names.
+> > > I feel like just changing them to disconnect the variables used for
+> > > calculation from the register names a little, so that the "is there a=
+ +1
+> > > needed here or not" stuff becomes a little clearer.
+> >=20
+> > Full ack, I considered asking for that, but after some time I was in the
+> > "I reviewed the patch today"-mode (which is quite similar to the mode
+> > you described :-) and forgot. (Even in that mode the PREG_TO_VAL macro
+> > annoyed me a bit.)
+> >=20
+> > > It always makes sense to be when I am in an "I respun the patch today"
+> > > mode, but by the time we're in the review stage I get muddled.
+> > > God forbid I have to look at this in 10 years time.
+> > >=20
+> > > That said, there is a bit of a mistake here. The comment two above sa=
+ys
+> > > "Therefore period_steps is restricted to 0xFE" when I'm capping things
+> > > off. Some inaccuracies have probably snuck in during the various
+> > > respins, and I think the comment above is "correct" but misleading, as
+> > > it muddies the waters about variable versus register names.
+> >=20
+> > I think it's sensible to only talk about either the register values or
+> > the factors. I tend to think that talking about the register values is
+> > easier at the end and recommend not to hide the +1 (or -1) in a macro.
+>=20
+> Yeah, I think the macro had value about 14 versions ago, but the number
+> of users has dropped over the revisions.
+> I think what I am going to to do for the next version is drop that
+> macro, and only ever hold the registers values in variables.
+> That had the advantage of making the maths in get_state() better match
+> the comments that are now quite prevalent in the driver, as the +1s done
+> there are more obvious.
+> I'm loathe to link a git tree but, without changes to the period
+> calculation logic, this is what it looks like w/ a consistent approach
+> to what period_steps and prescale mean:
+> https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/tree/driv=
+ers/pwm/pwm-microchip-core.c?h=3Dpwm-dev-v15
+> [I blindly pushed that before leaving work & without even building it, so
+> there's probably some silly mistake in it, but that's besides the point
+> of displaying variable/comment changes]
+>=20
+> From the chopped out bits of the previous email:
+> > Consider
+> >=20
+> > 	clk_rate =3D 1000000
+> > 	period =3D 64009000
+> >=20
+> > then your code gives:
+> >=20
+> >               period * clk_rate
+> > 	tmp =3D ----------------- =3D 64009
+> >                 NSEC_PER_SEC
+> >=20
+> > and so *prescale =3D 251 and *period_steps =3D 253.=20
+> >=20
+> > Wasn't the intention to pick *prescale =3D 250 and then
+> > *period_steps =3D 255?
+> >=20
+> > Depending on your semantics of "optimal", either (252, 252) or (250,
+> > 255) is better than (251, 253). I think that means you shouldn't ignore
+> > the -1?
+>=20
+> So, putting this one aside because it merits more thinking about.
+>=20
+> I went through and checked some arbitrary values of tmp, rather than
+> dealing with "real" ones computed from frequencies I know are easily
+> available for me to use in the FPGA bitstream I use to test this stuff.
+>=20
+> I think my "integer maths" truncation approach is not actually valid.
+> Consider tmp =3D 255... *prescale gets computed as 255/(254 + 1) =3D 1, p=
+er my
+> algorithm. Then, *period_steps is 255/(1 + 1) - 1 =3D 127.
+> The period is (1 + 1)(127 + 1), which is not 255.
+>=20
+> Or take tmp =3D 510. prescale is 510/(254 + 1) =3D 2. period_steps is then
+> 510/(2 + 1) - 1 =3D 169. period is (2 + 1)(169 + 1), which is 510. The
+> calculated period is right, but that is not the "optimal" value!
+>=20
+> I think you're right in that I do actually need to consider the -1, and
+> do a ceiling operation, when calculating prescale, IOW:
+> 	*prescale =3D ceil(div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1)) - 1;
+> 	*period_steps =3D div_u64(tmp, *prescale + 1) - 1;
+> 	[I know I can't actually call ceil()]
+>=20
+> That'd do the same thing as the truncation where
+> div_u64(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1) is not a round number,
+> but it improves the round number case, eg tmp =3D 510:
+> prescale =3D 510/(254 + 1) - 1 =3D 1, period_steps =3D 510/(1 + 1) - 1 =
+=3D 254
+> period =3D (1 + 1)(254 + 1) =3D 510
+>=20
+> It does mean a zero period would need to be special cased, but I don't
+> mind that.
+>=20
+> > One thing I think is strange is that with clk_rate =3D 1000001 and your
+> > algorithm we get:
+> >=20
+> > requested period =3D 1274998 ns -> real period =3D 1269998.73000127  (p=
+rescale =3D 4, period_steps =3D 253)
+> > requested period =3D 1274999 ns -> real period =3D 1271998.728001272 (p=
+rescale =3D 5, period_steps =3D 211)
+>=20
+> This second one here, where tmp =3D 1275, is a good example of the above.
+> With the ceil() change, this would be prescale =3D 4, period_steps =3D 254
+> which I think makes more sense.
+> >=20
+> > while 1271998.728001272 would be a better match for a request with
+> > period =3D 1274998 than 1269998.73000127.
+> >=20
+> > I spend too much time to think about that now. I'm unsure if this is
+> > because the -1 is missing, or if there is a bug in the idea to pick a
+> > small prescale to allow a big period_steps value (in combination with
+> > the request to pick the biggest possible period).
+>=20
+> With the inconsistency fixed, I think getting the slightly less accurate
+> period is a byproduct of prioritising the finegrainedness of the duty
+> cycle.
+>=20
+> > Hmm, maybe you understand that better than me? I'll have to think about
+> > it.
+>=20
+> [end of snip from the last mail]
+>=20
+> >=20
+> > Having said that here are my results of thinking a bit about how to
+> > choose register values:
+> >=20
+> > Let r(p) denote the period that is actually configured if p is
+> > requested.
+> >=20
+> > The nice properties we want (i.e. those a consumer might expect?) are:
+> >=20
+> >  a) =E2=88=80p: r(p) =E2=89=A4 p
+> >     i.e. never configure a bigger period than requested
+> >     (This is a bit arbitrary, but nice to get a consistent behaviour for
+> >     all drivers and easier to handle than requesting the nearest
+> >     possible period.)
+> >=20
+> >  b) =E2=88=80p, q: p =E2=89=A4 q =E2=9F=B9 r(p) =E2=89=A4 r(q)
+> >     i.e. monotonicity
+> >=20
+> >  c) =E2=88=80p: r(roundup(r(p))) =3D r(p)
+> >     i.e. idempotency
+> >=20
+> >  d) =E2=88=80p, q: r(p) =E2=89=A4 q =E2=9F=B9 r(p) =E2=89=A4 r(q)
+> >     i.e. pick the biggest possible period
+> >=20
+> > (Sidenote: d) and a) imply b) and c))
+> >=20
+> > If you always set period_steps to 0xfe
+> > (in Python syntax:
+> >=20
+> > 	tmp =3D p * clkrate // NSPS
+> > 	period_steps =3D 0xfe
+> > 	prescale =3D tmp // (period_steps + 1) - 1
+> >=20
+> > ) you get this consistent behaviour.
+> >=20
+> > This has the upside of being easy to implement and cheap to run.
+> > Downside is that it's coarse and fails to implement periods that would
+> > require e.g prescale =3D 0 and period_steps < 0xfe. As period_steps is
+> > big, the domain to chose the duty cycle from is good.
+>=20
+> I want to maintain support for prescale =3D 0, so I'm not really
+> interested in a computation that forsakes that.
+>=20
+> > If you pick period_steps and prescale such that
+> > 	(period_steps + 1) * (prescale + 1)
+> > is the maximal value that makes r(p) =E2=89=A4 p you have an increased =
+runtime
+> > because you have to test multiple values for period_steps. I don't think
+> > there is an algorithm without a loop to determine an optimal pair?!
+> > Usually this gives a better match that the easy algorithm above for the
+> > period, but the domain for duty_cycle is (usually) smaller.
+> > I think we have a) and d) here, so that's good.
+> >=20
+> > I think for most consumers a big domain for duty_cycle is more important
+> > that a good match for the requested period. So I tend to recommend the
+> > easy algorithm, but I'm not religious about that and open for other
+> > opinion and reasoning.
+>=20
+> I'll be honest and say that I am getting a bit fatigued with the way
+> that issues w/ the calculations keep cropping up. I'll put a bit of time
+> into trying to figure out how to fix the tmp =3D 6400900 case that you
+> mentioned above, but if it comes out in the wash that that is a facet of
+> the way this stuff is computed, then I might be inclined to forge ahead
+> without resolving it... I'd certainly want to explain in a comment
+> somewhere (limitations section?) the point at which it starts getting
+> less accurate though. I'll write a script to iterate through the values
+> of tmp & see if the reason is obvious.
 
->> +		err = clk_set_rate(channel->clk, 0xffffUL * NSEC_PER_SEC / period);
->> +		if (err) {
->> +			dev_err(meson->chip.dev, "failed to set pwm clock rate\n");
->> +			return err;
->> +		}
->> +	}
->> +
->>  	fin_freq = clk_get_rate(channel->clk);
->>  	if (fin_freq == 0) {
->>  		dev_err(meson->chip.dev, "invalid source clock frequency\n");
->> @@ -173,10 +183,14 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>  
->>  	dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
->>  
->> -	pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
->> -	if (pre_div > MISC_CLK_DIV_MASK) {
->> -		dev_err(meson->chip.dev, "unable to get period pre_div\n");
->> -		return -EINVAL;
->> +	if (meson->data->ext_clk) {
->> +		pre_div = 0;
->> +	} else {
->> +		pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
->> +		if (pre_div > MISC_CLK_DIV_MASK) {
->> +			dev_err(meson->chip.dev, "unable to get period pre_div\n");
->> +			return -EINVAL;
->> +		}
->>  	}
->>  
->>  	cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
->> @@ -445,6 +459,10 @@ static const struct meson_pwm_data pwm_g12a_ee_data = {
->>  	.num_parents = ARRAY_SIZE(pwm_g12a_ee_parent_names),
->>  };
->>  
->> +static const struct meson_pwm_data pwm_s4_data = {
->> +	.ext_clk = 1,
->> +};
->> +
->>  static const struct of_device_id meson_pwm_matches[] = {
->>  	{
->>  		.compatible = "amlogic,meson8b-pwm",
->> @@ -478,6 +496,10 @@ static const struct of_device_id meson_pwm_matches[] = {
->>  		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
->>  		.data = &pwm_g12a_ao_cd_data
->>  	},
->> +	{
->> +		.compatible = "amlogic,meson-s4-pwm",
->> +		.data = &pwm_s4_data
->> +	},
->>  	{},
->>  };
->>  MODULE_DEVICE_TABLE(of, meson_pwm_matches);
->> @@ -493,6 +515,14 @@ static int meson_pwm_init_channels(struct meson_pwm *meson)
->>  	for (i = 0; i < meson->chip.npwm; i++) {
->>  		struct meson_pwm_channel *channel = &meson->channels[i];
->>  
->> +		if (meson->data->ext_clk) {
->> +			snprintf(name, sizeof(name), "clkin%u", i);
->> +			channel->clk = devm_clk_get(dev, name);
->> +			if (IS_ERR(channel->clk))
->> +				return PTR_ERR(channel->clk);
->> +			continue;
->> +		}
->> +
-> 
-> This requires a binding change, right? Would it make sense to drop the
-> ext_clk flag and determine that by trying to get the clk and if it's
-> there, assume ext_clk would have been set?
-> 
-Clocks clkin0 and clkin1 are used already, therefore the binding doesn't change.
-Just the type of clock usage is different. So far the clocks are the parents
-for the internal mux/div, now it's the "final" clocks.
+I threw together a python script to go through the various values of tmp
+& check which ones ended up with these "non-optimal" prescale values.
+For tmp < 1000, I saw:
+tmp: 511 | 255 - period_steps: 86
+tmp: 766 | 255 - period_steps: 65
+tmp: 767 | 255 - period_steps: 65
+That then grows as tmp moves upwards, so:
+tmp: 1021  | 255 - period_steps: 52
+tmp: 1022  | 255 - period_steps: 52
+tmp: 1023  | 255 - period_steps: 52
 
-> Also I wonder if it would make sense to use the same name as used when
-> the mux clk is internal, i.e. reuse name from the line below.
-> 
-IMO this name is ok when used internally, but wouldn't be nice if used in
-the binding, e.g. because part of it is dev_name(dev). Therefore I'd prefer
-to stick with the clkin0/clkin1 names.
+That looks oddly like (tmp % (254 + 1)) < prescale and seems to be an
+"artifact" of using 254 to calculate the prescaler rather than 255.
+I think that that can be worked around while keeping the current simple
+approach to calculating prescale/period_steps. Looks like 32385 out of
+the 65280 valid values for tmp can benefit! That's in comparison to the
+127 that would produce the invalid period_steps value of 255.
 
->>  		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
-> 
-> Best regards
-> Uwe
-> 
-Heiner
+I'll go submit something fixing this next week then I suppose.
 
+> I would like to keep (something resembling) the current simple
+> implementation of the period calculation, as simplicity is a significant
+> advantage! I do also like the strategy of trying to maximise the number
+> of available duty cycle steps, I think it makes perfect sense to make
+> that the goal.
+>=20
+> Thanks again for spending time on this Uwe,
+> Conor.
+>=20
+
+
+
+--XrvFPcAPd6qmvVig
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZB7giwAKCRB4tDGHoIJi
+0nECAQC/cjx9DvreTXIZmXb1qCw0gURsMFsESUUgIa7VL6A3bQEA0WhAtJcoLKhM
+1ZyGA28Js4NbaimCJblIvDKwSDA6vAk=
+=Gwm3
+-----END PGP SIGNATURE-----
+
+--XrvFPcAPd6qmvVig--
