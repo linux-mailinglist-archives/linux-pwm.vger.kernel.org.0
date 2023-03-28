@@ -2,25 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AB756CBC19
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Mar 2023 12:11:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EE0D6CBC10
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Mar 2023 12:11:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232893AbjC1KL2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 28 Mar 2023 06:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34926 "EHLO
+        id S233014AbjC1KL0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 28 Mar 2023 06:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232709AbjC1KLY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Mar 2023 06:11:24 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 05AA683C2;
-        Tue, 28 Mar 2023 03:11:02 -0700 (PDT)
+        with ESMTP id S232725AbjC1KLU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 28 Mar 2023 06:11:20 -0400
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2C6EE7D9A;
+        Tue, 28 Mar 2023 03:10:59 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.98,297,1673881200"; 
-   d="scan'208";a="157440708"
+   d="scan'208";a="154049039"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 28 Mar 2023 19:10:50 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 28 Mar 2023 19:10:53 +0900
 Received: from localhost.localdomain (unknown [10.226.92.2])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5326640071EC;
-        Tue, 28 Mar 2023 19:10:47 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DB69640071F7;
+        Tue, 28 Mar 2023 19:10:50 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>
@@ -31,9 +31,9 @@ Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [DO NOT APPLY PATCH v7 09/10] pinctrl: renesas: rzg2l-poeg: output-disable request by external pin
-Date:   Tue, 28 Mar 2023 11:10:10 +0100
-Message-Id: <20230328101011.185594-10-biju.das.jz@bp.renesas.com>
+Subject: [DO NOT APPLY PATCH v7 10/10] tools/poeg: Add test app for poeg
+Date:   Tue, 28 Mar 2023 11:10:11 +0100
+Message-Id: <20230328101011.185594-11-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230328101011.185594-1-biju.das.jz@bp.renesas.com>
 References: <20230328101011.185594-1-biju.das.jz@bp.renesas.com>
@@ -47,73 +47,192 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add support for output-disable request by external pin.
+Add test app for poeg
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- drivers/pinctrl/renesas/poeg/rzg2l-poeg.c | 9 +++++++++
- include/linux/pinctrl/rzg2l-poeg.h        | 2 ++
- 2 files changed, 11 insertions(+)
+ tools/poeg/Build      |   1 +
+ tools/poeg/Makefile   |  53 ++++++++++++++++++++++
+ tools/poeg/poeg_app.c | 102 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 tools/poeg/Build
+ create mode 100644 tools/poeg/Makefile
+ create mode 100644 tools/poeg/poeg_app.c
 
-diff --git a/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c b/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
-index 7576f756af3c..5d93a0be33f3 100644
---- a/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
-+++ b/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
-@@ -15,13 +15,16 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/pwm/rzg2l-gpt.h>
-+#include <linux/pinctrl/rzg2l-poeg.h>
- #include <linux/poll.h>
- #include <linux/reset.h>
- #include <linux/wait.h>
- 
- #define POEGG_IOCE	BIT(5)
-+#define POEGG_PIDE	BIT(4)
- #define POEGG_SSF	BIT(3)
- #define POEGG_IOCF	BIT(1)
-+#define POEGG_PIDF	BIT(0)
- 
- #define RZG2L_POEG_MAX_INDEX		3
- 
-@@ -113,6 +116,9 @@ static irqreturn_t rzg2l_poeg_irq(int irq, void *ptr)
- 	if (val & POEGG_IOCF)
- 		val &= ~POEGG_IOCF;
- 
-+	if (val & POEGG_PIDF)
-+		val &= ~POEGG_PIDF;
+diff --git a/tools/poeg/Build b/tools/poeg/Build
+new file mode 100644
+index 000000000000..f960920a4afb
+--- /dev/null
++++ b/tools/poeg/Build
+@@ -0,0 +1 @@
++poeg_app-y += poeg_app.o
+diff --git a/tools/poeg/Makefile b/tools/poeg/Makefile
+new file mode 100644
+index 000000000000..669c914d9c98
+--- /dev/null
++++ b/tools/poeg/Makefile
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: GPL-2.0
++include ../scripts/Makefile.include
 +
- 	rzg2l_poeg_write(chip, val);
- 
- 	return IRQ_HANDLED;
-@@ -378,6 +384,9 @@ static int rzg2l_poeg_probe(struct platform_device *pdev)
- 			assign_bit(RZG2L_GPT_OABLF, chip->gpt_irq, true);
- 			assign_bit(RZG2L_GPT_DTEF, chip->gpt_irq, true);
- 			break;
-+		case POEG_EXT_PIN_CTRL:
-+			rzg2l_poeg_write(chip, POEGG_PIDE);
-+			break;
- 		default:
- 			ret = -EINVAL;
- 			goto err_pm;
-diff --git a/include/linux/pinctrl/rzg2l-poeg.h b/include/linux/pinctrl/rzg2l-poeg.h
-index 5441de7f3751..359849fea6a0 100644
---- a/include/linux/pinctrl/rzg2l-poeg.h
-+++ b/include/linux/pinctrl/rzg2l-poeg.h
-@@ -7,11 +7,13 @@
- #define RZG2L_GPT_DTEF	0
- #define RZG2L_GPT_OABHF	1
- #define RZG2L_GPT_OABLF	2
-+#define RZG2L_POEG_EXT_PIN_CTRL	3
- 
- #define RZG2L_POEG_USR_CTRL_ENABLE_CMD	0
- #define RZG2L_POEG_USR_CTRL_DISABLE_CMD	1
- #define RZG2L_POEG_GPT_CFG_IRQ_CMD		2
- #define RZG2L_POEG_GPT_FAULT_CLR_CMD		3
-+#define RZG2L_POEG_EXT_PIN_CTRL_FAULT_CLR_CMD	4
- 
- struct poeg_event {
- 	__u32 gpt_disable_irq_status;
++bindir ?= /usr/bin
++
++ifeq ($(srctree),)
++srctree := $(patsubst %/,%,$(dir $(CURDIR)))
++srctree := $(patsubst %/,%,$(dir $(srctree)))
++endif
++
++# Do not use make's built-in rules
++# (this improves performance and avoids hard-to-debug behaviour);
++MAKEFLAGS += -r
++
++override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
++
++ALL_TARGETS := poeg_app
++ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
++
++all: $(ALL_PROGRAMS)
++
++export srctree OUTPUT CC LD CFLAGS
++include $(srctree)/tools/build/Makefile.include
++
++#
++# We need the following to be outside of kernel tree
++#
++$(OUTPUT)include/linux/poeg.h: ../../include/linux/pinctrl/rzg2l-poeg.h
++	mkdir -p $(OUTPUT)include/linux 2>&1 || true
++	ln -sf $(CURDIR)/../../include/linux/pinctrl/rzg2l-poeg.h $@
++
++prepare: $(OUTPUT)include/linux/poeg.h
++
++POEG_EXAMPLE := $(OUTPUT)poeg_app.o
++$(POEG_EXAMPLE): prepare FORCE
++	$(Q)$(MAKE) $(build)=poeg_app
++$(OUTPUT)poeg_app: $(POEG_EXAMPLE)
++	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
++
++clean:
++	rm -f $(ALL_PROGRAMS)
++	rm -rf $(OUTPUT)include/linux/poeg.h
++	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
++
++install: $(ALL_PROGRAMS)
++	install -d -m 755 $(DESTDIR)$(bindir);		\
++	for program in $(ALL_PROGRAMS); do		\
++		install $$program $(DESTDIR)$(bindir);	\
++	done
++
++FORCE:
++
++.PHONY: all install clean FORCE prepare
+diff --git a/tools/poeg/poeg_app.c b/tools/poeg/poeg_app.c
+new file mode 100644
+index 000000000000..273ae1813e2f
+--- /dev/null
++++ b/tools/poeg/poeg_app.c
+@@ -0,0 +1,102 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * POEG - example userspace application
++ * Copyright (C) 2023 Biju Das
++ */
++#include <stdio.h>
++#include <stdlib.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <errno.h>
++#include <sys/ioctl.h>
++#include <linux/ioctl.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <sys/time.h>
++#include <sys/types.h>
++#include <poll.h>
++
++#include <linux/poeg.h>
++
++#define USER_CTRL	1
++#define GPT_CTRL	0
++#define EXT_PIN_CTRL	0
++
++int main(int argc, char *arg[])
++{
++	struct poeg_cmd cmd;
++	int ret, fd;
++#if GPT_CTRL
++	struct poeg_event event_data;
++	unsigned int val;
++	int i;
++#endif
++
++	fd = open("/dev/poeg3", O_RDWR);
++	if (fd < 0)
++		perror("open");
++	else
++		printf("[POEG]open\n");
++
++#if USER_CTRL
++	cmd.val = RZG2L_POEG_USR_CTRL_ENABLE_CMD;
++	cmd.channel = 4;
++	printf("[POEG] user control pin output disable enabled\n");
++	ret = write(fd, &cmd, sizeof(cmd));
++	if (ret == -1) {
++		perror("Failed to write cmd data");
++		return 1;
++	}
++	sleep(3);
++
++	printf("[POEG] user control pin output disable disabled\n");
++	cmd.val = RZG2L_POEG_USR_CTRL_DISABLE_CMD;
++	cmd.channel = 4;
++	ret = write(fd, &cmd, sizeof(cmd));
++	if (ret == -1) {
++		perror("Failed to write cmd data");
++		return 1;
++	}
++#endif
++
++#if GPT_CTRL
++	printf("[POEG] GPT control configure IRQ\n");
++	cmd.val = RZG2L_POEG_GPT_CFG_IRQ_CMD;
++	cmd.channel = 4;
++	ret = write(fd, &cmd, sizeof(cmd));
++	if (ret == -1) {
++		perror("Failed to write cmd data");
++		return 1;
++	}
++
++	for (;;) {
++		ret = read(fd, &event_data, sizeof(event_data));
++		if (ret == -1) {
++			perror("Failed to read event data");
++			return 1;
++		}
++
++		val = event_data.gpt_disable_irq_status;
++		if (val) {
++			/* emulate fault clearing condition by adding delay */
++			sleep(2);
++			for (i = 0; i < 8; i++) {
++				if (val & 7) {
++					printf("gpt ch:%u, irq=%x\n", i, val & 7);
++					cmd.val = RZG2L_POEG_GPT_FAULT_CLR_CMD;
++					cmd.channel = 4;
++					ret = write(fd, &cmd, sizeof(cmd));
++				}
++				val >>= 3;
++			}
++		}
++	}
++#endif
++
++	if (close(fd) != 0)
++		perror("close");
++	else
++		printf("[POEG]close\n");
++
++	return 0;
++}
 -- 
 2.25.1
 
