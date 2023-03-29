@@ -2,42 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33F2A6CD347
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Mar 2023 09:33:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E25A6CD96E
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Mar 2023 14:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjC2Hdw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 29 Mar 2023 03:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        id S229601AbjC2Mhr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 29 Mar 2023 08:37:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbjC2HdW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 Mar 2023 03:33:22 -0400
-Received: from mail.craftsplex.pl (mail.craftsplex.pl [162.19.155.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D1E44B2
-        for <linux-pwm@vger.kernel.org>; Wed, 29 Mar 2023 00:31:09 -0700 (PDT)
-Received: by mail.craftsplex.pl (Postfix, from userid 1002)
-        id 1BBB322D1D; Wed, 29 Mar 2023 07:30:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=craftsplex.pl;
-        s=mail; t=1680075016;
-        bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
-        h=Date:From:To:Subject:From;
-        b=zUBzQhf1/7GDWULdB5QrY/NWHEIjAVvq522VyZAltFcSACPqHAs+ZYKk+sLF/ULQ3
-         jZmN5Su73lzCL7C4wuHroOboXvxuV6BFSNGtGFuyp2rXxZSFFjxIGKydl6Ku9lysuf
-         YaDqqFfYvTM9sBsnRGwWkdammguOh+WRfGX+t9NNHnXYooEafKIn/ich61e5RS9TKa
-         EnPQWNaCR0NTj2zwTDvpVcGsvrjVqkjHu/T5Y+/4tyhdyqoTV3AjGerUlRJKocdycZ
-         tNsxvc1oObEwEwivGVpj2BHX0Qi5hqLB/9m7csXgj9bACmL7uOIXomT2aAVCf2TNgz
-         iMZebGhNAMeZg==
-Received: by mail.craftsplex.pl for <linux-pwm@vger.kernel.org>; Wed, 29 Mar 2023 07:29:54 GMT
-Message-ID: <20230329072937-0.1.58.kr2p.0.flpocrbnep@craftsplex.pl>
-Date:   Wed, 29 Mar 2023 07:29:54 GMT
-From:   "Kamil Tralewski" <kamil.tralewski@craftsplex.pl>
-To:     <linux-pwm@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.craftsplex.pl
+        with ESMTP id S229502AbjC2Mhq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 29 Mar 2023 08:37:46 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C82F4201
+        for <linux-pwm@vger.kernel.org>; Wed, 29 Mar 2023 05:37:45 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id h8so62612800ede.8
+        for <linux-pwm@vger.kernel.org>; Wed, 29 Mar 2023 05:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1680093464;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gHb6wEI0W+Q8XNFleXC4qtIxQ5KFkUssnbzkaSWTwt0=;
+        b=HG/XVNTljst0PoADYJ9a1oe2fUatY94AsdKpMHxxOpv6UuoHB6hvijDjhYLE9/25rs
+         152++Pjka5+uGRovDxe9lV+rhf8++TfTk52B//EwPFKlZ8SzAWjTwNLluSshW2RDWPnd
+         srv2pNMrlqDFWWsC173i94ItNlYGVLs5iGdN6EW6KPfp4NGuo04lpjR216LCgKHkG6hm
+         tt8ytMaBacnj2KHpooUNXKvXT476qhRY2eCUHq0XSDr3E6V5f2UW8KmHuS4qM5P/vnYo
+         c7iIw+AdSJaMxFaBxtnvEUmWHYQAhPvuAHIixL2EwShp2QWod24RpXn2eN7OXg5nz4PP
+         a8fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680093464;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gHb6wEI0W+Q8XNFleXC4qtIxQ5KFkUssnbzkaSWTwt0=;
+        b=5AfQuORJmsTC9PTZPCLu63sf6aPXkuNcS0i+GGTdMMsH/x7imk/muuciV7fYoewueW
+         GSchB7fvhlFLR+t1ToBV2uuPuWVameNMWIXR6qCbYrb1lVKpJQZjD6JwjA/Vbk6xYQhh
+         1TOuscpREW/pfMsABdcxhmMmzo9/ttCzCUl91o/LaGe6IeX1WW7O1AexBOAo7KjozTBJ
+         IA2F+bmkWB1upERWN34vMwUAo9ftTTSEx1eW4C8r98GP1o9cjhP0FWto7V6Bt3vMJHM9
+         u18dGDQAEpOxnJkYkzTpMbstJ8wwQZ7h85QqkHTUau/3VKAPyPQTYu+fHlj1blrv/XAh
+         umxA==
+X-Gm-Message-State: AAQBX9fxCd0BEXuqvm58QvqoIn9eFKYV8Qas14zYVxWnZVzn/8zCtPRv
+        VHgzKGu2gcpbAUOOcn5zduHaajjE6Z7JF6esh7wetA==
+X-Google-Smtp-Source: AKy350aDBwtiG5kWGJciArmsYca1qFgzqg6C3cxeEPeZkvx1P1YMyQqnsAGHM99S4BjGebJTBNJNFDacA5sFHwR7yCY=
+X-Received: by 2002:a17:907:d687:b0:93d:a14f:c9b4 with SMTP id
+ wf7-20020a170907d68700b0093da14fc9b4mr9691718ejc.2.1680093463969; Wed, 29 Mar
+ 2023 05:37:43 -0700 (PDT)
 MIME-Version: 1.0
+References: <20221129161134.2672474-1-Naresh.Solanki@9elements.com>
+ <20221129161134.2672474-5-Naresh.Solanki@9elements.com> <20221129163427.dxnqfay6ur6mvivu@pengutronix.de>
+ <d2d54a34-56dc-df83-5fde-ad0a9a73a9e0@roeck-us.net> <77c5a9e2-ce25-df19-1eba-ba4808bbeb9d@9elements.com>
+In-Reply-To: <77c5a9e2-ce25-df19-1eba-ba4808bbeb9d@9elements.com>
+From:   Naresh Solanki <naresh.solanki@9elements.com>
+Date:   Wed, 29 Mar 2023 18:07:34 +0530
+Message-ID: <CABqG17h1112TsJ_JtxZkLrObz0v-5dq_6B86RYA_T6efW14t1Q@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] hwmon: (max6639) Add pwm support
+To:     Guenter Roeck <linux@roeck-us.net>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        linux-pwm@vger.kernel.org, kernel@pengutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,18 +74,69 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hi Rob, Guenter,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+I need your inputs & direction on the next step for max6639 driver.
+I'm willing to work & implement changes.
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+Thank you for your time and consideration.
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+Regards,
+Naresh Solanki
 
-Pozdrawiam
-Kamil Tralewski
+Regards,
+Naresh Solanki
+
+
+
+9elements GmbH, Kortumstra=C3=9Fe 19-21, 44787 Bochum, Germany
+Email:  naresh.solanki@9elements.com
+Mobile:  +91 9538631477
+
+Sitz der Gesellschaft: Bochum
+Handelsregister: Amtsgericht Bochum, HRB 17519
+Gesch=C3=A4ftsf=C3=BChrung: Sebastian Deutsch, Eray Basar
+
+Datenschutzhinweise nach Art. 13 DSGVO
+
+
+On Tue, 6 Dec 2022 at 23:15, Naresh Solanki
+<naresh.solanki@9elements.com> wrote:
+>
+> Hi Guenter, Rob
+>
+> On 29-11-2022 10:11 pm, Guenter Roeck wrote:
+> > On 11/29/22 08:34, Uwe Kleine-K=C3=B6nig wrote:
+> >> On Tue, Nov 29, 2022 at 05:11:34PM +0100, Naresh Solanki wrote:
+> >>> Add pwm support for max6639. Also configure pwm fan speed based on pw=
+m
+> >>> provided in DT.
+> >>
+> >> Did you do anything to resolve the questions I had in reply to v5? If
+> >> yes, I must have missed it.
+> >>
+> >
+> > I don't see a response to my concerns either, especially regarding fan =
+mode
+> > (dc vs. pwm) in the bindings. For that reason, I won't even look at the
+> > series.
+> Best I can think of regulator with voltage control. Because as per my
+> understanding, DC control fan essentially control DC voltage on negative
+> pin of fan.
+>
+>
+> Regards,
+> Naresh
+> >
+> > Guenter
+> >
+> >> Note that maintainer time is scarce and with sending new versions of a
+> >> patch with no sign that you improved in the aspects that were critized
+> >> before, you're burning that scarce time and loosing the good will of t=
+he
+> >> responsible maintainers.
+> >>
+> >> Best regards
+> >> Uwe
+> >>
+> >
