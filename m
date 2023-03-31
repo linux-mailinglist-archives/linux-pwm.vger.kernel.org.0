@@ -2,74 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A5D6D22CB
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 Mar 2023 16:42:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE2E6D2337
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 Mar 2023 16:56:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbjCaOm5 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 31 Mar 2023 10:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46538 "EHLO
+        id S233045AbjCaO4G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 31 Mar 2023 10:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232094AbjCaOm4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 31 Mar 2023 10:42:56 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424A71D875;
-        Fri, 31 Mar 2023 07:42:54 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id v1so22671524wrv.1;
-        Fri, 31 Mar 2023 07:42:54 -0700 (PDT)
+        with ESMTP id S233048AbjCaOzt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 31 Mar 2023 10:55:49 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A05B20D84;
+        Fri, 31 Mar 2023 07:55:33 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id h17so22695995wrt.8;
+        Fri, 31 Mar 2023 07:55:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680273772;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gQSQpbyEP141etG6ZHWQCiEBFDe9rB+aPA05dS71AiE=;
-        b=cbBpJS1pp2VUe5eBBEWBtRWugdEsiSuZ1H1qoGepOP42kpx6N3zGIJHgbeL6Rec+eI
-         s9pTLH9Ici9vksjbXT60EgfezzKaGrWspX+Dwq7+kCxYhp3cr+0WAKQZOR6aXbp7Bhz2
-         08ENky6Z4m6kPYkUsD61RTA6JvPhuEtDkt1yL3ZCFfUisFGgUR594C8S5kD5AFRw7hfT
-         7x1Z9wEqfBsYqHaanJwr0EHsSriJn+pKviGmh5lnyop2MFqokHOfWEj3l4IQywKa9j5t
-         9JfJmH82bFFTyv+KK62K/QYrbTnfi2lLh8aW6VWZyeB7GwMprJ/xQfzyJF6KHzBDYoR6
-         db2A==
+        d=gmail.com; s=20210112; t=1680274530;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1v1oqbGwtutANfbZAgt8lNsLuoBjX9Am//6Vl/oFEfA=;
+        b=K46Ne0U68WOC0jQyu1f6ef7pr7GDPh7f4Pjgd6JONmZ5vhy5RMvhlW4VUj7raalPXN
+         aEAk419VYn+zMv1le8W80jEHTMAuP6mrf+zTSZazTT2K9obzDGaxQ54JqA4M3jRsWzm/
+         dzQYQmw7NFmeKkZcjrgHRL1q1/DLzK2Ia3Iiay9q3+FhUszWuTwM65xERLQfBXgCe/Ot
+         5yHZkVsNtjhU+MYbUZNaBz9IKuQO6lM1tlRrF7954KM39osWlOJHgnX0fDRKaOPXByTn
+         BlYJiRupf+OVpQDWadhViNPq7nGEQqunlLJhVmTKX4eUDkUnW3y6BS7FTCh9aneafmAG
+         g6gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680273772;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20210112; t=1680274530;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gQSQpbyEP141etG6ZHWQCiEBFDe9rB+aPA05dS71AiE=;
-        b=SwH4/tZQk/HQjapqyOXGKgo9R/cuVqzf9ny9WEsGEr9e1tx21h+Mt/ut9d6cM0Y7Fo
-         pBveiGjIWkF1JcdWdepk0mfAU4VYPCviEn2Al//GSrriAeE0/lfjuAsSV3xV5cMwHNQM
-         m+B/s8fcGVmxqujfwBlFxXwMUA0AZMAWeyktqtQmsASE4igAvHJ05nm36PlQTlSHnXmQ
-         a077PD3ne9oac9/EY0zTHvqqkdL+MnR9PWydRtGRhdeag55ctA5aM/URsjIh8OYIMlTL
-         kZzLIY2Ev0tWjWqiQu46G4zOdfPRhAuM5WiCVxHXwDnqHkKXiZ32Zms1x10yygrucWiC
-         kZVQ==
-X-Gm-Message-State: AAQBX9dRgKbUkhnULDUnnlaE32Yw4DwFuEN0Hjq12CTEkIsmhpDK3Brs
-        Dy8RKyM5d8HnnTLo2Ps5MKI=
-X-Google-Smtp-Source: AKy350ajzHQlwsDqL16oAUF2LtmLOv7wD/G4o4yloSXgjLI/FwWSy/wydMjxZrGLOzpCruc324uE2w==
-X-Received: by 2002:a5d:6585:0:b0:2c8:c667:1bb4 with SMTP id q5-20020a5d6585000000b002c8c6671bb4mr19680706wru.48.1680273772501;
-        Fri, 31 Mar 2023 07:42:52 -0700 (PDT)
+        bh=1v1oqbGwtutANfbZAgt8lNsLuoBjX9Am//6Vl/oFEfA=;
+        b=M588g1kmwVMQvhavaqehClCcjm+JzRRZTm7EFutPkOvclu23ckt95wMWCCeoWvzc1x
+         C6BrPjPML8J3a5sG2I4Qq5boxhMXz/1wxS+wAWd/py8dyaNTS27GatOjwwSiBVE5p2B0
+         XGyIc0B4dccmvNtpOpXMVtib77s76HQG+z/Q5m3sIh3wsQ0nognZJiag/odXUH7JcV1N
+         BXhRQvIs2oEtod3Xk1D9zGirAPkdhZ3p07o6egeWeLtXquDVkYzV0qEGp6GdoU0Ci6HS
+         xqYLZgM72kK5VcIQLPvNLTphxleAhg4u0teucJNrue6XZWn0wfrOio+rBnWBOR0b0Mme
+         mnOw==
+X-Gm-Message-State: AAQBX9fBMEvCExCrU4jfnwPINE1u1ejDEUGMjHW4gEsiPD3iLv+Huv/w
+        qML41gnihadMXYS3i8fJmPqIeAXa54NghQXi
+X-Google-Smtp-Source: AKy350YSKtIqzT8X8vCZa/0jBsvl+GqGNYLY0iKeyTokK7bymrPZFg5K6qU89SULQhw0gw/NXjZGpw==
+X-Received: by 2002:a5d:4dcb:0:b0:2ca:8da1:db96 with SMTP id f11-20020a5d4dcb000000b002ca8da1db96mr19386253wru.50.1680274530116;
+        Fri, 31 Mar 2023 07:55:30 -0700 (PDT)
 Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id g4-20020adffc84000000b002d8566128e5sm2374858wrr.25.2023.03.31.07.42.50
+        by smtp.gmail.com with ESMTPSA id g6-20020adfe406000000b002d743eeab39sm2398567wrm.58.2023.03.31.07.55.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Mar 2023 07:42:51 -0700 (PDT)
-Message-ID: <d3d6392f-98ae-f6da-914c-943962d94a74@gmail.com>
-Date:   Fri, 31 Mar 2023 16:42:49 +0200
+        Fri, 31 Mar 2023 07:55:29 -0700 (PDT)
+Message-ID: <c8861fda-63c6-7951-29a7-9d29a73e8f3e@gmail.com>
+Date:   Fri, 31 Mar 2023 16:55:27 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 14/21] dt-bindings: soc: mediatek: specify which
- compatible requires clocks property
 Content-Language: en-US
-To:     Alexandre Mergnat <amergnat@baylibre.com>,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
         Jitao Shi <jitao.shi@mediatek.com>,
         Thierry Reding <thierry.reding@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Sam Ravnborg <sam@ravnborg.org>,
         Rob Herring <robh+dt@kernel.org>,
         =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
         David Airlie <airlied@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Xinlei Lee <xinlei.lee@mediatek.com>
-Cc:     Guillaume La Roque <glaroque@baylibre.com>,
+        Xinlei Lee <xinlei.lee@mediatek.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
         dri-devel@lists.freedesktop.org,
@@ -78,11 +76,14 @@ Cc:     Guillaume La Roque <glaroque@baylibre.com>,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20230220-display-v1-0-45cbc68e188b@baylibre.com>
- <20230220-display-v1-14-45cbc68e188b@baylibre.com>
+ <20230220-display-v1-1-45cbc68e188b@baylibre.com>
+ <CAAOTY_8G03TpY88hMmUgbq5E6P2Y8h5a4DB5T72qfNG6CA+NQA@mail.gmail.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20230220-display-v1-14-45cbc68e188b@baylibre.com>
+Subject: Re: [PATCH 01/21] dt-bindings: display: mediatek: aal: add binding
+ for MT8365 SoC
+In-Reply-To: <CAAOTY_8G03TpY88hMmUgbq5E6P2Y8h5a4DB5T72qfNG6CA+NQA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
@@ -93,61 +94,44 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Chun-Kuang Hu,
 
-
-On 09/03/2023 15:23, Alexandre Mergnat wrote:
-> According to the mtk-mutex.c driver and the SoC DTS, the clock isn't
-> required to work properly for some of MTK SoC. Improve the clock
-> requirement by adding a condition which is function to the compatible.
+On 13/03/2023 16:02, Chun-Kuang Hu wrote:
+> Hi, Alexandre:
 > 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> Alexandre Mergnat <amergnat@baylibre.com> 於 2023年3月9日 週四 下午10:23寫道：
+>>
+>> Display Adaptive Ambient Light for MT8365 is compatible with another SoC.
+>> Then, add MT8365 binding along with MT8183 SoC.
+> 
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> 
 
-Applied, thanks.
-
-Now I think we can get rid of the no_clk variable in struct mtk_mutex_data, as 
-this should be mandated by the device-tree.
+I'm a bit puzzled that you give your reviewed by while I would have expected 
+that you will take the display binding patches. Will you take these or do you 
+want someone else to take them?
 
 Regards,
 Matthias
 
-> ---
->   .../bindings/soc/mediatek/mediatek,mutex.yaml        | 20 +++++++++++++++++++-
->   1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml
-> index 9241e5fc7cff..ca0ca549257d 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml
-> @@ -69,12 +69,30 @@ properties:
->         4 arguments defined in this property. Each GCE subsys id is mapping to
->         a client defined in the header include/dt-bindings/gce/<chip>-gce.h.
->   
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - mediatek,mt2701-disp-mutex
-> +              - mediatek,mt2712-disp-mutex
-> +              - mediatek,mt6795-disp-mutex
-> +              - mediatek,mt8173-disp-mutex
-> +              - mediatek,mt8186-disp-mutex
-> +              - mediatek,mt8186-mdp3-mutex
-> +              - mediatek,mt8192-disp-mutex
-> +              - mediatek,mt8195-disp-mutex
-> +    then:
-> +      required:
-> +        - clocks
-> +
-> +
->   required:
->     - compatible
->     - reg
->     - interrupts
->     - power-domains
-> -  - clocks
->   
->   additionalProperties: false
->   
-> 
+>>
+>> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>> ---
+>>   Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
+>> index d4d585485e7b..d47bc72f09c0 100644
+>> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
+>> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
+>> @@ -33,6 +33,7 @@ properties:
+>>                 - mediatek,mt8186-disp-aal
+>>                 - mediatek,mt8192-disp-aal
+>>                 - mediatek,mt8195-disp-aal
+>> +              - mediatek,mt8365-disp-aal
+>>             - const: mediatek,mt8183-disp-aal
+>>
+>>     reg:
+>>
+>> --
+>> b4 0.10.1
