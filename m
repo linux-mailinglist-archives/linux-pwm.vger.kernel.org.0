@@ -2,53 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5768E6D33EA
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Apr 2023 22:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 666D96D3C1B
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Apr 2023 05:26:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjDAUu7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 1 Apr 2023 16:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47494 "EHLO
+        id S230421AbjDCD0V (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 2 Apr 2023 23:26:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbjDAUuz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 1 Apr 2023 16:50:55 -0400
+        with ESMTP id S229492AbjDCD0U (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 2 Apr 2023 23:26:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B0A27804;
-        Sat,  1 Apr 2023 13:50:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BD56EB7;
+        Sun,  2 Apr 2023 20:26:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C101E60FC8;
-        Sat,  1 Apr 2023 20:50:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83A1C433EF;
-        Sat,  1 Apr 2023 20:50:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF423611E4;
+        Mon,  3 Apr 2023 03:26:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57913C433A4;
+        Mon,  3 Apr 2023 03:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680382251;
-        bh=cblNPwspiLiu6TBVBEScNWqtn9HgaLDxVomWxXoSOWQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R2Xsf7OmDrvxKOnaV1o2olTZD/+xO24c1NxVVjgi4tY54cdvVXRkP8hJX46e8UoKN
-         vHFfU3gTbKbx1gzg/9ZYBwKR77EFvO/bE9X5mbcwTnp5Xav6jrPMbaxht6AO6eYeeU
-         8uZ8Q6WVgufuMawepfUsnfuH+0iPYWMfn+pjTVn+FOP5n6swmE7RwLL05Fp4hH719s
-         trz6qOMwQ7pEP0BXeCulcHfwhx2FbZDit9dRQgxqa4X+m6eps5Cu7fkyEs8Jd/kMXl
-         yBu1tZ0WR2yiKZf80HCi8SKkX8C0Q74lFP4zMMEs70FtCI4Ykck7/2RopRFMfOCEyW
-         HPxAvf8S4LXqQ==
-Date:   Sat, 1 Apr 2023 21:50:47 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v15 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <0b91dee7-6c1d-4a33-8235-8fd5d58b200e@spud>
-References: <20230330071203.286972-1-conor.dooley@microchip.com>
- <20230330071203.286972-2-conor.dooley@microchip.com>
+        s=k20201202; t=1680492373;
+        bh=hrX4wjuNXtUa4it9dS1gD+x/opOelCsgKzVa5rmkya8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lNZ2cNh5LZpMSXs0x/GvA01FLXnCCZrRUi8x0zt9XdLbswQFhwKt1GrMX6DdqCKrV
+         +XIeXxupFEE3HyaVh2Uv9dqBn2fEooSbgytsHRqpxQ557IYsvYpAc1vqR8whoL6iDY
+         179fpo8Q1SlLLItRyriF6rwe+bFJ6BgokR/EvdNeDhMDCoLuunJ5CyTN8xdCDBjIpI
+         fWyn4lUm9XJWSYwnn0eowVtdsr2Nm9CKQ7k+Mosa301wJSbOG3hNwEjAnZXkPfbyDy
+         5YmtOs6xWfmvr5qr50umrnSvWNJ9LnmeowmgVHghW+7yKc55frTA+kLUhP3AJWty7i
+         dXMuJIQC5TbVA==
+Received: by mail-lf1-f53.google.com with SMTP id q16so36199496lfe.10;
+        Sun, 02 Apr 2023 20:26:13 -0700 (PDT)
+X-Gm-Message-State: AAQBX9fBO0Lnjejao9Q6HfXWW371IAFDPwwYTR9qAEe+Dk2qEnYktgnw
+        5iKnd+stkTV5zf4wEeBxwAOmGrugdRlQHuF3Wg==
+X-Google-Smtp-Source: AKy350YF5//fW3gKfi6NnVQPdCCMScWgB0PgA7jqaFFkilLrWcB2n9ijboh/wvLC2SKCsSxOdK5aX4P6/95BuMo1yus=
+X-Received: by 2002:ac2:596a:0:b0:4e8:6261:58c2 with SMTP id
+ h10-20020ac2596a000000b004e8626158c2mr9881249lfp.7.1680492371303; Sun, 02 Apr
+ 2023 20:26:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WqrHL50fzIiM0DjG"
-Content-Disposition: inline
-In-Reply-To: <20230330071203.286972-2-conor.dooley@microchip.com>
+References: <20230220-display-v1-0-45cbc68e188b@baylibre.com>
+ <20230220-display-v1-1-45cbc68e188b@baylibre.com> <CAAOTY_8G03TpY88hMmUgbq5E6P2Y8h5a4DB5T72qfNG6CA+NQA@mail.gmail.com>
+ <c8861fda-63c6-7951-29a7-9d29a73e8f3e@gmail.com>
+In-Reply-To: <c8861fda-63c6-7951-29a7-9d29a73e8f3e@gmail.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Mon, 3 Apr 2023 11:25:59 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-2eba2JYZdLPutCkLEWgEgOBrXQ4pqpasxu=d1QMWvUg@mail.gmail.com>
+Message-ID: <CAAOTY_-2eba2JYZdLPutCkLEWgEgOBrXQ4pqpasxu=d1QMWvUg@mail.gmail.com>
+Subject: Re: [PATCH 01/21] dt-bindings: display: mediatek: aal: add binding
+ for MT8365 SoC
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, David Airlie <airlied@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Xinlei Lee <xinlei.lee@mediatek.com>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        dri-devel@lists.freedesktop.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
@@ -58,65 +82,70 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi, Matthias:
 
---WqrHL50fzIiM0DjG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Matthias Brugger <matthias.bgg@gmail.com> =E6=96=BC 2023=E5=B9=B43=E6=9C=88=
+31=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=8810:55=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> Hi Chun-Kuang Hu,
+>
+> On 13/03/2023 16:02, Chun-Kuang Hu wrote:
+> > Hi, Alexandre:
+> >
+> > Alexandre Mergnat <amergnat@baylibre.com> =E6=96=BC 2023=E5=B9=B43=E6=
+=9C=889=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:23=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+> >>
+> >> Display Adaptive Ambient Light for MT8365 is compatible with another S=
+oC.
+> >> Then, add MT8365 binding along with MT8183 SoC.
+> >
+> > Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> >
+>
+> I'm a bit puzzled that you give your reviewed by while I would have expec=
+ted
+> that you will take the display binding patches. Will you take these or do=
+ you
+> want someone else to take them?
 
-On Thu, Mar 30, 2023 at 08:12:03AM +0100, Conor Dooley wrote:
+I usually apply whole series together, and I've question about
+"[07/21] dt-bindings: display: mediatek: dpi: add binding for MT8365"
+in this series. This is just the first version, so maybe I would apply
+partial patches in later version.
 
-> +	/*
-> +	 * Because 0xff is not a permitted value some error will seep into the
-> +	 * calculation of prescale as prescale grows. Specifically, this error
-> +	 * occurs where the remainder of the prescale calculation is less than
-> +	 * prescale.
-> +	 * For small values of prescale, only a handful of values will need
-> +	 * correction, but overall this applies to almost half of the valid
-> +	 * values for tmp.
-> +	 *
-> +	 * To keep the algorithm's decision making consistent, this case is
-> +	 * checked for and the simple solution is to, in these cases,
-> +	 * decrement prescale and check that the resulting value of period_steps
-> +	 * is valid.
-> +	 *
-> +	 * period_steps can be computed from prescale:
-> +	 *                      period * clk_rate
-> +	 * period_steps = ----------------------------- - 1
-> +	 *                NSEC_PER_SEC * (prescale + 1)
-> +	 *
-> +	 */
-> +	if (tmp % (MCHPCOREPWM_PERIOD_STEPS_MAX + 1) < *prescale) {
+Regards,
+Chun-Kuang.
 
-Hmm, looks like 32-bit doesn't like this modulus.
-I pushed things out for LKP to test before sending as I felt I'd not be
-allowed to do that operation, but got a build success email from it.
-I'm not sure why the mail wasn't sent as a reply to this, but
-<202304020410.A86IBNES-lkp@intel.com> complains:
-pwm-microchip-core.c:(.text+0x20a): undefined reference to `__aeabi_uldivmod'
 
-I know that tmp < 65536 at this point, so if the general approach is
-fine, I can always cast it to a non 64-bit type without losing any
-information.
-
-> +		u16 smaller_prescale = *prescale - 1;
-> +
-> +		*period_steps = div_u64(tmp, smaller_prescale + 1) - 1;
-> +		if (*period_steps < 255) {
-> +			*prescale = smaller_prescale;
-> +
-> +			return 0;
-> +		}
-> +	}
-
---WqrHL50fzIiM0DjG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZCiZJwAKCRB4tDGHoIJi
-0iJlAQCB2UJl++XV4NMR+7ECnWEx79RdqD/XDFZb1Ug8Y9BRwwEAvSU+APt+rIRQ
-PbPJgMxFUNyTzMFYCMWtE6d2M3dPCQ8=
-=v2Y6
------END PGP SIGNATURE-----
-
---WqrHL50fzIiM0DjG--
+>
+> Regards,
+> Matthias
+>
+> >>
+> >> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml=
+ | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediat=
+ek,aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,a=
+al.yaml
+> >> index d4d585485e7b..d47bc72f09c0 100644
+> >> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.=
+yaml
+> >> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.=
+yaml
+> >> @@ -33,6 +33,7 @@ properties:
+> >>                 - mediatek,mt8186-disp-aal
+> >>                 - mediatek,mt8192-disp-aal
+> >>                 - mediatek,mt8195-disp-aal
+> >> +              - mediatek,mt8365-disp-aal
+> >>             - const: mediatek,mt8183-disp-aal
+> >>
+> >>     reg:
+> >>
+> >> --
+> >> b4 0.10.1
