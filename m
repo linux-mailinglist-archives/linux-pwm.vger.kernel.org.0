@@ -2,77 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7ED6D987F
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDC166D989F
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:54:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238766AbjDFNqJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Apr 2023 09:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50096 "EHLO
+        id S229597AbjDFNyG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Apr 2023 09:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237927AbjDFNqG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:46:06 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09A765B6;
-        Thu,  6 Apr 2023 06:46:01 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-501d3943f8eso1393358a12.1;
-        Thu, 06 Apr 2023 06:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680788760;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PkHFpCD/XQeLxofMjQT3jwfPpJhgnEHgCex2rD4ksk8=;
-        b=lKMqG7lIc47IvaYySaSBUJFH/hA+mln853cL8/jfrpRJEPRmwW4vpmxSTWBVyKIk18
-         HReWO6yNVMsO8DPtbjjD0PjwHr5xKWAv3p0ciM7B1PSuvZbhJ80gT48ce5t2ve6posfM
-         8hp9pp1wToANmgTh5LIwI6suCjGhAZbFfn8TETLcUpXPnseDFgkUzhl2RG+z5kgEBaJN
-         rYnoAs3keLhepHWdqGD5Y50Sbv1R799at6hBKuSNACGwxqiHVOqc+tHpL4fsRIqm5Kfr
-         SkD8e1NgX2/yzMkqHX4+EKa+0c6DEK/HBMIXvny7nkWaOrMZA/ROssHZBeHAIhooC9aZ
-         kOpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680788760;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PkHFpCD/XQeLxofMjQT3jwfPpJhgnEHgCex2rD4ksk8=;
-        b=jVoTBXP2XmPqex4kXMxqoPQhbFbrZfVNVkaVLBX024dvp7Xwb/IvUV4TrKMA+JFXRF
-         JNjufMbvpABz0fv1t/r/tZV2ELGclDNPzRfgOS8auNyAWMOP5wAm7OMJQfDxUuTv7H8e
-         DSBC7k5TyO8R+Yiuj5fsnui8WFJt8LYqxJ4rLCxAdS7OmeRYI/ccCvtx3/05KWZCtxe5
-         3RthXuqvzzPQxt5r7V4wAjomDeXzYcIZkRgFn8DhXjcqxSwIV5SaF3Bi9+TDjdBlKIlK
-         iTqVjg3kkZknIwS/OdwEaznC9mR5DpwTDgrheH3uz4cxZTQq5jzGTkY0HfNC571pmp/C
-         5a/w==
-X-Gm-Message-State: AAQBX9efN5d3hYJjGfHW/WZ/yu+rM/qIPLYgu6WPoJsmixcr+Ye39g5b
-        jaCO2biaCrhw90s7Fw2hWyE=
-X-Google-Smtp-Source: AKy350ZFYf29eCxG6wCnL3JIuIp+ieQKorpdGdk2B232Ai9lNGOwLmUA+hdGHUvuhBjF8/BVi+o5Yw==
-X-Received: by 2002:a05:6402:1804:b0:502:6726:89c3 with SMTP id g4-20020a056402180400b00502672689c3mr5410333edy.23.1680788760431;
-        Thu, 06 Apr 2023 06:46:00 -0700 (PDT)
-Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id k6-20020a50cb86000000b00501d73cfc86sm773352edi.9.2023.04.06.06.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 06:46:00 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pwm@vger.kernel.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RESEND v4] dt-bindings: pwm: Convert Amlogic Meson PWM binding
-Date:   Thu,  6 Apr 2023 15:45:59 +0200
-Message-Id: <168078873512.1715717.5725405826072466849.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <3edc5ba6-bf3d-e45b-377a-9e7ece7642a7@gmail.com>
-References: <3edc5ba6-bf3d-e45b-377a-9e7ece7642a7@gmail.com>
+        with ESMTP id S229521AbjDFNyF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:54:05 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 858437AA0
+        for <linux-pwm@vger.kernel.org>; Thu,  6 Apr 2023 06:54:04 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pkQ3s-0002xV-Ik; Thu, 06 Apr 2023 15:54:00 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pkQ3r-009Oe4-CN; Thu, 06 Apr 2023 15:53:59 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pkQ3q-00B44I-5w; Thu, 06 Apr 2023 15:53:58 +0200
+Date:   Thu, 6 Apr 2023 15:53:58 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Lorenz Brun <lorenz@brun.one>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2] pwm: mediatek: support inverted polarity
+Message-ID: <20230406135358.x3et6gvvxqsknfn6@pengutronix.de>
+References: <20230309010410.2106525-1-lorenz@brun.one>
+ <ZC7LaC19YjNwTIi1@orome>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rhxflvtrefdf7zep"
+Content-Disposition: inline
+In-Reply-To: <ZC7LaC19YjNwTIi1@orome>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -81,16 +58,79 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 20 Feb 2023 22:19:30 +0100, Heiner Kallweit wrote:
-> Convert Amlogic Meson PWM binding to yaml.
-> 
-> 
 
-Applied, thanks!
+--rhxflvtrefdf7zep
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1/1] dt-bindings: pwm: Convert Amlogic Meson PWM binding
-      commit: 43a1c4ff3977f0ccd1d99e36d74e525aced5bb3a
+Hello Thierry,
 
-Best regards,
--- 
-Thierry Reding <thierry.reding@gmail.com>
+On Thu, Apr 06, 2023 at 03:38:48PM +0200, Thierry Reding wrote:
+> On Thu, Mar 09, 2023 at 02:04:10AM +0100, Lorenz Brun wrote:
+> > +	 * appear to have the capability to invert the output.
+> > +	 * This means that inverted mode can not be fully supported as the
+> > +	 * waveform will always start with the low period and end with the hi=
+gh
+> > +	 * period. Thus reject non-normal polarity if the shape of the wavefo=
+rm
+> > +	 * matters, i.e. usage_power is not set.
+> > +	 */
+> > +	if (state->polarity !=3D PWM_POLARITY_NORMAL && !state->usage_power)
+> >  		return -EINVAL;
+> > =20
+> >  	if (!state->enabled) {
+> > @@ -213,7 +221,11 @@ static int pwm_mediatek_apply(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
+> >  		return 0;
+> >  	}
+> > =20
+> > -	err =3D pwm_mediatek_config(pwm->chip, pwm, state->duty_cycle, state-=
+>period);
+> > +	duty_cycle =3D state->duty_cycle;
+> > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> > +		duty_cycle =3D state->period - state->duty_cycle;
+>=20
+> That's not really what state->usage_power was meant to address.
+
+I don't understand your concern here. I don't like .usage_power, but
+AFAICT this is a legitimite use. With .usage_power =3D true, the lowlevel
+driver is free to shift the phase_offset and even modify the period size
+and the goal is just that the average power-output matches.
+
+Lorenz's patch does exactly this: It even keeps the period and only
+shifts the phase (by period - duty_cycle). If you consider this not
+legitmate, I think we have to improve the docs about .usage_power.
+
+> What's wrong with just reversing the duty cycle in the pwm-fan? If you
+> use DT it's quite trivial to do that by just reversing the entries in
+> your cooling-levels property. Does that not work for you?
+
+That's an option, too. With a different PWM (i.e. one that can do proper
+inverted polarity) Lorenz's solution would be ok, though, right? And the
+pwm-fan only cares about the relative duty_cycle and not the phase
+shift, so setting .usage_power =3D true is fine, too?!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rhxflvtrefdf7zep
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQuzvUACgkQj4D7WH0S
+/k4/Egf+Ox1VxLypTm6cyDNz+uIgbTFzaY+WA5DZQt5FTjYJnYoqqalVgZiTzIUm
+7IhDK/qgyDfmbUf/X4HFNtTIq6cbIpcbWwhFQjpGtx6yaVhs9By8CISv0mCYBjV6
+QHEDQQXNVgjppdqv7jJo0Ivxf4WO7cnoKREQ7atIoxoHBT//qIsWL0GLAG1rs45B
+FUDUod7VU2lWVdOAD/GVeeBcGVyjONuWbEshw0V9rxKoxT39ULRn/GiWv7WUmOa0
+7ZrR0zSgdedKZHgS4mj2i/IdvYV7OWYpEr1BbvmnUZT5BR4KS/kGJ8WhO2ko+g35
+hsWHH/KPjVFc4pv/9yC/CAh2LNkR8w==
+=rRPg
+-----END PGP SIGNATURE-----
+
+--rhxflvtrefdf7zep--
