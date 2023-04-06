@@ -2,106 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 526F76D9A7E
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 16:36:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B196DA033
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 20:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239298AbjDFOgL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Apr 2023 10:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
+        id S240299AbjDFSqU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Apr 2023 14:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236811AbjDFOfx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 10:35:53 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13298BDFA;
-        Thu,  6 Apr 2023 07:33:21 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id l17so1888579ejp.8;
-        Thu, 06 Apr 2023 07:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680791532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7NE8LMgRiCIjdbrcrGLtDoTN1MqhIW5n6uRWWiPsxx4=;
-        b=oAd5hS+uRxlGo7MKVZnAUSQOTtoHWyyYHm/pXDAeI1Tte1vDy7MsgcdQUJBu/ktkiP
-         ATEb4RwFRMmLuuWS81gHkksVF7ssGCX2xxbU0LcpZW3jOFY2hDJ1a670yuA+wLlXW/vn
-         EegRngxc4WMbelYLWXk5az66RxHtSgdvfmcMPkw1K7spAnbuUWljjdfgiukj23Ru0LzI
-         75VJbAu1hzZdZxJKb4l82gAhxT2ref9iXmThsgD6GlFgIsX05mSAY9b0VrNKVGArkO1k
-         /7bb+P0eBNGuqgVBOxA8cBVDy2rYH+ZAFu5L9aE4gDHvPP7BUYGcrlDKZPYF78dPKbUK
-         KpXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680791532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7NE8LMgRiCIjdbrcrGLtDoTN1MqhIW5n6uRWWiPsxx4=;
-        b=W6yo+VRncEW0OrldOnyZjLCjIVv5qkNx9IclDCsQI3drmW7mfkuBdTwXccXi/R2aCK
-         xvc1g3yEEem7Hw8zD4EjI40CQDGYU78tv0uqxGFeuONf67gHhfz0Yi6Nyt1sSjEBRjaZ
-         Pg4DcTa81uVBPtq9JZj1NOwhucZJKpfHZaU80tUTNmdylSJEjNd4FIwGkYBHwQO3ZYUi
-         VWQWw1ClESIyoEBwPPqXGoPDP92GZJ+O67GQarsONi+u6ctx6R+SeQOz2QvK/gl9T/on
-         zMcTAvaW7HMK7t6U2vGt7WFgO/qH7DzqdtRTHFnJuNZAJDS/I2vrNtynhkYZHY/yR0Xy
-         sTeg==
-X-Gm-Message-State: AAQBX9eh8Qalsg9i1385pqNvrJ/EKfd3IzOKzSZYmwP33SaUqDD4f3fO
-        czn0a0VI3e8mIQ6u18a7Mv0=
-X-Google-Smtp-Source: AKy350bgjv21uhcf1/rq5AbSVXwcWWjZ656MGCrxpKOpbqsIx2AfWLsFXOcTOvV+HGXBkw3mMWKAuA==
-X-Received: by 2002:a17:906:2acf:b0:948:b667:e984 with SMTP id m15-20020a1709062acf00b00948b667e984mr6508084eje.27.1680791532591;
-        Thu, 06 Apr 2023 07:32:12 -0700 (PDT)
-Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id i3-20020a50c3c3000000b004fa012332ecsm846250edf.1.2023.04.06.07.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 07:32:12 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sasha Finkelstein <fnkl.kernel@gmail.com>,
-        - <asahi@lists.linux.dev>, Rob Herring <robh+dt@kernel.org>,
-        Sven Peter <sven@svenpeter.dev>,
+        with ESMTP id S240306AbjDFSqP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 14:46:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FAF986A5;
+        Thu,  6 Apr 2023 11:46:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 211CC64B0D;
+        Thu,  6 Apr 2023 18:46:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 83486C433AA;
+        Thu,  6 Apr 2023 18:46:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680806773;
+        bh=xJB1cCNnC16/79FNuxDsvllEtGycNn6SPCwLEzBeK3E=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=B2AgzZ4t7G3mWFBYihaFxY0sB6ZQaXJSNdg3zPej+t6tawlwnR3x9ta/mySaoLTCp
+         B0fgJEia8VIwiwc3CFjvCkfvcTB+Qdd1smVeeCwKt4PKjr/smp2smjdlxcShBeTYjL
+         6DjfDqy5+r9iSKTk4+IuyhDJyV83sOzE0x/cbgB3FHfn7i2n5jCKJ0CCPebbJ+myVb
+         6LqvIN95A3pzwDA37w4Ybm8Ta7ULyPwUERgPjRtteAZRtualv7KueGWghu7nvBjN1J
+         Fv4atVT2n8CVsb2QAKHCwW00VDY1VY36ROQkPX3W03+lrtWY9lGvf3YF/B7Obc16Oa
+         mwps6Df8GD1/g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 64B5EE4F14C;
+        Thu,  6 Apr 2023 18:46:13 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: Fixes for v6.3-rc6
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230406130055.1244344-1-thierry.reding@gmail.com>
+References: <20230406130055.1244344-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230406130055.1244344-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.3-rc6
+X-PR-Tracked-Commit-Id: 1271a7b98e7989ba6bb978e14403fc84efe16e13
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ae52f797904ef0e98951e43d15a274fa8e80bbe5
+Message-Id: <168080677340.24406.13255641265047564185.pr-tracker-bot@kernel.org>
+Date:   Thu, 06 Apr 2023 18:46:13 +0000
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Hector Martin <marcan@marcan.st>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     Sasha Finkelstein <7d578vix8hzw@opayq.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH RESEND v9 0/5] PWM and keyboard backlight driver for ARM Macs
-Date:   Thu,  6 Apr 2023 16:32:11 +0200
-Message-Id: <168079151921.2015855.16317182688660324415.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230214-fpwm-v9-0-f3094107b16b@gmail.com>
-References: <20230214-fpwm-v9-0-f3094107b16b@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, 03 Apr 2023 16:19:18 +0200, Sasha Finkelstein wrote:
-> This is the v9 of the patch series to add PWM and keyboard
-> backlight driver for ARM macs.
-> 
-> Changes in v1:
-> Addressing the review comments.
-> 
-> Changes in v2:
-> Added the reviewed-by and acked-by tags.
-> Addressing a review comment.
-> 
-> [...]
+The pull request you sent on Thu,  6 Apr 2023 15:00:55 +0200:
 
-Applied, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.3-rc6
 
-[1/5] dt-bindings: pwm: Add Apple PWM controller
-      commit: 87a3a3929c710b863c3a288f6b094edc97662858
-[2/5] pwm: Add Apple PWM controller
-      commit: bafbbef85fd788074c27892c2391faf249eb7b29
-[5/5] MAINTAINERS: Add entries for Apple PWM driver
-      commit: de614ac31955fe20f71021fd5f4a9a811e90028f
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ae52f797904ef0e98951e43d15a274fa8e80bbe5
 
-Best regards,
+Thank you!
+
 -- 
-Thierry Reding <thierry.reding@gmail.com>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
