@@ -2,147 +2,132 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27FA96D987A
+	by mail.lfdr.de (Postfix) with ESMTP id 749146D987B
 	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:45:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbjDFNpd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Apr 2023 09:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48336 "EHLO
+        id S237615AbjDFNpe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Apr 2023 09:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229747AbjDFNpG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:45:06 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5844ED0;
-        Thu,  6 Apr 2023 06:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1680788703; x=1712324703;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=66uzbHnTeg9KP22hFc1pTAbx1P429+J0tDm9ryOLR9k=;
-  b=2h38trDB5Cm+bC0IAQ2g4gmjeaDeCNgwPmqL58Vtn8nNTPlW77E5/Zvt
-   zqaYcRjsrxvwHtraIXcdVMwiAMBWVu0Z4OEh1rDeUmOarviGAN1rIHmLz
-   s1Zt54W0GrElWid5dt5qT6WxEWs36GVtfw4nuioGn/fgpyKqL0vrqkKIc
-   M25i00MfXeqS9/6Bug44oddS3S8DDK5+CYstMTK+KxIZff+S8XAYl6KVk
-   +jIZt5fnEs7DOYsXPGXmUcOsR3/NBD4N2LwiaACMyhptZoggtbXWhHpVL
-   8QQ67dHF+zYDc0bpMpGwsvaxZYXNvd07zQBft265UHw324Xvw3A9mGw1w
-   w==;
-X-IronPort-AV: E=Sophos;i="5.98,323,1673938800"; 
-   d="asc'?scan'208";a="208461384"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Apr 2023 06:45:02 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 6 Apr 2023 06:45:01 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Thu, 6 Apr 2023 06:44:59 -0700
-Date:   Thu, 6 Apr 2023 14:44:45 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Conor Dooley <conor@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        with ESMTP id S238799AbjDFNpY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:45:24 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DAF6EAF;
+        Thu,  6 Apr 2023 06:45:21 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id j22so1531884ejv.1;
+        Thu, 06 Apr 2023 06:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680788720;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rWxbTxHDU4JcHcqIFGeE5B91rGmVuRWUbY39VK5Io2I=;
+        b=I3wPE9fF6ZQvwNt9wFEazeEQhvhd95Td/wzX9oOkgczXc6Zpic0WpzlmuS4PFXYHVc
+         Nm2QIvafX0Y4osc6+a4d4+QaMX/iff5y7K8vEtHOmxHtreEQRHzV7y8LzdSkXETnpotL
+         LoubqQZoUdju3N9i1moKCGrj9wAgCRW6yapdFIqrPjuBM6aMN1ipgzeXmdP80uY9ApqQ
+         tx0amO7DIch7vlJFu30H1Cb08QlBZYiQbC36b3zg9/xQgV12ASiUdmgJD4jnw9RLaCVL
+         r6sqlHloP3eo4hlIfcxVSqLfsg+AS1wbTccpxOksyePCinaiCKZaRPTUvwA5/NZ/I5uO
+         27CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680788720;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rWxbTxHDU4JcHcqIFGeE5B91rGmVuRWUbY39VK5Io2I=;
+        b=AV0oQJ4/9a7rT1pVw7/7OUDKnKcQWZDsFtZy1U14RpiXR962E1XUUofdvi5LnLy8ik
+         m5XeQNE4OKJWBNSN0Kf7k3IGR52IJTAZNd+03/E/6mbd6NzQGkWRJjJXhPg/DL5YQSU+
+         nIKefT4vou3N0YHgtkR4mTQVBeUtPumsFg6T1KuRG42bFSsw2lVecZxWfzfBek0JwiAD
+         EoA4IiVKtEH7aOzsMSiSF6wrDXoGuOprZ0H+NLfxrwZ2M0z0+wegWdtC3PAsSXIHUS5U
+         xC5VgiisrdVcA+E8VqEYeykHoMvzJJWM3nUI21WflpXnIb9iCEMc4p86uJaLvaXMMTYO
+         xxIQ==
+X-Gm-Message-State: AAQBX9cFGArNj5kt9phXUKUEBXdBdYWHrbjan2UyX1L08W1/xM1G87NM
+        YFMkP7HgmTTdDcMYBb6oX7sz1QhOf+s=
+X-Google-Smtp-Source: AKy350Zj176tWLpdtEztAu2yD1vTtRpDl6FObu/nSiFFfdgiZ43AZGdmoNkStWa8HKEzgAHBcdayGg==
+X-Received: by 2002:a17:906:9441:b0:92b:7e6a:bca0 with SMTP id z1-20020a170906944100b0092b7e6abca0mr7077798ejx.14.1680788720378;
+        Thu, 06 Apr 2023 06:45:20 -0700 (PDT)
+Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id r13-20020a170906a20d00b008d044ede804sm826535ejy.163.2023.04.06.06.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Apr 2023 06:45:19 -0700 (PDT)
+Date:   Thu, 6 Apr 2023 15:45:18 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v15 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <20230406-ducktail-reflex-4840315459f8@wendy>
-References: <20230330071203.286972-1-conor.dooley@microchip.com>
- <20230330071203.286972-2-conor.dooley@microchip.com>
- <0b91dee7-6c1d-4a33-8235-8fd5d58b200e@spud>
- <ZC7GeXJbB9PAF0lb@orome>
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] pwm: rcar: drop of_match_ptr for ID table
+Message-ID: <ZC7M7rpyEQaI4YJJ@orome>
+References: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="P2ywBvzo9kT8+ANN"
+        protocol="application/pgp-signature"; boundary="qzk1RDxBtReFCSbK"
 Content-Disposition: inline
-In-Reply-To: <ZC7GeXJbB9PAF0lb@orome>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
+User-Agent: Mutt/2.2.10 (2023-03-25)
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
---P2ywBvzo9kT8+ANN
-Content-Type: text/plain; charset=us-ascii
+
+--qzk1RDxBtReFCSbK
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 06, 2023 at 03:17:45PM +0200, Thierry Reding wrote:
-> On Sat, Apr 01, 2023 at 09:50:47PM +0100, Conor Dooley wrote:
-> > On Thu, Mar 30, 2023 at 08:12:03AM +0100, Conor Dooley wrote:
-> >=20
-> > > +	/*
-> > > +	 * Because 0xff is not a permitted value some error will seep into =
-the
-> > > +	 * calculation of prescale as prescale grows. Specifically, this er=
-ror
-> > > +	 * occurs where the remainder of the prescale calculation is less t=
-han
-> > > +	 * prescale.
-> > > +	 * For small values of prescale, only a handful of values will need
-> > > +	 * correction, but overall this applies to almost half of the valid
-> > > +	 * values for tmp.
-> > > +	 *
-> > > +	 * To keep the algorithm's decision making consistent, this case is
-> > > +	 * checked for and the simple solution is to, in these cases,
-> > > +	 * decrement prescale and check that the resulting value of period_=
-steps
-> > > +	 * is valid.
-> > > +	 *
-> > > +	 * period_steps can be computed from prescale:
-> > > +	 *                      period * clk_rate
-> > > +	 * period_steps =3D ----------------------------- - 1
-> > > +	 *                NSEC_PER_SEC * (prescale + 1)
-> > > +	 *
-> > > +	 */
-> > > +	if (tmp % (MCHPCOREPWM_PERIOD_STEPS_MAX + 1) < *prescale) {
-> >=20
-> > Hmm, looks like 32-bit doesn't like this modulus.
-> > I pushed things out for LKP to test before sending as I felt I'd not be
-> > allowed to do that operation, but got a build success email from it.
-> > I'm not sure why the mail wasn't sent as a reply to this, but
-> > <202304020410.A86IBNES-lkp@intel.com> complains:
-> > pwm-microchip-core.c:(.text+0x20a): undefined reference to `__aeabi_uld=
-ivmod'
-> >=20
-> > I know that tmp < 65536 at this point, so if the general approach is
-> > fine, I can always cast it to a non 64-bit type without losing any
-> > information.
+On Sun, Mar 12, 2023 at 02:51:19PM +0100, Krzysztof Kozlowski wrote:
+> The driver can match only via the DT table so the table should be always
+> used and the of_match_ptr does not have any sense (this also allows ACPI
+> matching via PRP0001, even though it might not be relevant here).  This
+> also fixes !CONFIG_OF error:
 >=20
-> Since you already use some of the helpers from linux/math64.h, perhaps
-> you can use something like div_u64_rem() here?
+>   drivers/pwm/pwm-rcar.c:252:34: error: =E2=80=98rcar_pwm_of_table=E2=80=
+=99 defined but not used [-Werror=3Dunused-const-variable=3D]
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>=20
+> ---
+>=20
+> Changes since v1:
+> 1. Extend commit msg.
+> ---
+>  drivers/pwm/pwm-rcar.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I had actually initially tried to do that, before I added changed the
-calculation of prescale to use DIV64_U64_ROUND_UP():
-| *prescale =3D DIV64_U64_ROUND_UP(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1) -=
- 1;
+I've applied both patches with an updated commit message clarifying the
+exact configuration as pointed out by Uwe.
 
-I could I suppose add an additional:
-| div_u64_rem(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1, &remainder);
+Thanks,
+Thierry
 
-and then just use the value of remainder in the if statement.
-Not the prettiest thing in the world I suppose, but should be 32-bit
-safe...
-
-Thanks for the suggestion, I'm just surprised that LKP didn't complain
-when it built my tree...
-
---P2ywBvzo9kT8+ANN
+--qzk1RDxBtReFCSbK
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZC7MzAAKCRB4tDGHoIJi
-0jooAP4mP43vuXbOMOXs2Y2/DPqSEe5azoc/PfplOVKQMqj2mgD/f19yx3/S/PIL
-eL2ROUgUxGJ7Zm+dMCmMXk23o3v8RwA=
-=MkqJ
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQuzO4ACgkQ3SOs138+
+s6Hudw//cWhnAimBrk1LA2VSwkIOTdBerLAIkizxv+nAArOFPffpfRnvvgECr6CF
+W3g9chFQMrZbwrzsni42K8ru2dtugvNutPnefJqJgMB0qIviPcSLCxBgcwj6eZjM
+ABf0gqnGeaIBMWn+fh9fjViV37QS3x7vSN8lecIY3fqcs5GHp3chptFSG7f+QPMJ
+IwFPM+kxiSqBsyUd2Hg1HsCFv2pHilg4ZSHhN5NdyOM9VAELHgCTinSFrvSPbtQJ
+xAWqMIVeQf1m2s1La6Xuj/KwTJ0gtD9NlpPpe4nkickMr08+TAJmcGWSlTiQ56Di
+lBGS1FJ7XKwBt5Ksfo44//WgXI09C4rqV+2AGS6A0cdhWNZpANhk0zpt7TshcI0T
+mYywBxlzx1x2r150DmADbas6bVmaU1mqoATNQhJwE1t7Uo8s0BSXOqFAu/98Tos7
+L/3GLKF/7NuwgTE0C8mj3bgRsR7/o+KlXkUM1dvVEM6cBtsUgkX7AgSVAj2gWVbQ
+rE+uiosENCxe756ODJLnqHgmw2hsIn5tGN4ebxl0kp+RCTzDVcfQjtmMbO1zJCVT
+W+wFrGT7VLM2uaZ5q1M2uHmWKGzGRgxWGBhAXBll9UoMBa5UPV6lSNLSnwLxLgTn
+nxZJ1TmDJfGUW1oTgvoarFDfUvAaaGu4O3KFnynPo0iybuembO0=
+=TBNW
 -----END PGP SIGNATURE-----
 
---P2ywBvzo9kT8+ANN--
+--qzk1RDxBtReFCSbK--
