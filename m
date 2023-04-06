@@ -2,73 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 749146D987B
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D7ED6D987F
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237615AbjDFNpe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Apr 2023 09:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
+        id S238766AbjDFNqJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Apr 2023 09:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238799AbjDFNpY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:45:24 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DAF6EAF;
-        Thu,  6 Apr 2023 06:45:21 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id j22so1531884ejv.1;
-        Thu, 06 Apr 2023 06:45:21 -0700 (PDT)
+        with ESMTP id S237927AbjDFNqG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:46:06 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09A765B6;
+        Thu,  6 Apr 2023 06:46:01 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-501d3943f8eso1393358a12.1;
+        Thu, 06 Apr 2023 06:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680788720;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1680788760;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rWxbTxHDU4JcHcqIFGeE5B91rGmVuRWUbY39VK5Io2I=;
-        b=I3wPE9fF6ZQvwNt9wFEazeEQhvhd95Td/wzX9oOkgczXc6Zpic0WpzlmuS4PFXYHVc
-         Nm2QIvafX0Y4osc6+a4d4+QaMX/iff5y7K8vEtHOmxHtreEQRHzV7y8LzdSkXETnpotL
-         LoubqQZoUdju3N9i1moKCGrj9wAgCRW6yapdFIqrPjuBM6aMN1ipgzeXmdP80uY9ApqQ
-         tx0amO7DIch7vlJFu30H1Cb08QlBZYiQbC36b3zg9/xQgV12ASiUdmgJD4jnw9RLaCVL
-         r6sqlHloP3eo4hlIfcxVSqLfsg+AS1wbTccpxOksyePCinaiCKZaRPTUvwA5/NZ/I5uO
-         27CA==
+        bh=PkHFpCD/XQeLxofMjQT3jwfPpJhgnEHgCex2rD4ksk8=;
+        b=lKMqG7lIc47IvaYySaSBUJFH/hA+mln853cL8/jfrpRJEPRmwW4vpmxSTWBVyKIk18
+         HReWO6yNVMsO8DPtbjjD0PjwHr5xKWAv3p0ciM7B1PSuvZbhJ80gT48ce5t2ve6posfM
+         8hp9pp1wToANmgTh5LIwI6suCjGhAZbFfn8TETLcUpXPnseDFgkUzhl2RG+z5kgEBaJN
+         rYnoAs3keLhepHWdqGD5Y50Sbv1R799at6hBKuSNACGwxqiHVOqc+tHpL4fsRIqm5Kfr
+         SkD8e1NgX2/yzMkqHX4+EKa+0c6DEK/HBMIXvny7nkWaOrMZA/ROssHZBeHAIhooC9aZ
+         kOpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680788720;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1680788760;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rWxbTxHDU4JcHcqIFGeE5B91rGmVuRWUbY39VK5Io2I=;
-        b=AV0oQJ4/9a7rT1pVw7/7OUDKnKcQWZDsFtZy1U14RpiXR962E1XUUofdvi5LnLy8ik
-         m5XeQNE4OKJWBNSN0Kf7k3IGR52IJTAZNd+03/E/6mbd6NzQGkWRJjJXhPg/DL5YQSU+
-         nIKefT4vou3N0YHgtkR4mTQVBeUtPumsFg6T1KuRG42bFSsw2lVecZxWfzfBek0JwiAD
-         EoA4IiVKtEH7aOzsMSiSF6wrDXoGuOprZ0H+NLfxrwZ2M0z0+wegWdtC3PAsSXIHUS5U
-         xC5VgiisrdVcA+E8VqEYeykHoMvzJJWM3nUI21WflpXnIb9iCEMc4p86uJaLvaXMMTYO
-         xxIQ==
-X-Gm-Message-State: AAQBX9cFGArNj5kt9phXUKUEBXdBdYWHrbjan2UyX1L08W1/xM1G87NM
-        YFMkP7HgmTTdDcMYBb6oX7sz1QhOf+s=
-X-Google-Smtp-Source: AKy350Zj176tWLpdtEztAu2yD1vTtRpDl6FObu/nSiFFfdgiZ43AZGdmoNkStWa8HKEzgAHBcdayGg==
-X-Received: by 2002:a17:906:9441:b0:92b:7e6a:bca0 with SMTP id z1-20020a170906944100b0092b7e6abca0mr7077798ejx.14.1680788720378;
-        Thu, 06 Apr 2023 06:45:20 -0700 (PDT)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id r13-20020a170906a20d00b008d044ede804sm826535ejy.163.2023.04.06.06.45.19
+        bh=PkHFpCD/XQeLxofMjQT3jwfPpJhgnEHgCex2rD4ksk8=;
+        b=jVoTBXP2XmPqex4kXMxqoPQhbFbrZfVNVkaVLBX024dvp7Xwb/IvUV4TrKMA+JFXRF
+         JNjufMbvpABz0fv1t/r/tZV2ELGclDNPzRfgOS8auNyAWMOP5wAm7OMJQfDxUuTv7H8e
+         DSBC7k5TyO8R+Yiuj5fsnui8WFJt8LYqxJ4rLCxAdS7OmeRYI/ccCvtx3/05KWZCtxe5
+         3RthXuqvzzPQxt5r7V4wAjomDeXzYcIZkRgFn8DhXjcqxSwIV5SaF3Bi9+TDjdBlKIlK
+         iTqVjg3kkZknIwS/OdwEaznC9mR5DpwTDgrheH3uz4cxZTQq5jzGTkY0HfNC571pmp/C
+         5a/w==
+X-Gm-Message-State: AAQBX9efN5d3hYJjGfHW/WZ/yu+rM/qIPLYgu6WPoJsmixcr+Ye39g5b
+        jaCO2biaCrhw90s7Fw2hWyE=
+X-Google-Smtp-Source: AKy350ZFYf29eCxG6wCnL3JIuIp+ieQKorpdGdk2B232Ai9lNGOwLmUA+hdGHUvuhBjF8/BVi+o5Yw==
+X-Received: by 2002:a05:6402:1804:b0:502:6726:89c3 with SMTP id g4-20020a056402180400b00502672689c3mr5410333edy.23.1680788760431;
+        Thu, 06 Apr 2023 06:46:00 -0700 (PDT)
+Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id k6-20020a50cb86000000b00501d73cfc86sm773352edi.9.2023.04.06.06.45.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 06:45:19 -0700 (PDT)
-Date:   Thu, 6 Apr 2023 15:45:18 +0200
+        Thu, 06 Apr 2023 06:46:00 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pwm@vger.kernel.org,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] pwm: rcar: drop of_match_ptr for ID table
-Message-ID: <ZC7M7rpyEQaI4YJJ@orome>
-References: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH RESEND v4] dt-bindings: pwm: Convert Amlogic Meson PWM binding
+Date:   Thu,  6 Apr 2023 15:45:59 +0200
+Message-Id: <168078873512.1715717.5725405826072466849.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <3edc5ba6-bf3d-e45b-377a-9e7ece7642a7@gmail.com>
+References: <3edc5ba6-bf3d-e45b-377a-9e7ece7642a7@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qzk1RDxBtReFCSbK"
-Content-Disposition: inline
-In-Reply-To: <20230312135120.357713-1-krzysztof.kozlowski@linaro.org>
-User-Agent: Mutt/2.2.10 (2023-03-25)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -79,55 +81,16 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 20 Feb 2023 22:19:30 +0100, Heiner Kallweit wrote:
+> Convert Amlogic Meson PWM binding to yaml.
+> 
+> 
 
---qzk1RDxBtReFCSbK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks!
 
-On Sun, Mar 12, 2023 at 02:51:19PM +0100, Krzysztof Kozlowski wrote:
-> The driver can match only via the DT table so the table should be always
-> used and the of_match_ptr does not have any sense (this also allows ACPI
-> matching via PRP0001, even though it might not be relevant here).  This
-> also fixes !CONFIG_OF error:
->=20
->   drivers/pwm/pwm-rcar.c:252:34: error: =E2=80=98rcar_pwm_of_table=E2=80=
-=99 defined but not used [-Werror=3Dunused-const-variable=3D]
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
-> ---
->=20
-> Changes since v1:
-> 1. Extend commit msg.
-> ---
->  drivers/pwm/pwm-rcar.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+[1/1] dt-bindings: pwm: Convert Amlogic Meson PWM binding
+      commit: 43a1c4ff3977f0ccd1d99e36d74e525aced5bb3a
 
-I've applied both patches with an updated commit message clarifying the
-exact configuration as pointed out by Uwe.
-
-Thanks,
-Thierry
-
---qzk1RDxBtReFCSbK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQuzO4ACgkQ3SOs138+
-s6Hudw//cWhnAimBrk1LA2VSwkIOTdBerLAIkizxv+nAArOFPffpfRnvvgECr6CF
-W3g9chFQMrZbwrzsni42K8ru2dtugvNutPnefJqJgMB0qIviPcSLCxBgcwj6eZjM
-ABf0gqnGeaIBMWn+fh9fjViV37QS3x7vSN8lecIY3fqcs5GHp3chptFSG7f+QPMJ
-IwFPM+kxiSqBsyUd2Hg1HsCFv2pHilg4ZSHhN5NdyOM9VAELHgCTinSFrvSPbtQJ
-xAWqMIVeQf1m2s1La6Xuj/KwTJ0gtD9NlpPpe4nkickMr08+TAJmcGWSlTiQ56Di
-lBGS1FJ7XKwBt5Ksfo44//WgXI09C4rqV+2AGS6A0cdhWNZpANhk0zpt7TshcI0T
-mYywBxlzx1x2r150DmADbas6bVmaU1mqoATNQhJwE1t7Uo8s0BSXOqFAu/98Tos7
-L/3GLKF/7NuwgTE0C8mj3bgRsR7/o+KlXkUM1dvVEM6cBtsUgkX7AgSVAj2gWVbQ
-rE+uiosENCxe756ODJLnqHgmw2hsIn5tGN4ebxl0kp+RCTzDVcfQjtmMbO1zJCVT
-W+wFrGT7VLM2uaZ5q1M2uHmWKGzGRgxWGBhAXBll9UoMBa5UPV6lSNLSnwLxLgTn
-nxZJ1TmDJfGUW1oTgvoarFDfUvAaaGu4O3KFnynPo0iybuembO0=
-=TBNW
------END PGP SIGNATURE-----
-
---qzk1RDxBtReFCSbK--
+Best regards,
+-- 
+Thierry Reding <thierry.reding@gmail.com>
