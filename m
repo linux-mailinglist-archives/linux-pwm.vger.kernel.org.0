@@ -2,174 +2,147 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB51C6D986D
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:39:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27FA96D987A
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 15:45:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238736AbjDFNjE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Apr 2023 09:39:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41670 "EHLO
+        id S229671AbjDFNpd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Apr 2023 09:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238249AbjDFNix (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:38:53 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36359EC2;
-        Thu,  6 Apr 2023 06:38:51 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id 11so1477655ejw.0;
-        Thu, 06 Apr 2023 06:38:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680788330;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gB2XWPbhfDFidinyV1LNhb8ctScJU+dAkHSX0qz7ET4=;
-        b=DWFsNgwj/RZSXsLXnNUQoiR8umWiGJbUUiIYa58HYUntJINtF1X3sbUNK2SGmtQjur
-         nf2zTDMyN8s4oHRR0TYqUkgjfIVkTLPs8CmJEMitOmxAZeERijaCX+6qOIZxycnmPgoR
-         U9e6XbN9UEFMadS3q3VyQXrA/DT5Qq/i5hiY6cbb4evqd8uruoPSRNOH3i19c8Ye3Pfh
-         zFkTgdxSfjPe42PgYkUWNAyotrDpkDFHp+KwaTjFl6b3ghsqOzXAhZeXx2VzEvzFwZZ3
-         tp3DVny8GXxsRvaRknQVHwp+VB/LLgDBi4Jx60LtQrwg7MdoTkXd6w5QYympcGyh0otV
-         dQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680788330;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gB2XWPbhfDFidinyV1LNhb8ctScJU+dAkHSX0qz7ET4=;
-        b=NW8CzzzCr9yQsR9kqVRl/o5x8hvR9JbHJHX3YBc7L30C0Bip8fqjNL1xr5DPYEm28f
-         GqUiyJytzhRZ8gfo+9jA1HU7UvViSzSZY3E5olWhHu2crr9SevvclLBpp97FSXOaIrE3
-         Ob9QX66a7iAKaQQPSmMEtwI69ud25/+i9Doq3jbqeYHbLyayLR/3sbJ1X77QyLIUsmNH
-         01qaAxHEOHOOhvqDoq8AEqzZE7ZQuX0a/1D3xrYtHfG3VQ09qEHJegXz6+wKnNNlAo0e
-         H42dWB/FnIB4eYWUO+ECNivworxrO0A5hccJIcat4zROLrWf4bx7VDcg97dtUMMqj85g
-         9+NQ==
-X-Gm-Message-State: AAQBX9ccBiqKP8wdsan5OQRGyLBsAaoPZI7sCZarZf2LkhDMZlR5BM4p
-        jvHVDIQkNLQm5h1fIiNrW+8=
-X-Google-Smtp-Source: AKy350ZtRMRv7B/dzBQ47qJgU1XWDGBVEEwshFNdf9hH5SdFw8PysBgGRaYwtkrRRVPRdbePL9WAXw==
-X-Received: by 2002:a17:907:2c4d:b0:92b:8fe7:344 with SMTP id hf13-20020a1709072c4d00b0092b8fe70344mr5959998ejc.16.1680788330175;
-        Thu, 06 Apr 2023 06:38:50 -0700 (PDT)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id mb14-20020a170906eb0e00b00947a749fc3esm835297ejb.33.2023.04.06.06.38.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 06:38:49 -0700 (PDT)
-Date:   Thu, 6 Apr 2023 15:38:48 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lorenz Brun <lorenz@brun.one>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        with ESMTP id S229747AbjDFNpG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 09:45:06 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5844ED0;
+        Thu,  6 Apr 2023 06:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1680788703; x=1712324703;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=66uzbHnTeg9KP22hFc1pTAbx1P429+J0tDm9ryOLR9k=;
+  b=2h38trDB5Cm+bC0IAQ2g4gmjeaDeCNgwPmqL58Vtn8nNTPlW77E5/Zvt
+   zqaYcRjsrxvwHtraIXcdVMwiAMBWVu0Z4OEh1rDeUmOarviGAN1rIHmLz
+   s1Zt54W0GrElWid5dt5qT6WxEWs36GVtfw4nuioGn/fgpyKqL0vrqkKIc
+   M25i00MfXeqS9/6Bug44oddS3S8DDK5+CYstMTK+KxIZff+S8XAYl6KVk
+   +jIZt5fnEs7DOYsXPGXmUcOsR3/NBD4N2LwiaACMyhptZoggtbXWhHpVL
+   8QQ67dHF+zYDc0bpMpGwsvaxZYXNvd07zQBft265UHw324Xvw3A9mGw1w
+   w==;
+X-IronPort-AV: E=Sophos;i="5.98,323,1673938800"; 
+   d="asc'?scan'208";a="208461384"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Apr 2023 06:45:02 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 6 Apr 2023 06:45:01 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Thu, 6 Apr 2023 06:44:59 -0700
+Date:   Thu, 6 Apr 2023 14:44:45 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Conor Dooley <conor@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2] pwm: mediatek: support inverted polarity
-Message-ID: <ZC7LaC19YjNwTIi1@orome>
-References: <20230309010410.2106525-1-lorenz@brun.one>
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v15 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <20230406-ducktail-reflex-4840315459f8@wendy>
+References: <20230330071203.286972-1-conor.dooley@microchip.com>
+ <20230330071203.286972-2-conor.dooley@microchip.com>
+ <0b91dee7-6c1d-4a33-8235-8fd5d58b200e@spud>
+ <ZC7GeXJbB9PAF0lb@orome>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="B9cjqcWf+cUWsJxl"
+        protocol="application/pgp-signature"; boundary="P2ywBvzo9kT8+ANN"
 Content-Disposition: inline
-In-Reply-To: <20230309010410.2106525-1-lorenz@brun.one>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <ZC7GeXJbB9PAF0lb@orome>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---B9cjqcWf+cUWsJxl
+--P2ywBvzo9kT8+ANN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 09, 2023 at 02:04:10AM +0100, Lorenz Brun wrote:
-> According to the MT7986 Reference Manual the Mediatek PWM controller
-> doesn't appear to have support for inverted polarity.
+On Thu, Apr 06, 2023 at 03:17:45PM +0200, Thierry Reding wrote:
+> On Sat, Apr 01, 2023 at 09:50:47PM +0100, Conor Dooley wrote:
+> > On Thu, Mar 30, 2023 at 08:12:03AM +0100, Conor Dooley wrote:
+> >=20
+> > > +	/*
+> > > +	 * Because 0xff is not a permitted value some error will seep into =
+the
+> > > +	 * calculation of prescale as prescale grows. Specifically, this er=
+ror
+> > > +	 * occurs where the remainder of the prescale calculation is less t=
+han
+> > > +	 * prescale.
+> > > +	 * For small values of prescale, only a handful of values will need
+> > > +	 * correction, but overall this applies to almost half of the valid
+> > > +	 * values for tmp.
+> > > +	 *
+> > > +	 * To keep the algorithm's decision making consistent, this case is
+> > > +	 * checked for and the simple solution is to, in these cases,
+> > > +	 * decrement prescale and check that the resulting value of period_=
+steps
+> > > +	 * is valid.
+> > > +	 *
+> > > +	 * period_steps can be computed from prescale:
+> > > +	 *                      period * clk_rate
+> > > +	 * period_steps =3D ----------------------------- - 1
+> > > +	 *                NSEC_PER_SEC * (prescale + 1)
+> > > +	 *
+> > > +	 */
+> > > +	if (tmp % (MCHPCOREPWM_PERIOD_STEPS_MAX + 1) < *prescale) {
+> >=20
+> > Hmm, looks like 32-bit doesn't like this modulus.
+> > I pushed things out for LKP to test before sending as I felt I'd not be
+> > allowed to do that operation, but got a build success email from it.
+> > I'm not sure why the mail wasn't sent as a reply to this, but
+> > <202304020410.A86IBNES-lkp@intel.com> complains:
+> > pwm-microchip-core.c:(.text+0x20a): undefined reference to `__aeabi_uld=
+ivmod'
+> >=20
+> > I know that tmp < 65536 at this point, so if the general approach is
+> > fine, I can always cast it to a non 64-bit type without losing any
+> > information.
 >=20
-> To still support inverted PWM for common use cases, this relaxes the
-> check for inverted polarity within the driver to allow it to work in
-> case usage_power is set to true, i.e. the exact waveform does not
-> matter. If usage_power is true and the polarity is inverted the duty
-> cycle is mathematically inverted before being applied to the hardware.
->=20
-> Signed-off-by: Lorenz Brun <lorenz@brun.one>
-> ---
-> V2: Only allow mathematically inverted PWM if usage_power is true
-> ---
->  drivers/pwm/pwm-mediatek.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index 5b5eeaff35da..18791304d1ca 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -202,8 +202,16 @@ static int pwm_mediatek_apply(struct pwm_chip *chip,=
- struct pwm_device *pwm,
->  			      const struct pwm_state *state)
->  {
->  	int err;
-> -
-> -	if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> +	u64 duty_cycle;
-> +
-> +	/* According to the MT7986 Reference Manual the peripheral does not
+> Since you already use some of the helpers from linux/math64.h, perhaps
+> you can use something like div_u64_rem() here?
 
-Block comments should have no text on the first line:
+I had actually initially tried to do that, before I added changed the
+calculation of prescale to use DIV64_U64_ROUND_UP():
+| *prescale =3D DIV64_U64_ROUND_UP(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1) -=
+ 1;
 
-	/*
-	 * According
-	 * ...
-	 */
+I could I suppose add an additional:
+| div_u64_rem(tmp, MCHPCOREPWM_PERIOD_STEPS_MAX + 1, &remainder);
 
-> +	 * appear to have the capability to invert the output.
-> +	 * This means that inverted mode can not be fully supported as the
-> +	 * waveform will always start with the low period and end with the high
-> +	 * period. Thus reject non-normal polarity if the shape of the waveform
-> +	 * matters, i.e. usage_power is not set.
-> +	 */
-> +	if (state->polarity !=3D PWM_POLARITY_NORMAL && !state->usage_power)
->  		return -EINVAL;
-> =20
->  	if (!state->enabled) {
-> @@ -213,7 +221,11 @@ static int pwm_mediatek_apply(struct pwm_chip *chip,=
- struct pwm_device *pwm,
->  		return 0;
->  	}
-> =20
-> -	err =3D pwm_mediatek_config(pwm->chip, pwm, state->duty_cycle, state->p=
-eriod);
-> +	duty_cycle =3D state->duty_cycle;
-> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		duty_cycle =3D state->period - state->duty_cycle;
+and then just use the value of remainder in the if statement.
+Not the prettiest thing in the world I suppose, but should be 32-bit
+safe...
 
-That's not really what state->usage_power was meant to address. What's
-wrong with just reversing the duty cycle in the pwm-fan? If you use DT
-it's quite trivial to do that by just reversing the entries in your
-cooling-levels property. Does that not work for you?
+Thanks for the suggestion, I'm just surprised that LKP didn't complain
+when it built my tree...
 
-Thierry
-
---B9cjqcWf+cUWsJxl
+--P2ywBvzo9kT8+ANN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQuy2UACgkQ3SOs138+
-s6EjfxAAoFem6yKro0FZC+kXhbzW9EpoGnhcTKrrD3iU//RmD1TMIk6xayb8XZIW
-lAkXQtj+pB1Ck50VA26ygliJ2IFxbqJgwq3bBVUkhpkkoCMFI4KynDZgwnCu38cp
-t8b3SjIEyi8Wernz9HlLWMJ5y/1uBRFnMYQoQnT2STh/nqmZx0lZ31xu9G4Bqt0f
-cbT4IqQMXeosjng/vNcBkl7Svm/K+PxUK/mxnsqHLjjmYbtWahZDCpyqIVgU8D60
-AWGRmkil2acw8ZLDMbnc59HhKAK6W55SxoGvvVtwagCRRbSrmVAvAg16Gi4NoSR8
-mdabDVhVcTB50QNN5UWGn0H4ZzD22jWoAbc2iuK9p7p2OTgLI3LvxH4E5DVoIgxO
-Yzc2fT9Y1o10A8hYLmSjEiHU0apY5PTjgF7T8deA0U/YH0xstxZIt+FV2mkySs7/
-5iV8gqv4jCMTN2RFK6mwi7vQ+4ZA9qf1dW1H5GCd92kHYkuZ6EhUFHKc2gpQWNsF
-/ENh1mJ3D6uFYD83oSiVG8WFJssCSBCIjUJsQuVDOBOZyKVrn2cd1usv8dh07fS6
-MMmU39wD011XL5XjahcVZAV7Pe3xiK+CpMozlJVdG9L1SWwrh8q7f5Z+BIS1qXMN
-vilxrUDLGLTvWUS4CnNWBNFE8n/udkkU8rFxPhY0R/rs8Ms6xSE=
-=kG8p
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZC7MzAAKCRB4tDGHoIJi
+0jooAP4mP43vuXbOMOXs2Y2/DPqSEe5azoc/PfplOVKQMqj2mgD/f19yx3/S/PIL
+eL2ROUgUxGJ7Zm+dMCmMXk23o3v8RwA=
+=MkqJ
 -----END PGP SIGNATURE-----
 
---B9cjqcWf+cUWsJxl--
+--P2ywBvzo9kT8+ANN--
