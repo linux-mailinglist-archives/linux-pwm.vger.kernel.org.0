@@ -2,74 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D625B6D9A3D
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 16:31:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 526F76D9A7E
+	for <lists+linux-pwm@lfdr.de>; Thu,  6 Apr 2023 16:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239377AbjDFObJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Apr 2023 10:31:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
+        id S239298AbjDFOgL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 6 Apr 2023 10:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239124AbjDFOa2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 10:30:28 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84C88A7E;
-        Thu,  6 Apr 2023 07:30:26 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id n21so1873071ejz.4;
-        Thu, 06 Apr 2023 07:30:26 -0700 (PDT)
+        with ESMTP id S236811AbjDFOfx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Apr 2023 10:35:53 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13298BDFA;
+        Thu,  6 Apr 2023 07:33:21 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id l17so1888579ejp.8;
+        Thu, 06 Apr 2023 07:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680791425;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1680791532;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wQhUC48C6wHrpynrBLKu6E6JYZ/G69c0U7Fw89TbAAs=;
-        b=kDOOqQM8r/fMLfoKQs/IN3KdhOeZVXq6IKjq+NmpuI3Nbp3GY5P4GDrn2CrByhvDeu
-         EWAjDR4Z8ZleR3HKC1cmY2spstSNnB/Khvo1ymjzcvloNFHtxRAbIjnwJTVxZYQPGMN1
-         OtcrQuOyXUeGpZ3VEGUOs4ttExdXTkEaMaQR6qgqa8eN3F10VX2if5cPh+2yU0EqQ4Af
-         TVBJt0uMI5PD9lPxYuMVhgZMfKOqSSWtYiapQBtwL34qNXbBo8ks54SaYh2d7imYToF0
-         Kn94WYCLs+fdzYrRLGmsM4Q7FT4WnOWjL6Vy/TG3IHNllqFW2+AruAztWe/W0j8qVKCn
-         IEWA==
+        bh=7NE8LMgRiCIjdbrcrGLtDoTN1MqhIW5n6uRWWiPsxx4=;
+        b=oAd5hS+uRxlGo7MKVZnAUSQOTtoHWyyYHm/pXDAeI1Tte1vDy7MsgcdQUJBu/ktkiP
+         ATEb4RwFRMmLuuWS81gHkksVF7ssGCX2xxbU0LcpZW3jOFY2hDJ1a670yuA+wLlXW/vn
+         EegRngxc4WMbelYLWXk5az66RxHtSgdvfmcMPkw1K7spAnbuUWljjdfgiukj23Ru0LzI
+         75VJbAu1hzZdZxJKb4l82gAhxT2ref9iXmThsgD6GlFgIsX05mSAY9b0VrNKVGArkO1k
+         /7bb+P0eBNGuqgVBOxA8cBVDy2rYH+ZAFu5L9aE4gDHvPP7BUYGcrlDKZPYF78dPKbUK
+         KpXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680791425;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1680791532;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wQhUC48C6wHrpynrBLKu6E6JYZ/G69c0U7Fw89TbAAs=;
-        b=231je9ypA2ku3FKPqkU0LdCoeYfEqJlGsy15NMi4adaBJVG7QmffpfAdPacTbKDtpd
-         dh3BSUpJBUVJZLNwHOK6pxXKy+eTtdFrOZlV3BPWSsc6CBLr0rHJ0grrpGV8/RNTSQ/W
-         PVeBesj08T1Dt3EvplOfiaY2vsW1JHBLIA2qmIMI+zZQsnzytg/nNJ9yVV2AzfObZc2S
-         OZKdUU1gCsudVsrl8ghk8LHkrvzDxc1NPieYiydtN44GmQN3zeF8r5LFunbLzUJFRkds
-         LeFKbrUPwSGHdDAiFnyyxDmgsM+66ZU5ZCOrjXXH1UbFATP1S6G0K3ylcAxiMpGA6V2d
-         +c3A==
-X-Gm-Message-State: AAQBX9e4yBgguBTYpcAMFXbeZHLUREQ7PeujpKLPqLoONjnGdAMtMSxB
-        yLKKdTLRvG2U8/38tCBAiQc=
-X-Google-Smtp-Source: AKy350aiBqXW2UWscI0vgWKtSbPJl7vSCZnaC+Q+fMor6zOBrfrqrLsRVMdvXTw3ToBjy+9r3IsNzg==
-X-Received: by 2002:a17:906:6d6:b0:8f6:5a70:cccc with SMTP id v22-20020a17090606d600b008f65a70ccccmr6946401ejb.66.1680791425036;
-        Thu, 06 Apr 2023 07:30:25 -0700 (PDT)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id dd20-20020a1709069b9400b009475bf82935sm884746ejc.31.2023.04.06.07.30.24
+        bh=7NE8LMgRiCIjdbrcrGLtDoTN1MqhIW5n6uRWWiPsxx4=;
+        b=W6yo+VRncEW0OrldOnyZjLCjIVv5qkNx9IclDCsQI3drmW7mfkuBdTwXccXi/R2aCK
+         xvc1g3yEEem7Hw8zD4EjI40CQDGYU78tv0uqxGFeuONf67gHhfz0Yi6Nyt1sSjEBRjaZ
+         Pg4DcTa81uVBPtq9JZj1NOwhucZJKpfHZaU80tUTNmdylSJEjNd4FIwGkYBHwQO3ZYUi
+         VWQWw1ClESIyoEBwPPqXGoPDP92GZJ+O67GQarsONi+u6ctx6R+SeQOz2QvK/gl9T/on
+         zMcTAvaW7HMK7t6U2vGt7WFgO/qH7DzqdtRTHFnJuNZAJDS/I2vrNtynhkYZHY/yR0Xy
+         sTeg==
+X-Gm-Message-State: AAQBX9eh8Qalsg9i1385pqNvrJ/EKfd3IzOKzSZYmwP33SaUqDD4f3fO
+        czn0a0VI3e8mIQ6u18a7Mv0=
+X-Google-Smtp-Source: AKy350bgjv21uhcf1/rq5AbSVXwcWWjZ656MGCrxpKOpbqsIx2AfWLsFXOcTOvV+HGXBkw3mMWKAuA==
+X-Received: by 2002:a17:906:2acf:b0:948:b667:e984 with SMTP id m15-20020a1709062acf00b00948b667e984mr6508084eje.27.1680791532591;
+        Thu, 06 Apr 2023 07:32:12 -0700 (PDT)
+Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id i3-20020a50c3c3000000b004fa012332ecsm846250edf.1.2023.04.06.07.32.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 07:30:24 -0700 (PDT)
-Date:   Thu, 6 Apr 2023 16:30:23 +0200
+        Thu, 06 Apr 2023 07:32:12 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lorenz Brun <lorenz@brun.one>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2] pwm: mediatek: support inverted polarity
-Message-ID: <ZC7Xf8Wy1x9gnaAY@orome>
-References: <20230309010410.2106525-1-lorenz@brun.one>
- <ZC7LaC19YjNwTIi1@orome>
- <20230406135358.x3et6gvvxqsknfn6@pengutronix.de>
+To:     Sasha Finkelstein <fnkl.kernel@gmail.com>,
+        - <asahi@lists.linux.dev>, Rob Herring <robh+dt@kernel.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Hector Martin <marcan@marcan.st>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Sasha Finkelstein <7d578vix8hzw@opayq.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH RESEND v9 0/5] PWM and keyboard backlight driver for ARM Macs
+Date:   Thu,  6 Apr 2023 16:32:11 +0200
+Message-Id: <168079151921.2015855.16317182688660324415.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230214-fpwm-v9-0-f3094107b16b@gmail.com>
+References: <20230214-fpwm-v9-0-f3094107b16b@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vTrnEci5s8VqfSaD"
-Content-Disposition: inline
-In-Reply-To: <20230406135358.x3et6gvvxqsknfn6@pengutronix.de>
-User-Agent: Mutt/2.2.10 (2023-03-25)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -80,79 +80,28 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Mon, 03 Apr 2023 16:19:18 +0200, Sasha Finkelstein wrote:
+> This is the v9 of the patch series to add PWM and keyboard
+> backlight driver for ARM macs.
+> 
+> Changes in v1:
+> Addressing the review comments.
+> 
+> Changes in v2:
+> Added the reviewed-by and acked-by tags.
+> Addressing a review comment.
+> 
+> [...]
 
---vTrnEci5s8VqfSaD
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks!
 
-On Thu, Apr 06, 2023 at 03:53:58PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Thierry,
->=20
-> On Thu, Apr 06, 2023 at 03:38:48PM +0200, Thierry Reding wrote:
-> > On Thu, Mar 09, 2023 at 02:04:10AM +0100, Lorenz Brun wrote:
-> > > +	 * appear to have the capability to invert the output.
-> > > +	 * This means that inverted mode can not be fully supported as the
-> > > +	 * waveform will always start with the low period and end with the =
-high
-> > > +	 * period. Thus reject non-normal polarity if the shape of the wave=
-form
-> > > +	 * matters, i.e. usage_power is not set.
-> > > +	 */
-> > > +	if (state->polarity !=3D PWM_POLARITY_NORMAL && !state->usage_power)
-> > >  		return -EINVAL;
-> > > =20
-> > >  	if (!state->enabled) {
-> > > @@ -213,7 +221,11 @@ static int pwm_mediatek_apply(struct pwm_chip *c=
-hip, struct pwm_device *pwm,
-> > >  		return 0;
-> > >  	}
-> > > =20
-> > > -	err =3D pwm_mediatek_config(pwm->chip, pwm, state->duty_cycle, stat=
-e->period);
-> > > +	duty_cycle =3D state->duty_cycle;
-> > > +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> > > +		duty_cycle =3D state->period - state->duty_cycle;
-> >=20
-> > That's not really what state->usage_power was meant to address.
->=20
-> I don't understand your concern here. I don't like .usage_power, but
-> AFAICT this is a legitimite use. With .usage_power =3D true, the lowlevel
-> driver is free to shift the phase_offset and even modify the period size
-> and the goal is just that the average power-output matches.
->=20
-> Lorenz's patch does exactly this: It even keeps the period and only
-> shifts the phase (by period - duty_cycle). If you consider this not
-> legitmate, I think we have to improve the docs about .usage_power.
+[1/5] dt-bindings: pwm: Add Apple PWM controller
+      commit: 87a3a3929c710b863c3a288f6b094edc97662858
+[2/5] pwm: Add Apple PWM controller
+      commit: bafbbef85fd788074c27892c2391faf249eb7b29
+[5/5] MAINTAINERS: Add entries for Apple PWM driver
+      commit: de614ac31955fe20f71021fd5f4a9a811e90028f
 
-I realize that I'm being nitpicky here. Setting usage_power =3D true and
-duty =3D period - duty is a lazy way of achieving what you can easily do
-by adjusting the input duty cycle.
-
-If you all really want this, then it should go into the core, because
-it's something that can be implemented on basically every single PWM
-controller.
-
-Thierry
-
---vTrnEci5s8VqfSaD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQu134ACgkQ3SOs138+
-s6HdEg//QB1RbC+b2D1fyJp2a/878DZw0Noui4uzQ9hqOvjkcUvly2m9Nt/YPMG3
-LK8yJ8Zmxkytm6YqFHgYwaYZk7vnRL6Cvoo5gVdxlAvsgG+Go/UAEgvMpq5dgnP+
-FO8mZa4P7LKgJe/5sGuZanDrwVt7Xh6Y12RsmiBYcaMkC4fkpyKutR0VRy31KIE4
-qNJP0DozI7wHDyJcdV+AW+2saARDEt+5IRFn/fKjpxx5hp2pIg04OUcelAJEgF6E
-pg16Vs9BAqUYfN+LnqdGqph3+tJR6pvcXLG+uU6o/FgQLTqf3ic1oQca7stRfAH9
-BbqhkkoTzlpOiLvp0S4bzxqOiaFioRnROBppZvNIl85j3NIOSm7NTAzUE3rh/Z9I
-qkn06FT3+Y1R3/NsOKZoQfH0ygm97RdjtQhwWscm0VHIneh165fW8e++dcrBLYCY
-NyYA01We7VONe4m05ycsWzXq3xckZj7T4225MOK/NA2AK2KTNhMUhSqA3T41IEto
-iWBzS9J8azku8jAYj0My5RO7obpymkVX0+ymixsmFVvBW4V7Hd7fPR43eI805Rg9
-OMuh92K+e1XBvgq8nUUuA8pJxmBBkG+Qpz9t1zta55X1hu9LBtSdocZcJtaBr746
-ELWDyZxNNGBTfbmchrp5SIP1zphRDVY3o3wzoKVY4XQewLaDL5g=
-=rBYM
------END PGP SIGNATURE-----
-
---vTrnEci5s8VqfSaD--
+Best regards,
+-- 
+Thierry Reding <thierry.reding@gmail.com>
