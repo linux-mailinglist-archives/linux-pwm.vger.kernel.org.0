@@ -2,44 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A85136DF6D1
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 15:18:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D38F6DF6E3
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 15:21:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230344AbjDLNSW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 09:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
+        id S230033AbjDLNVx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 09:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230161AbjDLNSN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 09:18:13 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112DA7ABF;
-        Wed, 12 Apr 2023 06:17:53 -0700 (PDT)
+        with ESMTP id S229917AbjDLNVw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 09:21:52 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B493C9766;
+        Wed, 12 Apr 2023 06:21:24 -0700 (PDT)
 Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id B32D26603102;
-        Wed, 12 Apr 2023 14:17:23 +0100 (BST)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 2599F6603102;
+        Wed, 12 Apr 2023 14:21:18 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1681305445;
-        bh=kWaXsEK0eZOcZEFNa/wRIg4Y8oDz609JLlK3U1zI9vs=;
+        s=mail; t=1681305679;
+        bh=BEatgd20PaT+FoAtz5LJF9JNJB6ziiidFfTfPNIX/YM=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=ijaIa/bTYqS4pI+GbN0q3iYFpCbrjvFi6mUY+gW5iKphea997GuAq5lrjcRD4dTza
-         tsfwTtFjO03ygljQz7j1jlnUrvZCjOoNypSlvvVzlqgJukqvVTxoDEh5G5yS3K57xC
-         0bqqKhngFD/JBhIHW0lneWDqez/IW5GMilTqgZuJ9CxsIymlhk2BpW57dVN+qOKM5m
-         CYjeoILzbttz1wIyfZgfY1mXlrowZbETlVXM9edw3x4u+apT1BM81e7HHDOsuV/wAn
-         uzrqHv7YB8ffDzeX74DusX+jhOkc2dArNZhIcjQD222MBsqQEipgE9qHLCxCAxsG+k
-         wkAyrXEvCEwIw==
-Message-ID: <e129b3ff-90b1-3df7-871e-09fba0a960f4@collabora.com>
-Date:   Wed, 12 Apr 2023 15:17:21 +0200
+        b=fsD0pPPDgNntnWVZcg0I3MYaS53hmASFtfvk2zOkcJ9TJZiqgyjcdHRrgEqLsg32h
+         QpEOr5iKO0Ea1oRKd9TFMqf2RHhd0m5UjbO3GPw5vZh4WF19HkG6o3Zi2Giq7egCgN
+         9u4b/aW/K8IKCNgyJ2EdGPdlzlvp51x2AnsimSLEbc5Z5RZ9hIau+owIMC8ThfilW+
+         bVQ1xfnX8cu6G6PYHP/ZZiMRLmCTrOoLr+ZVHoV6gZY90ykb8E/LqSvsieF4Sg3zAy
+         ul7/TGTo6KI8Zv0auPlCa3hscCYQrEopSi478gvEP2mBehdLl0DAgHOTXBHEMUN0Ey
+         S3UbQhNG6eqAg==
+Message-ID: <8bc72da0-d872-53fb-6753-f826efa3a51b@collabora.com>
+Date:   Wed, 12 Apr 2023 15:21:16 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH 02/27] dt-bindings: phy: mediatek,dsi-phy: Add compatible
- for MT6795 Helio X10
+Subject: Re: [PATCH 05/27] dt-bindings: display: mediatek: dsi: Add compatible
+ for MediaTek MT6795
 Content-Language: en-US
-To:     Alexandre Mergnat <amergnat@baylibre.com>, matthias.bgg@gmail.com
+To:     Matthias Brugger <matthias.bgg@gmail.com>
 Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         jassisinghbrar@gmail.com, chunfeng.yun@mediatek.com,
@@ -54,13 +54,11 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-3-angelogioacchino.delregno@collabora.com>
- <20684378-cf3e-0299-d390-287b7bafbda5@baylibre.com>
- <eb770f19-ada5-81bb-5ea3-798edabca70f@collabora.com>
- <7e53c0b1-3aed-da08-5c57-800ac2277bc6@baylibre.com>
+ <20230412112739.160376-6-angelogioacchino.delregno@collabora.com>
+ <b9424113-f812-2f2d-5068-b04bb789e0de@gmail.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <7e53c0b1-3aed-da08-5c57-800ac2277bc6@baylibre.com>
+In-Reply-To: <b9424113-f812-2f2d-5068-b04bb789e0de@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,63 +70,59 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Il 12/04/23 15:12, Alexandre Mergnat ha scritto:
-> On 12/04/2023 15:03, AngeloGioacchino Del Regno wrote:
->> Il 12/04/23 14:59, Alexandre Mergnat ha scritto:
->>> On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
->>>> Add a compatible string for MediaTek Helio X10 MT6795: this SoC uses
->>>> the same DSI PHY as MT8173.
->>>>
->>>> Signed-off-by: AngeloGioacchino Del Regno 
->>>> <angelogioacchino.delregno@collabora.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml | 4 ++++
->>>>   1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml 
->>>> b/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
->>>> index 26f2b887cfc1..a9f78344efdb 100644
->>>> --- a/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
->>>> +++ b/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
->>>> @@ -24,6 +24,10 @@ properties:
->>>>             - enum:
->>>>                 - mediatek,mt7623-mipi-tx
->>>>             - const: mediatek,mt2701-mipi-tx
->>>> +      - items:
->>>> +          - enum:
->>>> +              - mediatek,mt6795-mipi-tx
->>>> +          - const: mediatek,mt8173-mipi-tx
->>>
->>> AFAIK, it should be:
->>>        - items:
->>>            - const: mediatek,mt6795-mipi-tx
->>>            - const: mediatek,mt8173-mipi-tx
->>>
->>> Since it isn't respected above for mt7623, it may be tolerated.
->>> Please, take this comment as a suggestion, isn't a NAK from me.
->>>
+Il 12/04/23 14:36, Matthias Brugger ha scritto:
+> 
+> 
+> On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
+>> Add a compatible string for MediaTek Helio X10 MT6795, using the same
+>> DSI block as MT8173.
 >>
->> First of all, Thanks!
->> I want to explain, though, the reason for that.
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../display/mediatek/mediatek,dsi.yaml        | 19 ++++++++++++-------
+>>   1 file changed, 12 insertions(+), 7 deletions(-)
 >>
->> If you check all the commits, on some I did it as you just proposed, while
->> on some others I did it with an enum before const: that's simply because I
->> *totally expect* some to grow, while others (const - const) I was either
->> unsure, or totally *not* expecting them to grow soon!
+>> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml 
+>> b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+>> index 4707b60238b0..12441b937684 100644
+>> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+>> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+>> @@ -22,13 +22,18 @@ allOf:
+>>   properties:
+>>     compatible:
+>> -    enum:
+>> -      - mediatek,mt2701-dsi
+>> -      - mediatek,mt7623-dsi
+>> -      - mediatek,mt8167-dsi
+>> -      - mediatek,mt8173-dsi
+>> -      - mediatek,mt8183-dsi
+>> -      - mediatek,mt8186-dsi
+>> +    oneOf:
+>> +      - enum:
+>> +          - mediatek,mt2701-dsi
+>> +          - mediatek,mt7623-dsi
+>> +          - mediatek,mt8167-dsi
+>> +          - mediatek,mt8173-dsi
+>> +          - mediatek,mt8183-dsi
+>> +          - mediatek,mt8186-dsi
+>> +      - items:
+>> +          - enum:
+>> +              - mediatek,mt6795-dsi
+>> +          - const: mediatek,mt8173-dsi
 > 
-> 
-> That's what I thought. IMHO, if someone add another compat later, he will be on 
-> charge to change the const by enum front of your "mediatek,mt6795-mipi-tx". But my 
-> opinion is probably not the most popular.
-> 
-> I will not make the same feedback for the other patches in this series.
+> Same here, why not const?
 > 
 
-I honestly don't know what's the most popular opinion about that... but whatever,
-in any case... just want to make sure to communicate that I don't really have
-strong opinions about doing it one way or the other.
+For both DPI and DSI: many other SoCs can work with the same handling
+as MT8173, that's all the ones from the same era, one example is MT6765,
+MT6755... as well as MT6752 and 67533 afaik.
 
-The arguments in favor and against that are probably 1:1... :-D
+...that's why :-)
 
-Cheers!
+Cheers,
 Angelo
+
+>>     reg:
+>>       maxItems: 1
+
+
