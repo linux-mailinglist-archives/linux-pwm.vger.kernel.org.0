@@ -2,60 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A9B56DF5AB
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29EC6DF5D5
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:44:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230096AbjDLMlk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 08:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56650 "EHLO
+        id S230506AbjDLMoD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 08:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjDLMlj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:41:39 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD24B6E9A;
-        Wed, 12 Apr 2023 05:41:26 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id w24so1154894wra.10;
-        Wed, 12 Apr 2023 05:41:26 -0700 (PDT)
+        with ESMTP id S231470AbjDLMnx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:43:53 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B1093F4;
+        Wed, 12 Apr 2023 05:43:27 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id d8-20020a05600c3ac800b003ee6e324b19so6095472wms.1;
+        Wed, 12 Apr 2023 05:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681303285; x=1683895285;
+        d=gmail.com; s=20221208; t=1681303405; x=1683895405;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AEHj125fFUHVqVSYxI2Iu4R8mwBu9xLsNlhlcbmp5rM=;
-        b=llEetynzd9UPHbqm2DuZ2+4h9Q3PCWFOLHFsb0vOSnJYPAfCAO1R3XNmoKZJMwhBQC
-         vILAF7oLkx35oAn4QQZ8feiPlgHUZyVqzYlVPvviSyOOaIXVD6/sdEW7kIDfuIu36t1Q
-         BV3+QEpyAceCpr/CqnR2DQTdlps3ia+YVy+hXsNBIjJNSOnwwno7+vnUilo8JJuidsOx
-         xF+jP1kAslYKyhJ65RH2Wh4UWQ0PDszOh+n7iT3D099hxVe/Dh5QPmuLZJA9ADqi/Egk
-         +t+fgzr6O2apGbnbPnFhV3cikLdph/xyWZXNgCgnQXK6rogqkwqP0NQ4UEO/PLWc0wmV
-         xnNw==
+        bh=cUF7LoitQw5OkHRbbbgY1vxHPcwK0X9aUiqFfbPiOwE=;
+        b=Ex9hVrKzu4VnZn/KwKympLWVqnLG00mRzfW1qoaZcqweDNRIjvzttcA6d175fMltO+
+         s+44KFje1bNbbW1gDNTtg3qY1PPlw3F6d9BWgDp5ictRbUsF4ftSM4bJjPQMO6OS7krV
+         WDqO6hovL/h7RbDXLeZqyLjg5Qml1ZqBKnYXAfpbj0yw6PJpcjNMTmPNNP+LuJE0Ksx4
+         f2a3OtOGJpRCwm0v1TC3plUl5VKW2RjLu5fJ8uFc1o42cl7iQU1v2I1Iyp5y54YckBNf
+         D0U3zJQ3MW5AoxCy1/Sr1gNtfHVX1dSBBiIJ4aSoCN9fzRfjxTDzAT7ZaF+BegoXfL2F
+         Eceg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681303285; x=1683895285;
+        d=1e100.net; s=20210112; t=1681303405; x=1683895405;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEHj125fFUHVqVSYxI2Iu4R8mwBu9xLsNlhlcbmp5rM=;
-        b=Hgnd9GLyz1+RWCtNAwAN09m8xOxKv7KOf4Peh5us/gRq+g21Tg+L6I+gkMK844mJTa
-         mJMjR3XAHYCDU8LJ0ixGleNBJnsYctiC+BOiRfLuoD8V8LI6iRT2N8UKnQI5DNaSYgu0
-         SIq2WYTGKhTafgKbdAZcEo11IUEW5tiRwZkFIXAqlhCAo/MuHCf3S6HcSnBgXIl6VYEi
-         NSBraqVj1WaiNRgfPqOUdf2UxbC3ArnDPJphhm7wnw+B3cjuUeV98foeIGhJkXXOXPTS
-         +fogQ2vZx2iR2qBqGmGjPLKND+LlvC/kdaF/yj/hJuHZU4YKdHs8Mk+XVjoI93tXNY/r
-         +++Q==
-X-Gm-Message-State: AAQBX9ebdHiyZ+6NIV2krt7HBjxXReejLAFfe43DKY+DyADtRePip4EJ
-        oosAK+jhq1q/2O2cNCd1h3Q=
-X-Google-Smtp-Source: AKy350aT31kI3WrPlyJemwrlllp01mZSGvhWt0uUtaz7CCjWzacgDuOrFbxL5IdxxVlheLDNfhc0UA==
-X-Received: by 2002:a05:6000:11d1:b0:2f4:e8e3:ef62 with SMTP id i17-20020a05600011d100b002f4e8e3ef62mr1002128wrx.65.1681303285246;
-        Wed, 12 Apr 2023 05:41:25 -0700 (PDT)
+        bh=cUF7LoitQw5OkHRbbbgY1vxHPcwK0X9aUiqFfbPiOwE=;
+        b=IR6M5EJx+qx5u16q0AY12d1dI8ZxGK0YsB66lZtWi6dXVvTxM/hdqeOmUeMo524qZT
+         e5BImHE+U0t6mPqhzkZzV1Ej47hB4hg2pNUGYRHAWulPJia2ntEb14n4qfV9c3jeBNc+
+         NE3Il/tZzUD0eJz5tJsutE9ow0Fr3bdmfDBfAPsMeCySUwJbvib6Ug18oiR/UWR7kkhE
+         F3uKEzIIu6gc4xlMK9qmZ+CLOEzTcxQDOpSnzptcjhMXXSByHwxOQcjaPUuQfvwjpO5u
+         H6fYCHQiU+Mad2ij69O6sSm+gv3gHB9L0rDi/Gari3FiSdwG+31aVXnXfYwfa0EWWW/k
+         MTUA==
+X-Gm-Message-State: AAQBX9dOHUxXXP1EQcncoZDUSVCYl2AracI/rT7LtMJ+veW782FKPxq/
+        zkaxB+r3YusoKCpjdu/3kS8=
+X-Google-Smtp-Source: AKy350aAVnydjEmaeKZAWvOiy1vncejnZ4Satpe9Geuus5lfYY1lSqu4hz+nbW5+onECFdEVwDSGCQ==
+X-Received: by 2002:a05:600c:c1:b0:3ed:9ce3:4a39 with SMTP id u1-20020a05600c00c100b003ed9ce34a39mr9980309wmm.26.1681303405450;
+        Wed, 12 Apr 2023 05:43:25 -0700 (PDT)
 Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id u11-20020a5d514b000000b002cefcac0c62sm17220111wrt.9.2023.04.12.05.41.23
+        by smtp.gmail.com with ESMTPSA id 6-20020a05600c028600b003ee0d191539sm2269003wmk.10.2023.04.12.05.43.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 05:41:24 -0700 (PDT)
-Message-ID: <7466cf12-9411-cb35-8e8b-fa50f5efe492@gmail.com>
-Date:   Wed, 12 Apr 2023 14:41:22 +0200
+        Wed, 12 Apr 2023 05:43:24 -0700 (PDT)
+Message-ID: <95aec24f-b393-e36d-b4dd-4c0a228fc619@gmail.com>
+Date:   Wed, 12 Apr 2023 14:43:22 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 22/27] arm64: dts: mediatek: mt6795: Copyright header
- additions
+Subject: Re: [PATCH 20/27] arm64: dts: mediatek: mt6795: Add tertiary PWM node
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
@@ -73,9 +72,9 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-23-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-21-angelogioacchino.delregno@collabora.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20230412112739.160376-23-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230412112739.160376-21-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -91,31 +90,46 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> I have added more than 800 lines to this devicetree: adding myself to
-> the copyright header.
+> The PWM at 0x11006000 is the tertiary PWM; unlike PWM0, PWM1, this is
+> not display specific and can be used as a generic PWM controller.
+> 
+> This node is left disabled as usage is board-specific.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Applied, thanks!
+
 > ---
->   arch/arm64/boot/dts/mediatek/mt6795.dtsi | 3 +++
->   1 file changed, 3 insertions(+)
+>   arch/arm64/boot/dts/mediatek/mt6795.dtsi | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> index 29ca9a7bf0b3..a4c950b65006 100644
+> index cf45cb4ad3d2..50d9276d18c6 100644
 > --- a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
 > +++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> @@ -2,6 +2,9 @@
->   /*
->    * Copyright (c) 2015 MediaTek Inc.
->    * Author: Mars.C <mars.cheng@mediatek.com>
-> + *
-> + * Copyright (C) 2023 Collabora Ltd.
-> + *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Indentation?
-
-BTW from what I understand the copyright will be by your employer, Collabora not 
-you, but I'm not an legal expert :)
-
->    */
+> @@ -583,6 +583,25 @@ uart3: serial@11005000 {
+>   			status = "disabled";
+>   		};
 >   
->   #include <dt-bindings/interrupt-controller/irq.h>
+> +		pwm2: pwm@11006000 {
+> +			compatible = "mediatek,mt6795-pwm";
+> +			reg = <0 0x11006000 0 0x1000>;
+> +			#pwm-cells = <2>;
+> +			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
+> +				 <&pericfg CLK_PERI_PWM>,
+> +				 <&pericfg CLK_PERI_PWM1>,
+> +				 <&pericfg CLK_PERI_PWM2>,
+> +				 <&pericfg CLK_PERI_PWM3>,
+> +				 <&pericfg CLK_PERI_PWM4>,
+> +				 <&pericfg CLK_PERI_PWM5>,
+> +				 <&pericfg CLK_PERI_PWM6>,
+> +				 <&pericfg CLK_PERI_PWM7>;
+> +			clock-names = "top", "main", "pwm1", "pwm2", "pwm3",
+> +				      "pwm4", "pwm5", "pwm6", "pwm7";
+> +			status = "disabled";
+> +		};
+> +
+>   		i2c0: i2c@11007000 {
+>   			compatible = "mediatek,mt6795-i2c", "mediatek,mt8173-i2c";
+>   			reg = <0 0x11007000 0 0x70>, <0 0x11000100 0 0x80>;
