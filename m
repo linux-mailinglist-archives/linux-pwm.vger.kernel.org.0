@@ -2,57 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8AB56E0010
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 22:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10B676E001A
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 22:47:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjDLUml (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 16:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        id S229651AbjDLUrU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 16:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbjDLUmh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 16:42:37 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C595FD5
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:42:34 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id dm2so32170519ejc.8
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:42:34 -0700 (PDT)
+        with ESMTP id S229630AbjDLUrT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 16:47:19 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A095249
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:47:18 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-94a39f6e8caso299062966b.0
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:47:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1681332153;
+        d=googlemail.com; s=20221208; t=1681332436;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=K1NzP44NJ7Zn3Q3csjGxZmv7aNxzXOUtIWmezQUNt6E=;
-        b=nVpR91sBcS+KRq1o4GWnYRP56PPkTUMykZd7SYQKXAnRLpGCDIi9XrqOTT2uUFnDV5
-         /LnSEl2PBVTcu9Ide2+m73pjDhP4LGoo3dnx7T7CbNohxN0Rh76DRka0cCSBTchrWbV8
-         U8yvnzy/So7PLyNcOH2F/4fIsoRrSUIgfmy8zZebiFBhEcHZcMfGDnqdxGu+aFU84olk
-         MTedAOn0MrUsxrCVvyyqfyHb1fBP4fWKAKqPz25UenxM8GjBrS9sTLehd/wFLJ7JoPCB
-         HmlgoPOhqnMjqleD4WJi78wgxw4aKSrl2YPf6eNbjo8Gliexo7poGyJD/2kexrNszh0s
-         LgKw==
+        bh=adW1liiXa5DTitRWm/MrMHr2aySyi2H+5VTArVZMM8I=;
+        b=JsN8WGSr9uDtkZ0rsGDDGjoppXwP8kEuYggVlfSAxHbuAdVW2r07ASK7bI66v/x/fD
+         bnHb81PY6SLdg2WSKm0gRkOLay4I70XgkEAR9/+Eq8Wa6koQ2tL/P4ValKcIb/UGHn4i
+         b7tE+PRUDJpeZKWH8yXeCZyocK47W8BIZQEGlaW61gKOjK/ahl0/SeSHDN0XJa5zqwHY
+         2PxxbLcLE3l8BQwtTR1BaaGD8P8MYyb+EpDCsis2heEqs020zpycawkpmTLGEOagnREa
+         rlhcBQeM0u8wFhDuq6/rXbvvylKH4jsuErp8i/fi4X73URI8/QOEMQASSEMPIIUY+WZc
+         80ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681332153;
+        d=1e100.net; s=20221208; t=1681332436;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=K1NzP44NJ7Zn3Q3csjGxZmv7aNxzXOUtIWmezQUNt6E=;
-        b=DyJIzyW2ydqTCpmfvr84Oryjf55o5DoXtFcOJHgfrBOISVdUGNiQIsIMibgxWavKEY
-         9H5owAkp9ITp1JoepvCnErJRq99pKA32i6VTXUqf94voBFJbwm1sE87K9CRac0j9nPYV
-         dLsb094dQRQij12xr7w2GKlYiv84hZ/ntSh0Mr24CdVYFk59EbuyZJ72Naxw5ll0S74b
-         xjioHN+MM1sf0UMVzxrP0eLmwb/1vU2mxNRtv/U0cNhPmYCVjPzE/Zf30WBBVW8smVAE
-         PlAvMEmSyvywNOd9bZXmE6e1yqNpvGDgxYNRQGkY3VKHErwd3U+BKlu84M5EW6PY9cgQ
-         LXbQ==
-X-Gm-Message-State: AAQBX9d285s9DVLYTIl9sIqqK1lOTY++C9C+DQHKn2MiP8X4Pd8GvkRm
-        MvUUdODHk3qjE+EuZ26e6nk8C969CBaJjJ9nMWo=
-X-Google-Smtp-Source: AKy350aA3TVqCUEdmigMYtd8tjauavWkkGNE5hxWY9vTVePvJvvL8i1e/EM8+pVrx1lgnPq/1ySeGA5/op6xhuQtOaE=
-X-Received: by 2002:a17:907:1c02:b0:932:4577:6705 with SMTP id
- nc2-20020a1709071c0200b0093245776705mr127456ejc.6.1681332153223; Wed, 12 Apr
- 2023 13:42:33 -0700 (PDT)
+        bh=adW1liiXa5DTitRWm/MrMHr2aySyi2H+5VTArVZMM8I=;
+        b=DNJp8hsJVbCrQMmWD8kgFpsT3iMbt4UTEcykFpDlNMmOlHNN8ZzwDXPOOEyofiewuy
+         TUeZvMmvusE64QSBBhtN0ZlHhkJ9jIA9t3WisZU5hz6iz0mCJcT7fPXU2BxCxwj5cAOV
+         UTS7abqVX2B45MGCC7zA+f9nXrcpcKrg7j2XzmGFopuupmNN5btvVAR4NaORBjCXzcma
+         FjQBUDVawWc9xzjIw2zvCspuN/wiBW42jIGl9sOYWxsOWIde6ouaUuyc/T0EMJJGO5If
+         8/FhG9e0tw9WRxQOxoLsoqn8qAC+gsklOKo9rZoFPK92ECV409gudO6S4BbVZ+Ue2ERr
+         2/Cw==
+X-Gm-Message-State: AAQBX9di1jH1on6W4l2j19om2Y3oVU9TFBIJf1yIyRT5xQvNY/o4hwIQ
+        CP1PDSI1LhWF83FsDubvLmKVvZYRkzXsESQvYHc=
+X-Google-Smtp-Source: AKy350aKT9mhtEZLe3+/dPU6KZVDXqdCUxJb6NrFLui1rsW9oEXUrBYezlVHH3CazHEPRcBuD1JQT57SADw4Xty6DjA=
+X-Received: by 2002:a50:cc9d:0:b0:4bb:e549:a2ad with SMTP id
+ q29-20020a50cc9d000000b004bbe549a2admr8415edi.4.1681332436206; Wed, 12 Apr
+ 2023 13:47:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com> <8c6ac288-a59d-7c51-aced-3dbcfa828cdd@gmail.com>
-In-Reply-To: <8c6ac288-a59d-7c51-aced-3dbcfa828cdd@gmail.com>
+References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com> <f7291bab-eb51-3f2d-4eb4-78f6330242ef@gmail.com>
+In-Reply-To: <f7291bab-eb51-3f2d-4eb4-78f6330242ef@gmail.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 12 Apr 2023 22:42:22 +0200
-Message-ID: <CAFBinCCbQhj0X5mNHF77PQWTmdvHrd=s09N-a6OxyxQxwW7Gdw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] pwm: meson: don't use hdmi/video clock as mux parent
+Date:   Wed, 12 Apr 2023 22:47:05 +0200
+Message-ID: <CAFBinCDs=EQo8-HSSbaprfJB+93sz+Ng1H=MX3hBG_00PTko3g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] pwm: meson: change clk/pwm gate from mask to bit
 To:     Heiner Kallweit <hkallweit1@gmail.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
@@ -76,19 +76,43 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Heiner,
+
 On Wed, Apr 12, 2023 at 9:23=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.c=
 om> wrote:
 >
-> meson_vclk may change the rate of the video clock. Therefore better
-if you have to re-send for some reason then it would be great if this
-first sentence could be extended a little more, for example with: "the
-meson_vclk code from the display driver may change ..." to make it
-clear what meson_vclk is.
-
-> don't use it as pwm mux parent. After removing this clock from the
-> parent list pwm_gxbb_data and pwm_g12a_ee_data are the same as
-> pwm_meson8b_data. So we can remove them.
+> Change single-bit values from mask to bit. This facilitates
+> CCF initialization for the clock gate in a follow-up patch.
 >
-> Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com> #
+meson8b-odroidc1, sm1-x96-air
+
+[...]
+>  #define REG_MISC_AB            0x8
+> -#define MISC_B_CLK_EN          BIT(23)
+> -#define MISC_A_CLK_EN          BIT(15)
+> +#define MISC_B_CLK_EN          23
+> +#define MISC_A_CLK_EN          15
+>  #define MISC_CLK_DIV_MASK      0x7f
+>  #define MISC_B_CLK_DIV_SHIFT   16
+>  #define MISC_A_CLK_DIV_SHIFT   8
+>  #define MISC_B_CLK_SEL_SHIFT   6
+>  #define MISC_A_CLK_SEL_SHIFT   4
+>  #define MISC_CLK_SEL_MASK      0x3
+> -#define MISC_B_EN              BIT(1)
+> -#define MISC_A_EN              BIT(0)
+> +#define MISC_B_EN              1
+> +#define MISC_A_EN              0
+Personally I'm fine with this change but it's not how I would have done it:
+- I would have kept the BIT() macro for MISC_{A,B}_EN
+- then I would have renamed MISC_{A,}_CLK_EN to
+MISC_{A,B}_CLK_EN_SHIFT (to be consistent with _SHIFT of the mux and
+divider) and drop the BIT() macro there (like you did)
+
+This is possibly/likely personal preference, so my suggestion is to
+wait for some more feedback.
+
+
+Best regards,
+Martin
