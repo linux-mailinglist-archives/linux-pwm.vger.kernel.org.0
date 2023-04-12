@@ -2,59 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B29EC6DF5D5
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:44:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 105F46DF5F5
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:45:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230506AbjDLMoD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 08:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
+        id S231657AbjDLMpj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 08:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231470AbjDLMnx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:43:53 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B1093F4;
-        Wed, 12 Apr 2023 05:43:27 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id d8-20020a05600c3ac800b003ee6e324b19so6095472wms.1;
-        Wed, 12 Apr 2023 05:43:27 -0700 (PDT)
+        with ESMTP id S231479AbjDLMpG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:45:06 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FC369ECE;
+        Wed, 12 Apr 2023 05:44:41 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id o6-20020a05600c4fc600b003ef6e6754c5so4148615wmq.5;
+        Wed, 12 Apr 2023 05:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681303405; x=1683895405;
+        d=gmail.com; s=20221208; t=1681303479; x=1683895479;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cUF7LoitQw5OkHRbbbgY1vxHPcwK0X9aUiqFfbPiOwE=;
-        b=Ex9hVrKzu4VnZn/KwKympLWVqnLG00mRzfW1qoaZcqweDNRIjvzttcA6d175fMltO+
-         s+44KFje1bNbbW1gDNTtg3qY1PPlw3F6d9BWgDp5ictRbUsF4ftSM4bJjPQMO6OS7krV
-         WDqO6hovL/h7RbDXLeZqyLjg5Qml1ZqBKnYXAfpbj0yw6PJpcjNMTmPNNP+LuJE0Ksx4
-         f2a3OtOGJpRCwm0v1TC3plUl5VKW2RjLu5fJ8uFc1o42cl7iQU1v2I1Iyp5y54YckBNf
-         D0U3zJQ3MW5AoxCy1/Sr1gNtfHVX1dSBBiIJ4aSoCN9fzRfjxTDzAT7ZaF+BegoXfL2F
-         Eceg==
+        bh=H9NXku2pSRV2wSCRtuxBqdlKYT3KNs95Y1/l9wS3vzw=;
+        b=OyUCjn9d2mWZw6/j9UH76T6MvVfV73nrX7flAEHmexvlXuDR1A3kUxIjr+44xDCrDR
+         k//7Zw99Qqcchw/qWW0ytKHFb8rCDg0FSSOQiwNs2dwvTwNVjp8nk0Cu2NfAfjmw9Zc8
+         5uzci64ZRXvrjB0zjvaimqizCRF1+OKTRXwW/zN3C0pT8ZwRwRaQ6Xx/6f+OROOMWKG6
+         cMyn8GGHWv15mf6E752bYcMrKPUww+r3RV4+3atyPQuSPI9VETbjjn0N4Uxt2Pn/UyoH
+         ccqI2akgk2fhK3+m1y6MYcSTCHHj84THPSfcHDOGBvGTZqhWb9Y2KoXB3FK5Oj3oqwwm
+         pI5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681303405; x=1683895405;
+        d=1e100.net; s=20210112; t=1681303479; x=1683895479;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cUF7LoitQw5OkHRbbbgY1vxHPcwK0X9aUiqFfbPiOwE=;
-        b=IR6M5EJx+qx5u16q0AY12d1dI8ZxGK0YsB66lZtWi6dXVvTxM/hdqeOmUeMo524qZT
-         e5BImHE+U0t6mPqhzkZzV1Ej47hB4hg2pNUGYRHAWulPJia2ntEb14n4qfV9c3jeBNc+
-         NE3Il/tZzUD0eJz5tJsutE9ow0Fr3bdmfDBfAPsMeCySUwJbvib6Ug18oiR/UWR7kkhE
-         F3uKEzIIu6gc4xlMK9qmZ+CLOEzTcxQDOpSnzptcjhMXXSByHwxOQcjaPUuQfvwjpO5u
-         H6fYCHQiU+Mad2ij69O6sSm+gv3gHB9L0rDi/Gari3FiSdwG+31aVXnXfYwfa0EWWW/k
-         MTUA==
-X-Gm-Message-State: AAQBX9dOHUxXXP1EQcncoZDUSVCYl2AracI/rT7LtMJ+veW782FKPxq/
-        zkaxB+r3YusoKCpjdu/3kS8=
-X-Google-Smtp-Source: AKy350aAVnydjEmaeKZAWvOiy1vncejnZ4Satpe9Geuus5lfYY1lSqu4hz+nbW5+onECFdEVwDSGCQ==
-X-Received: by 2002:a05:600c:c1:b0:3ed:9ce3:4a39 with SMTP id u1-20020a05600c00c100b003ed9ce34a39mr9980309wmm.26.1681303405450;
-        Wed, 12 Apr 2023 05:43:25 -0700 (PDT)
+        bh=H9NXku2pSRV2wSCRtuxBqdlKYT3KNs95Y1/l9wS3vzw=;
+        b=OahRvyRn0/I3SYRErsOeFsLRH5OeEPe9B0luLKAQShphuH88thb3kCEXcfURsF7SG+
+         0ejg40vtlEQbk1IchsBKgS9SxHQl8xLb1mZMJ9lMNFoi8pwl/OUBbknIwi4ODW/sDHst
+         DyNFBRoaV5TLOUKG/e9ITG8tz8Xg9cpu9TckwAcZOFengKmC0v7bQuqFchRAI26spY+j
+         dL+POSnCwUx8SvESIaidap8W4b7dy8NKoAGF0xp0A+5YBVZ+868oUWYJndKAisTMCYHx
+         onHS3t/ZAlMgHqtwFCTjXnN8uCYLrp26C7ojSNSOm88+0wRGo2LVT4SuuJNFTqNPFuGW
+         CIRA==
+X-Gm-Message-State: AAQBX9eU7wfn0pmLO7BU7XXG7wXg+XQ5ATXfMOCkIIQ0qGDMYcFmvjqF
+        ilHwgjj/iJL+K6ZmoCiBQpE=
+X-Google-Smtp-Source: AKy350Z9J6ofOu5x2SAuA+Yid54vROa2O2IpNFieU9+eQdR2LmXWIs2SlT696xFupy+hn+OrZ4Z+vg==
+X-Received: by 2002:a1c:f20b:0:b0:3ed:418a:ec06 with SMTP id s11-20020a1cf20b000000b003ed418aec06mr11959758wmc.28.1681303479096;
+        Wed, 12 Apr 2023 05:44:39 -0700 (PDT)
 Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id 6-20020a05600c028600b003ee0d191539sm2269003wmk.10.2023.04.12.05.43.22
+        by smtp.gmail.com with ESMTPSA id p23-20020a1c7417000000b003f0824e8c92sm2294201wmc.7.2023.04.12.05.44.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 05:43:24 -0700 (PDT)
-Message-ID: <95aec24f-b393-e36d-b4dd-4c0a228fc619@gmail.com>
-Date:   Wed, 12 Apr 2023 14:43:22 +0200
+        Wed, 12 Apr 2023 05:44:38 -0700 (PDT)
+Message-ID: <d892f4d4-f311-4795-ded4-6b735739dd94@gmail.com>
+Date:   Wed, 12 Apr 2023 14:44:35 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 20/27] arm64: dts: mediatek: mt6795: Add tertiary PWM node
+Subject: Re: [PATCH 26/27] arm64: dts: mediatek: mt6795-xperia-m5: Add Bosch
+ BMA255 Accelerometer
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
@@ -72,9 +73,9 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-21-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-27-angelogioacchino.delregno@collabora.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20230412112739.160376-21-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230412112739.160376-27-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -90,46 +91,46 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> The PWM at 0x11006000 is the tertiary PWM; unlike PWM0, PWM1, this is
-> not display specific and can be used as a generic PWM controller.
-> 
-> This node is left disabled as usage is board-specific.
+> Add the BMA255 Accelerometer on I2C3 and its pin definitions.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Applied, thanks!
+Applied, thanks
 
 > ---
->   arch/arm64/boot/dts/mediatek/mt6795.dtsi | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
+>   .../boot/dts/mediatek/mt6795-sony-xperia-m5.dts   | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6795.dtsi b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> index cf45cb4ad3d2..50d9276d18c6 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6795.dtsi
-> @@ -583,6 +583,25 @@ uart3: serial@11005000 {
->   			status = "disabled";
->   		};
->   
-> +		pwm2: pwm@11006000 {
-> +			compatible = "mediatek,mt6795-pwm";
-> +			reg = <0 0x11006000 0 0x1000>;
-> +			#pwm-cells = <2>;
-> +			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-> +				 <&pericfg CLK_PERI_PWM>,
-> +				 <&pericfg CLK_PERI_PWM1>,
-> +				 <&pericfg CLK_PERI_PWM2>,
-> +				 <&pericfg CLK_PERI_PWM3>,
-> +				 <&pericfg CLK_PERI_PWM4>,
-> +				 <&pericfg CLK_PERI_PWM5>,
-> +				 <&pericfg CLK_PERI_PWM6>,
-> +				 <&pericfg CLK_PERI_PWM7>;
-> +			clock-names = "top", "main", "pwm1", "pwm2", "pwm3",
-> +				      "pwm4", "pwm5", "pwm6", "pwm7";
-> +			status = "disabled";
-> +		};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts b/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+> index 155a573eac4c..0b0519f6b2f1 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+> @@ -68,6 +68,13 @@ &i2c1 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&i2c1_pins>;
+>   	status = "okay";
 > +
->   		i2c0: i2c@11007000 {
->   			compatible = "mediatek,mt6795-i2c", "mediatek,mt8173-i2c";
->   			reg = <0 0x11007000 0 0x70>, <0 0x11000100 0 0x80>;
+> +	accelerometer@10 {
+> +		compatible = "bosch,bma255";
+> +		reg = <0x10>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&accel_pins>;
+> +	};
+>   };
+>   
+>   &i2c2 {
+> @@ -247,6 +254,14 @@ pins-irq {
+>   		};
+>   	};
+>   
+> +	accel_pins: accelerometer-pins {
+> +		pins-irq {
+> +			pinmux = <PINMUX_GPIO12__FUNC_GPIO12>;
+> +			bias-pull-up;
+> +			input-enable;
+> +		};
+> +	};
+> +
+>   	i2c0_pins: i2c0-pins {
+>   		pins-bus {
+>   			pinmux = <PINMUX_GPIO45__FUNC_SDA0>,
