@@ -2,59 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50A9A6DF566
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:35:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C67656DF570
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:36:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231611AbjDLMfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 08:35:42 -0400
+        id S231207AbjDLMga (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 08:36:30 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbjDLMfj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:35:39 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BF3D4202;
-        Wed, 12 Apr 2023 05:35:31 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id i8-20020a05600c354800b003ee93d2c914so7695941wmq.2;
-        Wed, 12 Apr 2023 05:35:31 -0700 (PDT)
+        with ESMTP id S229938AbjDLMg3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:36:29 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBB96E9A;
+        Wed, 12 Apr 2023 05:36:08 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id e7so654622wrc.12;
+        Wed, 12 Apr 2023 05:36:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681302929; x=1683894929;
+        d=gmail.com; s=20221208; t=1681302963; x=1683894963;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nOc2AucAU7aYdgbiSm2th1euSZVFGfwkabbTq6fep20=;
-        b=m+v514HGaFK5Ryst2GvVu0WpbKzjiMUgoyTC3y7ib70zmND8f67yDqDhLEyszteIcu
-         nDEgm33pZMF14/NNYFE24RJ4wbeF6salTTbtdl1udWn14nlYygKujZcEmXvXeCrBKu20
-         +uHCSmVjN7gN/VCu2q6bPg9rk3QWIOcAVF8XQ8OFc/EyKn6V4ER2/rkYwBUSltPIteMT
-         snSivVlPFZSUA7xOhLeIVhtWzFFbsxi/TyAwby9iugYa7cAG2iQNu0+ThiWWmiAZ2KsA
-         I8wgaKW3OSXULH/DAaKqPGc/lFQDpCVKycLjbmpJbYKXoe1pSxtsvoQj+sPanEZNJ6af
-         xwVA==
+        bh=wE7N70141Au9hlevZXAZoj6fncNpv5mG2/2AtTaaiCY=;
+        b=NEcoZuzS8P4iLio4nXH/fPKA+WVpnLFtlrKOnIPIT3Hx2KjonjAQrokGpRwlwnOBGO
+         bGLkPeH7icTnEBAVVxA2h5hVZ/1gQr30E7WY8UkQUX7V3g/i1ZR3jOpLBmCjnONzLIqC
+         p+1OB+B2Y9WPOSeoN4GbT1ZuCIZaYDEw8spi4Z8ZyVEtkGNDLFEuM0hEDHsgjQZFOKN+
+         3zjg0YwBt3OUh20M6jYtvdwRP69s7PEMPcGL2c0bvNnWZCQFOgyvdvYS6OVvygJMRzR7
+         5RAtXlaNgLtQpZeh2eBC2qzZ3blTgUd8gC3wOngl0DnYAfrFQ3N3kRQ9qTWHHc79qnlr
+         J2ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681302929; x=1683894929;
+        d=1e100.net; s=20210112; t=1681302963; x=1683894963;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nOc2AucAU7aYdgbiSm2th1euSZVFGfwkabbTq6fep20=;
-        b=L1CuNLcrdbN3P08R6MIIWtFc/DSwJDfFr3h8Li+qths/7Kaj/pGT1AxqhKks8vGjxU
-         DutyxHiFRaPPzDHBkUXNuAZMPCFZYsSUAxFP328s8TnIuMnEim429KawzII5Y2cw3lKA
-         6DYzXIFgneA/wPx6HafsUFFRywrlu3XTK3cXQ2RZ2UmG7DPMQgCfbwOtIzJoZQgJC1IG
-         XhG4HEVFVcZhPiEoMm6E155dTUUkk6i7xT1xHGqDFbKxW69ygJUjBYPMa7nNIkasTL5Z
-         t5p02Uz/UV4VQTsr64472wb09EPNf5YXiA639SL91DaOV8KJoUTJn2r4Uukjurh32bNb
-         8y0w==
-X-Gm-Message-State: AAQBX9em8d5Ox31Ee26qQi/53UrXzDcQ9HAicH6O6sWZ2gL0f+vWm0sD
-        WOLm6160gwVMFwbVScQhf9Y=
-X-Google-Smtp-Source: AKy350bP8nKYohS7TIl2I5thMGIpEvLFOztUtKV5055tbR5s2H7wE+Qv5yJdtdxWYRvuV7mf/92Nfg==
-X-Received: by 2002:a7b:c3d4:0:b0:3f0:7f4b:f3ab with SMTP id t20-20020a7bc3d4000000b003f07f4bf3abmr4704930wmj.5.1681302929390;
-        Wed, 12 Apr 2023 05:35:29 -0700 (PDT)
+        bh=wE7N70141Au9hlevZXAZoj6fncNpv5mG2/2AtTaaiCY=;
+        b=26FmiBGvnfYmvJ0S6rg7vfht1TncXiiglBjSC1du54rWtcKkXA+YyCHzLF9Nqv48dC
+         Q3ykNbVUeYn09lFZHoVrggS5sXp03B1uLzYO5bXUAKQ26PuLodylyV/Nd1/kh8rqnuj6
+         bu2boyibLsExhBudRXAJCx+8twS0oH3IzJhWQtRgs85nygpM/wd8lw8M6wGx2qgVQWWh
+         zKsTjLErisUWJCIy4nQNQaPI6RUdAupT14qfu1xhOg9il4j6njU+CJ9w/IweifN6qKmL
+         joJ3T4BrBms/ocRRSk285eeEC+s+MJxy1zm+mdw1mPxl3AmOREM2a9q7Tmdl2OygJiMA
+         Tbig==
+X-Gm-Message-State: AAQBX9d+RLJTIKxp51+GWzotu150J1O9s3Hr4lQykBDWEd6/TUBTmWox
+        g7tdKAkAC5u2WSYwHdNe1pY=
+X-Google-Smtp-Source: AKy350aeuLyAiDRCHx8WCMaCn9uP+PuosubsGjcr6o2UO9HCVUKys6W1CjIDSWkAVTjaxq4gQgUTDw==
+X-Received: by 2002:adf:e441:0:b0:2f1:d17f:cf95 with SMTP id t1-20020adfe441000000b002f1d17fcf95mr7353387wrm.12.1681302963216;
+        Wed, 12 Apr 2023 05:36:03 -0700 (PDT)
 Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id c8-20020a05600c0a4800b003ee5fa61f45sm2359319wmq.3.2023.04.12.05.35.27
+        by smtp.gmail.com with ESMTPSA id f5-20020a0560001b0500b002cfe3f842c8sm17040059wrz.56.2023.04.12.05.36.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 05:35:28 -0700 (PDT)
-Message-ID: <6920f628-8e8e-b800-eaeb-2703a9b7f9f0@gmail.com>
-Date:   Wed, 12 Apr 2023 14:35:26 +0200
+        Wed, 12 Apr 2023 05:36:02 -0700 (PDT)
+Message-ID: <b9424113-f812-2f2d-5068-b04bb789e0de@gmail.com>
+Date:   Wed, 12 Apr 2023 14:36:00 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 04/27] dt-bindings: display: mediatek: aal: Add compatible
+Subject: Re: [PATCH 05/27] dt-bindings: display: mediatek: dsi: Add compatible
  for MediaTek MT6795
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
@@ -73,9 +73,9 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-5-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-6-angelogioacchino.delregno@collabora.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20230412112739.160376-5-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230412112739.160376-6-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -91,26 +91,44 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for MediaTek Helio X10 MT6795: similarly to
-> MT8173, this SoC has the gamma LUT registers in DISP_AAL.
+> Add a compatible string for MediaTek Helio X10 MT6795, using the same
+> DSI block as MT8173.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
 > ---
->   .../devicetree/bindings/display/mediatek/mediatek,aal.yaml       | 1 +
->   1 file changed, 1 insertion(+)
+>   .../display/mediatek/mediatek,dsi.yaml        | 19 ++++++++++++-------
+>   1 file changed, 12 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
-> index 92741486c24d..7fd42c8fdc32 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
-> @@ -27,6 +27,7 @@ properties:
->         - items:
->             - enum:
->                 - mediatek,mt2712-disp-aal
-> +              - mediatek,mt6795-disp-aal
->             - const: mediatek,mt8173-disp-aal
->         - items:
->             - enum:
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+> index 4707b60238b0..12441b937684 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+> @@ -22,13 +22,18 @@ allOf:
+>   
+>   properties:
+>     compatible:
+> -    enum:
+> -      - mediatek,mt2701-dsi
+> -      - mediatek,mt7623-dsi
+> -      - mediatek,mt8167-dsi
+> -      - mediatek,mt8173-dsi
+> -      - mediatek,mt8183-dsi
+> -      - mediatek,mt8186-dsi
+> +    oneOf:
+> +      - enum:
+> +          - mediatek,mt2701-dsi
+> +          - mediatek,mt7623-dsi
+> +          - mediatek,mt8167-dsi
+> +          - mediatek,mt8173-dsi
+> +          - mediatek,mt8183-dsi
+> +          - mediatek,mt8186-dsi
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt6795-dsi
+> +          - const: mediatek,mt8173-dsi
+
+Same here, why not const?
+
+>   
+>     reg:
+>       maxItems: 1
