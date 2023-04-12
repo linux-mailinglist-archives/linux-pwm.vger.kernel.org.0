@@ -2,117 +2,102 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10B676E001A
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 22:47:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A516E005E
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 23:04:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjDLUrU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 16:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56298 "EHLO
+        id S229906AbjDLVEI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 17:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjDLUrT (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 16:47:19 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A095249
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:47:18 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-94a39f6e8caso299062966b.0
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1681332436;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=adW1liiXa5DTitRWm/MrMHr2aySyi2H+5VTArVZMM8I=;
-        b=JsN8WGSr9uDtkZ0rsGDDGjoppXwP8kEuYggVlfSAxHbuAdVW2r07ASK7bI66v/x/fD
-         bnHb81PY6SLdg2WSKm0gRkOLay4I70XgkEAR9/+Eq8Wa6koQ2tL/P4ValKcIb/UGHn4i
-         b7tE+PRUDJpeZKWH8yXeCZyocK47W8BIZQEGlaW61gKOjK/ahl0/SeSHDN0XJa5zqwHY
-         2PxxbLcLE3l8BQwtTR1BaaGD8P8MYyb+EpDCsis2heEqs020zpycawkpmTLGEOagnREa
-         rlhcBQeM0u8wFhDuq6/rXbvvylKH4jsuErp8i/fi4X73URI8/QOEMQASSEMPIIUY+WZc
-         80ZQ==
+        with ESMTP id S229949AbjDLVEB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 17:04:01 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3B57D85;
+        Wed, 12 Apr 2023 14:03:56 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id bm45so2991434oib.4;
+        Wed, 12 Apr 2023 14:03:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681332436;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=adW1liiXa5DTitRWm/MrMHr2aySyi2H+5VTArVZMM8I=;
-        b=DNJp8hsJVbCrQMmWD8kgFpsT3iMbt4UTEcykFpDlNMmOlHNN8ZzwDXPOOEyofiewuy
-         TUeZvMmvusE64QSBBhtN0ZlHhkJ9jIA9t3WisZU5hz6iz0mCJcT7fPXU2BxCxwj5cAOV
-         UTS7abqVX2B45MGCC7zA+f9nXrcpcKrg7j2XzmGFopuupmNN5btvVAR4NaORBjCXzcma
-         FjQBUDVawWc9xzjIw2zvCspuN/wiBW42jIGl9sOYWxsOWIde6ouaUuyc/T0EMJJGO5If
-         8/FhG9e0tw9WRxQOxoLsoqn8qAC+gsklOKo9rZoFPK92ECV409gudO6S4BbVZ+Ue2ERr
-         2/Cw==
-X-Gm-Message-State: AAQBX9di1jH1on6W4l2j19om2Y3oVU9TFBIJf1yIyRT5xQvNY/o4hwIQ
-        CP1PDSI1LhWF83FsDubvLmKVvZYRkzXsESQvYHc=
-X-Google-Smtp-Source: AKy350aKT9mhtEZLe3+/dPU6KZVDXqdCUxJb6NrFLui1rsW9oEXUrBYezlVHH3CazHEPRcBuD1JQT57SADw4Xty6DjA=
-X-Received: by 2002:a50:cc9d:0:b0:4bb:e549:a2ad with SMTP id
- q29-20020a50cc9d000000b004bbe549a2admr8415edi.4.1681332436206; Wed, 12 Apr
- 2023 13:47:16 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681333435; x=1683925435;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+Q95Knbpjeo78pZINMZAvNZ8f1W6NvaHbQpZHgZ+DhU=;
+        b=jUTC+/hdRPUAJNg2SJoLrVPCwphEGcjwMOVjA+DuD9WtFL+SMCfBdnNhiI7jk3XAsW
+         eEzH/pZxv7vFmJgAs99LA6N3+rB3o86p6i6NoPyTzadRINpQLh8+bYSbyiuRg0zwjkap
+         0vaSOQOKENjm1NFGp3gF20mqr2Ix6LvrfvT2joHDF2q4CITIYbucovZBNtKUEKMwn79O
+         BR47ZDXv3LN8KOwzcq0G66Gk1gtdeacW+Hudy1MV76jo8V1BN2Lw6YykSAb+1jUpCYjR
+         QwdpotsY+J7GZDqNoWp8cnm4nWo+RSOdLGnl6JfAiLGwbpRxCU+uQy2E2TOzqIADwUcr
+         F0/Q==
+X-Gm-Message-State: AAQBX9dnaflsbPQEYn/KmBe1WejHAcDMQMPW0PkHerykGip+iB76yXzw
+        tXIaxMGzSQXcgCEbNK67wg==
+X-Google-Smtp-Source: AKy350ZAQUKENqZQK/BkT1GzRkK8etcW3v2rWKWM1oDiBBATLa6RSgxvv4SclTk2dvtCGsASeNojAw==
+X-Received: by 2002:a05:6808:4b:b0:387:12e5:543a with SMTP id v11-20020a056808004b00b0038712e5543amr7422991oic.29.1681333434837;
+        Wed, 12 Apr 2023 14:03:54 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i128-20020acaea86000000b00386eff32f58sm7148418oih.13.2023.04.12.14.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 14:03:54 -0700 (PDT)
+Received: (nullmailer pid 3200537 invoked by uid 1000);
+        Wed, 12 Apr 2023 21:03:44 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com> <f7291bab-eb51-3f2d-4eb4-78f6330242ef@gmail.com>
-In-Reply-To: <f7291bab-eb51-3f2d-4eb4-78f6330242ef@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 12 Apr 2023 22:47:05 +0200
-Message-ID: <CAFBinCDs=EQo8-HSSbaprfJB+93sz+Ng1H=MX3hBG_00PTko3g@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] pwm: meson: change clk/pwm gate from mask to bit
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     thierry.reding@gmail.com, kishon@kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, linux-pwm@vger.kernel.org,
+        airlied@gmail.com, robh+dt@kernel.org, chunfeng.yun@mediatek.com,
+        dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        kernel@collabora.com, xinlei.lee@mediatek.com, ck.hu@mediatek.com,
+        linux-arm-kernel@lists.infradead.org, phone-devel@vger.kernel.org,
+        matthias.bgg@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+        devicetree@vger.kernel.org, vkoul@kernel.org,
+        p.zabel@pengutronix.de, jassisinghbrar@gmail.com,
+        chunkuang.hu@kernel.org, houlong.wei@mediatek.com,
+        jitao.shi@mediatek.com, daniel@ffwll.ch
+In-Reply-To: <20230412112739.160376-10-angelogioacchino.delregno@collabora.com>
+References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-10-angelogioacchino.delregno@collabora.com>
+Message-Id: <168133319583.3191294.4759319842761199183.robh@kernel.org>
+Subject: Re: [PATCH 09/27] dt-bindings: display: mediatek: color: Add
+ compatible for MediaTek MT6795
+Date:   Wed, 12 Apr 2023 16:03:44 -0500
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Heiner,
 
-On Wed, Apr 12, 2023 at 9:23=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.c=
-om> wrote:
->
-> Change single-bit values from mask to bit. This facilitates
-> CCF initialization for the clock gate in a follow-up patch.
->
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com> #
-meson8b-odroidc1, sm1-x96-air
+On Wed, 12 Apr 2023 13:27:21 +0200, AngeloGioacchino Del Regno wrote:
+> Add a compatible string for MediaTek Helio X10 MT6795's COLOR block: this
+> is the same as MT8173.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,color.yaml     | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-[...]
->  #define REG_MISC_AB            0x8
-> -#define MISC_B_CLK_EN          BIT(23)
-> -#define MISC_A_CLK_EN          BIT(15)
-> +#define MISC_B_CLK_EN          23
-> +#define MISC_A_CLK_EN          15
->  #define MISC_CLK_DIV_MASK      0x7f
->  #define MISC_B_CLK_DIV_SHIFT   16
->  #define MISC_A_CLK_DIV_SHIFT   8
->  #define MISC_B_CLK_SEL_SHIFT   6
->  #define MISC_A_CLK_SEL_SHIFT   4
->  #define MISC_CLK_SEL_MASK      0x3
-> -#define MISC_B_EN              BIT(1)
-> -#define MISC_A_EN              BIT(0)
-> +#define MISC_B_EN              1
-> +#define MISC_A_EN              0
-Personally I'm fine with this change but it's not how I would have done it:
-- I would have kept the BIT() macro for MISC_{A,B}_EN
-- then I would have renamed MISC_{A,}_CLK_EN to
-MISC_{A,B}_CLK_EN_SHIFT (to be consistent with _SHIFT of the mux and
-divider) and drop the BIT() macro there (like you did)
+Running 'make dtbs_check' with the schema in this patch gives the
+following warnings. Consider if they are expected or the schema is
+incorrect. These may not be new warnings.
 
-This is possibly/likely personal preference, so my suggestion is to
-wait for some more feedback.
+Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+This will change in the future.
+
+Full log is available here: https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230412112739.160376-10-angelogioacchino.delregno@collabora.com
 
 
-Best regards,
-Martin
+color@1400b000: 'power-domains' is a required property
+	arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb
+	arch/arm/boot/dts/mt7623n-rfb-emmc.dtb
+
