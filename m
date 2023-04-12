@@ -2,59 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85F806DFE9D
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 21:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF4E6DFEAA
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 21:23:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbjDLTSw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 15:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53268 "EHLO
+        id S229626AbjDLTXg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 15:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjDLTSv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 15:18:51 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268752108
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:18:50 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-5066ce4f725so14591a12.1
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:18:49 -0700 (PDT)
+        with ESMTP id S229535AbjDLTXf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 15:23:35 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE166181
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:23:34 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id dm2so31658589ejc.8
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:23:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681327128; x=1683919128;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rHL+GbEo29m7+N9Hj3u8ApA5PF4c2FErCrr9m7viWrc=;
-        b=XUDR4nB0r8hdQDueDtsXYXRwv47FYJ72enFG0KDr7q9k8WYFzxn0Dh1oxOX5Uj/hna
-         l/cWQ7GPfyov3gbxO4JyE5fl7dpGuMrSKqlGFPP6sT59Yv3Cr3E2BdI+ISrODgioRlWK
-         6MMiubj6KujBlUG6s5AQ7ln/QTpGuSBHPTOZ2xVD3d+8Tu4tt6CKDM66RjnE/BDuweip
-         gK/fjdjIbHNc30j7dkQP1cOI+HZ9uTMVC7If42TSjJGjzfTbz4LuPBA7eoMUr0FQhibw
-         UvDXexs26xcrOmwr1DEqB1syCbO/K7uOMRvEbWoNGb+OK0g8hGf2o7j0q5xZQ4WWMTpo
-         ZAoQ==
+        d=gmail.com; s=20221208; t=1681327413; x=1683919413;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6ruCafjyH/3zlOeY8HIt23X9tT9LTYcm24amx/aCjHg=;
+        b=NInJHmo5GJ6LGF0P5Ez+b8s/XEnq2XPkad46wmzQwZ6PTlPpTzifRfDv5RUShBT8vR
+         +ZCpzsFt+zmm3gY4xPr67LIaxTRan2Cw0w/+boQKu0m25t7oJgVQ8TpTvNt+YbE431J9
+         nzMvyXURMKrxVgoBETjFiiDSxQUhWo+kiJpFbx//d9ZXZ05lmOT1mDbRNUpun5jncRla
+         VoUa8vewPb19Qsc/mukFUat+KzJHJ558lSjQLhdbhKf6CxrWPp05kQKKjRi9HXWnHwr9
+         AwbJGiRGJ6+HkIt/cCa/Cs7eM6PdrW7iqQnxxhIdsfToplUf4S8d7vyx0HFYmXsZMZpS
+         en0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681327128; x=1683919128;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rHL+GbEo29m7+N9Hj3u8ApA5PF4c2FErCrr9m7viWrc=;
-        b=AQHGOKk6y0jzAtUJss0+xlGZwzjDO5F/wOrPMmIBqr95CDkoMjYzUpBIT9rSLNLKkX
-         asCjBTbsX28haE7L7JYCe+rJV1ddE4UPtqulxrWjjITYBQQ73tzTu0jQleh4Wg2pqrey
-         rMXCKb6KJUPHJuosHS+XKog5VTC9eM246ayDQFgR+SWyXJ1rP8SDsWrCTrO1YIV20Zc2
-         4ok3v9mCFVmfQpjONwDWpHetbDvuEEopEzYyNQjVSnl9Cci22PLYpd2H0ZXjvMpvATo6
-         KVW0PB5fNK7+jxUc+D7fe0Iy1cibWbqnNaKWjDe+aVhCBgwkl/Wk+Vzpx7i9+cxNYTln
-         ZItw==
-X-Gm-Message-State: AAQBX9cPMSY7RLOtbdJbzAAYaRmxiN04DCpgMUt10aJahveiVE0JXoco
-        GiKAArMsIrrJCEBoyHcBPT4=
-X-Google-Smtp-Source: AKy350YeUAb7t76TYhcHgvNYbchZjcQXwJZvGmf45PvpnT5B0CPhp8qcs3kbnzKThyBlwm+NB0PD5A==
-X-Received: by 2002:a05:6402:1acf:b0:504:b592:ed06 with SMTP id ba15-20020a0564021acf00b00504b592ed06mr6669455edb.39.1681327128365;
-        Wed, 12 Apr 2023 12:18:48 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681327413; x=1683919413;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6ruCafjyH/3zlOeY8HIt23X9tT9LTYcm24amx/aCjHg=;
+        b=chztOo8kQQmRmT9TXagAztM1Ysgs9kDULVrKSOSbGhavs5YJpR6cJnLHYxOj6VQkwh
+         lQTZROgwYLps5elVp6r/OkD7GFsh+WCHrl/BEGyTRElTXZmIxQ3dolcmMPdSGZkaDEz/
+         Aqx9Yk/c8RfS1WWDkB9JP9ei9D34jLIDMnmvSx5+HwQ2S58nBJaLgd/MHa8HiQAtu2pj
+         xO0mDhiu+k+/URT1obDDjhHT1QmVkv45nTmtASzt3xR27nSdx+OJlxptcG0lBumDe0tt
+         63EVAyyn8o6btK3QTX1EU0vix/VCe5ns+JsTWkxJQJ0IBf3NMbOw8eIFUwmXNjLM7QEP
+         wSSQ==
+X-Gm-Message-State: AAQBX9e31kS/SRG7PQ5EpUPYKCVcvkpd5WG92m1TZuzQvIzhvZ227Omo
+        ZCCeQM4NZ0nezHolbjAGaoU=
+X-Google-Smtp-Source: AKy350ZaNzltKbVwQY5y4mdYzMETZFU620vKj2YBlg94g4V/1DYLl3tl/r9TkM4CqIyvyd5EOY4aXQ==
+X-Received: by 2002:a17:906:c78a:b0:947:eafc:a738 with SMTP id cw10-20020a170906c78a00b00947eafca738mr7066559ejb.60.1681327412903;
+        Wed, 12 Apr 2023 12:23:32 -0700 (PDT)
 Received: from ?IPV6:2a02:3100:903d:3d00:b0e7:6bd7:f613:784b? (dynamic-2a02-3100-903d-3d00-b0e7-6bd7-f613-784b.310.pool.telefonica.de. [2a02:3100:903d:3d00:b0e7:6bd7:f613:784b])
-        by smtp.googlemail.com with ESMTPSA id i11-20020a50870b000000b004bd6e3ed196sm7181974edb.86.2023.04.12.12.18.47
+        by smtp.googlemail.com with ESMTPSA id f17-20020a170906739100b0094e5679dd2csm1134210ejl.165.2023.04.12.12.23.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 12:18:47 -0700 (PDT)
-Message-ID: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com>
-Date:   Wed, 12 Apr 2023 21:18:27 +0200
+        Wed, 12 Apr 2023 12:23:32 -0700 (PDT)
+Message-ID: <8a7c067d-b121-3bd0-b587-f53861b52bd5@gmail.com>
+Date:   Wed, 12 Apr 2023 21:20:17 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
+Subject: [PATCH v3 1/4] pwm: meson: switch to using struct clk_parent_data for
+ mux parents
 Content-Language: en-US
+From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Jerome Brunet <jbrunet@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
@@ -65,77 +68,76 @@ Cc:     "linux-arm-kernel@lists.infradead.org"
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         linux-pwm@vger.kernel.org
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v3 0/4] pwm: meson: make full use of common clock framework
+References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com>
+In-Reply-To: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Newer versions of the PWM block use a core clock with external mux,
-divider, and gate. These components either don't exist any longer in
-the PWM block, or they are bypassed.
-To minimize needed changes for supporting the new version, the internal
-divider and gate should be handled by CCF too.
+We'll use struct clk_parent_data for mux/div/gate initialization in the
+follow-up patches. As a first step switch the mux from using
+parent_names to clk_parent_data.
 
-I didn't see a good way to split the patch, therefore it's somewhat
-bigger. What it does:
-
-- The internal mux is handled by CCF already. Register also internal
-  divider and gate with CCF, so that we have one representation of the
-  input clock: [mux] parent of [divider] parent of [gate]
-  
-- Now that CCF selects an appropriate mux parent, we don't need the
-  DT-provided default parent any longer. Accordingly we can also omit
-  setting the mux parent directly in the driver.
-  
-- Instead of manually handling the pre-div divider value, let CCF
-  set the input clock. Targeted input clock frequency is
-  0xffff * 1/period for best precision.
-  
-- For the "inverted pwm disabled" scenario target an input clock
-  frequency of 1GHz. This ensures that the remaining low pulses
-  have minimum length.
-
-I don't have hw with the old PWM block, therefore I couldn't test this
-patch. With the not yet included extension for the new PWM block
-(channel->clock directly coming from get_clk(external_clk)) I didn't
-notice any problem. My system uses PWM for the CPU voltage regulator
-and for the SDIO 32kHz clock.
-
-Note: The clock gate in the old PWM block is permanently disabled.
-This seems to indicate that it's not used by the new PWM block.
-
-Changes to RFT/RFC version:
-- use parent_hws instead of parent_names for div/gate clock
-- use devm_clk_hw_register where the struct clk * returned by
-  devm_clk_register isn't needed
-
-v2:
-- add patch 1
-- add patch 3
-- switch to using clk_parent_data in all relevant places
-
+Suggested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
 v3:
-- patch 1: move setting mux parent data out of the loop
-- patch 4: add flag CLK_IGNORE_UNUSED
+- move setting mux parent data out of the loop
+---
+ drivers/pwm/pwm-meson.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Heiner Kallweit (4):
-  pwm: meson: switch to using struct clk_parent_data for mux parents
-  pwm: meson: don't use hdmi/video clock as mux parent
-  pwm: meson: change clk/pwm gate from mask to bit
-  pwm: meson: make full use of common clock framework
-
- drivers/pwm/pwm-meson.c | 193 +++++++++++++++++++++-------------------
- 1 file changed, 100 insertions(+), 93 deletions(-)
-
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 4e5605c9d..6a66d5d58 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -61,6 +61,7 @@
+ #define MISC_A_EN		BIT(0)
+ 
+ #define MESON_NUM_PWMS		2
++#define MESON_MAX_MUX_PARENTS	4
+ 
+ static struct meson_pwm_channel_data {
+ 	u8		reg_offset;
+@@ -484,21 +485,27 @@ MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+ 
+ static int meson_pwm_init_channels(struct meson_pwm *meson)
+ {
++	struct clk_parent_data mux_parent_data[MESON_MAX_MUX_PARENTS] = {};
+ 	struct device *dev = meson->chip.dev;
+-	struct clk_init_data init;
+ 	unsigned int i;
+ 	char name[255];
+ 	int err;
+ 
++	for (i = 0; i < meson->data->num_parents; i++) {
++		mux_parent_data[i].index = -1;
++		mux_parent_data[i].name = meson->data->parent_names[i];
++	}
++
+ 	for (i = 0; i < meson->chip.npwm; i++) {
+ 		struct meson_pwm_channel *channel = &meson->channels[i];
++		struct clk_init_data init = {};
+ 
+ 		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
+ 
+ 		init.name = name;
+ 		init.ops = &clk_mux_ops;
+ 		init.flags = 0;
+-		init.parent_names = meson->data->parent_names;
++		init.parent_data = mux_parent_data;
+ 		init.num_parents = meson->data->num_parents;
+ 
+ 		channel->mux.reg = meson->base + REG_MISC_AB;
 -- 
 2.40.0
+
 
