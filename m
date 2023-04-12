@@ -2,60 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECF4E6DFEAA
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 21:23:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9D86DFEAB
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 21:23:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbjDLTXg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 15:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
+        id S229685AbjDLTXi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 15:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjDLTXf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 15:23:35 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE166181
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:23:34 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id dm2so31658589ejc.8
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:23:34 -0700 (PDT)
+        with ESMTP id S229535AbjDLTXh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 15:23:37 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177D46181
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:23:36 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id q23so22076082ejz.3
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 12:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681327413; x=1683919413;
+        d=gmail.com; s=20221208; t=1681327414; x=1683919414;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6ruCafjyH/3zlOeY8HIt23X9tT9LTYcm24amx/aCjHg=;
-        b=NInJHmo5GJ6LGF0P5Ez+b8s/XEnq2XPkad46wmzQwZ6PTlPpTzifRfDv5RUShBT8vR
-         +ZCpzsFt+zmm3gY4xPr67LIaxTRan2Cw0w/+boQKu0m25t7oJgVQ8TpTvNt+YbE431J9
-         nzMvyXURMKrxVgoBETjFiiDSxQUhWo+kiJpFbx//d9ZXZ05lmOT1mDbRNUpun5jncRla
-         VoUa8vewPb19Qsc/mukFUat+KzJHJ558lSjQLhdbhKf6CxrWPp05kQKKjRi9HXWnHwr9
-         AwbJGiRGJ6+HkIt/cCa/Cs7eM6PdrW7iqQnxxhIdsfToplUf4S8d7vyx0HFYmXsZMZpS
-         en0Q==
+        bh=8gzoR5eTjdX6x0tTj8Yg9Hg0mvL/Rg2ipc11h9oGPMg=;
+        b=LnifDVanznGfp5EnwOx7zenvrF0sDNVcbMgrnopS6RNAw4RLaIh/r4M2FVUVebcw45
+         PWNwif+mNd6fiildq6OyAeG7MLTY7wJdK6YkuSLBxT59ImqkmdpjxQSnDdAGRN3Mw1oy
+         /OLgqkfHWVlDyoA7RgQoiVSfVMy9jW4fc15sJLKRnsfYHJpcwBNFtzhTwqzW1PZqpc+/
+         8HE1Kwjg9UWWcxjnlzrlhk75xIQ0giBdsZ5C14P3RuKwtd2oe9u4pH44VMmkWM5AyoIa
+         yaSLQRqCRTUllbAN5doEIVRMVf90SfVBls54O0rWaNyawChToDj9tDu16YRzdnm84QNm
+         gTgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681327413; x=1683919413;
+        d=1e100.net; s=20221208; t=1681327414; x=1683919414;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ruCafjyH/3zlOeY8HIt23X9tT9LTYcm24amx/aCjHg=;
-        b=chztOo8kQQmRmT9TXagAztM1Ysgs9kDULVrKSOSbGhavs5YJpR6cJnLHYxOj6VQkwh
-         lQTZROgwYLps5elVp6r/OkD7GFsh+WCHrl/BEGyTRElTXZmIxQ3dolcmMPdSGZkaDEz/
-         Aqx9Yk/c8RfS1WWDkB9JP9ei9D34jLIDMnmvSx5+HwQ2S58nBJaLgd/MHa8HiQAtu2pj
-         xO0mDhiu+k+/URT1obDDjhHT1QmVkv45nTmtASzt3xR27nSdx+OJlxptcG0lBumDe0tt
-         63EVAyyn8o6btK3QTX1EU0vix/VCe5ns+JsTWkxJQJ0IBf3NMbOw8eIFUwmXNjLM7QEP
-         wSSQ==
-X-Gm-Message-State: AAQBX9e31kS/SRG7PQ5EpUPYKCVcvkpd5WG92m1TZuzQvIzhvZ227Omo
-        ZCCeQM4NZ0nezHolbjAGaoU=
-X-Google-Smtp-Source: AKy350ZaNzltKbVwQY5y4mdYzMETZFU620vKj2YBlg94g4V/1DYLl3tl/r9TkM4CqIyvyd5EOY4aXQ==
-X-Received: by 2002:a17:906:c78a:b0:947:eafc:a738 with SMTP id cw10-20020a170906c78a00b00947eafca738mr7066559ejb.60.1681327412903;
-        Wed, 12 Apr 2023 12:23:32 -0700 (PDT)
+        bh=8gzoR5eTjdX6x0tTj8Yg9Hg0mvL/Rg2ipc11h9oGPMg=;
+        b=grYB3mQzFFqrV8fiAytszjK/VH/UnS0b1ryJM69KHipOs/QGdCgpAE/8a3NUB4tYCy
+         Kz9Agb0F6DHPv17yMMqTI2eettSVtnPMqmYaVxhp18qcJKu5RR8lAutJ2tbYoxzNyPTU
+         MiF9NxB5KAZJSuOx9k4a/V8VTNeoXE7uaRCWdZ/xAtv7unCJ24kstsgK0uqIASDylbu5
+         0vab8us+i/sct9s3DI2Au02HcatIX/T7zhGvbO3ndEEEphSIYustpnR96U9MiDcpXrGN
+         Ba2RJP1LRoCJZMl8MYhzbRIsjSeATK60X89s2MYtaOM2bHcgsqPTnj7tx/krqrsX185I
+         FLgg==
+X-Gm-Message-State: AAQBX9ehJS5+rOr3OH9FYnXP+CzLEbSHlewKJbk7pPngrhsqcoMDJfOc
+        dCgWJCzeq/DmNiXeg8/X3ZM=
+X-Google-Smtp-Source: AKy350Z51bocLFO+NnEa5ejX6/IQ0VwXAA/I9gDLX46W1cmh+Jj2fQscv9ChmTeGyQ2XEsgLshUQbw==
+X-Received: by 2002:a17:906:cc87:b0:948:d1af:3a11 with SMTP id oq7-20020a170906cc8700b00948d1af3a11mr7143768ejb.50.1681327414362;
+        Wed, 12 Apr 2023 12:23:34 -0700 (PDT)
 Received: from ?IPV6:2a02:3100:903d:3d00:b0e7:6bd7:f613:784b? (dynamic-2a02-3100-903d-3d00-b0e7-6bd7-f613-784b.310.pool.telefonica.de. [2a02:3100:903d:3d00:b0e7:6bd7:f613:784b])
-        by smtp.googlemail.com with ESMTPSA id f17-20020a170906739100b0094e5679dd2csm1134210ejl.165.2023.04.12.12.23.31
+        by smtp.googlemail.com with ESMTPSA id mb8-20020a170906eb0800b0094a9f434fc2sm3196299ejb.176.2023.04.12.12.23.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 12:23:32 -0700 (PDT)
-Message-ID: <8a7c067d-b121-3bd0-b587-f53861b52bd5@gmail.com>
-Date:   Wed, 12 Apr 2023 21:20:17 +0200
+        Wed, 12 Apr 2023 12:23:33 -0700 (PDT)
+Message-ID: <8c6ac288-a59d-7c51-aced-3dbcfa828cdd@gmail.com>
+Date:   Wed, 12 Apr 2023 21:21:07 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: [PATCH v3 1/4] pwm: meson: switch to using struct clk_parent_data for
- mux parents
+Subject: [PATCH v3 2/4] pwm: meson: don't use hdmi/video clock as mux parent
 Content-Language: en-US
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Jerome Brunet <jbrunet@baylibre.com>,
@@ -74,69 +73,88 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-We'll use struct clk_parent_data for mux/div/gate initialization in the
-follow-up patches. As a first step switch the mux from using
-parent_names to clk_parent_data.
+meson_vclk may change the rate of the video clock. Therefore better
+don't use it as pwm mux parent. After removing this clock from the
+parent list pwm_gxbb_data and pwm_g12a_ee_data are the same as
+pwm_meson8b_data. So we can remove them.
 
-Suggested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
-v3:
-- move setting mux parent data out of the loop
----
- drivers/pwm/pwm-meson.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-meson.c | 24 +++---------------------
+ 1 file changed, 3 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 4e5605c9d..6a66d5d58 100644
+index 6a66d5d58..2a86867c1 100644
 --- a/drivers/pwm/pwm-meson.c
 +++ b/drivers/pwm/pwm-meson.c
-@@ -61,6 +61,7 @@
- #define MISC_A_EN		BIT(0)
+@@ -371,7 +371,7 @@ static const struct pwm_ops meson_pwm_ops = {
+ };
  
- #define MESON_NUM_PWMS		2
-+#define MESON_MAX_MUX_PARENTS	4
+ static const char * const pwm_meson8b_parent_names[] = {
+-	"xtal", "vid_pll", "fclk_div4", "fclk_div3"
++	"xtal", NULL, "fclk_div4", "fclk_div3"
+ };
  
- static struct meson_pwm_channel_data {
- 	u8		reg_offset;
-@@ -484,21 +485,27 @@ MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+ static const struct meson_pwm_data pwm_meson8b_data = {
+@@ -379,15 +379,6 @@ static const struct meson_pwm_data pwm_meson8b_data = {
+ 	.num_parents = ARRAY_SIZE(pwm_meson8b_parent_names),
+ };
  
- static int meson_pwm_init_channels(struct meson_pwm *meson)
- {
-+	struct clk_parent_data mux_parent_data[MESON_MAX_MUX_PARENTS] = {};
- 	struct device *dev = meson->chip.dev;
--	struct clk_init_data init;
- 	unsigned int i;
- 	char name[255];
- 	int err;
+-static const char * const pwm_gxbb_parent_names[] = {
+-	"xtal", "hdmi_pll", "fclk_div4", "fclk_div3"
+-};
+-
+-static const struct meson_pwm_data pwm_gxbb_data = {
+-	.parent_names = pwm_gxbb_parent_names,
+-	.num_parents = ARRAY_SIZE(pwm_gxbb_parent_names),
+-};
+-
+ /*
+  * Only the 2 first inputs of the GXBB AO PWMs are valid
+  * The last 2 are grounded
+@@ -437,15 +428,6 @@ static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
+ 	.num_parents = ARRAY_SIZE(pwm_g12a_ao_cd_parent_names),
+ };
  
-+	for (i = 0; i < meson->data->num_parents; i++) {
-+		mux_parent_data[i].index = -1;
-+		mux_parent_data[i].name = meson->data->parent_names[i];
-+	}
-+
- 	for (i = 0; i < meson->chip.npwm; i++) {
- 		struct meson_pwm_channel *channel = &meson->channels[i];
-+		struct clk_init_data init = {};
- 
- 		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
- 
- 		init.name = name;
- 		init.ops = &clk_mux_ops;
- 		init.flags = 0;
--		init.parent_names = meson->data->parent_names;
-+		init.parent_data = mux_parent_data;
- 		init.num_parents = meson->data->num_parents;
- 
- 		channel->mux.reg = meson->base + REG_MISC_AB;
+-static const char * const pwm_g12a_ee_parent_names[] = {
+-	"xtal", "hdmi_pll", "fclk_div4", "fclk_div3"
+-};
+-
+-static const struct meson_pwm_data pwm_g12a_ee_data = {
+-	.parent_names = pwm_g12a_ee_parent_names,
+-	.num_parents = ARRAY_SIZE(pwm_g12a_ee_parent_names),
+-};
+-
+ static const struct of_device_id meson_pwm_matches[] = {
+ 	{
+ 		.compatible = "amlogic,meson8b-pwm",
+@@ -453,7 +435,7 @@ static const struct of_device_id meson_pwm_matches[] = {
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-gxbb-pwm",
+-		.data = &pwm_gxbb_data
++		.data = &pwm_meson8b_data
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-gxbb-ao-pwm",
+@@ -469,7 +451,7 @@ static const struct of_device_id meson_pwm_matches[] = {
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-g12a-ee-pwm",
+-		.data = &pwm_g12a_ee_data
++		.data = &pwm_meson8b_data
+ 	},
+ 	{
+ 		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
 -- 
 2.40.0
 
