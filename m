@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45EEB6DF6B2
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 15:13:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97FE06DF6C2
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 15:15:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231185AbjDLNNn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 09:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
+        id S229800AbjDLNPZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 09:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231509AbjDLNNR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 09:13:17 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A8D93D8
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 06:12:52 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id l26-20020a05600c1d1a00b003edd24054e0so8017923wms.4
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 06:12:52 -0700 (PDT)
+        with ESMTP id S229717AbjDLNPY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 09:15:24 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7964B975C
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 06:14:44 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id l16so6034534wms.1
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 06:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1681305170; x=1683897170;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112; t=1681305238; x=1683897238;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=IsrkVPeKsaynFnbWlBbnoqSaEozGzCnZBk6Qj0AOkSA=;
-        b=ssqrDy/2cLPJMN/UfNNxohNjADmsWrmIPazYKu4Ca3VT51kMGJqUU1fvWcWP4RjuZo
-         4dF+jf6yXYovywxAeb9lSaPiNCt6S4eT3K+uf9VRCmYJmFdY8L41VcIutelklqmDsd6V
-         qEQiJk6+v2YoizYOHRkf0dteFBK+5GWCvEXstGpl1jIPIMOXUsz7nnNubKdh5OvNHnOL
-         aDF6VeDl9OZ8cI5sC0EVKynLDlBXTOguFMXJZ/LRchX+pbtIPKdlFgmkzwneaoW2z/GQ
-         VQFB2AhqMthknYvrUs8GSB/XmaDK1dHZobdQvl+1Y43TnONYn2GITk4eWX+S3A94HX6O
-         2rYg==
+        bh=hxbSg03sNJ6CHBcwBXEqQmDmhcD81dI/Z44z6aEkv9E=;
+        b=iqlCaO5Meyq2KhSfObg54+ntFwmYyox7N0vs4ZwWfI0b8iXJr0zQjqeXgKZzI53SNP
+         H31oK0eqoOHMwt+5dGPEyyfyj5cCrmT5nybL0zAhK41cdxm7B3v4igvA4k5lkuqtJTW9
+         YOk64/8nobsuhdmuQNuTaGP9MgpNq48Y5POxZ1YyebohKwSsby8TdHV0GlDBEww3LEh0
+         2eUjyyHh4WW4Z8X5/MZhtfQE/wqsOnwifvlJjM0Xg519oHxY4uFIG921zK58kcuajP3z
+         gKHR1kDoH1eyRYuywA/OWUs1WJekpIDISpjEIxG8O9cEx1CttcP/zZFWWWJCQnmYiTzu
+         Lgtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681305170; x=1683897170;
+        d=1e100.net; s=20210112; t=1681305238; x=1683897238;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IsrkVPeKsaynFnbWlBbnoqSaEozGzCnZBk6Qj0AOkSA=;
-        b=Dxh/FPDZ9IZIonS8l4z+r8hBdmMAzMPC/wtvjGIGggAtBSHEX42SfqbDVOMuLpJ6R2
-         KtEkLic+gpww8+hsHoxUX5wtrkjo+EeEv9KM729vwa+m1v7oNifEuEbs+jl4HaYjFoqD
-         BKeu6tBsLFmhbtZbOUsQPW7ZBJSug/lO17ojJtjxMhzgeUTv1XvNvH2t87txtSUec8zi
-         KRIOIV6Y2unH5+l+j+h+MJ4sBiLmiFIGI5R9gPnKsrXLyIVXhBKkMV7yidat203SLpMR
-         VbqKgDjuIZarWYEugo27Qa4RXWVNuACKZkydYR0Y30dxxtQO/2SkN4bB6UfOTai0pUBn
-         O5mw==
-X-Gm-Message-State: AAQBX9dklnkR56jUvw3b7yWUgQSitwx136+yVoGjldvBLCA3yA2U5HZB
-        OAbTMt0Uq2vH5dmmSFQa78nlvw==
-X-Google-Smtp-Source: AKy350ZBjsJyLl7Rt2Og/2cr2DuEAVD7N0GXPO8YRPue1Xvb87vVf08FN6CXsl6Q/928lyD+Npa9JA==
-X-Received: by 2002:a05:600c:2142:b0:3ef:62cd:1ef with SMTP id v2-20020a05600c214200b003ef62cd01efmr4545069wml.25.1681305170583;
-        Wed, 12 Apr 2023 06:12:50 -0700 (PDT)
+        bh=hxbSg03sNJ6CHBcwBXEqQmDmhcD81dI/Z44z6aEkv9E=;
+        b=0tHd5HkS7WatzoF6+swreZr3wtvDGUcRV+DmPNBTVDNHZtPJy3pWX3Ckm97wz2vGkM
+         QvIEySTOZv6HxO/64wkwT8CvSTBzejwvcLWjG3gU/f6v0JQOQCzZqj/2plxyd04NjhHt
+         T3E1HI8zFDTwQPHmNZWVVvNt8xEqenMyvtsJcBgw+Gchi1lpGnuANuwmljoZFB3rpkpe
+         eqNrzKN0inOe55s83OdywmnFU4xfuaRKXYIynAwGU2iWVPzAf9mA953TOipUbSdYs8UL
+         Vm55s7I3w8JcPhj0gH+e92gtDBEYqqd1CoSf2r6gq9tXZbF6P8LNpKEC/Icw9iS5OK+G
+         qf/Q==
+X-Gm-Message-State: AAQBX9cN1/wzQ0kFxEr0YOVh/P0KwOSPrjUwJ+C42McY+Mg+Dz2jcM8J
+        SeSL5ZvGxzSmzpZGz+YZmpHCnQ==
+X-Google-Smtp-Source: AKy350ZNRAG/3MPGjxbC9J3m06khEHCcasXR6FH61xJ832WlKtAzUSM52+gCptxIy0mOHHJs36cd2w==
+X-Received: by 2002:a05:600c:2316:b0:3ea:f75d:4626 with SMTP id 22-20020a05600c231600b003eaf75d4626mr4566131wmo.38.1681305237744;
+        Wed, 12 Apr 2023 06:13:57 -0700 (PDT)
 Received: from [192.168.1.172] (158.22.5.93.rev.sfr.net. [93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id z12-20020a7bc7cc000000b003ee63fe5203sm2311867wmk.36.2023.04.12.06.12.49
+        by smtp.gmail.com with ESMTPSA id u25-20020a05600c211900b003f09fe8312csm1351510wml.20.2023.04.12.06.13.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 06:12:50 -0700 (PDT)
-Message-ID: <7e53c0b1-3aed-da08-5c57-800ac2277bc6@baylibre.com>
-Date:   Wed, 12 Apr 2023 15:12:48 +0200
+        Wed, 12 Apr 2023 06:13:57 -0700 (PDT)
+Message-ID: <abc4c188-0ba8-8104-2c1f-39865f01353a@baylibre.com>
+Date:   Wed, 12 Apr 2023 15:13:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH 02/27] dt-bindings: phy: mediatek,dsi-phy: Add compatible
- for MT6795 Helio X10
+Subject: Re: [PATCH 03/27] dt-bindings: display: mediatek: dpi: Add compatible
+ for MediaTek MT6795
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>, matthias.bgg@gmail.com
@@ -73,13 +73,11 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-3-angelogioacchino.delregno@collabora.com>
- <20684378-cf3e-0299-d390-287b7bafbda5@baylibre.com>
- <eb770f19-ada5-81bb-5ea3-798edabca70f@collabora.com>
+ <20230412112739.160376-4-angelogioacchino.delregno@collabora.com>
 From:   Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <eb770f19-ada5-81bb-5ea3-798edabca70f@collabora.com>
+In-Reply-To: <20230412112739.160376-4-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -89,56 +87,13 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 12/04/2023 15:03, AngeloGioacchino Del Regno wrote:
-> Il 12/04/23 14:59, Alexandre Mergnat ha scritto:
->> On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
->>> Add a compatible string for MediaTek Helio X10 MT6795: this SoC uses
->>> the same DSI PHY as MT8173.
->>>
->>> Signed-off-by: AngeloGioacchino Del Regno 
->>> <angelogioacchino.delregno@collabora.com>
->>> ---
->>>   Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml 
->>> b/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
->>> index 26f2b887cfc1..a9f78344efdb 100644
->>> --- a/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
->>> +++ b/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
->>> @@ -24,6 +24,10 @@ properties:
->>>             - enum:
->>>                 - mediatek,mt7623-mipi-tx
->>>             - const: mediatek,mt2701-mipi-tx
->>> +      - items:
->>> +          - enum:
->>> +              - mediatek,mt6795-mipi-tx
->>> +          - const: mediatek,mt8173-mipi-tx
->>
->> AFAIK, it should be:
->>        - items:
->>            - const: mediatek,mt6795-mipi-tx
->>            - const: mediatek,mt8173-mipi-tx
->>
->> Since it isn't respected above for mt7623, it may be tolerated.
->> Please, take this comment as a suggestion, isn't a NAK from me.
->>
+On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
+> Add a compatible string for the MediaTek Helio X10 MT6795 SoC, using
+> the same parameters as MT8183.
 > 
-> First of all, Thanks!
-> I want to explain, though, the reason for that.
-> 
-> If you check all the commits, on some I did it as you just proposed, while
-> on some others I did it with an enum before const: that's simply because I
-> *totally expect* some to grow, while others (const - const) I was either
-> unsure, or totally *not* expecting them to grow soon!
+> Signed-off-by: AngeloGioacchino Del Regno<angelogioacchino.delregno@collabora.com>
 
-
-That's what I thought. IMHO, if someone add another compat later, he 
-will be on charge to change the const by enum front of your 
-"mediatek,mt6795-mipi-tx". But my opinion is probably not the most popular.
-
-I will not make the same feedback for the other patches in this series.
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
 
 -- 
 Regards,
