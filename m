@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE016DF557
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC0666DF563
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 14:35:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbjDLMep (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 08:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46648 "EHLO
+        id S231544AbjDLMfj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 08:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230355AbjDLMeo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:34:44 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4BD59D3;
-        Wed, 12 Apr 2023 05:34:34 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id n19-20020a05600c501300b003f064936c3eso11143169wmr.0;
-        Wed, 12 Apr 2023 05:34:34 -0700 (PDT)
+        with ESMTP id S230224AbjDLMfd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 08:35:33 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E347ABD;
+        Wed, 12 Apr 2023 05:35:21 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id j1so14736006wrb.0;
+        Wed, 12 Apr 2023 05:35:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681302873; x=1683894873;
+        d=gmail.com; s=20221208; t=1681302920; x=1683894920;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eY38QovBO9X6brYLqxxxjQBNRV1VBzhniRNPrjrGVZU=;
-        b=fmZsiHj4rx9xq5FQgOmOXXcMbHU/E0WtOfVdbUc8+/vCn2M26CpV8Ek1O40/kkrWEi
-         6zMJDO5HcE660BAUn/G/QDSuh2gBMfU2cw6cyqL8o2NhawqkxGwQ7pPopcs2lBY5HuYx
-         V7B8DOHQWR+5JsQYup6pv5v7W29eqmYY+B3IrwanVAdzSY1wx6NTATHVfYFNfMDJC9X/
-         0+GEUiksr0AZa+EI+SRN79aBlMgcgPNMLkTf+YnmKZ+q+T78X+fZKV1M6tPm2FSWQSrQ
-         YloSPAcWSSJQkVX0MlpguqUpaYZxw51vAKtrGBbjWA7gFpMz/D2gsbFSSl5VU95KjoWE
-         dO3w==
+        bh=GYHSgufQGPfsF5vAg0opMnss76My6NDOcEfiI+dOR3E=;
+        b=Gdoo7jQaku69ktNF9SD+vwJOUXaz8W5CG7Iec1zVbexwiq0FwZblgy3P9YHsS+/YMR
+         kfmWq9T6J5UD6nBDAbUk5kEsPiGt77owQYxonu+e4/WKERVILLYVpXKE2QCckV8J6Nt5
+         eTmKA/Nvl6SM70odZp51QoDMPAmqMLBTffQhdENQWztVd5qXYxkI1XXu1vqLzLOC+f9d
+         zwzyifpaIzunPEAIFP34jMT1M02huYUbZzo5rmO8yooQXCGQ7OFZUwtf509ajbqbtmIU
+         6OHNDcqpu3ZMn9elbph56P1JeVoZL8NJaNaUJ6TMHfyRt7GIavnWBZIhrhz4JYiptJ/e
+         GcKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681302873; x=1683894873;
+        d=1e100.net; s=20210112; t=1681302920; x=1683894920;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eY38QovBO9X6brYLqxxxjQBNRV1VBzhniRNPrjrGVZU=;
-        b=pmMSDOtU/wzCsk8oT4aNkfiIuHY3EzJ28L9sLGo6yJ9MdX+qnB5EY/ILoGQFU7t0ub
-         7cnVNsKmZNZDL6ohBZuT6uZ56ssfRc5dfFxL5Ndh47mL/PPAo28JMeCrCR+E5oqUVL98
-         7IgpQh4wS1EM28Y128dmdFMCAcNWrpld83jhLxyUJajrkD01FwdtRmrMkdCygnARaX7o
-         2biajjY3/53uUu8IgbpP4hVoPVlNWkJpWTRRXHXNyFhURJdKPiUG7zZze3zZxn2FNOQJ
-         lrkmQozk6EAgZU5bbilnrkDJln/eltFaG5SxAiLCcU3auMjGNniOof6uoaIHkDUH4/hl
-         469A==
-X-Gm-Message-State: AAQBX9eiZtP3isoqs2Y86hDcrk5Dz+pwShnGBQcYxPWo9JFy0yUIBocs
-        TjjOWw3Gye9ysK0LyOL0csU=
-X-Google-Smtp-Source: AKy350bGRvf/Hjw+RYU3A7cGvEuMBp8eO5w3pbAUHmtpQjt3TNMecIwKpO6IParEHspcLI6mD84xZA==
-X-Received: by 2002:a7b:c84c:0:b0:3ed:bc83:3745 with SMTP id c12-20020a7bc84c000000b003edbc833745mr1856609wml.25.1681302872837;
-        Wed, 12 Apr 2023 05:34:32 -0700 (PDT)
+        bh=GYHSgufQGPfsF5vAg0opMnss76My6NDOcEfiI+dOR3E=;
+        b=MBhwCLZCivD7naHr+CrBj/7IIDd2F1+rK0BVXLemCBen4W6T16t7S3KWJYjQRPzGdL
+         hEj+2wqn0lB8hdIwAttyEPJ+vKltVElMRCzlhth6N0jEvwGiJo045IfHchVbpFJjoTT8
+         DztVhZFm2cFucwTzsMFggoCoHoGaEqpBSscKpa6EjpG9VssU0liYknvMfPWBXhSEYg3w
+         dDcV/T/7+ly8plnthMhzy4oHbqRCvgVcZO5BCuT1cevBt3w9xZPEwVDgskmYKd3Fx0Ut
+         eCKrwREiTTYbhdyv4RU8FVkbez/NuDMdspLGw/hbi7UOuGU0kUNs089wwuWSepQaXwDA
+         cjOA==
+X-Gm-Message-State: AAQBX9cMmTCISIQhlgTIyF4pgwEtMAx8xoifiexnKUCboYFKmhHBmg/8
+        wRW3BdsrS/gMdzBDp9FI3KQ=
+X-Google-Smtp-Source: AKy350YJDBIXDYs4pLFPPdXIwXv2xr+tmhcoVzQ/7lfEPyTz8FT7yOyyA6AmK41Lu0ewaS+izRE8PA==
+X-Received: by 2002:adf:e0c1:0:b0:2ef:b4a9:202f with SMTP id m1-20020adfe0c1000000b002efb4a9202fmr11506835wri.69.1681302919583;
+        Wed, 12 Apr 2023 05:35:19 -0700 (PDT)
 Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id e2-20020a05600c218200b003ede06f3178sm2223361wme.31.2023.04.12.05.34.30
+        by smtp.gmail.com with ESMTPSA id i3-20020adfdec3000000b002f24db41f50sm7013909wrn.69.2023.04.12.05.35.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 05:34:31 -0700 (PDT)
-Message-ID: <7adda7a4-99e6-f3a9-22c2-6f4e1e2273de@gmail.com>
-Date:   Wed, 12 Apr 2023 14:34:30 +0200
+        Wed, 12 Apr 2023 05:35:18 -0700 (PDT)
+Message-ID: <0416a00e-b567-1ae4-c49c-ec21e024ab0f@gmail.com>
+Date:   Wed, 12 Apr 2023 14:35:16 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 02/27] dt-bindings: phy: mediatek,dsi-phy: Add compatible
- for MT6795 Helio X10
+Subject: Re: [PATCH 03/27] dt-bindings: display: mediatek: dpi: Add compatible
+ for MediaTek MT6795
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
@@ -73,9 +73,9 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-3-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-4-angelogioacchino.delregno@collabora.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20230412112739.160376-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230412112739.160376-4-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -91,34 +91,44 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for MediaTek Helio X10 MT6795: this SoC uses
-> the same DSI PHY as MT8173.
+> Add a compatible string for the MediaTek Helio X10 MT6795 SoC, using
+> the same parameters as MT8183.
 > 
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->   Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml | 4 ++++
->   1 file changed, 4 insertions(+)
+>   .../display/mediatek/mediatek,dpi.yaml        | 23 +++++++++++--------
+>   1 file changed, 14 insertions(+), 9 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml b/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
-> index 26f2b887cfc1..a9f78344efdb 100644
-> --- a/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml
-> @@ -24,6 +24,10 @@ properties:
->             - enum:
->                 - mediatek,mt7623-mipi-tx
->             - const: mediatek,mt2701-mipi-tx
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> index d976380801e3..803c00f26206 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> @@ -17,15 +17,20 @@ description: |
+>   
+>   properties:
+>     compatible:
+> -    enum:
+> -      - mediatek,mt2701-dpi
+> -      - mediatek,mt7623-dpi
+> -      - mediatek,mt8173-dpi
+> -      - mediatek,mt8183-dpi
+> -      - mediatek,mt8186-dpi
+> -      - mediatek,mt8188-dp-intf
+> -      - mediatek,mt8192-dpi
+> -      - mediatek,mt8195-dp-intf
+> +    oneOf:
+> +      - enum:
+> +          - mediatek,mt2701-dpi
+> +          - mediatek,mt7623-dpi
+> +          - mediatek,mt8173-dpi
+> +          - mediatek,mt8183-dpi
+> +          - mediatek,mt8186-dpi
+> +          - mediatek,mt8188-dp-intf
+> +          - mediatek,mt8192-dpi
+> +          - mediatek,mt8195-dp-intf
 > +      - items:
 > +          - enum:
-> +              - mediatek,mt6795-mipi-tx
-> +          - const: mediatek,mt8173-mipi-tx
+> +              - mediatek,mt6795-dpi
+> +          - const: mediatek,mt8183-dpi
 
-I suppose you expect more SoCs to share the same fallback in the future, apart 
-from keeping in sync with other comaptibles described here, so:
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-
-
->         - items:
->             - enum:
->                 - mediatek,mt8365-mipi-tx
+Shouldn't we declare both const: ?
