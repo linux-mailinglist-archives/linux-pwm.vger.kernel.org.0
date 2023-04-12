@@ -2,58 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FA486E0003
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 22:41:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8AB56E0010
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 22:42:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjDLUlJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 16:41:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53062 "EHLO
+        id S229555AbjDLUml (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 16:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjDLUlI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 16:41:08 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7114955A6
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:41:06 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id qb20so31624702ejc.6
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:41:06 -0700 (PDT)
+        with ESMTP id S230305AbjDLUmh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 16:42:37 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C595FD5
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:42:34 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id dm2so32170519ejc.8
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 13:42:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1681332065;
+        d=googlemail.com; s=20221208; t=1681332153;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GmTn4okX9LMhUGLjcx12BLMMUvyQdi4ru6Z/q3wv2Tk=;
-        b=Sjn1n/CrAAUqzuv5Z7X9Ev8IWeRw48fAxiNlHB0Yu/kVgOBLrQUMQ/k+d5HPTNfumR
-         T5ngVBkmNjYXw2QhwlHnqSS2DpSYirS9TPc+YL4FKR8aJylPdQ8WIjT7I63bWGPfcA1V
-         GIx88SgstrOhXGbMGR1L7CPUs9cpgYO9mstBqb8hwfXcHiQ03lF3FBjBLG55BLXTX6M6
-         20pi09Lr70zyRFQ07QyfN7qYwF+K8jjuFwVs0tjH3Gr1UXvwqvI7xBInJ/tGaMDohMkD
-         gIwYv+ptbgM80VrB1EW/XuktLkbN8Z6v1ZLi+UNBrBRYRA/LwRKrME44z7Jhxbnz/mNX
-         slZA==
+        bh=K1NzP44NJ7Zn3Q3csjGxZmv7aNxzXOUtIWmezQUNt6E=;
+        b=nVpR91sBcS+KRq1o4GWnYRP56PPkTUMykZd7SYQKXAnRLpGCDIi9XrqOTT2uUFnDV5
+         /LnSEl2PBVTcu9Ide2+m73pjDhP4LGoo3dnx7T7CbNohxN0Rh76DRka0cCSBTchrWbV8
+         U8yvnzy/So7PLyNcOH2F/4fIsoRrSUIgfmy8zZebiFBhEcHZcMfGDnqdxGu+aFU84olk
+         MTedAOn0MrUsxrCVvyyqfyHb1fBP4fWKAKqPz25UenxM8GjBrS9sTLehd/wFLJ7JoPCB
+         HmlgoPOhqnMjqleD4WJi78wgxw4aKSrl2YPf6eNbjo8Gliexo7poGyJD/2kexrNszh0s
+         LgKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681332065;
+        d=1e100.net; s=20221208; t=1681332153;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GmTn4okX9LMhUGLjcx12BLMMUvyQdi4ru6Z/q3wv2Tk=;
-        b=bWo2vuIl7Z6mdzMDsqkaNbtruyW4dJ2Zw6JMQZWeRZBDfmcOOZESgwmbWpg7Scx6RA
-         MnflOp2cq2XkTzlSC3XT5nUTvpC7eSyK1vqqjftURUKTOzIVO+ZCyxQHbB2S4s8YQ+0H
-         SGTm4ShwWCDcuwNt0GbwDDuQ2l7jNTfyY408rYhJZ7EA7x2sZ7sF8M8ka7WWuVR7y2Pb
-         hD0OVlNsFIU0SLwQFw6b9r6HKxgqAmUExO/02t5JQKllPC0M3wmIVSdqmJYwd0uqsPt0
-         GBy++hsxgD3Vg54l+HbbOQDuB3KpIbynhJtjb5XeUp4vIUVseZvY3IJGuICvRoWR9e33
-         ksqQ==
-X-Gm-Message-State: AAQBX9dHU8y5ImPW+SV8fChOHvwxQ7tennTkwMx3a9oGGkDby2AKo3kQ
-        FeEwaGXWgOno1p0hKdVxaMtAxtQS0/QUPNOfLUU=
-X-Google-Smtp-Source: AKy350Z2waaCpe8fjeWSSCCYhqnrAMpxatTSIzNcDu+s0HdyG+P1/z5s9D8e1V8Wxr/6pA/CEwjIwKTV+frQ6jWSgPQ=
-X-Received: by 2002:a17:907:160c:b0:92f:cbfe:1635 with SMTP id
- hb12-20020a170907160c00b0092fcbfe1635mr118333ejc.6.1681332064761; Wed, 12 Apr
- 2023 13:41:04 -0700 (PDT)
+        bh=K1NzP44NJ7Zn3Q3csjGxZmv7aNxzXOUtIWmezQUNt6E=;
+        b=DyJIzyW2ydqTCpmfvr84Oryjf55o5DoXtFcOJHgfrBOISVdUGNiQIsIMibgxWavKEY
+         9H5owAkp9ITp1JoepvCnErJRq99pKA32i6VTXUqf94voBFJbwm1sE87K9CRac0j9nPYV
+         dLsb094dQRQij12xr7w2GKlYiv84hZ/ntSh0Mr24CdVYFk59EbuyZJ72Naxw5ll0S74b
+         xjioHN+MM1sf0UMVzxrP0eLmwb/1vU2mxNRtv/U0cNhPmYCVjPzE/Zf30WBBVW8smVAE
+         PlAvMEmSyvywNOd9bZXmE6e1yqNpvGDgxYNRQGkY3VKHErwd3U+BKlu84M5EW6PY9cgQ
+         LXbQ==
+X-Gm-Message-State: AAQBX9d285s9DVLYTIl9sIqqK1lOTY++C9C+DQHKn2MiP8X4Pd8GvkRm
+        MvUUdODHk3qjE+EuZ26e6nk8C969CBaJjJ9nMWo=
+X-Google-Smtp-Source: AKy350aA3TVqCUEdmigMYtd8tjauavWkkGNE5hxWY9vTVePvJvvL8i1e/EM8+pVrx1lgnPq/1ySeGA5/op6xhuQtOaE=
+X-Received: by 2002:a17:907:1c02:b0:932:4577:6705 with SMTP id
+ nc2-20020a1709071c0200b0093245776705mr127456ejc.6.1681332153223; Wed, 12 Apr
+ 2023 13:42:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com> <8a7c067d-b121-3bd0-b587-f53861b52bd5@gmail.com>
-In-Reply-To: <8a7c067d-b121-3bd0-b587-f53861b52bd5@gmail.com>
+References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com> <8c6ac288-a59d-7c51-aced-3dbcfa828cdd@gmail.com>
+In-Reply-To: <8c6ac288-a59d-7c51-aced-3dbcfa828cdd@gmail.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 12 Apr 2023 22:40:53 +0200
-Message-ID: <CAFBinCDMXT-a+XkmbmAsS3Tijv90KyFut=cUzj3L3r_XQbABBA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] pwm: meson: switch to using struct clk_parent_data
- for mux parents
+Date:   Wed, 12 Apr 2023 22:42:22 +0200
+Message-ID: <CAFBinCCbQhj0X5mNHF77PQWTmdvHrd=s09N-a6OxyxQxwW7Gdw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] pwm: meson: don't use hdmi/video clock as mux parent
 To:     Heiner Kallweit <hkallweit1@gmail.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
@@ -80,12 +79,16 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 On Wed, Apr 12, 2023 at 9:23=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.c=
 om> wrote:
 >
-> We'll use struct clk_parent_data for mux/div/gate initialization in the
-> follow-up patches. As a first step switch the mux from using
-> parent_names to clk_parent_data.
+> meson_vclk may change the rate of the video clock. Therefore better
+if you have to re-send for some reason then it would be great if this
+first sentence could be extended a little more, for example with: "the
+meson_vclk code from the display driver may change ..." to make it
+clear what meson_vclk is.
+
+> don't use it as pwm mux parent. After removing this clock from the
+> parent list pwm_gxbb_data and pwm_g12a_ee_data are the same as
+> pwm_meson8b_data. So we can remove them.
 >
-> Suggested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com> #
-meson8b-odroidc1, sm1-x96-air
