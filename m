@@ -2,73 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A0F66E0054
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 23:04:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7F536E0074
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Apr 2023 23:05:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbjDLVD6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Apr 2023 17:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36694 "EHLO
+        id S229532AbjDLVFn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Apr 2023 17:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjDLVDz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 17:03:55 -0400
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E50A76A9;
-        Wed, 12 Apr 2023 14:03:52 -0700 (PDT)
-Received: by mail-oo1-f44.google.com with SMTP id z8-20020a4ad1a8000000b00542190bf1fcso335457oor.9;
-        Wed, 12 Apr 2023 14:03:52 -0700 (PDT)
+        with ESMTP id S229553AbjDLVFm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Apr 2023 17:05:42 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425C0729F
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 14:05:34 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id xi5so32200126ejb.13
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 14:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20221208; t=1681333532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1yx+vB/vFq6CeEDIMJycMifvuE1xDIqS48HQvE/eryE=;
+        b=Qg01jD89AN9DEqUwI45AgkzGAEraJv/t73p4UeXyfLGl6eqwFAt4Z3SnQF0GGE6yL7
+         wD9ptD5SVqvSWx0+KQBVxbkBiu/Bor1PrkzytWeelfRfWG5KqKJBfc2m+0xqJNCpwB6c
+         MifyxPNsKGVJRp100t+n6z0B0I3OvdcjbGqHyjnmehPw+Xl05U+nJpVVSjkSCpJs5p3B
+         egAah7E6/6nQilItp4ROpXXAhyiiW5HovIqr7D86QaUvuCa4ltxoYtws39+JVbSgGkOE
+         oS28FCChTFqNHvDgejeBY9WgyfArlASM+QqT97n54imsBJ3gLJ5lL86rcewaeSYps4cd
+         d2yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681333431; x=1683925431;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iAvkCDu3hruxgiOJqmE1sAlKDaRv3MBstRHxkz3IG9s=;
-        b=PZYohEZzCHMYvCewn9xyTWh+S3ue2bDItStlS5bUVPotCBOoXt9N1fjFEaQv5dSBvD
-         jRpJ7BGPIEo/LRK/KB5xLRiDWgABxmyAO/MGN9CVYnJomDkz6EpMx2rLQ140AWv0AP6T
-         mjZDSrUK5BBvAMoXn3Qo5pK2e6NXdpAS0QCiLp0PRr2cU5ki98GlLGpwhTNWzBr15BoE
-         0JwH4r2T0GNV4+Wv3P9Il56vS6+AM5QK1H5i4Ty0ELI+DQi409SXxsdBEjnDp24WhSdS
-         LYWcDVgqN/d1gokFwFgayxXa1GwvYfJE86cqWUa1m7y0SNmCJP04F/zDOFX+X6zWRgS/
-         4hxQ==
-X-Gm-Message-State: AAQBX9fCAv3vyTfMLTrv2Ax7cTZTPNgyCWpa9txSKdUDXGEKs11Da99j
-        hFMMN20Ch2XBInZAb4FL1g==
-X-Google-Smtp-Source: AKy350Z5Q9mJ1edtUqGeVZax9s2dgjb2Rbg2T6w0rBrdB1GGVndSVyqgynTnqgRdU1HgIe3DZDxvJQ==
-X-Received: by 2002:a4a:4153:0:b0:532:7281:93fc with SMTP id x80-20020a4a4153000000b00532728193fcmr8643020ooa.2.1681333431639;
-        Wed, 12 Apr 2023 14:03:51 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id o7-20020acad707000000b0038b0dd1c040sm7217626oig.3.2023.04.12.14.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 14:03:51 -0700 (PDT)
-Received: (nullmailer pid 3200533 invoked by uid 1000);
-        Wed, 12 Apr 2023 21:03:44 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        d=1e100.net; s=20221208; t=1681333532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1yx+vB/vFq6CeEDIMJycMifvuE1xDIqS48HQvE/eryE=;
+        b=cTE+T354k4JOmDA1ib2P5wMjWhTrL6LYbVJBqhCiRkqvfRNV+pxTDds0AHY/bgu6bG
+         jla+F/PNMaQxW3b2vMD6V8zvjIli/uSCvsk3GfSy7mVL5vc+zJZ5ZUdWiHBILVPITTpX
+         sqUkIP7pq3BXg5W/aUqY/XC6nfvjSc+YP4uGBBE2jpZ7DACFIDWCwv2Jg0Cs9QBIdfpy
+         bU05qAoST8lnWAtwXwhfXPV07zDb7UYEcUH8ixhoAv/lo1HplwRnR4y/v2AUd27AJs1f
+         omAN8c09cm/NXJ+Iux7gjGG8y8pM++4Z8WSUwROgoYa5ogW4iDblhQ4fD2+P87DuGDXK
+         mftg==
+X-Gm-Message-State: AAQBX9dTVNOd6L4F+9EYlChDo+wwyVhkpTZ+DxwCO4+R0PhGD4hZE695
+        YsKjSqgFC2loaejQhdlNFCk13x6lu8nDHIFTkDQ=
+X-Google-Smtp-Source: AKy350a6P2vdQtyIEZIORfnHWwjfruvRmjlyRwvvvQmRWccXRwDTP/Lqq0y4ItwZ5z0aqymMWxQ4Gts38UGLXirzxS8=
+X-Received: by 2002:a17:907:1c02:b0:932:4577:6705 with SMTP id
+ nc2-20020a1709071c0200b0093245776705mr157384ejc.6.1681333532120; Wed, 12 Apr
+ 2023 14:05:32 -0700 (PDT)
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     thierry.reding@gmail.com, linux-mediatek@lists.infradead.org,
-        chunkuang.hu@kernel.org, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org, vkoul@kernel.org, ck.hu@mediatek.com,
-        xinlei.lee@mediatek.com, krzysztof.kozlowski+dt@linaro.org,
-        p.zabel@pengutronix.de, dri-devel@lists.freedesktop.org,
-        kishon@kernel.org, robh+dt@kernel.org, kernel@collabora.com,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        daniel@ffwll.ch, phone-devel@vger.kernel.org,
-        jassisinghbrar@gmail.com, ~postmarketos/upstreaming@lists.sr.ht,
-        airlied@gmail.com, chunfeng.yun@mediatek.com,
-        matthias.bgg@gmail.com, houlong.wei@mediatek.com,
-        jitao.shi@mediatek.com, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20230412112739.160376-7-angelogioacchino.delregno@collabora.com>
-References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-7-angelogioacchino.delregno@collabora.com>
-Message-Id: <168133319361.3191144.6939545255340146019.robh@kernel.org>
-Subject: Re: [PATCH 06/27] dt-bindings: display: mediatek: ovl: Add
- compatible for MediaTek MT6795
-Date:   Wed, 12 Apr 2023 16:03:44 -0500
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com> <12d4fbc1-8ed4-637e-32ca-2c09d25d60a6@gmail.com>
+In-Reply-To: <12d4fbc1-8ed4-637e-32ca-2c09d25d60a6@gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 12 Apr 2023 23:05:21 +0200
+Message-ID: <CAFBinCDME3=3dUx6K5iZHcr=tu6nh-Xm2NMn_VAiTcM_uZD_qQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] pwm: meson: make full use of common clock framework
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,28 +76,87 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Heiner,
 
-On Wed, 12 Apr 2023 13:27:18 +0200, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for MediaTek Helio X10 MT6795's OVL block: this
-> is the same as MT8173.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,ovl.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+On Wed, Apr 12, 2023 at 9:23=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.c=
+om> wrote:
+>
+> Newer versions of the PWM block use a core clock with external mux,
+> divider, and gate. These components either don't exist any longer in
+> the PWM block, or they are bypassed.
+> To minimize needed changes for supporting the new version, the internal
+> divider and gate should be handled by CCF too.
+>
+> I didn't see a good way to split the patch, therefore it's somewhat
+> bigger. What it does:
+>
+> - The internal mux is handled by CCF already. Register also internal
+>   divider and gate with CCF, so that we have one representation of the
+>   input clock: [mux] parent of [divider] parent of [gate]
+>
+> - Now that CCF selects an appropriate mux parent, we don't need the
+>   DT-provided default parent any longer. Accordingly we can also omit
+>   setting the mux parent directly in the driver.
+>
+> - Instead of manually handling the pre-div divider value, let CCF
+>   set the input clock. Targeted input clock frequency is
+>   0xffff * 1/period for best precision.
+>
+> - For the "inverted pwm disabled" scenario target an input clock
+>   frequency of 1GHz. This ensures that the remaining low pulses
+>   have minimum length.
+>
+> I don't have hw with the old PWM block, therefore I couldn't test this
+> patch. With the not yet included extension for the new PWM block
+> (channel->clock directly coming from get_clk(external_clk)) I didn't
+> notice any problem. My system uses PWM for the CPU voltage regulator
+> and for the SDIO 32kHz clock.
+>
+> Note: The clock gate in the old PWM block is permanently disabled.
+> This seems to indicate that it's not used by the new PWM block.
+>
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com> #
+meson8b-odroidc1, sm1-x96-air
 
-Running 'make dtbs_check' with the schema in this patch gives the
-following warnings. Consider if they are expected or the schema is
-incorrect. These may not be new warnings.
+Generally I'm very happy with this - only a few small questions/comments be=
+low.
 
-Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-This will change in the future.
+[...]
+> +       state->enabled =3D __clk_is_enabled(channel->clk) && (value & tmp=
+) =3D=3D tmp;
+I was about to suggest that clk_hw_is_enabled() should be used instead
+of __clk_is_enabled()
+That would be easy for SoCs where the gate is part of the PWM IP. But
+it would not work (at least I don't think that it would) work for the
+newer IP that Heiner's described where the gate is part of the SoC's
+clock controller (and thus outside the PWM controller registers). To
+me this means that we need to keep __clk_is_enabled() here unless
+somebody knows of a better approach.
 
-Full log is available here: https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230412112739.160376-7-angelogioacchino.delregno@collabora.com
+The "(value & tmp) =3D=3D tmp" can now be simplified to !!(value &
+BIT(channel_data->pwm_en_bit)) as we're now only checking a single bit
+(previously we were checking two bits in one statement, so that more
+complex check was needed).
+
+[...]
+> +               channel->gate.reg =3D meson->base + REG_MISC_AB;
+> +               channel->gate.bit_idx =3D meson_pwm_per_channel_data[i].c=
+lk_en_bit;
+> +               channel->gate.hw.init =3D &init;
+> +               channel->gate.flags =3D 0;
+> +               channel->gate.lock =3D &meson->lock;
+> +
+> +               channel->clk =3D devm_clk_register(dev, &channel->gate.hw=
+);
+If I recall correctly Jerome previously suggested that I should use:
+- devm_clk_hw_register() to initially register the clock
+- then use (for example) channel->clk =3D devm_clk_hw_get_clk(dev,
+&channel->gate.hw, "pwm0")
+
+It's not the most common pattern (yet) but if I recall correctly this
+is also what the CCF maintainers agreed to be the way forward.
 
 
-ovl@14007000: 'power-domains' is a required property
-	arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb
-	arch/arm/boot/dts/mt7623n-rfb-emmc.dtb
-
+Best regards,
+Martin
