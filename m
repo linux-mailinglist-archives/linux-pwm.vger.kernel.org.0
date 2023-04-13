@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 674316E09D3
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 11:13:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26CB36E0A14
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 11:23:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbjDMJNb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 13 Apr 2023 05:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37594 "EHLO
+        id S229482AbjDMJXQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 13 Apr 2023 05:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjDMJNa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 05:13:30 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA56510FC
-        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 02:13:29 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id i8-20020a05600c354800b003ee93d2c914so9324574wmq.2
-        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 02:13:29 -0700 (PDT)
+        with ESMTP id S229535AbjDMJXP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 05:23:15 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338D8106
+        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 02:23:14 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id z9so8759047ejx.11
+        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 02:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681377208; x=1683969208;
+        d=gmail.com; s=20221208; t=1681377792; x=1683969792;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3PE5vTEL7E8P1zVsVjnu4l049FaIVCSgsce7iMS5wYo=;
-        b=aluH8fC3W9eGsPUYb2LM4wkwmi98R96J31nWixQzfv8t0WQFyfXNO3vnupmmW6Uhig
-         AKei/SmgO/tZolkFxv8MY6QVNTHXKcVQQDael3AcM//2KsMLVSHZt2aYWvxfh+QF9NWH
-         A7U1B8vHiwAYw+KwEUM15VdgU54t+mz9E8KoxcoOwgnEdHmBZBCkL/Iz0cr7L7u1T6HE
-         +4CLAGqgxH3ES21VG6SDYb2/EQDOpdjII6sSmSbbkKpSXZTVfzKdWwayKR/pLOgS2YZS
-         sAfj+P1PpTacuxGTePgB2arqjECwMCoZGYsKrgZwnjdePLyFhioNfedEOhD+YA3QFu2Q
-         aOGg==
+        bh=nzTTbhfFcZTGMDra4ZzytX8FtG7O0yt+/KOC/gcA42g=;
+        b=MS5UrRavGhMkko2goaKDguazFwRR3eHaZscHm70DVgnFWrOb8bfdgVf0MIds2d/dZE
+         qyUxWMIqH9YyS22gzZzAgkUi2x+PJGE0yCgItRVu8RcNNK1mJFI3X9pHS2TeifrzdNVZ
+         TQ31qi7Y/bvfeIuEJs9YfFIrp1dYcROE879fnXc0E4gIF0FZy0PTnHAIc43+g4x3mFn3
+         Kr9RLYpCS0B/JtOb142LmmkhsJtqFJYODtKHzSfd29GrjFjNuwFZISNp1GqhWIsdalub
+         q9h9YYWo/20k4jFN58lJDyOO7kD2a15MqagzCEkzdtGjWaySjyfud3HcQVKWCdd7dDph
+         fhNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681377208; x=1683969208;
+        d=1e100.net; s=20221208; t=1681377792; x=1683969792;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3PE5vTEL7E8P1zVsVjnu4l049FaIVCSgsce7iMS5wYo=;
-        b=YpjQWrLV6dVZkKATSuamAyyz+gPIuDBy0NBZlMR0YtqGNkD3u9W6sGWsDvuqn6B8YB
-         TA6ZLwuIZ+jcPF7ih7Kf6hIh4KJHIwrnshssWMGhFjXW1BBNeNy6CkD88iv7c+fn+viv
-         nLkvw7lcvtESzhfwL2tIzSds1zCINlqT5Y7NR7z3BUQ3dmjL+tUWPbRy/tKPkySu+6Th
-         4xOjFYHkUNW15LFxrjw/8ZCmV4IHu+SbMysF+AgFxGPqJZcsSBlko3p2KsYtoqnbuYL3
-         cXZyYVlBmLkwpnn8PDjZ/BK+OIg9eY1he28fPT3I/1MV4PYw3goA8hxNuS+WsnVYKQ8/
-         QCFQ==
-X-Gm-Message-State: AAQBX9ee9/oEaTqEVr8kJ8h7jwQqJouP18cjFp3rk2n2fqqxK2aOFMV2
-        Ed6rdzLwHwjdufhO0yGNLVM=
-X-Google-Smtp-Source: AKy350b/VHvKiJPvaShg0z14CliEy1L2m0k16FmmSbuZvbcffbhf/gBX/6b4Pyl2LWtpasJ5krIkNw==
-X-Received: by 2002:a1c:7c15:0:b0:3ee:1acd:b039 with SMTP id x21-20020a1c7c15000000b003ee1acdb039mr1282321wmc.34.1681377208102;
-        Thu, 13 Apr 2023 02:13:28 -0700 (PDT)
+        bh=nzTTbhfFcZTGMDra4ZzytX8FtG7O0yt+/KOC/gcA42g=;
+        b=D1C2VtRL2eEC0YxYBtYQKM8Mn21o1of0pVF67+nHmqZhPaRkj70McQjwuBH6KDobjy
+         8dZK3cWMHIdUUagU40IXjYbG4fxaKys52EGnjAL3MopMSfpjMY4OkxyXyu4GDfrsLvo9
+         RetaB81oBzgjbehHIJ8wp5kVkpzbrlkIUuxIH5hEi2sHCjPdiN9XwRBOvGwsejhKr3Pz
+         R0icRLfiDxqsL8ja5B3STzZZ4ZEgyVXf6+teHr7JMWZByuZtTx42gy3a4Sx33wZRms49
+         GiE/VVpLP2umEssYsJL93AExJsv27uwKebsZa+0ccVzOUFLDfubHeBsQOU+1aJRt3Nig
+         28TA==
+X-Gm-Message-State: AAQBX9d3C6KtziyLoHFv29O2F3GCa1mgKQagJDCvnfTKNOpg/TAervI2
+        NRxwP6Oa8rsRrRl3OlLBLjo=
+X-Google-Smtp-Source: AKy350b+0wfw7dVL91U9xvbCROvtI06Ebusi+QNQCVM6y3b7U26QgoeOhAtqd/T8n8CMpiwbMTy4DA==
+X-Received: by 2002:a17:906:a841:b0:94a:4499:ec30 with SMTP id dx1-20020a170906a84100b0094a4499ec30mr1944498ejb.15.1681377792565;
+        Thu, 13 Apr 2023 02:23:12 -0700 (PDT)
 Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id q23-20020a7bce97000000b003e203681b26sm1258853wmj.29.2023.04.13.02.13.27
+        by smtp.gmail.com with ESMTPSA id b11-20020a17090636cb00b00930aa50372csm703184ejc.43.2023.04.13.02.23.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 02:13:27 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 11:13:26 +0200
+        Thu, 13 Apr 2023 02:23:12 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 11:23:10 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
         Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
@@ -61,18 +61,15 @@ Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] pwm: meson: make full use of common clock
- framework
-Message-ID: <ZDfHtvZawSWWGTRP@orome>
-References: <0f087629-810d-f0e0-bf0b-05ca5defc16d@gmail.com>
- <05e3b9de-ee38-97b6-7f39-5b6f7de1674f@gmail.com>
- <CAFBinCAdXE+3VrPJAoik_0TFW6TsB0033s+fTYUTNehPrn=PZg@mail.gmail.com>
+        linux-pwm@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH v2] pwm: meson: fix axg ao mux parents
+Message-ID: <ZDfJ_iaRXlXzd0PL@orome>
+References: <ffc3e4e7-b2ea-1a56-4fff-6554ad3775c0@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AfN6U5Lk+axIGN3J"
+        protocol="application/pgp-signature"; boundary="JY0L2Q8GjmC/YsxM"
 Content-Disposition: inline
-In-Reply-To: <CAFBinCAdXE+3VrPJAoik_0TFW6TsB0033s+fTYUTNehPrn=PZg@mail.gmail.com>
+In-Reply-To: <ffc3e4e7-b2ea-1a56-4fff-6554ad3775c0@gmail.com>
 User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -85,56 +82,78 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---AfN6U5Lk+axIGN3J
-Content-Type: text/plain; charset=utf-8
+--JY0L2Q8GjmC/YsxM
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 11, 2023 at 09:48:46PM +0200, Martin Blumenstingl wrote:
-> On Tue, Apr 11, 2023 at 9:26=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail=
-=2Ecom> wrote:
-> [...]
-> > +               init.name =3D name;
-> > +               init.ops =3D &clk_gate_ops;
-> > +               init.flags =3D CLK_SET_RATE_PARENT;
-> As much as I don't want it: I think we need CLK_IGNORE_UNUSED here as wel=
-l :-(
-> On GXBB, GXL and GXM SoCs the board design typically uses PWM
-> regulators (like the boards using 32-bit SoCs as well as newer boards
-> using G12A or later SoCs).
-> This means: if we enable that PWM controller and one of the channels
-> is firmware managed and the other isn't then we can end up disabling
-> the clock - taking away VCCK (which supplies the CPU) or VDDEE (which
-> supplies GPU and various other components).
-> I'd be happy if there are other suggestions around this though.
+On Sun, Apr 09, 2023 at 05:15:52PM +0200, Heiner Kallweit wrote:
+> This fix is basically the same as 9bce02ef0dfa ("pwm: meson: Fix the
+> G12A AO clock parents order"). Vendor driver referenced there has
+> xtal as first parent also for axg ao. In addition fix the name
+> of the aoclk81 clock. Apparently name aoclk81 as used by the vendor
+> driver was changed when mainlining the axg clock driver.
+>=20
+> Fixes: bccaa3f917c9 ("pwm: meson: Add clock source configuration for Meso=
+n-AXG")
+> Cc: stable@vger.kernel.org
+>=20
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  drivers/pwm/pwm-meson.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-What exactly does "firmware managed" mean? Typically we describe all
-supplies in DT to avoid these kinds of workarounds. If VCCK and/or VDDEE
-are PWM-controlled regulators that should never be turned off, can they
-not simply be added to device tree and marked as "always-on"? That would
-propagate to the PWM and make sure the corresponding clock remains
-enabled.
+This looks like it supersedes this one:
+
+	https://patchwork.ozlabs.org/project/linux-pwm/patch/e7a95baf-5f9d-be56-93=
+dc-82ca83b69c7a@gmail.com/
+
+I don't see any discussion on on that one, nor does v2 here have a
+changelog and the commit subject is slightly changed, so you're making
+it more difficult than necessary to correlate the two.
+
+Anyway, since both patches conflict, I've picked up v2. Let me know if
+that's not what you intended.
 
 Thierry
 
---AfN6U5Lk+axIGN3J
+>=20
+> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> index b5c746fab..0fe0400c2 100644
+> --- a/drivers/pwm/pwm-meson.c
+> +++ b/drivers/pwm/pwm-meson.c
+> @@ -381,7 +381,7 @@ static const struct meson_pwm_data pwm_axg_ee_data =
+=3D {
+>  };
+> =20
+>  static const char * const pwm_axg_ao_parent_names[] =3D {
+> -	"aoclk81", "xtal", "fclk_div4", "fclk_div5"
+> +	"xtal", "axg_ao_clk81", "fclk_div4", "fclk_div5"
+>  };
+> =20
+>  static const struct meson_pwm_data pwm_axg_ao_data =3D {
+> --=20
+> 2.40.0
+>=20
+
+--JY0L2Q8GjmC/YsxM
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQ3x7UACgkQ3SOs138+
-s6EBdhAAljp7Lr0PxfWyQ82h5k8GfQ/FKW8dR8JGyDEf6YXn4iIV/ewq/8o9WzjE
-M8tmZnekwmw2pZ0Lw7zOk+sX1N2RBovBd4NxnFNHSfKw8v1Iw/vj3SVZC2aD+a1I
-sAKLOvIrMNJvQSWwz2U6TcLYSKud5T42eN8Pw1QZu3kXr24tXhFWp7hpQ0YvuQCq
-oSFb6u4bta924aE16ziVZRA68edFA6K+DTDnstKh1Vrgs/KIGgPstBzScQ3uMTjg
-jTKMgaaHNp0T0WXuWEITZoH1pweJ5/sXvIRCC9TDZ1ZGIHniV2KcU3st163h5qLO
-TwrkkXSYz0DzBQRmP4YJgSR5gUXZ1jeHgka0LNSTLy+NVhm5mfwzN4lV9J8TOxTx
-N5EVrgqjDzx1wCwjb3Dj9tfm9LJBQI7YfFo1SNoM1jyBVrviVO5hikxwdWxfCgtW
-eo/CjUmRxOaZBSEFOM3OKkOBiizCaexo7rGIdi3pgk12vPVgQSaKrMackJHMZYSd
-u1N9Wfc3/vddOKzErQ5JDCGLgupYiZa0aSxz0DHVGIKFjKFuq/hoUi0ty6mnOuuH
-HTdGhtWmS/s5AjBxXQyVf0wUNjbU8J1fxNPajOjJDdgCmHgc9LPIl25BDOiUg9PX
-/ji55f15wMB4KzXDBPbD24tbGbRaBJK7wxCXuopMum4TBCAniAw=
-=FwfH
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQ3yf4ACgkQ3SOs138+
+s6HqNw//YI7ly5943Ef3PUyEnJsR3phdH4mHTCJ/u908QspsLWp9d3rwJR6bln95
+PA5S8hbymwO2EbLEW9C4XtX3SelSQqy1+DOJeDN5YuRpFRRdrlErbch1lPSNIMTm
+SK99Saho5jZe4VYZhNtMUD7vvGhcLGtgn54cBoU45dTTWJuVqLPZOPLIfvUo/jm7
+cU9fR49DhmlOSTTJrrmapKKD5Fz8ciYkHq734fQYL6KtPJjKk8fMjvDMPDDVx69F
+BOBqczdoIvKoh2u26kg6X0l9/yjrQdscaNsn5nJg4C0bydgmpuE9hideGDyIbmkS
+7/2l8gEWxznWC2hAasfVz0mCd1prH/7yJ75cbtJLjmEIQI1McUq5tu1MWg7bjink
+9PZBaOCw1nZTBCYLtDVxJN4ANQGOO+fDEW3c95vYFrIwuC+ER4EhafyOt0Mr0FX1
+jkNbIyPhvCxtq+J1RFA7ScES+HhVYyE6OHhlfCdHNSL34YGJigIEuJSbtRI4S7X6
++UrtTK3VAPkWZIjU/l1oEt7KFwzerg8S4Q6Bae80RxWpVHaP1G+2JSbnh11GXZjY
+qFHzvOan+374UyQ4xJIfZOuKivtb1v2SqQ3mRVrhkLzZkbf7oktVsUUdP3BW9vip
+zN/g2SaY8PWGWFWGzYmp/8lp8/SD2b4xeZLm1sGLzifAbr7z5sY=
+=I0Iv
 -----END PGP SIGNATURE-----
 
---AfN6U5Lk+axIGN3J--
+--JY0L2Q8GjmC/YsxM--
