@@ -2,119 +2,123 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A35B6E0CC5
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 13:38:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96EAA6E0D72
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 14:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjDMLif (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 13 Apr 2023 07:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
+        id S229876AbjDMM36 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 13 Apr 2023 08:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjDMLie (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 07:38:34 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152DC269D
-        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 04:38:32 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pmvHb-0007gS-7S; Thu, 13 Apr 2023 13:38:31 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pmvHa-00AxLD-IL; Thu, 13 Apr 2023 13:38:30 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pmvHZ-00Crf9-Q5; Thu, 13 Apr 2023 13:38:29 +0200
-Date:   Thu, 13 Apr 2023 13:38:29 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229847AbjDMM34 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 08:29:56 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C2B8A57
+        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 05:29:53 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id v10so1744134wmn.5
+        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 05:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681388991; x=1683980991;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Qp0N5R/Q4kc478mKsiwOCthcJASKN3MuwNKuLyigck=;
+        b=eKzGXjJv6ylDYcSKVMLDr6ok/cXQR6S2XL86o5MBB8dTOvOlrLK5ZVQ73WFAIZ0JpK
+         qaqBIijLeF/d1GHHelDtzxM71mj1Y3O8F+DDcZC/Gu3R1PCYY3l9yMy9OOVfEeb8q030
+         fkur217UomhsTtk5PInXJeUhWW5iugZy8yU3lfjiccFTFxkSCRhu4jDynawIsTPuKNEW
+         C8ZZobaN9Zvz3Gjz3m4G6laOV9Etp9w6+6zEaatIQQO1Tr+kSzbRrJK0QvmwtLz8NyaH
+         zIX5Q6h2SAo7FCWDmsCoUTpGeIFy5Cf8yulkim2oYgMTf7NoVpKGlejAusmvf/+MGd/c
+         +krw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681388991; x=1683980991;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Qp0N5R/Q4kc478mKsiwOCthcJASKN3MuwNKuLyigck=;
+        b=ExBffbhZvrMozTzh8YgiwDR3dxEw1lSg/iX4gtpnPa5b8V33/lhyDuJRweh9tTpjQY
+         qsF1+WE/kuQP9iifqNjtexzVhSw8qWcnweWO3gh2BQ1vcqBs9Hy9NxAtkHsVTirLONpS
+         gVPr7Kb4ecXVgQRgl1BDDFnCYrCqVaguNuNqPtzLci7DvG+vnHq9vUT8s7NfmxDPdaY1
+         SPFz0e2Mw22sZOOzqS1qbF7ytu5jkbWOXTEe4CmYdZxnvkmWCI/Q3x8KeDSkmqqRk0ky
+         lDapcpT1KVBG9FM34uEuArejyKZBqmAREEEYPDfiP0xW0Nn7lTIMx+Pl1MapILWK3xyV
+         6zrg==
+X-Gm-Message-State: AAQBX9eY/oZ/UMFSiOSf3r78cf61Olj99tgzrsuWgmsxd9vIbPaWCS3A
+        U7AJ7e20+yp9oTtIA0GKm3whzn7yLHY=
+X-Google-Smtp-Source: AKy350bcpUu9T0+OnVvYtM0Gd/smDG+XOuV+pRN2gbaUvLPAXV1Yp+ijdmAazqWdaCn3VS5w5vxx3g==
+X-Received: by 2002:a7b:c3cc:0:b0:3ef:128d:7167 with SMTP id t12-20020a7bc3cc000000b003ef128d7167mr1750833wmj.13.1681388991360;
+        Thu, 13 Apr 2023 05:29:51 -0700 (PDT)
+Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id h7-20020a05600c314700b003f07ef4e3e0sm9995313wmo.0.2023.04.13.05.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Apr 2023 05:29:51 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: Delete deprecated functions pwm_request() and
- pwm_free()
-Message-ID: <20230413113829.pm32b3mdnyu477gi@pengutronix.de>
-References: <20230412115636.3533366-1-u.kleine-koenig@pengutronix.de>
- <ZDfLyP5bP0PdBS1J@orome>
- <ZDfMF3wAfbd-1y-Z@orome>
- <ZDfMtB_lakGPDsZZ@orome>
+Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
+Subject: [PATCH] pwm: Remove unused radix tree
+Date:   Thu, 13 Apr 2023 14:29:47 +0200
+Message-Id: <20230413122947.428134-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3giti53lh6iuvrys"
-Content-Disposition: inline
-In-Reply-To: <ZDfMtB_lakGPDsZZ@orome>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+The radix tree's only use was to map PWM channels to the global number
+space. With that number space gone, the radix tree is now unused, so it
+can simply be removed.
 
---3giti53lh6iuvrys
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+---
+ drivers/pwm/core.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-On Thu, Apr 13, 2023 at 11:34:44AM +0200, Thierry Reding wrote:
-> On Thu, Apr 13, 2023 at 11:32:07AM +0200, Thierry Reding wrote:
-> > On Thu, Apr 13, 2023 at 11:30:48AM +0200, Thierry Reding wrote:
-> > > On Wed, Apr 12, 2023 at 01:56:36PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > Since commit 5a7fbe452ad9 ("backlight: pwm_bl: Drop support for leg=
-acy PWM
-> > > > probing") the last user of pwm_request() and pwm_free() is gone. So=
- remove
-> > > > these functions that were deprecated over 10 years ago in commit
-> > > > 8138d2ddbcca ("pwm: Add table-based lookup for static mappings").
-> > > >=20
-> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > > ---
-> > > >  Documentation/driver-api/pwm.rst | 13 ++++-----
-> > > >  drivers/pwm/core.c               | 49 ----------------------------=
-----
-> > > >  include/linux/pwm.h              | 13 ---------
-> > > >  3 files changed, 5 insertions(+), 70 deletions(-)
-> > >=20
-> > > There seem to be two more occurrences of pwm_free() in
-> > > drivers/pwm/core.c, but I think they can trivially be replaced by
-> > > pwm_put(). I can do that while applying, but let me know if you don't
-> > > agree.
-> >=20
-> > I also get warnings about pwm_to_device() now being unused, so I'll
-> > remove that one along with these.
->=20
-> With pwm_to_device() gone, there's now also no purpose in the pwm_tree
-> radix tree, so let me try to drop that as well.
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 9ce85c6157e4..3dacceaef4a9 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -28,12 +28,11 @@
+ static DEFINE_MUTEX(pwm_lookup_lock);
+ static LIST_HEAD(pwm_lookup_list);
+ 
+-/* protects access to pwm_chips, allocated_pwms, and pwm_tree */
++/* protects access to pwm_chips and allocated_pwms */
+ static DEFINE_MUTEX(pwm_lock);
+ 
+ static LIST_HEAD(pwm_chips);
+ static DECLARE_BITMAP(allocated_pwms, MAX_PWMS);
+-static RADIX_TREE(pwm_tree, GFP_KERNEL);
+ 
+ /* Called with pwm_lock held */
+ static int alloc_pwms(unsigned int count)
+@@ -54,14 +53,6 @@ static int alloc_pwms(unsigned int count)
+ /* Called with pwm_lock held */
+ static void free_pwms(struct pwm_chip *chip)
+ {
+-	unsigned int i;
+-
+-	for (i = 0; i < chip->npwm; i++) {
+-		struct pwm_device *pwm = &chip->pwms[i];
+-
+-		radix_tree_delete(&pwm_tree, pwm->pwm);
+-	}
+-
+ 	bitmap_clear(allocated_pwms, chip->base, chip->npwm);
+ 
+ 	kfree(chip->pwms);
+@@ -302,8 +293,6 @@ int pwmchip_add(struct pwm_chip *chip)
+ 		pwm->chip = chip;
+ 		pwm->pwm = chip->base + i;
+ 		pwm->hwpwm = i;
+-
+-		radix_tree_insert(&pwm_tree, pwm->pwm, pwm);
+ 	}
+ 
+ 	list_add(&chip->list, &pwm_chips);
+-- 
+2.40.0
 
-Huh, it seems I was too sloppy here. Thanks for cleaning up after me.
-Feel free to grab authorship of your result, given that you seem to have
-done more than me now.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---3giti53lh6iuvrys
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQ36bQACgkQj4D7WH0S
-/k5G6Af9FmEwGbW+zVQoRIATVp9loxC6Urucf7nSMsh9D1WKdp8UglGbiwVPUPMI
-NXY7Orm9CSA5bRRnURifsIwSWHSwH5Ys+3KGuJoIv30cT/mngE+EIpfjNBwZKZ1c
-8IHr9zsYLw3FHwYgEIrt9FTmAgrVRk073pF4fcKbpvhZ9dSPINDNzw6GphgRQnZa
-8379eTz+4uuMy/5Vp0r1rRWF9yYgcs4NHyqQ94DMMKJ81I0Aea8WK9wpoRI8X2BT
-txUT5FU5FshyqNGrByiEoLRdzQNx6iWo435ZqKJ6vv22n7hlzaM9TwWryEyJcDS1
-dw3FqLquzoyBan6gz0LOjJZdA8UTtg==
-=UcwA
------END PGP SIGNATURE-----
-
---3giti53lh6iuvrys--
