@@ -2,94 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E012E6E0A25
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 11:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D46EA6E0A35
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 11:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjDMJZe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 13 Apr 2023 05:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51968 "EHLO
+        id S229642AbjDMJ25 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 13 Apr 2023 05:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjDMJZd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 05:25:33 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEFE41A4
-        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 02:25:32 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id q5so8054565wmo.4
-        for <linux-pwm@vger.kernel.org>; Thu, 13 Apr 2023 02:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681377931; x=1683969931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SmM2Iumz0wCty9ffU6sJazDTRuVNx11Hj/8rUPFg/VM=;
-        b=rvDLnCyCtCM69vYo9/NJ+axluCUjrwXbd0x6w6yn8+QSHhoQdODZ8V55IcC3u7KqM7
-         bxoHBwhI+/DHEjf6SLKDvCCKZSiTdc2VJHo5zBl4krXuoMLRVFtG2y/4MyYXVhKu/i74
-         oL+6JnQyDrqG2TUHoFPsHPsUcYbFEdFnSfU5yNguULo1zCqfvp1Fa3nN+SsE6/MxvtDu
-         0FuV48NWdUnyYaXjYRL88MNiEhAdPzFMIgOFK0tNY+9O0Ou6vMhKYGmhglAzMSmFeRFK
-         6aZICtK9gQ8j8ibaBaPu5B011aKR1mFhFVjrWO5q3KV6raX1ux4oi1yDxRyqm8wsECla
-         0pBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681377931; x=1683969931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SmM2Iumz0wCty9ffU6sJazDTRuVNx11Hj/8rUPFg/VM=;
-        b=jQC9D7gqnRBnWSL8teq2gDdDD08Rc5avxB/pybY5/7eOo/bl36GU/DZ6hTqVQxSh/6
-         o1+HAS0MS5LdKGRzT+QAF4Tv2Y95esqFPf9NiHXUpf+0y73Pkl81qHarp60bHCeZm6H9
-         tiGYlwz5QIYRjpDnagW9FXbyH+qTLqA2U5P3uiBHTo+0L5m7DAFEn/4fMtEA799tyruN
-         zdY3TCxUrJPKaK3sIRYRsPsjgqWnIt8L+t3HsG9MNHSA3qERSfohxGbbG7tWp2qvil//
-         VghXjHELTX6bgIGBKBwx/BXtYYqJGs6AEWOlUkxmchnSSkzdhQvGGUmbIjgt5ND7P3sj
-         tlxw==
-X-Gm-Message-State: AAQBX9fY1Tk7RLiKrC8z6GhB8QcUsIzMBLZ7fCzC4MZbMxwRYtLeXDGt
-        PcBOhFm611qMJvBwvpfelh8=
-X-Google-Smtp-Source: AKy350bSedNi5QuhggJdNoxRcLrb4wiyesVKP7d3sWXVkEafZm+s5Ri0+xIF7kqYbPQb81iiI3rxEw==
-X-Received: by 2002:a05:600c:d9:b0:3ee:6d88:774a with SMTP id u25-20020a05600c00d900b003ee6d88774amr841701wmm.14.1681377931180;
-        Thu, 13 Apr 2023 02:25:31 -0700 (PDT)
-Received: from localhost (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id u7-20020a7bcb07000000b003ee70225ed2sm1316522wmj.15.2023.04.13.02.25.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 02:25:30 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel@lists.infradead.org, Jian Hu <jian.hu@amlogic.com>
-Subject: Re: [PATCH] pwm: meson: fix g12a ao clk81 name
-Date:   Thu, 13 Apr 2023 11:25:30 +0200
-Message-Id: <168137792161.301968.13202173892797133220.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <b53af028-28df-105a-eb50-21a1ed4e15b5@gmail.com>
-References: <b53af028-28df-105a-eb50-21a1ed4e15b5@gmail.com>
+        with ESMTP id S229615AbjDMJ24 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 05:28:56 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F106199;
+        Thu, 13 Apr 2023 02:28:54 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 461686603207;
+        Thu, 13 Apr 2023 10:28:52 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1681378133;
+        bh=XjK0zXGcRUwWwMF6tZnTtwrjb64IJRzNjt7p/8KBhjs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=d6UgCefhED/N6R8YjSiNAxuQU77pHTuH671k0sortzz+h8HWsWRqZ+jYQSW7fvRuT
+         eyERdIo/mVGeDewj1B8XzdivfyeIBoj4BbuwUO+g6g4nueknODvGQJMPlI4yxePiu7
+         NuOwzs1nxxvQLZoT6Gz6QqlumXZ/LPPtoRalL/PNZBRzWi21FDr1ERMSzf5/YdQ0ao
+         SuCRTmMDLW4w6pVFA5oYs7uzGfTMJDl8OlQ+a74HPRNcFs/xWKKxq7XUUUEEK9E3RM
+         B6DPGx+OyIBsldxVd+4s/2jbWuEmIGhyaXfSXOHhbMSK51XO+1b02CwJ3aQWBP1d/D
+         z/bAWlEu4eshg==
+Message-ID: <4a016428-be44-27e3-5bc2-dc517922fa15@collabora.com>
+Date:   Thu, 13 Apr 2023 11:28:49 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH 01/27] dt-bindings: pwm: Add compatible for MediaTek
+ MT6795
+Content-Language: en-US
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+        kernel@collabora.com, chunkuang.hu@kernel.org,
+        linux-phy@lists.infradead.org, ck.hu@mediatek.com,
+        jitao.shi@mediatek.com, houlong.wei@mediatek.com,
+        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+        vkoul@kernel.org, chunfeng.yun@mediatek.com, daniel@ffwll.ch,
+        robh+dt@kernel.org, linux-mediatek@lists.infradead.org,
+        xinlei.lee@mediatek.com, airlied@gmail.com,
+        u.kleine-koenig@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org,
+        krzysztof.kozlowski+dt@linaro.org, kishon@kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, thierry.reding@gmail.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        jassisinghbrar@gmail.com
+References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-2-angelogioacchino.delregno@collabora.com>
+ <168133318912.3190428.16120880490622098945.robh@kernel.org>
+ <5c0bc1f2-5917-ab84-8b0b-f2adc48f8be7@gmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <5c0bc1f2-5917-ab84-8b0b-f2adc48f8be7@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 11 Apr 2023 07:34:11 +0200, Heiner Kallweit wrote:
-> Fix the name of the aoclk81 clock. Apparently name aoclk81 as used by
-> the vendor driver was changed when mainlining the g12a clock driver.
+Il 13/04/23 10:52, Matthias Brugger ha scritto:
 > 
 > 
+> On 12/04/2023 23:03, Rob Herring wrote:
+>>
+>> On Wed, 12 Apr 2023 13:27:13 +0200, AngeloGioacchino Del Regno wrote:
+>>> Add a compatible string for MediaTek Helio X10 MT6795's display PWM
+>>> block: this is the same as MT8173.
+>>>
+>>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 4 +++-
+>>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>
+>> Running 'make dtbs_check' with the schema in this patch gives the
+>> following warnings. Consider if they are expected or the schema is
+>> incorrect. These may not be new warnings.
+>>
+> 
+> These are not new warnings. I think we should address them in a different patch. In 
+> my opinion it shouldn't block this patch. In the end it only add as compatible here.
+> 
 
-Applied, thanks!
+I agree. These warnings should not block this patch, as they're totally unrelated
+to it.
 
-[1/1] pwm: meson: fix g12a ao clk81 name
-      commit: d02037e2297dcb0e705bfbd6c11278b48e330f97
+Regards,
+Angelo
 
-Best regards,
--- 
-Thierry Reding <thierry.reding@gmail.com>
