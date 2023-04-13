@@ -2,178 +2,165 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A62A66E06C9
-	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 08:12:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 444FD6E095B
+	for <lists+linux-pwm@lfdr.de>; Thu, 13 Apr 2023 10:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbjDMGMB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 13 Apr 2023 02:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36106 "EHLO
+        id S229968AbjDMIwn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 13 Apr 2023 04:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjDMGMB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 02:12:01 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5BF95FC6
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 23:11:59 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id he13so12801060wmb.2
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Apr 2023 23:11:59 -0700 (PDT)
+        with ESMTP id S229881AbjDMIwj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 13 Apr 2023 04:52:39 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D9293ED;
+        Thu, 13 Apr 2023 01:52:36 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id v10so1391981wmn.5;
+        Thu, 13 Apr 2023 01:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681366318; x=1683958318;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awOm9muSY38mDgU9YNhlhDcoLFSx4493kH/RGeG3QLA=;
-        b=Lh/ncrEBpXTUpaccGXNfGHsXix7yWcntwG084k9e5GjA45WCjfU7gD1bdGYuX1Q1Me
-         /NerKj4eJgD+47lsCS52i80X1kLndjrbLQs5c2it8RpWvtNYPHXTlsPGP7je1xu23p82
-         BeHh2CdVICQz0u0kT0eiu6XoITcys/TUdjGeR4YDBynj560ib8vriCS2htv3mJWNjEs7
-         gNuFMDbR6xceaIjT1M8HxkDkBxXOIM8qQx6vCM0zUi4Mb34wXsSR/zTARO54Tf/iVm/y
-         PTpcndwh/WVyHL6nBvPp9VpCnRO6WFp72cXYlBStzkeGHcX6vKY6d2LkrRodxPCX52PF
-         YhFg==
+        d=gmail.com; s=20221208; t=1681375955; x=1683967955;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qbpMYUm2CE6fjv2A+zaOllAKnd6lk3Qd3AHGhhmkm+E=;
+        b=HnpySm5xmwPhooXdE/eWdYCyuS800PJRr0sF9uWCs073RxT9dO6p7iMXu6ILDLZ7zP
+         4d4E221WENcpoKtiiIM9zeUYH0DMw1AXa9WdXmx1n6w0fMixp23F1HBhkcDvvReyYbU/
+         QqfE2is2eHEHTcj0GysdXh7IaVfzLC4YVq8MjWSK0kg+tpCW3udF4NcPpz8NT9EazIsS
+         cD/Our85/CIKOO0lTgVqfVuRLzMAh8dkjo27ia6/HLhm0yIOPdIMtNp2Lubo+x9xQ2gX
+         eHO8Nz2s2R9eiM5qT2XBr+/lEdFPn3cCbKNE1i6m2dQtOb/wNmorAts0OIgKoKQqBuTu
+         qR8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681366318; x=1683958318;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1681375955; x=1683967955;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=awOm9muSY38mDgU9YNhlhDcoLFSx4493kH/RGeG3QLA=;
-        b=GuIK2KphKixBDKhmxa0LU49C8Vprq90/6Aj47PTZwZeJTQSa851L06+UonwzWw55PM
-         l5bepwR9xhoHETHjVUiwR2cdIhvao6lEeiOIS8dOVamMSv4yY3kiA+HLpixU7VCB21K/
-         qamq3+KQIz9zyesV8toUOHnaxisoKzB0O/NQ0ZRN5vs9bIWQIGB814O628mO16HSxa/L
-         GbSa7xrhdEVfIRyCWk/deaJpp4PoujJIw4v4HwVeIcsdi4r0sQjqoe5mE3aNHge3GmrL
-         q4d9zLxeZdDGk11VcmdhCX5j80CoJHAUr2izXPrnSzWYGLzZ1eOVabQxcX/FVIIhW1SA
-         Qz4Q==
-X-Gm-Message-State: AAQBX9e9G9+qnr2pMO7giNvSBhycLWi0qmq5/iqgGy5kLmyN11P/g8xn
-        1ZXuwjVvjdztjAVKfRtS3eU=
-X-Google-Smtp-Source: AKy350ZZtYeOpLr4TXMpC/6XFO5t2jSa5vvndPYNxpSRFPZMMtr3r9fvyXO/3/JqvwteOd2ONcfeEA==
-X-Received: by 2002:a7b:c40a:0:b0:3dc:4b87:a570 with SMTP id k10-20020a7bc40a000000b003dc4b87a570mr443880wmi.35.1681366318162;
-        Wed, 12 Apr 2023 23:11:58 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:738e:4400:9dd0:adc5:d6d8:61d8? (dynamic-2a01-0c22-738e-4400-9dd0-adc5-d6d8-61d8.c22.pool.telefonica.de. [2a01:c22:738e:4400:9dd0:adc5:d6d8:61d8])
-        by smtp.googlemail.com with ESMTPSA id c8-20020a05600c0a4800b003ee5fa61f45sm4535912wmq.3.2023.04.12.23.11.57
+        bh=qbpMYUm2CE6fjv2A+zaOllAKnd6lk3Qd3AHGhhmkm+E=;
+        b=KDCM8c+UMmG3AMuOs/ff8M8y/jwMiUCLFw4wAvYpmjc0OjpW5JeekL0Dupn53N1wbI
+         7x4tJN7Dx2m6iYLv9Ias03SWT401G3qrRk9zDaywisgz3lcy82F3xVbX4hHKLS/APX07
+         H+HmfXaE8JEWdXmiYoKtz9ALIdsqqpCHHG5l0JtyA8cLwmJeZYhYDTGQhTgV2iv5/Dmj
+         +VuAA6ZLnZL+SObBUkOhIS4gfRgGTXRbGKOl1Xic3wzEZBzTbRQTvVIOD6B45pdzs/pj
+         Ng7dsooxmc1ShknX+izI1G8Daylu3HM9JltujSFhexjyT8IkFgljWiUBhmzAoUphyykw
+         jFhA==
+X-Gm-Message-State: AAQBX9d+jWoL0V4zSPyKmUhRGmEZ4G9y7m3VvXsbDV1qEzXyrwDpLoHu
+        ET8DrDxBEm7kUVWtNU9SW4U=
+X-Google-Smtp-Source: AKy350bo2b5a9kvtAxKtfQWiGoPW5i8VySTNTjPFcwiTp3qfQEaU8P/r5OLKZVyAxMZ2gR/rW3SeaA==
+X-Received: by 2002:a1c:7701:0:b0:3ee:3d2d:841a with SMTP id t1-20020a1c7701000000b003ee3d2d841amr929838wmi.24.1681375954444;
+        Thu, 13 Apr 2023 01:52:34 -0700 (PDT)
+Received: from [192.168.0.32] ([37.222.243.26])
+        by smtp.gmail.com with ESMTPSA id l7-20020a05600c1d0700b003ee443bf0c7sm4870877wms.16.2023.04.13.01.52.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 23:11:57 -0700 (PDT)
-Message-ID: <b32bf46e-432f-22f0-63fd-123853d787e5@gmail.com>
-Date:   Thu, 13 Apr 2023 08:11:51 +0200
+        Thu, 13 Apr 2023 01:52:32 -0700 (PDT)
+Message-ID: <5c0bc1f2-5917-ab84-8b0b-f2adc48f8be7@gmail.com>
+Date:   Thu, 13 Apr 2023 10:52:28 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 01/27] dt-bindings: pwm: Add compatible for MediaTek
+ MT6795
 Content-Language: en-US
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
-References: <29973c8a-2b14-3d0c-bee8-8aff36c265e3@gmail.com>
- <12d4fbc1-8ed4-637e-32ca-2c09d25d60a6@gmail.com>
- <CAFBinCDME3=3dUx6K5iZHcr=tu6nh-Xm2NMn_VAiTcM_uZD_qQ@mail.gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 4/4] pwm: meson: make full use of common clock
- framework
-In-Reply-To: <CAFBinCDME3=3dUx6K5iZHcr=tu6nh-Xm2NMn_VAiTcM_uZD_qQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+To:     Rob Herring <robh@kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+        kernel@collabora.com, chunkuang.hu@kernel.org,
+        linux-phy@lists.infradead.org, ck.hu@mediatek.com,
+        jitao.shi@mediatek.com, houlong.wei@mediatek.com,
+        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+        vkoul@kernel.org, chunfeng.yun@mediatek.com, daniel@ffwll.ch,
+        robh+dt@kernel.org, linux-mediatek@lists.infradead.org,
+        xinlei.lee@mediatek.com, airlied@gmail.com,
+        u.kleine-koenig@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org,
+        krzysztof.kozlowski+dt@linaro.org, kishon@kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, thierry.reding@gmail.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        jassisinghbrar@gmail.com
+References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-2-angelogioacchino.delregno@collabora.com>
+ <168133318912.3190428.16120880490622098945.robh@kernel.org>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <168133318912.3190428.16120880490622098945.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 12.04.2023 23:05, Martin Blumenstingl wrote:
-> Hi Heiner,
-> 
-> On Wed, Apr 12, 2023 at 9:23 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->>
->> Newer versions of the PWM block use a core clock with external mux,
->> divider, and gate. These components either don't exist any longer in
->> the PWM block, or they are bypassed.
->> To minimize needed changes for supporting the new version, the internal
->> divider and gate should be handled by CCF too.
->>
->> I didn't see a good way to split the patch, therefore it's somewhat
->> bigger. What it does:
->>
->> - The internal mux is handled by CCF already. Register also internal
->>   divider and gate with CCF, so that we have one representation of the
->>   input clock: [mux] parent of [divider] parent of [gate]
->>
->> - Now that CCF selects an appropriate mux parent, we don't need the
->>   DT-provided default parent any longer. Accordingly we can also omit
->>   setting the mux parent directly in the driver.
->>
->> - Instead of manually handling the pre-div divider value, let CCF
->>   set the input clock. Targeted input clock frequency is
->>   0xffff * 1/period for best precision.
->>
->> - For the "inverted pwm disabled" scenario target an input clock
->>   frequency of 1GHz. This ensures that the remaining low pulses
->>   have minimum length.
->>
->> I don't have hw with the old PWM block, therefore I couldn't test this
->> patch. With the not yet included extension for the new PWM block
->> (channel->clock directly coming from get_clk(external_clk)) I didn't
->> notice any problem. My system uses PWM for the CPU voltage regulator
->> and for the SDIO 32kHz clock.
->>
->> Note: The clock gate in the old PWM block is permanently disabled.
->> This seems to indicate that it's not used by the new PWM block.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com> #
-> meson8b-odroidc1, sm1-x96-air
-> 
-> Generally I'm very happy with this - only a few small questions/comments below.
-> 
-> [...]
->> +       state->enabled = __clk_is_enabled(channel->clk) && (value & tmp) == tmp;
-> I was about to suggest that clk_hw_is_enabled() should be used instead
-> of __clk_is_enabled()
-> That would be easy for SoCs where the gate is part of the PWM IP. But
-> it would not work (at least I don't think that it would) work for the
-> newer IP that Heiner's described where the gate is part of the SoC's
-> clock controller (and thus outside the PWM controller registers). To
-> me this means that we need to keep __clk_is_enabled() here unless
-> somebody knows of a better approach.
-> 
-> The "(value & tmp) == tmp" can now be simplified to !!(value &
-> BIT(channel_data->pwm_en_bit)) as we're now only checking a single bit
-> (previously we were checking two bits in one statement, so that more
-> complex check was needed).
-> 
-> [...]
->> +               channel->gate.reg = meson->base + REG_MISC_AB;
->> +               channel->gate.bit_idx = meson_pwm_per_channel_data[i].clk_en_bit;
->> +               channel->gate.hw.init = &init;
->> +               channel->gate.flags = 0;
->> +               channel->gate.lock = &meson->lock;
->> +
->> +               channel->clk = devm_clk_register(dev, &channel->gate.hw);
-> If I recall correctly Jerome previously suggested that I should use:
-> - devm_clk_hw_register() to initially register the clock
-> - then use (for example) channel->clk = devm_clk_hw_get_clk(dev,
-> &channel->gate.hw, "pwm0")
-> 
-> It's not the most common pattern (yet) but if I recall correctly this
-> is also what the CCF maintainers agreed to be the way forward.
-> 
-One more remark/question on this pattern. In __clk_register() there's
-the following comment:
-/*
-* Don't call clk_hw_create_clk() here because that would pin the
-* provider module to itself and prevent it from ever being removed.
-*/
-I think we have the same situation here when calling devm_clk_hw_register()
-and devm_clk_hw_get_clk() both from pwm-meson. So we may not be able to
-remove module pwm-meson. Shouldn't be really relevant for us because we
-need pwm for the CPU voltage regulator and therefore have it built-in.
-But it wouldn't be nice.
 
-> 
-> Best regards,
-> Martin
 
+On 12/04/2023 23:03, Rob Herring wrote:
+> 
+> On Wed, 12 Apr 2023 13:27:13 +0200, AngeloGioacchino Del Regno wrote:
+>> Add a compatible string for MediaTek Helio X10 MT6795's display PWM
+>> block: this is the same as MT8173.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+> 
+> Running 'make dtbs_check' with the schema in this patch gives the
+> following warnings. Consider if they are expected or the schema is
+> incorrect. These may not be new warnings.
+> 
+
+These are not new warnings. I think we should address them in a different patch. 
+In my opinion it shouldn't block this patch. In the end it only add as 
+compatible here.
+
+Regards,
+Matthias
+
+> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> This will change in the future.
+> 
+> Full log is available here: https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230412112739.160376-2-angelogioacchino.delregno@collabora.com
+> 
+> 
+> pwm@1100e000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	arch/arm64/boot/dts/mediatek/mt8183-evb.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-burnet.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-cozmo.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-damu.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14-sku2.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku6.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku7.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper-sku16.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-kappa.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-kenzo.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow-sku0.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow-sku1.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu-sku22.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama-sku16.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama-sku272.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama-sku288.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama-sku32.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku0.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-kukui-krane-sku176.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dtb
+> 
+> pwm@1400a000: compatible: 'oneOf' conditional failed, one must be fixed:
+> 	arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb
+> 	arch/arm/boot/dts/mt7623n-rfb-emmc.dtb
+> 
+> pwm@1401e000: compatible: 'oneOf' conditional failed, one must be fixed:
+> 	arch/arm64/boot/dts/mediatek/mt8173-elm.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8173-evb.dtb
+> 
+> pwm@1401f000: compatible: 'oneOf' conditional failed, one must be fixed:
+> 	arch/arm64/boot/dts/mediatek/mt8173-elm.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dtb
+> 	arch/arm64/boot/dts/mediatek/mt8173-evb.dtb
+> 
