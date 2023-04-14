@@ -2,101 +2,111 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8D776E20CE
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 12:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEAD56E2131
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 12:44:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjDNKbo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Apr 2023 06:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36766 "EHLO
+        id S230303AbjDNKoP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Apr 2023 06:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230032AbjDNKbn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 06:31:43 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C55F5B98
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 03:31:41 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50674656309so1002853a12.0
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 03:31:41 -0700 (PDT)
+        with ESMTP id S230268AbjDNKoO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 06:44:14 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2820E3584
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 03:44:08 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id l18so16961831wrb.9
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 03:44:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681468300; x=1684060300;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1720p3siIfGtX4Ig+Z8rM9FJYarwB+pzhTTSt4MACL8=;
-        b=P4W8iZ2w1Gh7w85Jw+AojjPgK8APjJ7qSz1fTCyoPkCa8pfiyXaWxx90phdGQQOHuu
-         bPac1TD/9gNZKaxRbz72Wunu/xHXHKFL4Cjd+Kbo52qxYaxOIcxUROS9Zy3LzFzKcr5I
-         vrNiZB9B8jI3QK3Thuhu/5A0m1jUs5B6xfgGgfbTJB7LU72BfxDmi6sw0t1l9pGk3YQp
-         jJ05crgXl9OPB3wfvTnJ0+FiJaAaNf5r2bwoioghBIUqWem/txWIR74BMuNN6nnS29eV
-         FGQJ/+bVKmWcbBYbm982gzUtSJCvXphxxoWHiJskFaVd/XvHtsbTh68neo11aAgkcmFw
-         tzaw==
+        d=gmail.com; s=20221208; t=1681469046; x=1684061046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S1Mx0G1Wi3Wja8qB0WUph0r603HKwZrefEqAcTGE6Jo=;
+        b=iX9Y4vtyU3Dor44fU8MPc9+r3GFr+5QmwwnvrDfsUY0eM+B27G0WQs8qlzd8NoLr/O
+         ukeOOLxTycVwDGn1nwJ3HPkcnxh6ESSMMdL/Bq4FJ0crtkhLcfgngOcQcYUFsM38lEfO
+         jN9eaRNgzC3YHauiXGYByWC/XHt9klV9jy1tVU4Wq+mREXlctDnbwn2MTq+T8FUx7duB
+         BbeFiOqx16xrp8534R0v2GlS0KMwWJ/XULd5xyHaUElyLmBr9zyTgvjSVTbm1Ya0FGwl
+         4ujLRaP55/tp5HuHQwuQdBVZ3bMP8+MgZhT1cOq1RJT0I2fAVGD7fn8KxnL/993f4FBv
+         GgXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681468300; x=1684060300;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1720p3siIfGtX4Ig+Z8rM9FJYarwB+pzhTTSt4MACL8=;
-        b=Yb0y7Y3hUijJCmS7hk4gosfdz/5DM2ETfjOiODZAeRcBz5/RWsHa1+Q5+y9e+0x0uh
-         tCi1mYGUB1DN+UnveFa0fAvxW2gUFBfGsSgsOidHMlUO35+kSBJ6CeSWf/lJTzzGWmOa
-         y8sxSMkNmwvxPnLnfCX2tfv7LvUK2lRQ7vQn7VdGhm/R4uQS6JTXgK+1nvZxE9oERK/p
-         nYYI+eo77ZgT7ODHdK/YVHuvpNUDn6sNz4zuvWl6LI4ILV9krXhvKMaGHCEyfVJPYvZg
-         aYt98ieBovQkUk+YIE3bAg3z4R3EgXwZvhtPORSfImJjBxs8f/Avb8AoJXORsmUb0Q4P
-         pn+A==
-X-Gm-Message-State: AAQBX9dOSjahPzO0VaLDvwbyCOjCada6J3f6aD3CDhGGH/pHMBtXUlag
-        EP6Mh8xOCFqoJhI9cu1E+wTi6w==
-X-Google-Smtp-Source: AKy350ZIjMP6TMSw+k6xUakCFEXrjNxzNtDnPVbQjujlC0FIdzUT/htNABiisXWE6rAig7qQ68+/Ig==
-X-Received: by 2002:aa7:d947:0:b0:501:cf67:97f3 with SMTP id l7-20020aa7d947000000b00501cf6797f3mr5612068eds.25.1681468299842;
-        Fri, 14 Apr 2023 03:31:39 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:40b9:8c57:b112:651d? ([2a02:810d:15c0:828:40b9:8c57:b112:651d])
-        by smtp.gmail.com with ESMTPSA id d25-20020a05640208d900b004fa99a22c3bsm1949428edz.61.2023.04.14.03.31.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Apr 2023 03:31:39 -0700 (PDT)
-Message-ID: <eea67985-261f-6ce0-031e-2acf0e682375@linaro.org>
-Date:   Fri, 14 Apr 2023 12:31:37 +0200
+        d=1e100.net; s=20221208; t=1681469046; x=1684061046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S1Mx0G1Wi3Wja8qB0WUph0r603HKwZrefEqAcTGE6Jo=;
+        b=BYtlLKo8emRworXbr3MakhEj181Im0NHgUfW7WtPyzlkWAdxFkdVeF037iQFrGWwx8
+         mu/oUqhzoWLW3J13pdLPm4RoLeBCcWiBWa6JXJh+d/67yZ/ZWGnjOvy+8duKe8lTTTf/
+         JUCJIkw0ktIK2ueSoPscOt6V62SP6k0l3mC/n85bhCDKzLhxvPJ3/sEHGaZuyMpv5Ofu
+         2yVHTIu9wO63mLQaHVUwfIiB+ORecGkOQ3LusbmeBiE+9ft9sy+8MaV/gs/I6XuQUNVx
+         70JKXfcTTE84BXMyZgoZ/bqtNIqTxsDvhCN40m84r6NS4mC2rSZ+M7TmaLSpPcOWAHSl
+         a4eg==
+X-Gm-Message-State: AAQBX9fp2mJKNbT5/W/IQvjdA1oH0YcwDvZHqu6OKV0231bXSJP9Rt/y
+        z+He4O6qoQhQWUtZMp74iIoLS5ga+Ac6Tve+w7s6Lpww
+X-Google-Smtp-Source: AKy350ZdhUr2Cpv0QHQOKhb5hcKeT9l3GdwL9KHI+fokT6KZ9h2S4CQ6s52YrBj9GPrXlZ/eOQJer5A0SLN8ZhKSt5o=
+X-Received: by 2002:a5d:4248:0:b0:2ce:ac97:6f51 with SMTP id
+ s8-20020a5d4248000000b002ceac976f51mr927386wrr.13.1681469046398; Fri, 14 Apr
+ 2023 03:44:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH 01/27] dt-bindings: pwm: Add compatible for MediaTek
- MT6795
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, matthias.bgg@gmail.com
-Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        jassisinghbrar@gmail.com, chunfeng.yun@mediatek.com,
-        vkoul@kernel.org, kishon@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, chunkuang.hu@kernel.org,
-        ck.hu@mediatek.com, jitao.shi@mediatek.com,
-        xinlei.lee@mediatek.com, houlong.wei@mediatek.com,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org,
-        kernel@collabora.com, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-2-angelogioacchino.delregno@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230412112739.160376-2-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20230412115636.3533366-1-u.kleine-koenig@pengutronix.de>
+ <ZDfLyP5bP0PdBS1J@orome> <ZDfMF3wAfbd-1y-Z@orome> <ZDfMtB_lakGPDsZZ@orome> <20230413113829.pm32b3mdnyu477gi@pengutronix.de>
+In-Reply-To: <20230413113829.pm32b3mdnyu477gi@pengutronix.de>
+From:   Thierry Reding <thierry.reding@gmail.com>
+Date:   Fri, 14 Apr 2023 12:43:55 +0200
+Message-ID: <CA+PwDYexBPsZYZ0-SVgOJMOHYUJTjq0Adu8xxm0vap3S_LYKLw@mail.gmail.com>
+Subject: Re: [PATCH] pwm: Delete deprecated functions pwm_request() and pwm_free()
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for MediaTek Helio X10 MT6795's display PWM
-> block: this is the same as MT8173.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+On Thu, Apr 13, 2023 at 01:38:29PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> On Thu, Apr 13, 2023 at 11:34:44AM +0200, Thierry Reding wrote:
+> > On Thu, Apr 13, 2023 at 11:32:07AM +0200, Thierry Reding wrote:
+> > > On Thu, Apr 13, 2023 at 11:30:48AM +0200, Thierry Reding wrote:
+> > > > On Wed, Apr 12, 2023 at 01:56:36PM +0200, Uwe Kleine-K=C3=B6nig wro=
+te:
+> > > > > Since commit 5a7fbe452ad9 ("backlight: pwm_bl: Drop support for l=
+egacy PWM
+> > > > > probing") the last user of pwm_request() and pwm_free() is gone. =
+So remove
+> > > > > these functions that were deprecated over 10 years ago in commit
+> > > > > 8138d2ddbcca ("pwm: Add table-based lookup for static mappings").
+> > > > >
+> > > > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix=
+.de>
+> > > > > ---
+> > > > >  Documentation/driver-api/pwm.rst | 13 ++++-----
+> > > > >  drivers/pwm/core.c               | 49 --------------------------=
+------
+> > > > >  include/linux/pwm.h              | 13 ---------
+> > > > >  3 files changed, 5 insertions(+), 70 deletions(-)
+> > > >
+> > > > There seem to be two more occurrences of pwm_free() in
+> > > > drivers/pwm/core.c, but I think they can trivially be replaced by
+> > > > pwm_put(). I can do that while applying, but let me know if you don=
+'t
+> > > > agree.
+> > >
+> > > I also get warnings about pwm_to_device() now being unused, so I'll
+> > > remove that one along with these.
+> >
+> > With pwm_to_device() gone, there's now also no purpose in the pwm_tree
+> > radix tree, so let me try to drop that as well.
+>
+> Huh, it seems I was too sloppy here. Thanks for cleaning up after me.
+> Feel free to grab authorship of your result, given that you seem to have
+> done more than me now.
 
+I've applied this now, thanks.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Thierry
