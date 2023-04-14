@@ -2,64 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 898226E1E56
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 10:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CF156E1E60
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 10:34:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbjDNIbH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Apr 2023 04:31:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37716 "EHLO
+        id S229760AbjDNId7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Apr 2023 04:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230243AbjDNIa4 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 04:30:56 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A0859ED
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:30:55 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pnEp5-0004l4-Vm; Fri, 14 Apr 2023 10:30:24 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pnEp2-00B9ki-OF; Fri, 14 Apr 2023 10:30:20 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pnEp1-00D6uj-Ur; Fri, 14 Apr 2023 10:30:19 +0200
-Date:   Fri, 14 Apr 2023 10:30:19 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, matthias.bgg@gmail.com,
-        p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+        with ESMTP id S229446AbjDNId6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 04:33:58 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8E035B1
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:33:57 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5066ce4f725so1281174a12.1
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681461236; x=1684053236;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NpwShvISTcTE3K551Ap7usqhXOxNcMryVkJfhLZoUUQ=;
+        b=gsiPpWBp2wpRZMjngR/LlRcMXgtQhIJMpe1zxLflCmmCEgZt1OKJwCaaOuy1DRfeG4
+         8Btrq6P7SzcRIEwS+LzlJZ7Xy8WKZllnDewpxsObInwk1yG9iMGXgLwLfVQrVvsmQ3l8
+         GRnVASeSZv/aJAIJZcH2Tq5EIEKvmGeMwVpgmsKj2nG6SkyJk6BLzVeqL1fq/ClPJpAL
+         D2HXXK5q+Sm/lZ+t6o/2LhFPgSoeb9zXxR7qfaDZKOqyccvzAfDms7EFm1rUOy0oT0pa
+         S8ZqPM1ighYnFYjjvIwJuXJL4VsoiUOYj9wFcvl7d5v+aT2h15sOyAHO8r3o7TYGV/L8
+         GreA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681461236; x=1684053236;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NpwShvISTcTE3K551Ap7usqhXOxNcMryVkJfhLZoUUQ=;
+        b=bIV6ceVtF/MvFG0biQuRIuzlflFprIBMTlGoFOT+bo6M81h5Bwq6uqMf0fMyDSh4ou
+         pJwXAYzyMOzEPWBbABjGTgjUM5bCOjjJQLe+LzXc1J742c6i8sHKsuUL2aYw+P9yzzhJ
+         82KiEn18Z+PItYjedXmAXmuskqsEyKNjaL8zsIt8nYCb3lCjcufWO+6eAr9TjSjoOOFb
+         hvOTMiuFVdogsSzcybyKKo/Gfrlebql6s8FXeWx+IKyjQxjGKOXUf2NiTCQDG0vFvu2B
+         CgzR2AkddktaicVRokzasZvs7WMxc/MUbqJrheFyR/nMUo4lDeECkZMRVT026PiYh7vJ
+         3a/w==
+X-Gm-Message-State: AAQBX9dgAqzQOPCwF0jSV9W/RNJybTekU+683DjTsAslCmcLhYFypu+E
+        RCQ4N6TTlUVCqfigl8guLKhUGQ==
+X-Google-Smtp-Source: AKy350ak3cqtwXDorNJtScCLcUQuNv92fnfl8eFxO84dV/0O6W4+Gjg7xHm2TDj2lqckrpNVg9kccw==
+X-Received: by 2002:aa7:c7d4:0:b0:506:8470:c323 with SMTP id o20-20020aa7c7d4000000b005068470c323mr823188eds.24.1681461236235;
+        Fri, 14 Apr 2023 01:33:56 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:8a60:6b0f:105a:eefb? ([2a02:810d:15c0:828:8a60:6b0f:105a:eefb])
+        by smtp.gmail.com with ESMTPSA id 15-20020a170906208f00b0094a511b9e6csm2117677ejq.139.2023.04.14.01.33.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Apr 2023 01:33:55 -0700 (PDT)
+Message-ID: <b573ddb8-3909-998d-f051-6a3c4af1c629@linaro.org>
+Date:   Fri, 14 Apr 2023 10:33:54 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH 11/27] dt-bindings: display: mediatek: merge: Add
+ compatible for MediaTek MT6795
+Content-Language: en-US
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>, matthias.bgg@gmail.com
+Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         jassisinghbrar@gmail.com, chunfeng.yun@mediatek.com,
         vkoul@kernel.org, kishon@kernel.org, thierry.reding@gmail.com,
-        chunkuang.hu@kernel.org, ck.hu@mediatek.com,
-        jitao.shi@mediatek.com, xinlei.lee@mediatek.com,
-        houlong.wei@mediatek.com, dri-devel@lists.freedesktop.org,
+        u.kleine-koenig@pengutronix.de, chunkuang.hu@kernel.org,
+        ck.hu@mediatek.com, jitao.shi@mediatek.com,
+        xinlei.lee@mediatek.com, houlong.wei@mediatek.com,
+        dri-devel@lists.freedesktop.org,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 01/27] dt-bindings: pwm: Add compatible for MediaTek
- MT6795
-Message-ID: <20230414083019.cpomx37tax4ibe5u@pengutronix.de>
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-2-angelogioacchino.delregno@collabora.com>
- <aaeeb18d-f8e8-d6c1-1272-e5b797554b9e@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="meuxombxxc4zwoxv"
-Content-Disposition: inline
-In-Reply-To: <aaeeb18d-f8e8-d6c1-1272-e5b797554b9e@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+ <20230412112739.160376-12-angelogioacchino.delregno@collabora.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230412112739.160376-12-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,70 +88,14 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
+> Add a compatible string for MediaTek Helio X10 MT6795's MERGE block: this
+> is the same as MT8173.
+> 
 
---meuxombxxc4zwoxv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 14, 2023 at 10:21:05AM +0200, Krzysztof Kozlowski wrote:
-> On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> > Add a compatible string for MediaTek Helio X10 MT6795's display PWM
-> > block: this is the same as MT8173.
-> >=20
-> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@co=
-llabora.com>
-> > ---
-> >  Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.ya=
-ml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> > index 0088bc8e7c54..153e146df7d4 100644
-> > --- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-> > @@ -22,7 +22,9 @@ properties:
-> >            - mediatek,mt8173-disp-pwm
-> >            - mediatek,mt8183-disp-pwm
-> >        - items:
-> > -          - const: mediatek,mt8167-disp-pwm
-> > +          - enum:
-> > +              - mediatek,mt6795-disp-pwm
-> > +              - mediatek,mt8167-disp-pwm
->=20
-> This does not look correct. You do not add compatible, you replace
-> breaking all mt8167-disp-pwm. At least it looks like this from context.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I thought the old semantic to be:
+Best regards,
+Krzysztof
 
-	"mediatek,mt8167-disp-pwm"
-
-and the new
-
-	"mediatek,mt6795-disp-pwm" or "mediatek,mt8167-disp-pwm"
-
-=2E What am I missing?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---meuxombxxc4zwoxv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQ5DxoACgkQj4D7WH0S
-/k4b0gf/XGg5FqG1Mgkx3HAKSgi3PZuY2KSNIop4uRKh9jD6sSxX8ZOB5wNtwFbz
-OwOpF/4bmEy9R4vW++134sQENrXwVv2QR8aMaolP298zl6s+qqTm1/8USwc3TVep
-kTXMWWKuKFTBbj2viZrKSJUBT7C7I+VPcblxqtQnYe9AUZYJRCtLalvkECL+FgiZ
-EbKGM99/7nbD7NPk33LTt0uEiaBrWoe7p4ehasD9uVW/7dhZAs44xQLFOR+XiT4U
-Upy4cMJQtRqfISF44KBNw0Bm2Rm+Tqw3NoKTtPOQ1C36xzTHBnC+hp8ZoPFR/dYo
-T9uMy4x52AKlzE9EAH2T/lOj/Rs5uQ==
-=6UO4
------END PGP SIGNATURE-----
-
---meuxombxxc4zwoxv--
