@@ -2,66 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F4776E2A1F
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 20:33:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 300AA6E2AB4
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 21:39:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbjDNSdn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Apr 2023 14:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59824 "EHLO
+        id S229920AbjDNTje (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Apr 2023 15:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjDNSdm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 14:33:42 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F534EDD
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 11:33:41 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id rp27so10846282ejb.12
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 11:33:41 -0700 (PDT)
+        with ESMTP id S229468AbjDNTje (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 15:39:34 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F0149EA
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 12:39:32 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-50685f1b6e0so655768a12.0
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 12:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1681497219; x=1684089219;
+        d=googlemail.com; s=20221208; t=1681501171; x=1684093171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eIf6PYuTjDTDHZxGxsSMTjaI/J6LADqJdodTRE67zC4=;
-        b=BWz02PudPMpPBmM3O7sRMjTt+Erp3EezqseLR6UBuN2fYZMcS2FlW71o3bAAYmsGwQ
-         eElZGlGM5DnW4Um2jxqed5mn7CA/JIWIULrCSSNBruZOGqVholmRgo/1NPNrobho3CX5
-         1sQAY43kep/S5g21zAsYkKKPAmeGu+/DvnOmDwWiqRJuTBIguMjBR1zVAdtk5S6J1L/9
-         3gZB+MX55jAjRuSgzxfHutPh7DLsYWkOn4iE85AQo1iGbtUqH5daEL6HkDJy2WA9V+v4
-         THZDWGDTOs/uZI1jJO+LJLyHDd5Fx7ooOVxej/OFCzM6OJLGbF+M15wHkc8pfUCOkrqN
-         QTlg==
+        bh=nOUCnEhiDn9WO9Wj97pnKuh3/rJWPv57bu1ARRp0RwI=;
+        b=HJQS/icdi5x4jS91dUpb6gdjgmoP4TP+3VSr6r0POjnslRTT3xdJ/vnI4VLpa7iC0o
+         DL3YTmT8GbneLc/Gbr1VA4xT8I7Id/yP3h1ziUI2C7iNUyaD+M4moC7UlGqC4qvF39d5
+         YW1bxwKmyhOGtUQvm+O1saExy+zMR+ILlNZ+wiCGv+EUKb+x1X7blDWEos8pPvQS2UMq
+         hnwGfet1tT71lOQDWT+UDixuiMdl8Wb7ka2s6UDNIsCEc/trlQYNmxBjkPIQ1scJIZm2
+         MAT/o0b/bHLZCYIq/A1pu874es6mabUYsxWx1PCE8C+jpkXrahpYi/GP04uLqa9ZfbGf
+         cBOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681497219; x=1684089219;
+        d=1e100.net; s=20221208; t=1681501171; x=1684093171;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eIf6PYuTjDTDHZxGxsSMTjaI/J6LADqJdodTRE67zC4=;
-        b=Ajy8LgV56HNXfnY5mJhcavM/Ou/i01xeLVlnRmeezdcs2pjXpkZ9qlRIe/urlQpE5c
-         hneuJT3qX/nKDzQS+OgO/w3Y2ls08FIAF9ECShIQD6IFkAEaOB0WyMXm0Kv4Z17NHDDF
-         hnzIIRMaZuo1BwkyyuL0blMVonGtZQoDOF4GBjEwoyQPxch/jiACfM9i0ky6rI6nfKgT
-         UKR1Eb5fZ7APJZfvCs13G/hAm56tIV8KccGfa/P3tkr8+f+Ca0EDDpA8Ax8wnxVWmt/G
-         SPKuMZFqKM9fEpSIExIZPUisav3m1P4lnojgjRIR84GdAbT0777CjyRW77kA+BI5bI2Q
-         14Qw==
-X-Gm-Message-State: AAQBX9cBdFkFQJXzfFCmFSJuBqKdFGB0TiebxSQSK0tbFiFsK8zVzEUv
-        XgRvdwdYZMp0e2akODWuuXf5ABEjxpY5CgCRqxk=
-X-Google-Smtp-Source: AKy350YLXEmAtJNKJkWEz0hfaThJ0i/fMSrBL73kyK/Fo8i+L6Gtxeq6N1a2coyzpmofmBTresfqmpVzK2LvD4vlm/o=
-X-Received: by 2002:a17:906:af05:b0:933:1b05:8851 with SMTP id
- lx5-20020a170906af0500b009331b058851mr78793ejb.16.1681497219400; Fri, 14 Apr
- 2023 11:33:39 -0700 (PDT)
+        bh=nOUCnEhiDn9WO9Wj97pnKuh3/rJWPv57bu1ARRp0RwI=;
+        b=J7IYJAAcLtspfczYTWqEoQ7MjRYdZeG/laYyAjgmgldzultQ1NNJoQdHJ2mDxBYTTz
+         T+eHk/y6+cq6LY2qLQtvKTt1gt/wz0KW0t6CZZxOvD3cBQoAcaZ2B6e5nmpLzdk6SoGz
+         XBHpx9dypxfdiDlN2DyKLoTa/gn0h+YXEJmMMu9IjMrO9ZApW6KPJtO+h1WP1KUzN7tx
+         O1/XFhlbvVY3lr+MR9BNwEBWQHn2UIiyX1RaTyRbdmut+9X65M7VtzWF0zfo2vN4IpJr
+         ZxrvQ9H6MmjwC1bCvm4qD4P1SlqGWnvXl2vEet//ogVvtZA39XG5TiJSyy6ROYOI+wpB
+         fAtg==
+X-Gm-Message-State: AAQBX9cUw08EQBcdjAEJTjahg0YV83n5BqH/eODYTzL5XoKzyRD7wIvO
+        qTkKnqKRHWzdCacMrNGzrokdkULTDxjUMzdXqoc=
+X-Google-Smtp-Source: AKy350aOcGRUdnjHrdFZhalOBxp4kTr1zQnbUAi69XwVgFFazQRQ74ID+kdnjS8NgtA1ov6R2/PZCLHq6F6LZmQcYA0=
+X-Received: by 2002:a05:6402:1489:b0:506:8dba:bd71 with SMTP id
+ e9-20020a056402148900b005068dbabd71mr935285edv.27.1681501171316; Fri, 14 Apr
+ 2023 12:39:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <0f087629-810d-f0e0-bf0b-05ca5defc16d@gmail.com>
- <05e3b9de-ee38-97b6-7f39-5b6f7de1674f@gmail.com> <CAFBinCAdXE+3VrPJAoik_0TFW6TsB0033s+fTYUTNehPrn=PZg@mail.gmail.com>
- <ZDfHtvZawSWWGTRP@orome>
-In-Reply-To: <ZDfHtvZawSWWGTRP@orome>
+References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com> <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
+In-Reply-To: <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 14 Apr 2023 20:33:28 +0200
-Message-ID: <CAFBinCBNA_AWy63P9RwSU98xNJ1-F8KHJWm9Dq1kmrZ7aFbpJw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] pwm: meson: make full use of common clock framework
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
+Date:   Fri, 14 Apr 2023 21:39:20 +0200
+Message-ID: <CAFBinCCzMdQZ4mDF7SEZKHc01MPSepxdzYa+j7G-qDXe5-kBVA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock framework
+To:     Heiner Kallweit <hkallweit1@gmail.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
@@ -78,90 +76,73 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Thierry and Heiner,
+Hello Heiner,
 
-On Thu, Apr 13, 2023 at 11:13=E2=80=AFAM Thierry Reding
-<thierry.reding@gmail.com> wrote:
->
-> On Tue, Apr 11, 2023 at 09:48:46PM +0200, Martin Blumenstingl wrote:
-> > On Tue, Apr 11, 2023 at 9:26=E2=80=AFPM Heiner Kallweit <hkallweit1@gma=
-il.com> wrote:
-> > [...]
-> > > +               init.name =3D name;
-> > > +               init.ops =3D &clk_gate_ops;
-> > > +               init.flags =3D CLK_SET_RATE_PARENT;
-> > As much as I don't want it: I think we need CLK_IGNORE_UNUSED here as w=
-ell :-(
-> > On GXBB, GXL and GXM SoCs the board design typically uses PWM
-> > regulators (like the boards using 32-bit SoCs as well as newer boards
-> > using G12A or later SoCs).
-> > This means: if we enable that PWM controller and one of the channels
-> > is firmware managed and the other isn't then we can end up disabling
-> > the clock - taking away VCCK (which supplies the CPU) or VDDEE (which
-> > supplies GPU and various other components).
-> > I'd be happy if there are other suggestions around this though.
->
-> What exactly does "firmware managed" mean? Typically we describe all
-> supplies in DT to avoid these kinds of workarounds. If VCCK and/or VDDEE
-> are PWM-controlled regulators that should never be turned off, can they
-> not simply be added to device tree and marked as "always-on"? That would
-> propagate to the PWM and make sure the corresponding clock remains
-> enabled.
-Most Amlogic boards use PWM-controlled regulators. There's three SoC
-generations I know of that are "special" when it comes to managing
-these regulators (and CPU clocks) though.
-Let's start with the simple ones: Meson8/8b/8m2, G12A, G12B, SM1 (and
-I assume newer generations as well): here the PWM regulators are
-managed by Linux.
-Then there's the special cases: GXBB, GXL and GXM which run a SCPI
-firmware for managing the CPU clocks, regulators and suspend.
+On Thu, Apr 13, 2023 at 7:55=E2=80=AFAM Heiner Kallweit <hkallweit1@gmail.c=
+om> wrote:
+[...]
+> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Unfortunately I have some bad news and I need to take back my Tested-by :-(
+Previously my test was: cycle through all available CPU frequencies
+while stressing the CPU.
+My assumption was: if the system doesn't lock up everything's fine
+because we have a high enough voltage.
 
-SCPI firmware is running in the "secure world", while Linux is running
-in the "normal world".
-I don't know if there's boards with secure boot that lock Linux out
-from the PWM and CPU clock registers.
-This means: so far we've left any PWM controller settings that relate
-to the regulators up to the SCPI firmware, not messing with any of the
-registers from Linux.
+This evening however I got a memory corruption error while trying to
+log in via UART - which I thought was strange.
+So I connected my logic analyzer to my Odroid-C1 and did some experiments:
 
-My concern is for example with the Khadas VIM2, see it's schematics [0] pag=
-e 4:
-- PWM_C is used to manage the VDDEE regulator (I suspect that there's
-a typo though and it should be called VDDEE_PWM_C, but the schematics
-state that the signal is called "VDDEE_PWM_D")
-- PWM_D can routed to the GPIO headers
-Now if a user enables &pwm_cd (the PWM controller responsible for
-channel PWM_C and PWM_D) to use PWM_D on the pin header we don't want
-to turn off PWM_C by accident.
-Turning PWM_C off by accident can happen if we register the clock gate
-and don't have a consumer for it. CCF (common clock framework) can
-then just turn off that clock because it's unused. This would lock up
-the board because VDDEE is used for critical functionality on the SoC.
+period =3D 30518, duty cycle =3D 15259 (typically used for the 32kHz
+output to the SDIO wifi chip)
+before your patches / after applying your patches:
+PWM: duty cycle: 50.000000% / 50.000000%
+PWM: period: 30.6 =C2=B5s / 30.5 =C2=B5s
+Timing: Time: 15.292 =C2=B5s (65.395 kHz) / 15.250 =C2=B5s (65.574 kHz)
+Timing: Average: 15.296 =C2=B5s (65.377 kHz) / 15.264 =C2=B5s (65.513 kHz)
+driver debug messages with your patches applied:
+fin_freq: 850000000 Hz
+period=3D30518 cnt=3D25940
+duty=3D15259 duty_cnt=3D12970
 
-Two extra questions from Heiner:
-> I check regarding Thierry's comment and found the vddcpu
-> pwm-regulators described in the DT's. Is your concern that
-> not for all boards the vddcpu pwm-regulator is described in
-> the DT?
-Correct, boards that have the pwm-regulators described in their .dts
-(typically the boards using a Meson8/8b/8m2, G12A, G12B or SM1 SoC)
-are not a problem.
-Only the ones that don't describe the pwm-regulators in their .dts are
-an issue as these are managed by the SCPI firmware.
+Then I tried period =3D 12218, duty cycle =3D 0 (typically used for the
+highest CPU voltage):
+before your patches / after applying your patches:
+PWM: duty cycle: 0.338983% / n/a (constant low output)
+PWM: period: 12.3 =C2=B5s / n/a
+Timing: Time: 12.250 =C2=B5s (81.633 kHz) / n/a
+Timing: Average: 6.148 =C2=B5s (162.668 kHz) / n/a
+driver debug messages with your patches applied:
+fin_freq: 850000000 Hz
+period=3D12218 cnt=3D10385
 
-> AFAICS pwm channels are independent. How can switching
-> off the clock for one channel affect the other channel?
-It's not about one channel affecting the other. My thought is that
-CCF's "disabled unused clocks" feature will turn off the clock if it's
-not used. Since SCPI firmware uses it, Linux doesn't know that CCF may
-disable the clock unless CLK_IGNORE_UNUSED is set.
+Finally I tried period =3D 12218, duty cycle =3D 12218 (typically used for
+the lowest CPU voltage):
+before your patches / after applying your patches:
+PWM: duty cycle: 99.661017% / n/a (constant low output)
+PWM: period: 12.3 =C2=B5s / n/a
+Timing: Time: 12.250 =C2=B5s (81.633 kHz) / n/a
+Timing: Average: 6.148 =C2=B5s (162.668 kHz) / n/a
+driver debug messages with your patches applied:
+fin_freq: 850000000 Hz
+period=3D12218 cnt=3D10385
 
-I hope this makes sense. If you have any additional questions then
-feel free to ask.
+After seeing the constant low output with period 12218 I realized that
+my previous test was no good: the CPU was fed the highest possible
+voltage all the time.
+It's not clear to me why period 12218 would give no PWM output at all
+while period 30518 works fine.
+I did an experiment by removing CLK_SET_RATE_PARENT from the divider's
+init.flags -> now XTAL (24MHz) is the only possible clock (it's the
+hardware default). It does indeed bring back the exact same results as
+before (where the XTAL clock was also used; with the changes from this
+series FCLK_DIV3 is now chosen, which runs at 850MHz).
+
+Do you have any idea what could cause this?
+The FCLK_DIV3 input seems to work as otherwise period 30518 would also not =
+work.
+The calculated values also look sane, so it's not that we have some
+32-bit overflow (as I'm testing on a 32-bit Meson8b SoC).
 
 
 Best regards,
 Martin
-
-
-[0] https://dl.khadas.com/products/vim2/schematic/vim2_sch_v12.pdf
