@@ -2,59 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CF156E1E60
-	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 10:34:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6D1F6E1E64
+	for <lists+linux-pwm@lfdr.de>; Fri, 14 Apr 2023 10:34:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229760AbjDNId7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 14 Apr 2023 04:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
+        id S229853AbjDNIeM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 14 Apr 2023 04:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjDNId6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 04:33:58 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8E035B1
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:33:57 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5066ce4f725so1281174a12.1
-        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:33:57 -0700 (PDT)
+        with ESMTP id S229820AbjDNIeL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 14 Apr 2023 04:34:11 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A7C7698
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:34:08 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id kt6so5599297ejb.0
+        for <linux-pwm@vger.kernel.org>; Fri, 14 Apr 2023 01:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681461236; x=1684053236;
+        d=linaro.org; s=google; t=1681461246; x=1684053246;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NpwShvISTcTE3K551Ap7usqhXOxNcMryVkJfhLZoUUQ=;
-        b=gsiPpWBp2wpRZMjngR/LlRcMXgtQhIJMpe1zxLflCmmCEgZt1OKJwCaaOuy1DRfeG4
-         8Btrq6P7SzcRIEwS+LzlJZ7Xy8WKZllnDewpxsObInwk1yG9iMGXgLwLfVQrVvsmQ3l8
-         GRnVASeSZv/aJAIJZcH2Tq5EIEKvmGeMwVpgmsKj2nG6SkyJk6BLzVeqL1fq/ClPJpAL
-         D2HXXK5q+Sm/lZ+t6o/2LhFPgSoeb9zXxR7qfaDZKOqyccvzAfDms7EFm1rUOy0oT0pa
-         S8ZqPM1ighYnFYjjvIwJuXJL4VsoiUOYj9wFcvl7d5v+aT2h15sOyAHO8r3o7TYGV/L8
-         GreA==
+        bh=YETSwyP9KyJmIykjMyk1TM49CieBNMVHrTzyPxKcTSk=;
+        b=FkQzqgIFOAMsY5C49r1vVB/ZlzTMvC6eoeJBVcpcCRatuAaj6EIDAzi3hygq5+Ij1g
+         JBGhZBFMX7pINFHlQiMdv7hC22MjElW2vDWKKVX/MSzTmcHGS5Gow/BGmXAiYyXVt3Rc
+         TwHLdDfG5VUJBs7kKpL0yZtdBIOgMc27tvQabifkeXgBXMFPRAaCDM7iXEOBED/IWt/y
+         NmIFWcjRsMtBhqMZwvLbe3ORStBZA417ZS8RGIc3ZE0/2GEdnH753mli+ov6NbQ1UAV0
+         2miw7dNFMmbmugoxca3FDGb1jnUPzAQcjAd4BRyShkqiZf8yTad3RCKAOBWa8ejhn2ha
+         LbVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681461236; x=1684053236;
+        d=1e100.net; s=20221208; t=1681461246; x=1684053246;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NpwShvISTcTE3K551Ap7usqhXOxNcMryVkJfhLZoUUQ=;
-        b=bIV6ceVtF/MvFG0biQuRIuzlflFprIBMTlGoFOT+bo6M81h5Bwq6uqMf0fMyDSh4ou
-         pJwXAYzyMOzEPWBbABjGTgjUM5bCOjjJQLe+LzXc1J742c6i8sHKsuUL2aYw+P9yzzhJ
-         82KiEn18Z+PItYjedXmAXmuskqsEyKNjaL8zsIt8nYCb3lCjcufWO+6eAr9TjSjoOOFb
-         hvOTMiuFVdogsSzcybyKKo/Gfrlebql6s8FXeWx+IKyjQxjGKOXUf2NiTCQDG0vFvu2B
-         CgzR2AkddktaicVRokzasZvs7WMxc/MUbqJrheFyR/nMUo4lDeECkZMRVT026PiYh7vJ
-         3a/w==
-X-Gm-Message-State: AAQBX9dgAqzQOPCwF0jSV9W/RNJybTekU+683DjTsAslCmcLhYFypu+E
-        RCQ4N6TTlUVCqfigl8guLKhUGQ==
-X-Google-Smtp-Source: AKy350ak3cqtwXDorNJtScCLcUQuNv92fnfl8eFxO84dV/0O6W4+Gjg7xHm2TDj2lqckrpNVg9kccw==
-X-Received: by 2002:aa7:c7d4:0:b0:506:8470:c323 with SMTP id o20-20020aa7c7d4000000b005068470c323mr823188eds.24.1681461236235;
-        Fri, 14 Apr 2023 01:33:56 -0700 (PDT)
+        bh=YETSwyP9KyJmIykjMyk1TM49CieBNMVHrTzyPxKcTSk=;
+        b=XspeUuvFm5n9KGkjrgWLaSD6Y3CUB9g8E0WUm2O/s3j593egA5TXpzrsodc9sSpZfW
+         vIQJ4oGUE2l7veNQEuWozSCzutY1d9ToEMQgsa0i7QYP85L3891EFy0YCVfe9GIUZUM9
+         4SM6hB2JvVX/NBsXdlr6XcMtjCwtGWxC4ir/Uy6HtzWQaXJfqOhy0hK6S3EHjJuJtm5x
+         TSlaAooy8KEsbRHwyzKylYdEBBZ22HpbuPGH1vkN92ApChk0fWGejJxCEo1rStjJ46yO
+         5UwVNnN0czkECE9OIRUUou5HgfLgGCksDheZq3kM+GocL4frvHVX8MOVkvldIe1pHS83
+         RPWw==
+X-Gm-Message-State: AAQBX9cpV9KDmBwvTReUHM0TgT7xjrQ0rOvsh8FVk8TY0yjRWwAe4Cs1
+        I2xWj1bpih3y2M3d2EsHL85CmQ==
+X-Google-Smtp-Source: AKy350Z7uaDB4GQxOP+F7tcD8R2KCxU2CUl3f5Uqi9jTZYCUHl43i3I1xzx6+MrjdoI2Do1jwFgUmg==
+X-Received: by 2002:a17:907:1b1b:b0:94a:68a9:b399 with SMTP id mp27-20020a1709071b1b00b0094a68a9b399mr6056042ejc.53.1681461246577;
+        Fri, 14 Apr 2023 01:34:06 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:8a60:6b0f:105a:eefb? ([2a02:810d:15c0:828:8a60:6b0f:105a:eefb])
-        by smtp.gmail.com with ESMTPSA id 15-20020a170906208f00b0094a511b9e6csm2117677ejq.139.2023.04.14.01.33.54
+        by smtp.gmail.com with ESMTPSA id jt6-20020a170906dfc600b0094e6c45b117sm2106215ejc.168.2023.04.14.01.34.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Apr 2023 01:33:55 -0700 (PDT)
-Message-ID: <b573ddb8-3909-998d-f051-6a3c4af1c629@linaro.org>
-Date:   Fri, 14 Apr 2023 10:33:54 +0200
+        Fri, 14 Apr 2023 01:34:06 -0700 (PDT)
+Message-ID: <8349f5c1-36fe-802b-2a36-acb9c6eb6d8e@linaro.org>
+Date:   Fri, 14 Apr 2023 10:34:04 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH 11/27] dt-bindings: display: mediatek: merge: Add
+Subject: Re: [PATCH 12/27] dt-bindings: display: mediatek: split: Add
  compatible for MediaTek MT6795
 Content-Language: en-US
 To:     AngeloGioacchino Del Regno 
@@ -73,14 +73,14 @@ Cc:     p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
         kernel@collabora.com, phone-devel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht
 References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-12-angelogioacchino.delregno@collabora.com>
+ <20230412112739.160376-13-angelogioacchino.delregno@collabora.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230412112739.160376-12-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230412112739.160376-13-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,10 +89,14 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> Add a compatible string for MediaTek Helio X10 MT6795's MERGE block: this
+> Add a compatible string for MediaTek Helio X10 MT6795's SPLIT block: this
 > is the same as MT8173.
 > 
-
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,split.yaml   | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
