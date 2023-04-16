@@ -2,135 +2,105 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00A296E360B
-	for <lists+linux-pwm@lfdr.de>; Sun, 16 Apr 2023 10:32:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63386E3660
+	for <lists+linux-pwm@lfdr.de>; Sun, 16 Apr 2023 11:02:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230305AbjDPIcd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 16 Apr 2023 04:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51014 "EHLO
+        id S230400AbjDPJCW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 16 Apr 2023 05:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbjDPIcc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 16 Apr 2023 04:32:32 -0400
-Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1112D59
-        for <linux-pwm@vger.kernel.org>; Sun, 16 Apr 2023 01:32:30 -0700 (PDT)
+        with ESMTP id S230416AbjDPJCV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 16 Apr 2023 05:02:21 -0400
+Received: from smtp.smtpout.orange.fr (smtp-12.smtpout.orange.fr [80.12.242.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B66268F
+        for <linux-pwm@vger.kernel.org>; Sun, 16 Apr 2023 02:02:17 -0700 (PDT)
 Received: from pop-os.home ([86.243.2.178])
         by smtp.orange.fr with ESMTPA
-        id nxoBpUp5GSbkVnxoBp6SVd; Sun, 16 Apr 2023 10:32:28 +0200
+        id nyH0pbG1aZuz8nyH0pkDjf; Sun, 16 Apr 2023 11:02:15 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
-        s=t20230301; t=1681633948;
-        bh=6Nh9SbNnwZaFDBB1P2bWoSGbGhDLyt3bjRnq7fv3tcQ=;
+        s=t20230301; t=1681635735;
+        bh=jElERW5oAW/BA/iWn/iMwYZcr8+bBQCwjgCK64tXWvg=;
         h=From:To:Cc:Subject:Date;
-        b=qFdGVJRwqDfnU9DfilquMgxQjV9J9mgxoH27+b8QY0gKrhl2ccxCYzou2MtAnD5ae
-         z0HourN8rMXV8JErxeZhIFcWiCliAqAmsA6WxwF5GMxRgHHQnoi+PrIBJKv7B0La23
-         8yjXbmlDHjyhgakbQSwaXyHW2dSD3Yv2u7Qvclm2aqU5in7R8jYE/daNW9A9u7NLsk
-         Nu6PfQA3Sl/DB+nFTc5vNzueEoyGmKmGzIt3nOnsBP63iFET/tYIyR/hPrHAt2esu/
-         bjNUGmEfRGEB3ilzvEdg0Uw1AEbRH2mbgjremW9TGWqPLQgQsjPIsJ6EaI2kboiSmc
-         qKbmfNnECzyHw==
+        b=AIFyl+4LMWAYJKXQSaTaP5fgyO1X8fiTU5MY+pi2PUbnxU7yuDCdbbAqrdvqIoC2h
+         /Re8WzFeK5MuZBRZbUy9r5Cix6r43nGExGv8WCSS1eAQ+NgHVhiZkTN5DE4ewWCQDC
+         NbVJ6cEGaHYvwFd32K5yLQ6bNHg5xfO73Jevs/tYWvkserBdeLMwZdlLpWrePByJWn
+         XotY/Qt9wK/Om2MHEnD6yTzrjqBSz8r8V66GWYGXaF1q2DDJhWtr/82Az59vQsP4wj
+         r1lqMEBTl29BivO+S4LZCIC4h0isnAtjiYXkTBL8RA6Kjfqg27z7+pUBLJhM1C3Bgs
+         yLXACoYbAFv1w==
 X-ME-Helo: pop-os.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 16 Apr 2023 10:32:28 +0200
+X-ME-Date: Sun, 16 Apr 2023 11:02:15 +0200
 X-ME-IP: 86.243.2.178
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>
+        <u.kleine-koenig@pengutronix.de>
 Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         linux-pwm@vger.kernel.org
-Subject: [PATCH] pwm: sti: Fix the error handling path of sti_pwm_probe()
-Date:   Sun, 16 Apr 2023 10:32:24 +0200
-Message-Id: <ef5d6301cb120db5d52175a7bf94b5095beaaeef.1681633924.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] pwm: clk: Use the devm_clk_get_prepared() helper function
+Date:   Sun, 16 Apr 2023 11:02:13 +0200
+Message-Id: <9281571825c365c1591fcf31527d45ec576c19b4.1681635694.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Rewrite the error handing path of sti_pwm_probe() to avoid some leaks.
+Use the devm_clk_get_prepared() helper function instead of hand-writing it.
+It saves some line of codes.
 
-Fixes: 3f0925b5a864 ("pwm: sti: Initialise PWM capture device data")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-I also wonder if some clk_put() are also missing in the error handling path
-and in the remove function.
+ drivers/pwm/pwm-clk.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-This could be split in several patches because some issues were
-introduced before 3f0925b5a864.
-But it is already nearly 7 years old, so it should be enough, should it be
-back-ported.
----
- drivers/pwm/pwm-sti.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sti.c b/drivers/pwm/pwm-sti.c
-index b1d1373648a3..7e678cab2991 100644
---- a/drivers/pwm/pwm-sti.c
-+++ b/drivers/pwm/pwm-sti.c
-@@ -630,13 +630,14 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 		pc->cpt_clk = of_clk_get_by_name(dev->of_node, "capture");
- 		if (IS_ERR(pc->cpt_clk)) {
- 			dev_err(dev, "failed to get PWM capture clock\n");
--			return PTR_ERR(pc->cpt_clk);
-+			ret = PTR_ERR(pc->cpt_clk);
-+			goto err_unprepare_pwm;
- 		}
+diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
+index f1da99881adf..0ee4d2aee4df 100644
+--- a/drivers/pwm/pwm-clk.c
++++ b/drivers/pwm/pwm-clk.c
+@@ -89,7 +89,7 @@ static int pwm_clk_probe(struct platform_device *pdev)
+ 	if (!pcchip)
+ 		return -ENOMEM;
  
- 		ret = clk_prepare(pc->cpt_clk);
- 		if (ret) {
- 			dev_err(dev, "failed to prepare clock\n");
--			return ret;
-+			goto err_unprepare_pwm;
- 		}
- 	}
+-	pcchip->clk = devm_clk_get(&pdev->dev, NULL);
++	pcchip->clk = devm_clk_get_prepared(&pdev->dev, NULL);
+ 	if (IS_ERR(pcchip->clk))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(pcchip->clk),
+ 				     "Failed to get clock\n");
+@@ -98,15 +98,9 @@ static int pwm_clk_probe(struct platform_device *pdev)
+ 	pcchip->chip.ops = &pwm_clk_ops;
+ 	pcchip->chip.npwm = 1;
  
-@@ -645,18 +646,17 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 	pc->chip.npwm = pc->cdata->pwm_num_devs;
- 
- 	ret = pwmchip_add(&pc->chip);
+-	ret = clk_prepare(pcchip->clk);
+-	if (ret < 0)
+-		return dev_err_probe(&pdev->dev, ret, "Failed to prepare clock\n");
+-
+ 	ret = pwmchip_add(&pcchip->chip);
 -	if (ret < 0) {
--		clk_unprepare(pc->pwm_clk);
--		clk_unprepare(pc->cpt_clk);
--		return ret;
--	}
+-		clk_unprepare(pcchip->clk);
 +	if (ret < 0)
-+		goto err_unprepare_cpt;
+ 		return dev_err_probe(&pdev->dev, ret, "Failed to add pwm chip\n");
+-	}
  
- 	for (i = 0; i < cdata->cpt_num_devs; i++) {
- 		struct sti_cpt_ddata *ddata;
- 
- 		ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
--		if (!ddata)
--			return -ENOMEM;
-+		if (!ddata) {
-+			ret = -ENOMEM;
-+			goto err_remove_pwmchip;
-+		}
- 
- 		init_waitqueue_head(&ddata->wait);
- 		mutex_init(&ddata->lock);
-@@ -667,6 +667,14 @@ static int sti_pwm_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pc);
- 
+ 	platform_set_drvdata(pdev, pcchip);
  	return 0;
-+
-+err_remove_pwmchip:
-+	pwmchip_remove(&pc->chip);
-+err_unprepare_cpt:
-+	clk_unprepare(pc->cpt_clk);
-+err_unprepare_pwm:
-+	clk_unprepare(pc->pwm_clk);
-+	return ret;
+@@ -120,8 +114,6 @@ static void pwm_clk_remove(struct platform_device *pdev)
+ 
+ 	if (pcchip->clk_enabled)
+ 		clk_disable(pcchip->clk);
+-
+-	clk_unprepare(pcchip->clk);
  }
  
- static void sti_pwm_remove(struct platform_device *pdev)
+ static const struct of_device_id pwm_clk_dt_ids[] = {
 -- 
 2.34.1
 
