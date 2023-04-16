@@ -2,105 +2,93 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D63386E3660
-	for <lists+linux-pwm@lfdr.de>; Sun, 16 Apr 2023 11:02:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C777F6E3A66
+	for <lists+linux-pwm@lfdr.de>; Sun, 16 Apr 2023 19:02:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbjDPJCW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 16 Apr 2023 05:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
+        id S229643AbjDPRCm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 16 Apr 2023 13:02:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230416AbjDPJCV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 16 Apr 2023 05:02:21 -0400
-Received: from smtp.smtpout.orange.fr (smtp-12.smtpout.orange.fr [80.12.242.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B66268F
-        for <linux-pwm@vger.kernel.org>; Sun, 16 Apr 2023 02:02:17 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id nyH0pbG1aZuz8nyH0pkDjf; Sun, 16 Apr 2023 11:02:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
-        s=t20230301; t=1681635735;
-        bh=jElERW5oAW/BA/iWn/iMwYZcr8+bBQCwjgCK64tXWvg=;
-        h=From:To:Cc:Subject:Date;
-        b=AIFyl+4LMWAYJKXQSaTaP5fgyO1X8fiTU5MY+pi2PUbnxU7yuDCdbbAqrdvqIoC2h
-         /Re8WzFeK5MuZBRZbUy9r5Cix6r43nGExGv8WCSS1eAQ+NgHVhiZkTN5DE4ewWCQDC
-         NbVJ6cEGaHYvwFd32K5yLQ6bNHg5xfO73Jevs/tYWvkserBdeLMwZdlLpWrePByJWn
-         XotY/Qt9wK/Om2MHEnD6yTzrjqBSz8r8V66GWYGXaF1q2DDJhWtr/82Az59vQsP4wj
-         r1lqMEBTl29BivO+S4LZCIC4h0isnAtjiYXkTBL8RA6Kjfqg27z7+pUBLJhM1C3Bgs
-         yLXACoYbAFv1w==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 16 Apr 2023 11:02:15 +0200
-X-ME-IP: 86.243.2.178
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH] pwm: clk: Use the devm_clk_get_prepared() helper function
-Date:   Sun, 16 Apr 2023 11:02:13 +0200
-Message-Id: <9281571825c365c1591fcf31527d45ec576c19b4.1681635694.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229601AbjDPRCk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 16 Apr 2023 13:02:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A7401FFE
+        for <linux-pwm@vger.kernel.org>; Sun, 16 Apr 2023 10:02:39 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1po5lq-0008Rd-5w; Sun, 16 Apr 2023 19:02:34 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1po5lo-00BgZu-Qe; Sun, 16 Apr 2023 19:02:32 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1po5lo-00Dgys-0x; Sun, 16 Apr 2023 19:02:32 +0200
+Date:   Sun, 16 Apr 2023 19:02:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: sti: Fix the error handling path of sti_pwm_probe()
+Message-ID: <20230416170232.igjwawhnkgya2qee@pengutronix.de>
+References: <ef5d6301cb120db5d52175a7bf94b5095beaaeef.1681633924.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qichhjai5fq4p6s3"
+Content-Disposition: inline
+In-Reply-To: <ef5d6301cb120db5d52175a7bf94b5095beaaeef.1681633924.git.christophe.jaillet@wanadoo.fr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Use the devm_clk_get_prepared() helper function instead of hand-writing it.
-It saves some line of codes.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/pwm/pwm-clk.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+--qichhjai5fq4p6s3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
-index f1da99881adf..0ee4d2aee4df 100644
---- a/drivers/pwm/pwm-clk.c
-+++ b/drivers/pwm/pwm-clk.c
-@@ -89,7 +89,7 @@ static int pwm_clk_probe(struct platform_device *pdev)
- 	if (!pcchip)
- 		return -ENOMEM;
- 
--	pcchip->clk = devm_clk_get(&pdev->dev, NULL);
-+	pcchip->clk = devm_clk_get_prepared(&pdev->dev, NULL);
- 	if (IS_ERR(pcchip->clk))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(pcchip->clk),
- 				     "Failed to get clock\n");
-@@ -98,15 +98,9 @@ static int pwm_clk_probe(struct platform_device *pdev)
- 	pcchip->chip.ops = &pwm_clk_ops;
- 	pcchip->chip.npwm = 1;
- 
--	ret = clk_prepare(pcchip->clk);
--	if (ret < 0)
--		return dev_err_probe(&pdev->dev, ret, "Failed to prepare clock\n");
--
- 	ret = pwmchip_add(&pcchip->chip);
--	if (ret < 0) {
--		clk_unprepare(pcchip->clk);
-+	if (ret < 0)
- 		return dev_err_probe(&pdev->dev, ret, "Failed to add pwm chip\n");
--	}
- 
- 	platform_set_drvdata(pdev, pcchip);
- 	return 0;
-@@ -120,8 +114,6 @@ static void pwm_clk_remove(struct platform_device *pdev)
- 
- 	if (pcchip->clk_enabled)
- 		clk_disable(pcchip->clk);
--
--	clk_unprepare(pcchip->clk);
- }
- 
- static const struct of_device_id pwm_clk_dt_ids[] = {
--- 
-2.34.1
+Hello,
 
+On Sun, Apr 16, 2023 at 10:32:24AM +0200, Christophe JAILLET wrote:
+> Rewrite the error handing path of sti_pwm_probe() to avoid some leaks.
+
+There are also some clk_put()'s missing. See
+https://lore.kernel.org/linux-pwm/20201013081531.661528-1-uwe@kleine-koenig=
+=2Eorg
+for an older fix of the things you noticed.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qichhjai5fq4p6s3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQ8KicACgkQj4D7WH0S
+/k4rCgf+IgFiqYV/KJORdTuLVDP0Re0M+LXFE9SQ3feYlcXI4yGTxI+UQS3Is5mj
+QSjVvfU01PG4PHg1AeT88fR3XHDKHfecKoobE5vLJPkdawirsVBGDRIDSPGlRniG
+6ew05MYz2eQgNxN03KIFcIK2KQle8vgJBWVV2bgtFwkmc0gSbZtHfbr0KmtWUmpP
+7BUvcK7or4s/Kx7jpLIY0KRYvCpQXgOEyQcemzm7GVH8NL6vnNym0pveGlSEBqSa
+0ylrtOQ0mENxMAfRYxb4HMxdbZAb4uZkh/MAvDgcepsJF5/oFucCqiooz82vwkUZ
+VMzQlpU/5sisJaUqBt6F5ZZhn9zCIw==
+=amNk
+-----END PGP SIGNATURE-----
+
+--qichhjai5fq4p6s3--
