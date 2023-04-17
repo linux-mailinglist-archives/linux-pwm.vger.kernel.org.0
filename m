@@ -2,323 +2,330 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4340B6E455F
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Apr 2023 12:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04D186E460B
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Apr 2023 13:09:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbjDQKjM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Apr 2023 06:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
+        id S230102AbjDQLJi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 17 Apr 2023 07:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbjDQKjL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Apr 2023 06:39:11 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E0559FE
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Apr 2023 03:38:14 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id fw30so10027121ejc.5
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Apr 2023 03:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681727821; x=1684319821;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wkXKEQvULxKzfD58u+R7FM0H9NpEQGqvZoPv/ny3gvg=;
-        b=OWxl665j+6s9ydZX1q5Tp7Idn6Moa/Lhb9I5atGuU6wBfUJndb7YhmvQ75diuKxRG9
-         e2krshP5jTSdSFMf/Y7BF/6HicJ3L5qY36hcFnRpo4eZNEiNmN87PCebn30JTv3GU5ET
-         P/NRObDq4PJPiBIcrJILHFY1JvJmke+E6FDoeplAOstMavIQmOT1BWJflW5UQlw//oP7
-         0oV/NnYM+aJ+2HxTb+AG7DiZ3wPI4YIGa/Oq6N1oHCRg3s+ORQXbNfQikg0tvJgwuWAI
-         5wKUEYqNkWNN+P+n9uJi+tcmkcJtdKobtCLgOoW6XhAjaRNttjEYDXMtpiHrjFz2QE6Y
-         oSUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681727821; x=1684319821;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wkXKEQvULxKzfD58u+R7FM0H9NpEQGqvZoPv/ny3gvg=;
-        b=f1ITqv5YuXwcmKFMkqn26qZrXEhaKmXuNRqrzw39O1qcaX03iTGilPkGlTYLuQ2FN5
-         chbLprRlsm6xK1lJDKw9YbEgLbzYXfeSR4eDvO4W/T5bZhLEcO38Mc+r1nxykTEPP6e6
-         QhuU3B2i4jMAftdqcmo2qqtU+Pod8Hsey/q425H3qK6ST0X8eYL3jLClEAHhfel1xvbT
-         Htwba8Q/5LBHiX+KOTeyeYwT/be//yyIcCAobwC9njIW6C+xgGg0Pi1hpTfWyPxejR/x
-         YdgM7RjiR4DInNNkrSa6fbmzU3B9vWWHIeKPa2wh47VtyG0uF8y27JEpmq/JMbZJ9+pr
-         xdbQ==
-X-Gm-Message-State: AAQBX9fm+FiehxpI16mrGJnGHO7IaH/R1ivfQ8SYMCfu5TSEab+zIKln
-        +8EXWKHpbREpgm2IQ0aLIBs=
-X-Google-Smtp-Source: AKy350Zo8XAGyX6yT+BuwV2uXPmcvBPlNmJ8H+1hryWR1o4sMwfsyBfdJQJ7UeewxWYJFRo2LMNS1Q==
-X-Received: by 2002:a17:907:844:b0:94f:61f5:9ef7 with SMTP id ww4-20020a170907084400b0094f61f59ef7mr3870612ejb.44.1681727820663;
-        Mon, 17 Apr 2023 03:37:00 -0700 (PDT)
-Received: from ?IPV6:2a01:c22:770d:1c00:59f1:1548:39fc:ccd5? (dynamic-2a01-0c22-770d-1c00-59f1-1548-39fc-ccd5.c22.pool.telefonica.de. [2a01:c22:770d:1c00:59f1:1548:39fc:ccd5])
-        by smtp.googlemail.com with ESMTPSA id tg4-20020a1709078dc400b0094ea3a32694sm6265513ejc.190.2023.04.17.03.36.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Apr 2023 03:37:00 -0700 (PDT)
-Message-ID: <872b3270-8319-6b4d-9d52-1da0b58d4e19@gmail.com>
-Date:   Mon, 17 Apr 2023 12:36:57 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-To:     neil.armstrong@linaro.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
-References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
- <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
- <ca531c1a-3c62-5fb1-6765-68ec1e541483@linaro.org>
- <73a52391-b380-e491-0e96-5c51c7be487c@gmail.com>
- <22b6f870-8dfd-c01b-a7cd-383a9d9ece20@linaro.org>
+        with ESMTP id S230049AbjDQLJh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Apr 2023 07:09:37 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on20705.outbound.protection.outlook.com [IPv6:2a01:111:f403:7010::705])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEBF5259;
+        Mon, 17 Apr 2023 04:08:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H2zVyd6ssfQnNOzbbxXQKet6AZh2jrH6wBoGgrNkOVqEaZOOaWiPI3Pi5xZhlOANrSRQfmT1Ip4cDnW7Xkm1r9R7nxOEs6gdr63UTwvgpGwm+aONaEUKPlnhZI3dw/trRMLbKq1qQNK2GZDKtLsX6TNmUqoJ1xYVLXrZfXLVj0fFYEAAnqpIdPJUi5WlEE2LX+pRcN2pcRdMXUGrkGOb9ts55Tjvs8t3Yi+C9gO8UQ2NHjyJQyIedEInP1+vorFNcJzn+341qmyPjYkPHF5NC6l/RnfENOAHP8cmO8239FJliird1fqlYeCJitk71Eaeqx6uZBBE5019SEnPKi6daA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V2sGOa2jH6uHhLsQruCKFwRTLWd/GVG2iq5TSWoCOwQ=;
+ b=bfi/vnHif+yYDDq2ZZcnrQJeJXGtbOiS9+x4BH/SamZv3vV4fGZ+xwyJNKF95c9NJ0fRIEqQyW4SVbXkloinjdEovOlYKoFuwzxTR11Fg+bkMiDmmVnLdDDubyoexUX0S9rOD7sUCJFa2xAq/wt75ywlkHCROm7LgMN+7d6yYrHDvo0hj4+6cXeB6yWFzzeAnkq5XDLmG6JmG7LvMXjn9NotCeIz4ZHESVZ2UPkdlabESlhn8kmkyXmHYNCqziLBcw8Ci7Z6gK1ZdEUqsz2TMjGObaKgrWHdAILnl4DqV+JSzw7BWAoDi0fXAVMx7lxRgTrombaizNoHI11TWUkqYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V2sGOa2jH6uHhLsQruCKFwRTLWd/GVG2iq5TSWoCOwQ=;
+ b=FiGEJ15CsMfQzfXOikIz8tVZoEmSBhcG0hLBNbDVUe22AQrfAjoShndPoGuCpDho+kg1xeddNxY45iytbR2dCXrUJFEinnu/CGNsU5e+z+kBQuQEmwK1Faic5S63w1x0egLJbbVcZGAsCdjcAFpDR9rNKdTy/0hU/0BKSjnM5vc=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by TYCPR01MB9975.jpnprd01.prod.outlook.com (2603:1096:400:1eb::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Mon, 17 Apr
+ 2023 11:06:59 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::bd0a:a38d:b4d2:5d2]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::bd0a:a38d:b4d2:5d2%5]) with mapi id 15.20.6298.045; Mon, 17 Apr 2023
+ 11:06:59 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Lee Jones <lee@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [PATCH v15 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+Thread-Topic: [PATCH v15 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+Thread-Index: AQHZYvkq1tObMCxvvECDvU/oy9wfC68qbjSAgAA3iDCAAHg0AIAEVEYA
+Date:   Mon, 17 Apr 2023 11:06:59 +0000
+Message-ID: <OS0PR01MB592260E8E4F583704C2844B0869C9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20230330111632.169434-1-biju.das.jz@bp.renesas.com>
+ <20230330111632.169434-7-biju.das.jz@bp.renesas.com>
+ <20230414062641.76no7jz7uluixwdg@pengutronix.de>
+ <OS0PR01MB5922824F09E1BC9FB9CECC9586999@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+ <20230414165540.bfquriyo6crnxj5q@pengutronix.de>
+In-Reply-To: <20230414165540.bfquriyo6crnxj5q@pengutronix.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock
- framework
-In-Reply-To: <22b6f870-8dfd-c01b-a7cd-383a9d9ece20@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|TYCPR01MB9975:EE_
+x-ms-office365-filtering-correlation-id: 7aefd901-1e67-4274-21f2-08db3f33dd4c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mX0uuNyk5ApJZs962HCmZk/ayObx0hSYGZz/06xXgChc72UwJvknKuobTs1ZBXWcNjgfy4pImKJJdXlFubzJ7jvJW9aFaRqOBWx1aud2zDul65AHnZrPCNDKT43cfzD7X9P3jy6tOA3FXDsDmvWrMORRRgIzb7cANcB/vYTU3rUl+5gf+NNk9iBc8k4MIhacyw1G7jMSIotW7Vi4OGON8BiyS1lfmTOLM8fhwaRaAa9UEJpTwGbP6hDqfbSKOJ1ZMRd435L3HzT9BtAyxXiHNg2wIgwA2D8opWvXJseNznEo8AEyyxOtq0zCptPNBshCgyF6hRM8UzNiaN2ODsEGkDeJMCifz1wm+hgKgOVxtbgD6y3wDNjzxFD5YfvkYeg9UMHBP28qXQC9wfVkGfUV3ZekTbV/wDJPkAs/oIqUGjCoxXhJs8i5NYHuYhzf73kiiy35xRkfwnY8TcA6lkWLYomdaKKoXSSj6ncS1IuRLvywweSKtxu65dAx+1k4vuKr3Kf0cwDHv+RJx/VTzNsQMDF7x4FStIGPYKTSUi7y+gu2MUqS83e8JTg1i2yrEYxQtw+EQ9Ujg13M4eNlHJLqGTfKumCS6412sVbprya8Cvxv/otpnny/6xWNF7aHzENwJlXjXBRUXFrfymLaFSES6g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(451199021)(52536014)(5660300002)(86362001)(83380400001)(186003)(26005)(6506007)(9686003)(122000001)(38100700002)(38070700005)(8676002)(8936002)(33656002)(54906003)(478600001)(71200400001)(7696005)(316002)(41300700001)(55016003)(76116006)(64756008)(66446008)(66476007)(66556008)(4326008)(6916009)(66946007)(2906002)(32563001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?kfNaF/gZFvglHIuJCJoVp2TbG4HcAE1Vz0FhkqJIXp4tgD9+pna0KXhOX1?=
+ =?iso-8859-1?Q?FrqrIR4qrdgZindLxGNQt0tfoYvV3wYySFoDRXDckPY0r1fAwqXQPnqoxv?=
+ =?iso-8859-1?Q?1uINapFeAAsgHscxPiWTGep07BPsVeQIhRUSOfZ5j3SU18rv00Tc22ZpYW?=
+ =?iso-8859-1?Q?oHnHAaN0D9jWG+G1cQDHG5R9XcZG76e1rlkBu+iTs7Rq4Bi56jdRc7+KZy?=
+ =?iso-8859-1?Q?MuuE/WNiEMAA78Pyuowd/eHAm0YKHHsWVnZkjIccYj54KOZKopGT0DHpgO?=
+ =?iso-8859-1?Q?wFxt0UnCNIj0X5wNov/Z8KX1MecBf5x3aObVMA81U5xQiCDrYpd7LBFxG4?=
+ =?iso-8859-1?Q?f1WZGTGnMqd1xKv/G5U2IWVNiSB8hO0RcBKfa5o/2PxGIRZ9s0qfL+9aHo?=
+ =?iso-8859-1?Q?Tb1Np1vocAuZJ/chllCsKx/KcMjZm/dbpFi/pKSXnOVstn89GyVaYzY2ED?=
+ =?iso-8859-1?Q?VFVs9SxrhbLpxXtWWZ/P3UvdIqdVeKbN1UXMS1XNJBrMJMjNxdOKeOnCkv?=
+ =?iso-8859-1?Q?eayEtr7vItsggqL12vYR/dv31RHuHaPcnICfAKV4fQuT7clp4wSbIF+cCt?=
+ =?iso-8859-1?Q?qg3ezmaOWoS5DWkEfOHRwMsAB5Yf2gad14INbvvOU3K7XCtOcmxOxpTHAR?=
+ =?iso-8859-1?Q?gJBbs3SOfdeITrDPF3c4JzZcyG4+hPtkqUUkmP6TDvduKH/07ayZQVNZmc?=
+ =?iso-8859-1?Q?JznBVil9zTaZu5Yv7hflchkU7mMjU4r5Kn3IwdUdYdurL1VbMQi1HxK3uR?=
+ =?iso-8859-1?Q?3E5CKkGHo+LRKFuKx4g6LTGpjXAD6UdanRpr9e3rgMZJBLEIlaRepIbc15?=
+ =?iso-8859-1?Q?x1FU0S4VDXKlJMo04Z2of32i5Q2Z3M4CO1ETougMriTInuuwPBdJREqQXT?=
+ =?iso-8859-1?Q?iQzjPTMStfcknc67g+IJOvpfYzIgYG+O2pD+OWBoWua8JStx6Bj0cxVeDR?=
+ =?iso-8859-1?Q?PLi+tZH9W0IhbDGfwr8NoOrELFWunQ7G8dXNRSM0+YKmekYKywYrs1IyxN?=
+ =?iso-8859-1?Q?sRC8i6Lx/WgBFIqMgQGFxxYl2dhnfgDIuZn+olDkz3JW+/V1jAExA2diNn?=
+ =?iso-8859-1?Q?Ih2Lf/6C8Zl0CkSTunp5ryvdr2yjxaMI8W2G/Yr2SNtqBI4GwZyQinoxUX?=
+ =?iso-8859-1?Q?CVVD5ZgQLJ2ay59TcYQTQy6aOYSUYNh4RBaNvIXhIj7U7z4ly/Sob+Wrbk?=
+ =?iso-8859-1?Q?pplIY018ZQkljGOzDFFK0m6pjRVT16nMxYa7vy0WCBxhVaJovlbL2NFL0G?=
+ =?iso-8859-1?Q?WqiUtwJJ6HQyq4lguttjmwS1i3yk9dYfqMXiy9oBorM5K/n2h4cdHkymlh?=
+ =?iso-8859-1?Q?lZheA4QTXdJCaUDc1VbTZ+BBxrTKaYBCoayEbDl1RyHY6yCtBmQDsAyh+u?=
+ =?iso-8859-1?Q?9r2r5MT+6wNPf/1CGruH2CxJiArHUfxSqefP80NVPuK+ZasYJLjQh5YUvp?=
+ =?iso-8859-1?Q?j6s7mCnwIpl7vmKNFedkWC8HKDCsBMUk2S1qL9tGp7V4kOEHTzWBa8882e?=
+ =?iso-8859-1?Q?ESdA39mnQprIEghaCqrMTDHcaHxrUx6p8bxRdxa7fdRHa8TZI4upnkfurl?=
+ =?iso-8859-1?Q?HNLcUpw7zCS3rRr2WWPCXufPjxp1o6PpPLXNGd5xYdyV8tC9yjswBojO+O?=
+ =?iso-8859-1?Q?mJh1efwDqAoo7YwAGArCWVJNhSQgnGXqJ5?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aefd901-1e67-4274-21f2-08db3f33dd4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2023 11:06:59.1233
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: n80RY9JSHTeHPOqrre8gG5M3n9oYgxgf6BlDbr2V0iM8npbM88yV0IbI+L3dz9TkaoaRPjnYKSwrLMxe2SfelTiv2DXfnPVmhbj049RXH6I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9975
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17.04.2023 11:59, neil.armstrong@linaro.org wrote:
-> On 17/04/2023 11:53, Heiner Kallweit wrote:
->> On 17.04.2023 09:23, Neil Armstrong wrote:
->>> On 13/04/2023 07:54, Heiner Kallweit wrote:
->>>> Newer versions of the PWM block use a core clock with external mux,
->>>> divider, and gate. These components either don't exist any longer in
->>>> the PWM block, or they are bypassed.
->>>> To minimize needed changes for supporting the new version, the internal
->>>> divider and gate should be handled by CCF too.
->>>>
->>>> I didn't see a good way to split the patch, therefore it's somewhat
->>>> bigger. What it does:
->>>>
->>>> - The internal mux is handled by CCF already. Register also internal
->>>>     divider and gate with CCF, so that we have one representation of the
->>>>     input clock: [mux] parent of [divider] parent of [gate]
->>>>     - Now that CCF selects an appropriate mux parent, we don't need the
->>>>     DT-provided default parent any longer. Accordingly we can also omit
->>>>     setting the mux parent directly in the driver.
->>>>     - Instead of manually handling the pre-div divider value, let CCF
->>>>     set the input clock. Targeted input clock frequency is
->>>>     0xffff * 1/period for best precision.
->>>>     - For the "inverted pwm disabled" scenario target an input clock
->>>>     frequency of 1GHz. This ensures that the remaining low pulses
->>>>     have minimum length.
->>>>
->>>> I don't have hw with the old PWM block, therefore I couldn't test this
->>>> patch. With the not yet included extension for the new PWM block
->>>> (channel->clk coming directly from get_clk(external_clk)) I didn't
->>>> notice any problem. My system uses PWM for the CPU voltage regulator
->>>> and for the SDIO 32kHz clock.
->>>>
->>>> Note: The clock gate in the old PWM block is permanently disabled.
->>>> This seems to indicate that it's not used by the new PWM block.
->>>>
->>>> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>> ---
->>>> Changes to RFT/RFC version:
->>>> - use parent_hws instead of parent_names for div/gate clock
->>>> - use devm_clk_hw_register where the struct clk * returned by
->>>>     devm_clk_register isn't needed
->>>>
->>>> v2:
->>>> - add patch 1
->>>> - add patch 3
->>>> - switch to using clk_parent_data in all relevant places
->>>> v3:
->>>> - add flag CLK_IGNORE_UNUSED
->>>> v4:
->>>> - remove variable tmp in meson_pwm_get_state
->>>> - don't use deprecated function devm_clk_register
->>>> ---
->>>>    drivers/pwm/pwm-meson.c | 142 +++++++++++++++++++++++-----------------
->>>>    1 file changed, 83 insertions(+), 59 deletions(-)
->>>>
->>>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->>>> index 40a8709ff..80ac71cbc 100644
->>>> --- a/drivers/pwm/pwm-meson.c
->>>> +++ b/drivers/pwm/pwm-meson.c
->>>> @@ -51,7 +51,7 @@
->>>>    #define REG_MISC_AB        0x8
->>>>    #define MISC_B_CLK_EN        23
->>>>    #define MISC_A_CLK_EN        15
->>>> -#define MISC_CLK_DIV_MASK    0x7f
->>>> +#define MISC_CLK_DIV_WIDTH    7
->>>>    #define MISC_B_CLK_DIV_SHIFT    16
->>>>    #define MISC_A_CLK_DIV_SHIFT    8
->>>>    #define MISC_B_CLK_SEL_SHIFT    6
->>>> @@ -87,12 +87,13 @@ static struct meson_pwm_channel_data {
->>>>    };
->>>>      struct meson_pwm_channel {
->>>> +    unsigned long rate;
->>>>        unsigned int hi;
->>>>        unsigned int lo;
->>>> -    u8 pre_div;
->>>>    -    struct clk *clk_parent;
->>>>        struct clk_mux mux;
->>>> +    struct clk_divider div;
->>>> +    struct clk_gate gate;
->>>>        struct clk *clk;
->>>>    };
->>>>    @@ -125,16 +126,6 @@ static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
->>>>        struct device *dev = chip->dev;
->>>>        int err;
->>>>    -    if (channel->clk_parent) {
->>>> -        err = clk_set_parent(channel->clk, channel->clk_parent);
->>>> -        if (err < 0) {
->>>> -            dev_err(dev, "failed to set parent %s for %s: %d\n",
->>>> -                __clk_get_name(channel->clk_parent),
->>>> -                __clk_get_name(channel->clk), err);
->>>> -            return err;
->>>> -        }
->>>> -    }
->>>> -
->>>>        err = clk_prepare_enable(channel->clk);
->>>>        if (err < 0) {
->>>>            dev_err(dev, "failed to enable clock %s: %d\n",
->>>> @@ -157,8 +148,9 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>>>                  const struct pwm_state *state)
->>>>    {
->>>>        struct meson_pwm_channel *channel = &meson->channels[pwm->hwpwm];
->>>> -    unsigned int duty, period, pre_div, cnt, duty_cnt;
->>>> +    unsigned int duty, period, cnt, duty_cnt;
->>>>        unsigned long fin_freq;
->>>> +    u64 freq;
->>>>          duty = state->duty_cycle;
->>>>        period = state->period;
->>>> @@ -166,7 +158,11 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>>>        if (state->polarity == PWM_POLARITY_INVERSED)
->>>>            duty = period - duty;
->>>>    -    fin_freq = clk_get_rate(channel->clk);
->>>> +    freq = div64_u64(NSEC_PER_SEC * (u64)0xffff, period);
->>>> +    if (freq > ULONG_MAX)
->>>> +        freq = ULONG_MAX;
->>>> +
->>>> +    fin_freq = clk_round_rate(channel->clk, freq);
->>>>        if (fin_freq == 0) {
->>>>            dev_err(meson->chip.dev, "invalid source clock frequency\n");
->>>>            return -EINVAL;
->>>> @@ -174,46 +170,35 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>>>          dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
->>>>    -    pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
->>>> -    if (pre_div > MISC_CLK_DIV_MASK) {
->>>> -        dev_err(meson->chip.dev, "unable to get period pre_div\n");
->>>> -        return -EINVAL;
->>>> -    }
->>>> -
->>>> -    cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
->>>> +    cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC);
->>>>        if (cnt > 0xffff) {
->>>>            dev_err(meson->chip.dev, "unable to get period cnt\n");
->>>>            return -EINVAL;
->>>>        }
->>>>    -    dev_dbg(meson->chip.dev, "period=%u pre_div=%u cnt=%u\n", period,
->>>> -        pre_div, cnt);
->>>> +    dev_dbg(meson->chip.dev, "period=%u cnt=%u\n", period, cnt);
->>>>          if (duty == period) {
->>>> -        channel->pre_div = pre_div;
->>>>            channel->hi = cnt;
->>>>            channel->lo = 0;
->>>>        } else if (duty == 0) {
->>>> -        channel->pre_div = pre_div;
->>>>            channel->hi = 0;
->>>>            channel->lo = cnt;
->>>>        } else {
->>>> -        /* Then check is we can have the duty with the same pre_div */
->>>> -        duty_cnt = div64_u64(fin_freq * (u64)duty,
->>>> -                     NSEC_PER_SEC * (pre_div + 1));
->>>> +        duty_cnt = div64_u64(fin_freq * (u64)duty, NSEC_PER_SEC);
->>>>            if (duty_cnt > 0xffff) {
->>>>                dev_err(meson->chip.dev, "unable to get duty cycle\n");
->>>>                return -EINVAL;
->>>>            }
->>>>    -        dev_dbg(meson->chip.dev, "duty=%u pre_div=%u duty_cnt=%u\n",
->>>> -            duty, pre_div, duty_cnt);
->>>> +        dev_dbg(meson->chip.dev, "duty=%u duty_cnt=%u\n", duty, duty_cnt);
->>>>    -        channel->pre_div = pre_div;
->>>>            channel->hi = duty_cnt;
->>>>            channel->lo = cnt - duty_cnt;
->>>>        }
->>>>    +    channel->rate = fin_freq;
->>>> +
->>>>        return 0;
->>>>    }
->>>>    @@ -223,16 +208,15 @@ static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
->>>>        struct meson_pwm_channel_data *channel_data;
->>>>        unsigned long flags;
->>>>        u32 value;
->>>> +    int err;
->>>>          channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
->>>>    -    spin_lock_irqsave(&meson->lock, flags);
->>>> +    err = clk_set_rate(channel->clk, channel->rate);
->>>> +    if (err)
->>>> +        dev_err(meson->chip.dev, "setting clock rate failed\n");
->>>>    -    value = readl(meson->base + REG_MISC_AB);
->>>> -    value &= ~(MISC_CLK_DIV_MASK << channel_data->clk_div_shift);
->>>> -    value |= channel->pre_div << channel_data->clk_div_shift;
->>>> -    value |= BIT(channel_data->clk_en_bit);
->>>> -    writel(value, meson->base + REG_MISC_AB);
->>>> +    spin_lock_irqsave(&meson->lock, flags);
->>>>          value = FIELD_PREP(PWM_HIGH_MASK, channel->hi) |
->>>>            FIELD_PREP(PWM_LOW_MASK, channel->lo);
->>>> @@ -271,16 +255,16 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>>>                /*
->>>>                 * This IP block revision doesn't have an "always high"
->>>>                 * setting which we can use for "inverted disabled".
->>>> -             * Instead we achieve this using the same settings
->>>> -             * that we use a pre_div of 0 (to get the shortest
->>>> -             * possible duration for one "count") and
->>>> +             * Instead we achieve this by setting an arbitrary,
->>>> +             * very high frequency, resulting in the shortest
->>>> +             * possible duration for one "count" and
->>>>                 * "period == duty_cycle". This results in a signal
->>>>                 * which is LOW for one "count", while being HIGH for
->>>>                 * the rest of the (so the signal is HIGH for slightly
->>>>                 * less than 100% of the period, but this is the best
->>>>                 * we can achieve).
->>>>                 */
->>>> -            channel->pre_div = 0;
->>>> +            channel->rate = 1000000000;
->>>>                channel->hi = ~0;
->>>>                channel->lo = 0;
->>>
->>> This looks like a really bad idea... please don't do that and instead introduce
->>> some pinctrl states where we set the PWM pin as GPIO mode high/low state like we
->>> did for SPI:
->>> https://lore.kernel.org/r/20221004-up-aml-fix-spi-v4-2-0342d8e10c49@baylibre.com
->>>
->>
->> There's no behavior change in this patch set. So my understanding is that you'd
->> like to change the current behavior independent of the CCF-related changes.
-> 
-> There's a behavior change since you change the calculation with a radically different
-> algorithm.
-> 
-Setting an input clock rate of 1GHz will result in pre_div = 0 with (where available)
-mux parent fdiv3 (850MHz). So it's the same duty cycle as before, just with a different
-period. The applied logic is the same as before and as described in the comment
-"get the shortest possible duration for one count"
+Hi Uwe,
 
-> Neil
-> 
->>
->> For the updated PWM block (at least for S905X3, not sure with which family Amlogic
->> extended the PWM block) we have an integrated option to achieve constant low/high
->> output. It's just not implemented yet, it's something I may do as next step.
->> The extended PWM block added new bits pwm_A/B_constant_en that prevent the default
->> increment of the hi/lo period. By supporting these bits we can achieve value 0
->> for hi/lo.
->> IMO that's easier than adding pinctrl handling. The remaining question would be
->> whether it's worth it to add pinctrl handling just for the legacy version of the
->> PWM block.
->>
-> 
+Thanks for the feedback.
 
+> Subject: Re: [PATCH v15 6/6] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+>=20
+> Hello,
+>=20
+> On Fri, Apr 14, 2023 at 09:53:09AM +0000, Biju Das wrote:
+> > > On Thu, Mar 30, 2023 at 12:16:32PM +0100, Biju Das wrote:
+> > > > +	val =3D RZ_MTU3_TCR_CKEG_RISING | prescale;
+> > > > +	if (priv->map->channel =3D=3D pwm->hwpwm) {
+> > > > +		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TCR,
+> > > > +				      RZ_MTU3_TCR_CCLR_TGRA | val);
+> > >
+> > > If the sibling PWM on the same channel is on, you're overwriting its
+> > > prescale value here, are you not?
+> >
+> > Yes, you are correct. Will cache prescale and add the below code in
+> > rz_mtu3_pwm_config(). Is it ok?
+> >
+> > +        * Prescalar is shared by multiple channels, so prescale can
+> > +        * NOT be modified when there are multiple channels in use with
+> > +        * different settings.
+> > +        */
+> > +       if (prescale !=3D rz_mtu3_pwm->prescale[ch] && rz_mtu3_pwm-
+> >user_count[ch] > 1)
+> > +               return -EBUSY;
+>=20
+> If the other PWM is off, you can (and should) change the prescale value.
+> Also if the current prescale value is less than the one you want to set, =
+you
+> can handle that.
+>=20
+
+You mean like below??
+
+static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm=
+,
+			      const struct pwm_state *state)
+{
+	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
+	struct rz_mtu3_pwm_channel *priv;
+	u64 period_cycles;
+	u64 duty_cycles;
+	u8 prescale;
+	u16 pv, dc;
+	u8 val;
+	u32 ch;
+
+	priv =3D rz_mtu3_get_channel(rz_mtu3_pwm, pwm->hwpwm);
+	ch =3D priv - rz_mtu3_pwm->channel_data;
+
+	period_cycles =3D mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
+					NSEC_PER_SEC);
+	prescale =3D rz_mtu3_pwm_calculate_prescale(rz_mtu3_pwm, period_cycles);
+
+	/*
+	 * Prescalar is shared by multiple channels, so prescale can
+	 * NOT be modified when there are multiple channels in use with
+	 * different settings. Modify prescalar if other PWM is off or current
+	 * prescale value is less than the one we want to set.
+	 */
+	if (rz_mtu3_pwm->enable_count[ch] > 1 &&
+	    rz_mtu3_pwm->prescale[ch] > prescale)
+		return -EBUSY;
+
+	pv =3D rz_mtu3_pwm_calculate_pv_or_dc(period_cycles, prescale);
+
+	duty_cycles =3D mul_u64_u32_div(state->duty_cycle, rz_mtu3_pwm->rate,
+				      NSEC_PER_SEC);
+	dc =3D rz_mtu3_pwm_calculate_pv_or_dc(duty_cycles, prescale);
+
+	/*
+	 * If the PWM channel is disabled, make sure to turn on the clock
+	 * before writing the register.
+	 */
+	if (!pwm->state.enabled)
+		pm_runtime_get_sync(chip->dev);
+
+	val =3D RZ_MTU3_TCR_CKEG_RISING | prescale;
+
+	/* Counter must be stopped while updating TCR register */
+	if (rz_mtu3_pwm->prescale[ch] !=3D prescale && rz_mtu3_pwm->enable_count[c=
+h])
+		rz_mtu3_disable(priv->mtu);
+
+	if (priv->map->base_pwm_number =3D=3D pwm->hwpwm) {
+		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TCR,
+				      RZ_MTU3_TCR_CCLR_TGRA | val);
+
+		rz_mtu3_pwm_write_tgr_registers(priv, RZ_MTU3_TGRA, pv,
+						RZ_MTU3_TGRB, dc);
+
+		/* Update pv and dc of other PWM based on new prescalar */
+		if (rz_mtu3_pwm->prescale[ch] !=3D prescale &&
+		    rz_mtu3_pwm->enable_count[ch] > 1) {
+			rz_mtu3_pwm_read_tgr_registers(priv, RZ_MTU3_TGRC, &pv,
+						       RZ_MTU3_TGRD, &dc);
+			rz_mtu3_pwm_calculate_new_pv_dc(rz_mtu3_pwm->rate, &pv,
+							&dc, prescale);
+			rz_mtu3_pwm_write_tgr_registers(priv, RZ_MTU3_TGRC,
+							pv, RZ_MTU3_TGRD, dc);
+		}
+	} else {
+		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TCR,
+				      RZ_MTU3_TCR_CCLR_TGRC | val);
+
+		rz_mtu3_pwm_write_tgr_registers(priv, RZ_MTU3_TGRC, pv,
+						RZ_MTU3_TGRD, dc);
+
+		/* Update pv and dc of other PWM based on new prescalar */
+		if (rz_mtu3_pwm->prescale[ch] !=3D prescale &&
+		    rz_mtu3_pwm->enable_count[ch] > 1) {
+			rz_mtu3_pwm_read_tgr_registers(priv, RZ_MTU3_TGRA, &pv,
+						       RZ_MTU3_TGRB, &dc);
+			rz_mtu3_pwm_calculate_new_pv_dc(rz_mtu3_pwm->rate, &pv,
+							&dc, prescale);
+			rz_mtu3_pwm_write_tgr_registers(priv, RZ_MTU3_TGRA, pv,
+							RZ_MTU3_TGRB, dc);
+		}
+	}
+
+	if (rz_mtu3_pwm->prescale[ch] !=3D prescale) {
+		/*
+		 * Prescalar is shared by multiple channels, we cache the
+		 * prescalar value and use the same value for both channels.
+		 */
+		rz_mtu3_pwm->prescale[ch] =3D prescale;
+
+		if (rz_mtu3_pwm->enable_count[ch])
+			rz_mtu3_enable(priv->mtu);
+	}
+
+	/* If the PWM is not enabled, turn the clock off again to save power. */
+	if (!pwm->state.enabled)
+		pm_runtime_put(chip->dev);
+
+	return 0;
+}
+
+Helper functions:
+static void rz_mtu3_pwm_read_tgr_registers(struct rz_mtu3_pwm_channel *priv=
+,
+					   u16 reg_pv_offset, u16 *pv_val,
+					   u16 reg_dc_offset, u16 *dc_val)
+{
+	*pv_val =3D rz_mtu3_16bit_ch_read(priv->mtu, reg_pv_offset);
+	*dc_val =3D rz_mtu3_16bit_ch_read(priv->mtu, reg_dc_offset);
+}
+
+static void rz_mtu3_pwm_write_tgr_registers(struct rz_mtu3_pwm_channel *pri=
+v,
+					    u16 reg_pv_offset, u16 pv_val,
+					    u16 reg_dc_offset, u16 dc_val)
+{
+	rz_mtu3_16bit_ch_write(priv->mtu, reg_pv_offset, pv_val);
+	rz_mtu3_16bit_ch_write(priv->mtu, reg_dc_offset, dc_val);
+}
+
+static u64 rz_mtu3_pwm_get_period_or_duty_cycle(unsigned long pwm_rate,
+						u16 val, u8 prescale)
+{
+	u64 tmp;
+
+	/* With prescale <=3D 7 and pv <=3D 0xffff this doesn't overflow. */
+	tmp =3D NSEC_PER_SEC * (u64)val << (2 * prescale);
+
+	return DIV_ROUND_UP_ULL(tmp, pwm_rate);
+}
+
+static u16 rz_mtu3_pwm_calculate_pv_or_dc(u64 period_or_duty_cycle, u8 pres=
+cale)
+{
+	return (period_or_duty_cycle >> (2 * prescale)) <=3D U16_MAX ?
+		period_or_duty_cycle >> (2 * prescale) : U16_MAX;
+}
+
+static void rz_mtu3_pwm_calculate_new_pv_dc(unsigned long pwm_rate,
+					    u16 *pv, u16 *dc, u8 prescale)
+{
+	u64 tmp;
+
+	tmp =3D rz_mtu3_pwm_get_period_or_duty_cycle(pwm_rate, *pv, prescale);
+	tmp =3D mul_u64_u32_div(tmp, pwm_rate, NSEC_PER_SEC);
+	*pv =3D rz_mtu3_pwm_calculate_pv_or_dc(tmp, prescale);
+
+	tmp =3D rz_mtu3_pwm_get_period_or_duty_cycle(pwm_rate, *dc, prescale);
+	tmp =3D mul_u64_u32_div(tmp, pwm_rate, NSEC_PER_SEC);
+	*dc =3D rz_mtu3_pwm_calculate_pv_or_dc(tmp, prescale);
+}
+
+And in apply, add lock around config()
+
+	mutex_lock(&rz_mtu3_pwm->lock);
+	ret =3D rz_mtu3_pwm_config(chip, pwm, state);
+	mutex_unlock(&rz_mtu3_pwm->lock);
+
+Cheers,
+Biju
