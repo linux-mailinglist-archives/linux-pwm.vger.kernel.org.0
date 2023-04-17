@@ -2,215 +2,306 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B8F6E43D5
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Apr 2023 11:28:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C56F86E4478
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Apr 2023 11:56:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjDQJ2R (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Apr 2023 05:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
+        id S229744AbjDQJ4T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 17 Apr 2023 05:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbjDQJ1l (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Apr 2023 05:27:41 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303721BE1
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Apr 2023 02:27:25 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3f16ecaadd1so11188925e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Apr 2023 02:27:25 -0700 (PDT)
+        with ESMTP id S229588AbjDQJ4S (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Apr 2023 05:56:18 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F5B6A7C
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Apr 2023 02:55:48 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-50670cc3abfso2786525a12.1
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Apr 2023 02:55:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681723643; x=1684315643;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=skr4F3sTXuTG1y8kpEW9y6PuSOyN9BupGiKr5TWOkDY=;
-        b=qWFSkMjcj40qUAAl6SEps/M542l+4X+C2iqNfhp2Hm9NHgczgel13Pd5y0bFPMtYo9
-         kC/TjlOwIvQgfR/xwjT90OqnflRItpYzWQg3AFUEm6496zd+Lp2T2jdObIaw9sb3T10a
-         EX7/wM8AjJXPLKfS9S8ly+/V49pzuvmQIhcDn82iwRRiV9lqhg5bXxAAEnvOY+KxNiGa
-         wUQPbGP0YjHEODy283iBtHa7kEOM0UePhZ7vBCt7SIMYnDRodQQWIRCmf3qqI9T/Y97F
-         6yegnnPZpUBtNBiCxyhynZ0kvS+ZY5v3ASbHGSn1slrBWaa+neXsHUvtxlk1koIacN7H
-         EDTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681723643; x=1684315643;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=gmail.com; s=20221208; t=1681725251; x=1684317251;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=skr4F3sTXuTG1y8kpEW9y6PuSOyN9BupGiKr5TWOkDY=;
-        b=JznLfQbRSE6SALfdJk4+F8KI0s1EL3zp0zShCeFss+4XmkOQptvhCMtx29rEohWjoj
-         ZYd3f68JpzqDiwposjs1XkIvIucNRgQVSulV1ozUc9uHbDqz+nW3D/jIiwaxuNw4BE4M
-         1vO2olLO5SG5M9RK8eJb/7KifpnssAlYPHBMaLZzPZDgc9FUJ7kIOTB290lo9tNXEhb9
-         dOYBMDEpgV8I+5PwVmgHvaVVJBQfGBUwn/pjWhGA7cv93FmJeN2f3EWkM4jJwOJkpPC8
-         yIM07hpaLzcuc84EMv87VnqTZ6N9hayucruvWXeBU728Mc3KbAKSfbQIFBxy0IFqRMIo
-         Odcg==
-X-Gm-Message-State: AAQBX9fcjKQRM5c0jfPxpsWenAKeLQuzNwFyXfrjJF1YJ1WpOojE6RG0
-        2+gfg7bBYKs3XiCIpYaeewk=
-X-Google-Smtp-Source: AKy350b+1l8cy3AQywzBIVAvVcyfLEguCcUrXMWznl2I3n3mvrFNMDiniK+zuJ7a+ruW4FOsjxekaw==
-X-Received: by 2002:a5d:6a0c:0:b0:2d2:f3e3:115d with SMTP id m12-20020a5d6a0c000000b002d2f3e3115dmr5352998wru.59.1681723643413;
-        Mon, 17 Apr 2023 02:27:23 -0700 (PDT)
-Received: from orome (p200300e41f053a00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f05:3a00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id g23-20020a7bc4d7000000b003f17300c7dcsm3313242wmk.48.2023.04.17.02.27.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 02:27:23 -0700 (PDT)
-Date:   Mon, 17 Apr 2023 11:27:21 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+        bh=O0Be3KZ80ormPnApJ2YeiF153NcsJsioYWb5rEh94Ko=;
+        b=AeZsDLKRN9FF9f5z95VIO6HvFKa/K9o/ApQuknKIEjwLK2HNuhh9bbotNWccZHEQRG
+         w7tWaSR7FZpelKUetthK4XXCmJp0H1QN2upMcoPl31nczDC+FZYB80LSFRcwr+s+lWQ4
+         e7z8XXHpVdkC8dLMjStalodlVOS/GN636ULCv3goZhiJlSHJTzUunm4VJRSfAM5buKGH
+         2rgtZMWWoM8m00Dj36ojOZx7pFp/64ZbVndw5n9zYHs4JWZQOoEF5C3Dw1rq8fZGUqo1
+         tKt+Qm3k5C1VICnoLl0Ftd7581WMKKXK07vBcrF8faswBhR23vwwhHPoFn48mkq3bFK1
+         T1OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681725251; x=1684317251;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O0Be3KZ80ormPnApJ2YeiF153NcsJsioYWb5rEh94Ko=;
+        b=MT2TFGUhXJLSdwTfJvTDkJT+K830VDfT3LugQlYar+qpOuC+yadYPBcQGyyCm4E+Gx
+         6wrDAz9FAPI8sNPIzc/5f3HSRRB0crCe3mR/VGpAsKAC+3mgES3YjUp2GpLvwOFapsIO
+         YzfIq+8xvh8MhaDwMEdvMT86GZv9WdC80xkRPPv0dieIuyNUa3b7EL4cNH4494X4n2A+
+         Ge/QCYekG5kyK2uyhvT5fJv/BRDodinjvkx+YfuyVfDu86zcL63L1vJhvSumKmVEHhO5
+         aTwx21X29RvGbo07g7nFcf1Uh+Yz921QhkwUdDg+W/Q/CJ5fGBmOcfEJShUHk9jw4itt
+         /TIA==
+X-Gm-Message-State: AAQBX9ct+/peCs39yBtZy1KswN4pKEAvjNM50wDE/7NAv5vqKabYujtg
+        0XvwGoMeAR5nF8bgrtTUOM8yikZhwQg=
+X-Google-Smtp-Source: AKy350ZS8M3fkFbw/Gv1f5uCCpkmRF+EtdUOZFc/oNOZ5X73IkA4smHB5oZrPiU+/8lwQN/VOt6VGA==
+X-Received: by 2002:a05:6402:202f:b0:504:b324:9ec3 with SMTP id ay15-20020a056402202f00b00504b3249ec3mr12662613edb.1.1681725250767;
+        Mon, 17 Apr 2023 02:54:10 -0700 (PDT)
+Received: from ?IPV6:2a01:c22:770d:1c00:59f1:1548:39fc:ccd5? (dynamic-2a01-0c22-770d-1c00-59f1-1548-39fc-ccd5.c22.pool.telefonica.de. [2a01:c22:770d:1c00:59f1:1548:39fc:ccd5])
+        by smtp.googlemail.com with ESMTPSA id v16-20020a1709064e9000b0094f663bced2sm1753436eju.33.2023.04.17.02.54.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Apr 2023 02:54:10 -0700 (PDT)
+Message-ID: <73a52391-b380-e491-0e96-5c51c7be487c@gmail.com>
+Date:   Mon, 17 Apr 2023 11:53:58 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To:     neil.armstrong@linaro.org, Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
         linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] pwm: meson: make full use of common clock
+References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
+ <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
+ <ca531c1a-3c62-5fb1-6765-68ec1e541483@linaro.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock
  framework
-Message-ID: <ZD0Q-fUjMKRrPjXn@orome>
-References: <0f087629-810d-f0e0-bf0b-05ca5defc16d@gmail.com>
- <05e3b9de-ee38-97b6-7f39-5b6f7de1674f@gmail.com>
- <CAFBinCAdXE+3VrPJAoik_0TFW6TsB0033s+fTYUTNehPrn=PZg@mail.gmail.com>
- <ZDfHtvZawSWWGTRP@orome>
- <CAFBinCBNA_AWy63P9RwSU98xNJ1-F8KHJWm9Dq1kmrZ7aFbpJw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NhQe1dIIe6b/8+OF"
-Content-Disposition: inline
-In-Reply-To: <CAFBinCBNA_AWy63P9RwSU98xNJ1-F8KHJWm9Dq1kmrZ7aFbpJw@mail.gmail.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ca531c1a-3c62-5fb1-6765-68ec1e541483@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 17.04.2023 09:23, Neil Armstrong wrote:
+> On 13/04/2023 07:54, Heiner Kallweit wrote:
+>> Newer versions of the PWM block use a core clock with external mux,
+>> divider, and gate. These components either don't exist any longer in
+>> the PWM block, or they are bypassed.
+>> To minimize needed changes for supporting the new version, the internal
+>> divider and gate should be handled by CCF too.
+>>
+>> I didn't see a good way to split the patch, therefore it's somewhat
+>> bigger. What it does:
+>>
+>> - The internal mux is handled by CCF already. Register also internal
+>>    divider and gate with CCF, so that we have one representation of the
+>>    input clock: [mux] parent of [divider] parent of [gate]
+>>    - Now that CCF selects an appropriate mux parent, we don't need the
+>>    DT-provided default parent any longer. Accordingly we can also omit
+>>    setting the mux parent directly in the driver.
+>>    - Instead of manually handling the pre-div divider value, let CCF
+>>    set the input clock. Targeted input clock frequency is
+>>    0xffff * 1/period for best precision.
+>>    - For the "inverted pwm disabled" scenario target an input clock
+>>    frequency of 1GHz. This ensures that the remaining low pulses
+>>    have minimum length.
+>>
+>> I don't have hw with the old PWM block, therefore I couldn't test this
+>> patch. With the not yet included extension for the new PWM block
+>> (channel->clk coming directly from get_clk(external_clk)) I didn't
+>> notice any problem. My system uses PWM for the CPU voltage regulator
+>> and for the SDIO 32kHz clock.
+>>
+>> Note: The clock gate in the old PWM block is permanently disabled.
+>> This seems to indicate that it's not used by the new PWM block.
+>>
+>> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>> Changes to RFT/RFC version:
+>> - use parent_hws instead of parent_names for div/gate clock
+>> - use devm_clk_hw_register where the struct clk * returned by
+>>    devm_clk_register isn't needed
+>>
+>> v2:
+>> - add patch 1
+>> - add patch 3
+>> - switch to using clk_parent_data in all relevant places
+>> v3:
+>> - add flag CLK_IGNORE_UNUSED
+>> v4:
+>> - remove variable tmp in meson_pwm_get_state
+>> - don't use deprecated function devm_clk_register
+>> ---
+>>   drivers/pwm/pwm-meson.c | 142 +++++++++++++++++++++++-----------------
+>>   1 file changed, 83 insertions(+), 59 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+>> index 40a8709ff..80ac71cbc 100644
+>> --- a/drivers/pwm/pwm-meson.c
+>> +++ b/drivers/pwm/pwm-meson.c
+>> @@ -51,7 +51,7 @@
+>>   #define REG_MISC_AB        0x8
+>>   #define MISC_B_CLK_EN        23
+>>   #define MISC_A_CLK_EN        15
+>> -#define MISC_CLK_DIV_MASK    0x7f
+>> +#define MISC_CLK_DIV_WIDTH    7
+>>   #define MISC_B_CLK_DIV_SHIFT    16
+>>   #define MISC_A_CLK_DIV_SHIFT    8
+>>   #define MISC_B_CLK_SEL_SHIFT    6
+>> @@ -87,12 +87,13 @@ static struct meson_pwm_channel_data {
+>>   };
+>>     struct meson_pwm_channel {
+>> +    unsigned long rate;
+>>       unsigned int hi;
+>>       unsigned int lo;
+>> -    u8 pre_div;
+>>   -    struct clk *clk_parent;
+>>       struct clk_mux mux;
+>> +    struct clk_divider div;
+>> +    struct clk_gate gate;
+>>       struct clk *clk;
+>>   };
+>>   @@ -125,16 +126,6 @@ static int meson_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+>>       struct device *dev = chip->dev;
+>>       int err;
+>>   -    if (channel->clk_parent) {
+>> -        err = clk_set_parent(channel->clk, channel->clk_parent);
+>> -        if (err < 0) {
+>> -            dev_err(dev, "failed to set parent %s for %s: %d\n",
+>> -                __clk_get_name(channel->clk_parent),
+>> -                __clk_get_name(channel->clk), err);
+>> -            return err;
+>> -        }
+>> -    }
+>> -
+>>       err = clk_prepare_enable(channel->clk);
+>>       if (err < 0) {
+>>           dev_err(dev, "failed to enable clock %s: %d\n",
+>> @@ -157,8 +148,9 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+>>                 const struct pwm_state *state)
+>>   {
+>>       struct meson_pwm_channel *channel = &meson->channels[pwm->hwpwm];
+>> -    unsigned int duty, period, pre_div, cnt, duty_cnt;
+>> +    unsigned int duty, period, cnt, duty_cnt;
+>>       unsigned long fin_freq;
+>> +    u64 freq;
+>>         duty = state->duty_cycle;
+>>       period = state->period;
+>> @@ -166,7 +158,11 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+>>       if (state->polarity == PWM_POLARITY_INVERSED)
+>>           duty = period - duty;
+>>   -    fin_freq = clk_get_rate(channel->clk);
+>> +    freq = div64_u64(NSEC_PER_SEC * (u64)0xffff, period);
+>> +    if (freq > ULONG_MAX)
+>> +        freq = ULONG_MAX;
+>> +
+>> +    fin_freq = clk_round_rate(channel->clk, freq);
+>>       if (fin_freq == 0) {
+>>           dev_err(meson->chip.dev, "invalid source clock frequency\n");
+>>           return -EINVAL;
+>> @@ -174,46 +170,35 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+>>         dev_dbg(meson->chip.dev, "fin_freq: %lu Hz\n", fin_freq);
+>>   -    pre_div = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * 0xffffLL);
+>> -    if (pre_div > MISC_CLK_DIV_MASK) {
+>> -        dev_err(meson->chip.dev, "unable to get period pre_div\n");
+>> -        return -EINVAL;
+>> -    }
+>> -
+>> -    cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC * (pre_div + 1));
+>> +    cnt = div64_u64(fin_freq * (u64)period, NSEC_PER_SEC);
+>>       if (cnt > 0xffff) {
+>>           dev_err(meson->chip.dev, "unable to get period cnt\n");
+>>           return -EINVAL;
+>>       }
+>>   -    dev_dbg(meson->chip.dev, "period=%u pre_div=%u cnt=%u\n", period,
+>> -        pre_div, cnt);
+>> +    dev_dbg(meson->chip.dev, "period=%u cnt=%u\n", period, cnt);
+>>         if (duty == period) {
+>> -        channel->pre_div = pre_div;
+>>           channel->hi = cnt;
+>>           channel->lo = 0;
+>>       } else if (duty == 0) {
+>> -        channel->pre_div = pre_div;
+>>           channel->hi = 0;
+>>           channel->lo = cnt;
+>>       } else {
+>> -        /* Then check is we can have the duty with the same pre_div */
+>> -        duty_cnt = div64_u64(fin_freq * (u64)duty,
+>> -                     NSEC_PER_SEC * (pre_div + 1));
+>> +        duty_cnt = div64_u64(fin_freq * (u64)duty, NSEC_PER_SEC);
+>>           if (duty_cnt > 0xffff) {
+>>               dev_err(meson->chip.dev, "unable to get duty cycle\n");
+>>               return -EINVAL;
+>>           }
+>>   -        dev_dbg(meson->chip.dev, "duty=%u pre_div=%u duty_cnt=%u\n",
+>> -            duty, pre_div, duty_cnt);
+>> +        dev_dbg(meson->chip.dev, "duty=%u duty_cnt=%u\n", duty, duty_cnt);
+>>   -        channel->pre_div = pre_div;
+>>           channel->hi = duty_cnt;
+>>           channel->lo = cnt - duty_cnt;
+>>       }
+>>   +    channel->rate = fin_freq;
+>> +
+>>       return 0;
+>>   }
+>>   @@ -223,16 +208,15 @@ static void meson_pwm_enable(struct meson_pwm *meson, struct pwm_device *pwm)
+>>       struct meson_pwm_channel_data *channel_data;
+>>       unsigned long flags;
+>>       u32 value;
+>> +    int err;
+>>         channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
+>>   -    spin_lock_irqsave(&meson->lock, flags);
+>> +    err = clk_set_rate(channel->clk, channel->rate);
+>> +    if (err)
+>> +        dev_err(meson->chip.dev, "setting clock rate failed\n");
+>>   -    value = readl(meson->base + REG_MISC_AB);
+>> -    value &= ~(MISC_CLK_DIV_MASK << channel_data->clk_div_shift);
+>> -    value |= channel->pre_div << channel_data->clk_div_shift;
+>> -    value |= BIT(channel_data->clk_en_bit);
+>> -    writel(value, meson->base + REG_MISC_AB);
+>> +    spin_lock_irqsave(&meson->lock, flags);
+>>         value = FIELD_PREP(PWM_HIGH_MASK, channel->hi) |
+>>           FIELD_PREP(PWM_LOW_MASK, channel->lo);
+>> @@ -271,16 +255,16 @@ static int meson_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>>               /*
+>>                * This IP block revision doesn't have an "always high"
+>>                * setting which we can use for "inverted disabled".
+>> -             * Instead we achieve this using the same settings
+>> -             * that we use a pre_div of 0 (to get the shortest
+>> -             * possible duration for one "count") and
+>> +             * Instead we achieve this by setting an arbitrary,
+>> +             * very high frequency, resulting in the shortest
+>> +             * possible duration for one "count" and
+>>                * "period == duty_cycle". This results in a signal
+>>                * which is LOW for one "count", while being HIGH for
+>>                * the rest of the (so the signal is HIGH for slightly
+>>                * less than 100% of the period, but this is the best
+>>                * we can achieve).
+>>                */
+>> -            channel->pre_div = 0;
+>> +            channel->rate = 1000000000;
+>>               channel->hi = ~0;
+>>               channel->lo = 0;
+> 
+> This looks like a really bad idea... please don't do that and instead introduce
+> some pinctrl states where we set the PWM pin as GPIO mode high/low state like we
+> did for SPI:
+> https://lore.kernel.org/r/20221004-up-aml-fix-spi-v4-2-0342d8e10c49@baylibre.com
+> 
 
---NhQe1dIIe6b/8+OF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There's no behavior change in this patch set. So my understanding is that you'd
+like to change the current behavior independent of the CCF-related changes.
 
-On Fri, Apr 14, 2023 at 08:33:28PM +0200, Martin Blumenstingl wrote:
-> Hello Thierry and Heiner,
->=20
-> On Thu, Apr 13, 2023 at 11:13=E2=80=AFAM Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> >
-> > On Tue, Apr 11, 2023 at 09:48:46PM +0200, Martin Blumenstingl wrote:
-> > > On Tue, Apr 11, 2023 at 9:26=E2=80=AFPM Heiner Kallweit <hkallweit1@g=
-mail.com> wrote:
-> > > [...]
-> > > > +               init.name =3D name;
-> > > > +               init.ops =3D &clk_gate_ops;
-> > > > +               init.flags =3D CLK_SET_RATE_PARENT;
-> > > As much as I don't want it: I think we need CLK_IGNORE_UNUSED here as=
- well :-(
-> > > On GXBB, GXL and GXM SoCs the board design typically uses PWM
-> > > regulators (like the boards using 32-bit SoCs as well as newer boards
-> > > using G12A or later SoCs).
-> > > This means: if we enable that PWM controller and one of the channels
-> > > is firmware managed and the other isn't then we can end up disabling
-> > > the clock - taking away VCCK (which supplies the CPU) or VDDEE (which
-> > > supplies GPU and various other components).
-> > > I'd be happy if there are other suggestions around this though.
-> >
-> > What exactly does "firmware managed" mean? Typically we describe all
-> > supplies in DT to avoid these kinds of workarounds. If VCCK and/or VDDEE
-> > are PWM-controlled regulators that should never be turned off, can they
-> > not simply be added to device tree and marked as "always-on"? That would
-> > propagate to the PWM and make sure the corresponding clock remains
-> > enabled.
-> Most Amlogic boards use PWM-controlled regulators. There's three SoC
-> generations I know of that are "special" when it comes to managing
-> these regulators (and CPU clocks) though.
-> Let's start with the simple ones: Meson8/8b/8m2, G12A, G12B, SM1 (and
-> I assume newer generations as well): here the PWM regulators are
-> managed by Linux.
-> Then there's the special cases: GXBB, GXL and GXM which run a SCPI
-> firmware for managing the CPU clocks, regulators and suspend.
->=20
-> SCPI firmware is running in the "secure world", while Linux is running
-> in the "normal world".
-> I don't know if there's boards with secure boot that lock Linux out
-> from the PWM and CPU clock registers.
-> This means: so far we've left any PWM controller settings that relate
-> to the regulators up to the SCPI firmware, not messing with any of the
-> registers from Linux.
->=20
-> My concern is for example with the Khadas VIM2, see it's schematics [0] p=
-age 4:
-> - PWM_C is used to manage the VDDEE regulator (I suspect that there's
-> a typo though and it should be called VDDEE_PWM_C, but the schematics
-> state that the signal is called "VDDEE_PWM_D")
-> - PWM_D can routed to the GPIO headers
-> Now if a user enables &pwm_cd (the PWM controller responsible for
-> channel PWM_C and PWM_D) to use PWM_D on the pin header we don't want
-> to turn off PWM_C by accident.
-> Turning PWM_C off by accident can happen if we register the clock gate
-> and don't have a consumer for it. CCF (common clock framework) can
-> then just turn off that clock because it's unused. This would lock up
-> the board because VDDEE is used for critical functionality on the SoC.
->=20
-> Two extra questions from Heiner:
-> > I check regarding Thierry's comment and found the vddcpu
-> > pwm-regulators described in the DT's. Is your concern that
-> > not for all boards the vddcpu pwm-regulator is described in
-> > the DT?
-> Correct, boards that have the pwm-regulators described in their .dts
-> (typically the boards using a Meson8/8b/8m2, G12A, G12B or SM1 SoC)
-> are not a problem.
-> Only the ones that don't describe the pwm-regulators in their .dts are
-> an issue as these are managed by the SCPI firmware.
->=20
-> > AFAICS pwm channels are independent. How can switching
-> > off the clock for one channel affect the other channel?
-> It's not about one channel affecting the other. My thought is that
-> CCF's "disabled unused clocks" feature will turn off the clock if it's
-> not used. Since SCPI firmware uses it, Linux doesn't know that CCF may
-> disable the clock unless CLK_IGNORE_UNUSED is set.
->=20
-> I hope this makes sense. If you have any additional questions then
-> feel free to ask.
+For the updated PWM block (at least for S905X3, not sure with which family Amlogic
+extended the PWM block) we have an integrated option to achieve constant low/high
+output. It's just not implemented yet, it's something I may do as next step.
+The extended PWM block added new bits pwm_A/B_constant_en that prevent the default
+increment of the hi/lo period. By supporting these bits we can achieve value 0
+for hi/lo.
+IMO that's easier than adding pinctrl handling. The remaining question would be
+whether it's worth it to add pinctrl handling just for the legacy version of the
+PWM block.
 
-It seems to me like really your only option is to completely hide that
-clock from Linux. Even if you use CLK_IGNORE_UNUSED, you could still run
-into a situation where the clock gets turned off.
-
-Actually the same is true of the PWM channel. Once the PWM channel is
-registered somebody could try and use the sysfs interface to control it.
-So even if nothing in the DT makes use of the "reserved" PWM channel,
-people could still try to use it, which means that even if the clock
-were to remain always on, somebody could modify the period and
-destabilize the CPU.
-
-I think reserving specific PWM channels is the only way to safely make
-this work. People could still abuse this by patching the DT, but once
-you can do that, you can probably do a whole bunch of other things as
-well, so if there's no hardware mechanism to prevent access to the PWM
-channel, that's about as good as it'll get.
-
-Thierry
-
---NhQe1dIIe6b/8+OF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQ9EPkACgkQ3SOs138+
-s6FavxAAhMNAWa1ktohw9z9+7BdmWdfgzpPoUFg3RWkwJbXvEiBEp6QM+V4PEDpL
-60i59O7Bzh6ak775NfQExAeSzTLu66HsP+l+YsfmfxKZZ9zNb2vk9/Abme7whIvi
-8mxkq49h9mb+uH3FH8HN2TMdEYW59dHUA0GmiCIMv0GPqPdpocjqlyq2PSP+6B1Z
-gY0Wi8GCBRsGTb2ZKEHDpsAAq9NW++0xuY/qdy3lvxvkx5O3aMHptS2J6PLyN34O
-SxAl6grzWqWEJNytYcGG62K0YUWWx2tVHPxEkb3JCG89TO9ycTYrniECt+wpj4Eu
-N0yB0JgWg8c8iUguz+dCZmOPepy6borye5JIOaTk2GO1g0f+43IvJYI3OPUv/x8t
-q2PtihLjQ0r35YMal+DLbYNBFFTohiGwL2ox3HIIYnAEdh2qQVcGlbq/ZTYVe5eC
-Ev9ye4BA/1XdwLRpDOxT6wuZGjPZNYeDja4kiZ/tm8P2gxA03UPn0M5pzJ256ITM
-bh7gJtxboDcH/xMGcLcBGK/0McO1m8bwOqmq5UlumidaKbj0m4xaeACxW7iu03T9
-o04n6y56r6Q9b2CB4AwuNuQvN8tdAegIUptXfwdSnYsxS3Sr3NEWmEq32KreCMy/
-uJUmLoSWXqdmedKcx6NgZUled0DH+2rKTlrJkpQpd6s9X7ZJ+hk=
-=Wyg5
------END PGP SIGNATURE-----
-
---NhQe1dIIe6b/8+OF--
