@@ -2,82 +2,100 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68C7A6E9725
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Apr 2023 16:32:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A742D6E98BF
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Apr 2023 17:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbjDTOck (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 Apr 2023 10:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
+        id S232158AbjDTPuI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Apr 2023 11:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231690AbjDTOci (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Apr 2023 10:32:38 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC914203;
-        Thu, 20 Apr 2023 07:32:32 -0700 (PDT)
-Received: from [IPV6:2001:b07:2ed:14ed:c5f8:7372:f042:90a2] (unknown [IPv6:2001:b07:2ed:14ed:c5f8:7372:f042:90a2])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id E063E6603265;
-        Thu, 20 Apr 2023 15:32:30 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1682001151;
-        bh=+TVWRubMAjRGPp7QPq7BCPc3y2bv7sKk2mvQp0XR9e4=;
-        h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=DwKLq+3Ti4XpC+rjzkMoBCLlra80K/O3SeBpLyKMv9BjhtKOQI/v3FpKbuBdArkUV
-         cEcJB9MxeHYiFZB/N2BxWCjYo0MxFw8mmnYCJ7B8rZbZ1VXlh/9ltVWT8ogR6rDkWb
-         idFuTKbS8PxEY9IVyrYxYjTp9Mj+5jCulTz2arWXFIczoaUJMYqAH7Y4akXMXSG1P+
-         Buz6Vtq2FgEYcZ5ChfS62icntVGqOTI4OXNVjbnR7P6/K08VPPycXhAVUWeYtNrs+y
-         hT5c8SoYM6lMxwNdcnTqlrdAT9mNhF1SiSOaN8pGHNvKzphLgfiubSUDUKh7yhKkQy
-         7kK1Og/YmAM2g==
-Message-ID: <99c2ec7c-bff2-fa50-f267-d5ca383bd5ca@collabora.com>
-Date:   Thu, 20 Apr 2023 16:32:27 +0200
+        with ESMTP id S232401AbjDTPuH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Apr 2023 11:50:07 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D77E53
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Apr 2023 08:50:04 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id kt6so7637704ejb.0
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Apr 2023 08:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1682005803; x=1684597803;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wUjeJFJdOehqKEp3EDu0sSCTfsxNh9OJznbyLrn6SLw=;
+        b=m1uCicstQI0hGkjAbWwIjd6vTdAVf/qeZzy2/WT9nB1gaGJ9o3ZqJPJmXWHfBHS1VJ
+         3NsRzNmjx9ceKmK3fkJ9sDCBkMYhsIGmtCH25In5054W972Ukpvzh7O/qgdXGM/hkE41
+         /17KDplrFzJ1ZoNlsFQUo1AxzDXRMFX6DnlVstd73ClggwDM+BlTOxAyOYeuWV1ZJqAs
+         8nY6t14Q1+BTBF9UkHCyCC1FVIzqIX0JjWiNtg4FZII1mMhufsmrOxPf8lvHf16cN6yi
+         hKsIZ0g7PCGyMrR4XOkoz3/X4z8D4KnJx+VgEoAeDs1sX+noLysE/wYOiZz8Sc5Uzp7+
+         Sc3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682005803; x=1684597803;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wUjeJFJdOehqKEp3EDu0sSCTfsxNh9OJznbyLrn6SLw=;
+        b=Pep+KfsKd4DEVic61tIvHY7p2vvbcl7dHgTrqSQ4gmZqH+JqetV50B+mbmbA04wwmW
+         yZHO4Sb7G9ofTmBr/MUpN+T8l5gZU/OL5oxLTOfPbcNxQ85iPK+hqpk7S8RVxd83zWbu
+         PBm9++rvmjpEqLw+LDdB/vryc0Y7iEbhkEZ2oXsygcA8oSFezKDWKALmbbQ0vhkk3Je4
+         ACJTWXkheAtQY6KpmtjfFGlNQK9IY4a2BJX9MMUWpPk17Qlxw5a4WsbS6wA1AA8HO3Xr
+         xSGa9jq3cnPZcJIn143jGsN5/q17HPLETYZe9E5ehWUHDhNPBZkCx0GlRzYWfnjUdBG1
+         4qag==
+X-Gm-Message-State: AAQBX9fTVCFXON7lCd2xBjl0upvhP+/yuucYryWGlTRpsqatkXZbDK52
+        UxEA3hN6LBX6VzLizh9o/y+oYw==
+X-Google-Smtp-Source: AKy350YDaBKhwl+5wu1izAvYdwnvSzsDrXYRCK39dnDeHVpecX+2NV53mczkEOPg1LURkaolRvl+xw==
+X-Received: by 2002:a17:906:b20c:b0:94f:3804:5cd6 with SMTP id p12-20020a170906b20c00b0094f38045cd6mr1813554ejz.66.1682005802986;
+        Thu, 20 Apr 2023 08:50:02 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:bcb8:77e6:8f45:4771? ([2a02:810d:15c0:828:bcb8:77e6:8f45:4771])
+        by smtp.gmail.com with ESMTPSA id qn7-20020a170907210700b0094e44899367sm838732ejb.101.2023.04.20.08.50.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Apr 2023 08:50:02 -0700 (PDT)
+Message-ID: <2adfd25a-c4f0-db3f-2148-5fd150a6a49e@linaro.org>
+Date:   Thu, 20 Apr 2023 17:50:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v2 2/2] pwm: mediatek: Add support for MT7981
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: mediatek: Add mediatek,mt7981
+ compatible
 Content-Language: en-US
-To:     Daniel Golle <daniel@makrotopia.org>, linux-pwm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
+To:     Daniel Golle <daniel@makrotopia.org>, devicetree@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
         John Crispin <john@phrozen.org>
-References: <cover.1681992038.git.daniel@makrotopia.org>
- <7c6e31c844642c199f223f4229a04a37b57a34f3.1681992038.git.daniel@makrotopia.org>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <7c6e31c844642c199f223f4229a04a37b57a34f3.1681992038.git.daniel@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <cover.1681932165.git.daniel@makrotopia.org>
+ <4877689269af862ea9ddd199d8aa96b2d7fcf6fe.1681932165.git.daniel@makrotopia.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <4877689269af862ea9ddd199d8aa96b2d7fcf6fe.1681932165.git.daniel@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Il 20/04/23 14:36, Daniel Golle ha scritto:
-> The PWM unit on MT7981 uses different register offsets than previous
-> MediaTek PWM units. Add support for these new offsets and add support
-> for PWM on MT7981 which has 3 PWM channels, one of them is typically
-> used for a temperature controlled fan.
+On 19/04/2023 21:24, Daniel Golle wrote:
+> Add compatible string for the PWM unit found of the MediaTek MT7981 SoC.
+> This is in preparation to adding support in the pwm-mediatek.c driver.
 > 
 > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/mediatek,mt2712-pwm.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-The implementation is good now; there's only one nitpick: you're reordering
-the platform data entries and I agree about doing that, as they should be
-alphabetically sorted, but you didn't mention that in the commit message.
 
-Please send a v3 that mentions that you're also reordering.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-"...while at it, also reorder..."
+Best regards,
+Krzysztof
 
-After which:
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
