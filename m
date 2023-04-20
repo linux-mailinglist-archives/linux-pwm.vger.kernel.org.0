@@ -2,119 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 901236E919D
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Apr 2023 13:05:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FC516E9488
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Apr 2023 14:35:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234887AbjDTLFT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 Apr 2023 07:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
+        id S229704AbjDTMfs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Apr 2023 08:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235207AbjDTLEY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Apr 2023 07:04:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774E06593;
-        Thu, 20 Apr 2023 04:03:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D56A8647CF;
-        Thu, 20 Apr 2023 11:02:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A62C4339C;
-        Thu, 20 Apr 2023 11:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681988531;
-        bh=q5WtqATHSEDJyHfny5vrSARBb3qcLAUJXK6AMpRQOiY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1gZgCZSIsvXR9rnLRt2hV3jpahCX8Vzg0OcDEYM0kKqC0DVHSEDKY0u4oukUfdi5
-         9UAds0kCUyTeEc2UQ0dOq61WXxzjkx8dwOCAXEqpfaUVZ75STkyNbQU5lhJj2vUUdK
-         wtnxNyQYpFOysU8DpQOdY+LiMuCnfOdl/GPCg0lgjjYuXUFmOTVJvyYrZefRFVpq+0
-         gbtTdvzJRHdLUkqUIDSLduvTbwmoZhi+Y74ghQ80eprgngOrCnA0QJ/Ps3FLHSyOKt
-         bXYs1w8txQ766E/U55+jlCCACrN4u8+GcRXt51Tp5AvN9OGU9CfKU+gcvRdDygXcsC
-         tl6yhbJv46dwQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Munehisa Kamata <kamatam@amazon.com>,
+        with ESMTP id S229882AbjDTMfr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Apr 2023 08:35:47 -0400
+Received: from fudo.makrotopia.org (fudo.makrotopia.org [IPv6:2a07:2ec0:3002::71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349B344BE;
+        Thu, 20 Apr 2023 05:35:29 -0700 (PDT)
+Received: from local
+        by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+         (Exim 4.96)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1ppTVW-0005Um-1n;
+        Thu, 20 Apr 2023 14:35:26 +0200
+Date:   Thu, 20 Apr 2023 13:35:20 +0100
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 08/17] pwm: Zero-initialize the pwm_state passed to driver's .get_state()
-Date:   Thu, 20 Apr 2023 07:01:37 -0400
-Message-Id: <20230420110148.505779-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230420110148.505779-1-sashal@kernel.org>
-References: <20230420110148.505779-1-sashal@kernel.org>
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        John Crispin <john@phrozen.org>
+Subject: [PATCH v2 0/2] Support PWM on MediaTek MT7981
+Message-ID: <cover.1681992038.git.daniel@makrotopia.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Add support for PWM on the MediaTek MT7981 to pwm-mediatek.c as well
+as new mediatek,mt7981-pwm compatible string to the existing bindings.
 
-[ Upstream commit 1271a7b98e7989ba6bb978e14403fc84efe16e13 ]
+Changes since v1:
+ * use pointer to reg_offset instead of u8 reg_ver and if-else
 
-This is just to ensure that .usage_power is properly initialized and
-doesn't contain random stack data. The other members of struct pwm_state
-should get a value assigned in a successful call to .get_state(). So in
-the absence of bugs in driver implementations, this is only a safe-guard
-and no fix.
+Daniel Golle (2):
+  dt-bindings: pwm: mediatek: Add mediatek,mt7981 compatible
+  pwm: mediatek: Add support for MT7981
 
-Reported-by: Munehisa Kamata <kamatam@amazon.com>
-Link: https://lore.kernel.org/r/20230310214004.2619480-1-u.kleine-koenig@pengutronix.de
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pwm/core.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ .../bindings/pwm/mediatek,mt2712-pwm.yaml     |  1 +
+ drivers/pwm/pwm-mediatek.c                    | 39 +++++++++++++++----
+ 2 files changed, 32 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index e01147f66e15a..474725714a05b 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -115,7 +115,14 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
- 	}
- 
- 	if (pwm->chip->ops->get_state) {
--		struct pwm_state state;
-+		/*
-+		 * Zero-initialize state because most drivers are unaware of
-+		 * .usage_power. The other members of state are supposed to be
-+		 * set by lowlevel drivers. We still initialize the whole
-+		 * structure for simplicity even though this might paper over
-+		 * faulty implementations of .get_state().
-+		 */
-+		struct pwm_state state = { 0, };
- 
- 		err = pwm->chip->ops->get_state(pwm->chip, pwm, &state);
- 		trace_pwm_get(pwm, &state, err);
-@@ -448,7 +455,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- {
- 	struct pwm_state *last = &pwm->last;
- 	struct pwm_chip *chip = pwm->chip;
--	struct pwm_state s1, s2;
-+	struct pwm_state s1 = { 0 }, s2 = { 0 };
- 	int err;
- 
- 	if (!IS_ENABLED(CONFIG_PWM_DEBUG))
-@@ -530,6 +537,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
- 		return;
- 	}
- 
-+	*last = (struct pwm_state){ 0 };
- 	err = chip->ops->get_state(chip, pwm, last);
- 	trace_pwm_get(pwm, last, err);
- 	if (err)
+
+base-commit: 3cdbc01c40e34c57697f8934f2727a88551696be
 -- 
-2.39.2
+2.40.0
 
