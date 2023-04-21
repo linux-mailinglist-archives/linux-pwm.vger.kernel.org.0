@@ -2,68 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F050F6EAD8C
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Apr 2023 16:57:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D5B6EAE16
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Apr 2023 17:33:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232983AbjDUO5q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 21 Apr 2023 10:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39664 "EHLO
+        id S231910AbjDUPdg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 Apr 2023 11:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232190AbjDUO5p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Apr 2023 10:57:45 -0400
-Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272EC1703
-        for <linux-pwm@vger.kernel.org>; Fri, 21 Apr 2023 07:57:28 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mx.sberdevices.ru (Postfix) with ESMTP id C7F805FD2F;
-        Fri, 21 Apr 2023 17:57:24 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1682089044;
-        bh=kXc8+eTLHxscDSs+Gq31+KDprqZ81SYjJ4bIrlQstqc=;
-        h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-        b=bdiL/Zv4uiUe4gALoedKo5VShEWwZB8fa72p4Cg8TkMFzg4tQUPQtpiTWVXFWYfNo
-         Ya5ic+IHfE/Q24a5IAsSRHXyrXzARRg3hV+dYRfp35pF82GfyXa1jxnoJJWJo5tk3P
-         5rjoyJQYaU0R0qBsJjo98l8fmdtyljnvxs7jrelvhOzQxcvZ1XALx+GsmRzyVGg3TF
-         hwaI0HFFOdq8efFlpv3FvfP4hMAshhT0OBrhcHBML5FOOXxAzrFZOXOzOHAUExW7+s
-         cuPMkSP4cgGVKInX9SfTMUfH93TWSyOd6SgJb581ORlGMdUpILOVT831ZBDl3TJ9yD
-         Rf4bViXE1Uzpg==
-Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
-        by mx.sberdevices.ru (Postfix) with ESMTP;
-        Fri, 21 Apr 2023 17:57:24 +0300 (MSK)
-Date:   Fri, 21 Apr 2023 17:57:23 +0300
-From:   Dmitry Rokosov <ddrokosov@sberdevices.ru>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        with ESMTP id S229935AbjDUPdf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Apr 2023 11:33:35 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB1640D8
+        for <linux-pwm@vger.kernel.org>; Fri, 21 Apr 2023 08:33:32 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-2febac9cacdso1183807f8f.1
+        for <linux-pwm@vger.kernel.org>; Fri, 21 Apr 2023 08:33:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682091211; x=1684683211;
+        h=content-transfer-encoding:in-reply-to:subject:from:content-language
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HC3svFk4XAPKdzjA+OTrAzU2Lfe2zHdqn7Mlo6gk9NI=;
+        b=Kf0UrYdVVOH5GK9XokEsyp9sWqwnBzD1CqqnWbMR7dticBjiAZ6kMfgt7WPKi5q38b
+         cc9JAjiyZLlYgfNFxQRoilv4jS9PFXzSdDFL+o352heVE2I/KqDd9Kui1ZAd1WGNr4bs
+         6KkNHt626jSDQWk40/OANG8+66i4YKDjW4gzRhA2ngjmyo+eSmdjMo/V6fLLDas115WF
+         5VrnbFTDeoyaV9LpnlTnFYiZyPYbnMqxBZLePcRCiKx4XvZ4LvEuQh8aVds2hD5Tsyd+
+         /5QAuSMhJjKaztn7U6mwxufNeBsJYLZi6HgYSTbf9tU74OpT3/6BZLlSqKpdApwA2fow
+         BO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682091211; x=1684683211;
+        h=content-transfer-encoding:in-reply-to:subject:from:content-language
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HC3svFk4XAPKdzjA+OTrAzU2Lfe2zHdqn7Mlo6gk9NI=;
+        b=ASITAi1hXUlsPmEKZ6dMtIeiJf2+U0Jei/jh4u+lqPfICczSE9I4ybBARybF07NUEV
+         S+gwNGNA7KdWoDhS3okUsl2ElzCmXqYATCzOOIAMx10mH2gUctw5DMZb6NQbPbOzFDUn
+         AmgF6wkikJP9+yv8i+d7YalB6GUCwP6BfuexD4Wp+4IrZmY1OpP/gZ2IPK7CUkvZHPIu
+         Tut8eJUDYPk7A/pzFskfNg0KQDkaD03sIeRvw1oG4Hi5wv/RUcrBQqGqa/8amttwJnWf
+         jWSR4ay3f6BhcNKtdrVsa8ghd5hxHnjZuXgoSAsvG3+awauXTmnT8IMR5GxA/9WRSojs
+         afEA==
+X-Gm-Message-State: AAQBX9dTuzUq56QPQ/+mzUUECB1gB1OjfSlMRC+xSvsxFS7iW0YkQ+Ui
+        u4xN+aZ8jBu7drDbbfyLr40=
+X-Google-Smtp-Source: AKy350bGA4afJcGNnGUG1GskKygwZhFCP6vVswVC+F0QdnciS8gk+botp/N1mwm/kOKMSV+m2IyTSw==
+X-Received: by 2002:adf:ef0d:0:b0:2fc:ec82:4dbf with SMTP id e13-20020adfef0d000000b002fcec824dbfmr4145646wro.1.1682091210923;
+        Fri, 21 Apr 2023 08:33:30 -0700 (PDT)
+Received: from ?IPV6:2a01:c23:b8bd:100:e56d:8c4a:e6a8:c253? (dynamic-2a01-0c23-b8bd-0100-e56d-8c4a-e6a8-c253.c23.pool.telefonica.de. [2a01:c23:b8bd:100:e56d:8c4a:e6a8:c253])
+        by smtp.googlemail.com with ESMTPSA id h15-20020a05600c314f00b003f1978bbcd6sm9947wmo.3.2023.04.21.08.33.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Apr 2023 08:33:30 -0700 (PDT)
+Message-ID: <5b1a84ee-1f96-1585-5167-4f4e266a7fb7@gmail.com>
+Date:   Fri, 21 Apr 2023 17:33:29 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+To:     Dmitry Rokosov <ddrokosov@sberdevices.ru>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        <linux-pwm@vger.kernel.org>, <kernel@sberdevices.ru>
-Subject: Re: [PATCH] pwm: meson: simplify calculation in meson_pwm_get_state
-Message-ID: <20230421145723.oq7zqbhhz4fhkmyj@CAB-WSD-L081021>
+        linux-pwm@vger.kernel.org, kernel@sberdevices.ru
 References: <5a5920db-4c32-25e8-d1e3-bd2f724dd242@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5a5920db-4c32-25e8-d1e3-bd2f724dd242@gmail.com>
-User-Agent: NeoMutt/20220415
-X-Originating-IP: [172.16.1.6]
-X-ClientProxiedBy: S-MS-EXCH02.sberdevices.ru (172.16.1.5) To
- S-MS-EXCH01.sberdevices.ru (172.16.1.4)
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2023/04/21 08:36:00 #21135550
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+ <20230421145723.oq7zqbhhz4fhkmyj@CAB-WSD-L081021>
+Content-Language: en-US
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH] pwm: meson: simplify calculation in meson_pwm_get_state
+In-Reply-To: <20230421145723.oq7zqbhhz4fhkmyj@CAB-WSD-L081021>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,66 +84,73 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Heiner,
-
-Thank you for the patch! Please find my comments below.
-
-On Wed, Apr 19, 2023 at 11:30:55PM +0200, Heiner Kallweit wrote:
-> I don't see a reason why we should treat the case lo < hi that
-> different and return 0 as period and duty_cycle. Let's handle it as
-> normal use case and also remove the optimization for lo == 0.
-> I think the improved readability is worth it.
+On 21.04.2023 16:57, Dmitry Rokosov wrote:
+> Hello Heiner,
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-
-Inside this patch, in my opinion, you have not only simplified and
-optimized but have also modified the logic. It is important to provide
-more details on this modification. Previously, in cases where
-(channel->lo != 0) && (channel->lo < channel->hi), period and duty_cycle
-were not calculated. However, in your patchset, duty_cycle and polarity
-are calculated and returned to the caller in such cases.
-Can you please share the details of why this is the right solution?
-Also, please rephrase the commit message using 'modify' instead of
-'simplify'.
-
-> ---
->  drivers/pwm/pwm-meson.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
+> Thank you for the patch! Please find my comments below.
 > 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 5732300eb..3865538dd 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -351,18 +351,8 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	channel->lo = FIELD_GET(PWM_LOW_MASK, value);
->  	channel->hi = FIELD_GET(PWM_HIGH_MASK, value);
->  
-> -	if (channel->lo == 0) {
-> -		state->period = meson_pwm_cnt_to_ns(chip, pwm, channel->hi);
-> -		state->duty_cycle = state->period;
-> -	} else if (channel->lo >= channel->hi) {
-> -		state->period = meson_pwm_cnt_to_ns(chip, pwm,
-> -						    channel->lo + channel->hi);
-> -		state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm,
-> -							channel->hi);
-> -	} else {
-> -		state->period = 0;
-> -		state->duty_cycle = 0;
-> -	}
-> +	state->period = meson_pwm_cnt_to_ns(chip, pwm, channel->lo + channel->hi);
-> +	state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm, channel->hi);
->  
->  	state->polarity = PWM_POLARITY_NORMAL;
->  
-> -- 
-> 2.40.0
+> On Wed, Apr 19, 2023 at 11:30:55PM +0200, Heiner Kallweit wrote:
+>> I don't see a reason why we should treat the case lo < hi that
+>> different and return 0 as period and duty_cycle. Let's handle it as
+>> normal use case and also remove the optimization for lo == 0.
+>> I think the improved readability is worth it.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Inside this patch, in my opinion, you have not only simplified and
+> optimized but have also modified the logic. It is important to provide
+> more details on this modification. Previously, in cases where
+> (channel->lo != 0) && (channel->lo < channel->hi), period and duty_cycle
+> were not calculated. However, in your patchset, duty_cycle and polarity
+> are calculated and returned to the caller in such cases.
+> Can you please share the details of why this is the right solution?
 
--- 
-Thank you,
-Dmitry
+It's the obvious solution. I see no reason to return all zero's for
+lo < hi, and also the commit that added this calculation doesn't provide
+an explanation. It just references the calculation in meson_pwm_calc(),
+however I fail to see that lo < hi is treated differently there.
+
+c375bcbaabdb ("pwm: meson: Read the full hardware state in meson_pwm_get_state()")
+
+> Also, please rephrase the commit message using 'modify' instead of
+> 'simplify'.
+> 
+>> ---
+>>  drivers/pwm/pwm-meson.c | 14 ++------------
+>>  1 file changed, 2 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+>> index 5732300eb..3865538dd 100644
+>> --- a/drivers/pwm/pwm-meson.c
+>> +++ b/drivers/pwm/pwm-meson.c
+>> @@ -351,18 +351,8 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>>  	channel->lo = FIELD_GET(PWM_LOW_MASK, value);
+>>  	channel->hi = FIELD_GET(PWM_HIGH_MASK, value);
+>>  
+>> -	if (channel->lo == 0) {
+>> -		state->period = meson_pwm_cnt_to_ns(chip, pwm, channel->hi);
+>> -		state->duty_cycle = state->period;
+>> -	} else if (channel->lo >= channel->hi) {
+>> -		state->period = meson_pwm_cnt_to_ns(chip, pwm,
+>> -						    channel->lo + channel->hi);
+>> -		state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm,
+>> -							channel->hi);
+>> -	} else {
+>> -		state->period = 0;
+>> -		state->duty_cycle = 0;
+>> -	}
+>> +	state->period = meson_pwm_cnt_to_ns(chip, pwm, channel->lo + channel->hi);
+>> +	state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm, channel->hi);
+>>  
+>>  	state->polarity = PWM_POLARITY_NORMAL;
+>>  
+>> -- 
+>> 2.40.0
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
