@@ -2,62 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B2FE6EC252
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Apr 2023 22:55:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9486EC258
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Apr 2023 22:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbjDWUzf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 23 Apr 2023 16:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47426 "EHLO
+        id S230052AbjDWU62 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 23 Apr 2023 16:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjDWUzd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 23 Apr 2023 16:55:33 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD6D1AB
-        for <linux-pwm@vger.kernel.org>; Sun, 23 Apr 2023 13:55:32 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-956ff2399c9so598326266b.3
-        for <linux-pwm@vger.kernel.org>; Sun, 23 Apr 2023 13:55:32 -0700 (PDT)
+        with ESMTP id S229476AbjDWU61 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 23 Apr 2023 16:58:27 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C88F7
+        for <linux-pwm@vger.kernel.org>; Sun, 23 Apr 2023 13:58:26 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-956ff2399c9so598605166b.3
+        for <linux-pwm@vger.kernel.org>; Sun, 23 Apr 2023 13:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1682283331; x=1684875331;
+        d=googlemail.com; s=20221208; t=1682283505; x=1684875505;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YcgYo5hEprZMBHNoav25W6j8Pl8FNmsiW4q1h+BqMOg=;
-        b=EqAUQeM0JQuXSYgqSJ/To+DxOQlUK6sx/O8xDPDsFp6xME8SzzX/YczB61sbgvK8kI
-         hFDakjI4z+FwEb+CZkJMp6BjqhUSmJom9SllgiOOE4AuKElMDaAP3ZGD3f9kEIDy9eJj
-         hcKLfWQycIpZ23PCuiCVy/5/3VPtEzcHbIQ1xqFNZLBlYEpSnV/p9VKGZPTgQPZ6q7qb
-         gGjzPVdxDS5et5ASt/a07AceoEiehl9JLXKMpbhTCELg6OfENKzW2uAzut/Rrmh4jGZU
-         5XH9ENAUp5OSVcBY4ujTzHhTSNsof5nUzQN4zyAuTquV4u3G1rq+mXF1zyqQxtsTgaAU
-         avWQ==
+        bh=IY5GmMnxqaIW+YsbqRgEPcpd7ww+Ak1Qib0SWHWH38U=;
+        b=qjC5ZhUiwTYk+IzeiX0eotOTUeAuIyB5rrQd1lJfL7dGhD0BlpBXliVMYu5PGOGsUe
+         TE++dICoxPlTTE/cdPkljxRLAM615ZqfbJT8fDbT4DzM/Nj1HDuzh6Vvnfh7ZW3kQscf
+         RVDdGKy8kOXBPxr69sKomibLalXErGB1ePvh+t872Yv63tz5UItdEbEr1G6Yu4sRH0Y4
+         JrjmugIk+7VRCEc84WmSHv2AF9prr3kSvTQulGyygHPlnB9uBz1H6Bueuv7iG1r2jnhS
+         AnzlT+azFRG4idYjskLTSnuFK4SkGQZMDUsGCADfvGmdMlgpVMOj4IRmRIn6Plj3T9Yx
+         hQ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682283331; x=1684875331;
+        d=1e100.net; s=20221208; t=1682283505; x=1684875505;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YcgYo5hEprZMBHNoav25W6j8Pl8FNmsiW4q1h+BqMOg=;
-        b=PrGZjgXzg+98nBcYU1V/aH43rZ3xgNfeF4oMhGUww3oKs3B5WKiqHeqI0MZr0kxmam
-         MSESIq6eDHVH5rdWc/l3B55cWsVkhOqkIZH0N9vl/7qaoi+kZWqw+4FnukmtZvUNV22j
-         YYgwy3xoXWjOA1qnZi7AoM/dM0b8RQuIkouKrZ41KNUgh5ttcFS7EJhw+/4CaBvbuwlO
-         p5d8du4gtzL2zTngw/TbsOc6+1lBCDQEwqK3pZ4dEmIYy6Vbmd6ob1A1ilUWc/dZbjoy
-         5Cjo81FKazK/jLv/y7Ux49CvBXIKVqh+QrIJlbvtxn2QYAgKD1ah/lKdJQq79DnExWHz
-         db1Q==
-X-Gm-Message-State: AAQBX9fxjhYXgxJEvUL3l+FUqRQRRjHCpezdIfbGn5X3MiatL2frbb3I
-        eTRRYaTj07stN7uGjF5YL1nmg4NlTYuJTfTVPYY=
-X-Google-Smtp-Source: AKy350aBCl5IMD8yacgRUJSjCF67IzlNv8X577NfRZKiHofEPTM2cRgkm4RyTznBIgphDn+X81O96kSv/oVxlpnVS48=
-X-Received: by 2002:a17:906:a2da:b0:946:be05:ed7a with SMTP id
- by26-20020a170906a2da00b00946be05ed7amr8288089ejb.70.1682283331025; Sun, 23
- Apr 2023 13:55:31 -0700 (PDT)
+        bh=IY5GmMnxqaIW+YsbqRgEPcpd7ww+Ak1Qib0SWHWH38U=;
+        b=GjQUyLqXvs3gt37KGRfB16z/LKElf9cJjMfl7mCy0TaSCtdtIMvROJzx6deM5LLu0u
+         RUFr4XO4/R7dIjJ8klDx5CWJsG2tpJKDE5vUzo02kyT1WqRYYxKpylO32JZBw3K/gYwt
+         ZrZTsLOLG2SZo7GpWQXtZP5VgobrkTYFaY1MWlK8rnGZaQkiHaKFxN/zrMvDSw7HsXUn
+         0015KicshRM/SVhnlm1RT4ObuD5q5UE7LegiwFhcXemIsEuonoOTSr74mFin7ZyxSIsI
+         S6ppdSgbIi5ApdyuFoFZy9WA6KEjNXdATOU5rRsk1ldQAk33MmA1GTwbNqWu+gkNvWP2
+         mv3A==
+X-Gm-Message-State: AAQBX9e0AnujpsnOijvft2BVG9dK8tBaYqg+oVXciCc5CRTXJRwwbVsh
+        T0FHxFVDa5E5m3yjelcLO/OhN9nbjR7ulF9IMQO6XV6U
+X-Google-Smtp-Source: AKy350ZsmjTPL0vzoiJJX7Vfs3uXUqDV4mDqCzlplxejwNy1QwSj4RRBsAguoR0i09W3HWLKB/9X1f3F6LwVdKFmdvw=
+X-Received: by 2002:a17:906:1498:b0:94f:322d:909c with SMTP id
+ x24-20020a170906149800b0094f322d909cmr8440339ejc.34.1682283504786; Sun, 23
+ Apr 2023 13:58:24 -0700 (PDT)
 MIME-Version: 1.0
 References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
- <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com> <CAFBinCCzMdQZ4mDF7SEZKHc01MPSepxdzYa+j7G-qDXe5-kBVA@mail.gmail.com>
- <4b328dab-5f96-e5d0-3181-ce059d11b04b@gmail.com> <CAFBinCCxQvB_fY0r4jkwy7zW1F9s2vrxmcRaTs6hG5ay_Gf8mw@mail.gmail.com>
- <7601c976-3195-a35d-236c-9bd386dfe8e0@gmail.com>
-In-Reply-To: <7601c976-3195-a35d-236c-9bd386dfe8e0@gmail.com>
+ <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com> <ca531c1a-3c62-5fb1-6765-68ec1e541483@linaro.org>
+ <73a52391-b380-e491-0e96-5c51c7be487c@gmail.com> <22b6f870-8dfd-c01b-a7cd-383a9d9ece20@linaro.org>
+ <872b3270-8319-6b4d-9d52-1da0b58d4e19@gmail.com> <229e20ef-6e99-6d52-b0e6-a357a184b6af@linaro.org>
+ <87f14a9d-f341-d694-f567-7f9e78666b5d@gmail.com>
+In-Reply-To: <87f14a9d-f341-d694-f567-7f9e78666b5d@gmail.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sun, 23 Apr 2023 22:55:19 +0200
-Message-ID: <CAFBinCCV95Q8eCvUBH0VHgFdm7_kot5oVfPdBTppUQbw2g0+qw@mail.gmail.com>
+Date:   Sun, 23 Apr 2023 22:58:13 +0200
+Message-ID: <CAFBinCAF4oc+FoG8CtQhpSHSAkODQFXGbt5OvtprGSb4s+fWqg@mail.gmail.com>
 Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock framework
 To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     neil.armstrong@linaro.org, Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>,
         =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
@@ -79,42 +80,31 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Heiner,
-
-apologies for the late reply - I've been busy with offline things.
-
-On Sun, Apr 16, 2023 at 11:34=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.=
-com> wrote:
+On Wed, Apr 19, 2023 at 9:58=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.c=
+om> wrote:
 [...]
-> >> With a 850MHz input clock we should see a 0.01% duty cycle with 1.2ns
-> >> clock pulses. Can we rule out an issue with the measuring equipment?
-> >> Is your logic analyzer able to display such short clock pulses?
-> > Oh, you're right: my logic analyzer maxes out at 24MHz (~42ns).
-> > So we can ignore this case.
+> > This is a hack based on current clock values, either explicitly support=
+ a code path
+> > where pre_div =3D 0 or if you can't do that with CCF implement the pinc=
+trl way to handle this,
+> > which is the cleanest.
 > >
-> >>> Finally I tried period =3D 12218, duty cycle =3D 12218 (typically use=
-d for
-> >>> the lowest CPU voltage):
-> >>> before your patches / after applying your patches:
-> >>> PWM: duty cycle: 99.661017% / n/a (constant low output)
-> > I have to correct myself: for this case my logic analyzer sees a:
-> > constant high signal
-> >
-> So conclusion is that the PWM output is as expected? If yes, then the
-> memory corruption you saw supposedly had another root cause?
-You are right:
-- For this case my logic analyzer is also too slow
-- In the meantime I've been able to reproduce the memory corruption
-issue without your patch
+> To make it explicit we could request ULONG_MAX as rate instead of 1GHz, t=
+his would imply
+> choosing mux parent with highest rate and pre_div =3D 0. Up to you whethe=
+r this would be
+> acceptable.
+I like the idea of using ULONG_MAX as I first had to think about why
+you chose 1GHz in the driver.
 
-> Eventually your Tested-by could be re-instantiated?
-Indeed, and in addition to SM1 I have also tested it on Khadas VIM2 (GXM So=
-C):
-[    4.135944] brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4356/2
-wl0: Apr  9 2021 00:40:07 version 7.35.349.104 (775a9ab CY) FWID
-01-64b609e0
-
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> AFAICS pinctrl would need quite some DTS changes, and it's not my area of=
+ expertise.
+> So it would be open who can implement this.
+My opinion is that this can be done in a separate patch. We need to
+work on this whole thing anyways as you mentioned that newer SoCs
+(from what I understand: G12A onwards) have a dedicated "constant
+output" bit which will make the pinctrl solution unnecessary (at least
+based on how I understand it).
 
 
 Best regards,
