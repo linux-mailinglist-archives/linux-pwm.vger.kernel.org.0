@@ -2,100 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7D96ECA6A
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 12:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B391D6ED1EE
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 18:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230499AbjDXKfE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Apr 2023 06:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57590 "EHLO
+        id S232005AbjDXQDH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Apr 2023 12:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231255AbjDXKer (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 06:34:47 -0400
-X-Greylist: delayed 2343 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Apr 2023 03:34:24 PDT
-Received: from forward502c.mail.yandex.net (forward502c.mail.yandex.net [IPv6:2a02:6b8:c03:500:1:45:d181:d502])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53956E42;
-        Mon, 24 Apr 2023 03:34:24 -0700 (PDT)
-Received: from mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:261e:0:640:2e3d:0])
-        by forward502c.mail.yandex.net (Yandex) with ESMTP id 2EA505ED20;
-        Mon, 24 Apr 2023 12:36:10 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id JZBb1pbWwKo0-IjRSbbKj;
-        Mon, 24 Apr 2023 12:36:09 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1682328969;
-        bh=Mx2hqLt4/z50beOgPB+ygINDekWFXL6ATj4afqN4iBs=;
-        h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-        b=qBdLkkz3cuV/oTDYOawaHRLB0ZiqRfECIW5t2bkr7rltqMAdcfnDqMedsRgH01cBB
-         grZQh/5MRVdXOGnrq8Totopop9u6WEUocg3WxOElfBPrVV3LqYvTRQmjAhn+Dl21Xy
-         piXcb4uyJTL+VRriFrbA6R7YuB8uu1ZsVTwc4INk=
-Authentication-Results: mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
+        with ESMTP id S231898AbjDXQDC (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 12:03:02 -0400
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0119072BD;
+        Mon, 24 Apr 2023 09:02:54 -0700 (PDT)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-18e26c08349so2408893fac.0;
+        Mon, 24 Apr 2023 09:02:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682352174; x=1684944174;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LnzfYEatrJSwokCAbLh8ogw9ZFGMSla77/kxbiv4hOM=;
+        b=aweU4cCR0IPirBYORTCFBygRX9Wcsqoq8lDtjgJpBpWQiUoLuX49EDL9sxrXcDE2M4
+         kj+8MGKNU/2MToUBFfWRqxDx8hWPLscQcrMeijmroi5AYxGAu3gLr1ZUXr+KVKoWCqWe
+         GAzlY8JBX0gqRhUHvsylPo7YtBNePqFr9IXHlWO1VArzEN7QDOMHVGkWw6b5nwaTbY9e
+         5e+tPOBEEyyui9ynBb4zNij8Yf1wpM6EL0QbPmO+GGABzWjUyZ2PfFRL/0dfRMQwlk46
+         mBNXHJ2rfZ6flubYDqBdjJqLD5qKFAf9lfHC9NL9ZBY5DoSKjH8h4uxxqQESoeuwcuHf
+         gAwA==
+X-Gm-Message-State: AAQBX9fOd0Z6YeWrOC1DwmCAXBn4rBGaEzTyIZe2HCwow5BhDRykaT5e
+        9m8InN+MDtspBVWR8p8Y7hRGjIEm7A==
+X-Google-Smtp-Source: AKy350YFprky0QexCA+YNuK9/WujoCDaw7Udk1v+D5cUN5ctLb84vKBwYCYQ9n67gbZyOlPwf0q5vQ==
+X-Received: by 2002:a05:6870:b491:b0:187:e5c4:4a50 with SMTP id y17-20020a056870b49100b00187e5c44a50mr10330412oap.17.1682352174290;
+        Mon, 24 Apr 2023 09:02:54 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id c2-20020ae9ed02000000b007339c5114a9sm3660638qkg.103.2023.04.24.09.02.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 09:02:53 -0700 (PDT)
+Received: (nullmailer pid 2717300 invoked by uid 1000);
+        Mon, 24 Apr 2023 16:02:52 -0000
+Date:   Mon, 24 Apr 2023 11:02:52 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
 Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 36/43] pwm: ep93xx: drop legacy pinctrl
-Date:   Mon, 24 Apr 2023 15:34:52 +0300
-Message-Id: <20230424123522.18302-37-nikita.shubin@maquefel.me>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+Subject: Re: [PATCH 14/43] dt-bindings: pwm: Add DT bindings ep93xx PWM
+Message-ID: <20230424160252.GC2701399-robh@kernel.org>
 References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+ <20230424123522.18302-15-nikita.shubin@maquefel.me>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230424123522.18302-15-nikita.shubin@maquefel.me>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Drop legacy gpio request/free since we are using
-pinctrl for this now.
+On Mon, Apr 24, 2023 at 03:34:30PM +0300, Nikita Shubin wrote:
+> Add YAML bindings for ep93xx SoC.
+> 
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> ---
+>  .../bindings/pwm/cirrus,ep93xx-pwm.yaml       | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml b/Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
+> new file mode 100644
+> index 000000000000..8f67eb152f8b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/cirrus,ep93xx-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cirrus Logick ep93xx PWM controller
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
 
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
- drivers/pwm/pwm-ep93xx.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+This is someone that cares about this platform/binding, not who applies 
+patches. Same thing elsewhere.
 
-diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
-index 8bfe6cfbb3db..657adb011aeb 100644
---- a/drivers/pwm/pwm-ep93xx.c
-+++ b/drivers/pwm/pwm-ep93xx.c
-@@ -45,20 +45,6 @@ static inline struct ep93xx_pwm *to_ep93xx_pwm(struct pwm_chip *chip)
- 	return container_of(chip, struct ep93xx_pwm, chip);
- }
- 
--static int ep93xx_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct platform_device *pdev = to_platform_device(chip->dev);
--
--	return ep93xx_pwm_acquire_gpio(pdev);
--}
--
--static void ep93xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct platform_device *pdev = to_platform_device(chip->dev);
--
--	ep93xx_pwm_release_gpio(pdev);
--}
--
- static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
- {
-@@ -157,8 +143,6 @@ static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- }
- 
- static const struct pwm_ops ep93xx_pwm_ops = {
--	.request = ep93xx_pwm_request,
--	.free = ep93xx_pwm_free,
- 	.apply = ep93xx_pwm_apply,
- 	.owner = THIS_MODULE,
- };
--- 
-2.39.2
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cirrus,ep9301-pwm
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: SoC PWM clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pwm_clk
 
+*-names is kind of pointless with only 1 entry. And 'pwm' is redundant 
+because names are local to the device. 'clk' is redundant because it's 
+all clocks.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/cirrus,ep93xx-clock.h>
+> +    pwm0: pwm@80910000 {
+> +        compatible = "cirrus,ep9301-pwm";
+> +        reg = <0x80910000 0x10>;
+> +        clocks = <&syscon EP93XX_CLK_PWM>;
+> +        clock-names = "pwm_clk";
+> +    };
+> +
+> +...
+> -- 
+> 2.39.2
+> 
