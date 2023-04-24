@@ -2,229 +2,299 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B41EA6ECC00
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 14:29:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9566A6EC9AD
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 12:02:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231710AbjDXM3L (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Apr 2023 08:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
+        id S231667AbjDXKCS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Apr 2023 06:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbjDXM3K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 08:29:10 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29742D79;
-        Mon, 24 Apr 2023 05:28:58 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-2fc3f1d6f8cso2706655f8f.3;
-        Mon, 24 Apr 2023 05:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682339337; x=1684931337;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4btwjmDtWOTvKFh0kR1iGmSPDebnG97zaZbOKyWXPl8=;
-        b=NWqzOabt7g5a2aRxakDGgrWWeChfEg+FmyKj0ygzBgSA8CDGw05VghIIDZgdeIEAwQ
-         RQYZCD9+Qu8Ywqw24e5+AmENg7iqveIMmnLaghK3HJXoc34QVGeNv+pKF93CtBmEiHPw
-         9SUOUnhjFyi6foZ2C2PxpoaNpzL3EjmO6LsH6BUuv/ZYQ/hH1QxpkbNEu01rmuT6l01l
-         0z+RzJ1FCKvp63KaXE1RS/UvJ13Z4KEqftHGHwiAFpmpK/yFeOSt1bjN81v/CmiPb2zi
-         ESrFnK+1Jt+mERMRqPdrTxsH47yF89oFG3agh9ahRUC1joetW8y95Cqid/JdmL0h22OD
-         CVpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682339337; x=1684931337;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4btwjmDtWOTvKFh0kR1iGmSPDebnG97zaZbOKyWXPl8=;
-        b=V0xQRix5iqKcTtxwV0dDVrqHMDqFYCiDTLouCdzl0iSFK5P++ts3XUbMmtMZ/OMey4
-         tGd0b9bbvy7tagQoxt/tzNyxwk9FQjUGa1zxcpBsPBgSHutnung6Xh7sXD2579IjGVdC
-         Z5wsRXQJFPZLiK6ka55iRWXU9UfFGcNU8t5dE7cJOe+uHU+mwbMFZvvkxSZmUzx8c4A5
-         lD2u8ziJ2UqK1f4I7MBftZtoEhqvUEdkGKA8RNuEl+vRht4XDRjzbaHGBLr3bQGrajhM
-         kYVEjBiem6GG33SQBKBuH3F/xFarH2WQVLvtGFovR5n1y1+AbJXxundMxbmuSPvfLlUL
-         p8SA==
-X-Gm-Message-State: AAQBX9d2LygGWIQBhtwl1J/qpr7qUU1dBdgwo04tvaNnnzhZduIu1XdQ
-        3AzGJHXuubUkRKHLpyi4P9Y=
-X-Google-Smtp-Source: AKy350agHdXEnenUeIKkyBX5s87gm3E29BhXOq6syhGfdpmGCZ8I0JFt4vEj810whEGRo1V/rkG4Sg==
-X-Received: by 2002:adf:f30a:0:b0:2f1:78ca:cdea with SMTP id i10-20020adff30a000000b002f178cacdeamr9726712wro.52.1682339336905;
-        Mon, 24 Apr 2023 05:28:56 -0700 (PDT)
-Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id k6-20020a5d5246000000b002fe87e0706bsm10662937wrc.97.2023.04.24.05.28.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Apr 2023 05:28:55 -0700 (PDT)
-Message-ID: <16cf2101-b9ba-154a-9932-3115e2447c82@gmail.com>
-Date:   Mon, 24 Apr 2023 14:28:54 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 2/2] pwm: mediatek: Add support for MT7981
-Content-Language: en-US
-To:     Daniel Golle <daniel@makrotopia.org>, linux-pwm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S231648AbjDXKCO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 06:02:14 -0400
+X-Greylist: delayed 410 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Apr 2023 03:02:11 PDT
+Received: from forward200b.mail.yandex.net (forward200b.mail.yandex.net [178.154.239.157])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE091FCC;
+        Mon, 24 Apr 2023 03:02:10 -0700 (PDT)
+Received: from forward101b.mail.yandex.net (forward101b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d101])
+        by forward200b.mail.yandex.net (Yandex) with ESMTP id AE10F68B44;
+        Mon, 24 Apr 2023 12:35:33 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:261e:0:640:2e3d:0])
+        by forward101b.mail.yandex.net (Yandex) with ESMTP id B34EC60119;
+        Mon, 24 Apr 2023 12:35:29 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id JZBb1pbWwKo0-gTOTU7I1;
+        Mon, 24 Apr 2023 12:35:27 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1682328927;
+        bh=1BUnzucVZIOur2ZqkDwi3tGjasPWJzQYz0Qjtg3w2ik=;
+        h=Message-Id:Date:Cc:Subject:To:From;
+        b=UgghrdamwAlliyfWMNgpgIf/GA2CaDnIf8J4N707ddvflunc8oYkhwckHZhBR6hJy
+         fXHcpXI0SVojxzFFPeHKSa59FaYAQzj5QfnSgkXsyZJrYJL3ZPWStgaVY/FmuCCqhd
+         giyDCppN4p4mDYomopXewIMVn6BrcHYAuV04xe30=
+Authentication-Results: mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Brian Norris <briannorris@chromium.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Eric Dumazet <edumazet@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jean Delvare <jdelvare@suse.de>, Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Le Moal <damien.lemoal@opensource.wdc.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lukasz Majewski <lukma@denx.de>, Lv Ruyi <lv.ruyi@zte.com.cn>,
+        Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Qin Jian <qinjian@cqplus1.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Russell King <linux@armlinux.org.uk>,
+        Sebastian Reichel <sre@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Sven Peter <sven@svenpeter.dev>, Takashi Iwai <tiwai@suse.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        John Crispin <john@phrozen.org>
-References: <cover.1682007088.git.daniel@makrotopia.org>
- <7f404164337a2e06a6026c5c7e066e0cfba1fb32.1682007088.git.daniel@makrotopia.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <7f404164337a2e06a6026c5c7e066e0cfba1fb32.1682007088.git.daniel@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Walker Chen <walker.chen@starfivetech.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        netdev@vger.kernel.org, soc@kernel.org
+Subject: [PATCH 00/43] ep93xx device tree conversion
+Date:   Mon, 24 Apr 2023 15:34:16 +0300
+Message-Id: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This series aims to convert ep93xx from platform to full device tree support.
 
+Tested on ts7250 64 RAM/128 MiB Nand flash, edb9302.
 
-On 21/04/2023 01:23, Daniel Golle wrote:
-> The PWM unit on MT7981 uses different register offsets than previous
-> MediaTek PWM units. Add support for these new offsets and add support
-> for PWM on MT7981 which has 3 PWM channels, one of them is typically
-> used for a temperature controlled fan.
-> While at it, also reorder pwm_mediatek_of_data entries to restore
-> alphabetic order.
-> 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Thank you Linus and Arnd for your support, review and comments, sorry if i missed something -
+these series are quite big for me.
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Big thanks to Alexander Sverdlin for his testing, support, review, fixes and patches.
 
-> ---
->   drivers/pwm/pwm-mediatek.c | 39 ++++++++++++++++++++++++++++++--------
->   1 file changed, 31 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index 5b5eeaff35da6..7a51d210a8778 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -38,6 +38,7 @@ struct pwm_mediatek_of_data {
->   	unsigned int num_pwms;
->   	bool pwm45_fixup;
->   	bool has_ck_26m_sel;
-> +	const unsigned int *reg_offset;
->   };
->   
->   /**
-> @@ -59,10 +60,14 @@ struct pwm_mediatek_chip {
->   	const struct pwm_mediatek_of_data *soc;
->   };
->   
-> -static const unsigned int pwm_mediatek_reg_offset[] = {
-> +static const unsigned int mtk_pwm_reg_offset_v1[] = {
->   	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
->   };
->   
-> +static const unsigned int mtk_pwm_reg_offset_v2[] = {
-> +	0x0080, 0x00c0, 0x0100, 0x0140, 0x0180, 0x01c0, 0x0200, 0x0240
-> +};
-> +
->   static inline struct pwm_mediatek_chip *
->   to_pwm_mediatek_chip(struct pwm_chip *chip)
->   {
-> @@ -111,7 +116,7 @@ static inline void pwm_mediatek_writel(struct pwm_mediatek_chip *chip,
->   				       unsigned int num, unsigned int offset,
->   				       u32 value)
->   {
-> -	writel(value, chip->regs + pwm_mediatek_reg_offset[num] + offset);
-> +	writel(value, chip->regs + chip->soc->reg_offset[num] + offset);
->   }
->   
->   static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> @@ -285,60 +290,77 @@ static const struct pwm_mediatek_of_data mt2712_pwm_data = {
->   	.num_pwms = 8,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = false,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct pwm_mediatek_of_data mt6795_pwm_data = {
->   	.num_pwms = 7,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = false,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct pwm_mediatek_of_data mt7622_pwm_data = {
->   	.num_pwms = 6,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = true,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct pwm_mediatek_of_data mt7623_pwm_data = {
->   	.num_pwms = 5,
->   	.pwm45_fixup = true,
->   	.has_ck_26m_sel = false,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct pwm_mediatek_of_data mt7628_pwm_data = {
->   	.num_pwms = 4,
->   	.pwm45_fixup = true,
->   	.has_ck_26m_sel = false,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct pwm_mediatek_of_data mt7629_pwm_data = {
->   	.num_pwms = 1,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = false,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
-> -static const struct pwm_mediatek_of_data mt8183_pwm_data = {
-> -	.num_pwms = 4,
-> +static const struct pwm_mediatek_of_data mt7981_pwm_data = {
-> +	.num_pwms = 3,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = true,
-> +	.reg_offset = mtk_pwm_reg_offset_v2,
->   };
->   
-> -static const struct pwm_mediatek_of_data mt8365_pwm_data = {
-> -	.num_pwms = 3,
-> +static const struct pwm_mediatek_of_data mt7986_pwm_data = {
-> +	.num_pwms = 2,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = true,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
-> -static const struct pwm_mediatek_of_data mt7986_pwm_data = {
-> -	.num_pwms = 2,
-> +static const struct pwm_mediatek_of_data mt8183_pwm_data = {
-> +	.num_pwms = 4,
-> +	.pwm45_fixup = false,
-> +	.has_ck_26m_sel = true,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
-> +};
-> +
-> +static const struct pwm_mediatek_of_data mt8365_pwm_data = {
-> +	.num_pwms = 3,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = true,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct pwm_mediatek_of_data mt8516_pwm_data = {
->   	.num_pwms = 5,
->   	.pwm45_fixup = false,
->   	.has_ck_26m_sel = true,
-> +	.reg_offset = mtk_pwm_reg_offset_v1,
->   };
->   
->   static const struct of_device_id pwm_mediatek_of_match[] = {
-> @@ -348,6 +370,7 @@ static const struct of_device_id pwm_mediatek_of_match[] = {
->   	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
->   	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
->   	{ .compatible = "mediatek,mt7629-pwm", .data = &mt7629_pwm_data },
-> +	{ .compatible = "mediatek,mt7981-pwm", .data = &mt7981_pwm_data },
->   	{ .compatible = "mediatek,mt7986-pwm", .data = &mt7986_pwm_data },
->   	{ .compatible = "mediatek,mt8183-pwm", .data = &mt8183_pwm_data },
->   	{ .compatible = "mediatek,mt8365-pwm", .data = &mt8365_pwm_data },
+Alexander Sverdlin (4):
+  ARM: dts: ep93xx: Add ADC node
+  ARM: dts: ep93xx: Add I2S and AC97 nodes
+  ARM: dts: ep93xx: Add EDB9302 DT
+  ASoC: cirrus: edb93xx: Delete driver
+
+Nikita Shubin (39):
+  gpio: ep93xx: split device in multiple
+  soc: Add SoC driver for Cirrus ep93xx
+  dt-bindings: pinctrl: Add DT bindings ep93xx pinctrl
+  pinctrl: add a Cirrus ep93xx SoC pin controller
+  dt-bindings: timers: add DT bindings for Cirrus EP93xx
+  clocksource: ep93xx: Add driver for Cirrus Logic EP93xx
+  dt-bindings: rtc: add DT bindings for Cirrus EP93xx
+  rtc: ep93xx: add DT support for Cirrus EP93xx
+  dt-bindings: watchdog: add DT bindings for Cirrus EP93x
+  watchdog: ep93xx: add DT support for Cirrus EP93xx
+  dt-bindings: clock: add DT bindings for Cirrus EP93xx
+  clk: ep93xx: add DT support for Cirrus EP93xx
+  power: reset: Add a driver for the ep93xx reset
+  dt-bindings: pwm: Add DT bindings ep93xx PWM
+  pwm: ep93xx: add DT support for Cirrus EP93xx
+  dt-bindings: spi: Add DT bindings ep93xx spi
+  spi: ep93xx: add DT support for Cirrus EP93xx
+  dt-bindings: net: Add DT bindings ep93xx eth
+  net: cirrus: add DT support for Cirrus EP93xx
+  dt-bindings: dma: Add DT bindings ep93xx dma
+  dma: cirrus: add DT support for Cirrus EP93xx
+  dt-bindings: mtd: add DT bindings for ts7250 nand
+  mtd: ts72xx_nand: add platform helper
+  dt-bindings: ata: Add DT bindings ep93xx pata
+  pata: cirrus: add DT support for Cirrus EP93xx
+  dt-bindings: input: Add DT bindings ep93xx keypad
+  input: keypad: ep93xx: add DT support for Cirrus EP93xx
+  dt-bindings: rtc: Add DT binding m48t86 rtc
+  rtc: m48t86: add DT support for m48t86
+  dt-bindings: wdt: Add DT binding ts72xx wdt
+  wdt: ts72xx: add DT support for ts72xx
+  dt-bindings: gpio: Add DT bindings ep93xx gpio
+  gpio: ep93xx: add DT support for gpio-ep93xx
+  ARM: dts: add device tree for ep93xx Soc
+  ARM: ep93xx: DT for the Cirrus ep93xx SoC platforms
+  pwm: ep93xx: drop legacy pinctrl
+  input: keypad: ep93xx: drop legacy pinctrl
+  ARM: ep93xx: soc: drop defines
+  ARM: ep93xx: delete all boardfiles
+
+ .../devicetree/bindings/arm/ep93xx.yaml       |   99 +
+ .../bindings/ata/cirrus,ep93xx-pata.yaml      |   40 +
+ .../bindings/dma/cirrus,ep93xx-dma-m2m.yaml   |   66 +
+ .../bindings/dma/cirrus,ep93xx-dma-m2p.yaml   |  102 +
+ .../devicetree/bindings/gpio/gpio-ep93xx.yaml |  161 ++
+ .../bindings/input/cirrus,ep93xx-keypad.yaml  |  123 ++
+ .../bindings/mtd/technologic,nand.yaml        |   56 +
+ .../bindings/net/cirrus,ep93xx_eth.yaml       |   51 +
+ .../pinctrl/cirrus,ep93xx-pinctrl.yaml        |   66 +
+ .../bindings/pwm/cirrus,ep93xx-pwm.yaml       |   45 +
+ .../bindings/rtc/cirrus,ep93xx-rtc.yaml       |   32 +
+ .../bindings/rtc/dallas,rtc-m48t86.yaml       |   33 +
+ .../devicetree/bindings/spi/spi-ep93xx.yaml   |   68 +
+ .../bindings/timer/cirrus,ep93xx-timer.yaml   |   41 +
+ .../bindings/watchdog/cirrus,ep93xx-wdt.yaml  |   38 +
+ .../watchdog/technologic,ts72xx-wdt.yaml      |   39 +
+ arch/arm/Makefile                             |    1 -
+ arch/arm/boot/dts/Makefile                    |    1 +
+ arch/arm/boot/dts/ep93xx-bk3.dts              |   96 +
+ arch/arm/boot/dts/ep93xx-edb9302.dts          |  150 ++
+ arch/arm/boot/dts/ep93xx-ts7250.dts           |  113 ++
+ arch/arm/boot/dts/ep93xx.dtsi                 |  466 +++++
+ arch/arm/mach-ep93xx/Kconfig                  |   20 +-
+ arch/arm/mach-ep93xx/Makefile                 |   11 -
+ arch/arm/mach-ep93xx/core.c                   | 1017 ----------
+ arch/arm/mach-ep93xx/dma.c                    |  114 --
+ arch/arm/mach-ep93xx/edb93xx.c                |  344 ----
+ arch/arm/mach-ep93xx/ep93xx-regs.h            |   38 -
+ arch/arm/mach-ep93xx/gpio-ep93xx.h            |  111 --
+ arch/arm/mach-ep93xx/hardware.h               |   25 -
+ arch/arm/mach-ep93xx/irqs.h                   |   76 -
+ arch/arm/mach-ep93xx/platform.h               |   42 -
+ arch/arm/mach-ep93xx/soc.h                    |  212 --
+ arch/arm/mach-ep93xx/ts72xx.c                 |  422 ----
+ arch/arm/mach-ep93xx/ts72xx.h                 |   94 -
+ arch/arm/mach-ep93xx/vision_ep9307.c          |  311 ---
+ drivers/ata/pata_ep93xx.c                     |    9 +
+ drivers/clk/Kconfig                           |    8 +
+ drivers/clk/Makefile                          |    1 +
+ .../clock.c => drivers/clk/clk-ep93xx.c       |  491 +++--
+ drivers/clocksource/Kconfig                   |   11 +
+ drivers/clocksource/Makefile                  |    1 +
+ .../clocksource}/timer-ep93xx.c               |  143 +-
+ drivers/dma/ep93xx_dma.c                      |  119 +-
+ drivers/gpio/gpio-ep93xx.c                    |  329 ++--
+ drivers/input/keyboard/ep93xx_keypad.c        |   25 +-
+ drivers/mtd/nand/raw/Kconfig                  |    8 +
+ drivers/mtd/nand/raw/Makefile                 |    1 +
+ drivers/mtd/nand/raw/ts72xx_nand.c            |   94 +
+ drivers/net/ethernet/cirrus/ep93xx_eth.c      |   49 +-
+ drivers/pinctrl/Kconfig                       |    7 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-ep93xx.c              | 1698 +++++++++++++++++
+ drivers/power/reset/Kconfig                   |   10 +
+ drivers/power/reset/Makefile                  |    1 +
+ drivers/power/reset/ep93xx-restart.c          |   65 +
+ drivers/pwm/pwm-ep93xx.c                      |   24 +-
+ drivers/rtc/rtc-ep93xx.c                      |    8 +
+ drivers/rtc/rtc-m48t86.c                      |   10 +
+ drivers/soc/Kconfig                           |    1 +
+ drivers/soc/Makefile                          |    1 +
+ drivers/soc/cirrus/Kconfig                    |   11 +
+ drivers/soc/cirrus/Makefile                   |    2 +
+ drivers/soc/cirrus/soc-ep93xx.c               |  134 ++
+ drivers/spi/spi-ep93xx.c                      |   31 +-
+ drivers/watchdog/ep93xx_wdt.c                 |    8 +
+ drivers/watchdog/ts72xx_wdt.c                 |    8 +
+ .../dt-bindings/clock/cirrus,ep93xx-clock.h   |   53 +
+ include/linux/platform_data/dma-ep93xx.h      |    3 +
+ include/linux/soc/cirrus/ep93xx.h             |   28 +-
+ sound/soc/cirrus/Kconfig                      |    9 -
+ sound/soc/cirrus/Makefile                     |    4 -
+ sound/soc/cirrus/edb93xx.c                    |  119 --
+ 73 files changed, 4796 insertions(+), 3453 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/ep93xx.yaml
+ create mode 100644 Documentation/devicetree/bindings/ata/cirrus,ep93xx-pata.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/cirrus,ep93xx-dma-m2m.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/cirrus,ep93xx-dma-m2p.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-ep93xx.yaml
+ create mode 100644 Documentation/devicetree/bindings/input/cirrus,ep93xx-keypad.yaml
+ create mode 100644 Documentation/devicetree/bindings/mtd/technologic,nand.yaml
+ create mode 100644 Documentation/devicetree/bindings/net/cirrus,ep93xx_eth.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,ep93xx-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/cirrus,ep93xx-rtc.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/dallas,rtc-m48t86.yaml
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-ep93xx.yaml
+ create mode 100644 Documentation/devicetree/bindings/timer/cirrus,ep93xx-timer.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/cirrus,ep93xx-wdt.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/technologic,ts72xx-wdt.yaml
+ create mode 100644 arch/arm/boot/dts/ep93xx-bk3.dts
+ create mode 100644 arch/arm/boot/dts/ep93xx-edb9302.dts
+ create mode 100644 arch/arm/boot/dts/ep93xx-ts7250.dts
+ create mode 100644 arch/arm/boot/dts/ep93xx.dtsi
+ delete mode 100644 arch/arm/mach-ep93xx/Makefile
+ delete mode 100644 arch/arm/mach-ep93xx/core.c
+ delete mode 100644 arch/arm/mach-ep93xx/dma.c
+ delete mode 100644 arch/arm/mach-ep93xx/edb93xx.c
+ delete mode 100644 arch/arm/mach-ep93xx/ep93xx-regs.h
+ delete mode 100644 arch/arm/mach-ep93xx/gpio-ep93xx.h
+ delete mode 100644 arch/arm/mach-ep93xx/hardware.h
+ delete mode 100644 arch/arm/mach-ep93xx/irqs.h
+ delete mode 100644 arch/arm/mach-ep93xx/platform.h
+ delete mode 100644 arch/arm/mach-ep93xx/soc.h
+ delete mode 100644 arch/arm/mach-ep93xx/ts72xx.c
+ delete mode 100644 arch/arm/mach-ep93xx/ts72xx.h
+ delete mode 100644 arch/arm/mach-ep93xx/vision_ep9307.c
+ rename arch/arm/mach-ep93xx/clock.c => drivers/clk/clk-ep93xx.c (60%)
+ rename {arch/arm/mach-ep93xx => drivers/clocksource}/timer-ep93xx.c (51%)
+ create mode 100644 drivers/mtd/nand/raw/ts72xx_nand.c
+ create mode 100644 drivers/pinctrl/pinctrl-ep93xx.c
+ create mode 100644 drivers/power/reset/ep93xx-restart.c
+ create mode 100644 drivers/soc/cirrus/Kconfig
+ create mode 100644 drivers/soc/cirrus/Makefile
+ create mode 100644 drivers/soc/cirrus/soc-ep93xx.c
+ create mode 100644 include/dt-bindings/clock/cirrus,ep93xx-clock.h
+ delete mode 100644 sound/soc/cirrus/edb93xx.c
+
+-- 
+2.39.2
+
