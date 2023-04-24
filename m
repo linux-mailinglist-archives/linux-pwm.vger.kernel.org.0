@@ -2,150 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 166AC6ECB5A
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 13:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 544476ECB78
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 13:41:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231445AbjDXLb4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Apr 2023 07:31:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34706 "EHLO
+        id S230343AbjDXLlB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Apr 2023 07:41:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjDXLbx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 07:31:53 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD502D70;
-        Mon, 24 Apr 2023 04:31:50 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id C099C5C018B;
-        Mon, 24 Apr 2023 07:31:49 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 24 Apr 2023 07:31:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1682335909; x=1682422309; bh=Y9
-        FYoJaNOjxIXKXj5iVt3HG1MU0gziVJXHg42DuXBOg=; b=O1tJf0aYUL1Asq2G9I
-        v/WenhP5rGZyZB1SAL0Lr08oQeAEEUQrAp0socR3vEd9UgGnvByhJ755hJxV1qKU
-        E9ZSACMVc6ctw5IOj3YSxNtJjppCrcMnuo3EHDjmd3kHM8VJtKdkgvKL4DFoHOqz
-        +W+8IuX2hg35wSKwedvXKJ3PURDaQkrWjJM/7PMwj2nQ3bK1GDbl6lv178HZ/NA8
-        KDsO9MYDBoMlPNBh8aEl4RrLKv4OLsavscqSSR/heANCq8T/WVE0cVUSnj8QfSJQ
-        4u/teN+GVPZosLly+e7aCJHZfWx6MH3m9aFx+6kQZQbTUHFFn+RPDQoPPYxBW1gQ
-        IJSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1682335909; x=1682422309; bh=Y9FYoJaNOjxIX
-        KXj5iVt3HG1MU0gziVJXHg42DuXBOg=; b=iBdH6uvO/L8/zyujyEmeuLQ7lvT2x
-        GYZygrbZo05oxTN/Md/oDE0e8WW8qA02cbgVhsfFcZOI0ds8e+FbCtiiaOJvFiRx
-        +0cW8fxBsOTCzFHhmKeMdRGumvrSujG5VcT8IFLwY3h8/nMbzymQnlGomWQOWzQx
-        /oBTRzPHT38WBG1dSwXH+qEHrQrBjZbDngRgGtk3lDrZjamKW1iCCAmPUjNH4bVF
-        47At9lDjEDsPYhnN2768xyf3oBtpO2z2m/rKqeUCbiN4YmtGLmGGX3q1bMmxrG9I
-        36sN74EogbvFLVEbiiG9I3iKHbm4hY5BQztKKlqVi2e7UnWmYlN05agjA==
-X-ME-Sender: <xms:o2hGZE7zjv519ykLdrbAQGTLb_LGqm8C9gu0iv5LW_l5ijia9biY7A>
-    <xme:o2hGZF7IUwkhhPb4KXqxJ6jrGKB4g1CI7PypRKEHNaKZ-yKjsy2DgJ29sYcy-8ANi
-    L7P0836qypU8DsWz5I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedutddggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:o2hGZDccuXBCL3RAIdybA7rao9itrSh_uY8pqy72IR4RYUm3PNP66w>
-    <xmx:o2hGZJLZwUfDzeDL8noN8lkkCw-LNtlf4Vp39AIRXYTSMF4PksJThw>
-    <xmx:o2hGZIKT3iHKm9UvV7uZTvPOYuO2PbPXKewmqiqnd7-usVCISuMq0A>
-    <xmx:pWhGZAVObyMQbbUUBpdedORBxIIpPoWc5gLC07zOHsQjH_IqgL-nMw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2684DB60086; Mon, 24 Apr 2023 07:31:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-372-g43825cb665-fm-20230411.003-g43825cb6
-Mime-Version: 1.0
-Message-Id: <8101c53e-e682-4dc3-95cc-a332b1822b8b@app.fastmail.com>
-In-Reply-To: <20230424123522.18302-1-nikita.shubin@maquefel.me>
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
-Date:   Mon, 24 Apr 2023 13:31:25 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Nikita Shubin" <nikita.shubin@maquefel.me>
-Cc:     "Arnd Bergmann" <arnd@kernel.org>,
-        "Linus Walleij" <linusw@kernel.org>,
-        "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "Russell King" <rmk+kernel@armlinux.org.uk>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        "Alexander Gordeev" <agordeev@linux.ibm.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Brian Norris" <briannorris@chromium.org>,
-        "Chuanhong Guo" <gch981213@gmail.com>,
-        "Conor.Dooley" <conor.dooley@microchip.com>,
-        "Damien Le Moal" <dlemoal@kernel.org>,
-        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-        "Emil Renner Berthing" <kernel@esmil.dk>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "Guenter Roeck" <linux@roeck-us.net>,
-        "Hartley Sweeten" <hsweeten@visionengravers.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "Hitomi Hasegawa" <hasegawa-hitomi@fujitsu.com>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        "Jean Delvare" <jdelvare@suse.de>, "Joel Stanley" <joel@jms.id.au>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        "Liang Yang" <liang.yang@amlogic.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Lukasz Majewski" <lukma@denx.de>, "Lv Ruyi" <lv.ruyi@zte.com.cn>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Masahiro Yamada" <masahiroy@kernel.org>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        "Nathan Chancellor" <nathan@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        "Nicolas Saenz Julienne" <nsaenz@kernel.org>,
-        "Olof Johansson" <olof@lixom.net>,
-        "Paolo Abeni" <pabeni@redhat.com>,
-        "Qin Jian" <qinjian@cqplus1.com>,
-        "Richard Weinberger" <richard@nod.at>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Robert Jarzmik" <robert.jarzmik@free.fr>,
-        "Russell King" <linux@armlinux.org.uk>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        "Sergey Shtylyov" <s.shtylyov@omp.ru>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        "Sumanth Korikkar" <sumanthk@linux.ibm.com>,
-        "Sven Peter" <sven@svenpeter.dev>, "Takashi Iwai" <tiwai@suse.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>,
-        "Vinod Koul" <vkoul@kernel.org>,
-        "Walker Chen" <walker.chen@starfivetech.com>,
-        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
-        "Yinbo Zhu" <zhuyinbo@loongson.cn>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        soc@kernel.org
-Subject: Re: [PATCH 00/43] ep93xx device tree conversion
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        with ESMTP id S231405AbjDXLlB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 07:41:01 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECB83A8C;
+        Mon, 24 Apr 2023 04:40:55 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-959a3e2dc72so197505366b.2;
+        Mon, 24 Apr 2023 04:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682336453; x=1684928453;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Atxqe0IIK6VDLPs1BwgFpTOFx3cvy6f167JM1AHQk1Y=;
+        b=rqR0Aznkpa/KhuYo7EPT5kkIe8+ouuxZJ9sHP4Qho9DYWp83KM6BlUpNAnn0xSGLIo
+         ZFVgRHM6edU8MKhCgxxayxrDx5z7ZXNEcV5POFrJmPqOxzDgrG682DZ/ooLUjTJgqcSl
+         SzIE183YMcanum737awhw51qB+Co0uWiRBMs2e8j/YldO2S7gwzBC8wKYptf02p0y5jg
+         kSO7SjXB6h+RAHwXHci9NHdgrdwZdOtEUZaP8AWEYGsXYxJd8Qml/TsX1vpUfSV5ejM1
+         4k/Pxlt1hskBtIrYsBYKUMXL5GIodI7MJCJuzU41DiBP/l1sVmqQgSRo/ysdB5P+YFaa
+         ynhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682336453; x=1684928453;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Atxqe0IIK6VDLPs1BwgFpTOFx3cvy6f167JM1AHQk1Y=;
+        b=HvVFyB4IVRnFukspLClR1EqpjRnmK7oR0EXF+k3fvnr1n+iiHFzEM3fgXSc7TFOU8b
+         kdHNai8YGtN7oE+gtrsQFP0YrsYKPOFhgbSX1K4OQQtyHSxb9ZLoCQj6PC6G4yjse5YO
+         wqhQTHmyNQVxfgxohZsSzVI5Iy7O+XfQeqHj2z2/hyi2AXOPp3c1qK2cK9nn5aNwMHq5
+         EJDtxFNMUQtJtPCyfIRSm5QHlM/0MxQeIy5+WKBprSdejQpJ0oUAlAVThCgZA8VGYbqJ
+         wuojjrc1Xyo7eWMqJJGZ+9jHavV8QRH1AV14a38/lyOhbySy0NqjusTnr7PvXMW3tF1f
+         PD7w==
+X-Gm-Message-State: AAQBX9fr7cHoct82UuAKVG3TER8Xus/nWuE3FIbaidNbTTcfuUOkN1GR
+        X0b0thfhWShrSadS5vx+Hf1IVQemhxc=
+X-Google-Smtp-Source: AKy350aX/xBxpt1PnTgQ8kFjllzm6KAbnrCFnpuubj37N4v9I3qsOO7RD9Jp4Yeguir8tzDIEGhL1w==
+X-Received: by 2002:a17:906:cb94:b0:94a:826c:df57 with SMTP id mf20-20020a170906cb9400b0094a826cdf57mr8242043ejb.39.1682336453548;
+        Mon, 24 Apr 2023 04:40:53 -0700 (PDT)
+Received: from felia.fritz.box ([2a02:810d:2a40:1104:d8ac:5455:8f1f:51ef])
+        by smtp.gmail.com with ESMTPSA id a8-20020a170906670800b0094f257e3e05sm5415705ejp.168.2023.04.24.04.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 04:40:53 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Sasha Finkelstein <7d578vix8hzw@opayq.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        asahi@lists.linux.dev, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust file entry for ARM/APPLE MACHINE SUPPORT
+Date:   Mon, 24 Apr 2023 13:40:43 +0200
+Message-Id: <20230424114043.22475-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -153,23 +68,32 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Apr 24, 2023, at 14:34, Nikita Shubin wrote:
-> This series aims to convert ep93xx from platform to full device tree support.
->
-> Tested on ts7250 64 RAM/128 MiB Nand flash, edb9302.
->
-> Thank you Linus and Arnd for your support, review and comments, sorry 
-> if i missed something -
-> these series are quite big for me.
->
-> Big thanks to Alexander Sverdlin for his testing, support, review, 
-> fixes and patches.
+Commit de614ac31955 ("MAINTAINERS: Add entries for Apple PWM driver") adds
+an entry for Documentation/devicetree/bindings/pwm/pwm-apple.yaml, but
+commit 87a3a3929c71 ("dt-bindings: pwm: Add Apple PWM controller") from
+the same patch series actually adds the devicetree binding file with the
+name apple,s5l-fpwm.yaml.
 
-Thanks a lot for your continued work. I can't merge any of this at
-the moment since the upstream merge window just opened, but I'm
-happy to take this all through the soc tree for 6.5, provided we
-get the sufficient Acks from the subsystem maintainers. Merging
-it through each individual tree would take a lot longer, so I
-hope we can avoid that.
+Adjust the file entry to the file actually added.
 
-      Arnd
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 82bea269e242..a430ea8018ff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1961,7 +1961,7 @@ F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
+ F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+ F:	Documentation/devicetree/bindings/power/apple*
+-F:	Documentation/devicetree/bindings/pwm/pwm-apple.yaml
++F:	Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
+ F:	Documentation/devicetree/bindings/watchdog/apple,wdt.yaml
+ F:	arch/arm64/boot/dts/apple/
+ F:	drivers/bluetooth/hci_bcm4377.c
+-- 
+2.17.1
+
