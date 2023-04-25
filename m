@@ -2,142 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B391D6ED1EE
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Apr 2023 18:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FCBA6EDDF9
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Apr 2023 10:29:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232005AbjDXQDH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Apr 2023 12:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        id S233396AbjDYI27 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Apr 2023 04:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231898AbjDXQDC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Apr 2023 12:03:02 -0400
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0119072BD;
-        Mon, 24 Apr 2023 09:02:54 -0700 (PDT)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-18e26c08349so2408893fac.0;
-        Mon, 24 Apr 2023 09:02:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682352174; x=1684944174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LnzfYEatrJSwokCAbLh8ogw9ZFGMSla77/kxbiv4hOM=;
-        b=aweU4cCR0IPirBYORTCFBygRX9Wcsqoq8lDtjgJpBpWQiUoLuX49EDL9sxrXcDE2M4
-         kj+8MGKNU/2MToUBFfWRqxDx8hWPLscQcrMeijmroi5AYxGAu3gLr1ZUXr+KVKoWCqWe
-         GAzlY8JBX0gqRhUHvsylPo7YtBNePqFr9IXHlWO1VArzEN7QDOMHVGkWw6b5nwaTbY9e
-         5e+tPOBEEyyui9ynBb4zNij8Yf1wpM6EL0QbPmO+GGABzWjUyZ2PfFRL/0dfRMQwlk46
-         mBNXHJ2rfZ6flubYDqBdjJqLD5qKFAf9lfHC9NL9ZBY5DoSKjH8h4uxxqQESoeuwcuHf
-         gAwA==
-X-Gm-Message-State: AAQBX9fOd0Z6YeWrOC1DwmCAXBn4rBGaEzTyIZe2HCwow5BhDRykaT5e
-        9m8InN+MDtspBVWR8p8Y7hRGjIEm7A==
-X-Google-Smtp-Source: AKy350YFprky0QexCA+YNuK9/WujoCDaw7Udk1v+D5cUN5ctLb84vKBwYCYQ9n67gbZyOlPwf0q5vQ==
-X-Received: by 2002:a05:6870:b491:b0:187:e5c4:4a50 with SMTP id y17-20020a056870b49100b00187e5c44a50mr10330412oap.17.1682352174290;
-        Mon, 24 Apr 2023 09:02:54 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id c2-20020ae9ed02000000b007339c5114a9sm3660638qkg.103.2023.04.24.09.02.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 09:02:53 -0700 (PDT)
-Received: (nullmailer pid 2717300 invoked by uid 1000);
-        Mon, 24 Apr 2023 16:02:52 -0000
-Date:   Mon, 24 Apr 2023 11:02:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/43] dt-bindings: pwm: Add DT bindings ep93xx PWM
-Message-ID: <20230424160252.GC2701399-robh@kernel.org>
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
- <20230424123522.18302-15-nikita.shubin@maquefel.me>
+        with ESMTP id S233271AbjDYI26 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Apr 2023 04:28:58 -0400
+Received: from mail.loanfly.pl (mail.loanfly.pl [141.94.250.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98EBA40E0
+        for <linux-pwm@vger.kernel.org>; Tue, 25 Apr 2023 01:28:57 -0700 (PDT)
+Received: by mail.loanfly.pl (Postfix, from userid 1002)
+        id C30C9A6059; Tue, 25 Apr 2023 08:22:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=loanfly.pl; s=mail;
+        t=1682410945; bh=flSgn4+IJB03yMaHNopPnR0v50wun3P5Hd/CkHJx2Bc=;
+        h=Date:From:To:Subject:From;
+        b=lFTnEngoHhDRlKrpCNc9sH6IlrMbTanRpuDGZwITNhKTWOsS6swA9nQoU0gU4M1tM
+         8t43LaFYvHahwkiUFBnYX9HatgU6lrRBcFM2nXZhsdO3DbHBnfcKHW+zCulfbSJx2C
+         IV2S5S4ufYg+kisw2VKQ38i1GuypeuiwgrvrwgZJt+SjvWdhX5F1iMKwwPcng0Vpof
+         JGLOKyMBy5tkHAtI9SMQBNHYbUavk/iMXZZOQZ5yqO9oeb2XMzJVCorc+BPYhZICL3
+         Ikq3I365PyiKFD/JbZekMJrbGmy0+WqiSAGEQZxqre5b9Bh8rQM4r0wXqTRsGoonvJ
+         uww+mFcT3IkjA==
+Received: by mail.loanfly.pl for <linux-pwm@vger.kernel.org>; Tue, 25 Apr 2023 08:21:34 GMT
+Message-ID: <20230425064112-0.1.9r.1619c.0.85al1763x5@loanfly.pl>
+Date:   Tue, 25 Apr 2023 08:21:34 GMT
+From:   "Damian Cichocki" <damian.cichocki@loanfly.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: Prezentacja
+X-Mailer: mail.loanfly.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230424123522.18302-15-nikita.shubin@maquefel.me>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_ABUSE_SURBL,URIBL_BLOCKED,
+        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: *  1.2 URIBL_ABUSE_SURBL Contains an URL listed in the ABUSE SURBL
+        *      blocklist
+        *      [URIs: loanfly.pl]
+        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: loanfly.pl]
+        *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: loanfly.pl]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [141.94.250.68 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: loanfly.pl]
+        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 03:34:30PM +0300, Nikita Shubin wrote:
-> Add YAML bindings for ep93xx SoC.
-> 
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> ---
->  .../bindings/pwm/cirrus,ep93xx-pwm.yaml       | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml b/Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
-> new file mode 100644
-> index 000000000000..8f67eb152f8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/cirrus,ep93xx-pwm.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/cirrus,ep93xx-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cirrus Logick ep93xx PWM controller
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
+Dzie=C5=84 dobry!
 
-This is someone that cares about this platform/binding, not who applies 
-patches. Same thing elsewhere.
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cirrus,ep9301-pwm
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: SoC PWM clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pwm_clk
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
+dostaw.
 
-*-names is kind of pointless with only 1 entry. And 'pwm' is redundant 
-because names are local to the device. 'clk' is redundant because it's 
-all clocks.
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/cirrus,ep93xx-clock.h>
-> +    pwm0: pwm@80910000 {
-> +        compatible = "cirrus,ep9301-pwm";
-> +        reg = <0x80910000 0x10>;
-> +        clocks = <&syscon EP93XX_CLK_PWM>;
-> +        clock-names = "pwm_clk";
-> +    };
-> +
-> +...
-> -- 
-> 2.39.2
-> 
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
+
+
+Pozdrawiam,
+Damian Cichocki
