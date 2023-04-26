@@ -2,59 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F16276EFBFF
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Apr 2023 22:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA586EFC1E
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Apr 2023 23:06:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239869AbjDZU5M (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Apr 2023 16:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37184 "EHLO
+        id S239869AbjDZVGu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 26 Apr 2023 17:06:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239904AbjDZU5K (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Apr 2023 16:57:10 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890E12735
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Apr 2023 13:57:06 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-555e853d3c5so59562357b3.2
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Apr 2023 13:57:06 -0700 (PDT)
+        with ESMTP id S233450AbjDZVGt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Apr 2023 17:06:49 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF7826A6
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Apr 2023 14:06:47 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-54f8e823e47so87532477b3.2
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Apr 2023 14:06:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682542625; x=1685134625;
+        d=linaro.org; s=google; t=1682543207; x=1685135207;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PeyZTvE2qao9z3HUKls5t/zNMEefQNyhwIh3dGLQJIU=;
-        b=MLeMyFt/BrAb2CUUJZ7KmQTqlKOdl+nyYZc7PmyjnwYQvm0Yf7UbAGXqUUW6bmw5G8
-         d9v/M6N+1fVWgVUttzO6DbM8nQI6KJCXhAN7IozpaR9m8Bl7slG7VpsqTKwoquSQxGsD
-         jxjSQ3saNVE9cXwcQLcGF1jRtKLT/eEwI8kJvMSzxcIq2cDfiKWjYhMONbeUEU8V5mkj
-         6Wdd/04hTAUwScC/UEbqqr6+MnHBHQTixxYJ9LZKKkCtwlqFMN3MWW87ziN5fguiVzeh
-         4csevZGxcMK5tYzjndfSfWqBNcCl6Mif+sgasTPGERCLKwqXoxv35oil0C7Hw7NrwoqG
-         vwLA==
+        bh=8C6tKrbT51GaZnl8zer1AnBo8yNRgpprgLkj0av5l+E=;
+        b=Kh7TmG3JlHQoPDgJrxEspZSpUN+36yUdamiO43UnPnWU5WHRHExsZuq1crpHQPMIXw
+         zzWzXMlOi38Xx4my+77mCqHvk7/X81J/7WthQKZt0CHx/5a1ohrap/HzGWEDQbQACJTb
+         YhsFcjssiyz48P8HUQnvmRDVNrO8n5ZicePPH1S7Zj9YadbExO7GDrfEmhV8+JMdHi44
+         dS/U1Lzmekv6Z1Px+wN/pWN5LwOrRpCZPrnqoQccfnfTFROZXP698w5QlH4NBcZahcI9
+         Av/WtFSCGNW/WXdsMcqPPizaCNJVu9G6mBZV0Jx9mGGkKSo+tGaTmr2RPFnSQVsLEyzh
+         SKbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682542625; x=1685134625;
+        d=1e100.net; s=20221208; t=1682543207; x=1685135207;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PeyZTvE2qao9z3HUKls5t/zNMEefQNyhwIh3dGLQJIU=;
-        b=I1ceCTg6JTWqDGfx0mUurz1F9eYIV0tvczrPProXcMHYL2qhY3xLs9HF5J/7veIHGA
-         kyKoG57/Ua5TNnBd0BInC2DnjhEw5G3rE6nbReCagUWphR6LSx2enOvdE5D2PyKsEH9l
-         yPaJMmZUdJoFAQfHWHXn3IiLp5H6oT9BzTkQGdmGtI3DLrzprDDFzVbqtiv8MYtNDWkE
-         m7KkzNKiLPECTadrKDHMdiy3PFyJKaS+eFFFzORLfiKIxV2xIO2gTPSKkCeM7CyHwRCA
-         0IQtggsSBivFxUmFwUOJRWDL3ZB0Yl9ehMED+o+a7TCmTRn/G4osYsy6gg5gkcvpkqE2
-         98sA==
-X-Gm-Message-State: AAQBX9de2PJNux8+ZZgraaPoVbbNUAAJqXyN8fX75lDpS1IYxt+VbaId
-        TLqdsyLJTnNQDiGxUy9FAkgtNJrqRQF8tb280jXH0A==
-X-Google-Smtp-Source: AKy350ajEJHyhyynqyOl0isjddMpiNdULElT/xAxUEM8cmGuE9kOk2QPH86dypmLR0gOJToVISGwrFvJLTDtak1EsDI=
-X-Received: by 2002:a0d:ea0d:0:b0:552:a2e2:684e with SMTP id
- t13-20020a0dea0d000000b00552a2e2684emr13680157ywe.52.1682542625695; Wed, 26
- Apr 2023 13:57:05 -0700 (PDT)
+        bh=8C6tKrbT51GaZnl8zer1AnBo8yNRgpprgLkj0av5l+E=;
+        b=GkQKBfeaMM1qBrWhqCpxB51JBSvE5lbnefk59J/8iyEoiEz42FchQMNAnXpZSipgcn
+         yZZOsqjWMQFD62euB2HNACZnWHvCf86EPTKxs8IluMx1Ph9qoK+Us6EgcJhXQzbHEd+k
+         sMu+awi4Ujm3yW5N/dMXjHR4m42xIRijl63WVo+QiRun6eXLybueV7i91nzbHoJOPX5Q
+         lMPqpF2YbpFLSjP8LjVeHl1Ckekn6ojRiuqCJ2noHU3KbobbL99C0TYNCPPg72K89NA5
+         lIIZ5Gb618GFoajG7HUs/GetuNSwoPU/759DsRAiw0jZKQ9C6Y8qsMTFOlSdjoMEvcbS
+         8bqw==
+X-Gm-Message-State: AAQBX9f4AFkj91I8qdVEwCoPP+LBipBoOn/CmE77C36FpcXfTDQtBdCx
+        YwanYh/YRjaKYyX4OhgQBLfFmWoGClYSWDTQYWx8Dg==
+X-Google-Smtp-Source: AKy350bnHkFKck7ScHLySUohS3TGug3PuU6k1b4WHzFwKnH0/14BD/IU48R1JEuMfUGu5baNdUtxQXCsghQML3QSaV8=
+X-Received: by 2002:a81:5d02:0:b0:54f:8b56:bb3 with SMTP id
+ r2-20020a815d02000000b0054f8b560bb3mr13933284ywb.5.1682543207061; Wed, 26 Apr
+ 2023 14:06:47 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+ <CACRpkdarANFQ7-p=-Pi_iuk6L=PfSLDsD3_w4dEVqarwXkEGMQ@mail.gmail.com> <b5396ef5-3fed-4e98-8f37-a9cd4473bddc@sirena.org.uk>
+In-Reply-To: <b5396ef5-3fed-4e98-8f37-a9cd4473bddc@sirena.org.uk>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 26 Apr 2023 22:56:53 +0200
-Message-ID: <CACRpkdarANFQ7-p=-Pi_iuk6L=PfSLDsD3_w4dEVqarwXkEGMQ@mail.gmail.com>
+Date:   Wed, 26 Apr 2023 23:06:35 +0200
+Message-ID: <CACRpkdaZvKoFuDHP0Cd1MuayKtnBjCG5wmWPjwq3pccCrb-P9A@mail.gmail.com>
 Subject: Re: [PATCH 00/43] ep93xx device tree conversion
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
@@ -89,7 +92,6 @@ Cc:     Arnd Bergmann <arnd@kernel.org>, Linus Walleij <linusw@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Liang Yang <liang.yang@amlogic.com>,
         Lukasz Majewski <lukma@denx.de>, Lv Ruyi <lv.ruyi@zte.com.cn>,
-        Mark Brown <broonie@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -130,34 +132,27 @@ Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 11:35=E2=80=AFAM Nikita Shubin
-<nikita.shubin@maquefel.me> wrote:
-
-> This series aims to convert ep93xx from platform to full device tree supp=
-ort.
+On Wed, Apr 26, 2023 at 11:02=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+> On Wed, Apr 26, 2023 at 10:56:53PM +0200, Linus Walleij wrote:
 >
-> Tested on ts7250 64 RAM/128 MiB Nand flash, edb9302.
+> > This is a big patch set and the improvement to the ARM kernel it
+> > brings is great, so I am a bit worried about over-review stalling the
+> > merged. If there start to be nitpicky comments I would prefer that
+> > we merge it and let minor comments and "nice-to-haves" be
+> > addressed in-tree during the development cycle.
+>
+> I'm really not enthusiastic about the SPI bindings being merged as-is.
 
-Neat, I'd say let's merge this for 6.5 once the final rough edges are
-off. The DT bindings should be easy to fix.
-
-This is a big patch set and the improvement to the ARM kernel it
-brings is great, so I am a bit worried about over-review stalling the
-merged. If there start to be nitpicky comments I would prefer that
-we merge it and let minor comments and "nice-to-haves" be
-addressed in-tree during the development cycle.
-
-I encourage you to use b4 to manage the patch series if you
-have time to learn it, it could help you:
-https://people.kernel.org/monsieuricon/sending-a-kernel-patch-with-b4-part-=
-1
+Agree, the bindings are more important than the code IMO,
+they tend to get written in stone.
 
 Yours,
 Linus Walleij
