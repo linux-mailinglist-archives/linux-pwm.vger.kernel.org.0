@@ -2,157 +2,97 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FA586EFC1E
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Apr 2023 23:06:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE6726F136F
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Apr 2023 10:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239869AbjDZVGu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Apr 2023 17:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
+        id S229532AbjD1Iqi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Apr 2023 04:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233450AbjDZVGt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Apr 2023 17:06:49 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF7826A6
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Apr 2023 14:06:47 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-54f8e823e47so87532477b3.2
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Apr 2023 14:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1682543207; x=1685135207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8C6tKrbT51GaZnl8zer1AnBo8yNRgpprgLkj0av5l+E=;
-        b=Kh7TmG3JlHQoPDgJrxEspZSpUN+36yUdamiO43UnPnWU5WHRHExsZuq1crpHQPMIXw
-         zzWzXMlOi38Xx4my+77mCqHvk7/X81J/7WthQKZt0CHx/5a1ohrap/HzGWEDQbQACJTb
-         YhsFcjssiyz48P8HUQnvmRDVNrO8n5ZicePPH1S7Zj9YadbExO7GDrfEmhV8+JMdHi44
-         dS/U1Lzmekv6Z1Px+wN/pWN5LwOrRpCZPrnqoQccfnfTFROZXP698w5QlH4NBcZahcI9
-         Av/WtFSCGNW/WXdsMcqPPizaCNJVu9G6mBZV0Jx9mGGkKSo+tGaTmr2RPFnSQVsLEyzh
-         SKbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682543207; x=1685135207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8C6tKrbT51GaZnl8zer1AnBo8yNRgpprgLkj0av5l+E=;
-        b=GkQKBfeaMM1qBrWhqCpxB51JBSvE5lbnefk59J/8iyEoiEz42FchQMNAnXpZSipgcn
-         yZZOsqjWMQFD62euB2HNACZnWHvCf86EPTKxs8IluMx1Ph9qoK+Us6EgcJhXQzbHEd+k
-         sMu+awi4Ujm3yW5N/dMXjHR4m42xIRijl63WVo+QiRun6eXLybueV7i91nzbHoJOPX5Q
-         lMPqpF2YbpFLSjP8LjVeHl1Ckekn6ojRiuqCJ2noHU3KbobbL99C0TYNCPPg72K89NA5
-         lIIZ5Gb618GFoajG7HUs/GetuNSwoPU/759DsRAiw0jZKQ9C6Y8qsMTFOlSdjoMEvcbS
-         8bqw==
-X-Gm-Message-State: AAQBX9f4AFkj91I8qdVEwCoPP+LBipBoOn/CmE77C36FpcXfTDQtBdCx
-        YwanYh/YRjaKYyX4OhgQBLfFmWoGClYSWDTQYWx8Dg==
-X-Google-Smtp-Source: AKy350bnHkFKck7ScHLySUohS3TGug3PuU6k1b4WHzFwKnH0/14BD/IU48R1JEuMfUGu5baNdUtxQXCsghQML3QSaV8=
-X-Received: by 2002:a81:5d02:0:b0:54f:8b56:bb3 with SMTP id
- r2-20020a815d02000000b0054f8b560bb3mr13933284ywb.5.1682543207061; Wed, 26 Apr
- 2023 14:06:47 -0700 (PDT)
+        with ESMTP id S1345410AbjD1Iqh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Apr 2023 04:46:37 -0400
+Received: from mail.loanfly.pl (mail.loanfly.pl [141.94.250.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6CA359D
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Apr 2023 01:46:34 -0700 (PDT)
+Received: by mail.loanfly.pl (Postfix, from userid 1002)
+        id 922B5A701B; Fri, 28 Apr 2023 08:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=loanfly.pl; s=mail;
+        t=1682671592; bh=flSgn4+IJB03yMaHNopPnR0v50wun3P5Hd/CkHJx2Bc=;
+        h=Date:From:To:Subject:From;
+        b=UihmMvO8aNXu1lTwn0ZRUmjKvSu4jN+QfjFHOpm6vZr/LAmTydwn1m79xZB1VfiaD
+         wZUfJb8WZNEcKnAgTI85kSphuaGbXu3NtDBayMsC/g0s5Sy+CKV+UmXuaIZc156uNU
+         V2Xc8RP15SpElQ+sOgqui1Lx+urM99PD8ECnU+yMPWtieUc04YtbviaTnNa4KYzvsD
+         gPfInKyERivtIE1of/wQpfOjfsIVuqy6dKScgRXtq70FdzgWT6spZh+lFI87EL/pEJ
+         MEvY+cPb3yYh8PaRQZ4mySh0k7Fu1ZcQ5PscJe5LuZTWWi2kiKN5SjGWeO+ikgJubN
+         RUrYN09hle+4w==
+Received: by mail.loanfly.pl for <linux-pwm@vger.kernel.org>; Fri, 28 Apr 2023 08:46:18 GMT
+Message-ID: <20230428084110-0.1.9u.1619c.0.1fvaa6op6k@loanfly.pl>
+Date:   Fri, 28 Apr 2023 08:46:18 GMT
+From:   "Damian Cichocki" <damian.cichocki@loanfly.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: Prezentacja
+X-Mailer: mail.loanfly.pl
 MIME-Version: 1.0
-References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
- <CACRpkdarANFQ7-p=-Pi_iuk6L=PfSLDsD3_w4dEVqarwXkEGMQ@mail.gmail.com> <b5396ef5-3fed-4e98-8f37-a9cd4473bddc@sirena.org.uk>
-In-Reply-To: <b5396ef5-3fed-4e98-8f37-a9cd4473bddc@sirena.org.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 26 Apr 2023 23:06:35 +0200
-Message-ID: <CACRpkdaZvKoFuDHP0Cd1MuayKtnBjCG5wmWPjwq3pccCrb-P9A@mail.gmail.com>
-Subject: Re: [PATCH 00/43] ep93xx device tree conversion
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Linus Walleij <linusw@kernel.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Brian Norris <briannorris@chromium.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jean Delvare <jdelvare@suse.de>, Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Le Moal <damien.lemoal@opensource.wdc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Lukasz Majewski <lukma@denx.de>, Lv Ruyi <lv.ruyi@zte.com.cn>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Qin Jian <qinjian@cqplus1.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Russell King <linux@armlinux.org.uk>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Sven Peter <sven@svenpeter.dev>, Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Walker Chen <walker.chen@starfivetech.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        netdev@vger.kernel.org, soc@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_ABUSE_SURBL,URIBL_BLOCKED,
+        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: loanfly.pl]
+        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: loanfly.pl]
+        *  1.2 URIBL_ABUSE_SURBL Contains an URL listed in the ABUSE SURBL
+        *      blocklist
+        *      [URIs: loanfly.pl]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [141.94.250.68 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: loanfly.pl]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 11:02=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
-> On Wed, Apr 26, 2023 at 10:56:53PM +0200, Linus Walleij wrote:
->
-> > This is a big patch set and the improvement to the ARM kernel it
-> > brings is great, so I am a bit worried about over-review stalling the
-> > merged. If there start to be nitpicky comments I would prefer that
-> > we merge it and let minor comments and "nice-to-haves" be
-> > addressed in-tree during the development cycle.
->
-> I'm really not enthusiastic about the SPI bindings being merged as-is.
+Dzie=C5=84 dobry!
 
-Agree, the bindings are more important than the code IMO,
-they tend to get written in stone.
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
-Yours,
-Linus Walleij
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
+dostaw.
+
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
+
+
+Pozdrawiam,
+Damian Cichocki
