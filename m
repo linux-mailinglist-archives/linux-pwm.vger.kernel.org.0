@@ -2,160 +2,134 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD54A6F246B
-	for <lists+linux-pwm@lfdr.de>; Sat, 29 Apr 2023 13:14:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C4D6F2593
+	for <lists+linux-pwm@lfdr.de>; Sat, 29 Apr 2023 20:16:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230467AbjD2LOS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 29 Apr 2023 07:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58362 "EHLO
+        id S230156AbjD2SQ6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 29 Apr 2023 14:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjD2LOR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 29 Apr 2023 07:14:17 -0400
-Received: from mail.z3ntu.xyz (mail.z3ntu.xyz [128.199.32.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22731998;
-        Sat, 29 Apr 2023 04:14:15 -0700 (PDT)
-Received: from g550jk.localnet (unknown [62.108.10.64])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 9293DC76D6;
-        Sat, 29 Apr 2023 11:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1682766853; bh=A8QySs6SKhnXKBxkO0+a10Q3xy1UQlrC6oSknuRX0p0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=U7zokl7PwDhkg2mUuKqWuwfT1MxrzqVZ/5hi6RDzgNWum9wURWdBcStFGLcfBVMY8
-         UaDtySh/ktQAX2Bj61orQkqqmlcte/2DFaVZsjjcp4LVEPFIEio70LtCzx+VEJ1/eZ
-         gUtBK5DhbsU6wGkMv9uelFv8KytbxGpGtKzr0API=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        with ESMTP id S229655AbjD2SQ5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 29 Apr 2023 14:16:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CB81BCF
+        for <linux-pwm@vger.kernel.org>; Sat, 29 Apr 2023 11:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682792166;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qoMw8hZsLZdf/cdbGeh0wbM5n+2XCZVN28XQ0DZAp9Y=;
+        b=fD0g3fQvUBNY25scJdG8zgS+Fuev9tcgoWXGrUS/4nbIffRwBeJt6MyANgKK9QbNKFYw2Y
+        akgKGg1wj1+mV8y866rCHAFkHSn3ApvaaOgJleVjuPKEDE5RYF2/wzEblbe0Sxop8vfH2I
+        rnl7ykJPbevweIecxIHmTzYN7V6E83o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-507-eyYPoH-XMuqKrmH-ozuZBg-1; Sat, 29 Apr 2023 14:16:01 -0400
+X-MC-Unique: eyYPoH-XMuqKrmH-ozuZBg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 129FA85A588;
+        Sat, 29 Apr 2023 18:16:01 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F62F2027043;
+        Sat, 29 Apr 2023 18:15:59 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Helge Deller <deller@gmx.de>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Artur Weber <aweber.kernel@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Artur Weber <aweber.kernel@gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: adapt to LP855X bindings changes
-Date:   Sat, 29 Apr 2023 13:14:12 +0200
-Message-ID: <3414865.QJadu78ljV@z3ntu.xyz>
-In-Reply-To: <20230429104534.28943-4-aweber.kernel@gmail.com>
-References: <20230429104534.28943-1-aweber.kernel@gmail.com>
- <20230429104534.28943-4-aweber.kernel@gmail.com>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH 00/19] platform/x86: lenovo-yogabook: Modify to also work on Android version
+Date:   Sat, 29 Apr 2023 20:15:32 +0200
+Message-Id: <20230429181551.98201-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Samstag, 29. April 2023 12:45:33 CEST Artur Weber wrote:
-> Change underscores in ROM node names to dashes, and remove deprecated
-> pwm-period property.
-> 
-> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+Hi All,
 
-Reviewed-by: Luca Weiss <luca@z3ntu.xyz>
+The Lenovo Yoga Book (yb1-x9*) is a yoga 2-in-1 where the keyboard
+half has a touch keyboard (with a backlit fixed key layout) to make
+it extra thin and light. The keyboard half can also be switched to
+an alternative wacom digitizer mode where it instead can be used
+to draw on. The backlight + switching is handled by
+the lenovo-yogabook driver.
 
-> ---
->  .../dts/qcom-apq8026-samsung-matisse-wifi.dts |  1 -
->  ...-msm8974pro-sony-xperia-shinano-castor.dts | 23 ++++++++++---------
->  2 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8026-samsung-matisse-wifi.dts
-> b/arch/arm/boot/dts/qcom-apq8026-samsung-matisse-wifi.dts index
-> 91b860e24681..884d99297d4c 100644
-> --- a/arch/arm/boot/dts/qcom-apq8026-samsung-matisse-wifi.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8026-samsung-matisse-wifi.dts
-> @@ -99,7 +99,6 @@ backlight@2c {
-> 
->  			dev-ctrl = /bits/ 8 <0x80>;
->  			init-brt = /bits/ 8 <0x3f>;
-> -			pwm-period = <100000>;
-> 
->  			pwms = <&backlight_pwm 0 100000>;
->  			pwm-names = "lp8556";
-> diff --git
-> a/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> b/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts index
-> 04bc58d87abf..2396253f953a 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> @@ -150,47 +150,48 @@ lp8566_wled: backlight@2c {
->  		bl-name = "backlight";
->  		dev-ctrl = /bits/ 8 <0x05>;
->  		init-brt = /bits/ 8 <0x3f>;
-> -		rom_a0h {
-> +
-> +		rom-a0h {
->  			rom-addr = /bits/ 8 <0xa0>;
->  			rom-val = /bits/ 8 <0xff>;
->  		};
-> -		rom_a1h {
-> +		rom-a1h {
->  			rom-addr = /bits/ 8 <0xa1>;
->  			rom-val = /bits/ 8 <0x3f>;
->  		};
-> -		rom_a2h {
-> +		rom-a2h {
->  			rom-addr = /bits/ 8 <0xa2>;
->  			rom-val = /bits/ 8 <0x20>;
->  		};
-> -		rom_a3h {
-> +		rom-a3h {
->  			rom-addr = /bits/ 8 <0xa3>;
->  			rom-val = /bits/ 8 <0x5e>;
->  		};
-> -		rom_a4h {
-> +		rom-a4h {
->  			rom-addr = /bits/ 8 <0xa4>;
->  			rom-val = /bits/ 8 <0x02>;
->  		};
-> -		rom_a5h {
-> +		rom-a5h {
->  			rom-addr = /bits/ 8 <0xa5>;
->  			rom-val = /bits/ 8 <0x04>;
->  		};
-> -		rom_a6h {
-> +		rom-a6h {
->  			rom-addr = /bits/ 8 <0xa6>;
->  			rom-val = /bits/ 8 <0x80>;
->  		};
-> -		rom_a7h {
-> +		rom-a7h {
->  			rom-addr = /bits/ 8 <0xa7>;
->  			rom-val = /bits/ 8 <0xf7>;
->  		};
-> -		rom_a9h {
-> +		rom-a9h {
->  			rom-addr = /bits/ 8 <0xa9>;
->  			rom-val = /bits/ 8 <0x80>;
->  		};
-> -		rom_aah {
-> +		rom-aah {
->  			rom-addr = /bits/ 8 <0xaa>;
->  			rom-val = /bits/ 8 <0x0f>;
->  		};
-> -		rom_aeh {
-> +		rom-aeh {
->  			rom-addr = /bits/ 8 <0xae>;
->  			rom-val = /bits/ 8 <0x0f>;
->  		};
+There are both Windows and Android versions with different BIOS-es /
+ACPI tables. This series extends the current Windows model only driver
+to also support the Android model.
+
+On the Android yb1-x90f/l models there is not ACPI method to control
+the keyboard backlight brightness. Instead the second PWM controller
+is exposed directly to the OS there.
+
+This requires adding a pwm_lookup table and the lenovo-yogabook code
+can (and typically is) build as a module. So the first patch in
+this series exports pwm_add_table() and pwm_remove_table() for use
+in modules.
+
+I believe that it is easiest to just merge the entire series through
+the drivers/platform/x86 tree. Thierry, may I have your ack for
+patch 1/19 to merge it through the pdx86 tree ?
+
+Regards,
+
+Hans
 
 
+Hans de Goede (19):
+  pwm: Export pwm_add_table() / pwm_remove_table()
+  platform/x86: lenovo-yogabook: Fix work race on remove()
+  platform/x86: lenovo-yogabook: Reprobe devices on remove()
+  platform/x86: lenovo-yogabook: Set default keyboard backligh
+    brightness on probe()
+  platform/x86: lenovo-yogabook: Simplify gpio lookup table cleanup
+  platform/x86: lenovo-yogabook: Switch to DEFINE_SIMPLE_DEV_PM_OPS()
+  platform/x86: lenovo-yogabook: Store dev instead of wdev in drvdata
+    struct
+  platform/x86: lenovo-yogabook: Add dev local variable to probe()
+  platform/x86: lenovo-yogabook: Use PMIC LED driver for pen icon LED
+    control
+  platform/x86: lenovo-yogabook: Split probe() into generic and WMI
+    specific parts
+  platform/x86: lenovo-yogabook: Stop checking adev->power.state
+  platform/x86: lenovo-yogabook: Abstract kbd backlight setting
+  platform/x86: lenovo-yogabook: Add a yogabook_toggle_digitizer_mode()
+    helper function
+  platform/x86: lenovo-yogabook: Drop _wmi_ from remaining generic
+    symbols
+  platform/x86: lenovo-yogabook: Group WMI specific code together
+  platform/x86: lenovo-yogabook: Add YB_KBD_BL_MAX define
+  platform/x86: lenovo-yogabook: Add platform driver support
+  platform/x86: lenovo-yogabook: Add keyboard backlight control to
+    platform driver
+  platform/x86: lenovo-yogabook: Rename lenovo-yogabook-wmi to
+    lenovo-yogabook
 
+ drivers/platform/x86/Kconfig               |   6 +-
+ drivers/platform/x86/Makefile              |   2 +-
+ drivers/platform/x86/lenovo-yogabook-wmi.c | 408 --------------
+ drivers/platform/x86/lenovo-yogabook.c     | 587 +++++++++++++++++++++
+ drivers/pwm/core.c                         |   2 +
+ 5 files changed, 593 insertions(+), 412 deletions(-)
+ delete mode 100644 drivers/platform/x86/lenovo-yogabook-wmi.c
+ create mode 100644 drivers/platform/x86/lenovo-yogabook.c
+
+-- 
+2.39.2
 
