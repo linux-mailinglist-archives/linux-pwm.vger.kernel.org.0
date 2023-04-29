@@ -2,97 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE6726F136F
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Apr 2023 10:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 736BA6F242F
+	for <lists+linux-pwm@lfdr.de>; Sat, 29 Apr 2023 12:46:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbjD1Iqi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Apr 2023 04:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
+        id S231176AbjD2Kp6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 29 Apr 2023 06:45:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345410AbjD1Iqh (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Apr 2023 04:46:37 -0400
-Received: from mail.loanfly.pl (mail.loanfly.pl [141.94.250.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6CA359D
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Apr 2023 01:46:34 -0700 (PDT)
-Received: by mail.loanfly.pl (Postfix, from userid 1002)
-        id 922B5A701B; Fri, 28 Apr 2023 08:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=loanfly.pl; s=mail;
-        t=1682671592; bh=flSgn4+IJB03yMaHNopPnR0v50wun3P5Hd/CkHJx2Bc=;
-        h=Date:From:To:Subject:From;
-        b=UihmMvO8aNXu1lTwn0ZRUmjKvSu4jN+QfjFHOpm6vZr/LAmTydwn1m79xZB1VfiaD
-         wZUfJb8WZNEcKnAgTI85kSphuaGbXu3NtDBayMsC/g0s5Sy+CKV+UmXuaIZc156uNU
-         V2Xc8RP15SpElQ+sOgqui1Lx+urM99PD8ECnU+yMPWtieUc04YtbviaTnNa4KYzvsD
-         gPfInKyERivtIE1of/wQpfOjfsIVuqy6dKScgRXtq70FdzgWT6spZh+lFI87EL/pEJ
-         MEvY+cPb3yYh8PaRQZ4mySh0k7Fu1ZcQ5PscJe5LuZTWWi2kiKN5SjGWeO+ikgJubN
-         RUrYN09hle+4w==
-Received: by mail.loanfly.pl for <linux-pwm@vger.kernel.org>; Fri, 28 Apr 2023 08:46:18 GMT
-Message-ID: <20230428084110-0.1.9u.1619c.0.1fvaa6op6k@loanfly.pl>
-Date:   Fri, 28 Apr 2023 08:46:18 GMT
-From:   "Damian Cichocki" <damian.cichocki@loanfly.pl>
-To:     <linux-pwm@vger.kernel.org>
-Subject: Prezentacja
-X-Mailer: mail.loanfly.pl
+        with ESMTP id S229507AbjD2Kp4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 29 Apr 2023 06:45:56 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A5F1FCD;
+        Sat, 29 Apr 2023 03:45:55 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-506b2a08877so1150534a12.2;
+        Sat, 29 Apr 2023 03:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682765153; x=1685357153;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WTQTEbLPt4h9veixLWM+5ZtwRhk8Wsy+ewL1TGUe3D0=;
+        b=oH5Kvm5drzQdcOXTiqEwKZhd7EmXTc4PzAK03AaVxM3T9Y3Z4v02nzKRQw+JKmLXDa
+         hHfP3cVaROpARK80o9Px6dby16oN8U2ony8aEDqo8HHSJYrw5t9GKqy0MYpUDPsSctle
+         CB5SFrTFkL7WFcReoHDaLQ+ZnfqxjD9ApSysyxIZqU9aGCQTW2yGDXSgWl+dwsvJesdi
+         o3Ip7JbO0A3s2iZ9i4dUvZ2Whyo6X392jfNqd8+xo4TXHXLJUPAeM5t4MwR6TarTO9Uu
+         aTa8+CWtcK4O+7PvC/eVLW87vMxxlDlsx4436E1Hf3iuF1Fbl8XLaxy6kbTgA48kCq1x
+         A1gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682765153; x=1685357153;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WTQTEbLPt4h9veixLWM+5ZtwRhk8Wsy+ewL1TGUe3D0=;
+        b=KJKcNnQz/K4qo840e0i52cHK5FBN8Fecfg/r38iaC5aQ3ec41FXYatMVJkW7h5Uqef
+         pbu+SDVnJCowHLQ2qSRIoayA5f5tP1KP+epa5hqXtGXhS8E0pMpYqOenUJUmxQLaGnM7
+         +Te6ogx6Nm6k8Brz346mlf8l4gKNIYAK6rJzkaXDysVtY+IT9Did4WO7qdxUIEVzFW8s
+         sBt9Zku8dav7a8BxRtX/nUivEht+t279Np1THpbq3g7dV6p0amHmfJe06VAWsRkFkzOS
+         aH4dq+O8zke96l9YJhQCeUsE1vplqIo52nI1h5tzowKOu3Dod6WhgaUx0VyOURM7tN15
+         7maQ==
+X-Gm-Message-State: AC+VfDyzEAU3nO6bLZynWFVHn/JL7bQid25mB06bP6P25V3U8zra/aWG
+        W9HUlDSCE8shR7Cym+COV9E=
+X-Google-Smtp-Source: ACHHUZ4x/Gdg5OzSrpmM9phfXhSpLi+EARAapUnJz09J7J4N94Z160t6oxkz+44oNxD3ND2gGUwSvg==
+X-Received: by 2002:aa7:d547:0:b0:4fc:709f:7abd with SMTP id u7-20020aa7d547000000b004fc709f7abdmr1241415edr.2.1682765153465;
+        Sat, 29 Apr 2023 03:45:53 -0700 (PDT)
+Received: from localhost.my.domain (83.8.115.30.ipv4.supernova.orange.pl. [83.8.115.30])
+        by smtp.gmail.com with ESMTPSA id b11-20020a056402138b00b004bd6e3ed196sm9952522edv.86.2023.04.29.03.45.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Apr 2023 03:45:53 -0700 (PDT)
+From:   Artur Weber <aweber.kernel@gmail.com>
+To:     Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Helge Deller <deller@gmx.de>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Artur Weber <aweber.kernel@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH 0/4] video: backlight: lp855x: modernize bindings
+Date:   Sat, 29 Apr 2023 12:45:30 +0200
+Message-Id: <20230429104534.28943-1-aweber.kernel@gmail.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_ABUSE_SURBL,URIBL_BLOCKED,
-        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
-        *      blocklist
-        *      [URIs: loanfly.pl]
-        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
-        *      blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [URIs: loanfly.pl]
-        *  1.2 URIBL_ABUSE_SURBL Contains an URL listed in the ABUSE SURBL
-        *      blocklist
-        *      [URIs: loanfly.pl]
-        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-        *      [141.94.250.68 listed in zen.spamhaus.org]
-        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
-        *      blocklist
-        *      [URIs: loanfly.pl]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-X-Spam-Level: *****
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dzie=C5=84 dobry!
+Convert TI LP855X backlight controller bindings from TXT to YAML and,
+while we're at it, rework some of the code related to PWM handling.
+Also correct existing DTS files to avoid introducing new dtb_check
+errors.
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
-dostaw.
+Artur Weber (4):
+  dt-bindings: backlight: lp855x: convert to YAML and modernize
+  video: backlight: lp855x: get PWM for PWM mode during probe
+  ARM: dts: adapt to LP855X bindings changes
+  arm64: dts: adapt to LP855X bindings changes
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+ .../leds/backlight/lp855x-backlight.yaml      | 148 ++++++++++++++++++
+ .../bindings/leds/backlight/lp855x.txt        |  72 ---------
+ .../dts/qcom-apq8026-samsung-matisse-wifi.dts |   1 -
+ ...-msm8974pro-sony-xperia-shinano-castor.dts |  23 +--
+ .../boot/dts/nvidia/tegra210-p2371-2180.dts   |   6 +-
+ drivers/video/backlight/lp855x_bl.c           |  48 +++---
+ 6 files changed, 188 insertions(+), 110 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/lp855x-backlight.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/lp855x.txt
 
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
 
+base-commit: e154a338e16cc3b3bbd54c891253319d22383746
+-- 
+2.40.1
 
-Pozdrawiam,
-Damian Cichocki
