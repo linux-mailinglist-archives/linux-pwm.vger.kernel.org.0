@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 115B06F2877
-	for <lists+linux-pwm@lfdr.de>; Sun, 30 Apr 2023 12:36:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA33C6F287B
+	for <lists+linux-pwm@lfdr.de>; Sun, 30 Apr 2023 12:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjD3KgL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 30 Apr 2023 06:36:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34664 "EHLO
+        id S230222AbjD3Kiz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 30 Apr 2023 06:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjD3KgJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Apr 2023 06:36:09 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24729128;
-        Sun, 30 Apr 2023 03:36:07 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-3ef34e948b1so7131921cf.2;
-        Sun, 30 Apr 2023 03:36:07 -0700 (PDT)
+        with ESMTP id S229461AbjD3Kix (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Apr 2023 06:38:53 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE9110DB;
+        Sun, 30 Apr 2023 03:38:52 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3ef35d44612so18366651cf.1;
+        Sun, 30 Apr 2023 03:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682850966; x=1685442966;
+        d=gmail.com; s=20221208; t=1682851132; x=1685443132;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6dNET8HOuj2PeP2UuTx2ymn4h6dDe9tSyzJY0ILEBHU=;
-        b=Bi4iXNoFtUBn2He+lXem1Puh/N9vgT/rhaANNpPC5lD9wY3znMuA8ofWOVOjGVRIV1
-         +5LRaFCJm0UD+g+zad1LIbG2o8NLBECsiieY+u8Ui+UQ4zA+oDtF9x2LO0KTmoNi2oE2
-         ZhlYVHYeUQZB+lqErTdnNadOLD3nQ6zp27T8gQAoiDOI3pqDMfTQLiV+sfFa3bR3VDjL
-         QGs2hycBRHoMjYynL+F3d/bBiFHhSDAoeDd6icywT/6oTGMBMHqLz8xrqPTXnssdbcon
-         eks1Ky+rnk3zFVyOzhpQi4XqjDF1PXsBDGbLQqscYAAFevzB+s21JeK8VhjZxxbm/dfb
-         dGNg==
+        bh=xZKBLPSRoLR6E32GNyHWfjJNPT9RqigzUNAEk928+lE=;
+        b=EtwzRx2nOX5XIuy9nhrizh2E+jXmM3ISLBoLwg0SIj29erPSQMqXJ4HwPukKlyA2bR
+         pBQSO/spe71K3OMP57UerIFGIIeNVRs+M4cI0nmVsZ5XyrxIlF4hwJflN3r3t85aEQtr
+         xOqMbSUSmzplCf3nL4B9KX6qyLydqEhnSAuCX15FuNtXCfYs979uXDg2jE1Q2OyzXR64
+         MeZJ0ZAwd03/4WOB+IQ4AQRtNLehtq4Vi46Hyqd118jXn/yJWrauWTVk3vNmRthdUP4E
+         McH45dg8IPs+bllIFcLPMSXdtQ3HJ55uERxmdckCTvQ2UO8cj2+Wq2SeFh4mna0c9J+K
+         t7ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682850966; x=1685442966;
+        d=1e100.net; s=20221208; t=1682851132; x=1685443132;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6dNET8HOuj2PeP2UuTx2ymn4h6dDe9tSyzJY0ILEBHU=;
-        b=byZupe/fqtQZj9BnmJhwxZltltkT0T+XnMpCBJTeAarqMfiXh9VxYr5VnU7yq9QhHn
-         99x/KSlVbCreYsxuPR8zwJT4mYnvBZXF9Sd8NckSNcyQ+pnxxMsQQjcUaE8JJ7+SJN3r
-         8C1HRmB0ghia6BVVsUNDjPrFlC+u+VbS2DPqBRIeraWbjSq4EuD8TZQHCOP+CTQ1e3nF
-         ewCYAUnFxeQnaO/Rj8NDIB8w2CkB+frL7KjyjJeRRtgDgUGQTutORagQvvsC5SMhIk1u
-         R7SKnKBtStiA2x2phRp8nJX36GKO8UiMJ/Q4dBAiUgMxN+OcAmsZdibkclTAhRMOpPDj
-         UMlg==
-X-Gm-Message-State: AC+VfDzVuV3Qpvrw7PHangrYKtNBCL09Ml+w0s0gIqDoYSwFnYDQA0bD
-        jRUyRnjt+XmZT0hZamsvHhv5s21/7ZWME/dn5hs=
-X-Google-Smtp-Source: ACHHUZ7KjpaQf0kDmYz1VZ+fCi0gNcCz5+pLKf3jrW1ancJIoAvh+wt/cn/P8xHq2hRiMGxE2+jkvakpF4g/lOED+j0=
-X-Received: by 2002:a05:622a:386:b0:3ea:6f96:1915 with SMTP id
- j6-20020a05622a038600b003ea6f961915mr16265620qtx.24.1682850966039; Sun, 30
- Apr 2023 03:36:06 -0700 (PDT)
+        bh=xZKBLPSRoLR6E32GNyHWfjJNPT9RqigzUNAEk928+lE=;
+        b=AzxA6/rHgqEmQdTFqeTdAhIHj5zDJ75jDh77+WKFtOP1z+OBggan9U6wbPhqMeJhZR
+         t5YSNQ0sWpTbsWQQvfHy3bfWq8ZnjJRH/T5Zci/cuXnI5XlgZynHQnSR35Ef5T+blhkq
+         FDWORjllWXYjvd7B/Dexg1Dj8XZZte5I/0NZvnfAM3RKrn+PEdtc7HjGsPF/SQD4QgYk
+         XqFHnJs4ffQZsX53rJix/WdA6gcS7d19C2Edm12864z8GLyV0pMMJOz1Y9dUVLYEJFv4
+         QkoV5LlWnrf5g+TUpF5wiEEPiH+367iAlU/hU0YCXkSjTLkqMl83lvc28CYU7gihhzcz
+         PwaQ==
+X-Gm-Message-State: AC+VfDzzuULvOHPYvAHd5eg95gLOnN9LHT6A+wUUV7NGQAbVywxAqJdu
+        SjyQbI8Ly3fJ2WRis2YOFc+QvwDLtBAqb9sCkso=
+X-Google-Smtp-Source: ACHHUZ7rqGV3XUOXgx8gzu4g0EhjVrxOcq5nG5VFnsobNS/3OtaM3BQ+S6lq90jhKpDed7Wutz4GB/8ScJWQjZRNOLs=
+X-Received: by 2002:ac8:7c49:0:b0:3ef:2c3a:faa3 with SMTP id
+ o9-20020ac87c49000000b003ef2c3afaa3mr16886054qtv.17.1682851131776; Sun, 30
+ Apr 2023 03:38:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230429181551.98201-1-hdegoede@redhat.com> <20230429181551.98201-10-hdegoede@redhat.com>
-In-Reply-To: <20230429181551.98201-10-hdegoede@redhat.com>
+References: <20230429181551.98201-1-hdegoede@redhat.com> <20230429181551.98201-11-hdegoede@redhat.com>
+In-Reply-To: <20230429181551.98201-11-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 Apr 2023 13:35:30 +0300
-Message-ID: <CAHp75VeeOpycDsR2pRCDs4TEd7Ck3wWSLyFo=St6qQC+tbGaOQ@mail.gmail.com>
-Subject: Re: [PATCH 09/19] platform/x86: lenovo-yogabook: Use PMIC LED driver
- for pen icon LED control
+Date:   Sun, 30 Apr 2023 13:38:15 +0300
+Message-ID: <CAHp75VfXGC611evXnorLaoWecAX2daFsvSdqmp09UFt4yD-isQ@mail.gmail.com>
+Subject: Re: [PATCH 10/19] platform/x86: lenovo-yogabook: Split probe() into
+ generic and WMI specific parts
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -77,32 +77,54 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 On Sat, Apr 29, 2023 at 9:16=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
  wrote:
 >
-> Use the (new) PMIC LED driver for pen icon LED control instead of using
-> custom WMI calls for this.
+> Split probe() and remove() into generic and WMI specific parts.
 >
-> This will also work on the Android version of the Lenovo Yoga Book 1,
-> where there is no WMI interface for this.
->
-> The dev_id of the lookup is set using dev_name() so that it will also
-> work for both the Windows YB1 WMI-device as well as the Android YB1
-> platform-device. While at it also move the gpio_lookup to using dev_name(=
-)
-> for the dev_id.
->
-> Note this also removes the need to turn of the LED during suspend since
-> the PMIC LED driver now already does that.
+> This is a preparation patch for making lenovo-yogabook-wmi also work
+> on the Android version of the Yoga Book 1 which does not have a WMI
+> interface to deal with toggling the keyboard half between
+> touch-keyboard and wacom-digitizer mode.
+
+
+
+
+
+>         if (IS_ERR(data->pen_led)) {
+>                 r =3D PTR_ERR(data->pen_led);
+>                 dev_err_probe(dev, r, "Getting pen icon LED\n");
+> -               goto error_put_devs;
+> +               return r;
+>         }
+
+At the same time you may
+
+return dev_err_probe(PTR_ERR());
+
+Same to the rest of the modified places like this.
 
 ...
 
-> +       led_add_lookup(&yogabook_pen_led);
-> +       data->pen_led =3D devm_led_get(dev, "pen-icon-led");
-> +       led_remove_lookup(&yogabook_pen_led);
+> +       data->kbd_adev =3D acpi_dev_get_first_match_dev("GDIX1001", NULL,=
+ -1);
+> +       if (!data->kbd_adev) {
+> +               dev_err(dev, "Cannot find the touchpad device in ACPI tab=
+les\n");
+> +               return -ENODEV;
 
-Wondering if we should start at some point helpers like
+return dev_err_probe();
 
-devm_led_get_with_table() which will do the above.
+> +       }
+> +
+> +       data->dig_adev =3D acpi_dev_get_first_match_dev("WCOM0019", NULL,=
+ -1);
+> +       if (!data->dig_adev) {
+> +               dev_err(dev, "Cannot find the digitizer device in ACPI ta=
+bles\n");
+> +               r =3D -ENODEV;
 
-P.S. All the same probably makes sense to (ACPI) GPIO, PWM, etc calls.
+r =3D dev_err_probe(); ?
+
+> +               goto error_put_devs;
+> +       }
 
 --=20
 With Best Regards,
