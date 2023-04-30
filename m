@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3C836F2873
-	for <lists+linux-pwm@lfdr.de>; Sun, 30 Apr 2023 12:32:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 115B06F2877
+	for <lists+linux-pwm@lfdr.de>; Sun, 30 Apr 2023 12:36:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230114AbjD3KcN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 30 Apr 2023 06:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33922 "EHLO
+        id S229565AbjD3KgL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 30 Apr 2023 06:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjD3KcM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Apr 2023 06:32:12 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF41F10F7;
-        Sun, 30 Apr 2023 03:32:10 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3f0b30f240eso15261071cf.3;
-        Sun, 30 Apr 2023 03:32:10 -0700 (PDT)
+        with ESMTP id S229461AbjD3KgJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Apr 2023 06:36:09 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24729128;
+        Sun, 30 Apr 2023 03:36:07 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-3ef34e948b1so7131921cf.2;
+        Sun, 30 Apr 2023 03:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682850730; x=1685442730;
+        d=gmail.com; s=20221208; t=1682850966; x=1685442966;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=88q4cylknUGQPnEgNEkNRWSqoVDq4Wpv4/ce7oxcsTc=;
-        b=kwhnndqIX0ZTJfd2uwcPbrvZe69FW1o8V0XDQDVxmihIUueUKcakv62k/R7fv/Uasj
-         EqTd/iTZb1Mw4oNWFC1FI+DycR9chzm8XkOgZ2z1UPrnit0GtZ8v3U3cPopbTCKIdNF9
-         Xc5L5O3pkReOqvWSgHcMPDr8xrI7JdPI/IjqkhG/9ft7flTrwJctcukDPr66wmSWOetw
-         s7cEHD8szfVLdKYdeiuQRjQwynomYFWKZQTXmPYw7ZZHv7dqGiOryfbZ8Pv6F07HUBlC
-         /mgzrIaMydWoMQK/L+8QMFH++IKQPrlMFbXiVmjMfCNYwgfgbjunBlZrxCdRv07Z9lWF
-         poLw==
+        bh=6dNET8HOuj2PeP2UuTx2ymn4h6dDe9tSyzJY0ILEBHU=;
+        b=Bi4iXNoFtUBn2He+lXem1Puh/N9vgT/rhaANNpPC5lD9wY3znMuA8ofWOVOjGVRIV1
+         +5LRaFCJm0UD+g+zad1LIbG2o8NLBECsiieY+u8Ui+UQ4zA+oDtF9x2LO0KTmoNi2oE2
+         ZhlYVHYeUQZB+lqErTdnNadOLD3nQ6zp27T8gQAoiDOI3pqDMfTQLiV+sfFa3bR3VDjL
+         QGs2hycBRHoMjYynL+F3d/bBiFHhSDAoeDd6icywT/6oTGMBMHqLz8xrqPTXnssdbcon
+         eks1Ky+rnk3zFVyOzhpQi4XqjDF1PXsBDGbLQqscYAAFevzB+s21JeK8VhjZxxbm/dfb
+         dGNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682850730; x=1685442730;
+        d=1e100.net; s=20221208; t=1682850966; x=1685442966;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=88q4cylknUGQPnEgNEkNRWSqoVDq4Wpv4/ce7oxcsTc=;
-        b=H/iRrRqTf2DhJoOCGfKS7dxvT16Jk3BrNs0Cz2X77TWO10HtZ3IAX0iiwvGxX+Ht3Y
-         QPaJaYzqlAQf3rFTiNzT0vHQqR6qKzNiKqxJAkqKvDO3gMC0TQPzoYOqJVWsxvHXMp3x
-         1dj4yOs3kpiI9VthaT8MnbsBnHtRk9Nt3AUm9KiIv6YP87Afzq5v3WbGmdquW2shOzFp
-         EcFp+NMWyKV8iPDZ5Fy0e36nVm40qErlomOtX4o4KlQOI/d65RP4SZqhxvlikK6Ok8YB
-         u179YikvhAcoBywUONKriLEHC1aaLHrU+3oXl2jtUROpTAa9cZaBTUiNybxo0PaKVA55
-         Ixkw==
-X-Gm-Message-State: AC+VfDyR0vyihW+9oU7GfSeBCUWCbH6ldhq0bHxp+PNCDtBB2ke8o44M
-        HZEVBt9wlz9NMh/sppAjIUV1uEbTQjzSYbJXvocaS46nbA253P3m
-X-Google-Smtp-Source: ACHHUZ7ysxDRJIXIwqloEdjOfVBZum8r3YnorFjgTjRWt92Mm4xXaqE6MvspwQHpLXGJw9W/clktoBj3h4LTDpG6tXM=
-X-Received: by 2002:ac8:5d86:0:b0:3eb:6892:2930 with SMTP id
- d6-20020ac85d86000000b003eb68922930mr17155324qtx.39.1682850729848; Sun, 30
- Apr 2023 03:32:09 -0700 (PDT)
+        bh=6dNET8HOuj2PeP2UuTx2ymn4h6dDe9tSyzJY0ILEBHU=;
+        b=byZupe/fqtQZj9BnmJhwxZltltkT0T+XnMpCBJTeAarqMfiXh9VxYr5VnU7yq9QhHn
+         99x/KSlVbCreYsxuPR8zwJT4mYnvBZXF9Sd8NckSNcyQ+pnxxMsQQjcUaE8JJ7+SJN3r
+         8C1HRmB0ghia6BVVsUNDjPrFlC+u+VbS2DPqBRIeraWbjSq4EuD8TZQHCOP+CTQ1e3nF
+         ewCYAUnFxeQnaO/Rj8NDIB8w2CkB+frL7KjyjJeRRtgDgUGQTutORagQvvsC5SMhIk1u
+         R7SKnKBtStiA2x2phRp8nJX36GKO8UiMJ/Q4dBAiUgMxN+OcAmsZdibkclTAhRMOpPDj
+         UMlg==
+X-Gm-Message-State: AC+VfDzVuV3Qpvrw7PHangrYKtNBCL09Ml+w0s0gIqDoYSwFnYDQA0bD
+        jRUyRnjt+XmZT0hZamsvHhv5s21/7ZWME/dn5hs=
+X-Google-Smtp-Source: ACHHUZ7KjpaQf0kDmYz1VZ+fCi0gNcCz5+pLKf3jrW1ancJIoAvh+wt/cn/P8xHq2hRiMGxE2+jkvakpF4g/lOED+j0=
+X-Received: by 2002:a05:622a:386:b0:3ea:6f96:1915 with SMTP id
+ j6-20020a05622a038600b003ea6f961915mr16265620qtx.24.1682850966039; Sun, 30
+ Apr 2023 03:36:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230429181551.98201-1-hdegoede@redhat.com> <20230429181551.98201-9-hdegoede@redhat.com>
-In-Reply-To: <20230429181551.98201-9-hdegoede@redhat.com>
+References: <20230429181551.98201-1-hdegoede@redhat.com> <20230429181551.98201-10-hdegoede@redhat.com>
+In-Reply-To: <20230429181551.98201-10-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 Apr 2023 13:31:33 +0300
-Message-ID: <CAHp75Vctex-8_1jOx3jaaCj9MH=d4oMoeCYdw5AYv+F=nzK1Kw@mail.gmail.com>
-Subject: Re: [PATCH 08/19] platform/x86: lenovo-yogabook: Add dev local
- variable to probe()
+Date:   Sun, 30 Apr 2023 13:35:30 +0300
+Message-ID: <CAHp75VeeOpycDsR2pRCDs4TEd7Ck3wWSLyFo=St6qQC+tbGaOQ@mail.gmail.com>
+Subject: Re: [PATCH 09/19] platform/x86: lenovo-yogabook: Use PMIC LED driver
+ for pen icon LED control
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
@@ -77,34 +77,32 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 On Sat, Apr 29, 2023 at 9:16=E2=80=AFPM Hans de Goede <hdegoede@redhat.com>=
  wrote:
 >
-> Add a "struct device *dev" local variable to probe().
+> Use the (new) PMIC LED driver for pen icon LED control instead of using
+> custom WMI calls for this.
 >
-> This is a preparation patch for making lenovo-yogabook-wmi also work
-> on the Android version of the Yoga Book 1 which does not have a WMI
-> interface to deal with toggling the keyboard half between
-> touch-keyboard and wacom-digitizer mode.
+> This will also work on the Android version of the Lenovo Yoga Book 1,
+> where there is no WMI interface for this.
+>
+> The dev_id of the lookup is set using dev_name() so that it will also
+> work for both the Windows YB1 WMI-device as well as the Android YB1
+> platform-device. While at it also move the gpio_lookup to using dev_name(=
+)
+> for the dev_id.
+>
+> Note this also removes the need to turn of the LED during suspend since
+> the PMIC LED driver now already does that.
 
 ...
 
-> -       data =3D devm_kzalloc(&wdev->dev, sizeof(struct yogabook_wmi), GF=
-P_KERNEL);
-> +       data =3D devm_kzalloc(dev, sizeof(struct yogabook_wmi), GFP_KERNE=
-L);
->         if (data =3D=3D NULL)
->                 return -ENOMEM;
+> +       led_add_lookup(&yogabook_pen_led);
+> +       data->pen_led =3D devm_led_get(dev, "pen-icon-led");
+> +       led_remove_lookup(&yogabook_pen_led);
 
-> -       dev_set_drvdata(&wdev->dev, data);
-> +       dev_set_drvdata(dev, data);
+Wondering if we should start at some point helpers like
 
-For robustness' sake I would at the same time move this a bit down to
-have (some? at least dev seems to be important) fields in data to be
-initialized. Yes, this won't change anything, I hope.
+devm_led_get_with_table() which will do the above.
 
-> -       data->dev =3D &wdev->dev;
-> +       data->dev =3D dev;
->         data->brightness =3D YB_KBD_BL_DEFAULT;
->         set_bit(YB_KBD_IS_ON, &data->flags);
->         set_bit(YB_DIGITIZER_IS_ON, &data->flags);
+P.S. All the same probably makes sense to (ACPI) GPIO, PWM, etc calls.
 
 --=20
 With Best Regards,
