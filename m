@@ -2,147 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6286D6F2964
-	for <lists+linux-pwm@lfdr.de>; Sun, 30 Apr 2023 17:40:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 301AC6F2995
+	for <lists+linux-pwm@lfdr.de>; Sun, 30 Apr 2023 18:59:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjD3Pkv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 30 Apr 2023 11:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
+        id S229478AbjD3Q7K (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 30 Apr 2023 12:59:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjD3Pku (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Apr 2023 11:40:50 -0400
+        with ESMTP id S230272AbjD3Q7J (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 30 Apr 2023 12:59:09 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD991739
-        for <linux-pwm@vger.kernel.org>; Sun, 30 Apr 2023 08:40:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC311FDF
+        for <linux-pwm@vger.kernel.org>; Sun, 30 Apr 2023 09:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682869202;
+        s=mimecast20190719; t=1682873901;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wQ16pmB1gtE1KSPBErTmJ1zb6H8Xmxi2VyW+gGOxZdw=;
-        b=IPdn9t0AXUQR0pMgOjUlQlRzylavdoY/5d2YUDnl/b15yyukJf3tS/cMLpKfzxqCc2BTdG
-        ysJMDJz/s7zswzdi8DICCrdwsSC+8lxGP23JGqOer7nEQEsVa+IN4gfN8j691glSighWd+
-        gY29NrmuBcqBhfff3BXuxUNIYIZN9dM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-215-2ZI0TbtHOd68LVgpv_DweA-1; Sun, 30 Apr 2023 11:39:53 -0400
-X-MC-Unique: 2ZI0TbtHOd68LVgpv_DweA-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-94a355c9028so205860366b.3
-        for <linux-pwm@vger.kernel.org>; Sun, 30 Apr 2023 08:39:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682869191; x=1685461191;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQ16pmB1gtE1KSPBErTmJ1zb6H8Xmxi2VyW+gGOxZdw=;
-        b=hnfzs4cMHU3TFI/kW2SX9uhBSd8eEepem9i7Y+Ka4WDea5nCkO60v9hI3eOxd8Znnw
-         5uV69KlZfQK1hxccw7D5MZT/BD6b++nhBFVL1HjejP50dYFOAXx42aXaA4SUz4HHjrsJ
-         8sqkRsqgWDu9tcxDNuM9KtgfAMrOCZTOUzlvGN9MlTuzdn/zIKp0y/yh4MuTq+tTs0Mu
-         cOFJ1hsCeeckUq5i7vfB3wp1dv1qN57rZCcjEYg23aSlJkBG9FGuzkPIMcEkG/8w0HCm
-         yFubDjMYIuZtP2lOi+hpg1uYZZgnqB7VRdpk31txWqhM/6Pj+CeFmZ2NSdvo0/I/fEtq
-         14WQ==
-X-Gm-Message-State: AC+VfDxdRZOTxjq5RigR4clbRCpeQYnv+TID4bLwrdNw+ct/SPqHPBJJ
-        57ZXPRNQ3UjmuvMcn6UKC2LmvO/kXT760hpw4YAukT4Dj/cGYjhz2rhVH54aCmrkc2CWfR90k2p
-        VPVu1ZXvG4FNExK3RL62F
-X-Received: by 2002:a17:907:9807:b0:94b:4a4:2836 with SMTP id ji7-20020a170907980700b0094b04a42836mr11939102ejc.69.1682869191769;
-        Sun, 30 Apr 2023 08:39:51 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4dJeI8z1d3dV3690wn9/BaNN+x/IpTVnmozRHk5O8lqujWDaTlhkgxjAo7mSAw5ua7zixzBQ==
-X-Received: by 2002:a17:907:9807:b0:94b:4a4:2836 with SMTP id ji7-20020a170907980700b0094b04a42836mr11939080ejc.69.1682869191458;
-        Sun, 30 Apr 2023 08:39:51 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id jz9-20020a17090775e900b0096152a82ef3sm1629877ejc.213.2023.04.30.08.39.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Apr 2023 08:39:50 -0700 (PDT)
-Message-ID: <44e88d4d-388c-17c6-e1ec-fad7df2cb246@redhat.com>
-Date:   Sun, 30 Apr 2023 17:39:50 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 17/19] platform/x86: lenovo-yogabook: Add platform driver
- support
-Content-Language: en-US, nl
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pbDZJIUBrLKM4/SqIU7D5tFAQOIjEiowybu+jmWmaiM=;
+        b=F3LlF9eJsMTQiSxS0NeTbXEJyzL6opU4Ij75N8MWeQDjpPKN16k1tmzFe9FiFoD6AzTlNX
+        gGkmiNZcuQfAldWUsOGEFXAs/+JwrIE+IEiI66ifDdMYfKwPvEE65DLZUzl+lCGKLlbFkB
+        RgZki+UntJ+0v8R97Rab4ux4LqxaXNM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-413-c5dtYc6ANOeHjCYcZTJqvQ-1; Sun, 30 Apr 2023 12:58:17 -0400
+X-MC-Unique: c5dtYc6ANOeHjCYcZTJqvQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 27236811E7C;
+        Sun, 30 Apr 2023 16:58:17 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0354B2166B26;
+        Sun, 30 Apr 2023 16:58:15 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Yauhen Kharuzhy <jekhor@gmail.com>,
         platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20230429181551.98201-1-hdegoede@redhat.com>
- <20230429181551.98201-18-hdegoede@redhat.com>
- <CAHp75VfCzm+ZS=Q4jmeww_12UeU0YKHFqURBfJiSFX-MxxbFbg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VfCzm+ZS=Q4jmeww_12UeU0YKHFqURBfJiSFX-MxxbFbg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Subject: [PATCH v2 00/19] platform/x86: lenovo-yogabook: Modify to also work on Android version
+Date:   Sun, 30 Apr 2023 18:57:48 +0200
+Message-Id: <20230430165807.472798-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Andy,
+Hi All,
 
-Thank you for all the reviews.
+The Lenovo Yoga Book (yb1-x9*) is a yoga 2-in-1 where the keyboard
+half has a touch keyboard (with a backlit fixed key layout) to make
+it extra thin and light. The keyboard half can also be switched to
+an alternative wacom digitizer mode where it instead can be used
+to draw on. The backlight + switching is handled by
+the lenovo-yogabook driver.
 
-I agree with all your comments and I will fix them
-all for version 2 of this series.
+There are both Windows and Android versions with different BIOS-es /
+ACPI tables. This series extends the current Windows model only driver
+to also support the Android model.
 
+On the Android yb1-x90f/l models there is not ACPI method to control
+the keyboard backlight brightness. Instead the second PWM controller
+is exposed directly to the OS there.
 
-On 4/30/23 12:49, Andy Shevchenko wrote:
+This requires adding a pwm_lookup table and the lenovo-yogabook code
+can (and typically is) build as a module. So the first patch in
+this series exports pwm_add_table() and pwm_remove_table() for use
+in modules.
 
-<snip>
+I believe that it is easiest to just merge the entire series through
+the drivers/platform/x86 tree. Thierry, may I have your ack for
+patch 1/19 to merge it through the pdx86 tree ?
 
->> +       r = gpiod_to_irq(data->pen_touch_event);
->> +       if (r < 0) {
->> +               dev_err_probe(dev, r, "Getting pen_touch_event IRQ\n");
->> +               return r;
-> 
-> return dev_err_probe();
-> 
->> +       }
->> +       data->pen_touch_irq = r;
->> +
->> +       r = request_irq(data->pen_touch_irq, yogabook_pen_touch_irq, IRQF_TRIGGER_FALLING,
->> +                       "pen_touch_event", data);
->> +       if (r) {
->> +               dev_err_probe(dev, r, "Requesting backside_hall_sw IRQ\n");
->> +               return r;
-> 
-> Ditto.
-
-Actually this block has 2 copy and paste errors:
-
-1. The second error message
-2. Both "return r;" statements need to be replaced with goto error_put_devs.
-
-I'll fix this both for version 2.
-
-> 
->> +       }
-> 
-> ...
-> 
->> +MODULE_ALIAS("platform:" YB_PDEV_NAME);
-> 
-> Hmm... Do we need this?
-
-Yes simple platform_drivers like this one typically don't have
-a device-id table (they simply match by name) and thus they also
-don't have a MODULE_DEVICE_TABLE(platform, ...); statement so
-they need an explicit MODULE_ALIAS to correctly auto-load.
+Changes in v2:
+- Address Andy's review remarks
+- Error-exit handling fixes in yogabook_pdev_probe() and
+  yogabook_module_init()
+- Explicitly turn off keyboard backlight on suspend
 
 Regards,
 
 Hans
 
 
-> 
+Hans de Goede (19):
+  pwm: Export pwm_add_table() / pwm_remove_table()
+  platform/x86: lenovo-yogabook: Fix work race on remove()
+  platform/x86: lenovo-yogabook: Reprobe devices on remove()
+  platform/x86: lenovo-yogabook: Set default keyboard backligh
+    brightness on probe()
+  platform/x86: lenovo-yogabook: Simplify gpio lookup table cleanup
+  platform/x86: lenovo-yogabook: Switch to DEFINE_SIMPLE_DEV_PM_OPS()
+  platform/x86: lenovo-yogabook: Store dev instead of wdev in drvdata
+    struct
+  platform/x86: lenovo-yogabook: Add dev local variable to probe()
+  platform/x86: lenovo-yogabook: Use PMIC LED driver for pen icon LED
+    control
+  platform/x86: lenovo-yogabook: Split probe() into generic and WMI
+    specific parts
+  platform/x86: lenovo-yogabook: Stop checking adev->power.state
+  platform/x86: lenovo-yogabook: Abstract kbd backlight setting
+  platform/x86: lenovo-yogabook: Add a yogabook_toggle_digitizer_mode()
+    helper function
+  platform/x86: lenovo-yogabook: Drop _wmi_ from remaining generic
+    symbols
+  platform/x86: lenovo-yogabook: Group WMI specific code together
+  platform/x86: lenovo-yogabook: Add YB_KBD_BL_MAX define
+  platform/x86: lenovo-yogabook: Add platform driver support
+  platform/x86: lenovo-yogabook: Add keyboard backlight control to
+    platform driver
+  platform/x86: lenovo-yogabook: Rename lenovo-yogabook-wmi to
+    lenovo-yogabook
+
+ drivers/platform/x86/Kconfig               |   6 +-
+ drivers/platform/x86/Makefile              |   2 +-
+ drivers/platform/x86/lenovo-yogabook-wmi.c | 408 --------------
+ drivers/platform/x86/lenovo-yogabook.c     | 585 +++++++++++++++++++++
+ drivers/pwm/core.c                         |   2 +
+ 5 files changed, 591 insertions(+), 412 deletions(-)
+ delete mode 100644 drivers/platform/x86/lenovo-yogabook-wmi.c
+ create mode 100644 drivers/platform/x86/lenovo-yogabook.c
+
+-- 
+2.39.2
 
