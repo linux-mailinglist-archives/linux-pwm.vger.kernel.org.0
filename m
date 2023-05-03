@@ -2,166 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E96EA6F5DB9
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 20:16:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FA5A6F5DF9
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 20:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229620AbjECSQL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 May 2023 14:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
+        id S230374AbjECSd6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 May 2023 14:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjECSQK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 14:16:10 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 300E02698;
-        Wed,  3 May 2023 11:16:08 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4ec8133c59eso6481574e87.0;
-        Wed, 03 May 2023 11:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683137766; x=1685729766;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9yiKwuZiEdXJrF/1rUslwvmYmxkjetYRDuNTZSaxYQw=;
-        b=gATGtv97fWbahCxBOgzaiFbZU4Pzqk6UNyZW3zqdNwFNGQ6A5ACRZbJpVQH3f5UcA/
-         q3aObt9nJOAyJXzz3pdPWWqLGVycIcqGsOscThesaoMBdeVgDZ2beXizG24AhyxJo1+D
-         ojgYu7ykLy/bEWbGI7zcfbBhlinhchxHBJ4B/yW0aLh52JdzqUSb2RmPs5qgZUPV4QPx
-         0h5Ump8ONW+g6zWGAbjFrGuVQ5O/dJex6wpWvSrJA7fCd4OZfjaawBnBvBWiUf5yR2Kq
-         ZGg+4nYv3vSX518VVV6zfyqjS7Ghy5MC/INaHXuE1nk3AzCqEJ48+CjUltaLaOcs43hf
-         Rx8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683137766; x=1685729766;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9yiKwuZiEdXJrF/1rUslwvmYmxkjetYRDuNTZSaxYQw=;
-        b=hU2qXtgKcVsLM1qKGaS+JkfG6Y22ZSGAhGCxIBx7jzzKBkSe5qCad+Q156Hm1s2oaA
-         BHc1rPUuNWeW7IH5dLc2xMOSt2Lgw2ul46u523hCy8FEV13hBRMvu3X3WGVMr6ud1+Ay
-         K6+UkrZcng+0b16plp/N1gufn7t6DGQnGTEvs3/34bxWB5/9S05/iT/O+ZmwmP25ZOUA
-         o4mOnQHdWrFP+0hxYSqiKZkdc1jCc0IyoQlZeaaNjZ8SaTP+2glc3B4YGhgSj0u/fhuU
-         Krzdob7EMZo3isieuuFeFMyYzQMZncp2GO9gzPhmDT+tAUoFCDKM3h9OWaZqgsZgjWO3
-         +urQ==
-X-Gm-Message-State: AC+VfDx2SErtxOWP7e/5nzG5cZNynKN48NgwkI3hogLSovCm9oOzOdAt
-        Z0ePfyMJDsHLdEAETEpNfOVXFiNW9ig1gKvC
-X-Google-Smtp-Source: ACHHUZ6VB+SeesdhIuto8jqmh6FJP7g2Z0ynzDhFlxE/dGFO1LkllAzqmGTpv6npDONufo3SVFV7lQ==
-X-Received: by 2002:ac2:5457:0:b0:4cc:7282:702b with SMTP id d23-20020ac25457000000b004cc7282702bmr1121327lfn.2.1683137766031;
-        Wed, 03 May 2023 11:16:06 -0700 (PDT)
-Received: from localhost.localdomain ([46.251.53.180])
-        by smtp.gmail.com with ESMTPSA id f9-20020a19ae09000000b004eff64a26ccsm4557627lfc.196.2023.05.03.11.16.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 11:16:05 -0700 (PDT)
-Received: from jek by localhost.localdomain with local (Exim 4.96)
-        (envelope-from <jekhor@gmail.com>)
-        id 1puH1I-00AFnn-2q;
-        Wed, 03 May 2023 21:16:04 +0300
-Date:   Wed, 3 May 2023 21:16:04 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 00/19] platform/x86: lenovo-yogabook: Modify to also work
- on Android version
-Message-ID: <ZFKk5JVgpLc2kG4Z@jeknote.loshitsa1.net>
-References: <20230429181551.98201-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230429181551.98201-1-hdegoede@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230122AbjECSdw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 14:33:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A137DA8;
+        Wed,  3 May 2023 11:33:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 490136303E;
+        Wed,  3 May 2023 18:32:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AC639C433A1;
+        Wed,  3 May 2023 18:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683138742;
+        bh=s2MHNIyesFtV4x+Mvm/bu4ZRbQQKxxRSdymaqkMJ4j4=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=m+85Ln6NA5VetI3dGWY9XFLR/9EG7o0kWBuP+gxaLU4xcnmIVQ+DpnikRz9jlbDwA
+         2DHyJJxjGanuazWmHYO/k+9GOLhdGnNMbeh/42vuJglZkGXJMc6Mzl44vAUW9Jqh7U
+         TZAvHTZ5Glju/2W7jwdQs832dXkqhpizx7RXwjN60JixZag6I8lKnBJr7XIvsVKFau
+         mRf7i1LnKSV84zJnrsQQ3uh4pU4bKXUEcFAk3v4y/1cjCpAOW391RYBwE4rV2gUFAc
+         UWH8xqNbWI0RqtlY5a+HhpzQfCoQNzJl74SgQzPbRAQu7KY9dle2j9eA7REdPM2yFq
+         dDt1jUwTA5VqQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98A9FE5FFC9;
+        Wed,  3 May 2023 18:32:22 +0000 (UTC)
+Subject: Re: [GIT PULL] pwm: Changes for v6.4-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230503154936.1824529-1-thierry.reding@gmail.com>
+References: <20230503154936.1824529-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230503154936.1824529-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.4-rc1
+X-PR-Tracked-Commit-Id: 247ee6c780406513c6031a7f4ea41f1648b03295
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 89b7fd5d7f3ceda236cc1d0026986a5f57ecaf4a
+Message-Id: <168313874262.23026.9747540711137922366.pr-tracker-bot@kernel.org>
+Date:   Wed, 03 May 2023 18:32:22 +0000
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sat, Apr 29, 2023 at 08:15:32PM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> The Lenovo Yoga Book (yb1-x9*) is a yoga 2-in-1 where the keyboard
-> half has a touch keyboard (with a backlit fixed key layout) to make
-> it extra thin and light. The keyboard half can also be switched to
-> an alternative wacom digitizer mode where it instead can be used
-> to draw on. The backlight + switching is handled by
-> the lenovo-yogabook driver.
-> 
-> There are both Windows and Android versions with different BIOS-es /
-> ACPI tables. This series extends the current Windows model only driver
-> to also support the Android model.
-> 
-> On the Android yb1-x90f/l models there is not ACPI method to control
-> the keyboard backlight brightness. Instead the second PWM controller
-> is exposed directly to the OS there.
-> 
-> This requires adding a pwm_lookup table and the lenovo-yogabook code
-> can (and typically is) build as a module. So the first patch in
-> this series exports pwm_add_table() and pwm_remove_table() for use
-> in modules.
-> 
-> I believe that it is easiest to just merge the entire series through
-> the drivers/platform/x86 tree. Thierry, may I have your ack for
-> patch 1/19 to merge it through the pdx86 tree ?
+The pull request you sent on Wed,  3 May 2023 17:49:36 +0200:
 
-Wow, great! I thought about ACPI table substitution by one taken from the Windows
-tablet but didn't try this. I'm glad if this works because ACPI tables
-in Android version looks like as a placeholder from the Intel's SDK, not
-a real thing.
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.4-rc1
 
-There is instruction how to install Windows on Android version, maybe it
-will be useful for you:
-https://web.archive.org/web/20220516142318/https://www.poz1.com/windows-on-android-lenovo-yogabook/
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/89b7fd5d7f3ceda236cc1d0026986a5f57ecaf4a
 
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> Hans de Goede (19):
->   pwm: Export pwm_add_table() / pwm_remove_table()
->   platform/x86: lenovo-yogabook: Fix work race on remove()
->   platform/x86: lenovo-yogabook: Reprobe devices on remove()
->   platform/x86: lenovo-yogabook: Set default keyboard backligh
->     brightness on probe()
->   platform/x86: lenovo-yogabook: Simplify gpio lookup table cleanup
->   platform/x86: lenovo-yogabook: Switch to DEFINE_SIMPLE_DEV_PM_OPS()
->   platform/x86: lenovo-yogabook: Store dev instead of wdev in drvdata
->     struct
->   platform/x86: lenovo-yogabook: Add dev local variable to probe()
->   platform/x86: lenovo-yogabook: Use PMIC LED driver for pen icon LED
->     control
->   platform/x86: lenovo-yogabook: Split probe() into generic and WMI
->     specific parts
->   platform/x86: lenovo-yogabook: Stop checking adev->power.state
->   platform/x86: lenovo-yogabook: Abstract kbd backlight setting
->   platform/x86: lenovo-yogabook: Add a yogabook_toggle_digitizer_mode()
->     helper function
->   platform/x86: lenovo-yogabook: Drop _wmi_ from remaining generic
->     symbols
->   platform/x86: lenovo-yogabook: Group WMI specific code together
->   platform/x86: lenovo-yogabook: Add YB_KBD_BL_MAX define
->   platform/x86: lenovo-yogabook: Add platform driver support
->   platform/x86: lenovo-yogabook: Add keyboard backlight control to
->     platform driver
->   platform/x86: lenovo-yogabook: Rename lenovo-yogabook-wmi to
->     lenovo-yogabook
-> 
->  drivers/platform/x86/Kconfig               |   6 +-
->  drivers/platform/x86/Makefile              |   2 +-
->  drivers/platform/x86/lenovo-yogabook-wmi.c | 408 --------------
->  drivers/platform/x86/lenovo-yogabook.c     | 587 +++++++++++++++++++++
->  drivers/pwm/core.c                         |   2 +
->  5 files changed, 593 insertions(+), 412 deletions(-)
->  delete mode 100644 drivers/platform/x86/lenovo-yogabook-wmi.c
->  create mode 100644 drivers/platform/x86/lenovo-yogabook.c
-> 
-> -- 
-> 2.39.2
-> 
+Thank you!
 
 -- 
-Yauhen Kharuzhy
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
