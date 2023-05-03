@@ -2,218 +2,166 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BCBE6F5B81
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 17:49:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E96EA6F5DB9
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 20:16:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230449AbjECPtu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 May 2023 11:49:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
+        id S229620AbjECSQL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 May 2023 14:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbjECPto (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 11:49:44 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344994EDC;
-        Wed,  3 May 2023 08:49:42 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-50bc25f0c7dso8367752a12.3;
-        Wed, 03 May 2023 08:49:42 -0700 (PDT)
+        with ESMTP id S229514AbjECSQK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 14:16:10 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 300E02698;
+        Wed,  3 May 2023 11:16:08 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4ec8133c59eso6481574e87.0;
+        Wed, 03 May 2023 11:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683128980; x=1685720980;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tETsKMX2tnbq04Ram2NTU5I+3P2hJGPmdkjf8f881/c=;
-        b=bwq4mF86a1xlcBwdEgHnM//lmE25bW8kY7mq8Eb70aT4AHp9XEcNc2xxJEMMo+BZF+
-         h69vI0Rv6ZI7k1KSct6jgHgdlm2XcaueyEPNZ23QW+PWXx5O8aPQ4oRoqbrMaXlxVGe7
-         4+rDF68hndvDqTQBamKpCUVEo0BzIDqvWjiAvZ9L+xBuruZEz7MRaoTwTpiiW+0OOQUA
-         ZczI/V74JVrpKhKHBVsrr8wGMtxA5DEhNDqZ4L6iGY/tOciOanl4GuzidfeWbC6DvZ+I
-         HYUouuAoEIQ5qv5aDZ3DPNsOcpLurqJ6UmjJk31fTP+Mo5jvBiduwoH8StlXxYCzykBm
-         RrHQ==
+        d=gmail.com; s=20221208; t=1683137766; x=1685729766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9yiKwuZiEdXJrF/1rUslwvmYmxkjetYRDuNTZSaxYQw=;
+        b=gATGtv97fWbahCxBOgzaiFbZU4Pzqk6UNyZW3zqdNwFNGQ6A5ACRZbJpVQH3f5UcA/
+         q3aObt9nJOAyJXzz3pdPWWqLGVycIcqGsOscThesaoMBdeVgDZ2beXizG24AhyxJo1+D
+         ojgYu7ykLy/bEWbGI7zcfbBhlinhchxHBJ4B/yW0aLh52JdzqUSb2RmPs5qgZUPV4QPx
+         0h5Ump8ONW+g6zWGAbjFrGuVQ5O/dJex6wpWvSrJA7fCd4OZfjaawBnBvBWiUf5yR2Kq
+         ZGg+4nYv3vSX518VVV6zfyqjS7Ghy5MC/INaHXuE1nk3AzCqEJ48+CjUltaLaOcs43hf
+         Rx8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683128980; x=1685720980;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tETsKMX2tnbq04Ram2NTU5I+3P2hJGPmdkjf8f881/c=;
-        b=B/tVznjPLb+LKujDtPa/5/P7bTI8kir5XTRwxsh5XieJ+FjEo0Z/aYSzBB96kE9NC/
-         hmQp9LPktJMCRQvP3QstWO2Zx3yV3WSOQaYGUj4Q0NoP4ETuZxmjrPB7gnxvrl8ihqmZ
-         D8fdfeNrcgW6b+XTCNABDBY8t+NrDr+Wo73wjGtDZR07syeCKsy8n2XbQzyhrpQjPYXG
-         tLiruuQgao/+0pXdqjjXCCOkhvJnDG82BMFGVwbBdSD1KesW+rjTEnLGUgl6BTIhvM9y
-         yXyLlKzT8uex41jZcSPbspqKPCMQbk25BKuywnfqwhhVi8rep04mpb64z80olVmw8JSZ
-         Nbng==
-X-Gm-Message-State: AC+VfDwD9J/rqwja2rpilC4tDbGBR6H5yYDM6EYOFoXAob+xxPjO+iu/
-        VRC3rdKkKF262s1o3OsiUUI=
-X-Google-Smtp-Source: ACHHUZ6pzgR3ME9djQJDyipBlhiBL37NkjvADP9CwcpHZSnhBZ2fgGFwJhb4NmnG9qP4MCUNOuxJrg==
-X-Received: by 2002:a17:906:ee86:b0:958:cc8:bd55 with SMTP id wt6-20020a170906ee8600b009580cc8bd55mr3755739ejb.0.1683128980422;
-        Wed, 03 May 2023 08:49:40 -0700 (PDT)
-Received: from localhost (p200300e41f053a00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f05:3a00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id gx11-20020a1709068a4b00b0094f225c0cd3sm17328106ejc.86.2023.05.03.08.49.40
+        d=1e100.net; s=20221208; t=1683137766; x=1685729766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9yiKwuZiEdXJrF/1rUslwvmYmxkjetYRDuNTZSaxYQw=;
+        b=hU2qXtgKcVsLM1qKGaS+JkfG6Y22ZSGAhGCxIBx7jzzKBkSe5qCad+Q156Hm1s2oaA
+         BHc1rPUuNWeW7IH5dLc2xMOSt2Lgw2ul46u523hCy8FEV13hBRMvu3X3WGVMr6ud1+Ay
+         K6+UkrZcng+0b16plp/N1gufn7t6DGQnGTEvs3/34bxWB5/9S05/iT/O+ZmwmP25ZOUA
+         o4mOnQHdWrFP+0hxYSqiKZkdc1jCc0IyoQlZeaaNjZ8SaTP+2glc3B4YGhgSj0u/fhuU
+         Krzdob7EMZo3isieuuFeFMyYzQMZncp2GO9gzPhmDT+tAUoFCDKM3h9OWaZqgsZgjWO3
+         +urQ==
+X-Gm-Message-State: AC+VfDx2SErtxOWP7e/5nzG5cZNynKN48NgwkI3hogLSovCm9oOzOdAt
+        Z0ePfyMJDsHLdEAETEpNfOVXFiNW9ig1gKvC
+X-Google-Smtp-Source: ACHHUZ6VB+SeesdhIuto8jqmh6FJP7g2Z0ynzDhFlxE/dGFO1LkllAzqmGTpv6npDONufo3SVFV7lQ==
+X-Received: by 2002:ac2:5457:0:b0:4cc:7282:702b with SMTP id d23-20020ac25457000000b004cc7282702bmr1121327lfn.2.1683137766031;
+        Wed, 03 May 2023 11:16:06 -0700 (PDT)
+Received: from localhost.localdomain ([46.251.53.180])
+        by smtp.gmail.com with ESMTPSA id f9-20020a19ae09000000b004eff64a26ccsm4557627lfc.196.2023.05.03.11.16.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 08:49:40 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for v6.4-rc1
-Date:   Wed,  3 May 2023 17:49:36 +0200
-Message-Id: <20230503154936.1824529-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        Wed, 03 May 2023 11:16:05 -0700 (PDT)
+Received: from jek by localhost.localdomain with local (Exim 4.96)
+        (envelope-from <jekhor@gmail.com>)
+        id 1puH1I-00AFnn-2q;
+        Wed, 03 May 2023 21:16:04 +0300
+Date:   Wed, 3 May 2023 21:16:04 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 00/19] platform/x86: lenovo-yogabook: Modify to also work
+ on Android version
+Message-ID: <ZFKk5JVgpLc2kG4Z@jeknote.loshitsa1.net>
+References: <20230429181551.98201-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230429181551.98201-1-hdegoede@redhat.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Linus,
+On Sat, Apr 29, 2023 at 08:15:32PM +0200, Hans de Goede wrote:
+> Hi All,
+> 
+> The Lenovo Yoga Book (yb1-x9*) is a yoga 2-in-1 where the keyboard
+> half has a touch keyboard (with a backlit fixed key layout) to make
+> it extra thin and light. The keyboard half can also be switched to
+> an alternative wacom digitizer mode where it instead can be used
+> to draw on. The backlight + switching is handled by
+> the lenovo-yogabook driver.
+> 
+> There are both Windows and Android versions with different BIOS-es /
+> ACPI tables. This series extends the current Windows model only driver
+> to also support the Android model.
+> 
+> On the Android yb1-x90f/l models there is not ACPI method to control
+> the keyboard backlight brightness. Instead the second PWM controller
+> is exposed directly to the OS there.
+> 
+> This requires adding a pwm_lookup table and the lenovo-yogabook code
+> can (and typically is) build as a module. So the first patch in
+> this series exports pwm_add_table() and pwm_remove_table() for use
+> in modules.
+> 
+> I believe that it is easiest to just merge the entire series through
+> the drivers/platform/x86 tree. Thierry, may I have your ack for
+> patch 1/19 to merge it through the pdx86 tree ?
 
-The following changes since commit 1271a7b98e7989ba6bb978e14403fc84efe16e13:
+Wow, great! I thought about ACPI table substitution by one taken from the Windows
+tablet but didn't try this. I'm glad if this works because ACPI tables
+in Android version looks like as a placeholder from the Intel's SDK, not
+a real thing.
 
-  pwm: Zero-initialize the pwm_state passed to driver's .get_state() (2023-03-23 14:44:43 +0100)
+There is instruction how to install Windows on Android version, maybe it
+will be useful for you:
+https://web.archive.org/web/20220516142318/https://www.poz1.com/windows-on-android-lenovo-yogabook/
 
-are available in the Git repository at:
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> Hans de Goede (19):
+>   pwm: Export pwm_add_table() / pwm_remove_table()
+>   platform/x86: lenovo-yogabook: Fix work race on remove()
+>   platform/x86: lenovo-yogabook: Reprobe devices on remove()
+>   platform/x86: lenovo-yogabook: Set default keyboard backligh
+>     brightness on probe()
+>   platform/x86: lenovo-yogabook: Simplify gpio lookup table cleanup
+>   platform/x86: lenovo-yogabook: Switch to DEFINE_SIMPLE_DEV_PM_OPS()
+>   platform/x86: lenovo-yogabook: Store dev instead of wdev in drvdata
+>     struct
+>   platform/x86: lenovo-yogabook: Add dev local variable to probe()
+>   platform/x86: lenovo-yogabook: Use PMIC LED driver for pen icon LED
+>     control
+>   platform/x86: lenovo-yogabook: Split probe() into generic and WMI
+>     specific parts
+>   platform/x86: lenovo-yogabook: Stop checking adev->power.state
+>   platform/x86: lenovo-yogabook: Abstract kbd backlight setting
+>   platform/x86: lenovo-yogabook: Add a yogabook_toggle_digitizer_mode()
+>     helper function
+>   platform/x86: lenovo-yogabook: Drop _wmi_ from remaining generic
+>     symbols
+>   platform/x86: lenovo-yogabook: Group WMI specific code together
+>   platform/x86: lenovo-yogabook: Add YB_KBD_BL_MAX define
+>   platform/x86: lenovo-yogabook: Add platform driver support
+>   platform/x86: lenovo-yogabook: Add keyboard backlight control to
+>     platform driver
+>   platform/x86: lenovo-yogabook: Rename lenovo-yogabook-wmi to
+>     lenovo-yogabook
+> 
+>  drivers/platform/x86/Kconfig               |   6 +-
+>  drivers/platform/x86/Makefile              |   2 +-
+>  drivers/platform/x86/lenovo-yogabook-wmi.c | 408 --------------
+>  drivers/platform/x86/lenovo-yogabook.c     | 587 +++++++++++++++++++++
+>  drivers/pwm/core.c                         |   2 +
+>  5 files changed, 593 insertions(+), 412 deletions(-)
+>  delete mode 100644 drivers/platform/x86/lenovo-yogabook-wmi.c
+>  create mode 100644 drivers/platform/x86/lenovo-yogabook.c
+> 
+> -- 
+> 2.39.2
+> 
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.4-rc1
-
-for you to fetch changes up to 247ee6c780406513c6031a7f4ea41f1648b03295:
-
-  pwm: Remove unused radix tree (2023-04-14 11:35:52 +0200)
-
-This is based on top of the v6.3 fixes pull from a few weeks ago.
-Interestingly this brings to a close a journey (legacy API removal)
-that I set out on back when I took over maintenance. It's hard to
-believe that that was over 11 years ago. I hadn't thought it would
-take that long. Thanks to Uwe for helping to get this across the
-finish line.
-
-Thanks,
-Thierry
-
-----------------------------------------------------------------
-pwm: Changes for v6.4-rc1
-
-The bulk of this is trivial conversions to the new .remove_new()
-callback for drivers as part of Uwe's effort to clean that up.
-
-Other than that a driver is added for Apple devices and various small
-fixes are included for existing drivers.
-
-Last but not least, this finally gets rid of the old pwm_request() and
-pwm_free() APIs are removed since the last user was dropped in v6.3.
-
-----------------------------------------------------------------
-AngeloGioacchino Del Regno (2):
-      pwm: mtk-disp: Disable shadow registers before setting backlight values
-      pwm: mtk-disp: Configure double buffering before reading in .get_state()
-
-Daniel Golle (1):
-      dt-bindings: pwm: mediatek: Add mediatek,mt7986 compatible
-
-Heiner Kallweit (3):
-      dt-bindings: pwm: Convert Amlogic Meson PWM binding
-      pwm: meson: Fix axg ao mux parents
-      pwm: meson: Fix g12a ao clk81 name
-
-Krzysztof Kozlowski (2):
-      pwm: rcar: Drop of_match_ptr for ID table
-      pwm: stm32-lp: Drop of_match_ptr for ID table
-
-Olivier Moysan (1):
-      pwm: stm32: Enforce settings for PWM capture
-
-Sasha Finkelstein (3):
-      dt-bindings: pwm: Add Apple PWM controller
-      pwm: Add Apple PWM controller
-      MAINTAINERS: Add entries for Apple PWM driver
-
-Thierry Reding (2):
-      Merge branch 'fixes' into for-next
-      pwm: Remove unused radix tree
-
-Uwe Kleine-König (31):
-      pwm: atmel-hlcdc: Convert to platform remove callback returning void
-      pwm: atmel-tcb: Convert to platform remove callback returning void
-      pwm: atmel: Convert to platform remove callback returning void
-      pwm: bcm-iproc: Convert to platform remove callback returning void
-      pwm: bcm2835: Convert to platform remove callback returning void
-      pwm: berlin: Convert to platform remove callback returning void
-      pwm: brcmstb: Convert to platform remove callback returning void
-      pwm: clk: Convert to platform remove callback returning void
-      pwm: cros-ec: Convert to platform remove callback returning void
-      pwm: hibvt: Convert to platform remove callback returning void
-      pwm: img: Convert to platform remove callback returning void
-      pwm: imx-tpm: Convert to platform remove callback returning void
-      pwm: lpc18xx-sct: Convert to platform remove callback returning void
-      pwm: lpss-platform: Convert to platform remove callback returning void
-      pwm: mtk-disp: Convert to platform remove callback returning void
-      pwm: omap-dmtimer: Convert to platform remove callback returning void
-      pwm: rcar: Convert to platform remove callback returning void
-      pwm: rockchip: Convert to platform remove callback returning void
-      pwm: samsung: Convert to platform remove callback returning void
-      pwm: sifive: Convert to platform remove callback returning void
-      pwm: spear: Convert to platform remove callback returning void
-      pwm: sprd: Convert to platform remove callback returning void
-      pwm: sti: Convert to platform remove callback returning void
-      pwm: stm32: Convert to platform remove callback returning void
-      pwm: sun4i: Convert to platform remove callback returning void
-      pwm: tegra: Convert to platform remove callback returning void
-      pwm: tiecap: Convert to platform remove callback returning void
-      pwm: tiehrpwm: Convert to platform remove callback returning void
-      pwm: vt8500: Convert to platform remove callback returning void
-      pwm: xilinx: Convert to platform remove callback returning void
-      pwm: Delete deprecated functions pwm_request() and pwm_free()
-
- .../devicetree/bindings/pwm/apple,s5l-fpwm.yaml    |  51 +++++++
- .../bindings/pwm/mediatek,mt2712-pwm.yaml          |   1 +
- .../devicetree/bindings/pwm/pwm-amlogic.yaml       |  70 +++++++++
- .../devicetree/bindings/pwm/pwm-meson.txt          |  29 ----
- Documentation/driver-api/pwm.rst                   |  13 +-
- MAINTAINERS                                        |   2 +
- drivers/pwm/Kconfig                                |  12 ++
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/core.c                                 |  71 +--------
- drivers/pwm/pwm-apple.c                            | 159 +++++++++++++++++++++
- drivers/pwm/pwm-atmel-hlcdc.c                      |   6 +-
- drivers/pwm/pwm-atmel-tcb.c                        |   6 +-
- drivers/pwm/pwm-atmel.c                            |   6 +-
- drivers/pwm/pwm-bcm-iproc.c                        |   6 +-
- drivers/pwm/pwm-bcm2835.c                          |   6 +-
- drivers/pwm/pwm-berlin.c                           |   6 +-
- drivers/pwm/pwm-brcmstb.c                          |   6 +-
- drivers/pwm/pwm-clk.c                              |   6 +-
- drivers/pwm/pwm-cros-ec.c                          |   6 +-
- drivers/pwm/pwm-hibvt.c                            |   6 +-
- drivers/pwm/pwm-img.c                              |   6 +-
- drivers/pwm/pwm-imx-tpm.c                          |   6 +-
- drivers/pwm/pwm-lpc18xx-sct.c                      |   6 +-
- drivers/pwm/pwm-lpss-platform.c                    |   5 +-
- drivers/pwm/pwm-meson.c                            |   6 +-
- drivers/pwm/pwm-mtk-disp.c                         |  40 ++++--
- drivers/pwm/pwm-omap-dmtimer.c                     |   6 +-
- drivers/pwm/pwm-rcar.c                             |   8 +-
- drivers/pwm/pwm-rockchip.c                         |   6 +-
- drivers/pwm/pwm-samsung.c                          |   6 +-
- drivers/pwm/pwm-sifive.c                           |   6 +-
- drivers/pwm/pwm-spear.c                            |   6 +-
- drivers/pwm/pwm-sprd.c                             |   6 +-
- drivers/pwm/pwm-sti.c                              |   6 +-
- drivers/pwm/pwm-stm32-lp.c                         |   2 +-
- drivers/pwm/pwm-stm32.c                            |  10 +-
- drivers/pwm/pwm-sun4i.c                            |   6 +-
- drivers/pwm/pwm-tegra.c                            |   6 +-
- drivers/pwm/pwm-tiecap.c                           |   6 +-
- drivers/pwm/pwm-tiehrpwm.c                         |   6 +-
- drivers/pwm/pwm-vt8500.c                           |   6 +-
- drivers/pwm/pwm-xilinx.c                           |   5 +-
- include/linux/mfd/stm32-timers.h                   |   1 +
- include/linux/pwm.h                                |  13 --
- 44 files changed, 397 insertions(+), 252 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/apple,s5l-fpwm.yaml
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
- create mode 100644 drivers/pwm/pwm-apple.c
+-- 
+Yauhen Kharuzhy
