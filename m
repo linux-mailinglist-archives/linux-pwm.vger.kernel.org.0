@@ -2,75 +2,83 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FA5A6F5DF9
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 20:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D098D6F5F34
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 21:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230374AbjECSd6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 3 May 2023 14:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
+        id S229505AbjECTgo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 3 May 2023 15:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230122AbjECSdw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 14:33:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A137DA8;
-        Wed,  3 May 2023 11:33:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 490136303E;
-        Wed,  3 May 2023 18:32:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AC639C433A1;
-        Wed,  3 May 2023 18:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683138742;
-        bh=s2MHNIyesFtV4x+Mvm/bu4ZRbQQKxxRSdymaqkMJ4j4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=m+85Ln6NA5VetI3dGWY9XFLR/9EG7o0kWBuP+gxaLU4xcnmIVQ+DpnikRz9jlbDwA
-         2DHyJJxjGanuazWmHYO/k+9GOLhdGnNMbeh/42vuJglZkGXJMc6Mzl44vAUW9Jqh7U
-         TZAvHTZ5Glju/2W7jwdQs832dXkqhpizx7RXwjN60JixZag6I8lKnBJr7XIvsVKFau
-         mRf7i1LnKSV84zJnrsQQ3uh4pU4bKXUEcFAk3v4y/1cjCpAOW391RYBwE4rV2gUFAc
-         UWH8xqNbWI0RqtlY5a+HhpzQfCoQNzJl74SgQzPbRAQu7KY9dle2j9eA7REdPM2yFq
-         dDt1jUwTA5VqQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98A9FE5FFC9;
-        Wed,  3 May 2023 18:32:22 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v6.4-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230503154936.1824529-1-thierry.reding@gmail.com>
-References: <20230503154936.1824529-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230503154936.1824529-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.4-rc1
-X-PR-Tracked-Commit-Id: 247ee6c780406513c6031a7f4ea41f1648b03295
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 89b7fd5d7f3ceda236cc1d0026986a5f57ecaf4a
-Message-Id: <168313874262.23026.9747540711137922366.pr-tracker-bot@kernel.org>
-Date:   Wed, 03 May 2023 18:32:22 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229585AbjECTgn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 15:36:43 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B37626A6;
+        Wed,  3 May 2023 12:36:40 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (aztw-30-b2-v4wan-166917-cust845.vm26.cable.virginm.net [82.37.23.78])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C0A73755;
+        Wed,  3 May 2023 21:36:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1683142595;
+        bh=OISN3lnEGX5h+/hgrl4D+o6AnERV3z8aJH1158I66Yg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=FdptgKp4JFeMseqRT/XgDE+GfGGnBlJXElhgcGaF7rL13mHqUw6a5g73feuVoWQr2
+         socpbwCPDTJ3qfdKOpt8g4VVL6uZvBDVp95W65wZf7hWYwFmTLPcPjRkiv65JuK9du
+         Qt/oVej6YABXcvy07oz+n/KBRj9s8Miy+HQP84TY=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230502165330.55769-1-wsa+renesas@sang-engineering.com>
+References: <20230502165330.55769-1-wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH] dt-bindings: pwm: Add R-Car V3U device tree bindings
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-pwm@vger.kernel.org
+Date:   Wed, 03 May 2023 20:36:35 +0100
+Message-ID: <168314259577.1880445.14037728409745166769@Monstersaurus>
+User-Agent: alot/0.10
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Wed,  3 May 2023 17:49:36 +0200:
+Quoting Wolfram Sang (2023-05-02 17:53:29)
+> Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.4-rc1
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/89b7fd5d7f3ceda236cc1d0026986a5f57ecaf4a
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml =
+b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> index 4c8097010687..6b6a302a175c 100644
+> --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> @@ -35,6 +35,7 @@ properties:
+>            - renesas,pwm-r8a77980  # R-Car V3H
+>            - renesas,pwm-r8a77990  # R-Car E3
+>            - renesas,pwm-r8a77995  # R-Car D3
+> +          - renesas,pwm-r8a779a0  # R-Car V3U
+>            - renesas,pwm-r8a779g0  # R-Car V4H
+>        - const: renesas,pwm-rcar
+> =20
+> --=20
+> 2.30.2
+>
