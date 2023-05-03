@@ -2,130 +2,90 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 484826F4B6B
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 May 2023 22:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22FC66F55A3
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 May 2023 12:11:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbjEBUdv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 2 May 2023 16:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58920 "EHLO
+        id S229835AbjECKL2 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 3 May 2023 06:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjEBUdu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 2 May 2023 16:33:50 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96EF19A2
-        for <linux-pwm@vger.kernel.org>; Tue,  2 May 2023 13:33:48 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-94ef8b88a5bso665143566b.2
-        for <linux-pwm@vger.kernel.org>; Tue, 02 May 2023 13:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683059627; x=1685651627;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BqHoRnIi56y0Eq3HCEEwB6zOQFkWe+lN+qtxHiWOfIo=;
-        b=phKn5u/TpxfWZCCcLmERJjvTvteJbMzujNbodrPcubv/qRW1vTv/VeX/UslvCfav9f
-         wvOzzHXIJ22a1IWgUq1c/c8HiQMbDuachoSGoAJvriCqC3L/AL8jdgw+xmSJTfwRYSBB
-         QX1fJRe2av5Tu5yEfer8B4Z1kOHZgEt1EFVKHibM8AHGcT021+E6BVYu8ecsm4dn/O3n
-         RkAzWa/DK2nZYS1HTd27JjxHjAQhIZYgZIcLm88qdhfWUTOhohgm5CVT/zL5WYCnOgWU
-         1xXDv4I1Ssxpw4eEoRRvYdMmyj4oxyzUHerRLBTDRX9PXB1vCz0haGWlIUPJCpnS43Mi
-         srag==
+        with ESMTP id S229756AbjECKL1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 3 May 2023 06:11:27 -0400
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33B41A5;
+        Wed,  3 May 2023 03:11:26 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-b9a6eec8611so2515052276.0;
+        Wed, 03 May 2023 03:11:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683059627; x=1685651627;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BqHoRnIi56y0Eq3HCEEwB6zOQFkWe+lN+qtxHiWOfIo=;
-        b=LC7ewSOu9P5wQUM+MUuwYZpfc0Yf53PmUkBXVn7HhrQiIyTHKS93EFMp5iAoAxeYqq
-         mZumxE4DdBFIKBp2SGY3kvwkyM0TfzhguuAyv0LOkTmF70fOUDLQAD4HJyy4Fbi86Ymk
-         d3QsRDDwEPcOSZ3PQBo0zRQScg1faRKrZ5Ujrn52xsBS2hXk8K83FvB069alCBxvlG1s
-         wKqFCv9YdnOX6PMuQQ28wtYuecgsYbZ/xvm5gVp1ew8RanXrfwKpJ2nZrShZMktvfzel
-         PTISBlaFoiG94tH/o4kwuIZ6PXS0gMtjVzir1rSltq2gb3O5AR0vw4+CS0Lc2/1a4bCW
-         Ga4Q==
-X-Gm-Message-State: AC+VfDy8xySUzuGmYUztX7o2vU6pdModhY3souSHWiUkVC5EATgchuQ5
-        e7q73x6XTT4gcYhCKbTFbUo=
-X-Google-Smtp-Source: ACHHUZ7CpHN6a9lznliOqn1nanEQFGERN1R9MhRwy+t7+nNLrxSwICk5kKcVFMCPWPweRKH8bmA+dA==
-X-Received: by 2002:a17:907:7e8d:b0:94d:a2c2:9aeb with SMTP id qb13-20020a1709077e8d00b0094da2c29aebmr1512829ejc.49.1683059627094;
-        Tue, 02 May 2023 13:33:47 -0700 (PDT)
-Received: from ?IPV6:2a02:3100:9545:b300:8dc9:588b:ac03:5082? (dynamic-2a02-3100-9545-b300-8dc9-588b-ac03-5082.310.pool.telefonica.de. [2a02:3100:9545:b300:8dc9:588b:ac03:5082])
-        by smtp.googlemail.com with ESMTPSA id la5-20020a170906ad8500b0094e877ec197sm16727262ejb.148.2023.05.02.13.33.46
+        d=1e100.net; s=20221208; t=1683108686; x=1685700686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8ZtrVLKnAX2pxnlVF4pY/ZydKFTcmn+Q19HXitjOZjU=;
+        b=ZOnCyP+Yv2IF+OUAsQAolALAArMqRrDRe/X5oE2UWiYQiLhXEOyIlVYVf4zwIER8UI
+         R6quEHkssFnBGseKKsB6hNpZ9yQTWlw6dF8Oxuh9id4HHxlkGVUqfQ/3h88+oFmAcfvd
+         jJ8b6XZkWxBIT44tj3uIYqQu8UMWE+aWWzh9Nk9rTkoVQL1L+oV+Gc1JTKp7IdKmU6WL
+         IvATSn9ZRMMjL/4m/URXcEc2bBjPL4ofCtGalidtXRf6aUp+hk++TYD242X4ud5vVPKc
+         dOf7qmJdBxIi6d+JFxoCizKZ77f/q7VxlznFQ+VYOmA1kydj5wwt11Lg4eMB8CGotOUw
+         Tm9g==
+X-Gm-Message-State: AC+VfDzc7KHiANtb708LSDKaZd0Ne3sgzh9KL2XDCKWxZb00vRNk4Qnl
+        GaYjJppfA0IBKhQDWS1MP2+gf7JAYUZOpQ==
+X-Google-Smtp-Source: ACHHUZ7D0fYYJ5jbojmA5YPHIjazHXSLmdQDImO1vrcPdUrDh4T2AgDndA3GvLlfYnsnN8IwkoLTGg==
+X-Received: by 2002:a81:160a:0:b0:552:a4af:da with SMTP id 10-20020a81160a000000b00552a4af00damr1537309yww.10.1683108685776;
+        Wed, 03 May 2023 03:11:25 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id z188-20020a8165c5000000b00545a08184d0sm8584840ywb.96.2023.05.03.03.11.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 May 2023 13:33:46 -0700 (PDT)
-Message-ID: <23fe625e-dc23-4db8-3dce-83167cd3b206@gmail.com>
-Date:   Tue, 2 May 2023 22:33:42 +0200
+        Wed, 03 May 2023 03:11:25 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-b9a6f17f2b6so2433565276.1;
+        Wed, 03 May 2023 03:11:24 -0700 (PDT)
+X-Received: by 2002:a0d:e894:0:b0:55d:626e:3dcf with SMTP id
+ r142-20020a0de894000000b0055d626e3dcfmr396904ywe.12.1683108684523; Wed, 03
+ May 2023 03:11:24 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org,
-        Dmitry Rokosov <ddrokosov@sberdevices.ru>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v3] pwm: meson: modify and simplify calculation in
- meson_pwm_get_state
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230502165330.55769-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20230502165330.55769-1-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 3 May 2023 12:11:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVh73ZzNy0Gv4hchQxzWwfMy5JinZz_972QoaZ2Obiy7A@mail.gmail.com>
+Message-ID: <CAMuHMdVh73ZzNy0Gv4hchQxzWwfMy5JinZz_972QoaZ2Obiy7A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pwm: Add R-Car V3U device tree bindings
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-I don't see a reason why we should treat the case lo < hi differently
-and return 0 as period and duty_cycle. The current logic was added with
-c375bcbaabdb ("pwm: meson: Read the full hardware state in
-meson_pwm_get_state()"), Martin as original author doesn't remember why
-it was implemented this way back then.
-So let's handle it as normal use case and also remove the optimization
-for lo == 0. I think the improved readability is worth it.
+On Tue, May 2, 2023 at 6:53 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Fixes: c375bcbaabdb ("pwm: meson: Read the full hardware state in meson_pwm_get_state()")
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
-v2:
-- improve commit description
-v3:
-- make patch a fix
----
- drivers/pwm/pwm-meson.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 5732300eb..3865538dd 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -351,18 +351,8 @@ static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	channel->lo = FIELD_GET(PWM_LOW_MASK, value);
- 	channel->hi = FIELD_GET(PWM_HIGH_MASK, value);
- 
--	if (channel->lo == 0) {
--		state->period = meson_pwm_cnt_to_ns(chip, pwm, channel->hi);
--		state->duty_cycle = state->period;
--	} else if (channel->lo >= channel->hi) {
--		state->period = meson_pwm_cnt_to_ns(chip, pwm,
--						    channel->lo + channel->hi);
--		state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm,
--							channel->hi);
--	} else {
--		state->period = 0;
--		state->duty_cycle = 0;
--	}
-+	state->period = meson_pwm_cnt_to_ns(chip, pwm, channel->lo + channel->hi);
-+	state->duty_cycle = meson_pwm_cnt_to_ns(chip, pwm, channel->hi);
- 
- 	state->polarity = PWM_POLARITY_NORMAL;
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.40.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
