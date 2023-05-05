@@ -2,103 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9EA86F823D
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 May 2023 13:44:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1643D6F891F
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 May 2023 20:58:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231648AbjEELoX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 5 May 2023 07:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45378 "EHLO
+        id S233403AbjEES6R (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 5 May 2023 14:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231200AbjEELoV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 May 2023 07:44:21 -0400
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84DB11607;
-        Fri,  5 May 2023 04:44:20 -0700 (PDT)
-Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-61b60d0c5b8so7302176d6.0;
-        Fri, 05 May 2023 04:44:20 -0700 (PDT)
+        with ESMTP id S233401AbjEES6Q (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 5 May 2023 14:58:16 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B912074A;
+        Fri,  5 May 2023 11:58:11 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3f4000ec71dso15026915e9.2;
+        Fri, 05 May 2023 11:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683287060; x=1685879060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G+bbaqSd9YZw2df9CDJeO5CzvhDoNZKC+TExeyLVHVM=;
-        b=k3TjWeeC26lLlQD3CO3t99E+HIyPX/SAl9VAL1Bjwr7RiL07G+JwnE/2EW5tCS6/k0
-         OqmZ2yaxeCcZ3+vTkJ69gdDWnu+ey1wcOy+ssNik4pIL6s9EZQ54r3kSB0nplDYm6uvs
-         ocNg1lh1vTW4tt/eQsI/+dIK7a0sBxpDbBXsB0UyWQnlABMAn1HrmuZBsgCMd4xVgIAO
-         JuKHA2C2tPn/JnJKhAeLLV2Q95g7OLYmzW/QTQwctVHzv9EiXPj5sM0Ae+H4ESUm7eOp
-         wPqhZ9lraEkI318CfZHgmvHykiUp3WB/FpwILXQMiotSKeYmmkDT4VHAJMU0sDNNoXS9
-         fG6Q==
+        d=gmail.com; s=20221208; t=1683313090; x=1685905090;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1b+OLvSRoYfyljr8mg5KeVPnX55ONCXJ476XEVumh/s=;
+        b=oY2AQu9BVNjD3rwPFri5qbdOkPAjl7SrIGW9Ei9AmmSOu2oV2+G/beYc90CDGkjJIN
+         WTSL3cPsucYZ447qlImb2JtqhI6aty5P2Z/LTF8ZWp3nVzA9CJDqRupN8sd2FekjDFJO
+         9v/iVdx5Uch4kEmRJk9vqtfsQ57sPvHCJQu6TfiPCDF1TbBgygBgNH0QX/P2G8lFDjuX
+         W+oT5yq+4tQ/0FSzEbBY3gVSJnboeZhLFywzBA+nw1N30AeE16ltvStZwUWIvPCR/usj
+         7Bcvo/acWnikPWTiY/YPx/Tgin/jDb8fHkoV24523JrUt2zj1dBEEqWGNccwnS/1JA0/
+         70cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683287060; x=1685879060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G+bbaqSd9YZw2df9CDJeO5CzvhDoNZKC+TExeyLVHVM=;
-        b=lDKPQuAExwjdjoFfRHif8qGRgXe+2/6mLNF8Y/zd16ExD7VYFvtHvTpPLRxLTWQIRJ
-         jYvrSMTSlZxo2Efz6dFjrbYhd652VsxFpkE5B1Hkz//znCOAHwlIIH5NVkdjMk8WG9il
-         OyqxCalbc376gGeMS7cGm5hz0Td6iWhse5d2VPBq6Q+vEzH05AA98OwfkU7whARr4gX1
-         jw4/PEzyEa61OpqhT/HZE4PTae4RsiLT2SYQWAEVnTN/qWXSoRxQL2LaHCObOx2Uv5Zv
-         ccz2bKFvVRLNgDM2/11FJoSVoua2ZGi9otZcuVYP63J9rM1bTOmVTOyXEUiMbUFts6YI
-         GyZA==
-X-Gm-Message-State: AC+VfDxfNqOBJexHTr/ZSvdBwdOC0eb1XpcrXqUIjU/7QbEkSlQg/nb4
-        gdZvWCuLaO03c3WVvhCj/wBPhTIMzFmUI09kUkGVYkgVFQTbAsCu
-X-Google-Smtp-Source: ACHHUZ6SHz84O73zKP9Yy6AHUeXGlZzm6X0nJSFvuDnVARhjK67UwKJwqrCAXy0Bs0su7Zm9qan0CNeUH5U5Vc905oA=
-X-Received: by 2002:ad4:5cce:0:b0:5ed:d3d:405 with SMTP id iu14-20020ad45cce000000b005ed0d3d0405mr1487502qvb.34.1683287059877;
- Fri, 05 May 2023 04:44:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230430165807.472798-1-hdegoede@redhat.com> <20230430165807.472798-19-hdegoede@redhat.com>
- <20230504165307.tydqlk6sml7sp5qe@pengutronix.de> <CAHp75VdgFFk=q-=ZDiKwV02Tin19ZSmSS=fhwgRrE6v48s-u0w@mail.gmail.com>
- <20230505092111.qknupa2vooi7mqwl@pengutronix.de>
-In-Reply-To: <20230505092111.qknupa2vooi7mqwl@pengutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 May 2023 14:43:43 +0300
-Message-ID: <CAHp75VcqY0+GWXriA8qzdjY-_zMO_9sAXYxR3nxEaajQfWX5Ag@mail.gmail.com>
-Subject: Re: [PATCH v2 18/19] platform/x86: lenovo-yogabook: Add keyboard
- backlight control to platform driver
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
+        d=1e100.net; s=20221208; t=1683313090; x=1685905090;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1b+OLvSRoYfyljr8mg5KeVPnX55ONCXJ476XEVumh/s=;
+        b=LyV0KHm7AWUVhLb8rcnpcyXw+CcU/GCEKv5F0azL9diK5W4m71/2eQ/16CgebOXxQ7
+         E8j6UsjooJXxJxWzScN4WxdqXPaogDi6oef72cuo/q72emO6VnWNfCqk5oXUe7sfFpd/
+         aGSw1R+yevaA/An7HmhSPYf1zzJtQwrlg3MmedvShEfECjPSi3ML2tRgD3ZKLEZYoabl
+         qTxuN0BdoKODEpTP3hU62ER8NUZS1el/qp2CPvI13xDkhYiLMqvS6sivhptdTpcBeXVA
+         8DHWowQgq8EU0+K/eZmUHhiTgoAmq3LDeSBzFvUq+vRo2uzcNldGgVKbVrUPGYzVns55
+         tJnQ==
+X-Gm-Message-State: AC+VfDy0vmg49dCD5EL8moPtJm9negXYnpG+P/7MLsyJeanIQuwwEjVF
+        BK75pD4x5mdpWREK4AmDtPU=
+X-Google-Smtp-Source: ACHHUZ6fJO8vyrwjBhFmq93Y3W8Pkix0SQ38ShAcZelUn741btCGidGkn5mGRo4vUfDutDIFv5ll7Q==
+X-Received: by 2002:a05:600c:d7:b0:3f1:82d5:997b with SMTP id u23-20020a05600c00d700b003f182d5997bmr1773498wmm.18.1683313089697;
+        Fri, 05 May 2023 11:58:09 -0700 (PDT)
+Received: from koko.localdomain (cgn-89-1-213-9.nc.de. [89.1.213.9])
+        by smtp.gmail.com with ESMTPSA id z9-20020a05600c114900b003f4069417absm5825061wmz.24.2023.05.05.11.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 May 2023 11:58:09 -0700 (PDT)
+From:   Maximilian Weigand <mweigand2017@gmail.com>
+To:     Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Maximilian Weigand <mweigand@mweigand.net>
+Subject: [PATCH v1] backlight: lm3630a: turn off both led strings when display is blank
+Date:   Fri,  5 May 2023 20:57:52 +0200
+Message-Id: <20230505185752.969476-1-mweigand2017@gmail.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, May 5, 2023 at 12:21=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Fri, May 05, 2023 at 12:07:02PM +0300, Andy Shevchenko wrote:
-> > On Thu, May 4, 2023 at 7:53=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Sun, Apr 30, 2023 at 06:58:06PM +0200, Hans de Goede wrote:
+From: Maximilian Weigand <mweigand@mweigand.net>
 
-...
+Use display_is_blank() to determine if the led strings should be turned
+off in the update_status() functions of both strings.
 
-> > > I don't know much about x86, but I think the table belongs to where t=
-his
-> > > "80862289:00" device is created.
-> >
-> > Just for your information, it's in drivers/acpi/acpi_lpss.c.
->
-> Compared to drivers/platform/x86/lenovo-yogabook-wmi.c this file is
-> never compiled as a module and so patch #1 would become unnecessary.
->
-> That file also already has a pwm_lookup table.
+Signed-off-by: Maximilian Weigand <mweigand@mweigand.net>
+---
+ drivers/video/backlight/lm3630a_bl.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-TBH, Hans knows nowadays much better what those drivers do and why the
-split was done this way. If he thinks that it's needed, I will trust
-his word.
+diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+index d8c42acecb5d..5498b57329f9 100644
+--- a/drivers/video/backlight/lm3630a_bl.c
++++ b/drivers/video/backlight/lm3630a_bl.c
+@@ -202,7 +202,9 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
+ 	usleep_range(1000, 2000);
+ 	/* minimum brightness is 0x04 */
+ 	ret = lm3630a_write(pchip, REG_BRT_A, bl->props.brightness);
+-	if (bl->props.brightness < 0x4)
++
++	if (backlight_is_blank(bl) || (bl->props.brightness < 0x4))
++		/* turn the string off  */
+ 		ret |= lm3630a_update(pchip, REG_CTRL, LM3630A_LEDA_ENABLE, 0);
+ 	else
+ 		ret |= lm3630a_update(pchip, REG_CTRL,
+@@ -277,7 +279,9 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
+ 	usleep_range(1000, 2000);
+ 	/* minimum brightness is 0x04 */
+ 	ret = lm3630a_write(pchip, REG_BRT_B, bl->props.brightness);
+-	if (bl->props.brightness < 0x4)
++
++	if (backlight_is_blank(bl) || (bl->props.brightness < 0x4))
++		/* turn the string off  */
+ 		ret |= lm3630a_update(pchip, REG_CTRL, LM3630A_LEDB_ENABLE, 0);
+ 	else
+ 		ret |= lm3630a_update(pchip, REG_CTRL,
 
---=20
-With Best Regards,
-Andy Shevchenko
+base-commit: 457391b0380335d5e9a5babdec90ac53928b23b4
+--
+2.39.2
+
