@@ -2,78 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A616FA315
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 11:16:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E8B6FA32E
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 11:24:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233202AbjEHJQo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 8 May 2023 05:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
+        id S229491AbjEHJY6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 8 May 2023 05:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233133AbjEHJQn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 05:16:43 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22302074F
-        for <linux-pwm@vger.kernel.org>; Mon,  8 May 2023 02:16:41 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9661a1ff1e9so270931966b.1
-        for <linux-pwm@vger.kernel.org>; Mon, 08 May 2023 02:16:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683537400; x=1686129400;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/T10afqTW6daMTYjhrYC+yDv3aZ7k6tzWV/gJ72nsvg=;
-        b=mdRluXxsgs9NgrPR6YCXEZXlM7wuNompAfvEV3zT6FIDODHHPibHG3RZQOdD9OH0fc
-         vayPSdJR0Gl76Rg3IpcIViArkQK6w8P1zd3rc7KXtu7b6LW/9ZtlM6lwHPswojJ0Jl56
-         gBXmoH5FnrkOaH9LoJJQjXadiNNVfCrrdQJPbXShMBQcQavip4AulrJ7FSSZdq2zepxl
-         xNm3D0uRiyBXKenrMDHZy2Aq3B/EuWReX3FJGi9PSDOxjN9GSBIjb7MHpaWAIcr3BA2m
-         E5ju47qgGcTArmFlj5pI7i3OQldohn1coZoziDf65E0KskxVvO5Nf092w6MH3sItIUm+
-         6xKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683537400; x=1686129400;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/T10afqTW6daMTYjhrYC+yDv3aZ7k6tzWV/gJ72nsvg=;
-        b=k3eq2NJKO2T/6r1nW6Z9jvn9ojn3QMfa9hwD8vnH52hibs8PLaVgPG4f2cpzA58Er7
-         ax56i4BTR0L8OQFKIrZ9kcrmMVQxy/3umibrvllwN8xLUcy9lFtIGikbcMBhE4CQHwy9
-         25zMpfsPUmK6hxJUa6KNtFxICX1uXesIxH59PuXy/r7rLUeRz1EvC88tqjEF1unaXPce
-         A3J4NZaFz3UfE9JKJCuAciGBNEMuLX4u5ibfvxUghTPEw/xwmvTpNXrfcAP+JUNLD2QE
-         mi2hwSKBFMPEuYAN5PuZ4GlSRGxdDMlVdlA8yXlsGgi86WZTHSOIZHYuqY9lJYIUb7F4
-         zipg==
-X-Gm-Message-State: AC+VfDwmkSJ0WTpNpnRKLguxYWkhPUxUempqQsN9Pr3P6qdfVkzRJGo9
-        tEfYaANnAe8iCqOQ4vn9M9wTAw==
-X-Google-Smtp-Source: ACHHUZ7UhEbSqRlodHaeyDCKERtf8Tglu4oLOw6KXMPPRxp7f3mU6Viid9v1zp4McZLtWQ92hmN/CA==
-X-Received: by 2002:a17:907:3e83:b0:953:7bb2:28d8 with SMTP id hs3-20020a1709073e8300b009537bb228d8mr8813817ejc.21.1683537400452;
-        Mon, 08 May 2023 02:16:40 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:50e0:ebdf:b755:b300? ([2a02:810d:15c0:828:50e0:ebdf:b755:b300])
-        by smtp.gmail.com with ESMTPSA id t16-20020a1709064f1000b009571293d6acsm4661301eju.59.2023.05.08.02.16.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 May 2023 02:16:40 -0700 (PDT)
-Message-ID: <de4c60af-1e7b-1354-ea76-457601b1ec22@linaro.org>
-Date:   Mon, 8 May 2023 11:16:38 +0200
+        with ESMTP id S232050AbjEHJY5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 05:24:57 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67DD18DE6
+        for <linux-pwm@vger.kernel.org>; Mon,  8 May 2023 02:24:56 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pvx6x-0008En-MD; Mon, 08 May 2023 11:24:51 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pvx6v-001xUH-66; Mon, 08 May 2023 11:24:49 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pvx6u-002NKQ-DI; Mon, 08 May 2023 11:24:48 +0200
+Date:   Mon, 8 May 2023 11:24:48 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v16] pwm: Add Renesas RZ/G2L MTU3a PWM driver
+Message-ID: <20230508092448.6jzrh2lalh5v2ebi@pengutronix.de>
+References: <20230418102037.346405-1-biju.das.jz@bp.renesas.com>
+ <OS0PR01MB5922D142435F4755009E6F6D86719@OS0PR01MB5922.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
-Content-Language: en-US
-To:     Stanislav Jakubek <stano.jakubek@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230508085727.GA7252@standask-GA-A55M-S2HP>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230508085727.GA7252@standask-GA-A55M-S2HP>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mzfwrudwncj43avy"
+Content-Disposition: inline
+In-Reply-To: <OS0PR01MB5922D142435F4755009E6F6D86719@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,20 +57,47 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 08/05/2023 10:57, Stanislav Jakubek wrote:
-> Convert Broadcom Kona family PWM controller bindings to DT schema.
 
-Please mention in the commit log changes to original binding. You added
-new compatible.
+--mzfwrudwncj43avy
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
-> ---
->  .../devicetree/bindings/pwm/brcm,kona-pwm.txt | 21 --------
->  .../bindings/pwm/brcm,kona-pwm.yaml           | 51 +++++++++++++++++++
->  2 files changed, 51 insertions(+), 21 deletions(-)
+On Mon, May 08, 2023 at 07:56:08AM +0000, Biju Das wrote:
+> Hi Uwe,
+>=20
+> The dependency patch[1] hits on v6.4-rc1.
+>=20
+> So are you happy with this patch? or do you want me to rebase and resend =
+the patch
+> on Linux-pwm? Please let me know.
+>=20
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/?=
+h=3Dv6.4-rc1
 
+It's on my todo list, I intend to look into it during this week.
 
-Best regards,
-Krzysztof
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mzfwrudwncj43avy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRYv98ACgkQj4D7WH0S
+/k49KQf/R3rIeAbC5LVjkJxl1kKes69uruHNdUXZNcCIhXOx50H7i2YFAPp2BY9Z
+S7Dd1vfxlXZ1PHMCGBvnowcJs8NaGIz5jSS76raY7CXgKfuetWrF2nPNMvRQ/64X
+w5aMXmnqspR9BQrg2lMJqmLb6qwmhJmXpo5DS/XEr6IOwE/QbjOvFGy22EDmTE97
+hw65MbhX0QbjuMf7DWBNNRiIcRRRkX3y17PBwqVwS0grkRDIefcBnOHhXPztb1Qe
+E6V5mhnN4wgOD1DLj3+rsCHlRXu/CuNeek6Itc0XUAiXmIVQBwr2VE5ZcaB6aU0S
+4kbLQOjP7DzgKQJDUC+VkKbSrn+IQA==
+=pzhf
+-----END PGP SIGNATURE-----
+
+--mzfwrudwncj43avy--
