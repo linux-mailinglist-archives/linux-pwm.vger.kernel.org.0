@@ -2,55 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86E8B6FA32E
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 11:24:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 679666FA33B
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 11:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbjEHJY6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 8 May 2023 05:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
+        id S233132AbjEHJ1U (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 8 May 2023 05:27:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232050AbjEHJY5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 05:24:57 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67DD18DE6
-        for <linux-pwm@vger.kernel.org>; Mon,  8 May 2023 02:24:56 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pvx6x-0008En-MD; Mon, 08 May 2023 11:24:51 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pvx6v-001xUH-66; Mon, 08 May 2023 11:24:49 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pvx6u-002NKQ-DI; Mon, 08 May 2023 11:24:48 +0200
-Date:   Mon, 8 May 2023 11:24:48 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v16] pwm: Add Renesas RZ/G2L MTU3a PWM driver
-Message-ID: <20230508092448.6jzrh2lalh5v2ebi@pengutronix.de>
-References: <20230418102037.346405-1-biju.das.jz@bp.renesas.com>
- <OS0PR01MB5922D142435F4755009E6F6D86719@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+        with ESMTP id S233626AbjEHJ1T (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 05:27:19 -0400
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331388F;
+        Mon,  8 May 2023 02:27:17 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1928253dd95so1776719fac.3;
+        Mon, 08 May 2023 02:27:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683538036; x=1686130036;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=T+phZhc9+/yemeqtaxpRhq+37BIQlVelYnOaxp7TxHA=;
+        b=DDrapKT1klKw1NpVUu0qeuRkWCcxss9d34pfg9lJ100V5TptTVBpikP+xhLKCEQr1v
+         jdlKBnXUSnjUMm9BAI+Xhn8VpOeSC+gvajob/yh1tRu3G9vPq/c2t0i7iy0bkCN1ebxQ
+         LCv7jOVY2+PB4b1Lhe3tyOD2VDnqoaoq7ZLESluRsZrhFJUDFym233eOHhEoh68uoJU8
+         85plXIn/h/C+F/WiI/Qy2stHsPddSJkr43yXv4iUSJfuptKNdQFk7xjBf2+zV1gKJtUU
+         Yts9wJMFqA2URQs5N2fgoJSZjhVUSHBN7B1y+tVMHoDsqANnHwDiyMFSLGI1mpHscLcZ
+         5WbA==
+X-Gm-Message-State: AC+VfDwFAZdF9YDvPw8e67NUFuuomLRfO/IsQK5aSs5XylN1JI7jlmnw
+        ur/sL30+ipfV81mf7vEd1A==
+X-Google-Smtp-Source: ACHHUZ4zEz3lotUMpKgI4ZPVHP7xU9QrTR7Bpg4c27qYYicbSaDkcubir3d0oL+l+tWFQxu7lzT4GQ==
+X-Received: by 2002:a05:6870:e506:b0:177:c2bd:3f6d with SMTP id y6-20020a056870e50600b00177c2bd3f6dmr4022359oag.45.1683538036369;
+        Mon, 08 May 2023 02:27:16 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id j5-20020a056870a48500b0018b12e3a392sm4724440oal.42.2023.05.08.02.27.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 02:27:15 -0700 (PDT)
+Received: (nullmailer pid 575488 invoked by uid 1000);
+        Mon, 08 May 2023 09:27:12 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mzfwrudwncj43avy"
-Content-Disposition: inline
-In-Reply-To: <OS0PR01MB5922D142435F4755009E6F6D86719@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Stanislav Jakubek <stano.jakubek@gmail.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20230508085727.GA7252@standask-GA-A55M-S2HP>
+References: <20230508085727.GA7252@standask-GA-A55M-S2HP>
+Message-Id: <168353803294.575457.2741110608666580664.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
+Date:   Mon, 08 May 2023 04:27:12 -0500
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -58,46 +71,47 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---mzfwrudwncj43avy
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 08 May 2023 10:57:27 +0200, Stanislav Jakubek wrote:
+> Convert Broadcom Kona family PWM controller bindings to DT schema.
+> 
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+> ---
+>  .../devicetree/bindings/pwm/brcm,kona-pwm.txt | 21 --------
+>  .../bindings/pwm/brcm,kona-pwm.yaml           | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 21 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
+> 
 
-On Mon, May 08, 2023 at 07:56:08AM +0000, Biju Das wrote:
-> Hi Uwe,
->=20
-> The dependency patch[1] hits on v6.4-rc1.
->=20
-> So are you happy with this patch? or do you want me to rebase and resend =
-the patch
-> on Linux-pwm? Please let me know.
->=20
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/?=
-h=3Dv6.4-rc1
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-It's on my todo list, I intend to look into it during this week.
+yamllint warnings/errors:
 
-Best regards
-Uwe
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/rockchip-isp1.example.dtb: camera@3c: port:endpoint:data-lanes: [[1]] is too short
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.example.dtb: camera-sensor@3c: port:endpoint:data-lanes: [[1]] is too short
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.example.dtb: pcie-ep@33800000: Unevaluated properties are not allowed ('assigned-clock-parents', 'assigned-clock-rates', 'assigned-clocks' were unexpected)
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+doc reference errors (make refcheckdocs):
+Documentation/usb/gadget_uvc.rst: Documentation/userspace-api/media/v4l/pixfmt-packed.yuv.rst
+MAINTAINERS: Documentation/devicetree/bindings/pwm/pwm-apple.yaml
 
---mzfwrudwncj43avy
-Content-Type: application/pgp-signature; name="signature.asc"
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230508085727.GA7252@standask-GA-A55M-S2HP
 
------BEGIN PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRYv98ACgkQj4D7WH0S
-/k49KQf/R3rIeAbC5LVjkJxl1kKes69uruHNdUXZNcCIhXOx50H7i2YFAPp2BY9Z
-S7Dd1vfxlXZ1PHMCGBvnowcJs8NaGIz5jSS76raY7CXgKfuetWrF2nPNMvRQ/64X
-w5aMXmnqspR9BQrg2lMJqmLb6qwmhJmXpo5DS/XEr6IOwE/QbjOvFGy22EDmTE97
-hw65MbhX0QbjuMf7DWBNNRiIcRRRkX3y17PBwqVwS0grkRDIefcBnOHhXPztb1Qe
-E6V5mhnN4wgOD1DLj3+rsCHlRXu/CuNeek6Itc0XUAiXmIVQBwr2VE5ZcaB6aU0S
-4kbLQOjP7DzgKQJDUC+VkKbSrn+IQA==
-=pzhf
------END PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
---mzfwrudwncj43avy--
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
