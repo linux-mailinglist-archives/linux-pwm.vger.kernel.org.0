@@ -2,56 +2,64 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 359CD6FA2AF
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 10:57:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A616FA315
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 11:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232518AbjEHI5k (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 8 May 2023 04:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39696 "EHLO
+        id S233202AbjEHJQo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 8 May 2023 05:16:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233386AbjEHI5g (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 04:57:36 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5894821573;
-        Mon,  8 May 2023 01:57:31 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3f315712406so161980415e9.0;
-        Mon, 08 May 2023 01:57:31 -0700 (PDT)
+        with ESMTP id S233133AbjEHJQn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 05:16:43 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22302074F
+        for <linux-pwm@vger.kernel.org>; Mon,  8 May 2023 02:16:41 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9661a1ff1e9so270931966b.1
+        for <linux-pwm@vger.kernel.org>; Mon, 08 May 2023 02:16:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683536250; x=1686128250;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=linaro.org; s=google; t=1683537400; x=1686129400;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPLvkIvtLC6+B7znIWatvSXfTI7f9KmVz7fncKddhqI=;
-        b=NOEQsRNjTZ34Mz97BXBCCVqgGl5hxzsvyCQjQnlgSOPoAcjn9ocfvJVVI3fPEQE5Rm
-         73L8nnPYHfB8cV5rojUcjfRSMl6/iYOfr8hnUWVHAO51v8F16ib49cOqFoTUtaAVhIe2
-         e/ZTThTcUoMS45GuWV6llj7BcIpwRS6Tx5XijCbhW6cunt5JSv6pVRS6kJ6e1T03T1A9
-         fN0NwJzqC8BO+fVJEsDTQat7BsuMr2gCQEZ5Glfw4O9XZmasaJRJPFgyn/JyPnXEgfAA
-         GEEhvAoyBYMSL0FU195P/+yFbOJ9CX4dIqG4Wc3Q8u6HN8UhR6k6PWW/QLv010aPDTAF
-         WCSQ==
+        bh=/T10afqTW6daMTYjhrYC+yDv3aZ7k6tzWV/gJ72nsvg=;
+        b=mdRluXxsgs9NgrPR6YCXEZXlM7wuNompAfvEV3zT6FIDODHHPibHG3RZQOdD9OH0fc
+         vayPSdJR0Gl76Rg3IpcIViArkQK6w8P1zd3rc7KXtu7b6LW/9ZtlM6lwHPswojJ0Jl56
+         gBXmoH5FnrkOaH9LoJJQjXadiNNVfCrrdQJPbXShMBQcQavip4AulrJ7FSSZdq2zepxl
+         xNm3D0uRiyBXKenrMDHZy2Aq3B/EuWReX3FJGi9PSDOxjN9GSBIjb7MHpaWAIcr3BA2m
+         E5ju47qgGcTArmFlj5pI7i3OQldohn1coZoziDf65E0KskxVvO5Nf092w6MH3sItIUm+
+         6xKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683536250; x=1686128250;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1683537400; x=1686129400;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZPLvkIvtLC6+B7znIWatvSXfTI7f9KmVz7fncKddhqI=;
-        b=jgPpjDokjW5e5oF9fMrwqhyXg10n5oO21CaSTQ6AYWtJNIC/I6/KVJCmWxdsOsbIcq
-         +cuuf0aA0jRH0vnnyC/gtQtnoN2YS97DSDg+nEWwjeaxEv3TohUGzun4sYfBDocZRGGb
-         SNCUfLnFlHTtzq/9JPBPb2fycnyCp4CvUPmu/q5rLIAq6rANF90P8zIlbhVaBQd/Eq65
-         cpIKeE7Hmszbz/nTI1UkpeTRo8/8gukdd3plYW7mxs5BlqHjcV3aZ74tG/fW72hxzMrz
-         FnPK7gHV63bAnw57VwPFFRyZ4ObKkjJk6Q6rNMsg5KFyspx7HBoHwfOIGyfQ5Lu1TsEk
-         Xx2w==
-X-Gm-Message-State: AC+VfDw50YT8fiyYLxwM3Xod7BXCH8wkb1YPkuG3igHpELJadTOYbvBg
-        6j3qF2QoeFbtUlKLDzL4fMYaPmE9mE13Iw==
-X-Google-Smtp-Source: ACHHUZ5170gD0qWyViQhbwVMdfdLaGlswQv5lfQTrPjoCZkXRHlVbhXMlo+cLckFWAxjp0X3AnIJBw==
-X-Received: by 2002:adf:dd83:0:b0:307:7d1a:20fd with SMTP id x3-20020adfdd83000000b003077d1a20fdmr5715126wrl.12.1683536249976;
-        Mon, 08 May 2023 01:57:29 -0700 (PDT)
-Received: from standask-GA-A55M-S2HP ([188.123.113.247])
-        by smtp.gmail.com with ESMTPSA id z6-20020adff746000000b002f103ca90cdsm10656624wrp.101.2023.05.08.01.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 01:57:29 -0700 (PDT)
-Date:   Mon, 8 May 2023 10:57:27 +0200
-From:   Stanislav Jakubek <stano.jakubek@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        bh=/T10afqTW6daMTYjhrYC+yDv3aZ7k6tzWV/gJ72nsvg=;
+        b=k3eq2NJKO2T/6r1nW6Z9jvn9ojn3QMfa9hwD8vnH52hibs8PLaVgPG4f2cpzA58Er7
+         ax56i4BTR0L8OQFKIrZ9kcrmMVQxy/3umibrvllwN8xLUcy9lFtIGikbcMBhE4CQHwy9
+         25zMpfsPUmK6hxJUa6KNtFxICX1uXesIxH59PuXy/r7rLUeRz1EvC88tqjEF1unaXPce
+         A3J4NZaFz3UfE9JKJCuAciGBNEMuLX4u5ibfvxUghTPEw/xwmvTpNXrfcAP+JUNLD2QE
+         mi2hwSKBFMPEuYAN5PuZ4GlSRGxdDMlVdlA8yXlsGgi86WZTHSOIZHYuqY9lJYIUb7F4
+         zipg==
+X-Gm-Message-State: AC+VfDwmkSJ0WTpNpnRKLguxYWkhPUxUempqQsN9Pr3P6qdfVkzRJGo9
+        tEfYaANnAe8iCqOQ4vn9M9wTAw==
+X-Google-Smtp-Source: ACHHUZ7UhEbSqRlodHaeyDCKERtf8Tglu4oLOw6KXMPPRxp7f3mU6Viid9v1zp4McZLtWQ92hmN/CA==
+X-Received: by 2002:a17:907:3e83:b0:953:7bb2:28d8 with SMTP id hs3-20020a1709073e8300b009537bb228d8mr8813817ejc.21.1683537400452;
+        Mon, 08 May 2023 02:16:40 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:50e0:ebdf:b755:b300? ([2a02:810d:15c0:828:50e0:ebdf:b755:b300])
+        by smtp.gmail.com with ESMTPSA id t16-20020a1709064f1000b009571293d6acsm4661301eju.59.2023.05.08.02.16.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 May 2023 02:16:40 -0700 (PDT)
+Message-ID: <de4c60af-1e7b-1354-ea76-457601b1ec22@linaro.org>
+Date:   Mon, 8 May 2023 11:16:38 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
+Content-Language: en-US
+To:     Stanislav Jakubek <stano.jakubek@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -59,115 +67,35 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Scott Branden <sbranden@broadcom.com>
 Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
-Message-ID: <20230508085727.GA7252@standask-GA-A55M-S2HP>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230508085727.GA7252@standask-GA-A55M-S2HP>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230508085727.GA7252@standask-GA-A55M-S2HP>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert Broadcom Kona family PWM controller bindings to DT schema.
+On 08/05/2023 10:57, Stanislav Jakubek wrote:
+> Convert Broadcom Kona family PWM controller bindings to DT schema.
 
-Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
----
- .../devicetree/bindings/pwm/brcm,kona-pwm.txt | 21 --------
- .../bindings/pwm/brcm,kona-pwm.yaml           | 51 +++++++++++++++++++
- 2 files changed, 51 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
+Please mention in the commit log changes to original binding. You added
+new compatible.
 
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
-deleted file mode 100644
-index c42eecfc81ed..000000000000
---- a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--Broadcom Kona PWM controller device tree bindings
--
--This controller has 6 channels.
--
--Required Properties :
--- compatible: should contain "brcm,kona-pwm"
--- reg: physical base address and length of the controller's registers
--- clocks: phandle + clock specifier pair for the external clock
--- #pwm-cells: Should be 3. See pwm.yaml in this directory for a
--  description of the cells format.
--
--Refer to clocks/clock-bindings.txt for generic clock consumer properties.
--
--Example:
--
--pwm: pwm@3e01a000 {
--	compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
--	reg = <0x3e01a000 0xc4>;
--	clocks = <&pwm_clk>;
--	#pwm-cells = <3>;
--};
-diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
-new file mode 100644
-index 000000000000..d1a58d130708
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/brcm,kona-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom Kona family PWM controller
-+
-+description:
-+  This controller has 6 channels.
-+
-+maintainers:
-+  - Florian Fainelli <f.fainelli@gmail.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - brcm,bcm11351-pwm
-+      - const: brcm,kona-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#pwm-cells':
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include "dt-bindings/clock/bcm281xx.h"
-+
-+    pwm@3e01a000 {
-+       compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
-+       reg = <0x3e01a000 0xcc>;
-+       clocks = <&slave_ccu BCM281XX_SLAVE_CCU_PWM>;
-+       #pwm-cells = <3>;
-+    };
-+...
--- 
-2.25.1
+> 
+> Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
+> ---
+>  .../devicetree/bindings/pwm/brcm,kona-pwm.txt | 21 --------
+>  .../bindings/pwm/brcm,kona-pwm.yaml           | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 21 deletions(-)
+
+
+Best regards,
+Krzysztof
 
