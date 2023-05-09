@@ -2,56 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EFB36FC7D3
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 May 2023 15:27:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D831C6FCC66
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 May 2023 19:10:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234833AbjEIN1n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 9 May 2023 09:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52314 "EHLO
+        id S235451AbjEIRKz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 9 May 2023 13:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234503AbjEIN1m (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 May 2023 09:27:42 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF6730CF
-        for <linux-pwm@vger.kernel.org>; Tue,  9 May 2023 06:27:39 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-3063b5f32aaso3794392f8f.2
-        for <linux-pwm@vger.kernel.org>; Tue, 09 May 2023 06:27:39 -0700 (PDT)
+        with ESMTP id S229704AbjEIRKf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 May 2023 13:10:35 -0400
+X-Greylist: delayed 968 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 09 May 2023 10:08:44 PDT
+Received: from mailrelay6-1.pub.mailoutpod2-cph3.one.com (mailrelay6-1.pub.mailoutpod2-cph3.one.com [IPv6:2a02:2350:5:405::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401BE4C1A
+        for <linux-pwm@vger.kernel.org>; Tue,  9 May 2023 10:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683638858; x=1686230858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YuQ2FBeCRoqgngylaRdOh7aqiqlvdZtnW5rbAbkcgXI=;
-        b=AH1IzWoKD1GbxcF9ng7uQsTL872w02GkxK1Q77af/6B74iG8+N4tcxgxkyb7OF7cca
-         Un3CHwFvJCOe9jANPaUvgVp3z6qPeSkMv78Q31nEc+DzNcFSqduVfxqpERiiTgbIxEiL
-         uYMUNm2pcXy7AVAl7+aOS38etpxSM74rgG1X9Vn2TIAwXNuN0nU4CXYcCbL+WmYruQEi
-         apXr7BQg6zkxzn3spKQUkefPlrDVExBq5LPRdpsYJdRwqgi+PMhrS6V0tRCETTl07OO5
-         LrlqLsPxnoVZa2FKaXipGlrepsiGlXi0YGBODqPF6rQGfvwQW0ALnAAUm7XW8EftFs0Y
-         qQhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683638858; x=1686230858;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YuQ2FBeCRoqgngylaRdOh7aqiqlvdZtnW5rbAbkcgXI=;
-        b=Ur0tgVQbFPaXjsefTK/u9Zf/2sF+tj8Jdq5hxxmxWf+tdfNKXk6zmmOcqLdrs0KXql
-         0Exkw3Ve1HhSSUORb8TIjqxSaA3kp4QMEzmYA3ZVk62ZCBPt+5nr7XDKDBAjuSgZxVux
-         LaQJQG1hhMQ3FEp1/p8tbHOj0c7/wa7d4PAvK2dcIOOLAK3g2BfS0FdPS4EYwpc+KRBw
-         RjMtBGINfLqb7Yq5+DYGPMc8NTNlNIBVoChbc+3lDBMD1blVegyrstdHIvqRzzSp5PFI
-         0c5yRHTuBpSrYlLJ81GaK/BDPB4JoGYIPJ6cZJEIbgvftRJDodQrSAXV3ROvmgNKxPqe
-         ZpSA==
-X-Gm-Message-State: AC+VfDyI6Xq/sHnoi9G9PmWBClRtta6Fmql9Z5DHuBo0zDkuLEpCsPBT
-        BSr8tbfogvJGin79Mb+BDogH7w==
-X-Google-Smtp-Source: ACHHUZ60LQ2w7jDdb1KfIt1LYeUDMCEJrCrpzMKg5XLc7SVJ/RpGIRMx0wqXtIAXfShUhg+fn2JRHA==
-X-Received: by 2002:adf:f491:0:b0:306:31b7:abe4 with SMTP id l17-20020adff491000000b0030631b7abe4mr11390420wro.14.1683638857874;
-        Tue, 09 May 2023 06:27:37 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id d6-20020a056000114600b00306344eaebfsm14415375wrx.28.2023.05.09.06.27.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 May 2023 06:27:37 -0700 (PDT)
-Date:   Tue, 9 May 2023 14:27:35 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
+        d=ravnborg.org; s=rsa1;
+        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+         from:date:from;
+        bh=cOysKkMBNzDpcv5J2MsGIrd6IfUZXEEIlgYWc9yAK1I=;
+        b=Amwj4o2W9+x26XSYidQ/xfjam9GfElktepI4/ezdc6Di/JAz0kJvOa7H9OAIf56tAysvU/tXe3M3v
+         TL6HeGLz5FevtuATssXRb92xxS76qq6gZToR06QaFb/wP8fAXgXV0m9im8bvPTRqoSyBZK7HyKGK6S
+         CuHuha/2o4ihYd9eE2fi8mtqptzxnx18mq0BWuzXNryagE+Xu8OrA2aAHo4jK/aUX/qJco4VJThz9+
+         mndVlUyRZiPAzF55bOhzBkfWYjGCUpnED5au0AGdjZFJzKJsAaxFdL9HpOJeNPcfxXWwBAfmvBNwgi
+         djeMx/mSgSVtHhAVDZ8hmQeuwErhIow==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+        d=ravnborg.org; s=ed1;
+        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+         from:date:from;
+        bh=cOysKkMBNzDpcv5J2MsGIrd6IfUZXEEIlgYWc9yAK1I=;
+        b=qafW83QT/OqXnpLt+q4/N/9s/XB8IE/qbub0+3tIQ4iXiI+0eetRFTeoUfa7/wjKNHSdig+xPcFDo
+         bqfTGNdCQ==
+X-HalOne-ID: e4221e17-ee89-11ed-90db-6f01c1d0a443
+Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
+        by mailrelay6 (Halon) with ESMTPSA
+        id e4221e17-ee89-11ed-90db-6f01c1d0a443;
+        Tue, 09 May 2023 16:52:34 +0000 (UTC)
+Date:   Tue, 9 May 2023 18:52:32 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Maximilian Weigand <mweigand2017@gmail.com>
-Cc:     Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+Cc:     Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
         Helge Deller <deller@gmx.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
@@ -61,7 +52,7 @@ Cc:     Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
         Maximilian Weigand <mweigand@mweigand.net>
 Subject: Re: [PATCH v1] backlight: lm3630a: turn off both led strings when
  display is blank
-Message-ID: <20230509132735.GA31274@aspen.lan>
+Message-ID: <20230509165232.GA1072872@ravnborg.org>
 References: <20230505185752.969476-1-mweigand2017@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -69,8 +60,8 @@ Content-Disposition: inline
 In-Reply-To: <20230505185752.969476-1-mweigand2017@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -79,16 +70,40 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 On Fri, May 05, 2023 at 08:57:52PM +0200, Maximilian Weigand wrote:
 > From: Maximilian Weigand <mweigand@mweigand.net>
->
+> 
 > Use display_is_blank() to determine if the led strings should be turned
-
-Shouldn't this be backlight_is_blank()?
-
-
 > off in the update_status() functions of both strings.
+> 
+> Signed-off-by: Maximilian Weigand <mweigand@mweigand.net>
+> ---
+>  drivers/video/backlight/lm3630a_bl.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index d8c42acecb5d..5498b57329f9 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -202,7 +202,9 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
+>  	usleep_range(1000, 2000);
+>  	/* minimum brightness is 0x04 */
+>  	ret = lm3630a_write(pchip, REG_BRT_A, bl->props.brightness);
+> -	if (bl->props.brightness < 0x4)
+> +
+> +	if (backlight_is_blank(bl) || (bl->props.brightness < 0x4))
+You could replace bl->props.brightness with backlight_get_brightness(bl)
+to avoid direct access to the properties.
 
-Once the description is fixed this is:
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> +		/* turn the string off  */
+>  		ret |= lm3630a_update(pchip, REG_CTRL, LM3630A_LEDA_ENABLE, 0);
+>  	else
+>  		ret |= lm3630a_update(pchip, REG_CTRL,
+> @@ -277,7 +279,9 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
+>  	usleep_range(1000, 2000);
+>  	/* minimum brightness is 0x04 */
+>  	ret = lm3630a_write(pchip, REG_BRT_B, bl->props.brightness);
+> -	if (bl->props.brightness < 0x4)
+> +
+> +	if (backlight_is_blank(bl) || (bl->props.brightness < 0x4))
+Same here
 
-
-Daniel.
+	Sam
