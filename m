@@ -2,74 +2,84 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65C2E6FB7B5
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 May 2023 21:49:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E8056FC403
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 May 2023 12:34:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233758AbjEHTtW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 8 May 2023 15:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        id S235347AbjEIKeU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 9 May 2023 06:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233770AbjEHTtD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 8 May 2023 15:49:03 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A634A8A6A
-        for <linux-pwm@vger.kernel.org>; Mon,  8 May 2023 12:47:46 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-956ff2399c9so939715466b.3
-        for <linux-pwm@vger.kernel.org>; Mon, 08 May 2023 12:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1683575180; x=1686167180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+NtJxceVAbEagHvQtUU9/qw+tYoFv4N/txoDVssCgCY=;
-        b=PxHUOLMaMdGfRYeHzqC2wYDoWjXRpm1f2e+OpkGY/IVYOpni6P2/+XRHr1Oa8NpucF
-         Fmbu8D+5W8p89HBU0s1l1XPv9Uya20spJPnsjK+4om0CYUMz6RRgw5KGEohWu9qxL9Td
-         RzX/iu64/mt66fBU04jb4L4cFRpU+6l49tkaGmzBkko43m4HIm1Ef1dxPRl8oYkSDIX+
-         t77D80MJHGyKKF4MzDlBGeJfUhR3mAyuKAtPIIRF8ZFEPT00KPOAQ4wXszfxU/LZhrwz
-         S94xOhZvrR979cWDFePjBVOcChyiU00KzYIDteXTC3no2sv4U1wALe6WutizM7PL8ZjB
-         WfQg==
+        with ESMTP id S235348AbjEIKeI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 May 2023 06:34:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FF510A11
+        for <linux-pwm@vger.kernel.org>; Tue,  9 May 2023 03:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683628383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rY0wAhFO0QvQXSIMKQo3/4SZywWKrbnd3LDq+RJ6btQ=;
+        b=OiYv/rkhhOV+MA9a57cyIijO1vCpytl9dI1mFQgucXuBmylCdyqPKnZFuZvqge9bmItugD
+        wjSZWZw24ZIaW3ApRlc8ff+23bgvQ0SUCPeddSTzEtzgo9dUAQOQDSS4at87kx5ddilwKp
+        h+wGT1AjOiUPTQJH7p3FxVVeltGkcEA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-189-FUWlKzOAP4CCjAg5jxmuvw-1; Tue, 09 May 2023 06:33:01 -0400
+X-MC-Unique: FUWlKzOAP4CCjAg5jxmuvw-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-506beab6a73so6537576a12.1
+        for <linux-pwm@vger.kernel.org>; Tue, 09 May 2023 03:33:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683575180; x=1686167180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+NtJxceVAbEagHvQtUU9/qw+tYoFv4N/txoDVssCgCY=;
-        b=hL5Be9lzlMXLUg93UOONJI7LP0qXrrgn2EDr+zHyDLMzF29XRgSrmLrvbljc64ZvKL
-         JMQH6ZbaQ8I2nhcWLRXQniwnW03lkCizgfBytz9NtQB6SrvybOYbtt0HbMgQnlglO2T5
-         N7dMo6XuJfOzyTiwJSqbPJB9M+sXjY8z0zUR66jInD0dCcVJEBkyOTzO8m7+rn2dFwTR
-         vsiBwRdjwx85LTXdDUXjbmrclLOgL/2XDGYPY7OEpTIDOMZkOUfPXcrAgaANbkmU7L7Q
-         zbPDjtw1DkVaucplMrzydsuh9Wb6Ego04nH0xKioEaWEDMtPqtiBo7OxIWvNkvBu3ziV
-         sUpg==
-X-Gm-Message-State: AC+VfDxK0nqA7ElfcXK1GCP5epfIv8YcO4WJ+MjuYbV0E2hGYuzypu9S
-        qiHyV7ASF3AiSSccHvhGLdDPt7uwXpzJGOt12Bo=
-X-Google-Smtp-Source: ACHHUZ6yOwrYoQ+snTUAwTEeCmMFhkQc3bfTdJ4HXRbhf28HnR2TFi3FxXit9EFwPnHMgLuEh4FYTajknvxnLZaFpzo=
-X-Received: by 2002:a17:907:2cc5:b0:92b:69cd:34c7 with SMTP id
- hg5-20020a1709072cc500b0092b69cd34c7mr9808555ejc.40.1683575179927; Mon, 08
- May 2023 12:46:19 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683628380; x=1686220380;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rY0wAhFO0QvQXSIMKQo3/4SZywWKrbnd3LDq+RJ6btQ=;
+        b=YIxsxML5sEVkXnSIQC9bQPpiQO4DZl5WJAO2iGGbaS+UZJclwgmB3dn/XFw7CSL9q1
+         6TJSCc7XgN5TY0G3Q+U6RTzGkwxCp0DU3aE5U7Pn0d/iw5s6KXwPwoUs6LdG2DUyi/Qe
+         lugY64yvRZB3tiWoUe6sr3NIBdUTMpXTzjrw0W0GumV+EbULtCH5jVRfQCt6lbRQkZYY
+         goeRu1OszdxcFqe4D/S3mG2RoMFeekZ2cSgsDnCq72a/JhGQXkMaXvm3UAFoBwEgRCDT
+         Reu/iaetm626fGqGUmUrtjcs32VdA6tFomj4RTO0e+q9TUjtdGNHXnrrtwHDwjSBY3tC
+         j1cg==
+X-Gm-Message-State: AC+VfDyiPDFeQwZ9hAVMwErdxpLZWbdtWwlef+I0Gwi1e66s8HZ/PCo2
+        jzvsgUPSx7S+7O5VJPgYJJoCQwGOtP968+MR71vOuJIOOYtOE0UShEyz06YdwCAYd/HSts+v7As
+        YcIEwLg8aCrEVG/vH99mk
+X-Received: by 2002:a17:907:a4d:b0:95e:de94:5bea with SMTP id be13-20020a1709070a4d00b0095ede945beamr11586528ejc.56.1683628380814;
+        Tue, 09 May 2023 03:33:00 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5ZAQ9eCkaXMHHXerfZzIta4y0/T8ovCZ82gEgyXT6wc8rMWJpmUYK9BAFnT0SZXGRYHhkx1g==
+X-Received: by 2002:a17:907:a4d:b0:95e:de94:5bea with SMTP id be13-20020a1709070a4d00b0095ede945beamr11586508ejc.56.1683628380502;
+        Tue, 09 May 2023 03:33:00 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id v20-20020a170906b01400b0096165b2703asm1153586ejy.110.2023.05.09.03.32.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 03:33:00 -0700 (PDT)
+Message-ID: <a36a760f-6f64-190f-f94b-d30b82b3382e@redhat.com>
+Date:   Tue, 9 May 2023 12:32:59 +0200
 MIME-Version: 1.0
-References: <1d1a8ede-e789-bc4d-2dcd-9d06d2df4061@gmail.com>
-In-Reply-To: <1d1a8ede-e789-bc4d-2dcd-9d06d2df4061@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 8 May 2023 21:46:09 +0200
-Message-ID: <CAFBinCCeh1eUo1=pfqmp4F7UsuKZ--cja-16mCqBhV-cgodzqw@mail.gmail.com>
-Subject: Re: [PATCH] pwm: pwm-meson: fix handling of period/duty if greater
- than UINT_MAX
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 10/19] platform/x86: lenovo-yogabook: Split probe()
+ into generic and WMI specific parts
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20230430165807.472798-1-hdegoede@redhat.com>
+ <20230430165807.472798-11-hdegoede@redhat.com>
+ <CAHp75VejjvfjLSsePfhRetEiWTE7ve=uZR87V9MZLET9KG6C1g@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VejjvfjLSsePfhRetEiWTE7ve=uZR87V9MZLET9KG6C1g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,16 +87,55 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, May 3, 2023 at 9:58=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.co=
-m> wrote:
->
-> state->period/duty are of type u64, and if their value is greater than
-> UINT_MAX, then the cast to uint will cause problems. Fix this by
-> changing the type of the respective local variables to u64.
->
-> Fixes: b79c3670e120 ("pwm: meson: Don't duplicate the polarity internally=
-")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Hi,
+
+On 5/1/23 11:53, Andy Shevchenko wrote:
+> On Sun, Apr 30, 2023 at 7:58 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Split probe() and remove() into generic and WMI specific parts.
+>>
+>> This is a preparation patch for making lenovo-yogabook-wmi also work
+>> on the Android version of the Yoga Book 1 which does not have a WMI
+>> interface to deal with toggling the keyboard half between
+>> touch-keyboard and wacom-digitizer mode.
+> 
+> ...
+> 
+>> Changes in v2:
+>> - Use "return dev_err_probe(...);" in several places to simplify
+>>   error-exits in the new yogabook_probe() function
+> 
+> I'm not sure you have changed previous patches where it makes sense to
+> use dev_err_probe().
+
+Actually the 2 cases you point out below are the 2 last regular dev_err()
+calls in the probe() path of the driver.
+
+> Neither it's done (in full) here (in case you
+> wanted to split replacement to a separate change). See below.
+> 
+> ...
+> 
+>> +       data->kbd_adev = acpi_dev_get_first_match_dev("GDIX1001", NULL, -1);
+>> +       if (!data->kbd_adev) {
+>> +               dev_err(dev, "Cannot find the touchpad device in ACPI tables\n");
+>> +               return -ENODEV;
+> 
+> Here...
+> 
+>> +       }
+>> +
+>> +       data->dig_adev = acpi_dev_get_first_match_dev("WCOM0019", NULL, -1);
+>> +       if (!data->dig_adev) {
+>> +               dev_err(dev, "Cannot find the digitizer device in ACPI tables\n");
+>> +               r = -ENODEV;
+> 
+> ...and here.
+
+Ack I've fixed these both up while merging this series.
+
+Regards,
+
+Hans
+
+
