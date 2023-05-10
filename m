@@ -2,108 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D831C6FCC66
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 May 2023 19:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 186FC6FD9FD
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 May 2023 10:52:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235451AbjEIRKz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 9 May 2023 13:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56242 "EHLO
+        id S236250AbjEJIwW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 10 May 2023 04:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjEIRKf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 9 May 2023 13:10:35 -0400
-X-Greylist: delayed 968 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 09 May 2023 10:08:44 PDT
-Received: from mailrelay6-1.pub.mailoutpod2-cph3.one.com (mailrelay6-1.pub.mailoutpod2-cph3.one.com [IPv6:2a02:2350:5:405::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401BE4C1A
-        for <linux-pwm@vger.kernel.org>; Tue,  9 May 2023 10:08:44 -0700 (PDT)
+        with ESMTP id S236767AbjEJIwK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 10 May 2023 04:52:10 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549FC7ED5;
+        Wed, 10 May 2023 01:51:39 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f195b164c4so45553435e9.1;
+        Wed, 10 May 2023 01:51:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ravnborg.org; s=rsa1;
-        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-         from:date:from;
-        bh=cOysKkMBNzDpcv5J2MsGIrd6IfUZXEEIlgYWc9yAK1I=;
-        b=Amwj4o2W9+x26XSYidQ/xfjam9GfElktepI4/ezdc6Di/JAz0kJvOa7H9OAIf56tAysvU/tXe3M3v
-         TL6HeGLz5FevtuATssXRb92xxS76qq6gZToR06QaFb/wP8fAXgXV0m9im8bvPTRqoSyBZK7HyKGK6S
-         CuHuha/2o4ihYd9eE2fi8mtqptzxnx18mq0BWuzXNryagE+Xu8OrA2aAHo4jK/aUX/qJco4VJThz9+
-         mndVlUyRZiPAzF55bOhzBkfWYjGCUpnED5au0AGdjZFJzKJsAaxFdL9HpOJeNPcfxXWwBAfmvBNwgi
-         djeMx/mSgSVtHhAVDZ8hmQeuwErhIow==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-        d=ravnborg.org; s=ed1;
-        h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-         from:date:from;
-        bh=cOysKkMBNzDpcv5J2MsGIrd6IfUZXEEIlgYWc9yAK1I=;
-        b=qafW83QT/OqXnpLt+q4/N/9s/XB8IE/qbub0+3tIQ4iXiI+0eetRFTeoUfa7/wjKNHSdig+xPcFDo
-         bqfTGNdCQ==
-X-HalOne-ID: e4221e17-ee89-11ed-90db-6f01c1d0a443
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-        by mailrelay6 (Halon) with ESMTPSA
-        id e4221e17-ee89-11ed-90db-6f01c1d0a443;
-        Tue, 09 May 2023 16:52:34 +0000 (UTC)
-Date:   Tue, 9 May 2023 18:52:32 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Maximilian Weigand <mweigand2017@gmail.com>
-Cc:     Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Maximilian Weigand <mweigand@mweigand.net>
+        d=gmail.com; s=20221208; t=1683708698; x=1686300698;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Dlbrk4ZPhxYJQ2iwlQYUgs1YMic9U6ZFVKSub2IU5aA=;
+        b=Yp8TzKP3TmqtoNZ+fCizpDtzsNuLZntoDVf8jYnpn9qBGzOCC7t/hwHmQBX3wV/ns8
+         kySBKurqNOP4UJQGYmQ0WaW/LSziLYl5JVvzVzJwXkdxR2U44bplU/5IGsy+VoN0frEM
+         gMooL/sEXvab+yLWktPd+iW7AQKIcBzV1nIupZqU5wnqlDFXJJAR33zfGr+1fPCdWiys
+         LYNtW4YfILFX/wB5JuvE+Im8c7O7XbHODq4wDlxObrLPR9PHnww+Sn5SAgGB5bXud38u
+         MTlB8+FvvuCbMP5zDJ+mHQilzaSyS5DEU4k7as1Q9Rd1Aj8Fe1VZORR7Gy58EBUwFFha
+         UcWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683708698; x=1686300698;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dlbrk4ZPhxYJQ2iwlQYUgs1YMic9U6ZFVKSub2IU5aA=;
+        b=VQuV522rrBxZlQrm/mBYGYrV3cAEhvTEkSyVpdDHTCgk85TN4fgUuGafwoz9vftzut
+         bsRI7gURVAodFZtw74r7AzEMqBuicOQ6J6NyZ9OAx723E2/NR5TILTVwVKqcaTbiLc3D
+         qxoMOZxZj21AHGQBjTjPcJ9ocMrKJdH9lIZ/6tZ4r1/E1mX+d/fWXUbDJ5EH/K6aBRt3
+         2blv+fEb+G8O0bbFDK9w4kAHbRInSz1zkEo1WWNU9yS5qH84EafnONs5s3SsPvr45LAX
+         rw59u87gv8SAQ4Z5hk3iq7XViC47b/SqLAdUeqP0Qj4dFgHIdC2KIrLxeFr/y90so5jl
+         rueA==
+X-Gm-Message-State: AC+VfDxPDmRqCGGmfEQyfaKc0+Whbk/RH20Q7Kzg/N2ygLTfz89PijEF
+        mY/pGL8yp0KaUhYxIFaPW8U=
+X-Google-Smtp-Source: ACHHUZ4AeXulhEHTiTvL5HA71WfLqKjAEc3fIwJyAKBWxzr5/LME6Z9PVS3weTa+vNfic/xkXytfZw==
+X-Received: by 2002:a7b:ca4c:0:b0:3f4:2819:7777 with SMTP id m12-20020a7bca4c000000b003f428197777mr5585021wml.38.1683708697661;
+        Wed, 10 May 2023 01:51:37 -0700 (PDT)
+Received: from [192.168.1.131] (cgn-89-1-213-9.nc.de. [89.1.213.9])
+        by smtp.gmail.com with ESMTPSA id h1-20020a5d5481000000b0030647d1f34bsm16850080wrv.1.2023.05.10.01.51.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 May 2023 01:51:37 -0700 (PDT)
+Message-ID: <9b89164a-bd8a-bdea-2c17-101428aba98f@gmail.com>
+Date:   Wed, 10 May 2023 10:51:34 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
 Subject: Re: [PATCH v1] backlight: lm3630a: turn off both led strings when
  display is blank
-Message-ID: <20230509165232.GA1072872@ravnborg.org>
+Content-Language: en-US
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Maximilian Weigand <mweigand2017@gmail.com>
+Cc:     Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 References: <20230505185752.969476-1-mweigand2017@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230505185752.969476-1-mweigand2017@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+ <20230509132735.GA31274@aspen.lan>
+From:   Maximilian Weigand <mweigand2017@gmail.com>
+In-Reply-To: <20230509132735.GA31274@aspen.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, May 05, 2023 at 08:57:52PM +0200, Maximilian Weigand wrote:
-> From: Maximilian Weigand <mweigand@mweigand.net>
-> 
-> Use display_is_blank() to determine if the led strings should be turned
-> off in the update_status() functions of both strings.
-> 
-> Signed-off-by: Maximilian Weigand <mweigand@mweigand.net>
-> ---
->  drivers/video/backlight/lm3630a_bl.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index d8c42acecb5d..5498b57329f9 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -202,7 +202,9 @@ static int lm3630a_bank_a_update_status(struct backlight_device *bl)
->  	usleep_range(1000, 2000);
->  	/* minimum brightness is 0x04 */
->  	ret = lm3630a_write(pchip, REG_BRT_A, bl->props.brightness);
-> -	if (bl->props.brightness < 0x4)
-> +
-> +	if (backlight_is_blank(bl) || (bl->props.brightness < 0x4))
-You could replace bl->props.brightness with backlight_get_brightness(bl)
-to avoid direct access to the properties.
 
-> +		/* turn the string off  */
->  		ret |= lm3630a_update(pchip, REG_CTRL, LM3630A_LEDA_ENABLE, 0);
->  	else
->  		ret |= lm3630a_update(pchip, REG_CTRL,
-> @@ -277,7 +279,9 @@ static int lm3630a_bank_b_update_status(struct backlight_device *bl)
->  	usleep_range(1000, 2000);
->  	/* minimum brightness is 0x04 */
->  	ret = lm3630a_write(pchip, REG_BRT_B, bl->props.brightness);
-> -	if (bl->props.brightness < 0x4)
-> +
-> +	if (backlight_is_blank(bl) || (bl->props.brightness < 0x4))
-Same here
 
-	Sam
+>> Use display_is_blank() to determine if the led strings should be turned
+> 
+> Shouldn't this be backlight_is_blank()?
+
+Yes, indeed. Thanks for pointing this out. Fixed in v2.
