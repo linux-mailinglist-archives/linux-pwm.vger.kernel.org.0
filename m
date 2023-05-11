@@ -2,70 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 467786FFBB0
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 May 2023 23:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F316FFD4C
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 May 2023 01:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239310AbjEKVIH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 11 May 2023 17:08:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
+        id S238875AbjEKXcy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 11 May 2023 19:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239308AbjEKVIF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 11 May 2023 17:08:05 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5321D8A6D
-        for <linux-pwm@vger.kernel.org>; Thu, 11 May 2023 14:08:03 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64384c6797eso7406020b3a.2
-        for <linux-pwm@vger.kernel.org>; Thu, 11 May 2023 14:08:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683839283; x=1686431283;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X2DjvEwzCEEnywtsV4bRPruC6T+leR5KJTbFUvFCUwM=;
-        b=VjhYw4+yf83no8SnggFo9y3QOUUD11ApawgaEWjSoIwpvwSOiJjbyPHq2qa83RhgJ1
-         g/IYE4xLkS5++Ye9Vhj+kJxt+HEFVgPhdERzce4cOe9gaRyG79MdhMN4ylPEZcrgFOE6
-         taoXxbiMPvnTAzu+YxxoTN8PTUNW/lQa69uvE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683839283; x=1686431283;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X2DjvEwzCEEnywtsV4bRPruC6T+leR5KJTbFUvFCUwM=;
-        b=QfmflV4hVaIazajRoYX22dqTtjvN7bq1IRR0rOYCJFVTFn0QV8P/0Ig9IlAYh7Xl3+
-         itljoTKKpwfxq/oHl6J2noerc+oBdssekhpalfuKcRTEjyYDhqnGppe6s+sHh9NZixV1
-         1OybiL7hxAES7mO1iLcIAC/X7rVoY2rtfXAdFUgsDOe8yYfVJbflneFQSF4+ke81z6+1
-         xB6l8BFs52D42No+tcZi38wAkolt9dDCj6QusTXJaHu57YibW3DcDy2docyeakfW+Ksv
-         l+q07hBR6gmZtBgMNY2B7ZEjDVzQPyUQCobrhJf0XvH8D6hlXdEZEHy5qjnmBQuoEF1v
-         wQOw==
-X-Gm-Message-State: AC+VfDzjYfsN8rkM4uffSVWDntnKiaihlAOL5HKaEx/p7UzPUt3u3r9g
-        s2K2SOdfNwDF0nwLjApkBDqd+A==
-X-Google-Smtp-Source: ACHHUZ6xdEYUz5zwu0V0AcbG5lYh6nYjw/ovGKKjNlhrb2lHVfovyF8rUg8Eo1awaymEUt4fzxNm0g==
-X-Received: by 2002:a17:903:185:b0:1a9:6bd4:236a with SMTP id z5-20020a170903018500b001a96bd4236amr28538269plg.69.1683839282820;
-        Thu, 11 May 2023 14:08:02 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:5c55:153c:a26f:d30f])
-        by smtp.gmail.com with ESMTPSA id w3-20020a170902e88300b001aaffe15f39sm6383918plg.30.2023.05.11.14.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 14:08:02 -0700 (PDT)
-Date:   Thu, 11 May 2023 14:08:00 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Marek Vasut <marex@denx.de>
+        with ESMTP id S238815AbjEKXcy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 11 May 2023 19:32:54 -0400
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F42170D
+        for <linux-pwm@vger.kernel.org>; Thu, 11 May 2023 16:32:52 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id F235A858D6;
+        Fri, 12 May 2023 01:32:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1683847970;
+        bh=Z2lRg5npL94Lq0Ygpbzq54H9geMz6i7bPkOnbGjyhJk=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=doCffZPlVjF4rKS/wZh6SFeZ0Z+7JnAnsDAZsEey+ln2tPNJlQPbEj5Vej/P8QLrf
+         oe43oKlGHodc+Hj77CvTylekrkoQkXRPfslqHoIyJP1X/QX2mv35DfAvXARKV1dihX
+         f/JFMbKLBYQmqwqe7YkXLm011yaYJHmhXcDy2eQe/2Ot4m3YynvzT8RLQoQt7XClo5
+         jJ6iMY2BE0S8UQb3vPx5KynNJV5BkCcOCrkIt5bezzmAVwHc6c08gFpOuYh2QeJWv1
+         N9WtONTMts3NiAc3QWT7OZ242BiBBISZJsEM+fpQJ/q0JGWk66x9fT/AY0g+TggYzL
+         96BwQEuIvl4HQ==
+Message-ID: <52131759-457b-12ba-ef05-b91eafd7d342@denx.de>
+Date:   Fri, 12 May 2023 01:32:49 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] pwm: core: Permit unset period when applying
+ configuration of disabled PWMs
+Content-Language: en-US
+To:     Brian Norris <briannorris@chromium.org>
 Cc:     linux-pwm@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Thierry Reding <thierry.reding@gmail.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH] pwm: core: Permit unset period when applying
- configuration of disabled PWMs
-Message-ID: <ZF1ZMNBMxLqNI0zh@google.com>
 References: <20230511181853.185685-1-marex@denx.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+ <ZF1ZMNBMxLqNI0zh@google.com>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <ZF1ZMNBMxLqNI0zh@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230511181853.185685-1-marex@denx.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -74,74 +62,89 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 5/11/23 23:08, Brian Norris wrote:
+> Hi,
+
 Hi,
 
-On Thu, May 11, 2023 at 08:18:53PM +0200, Marek Vasut wrote:
-> In case the PWM is not enabled, the period can still be left unconfigured,
-> i.e. zero . Currently the pwm_class_apply_state() errors out in such a case.
-> This e.g. makes suspend fail on systems where pwmchip has been exported via
-> sysfs interface, but left unconfigured before suspend occurred.
+> On Thu, May 11, 2023 at 08:18:53PM +0200, Marek Vasut wrote:
+>> In case the PWM is not enabled, the period can still be left unconfigured,
+>> i.e. zero . Currently the pwm_class_apply_state() errors out in such a case.
+>> This e.g. makes suspend fail on systems where pwmchip has been exported via
+>> sysfs interface, but left unconfigured before suspend occurred.
+>>
+>> Failing case:
+>> "
+>> $ echo 1 > /sys/class/pwm/pwmchip4/export
+>> $ echo mem > /sys/power/state
+>> ...
+>> pwm pwmchip4: PM: dpm_run_callback(): pwm_class_suspend+0x1/0xa8 returns -22
+>> pwm pwmchip4: PM: failed to suspend: error -22
+>> PM: Some devices failed to suspend, or early wake event detected
+>> "
+>>
+>> Working case:
+>> "
+>> $ echo 1 > /sys/class/pwm/pwmchip4/export
+>> $ echo 100 > /sys/class/pwm/pwmchip4/pwm1/period
+>> $ echo 10 > /sys/class/pwm/pwmchip4/pwm1/duty_cycle
+>> $ echo mem > /sys/power/state
+>> ...
+>> "
+>>
+>> Permit unset period in pwm_class_apply_state() in case the PWM is disabled
+>> to fix this issue.
+>>
+>> Fixes: ef2bf4997f7d ("pwm: Improve args checking in pwm_apply_state()")
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+>> ---
+>> Cc: Brian Norris <briannorris@chromium.org>
+>> Cc: "Uwe Kleine-KÃ¶nig" <u.kleine-koenig@pengutronix.de>
+>> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: Thierry Reding <thierry.reding@gmail.com>
+>> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> Cc: linux-pwm@vger.kernel.org
+>> ---
+>>   drivers/pwm/core.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+>> index 3dacceaef4a9b..87252b70f1c81 100644
+>> --- a/drivers/pwm/core.c
+>> +++ b/drivers/pwm/core.c
+>> @@ -510,8 +510,8 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+>>   	 */
+>>   	might_sleep();
+>>   
+>> -	if (!pwm || !state || !state->period ||
+>> -	    state->duty_cycle > state->period)
+>> +	if (!pwm || !state || (state->enabled &&
+>> +	    (!state->period || state->duty_cycle > state->period)))
+>>   		return -EINVAL;
+>>   
+>>   	chip = pwm->chip;
 > 
-> Failing case:
-> "
-> $ echo 1 > /sys/class/pwm/pwmchip4/export
-> $ echo mem > /sys/power/state
-> ...
-> pwm pwmchip4: PM: dpm_run_callback(): pwm_class_suspend+0x1/0xa8 returns -22
-> pwm pwmchip4: PM: failed to suspend: error -22
-> PM: Some devices failed to suspend, or early wake event detected
-> "
-> 
-> Working case:
-> "
-> $ echo 1 > /sys/class/pwm/pwmchip4/export
-> $ echo 100 > /sys/class/pwm/pwmchip4/pwm1/period
-> $ echo 10 > /sys/class/pwm/pwmchip4/pwm1/duty_cycle
-> $ echo mem > /sys/power/state
-> ...
-> "
-> 
-> Permit unset period in pwm_class_apply_state() in case the PWM is disabled
-> to fix this issue.
-> 
-> Fixes: ef2bf4997f7d ("pwm: Improve args checking in pwm_apply_state()")
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> ---
-> Cc: Brian Norris <briannorris@chromium.org>
-> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: linux-pwm@vger.kernel.org
-> ---
->  drivers/pwm/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 3dacceaef4a9b..87252b70f1c81 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -510,8 +510,8 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
->  	 */
->  	might_sleep();
->  
-> -	if (!pwm || !state || !state->period ||
-> -	    state->duty_cycle > state->period)
-> +	if (!pwm || !state || (state->enabled &&
-> +	    (!state->period || state->duty_cycle > state->period)))
->  		return -EINVAL;
->  
->  	chip = pwm->chip;
+> By making the period assertions conditional, you're allowing people to
+> write garbage period values via sysfs. However you fix the (legitimate)
+> bug you point out, you shouldn't regress that.
 
-By making the period assertions conditional, you're allowing people to
-write garbage period values via sysfs. However you fix the (legitimate)
-bug you point out, you shouldn't regress that. (Now, that's sounding
-like we could use some unit tests for the PWM framework...)
+I wanted to say, it might be best to fix userspace so that it wouldn't 
+export pwmchip and then suspend without configuring it. But (!) this 
+actually allows userspace to export pwmchip and that way, block suspend 
+completely, because with pwmchip exported and not configured, the system 
+just would not suspend. So, yes, this is a legitimate fix for a real 
+bug, right ?
 
-You could, for example, also add the bounds checks to
-drviers/pwm/sysfs.c's period_store().
+> (Now, that's sounding
+> like we could use some unit tests for the PWM framework...)
 
-Or perhaps you could teach the suspend/resume functions to not bother
-calling pwm_apply_state() on a disabled PWM.
+Not just the PWM framework ...
 
-Brian
+> You could, for example, also add the bounds checks to
+> drviers/pwm/sysfs.c's period_store().
+> 
+> Or perhaps you could teach the suspend/resume functions to not bother
+> calling pwm_apply_state() on a disabled PWM.
+
+Right, I think it boils down to -- should this be fixed on the sysfs ABI 
+side, or in the pwm core ?
