@@ -2,60 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A934702E3B
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 May 2023 15:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FFC702F2E
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 May 2023 16:04:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242140AbjEONgH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 15 May 2023 09:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49004 "EHLO
+        id S239757AbjEOOEg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 15 May 2023 10:04:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242071AbjEONgG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 15 May 2023 09:36:06 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F17F269D;
-        Mon, 15 May 2023 06:36:05 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id DF812865B9;
-        Mon, 15 May 2023 15:36:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1684157763;
-        bh=VvwtXNmqT+9Xv9njSAwrHnTTGKYxSQ01nyZaDrzJaj4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=yT/pnU8MPVOx1PpOoqWtluzsZz5/0bIclcRnIXH0J9Pjzrkjy3bXArNn/u828p8t6
-         AudEt1vaiKHxP+VGsJm4IZozhjn76n0lgZdp+HD0OZWn1eIAsLQkIyprGAqM4T5Lgc
-         s7ivXcUFXM5bcU7Y65PMLdsGGg6OzPDNn0w6Ou08G+B7FqbnQ+goBshP9WsUQOj1wI
-         NbTLz8zSkEv4ugn1CcPMAwj5dwXaalbjkzfqiStVP7XF/nbLjc65UOqF7BPZ9/k3U7
-         1iwPrrrDOwW7O1DX6VhGHz6MJ46XYvoCMfDBTUurC+LgZfPVyp/ES42/W++V9VHANu
-         jrEAgWBaSHOuA==
-Message-ID: <a5293af4-8d02-ed8f-52d1-722c71d47f37@denx.de>
-Date:   Mon, 15 May 2023 15:36:02 +0200
+        with ESMTP id S239762AbjEOOEf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 15 May 2023 10:04:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 037A41738
+        for <linux-pwm@vger.kernel.org>; Mon, 15 May 2023 07:04:02 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pyYnm-0004LX-BA; Mon, 15 May 2023 16:03:50 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pyYnj-000Ne8-Ma; Mon, 15 May 2023 16:03:47 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pyYni-004iKq-Tk; Mon, 15 May 2023 16:03:46 +0200
+Date:   Mon, 15 May 2023 16:03:46 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Shuijing Li <shuijing.li@mediatek.com>
+Cc:     thierry.reding@gmail.com, matthias.bgg@gmail.com,
+        angelogioacchino.delregno@collabora.com,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        jitao.shi@mediatek.com
+Subject: Re: [PATCH] pwm: mtk_disp: Fix the disable flow of disp_pwm
+Message-ID: <20230515140346.bxeu6xewi6a446nd@pengutronix.de>
+References: <20230515061845.10241-1-shuijing.li@mediatek.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: AW: EXTERNAL - [PATCH] Input: pwm-beeper - Support volume setting
- via sysfs
-Content-Language: en-US
-To:     Traut Manuel LCPF-CH <Manuel.Traut@mt.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-References: <20230512185551.183049-1-marex@denx.de>
- <AS8PR03MB76211DFFD1261B00E55FF50BFA789@AS8PR03MB7621.eurprd03.prod.outlook.com>
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <AS8PR03MB76211DFFD1261B00E55FF50BFA789@AS8PR03MB7621.eurprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xy34fhkdf5yx4n7e"
+Content-Disposition: inline
+In-Reply-To: <20230515061845.10241-1-shuijing.li@mediatek.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,36 +57,77 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 5/15/23 08:50, Traut Manuel LCPF-CH wrote:
-> Hi Marek,
 
-Hi,
+--xy34fhkdf5yx4n7e
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> The PWM beeper volume can be controlled by adjusting the PWM duty cycle, expose volume setting via sysfs, so users can make the beeper quieter.
->> This patch adds sysfs attribute 'volume' in range 0..50000, i.e. from 0 to 50% in 1/1000th of percent steps, this resolution should be sufficient.
->>
->> The reason for 50000 cap on volume or PWM duty cycle is because duty cycle above 50% again reduces the loudness, the PWM wave form is inverted > wave form of the one for duty cycle below 50% and the beeper gets quieter the closer the setting is to 100% . Hence, 50% cap where the wave form yields the loudest result.
->>
->>   Signed-off-by: Marek Vasut <marex@denx.de>
->> ---
->> An alternative option would be to extend the userspace input ABI, e.g. by using SND_TONE top 16bits to encode the duty cycle in 0..50000 range, and bottom 16bit to encode the existing frequency in Hz . Since frequency in Hz is likely to be below some 25 kHz for audible bell, this fits in 16bits just fine. Thoughts ?
-> 
-> I tend to not change existing user-space interfaces. I would prefer to have an additional event or using sysfs.
+On Mon, May 15, 2023 at 02:18:45PM +0800, Shuijing Li wrote:
+> There is a flow error in the original mtk_disp_pwm_apply() function.
+> If this function is called when the clock is disabled, there will be a
+> chance to operate the disp_pwm register, resulting in disp_pwm exception.
+> Fix this accordingly.
+>=20
+> Signed-off-by: Shuijing Li <shuijing.li@mediatek.com>
+> ---
+>  drivers/pwm/pwm-mtk-disp.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+> index 79e321e96f56..cb699fa9a5ae 100644
+> --- a/drivers/pwm/pwm-mtk-disp.c
+> +++ b/drivers/pwm/pwm-mtk-disp.c
+> @@ -80,10 +80,9 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+>  		return -EINVAL;
+> =20
+>  	if (!state->enabled) {
+> -		mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, mdp->data->enable_mask,
+> -					 0x0);
+> -
+>  		if (mdp->enabled) {
+> +			mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
+> +						 mdp->data->enable_mask, 0x0);
+>  			clk_disable_unprepare(mdp->clk_mm);
+>  			clk_disable_unprepare(mdp->clk_main);
 
-I am increasingly concerned about the race condition between change of 
-volume (via sysfs) and frequency (via SND_TONE) . So I would be banking 
-toward additional event, like SND_TONE_WITH_VOLUME or something along 
-those lines.
+Instead of
 
->> ---
->> NOTE: This uses approach similar to [1], except it is much simpler.
->>       [1] https://patchwork.kernel.org/project/linux-input/cover/20230201152128.614439-1-manuel.traut@mt.com/
-> 
-> This one is more complex, because the mapping between duty cycle and volume is not linear. Probably it depends also on the used beeper hardware which values are doing a significant change in volume. Therefore the patchset introduced a mapping between volume levels and duty cycle times in the device-tree to allow user-space applications to control the beeper volume hardware independently.
+	if (A) {
+		if (B) {
+			something();
+		}
+	}
 
-I wonder whether this mapping shouldn't be considered policy and left to 
-userspace to deal with, instead of swamping the kernel or DT with it ?
+you can make this
 
--- 
-Best regards,
-Marek Vasut
+	if (A && B) {
+		something();
+	}
+
+Otherwise looks ok.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xy34fhkdf5yx4n7e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRiO8IACgkQj4D7WH0S
+/k4QEAf+JHyksmF99O3MatxvWpRlUB1TuPVQTawSXYmRI+LWvxVsetJ2CF7tEnBF
+diKT9cqjr4C9V1pV79GYZxRoRHlGA0AsgWnWusKtSX+4Dk4LWB4vfOSnTnQdHMjr
+prAECcJ9nl4om3uzCTpq/yY4j+bZDw71NguLu6qomx7SLIROjCr7dKgC6mJaY8JF
+oU7Bdj4LXRLFujZ9hJh1Rt4Sefmsvl59Mo30b938tom9Q1gpONm00k+ou/IY4nfc
+fGus4rqaHyuoYE2dyWNdTW2saURDF82BArYXSGonBdDAVZpOpF8VfJRC/NHtiF55
+MWFAgU85n/UCoRYhwpUaVnEDb8Q5JA==
+=MHoD
+-----END PGP SIGNATURE-----
+
+--xy34fhkdf5yx4n7e--
