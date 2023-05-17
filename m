@@ -2,113 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5882706503
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 May 2023 12:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B808570660A
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 May 2023 13:05:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230282AbjEQKUq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 May 2023 06:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45108 "EHLO
+        id S230292AbjEQLFQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 17 May 2023 07:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229937AbjEQKUp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 May 2023 06:20:45 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A06035AB
-        for <linux-pwm@vger.kernel.org>; Wed, 17 May 2023 03:20:44 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pzEGm-0001Nd-Hf; Wed, 17 May 2023 12:20:32 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pzEGl-000opd-MS; Wed, 17 May 2023 12:20:31 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pzEGk-005JDj-UP; Wed, 17 May 2023 12:20:30 +0200
-Date:   Wed, 17 May 2023 12:20:30 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S231390AbjEQLFN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 May 2023 07:05:13 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F412691;
+        Wed, 17 May 2023 04:04:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1684321494; x=1715857494;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r2C53q37nasETW8R0y62vJQzUer3lCIfLyK7Hf9/7k8=;
+  b=axX8PbLpY9PsCKFDzZNUFo/vEuC91gM+29zbxdq5GSxrvk/en9g2ap/T
+   QYr/az5gn598UL2VgilXah8J2eRmEAIid3mtNAXSBs4OWeGPLOqp9KT3i
+   imwaz3MGavyD9glOS4eMG9R6LLkP83y7mLhxyFszw0KXTj3UsVziFX+nb
+   Cgft0b9Zt5lBgZ89f7SumfxLIoZiLv6sx0xr03r1OMt2vH6JLERatA1s1
+   coaqkhTPOJJK+sYXaxQEQCMYDUWtx3PeMWHrHqxyuxSujxWvVod3aBowp
+   eSNBVdAMprB4mZPCiwogQ6Sa/Qv1aHkkbXArmL68bs1qLVAxLffw9EB3P
+   w==;
+X-IronPort-AV: E=Sophos;i="5.99,281,1677567600"; 
+   d="asc'?scan'208";a="215862137"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 May 2023 03:57:37 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 17 May 2023 03:57:36 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
+ Transport; Wed, 17 May 2023 03:57:35 -0700
+Date:   Wed, 17 May 2023 11:57:14 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
         Daire McNamara <daire.mcnamara@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
 Subject: Re: [PATCH v17 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <20230517102030.b4nyo2dmpfl7v7fk@pengutronix.de>
+Message-ID: <20230517-sinner-remember-a5f6b86194ab@wendy>
 References: <20230421-neurology-trapezoid-b4fa29923a23@wendy>
  <20230421-sleek-bottom-88b867f56609@wendy>
+ <20230517102030.b4nyo2dmpfl7v7fk@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qa5qm3wv35pmobau"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wz8/6k7ZC8Bn65VB"
 Content-Disposition: inline
-In-Reply-To: <20230421-sleek-bottom-88b867f56609@wendy>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20230517102030.b4nyo2dmpfl7v7fk@pengutronix.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
---qa5qm3wv35pmobau
+--wz8/6k7ZC8Bn65VB
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Conor,
+On Wed, May 17, 2023 at 12:20:30PM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello Conor,
+>=20
+> I found one remaining issue:
+>=20
+> On Fri, Apr 21, 2023 at 10:27:09AM +0100, Conor Dooley wrote:
+> > +static u64 mchp_core_pwm_calc_duty(const struct pwm_state *state, u64 =
+clk_rate,
+> > +				   u8 prescale, u8 period_steps)
+> > +{
+> > +	u64 duty_steps, tmp;
+> > +
+> > +	/*
+> > +	 * Calculate the duty cycle in multiples of the prescaled period:
+> > +	 * duty_steps =3D duty_in_ns / step_in_ns
+> > +	 * step_in_ns =3D (prescale * NSEC_PER_SEC) / clk_rate
+> > +	 * The code below is rearranged slightly to only divide once.
+> > +	 */
+> > +	tmp =3D (prescale + 1) * NSEC_PER_SEC;
+>=20
+> If prescale > 4 this overflows on 32bit archs, doesn't it?
 
-I found one remaining issue:
+Ooh, I think you are right.
 
-On Fri, Apr 21, 2023 at 10:27:09AM +0100, Conor Dooley wrote:
-> +static u64 mchp_core_pwm_calc_duty(const struct pwm_state *state, u64 cl=
-k_rate,
-> +				   u8 prescale, u8 period_steps)
-> +{
-> +	u64 duty_steps, tmp;
-> +
-> +	/*
-> +	 * Calculate the duty cycle in multiples of the prescaled period:
-> +	 * duty_steps =3D duty_in_ns / step_in_ns
-> +	 * step_in_ns =3D (prescale * NSEC_PER_SEC) / clk_rate
-> +	 * The code below is rearranged slightly to only divide once.
-> +	 */
-> +	tmp =3D (prescale + 1) * NSEC_PER_SEC;
+> (I think prescale + 1 is promoted to unsigned int, then the
+> multiplication is done and only then the range is extended to u64.
 
-If prescale > 4 this overflows on 32bit archs, doesn't it?
-(I think prescale + 1 is promoted to unsigned int, then the
-multiplication is done and only then the range is extended to u64.
+I'll respin with an explicit cast.
 
-> +	duty_steps =3D mul_u64_u64_div_u64(state->duty_cycle, clk_rate, tmp);
-> +
-> +	return duty_steps;
-> +}
+Thanks,
+Conor.
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qa5qm3wv35pmobau
+--wz8/6k7ZC8Bn65VB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRkqm4ACgkQj4D7WH0S
-/k6E4Af9GpPg42BTohU1ij/TFyI2WSTeDS3OHXIV92tExb/HLhS7FSfKT6abkvKE
-ypK/1B9fnczOdqCjkkU1EetSh+RpLL7D9iQTmpbVKiH6RNP4yzpluiURsYPs/FkX
-l13ixd0Twqfdm/YJC+I9bMxZMkSH/nQfz211qQXxdFDQ7gluRdNllcz0FZzx9goT
-naOJE1VjjAqzXEpcuSojE7ghI/ZG8zQihqmYgSRQV88rQoqupN7u69vvAKS/ji9g
-StJ3wFnLC3l5flUPz1ye32ZtXO/l7f7dewi+IpkDpcM54EY765Jiu4Mw53MTGUWm
-1b8HNXWdrt2LqRG9/l/0pUd6nJAJkQ==
-=4RDi
+iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGSzCgAKCRB4tDGHoIJi
+0hR/AQCX5o1i7KOyi7nlg0yPqhSWIWjpqh9ysAtfM1Ro3HafgwD4+ygsDH16bb3k
+qDc8pgBDgXVyZ+OhNF7rK7RJvQMNDA==
+=7JAi
 -----END PGP SIGNATURE-----
 
---qa5qm3wv35pmobau--
+--wz8/6k7ZC8Bn65VB--
