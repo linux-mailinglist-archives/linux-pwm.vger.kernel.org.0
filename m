@@ -2,91 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79FAC70816A
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 May 2023 14:35:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20C307084B6
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 May 2023 17:14:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231405AbjERMfw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 18 May 2023 08:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60386 "EHLO
+        id S230153AbjERPOk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 18 May 2023 11:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231162AbjERMfr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 May 2023 08:35:47 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2592E44;
-        Thu, 18 May 2023 05:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1684413348; x=1715949348;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IIWuJtF5YeJRCRhlmAxLua4lTEc3oMoMEkkaQsN/f3M=;
-  b=eJx++cVMIRGLWr2QzXVczwmv7J0nmClG0uRv62WsvBTxgxSAIYfDfgpZ
-   mGNooSxHxSuZCkA0Vbb8ZfbDnDIe0qdnznsFAxxopanQQFdJdDlV6z6Ck
-   T7+yqR2Ot8nFHO19majmz6n4HmKEni1FqrEj4B3ODeBlXwgnwN+GuFCjM
-   ZM1xSolEQn98vNIGP+HXe+xrjljcXwfUnDW4IVuf5Ekaqz3tVfqK2bwY6
-   Y+Mk3U2s8QdaWs9yN8uVVOaOpSYjXsjIDTcwJVPxwVdrFduHWLQileWs2
-   D4WwGm97lP56PXXj955BJJvbLuJfHJ27/D0H+h0yXNiKSCM8dj3WWyehq
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.99,285,1677567600"; 
-   d="scan'208";a="214432189"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2023 05:35:47 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 18 May 2023 05:35:42 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
- Transport; Thu, 18 May 2023 05:35:41 -0700
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Daire McNamara <daire.mcnamara@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>,
-        Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v18 2/2] MAINTAINERS: add pwm to PolarFire SoC entry
-Date:   Thu, 18 May 2023 13:29:21 +0100
-Message-ID: <20230518-headrest-puppet-d6cf2e11e340@wendy>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230518-reactive-nursing-23b7fe093048@wendy>
+        with ESMTP id S230081AbjERPOj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 May 2023 11:14:39 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954EBC9
+        for <linux-pwm@vger.kernel.org>; Thu, 18 May 2023 08:14:36 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pzfKl-0007Kv-DE; Thu, 18 May 2023 17:14:27 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pzfKk-00172Q-Kt; Thu, 18 May 2023 17:14:26 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pzfKj-005gmx-Rx; Thu, 18 May 2023 17:14:25 +0200
+Date:   Thu, 18 May 2023 17:14:25 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Conor Dooley <conor.dooley@microchip.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v18 1/2] pwm: add microchip soft ip corePWM driver
+Message-ID: <20230518151425.fy45t6brs7a7rmdm@pengutronix.de>
 References: <20230518-reactive-nursing-23b7fe093048@wendy>
+ <20230518-dandy-bless-fbd1e2c23dd0@wendy>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=669; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=IIWuJtF5YeJRCRhlmAxLua4lTEc3oMoMEkkaQsN/f3M=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDClpUgplf64fduuUD4mfOCF81dw5xbz1c4+Jpbp9uNzrnlIV tv5kRykLgxgHg6yYIkvi7b4WqfV/XHY497yFmcPKBDKEgYtTACZyfA/D/+r/KaU3H79cwZP8K49d3K RN6t2PM472DhvOlf4wl9l1fDHDPz2e4u8nTWXFDVr1CyJKu9/WvX0Ts0PcL/ink7nq9Km2DAA=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="f6ksgjaxmglv7ul5"
+Content-Disposition: inline
+In-Reply-To: <20230518-dandy-bless-fbd1e2c23dd0@wendy>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add the newly introduced pwm driver to the existing PolarFire SoC entry.
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+--f6ksgjaxmglv7ul5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7e0b87d5aa2e..4ef20257cae4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18138,6 +18138,7 @@ F:	drivers/clk/microchip/clk-mpfs*.c
- F:	drivers/i2c/busses/i2c-microchip-corei2c.c
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/pci/controller/pcie-microchip-host.c
-+F:	drivers/pwm/pwm-microchip-core.c
- F:	drivers/reset/reset-mpfs.c
- F:	drivers/rtc/rtc-mpfs.c
- F:	drivers/soc/microchip/mpfs-sys-controller.c
--- 
-2.39.2
+Hello Conor,
 
+On Thu, May 18, 2023 at 01:29:20PM +0100, Conor Dooley wrote:
+> Add a driver that supports the Microchip FPGA "soft" PWM IP core.
+>=20
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks for perseverance,
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--f6ksgjaxmglv7ul5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRmQNAACgkQj4D7WH0S
+/k6F4gf9ErdZXnexbDjJIiWItWNzb5YEKF8FvwDv6ibeULwG+RIOcaLbam21AmFT
+913r69IaAWh68bdBNkf4BhUs6BmOUPOre2egQP6eKBby01RmcMjoh4Cxq1aPqdDT
+AL6gZ+Z37mXc3agps6hJgZHBOx0Es3GRUEeQdixjnZsccj03sMqC5+Zbj5VqLrOv
+HWJ+sTaYv03wlTlx4cefJKWuQX8N0eFyrW3gZxkr/QwhU5UailbEI56E3pHxuBd7
+yCeg+/K2tQ7dqAfv3xefMT2AmsOqNJ3dhfUsjZD22CnYMQUnM4Ec2Zzc2MK6AQeU
+wSOH7akI53F68KvFOWv3QFV2N7xVTA==
+=IEww
+-----END PGP SIGNATURE-----
+
+--f6ksgjaxmglv7ul5--
