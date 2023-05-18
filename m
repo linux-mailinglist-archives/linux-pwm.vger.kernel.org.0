@@ -2,119 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B808570660A
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 May 2023 13:05:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 298D7707B99
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 May 2023 10:06:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230292AbjEQLFQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 17 May 2023 07:05:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
+        id S229810AbjERIGz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 18 May 2023 04:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231390AbjEQLFN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 17 May 2023 07:05:13 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F412691;
-        Wed, 17 May 2023 04:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1684321494; x=1715857494;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=r2C53q37nasETW8R0y62vJQzUer3lCIfLyK7Hf9/7k8=;
-  b=axX8PbLpY9PsCKFDzZNUFo/vEuC91gM+29zbxdq5GSxrvk/en9g2ap/T
-   QYr/az5gn598UL2VgilXah8J2eRmEAIid3mtNAXSBs4OWeGPLOqp9KT3i
-   imwaz3MGavyD9glOS4eMG9R6LLkP83y7mLhxyFszw0KXTj3UsVziFX+nb
-   Cgft0b9Zt5lBgZ89f7SumfxLIoZiLv6sx0xr03r1OMt2vH6JLERatA1s1
-   coaqkhTPOJJK+sYXaxQEQCMYDUWtx3PeMWHrHqxyuxSujxWvVod3aBowp
-   eSNBVdAMprB4mZPCiwogQ6Sa/Qv1aHkkbXArmL68bs1qLVAxLffw9EB3P
-   w==;
-X-IronPort-AV: E=Sophos;i="5.99,281,1677567600"; 
-   d="asc'?scan'208";a="215862137"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 17 May 2023 03:57:37 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 17 May 2023 03:57:36 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Wed, 17 May 2023 03:57:35 -0700
-Date:   Wed, 17 May 2023 11:57:14 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v17 1/2] pwm: add microchip soft ip corePWM driver
-Message-ID: <20230517-sinner-remember-a5f6b86194ab@wendy>
-References: <20230421-neurology-trapezoid-b4fa29923a23@wendy>
- <20230421-sleek-bottom-88b867f56609@wendy>
- <20230517102030.b4nyo2dmpfl7v7fk@pengutronix.de>
+        with ESMTP id S229651AbjERIGy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 18 May 2023 04:06:54 -0400
+Received: from mail.mahavavy.com (mail.mahavavy.com [92.222.170.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AEF926BF
+        for <linux-pwm@vger.kernel.org>; Thu, 18 May 2023 01:06:45 -0700 (PDT)
+Received: by mail.mahavavy.com (Postfix, from userid 1002)
+        id 5EE9523370; Thu, 18 May 2023 08:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mahavavy.com; s=mail;
+        t=1684397201; bh=IfqQW79nVX/qUpmHcJiWDpV9BQnOf/s+Zcq9ON74QJY=;
+        h=Date:From:To:Subject:From;
+        b=Iwax6CeHcH9ujWRY/Z6KTvaRmI2Z+F6QSs5UKl98RlQz5fNn6RvjByUJMVDlXQHhK
+         BUj+9ZJ3wWkyyFx2nvCqQa6mttjK1mY8a4ha/gzBYkRFoxL/YV9PJaog92KCPFJX7m
+         KTSEywDQYVzmBaHP7nblX8QceoHC8ZG+8SoIFqDbUmmjW1lnfMg1wU+whm9smy42GR
+         CdW3/ea5mn0S1TuyhZSU57Fy8Z1fgJdZjcLFbRLaLGWYyo4OJrC0QS1DQmwnq90eJW
+         rBdjm0PGKi5LkwE+gogD2pjyp2+Az8AcMzrB44NRfPCVbYPLQnsVcxoFhWZeVZc4y+
+         mzDNuWiDObjcQ==
+Received: by mail.mahavavy.com for <linux-pwm@vger.kernel.org>; Thu, 18 May 2023 08:06:21 GMT
+Message-ID: <20230518064500-0.1.2l.4sr2.0.pc2fdrfnqb@mahavavy.com>
+Date:   Thu, 18 May 2023 08:06:21 GMT
+From:   =?UTF-8?Q? "Kristi=C3=A1n_Plet=C3=A1nek" ?= 
+        <kristian.pletanek@mahavavy.com>
+To:     <linux-pwm@vger.kernel.org>
+Subject: =?UTF-8?Q?Tlakov=C4=9B_lit=C3=BD?=
+X-Mailer: mail.mahavavy.com
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wz8/6k7ZC8Bn65VB"
-Content-Disposition: inline
-In-Reply-To: <20230517102030.b4nyo2dmpfl7v7fk@pengutronix.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MIXED_ES,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
---wz8/6k7ZC8Bn65VB
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dobr=C3=A9 r=C3=A1no,
 
-On Wed, May 17, 2023 at 12:20:30PM +0200, Uwe Kleine-K=F6nig wrote:
-> Hello Conor,
->=20
-> I found one remaining issue:
->=20
-> On Fri, Apr 21, 2023 at 10:27:09AM +0100, Conor Dooley wrote:
-> > +static u64 mchp_core_pwm_calc_duty(const struct pwm_state *state, u64 =
-clk_rate,
-> > +				   u8 prescale, u8 period_steps)
-> > +{
-> > +	u64 duty_steps, tmp;
-> > +
-> > +	/*
-> > +	 * Calculate the duty cycle in multiples of the prescaled period:
-> > +	 * duty_steps =3D duty_in_ns / step_in_ns
-> > +	 * step_in_ns =3D (prescale * NSEC_PER_SEC) / clk_rate
-> > +	 * The code below is rearranged slightly to only divide once.
-> > +	 */
-> > +	tmp =3D (prescale + 1) * NSEC_PER_SEC;
->=20
-> If prescale > 4 this overflows on 32bit archs, doesn't it?
+zaji=C5=A1=C5=A5ujeme technologii tlakov=C3=A9ho lit=C3=AD hlin=C3=ADku.
 
-Ooh, I think you are right.
+M=C3=A1me v=C3=BDrobn=C3=AD z=C3=A1vody v Polsku, =C5=A0v=C3=A9dsku a =C4=
+=8C=C3=ADn=C4=9B se schopnost=C3=AD flexibiln=C4=9B p=C5=99esouvat v=C3=BD=
+robu mezi lokalitami.
 
-> (I think prescale + 1 is promoted to unsigned int, then the
-> multiplication is done and only then the range is extended to u64.
+Na=C5=A1e lic=C3=AD bu=C5=88ky jsou v=C4=9Bt=C5=A1inou automatick=C3=A9 n=
+ebo poloautomatick=C3=A9, co=C5=BE umo=C5=BE=C5=88uje v=C3=BDrobu velk=C3=
+=BDch v=C3=BDrobn=C3=ADch s=C3=A9ri=C3=AD s vysokou flexibilitou detail=C5=
+=AF.
+=20
+Poskytujeme podporu v ka=C5=BEd=C3=A9 f=C3=A1zi v=C3=BDvoje projektu, vyv=
+=C3=ADj=C3=ADme strukturu detailu.
 
-I'll respin with an explicit cast.
+Cht=C4=9Bli byste mluvit o spolupr=C3=A1ci v t=C3=A9to oblasti?
 
-Thanks,
-Conor.
-
---wz8/6k7ZC8Bn65VB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGSzCgAKCRB4tDGHoIJi
-0hR/AQCX5o1i7KOyi7nlg0yPqhSWIWjpqh9ysAtfM1Ro3HafgwD4+ygsDH16bb3k
-qDc8pgBDgXVyZ+OhNF7rK7RJvQMNDA==
-=7JAi
------END PGP SIGNATURE-----
-
---wz8/6k7ZC8Bn65VB--
+Pozdravy
+Kristi=C3=A1n Plet=C3=A1nek
