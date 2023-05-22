@@ -2,201 +2,243 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 811A570BFE3
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 May 2023 15:37:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20A5170C231
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 May 2023 17:20:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231463AbjEVNhp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 22 May 2023 09:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
+        id S231348AbjEVPUK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 22 May 2023 11:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231134AbjEVNhp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 May 2023 09:37:45 -0400
-Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C3AC2
-        for <linux-pwm@vger.kernel.org>; Mon, 22 May 2023 06:37:43 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mx.sberdevices.ru (Postfix) with ESMTP id 8EF5F5FD55;
-        Mon, 22 May 2023 16:37:41 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1684762661;
-        bh=AKNZnZ3MIqRpo1EsWlSggyW5gd6htKVBAOKl55rHHWg=;
-        h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-        b=lHGSWGOwIBtr+SOagZxDHlp1TiuCpz/CVQCo1VezIdnJ2eKee1HdvrrEfaUeUv2eh
-         S9H7PlIe+IdomzPSJiPU81hbl+pl4Exs2K9EhX37v0TEI05CXfESFJs9ZracunGyJq
-         CJlk/B5N5oZO6G/t5gQfhZiFUQvDxSSkdNUbEVS2An7R+y/A5ha5StQJ78NFTxiAO5
-         99z+lmI4R5AZGFyVAZcoU3S5qGtgNWKj6uNuuZuy+GzS6/6tOUqxvjLG2A1uYMbedy
-         1/QGLZf58tCTHEbuaiDmJnUmKVcf4c0dgRAx9Y/GnA4eOmqP5yzeaePECPL7O/XLQs
-         BKraRKcDOUVMQ==
-Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
-        by mx.sberdevices.ru (Postfix) with ESMTP;
-        Mon, 22 May 2023 16:37:41 +0300 (MSK)
-Date:   Mon, 22 May 2023 16:37:39 +0300
-From:   Dmitry Rokosov <ddrokosov@sberdevices.ru>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "rockosov@gmail.com" <rockosov@gmail.com>,
-        kernel <kernel@sberdevices.ru>
-Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock
- framework
-Message-ID: <20230522133739.7tc35zr2npsysopd@CAB-WSD-L081021>
-References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
- <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
- <tyuyderm7i6otsgrntw2wj4k4ii5xwp2vngfa76eaguki7yuqa@322cjuotnr6q>
- <29961a2e-5367-0685-0f3a-1910328ad3ab@gmail.com>
+        with ESMTP id S234376AbjEVPTy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 22 May 2023 11:19:54 -0400
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2135.outbound.protection.outlook.com [40.107.241.135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF16129;
+        Mon, 22 May 2023 08:19:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MP712sBG5rizobeczqBBpqMR3xA2PpacdBNekJ4/jJoz3QbWRSpCKPdsqNQNDGG8+ksjweMwFz5OD5kGffdNEWTnRWlLFw0E49vG2RBv2tr9KlCvD6SjzhQpKrGdtjGK5IfnDaQ1NazHuFv16x180ITW9vQGGvkl8SH45awUjjIIPAeAOOmcm2jFIV5AaXwlErJmeImpRJ5XEKa1Rpx0SRSMR6z8LIEEB1LpOcUZx8FguQK8wkhB3l/yqk6h2NMJtm8vMQom/SRbHVv2zMZX/wnluEO5WBEh3yXgIH3avp9RwSItd+c983CT0g7Kag/hLdalFvHkr75aACT9FyBOGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3NuSyqxhS8LZeSxKn5FCqVopNtGRTQkhIE1DldOXLnQ=;
+ b=cE8PWU7YMeB4QxWiOxgj3e4Hz2KpB08LxJoNN0h+Jtg1PTlgMcHv4iTFO818q8IVNDhmmfNsYNcev/JvBjiZ7ch+YLX2ExwZuRi2j27sNgLWKc5s7jB+tCno79Nc1ir8iQ5PekZMtA859+wfcl2BXV/rSspRicTyGJqXQVicPn7qK9snmKaAH5Fqa7b38RSFkP2jjXNLN1JZWBPLxWcbezhDdPX9KW3t0IvRR/R5JUTJGS8yQ+DgB4m9JFZH1Yt6bTIgJ6qk3HoKdmT38Pfp84J6DBUeRTXXR06d6aR8RK2Mhf2iASr5OKxZ2yC1J4YadYIYWH184jg24Y8fNryIsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3NuSyqxhS8LZeSxKn5FCqVopNtGRTQkhIE1DldOXLnQ=;
+ b=fYPZ1TwOI91va2tK7MhYFifS09ZIuxWCgcUzBZ+TibHR63XAEROD2/X3Ab2EMIhINm5/GnYpWZINMAWHdkOL1ZcsUglXHk+zBi+iQnPwIfq2q4cQfJpJKtgxFRgEYfG00lJEHxEjKlX4bWWELoGEzwRnjTdnDBOa2uQ4x1BejYE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axentia.se;
+Received: from AM0PR02MB4436.eurprd02.prod.outlook.com (2603:10a6:208:ed::15)
+ by AS8PR02MB9386.eurprd02.prod.outlook.com (2603:10a6:20b:5a1::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
+ 2023 15:19:46 +0000
+Received: from AM0PR02MB4436.eurprd02.prod.outlook.com
+ ([fe80::681f:7dcc:3f6c:3b36]) by AM0PR02MB4436.eurprd02.prod.outlook.com
+ ([fe80::681f:7dcc:3f6c:3b36%5]) with mapi id 15.20.6411.028; Mon, 22 May 2023
+ 15:19:46 +0000
+Message-ID: <7e2cfb55-e39f-2e5c-7f43-e1d275428bb5@axentia.se>
+Date:   Mon, 22 May 2023 17:19:43 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: sv-SE, en-US
+To:     LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-pwm@vger.kernel.org
+Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+From:   Peter Rosin <peda@axentia.se>
+Subject: PWM regression causing failures with the pwm-atmel driver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MM0P280CA0020.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:a::15) To AM0PR02MB4436.eurprd02.prod.outlook.com
+ (2603:10a6:208:ed::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <29961a2e-5367-0685-0f3a-1910328ad3ab@gmail.com>
-User-Agent: NeoMutt/20220415
-X-Originating-IP: [172.16.1.6]
-X-ClientProxiedBy: S-MS-EXCH02.sberdevices.ru (172.16.1.5) To
- S-MS-EXCH01.sberdevices.ru (172.16.1.4)
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2023/05/22 08:14:00 #21365129
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR02MB4436:EE_|AS8PR02MB9386:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a0b4f93-3c72-4eff-98b5-08db5ad7fa22
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sqfmDVEJLxbtAYsLRU+IIDAz7U+OrmZiwCgDgnJ/eEiFC48K+z3B/aBSRwZyjT/1ewajHU76qkfVMFcibbjWqb7lU3hpuxYUta51wNBGQp8ce+jiRTN6wD+X2deF0Kx4mDA0S++30s+jHsIDxirssbXjcHhkUfZRlPOSypY6DokfjnxmHQw0oApyL/8L81YwU6Z1Pzvd5Rn/8decjvnkcraxld1R6B3jBavxKhLzjkPUTyhEG3Noruzx8A6XbyqKpBICbIJ1QdmJ5zGoU1g6wwWxInoVcOueKTHVq+2yigVfmSB0zFMFz7LeSx6Um3RQBeMmubWzuS+ZStp9lYdn7WUtYvmWlv4rcjYsXna0IYoA6UKTbjp7QkgLnGJ8P39ybY1gcJ7VHZCisCOpbW5rYzEy52dTlYxd5xUI/jZy67tYP0q02ZJ84efJ+Htv2+gvd5DRl7NCwOsiSllUZsjK7JaT7tNKg4anGCJiUzZLUnvGRV4Cc/zSlGGUFZVWeXTvwJvCE2rbPi5oq45SjbaK2netHbufF887fHmVln6sWpu3CbA/YyQl9d2y9iJm/3M6zR1BGnPD4pdrOeUgDdHt2dRBNvi5qpAV0iMEufVS7dwNQK0cc0/Eh6lrx2tdQ9tLi36a5a3NBD0ynWvce4MBhQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB4436.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(136003)(376002)(39840400004)(396003)(451199021)(5660300002)(8936002)(8676002)(83380400001)(36756003)(186003)(2616005)(38100700002)(2906002)(31696002)(86362001)(6506007)(26005)(6512007)(6666004)(316002)(4326008)(66556008)(66476007)(66946007)(478600001)(110136005)(41300700001)(54906003)(31686004)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?anljanR6MW5nY1VVeXovejR2Q1MxelpIcEsrUE1mQ1Zuc2RQczlZQjRGRlpm?=
+ =?utf-8?B?aUwzaVByU28yT2Y1Q2lxcVNCeUFaUnZoUWFWTzJSNXVJTmtWTnE4RmZzT0Rr?=
+ =?utf-8?B?d0VtT3p0eVVVNTVwZnJHdUxKemg5ZXlmRytVV0ZrV1A5OGNlTkx3YjVGYk1v?=
+ =?utf-8?B?Qlhld1RYR0U1Kzh1OU85WG55S2xGS3lMeVpPWEVJL0Rjby9TOFI3QW83VTNT?=
+ =?utf-8?B?QVhtRGFPTUF3MVNxN0hBNGVjdlIwOEJLUUNVc1I2eCtyQ2FNV0dneW11UVV2?=
+ =?utf-8?B?VVlnNi9vODgrQUMvckx5T1ZJcU5TUk1EL1djaFhzOTZYNVNxMVU2YnJnS3hB?=
+ =?utf-8?B?UEh0eFF1MVNBdG9GSjlZb0NENUdGSy9RMjMrVjM3YVd2UzZpYmRoQmNFSjlQ?=
+ =?utf-8?B?dmdCbzJKRTJHeUpXZWxxd2t2MGhaMnl4RGpMc1V6amN6OHFraWFueitEdFEx?=
+ =?utf-8?B?aEZqUEJsZ2xidmV5dEl6VnlYYmhQWG9DbTU4TUtZVnpBbDRLY3hIMDR2NEpK?=
+ =?utf-8?B?MnFwRTVQTEE2b1FMRHFlT29FNXdvNnlLTnRBbUtZWHN5VjNxaForMm1lQnEw?=
+ =?utf-8?B?aFZKUkN3QVF1Z3hZUXBTZHljd2g4Zi83cHRqa1MxVG9sUE96bjNrMHNnOENI?=
+ =?utf-8?B?bWlkajJobFpHemNWc2hMOGcydnNOWnFCak0vMlBBVE1nWXh6OU8yYjlPdFhL?=
+ =?utf-8?B?ZGRGdk5oYmpTVXh5TjYwcGlhM1FmeHloTzk4SEJlRXVUNlQ4MjR1OXpVM05u?=
+ =?utf-8?B?SUtncmIySG90RzFXWlY4OU9xLzdtdGljeUlrakFWelhYRFNYSXFYQTEyMU5O?=
+ =?utf-8?B?KzM5SzlGL1ZlT0YzeGpPT280R0Ewd1E2eHN0NXZab1lpWjNZWExMZmJKVnFE?=
+ =?utf-8?B?R2RaWkJFV0ZoNWZEZUZFQUxlL0NUVDBSVlk2RHRSUk9ZbXpPTUc5dDZVeGwz?=
+ =?utf-8?B?dEJsN3NaOTJUdHlDeXl2MUJMSlNvQzQva25oa3U4RG9EclBIZ3BCdit1R2xl?=
+ =?utf-8?B?TzlzcUk5bTh1eWFXWlcwY05tajFrUXJja1RsaSttTi9jb2Nwd2tXcEI3M2M4?=
+ =?utf-8?B?dVcvOWlrOFRYSnR2dEMxUFdmR2pjSHdTd081Tk9mb0FTOWhSUXhUQU9FNzBq?=
+ =?utf-8?B?U3luaFhyc1FpbHdOUlVBRkg5Q1RRS3hXV2N0WXFOaE1UalEwOGFlVlltNnBj?=
+ =?utf-8?B?N2JSa1FycThVbTJnN2NWUlhhcTAzVVRDM1gxWWM1emYzUk83MWdiVGpoQzlq?=
+ =?utf-8?B?U2FyVUdBTWpaUkM4TmtiMkdad2Vpa1gySkJzMWFHVmN5TkxzMVIyWStoREJH?=
+ =?utf-8?B?Vk5MNUQ2ZnErTGRJUXdMbWZDRHBONUgvQTh1UFB1NWNvbFZZUW85cnhOdWEy?=
+ =?utf-8?B?Wm1ueHJ5RTZubHRITmZYaXVDb2EzNlN6STlGWUJUUFh4MXhqSEVSVGw5MEFK?=
+ =?utf-8?B?clJGaGV1OU92RkVVU0FKb1VvTEhwaFUxYUwzK2xnUW4vVnYwSEZyK0N3dXJU?=
+ =?utf-8?B?LzJ1N0VKOWtNZFhEczNNYXRROHNucTBrb2Z4dVN3MitlT1ljSHNXeGpkVE95?=
+ =?utf-8?B?bTJqMFNxbUsyMTBxK0IvZUFGbUQ4RnNlc0ZlbnpnTVpmdStJRVA0anRsdnZM?=
+ =?utf-8?B?WU5yTlB3Y2tDemtVS0xjSGYzY0lZNFMzaS8rZjVWM1pKY0hNT3lQeUVnUDZl?=
+ =?utf-8?B?VnJmQkhzUzdIOGVwcVNlVGhrVHRqTTZUK25OeUREdXIrc3d4S1hjdHlhekJi?=
+ =?utf-8?B?dGYxTUNKL3FiYk1ha1B4RGRPbVlOc0p0MUdwYnRrRUNyeUJXeWdZUWUwK2Fu?=
+ =?utf-8?B?Rk9tRWdwVDZUc042ajVqcTBYU3kyMHgzQzFZajBlTDVyVkhKWCtlS1NnNzM5?=
+ =?utf-8?B?NWhMUnVYcXFuVmpUWFNoL2FSdUo2c3JSODk5RFVLM1pKb0w0ZWNyZXVtVkpr?=
+ =?utf-8?B?SW0rMy9rQUZDZlVPWkdjL2s4OCt4SndwbjRCaW8vQUVDVFpjSkhaV1dIUXRz?=
+ =?utf-8?B?TmdGT05kNTNFRTNxdndsNkowWUVSS2pObFZMeElLZzZRY3QzRU42L0V2YnFJ?=
+ =?utf-8?B?MldCM1RnckMxSjlaZzJRL3RETTlHMzlieDJOQUVzTDhSZ2FsOHRpSHZvbDFU?=
+ =?utf-8?Q?WLbNgbUL/Hkx9itDa1BzFz1VF?=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a0b4f93-3c72-4eff-98b5-08db5ad7fa22
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR02MB4436.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 15:19:46.6019
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IZxyqNPscFkL8m8WaCUV01/efSl2+PbmWBPVcyptc+50qJXgBazmmSfCNkf7Y7G9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR02MB9386
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Heiner,
+Hi!
 
-On Fri, May 19, 2023 at 06:53:30PM +0200, Heiner Kallweit wrote:
-> On 19.05.2023 17:30, Dmitry Rokosov wrote:
-> > Hello Heiner,
-> > 
-> > Thank you for the patch series!
-> > 
-> > I am currently working on the Amlogic A1 clock driver and other
-> > peripheral devices, including PWM. During a discussion about the clock
-> > driver with Martin Blumenstingl, we found an intersection between the
-> > clock driver and your PWM CCF support patch series. Please see my
-> > comments below.
-> > 
-> > On Thu, Apr 13, 2023 at 07:54:46AM +0200, Heiner Kallweit wrote:
-> >> Newer versions of the PWM block use a core clock with external mux,
-> >> divider, and gate. These components either don't exist any longer in
-> >> the PWM block, or they are bypassed.
-> >> To minimize needed changes for supporting the new version, the internal
-> >> divider and gate should be handled by CCF too.
-> >>
-> >> I didn't see a good way to split the patch, therefore it's somewhat
-> >> bigger. What it does:
-> >>
-> >> - The internal mux is handled by CCF already. Register also internal
-> >>   divider and gate with CCF, so that we have one representation of the
-> >>   input clock: [mux] parent of [divider] parent of [gate]
-> >>   
-> >> - Now that CCF selects an appropriate mux parent, we don't need the
-> >>   DT-provided default parent any longer. Accordingly we can also omit
-> >>   setting the mux parent directly in the driver.
-> >>   
-> >> - Instead of manually handling the pre-div divider value, let CCF
-> >>   set the input clock. Targeted input clock frequency is
-> >>   0xffff * 1/period for best precision.
-> >>   
-> >> - For the "inverted pwm disabled" scenario target an input clock
-> >>   frequency of 1GHz. This ensures that the remaining low pulses
-> >>   have minimum length.
-> >>
-> >> I don't have hw with the old PWM block, therefore I couldn't test this
-> >> patch. With the not yet included extension for the new PWM block
-> >> (channel->clk coming directly from get_clk(external_clk)) I didn't
-> >> notice any problem. My system uses PWM for the CPU voltage regulator
-> >> and for the SDIO 32kHz clock.
-> >>
-> >> Note: The clock gate in the old PWM block is permanently disabled.
-> >> This seems to indicate that it's not used by the new PWM block.
-> >>
-> >> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> >> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> >> ---
-> >> Changes to RFT/RFC version:
-> >> - use parent_hws instead of parent_names for div/gate clock
-> >> - use devm_clk_hw_register where the struct clk * returned by
-> >>   devm_clk_register isn't needed
-> >>
-> >> v2:
-> >> - add patch 1
-> >> - add patch 3
-> >> - switch to using clk_parent_data in all relevant places
-> >> v3:
-> >> - add flag CLK_IGNORE_UNUSED
-> >> v4:
-> >> - remove variable tmp in meson_pwm_get_state
-> >> - don't use deprecated function devm_clk_register
-> > 
-> > [...]
-> > 
-> >> @@ -166,7 +158,11 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
-> >>  	if (state->polarity == PWM_POLARITY_INVERSED)
-> >>  		duty = period - duty;
-> >>  
-> >> -	fin_freq = clk_get_rate(channel->clk);
-> >> +	freq = div64_u64(NSEC_PER_SEC * (u64)0xffff, period);
-> >> +	if (freq > ULONG_MAX)
-> >> +		freq = ULONG_MAX;
-> >> +
-> >> +	fin_freq = clk_round_rate(channel->clk, freq);
-> >>  	if (fin_freq == 0) {
-> >>  		dev_err(meson->chip.dev, "invalid source clock frequency\n");
-> >>  		return -EINVAL;
-> > 
-> > As mentioned previously, we have discussed one optimization for PWM
-> > parent clock calculation. Many modern Amlogic SoCs include an RTC clock
-> > within the clock tree. This clock provides a stable and efficient 32kHz
-> > input for several clock objects that can be inherited through the muxes
-> > from the RTC clock.
-> > 
-> > In short, we aim to use the RTC clock parent directly for PWM to
-> > generate a 32kHz clock on the PWM lines. Martin has suggested one way to
-> > do so, which is described in [0]. You can also refer to our IRC
-> > discussion in [1].
-> > 
-> > I would appreciate your thoughts on this. Please let me know what you
-> > think.
-> > 
-> 
-> Requesting a frequency of (NSEC_PER_SEC * 0xffffULL / period) is based
-> on the assumption that the highest possible input frequency always
-> allows to generate a period that is close enough to the requested period.
-> 
-> To find the best parent you'd need a somewhat more complex logic outside CCF.
-> What you want is the parent where (f_parent * period / NSEC_PER_SEC) is
-> closest to an integer in the range 1 .. 0xffff.
-> IOW: max(abs((f_parent * period) % 10^9 - 5 * 10^8))
-> 
-> This can be done, question is whether it's needed and worth the effort.
-> 
-> This would be the generic solution. If you just want to handle the case
-> that period 1/32.768Hz is requested, an adjusted version of Martins's
-> pseudo-code formula should do.
-> Best I think as follow-up to my series.
-> 
+I have a device with a "sound card" that has an amplifier that needs
+an extra boost when high amplification is requested. This extra
+boost is controlled with a pwm-regulator.
 
-Certainly, if possible, please include this special case in the next
-version of your series. Appreciate it!
+As of commit c73a3107624d ("pwm: Handle .get_state() failures") this
+device no longer works. I have tracked the problem to an unfortunate
+interaction between the underlying PWM driver and the PWM core.
 
-[...]
+The driver is drivers/pwm/pwm-atmel.c which has difficulties getting
+the period and/or duty_cycle from the HW when the PWM is not enabled.
+Because of this, I think, the driver does not fill in .period and
+.duty_cycle at all in atmel_pwm_get_state() unless the PWM is enabled.
 
--- 
-Thank you,
-Dmitry
+However, the PWM core is not expecting these fields to be left as-is,
+at least not in pwm_adjust_config(), and its local state variable on
+the stack ends up with whatever crap was on the stack on entry for
+these fields. That fails spectacularly when the function continues to
+do math on these uninitialized values.
+
+In particular, I find this in the kernel log when a bad kernel runs:
+pwm-regulator: probe of reg-ana failed with error -22
+
+Before commit c73a3107624d this was a silent failure, and the situation
+"repaired itself" when the PWM was later reprogrammed, at least for my
+case. After that commit, the failure is fatal and the "sound card"
+fails to come up at all.
+
+
+I see a couple of adjustments that could be made.
+
+1. Zero out some fields in the driver:
+
+@@ -390,4 +390,6 @@ static int atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		state->enabled = true;
+ 	} else {
++		state->period = 0;
++		state->duty_cycle = 0;
+ 		state->enabled = false;
+ 	}
+
+
+2. Don't try to "adjust" a disabled PWM:
+
+@@ -656,7 +656,7 @@ int pwm_adjust_config(struct pwm_device *pwm)
+ 	 * In either case, we setup the new period and polarity, and assign a
+ 	 * duty cycle of 0.
+ 	 */
+-	if (!state.period) {
++	if (!state.enabled || !state.period) {
+ 		state.duty_cycle = 0;
+ 		state.period = pargs.period;
+ 		state.polarity = pargs.polarity;
+
+
+3. Zero out the state before calling pwm_get_state:
+
+@@ -115,7 +115,7 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
+ 	}
+ 
+ 	if (pwm->chip->ops->get_state) {
+-		struct pwm_state state;
++		struct pwm_state state = { .enabled = true };
+ 
+ 		err = pwm->chip->ops->get_state(pwm->chip, pwm, &state);
+ 		trace_pwm_get(pwm, &state, err);
+@@ -448,7 +448,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ {
+ 	struct pwm_state *last = &pwm->last;
+ 	struct pwm_chip *chip = pwm->chip;
+-	struct pwm_state s1, s2;
++	struct pwm_state s1 = { .enabled = false }, s2;
+ 	int err;
+ 
+ 	if (!IS_ENABLED(CONFIG_PWM_DEBUG))
+@@ -634,7 +634,7 @@ EXPORT_SYMBOL_GPL(pwm_capture);
+  */
+ int pwm_adjust_config(struct pwm_device *pwm)
+ {
+-	struct pwm_state state;
++	struct pwm_state state = { .enabled = false };
+ 	struct pwm_args pargs;
+ 
+ 	pwm_get_args(pwm, &pargs);
+@@ -1119,7 +1119,7 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+ 
+ 	for (i = 0; i < chip->npwm; i++) {
+ 		struct pwm_device *pwm = &chip->pwms[i];
+-		struct pwm_state state;
++		struct pwm_state state = { .enabled = false };
+ 
+ 		pwm_get_state(pwm, &state);
+ 
+
+
+I have verified that any of the above approaches resolve the
+regression but I don't know which approach is best? Maybe more
+than one?
+
+However:
+
+Approach 1. will maybe clobber the saved pwm->state such that
+it no longer works to get the period/duty_cycle if/when the
+PWM is disabled? Maybe only for some corner case? But that might
+be a significant corner case?
+
+Approach 2. will maybe mess up some unrelated functionality?
+
+Approach 3. is ugly, intrusive and is in all likelihood
+incomplete. It also needs a rebase from the culprit commit.
+
+Cheers,
+Peter
+
+#regzbot introduced c73a3107624d
