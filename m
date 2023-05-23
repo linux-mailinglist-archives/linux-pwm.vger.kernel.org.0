@@ -2,241 +2,218 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24B7470E549
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 21:22:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBD0670E67C
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 22:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232136AbjEWTWm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 23 May 2023 15:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33436 "EHLO
+        id S233660AbjEWUby (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 23 May 2023 16:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjEWTWl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 15:22:41 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D081AFA
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 12:22:39 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-970028cfb6cso458506866b.1
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 12:22:39 -0700 (PDT)
+        with ESMTP id S233535AbjEWUbx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 16:31:53 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2256BB;
+        Tue, 23 May 2023 13:31:51 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-96f50e26b8bso5748966b.2;
+        Tue, 23 May 2023 13:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684869758; x=1687461758;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KQvOP1To6uswMsOAgX+wydziU3ikh32rg406MHCEJvQ=;
-        b=Imt/heBbPK5enzJ/+uQOpGPSBetOiAG4vxIoP7VWVsv1C/PC9qc6zOU8YxnmYrL1Aa
-         BH42vxAiOPPpvWmMvmI8LztQX+Eg2VPuAdFJJr9a4jXBNB2alTvX3p0phJjSpD/tavIK
-         70bdQ6msZg3rNNr3JqGR/ZRO9xMMXy5Gm1VFXbJaKOy/YdJFbO8fArFkXDXq36Gp/l8g
-         fi2EfjcutU2f1yVkCyjdcFStdNpmaPFB1qI2Y/ZHwKvpsiPaP6vTzM+3lepWtost4H/F
-         p2x6+1vidRKv2tUNVLgCYz0uiJgBPrz1xq3t9jU4jsAhtI/+4+mrQ+sVbXN8SU4fhoCu
-         2e2g==
+        d=gmail.com; s=20221208; t=1684873910; x=1687465910;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gyIulyRW1hakaxkcxJ5p2tW7ghUvSVPa0n0AL3J553M=;
+        b=bN1sBcW/GoLtdz1AW/dagSVOrYJ0CSaLrfBuAQ6hLK28+DW6UBqyG+OQ0sDwtC6gtK
+         dXki79QofT3YpzNC7oK71qKF3WFPxyVLxdsyF4FY8dtb8G4lnJfIy706nbl+aog3Teon
+         O6FFYwbNXbdDPH+HaINYaVKg7ogMEenkQt6tG60D1fsjUTbU/wBR6xcwYCBWkFiDnioq
+         Wdiqv4XvRujFrMTHrFrxgamSuHpQvzZ4QVZrrdrwO7c0kqU+5y1B/7ziJxGY4+45SJuL
+         oSZ+vjqlTyL6CQVIncOMruBS/AQvKb9LRDiYvDOdS5hxFS55sAQH7DMrtZT5PwtwkURd
+         JHdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684869758; x=1687461758;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KQvOP1To6uswMsOAgX+wydziU3ikh32rg406MHCEJvQ=;
-        b=kV5bc0LN8m4sMQrLVmE0PCiERa8fVkSXGsfCxN59Xq5/SUs0ynplFthEeVvPvXB2Vp
-         QKcnPp0VbgOsSI4l4/o8UvfQw+J4k6ljwZxXdtAztAMz1rtOidCknDsrjsBL+LUf3PYE
-         fQov+KrxpCKmVC4VNR4SXXrjRFrjxl+I/b6PuMaPhUCvEloYDAWGneRfBwnmBCXNIj7l
-         YR82LtlOJS7wCMU/xwb2kUu+PFf8HeZ1WhUc/mwR4ozrQXkqoG5cmPHTApGmYKa2j1NX
-         WK0gct4jgh0ut7yvYtBwPnYvYOVZ4mcwIJToWxdwJ8JGKCbjZYfDNiRPWK+0wUpz2dED
-         7bVA==
-X-Gm-Message-State: AC+VfDyRZ35v14nmU34oQQmlMiL063vxS8WbIUILprI54rGDCwFFj5+b
-        SZXYOjKPfSPTfYzaCMe6FhE=
-X-Google-Smtp-Source: ACHHUZ5OYQM2FnvzBTQuZ3h0GRuxk+SoC9XF5awTAAP97yY5Qs/4wBk7ez84pB3bxdqzARK+qjt5MQ==
-X-Received: by 2002:a17:907:3e24:b0:96a:5bdd:7557 with SMTP id hp36-20020a1709073e2400b0096a5bdd7557mr15607406ejc.70.1684869758106;
-        Tue, 23 May 2023 12:22:38 -0700 (PDT)
-Received: from ?IPV6:2a01:c23:c4b9:3000:6c58:d026:2a46:c9d0? (dynamic-2a01-0c23-c4b9-3000-6c58-d026-2a46-c9d0.c23.pool.telefonica.de. [2a01:c23:c4b9:3000:6c58:d026:2a46:c9d0])
-        by smtp.googlemail.com with ESMTPSA id ja26-20020a170907989a00b0096b55be592asm4745291ejc.92.2023.05.23.12.22.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 12:22:37 -0700 (PDT)
-Message-ID: <97bac3d9-b497-c54b-05dd-da8d09166f70@gmail.com>
-Date:   Tue, 23 May 2023 21:22:36 +0200
+        d=1e100.net; s=20221208; t=1684873910; x=1687465910;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gyIulyRW1hakaxkcxJ5p2tW7ghUvSVPa0n0AL3J553M=;
+        b=DAaRqaMaJZK4xKA9fc16oMh6SuMBVOvjdgiHCLvnp9X9WZ0/09ZKAAGRJTtgPE/JTF
+         n3f7Do6QtTkDsDnR6B6WXZWg3+0JKLR/rhtJ9F1fw2suDUn6LOTsd2Wh9uCg1q26imxl
+         CK25mDYyE2g7osr2PsZ9tifL9q+dynrfo+LrDgNlxGRUhljjb0F5d05dCdb4bPinaBFj
+         XJMRLgyKc4k5aoAPFyTP/uj7abTXc54C1rwu6niOjRaSZC9UlKZ1FyS7Zt4DueihmjlH
+         Q2F+uHlhkJKyZZ+loYTajvRHiC5OhCuwLQOGcgCcdgLjBegMc1bA46MagFhZ8ofru/zk
+         kdZA==
+X-Gm-Message-State: AC+VfDw5hpGQ1ipa6p5j9cZY6SVyKZPt+NoufMX1FbphhUDoYd3eveI6
+        XfYtViH3BM2IVVRelyy0Uhs=
+X-Google-Smtp-Source: ACHHUZ4VhXZISRRKrd47rr7Fq88SbTtOHjVxtBMPgU7IxqYa//M8lQMhMP8o6U0F5B8xVSM83AlOMg==
+X-Received: by 2002:a17:907:25cd:b0:96f:45cd:6c21 with SMTP id ae13-20020a17090725cd00b0096f45cd6c21mr12894790ejc.30.1684873909972;
+        Tue, 23 May 2023 13:31:49 -0700 (PDT)
+Received: from orome (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 16-20020a170906101000b00965ffb8407asm4745519ejm.87.2023.05.23.13.31.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 13:31:49 -0700 (PDT)
+Date:   Tue, 23 May 2023 22:31:48 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Peter Rosin <peda@axentia.se>, LKML <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: Re: PWM regression causing failures with the pwm-atmel driver
+Message-ID: <ZG0itIIg48IGuC8R@orome>
+References: <7e2cfb55-e39f-2e5c-7f43-e1d275428bb5@axentia.se>
+ <20230522172358.bw677efyovbrfwjg@pengutronix.de>
+ <abe0b7f7-19de-605b-e1b1-c62930052894@axentia.se>
+ <20230522204346.krb37yyzylxokslx@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To:     Dmitry Rokosov <ddrokosov@sberdevices.ru>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "rockosov@gmail.com" <rockosov@gmail.com>,
-        kernel <kernel@sberdevices.ru>
-References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
- <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
- <tyuyderm7i6otsgrntw2wj4k4ii5xwp2vngfa76eaguki7yuqa@322cjuotnr6q>
- <29961a2e-5367-0685-0f3a-1910328ad3ab@gmail.com>
- <20230522133739.7tc35zr2npsysopd@CAB-WSD-L081021>
- <2ae9890d-9118-ba5a-0fbf-0b657c8b7be4@gmail.com>
- <20230523102848.32prkwhqvm7v53ps@CAB-WSD-L081021>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock
- framework
-In-Reply-To: <20230523102848.32prkwhqvm7v53ps@CAB-WSD-L081021>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WpjSotNzALEbIBBv"
+Content-Disposition: inline
+In-Reply-To: <20230522204346.krb37yyzylxokslx@pengutronix.de>
+User-Agent: Mutt/2.2.10 (2023-03-25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 23.05.2023 12:28, Dmitry Rokosov wrote:
-> Heiner,
-> 
-> On Mon, May 22, 2023 at 10:10:41PM +0200, Heiner Kallweit wrote:
->> On 22.05.2023 15:37, Dmitry Rokosov wrote:
->>> Heiner,
->>>
->>> On Fri, May 19, 2023 at 06:53:30PM +0200, Heiner Kallweit wrote:
->>>> On 19.05.2023 17:30, Dmitry Rokosov wrote:
->>>>> Hello Heiner,
->>>>>
->>>>> Thank you for the patch series!
->>>>>
->>>>> I am currently working on the Amlogic A1 clock driver and other
->>>>> peripheral devices, including PWM. During a discussion about the clock
->>>>> driver with Martin Blumenstingl, we found an intersection between the
->>>>> clock driver and your PWM CCF support patch series. Please see my
->>>>> comments below.
->>>>>
->>>>> On Thu, Apr 13, 2023 at 07:54:46AM +0200, Heiner Kallweit wrote:
->>>>>> Newer versions of the PWM block use a core clock with external mux,
->>>>>> divider, and gate. These components either don't exist any longer in
->>>>>> the PWM block, or they are bypassed.
->>>>>> To minimize needed changes for supporting the new version, the internal
->>>>>> divider and gate should be handled by CCF too.
->>>>>>
->>>>>> I didn't see a good way to split the patch, therefore it's somewhat
->>>>>> bigger. What it does:
->>>>>>
->>>>>> - The internal mux is handled by CCF already. Register also internal
->>>>>>   divider and gate with CCF, so that we have one representation of the
->>>>>>   input clock: [mux] parent of [divider] parent of [gate]
->>>>>>   
->>>>>> - Now that CCF selects an appropriate mux parent, we don't need the
->>>>>>   DT-provided default parent any longer. Accordingly we can also omit
->>>>>>   setting the mux parent directly in the driver.
->>>>>>   
->>>>>> - Instead of manually handling the pre-div divider value, let CCF
->>>>>>   set the input clock. Targeted input clock frequency is
->>>>>>   0xffff * 1/period for best precision.
->>>>>>   
->>>>>> - For the "inverted pwm disabled" scenario target an input clock
->>>>>>   frequency of 1GHz. This ensures that the remaining low pulses
->>>>>>   have minimum length.
->>>>>>
->>>>>> I don't have hw with the old PWM block, therefore I couldn't test this
->>>>>> patch. With the not yet included extension for the new PWM block
->>>>>> (channel->clk coming directly from get_clk(external_clk)) I didn't
->>>>>> notice any problem. My system uses PWM for the CPU voltage regulator
->>>>>> and for the SDIO 32kHz clock.
->>>>>>
->>>>>> Note: The clock gate in the old PWM block is permanently disabled.
->>>>>> This seems to indicate that it's not used by the new PWM block.
->>>>>>
->>>>>> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->>>>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>>>> ---
->>>>>> Changes to RFT/RFC version:
->>>>>> - use parent_hws instead of parent_names for div/gate clock
->>>>>> - use devm_clk_hw_register where the struct clk * returned by
->>>>>>   devm_clk_register isn't needed
->>>>>>
->>>>>> v2:
->>>>>> - add patch 1
->>>>>> - add patch 3
->>>>>> - switch to using clk_parent_data in all relevant places
->>>>>> v3:
->>>>>> - add flag CLK_IGNORE_UNUSED
->>>>>> v4:
->>>>>> - remove variable tmp in meson_pwm_get_state
->>>>>> - don't use deprecated function devm_clk_register
->>>>>
->>>>> [...]
->>>>>
->>>>>> @@ -166,7 +158,11 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
->>>>>>  	if (state->polarity == PWM_POLARITY_INVERSED)
->>>>>>  		duty = period - duty;
->>>>>>  
->>>>>> -	fin_freq = clk_get_rate(channel->clk);
->>>>>> +	freq = div64_u64(NSEC_PER_SEC * (u64)0xffff, period);
->>>>>> +	if (freq > ULONG_MAX)
->>>>>> +		freq = ULONG_MAX;
->>>>>> +
->>>>>> +	fin_freq = clk_round_rate(channel->clk, freq);
->>>>>>  	if (fin_freq == 0) {
->>>>>>  		dev_err(meson->chip.dev, "invalid source clock frequency\n");
->>>>>>  		return -EINVAL;
->>>>>
->>>>> As mentioned previously, we have discussed one optimization for PWM
->>>>> parent clock calculation. Many modern Amlogic SoCs include an RTC clock
->>>>> within the clock tree. This clock provides a stable and efficient 32kHz
->>>>> input for several clock objects that can be inherited through the muxes
->>>>> from the RTC clock.
->>>>>
->>>>> In short, we aim to use the RTC clock parent directly for PWM to
->>>>> generate a 32kHz clock on the PWM lines. Martin has suggested one way to
->>>>> do so, which is described in [0]. You can also refer to our IRC
->>>>> discussion in [1].
->>>>>
->>>>> I would appreciate your thoughts on this. Please let me know what you
->>>>> think.
->>>>>
->>>>
->>>> Requesting a frequency of (NSEC_PER_SEC * 0xffffULL / period) is based
->>>> on the assumption that the highest possible input frequency always
->>>> allows to generate a period that is close enough to the requested period.
->>>>
->>>> To find the best parent you'd need a somewhat more complex logic outside CCF.
->>>> What you want is the parent where (f_parent * period / NSEC_PER_SEC) is
->>>> closest to an integer in the range 1 .. 0xffff.
->>>> IOW: max(abs((f_parent * period) % 10^9 - 5 * 10^8))
->>>>
->>>> This can be done, question is whether it's needed and worth the effort.
->>>>
->>>> This would be the generic solution. If you just want to handle the case
->>>> that period 1/32.768Hz is requested, an adjusted version of Martins's
->>>> pseudo-code formula should do.
->>>> Best I think as follow-up to my series.
->>>>
->>>
->>> Certainly, if possible, please include this special case in the next
->>> version of your series. Appreciate it!
->>>
->>
->> The currently supported SoC generations don't support the RTC PWM mux
->> input. Changes for not yet supported SoC generations I'd like to keep
->> outside the scope of the CCF conversion patch series.
->> Such a change could be part of a series adding A1 support.
->> However it's good that that the type of needed change is being discussed
->> now, better than potentially finding out later that the CCF conversion
->> is incompatible with what's needed to support newer SoC generations.
->>
->> For my understanding:
->> A1 like S4 and SC2 has the PWM clock handling removed from the PWM block?
->>
-> 
-> Yes, that's correct. PWM clocks are external to A1 and S4 pwm block, and
-> they are currently located in the Peripherals clock controller. We made
-> some changes to the PWM driver to support this behavior in the current
-> version, which is very similar to your 'ext_clk' patchset. However, we
-> did not send it because of your patch series with fully CCF support.
-> 
 
-Once CCF is fully supported, the extension needed to support an external
-PWM input clock is very small.
-Before submitting the (hopefully) final version of the CCF conversion
-patch set, few pending patches should have been applied, however this
-seems to take some time.
+--WpjSotNzALEbIBBv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 22, 2023 at 10:43:46PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Peter,
+>=20
+> On Mon, May 22, 2023 at 09:28:39PM +0200, Peter Rosin wrote:
+> > 2023-05-22 at 19:23, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Mon, May 22, 2023 at 05:19:43PM +0200, Peter Rosin wrote:
+> > >> I have a device with a "sound card" that has an amplifier that needs
+> > >> an extra boost when high amplification is requested. This extra
+> > >> boost is controlled with a pwm-regulator.
+> > >>
+> > >> As of commit c73a3107624d ("pwm: Handle .get_state() failures") this
+> > >> device no longer works. I have tracked the problem to an unfortunate
+> > >> interaction between the underlying PWM driver and the PWM core.
+> > >>
+> > >> The driver is drivers/pwm/pwm-atmel.c which has difficulties getting
+> > >> the period and/or duty_cycle from the HW when the PWM is not enabled.
+> > >> Because of this, I think, the driver does not fill in .period and
+> > >> .duty_cycle at all in atmel_pwm_get_state() unless the PWM is enable=
+d.
+> > >>
+> > >> However, the PWM core is not expecting these fields to be left as-is,
+> > >> at least not in pwm_adjust_config(), and its local state variable on
+> > >> the stack ends up with whatever crap was on the stack on entry for
+> > >> these fields. That fails spectacularly when the function continues to
+> > >> do math on these uninitialized values.
+>=20
+> After looking again, I don't understand that part. Note that
+> pwm_get_state() doesn't call .get_state() at all. Also pwmchip_add()
+> zero initializes .state, then pwm_get() calls .get_state() (via
+> pwm_device_request() which is called in .xlate()) which (if the HW is
+> disabled) doesn't touch .period, so it should continue to be zero?!
+>=20
+> So I wonder why your approach 2 works at all. Do you see what I'm
+> missing?
+>=20
+> > >> In particular, I find this in the kernel log when a bad kernel runs:
+> > >> pwm-regulator: probe of reg-ana failed with error -22
+> > >>
+> > >> Before commit c73a3107624d this was a silent failure, and the situat=
+ion
+> > >> "repaired itself" when the PWM was later reprogrammed, at least for =
+my
+> > >> case. After that commit, the failure is fatal and the "sound card"
+> > >> fails to come up at all.
+> > >>
+> > >>
+> > >> I see a couple of adjustments that could be made.
+> > >>
+> > >> 1. Zero out some fields in the driver:
+> > >>
+> > >> @@ -390,4 +390,6 @@ static int atmel_pwm_get_state(struct pwm_chip *=
+chip, struct pwm_device *pwm,
+> > >>  		state->enabled =3D true;
+> > >>  	} else {
+> > >> +		state->period =3D 0;
+> > >> +		state->duty_cycle =3D 0;
+> > >>  		state->enabled =3D false;
+> > >>  	}
+> > >=20
+> > > I don't particularily like that. While state->period is an invalid
+> > > value, IMHO enabled =3D false is enough information from the driver's=
+ POV.
+> >=20
+> > This was the preferred approach of Thierry, and given the number of
+> > call sites for pwm_get_state with a local variable, I can sympathize
+> > with that view.
+>=20
+> I looked a bit more into the issue and think that pwm_get_state() isn't
+> problematic. pwm_get_state() fully assigns *state.
+>=20
+> > At the same time, fixing drivers one by one is not
+> > a fun game, so I can certainly see that approach 3 also has an appeal.
+>=20
+> What I don't like about it is that the output of a disabled PWM doesn't
+> have a period. There might be one configured in hardware(, and the
+> .get_state() callback might or might not return that), but the emitted
+> signal has no well-defined period.
+
+Well, this is a bit of a gray area, admittedly. .get_state() was not
+designed with regards to drivers that are unable to read the hardware
+state. Essentially if you can't read the full hardware state, the
+assumption was that you just shouldn't provide a .get_state() callback
+at all.
+
+In retrospect that's perhaps not ideal, and as you pointed out this is
+all a bit moot as of v6.3 because the initial state is now effectively
+zeroed out already.
+
+But just to address your point about enabled =3D false being enough: it's
+not. The reason is that consumers should be able to do something along
+these lines:
+
+	pwm_get_state(pwm, &state);
+	state.enabled =3D true;
+	pwm_apply_state(pwm, &state);
+
+And expect the device to do something reasonable. If the PWM isn't
+properly configured, that pwm_apply_state() should return an error. If
+->get_state() returned random values, that may not be guaranteed. With
+v6.3, the above should return -EINVAL for pwm-atmel because period ends
+up being 0 and we check for that explicitly. And that's really the only
+sane behavior for drivers that can't read back the full hardware state.
+
+Again, since we have this in the core that should be good enough. But it
+is still something that drivers need to be aware about. If you can't
+determine a real value from hardware readout, period and duty-cycle
+should be zeroed out so that consumers don't end up applying garbage
+values accidentally.
+
+Thierry
+
+--WpjSotNzALEbIBBv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmRtIrEACgkQ3SOs138+
+s6EHsg/8DbLHBm0U+xDpCnDi9N/onI44zfGC5FH70Gglg1st9nNPxnx16EjwwvvZ
+X7juPU/P8AwDf76byj2bxzPXZiTHdZjzfOqQVffGsYCK1FQttsllh/Vrj7wYoYrD
+nOOZ/kBqDhrpwFNyOvv+iRZFty4MvD3JvLpdikoPm7UCraHRGImwyVmoUCN/Kd3p
+/7CALd39C2T1vXfgSRQ2RwLBnQqAHo+8dD6DOyq3jakDzl/lj3QyTVltvjcYqtoq
+V42HeAemocoi3JVK29/IK4Wq26GLKKW1r7VlNi0oB5V6fLRd5pYMVSIZc2hpRKqZ
+4vMckGLH6dJH/sFdnwlr8PlKrIUwmIEabVk5+v83SbW4rYfzcawAsKkwodCCrJGj
+87tl+tHl/fBxC0pvJzyVHNAcxLMAEZidJacDAdqU/Oypn8jOyqrHafyUquDHySh6
+obd6Iofhi5eqIxyX8XC9IFarU4W0fy1mCqvyOVKAyPSogzyLQDWLx4OMt95guqT0
+bqFXHgk4uT3VtBC83k4ShSDnxjcTvj3xtPEXWp+bwCX8UJ7+kZrvmZlt4jTZJIPq
+PcoTSwGPSLsGl+8piPLEOFdOP0VsAV5yrPFtp9d4XYk8au1mysKZlUfOSMn+IJvk
+82AraiL3WrxujBgLirVTzkLiDM/+ztu9/zktz0aA+ZxHGYdy/yM=
+=u3i/
+-----END PGP SIGNATURE-----
+
+--WpjSotNzALEbIBBv--
