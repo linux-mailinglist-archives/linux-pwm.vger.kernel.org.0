@@ -2,69 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 762E170D780
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 10:34:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17A4970DA85
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 12:29:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236168AbjEWIeC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 23 May 2023 04:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48620 "EHLO
+        id S236169AbjEWK25 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 23 May 2023 06:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235515AbjEWIdU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 04:33:20 -0400
-Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B80268F
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 01:29:40 -0700 (PDT)
-Received: by mail-vk1-xa31.google.com with SMTP id 71dfb90a1353d-456f19307f6so1963686e0c.2
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 01:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1684830579; x=1687422579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ILn21p3iZ6SH9K+Q+SIaeY3G2Mcp4yvUaAoc5C5tStU=;
-        b=2J0fHnbfrRcsZzK2npGTKcC947Oxi0EKxXXqTryFytqM/KdAH7mmQzjXziTWKE4XL/
-         /p4CsRETrbQTzVDW+xYCs0pYOOAE15B2b49/gJuYWis29SxGD049DasfOre7uY8j8AWb
-         MJKJ3jv26G1zdwv0qpvt4lXcUIm9HKhDnp0di6CXCAoiJqbyawcrOneRatg4Ycz2RQCI
-         Fsy+fKZuP4SOJKRVYpTOEjrD5mGHZYB6dgJmXp9uw3dNJTc6aiSHkv1PfGLeQrYVLfyp
-         I0HtUI7J1vnTxOisHOF1vFO4ESa/pafBf8hqu0MaBw9tjoA4uqSMxGiw8xgcMRVcndz7
-         m3JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684830579; x=1687422579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ILn21p3iZ6SH9K+Q+SIaeY3G2Mcp4yvUaAoc5C5tStU=;
-        b=bo+M/TN0b/H1klmgJgf9h3TKtdZRNTxL25B8MV42BPAXOdazXMosaeCD8bZDdfCN/E
-         2sgzO5ijhudJ1B2WSXSinFeKtAZ9APMRyF+NbSFIDNPgbPiy0z0T6ygFTehAjj1pXY/F
-         iBW2XjshCR2H/MFCWk0CsApf670ZIH3KMNoGuyqZtgXcfR56VvaAgy0fxP5wsm+W4bSQ
-         Nco1Np0zApIHnObkMNZuX/janWfRyFCKh/f8CMGmh9QrnywP873BpNVDcwl0sVeHVGih
-         KW49byvHdnuwACnvq8YJNatLUoOO5bgLPLlrnV06f5FHeevrpTaSbmE9ckHM8abRmTgw
-         bUSg==
-X-Gm-Message-State: AC+VfDxgB1RkPG92BE0kO0hTO43czFqs6rcJmxQ6p7hi8B40pLFybPqx
-        drvSeYDwzoG5fu5fqsr8QMG/BfwRrISgw9yo+0vgwQ==
-X-Google-Smtp-Source: ACHHUZ7YKuSwrv0dWkaxm1I+dNkm97+KbpOtnb5BMYhmZ1vmG+hGVaj/tYJPg9kc1sbMWLiBy43AICYO3yKBeV6NVnM=
-X-Received: by 2002:a1f:3f03:0:b0:453:8f1c:eb31 with SMTP id
- m3-20020a1f3f03000000b004538f1ceb31mr4017125vka.14.1684830579480; Tue, 23 May
- 2023 01:29:39 -0700 (PDT)
+        with ESMTP id S230082AbjEWK24 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 06:28:56 -0400
+Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE69D130
+        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 03:28:50 -0700 (PDT)
+Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
+        by mx.sberdevices.ru (Postfix) with ESMTP id 355415FD0D;
+        Tue, 23 May 2023 13:28:49 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
+        s=mail; t=1684837729;
+        bh=RevZ/bHltm2OVXzqjtdSz+Uo+s6mOmjSubFtuWBtO6g=;
+        h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+        b=poJmAPB4TPK4murHvz0rVbIchkP1f7JNKM1dsmNz6O/OujoQypaB7xADFYdBO+Oz4
+         BQmLgMmDIGZdZuIlFs3ZxUYvpJoNV3Yw1CQAH+p8IoUybHsX1YulXGesq4OUY719Wi
+         QDuUX5Y799LNA8WpU4i00IEtbBr6iqhiaLKlP5gCaR64wIXJiik1Kr275/beNDcIbg
+         HQ0lcOzjUfqYW2BBUjfC335kjiUTzvFvDe1rgQac12e2655xlraLbjUPd2SGdOj/+D
+         WXeDw9znoYE116PWXZ+RILmmMmkt3lLJXjwpN27ohDIHNayL7w4AkNvwZcPkXkYgqh
+         3W3yZaZFwtpwA==
+Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
+        by mx.sberdevices.ru (Postfix) with ESMTP;
+        Tue, 23 May 2023 13:28:48 +0300 (MSK)
+Date:   Tue, 23 May 2023 13:28:48 +0300
+From:   Dmitry Rokosov <ddrokosov@sberdevices.ru>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "rockosov@gmail.com" <rockosov@gmail.com>,
+        kernel <kernel@sberdevices.ru>
+Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock
+ framework
+Message-ID: <20230523102848.32prkwhqvm7v53ps@CAB-WSD-L081021>
+References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
+ <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
+ <tyuyderm7i6otsgrntw2wj4k4ii5xwp2vngfa76eaguki7yuqa@322cjuotnr6q>
+ <29961a2e-5367-0685-0f3a-1910328ad3ab@gmail.com>
+ <20230522133739.7tc35zr2npsysopd@CAB-WSD-L081021>
+ <2ae9890d-9118-ba5a-0fbf-0b657c8b7be4@gmail.com>
 MIME-Version: 1.0
-References: <20230519171611.6810-1-sensor1010@163.com>
-In-Reply-To: <20230519171611.6810-1-sensor1010@163.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 May 2023 10:29:28 +0200
-Message-ID: <CAMRc=Mf9nLX1uSngiXB3dfbE7P6Ec093iRt90MVCa+1A15Zc4A@mail.gmail.com>
-Subject: Re: [PATCH] drivers/gpio : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
-To:     Lizhe <sensor1010@163.com>
-Cc:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
-        gregory.clement@bootlin.com, linux@armlinux.org.uk,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2ae9890d-9118-ba5a-0fbf-0b657c8b7be4@gmail.com>
+User-Agent: NeoMutt/20220415
+X-Originating-IP: [172.16.1.6]
+X-ClientProxiedBy: S-MS-EXCH02.sberdevices.ru (172.16.1.5) To
+ S-MS-EXCH01.sberdevices.ru (172.16.1.4)
+X-KSMG-Rule-ID: 4
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Status: not scanned, disabled by settings
+X-KSMG-AntiSpam-Interceptor-Info: not scanned
+X-KSMG-AntiPhishing: not scanned, disabled by settings
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2023/05/23 08:49:00 #21371737
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,52 +80,147 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, May 19, 2023 at 7:17=E2=80=AFPM Lizhe <sensor1010@163.com> wrote:
->
-> Before executing microchip_sgpio_irq_set_type(),
-> type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger(=
-).
->
-> Signed-off-by: Lizhe <sensor1010@163.com>
-> ---
->  arch/arm/plat-orion/gpio.c | 1 -
->  drivers/gpio/gpio-mvebu.c  | 1 -
->  2 files changed, 2 deletions(-)
->
-> diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
-> index 595e9cb33c1d..863fa497b1a2 100644
-> --- a/arch/arm/plat-orion/gpio.c
-> +++ b/arch/arm/plat-orion/gpio.c
-> @@ -364,7 +364,6 @@ static int gpio_irq_set_type(struct irq_data *d, u32 =
-type)
->                 return -EINVAL;
->         }
->
-> -       type &=3D IRQ_TYPE_SENSE_MASK;
->         if (type =3D=3D IRQ_TYPE_NONE)
->                 return -EINVAL;
->
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index a68f682aec01..34fd007b0308 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -505,7 +505,6 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d=
-, unsigned int type)
->         if ((u & BIT(pin)) =3D=3D 0)
->                 return -EINVAL;
->
-> -       type &=3D IRQ_TYPE_SENSE_MASK;
->         if (type =3D=3D IRQ_TYPE_NONE)
->                 return -EINVAL;
->
-> --
-> 2.34.1
->
+Heiner,
 
-Please split it into two patches. I can apply the second part but
-arch/arm is beyond my jurisdiction.
+On Mon, May 22, 2023 at 10:10:41PM +0200, Heiner Kallweit wrote:
+> On 22.05.2023 15:37, Dmitry Rokosov wrote:
+> > Heiner,
+> > 
+> > On Fri, May 19, 2023 at 06:53:30PM +0200, Heiner Kallweit wrote:
+> >> On 19.05.2023 17:30, Dmitry Rokosov wrote:
+> >>> Hello Heiner,
+> >>>
+> >>> Thank you for the patch series!
+> >>>
+> >>> I am currently working on the Amlogic A1 clock driver and other
+> >>> peripheral devices, including PWM. During a discussion about the clock
+> >>> driver with Martin Blumenstingl, we found an intersection between the
+> >>> clock driver and your PWM CCF support patch series. Please see my
+> >>> comments below.
+> >>>
+> >>> On Thu, Apr 13, 2023 at 07:54:46AM +0200, Heiner Kallweit wrote:
+> >>>> Newer versions of the PWM block use a core clock with external mux,
+> >>>> divider, and gate. These components either don't exist any longer in
+> >>>> the PWM block, or they are bypassed.
+> >>>> To minimize needed changes for supporting the new version, the internal
+> >>>> divider and gate should be handled by CCF too.
+> >>>>
+> >>>> I didn't see a good way to split the patch, therefore it's somewhat
+> >>>> bigger. What it does:
+> >>>>
+> >>>> - The internal mux is handled by CCF already. Register also internal
+> >>>>   divider and gate with CCF, so that we have one representation of the
+> >>>>   input clock: [mux] parent of [divider] parent of [gate]
+> >>>>   
+> >>>> - Now that CCF selects an appropriate mux parent, we don't need the
+> >>>>   DT-provided default parent any longer. Accordingly we can also omit
+> >>>>   setting the mux parent directly in the driver.
+> >>>>   
+> >>>> - Instead of manually handling the pre-div divider value, let CCF
+> >>>>   set the input clock. Targeted input clock frequency is
+> >>>>   0xffff * 1/period for best precision.
+> >>>>   
+> >>>> - For the "inverted pwm disabled" scenario target an input clock
+> >>>>   frequency of 1GHz. This ensures that the remaining low pulses
+> >>>>   have minimum length.
+> >>>>
+> >>>> I don't have hw with the old PWM block, therefore I couldn't test this
+> >>>> patch. With the not yet included extension for the new PWM block
+> >>>> (channel->clk coming directly from get_clk(external_clk)) I didn't
+> >>>> notice any problem. My system uses PWM for the CPU voltage regulator
+> >>>> and for the SDIO 32kHz clock.
+> >>>>
+> >>>> Note: The clock gate in the old PWM block is permanently disabled.
+> >>>> This seems to indicate that it's not used by the new PWM block.
+> >>>>
+> >>>> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> >>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> >>>> ---
+> >>>> Changes to RFT/RFC version:
+> >>>> - use parent_hws instead of parent_names for div/gate clock
+> >>>> - use devm_clk_hw_register where the struct clk * returned by
+> >>>>   devm_clk_register isn't needed
+> >>>>
+> >>>> v2:
+> >>>> - add patch 1
+> >>>> - add patch 3
+> >>>> - switch to using clk_parent_data in all relevant places
+> >>>> v3:
+> >>>> - add flag CLK_IGNORE_UNUSED
+> >>>> v4:
+> >>>> - remove variable tmp in meson_pwm_get_state
+> >>>> - don't use deprecated function devm_clk_register
+> >>>
+> >>> [...]
+> >>>
+> >>>> @@ -166,7 +158,11 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
+> >>>>  	if (state->polarity == PWM_POLARITY_INVERSED)
+> >>>>  		duty = period - duty;
+> >>>>  
+> >>>> -	fin_freq = clk_get_rate(channel->clk);
+> >>>> +	freq = div64_u64(NSEC_PER_SEC * (u64)0xffff, period);
+> >>>> +	if (freq > ULONG_MAX)
+> >>>> +		freq = ULONG_MAX;
+> >>>> +
+> >>>> +	fin_freq = clk_round_rate(channel->clk, freq);
+> >>>>  	if (fin_freq == 0) {
+> >>>>  		dev_err(meson->chip.dev, "invalid source clock frequency\n");
+> >>>>  		return -EINVAL;
+> >>>
+> >>> As mentioned previously, we have discussed one optimization for PWM
+> >>> parent clock calculation. Many modern Amlogic SoCs include an RTC clock
+> >>> within the clock tree. This clock provides a stable and efficient 32kHz
+> >>> input for several clock objects that can be inherited through the muxes
+> >>> from the RTC clock.
+> >>>
+> >>> In short, we aim to use the RTC clock parent directly for PWM to
+> >>> generate a 32kHz clock on the PWM lines. Martin has suggested one way to
+> >>> do so, which is described in [0]. You can also refer to our IRC
+> >>> discussion in [1].
+> >>>
+> >>> I would appreciate your thoughts on this. Please let me know what you
+> >>> think.
+> >>>
+> >>
+> >> Requesting a frequency of (NSEC_PER_SEC * 0xffffULL / period) is based
+> >> on the assumption that the highest possible input frequency always
+> >> allows to generate a period that is close enough to the requested period.
+> >>
+> >> To find the best parent you'd need a somewhat more complex logic outside CCF.
+> >> What you want is the parent where (f_parent * period / NSEC_PER_SEC) is
+> >> closest to an integer in the range 1 .. 0xffff.
+> >> IOW: max(abs((f_parent * period) % 10^9 - 5 * 10^8))
+> >>
+> >> This can be done, question is whether it's needed and worth the effort.
+> >>
+> >> This would be the generic solution. If you just want to handle the case
+> >> that period 1/32.768Hz is requested, an adjusted version of Martins's
+> >> pseudo-code formula should do.
+> >> Best I think as follow-up to my series.
+> >>
+> > 
+> > Certainly, if possible, please include this special case in the next
+> > version of your series. Appreciate it!
+> > 
+> 
+> The currently supported SoC generations don't support the RTC PWM mux
+> input. Changes for not yet supported SoC generations I'd like to keep
+> outside the scope of the CCF conversion patch series.
+> Such a change could be part of a series adding A1 support.
+> However it's good that that the type of needed change is being discussed
+> now, better than potentially finding out later that the CCF conversion
+> is incompatible with what's needed to support newer SoC generations.
+> 
+> For my understanding:
+> A1 like S4 and SC2 has the PWM clock handling removed from the PWM block?
+> 
 
-While at it: is this platform even used at all? If so, then maybe we
-could migrate this driver to drivers/gpio/?
+Yes, that's correct. PWM clocks are external to A1 and S4 pwm block, and
+they are currently located in the Peripherals clock controller. We made
+some changes to the PWM driver to support this behavior in the current
+version, which is very similar to your 'ext_clk' patchset. However, we
+did not send it because of your patch series with fully CCF support.
 
-Bart
+-- 
+Thank you,
+Dmitry
