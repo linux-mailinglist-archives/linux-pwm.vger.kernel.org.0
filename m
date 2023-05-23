@@ -2,77 +2,51 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17A4970DA85
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 12:29:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B19FA70E0BD
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 17:40:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236169AbjEWK25 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 23 May 2023 06:28:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
+        id S231615AbjEWPkv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 23 May 2023 11:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230082AbjEWK24 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 06:28:56 -0400
-Received: from mx.sberdevices.ru (mx.sberdevices.ru [45.89.227.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE69D130
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 03:28:50 -0700 (PDT)
-Received: from s-lin-edge02.sberdevices.ru (localhost [127.0.0.1])
-        by mx.sberdevices.ru (Postfix) with ESMTP id 355415FD0D;
-        Tue, 23 May 2023 13:28:49 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sberdevices.ru;
-        s=mail; t=1684837729;
-        bh=RevZ/bHltm2OVXzqjtdSz+Uo+s6mOmjSubFtuWBtO6g=;
-        h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-        b=poJmAPB4TPK4murHvz0rVbIchkP1f7JNKM1dsmNz6O/OujoQypaB7xADFYdBO+Oz4
-         BQmLgMmDIGZdZuIlFs3ZxUYvpJoNV3Yw1CQAH+p8IoUybHsX1YulXGesq4OUY719Wi
-         QDuUX5Y799LNA8WpU4i00IEtbBr6iqhiaLKlP5gCaR64wIXJiik1Kr275/beNDcIbg
-         HQ0lcOzjUfqYW2BBUjfC335kjiUTzvFvDe1rgQac12e2655xlraLbjUPd2SGdOj/+D
-         WXeDw9znoYE116PWXZ+RILmmMmkt3lLJXjwpN27ohDIHNayL7w4AkNvwZcPkXkYgqh
-         3W3yZaZFwtpwA==
-Received: from S-MS-EXCH01.sberdevices.ru (S-MS-EXCH01.sberdevices.ru [172.16.1.4])
-        by mx.sberdevices.ru (Postfix) with ESMTP;
-        Tue, 23 May 2023 13:28:48 +0300 (MSK)
-Date:   Tue, 23 May 2023 13:28:48 +0300
-From:   Dmitry Rokosov <ddrokosov@sberdevices.ru>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "rockosov@gmail.com" <rockosov@gmail.com>,
-        kernel <kernel@sberdevices.ru>
-Subject: Re: [PATCH v4 4/4] pwm: meson: make full use of common clock
- framework
-Message-ID: <20230523102848.32prkwhqvm7v53ps@CAB-WSD-L081021>
-References: <9faca2e6-b7a1-4748-7eb0-48f8064e323e@gmail.com>
- <cb79d313-c7a2-42e9-639a-63cb5366521a@gmail.com>
- <tyuyderm7i6otsgrntw2wj4k4ii5xwp2vngfa76eaguki7yuqa@322cjuotnr6q>
- <29961a2e-5367-0685-0f3a-1910328ad3ab@gmail.com>
- <20230522133739.7tc35zr2npsysopd@CAB-WSD-L081021>
- <2ae9890d-9118-ba5a-0fbf-0b657c8b7be4@gmail.com>
+        with ESMTP id S237342AbjEWPku (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 11:40:50 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04ED12B
+        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 08:40:47 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:b0ac:7afd:272:4cff])
+        by laurent.telenet-ops.be with bizsmtp
+        id 0Fgi2A00U0Jkz7G01Fgi8n; Tue, 23 May 2023 17:40:46 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1q1U7g-002t5B-8n;
+        Tue, 23 May 2023 17:40:42 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1q1U7u-00CkiL-KO;
+        Tue, 23 May 2023 17:40:42 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] backlight: pwm_bl: Remove unneeded checks for valid GPIOs
+Date:   Tue, 23 May 2023 17:40:41 +0200
+Message-Id: <00be8237e0e2bc9b179177b5490f175d657261a2.1684856337.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2ae9890d-9118-ba5a-0fbf-0b657c8b7be4@gmail.com>
-User-Agent: NeoMutt/20220415
-X-Originating-IP: [172.16.1.6]
-X-ClientProxiedBy: S-MS-EXCH02.sberdevices.ru (172.16.1.5) To
- S-MS-EXCH01.sberdevices.ru (172.16.1.4)
-X-KSMG-Rule-ID: 4
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2023/05/23 08:49:00 #21371737
-X-KSMG-AntiVirus-Status: Clean, skipped
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,147 +54,49 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Heiner,
+All of gpiod_set_value_cansleep() and gpiod_direction_output() handle
+NULL GPIO pointers just fine, so there is no need to check for that in
+the caller.
 
-On Mon, May 22, 2023 at 10:10:41PM +0200, Heiner Kallweit wrote:
-> On 22.05.2023 15:37, Dmitry Rokosov wrote:
-> > Heiner,
-> > 
-> > On Fri, May 19, 2023 at 06:53:30PM +0200, Heiner Kallweit wrote:
-> >> On 19.05.2023 17:30, Dmitry Rokosov wrote:
-> >>> Hello Heiner,
-> >>>
-> >>> Thank you for the patch series!
-> >>>
-> >>> I am currently working on the Amlogic A1 clock driver and other
-> >>> peripheral devices, including PWM. During a discussion about the clock
-> >>> driver with Martin Blumenstingl, we found an intersection between the
-> >>> clock driver and your PWM CCF support patch series. Please see my
-> >>> comments below.
-> >>>
-> >>> On Thu, Apr 13, 2023 at 07:54:46AM +0200, Heiner Kallweit wrote:
-> >>>> Newer versions of the PWM block use a core clock with external mux,
-> >>>> divider, and gate. These components either don't exist any longer in
-> >>>> the PWM block, or they are bypassed.
-> >>>> To minimize needed changes for supporting the new version, the internal
-> >>>> divider and gate should be handled by CCF too.
-> >>>>
-> >>>> I didn't see a good way to split the patch, therefore it's somewhat
-> >>>> bigger. What it does:
-> >>>>
-> >>>> - The internal mux is handled by CCF already. Register also internal
-> >>>>   divider and gate with CCF, so that we have one representation of the
-> >>>>   input clock: [mux] parent of [divider] parent of [gate]
-> >>>>   
-> >>>> - Now that CCF selects an appropriate mux parent, we don't need the
-> >>>>   DT-provided default parent any longer. Accordingly we can also omit
-> >>>>   setting the mux parent directly in the driver.
-> >>>>   
-> >>>> - Instead of manually handling the pre-div divider value, let CCF
-> >>>>   set the input clock. Targeted input clock frequency is
-> >>>>   0xffff * 1/period for best precision.
-> >>>>   
-> >>>> - For the "inverted pwm disabled" scenario target an input clock
-> >>>>   frequency of 1GHz. This ensures that the remaining low pulses
-> >>>>   have minimum length.
-> >>>>
-> >>>> I don't have hw with the old PWM block, therefore I couldn't test this
-> >>>> patch. With the not yet included extension for the new PWM block
-> >>>> (channel->clk coming directly from get_clk(external_clk)) I didn't
-> >>>> notice any problem. My system uses PWM for the CPU voltage regulator
-> >>>> and for the SDIO 32kHz clock.
-> >>>>
-> >>>> Note: The clock gate in the old PWM block is permanently disabled.
-> >>>> This seems to indicate that it's not used by the new PWM block.
-> >>>>
-> >>>> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> >>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> >>>> ---
-> >>>> Changes to RFT/RFC version:
-> >>>> - use parent_hws instead of parent_names for div/gate clock
-> >>>> - use devm_clk_hw_register where the struct clk * returned by
-> >>>>   devm_clk_register isn't needed
-> >>>>
-> >>>> v2:
-> >>>> - add patch 1
-> >>>> - add patch 3
-> >>>> - switch to using clk_parent_data in all relevant places
-> >>>> v3:
-> >>>> - add flag CLK_IGNORE_UNUSED
-> >>>> v4:
-> >>>> - remove variable tmp in meson_pwm_get_state
-> >>>> - don't use deprecated function devm_clk_register
-> >>>
-> >>> [...]
-> >>>
-> >>>> @@ -166,7 +158,11 @@ static int meson_pwm_calc(struct meson_pwm *meson, struct pwm_device *pwm,
-> >>>>  	if (state->polarity == PWM_POLARITY_INVERSED)
-> >>>>  		duty = period - duty;
-> >>>>  
-> >>>> -	fin_freq = clk_get_rate(channel->clk);
-> >>>> +	freq = div64_u64(NSEC_PER_SEC * (u64)0xffff, period);
-> >>>> +	if (freq > ULONG_MAX)
-> >>>> +		freq = ULONG_MAX;
-> >>>> +
-> >>>> +	fin_freq = clk_round_rate(channel->clk, freq);
-> >>>>  	if (fin_freq == 0) {
-> >>>>  		dev_err(meson->chip.dev, "invalid source clock frequency\n");
-> >>>>  		return -EINVAL;
-> >>>
-> >>> As mentioned previously, we have discussed one optimization for PWM
-> >>> parent clock calculation. Many modern Amlogic SoCs include an RTC clock
-> >>> within the clock tree. This clock provides a stable and efficient 32kHz
-> >>> input for several clock objects that can be inherited through the muxes
-> >>> from the RTC clock.
-> >>>
-> >>> In short, we aim to use the RTC clock parent directly for PWM to
-> >>> generate a 32kHz clock on the PWM lines. Martin has suggested one way to
-> >>> do so, which is described in [0]. You can also refer to our IRC
-> >>> discussion in [1].
-> >>>
-> >>> I would appreciate your thoughts on this. Please let me know what you
-> >>> think.
-> >>>
-> >>
-> >> Requesting a frequency of (NSEC_PER_SEC * 0xffffULL / period) is based
-> >> on the assumption that the highest possible input frequency always
-> >> allows to generate a period that is close enough to the requested period.
-> >>
-> >> To find the best parent you'd need a somewhat more complex logic outside CCF.
-> >> What you want is the parent where (f_parent * period / NSEC_PER_SEC) is
-> >> closest to an integer in the range 1 .. 0xffff.
-> >> IOW: max(abs((f_parent * period) % 10^9 - 5 * 10^8))
-> >>
-> >> This can be done, question is whether it's needed and worth the effort.
-> >>
-> >> This would be the generic solution. If you just want to handle the case
-> >> that period 1/32.768Hz is requested, an adjusted version of Martins's
-> >> pseudo-code formula should do.
-> >> Best I think as follow-up to my series.
-> >>
-> > 
-> > Certainly, if possible, please include this special case in the next
-> > version of your series. Appreciate it!
-> > 
-> 
-> The currently supported SoC generations don't support the RTC PWM mux
-> input. Changes for not yet supported SoC generations I'd like to keep
-> outside the scope of the CCF conversion patch series.
-> Such a change could be part of a series adding A1 support.
-> However it's good that that the type of needed change is being discussed
-> now, better than potentially finding out later that the CCF conversion
-> is incompatible with what's needed to support newer SoC generations.
-> 
-> For my understanding:
-> A1 like S4 and SC2 has the PWM clock handling removed from the PWM block?
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/video/backlight/pwm_bl.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Yes, that's correct. PWM clocks are external to A1 and S4 pwm block, and
-they are currently located in the Peripherals clock controller. We made
-some changes to the PWM driver to support this behavior in the current
-version, which is very similar to your 'ext_clk' patchset. However, we
-did not send it because of your patch series with fully CCF support.
-
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index fce412234d10399a..a51fbab96368053b 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -54,8 +54,7 @@ static void pwm_backlight_power_on(struct pwm_bl_data *pb)
+ 	if (pb->post_pwm_on_delay)
+ 		msleep(pb->post_pwm_on_delay);
+ 
+-	if (pb->enable_gpio)
+-		gpiod_set_value_cansleep(pb->enable_gpio, 1);
++	gpiod_set_value_cansleep(pb->enable_gpio, 1);
+ 
+ 	pb->enabled = true;
+ }
+@@ -65,8 +64,7 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
+ 	if (!pb->enabled)
+ 		return;
+ 
+-	if (pb->enable_gpio)
+-		gpiod_set_value_cansleep(pb->enable_gpio, 0);
++	gpiod_set_value_cansleep(pb->enable_gpio, 0);
+ 
+ 	if (pb->pwm_off_delay)
+ 		msleep(pb->pwm_off_delay);
+@@ -429,8 +427,7 @@ static int pwm_backlight_initial_power_state(const struct pwm_bl_data *pb)
+ 	 * Synchronize the enable_gpio with the observed state of the
+ 	 * hardware.
+ 	 */
+-	if (pb->enable_gpio)
+-		gpiod_direction_output(pb->enable_gpio, active);
++	gpiod_direction_output(pb->enable_gpio, active);
+ 
+ 	/*
+ 	 * Do not change pb->enabled here! pb->enabled essentially
 -- 
-Thank you,
-Dmitry
+2.34.1
+
