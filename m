@@ -2,105 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EEBB70E6DC
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 May 2023 22:51:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 177B370ED22
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 May 2023 07:34:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237948AbjEWUvr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 23 May 2023 16:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44354 "EHLO
+        id S234073AbjEXFeL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 24 May 2023 01:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238374AbjEWUvo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 23 May 2023 16:51:44 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13FE1A8
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 13:51:36 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-50bcb00a4c2so528205a12.1
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 13:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20221208; t=1684875095; x=1687467095;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yZundmrewKh0bipWQd+lfQPNPSXZ9mgJNRAPtylqIpw=;
-        b=Q3pRVYpapK/e7nkypEKxw7JxlSQP3eSbJ445xrlrZJGJ3w9bRAq3t1exfcZ5OR6YPZ
-         0ulvHLDuA2zQN3j5NET5X2a6ZsPORlKw2KCvHcNSAlV9OKKlrvBld2EkfgZvb1Mzwge7
-         fBx7DQcXayW2SJf3ckI8mZ2Jd7+TIKnR/iCmlKR2aNbQUNpyc0PnYgfirqyAYT6sbtPo
-         dCcLbe40SGEsfyEBjvwhZzBISyonGHDy4zSv6cSZ9lpm/dd325Fm1r8JNWgE6kFh0dek
-         ZeMCZB0ZCXlbTEsCiNR+DdLdZi7DtXKB0pDaUhHYUGNrZF/m/Dmuain7jaUBRLR024z1
-         jimw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684875095; x=1687467095;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yZundmrewKh0bipWQd+lfQPNPSXZ9mgJNRAPtylqIpw=;
-        b=UQ70X/5+439xl4ofkLhiKG3rKpzwWOg9q1xYadn2vFGzOKi1HkUMXLmLGo4iw2BpH0
-         7rlBqfq47Hzm68zPYSIzLhxqWpM//9qzmTprFA2V8FBMA4sRni3C7MXB6sUCP836+ks+
-         lAWKFZNk6e3ND5Zvu7yu6tOTfJqZZ93lRWppiGtX5PVxGK3I3m8hWYiVsCFJqyvE/YTo
-         NycewBNKlVEWFykPN/yC3cETtCm77sYyV6ske5FFlZWZ3bWuGVyqhw3BYGU20i05ok0f
-         o/IKfhnvxAxJbGI1MHLAbvyUWbkVRQ/wPgFGPKpQKjqf+DD0QQdDDZ1aR0qYsWCrAudF
-         zaVA==
-X-Gm-Message-State: AC+VfDy2NONEJ4crCRSLaVNtOmgHL0VRn61NEPywKMzTSdn5QyBFhx7T
-        beZPg7s41B9Rtt+viEysmXYxHhscA1chIg3g8k4=
-X-Google-Smtp-Source: ACHHUZ7MG7hcNaLhcgRMHzstW10kI2Qf9okU+o4Y5CQ8cOzkKjjiuZsIfJnrE0pqRbZjOE/7UMDBvJEQ4SeZfGeFzVc=
-X-Received: by 2002:a17:907:6288:b0:969:b2e2:4f3b with SMTP id
- nd8-20020a170907628800b00969b2e24f3bmr14435843ejc.51.1684875095098; Tue, 23
- May 2023 13:51:35 -0700 (PDT)
+        with ESMTP id S238870AbjEXFeK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 24 May 2023 01:34:10 -0400
+X-Greylist: delayed 134 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 22:34:08 PDT
+Received: from smtprelay01.ispgateway.de (smtprelay01.ispgateway.de [80.67.18.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5073B186
+        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 22:34:08 -0700 (PDT)
+Received: from [89.1.81.74] (helo=ipc1.ka-ro)
+        by smtprelay01.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <LW@KARO-electronics.de>)
+        id 1q1h5Z-0000q9-IP; Wed, 24 May 2023 07:31:09 +0200
+X-Cyrus-Session-Id: cyrus-20699-1684906043-2-8691531181334446017
+X-Sieve: CMU Sieve 3.0
+From:   =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Date:   Wed, 24 May 2023 07:27:14 +0200
+Message-Id: <20230524052714.3077-1-LW@KARO-electronics.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <1d1a8ede-e789-bc4d-2dcd-9d06d2df4061@gmail.com>
- <CAFBinCCeh1eUo1=pfqmp4F7UsuKZ--cja-16mCqBhV-cgodzqw@mail.gmail.com> <f6b93fcc-ca5a-43ae-729d-38338ba411bc@gmail.com>
-In-Reply-To: <f6b93fcc-ca5a-43ae-729d-38338ba411bc@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 23 May 2023 22:51:24 +0200
-Message-ID: <CAFBinCDdDcFaekrdC33_cO_TngRhMTgqgpFR2ELjEcavd-8SyA@mail.gmail.com>
-Subject: Re: [PATCH] pwm: pwm-meson: fix handling of period/duty if greater
- than UINT_MAX
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Subject: [PATCH] pwm: imx-tpm: fix kernel crash upon resume due to register
+ access with clocks disabled
+X-Df-Sender: bHdAa2Fyby1lbGVjdHJvbmljcy5kb21haW5mYWN0b3J5LWt1bmRlLmRl
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, May 15, 2023 at 10:32=E2=80=AFPM Heiner Kallweit <hkallweit1@gmail.=
-com> wrote:
->
-> On 08.05.2023 21:46, Martin Blumenstingl wrote:
-> > On Wed, May 3, 2023 at 9:58=E2=80=AFPM Heiner Kallweit <hkallweit1@gmai=
-l.com> wrote:
-> >>
-> >> state->period/duty are of type u64, and if their value is greater than
-> >> UINT_MAX, then the cast to uint will cause problems. Fix this by
-> >> changing the type of the respective local variables to u64.
-> >>
-> >> Fixes: b79c3670e120 ("pwm: meson: Don't duplicate the polarity interna=
-lly")
-> >> Cc: stable@vger.kernel.org
-> >> Suggested-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> >> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> > Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
-> Not sure about the process in pwm subsystem: When will these patches make
-> it to linux-next? Because I'd like to submit follow-ups with a dependency
-> only after pending patches have been applied.
-I'm also not sure. Personally I would take all patches that fix the
-existing driver code, bundle them into a series and re-send that
-(collecting all Reviewed-by, etc. along the way). The idea is to make
-Thierry's life easier as he just has to apply the series (no need to
-worry about the patch order, ...).
+If the pwm-imx-tpm driver is being used e.g. for backlight, the
+pwm_imx_tpm_apply() function is being called before the device is
+resumed and the clocks are enabled, resulting in a data abort:
+echo +5 > /sys/class/rtc/rtc0/wakealarm;echo mem > /sys/power/state
+PM: suspend entry (deep)
+Filesystems sync: 0.006 seconds
+Freezing user space processes ... (elapsed 0.015 seconds) done.
+OOM killer disabled.
+Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+Disabling non-boot CPUs ...
+psci: CPU1 killed (polled 0 ms)
+Enabling non-boot CPUs ...
+Detected VIPT I-cache on CPU1
+cacheinfo: Unable to detect cache hierarchy for CPU 1
+GICv3: CPU1: found redistributor 100 region 0:0x0000000048060000
+CPU1: Booted secondary processor 0x0000000100 [0x412fd050]
+CPU1 is up
+Internal error: synchronous external abort: 0000000096000010 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 245 Comm: bash Not tainted 6.1.1-karo+g29549c7073bf #1
+Hardware name: Ka-Ro electronics GmbH TX93-5210 (NXP i.MX93) module (DT)
+pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : pwm_imx_tpm_apply+0x12c/0x3f0
+lr : pwm_imx_tpm_apply+0x104/0x3f0
+sp : ffff80000a11b710
+x29: ffff80000a11b710 x28: 0000000000000001 x27: 0000000000000000
+x26: 0000000000000000 x25: 000000000007a12a x24: 0000000000008236
+x23: 0000000000000000 x22: ffff00000309b5d0 x21: 0000000000000000
+x20: ffff0000022b0a00 x19: ffff00000309b580 x18: 3030387830383231
+x17: 0048008800d90326 x16: 0324032303260320 x15: ffff80000a11b780
+x14: ffff80000a11b830 x13: ffff80000a11b834 x12: ffff00003fd90740
+x11: ffff00000391da00 x10: 00000000000007d0 x9 : ffff80000a11b6b0
+x8 : ffff00000391e230 x7 : 0000000000000000 x6 : ffff00000391da00
+x5 : 000000001dcd6500 x4 : 0000000000000000 x3 : ffff00000309b5d0
+x2 : ffff00000391da00 x1 : 0000000000000000 x0 : ffff800008fdd010
+Call trace:
+ pwm_imx_tpm_apply+0x12c/0x3f0
+ pwm_apply_state+0x5c/0xbc
+ pwm_backlight_update_status+0xc4/0x1ac
+ drm_panel_enable+0x70/0xe0
+[...]
+
+Fix this by remembering the suspend state and returning -EAGAIN in HW
+related functions (pwm_imx_tpm_apply() and pwm_imx_tpm_get_state()) as
+long as pwm_imx_tpm_resume() has not been called.
+
+Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+---
+ drivers/pwm/pwm-imx-tpm.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index e5e7b7c339a8..03813804daf3 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -64,6 +64,7 @@ struct imx_tpm_pwm_chip {
+ 	u32 user_count;
+ 	u32 enable_count;
+ 	u32 real_period;
++	int suspended;
+ };
+ 
+ struct imx_tpm_pwm_param {
+@@ -294,6 +295,9 @@ static int pwm_imx_tpm_apply(struct pwm_chip *chip,
+ 	struct pwm_state real_state;
+ 	int ret;
+ 
++	if (tpm->suspended)
++		return -EAGAIN;
++
+ 	ret = pwm_imx_tpm_round_state(chip, &param, &real_state, state);
+ 	if (ret)
+ 		return ret;
+@@ -397,6 +401,8 @@ static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
+ 	if (tpm->enable_count > 0)
+ 		return -EBUSY;
+ 
++	tpm->suspended = 1;
++
+ 	clk_disable_unprepare(tpm->clk);
+ 
+ 	return 0;
+@@ -411,6 +417,7 @@ static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
+ 	if (ret)
+ 		dev_err(dev, "failed to prepare or enable clock: %d\n", ret);
+ 
++	tpm->suspended = 0;
+ 	return ret;
+ }
+ 
+-- 
+2.30.2
+
