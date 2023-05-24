@@ -2,47 +2,46 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 177B370ED22
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 May 2023 07:34:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCADF70ED46
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 May 2023 07:46:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234073AbjEXFeL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 24 May 2023 01:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
+        id S233663AbjEXFqN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 24 May 2023 01:46:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238870AbjEXFeK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 24 May 2023 01:34:10 -0400
-X-Greylist: delayed 134 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 22:34:08 PDT
-Received: from smtprelay01.ispgateway.de (smtprelay01.ispgateway.de [80.67.18.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5073B186
-        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 22:34:08 -0700 (PDT)
-Received: from [89.1.81.74] (helo=ipc1.ka-ro)
+        with ESMTP id S239493AbjEXFqM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 24 May 2023 01:46:12 -0400
+X-Greylist: delayed 896 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 22:46:11 PDT
+Received: from smtprelay01.ispgateway.de (smtprelay01.ispgateway.de [80.67.31.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD8418B
+        for <linux-pwm@vger.kernel.org>; Tue, 23 May 2023 22:46:11 -0700 (PDT)
+Received: from [89.1.81.74] (helo=karo-electronics.de)
         by smtprelay01.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <LW@KARO-electronics.de>)
-        id 1q1h5Z-0000q9-IP; Wed, 24 May 2023 07:31:09 +0200
-X-Cyrus-Session-Id: cyrus-20699-1684906043-2-8691531181334446017
-X-Sieve: CMU Sieve 3.0
-From:   =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+        id 1q1hK5-0003fA-OK; Wed, 24 May 2023 07:46:09 +0200
+Date:   Wed, 24 May 2023 07:46:07 +0200
+From:   Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         Fabio Estevam <festevam@gmail.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Shawn Guo <shawnguo@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Date:   Wed, 24 May 2023 07:27:14 +0200
-Message-Id: <20230524052714.3077-1-LW@KARO-electronics.de>
-X-Mailer: git-send-email 2.30.2
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V2] pwm: imx-tpm: fix kernel crash upon resume due to
+ register access with clocks disabled
+Message-ID: <20230524074607.41ffc31b@karo-electronics.de>
+In-Reply-To: <20230524052714.3077-1-LW@KARO-electronics.de>
+References: <20230524052714.3077-1-LW@KARO-electronics.de>
+Organization: Ka-Ro electronics GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Subject: [PATCH] pwm: imx-tpm: fix kernel crash upon resume due to register
- access with clocks disabled
+Content-Transfer-Encoding: 8BIT
 X-Df-Sender: bHdAa2Fyby1lbGVjdHJvbmljcy5kb21haW5mYWN0b3J5LWt1bmRlLmRl
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -97,11 +96,13 @@ long as pwm_imx_tpm_resume() has not been called.
 
 Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
 ---
- drivers/pwm/pwm-imx-tpm.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+V2: one hunk was missing in the first mail
+---
+ drivers/pwm/pwm-imx-tpm.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index e5e7b7c339a8..03813804daf3 100644
+index e5e7b7c339a8..537c7182f988 100644
 --- a/drivers/pwm/pwm-imx-tpm.c
 +++ b/drivers/pwm/pwm-imx-tpm.c
 @@ -64,6 +64,7 @@ struct imx_tpm_pwm_chip {
@@ -112,7 +113,17 @@ index e5e7b7c339a8..03813804daf3 100644
  };
  
  struct imx_tpm_pwm_param {
-@@ -294,6 +295,9 @@ static int pwm_imx_tpm_apply(struct pwm_chip *chip,
+@@ -140,6 +141,9 @@ static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
+ 	u32 rate, val, prescale;
+ 	u64 tmp;
+ 
++	if (tpm->suspended)
++		return -EAGAIN;
++
+ 	/* get period */
+ 	state->period = tpm->real_period;
+ 
+@@ -294,6 +298,9 @@ static int pwm_imx_tpm_apply(struct pwm_chip *chip,
  	struct pwm_state real_state;
  	int ret;
  
@@ -122,16 +133,15 @@ index e5e7b7c339a8..03813804daf3 100644
  	ret = pwm_imx_tpm_round_state(chip, &param, &real_state, state);
  	if (ret)
  		return ret;
-@@ -397,6 +401,8 @@ static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
+@@ -397,6 +404,7 @@ static int __maybe_unused pwm_imx_tpm_suspend(struct device *dev)
  	if (tpm->enable_count > 0)
  		return -EBUSY;
  
 +	tpm->suspended = 1;
-+
  	clk_disable_unprepare(tpm->clk);
  
  	return 0;
-@@ -411,6 +417,7 @@ static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
+@@ -411,6 +419,7 @@ static int __maybe_unused pwm_imx_tpm_resume(struct device *dev)
  	if (ret)
  		dev_err(dev, "failed to prepare or enable clock: %d\n", ret);
  
@@ -141,4 +151,5 @@ index e5e7b7c339a8..03813804daf3 100644
  
 -- 
 2.30.2
+
 
