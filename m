@@ -2,57 +2,48 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AF9E710AE0
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 May 2023 13:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 836DB7118D9
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 May 2023 23:13:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240679AbjEYL2b (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 25 May 2023 07:28:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53766 "EHLO
+        id S234391AbjEYVNS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 25 May 2023 17:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbjEYL2a (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 25 May 2023 07:28:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F4DEE7;
-        Thu, 25 May 2023 04:28:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36962644E8;
-        Thu, 25 May 2023 11:28:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A968C433D2;
-        Thu, 25 May 2023 11:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685014108;
-        bh=80WjExu69YZ2z4Yx+TkUK0wPnz4HeaoTG1bwDpjeRRA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JlD8ees5bAkKLqFjBq3iW6EmUYXa30dyvHZGzMelEuKFDt3HVxCS7ZhSpNAjfsNrO
-         vvnfts2gv5AnkHr+gMbXj2yNp1brxD+qLu3jcIq5xt3Og8KApYozFl8UWN1oDLWi2+
-         D4R1yvBvWN+4Yb4KMgJ6hxDiJqv+cY0fht6hV62oPJaCxHNP+uIqwah6ySmb0MeN+Z
-         xQxtzcCzQHOSBXrNDTbgViXxAUWA7DWQQKkPiAO/CIIDq9KoBaHuKX0FKRdlOVaX+r
-         mllGzWqvSch7UE14Rt/J0r9+XZ+bvQO1gOfOEbgnaTVfmFud2OYhWOmOajqwwdsCRs
-         xTXPRsLXo0Zjw==
-Date:   Thu, 25 May 2023 12:28:23 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Remove unneeded checks for valid GPIOs
-Message-ID: <20230525112823.GB423913@google.com>
-References: <00be8237e0e2bc9b179177b5490f175d657261a2.1684856337.git.geert+renesas@glider.be>
+        with ESMTP id S229589AbjEYVNR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 25 May 2023 17:13:17 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E138E9E
+        for <linux-pwm@vger.kernel.org>; Thu, 25 May 2023 14:13:16 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q2IGp-0001YE-8d; Thu, 25 May 2023 23:13:15 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q2IGo-002oIw-B4; Thu, 25 May 2023 23:13:14 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q2IGn-007xix-Jc; Thu, 25 May 2023 23:13:13 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] pwm: pca9685: Switch i2c driver back to use .probe()
+Date:   Thu, 25 May 2023 23:13:05 +0200
+Message-Id: <20230525211305.736102-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=999; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=k2HjSWlgTVHSx7QPGNNw5p60tMGsBnOkdyUZoRWnNFE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkb89aodIZUoxqSIuqiD6LOhosx+poSWhtCnLMY 6LR8IW+LtyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZG/PWgAKCRCPgPtYfRL+ Tk7LB/4umNB4ufwLbePnS8vv0xQn/k/sV8TxnV5dBI1jedfOoqeDdHFliQqIQgW3RFufrnbeEbJ VuPgkLWaqKNkPhSAegCJAXJwI4fbT4Ii8mGfILlmpp6jyIz20oklOcNZ9tFFeExkhUA+pAFfXiK Dm4arBoAEshioJPEbsMhV+714OZignBOdGOkPIvBHtN1o99mJYTkYzO2d9wNu/ENjNgAv3JAx/N Ngr77aDYY9iok2YfyRrG6JLnkAQRG9b6aaTnr2fZdRrzTYsR99zoZ/SsyMnh2Pzi7z7rcd5+5yk Pqv3n0KorE+yKqCxOkdQGC+85f58uho1X9WkJ4MU6wOPPJl7
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <00be8237e0e2bc9b179177b5490f175d657261a2.1684856337.git.geert+renesas@glider.be>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -61,18 +52,32 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 23 May 2023, Geert Uytterhoeven wrote:
+After commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
+call-back type"), all drivers being converted to .probe_new() and then
+03c835f498b5 ("i2c: Switch .probe() to not take an id parameter")
+convert back to (the new) .probe() to be able to eventually drop
+.probe_new() from struct i2c_driver.
 
-> All of gpiod_set_value_cansleep() and gpiod_direction_output() handle
-> NULL GPIO pointers just fine, so there is no need to check for that in
-> the caller.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/video/backlight/pwm_bl.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-pca9685.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 3ed5a48ca581..3038a68412a7 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -665,7 +665,7 @@ static struct i2c_driver pca9685_i2c_driver = {
+ 		.of_match_table = of_match_ptr(pca9685_dt_ids),
+ 		.pm = &pca9685_pwm_pm,
+ 	},
+-	.probe_new = pca9685_pwm_probe,
++	.probe = pca9685_pwm_probe,
+ 	.remove = pca9685_pwm_remove,
+ 	.id_table = pca9685_id,
+ };
 
+base-commit: ac9a78681b921877518763ba0e89202254349d1b
 -- 
-Lee Jones [李琼斯]
+2.39.2
+
