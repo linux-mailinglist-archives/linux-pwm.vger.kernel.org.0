@@ -2,114 +2,91 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEF9A7166F4
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 17:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 050A571691C
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 18:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230486AbjE3P1u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 May 2023 11:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
+        id S231270AbjE3QWG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 May 2023 12:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbjE3P1t (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 11:27:49 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E50ABE
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 08:27:48 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q41Fd-0000cs-KF; Tue, 30 May 2023 17:27:09 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q41FZ-003uHM-R0; Tue, 30 May 2023 17:27:05 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q41FY-009Xf3-TU; Tue, 30 May 2023 17:27:04 +0200
-Date:   Tue, 30 May 2023 17:27:04 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-watchdog@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH 0/7] dt-bindings: restrict node name suffixes
-Message-ID: <20230530152704.tbflnepnioupnkmv@pengutronix.de>
-References: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S230521AbjE3QWB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 12:22:01 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 161C49D;
+        Tue, 30 May 2023 09:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ru5cR
+        PmsF9ZMmZyJkpTmhO87sRRfpND2S5AIZbRneS8=; b=hbgaKTL4OdWrbkFZELrqA
+        mQC+RbpjIo2yYZixv5gmZbNify5YQpkeZt+cg9cV5IK+NliPHjJD4flcoMMImgVw
+        hsuuo72k2wier9iOeZrHLP8Cuwhah41soLks8C5JC12mBN6abVRqVIYsHIYrcNet
+        LnAK/aQMLnnOQTfzYDg5XE=
+Received: from lizhe.. (unknown [120.245.132.246])
+        by zwqz-smtp-mta-g2-2 (Coremail) with SMTP id _____wB39k5TInZkiwMYBA--.49914S4;
+        Wed, 31 May 2023 00:21:06 +0800 (CST)
+From:   Lizhe <sensor1010@163.com>
+To:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
+        gregory.clement@bootlin.com, linux@armlinux.org.uk,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Lizhe <sensor1010@163.com>
+Subject: [PATCH] drivers/gpio : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
+Date:   Wed, 31 May 2023 00:20:34 +0800
+Message-Id: <20230530162034.4004-1-sensor1010@163.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qbppmt5ki4y3pwo5"
-Content-Disposition: inline
-In-Reply-To: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wB39k5TInZkiwMYBA--.49914S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GFy8uF1xGF4rZF1fZw1fZwb_yoWDKwb_Cw
+        n5Kay3Xw4rtFn8ZrnIka1xZrZFyw4DW3Z5urn5t3ZxArn5Zr13ursrW3WSyFW5Zr4I9FWU
+        tayrCr4avFW7AjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKGQ6JUUUUU==
+X-Originating-IP: [120.245.132.246]
+X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/xtbBXhN-q1aEBo2lAwAAsm
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Before executing microchip_sgpio_irq_set_type(),
+type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger().
 
---qbppmt5ki4y3pwo5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lizhe <sensor1010@163.com>
+---
+ arch/arm/plat-orion/gpio.c | 1 -
+ drivers/gpio/gpio-mvebu.c  | 1 -
+ 2 files changed, 2 deletions(-)
 
-Hello,
+diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
+index 595e9cb33c1d..863fa497b1a2 100644
+--- a/arch/arm/plat-orion/gpio.c
++++ b/arch/arm/plat-orion/gpio.c
+@@ -364,7 +364,6 @@ static int gpio_irq_set_type(struct irq_data *d, u32 type)
+ 		return -EINVAL;
+ 	}
+ 
+-	type &= IRQ_TYPE_SENSE_MASK;
+ 	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a68f682aec01..34fd007b0308 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -505,7 +505,6 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	if ((u & BIT(pin)) == 0)
+ 		return -EINVAL;
+ 
+-	type &= IRQ_TYPE_SENSE_MASK;
+ 	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
+-- 
+2.34.1
 
-On Tue, May 30, 2023 at 04:48:44PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
->=20
-> Tree-wide cleanup of DTS node name suffixes "-N", e.g. "pwm-5", so we all=
-ow
-> only decimal numbers.  In few cases narrow the pattern to also disallow
-> multiple suffixes, e.g. "pwm-5-5".
->=20
-> No dependencies, can be applied by individual subsystems.
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qbppmt5ki4y3pwo5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmR2FcgACgkQj4D7WH0S
-/k6mKggAlnEVcB4qInHpsUcVID/g9Si5ycFYWHV3Ur9fkw4/flTJsQ0+OPpooZXI
-dpvQ7Kl9QZycIs6FZtMyK5Pgi6npW15XG8hL7k+NZq1YUw0qNt6vxH8UqSSUjIdY
-to0v66ItQ5jvqJxskCqXG5nE4c39BB6kQmV0LmVqovwRxYEc3GvRqZgOF5RBVvfY
-/WGbC2DUwy+zYVyBuAEP9D57J/iJKGXd3Axujy4SwzEJfcdq38axsICip6LF2J3I
-goisJHcTFiyiw0ATcuvUafLQDXJUta6y3tmq/SKEjej6z5Iu1p2w3iH6SZ/FTeJx
-GHPzrrwL7MzOXnIV9L0w6WsAOJBKtg==
-=/tKH
------END PGP SIGNATURE-----
-
---qbppmt5ki4y3pwo5--
