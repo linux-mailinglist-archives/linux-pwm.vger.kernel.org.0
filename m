@@ -2,59 +2,71 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A80F87169FA
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 18:43:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF9A3716A80
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 19:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232746AbjE3Qne (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 May 2023 12:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
+        id S232289AbjE3RLi (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 May 2023 13:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230175AbjE3Qnd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 12:43:33 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903C313E;
-        Tue, 30 May 2023 09:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xYpmKMQmPPeBdM21QayEVgKLDqZ+OIn6t8tDa7bpcxs=; b=WtHfSpWCRwXoq+kq2JbstX6p/c
-        YX+EIQlMpx2XWHFoCo4ZsG2THm5d1qtR/HPMmPJkuQ6doVJfHCPAeiK3B/xIguMHpyufiuMdDOY0H
-        YoKhAGE6AnMWyg9nRKGQ7jxgIn8rhaK0H0czFxWaZNnJlWCfnZDIs1q2Ac/Pm+MJMeNoVukUiYDuX
-        E7MbdiJYJOJLmMmx/GFQaAtHYAE3qjYaISQl7KkISWpkv7mpXtv7EqKf7crF+9tKkgepP7DTP4wmF
-        kf/UbMoxUapHGc2R1DOG6/zW1BXxqe6uVc6/Efo+UvgiP+ArjQCYcav/8nSOLEB0y3yUj+MoaqZdE
-        /Q/1qS0g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55382)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1q42RH-00039H-OL; Tue, 30 May 2023 17:43:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1q42RE-0008DR-6J; Tue, 30 May 2023 17:43:12 +0100
-Date:   Tue, 30 May 2023 17:43:12 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Lizhe <sensor1010@163.com>
-Cc:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
-        gregory.clement@bootlin.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-arm-kernel@lists.infradead.org,
+        with ESMTP id S231690AbjE3RLh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 13:11:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C2F114;
+        Tue, 30 May 2023 10:11:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77090630A7;
+        Tue, 30 May 2023 17:11:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4A19C4339C;
+        Tue, 30 May 2023 17:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685466673;
+        bh=N6T7E2wPg+ksFvC4zTDbs7YVrQwcgW2P2fcGeKZjY20=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CFXovLHe2oCMksV5jMa1XRicI4ibzn2nGkPyGMPtRnC/y08Yp1GJGpfGxkDMnPjUD
+         qZYV3T982TxPaZJbNLbkVlsLxnwdoXIr1gMYRSbBBtmyb38QYNiI0vOaHqIPHSYlny
+         f7aHQpTFYKWKABhjocGyZKtjbwZx021cztTm/1LP472sZoPdfbJIF+fQowxr3luvtO
+         vFKZWc7TtHmcGsP8e7FivPGzTjYgomj+DAEhRquGGK4SNsoZI20AB0mYJmViyDGojr
+         OgochEVNk8ky0h6j2vMHGI169NU7lgIPPHKOPvuG8aH5roBKLrYsul0Y30Tl0lzs3E
+         vdCGDlBy+9FxQ==
+Date:   Tue, 30 May 2023 18:11:06 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] drivers/gpio : Remove redundant clearing of
- IRQ_TYPE_SENSE_MASK
-Message-ID: <ZHYnoHK7YDCC7AMg@shell.armlinux.org.uk>
-References: <20230530162034.4004-1-sensor1010@163.com>
+        linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-spi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-watchdog@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH 0/7] dt-bindings: restrict node name suffixes
+Message-ID: <20230530-banister-luxurious-d33a5d289749@spud>
+References: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3drXRST+roPPVcQt"
 Content-Disposition: inline
-In-Reply-To: <20230530162034.4004-1-sensor1010@163.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+In-Reply-To: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,25 +74,68 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, May 31, 2023 at 12:20:34AM +0800, Lizhe wrote:
-> Before executing microchip_sgpio_irq_set_type(),
-> type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger().
-> 
-> Signed-off-by: Lizhe <sensor1010@163.com>
 
-Please do as Bart has requested.
+--3drXRST+roPPVcQt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Your patch touches two files, each of which are managed by *different*
-people via *different* trees. Re-posting your patch will *not* get it
-applied, because the reason it can't be applied is because you have not
-split it as people have asked you to do.
+On Tue, May 30, 2023 at 04:48:44PM +0200, Krzysztof Kozlowski wrote:
+> Hi,
+>=20
+> Tree-wide cleanup of DTS node name suffixes "-N", e.g. "pwm-5", so we all=
+ow
+> only decimal numbers.  In few cases narrow the pattern to also disallow
+> multiple suffixes, e.g. "pwm-5-5".
 
-So, there is no point you re-posting it in its current form. You will
-only make people frustrated, and if that continues, you will end up
-being ignored.
+I figure there'll be quite a bit of stuff to fix up afterwards?
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Thanks.
+Thanks,
+Conor.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>=20
+> No dependencies, can be applied by individual subsystems.
+>=20
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+>=20
+> Link: https://lore.kernel.org/all/20221127182232.GA128974-robh@kernel.org/
+>=20
+> Best regards,
+> Krzysztof
+>=20
+> Krzysztof Kozlowski (7):
+>   dt-bindings: phy: intel,combo-phy: restrict node name suffixes
+>   dt-bindings: pwm: restrict node name suffixes
+>   dt-bindings: rtc: restrict node name suffixes
+>   dt-bindings: slimbus: restrict node name suffixes
+>   spi: dt-bindings: restrict node name suffixes
+>   dt-bindings: timestamp: restrict node name suffixes
+>   dt-bindings: watchdog: restrict node name suffixes
+>=20
+>  Documentation/devicetree/bindings/phy/intel,combo-phy.yaml    | 2 +-
+>  Documentation/devicetree/bindings/pwm/pwm.yaml                | 2 +-
+>  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
+>  Documentation/devicetree/bindings/slimbus/slimbus.yaml        | 2 +-
+>  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
+>  .../bindings/timestamp/hardware-timestamps-common.yaml        | 2 +-
+>  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 4 ++--
+>  7 files changed, 8 insertions(+), 8 deletions(-)
+>=20
+> --=20
+> 2.34.1
+>=20
+
+--3drXRST+roPPVcQt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHYuKgAKCRB4tDGHoIJi
+0nXKAQDamcvDwarCjeG65qUN+fBYxaI+//cyJEQB1SuuBpUTGgEAy0ivPKjui6wX
+d/shbUIhWWfohF1w8yRNuYfQATp+AAQ=
+=EmEg
+-----END PGP SIGNATURE-----
+
+--3drXRST+roPPVcQt--
