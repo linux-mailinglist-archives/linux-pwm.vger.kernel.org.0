@@ -2,119 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46FEA71698C
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 18:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A80F87169FA
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 18:43:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233269AbjE3Qbv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 May 2023 12:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45416 "EHLO
+        id S232746AbjE3Qne (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 May 2023 12:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233097AbjE3Qb0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 12:31:26 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BC6D134
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 09:30:56 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2af318fa2b8so49785431fa.0
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 09:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1685464251; x=1688056251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dcWzOSDdDMsKZsoBkaN9THPCf/sY5/j/iNNge3pn9DM=;
-        b=PAvv4eEcjomQIziSjKISkeFjcaM8bw2Cvt8O8Di39XulEe4tGDYa19ZifiYrMjLSwm
-         x9t/MZLhg8mMRIuAx+f4y2AVfXDKj2o2WeHrn7ykVWftTANPOXyGyNRtZAnq1Y7i9EEI
-         rQ/TKQlEPY1ERTmYOaqC9fyOFEZ0r1X+lS3tr9S+kugFULk5EiJdSrKW0iAQyOO2WHI3
-         lA5IoM3Y/LfpvVqyZavH3MFbjJLbi0tu+aNYqoVB49bKPlKc6lBQz750yam20+BK8KGh
-         Ahw/nNgm7uUXuEGk/7araBzzq6tXJwJtN1fOfmv8QmHTOV2SCdkrI2TRuXnul8BQo8Yw
-         kr/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685464251; x=1688056251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dcWzOSDdDMsKZsoBkaN9THPCf/sY5/j/iNNge3pn9DM=;
-        b=gRl1fhkDWuyn9TklPXcDvr6KF8PCW54gVabFZA84eV27YP4YCjgQw4iBB+KrFounSl
-         lIqQCY4vC/vy8VB+X2q3cix6z1M9INnPYM9B4htGN0gN6p5sAuQ5uIoJxJnnPPzfO5tI
-         KV47gLDlqiC5dwpVgIyKREOUQg7f4svEhHR+VQqiPXYPR9dik45CIVZi6Oi3YJ4cWf0j
-         5OMiPay+4Q0IA2kfUGdc3OCqx7+jB4p2Jl6030WvzVawgc7Cxzr2CzgrL/9/nsz9pO5+
-         H8LJrcT72bv6VL9S09ozCS5rG5E57ePT5ErVCcKXF2cBRBREUPG+sOe+oVPF0XevSX88
-         UG6Q==
-X-Gm-Message-State: AC+VfDzJ4pVF95xOYzfHucqOpdQE0p0BQSXSNJkCwdQ/WcR2Vy+5W7ai
-        kcHc621cRc8S1T86xq0D9woCGXaI6/ekNzjFClSK2g==
-X-Google-Smtp-Source: ACHHUZ48j4CTfutqy/48alHu0v+2BBwmvJtW8lx+Mk2Gi/WsVCOUmAS/c7SsVF23Cw5swC1SKumSRYNJEnYeVaiRC7w=
-X-Received: by 2002:a2e:3e07:0:b0:2ad:ce08:7a33 with SMTP id
- l7-20020a2e3e07000000b002adce087a33mr1215492lja.22.1685464251616; Tue, 30 May
- 2023 09:30:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230530162034.4004-1-sensor1010@163.com>
-In-Reply-To: <20230530162034.4004-1-sensor1010@163.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 30 May 2023 18:30:39 +0200
-Message-ID: <CAMRc=MctKb=LUu+um=9ZTH-51keBczdpY_EiPVYN+kbWJzdrTQ@mail.gmail.com>
-Subject: Re: [PATCH] drivers/gpio : Remove redundant clearing of IRQ_TYPE_SENSE_MASK
+        with ESMTP id S230175AbjE3Qnd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 12:43:33 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903C313E;
+        Tue, 30 May 2023 09:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xYpmKMQmPPeBdM21QayEVgKLDqZ+OIn6t8tDa7bpcxs=; b=WtHfSpWCRwXoq+kq2JbstX6p/c
+        YX+EIQlMpx2XWHFoCo4ZsG2THm5d1qtR/HPMmPJkuQ6doVJfHCPAeiK3B/xIguMHpyufiuMdDOY0H
+        YoKhAGE6AnMWyg9nRKGQ7jxgIn8rhaK0H0czFxWaZNnJlWCfnZDIs1q2Ac/Pm+MJMeNoVukUiYDuX
+        E7MbdiJYJOJLmMmx/GFQaAtHYAE3qjYaISQl7KkISWpkv7mpXtv7EqKf7crF+9tKkgepP7DTP4wmF
+        kf/UbMoxUapHGc2R1DOG6/zW1BXxqe6uVc6/Efo+UvgiP+ArjQCYcav/8nSOLEB0y3yUj+MoaqZdE
+        /Q/1qS0g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55382)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1q42RH-00039H-OL; Tue, 30 May 2023 17:43:15 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1q42RE-0008DR-6J; Tue, 30 May 2023 17:43:12 +0100
+Date:   Tue, 30 May 2023 17:43:12 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
 To:     Lizhe <sensor1010@163.com>
 Cc:     andrew@lunn.ch, sebastian.hesselbarth@gmail.com,
-        gregory.clement@bootlin.com, linux@armlinux.org.uk,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        gregory.clement@bootlin.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Subject: Re: [PATCH] drivers/gpio : Remove redundant clearing of
+ IRQ_TYPE_SENSE_MASK
+Message-ID: <ZHYnoHK7YDCC7AMg@shell.armlinux.org.uk>
+References: <20230530162034.4004-1-sensor1010@163.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230530162034.4004-1-sensor1010@163.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, May 30, 2023 at 6:21=E2=80=AFPM Lizhe <sensor1010@163.com> wrote:
->
+On Wed, May 31, 2023 at 12:20:34AM +0800, Lizhe wrote:
 > Before executing microchip_sgpio_irq_set_type(),
-> type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger(=
-).
->
+> type has already been cleared IRQ_TYPE_SENSE_MASK, see __irq_set_trigger().
+> 
 > Signed-off-by: Lizhe <sensor1010@163.com>
-> ---
->  arch/arm/plat-orion/gpio.c | 1 -
->  drivers/gpio/gpio-mvebu.c  | 1 -
->  2 files changed, 2 deletions(-)
->
-> diff --git a/arch/arm/plat-orion/gpio.c b/arch/arm/plat-orion/gpio.c
-> index 595e9cb33c1d..863fa497b1a2 100644
-> --- a/arch/arm/plat-orion/gpio.c
-> +++ b/arch/arm/plat-orion/gpio.c
-> @@ -364,7 +364,6 @@ static int gpio_irq_set_type(struct irq_data *d, u32 =
-type)
->                 return -EINVAL;
->         }
->
-> -       type &=3D IRQ_TYPE_SENSE_MASK;
->         if (type =3D=3D IRQ_TYPE_NONE)
->                 return -EINVAL;
->
 
-What have you not understood about splitting this into two patches?
+Please do as Bart has requested.
 
-Bart
+Your patch touches two files, each of which are managed by *different*
+people via *different* trees. Re-posting your patch will *not* get it
+applied, because the reason it can't be applied is because you have not
+split it as people have asked you to do.
 
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index a68f682aec01..34fd007b0308 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -505,7 +505,6 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d=
-, unsigned int type)
->         if ((u & BIT(pin)) =3D=3D 0)
->                 return -EINVAL;
->
-> -       type &=3D IRQ_TYPE_SENSE_MASK;
->         if (type =3D=3D IRQ_TYPE_NONE)
->                 return -EINVAL;
->
-> --
-> 2.34.1
->
+So, there is no point you re-posting it in its current form. You will
+only make people frustrated, and if that continues, you will end up
+being ignored.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
