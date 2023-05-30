@@ -2,77 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8212471587F
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 10:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9364E7164CB
+	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 16:49:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbjE3I3H (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 May 2023 04:29:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42438 "EHLO
+        id S232565AbjE3OtE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 May 2023 10:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbjE3I3G (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 04:29:06 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8035A1
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 01:29:05 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-5147f5efeb5so7023340a12.0
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 01:29:05 -0700 (PDT)
+        with ESMTP id S232587AbjE3OtB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 10:49:01 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D20115
+        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 07:48:57 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-510d6b939bfso8235416a12.0
+        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 07:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685435344; x=1688027344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rrXV2pSkwAI+QAXUpRLRnlNnNfkWLFknVTLvl7bQmX8=;
-        b=lD3LAqKUXnALaMMaXaoS9HvK65/b60q5KOMPNJKXq4x/yjBc62HmKwf3o9Ek9/zvHQ
-         nSej9wJvmbV3bfAgAXlJTPbSihgkBsaVaLZWW84ogmPbszEAkkyRAsbDxX7QkaaR05wm
-         Atu6SSxV+a1M+hAEsIrb1SZCYFf9sbuljS8M8=
+        d=linaro.org; s=google; t=1685458136; x=1688050136;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iV7Orb1i2HT8c6ntLQeDsScnfo8QsjoWIKrRpD+mlDM=;
+        b=q6DaxHgqELE2tu8Q1AxgIsCDpH+TNAJJHJp6Q7g8/Fkd/88Tk4TUy/ri0mT4Ktg5Mo
+         8loUDrV8rgOV4A6XNocbQ8st6LPKLPsCoM9M7NfuJiiPgFmWodAuWDMcEhGTqfI+4Tzf
+         71FhpeXfe33npOU4xXk8C/+4upzoWtXD+5OuR9V4CwEY+McHM/HpsrVpr/f2HM5wwk11
+         q6ItDg0BTxwcfJWB6uZBQGx+4pwaP2uzwuVXxHf91dLVKqsCTNfh3dg7BgyEkITCyOjh
+         IHl3EJehb7WHjyFD+D9eQjjetOZhYahUl2+MIzDnN4ovGk7najQrxWq/MU940DgRFDiZ
+         Y5Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685435344; x=1688027344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rrXV2pSkwAI+QAXUpRLRnlNnNfkWLFknVTLvl7bQmX8=;
-        b=BMwGVFMBii4RiamVxj0VbLcoHqi7kKOrx+7pNVeo10355YaeEBsxjjEoI0NkC/m9Gl
-         CnvclsTfvkSYoqSW6YXqkDYJqUNfW1ST9ANJgM6agV78uJ4SZWzcTgfoP2R6b0lpKIDU
-         nFemXTCLVmEdYwA7RQ1wrKv0nBJac2A1mKvCeq+nueqXFcqdu4Sf4U5D/59apwPctnnm
-         YlL93/+3tVoxWetbM2k8pSd/CobcsPjStNRBqVHCAqMfDQbzwyPVFARqMAdOZN1FfeE4
-         x1KPoS5qPoSURenuuKy1CUSaCQ5VflYiPgqcWEu19jh+QSHP/AV2jjoXWxxpiHW4AV5d
-         FlnQ==
-X-Gm-Message-State: AC+VfDyyb0Lt15E2/mOyXhvM6ujMB9lBrZWHoGefywkWBFFc7BNc2bju
-        EagKtxFMgbY97DTcZj49esDdF36W47McRXQOiPw=
-X-Google-Smtp-Source: ACHHUZ5+ec8AWHQEMuoaXpAPvj7HSRh9QxTiVOvdOfdZ2VeuHx2Ms99LYJbNWszZoYKFTpx6yYQOEQ==
-X-Received: by 2002:a05:6402:1858:b0:506:7d65:c1fb with SMTP id v24-20020a056402185800b005067d65c1fbmr1062605edy.30.1685435344031;
-        Tue, 30 May 2023 01:29:04 -0700 (PDT)
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
-        by smtp.gmail.com with ESMTPSA id j26-20020aa7c41a000000b005027d31615dsm4040679edq.62.2023.05.30.01.29.01
-        for <linux-pwm@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 01:29:02 -0700 (PDT)
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-3f6dfc4dffaso28250985e9.0
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 01:29:01 -0700 (PDT)
-X-Received: by 2002:a05:600c:3787:b0:3f6:1e6:d5a2 with SMTP id
- o7-20020a05600c378700b003f601e6d5a2mr946577wmr.4.1685435341339; Tue, 30 May
- 2023 01:29:01 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685458136; x=1688050136;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iV7Orb1i2HT8c6ntLQeDsScnfo8QsjoWIKrRpD+mlDM=;
+        b=Wb7/NLoGTuBIqTeN+6RtrRQrY8vnYNMCFOfnAEdcR5N+3Gi+EqJKIbonCfKyKjNjPB
+         tOcJ/CM/YmMs5tOysXS5SWGTIg6Zo4v0VxZJMj0TrR9Cr06UcwW8wsruz1LxDhDQfPFg
+         IWLYY3HGG8yTQD90lgQVnyTIQQ5EwfFoFoy6R0xx2D+mNDOjGTODMOgyNP+NDaOy9cvC
+         kfbJs6sA2rZUoPhOO+KQXOgUL1gB6E7ZTONc/HrSkEMA4F9LNemc1tyA1uGV1V8pACqd
+         8ZX57Nv2qMBjh7LmwS24XbMFBd62IroMLejeAiZeBk5j/27ODQJjORDX8OEXdAZ8B1l1
+         4CSA==
+X-Gm-Message-State: AC+VfDx9BPvavS6Peg5sQvbICtbyIx3s4mRYb19236lQ5sSHjhYSxxl/
+        LPELxuEHwwbK0nRG0HE6XFa62A==
+X-Google-Smtp-Source: ACHHUZ57600gdJ8fZghoBNthDb/ZJ2da044/ygwaZp54+5w2nAm+4l+5lOMfpN+gAlzBZIyE3wXFJQ==
+X-Received: by 2002:aa7:d9c4:0:b0:50d:fcfb:861b with SMTP id v4-20020aa7d9c4000000b0050dfcfb861bmr1926404eds.0.1685458136376;
+        Tue, 30 May 2023 07:48:56 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id q21-20020aa7cc15000000b00514b2717ec6sm631283edt.28.2023.05.30.07.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 07:48:55 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-spi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-watchdog@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH 0/7] dt-bindings: restrict node name suffixes
+Date:   Tue, 30 May 2023 16:48:44 +0200
+Message-Id: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230518115258.14320-1-shuijing.li@mediatek.com> <0ff74fff-9e48-e2a6-617c-13d4cfc2e157@gmail.com>
-In-Reply-To: <0ff74fff-9e48-e2a6-617c-13d4cfc2e157@gmail.com>
-From:   Fei Shao <fshao@chromium.org>
-Date:   Tue, 30 May 2023 16:28:24 +0800
-X-Gmail-Original-Message-ID: <CAC=S1nhVrbaAh2u7rG-=-RubsxTZvMBRZO-t0NA8jG7M8187EA@mail.gmail.com>
-Message-ID: <CAC=S1nhVrbaAh2u7rG-=-RubsxTZvMBRZO-t0NA8jG7M8187EA@mail.gmail.com>
-Subject: Re: [PATCH v2] pwm: mtk_disp: Fix the disable flow of disp_pwm
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Shuijing Li <shuijing.li@mediatek.com>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de,
-        angelogioacchino.delregno@collabora.com,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        jitao.shi@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -81,73 +89,40 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, May 29, 2023 at 6:43=E2=80=AFPM Matthias Brugger <matthias.bgg@gmai=
-l.com> wrote:
->
->
->
-> On 18/05/2023 13:52, Shuijing Li wrote:
-> > There is a flow error in the original mtk_disp_pwm_apply() function.
-> > If this function is called when the clock is disabled, there will be a
-> > chance to operate the disp_pwm register, resulting in disp_pwm exceptio=
-n.
-> > Fix this accordingly.
-> >
-> > Signed-off-by: Shuijing Li <shuijing.li@mediatek.com>
->
-> We are missing a fixes tag here.
-> Fixes: 888a623db5d0 ("pwm: mtk-disp: Implement atomic API .apply()")
->
->
-> with that:
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Hi,
 
-Tested-by: Fei Shao <fshao@chromium.org>
+Tree-wide cleanup of DTS node name suffixes "-N", e.g. "pwm-5", so we allow
+only decimal numbers.  In few cases narrow the pattern to also disallow
+multiple suffixes, e.g. "pwm-5-5".
 
->
-> > ---
-> > Changes in v2:
-> > Use
-> > if (A && B) {
-> >       something();
-> > }
-> > instead of
-> > if (A) {
-> >       if (B) {
-> >               something();
-> >       }
-> > }
-> > per suggestion from the previous thread:
-> > https://lore.kernel.org/lkml/20230515140346.bxeu6xewi6a446nd@pengutroni=
-x.de/
-> > ---
-> >   drivers/pwm/pwm-mtk-disp.c | 13 +++++--------
-> >   1 file changed, 5 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-> > index 79e321e96f56..2401b6733241 100644
-> > --- a/drivers/pwm/pwm-mtk-disp.c
-> > +++ b/drivers/pwm/pwm-mtk-disp.c
-> > @@ -79,14 +79,11 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> >       if (state->polarity !=3D PWM_POLARITY_NORMAL)
-> >               return -EINVAL;
-> >
-> > -     if (!state->enabled) {
-> > -             mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, mdp->data->ena=
-ble_mask,
-> > -                                      0x0);
-> > -
-> > -             if (mdp->enabled) {
-> > -                     clk_disable_unprepare(mdp->clk_mm);
-> > -                     clk_disable_unprepare(mdp->clk_main);
-> > -             }
-> > +     if (!state->enabled && mdp->enabled) {
-> > +             mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
-> > +                                      mdp->data->enable_mask, 0x0);
-> > +             clk_disable_unprepare(mdp->clk_mm);
-> > +             clk_disable_unprepare(mdp->clk_main);
-> >
-> >               mdp->enabled =3D false;
-> >               return 0;
->
+No dependencies, can be applied by individual subsystems.
+
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+
+Link: https://lore.kernel.org/all/20221127182232.GA128974-robh@kernel.org/
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (7):
+  dt-bindings: phy: intel,combo-phy: restrict node name suffixes
+  dt-bindings: pwm: restrict node name suffixes
+  dt-bindings: rtc: restrict node name suffixes
+  dt-bindings: slimbus: restrict node name suffixes
+  spi: dt-bindings: restrict node name suffixes
+  dt-bindings: timestamp: restrict node name suffixes
+  dt-bindings: watchdog: restrict node name suffixes
+
+ Documentation/devicetree/bindings/phy/intel,combo-phy.yaml    | 2 +-
+ Documentation/devicetree/bindings/pwm/pwm.yaml                | 2 +-
+ Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
+ Documentation/devicetree/bindings/slimbus/slimbus.yaml        | 2 +-
+ Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
+ .../bindings/timestamp/hardware-timestamps-common.yaml        | 2 +-
+ Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 4 ++--
+ 7 files changed, 8 insertions(+), 8 deletions(-)
+
+-- 
+2.34.1
+
