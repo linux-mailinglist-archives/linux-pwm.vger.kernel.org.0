@@ -2,70 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5DED716C7C
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 May 2023 20:28:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02B8571740E
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 May 2023 05:09:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbjE3S2u (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 30 May 2023 14:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57940 "EHLO
+        id S233778AbjEaDJx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 30 May 2023 23:09:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjE3S2t (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 14:28:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9E1B2;
-        Tue, 30 May 2023 11:28:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C38B4619FE;
-        Tue, 30 May 2023 18:28:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07BBCC4339E;
-        Tue, 30 May 2023 18:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685471327;
-        bh=EKx6VTVPtif3VopxDUTsogjb7XDS6ckoH87zFUChkRk=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=gNq/ZsXDpV3i7lAAIj9wedxoaIHRiPa8GeMA8KY+BCc+AtgakCixsCrcHU8v2kD2S
-         qjnXa48y6IVO/aLnDPRCGY3kpkEcBd0FFnj/Q3kjZNZ0xk88kLveBEI0YD/Kp1h0pv
-         wqPhDhAOt3KWFaOqSJcfgF8JBgPb8c5uMWp6U3Xrt7eRhVp9yhDenqNBPb0QvBwIpb
-         gyzSzCAYGhIEHZu9lj61HTMaAyZxD1CClcEgLnZnW8fT6ECmvgfC7/PZYbL1KVFZ4v
-         uJkNEAot6nXMpDrNfwQgTKt/eHJTPJdb3HZtlkh3yVLR3bETuF72j3SQtRz5ujEj/a
-         wwctPjUFDTKeA==
-From:   Mark Brown <broonie@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-watchdog@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Oleksij Rempel <linux@rempel-privat.de>
-In-Reply-To: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
-References: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH 0/7] dt-bindings: restrict node name suffixes
-Message-Id: <168547131548.1034788.34188090441869561.b4-ty@kernel.org>
-Date:   Tue, 30 May 2023 19:28:35 +0100
+        with ESMTP id S231407AbjEaDJu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 30 May 2023 23:09:50 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5567211D;
+        Tue, 30 May 2023 20:09:42 -0700 (PDT)
+X-UUID: 937d9f5aff6011ed9cb5633481061a41-20230531
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=i+8nMDyCUgtl3WLgCsYivUYfh194g8U9gITbrqABQrw=;
+        b=CBUHuG6vgK2XOuk4r0+BVMmcmrW2FviYTw++N7TLu+KifPuyIFEen7kC535V1eL35EWecL/U8RWPC+GNNuOPKJkyT5Lkf7iNVMCU7J9uUy1WeEwzfd874sYUrlu3CdXDhzX/gOj8BPS+EW+sqZ21rnxoWCx41LTF5cvLrPfCV3I=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.25,REQID:b03f65da-9970-429d-afd1-900f4fae9d44,IP:0,U
+        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:95
+X-CID-INFO: VERSION:1.1.25,REQID:b03f65da-9970-429d-afd1-900f4fae9d44,IP:0,URL
+        :0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Spam_GS981B3D,ACTION
+        :quarantine,TS:95
+X-CID-META: VersionHash:d5b0ae3,CLOUDID:3f4fe13c-de1e-4348-bc35-c96f92f1dcbb,B
+        ulkID:230531110938JUYPPQMA,BulkQuantity:0,Recheck:0,SF:28|17|19|48|38|29,T
+        C:nil,Content:0,EDM:-3,IP:nil,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+        L:0,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-UUID: 937d9f5aff6011ed9cb5633481061a41-20230531
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        (envelope-from <shuijing.li@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1874157115; Wed, 31 May 2023 11:09:37 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 31 May 2023 11:09:36 +0800
+Received: from mszsdhlt06.gcn.mediatek.inc (10.16.6.206) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 31 May 2023 11:09:35 +0800
+From:   Shuijing Li <shuijing.li@mediatek.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>
+CC:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <jitao.shi@mediatek.com>, Shuijing Li <shuijing.li@mediatek.com>,
+        Fei Shao <fshao@chromium.org>
+Subject: [PATCH v3] pwm: mtk_disp: Fix the disable flow of disp_pwm
+Date:   Wed, 31 May 2023 11:10:01 +0800
+Message-ID: <20230531031001.7440-1-shuijing.li@mediatek.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-bfdf5
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,MAY_BE_FORGED,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_TEMPERROR,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,43 +71,60 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 30 May 2023 16:48:44 +0200, Krzysztof Kozlowski wrote:
-> Tree-wide cleanup of DTS node name suffixes "-N", e.g. "pwm-5", so we allow
-> only decimal numbers.  In few cases narrow the pattern to also disallow
-> multiple suffixes, e.g. "pwm-5-5".
-> 
-> No dependencies, can be applied by individual subsystems.
-> 
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-> 
-> [...]
+There is a flow error in the original mtk_disp_pwm_apply() function.
+If this function is called when the clock is disabled, there will be a
+chance to operate the disp_pwm register, resulting in disp_pwm exception.
+Fix this accordingly.
 
-Applied to
+Fixes: 888a623db5d0 ("pwm: mtk-disp: Implement atomic API .apply()")
+Signed-off-by: Shuijing Li <shuijing.li@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Tested-by: Fei Shao <fshao@chromium.org>
+---
+Changes in v3:
+Add Fixes per suggestion from the previous thread:
+https://lore.kernel.org/lkml/CAC=S1nhVrbaAh2u7rG-=-RubsxTZvMBRZO-t0NA8jG7M8187EA@mail.gmail.com/
+Changes in v2:
+Use
+if (A && B) {
+        something();
+}
+instead of
+if (A) {
+        if (B) {
+                something();
+        }
+}
+per suggestion from the previous thread:
+https://lore.kernel.org/lkml/20230515140346.bxeu6xewi6a446nd@pengutronix.de/
+---
+ drivers/pwm/pwm-mtk-disp.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[5/7] spi: dt-bindings: restrict node name suffixes
-      commit: c4fb6880edc15866a530c7b8f2698ae65f80cfab
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+index 79e321e96f56..2401b6733241 100644
+--- a/drivers/pwm/pwm-mtk-disp.c
++++ b/drivers/pwm/pwm-mtk-disp.c
+@@ -79,14 +79,11 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		return -EINVAL;
+ 
+-	if (!state->enabled) {
+-		mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN, mdp->data->enable_mask,
+-					 0x0);
+-
+-		if (mdp->enabled) {
+-			clk_disable_unprepare(mdp->clk_mm);
+-			clk_disable_unprepare(mdp->clk_main);
+-		}
++	if (!state->enabled && mdp->enabled) {
++		mtk_disp_pwm_update_bits(mdp, DISP_PWM_EN,
++					 mdp->data->enable_mask, 0x0);
++		clk_disable_unprepare(mdp->clk_mm);
++		clk_disable_unprepare(mdp->clk_main);
+ 
+ 		mdp->enabled = false;
+ 		return 0;
+-- 
+2.40.1
 
