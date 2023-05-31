@@ -2,111 +2,163 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66CA871774D
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 May 2023 08:57:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E21C717938
+	for <lists+linux-pwm@lfdr.de>; Wed, 31 May 2023 09:57:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234219AbjEaG5a (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 31 May 2023 02:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
+        id S235023AbjEaH5Z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 31 May 2023 03:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234310AbjEaG52 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 31 May 2023 02:57:28 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9D5138
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 23:57:14 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5149429c944so6698401a12.0
-        for <linux-pwm@vger.kernel.org>; Tue, 30 May 2023 23:57:14 -0700 (PDT)
+        with ESMTP id S235028AbjEaH47 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 31 May 2023 03:56:59 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A16D173B;
+        Wed, 31 May 2023 00:56:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685516232; x=1688108232;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zT4hWvO+05+c9BNBT9jLKJhOVWpxKJ0fJ2bZlxyHp3w=;
-        b=fMFgfFRH2oKpRqT2ngwoG7OVNjzftGze+7bCsyKX8BPD9bFqofDMAUVPCoEnQHK7YZ
-         P9GIyQhfD38i4+ZCGDARXcEYm6X5cRIC4tL5T+qbNbkgeShDMzkTLWzr9oYDt0+f+JWl
-         lHzDF1iYCMCPrdpof6K5qUxlFGUwcFYF/GLZO65/NMu6OKwhNzWz1cd/d8wdE+j3pUOz
-         lMePApuIuf6d/zdItcp1XEsmzrxB6T6pgzjGopOR1xlFS+ZkuKGA7bsqaJpY4Q6LL23f
-         uvstk79rsZFVpgFpPX5fCbzRB2qe6jaDE4E+ZywGX9/CsaInpvUDHcLgwfmb322vcwZg
-         ruCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685516232; x=1688108232;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zT4hWvO+05+c9BNBT9jLKJhOVWpxKJ0fJ2bZlxyHp3w=;
-        b=FgQxThBi/G+cBOF3NklRsCNSToRJFJ5HShbEoOqNeQ3ShHmrtlz31a2FOVyCFpG7VI
-         vLLbc8sFlnKQg8V817j5u4S82q071B5ukMgUIC5d7Zqq6yLHcHGBF8g8vlo9HM7/GHYO
-         xlKiWMAVns0l7HZUpscl9plZRnBau4Mk98hulTLA2JLzUVchNRMZWdCmZN69OlJvnkzK
-         bKu7u1PGrvn6bSnhb+aGbkmffekRt795WkBaMQuyAnXLEdwKThAZNKdRHrEGxk0tyB/O
-         UafyCLR1YzNLCksB8mQPNY/43KEq25tZBQFCy+FboQOfQIMmfMWqcxIIWNHdn3uiuSv7
-         +1pQ==
-X-Gm-Message-State: AC+VfDznra6XVf7vibMtmiCumPV8KL5dwUrEQKyusYzwlRURjh7X5Tr4
-        YG+9qy697+G5nQEOI8WJiDeAHg==
-X-Google-Smtp-Source: ACHHUZ5x5SACtt0xW0b6cmpAiNLg6lb938Dymx8uZU0YcrSBw25hfhVk5P/RfqzyOE7B6a2bNngPfw==
-X-Received: by 2002:aa7:d591:0:b0:514:c43e:3881 with SMTP id r17-20020aa7d591000000b00514c43e3881mr277960edq.35.1685516232672;
-        Tue, 30 May 2023 23:57:12 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id h23-20020aa7c617000000b005147503a238sm5308899edq.17.2023.05.30.23.57.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 23:57:12 -0700 (PDT)
-Message-ID: <367c3d26-b406-9ddc-e0ca-717994ed1c4a@linaro.org>
-Date:   Wed, 31 May 2023 08:57:08 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 0/7] dt-bindings: restrict node name suffixes
-Content-Language: en-US
-To:     Conor Dooley <conor@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1685519761; x=1717055761;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5FS2roWGat0mA6b4IgEeq1guiQgG3htuXfzj9dNEmIw=;
+  b=XCGMBeJpPJ5ZO0Phr0fSjMuvD1o+tuzBt4mhYop/JdPvgRkf3z0xT/0c
+   1KGb4KAAGQ78JlIQQaHyMcA6l5RiQ3dYfoXQJvUTTV4REL4g//BnfahZX
+   GTEdidwbtT9kF8tCF5Okq4/co8yicYMGYnk8bQkbaFOBJOqhcpnX80RdC
+   j5Hqi66JacyQrhKVDRywyjhludf1GT6YP1bdn0aXzDZkLpohFDMTVS+kz
+   Tqhdiqc3G7RlVw/g72XdR+h+vXMTx2i1GsQHqN0aGiB0iwr9n3CguZBt+
+   umSVHmuzEx3Q76dpnslOnwrxuV90DJ5E+Wclk5UQG2AnuNyY9aQeKsYXb
+   A==;
+X-IronPort-AV: E=Sophos;i="6.00,205,1681164000"; 
+   d="scan'208";a="31185786"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 31 May 2023 09:55:53 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 31 May 2023 09:55:54 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 31 May 2023 09:55:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1685519753; x=1717055753;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=5FS2roWGat0mA6b4IgEeq1guiQgG3htuXfzj9dNEmIw=;
+  b=OoQa90CS6I6ZOIAkg4ArSC9cGdOtrrrEwemWNO00GWLDT+dgZrsj8vc0
+   tEi+PLrwZByV6RS292Pz2VKdjQuM9Ek58jDWYZ2HIFIVt4rPIjpsYKYp+
+   6gxBAaLzoYgF+CHJZBoXMAnB8xC/WXBa9z4LR834XrjSqfqwEExhPia1M
+   1tkW2gv6z+kl3dHlYAAxBcCNLo9jBQRDEfWm1zy8TqD9kR1G8MYh7gGff
+   +IJMtb5U2Ewe+ZQ51mb7aVqxQCcTG/XG3W+JiCjA3pvRhlaJXycQDTBVA
+   K8YAJ5kRI2/hoBTwck8o1mU35I3fz9ZX6TWe9O6VH8VZH7vYbJ5V3xLVC
+   g==;
+X-IronPort-AV: E=Sophos;i="6.00,205,1681164000"; 
+   d="scan'208";a="31185785"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 31 May 2023 09:55:53 +0200
+Received: from steina-w.localnet (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9AA3B280099;
+        Wed, 31 May 2023 09:55:53 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Dipen Patel <dipenp@nvidia.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dilip Kota <eswara.kota@linux.intel.com>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, timestamp@lists.linux.dev,
-        linux-watchdog@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-References: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
- <20230530-banister-luxurious-d33a5d289749@spud>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230530-banister-luxurious-d33a5d289749@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: imx8qxp: add adma_pwm in adma
+Date:   Wed, 31 May 2023 09:55:53 +0200
+Message-ID: <2232211.iZASKD2KPV@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20230424082108.26512-2-alexander.stein@ew.tq-group.com>
+References: <20230424082108.26512-1-alexander.stein@ew.tq-group.com> <20230424082108.26512-2-alexander.stein@ew.tq-group.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 30/05/2023 19:11, Conor Dooley wrote:
-> On Tue, May 30, 2023 at 04:48:44PM +0200, Krzysztof Kozlowski wrote:
->> Hi,
->>
->> Tree-wide cleanup of DTS node name suffixes "-N", e.g. "pwm-5", so we allow
->> only decimal numbers.  In few cases narrow the pattern to also disallow
->> multiple suffixes, e.g. "pwm-5-5".
-> 
-> I figure there'll be quite a bit of stuff to fix up afterwards?
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Hi,
 
-Quick grep shown zero fixes needed.
+Am Montag, 24. April 2023, 10:21:08 CEST schrieb Alexander Stein:
+> Add PWM device and the corresponding clock gating device in adma subsyste=
+m.
+
+Gentle ping.
 
 Best regards,
-Krzysztof
+Alexander
+
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+> * New in v2
+>=20
+>  .../arm64/boot/dts/freescale/imx8-ss-dma.dtsi | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi index
+> 2dce8f2ee3ea..7d5f96c99020 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> @@ -124,6 +124,19 @@ lpuart3: serial@5a090000 {
+>  		status =3D "disabled";
+>  	};
+>=20
+> +	adma_pwm: pwm@5a190000 {
+> +		compatible =3D "fsl,imx8qxp-pwm", "fsl,imx27-pwm";
+> +		reg =3D <0x5a190000 0x1000>;
+> +		interrupts =3D <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks =3D <&adma_pwm_lpcg 1>,
+> +			 <&adma_pwm_lpcg 0>;
+> +		clock-names =3D "ipg", "per";
+> +		assigned-clocks =3D <&clk IMX_SC_R_LCD_0_PWM_0=20
+IMX_SC_PM_CLK_PER>;
+> +		assigned-clock-rates =3D <24000000>;
+> +		#pwm-cells =3D <2>;
+> +		power-domains =3D <&pd IMX_SC_R_LCD_0_PWM_0>;
+> +	};
+> +
+>  	spi0_lpcg: clock-controller@5a400000 {
+>  		compatible =3D "fsl,imx8qxp-lpcg";
+>  		reg =3D <0x5a400000 0x10000>;
+> @@ -220,6 +233,18 @@ uart3_lpcg: clock-controller@5a490000 {
+>  		power-domains =3D <&pd IMX_SC_R_UART_3>;
+>  	};
+>=20
+> +	adma_pwm_lpcg: clock-controller@5a590000 {
+> +		compatible =3D "fsl,imx8qxp-lpcg";
+> +		reg =3D <0x5a590000 0x10000>;
+> +		#clock-cells =3D <1>;
+> +		clocks =3D <&clk IMX_SC_R_LCD_0_PWM_0 IMX_SC_PM_CLK_PER>,
+> +			 <&dma_ipg_clk>;
+> +		clock-indices =3D <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
+> +		clock-output-names =3D "adma_pwm_lpcg_clk",
+> +				     "adma_pwm_lpcg_ipg_clk";
+> +		power-domains =3D <&pd IMX_SC_R_LCD_0_PWM_0>;
+> +	};
+> +
+>  	i2c0: i2c@5a800000 {
+>  		reg =3D <0x5a800000 0x4000>;
+>  		interrupts =3D <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
 
