@@ -2,133 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6911F719611
-	for <lists+linux-pwm@lfdr.de>; Thu,  1 Jun 2023 10:52:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5574B7198D9
+	for <lists+linux-pwm@lfdr.de>; Thu,  1 Jun 2023 12:15:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232422AbjFAIwT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Thu, 1 Jun 2023 04:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52068 "EHLO
+        id S232907AbjFAKPk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 1 Jun 2023 06:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232389AbjFAIwI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Jun 2023 04:52:08 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5904E2;
-        Thu,  1 Jun 2023 01:52:05 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 2A6537FDC;
-        Thu,  1 Jun 2023 16:51:59 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 1 Jun
- 2023 16:51:59 +0800
-Received: from williamqiu-virtual-machine.starfivetech.com (171.223.208.138)
- by EXMBX168.cuchost.com (172.16.6.78) with Microsoft SMTP Server (TLS) id
- 15.0.1497.42; Thu, 1 Jun 2023 16:51:58 +0800
-From:   William Qiu <william.qiu@starfivetech.com>
-To:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        William Qiu <william.qiu@starfivetech.com>
-Subject: [PATCH v4 4/4] riscv: dts: starfive: jh7100: Add PWM node and pins configuration
-Date:   Thu, 1 Jun 2023 16:51:54 +0800
-Message-ID: <20230601085154.36938-5-william.qiu@starfivetech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230601085154.36938-1-william.qiu@starfivetech.com>
-References: <20230601085154.36938-1-william.qiu@starfivetech.com>
+        with ESMTP id S233527AbjFAKPG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 1 Jun 2023 06:15:06 -0400
+Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28998E6F;
+        Thu,  1 Jun 2023 03:12:52 -0700 (PDT)
+Received: from mail-nwsmtp-smtp-production-main-49.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-49.vla.yp-c.yandex.net [IPv6:2a02:6b8:c18:3487:0:640:5432:0])
+        by forward500a.mail.yandex.net (Yandex) with ESMTP id 6C3D15ECD9;
+        Thu,  1 Jun 2023 13:12:09 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-49.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 8CLA8e0DYuQ0-ISJWthyb;
+        Thu, 01 Jun 2023 13:12:08 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1685614328;
+        bh=mKkVNkgkXY6MNVho2Qm6KsUuypPCjCch512PkoPBmg4=;
+        h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
+        b=aH7v70ehGwAeeDJStZ0281Nf5k6pbQlE+puD8q8C/MMZsdFJLGbRx79WQz4z+WPiH
+         FzFtGnSHeAUGM4E4FdfDER76nRKAVn9ssGfz+OK9tzSLmWW4+0tkD9XxGqiWhQPoV/
+         NAuo1VdmEkiLZaHxpqFHRkWrOBUigMalwP7afqX0=
+Authentication-Results: mail-nwsmtp-smtp-production-main-49.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Date:   Thu, 1 Jun 2023 13:12:08 +0300
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Michael Peters <mpeters@embeddedTS.com>,
+        Kris Bahnsen <kris@embeddedTS.com>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 16/43] pwm: ep93xx: add DT support for Cirrus EP93xx
+Message-ID: <20230601131208.7ee17749@redslave.neermore.group>
+In-Reply-To: <20230601070128.ejvigvxwm6cg4izf@pengutronix.de>
+References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+        <20230601053546.9574-17-nikita.shubin@maquefel.me>
+        <20230601070128.ejvigvxwm6cg4izf@pengutronix.de>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [171.223.208.138]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add StarFive JH7100 PWM controller node and add PWM pins configuration
-on VisionFive 2 board.
+Hello Uwe!
 
-Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
-Signed-off-by: William Qiu <william.qiu@starfivetech.com>
----
- .../boot/dts/starfive/jh7100-common.dtsi      | 24 +++++++++++++++++++
- arch/riscv/boot/dts/starfive/jh7100.dtsi      |  9 +++++++
- 2 files changed, 33 insertions(+)
+On Thu, 1 Jun 2023 09:01:28 +0200
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7100-common.dtsi b/arch/riscv/boot/dts/starfive/jh7100-common.dtsi
-index b93ce351a90f..746867b882b0 100644
---- a/arch/riscv/boot/dts/starfive/jh7100-common.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7100-common.dtsi
-@@ -84,6 +84,24 @@ GPO_I2C2_PAD_SDA_OEN,
- 		};
- 	};
- 
-+	pwm_pins: pwm-0 {
-+		pwm-pins {
-+			pinmux = <GPIOMUX(7,
-+				  GPO_PWM_PAD_OUT_BIT0,
-+				  GPO_PWM_PAD_OE_N_BIT0,
-+				  GPI_NONE)>,
-+				 <GPIOMUX(5,
-+				  GPO_PWM_PAD_OUT_BIT1,
-+				  GPO_PWM_PAD_OE_N_BIT1,
-+				  GPI_NONE)>;
-+			bias-disable;
-+			drive-strength = <35>;
-+			input-disable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+
- 	uart3_pins: uart3-0 {
- 		rx-pins {
- 			pinmux = <GPIOMUX(13, GPO_LOW, GPO_DISABLE,
-@@ -154,6 +172,12 @@ &osc_aud {
- 	clock-frequency = <27000000>;
- };
- 
-+&ptc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_pins>;
-+	status = "okay";
-+};
-+
- &uart3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart3_pins>;
-diff --git a/arch/riscv/boot/dts/starfive/jh7100.dtsi b/arch/riscv/boot/dts/starfive/jh7100.dtsi
-index 000447482aca..977a509ffbdd 100644
---- a/arch/riscv/boot/dts/starfive/jh7100.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7100.dtsi
-@@ -238,5 +238,14 @@ i2c3: i2c@12460000 {
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		ptc: pwm@12490000 {
-+			compatible = "starfive,jh7100-pwm";
-+			reg = <0x0 0x12490000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_PWM_APB>;
-+			resets = <&rstgen JH7100_RSTN_PWM_APB>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-2.34.1
+> Hello,
+>=20
+> On Thu, Jun 01, 2023 at 08:34:07AM +0300, Nikita Shubin wrote:
+> > - find register range from the device tree
+> > - provide clock access via of
+> >=20
+> > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me> =20
+>=20
+> Looks good to me,
+>=20
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+
+Thank you.
+
+>=20
+> There don't seem to be dependencies interdependencies to other patches
+> in this series?! What is the merge plan here. Should this patch go in
+> via the PWM tree, or will the whole series go in via armsoc?
+
+We are hoping to get it merged as a whole, and not in pieces.
+
+So we are trying to get Ack for all patches in series.
+
+>=20
+> Best regards
+> Uwe
+>=20
 
