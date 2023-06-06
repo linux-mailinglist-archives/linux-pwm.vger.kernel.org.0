@@ -2,60 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 713DF72401F
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 12:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE5E724039
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 12:57:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237401AbjFFKwD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Jun 2023 06:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
+        id S236028AbjFFK5o (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Jun 2023 06:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236413AbjFFKvS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 06:51:18 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894EA1FCC
-        for <linux-pwm@vger.kernel.org>; Tue,  6 Jun 2023 03:49:09 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-977e7d6945aso280835166b.2
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Jun 2023 03:49:09 -0700 (PDT)
+        with ESMTP id S231954AbjFFK5G (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 06:57:06 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FD710FD
+        for <linux-pwm@vger.kernel.org>; Tue,  6 Jun 2023 03:55:50 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-970028cfb6cso973721766b.1
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Jun 2023 03:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686048548; x=1688640548;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6OxQ/WVFYZmGc+9CMM9rjpLj4RMdDlgV2nWVue5FuEM=;
-        b=m1tCThnr2QA5UotLP+/T+Gj9clGL6ioYl8gxstTn5hyE9T+4I10NPOzZrUr0uKT1uE
-         QqVGSaFIguYSwKeTXKJiBo5ZaAWMY9gwTmYyj0Iw55khskv/NeSnSyivRpfC4yxEIx4f
-         ayUb1xXsmfkWZyDgd2/YGfgUhee5AzNyLX5mSltAC+FpH6vS9bZglrI7UtwdKH26BqYa
-         /F9UFAjS++gJ7IaslVqnZ2sYMz3TzCcHFjViLp1IpPS1FqhngLl+RJDwB7TCBajo1uCK
-         dp1L4E8n7M1MuKXGCFuSMLeRm1d07aWg8NzCY272rEyC5un7/OXo57JShej+xQjwXlLv
-         UN5A==
+        d=linaro.org; s=google; t=1686048948; x=1688640948;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Pq4/1o8g+mHwxEzqKNg20efBPbAjrR6apZBJChO3sIo=;
+        b=fNLnGrMKKPYmlkdlb1s0aa4qOdDS/E1AlGKBf/9H/8/BDC1jc8RVHNZ2oaY+CwKtBr
+         Mnq8pM9pKveS+LblpZJNtwLfnkiC96AHJJSuXxBNMzE7lh/sikDrt8XkRtpQU7+pYmqv
+         lbSK5/2/K03Z4GucrOFZcFIN0wrfLZp6+nNbDlkfUmVlHDj5alBigSC3y+K9JrYP5Ijk
+         bRRFFVL1r2vlj8BIYt0pOjhKvGO2wuNawm1t5CdDE0M2y5TX/myn3vv4A4YeSjojnKvu
+         XsgUEfbbYMSa++caqDvq7fg7tMDNxS4a9jKB76UfTASnlxpGEQktqxeqakR5pkdPRwEu
+         jZTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686048548; x=1688640548;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1686048948; x=1688640948;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6OxQ/WVFYZmGc+9CMM9rjpLj4RMdDlgV2nWVue5FuEM=;
-        b=gQpmUu3Z61H2CtO8dKLFRch+3xJMrjuOf+F/CKHviUHbYwe1kugyE2r9UbdNGNL+gE
-         oOfsQZdF+jd3iBd7BQ/cKHRFPXUBpFNgfnveQb8ydRP6yTrW9Mme0imeie/VWH1P1UMn
-         J6jKUFfhceSDR4QrwDY5XGUwg2HYlQklZTFh7MntiKlZk93wWa33vit1L/Hhu9IqvYML
-         +tETRPGHLkgPQrpzG/MVO99DMJAbQs6R2xVuks0tU9+5G9JsUfMWQ1q0yyfI6mWNGy4T
-         KGqUbj8q53M2WgLPqpGr5ZPAKbyixNSmqs3tmMz3Wv1qBA+YR6acH8PdDfpDStzkK4qr
-         cIyg==
-X-Gm-Message-State: AC+VfDxfhR5ycG+ripa7YKuAxhhiduvSZEE1Qz9GM84+L6JW6QKONBWG
-        1iAFYLlklWm5PoXCMqHXA+6JJQ==
-X-Google-Smtp-Source: ACHHUZ62p9CREiTDBs8+NQvQxZi8jYGLp28YpDUxsKHxFW/5WSepttSvAu2okKmihhBbk0Igv/r/PA==
-X-Received: by 2002:a17:906:9b8d:b0:965:7fba:6bcf with SMTP id dd13-20020a1709069b8d00b009657fba6bcfmr2266323ejc.67.1686048547910;
-        Tue, 06 Jun 2023 03:49:07 -0700 (PDT)
+        bh=Pq4/1o8g+mHwxEzqKNg20efBPbAjrR6apZBJChO3sIo=;
+        b=khyzwpKpv52YRVKzQpTyPKIsZWAuTMAoHLKH6z3LRz4ELyIs7n1B4GtE1t2pnAfJnc
+         4HxtCrpBlHKk9Ow5onc6jmkXRBJMb45X5G14L9PLTtkb1Ml7rspmtLPXFLpkk/gKuYKU
+         dZ5V0XiviF3MzvE0JZzgUwzaeCBvlk+SLeFBR4ya5duwWlE3dqp74XesGssOKdIqQ+RN
+         MutYrP916PhIhhmB39ECABRwLMXhzCqxkxF5WXyg5vS4IQ11+6IY5nEvsq03Ekhicck/
+         mzt6vCxWcUsfPplVOu0KgRJSCaH45JeLySwDOYluA3CV12hoD9rskzGeETZ+CztYjYA0
+         DVKg==
+X-Gm-Message-State: AC+VfDxbtXc79JPDgqhu0RIDM+L1204LrZCFyvk2U7Zp1bUfru6qbgkR
+        IRDjywZ0Em2q14XVBj3QDRYU4A==
+X-Google-Smtp-Source: ACHHUZ6KgrMqGQMO7tZmwZnsNMzYsMhI4ucZxYbGLbrsL0Bzdh2tfgvpy05IWX5Q7ONoeyOU1C64ww==
+X-Received: by 2002:a17:907:9721:b0:94e:2db:533e with SMTP id jg33-20020a170907972100b0094e02db533emr2144315ejc.49.1686048948580;
+        Tue, 06 Jun 2023 03:55:48 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id oy8-20020a170907104800b0096b4ec45e10sm5420767ejb.139.2023.06.06.03.49.05
+        by smtp.gmail.com with ESMTPSA id sd17-20020a170906ce3100b0095fbb1b72c2sm5418402ejb.63.2023.06.06.03.55.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jun 2023 03:49:07 -0700 (PDT)
-Message-ID: <35bf0a69-bcf6-ae35-eb3c-e74cfcf9c571@linaro.org>
-Date:   Tue, 6 Jun 2023 12:49:04 +0200
+        Tue, 06 Jun 2023 03:55:48 -0700 (PDT)
+Message-ID: <676e5c04-e13c-417b-5a2a-73ee339fbbd3@linaro.org>
+Date:   Tue, 6 Jun 2023 12:55:45 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
-Subject: Re: [v5 3/5] dt-bindings: mfd: Add aspeed pwm-tach binding
-Content-Language: en-US
+Subject: Re: [v5 4/5] pwm: Add Aspeed ast2600 PWM support
 To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
         linux@roeck-us.net, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
@@ -67,11 +66,12 @@ To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
         linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org,
         patrick@stwcx.xyz
 References: <20230606094535.5388-1-billy_tsai@aspeedtech.com>
- <20230606094535.5388-4-billy_tsai@aspeedtech.com>
+ <20230606094535.5388-5-billy_tsai@aspeedtech.com>
+Content-Language: en-US
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230606094535.5388-4-billy_tsai@aspeedtech.com>
+In-Reply-To: <20230606094535.5388-5-billy_tsai@aspeedtech.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
@@ -83,61 +83,59 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 06/06/2023 11:45, Billy Tsai wrote:
-> Add device binding for aspeed pwm-tach device which is a multi-function
-> device include pwm and tach function.
+> Add the support of PWM controller which can be found at aspeed ast2600
+> soc. The pwm supoorts up to 16 channels and it's part function of
+> multi-function device "pwm-tach controller".
 > 
 > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> 
+> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 > ---
->  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml b/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
-> new file mode 100644
-> index 000000000000..f98c11ff3f8a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2021 Aspeed, Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/aspeed,ast2600-pwm-tach.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PWM Tach controller
-> +
-> +description: |
-> +  The PWM Tach controller is represented as a multi-function device which
-> +  includes:
-> +    PWM
-> +    Tach
-> +
-> +maintainers:
-> +  - Billy Tsai <billy_tsai@aspeedtech.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - aspeed,ast2600-pwm-tach
-> +      - const: syscon
-> +      - const: simple-mfd
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
 
-NAK. You got here clear comment. You cannot have simple MFD with
-resources. It is not simple anymore.
 
-Everywhere else you also ignored comments.
+> +static int aspeed_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +	struct aspeed_pwm_data *priv;
+> +	struct device_node *np;
+> +	struct platform_device *parent_dev;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	np = pdev->dev.parent->of_node;
+> +	if (!of_device_is_compatible(np, "aspeed,ast2600-pwm-tach"))
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "Unsupported pwm device binding\n");
+
+No, don't embed compatibles in your code. This is useless, so drop it.
+
+> +
+> +	priv->regmap = syscon_node_to_regmap(np);
+> +	if (IS_ERR(priv->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(priv->regmap),
+> +				     "Couldn't get regmap\n");
+> +
+> +	parent_dev = of_find_device_by_node(np);
+
+Why? You already have parent!
+
+> +	priv->clk = devm_clk_get_enabled(&parent_dev->dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return dev_err_probe(dev, PTR_ERR(priv->clk),
+> +				     "Couldn't get clock\n");
+
+NAK. This is purely broken. You cannot play with parent's clock and I
+told you this last time. Parent is simple-mfd so this code is a hacky
+workaround over using simple-mfd even though I told you that yuo cannot
+use simple-mfd.
+
+> +
+> +	priv->reset = devm_reset_control_get_shared(&parent_dev->dev, NULL);
+
+NAK.
+
 
 Best regards,
 Krzysztof
