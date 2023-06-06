@@ -2,69 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F37372453E
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 16:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F3C57245BE
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 16:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236607AbjFFOHb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Jun 2023 10:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
+        id S235961AbjFFOYA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Jun 2023 10:24:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237367AbjFFOHA (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 10:07:00 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD50E73;
-        Tue,  6 Jun 2023 07:06:59 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9E9185C0126;
-        Tue,  6 Jun 2023 10:06:58 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 06 Jun 2023 10:06:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1686060418; x=1686146818; bh=ZW
-        YxLXpwIqN3lIMQiG+E5JZqyRLLSTTKr6hHGJz4eoE=; b=ZhoFiBBHHqozMl9Xww
-        zRPvoHzC8QjfO6bUoKb2inXskBsCb2mW4AvRnoEqNu613rWkesu7KcbB+kB9QHVt
-        IF+2F5cYxFNi5CwiY17uvG8fIRXHskN5nwBTv8adKDO1qPsF6n/qSA5UcBFSstTU
-        7q3IfGGI5nUCF9LcbD66nQJ09yq2Dg5aqehsXZhaTj5MwG5a2sgXh9kwJuY4mZFX
-        McgXwdaPRm2/y62UkxxFXCXwWjJDbQWAXpikj6TdVNl9Tr3ixPsNin637A4XfGdq
-        dacf49TCUxwwHJmlS5xhX64mlOWkSf1VGf5tIzXg5VTLn4Gn3/pk7m9eyWZeDMrn
-        03Jw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1686060418; x=1686146818; bh=ZWYxLXpwIqN3l
-        IMQiG+E5JZqyRLLSTTKr6hHGJz4eoE=; b=JpwJNUVdXVsxn2WdGNaUEgdefIsUI
-        XvuRzFyYQIgrLatcR8dqWsaBrgK0UrIEMTsjHsn1v62fsZyuXn88kQojEWcDo3FE
-        YfEVkHuKy4Jtj+sU/ltpmnalMjl8Als2J270bLELESrOP5USxbAZZaqK04dGaelA
-        lRThb49T5z7yKXi5phLCpNtIZQJFuWFKNwefDZeVn6a9EY0lRYgpmnjYSHOhiH2v
-        wgIwVnIMfewM8G2pr/bqbv3od99LAs4WqJiYCMimpRs3K6SHgMEfOyz0DNyioQs+
-        EXPj7YAi5bN+Wf4a3LLQQUzz6AZ3MCXL5H4MSY17NupNbYamCiOI3m0Yw==
-X-ME-Sender: <xms:fz1_ZCfDySLyL_ascxriCuNl-DITBWZqCTlSH_B_uBtbdAAmn4Pu7A>
-    <xme:fz1_ZMM9JxdNifLIFJmaA_5aWWlZ13PNbGdav2_IXIUG_SDvvaoOPijQJX-NNaUpV
-    MnUoNzVYUJQYqZ8_rs>
-X-ME-Received: <xmr:fz1_ZDjWVh5pnApQVmt_XFCCIGEpUWggIi8oNS5-rTnwWWCTQ4slx0gRKBlMhKV3TL6A0B1pP8_4EoUS_E9w_fGDY0qFfYIkP88>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgedtuddgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdlvdefmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredt
-    tddvnecuhfhrohhmpefrrghtrhhitghkucghihhllhhirghmshcuoehprghtrhhitghkse
-    hsthiftgigrdighiiiqeenucggtffrrghtthgvrhhnpeejgfdtleelvdeftdeggefffeeu
-    feevgeejkeelgeeujeevveeufeeigfeivdejjeenucffohhmrghinhepkhgvrhhnvghlrd
-    horhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    phgrthhrihgtkhesshhtfigtgidrgiihii
-X-ME-Proxy: <xmx:fz1_ZP_x8j94IUAq0vNyR--OT7lFlwK9TFpUvg1K56xZcitv68Czmw>
-    <xmx:fz1_ZOvnM_WOkMoEXeEB_oNE60FCsQLt2yfDw9BP1DTMi35M-aJz_A>
-    <xmx:fz1_ZGF9ASGzJLIK4Ovp90snm2ez2OOOK8CygX3TrBHfF3aTq0uqSg>
-    <xmx:gj1_ZJlCPLmAZUWPyl-uhUyIS8zVcWFKRo_Gjfn06js8Abw7ubQhAg>
-Feedback-ID: i68a1478a:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 Jun 2023 10:06:55 -0400 (EDT)
-Date:   Tue, 6 Jun 2023 09:06:53 -0500
-From:   Patrick Williams <patrick@stwcx.xyz>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        with ESMTP id S231935AbjFFOX7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 10:23:59 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D62E6E
+        for <linux-pwm@vger.kernel.org>; Tue,  6 Jun 2023 07:23:56 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-97668583210so612727666b.1
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Jun 2023 07:23:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686061435; x=1688653435;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZrVZ+SOBI/x4uatGRzhwg8fwXrewUsr2gOgY5H5Ft9g=;
+        b=fjsh3FJuBj9U15nWQpVdEMJbpDHN4ljEkK9i2Vw7zwBuDx4W8rMjbHbsp9EmQtjyMn
+         eJF3j78A6GgKT5UmL33X70+Hn7Vza2duvJhoTuMmw2WP9K0uDsTiDNGs9f79C6arQHPg
+         9jVHZeruC6m8xpteMR0Dla+l2bhyabByCOIwilQYD4nT33q7Pbu31UeXpHuYVaaVGTBZ
+         CC4NtSF+mfmdaB3EUVgPZWPkbVVb8i81qGDd4Gj//FwS3EtZ7pyGd9yqlQkcYI1T4rVB
+         nGmGUBb9O5E9PZSf45Qkw5rPLiKqEavRcfFfNH7iu9n14Y5qV4u03o9Dy3NyKApuUmvb
+         vduQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686061435; x=1688653435;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZrVZ+SOBI/x4uatGRzhwg8fwXrewUsr2gOgY5H5Ft9g=;
+        b=VDslrzmaTRFol1pPTjnv4QfBKg5rFujcNMpXq8xvskLSzvBULm6jrPhlhB+qQ2Cxpl
+         RhDuxMsgT7+2uiXI/GfjI2cgdff+7VXz4Ob0sLuqGM4MyDqwL+T/NV/8VYWcjYFd38/T
+         Mg1Ndm0vddEL0gEjfF/Y2JS+wTlTiC64A2cqwBZllZbBVxSaRMeVDZPG5fbZ9CaEQRvk
+         BiBEtLG2laRXYd45b8gzUSl6zzz9OIBxwJ36HQ80ZjsBNZ6bwit3t/sOn2u01qK7xJxu
+         AlnAzzKdR+RPhWF40Pt7eGJLQrc31xcWTpT3EaRbfmsUzRjyCxHOTFFJTrBqTnGCrD/g
+         uRDw==
+X-Gm-Message-State: AC+VfDyky7Y8WvDyAR3/UPDo9BRW+kwAraLbuCnaEcz3r3HYOq3H+mMv
+        ReBc6ixrHDfPy7jP6yokGxBFWw==
+X-Google-Smtp-Source: ACHHUZ4tNfkNmafis8UY8kYNaoiMX1MZKlLqdyE0bOdqVbjV255h69EPHklsSAMRYGIU1YtOe+jhjQ==
+X-Received: by 2002:a17:907:2da9:b0:966:5730:c3fe with SMTP id gt41-20020a1709072da900b009665730c3femr2925794ejc.52.1686061435313;
+        Tue, 06 Jun 2023 07:23:55 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id qc16-20020a170906d8b000b00965d294e633sm5624319ejb.58.2023.06.06.07.23.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 07:23:54 -0700 (PDT)
+Message-ID: <c28f963e-d13c-6b5c-c389-996e986f81d5@linaro.org>
+Date:   Tue, 6 Jun 2023 16:23:52 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [v5 3/5] dt-bindings: mfd: Add aspeed pwm-tach binding
+Content-Language: en-US
+To:     Patrick Williams <patrick@stwcx.xyz>
 Cc:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
         linux@roeck-us.net, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
@@ -74,90 +66,76 @@ Cc:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [v5 3/5] dt-bindings: mfd: Add aspeed pwm-tach binding
-Message-ID: <ZH89fXknZlhGmM_H@heinlein.vulture-banana.ts.net>
 References: <20230606094535.5388-1-billy_tsai@aspeedtech.com>
  <20230606094535.5388-4-billy_tsai@aspeedtech.com>
  <35bf0a69-bcf6-ae35-eb3c-e74cfcf9c571@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b9kntY5Oezf+TuoA"
-Content-Disposition: inline
-In-Reply-To: <35bf0a69-bcf6-ae35-eb3c-e74cfcf9c571@linaro.org>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+ <ZH89fXknZlhGmM_H@heinlein.vulture-banana.ts.net>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ZH89fXknZlhGmM_H@heinlein.vulture-banana.ts.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 06/06/2023 16:06, Patrick Williams wrote:
+> On Tue, Jun 06, 2023 at 12:49:04PM +0200, Krzysztof Kozlowski wrote:
+> 
+> Hi Krzysztof,
+> 
+> Thank you for reviewing this from Billy.
+> 
+> The Aspeed chip is heavily used by the OpenBMC community and the 2600
+> has been used in production systems for almost 2 years now.  Many
+> companies are having to carry previous versions of these as patches, and
+> some of the APIs changed since the last revision from Billy.  So, I had
+> asked him to submit the latest patch set with as many revisions as he
+> understood what to change, since the conversation seemed to have died
+> since last time he submitted.  
+> 
+> I don't believe Billy is intentionally ignoring your feedback and he is
+> motivated to get this patch set wrapped up into an acceptable state.
+> 
+>> On 06/06/2023 11:45, Billy Tsai wrote:
+>  
+>> NAK. You got here clear comment. You cannot have simple MFD with
+>> resources. It is not simple anymore.
+>>
+> 
+> In fairness, Billy asked for clarification from you on this point and didn't
+> receive it.
+> 
+> https://lore.kernel.org/lkml/24DD1FEB-95F3-47BE-BE61-8B0E6FBDE20F@aspeedtech.com/
 
---b9kntY5Oezf+TuoA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I gave the instruction what Billy should do:
 
-On Tue, Jun 06, 2023 at 12:49:04PM +0200, Krzysztof Kozlowski wrote:
+https://lore.kernel.org/lkml/41500a04-b004-0e2c-20a1-3a3092b90e6d@linaro.org/
 
-Hi Krzysztof,
+What about other ignored comments? About subject, quotes and more? Even
+if this one was unclear, then why ignoring all the rest?
 
-Thank you for reviewing this from Billy.
+> 
+> He felt what he was trying to accomplish met the documented
+> expectations.  Are there some changes that need to be done in mfd.txt to
+> further clarify when to use it and when not to?
 
-The Aspeed chip is heavily used by the OpenBMC community and the 2600
-has been used in production systems for almost 2 years now.  Many
-companies are having to carry previous versions of these as patches, and
-some of the APIs changed since the last revision from Billy.  So, I had
-asked him to submit the latest patch set with as many revisions as he
-understood what to change, since the conversation seemed to have died
-since last time he submitted. =20
+I think mfd.txt clearly states:
+"For more complex devices, when the nexus driver has to
+probe registers to figure out what child devices exist etc, this should
+not be used. In the latter case the child devices will be determined by
+the operating system."
 
-I don't believe Billy is intentionally ignoring your feedback and he is
-motivated to get this patch set wrapped up into an acceptable state.
+Also, repeated many times:
+https://lore.kernel.org/all/YXhINE00HG6hbQI4@robh.at.kernel.org/
+https://lore.kernel.org/all/20220701000959.GA3588170-robh@kernel.org/
+https://osseu2022.sched.com/event/15z0W
 
-> On 06/06/2023 11:45, Billy Tsai wrote:
-=20
-> NAK. You got here clear comment. You cannot have simple MFD with
-> resources. It is not simple anymore.
->=20
+Best regards,
+Krzysztof
 
-In fairness, Billy asked for clarification from you on this point and didn't
-receive it.
-
-https://lore.kernel.org/lkml/24DD1FEB-95F3-47BE-BE61-8B0E6FBDE20F@aspeedtec=
-h.com/
-
-He felt what he was trying to accomplish met the documented
-expectations.  Are there some changes that need to be done in mfd.txt to
-further clarify when to use it and when not to?
-
-Again, we appreciate the time you've spent reviewing this patch set
-already.  Thank you.
-
---=20
-Patrick Williams
-
---b9kntY5Oezf+TuoA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAmR/PXsACgkQqwNHzC0A
-wRmTsQ//bK2vzp9XFuY+GPUMQGpWDdqT6j7sDHCU+IAOEkrOpM88FfU4PErhYBFO
-VT5MWDXKbLBGB5PBE/lyGPYw4pyEEuBl9tSnVfPxQCcV+nvWabeW9HibdoG6J2au
-Dm3A7FDm2wuBhdF6R9kI6vUxSMs4709R5vLr+iqFyUSPo065p8eK85LE23avU1SF
-MnQZPcM+nP5HeWTLKOwjEOQ6ouQnGv+CmQAr21ZFuz4KajnMHBbXRDV6fouqLwgI
-zXyDhK7iK843VRU8/dQDBmAI86XqZqkTG9hcSJjfWUyHmhMN7o3URTEP3ci6xae7
-tIfdqQp3aiRhzHMI4oqJRs1kMDSSdRUk826AifALKRNM+ip6/WlIUqoE9VcZr3mN
-fw4btAjo3NzkbRvrCbI9i+1pWk8wOqBQ8vx8TIyv6uAaRMCEQggtVDTJIiJttSPk
-oKQgTdhI1fbFn7A4K1oHIA9MMsu5+imNYbMNtpGrXz8T2Gx1XRx+6B/vEz8EYHBB
-4tbx4d0ziIeGs45mqSiIznBR8Wedo3XOe4eJJaWkUjaq4KQKiXj39S9H+XD4ASS+
-EvUUqtHy/kblFWr500FtCp6lGri8iNJ4RrgpfPpEi9L/+cchbcT6AZIpN2R7wuL6
-g5JsTh1Pr1XPkNqpHN/rHz8GB3bTIpz6rPBCqv4RJZr21sp/AMA=
-=loqp
------END PGP SIGNATURE-----
-
---b9kntY5Oezf+TuoA--
