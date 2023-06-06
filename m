@@ -2,140 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F3C57245BE
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 16:24:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2FD3724EE1
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 23:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235961AbjFFOYA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Jun 2023 10:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57932 "EHLO
+        id S234438AbjFFViz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Jun 2023 17:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231935AbjFFOX7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 10:23:59 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D62E6E
-        for <linux-pwm@vger.kernel.org>; Tue,  6 Jun 2023 07:23:56 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-97668583210so612727666b.1
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Jun 2023 07:23:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686061435; x=1688653435;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrVZ+SOBI/x4uatGRzhwg8fwXrewUsr2gOgY5H5Ft9g=;
-        b=fjsh3FJuBj9U15nWQpVdEMJbpDHN4ljEkK9i2Vw7zwBuDx4W8rMjbHbsp9EmQtjyMn
-         eJF3j78A6GgKT5UmL33X70+Hn7Vza2duvJhoTuMmw2WP9K0uDsTiDNGs9f79C6arQHPg
-         9jVHZeruC6m8xpteMR0Dla+l2bhyabByCOIwilQYD4nT33q7Pbu31UeXpHuYVaaVGTBZ
-         CC4NtSF+mfmdaB3EUVgPZWPkbVVb8i81qGDd4Gj//FwS3EtZ7pyGd9yqlQkcYI1T4rVB
-         nGmGUBb9O5E9PZSf45Qkw5rPLiKqEavRcfFfNH7iu9n14Y5qV4u03o9Dy3NyKApuUmvb
-         vduQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686061435; x=1688653435;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrVZ+SOBI/x4uatGRzhwg8fwXrewUsr2gOgY5H5Ft9g=;
-        b=VDslrzmaTRFol1pPTjnv4QfBKg5rFujcNMpXq8xvskLSzvBULm6jrPhlhB+qQ2Cxpl
-         RhDuxMsgT7+2uiXI/GfjI2cgdff+7VXz4Ob0sLuqGM4MyDqwL+T/NV/8VYWcjYFd38/T
-         Mg1Ndm0vddEL0gEjfF/Y2JS+wTlTiC64A2cqwBZllZbBVxSaRMeVDZPG5fbZ9CaEQRvk
-         BiBEtLG2laRXYd45b8gzUSl6zzz9OIBxwJ36HQ80ZjsBNZ6bwit3t/sOn2u01qK7xJxu
-         AlnAzzKdR+RPhWF40Pt7eGJLQrc31xcWTpT3EaRbfmsUzRjyCxHOTFFJTrBqTnGCrD/g
-         uRDw==
-X-Gm-Message-State: AC+VfDyky7Y8WvDyAR3/UPDo9BRW+kwAraLbuCnaEcz3r3HYOq3H+mMv
-        ReBc6ixrHDfPy7jP6yokGxBFWw==
-X-Google-Smtp-Source: ACHHUZ4tNfkNmafis8UY8kYNaoiMX1MZKlLqdyE0bOdqVbjV255h69EPHklsSAMRYGIU1YtOe+jhjQ==
-X-Received: by 2002:a17:907:2da9:b0:966:5730:c3fe with SMTP id gt41-20020a1709072da900b009665730c3femr2925794ejc.52.1686061435313;
-        Tue, 06 Jun 2023 07:23:55 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id qc16-20020a170906d8b000b00965d294e633sm5624319ejb.58.2023.06.06.07.23.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jun 2023 07:23:54 -0700 (PDT)
-Message-ID: <c28f963e-d13c-6b5c-c389-996e986f81d5@linaro.org>
-Date:   Tue, 6 Jun 2023 16:23:52 +0200
+        with ESMTP id S233854AbjFFViy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 17:38:54 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D76A7;
+        Tue,  6 Jun 2023 14:38:51 -0700 (PDT)
+X-GND-Sasl: alexandre.belloni@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1686087530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3IwmjLGuCx7jekbUY8ILKERGOQVFTWDIVAWaU21blAo=;
+        b=Dy4SLnZUwcBMfnuMUzXEiXCCf+OmuELyM00v0pww4+vjIpTkOl+fIRH8pEhvM3x/nzJMul
+        gLpZwLuDEdQHu871QMg10ARRE7Y74jYVWG5XY9fSdiAc7SjvAqooEU0I2D3djYQbWfZg9i
+        gpkLD8Maj0s77aaFOD0cyPpPtPxATVkRZIBM48CVdrshJP0QpbqLmAFalwMuGNC/GjSkEY
+        WJ96JK9/rX/yow7IfCyUGwDOyV8U4+9xZv1jjNjaWJClu3FVDFznyaBtSSfZP2dHjPbqSF
+        vZPjmj0aoqg4aH0mO2CuZETzpDn1hyqT2h3IlvksnZgg8qeXiFSKakpfe4lPSw==
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-GND-Sasl: alexandre.belloni@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D59E60004;
+        Tue,  6 Jun 2023 21:38:48 +0000 (UTC)
+Date:   Tue, 6 Jun 2023 23:38:47 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Dipen Patel <dipenp@nvidia.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-spi@vger.kernel.org, timestamp@lists.linux.dev,
+        linux-watchdog@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>,
+        Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: (subset) [PATCH 3/7] dt-bindings: rtc: restrict node name
+ suffixes
+Message-ID: <168608750603.35578.4427104675666542685.b4-ty@bootlin.com>
+References: <20230530144851.92059-1-krzysztof.kozlowski@linaro.org>
+ <20230530144851.92059-4-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [v5 3/5] dt-bindings: mfd: Add aspeed pwm-tach binding
-Content-Language: en-US
-To:     Patrick Williams <patrick@stwcx.xyz>
-Cc:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
-        linux@roeck-us.net, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
-        lee@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, corbet@lwn.net,
-        p.zabel@pengutronix.de, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20230606094535.5388-1-billy_tsai@aspeedtech.com>
- <20230606094535.5388-4-billy_tsai@aspeedtech.com>
- <35bf0a69-bcf6-ae35-eb3c-e74cfcf9c571@linaro.org>
- <ZH89fXknZlhGmM_H@heinlein.vulture-banana.ts.net>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <ZH89fXknZlhGmM_H@heinlein.vulture-banana.ts.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230530144851.92059-4-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 06/06/2023 16:06, Patrick Williams wrote:
-> On Tue, Jun 06, 2023 at 12:49:04PM +0200, Krzysztof Kozlowski wrote:
-> 
-> Hi Krzysztof,
-> 
-> Thank you for reviewing this from Billy.
-> 
-> The Aspeed chip is heavily used by the OpenBMC community and the 2600
-> has been used in production systems for almost 2 years now.  Many
-> companies are having to carry previous versions of these as patches, and
-> some of the APIs changed since the last revision from Billy.  So, I had
-> asked him to submit the latest patch set with as many revisions as he
-> understood what to change, since the conversation seemed to have died
-> since last time he submitted.  
-> 
-> I don't believe Billy is intentionally ignoring your feedback and he is
-> motivated to get this patch set wrapped up into an acceptable state.
-> 
->> On 06/06/2023 11:45, Billy Tsai wrote:
->  
->> NAK. You got here clear comment. You cannot have simple MFD with
->> resources. It is not simple anymore.
->>
-> 
-> In fairness, Billy asked for clarification from you on this point and didn't
-> receive it.
-> 
-> https://lore.kernel.org/lkml/24DD1FEB-95F3-47BE-BE61-8B0E6FBDE20F@aspeedtech.com/
 
-I gave the instruction what Billy should do:
-
-https://lore.kernel.org/lkml/41500a04-b004-0e2c-20a1-3a3092b90e6d@linaro.org/
-
-What about other ignored comments? About subject, quotes and more? Even
-if this one was unclear, then why ignoring all the rest?
-
+On Tue, 30 May 2023 16:48:47 +0200, Krzysztof Kozlowski wrote:
+> Make the pattern matching node names a bit stricter to improve DTS
+> consistency.  The pattern is restricted to:
+> 1. Only one unit address or one -N suffix,
+> 2. -N suffixes to decimal numbers.
 > 
-> He felt what he was trying to accomplish met the documented
-> expectations.  Are there some changes that need to be done in mfd.txt to
-> further clarify when to use it and when not to?
+> 
 
-I think mfd.txt clearly states:
-"For more complex devices, when the nexus driver has to
-probe registers to figure out what child devices exist etc, this should
-not be used. In the latter case the child devices will be determined by
-the operating system."
+Applied, thanks!
 
-Also, repeated many times:
-https://lore.kernel.org/all/YXhINE00HG6hbQI4@robh.at.kernel.org/
-https://lore.kernel.org/all/20220701000959.GA3588170-robh@kernel.org/
-https://osseu2022.sched.com/event/15z0W
+[3/7] dt-bindings: rtc: restrict node name suffixes
+      commit: 93eff1e0e67a0b54fc16f07f0ca88f8b5afd9f89
 
 Best regards,
-Krzysztof
 
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
