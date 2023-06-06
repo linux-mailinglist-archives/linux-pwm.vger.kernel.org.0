@@ -2,122 +2,162 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E56672420C
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 14:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F37372453E
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 16:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231278AbjFFM1w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Jun 2023 08:27:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59350 "EHLO
+        id S236607AbjFFOHb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Jun 2023 10:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbjFFM1v (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 08:27:51 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0606610C7
-        for <linux-pwm@vger.kernel.org>; Tue,  6 Jun 2023 05:27:50 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-514953b3aa6so8099451a12.1
-        for <linux-pwm@vger.kernel.org>; Tue, 06 Jun 2023 05:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686054468; x=1688646468;
-        h=to:subject:message-id:date:from:sender:reply-to:mime-version:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=D6L7ebmHSep7BhRPx756Bnk9wA5QJEyDZvI3tM5IjJw=;
-        b=jQuJuqsjyMN9Ir8YR7rH2lZY4CIpzB3RqkXHMjYW1GZJa8ivbXlpJfgf/kyGt+q/Hu
-         sqqxCyD3mBMhrFNTPnSLlYjXJ/rDN7+YhLhn3j5bfvww8OUljuCo2JuFB8qXypkHsvXB
-         zsV8iJYOBFiqOslSNWP/VSE5B0SOiXc9Ms+fEO4yDIhySEEZaq85733FJF1gDEJqmosq
-         XSfgNmnyTCXCK6ZLy7vimoVdc26cRke21j/fpz/T5RQ6hyiyowusjNLpmQNjCdE1YPGE
-         G4MonjsgjLBxVofrXkqqw6+f4i/Yc9AfWVecX3QcBjVydY0ASzL58LEuHxeK2aW5xEiH
-         8qCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686054468; x=1688646468;
-        h=to:subject:message-id:date:from:sender:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D6L7ebmHSep7BhRPx756Bnk9wA5QJEyDZvI3tM5IjJw=;
-        b=jf/wOSKU56UfcCAXBwtBSQDLON4siDc4/MRrI8gDgS8ds00k/4mbrw3Hck8TIhQ9pO
-         d+M5E02DkgBuqekoCN4FI8xvdB84KJgSBkynNjrN2zDt1XuFdcgUrHNXch2Ugv1oOfyF
-         t9N9cwRHLFaEUiRU9xqosGhDFT0KnER5PlIuonHXz5UPFeRaDGicZrG/A3RIKv+PRk67
-         Mx+SfaCwDOnif2GC9DtrIqqvgDHSnseAlp7dAeCVbqZc6oCAviP3K9UICx1nBB2kmk6v
-         3f9cB0IhBke8P3SSPFSr9cz2KrH2Ag6O/530xDeFAwlnRhndS4wXR8axJwd6eHEwBL/7
-         1H0w==
-X-Gm-Message-State: AC+VfDym281nJXaZZRfKY89ZzC1hlWUVjknXYSJXCu5O38NeE90v6uHp
-        38CKPRubSB7d1oXKaoaXS5hfYidLeEvWiWvKOrE=
-X-Google-Smtp-Source: ACHHUZ7APQFarxoMIk3Jz6QpYHSrOuzjBop27ZGUUsZXNJsmULNvnvOeYIQ1M5FYkmiFrDCX0kyJA9ckx/vCfHk7cH8=
-X-Received: by 2002:a17:907:360a:b0:978:6fbf:869c with SMTP id
- bk10-20020a170907360a00b009786fbf869cmr1724254ejc.16.1686054468200; Tue, 06
- Jun 2023 05:27:48 -0700 (PDT)
+        with ESMTP id S237367AbjFFOHA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 10:07:00 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD50E73;
+        Tue,  6 Jun 2023 07:06:59 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9E9185C0126;
+        Tue,  6 Jun 2023 10:06:58 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 06 Jun 2023 10:06:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1686060418; x=1686146818; bh=ZW
+        YxLXpwIqN3lIMQiG+E5JZqyRLLSTTKr6hHGJz4eoE=; b=ZhoFiBBHHqozMl9Xww
+        zRPvoHzC8QjfO6bUoKb2inXskBsCb2mW4AvRnoEqNu613rWkesu7KcbB+kB9QHVt
+        IF+2F5cYxFNi5CwiY17uvG8fIRXHskN5nwBTv8adKDO1qPsF6n/qSA5UcBFSstTU
+        7q3IfGGI5nUCF9LcbD66nQJ09yq2Dg5aqehsXZhaTj5MwG5a2sgXh9kwJuY4mZFX
+        McgXwdaPRm2/y62UkxxFXCXwWjJDbQWAXpikj6TdVNl9Tr3ixPsNin637A4XfGdq
+        dacf49TCUxwwHJmlS5xhX64mlOWkSf1VGf5tIzXg5VTLn4Gn3/pk7m9eyWZeDMrn
+        03Jw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1686060418; x=1686146818; bh=ZWYxLXpwIqN3l
+        IMQiG+E5JZqyRLLSTTKr6hHGJz4eoE=; b=JpwJNUVdXVsxn2WdGNaUEgdefIsUI
+        XvuRzFyYQIgrLatcR8dqWsaBrgK0UrIEMTsjHsn1v62fsZyuXn88kQojEWcDo3FE
+        YfEVkHuKy4Jtj+sU/ltpmnalMjl8Als2J270bLELESrOP5USxbAZZaqK04dGaelA
+        lRThb49T5z7yKXi5phLCpNtIZQJFuWFKNwefDZeVn6a9EY0lRYgpmnjYSHOhiH2v
+        wgIwVnIMfewM8G2pr/bqbv3od99LAs4WqJiYCMimpRs3K6SHgMEfOyz0DNyioQs+
+        EXPj7YAi5bN+Wf4a3LLQQUzz6AZ3MCXL5H4MSY17NupNbYamCiOI3m0Yw==
+X-ME-Sender: <xms:fz1_ZCfDySLyL_ascxriCuNl-DITBWZqCTlSH_B_uBtbdAAmn4Pu7A>
+    <xme:fz1_ZMM9JxdNifLIFJmaA_5aWWlZ13PNbGdav2_IXIUG_SDvvaoOPijQJX-NNaUpV
+    MnUoNzVYUJQYqZ8_rs>
+X-ME-Received: <xmr:fz1_ZDjWVh5pnApQVmt_XFCCIGEpUWggIi8oNS5-rTnwWWCTQ4slx0gRKBlMhKV3TL6A0B1pP8_4EoUS_E9w_fGDY0qFfYIkP88>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgedtuddgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlvdefmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredt
+    tddvnecuhfhrohhmpefrrghtrhhitghkucghihhllhhirghmshcuoehprghtrhhitghkse
+    hsthiftgigrdighiiiqeenucggtffrrghtthgvrhhnpeejgfdtleelvdeftdeggefffeeu
+    feevgeejkeelgeeujeevveeufeeigfeivdejjeenucffohhmrghinhepkhgvrhhnvghlrd
+    horhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
+    phgrthhrihgtkhesshhtfigtgidrgiihii
+X-ME-Proxy: <xmx:fz1_ZP_x8j94IUAq0vNyR--OT7lFlwK9TFpUvg1K56xZcitv68Czmw>
+    <xmx:fz1_ZOvnM_WOkMoEXeEB_oNE60FCsQLt2yfDw9BP1DTMi35M-aJz_A>
+    <xmx:fz1_ZGF9ASGzJLIK4Ovp90snm2ez2OOOK8CygX3TrBHfF3aTq0uqSg>
+    <xmx:gj1_ZJlCPLmAZUWPyl-uhUyIS8zVcWFKRo_Gjfn06js8Abw7ubQhAg>
+Feedback-ID: i68a1478a:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Jun 2023 10:06:55 -0400 (EDT)
+Date:   Tue, 6 Jun 2023 09:06:53 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
+        linux@roeck-us.net, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        lee@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, corbet@lwn.net,
+        p.zabel@pengutronix.de, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [v5 3/5] dt-bindings: mfd: Add aspeed pwm-tach binding
+Message-ID: <ZH89fXknZlhGmM_H@heinlein.vulture-banana.ts.net>
+References: <20230606094535.5388-1-billy_tsai@aspeedtech.com>
+ <20230606094535.5388-4-billy_tsai@aspeedtech.com>
+ <35bf0a69-bcf6-ae35-eb3c-e74cfcf9c571@linaro.org>
 MIME-Version: 1.0
-Reply-To: ashaalqaddfi10@gmail.com
-Sender: aboudoulayekarambiri08@gmail.com
-Received: by 2002:a17:906:9b88:b0:973:c47d:62e4 with HTTP; Tue, 6 Jun 2023
- 05:27:47 -0700 (PDT)
-From:   Aisha Gaddafi <ashaalqaddfi10@gmail.com>
-Date:   Tue, 6 Jun 2023 05:27:47 -0700
-X-Google-Sender-Auth: XkYX_b3LtZ0z55rgMPnXkSmtltI
-Message-ID: <CANGHVWpea-W=+n6f5AC=m4UzC_Y6xKu33=FX9gyutrviBYSWJQ@mail.gmail.com>
-Subject: Hello My Beloved One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=6.1 required=5.0 tests=BAYES_99,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,MILLION_HUNDRED,
-        MILLION_USD,MONEY_FRAUD_5,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:533 listed in]
-        [list.dnswl.org]
-        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
-        *      [score: 0.9908]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [ashaalqaddfi10[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [aboudoulayekarambiri08[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [ashaalqaddfi10[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.9 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
-        *  0.0 MILLION_USD BODY: Talks about millions of dollars
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  0.1 MONEY_FRAUD_5 Lots of money and many fraud phrases
-X-Spam-Level: ******
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="b9kntY5Oezf+TuoA"
+Content-Disposition: inline
+In-Reply-To: <35bf0a69-bcf6-ae35-eb3c-e74cfcf9c571@linaro.org>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello My Beloved One,
 
-I came across your e-mail contact prior to a private search
-while in need of your assistance. I am Aisha Al-Qaddafi, the only
-biological Daughter of Former President of Libya Muammar   Al-Qaddafi.
-Am a single Mother
+--b9kntY5Oezf+TuoA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-and a Widow with three Children. I have investment funds worth Twenty
-Seven Million Five Hundred Thousand United State Dollar (27.500.000.00
-) and i need a trusted investment Manager/Partner because of my
-current refugee status, however, I am interested in you for investment
-project assistance in your country,
+On Tue, Jun 06, 2023 at 12:49:04PM +0200, Krzysztof Kozlowski wrote:
 
-Maybe from there we can build business relationships in the near
-future. I am willing to negotiate an investment/business profit
-sharing ratio with you based on the future investment earning profits.
-If you are willing to handle this project on my behalf kindly reply
-urgently to enable me to provide you more information about the
-investment funds.
-Best Regards
+Hi Krzysztof,
+
+Thank you for reviewing this from Billy.
+
+The Aspeed chip is heavily used by the OpenBMC community and the 2600
+has been used in production systems for almost 2 years now.  Many
+companies are having to carry previous versions of these as patches, and
+some of the APIs changed since the last revision from Billy.  So, I had
+asked him to submit the latest patch set with as many revisions as he
+understood what to change, since the conversation seemed to have died
+since last time he submitted. =20
+
+I don't believe Billy is intentionally ignoring your feedback and he is
+motivated to get this patch set wrapped up into an acceptable state.
+
+> On 06/06/2023 11:45, Billy Tsai wrote:
+=20
+> NAK. You got here clear comment. You cannot have simple MFD with
+> resources. It is not simple anymore.
+>=20
+
+In fairness, Billy asked for clarification from you on this point and didn't
+receive it.
+
+https://lore.kernel.org/lkml/24DD1FEB-95F3-47BE-BE61-8B0E6FBDE20F@aspeedtec=
+h.com/
+
+He felt what he was trying to accomplish met the documented
+expectations.  Are there some changes that need to be done in mfd.txt to
+further clarify when to use it and when not to?
+
+Again, we appreciate the time you've spent reviewing this patch set
+already.  Thank you.
+
+--=20
+Patrick Williams
+
+--b9kntY5Oezf+TuoA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAmR/PXsACgkQqwNHzC0A
+wRmTsQ//bK2vzp9XFuY+GPUMQGpWDdqT6j7sDHCU+IAOEkrOpM88FfU4PErhYBFO
+VT5MWDXKbLBGB5PBE/lyGPYw4pyEEuBl9tSnVfPxQCcV+nvWabeW9HibdoG6J2au
+Dm3A7FDm2wuBhdF6R9kI6vUxSMs4709R5vLr+iqFyUSPo065p8eK85LE23avU1SF
+MnQZPcM+nP5HeWTLKOwjEOQ6ouQnGv+CmQAr21ZFuz4KajnMHBbXRDV6fouqLwgI
+zXyDhK7iK843VRU8/dQDBmAI86XqZqkTG9hcSJjfWUyHmhMN7o3URTEP3ci6xae7
+tIfdqQp3aiRhzHMI4oqJRs1kMDSSdRUk826AifALKRNM+ip6/WlIUqoE9VcZr3mN
+fw4btAjo3NzkbRvrCbI9i+1pWk8wOqBQ8vx8TIyv6uAaRMCEQggtVDTJIiJttSPk
+oKQgTdhI1fbFn7A4K1oHIA9MMsu5+imNYbMNtpGrXz8T2Gx1XRx+6B/vEz8EYHBB
+4tbx4d0ziIeGs45mqSiIznBR8Wedo3XOe4eJJaWkUjaq4KQKiXj39S9H+XD4ASS+
+EvUUqtHy/kblFWr500FtCp6lGri8iNJ4RrgpfPpEi9L/+cchbcT6AZIpN2R7wuL6
+g5JsTh1Pr1XPkNqpHN/rHz8GB3bTIpz6rPBCqv4RJZr21sp/AMA=
+=loqp
+-----END PGP SIGNATURE-----
+
+--b9kntY5Oezf+TuoA--
