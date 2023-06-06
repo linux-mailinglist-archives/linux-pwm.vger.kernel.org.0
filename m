@@ -2,117 +2,100 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E90F3723F67
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 12:27:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31B7E723FED
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jun 2023 12:44:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236041AbjFFK1b (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 6 Jun 2023 06:27:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49824 "EHLO
+        id S237329AbjFFKoT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 6 Jun 2023 06:44:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231826AbjFFK13 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 06:27:29 -0400
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDACE55;
-        Tue,  6 Jun 2023 03:27:28 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7748d634a70so229920839f.2;
-        Tue, 06 Jun 2023 03:27:28 -0700 (PDT)
+        with ESMTP id S234658AbjFFKnb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 6 Jun 2023 06:43:31 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D5510FF
+        for <linux-pwm@vger.kernel.org>; Tue,  6 Jun 2023 03:42:09 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-970056276acso879818166b.2
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Jun 2023 03:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686048128; x=1688640128;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7hztYX3lCCszrQN2sLS6OQQbXo0IrqmI3DHUIMhxyE4=;
+        b=xt5rNJ5A92ysQqwhJJhYw0coJTIrKX4DgtbH5fGHfhu5LpDsAZHObPbCnwNHtaMZJq
+         G1rbDd7KajXMFc+VlKEkb1tJTOGEcY7/xrhIrYpkQ6NAxSb06EhGap3os+1IPzumdbTF
+         wbOv9kZC+/oWDrZJALtqTUYOSS/Mu1JkbYw8DDRMZ0b/QllhL3Mr/xv73KHFNAIlRoLT
+         N353oc5ZG3FbdvSogTOYrSGcWRHNGgeZbzsm8NPlkfj4bGhDSe3Z3M8OgaaNxvm36rbO
+         3HEAplByMqOIHmg9Atam/7BlRPW9QgKS8pJNMJM0zuw+kF8TNi4FSLN+vtrxaXlrXIfT
+         LzKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686047248; x=1688639248;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JAPwM9u2F/Ud8Dzoq+JTM/HoPHsb9s153yZMWbPc3GE=;
-        b=PKTRNP9chvoAjEIzlHfBHCw2r/ttla4TUGpqBQZsijSTR0fhQ6HIs7/iE20gRvLXiH
-         bc9nx7HtcQPDEogQNUoTkt6NrsERSN2uH0yV39f37Ikk3YTgBWqfSgn0VVdznJtGnclq
-         NY+dxPqmYX42WirHI166x1+JMIXkMDhLaMZ+BBU/asqSo1EGrNG8tjErKUQStW8YPEXX
-         3jZOOb2Qq4v+5oZFWmnuLREb+D0uHOCTLux4nccmSZ5Jfi+McX9inphI43HTG0EXCfHp
-         vp8wCfvhJjZ1RsDssoJzMZeQFjzPaMMRAZC1EYzZutFjwHdRtB23AW8mQrBwayQ62ImU
-         YXNA==
-X-Gm-Message-State: AC+VfDwARxDjfCXKiHHwLgX84NEP4vSfhC8RUadwzz81X9R2hNB9zJUG
-        KhKvbdG6i2t9UlN+wy73xw==
-X-Google-Smtp-Source: ACHHUZ68E0V6jIRjSy2wh4tmUQtFk1OPqANyFaBsAC3f1lK9fAcvLfnZ2Yb+yr9jd5qlQIhh7Sju9w==
-X-Received: by 2002:a5d:9544:0:b0:775:8241:724a with SMTP id a4-20020a5d9544000000b007758241724amr1726719ios.16.1686047247601;
-        Tue, 06 Jun 2023 03:27:27 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id o22-20020a02c6b6000000b00408df9534c9sm2670058jan.130.2023.06.06.03.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 03:27:26 -0700 (PDT)
-Received: (nullmailer pid 411520 invoked by uid 1000);
-        Tue, 06 Jun 2023 10:27:24 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
+        d=1e100.net; s=20221208; t=1686048128; x=1688640128;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7hztYX3lCCszrQN2sLS6OQQbXo0IrqmI3DHUIMhxyE4=;
+        b=BN9+40TNGlcM8O29YhFoj0QTsvJTfS8Fdymi1Be1zKd2MgMpbVFrcdzMZ246DX1MWc
+         dwWtvTAA52ETYAbGmDEfcgZnRynKIvbKxCjs35ujkCtDWdgbbHBzjg+xe0D7N8kDGogX
+         cz5QXIz3NamcRoyx+vS9+ItswcFsSGP7SdCD4yOsHYFwUnuK/xwNdIweCRssNVo0Su5C
+         mTDTlTIs0x5OTBDdpkt01bQfkVmmySRisncwpDoiePpydQfpXFfyVJyhGvVFSKJZ7Dib
+         z1nVaXeP4m/Cn2cyO7J168tHaakuocAMQ4prGoOQWdGzZ/HjAYPetcw1n8u6DPAq2vxp
+         Shgg==
+X-Gm-Message-State: AC+VfDwSBxYgIq9Z0GmviCJQpLTJnqwhRIww8WAvo4MHfnUr6UnFgHJo
+        bwvORQnGDHm3vYW9RH0j5c8cSQ==
+X-Google-Smtp-Source: ACHHUZ4AfaeSpVY/ckQkqL5x95HhvZI47BGZCIoqkV64ZUEXQa8B+xm4b1XkP3o7H2cESv0dYCWcVw==
+X-Received: by 2002:a17:907:7f10:b0:974:4f34:b04c with SMTP id qf16-20020a1709077f1000b009744f34b04cmr2114952ejc.41.1686048128277;
+        Tue, 06 Jun 2023 03:42:08 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id fx4-20020a170906b74400b00977d0f1c5bcsm3115801ejb.69.2023.06.06.03.42.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 03:42:07 -0700 (PDT)
+Message-ID: <636526b0-b5b3-aa80-49f7-fa805ebbac5c@linaro.org>
+Date:   Tue, 6 Jun 2023 12:42:05 +0200
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     andrew@aj.id.au, devicetree@vger.kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-doc@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de, linux-aspeed@lists.ozlabs.org,
-        lee@kernel.org, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, jdelvare@suse.com,
-        linux-hwmon@vger.kernel.org, p.zabel@pengutronix.de,
-        joel@jms.id.au, patrick@stwcx.xyz, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, linux@roeck-us.net, corbet@lwn.net,
-        thierry.reding@gmail.com
-In-Reply-To: <20230606094535.5388-4-billy_tsai@aspeedtech.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [v5 1/5] dt-bindings: pwm: Add bindings for aspeed pwm controller
+Content-Language: en-US
+To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
+        linux@roeck-us.net, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        lee@kernel.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, corbet@lwn.net,
+        p.zabel@pengutronix.de, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org,
+        patrick@stwcx.xyz
 References: <20230606094535.5388-1-billy_tsai@aspeedtech.com>
- <20230606094535.5388-4-billy_tsai@aspeedtech.com>
-Message-Id: <168604724448.411496.12229634069665354962.robh@kernel.org>
-Subject: Re: [v5 3/5] dt-bindings: mfd: Add aspeed pwm-tach binding
-Date:   Tue, 06 Jun 2023 04:27:24 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+ <20230606094535.5388-2-billy_tsai@aspeedtech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230606094535.5388-2-billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
-On Tue, 06 Jun 2023 17:45:33 +0800, Billy Tsai wrote:
-> Add device binding for aspeed pwm-tach device which is a multi-function
-> device include pwm and tach function.
-> 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> 
-> ---
->  .../bindings/mfd/aspeed,ast2600-pwm-tach.yaml | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.yaml
+On 06/06/2023 11:45, Billy Tsai wrote:
+> Add the aspeed pwm device which should be the child-node of pwm-tach mfd.
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+This is a friendly reminder during the review process.
 
-yamllint warnings/errors:
+It seems my previous comments were not fully addressed. Maybe my
+feedback got lost between the quotes, maybe you just forgot to apply it.
+Please go back to the previous discussion and either implement all
+requested changes or keep discussing them.
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dts:37.15-28: Warning (reg_format): /example-0/pwm-tach@1e610000/tach/fan@0:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dts:36.19-38.15: Warning (avoid_default_addr_size): /example-0/pwm-tach@1e610000/tach/fan@0: Relying on default #address-cells value
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dts:36.19-38.15: Warning (avoid_default_addr_size): /example-0/pwm-tach@1e610000/tach/fan@0: Relying on default #size-cells value
-Documentation/devicetree/bindings/mfd/aspeed,ast2600-pwm-tach.example.dtb: Warning (unique_unit_address_if_enabled): Failed prerequisite 'avoid_default_addr_size'
+Thank you.
 
-doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230606094535.5388-4-billy_tsai@aspeedtech.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Best regards,
+Krzysztof
 
