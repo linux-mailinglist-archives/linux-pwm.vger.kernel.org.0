@@ -2,18 +2,18 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C554E7274C9
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jun 2023 04:16:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0BDC7274D1
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jun 2023 04:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233217AbjFHCQb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 7 Jun 2023 22:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36448 "EHLO
+        id S232670AbjFHCQg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 7 Jun 2023 22:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232670AbjFHCQa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jun 2023 22:16:30 -0400
+        with ESMTP id S233249AbjFHCQc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 7 Jun 2023 22:16:32 -0400
 Received: from mail.aspeedtech.com (mail.aspeedtech.com [211.20.114.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C964926A3;
-        Wed,  7 Jun 2023 19:16:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038461984;
+        Wed,  7 Jun 2023 19:16:30 -0700 (PDT)
 Received: from BillyTsai-pc.aspeed.com (192.168.1.221) by TWMBX02.aspeed.com
  (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 8 Jun
  2023 10:16:21 +0800
@@ -28,9 +28,9 @@ To:     <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>,
         <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
         <linux-pwm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <patrick@stwcx.xyz>
-Subject: [v6 1/4] dt-bindings: pwm: Add ASPEED PWM Control documentation
-Date:   Thu, 8 Jun 2023 10:18:36 +0800
-Message-ID: <20230608021839.12769-2-billy_tsai@aspeedtech.com>
+Subject: [v6 2/4] dt-bindings: hwmon: Add ASPEED TACH Control documentation
+Date:   Thu, 8 Jun 2023 10:18:37 +0800
+Message-ID: <20230608021839.12769-3-billy_tsai@aspeedtech.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230608021839.12769-1-billy_tsai@aspeedtech.com>
 References: <20230608021839.12769-1-billy_tsai@aspeedtech.com>
@@ -49,45 +49,39 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Document the compatible for aspeed,ast2600-pwm device.
+Document the compatible for aspeed,ast2600-tach device.
 
 Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 ---
- .../bindings/pwm/aspeed,ast2600-pwm.yaml      | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+ .../bindings/hwmon/aspeed,ast2600-tach.yaml   | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
 
-diff --git a/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml b/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
+diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
 new file mode 100644
-index 000000000000..a9e040263578
+index 000000000000..627aa00f2e92
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/aspeed,ast2600-pwm.yaml
-@@ -0,0 +1,38 @@
++++ b/Documentation/devicetree/bindings/hwmon/aspeed,ast2600-tach.yaml
+@@ -0,0 +1,32 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +# Copyright (C) 2021 Aspeed, Inc.
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pwm/aspeed,ast2600-pwm.yaml#
++$id: http://devicetree.org/schemas/hwmon/aspeed,ast2600-tach.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Aspeed Ast2600 PWM controller
++title: Aspeed Ast2600 Tach controller
 +
 +maintainers:
 +  - Billy Tsai <billy_tsai@aspeedtech.com>
 +
 +description: |
-+  The Aspeed PWM controller supports up to 1 PWM outputs.
-+
-+allOf:
-+  - $ref: pwm.yaml#
++  The Aspeed Tach controller can support upto 1 fan input.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - aspeed,ast2600-pwm
-+
-+  "#pwm-cells":
-+    const: 3
++      - aspeed,ast2600-tach
 +
 +  clocks:
 +    maxItems: 1
