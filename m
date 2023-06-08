@@ -2,55 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73B25727A11
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jun 2023 10:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0B89727A23
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jun 2023 10:40:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232984AbjFHIgo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 8 Jun 2023 04:36:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
+        id S231439AbjFHIkP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 8 Jun 2023 04:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234817AbjFHIgm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Jun 2023 04:36:42 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B564B270B
-        for <linux-pwm@vger.kernel.org>; Thu,  8 Jun 2023 01:36:40 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-976a0a1a92bso72205366b.1
-        for <linux-pwm@vger.kernel.org>; Thu, 08 Jun 2023 01:36:40 -0700 (PDT)
+        with ESMTP id S235507AbjFHIjr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 8 Jun 2023 04:39:47 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABB2272A
+        for <linux-pwm@vger.kernel.org>; Thu,  8 Jun 2023 01:39:45 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-977cc662f62so52905066b.3
+        for <linux-pwm@vger.kernel.org>; Thu, 08 Jun 2023 01:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686213399; x=1688805399;
+        d=linaro.org; s=google; t=1686213584; x=1688805584;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KP6FTQbezAovuHn8DXvJcqsrbsf1/vJCY3Cy9QhDcuY=;
-        b=l4G/0deA780yke9lCVpsQz9+5T9PPXsj68cOKT9hCDkYvKS49eun7pxuHW16iEZP/b
-         T1rcaMRIMwY+8YXee5rtf22mLEczKIXKY1g6IJBzTYh471ju92mHUqknGGuLD0DTvK8Z
-         gFaYicpruiY2UWFTlTY1B+9YGcvYGv9AmWpOuzaH0SqhJydXhDzbO6yxWhnK0fU60jhp
-         bHyzWnQ2qhDJ8aEb4KEPr7YSKlujuWbYyaEDzbcjNUEjblTOKuqMBaiFHiZdGrUpFjbs
-         N4XexIeytr493Pqqf1a1u5OohNOLFMz2kR6lq6Xx3EkEt8dXjJ7INiOHPvv8G4fVb2dz
-         atLA==
+        bh=T60h+W0DC18nxsqz7trELMiyE2WR3VGoPPEa5hHXx+Q=;
+        b=iyAq0hoQryh8EvDralt4E7z318BYMnia1f7pBiPyvP4AF+SIcXMPpSRzvhVbxF1JUH
+         zLxoD7Z/W1y3YSrJ3d8QsupMO4uBHea6A3IJoYsc1TCmiMPwTTn9EcowtqzR5BS3t8+X
+         PtHWFRxR2ljn4Qh94PXTURZW7oabLNX41piHq2O4284la+7jYsDq6S/ll0SKqrA7Ook3
+         rqMg7w4WzEZZI3KX2DPDiQEPiFrvs09O7xsWFP+sbYSa7nLnusOd7HJyMkwBhxDOhCxz
+         aQu1jVMiUskjy5c60nGo5TNqaNmBBd0NgP96Vm7fk4KFb0HAndFnWgmuYef6ZTMOPHS2
+         3wEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686213399; x=1688805399;
+        d=1e100.net; s=20221208; t=1686213584; x=1688805584;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KP6FTQbezAovuHn8DXvJcqsrbsf1/vJCY3Cy9QhDcuY=;
-        b=B023IQTnUPIP/UgR64/N0nzRGaxSNW93bAig9qmUS5wuKsKqyz5D85Mb4BOHBilQjk
-         QyZGRcpMxuqBdfr4CdHsSKjCS4o+P0yesQYY+wWjDu8z39pWCkY0cZKJNkFcpaF2RJ+5
-         6kevJ/1G153TE5bJ9SkrjQP2SN+vVBGpL44Wl48p5hfWDvfVIA4mHS59n8wjyRVp8aAk
-         Orbw3VtWU9JA5a2DhquyjqHV7jjU18cWqzScbJLPx6uxPm5IVi+5kziJVAvYYnx5TC5s
-         zFlSG8YsV9f7tCiDgCDmC1lwpcW4Cqf6bO2wPiz5/sMLSdTgZwKpl/FB/Hym1K09R1Sb
-         6kZw==
-X-Gm-Message-State: AC+VfDwDWA8n8oFT+Pzy6xrdaslPt3omApHRN2AJMm5cn5rbP7S1DP6p
-        d2+fysq5r/Q4eYJsjnZhvXv48A==
-X-Google-Smtp-Source: ACHHUZ4Rr0xFX57yVQfz1/k8GLc/jFvOpE/oXWcHFHi0S+gaR1ek3G1G18/OfI6o6YcStn+m8N0Kig==
-X-Received: by 2002:a17:907:1c15:b0:96a:8c13:8dc0 with SMTP id nc21-20020a1709071c1500b0096a8c138dc0mr9105461ejc.37.1686213399231;
-        Thu, 08 Jun 2023 01:36:39 -0700 (PDT)
+        bh=T60h+W0DC18nxsqz7trELMiyE2WR3VGoPPEa5hHXx+Q=;
+        b=Klr8WXVcNhudruBlPmBAmsMax7dr+uErkHD+6nWueccEs8pny1MLjIu8/ITF5HnNLR
+         A6tUjEtd5h1n0myyzSh+OotysoI/imsh19EquBEPf/Pay2AzE99G+01LaeUaR2g2n9Fh
+         UyTYH3ue7+AkzB7s82cH1elZ7BgnadEiHbewCN9hGUusdSEZZu+IszZaepgg634RGcI6
+         2oNHJfzJRbE86bKfblvWiT/DugXM1KFJQ3Meh7M1GjZudlEw0jkLD4eG3WeqKs2aeYPV
+         Tv2ZcSQDb4a5CUnBcvNlse/LvMcNVFWbOUr5gKXD4znN3UV/OxW7//ZUhDT429uQoIo5
+         nVFQ==
+X-Gm-Message-State: AC+VfDxPIDelalBtPrKspYGG0OIGAF2af7i8LRVi/pTASX+Ge8aZqt6r
+        plbBilXqhlZygvFZoU1D/Y7jqg==
+X-Google-Smtp-Source: ACHHUZ6+DFaOWxwBnwwn5BBCqCuWBnfpxcMfTyfrJlrYZN4vwswZ9T70B750ae6ffwKKz5XAccdyTg==
+X-Received: by 2002:a17:907:7e84:b0:978:6489:f9f with SMTP id qb4-20020a1709077e8400b0097864890f9fmr9130565ejc.52.1686213584247;
+        Thu, 08 Jun 2023 01:39:44 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id a14-20020a1709063a4e00b0097456b4085fsm383939ejf.190.2023.06.08.01.36.37
+        by smtp.gmail.com with ESMTPSA id k22-20020a1709065fd600b0096f830337e3sm384465ejv.129.2023.06.08.01.39.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jun 2023 01:36:38 -0700 (PDT)
-Message-ID: <9f8a9208-62d4-0c96-7d1c-a452d3d7e799@linaro.org>
-Date:   Thu, 8 Jun 2023 10:36:36 +0200
+        Thu, 08 Jun 2023 01:39:43 -0700 (PDT)
+Message-ID: <fb3cb26b-61d7-5f57-41de-f419aa50ac0b@linaro.org>
+Date:   Thu, 8 Jun 2023 10:39:41 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.2
@@ -120,10 +120,35 @@ On 08/06/2023 10:21, Billy Tsai wrote:
 >         > channel. What do you put then in the channel?
 > 
 > You need to put 0 in the cell of the channel, the example of the dts usage will like following:
+> 
+> pwm0: pwm0@1e610000 {
+>         compatible = "aspeed,ast2600-pwm";
+>         reg = <0x1e610000 0x8>;
+>         #pwm-cells = <3>;
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_pwm0_default>;
+>         clocks = <&syscon ASPEED_CLK_AHB>;
+>         resets = <&syscon ASPEED_RESET_PWM>;
+>         status = "okay";
+> };
+> 
+> pwm1: pwm1@1e610010 {
+>         compatible = "aspeed,ast2600-pwm";
+>         reg = <0x1e610010 0x8>;
+>         #pwm-cells = <3>;
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_pwm1_default>;
+>         clocks = <&syscon ASPEED_CLK_AHB>;
+>         resets = <&syscon ASPEED_RESET_PWM>;
+>         status = "okay";
 
-If you always put 0 isn't this a proof that it's wrong?
-
-
+BTW, these are not two PWM devices but one. I don't understand why you
+changed previous design into something like this, but this is not
+representing your hardware.
 
 Best regards,
 Krzysztof
