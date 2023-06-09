@@ -2,243 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FD07729B0B
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Jun 2023 15:07:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3F49729C3D
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Jun 2023 16:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230305AbjFINHL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Jun 2023 09:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34642 "EHLO
+        id S240127AbjFIOHb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Jun 2023 10:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232008AbjFINHK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Jun 2023 09:07:10 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9422C30C1;
-        Fri,  9 Jun 2023 06:07:08 -0700 (PDT)
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 359A3YsS008513;
-        Fri, 9 Jun 2023 15:06:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=sYBwEPeeXVHCEaJ9zVgryQu6LOSyB5YipX+5SvAY0iI=;
- b=NfSxrEdNhzMx5h25ukxKXUgW9M//4dpO9nI21kUdgm1MXLHP9oKKXMFjM92gwiND9a6W
- q/eTq+1/Wcy4eU/I9rq1+EZzoczs8jiZkUrZ+oeSlZ64pOUDgq17M0p6A7esQ/8XXNL1
- rt10PqwCbarepLDuhldJ4DuoapAoOKji4ukpW28GA6x2/ouO7asn8U0LApWkKQbBZisv
- XLrOC5mGQuBpJE3wEPfJFSSUfp6FBuVlfX/akjFLknfGYNl7G/juHjLHZBS40lYt0dP0
- e2POSzqcss+rNWHToMGkfgLxXKbvAbvLzfEv7+2kCx74081Su5docSbTV3G3PpweIozj VA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3r420813eg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jun 2023 15:06:53 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2D56E10002A;
-        Fri,  9 Jun 2023 15:06:51 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2445F21A20A;
-        Fri,  9 Jun 2023 15:06:51 +0200 (CEST)
-Received: from [10.252.5.115] (10.252.5.115) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 9 Jun
- 2023 15:06:48 +0200
-Message-ID: <dac9c545-fcbc-3aec-c341-abc62f551703@foss.st.com>
-Date:   Fri, 9 Jun 2023 15:06:47 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] pwm: stm32: Implement .get_state()
-Content-Language: en-US
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        with ESMTP id S240576AbjFIOHU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Jun 2023 10:07:20 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2750035A9
+        for <linux-pwm@vger.kernel.org>; Fri,  9 Jun 2023 07:07:14 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f655293a38so1912897e87.0
+        for <linux-pwm@vger.kernel.org>; Fri, 09 Jun 2023 07:07:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686319632; x=1688911632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jCeEbW1U8X5tsZ4C4X/AN2VQz3Te0cG/Jf+u2WdiQhA=;
+        b=Ts+urxZPApGt0XBPTXgusp3g46WRrEeespxkpm2YhTx4scmVZLcCBxFk3uP6DxV+uf
+         WN6eG0NJwH7RZ1E6L9AHyqbNzdaDRdX4zD0cYnfK3tO4HXMNlwfhaiEw3TIgCkP9qiNQ
+         9iNsDNhvICxqOwA1dbgfgYbpGtGTgQHjRdXMijsThBI4U9yu42yTNgT5e2M5mQAf9oAd
+         a+Gvb6QBZgaFFtTz4Ct59nJ+QsDL71nuScd4frj824CaOzpeIej0+cEL5+nx+G+d7clP
+         7qam1XfhLs+cKTZ+Rr0JT5q6tU746JDLC7A6XQRoIf3/pYf5OtfddbncqVOTSYazp1xA
+         18jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686319632; x=1688911632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jCeEbW1U8X5tsZ4C4X/AN2VQz3Te0cG/Jf+u2WdiQhA=;
+        b=kCYOb51iM8iJHsP9xrcCrjQPhaHGc7GGexR5IGi+6XaWXJGKPbMXUpuC/gBwkWX7V5
+         yQ7Tbs/9XwlDSsXdRZRLkLiBPs6fFRH7uz3/iBkZPUYzrUr1GCW0j4l7cwXevDMFI2Cu
+         KJKGevEOfJhFf+PNemtwKLcT0vytdFhZgA60DKvpVU38/1QrWmPBY/3hY8qtnd9+LLv3
+         UuuI5j0uV8rKG9uQh4XrJMal3BFpVt78+eqUYKXEIPpLk7FZ0PcPCaM5u40TCTQRXWGH
+         RgcYSeRigFfabzXzHPgy2ewqFj3jl6+/2V8rKYeZBoWMDTm7FrJIUtSUlFMV9bb76EgG
+         vMhQ==
+X-Gm-Message-State: AC+VfDyCUEROdqO81bbtc6IVyFLSWIHViPcf7h+uT5E8O0hXw3NoWdej
+        vqFsa6fp29+8sK1wvbF2wruXnw==
+X-Google-Smtp-Source: ACHHUZ6hAzhcinWv3jhYYd7EDXnoILzhszPHvrOnNXmIrY+BsxwZzC+2GchphS4lR8xtpjG8FhaLwQ==
+X-Received: by 2002:a2e:9656:0:b0:2ad:95dd:8802 with SMTP id z22-20020a2e9656000000b002ad95dd8802mr1292972ljh.38.1686319632281;
+        Fri, 09 Jun 2023 07:07:12 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id kg6-20020a17090776e600b009661484e84esm1319651ejc.191.2023.06.09.07.07.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 07:07:11 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <linux-pwm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
-From:   Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.252.5.115]
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-09_08,2023-06-09_01,2023-05-22_02
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: pwm: drop unneeded quotes
+Date:   Fri,  9 Jun 2023 16:07:09 +0200
+Message-Id: <20230609140709.64655-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Philipp,
+Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+checking for this can be enabled in yamllint.
 
-On 6/8/23 16:06, Philipp Zabel wrote:
-> Stop stm32_pwm_detect_channels() from disabling all channels and count
-> the number of enabled PWMs to keep the clock running. Implement the
-> &pwm_ops->get_state callback so drivers can inherit PWM state set by
-> the bootloader.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Make the necessary changes to allow inheriting PWM state set by the
-> bootloader, for example to avoid flickering with a pre-enabled PWM
-> backlight.
-> ---
->  drivers/pwm/pwm-stm32.c | 75 ++++++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 59 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 62e397aeb9aa..e0677c954bdf 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -52,6 +52,21 @@ static u32 active_channels(struct stm32_pwm *dev)
->  	return ccer & TIM_CCER_CCXE;
->  }
->  
-> +static int read_ccrx(struct stm32_pwm *dev, int ch, u32 *value)
-> +{
-> +	switch (ch) {
-> +	case 0:
-> +		return regmap_read(dev->regmap, TIM_CCR1, value);
-> +	case 1:
-> +		return regmap_read(dev->regmap, TIM_CCR2, value);
-> +	case 2:
-> +		return regmap_read(dev->regmap, TIM_CCR3, value);
-> +	case 3:
-> +		return regmap_read(dev->regmap, TIM_CCR4, value);
-> +	}
-> +	return -EINVAL;
-> +}
-> +
->  static int write_ccrx(struct stm32_pwm *dev, int ch, u32 value)
->  {
->  	switch (ch) {
-> @@ -486,9 +501,40 @@ static int stm32_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *pwm,
->  	return ret;
->  }
->  
-> +static int stm32_pwm_get_state(struct pwm_chip *chip,
-> +			       struct pwm_device *pwm, struct pwm_state *state)
-> +{
-> +	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-> +	int ch = pwm->hwpwm;
-> +	unsigned long rate;
-> +	u32 ccer, psc, arr, ccr;
-> +	u64 dty, prd;
-> +	int ret;
-> +
-> +	ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-> +	if (ret)
-> +		return ret;
-> +
-> +	state->enabled = ccer & (TIM_CCER_CC1E << (ch * 4));
-> +	state->polarity = (ccer & (TIM_CCER_CC1P << (ch * 4))) ?
-> +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-> +	regmap_read(priv->regmap, TIM_PSC, &psc);
-> +	regmap_read(priv->regmap, TIM_ARR, &arr);
-> +	read_ccrx(priv, ch, &ccr);
-> +	rate = clk_get_rate(priv->clk);
-> +
-> +	prd = (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
-> +	state->period = DIV_ROUND_UP_ULL(prd, rate);
-> +	dty = (u64)NSEC_PER_SEC * (psc + 1) * ccr;
-> +	state->duty_cycle = DIV_ROUND_UP_ULL(dty, rate);
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml | 2 +-
+ Documentation/devicetree/bindings/pwm/mxs-pwm.yaml           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Just a question/thought, could it be worth to use DIV_ROUND_CLOSEST_ULL() ?
+diff --git a/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
+index ab45df80345d..d84268b59784 100644
+--- a/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
+@@ -11,7 +11,7 @@ maintainers:
+   - Claudiu Beznea <claudiu.beznea@microchip.com>
+ 
+ allOf:
+-  - $ref: "pwm.yaml#"
++  - $ref: pwm.yaml#
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+index a34cbc13f691..6ffbed204c25 100644
+--- a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+@@ -25,7 +25,7 @@ properties:
+     const: 3
+ 
+   fsl,pwm-number:
+-    $ref: '/schemas/types.yaml#/definitions/uint32'
++    $ref: /schemas/types.yaml#/definitions/uint32
+     description: u32 value representing the number of PWM devices
+ 
+ required:
+-- 
+2.34.1
 
-> +
-> +	return ret;
-> +}
-> +
->  static const struct pwm_ops stm32pwm_ops = {
->  	.owner = THIS_MODULE,
->  	.apply = stm32_pwm_apply_locked,
-> +	.get_state = stm32_pwm_get_state,
->  	.capture = IS_ENABLED(CONFIG_DMA_ENGINE) ? stm32_pwm_capture : NULL,
->  };
->  
-> @@ -579,30 +625,22 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
->  	priv->have_complementary_output = (ccer != 0);
->  }
->  
-> -static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
-> +static int stm32_pwm_detect_channels(struct stm32_pwm *priv, int *n_enabled)
->  {
-> -	u32 ccer;
-> -	int npwm = 0;
-> +	u32 ccer, ccer_backup;
-> +	int npwm;
->  
->  	/*
->  	 * If channels enable bits don't exist writing 1 will have no
->  	 * effect so we can detect and count them.
->  	 */
-> +	regmap_read(priv->regmap, TIM_CCER, &ccer_backup);
->  	regmap_set_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
->  	regmap_read(priv->regmap, TIM_CCER, &ccer);
-> -	regmap_clear_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
-> +	regmap_write(priv->regmap, TIM_CCER, ccer_backup);
->  
-> -	if (ccer & TIM_CCER_CC1E)
-> -		npwm++;
-> -
-> -	if (ccer & TIM_CCER_CC2E)
-> -		npwm++;
-> -
-> -	if (ccer & TIM_CCER_CC3E)
-> -		npwm++;
-> -
-> -	if (ccer & TIM_CCER_CC4E)
-> -		npwm++;
-> +	npwm = hweight32(ccer & TIM_CCER_CCXE);
-> +	*n_enabled = hweight32(ccer_backup & TIM_CCER_CCXE);
->  
->  	return npwm;
->  }
-> @@ -613,7 +651,9 @@ static int stm32_pwm_probe(struct platform_device *pdev)
->  	struct device_node *np = dev->of_node;
->  	struct stm32_timers *ddata = dev_get_drvdata(pdev->dev.parent);
->  	struct stm32_pwm *priv;
-> +	int n_enabled;
->  	int ret;
-> +	int i;
->  
->  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
-> @@ -635,7 +675,10 @@ static int stm32_pwm_probe(struct platform_device *pdev)
->  
->  	priv->chip.dev = dev;
->  	priv->chip.ops = &stm32pwm_ops;
-> -	priv->chip.npwm = stm32_pwm_detect_channels(priv);
-> +	priv->chip.npwm = stm32_pwm_detect_channels(priv, &n_enabled);
-> +
-
-I'd suggest to comment a bit here, to explain it initializes the PWM
-counter clock refcount in sync with PWM initial state left by the
-bootloader.
-
-In all case, this is fine for me, you can add my:
-Reviewed-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-
-Best Regards,
-Thanks,
-Fabrice
-
-> +	for (i = 0; i < n_enabled; i++)
-> +		clk_enable(priv->clk);
->  
->  	ret = pwmchip_add(&priv->chip);
->  	if (ret < 0)
-> 
-> ---
-> base-commit: ac9a78681b921877518763ba0e89202254349d1b
-> change-id: 20230608-pwm-stm32-get-state-4107bcadd786
-> 
-> Best regards,
