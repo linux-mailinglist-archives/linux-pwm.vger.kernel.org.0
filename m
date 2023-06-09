@@ -2,121 +2,130 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3F49729C3D
-	for <lists+linux-pwm@lfdr.de>; Fri,  9 Jun 2023 16:07:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0625A729CAC
+	for <lists+linux-pwm@lfdr.de>; Fri,  9 Jun 2023 16:22:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240127AbjFIOHb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 9 Jun 2023 10:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35984 "EHLO
+        id S241082AbjFIOWG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 9 Jun 2023 10:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240576AbjFIOHU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Jun 2023 10:07:20 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2750035A9
-        for <linux-pwm@vger.kernel.org>; Fri,  9 Jun 2023 07:07:14 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f655293a38so1912897e87.0
-        for <linux-pwm@vger.kernel.org>; Fri, 09 Jun 2023 07:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686319632; x=1688911632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jCeEbW1U8X5tsZ4C4X/AN2VQz3Te0cG/Jf+u2WdiQhA=;
-        b=Ts+urxZPApGt0XBPTXgusp3g46WRrEeespxkpm2YhTx4scmVZLcCBxFk3uP6DxV+uf
-         WN6eG0NJwH7RZ1E6L9AHyqbNzdaDRdX4zD0cYnfK3tO4HXMNlwfhaiEw3TIgCkP9qiNQ
-         9iNsDNhvICxqOwA1dbgfgYbpGtGTgQHjRdXMijsThBI4U9yu42yTNgT5e2M5mQAf9oAd
-         a+Gvb6QBZgaFFtTz4Ct59nJ+QsDL71nuScd4frj824CaOzpeIej0+cEL5+nx+G+d7clP
-         7qam1XfhLs+cKTZ+Rr0JT5q6tU746JDLC7A6XQRoIf3/pYf5OtfddbncqVOTSYazp1xA
-         18jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686319632; x=1688911632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jCeEbW1U8X5tsZ4C4X/AN2VQz3Te0cG/Jf+u2WdiQhA=;
-        b=kCYOb51iM8iJHsP9xrcCrjQPhaHGc7GGexR5IGi+6XaWXJGKPbMXUpuC/gBwkWX7V5
-         yQ7Tbs/9XwlDSsXdRZRLkLiBPs6fFRH7uz3/iBkZPUYzrUr1GCW0j4l7cwXevDMFI2Cu
-         KJKGevEOfJhFf+PNemtwKLcT0vytdFhZgA60DKvpVU38/1QrWmPBY/3hY8qtnd9+LLv3
-         UuuI5j0uV8rKG9uQh4XrJMal3BFpVt78+eqUYKXEIPpLk7FZ0PcPCaM5u40TCTQRXWGH
-         RgcYSeRigFfabzXzHPgy2ewqFj3jl6+/2V8rKYeZBoWMDTm7FrJIUtSUlFMV9bb76EgG
-         vMhQ==
-X-Gm-Message-State: AC+VfDyCUEROdqO81bbtc6IVyFLSWIHViPcf7h+uT5E8O0hXw3NoWdej
-        vqFsa6fp29+8sK1wvbF2wruXnw==
-X-Google-Smtp-Source: ACHHUZ6hAzhcinWv3jhYYd7EDXnoILzhszPHvrOnNXmIrY+BsxwZzC+2GchphS4lR8xtpjG8FhaLwQ==
-X-Received: by 2002:a2e:9656:0:b0:2ad:95dd:8802 with SMTP id z22-20020a2e9656000000b002ad95dd8802mr1292972ljh.38.1686319632281;
-        Fri, 09 Jun 2023 07:07:12 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id kg6-20020a17090776e600b009661484e84esm1319651ejc.191.2023.06.09.07.07.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 07:07:11 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        with ESMTP id S241073AbjFIOWD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 9 Jun 2023 10:22:03 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83AB30F5
+        for <linux-pwm@vger.kernel.org>; Fri,  9 Jun 2023 07:22:01 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q7d01-0007ok-Tg; Fri, 09 Jun 2023 16:21:57 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q7d00-006Dw8-Nd; Fri, 09 Jun 2023 16:21:56 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q7d00-00CbtK-3b; Fri, 09 Jun 2023 16:21:56 +0200
+Date:   Fri, 9 Jun 2023 16:21:55 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: pwm: drop unneeded quotes
-Date:   Fri,  9 Jun 2023 16:07:09 +0200
-Message-Id: <20230609140709.64655-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: stm32: Implement .get_state()
+Message-ID: <20230609142155.h5fvn4fxdcleoznw@pengutronix.de>
+References: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
+ <dac9c545-fcbc-3aec-c341-abc62f551703@foss.st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wkz2lg5pii5fhdhh"
+Content-Disposition: inline
+In-Reply-To: <dac9c545-fcbc-3aec-c341-abc62f551703@foss.st.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Cleanup bindings dropping unneeded quotes. Once all these are fixed,
-checking for this can be enabled in yamllint.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml | 2 +-
- Documentation/devicetree/bindings/pwm/mxs-pwm.yaml           | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+--wkz2lg5pii5fhdhh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml b/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
-index ab45df80345d..d84268b59784 100644
---- a/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/atmel,at91sam-pwm.yaml
-@@ -11,7 +11,7 @@ maintainers:
-   - Claudiu Beznea <claudiu.beznea@microchip.com>
- 
- allOf:
--  - $ref: "pwm.yaml#"
-+  - $ref: pwm.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-index a34cbc13f691..6ffbed204c25 100644
---- a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-@@ -25,7 +25,7 @@ properties:
-     const: 3
- 
-   fsl,pwm-number:
--    $ref: '/schemas/types.yaml#/definitions/uint32'
-+    $ref: /schemas/types.yaml#/definitions/uint32
-     description: u32 value representing the number of PWM devices
- 
- required:
--- 
-2.34.1
+Hello Fabrice,
 
+On Fri, Jun 09, 2023 at 03:06:47PM +0200, Fabrice Gasnier wrote:
+> On 6/8/23 16:06, Philipp Zabel wrote:
+> > +static int stm32_pwm_get_state(struct pwm_chip *chip,
+> > +			       struct pwm_device *pwm, struct pwm_state *state)
+> > +{
+> > +	struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
+> > +	int ch =3D pwm->hwpwm;
+> > +	unsigned long rate;
+> > +	u32 ccer, psc, arr, ccr;
+> > +	u64 dty, prd;
+> > +	int ret;
+> > +
+> > +	ret =3D regmap_read(priv->regmap, TIM_CCER, &ccer);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	state->enabled =3D ccer & (TIM_CCER_CC1E << (ch * 4));
+> > +	state->polarity =3D (ccer & (TIM_CCER_CC1P << (ch * 4))) ?
+> > +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
+> > +	regmap_read(priv->regmap, TIM_PSC, &psc);
+> > +	regmap_read(priv->regmap, TIM_ARR, &arr);
+> > +	read_ccrx(priv, ch, &ccr);
+> > +	rate =3D clk_get_rate(priv->clk);
+> > +
+> > +	prd =3D (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
+> > +	state->period =3D DIV_ROUND_UP_ULL(prd, rate);
+> > +	dty =3D (u64)NSEC_PER_SEC * (psc + 1) * ccr;
+> > +	state->duty_cycle =3D DIV_ROUND_UP_ULL(dty, rate);
+>=20
+> Just a question/thought, could it be worth to use DIV_ROUND_CLOSEST_ULL()=
+ ?
+
+No, round up is the right choice. The reason for that is that .apply()
+rounds down in its divisions. If you use ROUND_CLOSEST here, reapplying
+the result from .get_state() might not be idempotent.
+
+> > +
+> > +	return ret;
+> > +}
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--wkz2lg5pii5fhdhh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSDNYMACgkQj4D7WH0S
+/k7s5Af/RT0ZOdJvsT4ylvLPggQkwlMTUHV0alz7e2/4+uYnw8bv5kN9Ly38Mnm5
+IKwDWxm5tRbuUNm658LqBYi4xXRnPdvkR3Sx18PE8KZsIkbjRcaizPk2UnkpIJKd
+UWtztLyKTT5LUp2mn9WGjzUgC+eXW67uSY0/ChoWVANu9/J2bpbp2rpIz3l2vk30
+jwdWMX61A7j5kS/XanteA7nKuFwI94MdzrfqCMSAW2w2YKS63RcA/aPr1tKtlPZv
+77UHlviGhFPm7R4LrAaX3Swj2OIq3Lj7nREr9YUT5/vO+AULV9pX2nUvR9zAMVVw
+y/4kR4atPgutjQ19zD+pfpXz/jlQGQ==
+=yi3A
+-----END PGP SIGNATURE-----
+
+--wkz2lg5pii5fhdhh--
