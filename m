@@ -2,61 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 058EA72BCFA
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Jun 2023 11:48:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 153BB72C80F
+	for <lists+linux-pwm@lfdr.de>; Mon, 12 Jun 2023 16:21:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233584AbjFLJsT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Jun 2023 05:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
+        id S237477AbjFLOUz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 12 Jun 2023 10:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234726AbjFLJrf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Jun 2023 05:47:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 681425585
-        for <linux-pwm@vger.kernel.org>; Mon, 12 Jun 2023 02:34:31 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q8dvJ-0007lJ-Kv; Mon, 12 Jun 2023 11:33:17 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q8dvI-006r1G-Db; Mon, 12 Jun 2023 11:33:16 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q8dvH-00DTIu-Ns; Mon, 12 Jun 2023 11:33:15 +0200
-Date:   Mon, 12 Jun 2023 11:33:15 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S239180AbjFLOUP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Jun 2023 10:20:15 -0400
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697474C31
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Jun 2023 07:17:52 -0700 (PDT)
+Received: by mail-ot1-x330.google.com with SMTP id 46e09a7af769-6b29b9f5c40so2919903a34.2
+        for <linux-pwm@vger.kernel.org>; Mon, 12 Jun 2023 07:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686579407; x=1689171407;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3KEZk+7J6jH+5aotS2FyIOrhqYERHH/vUHWmZ4rNxhg=;
+        b=bZn+CTs4P4E4qcCwjLB17/HmQbPIV+EwRKaOn23NbrEuaKywaKECFGxeDgst7oqsry
+         8E98zn+lshy2NuH5ncrt0TPX773Fh3BUnKyZOJXTrb+aI0PfHvf5qUCxUFJbVl/XslS3
+         +gsKNRFIbTVDnRADz5urtCDpqGMxa28zNgdKG1Vxj70c2LJ2QFJEBwG8LMn7suVLP8iw
+         LefKkfedKJhJ1lcUFm17eU5OqV/HvYn0aTLy/+6upZJjMMvC+fq6eZd6oul8eY67Zpam
+         5zmZR76yLa/RmoORuZOeTP+DANNTQeXifYt5BiW1xK381d+qJbG6Ejvl6fUWnQ1ivCzC
+         QIug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686579407; x=1689171407;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3KEZk+7J6jH+5aotS2FyIOrhqYERHH/vUHWmZ4rNxhg=;
+        b=kD3WI/BiI0gZ4QaglI3mCk8hrEfXs9P6fMZ5UfU0URVQRJh1iZgFkftL8DUvYy3l6r
+         SjYFmzMhmU0wHRuhh7M18hdX3MEEnAsGvFJtzscBlYKZaZsGW2ISL0p45zIhzIBmzYsF
+         KAH/3djjqlVqBDc41dCA/caL4CpSMIxaMOb9uX8XDIibpbJ3PMuQ+UXS8AZU6mCvxNAm
+         1HBZgdzqWlNaPZ4bSYTbuKzE7fcyMEK3mp82Nxc/PvuS8Cy4PEReEwqFgS2LHErbgUJO
+         2WmBoRK91apM/zBkeCvfzCRwx9B6U3VeL4wVlufMM3HRzub9yt9fArQ9sQSRXEbWws/w
+         APxg==
+X-Gm-Message-State: AC+VfDx5TcqbNZl4FtbxHH6tRlKm5MhA04AUHIETRsDVSBg2Vf/j0bjj
+        x+8MB5lt5fEa62TT1tq/f+iMZnb3Cf+Jo5o7WGPMwg==
+X-Google-Smtp-Source: ACHHUZ57+N2fxPaYk1KsjJ78p5skxj4sQPHQWMVRz384v60dInqhXhnP1Xd2BZXxN8RcGnafD1Ct7EAMdvyTUPuUwhE=
+X-Received: by 2002:a05:6359:679d:b0:123:4e5e:d65 with SMTP id
+ sq29-20020a056359679d00b001234e5e0d65mr4491115rwb.10.1686579406844; Mon, 12
+ Jun 2023 07:16:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230604121223.9625-1-stefan.wahren@i2se.com> <20230604121223.9625-9-stefan.wahren@i2se.com>
+In-Reply-To: <20230604121223.9625-9-stefan.wahren@i2se.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 12 Jun 2023 16:16:10 +0200
+Message-ID: <CAPDyKFpfcWifMwWHrFzKg+o8hD860x+eB5hT5ZUKyO6uc75Sug@mail.gmail.com>
+Subject: Re: [PATCH 08/10] dt-bindings: mmc: convert bcm2835-sdhost bindings
+ to YAML
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: drop unneeded quotes
-Message-ID: <20230612093315.gbabepl5qg44xf5d@pengutronix.de>
-References: <20230609140709.64655-1-krzysztof.kozlowski@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ywa6wsg5cd34k7qa"
-Content-Disposition: inline
-In-Reply-To: <20230609140709.64655-1-krzysztof.kozlowski@linaro.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,81 +84,114 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Sun, 4 Jun 2023 at 14:13, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>
+> Convert the DT binding document for bcm2835-sdhost from .txt to YAML.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
---ywa6wsg5cd34k7qa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied for next, thanks!
 
-Hello,
+Kind regards
+Uffe
 
-On Fri, Jun 09, 2023 at 04:07:09PM +0200, Krzysztof Kozlowski wrote:
-> Cleanup bindings dropping unneeded quotes. Once all these are fixed,
-> checking for this can be enabled in yamllint.
 
-in my book quoting everything instead of dropping quotes is the better
-option. While that policy adds more quotes, it prevents surprises like:
-
-	$ yaml2json << EOF
-	> countrycodes:
-	>  - de
-	>  - fr
-	>  - no
-	>  - pl
-	> EOF
-	{
-	  "countrycodes": [
-	    "de",
-	    "fr",
-	    false,
-	    "pl"
-	  ]
-	}
-
-And if you use the "only-when-needed" rule of yamllint you have to write
-the above list as:
-
-	countrycodes:
-	 - de
-	 - fr
-	 - "no"
-	 - pl
-
-which is IMHO really ugly.
-
-Another culprit is "on" (which is used e.g. in github action workflows),
-so yamllint tells for example for
-https://github.com/pengutronix/microcom/blob/main/.github/workflows/build.y=
-ml:
-
-	  3:1       warning  truthy value should be one of [false, true]  (truthy)
-
-and there are still more surprises (e.g. version numbers might be
-subject to conversion to float). So at least in my bubble the general
-hint is to *always* quote strings. Note that required: true is also the
-default for yamllint's quoted-strings setting, proably for pitfalls like
-these.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ywa6wsg5cd34k7qa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSG5loACgkQj4D7WH0S
-/k6ArQf/b00Bh9jtwpjsQUidCR7aV3sXe4wGk2E2np3MSScx9uTV5nNd3PEwuDXA
-gyH3OxCa59XjEAv4ldnNRq0vzgzg/+C3QazJbBNgK52hrNNJWcq0qmEUEJb7s1Xo
-HwZuUlIBzijuWwXTganvs3MT8/gihXcJZFJh1pYpaBW1cAPIaOivtOVgBEkG8Clh
-1/MuNXFbwuOECYdB/+EVU/L18k0UvHzOcPMkoG8PiNe7Qlrc4SRoMHKoQ2ODTg+e
-KnajlqePGTyRrawgZYlyQikCpnCR8RIEfuVe+kpM3c6bU6nXXCituhHEJqW0Cetv
-O3CieA77s+5NvHqazJ19xF+pYDaVPg==
-=r9PT
------END PGP SIGNATURE-----
-
---ywa6wsg5cd34k7qa--
+> ---
+>  .../bindings/mmc/brcm,bcm2835-sdhost.txt      | 23 --------
+>  .../bindings/mmc/brcm,bcm2835-sdhost.yaml     | 54 +++++++++++++++++++
+>  2 files changed, 54 insertions(+), 23 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+> deleted file mode 100644
+> index d876580ae3b8..000000000000
+> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+> +++ /dev/null
+> @@ -1,23 +0,0 @@
+> -Broadcom BCM2835 SDHOST controller
+> -
+> -This file documents differences between the core properties described
+> -by mmc.txt and the properties that represent the BCM2835 controller.
+> -
+> -Required properties:
+> -- compatible: Should be "brcm,bcm2835-sdhost".
+> -- clocks: The clock feeding the SDHOST controller.
+> -
+> -Optional properties:
+> -- dmas: DMA channel for read and write.
+> -          See Documentation/devicetree/bindings/dma/dma.txt for details
+> -
+> -Example:
+> -
+> -sdhost: mmc@7e202000 {
+> -       compatible = "brcm,bcm2835-sdhost";
+> -       reg = <0x7e202000 0x100>;
+> -       interrupts = <2 24>;
+> -       clocks = <&clocks BCM2835_CLOCK_VPU>;
+> -       dmas = <&dma 13>;
+> -       dma-names = "rx-tx";
+> -};
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml
+> new file mode 100644
+> index 000000000000..3a5a44800675
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/brcm,bcm2835-sdhost.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom BCM2835 SDHOST controller
+> +
+> +maintainers:
+> +  - Stefan Wahren <stefan.wahren@i2se.com>
+> +
+> +allOf:
+> +  - $ref: mmc-controller.yaml
+> +
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2835-sdhost
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    maxItems: 1
+> +
+> +  dma-names:
+> +    const: rx-tx
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/bcm2835.h>
+> +
+> +    sdhost: mmc@7e202000 {
+> +      compatible = "brcm,bcm2835-sdhost";
+> +      reg = <0x7e202000 0x100>;
+> +      interrupts = <2 24>;
+> +      clocks = <&clocks BCM2835_CLOCK_VPU>;
+> +      dmas = <&dma 13>;
+> +      dma-names = "rx-tx";
+> +      bus-width = <4>;
+> +    };
+> --
+> 2.34.1
+>
