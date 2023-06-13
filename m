@@ -2,149 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDBD272D647
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jun 2023 02:23:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AFFE72DC5D
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jun 2023 10:25:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238706AbjFMAPe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 12 Jun 2023 20:15:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        id S238041AbjFMIZb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 13 Jun 2023 04:25:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239092AbjFMAOH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 12 Jun 2023 20:14:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FDC1FC4;
-        Mon, 12 Jun 2023 17:12:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 092356305B;
-        Tue, 13 Jun 2023 00:12:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A60C433AC;
-        Tue, 13 Jun 2023 00:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686615156;
-        bh=fgQezU9Uhtd/cvT8fMXHuHFSkNX/SBX6F17ynk+Li7c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qpA4jI42/zyo7xTLzS4PdiFvs6Shs4bsvDP7FZ95DpUGkl5Mjs6Z7Qg28S75n5pS6
-         RR6Me5RUfUoCZTeWuhzve2bSQiYsVRHO35Oim0DLaEalBT9u71eJ+fPNkYqcn4uBeM
-         SE/Y+sgyd/s3KddBGvibVr9EPqrMspPYGWom/RzVYoQEauETXMjb6JWUu2rFVwdpg4
-         XjssPWBFj+pFXbXSB11GOincfTGTzmma7Rb5hnii5wg0JtTyHZBdrGY+wZRiGpSchj
-         FHTYgcWt7T0DGpx+svuZ+z9y1s+A8cef1LzLrzyC3cC4CMvW+RYRVep3SScEUodCym
-         48ZVwvYB5SHWA==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4f611ac39c5so6132978e87.2;
-        Mon, 12 Jun 2023 17:12:36 -0700 (PDT)
-X-Gm-Message-State: AC+VfDw1Z5vunOMqExez1R/6rXbsJpRKVZsScB0TFLmEGFAcsnaZze5n
-        slO4uHNrQayDY4B3M8AT34VNDeOlnhnslRZTjw==
-X-Google-Smtp-Source: ACHHUZ5DoNUKSvAIXqJyVR/dJqHjMXAJmhqi/nRReR8o6lChwcUCm3nF+VoA8dUPGUnBoXAPQ8cGXyQokNL17p9GqwE=
-X-Received: by 2002:a2e:9012:0:b0:2af:30d8:527f with SMTP id
- h18-20020a2e9012000000b002af30d8527fmr3553372ljg.19.1686615154438; Mon, 12
- Jun 2023 17:12:34 -0700 (PDT)
+        with ESMTP id S239355AbjFMIZa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 13 Jun 2023 04:25:30 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23BD10C2
+        for <linux-pwm@vger.kernel.org>; Tue, 13 Jun 2023 01:25:24 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f6283d0d84so6331250e87.1
+        for <linux-pwm@vger.kernel.org>; Tue, 13 Jun 2023 01:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686644723; x=1689236723;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F4ixw4xWTs3rJNnL8G6eiXhtwXpy6n06cNpG8Z4nKTY=;
+        b=RbHeb7veI2Kdlb7asuxhP7ksdM5VkbyTG261IIwL+nG/+hu1bJvspj4ijIYxr0UvIg
+         xkWIDyfG0KhGOAq0+aqFeTwLph9gvcBS4SruAS5OTUUShCrNMMvxtchL+XDvH0jHiIvR
+         Bcy9ec5BIAiliJFqPrh6bqLfM5FGLt8PNL4rJwT0Zxdx2TlXWRYUwKFrt2dDalvx/gr9
+         USBx87e9Iht9AWwiJy5X29fnYgALEejmp3OcRqJXwIRa9gPz1LXcv3IdppPuvm/wdCMy
+         rc89RPazWjqTPfpCjHL4KfIAeH40knlJXCqWDmU6WYL3ZSDuMLkmyY5G1n4yB+1+JkEO
+         1kEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686644723; x=1689236723;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F4ixw4xWTs3rJNnL8G6eiXhtwXpy6n06cNpG8Z4nKTY=;
+        b=By0yvOzy+hHZPZmj60+mJAbHWYX5t25xH5H8BfauncTofi732nIVQVwswQur92enJd
+         GHkGWVoeAGeQ8eXxjJotb5KpSBi3lSHFymFZcW0gpC0Z6iaBoSRbIF+pRv/khZr7t2Dl
+         s2SVeSKuOOdHndledzNtN/vG4GbK4e7+vU8c8uCD2k8rYYnLdVNqZg8b5Cbwp6oqW/a8
+         1/c2LtUvzryy8ilIVLxevqvdDFJ5R0q17OalamImdfr22+G683HH3UQhNLoeglGTbZbC
+         GlXLe5CXC1/TWm5eOWtw360O2M6sEACaZQn3rtNloJBMhn9gQ2r6OTlq59FWwbZM4L1B
+         3hEA==
+X-Gm-Message-State: AC+VfDzj7Vira+x221TiX0Z55xcrTg4S9Z7A95AIGcMqcq2wwyvAoZLA
+        rCdxyKnPYBmUDmrM8Rz3REv50g==
+X-Google-Smtp-Source: ACHHUZ7r47vQ3MyWQCdq68QcbgIUmC0wTN9B2tjrjOdXfofm3h3VHlJf3oFPzEa6nhiyIi56iM4r7w==
+X-Received: by 2002:a05:6512:503:b0:4f0:124:b56b with SMTP id o3-20020a056512050300b004f00124b56bmr4880954lfb.7.1686644723189;
+        Tue, 13 Jun 2023 01:25:23 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:b5a8:28ff:af00:a97f? ([2a05:6e02:1041:c10:b5a8:28ff:af00:a97f])
+        by smtp.googlemail.com with ESMTPSA id 6-20020a05600c230600b003f41bb52834sm13734723wmo.38.2023.06.13.01.25.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jun 2023 01:25:22 -0700 (PDT)
+Message-ID: <1c77c762-8557-b82d-219e-9d4d6fb0fa31@linaro.org>
+Date:   Tue, 13 Jun 2023 10:25:21 +0200
 MIME-Version: 1.0
-References: <20230412112739.160376-1-angelogioacchino.delregno@collabora.com>
- <20230412112739.160376-4-angelogioacchino.delregno@collabora.com> <02a588ca-680f-ab45-1005-768d5b5db252@gmail.com>
-In-Reply-To: <02a588ca-680f-ab45-1005-768d5b5db252@gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 13 Jun 2023 08:12:22 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9Heu3yzwbJgEpOwqabwpyTXMByFgcpoBojaM7MaRTUnQ@mail.gmail.com>
-Message-ID: <CAAOTY_9Heu3yzwbJgEpOwqabwpyTXMByFgcpoBojaM7MaRTUnQ@mail.gmail.com>
-Subject: Re: [PATCH 03/27] dt-bindings: display: mediatek: dpi: Add compatible
- for MediaTek MT6795
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        jassisinghbrar@gmail.com, chunfeng.yun@mediatek.com,
-        vkoul@kernel.org, kishon@kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, ck.hu@mediatek.com,
-        jitao.shi@mediatek.com, xinlei.lee@mediatek.com,
-        houlong.wei@mediatek.com, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org,
-        kernel@collabora.com, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 09/10] dt-bindings: thermal: convert bcm2835-thermal
+ bindings to YAML
+Content-Language: en-US
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20230604121223.9625-1-stefan.wahren@i2se.com>
+ <20230604121223.9625-10-stefan.wahren@i2se.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <20230604121223.9625-10-stefan.wahren@i2se.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi, Matthias:
+On 04/06/2023 14:12, Stefan Wahren wrote:
+> Convert the DT binding document for bcm2835-thermal from .txt to YAML.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
 
-Matthias Brugger <matthias.bgg@gmail.com> =E6=96=BC 2023=E5=B9=B45=E6=9C=88=
-29=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:07=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> Hi Chun-Kuang Hu,
->
-> Can you help to merge the missing DT-binding patches in this series?
+Applied, thanks
 
-Apply display binding of this series to  mediatek-drm-next [1].
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-next
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-Regards,
-Chun-Kuang.
-
->
-> Thanks a lot,
-> Matthias
->
-> On 12/04/2023 13:27, AngeloGioacchino Del Regno wrote:
-> > Add a compatible string for the MediaTek Helio X10 MT6795 SoC, using
-> > the same parameters as MT8183.
-> >
-> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@co=
-llabora.com>
-> > ---
-> >   .../display/mediatek/mediatek,dpi.yaml        | 23 +++++++++++-------=
--
-> >   1 file changed, 14 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediate=
-k,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dp=
-i.yaml
-> > index d976380801e3..803c00f26206 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.y=
-aml
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.y=
-aml
-> > @@ -17,15 +17,20 @@ description: |
-> >
-> >   properties:
-> >     compatible:
-> > -    enum:
-> > -      - mediatek,mt2701-dpi
-> > -      - mediatek,mt7623-dpi
-> > -      - mediatek,mt8173-dpi
-> > -      - mediatek,mt8183-dpi
-> > -      - mediatek,mt8186-dpi
-> > -      - mediatek,mt8188-dp-intf
-> > -      - mediatek,mt8192-dpi
-> > -      - mediatek,mt8195-dp-intf
-> > +    oneOf:
-> > +      - enum:
-> > +          - mediatek,mt2701-dpi
-> > +          - mediatek,mt7623-dpi
-> > +          - mediatek,mt8173-dpi
-> > +          - mediatek,mt8183-dpi
-> > +          - mediatek,mt8186-dpi
-> > +          - mediatek,mt8188-dp-intf
-> > +          - mediatek,mt8192-dpi
-> > +          - mediatek,mt8195-dp-intf
-> > +      - items:
-> > +          - enum:
-> > +              - mediatek,mt6795-dpi
-> > +          - const: mediatek,mt8183-dpi
-> >
-> >     reg:
-> >       maxItems: 1
