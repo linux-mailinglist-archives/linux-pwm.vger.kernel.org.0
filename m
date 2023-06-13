@@ -2,100 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03991731DF5
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jun 2023 18:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F6B4732621
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Jun 2023 06:16:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234207AbjFOQil (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 15 Jun 2023 12:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40508 "EHLO
+        id S242726AbjFPEQl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Jun 2023 00:16:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjFOQik (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 15 Jun 2023 12:38:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFECFE69;
-        Thu, 15 Jun 2023 09:38:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 549D361999;
-        Thu, 15 Jun 2023 16:38:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A5EC433C8;
-        Thu, 15 Jun 2023 16:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686847118;
-        bh=F22bVWQutuqXY4+tXA/ymZHSWuT7v9Xwt1AL5BPn/Ug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TgMX6Ci6I/OTSdrWAA8xWQSNewYLAz7PSAhLvL3XEzyiVsdb+fa57gAMuSUwJ+VEi
-         D8peYgh/500K9tDptketizD2OyA11Z9hhQs6EfhuUskeux0oqWl1R+mCVtTf1/81+v
-         WtdrbmquTupacBXtvNEhXwID/vFmAChiMbU0Rd9+1KgutYzZej0tuI5WzYw2H6i9In
-         hUnf6QzByudzLsdKs41jDQEcyW2DSllNSYGdAsXV6+gMhklsyGScmJxqcOZc49zGMt
-         429G5Mod+R821/wtV1v4dEzJH3zLalqcpx+xvhGYorAq+EMGOoQMFmMzKLHwX5UXZT
-         aOuOAZMjJ/hMQ==
-Date:   Thu, 15 Jun 2023 09:41:58 -0700
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Artur Weber <aweber.kernel@gmail.com>, Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>, linux-tegra@vger.kernel.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, linux-leds@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Helge Deller <deller@gmx.de>,
-        linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 0/4] video: backlight: lp855x: modernize
- bindings
-Message-ID: <20230615164158.6tpsd766mqx3o7y4@ripper>
-References: <20230519180728.2281-1-aweber.kernel@gmail.com>
- <168669542896.1315701.6764382551599027707.b4-ty@kernel.org>
+        with ESMTP id S242161AbjFPEQd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Jun 2023 00:16:33 -0400
+X-Greylist: delayed 4340 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Jun 2023 21:16:33 PDT
+Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFEF2D43
+        for <linux-pwm@vger.kernel.org>; Thu, 15 Jun 2023 21:16:33 -0700 (PDT)
+Received: by mail.durme.pl (Postfix, from userid 1002)
+        id 6B19650B85; Tue, 13 Jun 2023 08:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
+        t=1686644213; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
+        h=Date:From:To:Subject:From;
+        b=Ok1oxK6ryyvphsy7DBiPch54YgtfAP1auH7ch5QJnc82jh6RUiFUoW3aDhbvH9RDD
+         XCGsP4bo4x/2WywJXMJP5g/UDoT6/hYshrNOviUEPsgYcuDWPQAkhnyq6czA3sm29P
+         FQ9Jlk/3ZlAcIziMTohFp9V/RW3JKAce/AfJ/Kg88JUcggf+wCvcpBxbGFM+rv//aM
+         qYP2EGLnmgRxz8cMjtg2qYIGKmqqDptVtlJbSKByJZpEAAtH9qJoqI9pQjgR4yhZUx
+         AIN/RitIXOFAdQtg96dyv+sS2D0yWfxbi6bYunqDIhjE7MfgwRjWRLkIXns73wbf1s
+         R+VL0TmtpvJHA==
+Received: by mail.durme.pl for <linux-pwm@vger.kernel.org>; Tue, 13 Jun 2023 08:00:41 GMT
+Message-ID: <20230613064501-0.1.2g.ayuf.0.p2l5adolj7@durme.pl>
+Date:   Tue, 13 Jun 2023 08:00:41 GMT
+From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: W sprawie samochodu
+X-Mailer: mail.durme.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168669542896.1315701.6764382551599027707.b4-ty@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,URIBL_CSS_A,URIBL_DBL_SPAM
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 03:30:10PM -0700, Bjorn Andersson wrote:
-> On Fri, 19 May 2023 20:07:24 +0200, Artur Weber wrote:
-> > Convert TI LP855X backlight controller bindings from TXT to YAML and,
-> > while we're at it, rework some of the code related to PWM handling.
-> > Also correct existing DTS files to avoid introducing new dtb_check
-> > errors.
-> > 
-> > Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [4/4] arm64: dts: adapt to LP855X bindings changes
->       commit: ebdcfc8c42c2b9d5ca1b27d8ee558eefb3e904d8
-> 
+Dzie=C5=84 dobry,
 
-Sorry, that was not for me to pick up. So I've dropped this change
-again.
+chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
+, je=C5=9Bli chodzi o system monitoringu GPS.
 
-Please note that all other changes to the affected file is prefixed
-"arm64: tegra:". Following this is a good idea, and would have helped me
-not accidentally pick this change.
+Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
+e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
+a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
 
-Regards,
-Bjorn
+Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
+dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
+szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
+mne znaczenie.
 
-> Best regards,
-> -- 
-> Bjorn Andersson <andersson@kernel.org>
+Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
+b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
+
+
+Pozdrawiam
+Krystian Wieczorek
