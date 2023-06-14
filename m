@@ -2,163 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43CD772F932
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jun 2023 11:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 536A772FC3E
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jun 2023 13:18:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244082AbjFNJah (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Jun 2023 05:30:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36568 "EHLO
+        id S235800AbjFNLSO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Jun 2023 07:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244032AbjFNJaL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Jun 2023 05:30:11 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9370D1FEB;
-        Wed, 14 Jun 2023 02:30:09 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 825D386093;
-        Wed, 14 Jun 2023 11:30:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1686735006;
-        bh=gHe9QOpXgshvhLoIzYTw4Wb+apUJ5jktmuAeQ90/rDg=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=I58B0kgb1VIeivyh1hT+Kz0J15HDxGRPOAuuXjbGumRfG2xSvsTg6RsAQx1WDefu8
-         n8ZrgCU+h4BqeSjmCilvBL4aQLd6WvacqD1Szh589+9Iw9h8WPclx7+ulujp4ig/fW
-         tc08egmQwbopwGCRwk4ZSXy/HScd5hfs9wozz4ieOSisUEuUSXaMqRGV8UaX7r8x29
-         iCaX5zEup2v9MeKa8NVnlthMcrGcW/jh8w6GAoe1KPmfn466IKw+H+WGPenWTcJutr
-         u/eTNs3tCWJiFsjgILB1iPU5XmaoPKoZwUAUdEKfTT6bELBGMndMaJ2siMOOy+kInh
-         NqzJ/sMGUgkkw==
-Message-ID: <2a910f52-6a33-5d5e-8bc3-a2ec01a65804@denx.de>
-Date:   Wed, 14 Jun 2023 11:30:01 +0200
+        with ESMTP id S243731AbjFNLR7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Jun 2023 07:17:59 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31312698
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Jun 2023 04:17:38 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f8c5d0b216so5280575e9.1
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Jun 2023 04:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1686741457; x=1689333457;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZqM7S8NVl5TgVH/SCkBnKovDNoLn6CHQRP6NUvEVbFA=;
+        b=QOBvNJ4SK+SNbyk8XDYPoIiRQQGEReadorv2ByIf2r/Pgn2pEZzITLNMrdIZW4Uja1
+         FrPl+kL8JMgwnFvefo4gM4ADtDjXYBkoOJsodiAp/P4NWHr47LelPoqg5Z5eIZPbl5ed
+         W+A/T2K2m6EepXPnoOFsFcNjYboMPE6S5vb039RIEtYnbJEHi+qcmJOuHNQ9Z4kyLIDn
+         h3yI9XWwjJpwSdLsfp4+8K7SkLOYf7q8jLrVDRDO5cnHRdpbQS4PxIclh/2KWezLs+Pp
+         AEPdwu44Gi7WPkNp8s+L3l6mY+YlZ+dvDnubAgTdRxAOQJHTLNoCdo+HmjJBvjqPeCYE
+         jZmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686741457; x=1689333457;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZqM7S8NVl5TgVH/SCkBnKovDNoLn6CHQRP6NUvEVbFA=;
+        b=kGQ04xBufbRe2Uvgb1AF83rUgYq2FuFrq5WVsRotHQM0lCWZ4h+l0cKWKxcYWkdEMY
+         MAT3+yLdjH12TRcz+slQQT2NKnROH65YDRbOCH6rdP4ULnaR+n1xwrDT91AKvKfdvEZy
+         2eDD6rSnkxviENBFC03ofwiujDybiAS63V4G2laMBP8ToPseTLfed42LaeAsOb5cwlAp
+         Lh/nen6c0VB7uWonZKsxSnQbruSk3yZoenIW5kZLFpRTTWjv7DaRiHzxpAnZFYelyIBH
+         kehwHl2KH6pG5yxuzSpgbXGcOpYLwT9gRzP6UHiBVYUQb3BRXJONbsr0W1J+2kIayFEy
+         +jCA==
+X-Gm-Message-State: AC+VfDw4nH/DF1VNVQ5RoBzbpAhty4MclhZpF+z3MnghhtRXZVBwcWCz
+        DuAVLWMNMvklKh8+gV330tTFHg==
+X-Google-Smtp-Source: ACHHUZ4VV/u+wNY65vkMGqcqRpOJrnrIRBctK0IPefzUqdfJtG2Faq8wP4fbJml7xLdM6nEjARrruQ==
+X-Received: by 2002:a05:600c:2212:b0:3f7:865d:ce63 with SMTP id z18-20020a05600c221200b003f7865dce63mr10498832wml.21.1686741456811;
+        Wed, 14 Jun 2023 04:17:36 -0700 (PDT)
+Received: from [10.35.6.111] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id x25-20020a05600c21d900b003f60faa4612sm17154520wmj.22.2023.06.14.04.17.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Jun 2023 04:17:36 -0700 (PDT)
+Message-ID: <f993a71b-69ff-3047-9a56-d04fd583431a@sifive.com>
+Date:   Wed, 14 Jun 2023 12:17:35 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] Input: pwm-beeper - Support volume setting via sysfs
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v7 10/10] pwm: dwc: use clock rate in hz to avoid rounding
+ issues
 To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-input@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Manuel Traut <manuel.traut@mt.com>,
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org
-References: <20230512185551.183049-1-marex@denx.de>
- <20230614064510.nm3hhokjxe37hrjo@pengutronix.de>
-Content-Language: en-US
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <20230614064510.nm3hhokjxe37hrjo@pengutronix.de>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        jarkko.nikula@linux.intel.com,
+        William Salmon <william.salmon@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
+References: <20221223153820.404565-1-ben.dooks@sifive.com>
+ <20221223153820.404565-11-ben.dooks@sifive.com>
+ <20230216213927.r3lvjz6u7d62y4pb@pengutronix.de>
+Content-Language: en-GB
+From:   Ben Dooks <ben.dooks@sifive.com>
+In-Reply-To: <20230216213927.r3lvjz6u7d62y4pb@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 6/14/23 08:45, Uwe Kleine-König wrote:
-> On Fri, May 12, 2023 at 08:55:51PM +0200, Marek Vasut wrote:
->> The PWM beeper volume can be controlled by adjusting the PWM duty cycle,
->> expose volume setting via sysfs, so users can make the beeper quieter.
->> This patch adds sysfs attribute 'volume' in range 0..50000, i.e. from 0
->> to 50% in 1/1000th of percent steps, this resolution should be sufficient.
->>
->> The reason for 50000 cap on volume or PWM duty cycle is because duty cycle
->> above 50% again reduces the loudness, the PWM wave form is inverted wave
->> form of the one for duty cycle below 50% and the beeper gets quieter the
->> closer the setting is to 100% . Hence, 50% cap where the wave form yields
->> the loudest result.
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
->> ---
->> An alternative option would be to extend the userspace input ABI, e.g. by
->> using SND_TONE top 16bits to encode the duty cycle in 0..50000 range, and
->> bottom 16bit to encode the existing frequency in Hz . Since frequency in
->> Hz is likely to be below some 25 kHz for audible bell, this fits in 16bits
->> just fine. Thoughts ?
->> ---
->> NOTE: This uses approach similar to [1], except it is much simpler.
->>        [1] https://patchwork.kernel.org/project/linux-input/cover/20230201152128.614439-1-manuel.traut@mt.com/
->> ---
->> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
->> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Cc: Frieder Schrempf <frieder.schrempf@kontron.de>
->> Cc: Manuel Traut <manuel.traut@mt.com>
->> Cc: Marek Vasut <marex@denx.de>
->> Cc: Thierry Reding <thierry.reding@gmail.com>
->> Cc: linux-input@vger.kernel.org
->> Cc: linux-pwm@vger.kernel.org
->> ---
->>   drivers/input/misc/pwm-beeper.c | 58 ++++++++++++++++++++++++++++++++-
->>   1 file changed, 57 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
->> index 3cf1812384e6a..f63d0ebbaf573 100644
->> --- a/drivers/input/misc/pwm-beeper.c
->> +++ b/drivers/input/misc/pwm-beeper.c
->> @@ -21,6 +21,7 @@ struct pwm_beeper {
->>   	struct regulator *amplifier;
->>   	struct work_struct work;
->>   	unsigned long period;
->> +	unsigned long duty_cycle;
->>   	unsigned int bell_frequency;
->>   	bool suspended;
->>   	bool amplifier_on;
->> @@ -37,7 +38,7 @@ static int pwm_beeper_on(struct pwm_beeper *beeper, unsigned long period)
->>   
->>   	state.enabled = true;
->>   	state.period = period;
->> -	pwm_set_relative_duty_cycle(&state, 50, 100);
->> +	pwm_set_relative_duty_cycle(&state, beeper->duty_cycle, 100000);
->>   
->>   	error = pwm_apply_state(beeper->pwm, &state);
->>   	if (error)
->> @@ -119,6 +120,53 @@ static void pwm_beeper_close(struct input_dev *input)
->>   	pwm_beeper_stop(beeper);
->>   }
->>   
->> +static ssize_t volume_show(struct device *dev,
->> +			   struct device_attribute *attr,
->> +			   char *buf)
->> +{
->> +	struct pwm_beeper *beeper = dev_get_drvdata(dev);
->> +
->> +	return sysfs_emit(buf, "%ld\n", beeper->duty_cycle);
->> +}
->> +
->> +static ssize_t volume_store(struct device *dev,
->> +			    struct device_attribute *attr,
->> +			    const char *buf, size_t count)
->> +{
->> +	struct pwm_beeper *beeper = dev_get_drvdata(dev);
->> +	unsigned long val;
->> +
->> +	if (kstrtoul(buf, 0, &val) < 0)
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * Volume is really PWM duty cycle in pcm (per cent mille, 1/1000th
->> +	 * of percent). This value therefore ranges from 0 to 50000 . Duty
->> +	 * cycle of 50% = 50000pcm is the maximum volume .
->> +	 */
->> +	val = clamp(val, 0UL, 50000UL);
+On 16/02/2023 21:39, Uwe Kleine-König wrote:
+> On Fri, Dec 23, 2022 at 03:38:20PM +0000, Ben Dooks wrote:
+>> As noted, the clock-rate when not a nice multiple of ns is probably
+>> going to end up with inacurate caculations, as well as on a non pci
 > 
-> I wonder if you want to refuse values here that are not in the specified
-> range, that is, something like:
-> 
-> 	if (val != clamp(val, 0UL, 50000UL))
-> 		return -EINVAL;
-> 
-> I think this is more in line who other sysfs properties work?!
+> Given that such a non-nice ca*l*culation only happens in the of case
+> that is introduced here, it would be nice to move this patch before the
+> introduction of the of-support.
 
-I am still waiting for the more general API design decision here from 
-input maintainer, i.e. what was designed with Jeff above.
+I've moved of support to the end of the series
+you
+>> system the rate may change (although we've not put a clock rate
+>> change notifier in this code yet) so we also add some quick checks
+>> of the rate when we do any calculations with it.
+> 
+> If the clk rate changes while the PWM is on, this modifies the output.
+> This is unfortunate and so it justifies adding a call to
+> clk_rate_exclusive_get() when the PWM is on.
 
-Yes, we can clamp the value, but I won't work on this unless there is 
-clear answer how to go on with the API first.
+I can't really test things any more as the hardware has been returned
+to the client and I'm technically off the project (and awaiting this
+email address to be closed down).
+
+Could this either be solved by the clk_rate_exclusive_get() or adding
+a clock change notifier? Either way I would prefer this to be work for
+another patch.
+
+I'll send v8 out later as it has had some re-works due to moving
+things around.
+
+Thank you for the review.
+
+--
+Ben
+
