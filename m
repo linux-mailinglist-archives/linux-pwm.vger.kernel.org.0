@@ -2,31 +2,31 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DD2C72F88D
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jun 2023 11:01:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5A8872F927
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jun 2023 11:30:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234595AbjFNJBf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Jun 2023 05:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48684 "EHLO
+        id S244028AbjFNJaB (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Jun 2023 05:30:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235002AbjFNJBe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Jun 2023 05:01:34 -0400
+        with ESMTP id S244079AbjFNJ3j (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Jun 2023 05:29:39 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF7D1BE9
-        for <linux-pwm@vger.kernel.org>; Wed, 14 Jun 2023 02:01:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4015E268E
+        for <linux-pwm@vger.kernel.org>; Wed, 14 Jun 2023 02:29:26 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1q9MNe-0001bM-Cx; Wed, 14 Jun 2023 11:01:30 +0200
+        id 1q9Mod-0006Hu-CW; Wed, 14 Jun 2023 11:29:23 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1q9MNc-007JWQ-Bi; Wed, 14 Jun 2023 11:01:28 +0200
+        id 1q9Moa-007K2O-V4; Wed, 14 Jun 2023 11:29:20 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1q9MNb-00E9dX-Jd; Wed, 14 Jun 2023 11:01:27 +0200
-Date:   Wed, 14 Jun 2023 11:01:27 +0200
+        id 1q9Moa-00EAN5-62; Wed, 14 Jun 2023 11:29:20 +0200
+Date:   Wed, 14 Jun 2023 11:29:20 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Shuijing Li <shuijing.li@mediatek.com>
 Cc:     thierry.reding@gmail.com, matthias.bgg@gmail.com,
@@ -35,15 +35,15 @@ Cc:     thierry.reding@gmail.com, matthias.bgg@gmail.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org,
         Project_Global_Chrome_Upstream_Group@mediatek.com,
-        jitao.shi@mediatek.com
-Subject: Re: [PATCH v2] pwm: mtk_disp: Fix the disable flow of disp_pwm
-Message-ID: <20230614090127.6xynz6ti6cqptyy5@pengutronix.de>
-References: <20230518115258.14320-1-shuijing.li@mediatek.com>
+        jitao.shi@mediatek.com, Fei Shao <fshao@chromium.org>
+Subject: Re: [PATCH v3] pwm: mtk_disp: Fix the disable flow of disp_pwm
+Message-ID: <20230614092920.sl2qjdx3wbf7xtcm@pengutronix.de>
+References: <20230531031001.7440-1-shuijing.li@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="g65y4tisr66ns5qu"
+        protocol="application/pgp-signature"; boundary="7wrtscz2pppnkeoz"
 Content-Disposition: inline
-In-Reply-To: <20230518115258.14320-1-shuijing.li@mediatek.com>
+In-Reply-To: <20230531031001.7440-1-shuijing.li@mediatek.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -58,20 +58,33 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---g65y4tisr66ns5qu
+--7wrtscz2pppnkeoz
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 18, 2023 at 07:52:58PM +0800, Shuijing Li wrote:
+On Wed, May 31, 2023 at 11:10:01AM +0800, Shuijing Li wrote:
 > There is a flow error in the original mtk_disp_pwm_apply() function.
 > If this function is called when the clock is disabled, there will be a
 > chance to operate the disp_pwm register, resulting in disp_pwm exception.
 > Fix this accordingly.
 >=20
+> Fixes: 888a623db5d0 ("pwm: mtk-disp: Implement atomic API .apply()")
 > Signed-off-by: Shuijing Li <shuijing.li@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Tested-by: Fei Shao <fshao@chromium.org>
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-kleine@pengutronix.de>
+When I sent my ack for v2, I missed there was already a v3, so here
+again for the sake of easier maintenance:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+> ---
+> Changes in v3:
+> Add Fixes per suggestion from the previous thread:
+
+Note that for that a new version isn't necessary, patchwork (and I think
+also b4) pick up a fixes line from replies.
 
 Best regards
 Uwe
@@ -80,19 +93,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---g65y4tisr66ns5qu
+--7wrtscz2pppnkeoz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSJgeYACgkQj4D7WH0S
-/k4CfQf/dTzLQ5c2z/jSsZTIMPhUgJHtpEI+aFepaoUfNA4IRC+IrFVStQ8V/RJU
-6dAFA3nAUYFHuzZpQLTcaENDfr6MabMfSAR4yXhOaPcslme9pIpTuRnUZIIO0qvR
-42/AQxjcFCioGJAY0ARo4QLeKECZiK0U/ggPi3KRlqtd+XN78/q1Gc6483+0Eu4U
-F9ggDwUAft504AudLQq1CcKqUI4r2DkzpgKxzdTTOGcUFGCdwdhfjE0AooUN2wOp
-Fex3oZYrqkcw2WmUZydpEdSQ294jgNOBMG760VKK0mOrJDppOsPPRQN0jbK8J2i+
-4fiBt05cMgr2YeSBI1T7Fxh4dU5SPw==
-=mYin
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSJiG8ACgkQj4D7WH0S
+/k7apQf/QaFjN2bcdxDG3XjvUNxRfD7RzMDbbOJEbaqKBdj4v2M9frLXUojcBuu4
+OEXHdWb10Ubr4+XXAFxEf/DEhL8ejeD+RCp3qGCThjEnjEpv1X9XuaUR4WdcplVJ
+Aw1XlXDBIKULr/Mhmq9cvPQ7zJ0UYvLYDyKdK56QoItIoA60xHi37SSzWXWEzMCJ
+Eiyav50MyLXNBzx8UciAX8xGnN/C58csjV+kcckEAhuG7bF+ge5h6CjZzcxbTI1v
+hlzmQiRWt2NJsCd28aS4+7ibCtXW5GkYhGW1Gbxip8m/qlUw+CAelkrOBMK6ZQRL
+86cczXryeWLJGY7qC8lzocKjBZdt1w==
+=SoWt
 -----END PGP SIGNATURE-----
 
---g65y4tisr66ns5qu--
+--7wrtscz2pppnkeoz--
