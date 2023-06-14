@@ -2,119 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 536A772FC3E
-	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jun 2023 13:18:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D891E7305C2
+	for <lists+linux-pwm@lfdr.de>; Wed, 14 Jun 2023 19:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235800AbjFNLSO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 14 Jun 2023 07:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38584 "EHLO
+        id S233444AbjFNRPM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 14 Jun 2023 13:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243731AbjFNLR7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Jun 2023 07:17:59 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31312698
-        for <linux-pwm@vger.kernel.org>; Wed, 14 Jun 2023 04:17:38 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f8c5d0b216so5280575e9.1
-        for <linux-pwm@vger.kernel.org>; Wed, 14 Jun 2023 04:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1686741457; x=1689333457;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZqM7S8NVl5TgVH/SCkBnKovDNoLn6CHQRP6NUvEVbFA=;
-        b=QOBvNJ4SK+SNbyk8XDYPoIiRQQGEReadorv2ByIf2r/Pgn2pEZzITLNMrdIZW4Uja1
-         FrPl+kL8JMgwnFvefo4gM4ADtDjXYBkoOJsodiAp/P4NWHr47LelPoqg5Z5eIZPbl5ed
-         W+A/T2K2m6EepXPnoOFsFcNjYboMPE6S5vb039RIEtYnbJEHi+qcmJOuHNQ9Z4kyLIDn
-         h3yI9XWwjJpwSdLsfp4+8K7SkLOYf7q8jLrVDRDO5cnHRdpbQS4PxIclh/2KWezLs+Pp
-         AEPdwu44Gi7WPkNp8s+L3l6mY+YlZ+dvDnubAgTdRxAOQJHTLNoCdo+HmjJBvjqPeCYE
-         jZmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686741457; x=1689333457;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZqM7S8NVl5TgVH/SCkBnKovDNoLn6CHQRP6NUvEVbFA=;
-        b=kGQ04xBufbRe2Uvgb1AF83rUgYq2FuFrq5WVsRotHQM0lCWZ4h+l0cKWKxcYWkdEMY
-         MAT3+yLdjH12TRcz+slQQT2NKnROH65YDRbOCH6rdP4ULnaR+n1xwrDT91AKvKfdvEZy
-         2eDD6rSnkxviENBFC03ofwiujDybiAS63V4G2laMBP8ToPseTLfed42LaeAsOb5cwlAp
-         Lh/nen6c0VB7uWonZKsxSnQbruSk3yZoenIW5kZLFpRTTWjv7DaRiHzxpAnZFYelyIBH
-         kehwHl2KH6pG5yxuzSpgbXGcOpYLwT9gRzP6UHiBVYUQb3BRXJONbsr0W1J+2kIayFEy
-         +jCA==
-X-Gm-Message-State: AC+VfDw4nH/DF1VNVQ5RoBzbpAhty4MclhZpF+z3MnghhtRXZVBwcWCz
-        DuAVLWMNMvklKh8+gV330tTFHg==
-X-Google-Smtp-Source: ACHHUZ4VV/u+wNY65vkMGqcqRpOJrnrIRBctK0IPefzUqdfJtG2Faq8wP4fbJml7xLdM6nEjARrruQ==
-X-Received: by 2002:a05:600c:2212:b0:3f7:865d:ce63 with SMTP id z18-20020a05600c221200b003f7865dce63mr10498832wml.21.1686741456811;
-        Wed, 14 Jun 2023 04:17:36 -0700 (PDT)
-Received: from [10.35.6.111] ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id x25-20020a05600c21d900b003f60faa4612sm17154520wmj.22.2023.06.14.04.17.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jun 2023 04:17:36 -0700 (PDT)
-Message-ID: <f993a71b-69ff-3047-9a56-d04fd583431a@sifive.com>
-Date:   Wed, 14 Jun 2023 12:17:35 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v7 10/10] pwm: dwc: use clock rate in hz to avoid rounding
- issues
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S235423AbjFNRPF (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 14 Jun 2023 13:15:05 -0400
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952DFE69;
+        Wed, 14 Jun 2023 10:15:03 -0700 (PDT)
+Received: from [167.98.27.226] (helo=rainbowdash)
+        by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+        id 1q9U5D-00Exj5-EM; Wed, 14 Jun 2023 18:14:59 +0100
+Received: from ben by rainbowdash with local (Exim 4.96)
+        (envelope-from <ben@rainbowdash>)
+        id 1q9U5C-000I0h-0j;
+        Wed, 14 Jun 2023 18:14:58 +0100
+From:   Ben Dooks <ben.dooks@sifive.com>
+To:     linux-pwm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ben.dooks@codethink.co.uk, u.kleine-koenig@pengutronix.de,
         Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Greentime Hu <greentime.hu@sifive.com>,
         jarkko.nikula@linux.intel.com,
         William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>
-References: <20221223153820.404565-1-ben.dooks@sifive.com>
- <20221223153820.404565-11-ben.dooks@sifive.com>
- <20230216213927.r3lvjz6u7d62y4pb@pengutronix.de>
-Content-Language: en-GB
-From:   Ben Dooks <ben.dooks@sifive.com>
-In-Reply-To: <20230216213927.r3lvjz6u7d62y4pb@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>,
+        Ben Dooks <ben.dooks@sifive.com>
+Subject: [PATCH v8 0/5] DesignWare PWM driver updates
+Date:   Wed, 14 Jun 2023 18:14:52 +0100
+Message-Id: <20230614171457.69191-1-ben.dooks@sifive.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 16/02/2023 21:39, Uwe Kleine-König wrote:
-> On Fri, Dec 23, 2022 at 03:38:20PM +0000, Ben Dooks wrote:
->> As noted, the clock-rate when not a nice multiple of ns is probably
->> going to end up with inacurate caculations, as well as on a non pci
-> 
-> Given that such a non-nice ca*l*culation only happens in the of case
-> that is introduced here, it would be nice to move this patch before the
-> introduction of the of-support.
+This series is an update for the DesignWare PWM driver to add support for
+OF (and split the PCI bits out if aynone else wants them). This is mostly
+the same as the v7 series, but with code moved around and module-namespace
+added, plus review comments processed.
 
-I've moved of support to the end of the series
-you
->> system the rate may change (although we've not put a clock rate
->> change notifier in this code yet) so we also add some quick checks
->> of the rate when we do any calculations with it.
-> 
-> If the clk rate changes while the PWM is on, this modifies the output.
-> This is unfortunate and so it justifies adding a call to
-> clk_rate_exclusive_get() when the PWM is on.
+Since we no longer have the hardware, the clock code hasn't been changed to
+either lock the rate whilst the PWM is running, or to deal with any sort
+of change callback. This is left to future work (and I would rather get
+something in that does currently work) (second note, the hardware we did
+use had a fixed clock tree anyway)
 
-I can't really test things any more as the hardware has been returned
-to the client and I'm technically off the project (and awaiting this
-email address to be closed down).
+This account is probably going away soon, I have cc'd my main work
+email to catch any responses.
 
-Could this either be solved by the clk_rate_exclusive_get() or adding
-a clock change notifier? Either way I would prefer this to be work for
-another patch.
+Thank you all for the reviews.
 
-I'll send v8 out later as it has had some re-works due to moving
-things around.
+The lengthy changelog:
 
-Thank you for the review.
+v8:
+ - updated reviewed tags
+ - fix module name for pci version
+ - fix config symbol bug in makefile
+ - remove pci compile-test (mostly not used for pci)
+ - push the compile-test into the platform/of driver
+v7:
+ - fixup kconfig from previous pcie changes
+ - re-order kconfig to make dwc core be selected by PCI driver
+ - move clk variable to patch it is used in
+v6:
+ - fix removal ordering of DWC_PERIOD_NS
+v5:
+ - fixed kconfig string error
+ - merged pwm-nr into main of code
+ - split of code from pci code
+ - updated pwm-nr capping
+ - fix duplicate error reporting in of-code
+ - fix return in of-probe
+ - remove unecessary remove function as devm_ functions sort this
+ - fixed ordering of properties
+ - added missing reg item
+ - fixed missing split of the two clock sources.
+ - get bus clock in of code
+v4:
+ - split pci and of into new modules
+ - fixup review comments
+ - fix typos in dt-bindings
+v3:
+- change the compatible name
+- squash down pwm count patch
+- fixup patch naming
+v2:
+- fix #pwm-cells count to be 3
+- fix indetation 
+- merge the two clock patches
+- add HAS_IOMEM as a config dependency
 
---
-Ben
+Ben Dooks (5):
+  pwm: dwc: split pci out of core driver
+  pwm: dwc: make timer clock configurable
+  pwm: dwc: add PWM bit unset in get_state call
+  pwm: dwc: use clock rate in hz to avoid rounding issues
+  pwm: dwc: add of/platform support
+
+ drivers/pwm/Kconfig        |  24 ++++-
+ drivers/pwm/Makefile       |   2 +
+ drivers/pwm/pwm-dwc-core.c | 196 ++++++++++++++++++++++++++++++++++++
+ drivers/pwm/pwm-dwc-of.c   |  78 +++++++++++++++
+ drivers/pwm/pwm-dwc.c      | 198 +------------------------------------
+ drivers/pwm/pwm-dwc.h      |  61 ++++++++++++
+ 6 files changed, 364 insertions(+), 195 deletions(-)
+ create mode 100644 drivers/pwm/pwm-dwc-core.c
+ create mode 100644 drivers/pwm/pwm-dwc-of.c
+ create mode 100644 drivers/pwm/pwm-dwc.h
+
+-- 
+2.39.2
 
