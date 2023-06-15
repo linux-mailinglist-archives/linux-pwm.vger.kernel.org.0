@@ -2,58 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 078DB731BAE
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jun 2023 16:45:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6136D731DEE
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jun 2023 18:37:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240941AbjFOOpk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 15 Jun 2023 10:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59990 "EHLO
+        id S233944AbjFOQhZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 15 Jun 2023 12:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241542AbjFOOpj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 15 Jun 2023 10:45:39 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E781D294E;
-        Thu, 15 Jun 2023 07:45:35 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-4f61b45ee0dso10748465e87.0;
-        Thu, 15 Jun 2023 07:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686840334; x=1689432334;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wV92pSpCVmnx9n4E1q+MRb4GksMGgD+y07OYM0/qT58=;
-        b=aIzfv4Mjupmq37gyHvFs8F/LSK3Xj9YVHKM2j607IKnuOkrvGZAVssXNMRXeWX+dmV
-         /AABX0+ICsavEYJX+R3R3oC/NUjWUAt54gfecZ3dQ96G9nKrk4AmGMC0G7j9Lbv1SgaH
-         HquSTWXbpgXY4d8vkgRan3VK+R5OFrH+2Tzl6vO74LPZSu7DHUE/j3uzddwaTKvx2H/t
-         5202qourcPHXWuCglvCP6CdoV+V9kEbAap/hK6RIej9iv8rZpwVYy0hFRMU8uItAvMrz
-         5CsyEKHBt1Sfnna5pi9Im9hGJRY1hJVT/ZiTBhH9OukB8sEog1MjIDrMhfm4o4YpicQL
-         mQiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686840334; x=1689432334;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wV92pSpCVmnx9n4E1q+MRb4GksMGgD+y07OYM0/qT58=;
-        b=UAIVFo7qfg4ejUsezgWLlRjiFd7Ze5lYvELDHff4zg5nY0R19NQycCM2T1vQ1MpMn7
-         1KkkHBgaEUaVj4YbGzp2qRC8MgcNHbYuen4YRi0EgRd19Rlv+wNqtfI+GtiC4BKx4lZi
-         GElieDKpKXDR2vZhqeMYoiJT/8et/j8HlgPrih5xskj94u34khXFIvs8GsXJM7ZDiJJT
-         I4/dce4DVxi90Rl9svUbp/nkKnyBryssNlJ5aED3k0XHFUeUIRRTb3U9qknzlWwE0MAJ
-         zPgEzItajHPEbQFmAutzjwrw1kblqdcdToShWZPp12/dsbI0S4HTuvdNBdTSW02lA4iV
-         d20A==
-X-Gm-Message-State: AC+VfDyhcdb4qdd9KtOUM0Nz7aWoviG2AMKGNZbPaBICKWlLsqhzcm04
-        eJ+q9THAuGqyQl9Qra6/SQa0UCIremN2xU9Djw==
-X-Google-Smtp-Source: ACHHUZ7JCXFEpcyRUkA34U51/Dy11OR5ITEbLUmrZUsxSsG6Is9Uo9yDnK3rcDKYLGftkk2WwnqeoQ==
-X-Received: by 2002:a19:e01e:0:b0:4f8:4348:e000 with SMTP id x30-20020a19e01e000000b004f84348e000mr1324141lfg.13.1686840333381;
-        Thu, 15 Jun 2023 07:45:33 -0700 (PDT)
-Received: from localhost.localdomain (mail.pulsar-telecom.ru. [94.181.180.60])
-        by smtp.gmail.com with ESMTPSA id h7-20020ac25967000000b004f13f4ec267sm244451lfp.186.2023.06.15.07.45.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jun 2023 07:45:32 -0700 (PDT)
-From:   Aleksandr Shubin <privatesub2@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
+        with ESMTP id S230173AbjFOQhY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 15 Jun 2023 12:37:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5786BE69;
+        Thu, 15 Jun 2023 09:37:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E06B061A82;
+        Thu, 15 Jun 2023 16:37:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D897C433C0;
+        Thu, 15 Jun 2023 16:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686847042;
+        bh=qNA7RNRSn7+N0rXsnB3tLIGZpW49dK4CI81wmGijPKI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FILfp0XhsCAEFvj3KRRIeHhk7gSO6N4Xy03NeLRNCYvAfs29VNg7/UETFjJROjcyE
+         P7DvhjAWHw5fxoTtxnxgIyP2OVcMoejHbl2e0qXLatlGYmVhgBzPqvUTgNjZD7radt
+         I+fxhhS4VccMG1ebjsplRSfpSyMh073Grs7hun14/7Cz70d6pMl4g7qgYug6f93dK2
+         0ftJSIpAiSrxL6jJas7mr2fW1UW0zqVr6oZqDZsqdz4jlfuQacCWByttPYsW7csUgy
+         cg0u9K9Ll0Wvg8lgWIRZtFJX06unxfnLh0VZzlBco6Aa7NcFiN9DG58rbf30ksxRoM
+         rZqpJ2R98E6IQ==
+Date:   Thu, 15 Jun 2023 17:37:15 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Aleksandr Shubin <privatesub2@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -65,61 +49,143 @@ Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Andre Przywara <andre.przywara@arm.com>,
         Maxime Ripard <mripard@kernel.org>, linux-pwm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: [PATCH v1 3/3] riscv: dts: allwinner: d1: Add pwm node
-Date:   Thu, 15 Jun 2023 17:43:58 +0300
-Message-Id: <20230615144423.828698-4-privatesub2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230615144423.828698-1-privatesub2@gmail.com>
+Subject: Re: [PATCH v1 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+Message-ID: <20230615-display-encounter-9a7a78562ff8@spud>
 References: <20230615144423.828698-1-privatesub2@gmail.com>
+ <20230615144423.828698-2-privatesub2@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="F7o1AoRcl0OiOFh0"
+Content-Disposition: inline
+In-Reply-To: <20230615144423.828698-2-privatesub2@gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-D1 and T113s contain a pwm controller with 8 channels.
-This controller is supported by the sun20i-pwm driver.
 
-Add a device tree node for it.
+--F7o1AoRcl0OiOFh0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
----
- arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hey Aleksandr,
 
-diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-index 922e8e0e2c09..50f0f761527b 100644
---- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-@@ -127,6 +127,18 @@ uart3_pb_pins: uart3-pb-pins {
- 			};
- 		};
- 
-+		pwm: pwm@2000c00 {
-+			compatible = "allwinner,sun20i-d1-pwm";
-+			reg = <0x02000c00 0x400>;
-+			clocks = <&dcxo>,
-+				 <&ccu CLK_BUS_PWM>;
-+			clock-names = "hosc", "bus";
-+			resets = <&ccu RST_BUS_PWM>;
-+			allwinner,pwm-channels = <8>;
-+			status = "disabled";
-+			#pwm-cells = <0x3>;
-+		};
-+
- 		ccu: clock-controller@2001000 {
- 			compatible = "allwinner,sun20i-d1-ccu";
- 			reg = <0x2001000 0x1000>;
--- 
-2.25.1
+On Thu, Jun 15, 2023 at 05:43:56PM +0300, Aleksandr Shubin wrote:
+> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+> controller witch is different from the previous pwm-sun4i.
+>=20
+> D1 and T113s SoCs have one PWM controller with 8 channels.
+> R329 SoC has two PWM controllers in both power domains, one of
+> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
 
+It would be good to note that the D1 and T113 are identical in terms of
+peripherals, they differ only in the architecture of the CPU core, and
+even share the majority of their DT. Because of that, using the same
+compatible makes sense.
+The R329 is a different SoC though, and should have a different
+compatible string added, especially as there is a difference in the
+number of channels. It would be fine to use the current compatible for
+the D1 as a fallback.
+The allwinner,pwm-channels property should probably only be allowed on
+the R329 and only allow the values of 6 & 9.
+
+> Add a device tree binding for them.
+>=20
+> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> ---
+>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20=
+i-pwm.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.y=
+aml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> new file mode 100644
+> index 000000000000..e5f9cb2d5c4f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner D1, T113-S3 and R329 PWM
+> +
+> +maintainers:
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <mripard@kernel.org>
+
+BTW, this should probably be you, since you have the hardware with this
+SoC.
+
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: allwinner,sun20i-d1-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  clocks:
+> +    items:
+> +      - description: 24 MHz oscillator
+> +      - description: Bus Clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: hosc
+> +      - const: bus
+> +
+> +  resets:
+> +    items:
+> +      - description: module reset
+
+Don't need the items here, because there is only one. You can just do
+"maxItems: 1" instead.
+
+> +  allwinner,pwm-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of PWM channels configured for this instance
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#pwm-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - allwinner,pwm-channels
+
+Cheers,
+Conor.
+
+--F7o1AoRcl0OiOFh0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZIs+OwAKCRB4tDGHoIJi
+0hCRAQClhbz58ZFGWg/0NsMGr2czXIOEYRr3Icjm1MXyaIbQ2QD+JOxFNrOUEjYR
+q1YQ5xn6ccQNAWrTPBc2nULAXNeBUwI=
+=zm+X
+-----END PGP SIGNATURE-----
+
+--F7o1AoRcl0OiOFh0--
