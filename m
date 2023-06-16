@@ -2,33 +2,32 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F6B4732621
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Jun 2023 06:16:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07BA173293F
+	for <lists+linux-pwm@lfdr.de>; Fri, 16 Jun 2023 09:51:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242726AbjFPEQl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Jun 2023 00:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
+        id S243152AbjFPHu4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 16 Jun 2023 03:50:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242161AbjFPEQd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Jun 2023 00:16:33 -0400
-X-Greylist: delayed 4340 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Jun 2023 21:16:33 PDT
+        with ESMTP id S241866AbjFPHuu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Jun 2023 03:50:50 -0400
 Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFEF2D43
-        for <linux-pwm@vger.kernel.org>; Thu, 15 Jun 2023 21:16:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E161FD5
+        for <linux-pwm@vger.kernel.org>; Fri, 16 Jun 2023 00:50:49 -0700 (PDT)
 Received: by mail.durme.pl (Postfix, from userid 1002)
-        id 6B19650B85; Tue, 13 Jun 2023 08:01:03 +0000 (UTC)
+        id 217244CDA1; Fri, 16 Jun 2023 07:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
-        t=1686644213; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
+        t=1686901642; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
         h=Date:From:To:Subject:From;
-        b=Ok1oxK6ryyvphsy7DBiPch54YgtfAP1auH7ch5QJnc82jh6RUiFUoW3aDhbvH9RDD
-         XCGsP4bo4x/2WywJXMJP5g/UDoT6/hYshrNOviUEPsgYcuDWPQAkhnyq6czA3sm29P
-         FQ9Jlk/3ZlAcIziMTohFp9V/RW3JKAce/AfJ/Kg88JUcggf+wCvcpBxbGFM+rv//aM
-         qYP2EGLnmgRxz8cMjtg2qYIGKmqqDptVtlJbSKByJZpEAAtH9qJoqI9pQjgR4yhZUx
-         AIN/RitIXOFAdQtg96dyv+sS2D0yWfxbi6bYunqDIhjE7MfgwRjWRLkIXns73wbf1s
-         R+VL0TmtpvJHA==
-Received: by mail.durme.pl for <linux-pwm@vger.kernel.org>; Tue, 13 Jun 2023 08:00:41 GMT
-Message-ID: <20230613064501-0.1.2g.ayuf.0.p2l5adolj7@durme.pl>
-Date:   Tue, 13 Jun 2023 08:00:41 GMT
+        b=bo4DfAZcQWjPf/8n1eVgNDRuvfJTBaZRr7WS8+1ruwTDEQzYICcvaF2caY3MW2lKh
+         JLfr9swXPgVzVlvhYQX+F3XNX9sN3H3R1Ms0I1C7xcDy8/l+ruT3p0iQXXogVbTepI
+         f9ztE32QKhdDOv3m7lctvjUqCHqYPQryvFR365snqThFdhgLLdoFYAUrI9i8VXN9F7
+         FaQfR2uQvm0UzJcYVjW4c5cgSGvCo/MkraXFXMB5LGvo2Un9E5xgk8tDpjio88JzcA
+         fTJY+FCharVTYlqIKyzHIjXy/H2BoIU+jz4SKNDxwmTnX8ERuU6S1UEa/aFb+BA5TJ
+         AlBD9M9JwoekQ==
+Received: by mail.durme.pl for <linux-pwm@vger.kernel.org>; Fri, 16 Jun 2023 07:46:04 GMT
+Message-ID: <20230616064502-0.1.2j.ayuf.0.feig5lbfva@durme.pl>
+Date:   Fri, 16 Jun 2023 07:46:04 GMT
 From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
 To:     <linux-pwm@vger.kernel.org>
 Subject: W sprawie samochodu
@@ -36,11 +35,40 @@ X-Mailer: mail.durme.pl
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,URIBL_CSS_A,URIBL_DBL_SPAM
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,
+        RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED,URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: durme.pl]
+        *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: durme.pl]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [217.182.69.186 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: durme.pl]
+        *  1.3 RCVD_IN_VALIDITY_RPBL RBL: Relay in Validity RPBL,
+        *      https://senderscore.org/blocklistlookup/
+        *      [217.182.69.186 listed in bl.score.senderscore.com]
+        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
