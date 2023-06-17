@@ -2,128 +2,124 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A48873388A
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Jun 2023 20:57:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B02C73414B
+	for <lists+linux-pwm@lfdr.de>; Sat, 17 Jun 2023 15:37:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbjFPS5O (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 16 Jun 2023 14:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36966 "EHLO
+        id S230369AbjFQNhK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 17 Jun 2023 09:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjFPS5N (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 16 Jun 2023 14:57:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893DDC3;
-        Fri, 16 Jun 2023 11:57:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1ED5E62938;
-        Fri, 16 Jun 2023 18:57:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C397C433C8;
-        Fri, 16 Jun 2023 18:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686941831;
-        bh=vv/cmdovIkwrhLiTwDyTYR3pLEAnNU7iGqvbKxXb4LE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cjwtWBQ8DQYPMPpoGd9LEI3YSXNa1CDIjV9EAL4LDAkFKlQOEB/tXjPb8ev9Vyluy
-         5cNqBGbbhNpt0hQcQOarx7D2uDbvD90VmwKjFDfYrBwuWl/TtuBJwJO4z0JxYi6hG0
-         W+kChJ+xObPABXkazzq/IhEY+PwSpz8oeMh04RmYmhDzja5UfqGXo/Bj2IL+e5KYl7
-         IcsUJZtNS929pvmcwsFhBiyFnTyDWViPXlv1+0BSkZRMngMGH+sB5Tho6YoV4Tm+pV
-         09Wrey2BxRVZDGJIhr6okUOYHHyps/rd7kzn5t5MZvKDJC0j9erRpKBZAQ3BX1TinK
-         IhRXOKWiV4hmQ==
-Date:   Fri, 16 Jun 2023 19:57:05 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     =?utf-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCo0YPQsdC40L0=?= 
-        <privatesub2@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S234012AbjFQNhI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 17 Jun 2023 09:37:08 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B270AE72;
+        Sat, 17 Jun 2023 06:37:06 -0700 (PDT)
+Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MCsLo-1qJHWx2N3Q-008rdh; Sat, 17 Jun 2023 15:36:39 +0200
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Maxime Ripard <mripard@kernel.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
-Message-ID: <20230616-stopped-bunny-619cf684c9cb@spud>
-References: <20230615144423.828698-1-privatesub2@gmail.com>
- <20230615144423.828698-2-privatesub2@gmail.com>
- <20230615-display-encounter-9a7a78562ff8@spud>
- <CAF4idNksCzkh0WMhvb7ecqYfJRLw33GrpT1+eL5S9ydS8Uu-BA@mail.gmail.com>
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V2 0/7] ARM: dts: bcm283x: Improve device-trees and bindings
+Date:   Sat, 17 Jun 2023 15:36:13 +0200
+Message-Id: <20230617133620.53129-1-stefan.wahren@i2se.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BTfG3I7wYmbJRwEO"
-Content-Disposition: inline
-In-Reply-To: <CAF4idNksCzkh0WMhvb7ecqYfJRLw33GrpT1+eL5S9ydS8Uu-BA@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:YcK/WR3T6hRaLw1AnRYEOWbBdCZO9EhCjZdqdqs73nVdKHWNmCZ
+ 20NQGWbCY/hqlHi3SeaUojIUqSFa4Zp6DkL7MTtmuyaro5Z0MGjEd2SOK7KkLRSUl+pJQVo
+ vhKkfgNjXl56DrXFxTBMKAF0aaqicxN8CLwL/u+Afz89D8nChAO6OTEK1sMlQEs/Tbiz6IV
+ HfyVn1YxUq8qCgMf71InA==
+UI-OutboundReport: notjunk:1;M01:P0:WRpEgt448HQ=;Jrx4hK3B7Q3em0TSzh5wtA+CGrh
+ x5IVkZUABea9X6Ymu3965wxvZwVk6bzg5CJC3GpRtVdZs0yAJvJJuRmLQgb6RdBgY7u9yftA3
+ JadzRKSiEIcXX7DZGHN8YbxhU2tWn+k6vugMS+kRF9Y2M1wVdd68wT4igPjydHir0pDkT3FgR
+ FnimddScYqvul10fN05NYrjQuNbZ+Izd5Z7pSjX3nPlWpi+a1PdLu+piSUXMXu4+8qMfcPXIm
+ PvkmsEkhM48Nef7MObzLGcKVzAtgdy3dwqu+1uGiz/5guJM5zY6Ju6XDNat2EjGwW45vKjp/7
+ lm2yMqXiedbMX38XwhfRcJqyfuAoGmE1PwyJDeZE8migVNlC4Iv0ZFay86jd+oyZ+gQo26Rjy
+ rCwKbjat3YcvZlfX1AYjK5IlPPpk+JOvuZeAerP7K5VyLprj3J7wj1Uym+SyImJZ9/809uv1G
+ UCnTWrgqHUN3deThwTuR1t1rh+qkwBtkLjrhDKdF41TpHvyWePcZzGOgcxan+SOczFDZ+DtOG
+ u27BWXSESaUJdxvGSTw0Hh41bJwqvxVY986XgzkVTIRal2SV1cTOPcd9oCR+RoVUD0xpuDflt
+ eDUkzlY3f8W1qdkMwO22qRZlBcGewAeeum+ryOFpy0vtYdssiHWNsYsCdm0i0QLwssiVscG4W
+ u0CfwhSWbkgnmfwXUKcpxJKUodnNmNriu5vxZ1X1eA==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+This series fix some dtbs_check warning for the Raspberry Pi boards
+and convert 4 txt DT bindings for BCM2835 to YAML.
 
---BTfG3I7wYmbJRwEO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in V2:
+- drop already applied patches (bcm2835-sdhost, bcm2835-thermal)
+- drop patch "dmaengine: bcm2835: also support generic dma-channel-mask"
+- keep brcm,bcm2835-dma for ABI compatibility which also resolve
+  dependency between patch 2 and 3
+- drop quotes in patch 2 as noted by Rob Herring
+- add interrupt description as suggested by Rob
+- add Rob's and Uwe's Reviewed-by
 
-On Fri, Jun 16, 2023 at 11:02:12AM +0300, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=
-=B0=D0=BD=D0=B4=D1=80 =D0=A8=D1=83=D0=B1=D0=B8=D0=BD wrote:
-> =D1=87=D1=82, 15 =D0=B8=D1=8E=D0=BD. 2023=E2=80=AF=D0=B3. =D0=B2 19:37, C=
-onor Dooley <conor@kernel.org>:
-> > On Thu, Jun 15, 2023 at 05:43:56PM +0300, Aleksandr Shubin wrote:
-> > > Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
-> > > controller witch is different from the previous pwm-sun4i.
-> > >
-> > > D1 and T113s SoCs have one PWM controller with 8 channels.
-> > > R329 SoC has two PWM controllers in both power domains, one of
-> > > them has 9 channels (CPUX one) and the other has 6 (CPUS one).
-> >
-> > It would be good to note that the D1 and T113 are identical in terms of
-> > peripherals, they differ only in the architecture of the CPU core, and
-> > even share the majority of their DT. Because of that, using the same
-> > compatible makes sense.
-> > The R329 is a different SoC though, and should have a different
-> > compatible string added, especially as there is a difference in the
-> > number of channels. It would be fine to use the current compatible for
-> > the D1 as a fallback.
-> > The allwinner,pwm-channels property should probably only be allowed on
-> > the R329 and only allow the values of 6 & 9.
->=20
->=20
-> Maybe would it be better to allow only 8 channels for D1 and only 6 and 9
-> channels for R329?
 
-If you're on a D1, you don't need a dt property to tell you the number
-of channels, you already know it to be 8. Couple ways driver could
-implement that, for example: if the dt-binding requires the property on
-the R329, you could set 8 as the default and overwrite it if the
-property exists - which would only be permitted on the R329.
-Up to you.
+Stefan Wahren (7):
+  ARM: dts: bcm283x: Fix pinctrl groups
+  dt-bindings: dma: convert bcm2835-dma bindings to YAML
+  ARM: dts: bcm2835: adjust DMA node names
+  dt-bindings: pwm: convert pwm-bcm2835 bindings to YAML
+  ARM: dts: bcm283x: Increase pwm-cells
+  dt-bindings: mailbox: convert bcm2835-mbox bindings to YAML
+  dt-bindings: timer: convert bcm2835-system-timer bindings to YAML
 
---BTfG3I7wYmbJRwEO
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
+ .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
+ .../bindings/mailbox/brcm,bcm2835-mbox.txt    |  26 -----
+ .../bindings/mailbox/brcm,bcm2835-mbox.yaml   |  40 +++++++
+ .../devicetree/bindings/pwm/pwm-bcm2835.txt   |  30 ------
+ .../devicetree/bindings/pwm/pwm-bcm2835.yaml  |  43 ++++++++
+ .../timer/brcm,bcm2835-system-timer.txt       |  22 ----
+ .../timer/brcm,bcm2835-system-timer.yaml      |  48 +++++++++
+ arch/arm/boot/dts/bcm2711.dtsi                |   4 +-
+ arch/arm/boot/dts/bcm2835-common.dtsi         |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts      |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-a.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts      |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts      |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts     |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts      |   2 +
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts        |   1 +
+ arch/arm/boot/dts/bcm2835-rpi.dtsi            |   2 -
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts         |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts     |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts    |   2 +
+ arch/arm/boot/dts/bcm283x.dtsi                |   2 +-
+ 23 files changed, 250 insertions(+), 167 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.34.1
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZIywgQAKCRB4tDGHoIJi
-0iUSAQC6ORafqrG5LIGTBeO7kYUGeuQKemVu5IOojEnUDdNgzQD/XD0jXcAx7S8i
-OAlzQpXZMNiBbh73ztIgkb5Xk2l1RAU=
-=GAvr
------END PGP SIGNATURE-----
-
---BTfG3I7wYmbJRwEO--
