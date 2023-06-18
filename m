@@ -2,167 +2,184 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B633734170
-	for <lists+linux-pwm@lfdr.de>; Sat, 17 Jun 2023 15:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A400734690
+	for <lists+linux-pwm@lfdr.de>; Sun, 18 Jun 2023 16:23:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236309AbjFQNma (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 17 Jun 2023 09:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
+        id S229848AbjFROXd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 18 Jun 2023 10:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236455AbjFQNm1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 17 Jun 2023 09:42:27 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1E819A2;
-        Sat, 17 Jun 2023 06:42:22 -0700 (PDT)
-Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M2fDr-1q7UlX1Vhn-0048wI; Sat, 17 Jun 2023 15:36:44 +0200
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229849AbjFROXd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 18 Jun 2023 10:23:33 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E488EE72;
+        Sun, 18 Jun 2023 07:23:31 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-311275efaf8so1307107f8f.3;
+        Sun, 18 Jun 2023 07:23:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687098210; x=1689690210;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DJYV4u/kyWnHPf15N2q+dF+MPxP3v/xQ6on86+LClyU=;
+        b=qAUD+bj7MVLiR5sgtqerqMei0aUrWvRNb5gR3JbevNXKTFzqNY4PGLD4ua6tQ/ssND
+         P8DX7Od582jfr4hzChfEiDVvgY7xOxf/BD9xwTcBQRBf06eV0wZ3YU5qn2xifaa2Aci3
+         nTsdBlHlmRtD0AG7IbHFlq20BcZzoZw9uqL+VBQ9VbMdeqAHTGGAGKR7G8xuPWVNpWpy
+         8bwKKIhezCSyyXdeJuyrxTJWyKSRWQfa0NuqshPkmOrgcOMf7cgXau2fuoo9IgQRzA0q
+         MSzIedG4+AZYoGaQKWP6yBw3IOHt9e3LhX2eAbD6/fp3cdH6YvpqX6wijF3YoFKiQcm6
+         y9hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687098210; x=1689690210;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DJYV4u/kyWnHPf15N2q+dF+MPxP3v/xQ6on86+LClyU=;
+        b=XFi+byzyr0BNHYFTEAs/bHmfybYc5sABMMPCP3+mQRWR323P9nvt3oPZV2Gb5FgjbR
+         Dikb9DGB3T5pHmCq9RLg9rJj+ZnUhvSB+WON7ji5LVwCAYC0gx80A0lVM4wmR8C/wZFU
+         ExjNOCpJg9NJSyvewHmL350E+NPe5yv20Liiyuv+dy/xwlaXRlVynun5EVuhBLQJoB/z
+         VAul5csW4XxoNY/eqwmV/nSmEiUAUCzqSRLfWQFnKYIzzS9RWckZpUFfBnljdpN1W1q/
+         S/MsQbRHiaszvK4b72wrGspZSgV8rPfPpNEaHFJSg7w44qFwby98T7gnDmGZJqMlBQxC
+         2KRw==
+X-Gm-Message-State: AC+VfDzfUJi90bAtZmHxgXPpQdWUItBamktVt/8uRYWz28hBC1KnTK9H
+        VrL4f8P2vzZ/VCpJWQnCEpE=
+X-Google-Smtp-Source: ACHHUZ63HNWBd6P41y4hmjtF2ILMWQA3HUEu3zuPO9LibLofcFKyGWY7zsR98/6S51B7AOuxj5Y2pA==
+X-Received: by 2002:adf:f952:0:b0:30f:ca58:a00d with SMTP id q18-20020adff952000000b0030fca58a00dmr3822114wrr.45.1687098210150;
+        Sun, 18 Jun 2023 07:23:30 -0700 (PDT)
+Received: from standask-GA-A55M-S2HP ([188.123.113.247])
+        by smtp.gmail.com with ESMTPSA id t11-20020adfdc0b000000b0030ae3a6be5bsm28960710wri.78.2023.06.18.07.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jun 2023 07:23:29 -0700 (PDT)
+Date:   Sun, 18 Jun 2023 16:23:27 +0200
+From:   Stanislav Jakubek <stano.jakubek@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Florian Fainelli <florian.fainelli@broadcom.com>,
         Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer bindings to YAML
-Date:   Sat, 17 Jun 2023 15:36:20 +0200
-Message-Id: <20230617133620.53129-8-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230617133620.53129-1-stefan.wahren@i2se.com>
-References: <20230617133620.53129-1-stefan.wahren@i2se.com>
+        Scott Branden <sbranden@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
+Message-ID: <20230618142327.GA20367@standask-GA-A55M-S2HP>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mVFiliFboW4LEd+X1TQBa6vvRmi7USdo/RW69BmRyNa/pJtjGzS
- tVQ6dwdnHEHr/ZHHezkQhqcYQeI6DcMTENVHZf6OczxoEATjvn8NKf1lIAxB1OpX4zWvY08
- 1sP8GK5j5nAf4xocAOTABS5MDo/6bn++VaK84cFyxqD07Z80Bj2+pOq//rMnClwhW6nUT7s
- OL/kAvNBJ4QbODLW9ofkQ==
-UI-OutboundReport: notjunk:1;M01:P0:inw7a/j3P4k=;k+yIdptIj0BhoNOoxCn068igPV4
- pOdv6vS4XPRfjQPY+0tiABzI5rL/li6o7aLPUKu0+vnm8sELegztndB4AWp6kSatbYEMVl/Rl
- dmofJCZDR+0nNYJ9IA2zvBFjwmKZJ5OuZfKbMf54zg4R6piKdgtKxhXpc5dm4pPql2k58PHVZ
- MMits6+0gfWFcw8fFgH6aKYjupSOMbvR491t7i7m5SQqtlS5Cj7eb6vcdFO06EFOo3w55uVVO
- 8J5z1G5S+4GfED4nhRqqf94urrlTa5f+FqLnLMHF73PYePsrxL2WpIFbsVgYrTDYQk+4JUKH/
- 9M19uFHpSDk96dBA8DOV9ktUAn1r5dnO/wH9Z+3ttGfXf/6pTlmhutwTuRH2t6D2r/5gm1TmX
- JoS8p5nbkFSJI659bjrpCLQZWTYSYA1/+BYsXm6R65xipi9S0hggFPy5ZwP+5cVo11d1XiZg9
- 3onxo7vKD4LHGnh4XO6ErFtxx0pWJcOd81KBgamDmYK4mDiQCSMj6VdrEn0qCu0HsG70DNuly
- jIh1kUSbQQI5+fc+DT6/0cXStqt92tYgZ3JtJULUALmWsLBTcP4wlLXecp4zzsacdr26kbmYb
- nVYOgJAc/+f9OSjjr/h1Mb9pKaMbM6hvj/W/PhoGLVZyjdaR5RscxMlAxqEVlZNj8q59uUy5V
- A8XOBwuZyW1K2+/+sN8OspHzNhiHDiJMZdxhjJjkhQ==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Convert the DT binding document for bcm2835-system-timer from .txt
-to YAML.
+Convert Broadcom Kona family PWM controller bindings to DT schema.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Change during conversion:
+  - add used, but previously undocumented brcm,bcm11351-pwm compatible
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Stanislav Jakubek <stano.jakubek@gmail.com>
 ---
- .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
- .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
+Changes in V3:
+  - change "" include in example to <>
+  - rebase on next-20230616
+  - collect Krzysztof's R-b
 
-diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+Changes in V2:
+  - mention the new compatible in the commit message (Krzysztof)
+
+ .../devicetree/bindings/pwm/brcm,kona-pwm.txt | 21 --------
+ .../bindings/pwm/brcm,kona-pwm.yaml           | 51 +++++++++++++++++++
+ 2 files changed, 51 insertions(+), 21 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
 deleted file mode 100644
-index 844bd5fbd04c..000000000000
---- a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+index c42eecfc81ed..000000000000
+--- a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
 +++ /dev/null
-@@ -1,22 +0,0 @@
--BCM2835 System Timer
+@@ -1,21 +0,0 @@
+-Broadcom Kona PWM controller device tree bindings
 -
--The System Timer peripheral provides four 32-bit timer channels and a
--single 64-bit free running counter. Each channel has an output compare
--register, which is compared against the 32 least significant bits of the
--free running counter values, and generates an interrupt.
+-This controller has 6 channels.
 -
--Required properties:
+-Required Properties :
+-- compatible: should contain "brcm,kona-pwm"
+-- reg: physical base address and length of the controller's registers
+-- clocks: phandle + clock specifier pair for the external clock
+-- #pwm-cells: Should be 3. See pwm.yaml in this directory for a
+-  description of the cells format.
 -
--- compatible : should be "brcm,bcm2835-system-timer"
--- reg : Specifies base physical address and size of the registers.
--- interrupts : A list of 4 interrupt sinks; one per timer channel.
--- clock-frequency : The frequency of the clock that drives the counter, in Hz.
+-Refer to clocks/clock-bindings.txt for generic clock consumer properties.
 -
 -Example:
 -
--timer {
--	compatible = "brcm,bcm2835-system-timer";
--	reg = <0x7e003000 0x1000>;
--	interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
--	clock-frequency = <1000000>;
+-pwm: pwm@3e01a000 {
+-	compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
+-	reg = <0x3e01a000 0xc4>;
+-	clocks = <&pwm_clk>;
+-	#pwm-cells = <3>;
 -};
-diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
+diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
 new file mode 100644
-index 000000000000..227b44788a48
+index 000000000000..e86c8053b366
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/timer/brcm,bcm2835-system-timer.yaml#
++$id: http://devicetree.org/schemas/pwm/brcm,kona-pwm.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: BCM2835 System Timer
-+
-+maintainers:
-+  - Stefan Wahren <stefan.wahren@i2se.com>
++title: Broadcom Kona family PWM controller
 +
 +description:
-+  The System Timer peripheral provides four 32-bit timer channels and a
-+  single 64-bit free running counter. Each channel has an output compare
-+  register, which is compared against the 32 least significant bits of the
-+  free running counter values, and generates an interrupt.
++  This controller has 6 channels.
++
++maintainers:
++  - Florian Fainelli <f.fainelli@gmail.com>
++
++allOf:
++  - $ref: pwm.yaml#
 +
 +properties:
 +  compatible:
-+    const: brcm,bcm2835-system-timer
++    items:
++      - enum:
++          - brcm,bcm11351-pwm
++      - const: brcm,kona-pwm
 +
 +  reg:
 +    maxItems: 1
 +
-+  interrupts:
-+    items:
-+      - description: System Timer Compare 0 match (used by VideoCore GPU)
-+      - description: System Timer Compare 1 match (usable for ARM core)
-+      - description: System Timer Compare 2 match (used by VideoCore GPU)
-+      - description: System Timer Compare 3 match (usable for ARM core)
++  clocks:
++    maxItems: 1
 +
-+  clock-frequency: true
++  '#pwm-cells':
++    const: 3
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
++  - clocks
 +
-+additionalProperties: false
++unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    timer@7e003000 {
-+      compatible = "brcm,bcm2835-system-timer";
-+      reg = <0x7e003000 0x1000>;
-+      interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
-+      clock-frequency = <1000000>;
++    #include <dt-bindings/clock/bcm281xx.h>
++
++    pwm@3e01a000 {
++       compatible = "brcm,bcm11351-pwm", "brcm,kona-pwm";
++       reg = <0x3e01a000 0xcc>;
++       clocks = <&slave_ccu BCM281XX_SLAVE_CCU_PWM>;
++       #pwm-cells = <3>;
 +    };
++...
 -- 
-2.34.1
+2.25.1
 
