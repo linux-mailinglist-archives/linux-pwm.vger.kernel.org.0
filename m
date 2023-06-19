@@ -2,89 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EF24735E0F
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jun 2023 22:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4822F735FEA
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jun 2023 00:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230256AbjFSUA1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 19 Jun 2023 16:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53240 "EHLO
+        id S229762AbjFSWtV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 19 Jun 2023 18:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230199AbjFSUA0 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Jun 2023 16:00:26 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBD6E65
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Jun 2023 13:00:24 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-30af56f5f52so2968665f8f.1
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Jun 2023 13:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687204823; x=1689796823;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qvEnF7N3Rq3oH07tQdzeQod4R0+TvmTxdiOQqeQGOJA=;
-        b=xhU+bDOzMgV6Bi9+BjZUNyeWebJXGz2o23nN5Bsna386B3ZEGEEA5Tug4F1Gt09YNg
-         9xaQAehTU1a0iJRf2KpZnAOU3CaGHJR7/jOTXORoIH0hccZaReFHVrDSF3H3saFXxP3X
-         nT7+ZHvuxAzx6A+S3oRYMLyGPpkNHfwz8rgqxs5yZGg0jRaJhqCWceHupQ1mkqffaITQ
-         rzmLtcmLhC1/jFxPFb8Wu1+Ayn0DaeQuXOC34dY5Fq0yvajEwZ9FNn0qJUWOy8FLHxJU
-         6sUTl/M7BoMw+jwozwi4ifeYmYLuvsJG15aTfeD6R9S6BtQEi+NZ0+u3KiBwZClSHlk4
-         T5pA==
+        with ESMTP id S229462AbjFSWtU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 19 Jun 2023 18:49:20 -0400
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68B2E55;
+        Mon, 19 Jun 2023 15:49:19 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-77797beb42dso143980439f.2;
+        Mon, 19 Jun 2023 15:49:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687204823; x=1689796823;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qvEnF7N3Rq3oH07tQdzeQod4R0+TvmTxdiOQqeQGOJA=;
-        b=I7VHKYOdbJraS7vCE32+4OA7wzHw1Gjvf0Ed9IK5mV0/Qu4YPDU4uxwXwU3HvyF27u
-         8R+boAbbqV9AQZvgnvATSJowf3fnyZ2+Vo5PgWJzdaiuQgJ0qaPxs8i4XOo4wdV8pjtb
-         NIj/vYF6YJj5UlmKBtEwEDMZgX/IkgqroDzDE7sRQIM71/h/zQGNYErEVlNU8WtetRsr
-         FPr9qJ34sygyKJEiRn7tA3z+QjGTjbPv5OwOJjvR5Ly7rZ8hx3kf9pj312hr1CAmVnm6
-         KLq0GS/MzDIWNiG+jZ/EnRw1HAntdjJqVqPOgAKH/kPfm1vho8DYi+jjFXHm8SNdwcCj
-         WlVg==
-X-Gm-Message-State: AC+VfDwx4C/YNPeEypxcuvjoKJgWzsBL7hdbNE3PSLBBnMVYcdQE2GSZ
-        DzB/ZT8JxR/uz8Lmq4R3rk8MkQ==
-X-Google-Smtp-Source: ACHHUZ6R6jKhoJ5uyp4V5CmGcPmfGFuRGd6KbYqbL4TK6F7Tjqsr9xjBMW8Kr9m0FfLnKjEoJrySJg==
-X-Received: by 2002:adf:e7d1:0:b0:311:9a5:2d63 with SMTP id e17-20020adfe7d1000000b0031109a52d63mr6907950wrn.42.1687204822221;
-        Mon, 19 Jun 2023 13:00:22 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:13d0:1b6c:ce40:5429? ([2a05:6e02:1041:c10:13d0:1b6c:ce40:5429])
-        by smtp.googlemail.com with ESMTPSA id z5-20020a5d6545000000b003113bd9ecaesm303041wrv.116.2023.06.19.13.00.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 13:00:21 -0700 (PDT)
-Message-ID: <17a460d0-618c-b1f3-0b53-2ebab72b1311@linaro.org>
-Date:   Mon, 19 Jun 2023 22:00:20 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer
- bindings to YAML
-Content-Language: en-US
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
+        d=1e100.net; s=20221208; t=1687214959; x=1689806959;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XC5lpbRInQ/+5gWZrsaA+KqscUlYl6sjL8GyEzFCglg=;
+        b=AdZhKelKh/g8u40VH6vVJymf5NCG1IzEnDiO/6+7Mj3/7jtrUaGxjjHChsMsFrciJ2
+         754nOfGunzAV+VwT7DPwNofUlztqoPSTheUYHw2vV4RINONZjBlY9z23e7M9+Br/HiBD
+         DJN17atoa7YKyO6KRPYiK9XOGJXdeGQR5mIpEuX9m4R7msx13m2fZxqe51Uz2hb+YYpz
+         IQnqcjWBiaVwehHSh9w/PhDnJJhn3jCh8fmiuBg8iJrqQ2yF0H63JNYppdhDxmPkIFmH
+         FiMkqEdofW/acAsuom520r/W8IEdqAc8lpZiRQ+q0dN1IKRlEdi/Helr7RivhjttZR3z
+         2dgg==
+X-Gm-Message-State: AC+VfDzFOuWJv/fx6eEwcrlqHHtkf2rLtsXhJOmK3mygt9AP5A5RB5ad
+        8iALzJw4URet3sbl1CIx4Q==
+X-Google-Smtp-Source: ACHHUZ6aHzKiHI6j0pGyABhICGpFbZYq4LbWxeN/Z7bW9EdQkXxO4vMuOqgS+UoLXk9bYuI+u4Zypw==
+X-Received: by 2002:a5e:9802:0:b0:77a:c315:75b6 with SMTP id s2-20020a5e9802000000b0077ac31575b6mr2055139ioj.5.1687214959178;
+        Mon, 19 Jun 2023 15:49:19 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id y22-20020a5ec816000000b0077ac32a5de8sm213979iol.26.2023.06.19.15.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jun 2023 15:49:18 -0700 (PDT)
+Received: (nullmailer pid 1675447 invoked by uid 1000);
+        Mon, 19 Jun 2023 22:49:16 -0000
+Date:   Mon, 19 Jun 2023 16:49:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rob Herring <robh@kernel.org>
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        devicetree@vger.kernel.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH V2 2/7] dt-bindings: dma: convert bcm2835-dma bindings to
+ YAML
+Message-ID: <168721491312.1673983.7120570846265839418.robh@kernel.org>
 References: <20230617133620.53129-1-stefan.wahren@i2se.com>
- <20230617133620.53129-8-stefan.wahren@i2se.com>
- <02d1d74a-1476-41c8-6d94-3eb477352309@linaro.org>
- <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+ <20230617133620.53129-3-stefan.wahren@i2se.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230617133620.53129-3-stefan.wahren@i2se.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -92,43 +77,28 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 19/06/2023 20:57, Stefan Wahren wrote:
-> Hi Daniel,
+On Sat, 17 Jun 2023 15:36:15 +0200, Stefan Wahren wrote:
+> Convert the DT binding document for bcm2835-dma from .txt to YAML.
 > 
-> Am 19.06.23 um 19:00 schrieb Daniel Lezcano:
->> On 17/06/2023 15:36, Stefan Wahren wrote:
->>> Convert the DT binding document for bcm2835-system-timer from .txt
->>> to YAML.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> ---
->>>   .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
->>>   .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
->>>   2 files changed, 48 insertions(+), 22 deletions(-)
->>>   delete mode 100644 
->>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
->>> deleted file mode 100644
->>> index 844bd5fbd04c..000000000000
->>> --- 
->>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
->>
->> Appliedp patch #7
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
+>  .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
+>  2 files changed, 102 insertions(+), 83 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
 > 
-> i'm so sorry but i accidentially added a Reviewed-by from Rob, which is 
-> wrong here. I should have added to the patch 6 :-(
 
-No worries, I'll drop the patch and wait for its Acked-by
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+If a tag was not added on purpose, please state why and what changed.
+
+Missing tags:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+
 
