@@ -2,70 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BCE27362CC
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jun 2023 06:51:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC8AA736C8B
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jun 2023 14:59:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjFTEv0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 20 Jun 2023 00:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
+        id S230151AbjFTM7z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 20 Jun 2023 08:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjFTEvZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Jun 2023 00:51:25 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F6710C8;
-        Mon, 19 Jun 2023 21:51:24 -0700 (PDT)
-Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M42zo-1qBTKN2n5M-00054G; Tue, 20 Jun 2023 06:50:51 +0200
-Message-ID: <10083068-fab1-3e51-c183-e2a435167ad2@i2se.com>
-Date:   Tue, 20 Jun 2023 06:50:50 +0200
+        with ESMTP id S232614AbjFTM7m (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 20 Jun 2023 08:59:42 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B867199E;
+        Tue, 20 Jun 2023 05:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687265977; x=1718801977;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ppz5GRSz8+PUi7YOQuxhF2hz7S1cp4ihR/22egVfqhA=;
+  b=Oz/3mEIPyqr4wT3n2wOgi7P0OFbst0GUnx/uP3I+RHEd6+1Ct7hyIAzr
+   hI96JSOXt9Od44yLoD8IbbrSRsG1IEvRg+xaMeEZgp15oCgo+g8R0r/2T
+   xSyGcwDgbfG/v88OME2SQgcUES3BBXw3m+NKKgbHGDaLcYE2cT2IykeCX
+   xdS5TLfgoNmt7gP26x6Gm/JftQNqvkxwz2qci9GmvfJ1T+3j9ER22JXQd
+   PI2iWfoD0Qxg2hHgkzIIXB2iQ2PR2fcMkax9G1UV1lEjMxsGkwtZiH+5a
+   a8jK2rFOPg3Km9f5buwHRsr/9uJRdtwyjLStrJXwQXjB3uI+xOolCpMO7
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="349582721"
+X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
+   d="scan'208";a="349582721"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 05:59:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="708256245"
+X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
+   d="scan'208";a="708256245"
+Received: from mylly.fi.intel.com (HELO [10.237.72.161]) ([10.237.72.161])
+  by orsmga007.jf.intel.com with ESMTP; 20 Jun 2023 05:59:32 -0700
+Message-ID: <daffc540-3b99-f71d-538b-84c897730208@linux.intel.com>
+Date:   Tue, 20 Jun 2023 15:59:32 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V2 2/7] dt-bindings: dma: convert bcm2835-dma bindings to
- YAML
-To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        devicetree@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        linux-pwm@vger.kernel.org
-References: <20230617133620.53129-1-stefan.wahren@i2se.com>
- <20230617133620.53129-3-stefan.wahren@i2se.com>
- <168721491312.1673983.7120570846265839418.robh@kernel.org>
+ Firefox/102.0 Thunderbird/102.12.0
+Subject: Re: [PATCH v8 0/5] DesignWare PWM driver updates
 Content-Language: en-US
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <168721491312.1673983.7120570846265839418.robh@kernel.org>
+To:     Ben Dooks <ben.dooks@sifive.com>, linux-pwm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ben.dooks@codethink.co.uk, u.kleine-koenig@pengutronix.de,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        William Salmon <william.salmon@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
+References: <20230614171457.69191-1-ben.dooks@sifive.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+In-Reply-To: <20230614171457.69191-1-ben.dooks@sifive.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:VKWLyx96kIFaTCi0ZFhPdTmk8Mv0uYKT8yyjMylyRQeFhlZr2zB
- 0SCgVtkvHlqNX7+3pwohYn9u37nMq1Neu3hbSFJdFXTGn00hKvkjGmIMtuaI9oKbuW6Gapm
- kqOyY/9XwgQbUwizhQ246lxUDN3QoYy8Cicxk2jbmIh4mBtM9/5b4qPtkqK6hY/8pgND1zd
- bUoIpNdIQzmSLZ3gp1fWA==
-UI-OutboundReport: notjunk:1;M01:P0:CaJX/oWs7lE=;ECsu5Sz0cJwgPABRHlq1vITW5Mm
- 3DACX5F/VSYi31OW6WeGpAEnh96lvJkX1jmZcd2fk3RtAa9Uutck52w1MotLWaerWqbr8fzik
- Nk8bZkcZKvZ6MUYYFwrkin5agUBRJ5E0stwYpmmnBj5Zc+SeyhqbNXC35AZXooaXC7SsyeCOx
- r6oJ55aJ01aNd2dVFY1Gz6Xp6jOKzIjS7fap7tLoOsdWbINDlOtQBbvN4Z7sozc1yJDsiPcDV
- WyeZkTPUmJIehNZKtXqSATVun+rNfhYTWfMjNjf3PK+mc5wO9sw2/IcRK0GdwVSdTvtsu01gR
- Lc4V6Vvvh5Zix95nWcpORzEFFSt5B69XWHMtyeOW9cQqrv1CP/mp4lWqRnZ2m1sWkhCLR+ii8
- dK9+PK0yfnZLVABtcMcpSaN551ZFerUrng+1mCLYXLCn60SxOW3fDHA76gPG+h20M7vrjiVLD
- tHgrPDWwmwfqAci4gOGbey+ZfLawGB0lBB3Jpouu83v2GNsx/R7obysGh78yeWFcZ9SzyL05O
- cNrWbsVOtiRJfBLGPkDLqFpnUf72FB+pZHteBQjI99CCkdJy9caK1r3n0P0V9RBNpgGulx2pT
- lq8pVtUPwbc8/6lnhlVMYQr1w4PIuQLT1cSJoNzxWrYSnLzAv8/tWZtpG2nFsK6ZsIEHicweR
- x9+nW1i7/sG9KszDVxVdV6l5yW0N75AgiemyMBONsg==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,37 +69,23 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Rob,
+On 6/14/23 20:14, Ben Dooks wrote:
+> This series is an update for the DesignWare PWM driver to add support for
+> OF (and split the PCI bits out if aynone else wants them). This is mostly
+> the same as the v7 series, but with code moved around and module-namespace
+> added, plus review comments processed.
+> 
+> Since we no longer have the hardware, the clock code hasn't been changed to
+> either lock the rate whilst the PWM is running, or to deal with any sort
+> of change callback. This is left to future work (and I would rather get
+> something in that does currently work) (second note, the hardware we did
+> use had a fixed clock tree anyway)
+> 
+> This account is probably going away soon, I have cc'd my main work
+> email to catch any responses.
+> 
+> Thank you all for the reviews.
+> 
+I tested the patchset on Intel Elkhart Lake and didn't see issues.
 
-Am 20.06.23 um 00:49 schrieb Rob Herring:
-> On Sat, 17 Jun 2023 15:36:15 +0200, Stefan Wahren wrote:
->> Convert the DT binding document for bcm2835-dma from .txt to YAML.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>   .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
->>   .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
->>   2 files changed, 102 insertions(+), 83 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->>   create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
->>
-> 
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-
-i was uncertain after replacing the generic dma-channel-mask with the 
-vendor ones. So i decided to drop the reviewed-by.
-
-Best regards
-
-> 
-> Missing tags:
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> 
-> 
+Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
