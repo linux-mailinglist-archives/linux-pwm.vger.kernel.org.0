@@ -2,66 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6B50739033
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jun 2023 21:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10480739117
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jun 2023 22:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230231AbjFUThI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 21 Jun 2023 15:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
+        id S229624AbjFUUxX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 21 Jun 2023 16:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229951AbjFUThG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 21 Jun 2023 15:37:06 -0400
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8142171C;
-        Wed, 21 Jun 2023 12:37:04 -0700 (PDT)
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-341c362a851so24553935ab.2;
-        Wed, 21 Jun 2023 12:37:04 -0700 (PDT)
+        with ESMTP id S229564AbjFUUxW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 21 Jun 2023 16:53:22 -0400
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 949FF10F2;
+        Wed, 21 Jun 2023 13:53:21 -0700 (PDT)
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-341c14e495fso30952925ab.0;
+        Wed, 21 Jun 2023 13:53:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687376224; x=1689968224;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=v1W5en0X6o+ZubGP6+969Y3mIZxJYwr7a66wP5yY9ik=;
-        b=NfwNsjBL49VZSWITBBChmJJve7q5HcbGBs/henr5MDmQI/yVfa0QugUPmAHjAES6xu
-         xEJMd7s3mJUQSLLUAMcNaZk2h5aNhQ8e1rCkWXOJPLzhuC4SySa1CnQ3M7xoQBjmvs6s
-         ilIJ4p8/MgELHmdHX/Wu2W4kevm7cLso2hfNHhLj2n1lkxX6zOmauCCBCG5M5ud00YtT
-         BIU1W6C1oTgVE4CLJMVB6L+OlCn89IpGkKyv0YeVIOc6mNKN5D2g+bAHdZkEGm3aHkQa
-         Hx+bMKY6Ps3MKzoRDc2pZCS/fAXP0fTWFLvETU+bWBp589yWpJlq51wsMB0Nl+Ku/PQM
-         djkQ==
-X-Gm-Message-State: AC+VfDxQVyFGqbf3LONKXRgdai2jIPsX0n9aN6dMlV5Vo1WBI4l8CuRO
-        iAausEDoMJDd99VMeNqgpw==
-X-Google-Smtp-Source: ACHHUZ56xWTEeuEUlIWxxD7+8PJ+uta1biB7UfsTJz5OyKBF7NGWPlA3R5cc3fwUFRWz8KewHgTnfA==
-X-Received: by 2002:a92:cf50:0:b0:33b:1635:359f with SMTP id c16-20020a92cf50000000b0033b1635359fmr12184456ilr.22.1687376224015;
-        Wed, 21 Jun 2023 12:37:04 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687380801; x=1689972801;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2T1b/Oa5DrhnOGEKjXXQHTZCgVCz59Fkwvf59NrZRwU=;
+        b=NVNJWxHykTk060VodNnUiFnoKyo0p7x+8tGG7NCP003MPAPf+1amZyi1p6wD8OS6sf
+         aSbQB7/jlCiLUsbeNuzUjAt4NTyV4ivcSUygJ533JAHaaprI2DIb7uRa7Yk/IDRM9jGX
+         EiugaUBHc5LEPvsS4A5ElHF97tMQ9HP4YZha93wjk/X5i4uIHH9tanrfKBRn6R/EICEH
+         KLXtHGwenHyH9YEtucHXoODyE/CfZwgm67QwnDgTM7Mh+LvGVdOtjSUWjqaATTztDAo9
+         UV3cCPPJQyVAiF/hLsodiaEqW9RLK113VPgzQB0w9GP4mrmCBTxQqsy2ERoZqBOTgtZg
+         mFlw==
+X-Gm-Message-State: AC+VfDxU/AUz81obURwZZhsKKGHQdfJD2xKjqnC/YPvLbtBB5f5+/B/1
+        aohTgqYKKTZRTOrj48XPIw==
+X-Google-Smtp-Source: ACHHUZ5H150mSa88b4xttNu7JSRWw4BPqTiRV+I+rs10PLxMr8Er0uReqJbPmLW+bHZBCSLxxHMGdQ==
+X-Received: by 2002:a92:4b02:0:b0:33a:adaa:d6d1 with SMTP id m2-20020a924b02000000b0033aadaad6d1mr15210307ilg.15.1687380800779;
+        Wed, 21 Jun 2023 13:53:20 -0700 (PDT)
 Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j18-20020a926e12000000b00341c0710169sm1496585ilc.46.2023.06.21.12.37.02
+        by smtp.gmail.com with ESMTPSA id r1-20020a92d981000000b0033ce0ef231bsm1578002iln.23.2023.06.21.13.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 12:37:03 -0700 (PDT)
-Received: (nullmailer pid 3403584 invoked by uid 1000);
-        Wed, 21 Jun 2023 19:36:57 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-MIME-Version: 1.0
+        Wed, 21 Jun 2023 13:53:19 -0700 (PDT)
+Received: (nullmailer pid 3515661 invoked by uid 1000);
+        Wed, 21 Jun 2023 20:53:17 -0000
+Date:   Wed, 21 Jun 2023 14:53:17 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anjelique Melendez <quic_amelende@quicinc.com>
-Cc:     andersson@kernel.org, linux-pwm@vger.kernel.org, pavel@ucw.cz,
-        linux-arm-msm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, conor+dt@kernel.org,
-        thierry.reding@gmail.com, linux-leds@vger.kernel.org,
-        lee@kernel.org, agross@kernel.org
-In-Reply-To: <20230621185949.2068-3-quic_amelende@quicinc.com>
-References: <20230621185949.2068-1-quic_amelende@quicinc.com>
- <20230621185949.2068-3-quic_amelende@quicinc.com>
-Message-Id: <168737621786.3403563.13933135215667889399.robh@kernel.org>
-Subject: Re: [PATCH 2/7] dt-bindings: leds: leds-qcom-lpg: Add support for
- LUT through NVMEM devices
-Date:   Wed, 21 Jun 2023 13:36:57 -0600
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: drop unneeded quotes
+Message-ID: <20230621205317.GA3493078-robh@kernel.org>
+References: <20230609140709.64655-1-krzysztof.kozlowski@linaro.org>
+ <20230612093315.gbabepl5qg44xf5d@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230612093315.gbabepl5qg44xf5d@pengutronix.de>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,39 +78,69 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
-On Wed, 21 Jun 2023 11:59:46 -0700, Anjelique Melendez wrote:
-> Update leds-qcom-lpg bindings to support LUT patterns through NVMEM
-> devices.
+On Mon, Jun 12, 2023 at 11:33:15AM +0200, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> ---
->  .../bindings/leds/leds-qcom-lpg.yaml          | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
+> On Fri, Jun 09, 2023 at 04:07:09PM +0200, Krzysztof Kozlowski wrote:
+> > Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+> > checking for this can be enabled in yamllint.
 > 
+> in my book quoting everything instead of dropping quotes is the better
+> option. While that policy adds more quotes, it prevents surprises like:
+> 
+> 	$ yaml2json << EOF
+> 	> countrycodes:
+> 	>  - de
+> 	>  - fr
+> 	>  - no
+> 	>  - pl
+> 	> EOF
+> 	{
+> 	  "countrycodes": [
+> 	    "de",
+> 	    "fr",
+> 	    false,
+> 	    "pl"
+> 	  ]
+> 	}
+> 
+> And if you use the "only-when-needed" rule of yamllint you have to write
+> the above list as:
+> 
+> 	countrycodes:
+> 	 - de
+> 	 - fr
+> 	 - "no"
+> 	 - pl
+> 
+> which is IMHO really ugly.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Agreed, but "no" and "yes" are unlikely values in DT.
 
-yamllint warnings/errors:
+> 
+> Another culprit is "on" (which is used e.g. in github action workflows),
+> so yamllint tells for example for
+> https://github.com/pengutronix/microcom/blob/main/.github/workflows/build.yml:
+> 
+> 	  3:1       warning  truthy value should be one of [false, true]  (truthy)
+> 
+> and there are still more surprises (e.g. version numbers might be
+> subject to conversion to float).
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/leds/leds-qcom-lpg.example.dtb: /example-4/led-controller: failed to match any schema with compatible: ['qcom,pmi632-lpg']
+I'll add a meta-schema check for this. 'const' is already limited to 
+string or integer. That's missing from 'enum'. I think we can also check 
+that all items are the same type as well.
 
-doc reference errors (make refcheckdocs):
+> So at least in my bubble the general
+> hint is to *always* quote strings. Note that required: true is also the
+> default for yamllint's quoted-strings setting, proably for pitfalls like
+> these.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230621185949.2068-3-quic_amelende@quicinc.com
+We're so far gone the other direction from quoting everything, that's 
+not going to happen. Plus, if I liked everything quoted, I would have 
+used JSON.
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+My preference here is I don't want to care about this in reviews. I want 
+yamllint to check it and not have to think about it again.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Rob
