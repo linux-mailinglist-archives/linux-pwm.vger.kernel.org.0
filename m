@@ -2,66 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A56473BAA4
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jun 2023 16:51:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C056673BAA7
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jun 2023 16:51:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231720AbjFWOvw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jun 2023 10:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44802 "EHLO
+        id S230421AbjFWOvx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Jun 2023 10:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232285AbjFWOvv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jun 2023 10:51:51 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B101FD2;
-        Fri, 23 Jun 2023 07:51:50 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3f9c532fa45so8296035e9.2;
-        Fri, 23 Jun 2023 07:51:50 -0700 (PDT)
+        with ESMTP id S231684AbjFWOvw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jun 2023 10:51:52 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17C213E;
+        Fri, 23 Jun 2023 07:51:51 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f918922954so8209665e9.2;
+        Fri, 23 Jun 2023 07:51:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687531909; x=1690123909;
+        d=gmail.com; s=20221208; t=1687531910; x=1690123910;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OhZSgj6bpUo/705/plmFjcm6PUsGWACkSEON4vQAII4=;
-        b=rn1fual0Mz6TDpK+3vlaxFQtzuoeKXztrBpXY3wjAh+sHDrQ8xPI9QfS6voemk3Fwl
-         UVU6yV0ZpCpr9TNFQ/C/lP+5MmCA1skGpE8lBwZBL2j5DjHT1HeWimUwNJms5Xq6ANwL
-         9mKmwahi7YMaZx2M9bzmyfVC6mUn5rYhXZOK1w7Y+rLJeLCP+z7wuc5pnlGzfRaBHsm7
-         0ILKr9qaBUsyt/oSK22ey8RzopMtW3qzv6epOhdrhDOYf0RZVivhERgl4M59mnD2LOHq
-         iFv5g79lruagIKsDPvgvB+FqB+IDV+accT0vzfHAv+ieZoE93h+ze76L3t7eN7MII+JC
-         p6Kw==
+        bh=DsCs8LsHMP5hE51uFL5gb7cWLq1UmneDrAfiny814jA=;
+        b=o6/Iz3hStvmRMnHiNqCa0sS8vR5Z0zJ64Rt1pPsuREaHUr4QgBDYqi09KqiwX3wWez
+         tF5nR+dGxqpe7wEDzqrDA/UYvGUYZ+2AD+IwlkMR0BN1v+pPvd/P147AnKzHQgNEqMGy
+         oO/Jhiy9W+kl+YX2+q4N7GSaWnAceUuExtq4hI95MTLLZF/B5Bysw0av3YednZsjmUcf
+         K7IpqsXmosh6A2kATmnc6NZlVO7i5Zb+bNlbVxlToB7l3kLg9RINFtPnaTkfEsYw1yrW
+         yOYtbnBye2CaAnoZD9TKll9+oTsUUN+F0NMqTIkWC1DpemLYofc0xhqkwYl7v9KFIqcx
+         0vfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687531909; x=1690123909;
+        d=1e100.net; s=20221208; t=1687531910; x=1690123910;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OhZSgj6bpUo/705/plmFjcm6PUsGWACkSEON4vQAII4=;
-        b=mBB1Sqr4xquEuugx1YQJV3QLXALE5mOKuWPkTyRNqwaiMIA47QZCZ8wuOAUKBjeWHR
-         8PZr30OJA3seM5zOnh6RpsHX7Vnvk8cAeiQ8aIg1JqFt4EKvwBLTrac1tmJ/0ZgOhWff
-         8y70MGRzHMEMzHupb8eyia4Y3KbEKbgFnNSySrdKOBBqKvuuDMoUPy29lUyM54+mhQHJ
-         1fnhYcL4aPcqMH8rPZC5y+k6oHQN3K2HV7xUtqbWMPMr3epH+TPTI300HpJFLgoClQta
-         7uArEspfbn/4/BsL916HcrewmqjZdu+g7wFUiUhOJeIsu65Pzxj7vhG8Rs6SjUSTcGeE
-         judQ==
-X-Gm-Message-State: AC+VfDxX0gOrKkiyL4W/jv/ZiL/12ICQVVj6A6bskBv0dcSpShjLqn73
-        VsbEB5hdYpjkTMAU1ouBed0=
-X-Google-Smtp-Source: ACHHUZ5B/eh6bQ1Zrp3umUoe7CU0DZsC4zBzCEUGrPSKaPyNWIHXvBnlhS7B3OlFNJbNgcGbQ1Ol0w==
-X-Received: by 2002:adf:fc47:0:b0:30f:ca87:8e09 with SMTP id e7-20020adffc47000000b0030fca878e09mr3818910wrs.30.1687531909041;
-        Fri, 23 Jun 2023 07:51:49 -0700 (PDT)
+        bh=DsCs8LsHMP5hE51uFL5gb7cWLq1UmneDrAfiny814jA=;
+        b=aneT/oFmMG7HQCfwcNB1ClMT2UY7qdnK/LVHdfkU5Z8sP3gaV0ZMvZz6JXatgdEt5O
+         sm4GWwdSXLXfuO/QZ3zUBR7GOexLQ6HGSx7opqUHkHpEOtnl4Ur7V3eaip8Vpc4AWsiI
+         PlIVAJoPgjlQDF3TguLQ+edL8VHlkG3n4cseH4Sz5fkoSCATgiR0BVo1DFh3TSicM+zT
+         sAIcJNWKc8GaU7fxinZ4aYKEhPXJZMki8K9+4XvrKoO7zffwD00//c81/AF0RcOaoG5I
+         V1+Km1yEPAG+09qAap0aIXWBPC/OLUDPMO7Yk0DypTWmt5hQXJpCHiZhAHTKwqbME9F1
+         2LIA==
+X-Gm-Message-State: AC+VfDyN9qVmAlYxQ2NlwFVPrfc0csIpm1HaI48jgIGI30X77qEzfZ5o
+        PkYfcXWPx3hHZRzYlyic0Ec=
+X-Google-Smtp-Source: ACHHUZ70gFtH4lcp2jQS4FQ6zI/OQIsGhu95c6lzI/2L3tCt8GN0oZACXbXS+XHz+ObxQsvHVen9rw==
+X-Received: by 2002:a1c:f609:0:b0:3f9:bf0f:1ceb with SMTP id w9-20020a1cf609000000b003f9bf0f1cebmr6203753wmc.37.1687531910075;
+        Fri, 23 Jun 2023 07:51:50 -0700 (PDT)
 Received: from localhost (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id k3-20020a5d4283000000b00312780bedc3sm9691276wrq.56.2023.06.23.07.51.48
+        by smtp.gmail.com with ESMTPSA id v6-20020a1cf706000000b003f17848673fsm2577365wmh.27.2023.06.23.07.51.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 07:51:48 -0700 (PDT)
+        Fri, 23 Jun 2023 07:51:49 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Conor Dooley <conor.dooley@microchip.com>
-Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v18 0/2] Microchip Soft IP corePWM driver
-Date:   Fri, 23 Jun 2023 16:51:32 +0200
-Message-ID: <168753171968.1191890.12812740879836968278.b4-ty@gmail.com>
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: ab8500: Fix error code in probe()
+Date:   Fri, 23 Jun 2023 16:51:33 +0200
+Message-ID: <168753171969.1191890.2777194498557168545.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230518-reactive-nursing-23b7fe093048@wendy>
-References: <20230518-reactive-nursing-23b7fe093048@wendy>
+In-Reply-To: <ffc1e98d-0db4-4b8a-9e49-eb87ef844cbd@kili.mountain>
+References: <ffc1e98d-0db4-4b8a-9e49-eb87ef844cbd@kili.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -76,22 +75,16 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On Thu, 18 May 2023 13:29:19 +0100, Conor Dooley wrote:
-> Another version, although a lot smaller of a range-diff than previously!
-> All you get this time is the one change requested by Uwe on v17, along
-> with a rebase on -rc1.
+On Mon, 22 May 2023 14:07:42 +0300, Dan Carpenter wrote:
+> This code accidentally return positive EINVAL instead of negative
+> -EINVAL.
 > 
-> Thanks,
-> Conor.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/2] pwm: add microchip soft ip corePWM driver
-      commit: 2bf7ecf7b4fffd87d8eb5c072395239d6ff54728
-[2/2] MAINTAINERS: add pwm to PolarFire SoC entry
-      commit: de0bb6a8883342c19a5d20f28d5430169f87373e
+[1/1] pwm: ab8500: Fix error code in probe()
+      commit: cdcffafc4d845cc0c6392cba168c7a942734cce7
 
 Best regards,
 -- 
