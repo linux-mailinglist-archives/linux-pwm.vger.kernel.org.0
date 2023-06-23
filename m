@@ -2,45 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FC0C73B403
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jun 2023 11:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7463473BA9E
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jun 2023 16:51:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbjFWJq6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 23 Jun 2023 05:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
+        id S232058AbjFWOvt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 23 Jun 2023 10:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjFWJq5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jun 2023 05:46:57 -0400
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B1DE48;
-        Fri, 23 Jun 2023 02:46:55 -0700 (PDT)
-Received: from [78.40.148.178] (helo=webmail.codethink.co.uk)
-        by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-        id 1qCdNR-00Dbvf-Tr; Fri, 23 Jun 2023 10:46:50 +0100
-MIME-Version: 1.0
-Date:   Fri, 23 Jun 2023 10:46:50 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Ben Dooks <ben.dooks@sifive.com>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        u.kleine-koenig@pengutronix.de,
-        Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S230348AbjFWOvs (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 23 Jun 2023 10:51:48 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE19DE42;
+        Fri, 23 Jun 2023 07:51:47 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-311367a3e12so841301f8f.2;
+        Fri, 23 Jun 2023 07:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687531906; x=1690123906;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l+3LHeauprJMFrQd0+jQkGFlCp8ECRd37XuNslV2KI4=;
+        b=MinrleaBYcgn0SmOruI2S1QUSW3aFfm+GZoBJAolHuG58GBKj27ZOIKHri8o9uoLg/
+         VdUBW87sjF9wyCnBloDKdw/QhZMECJgrnfbrmW3qe/9LgiZbuC1BUD8WLZ73ydzrVSqZ
+         65SRi6chDkKWKA7RU+hbwtdET3d6uL+OHyPNdA48//dLy4uXi7cBh6qQ1zk2u3oKobSY
+         4f4LMcHU4o3t1TNyW1xHUKUsnyf/VSXVu+3zb4Spv9uqLpmjuage8Of5qOm4IbOYZopd
+         Bk/c48Vsnye3NluNaA5L3SACMQHf4bskHdSvjJxY5vbFF0Mnjnnr5rPEsvXBBX1O9CXQ
+         kePQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687531906; x=1690123906;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l+3LHeauprJMFrQd0+jQkGFlCp8ECRd37XuNslV2KI4=;
+        b=AyJu3J7uvqR/I26SkfqzfFefk9A1reeXHhlzMKVuRmq4g5GBjQjHg232y8vEXLmRUy
+         IwFYNxH5BQdsn6LWgcwZQJpLlOKxpJ/UuVcCiFaHI4JRAKXOc9ORw7Q8W+F6sNHJss8U
+         RJZaSiFH4Q7P9eVmq0qzSwqZ43miIIdXGRD4EJsRni2tWfMHD6PrscVAOrejjGZWSc//
+         QJVQ0upBtx26SttHXg9tyj07okQN1JUMDKuWIJnSX14S0tY2sm9nBhaCaHSZkzxU8B5d
+         xvQgn6WB1VhP+3tOS6oJQ3SbOkYYg3XariHNXMjtL5nMfk0Sa8qoa+VSahfLBPwxapig
+         kEjA==
+X-Gm-Message-State: AC+VfDzymDvP4GrMEBvyQanU99pGb59dkBuOnvu8f0bTyJy8wUaWeuFN
+        Cau9ye2gVVYRXcSVzCW33aM=
+X-Google-Smtp-Source: ACHHUZ60FNRlfUmIFP0b/3cM1TztC5mpMI+ckxGr2qi0N2TeLVaraRnzeYWpPjtELUaJeTm17tpo5Q==
+X-Received: by 2002:a5d:570b:0:b0:309:4da8:7713 with SMTP id a11-20020a5d570b000000b003094da87713mr17290741wrv.64.1687531905993;
+        Fri, 23 Jun 2023 07:51:45 -0700 (PDT)
+Received: from localhost (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id f12-20020a5d58ec000000b00309382eb047sm9654388wrd.112.2023.06.23.07.51.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 07:51:45 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: Re: [PATCH v8 0/5] DesignWare PWM driver updates
-In-Reply-To: <daffc540-3b99-f71d-538b-84c897730208@linux.intel.com>
-References: <20230614171457.69191-1-ben.dooks@sifive.com>
- <daffc540-3b99-f71d-538b-84c897730208@linux.intel.com>
-Message-ID: <1634a34bcd0f1b6eed5e3d59126d7892@codethink.co.uk>
-X-Sender: ben.dooks@codethink.co.uk
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: (subset) [PATCH v2 1/2] dt-bindings: pwm: imx: add i.MX8QXP compatible
+Date:   Fri, 23 Jun 2023 16:51:29 +0200
+Message-ID: <168753171957.1191890.13776090502738387691.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230424082108.26512-1-alexander.stein@ew.tq-group.com>
+References: <20230424082108.26512-1-alexander.stein@ew.tq-group.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -48,39 +82,16 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-
-On 2023-06-20 13:59, Jarkko Nikula wrote:
-> On 6/14/23 20:14, Ben Dooks wrote:
->> This series is an update for the DesignWare PWM driver to add support 
->> for
->> OF (and split the PCI bits out if aynone else wants them). This is 
->> mostly
->> the same as the v7 series, but with code moved around and 
->> module-namespace
->> added, plus review comments processed.
->> 
->> Since we no longer have the hardware, the clock code hasn't been 
->> changed to
->> either lock the rate whilst the PWM is running, or to deal with any 
->> sort
->> of change callback. This is left to future work (and I would rather 
->> get
->> something in that does currently work) (second note, the hardware we 
->> did
->> use had a fixed clock tree anyway)
->> 
->> This account is probably going away soon, I have cc'd my main work
->> email to catch any responses.
->> 
->> Thank you all for the reviews.
->> 
-> I tested the patchset on Intel Elkhart Lake and didn't see issues.
+On Mon, 24 Apr 2023 10:21:07 +0200, Alexander Stein wrote:
+> i.MX8QXP compatible is missing in the list, add it.
 > 
-> Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> 
 
-Great, thank you.
+Applied, thanks!
 
-Is this series likely to get into the next kernel release?
+[1/2] dt-bindings: pwm: imx: add i.MX8QXP compatible
+      commit: c799ad062a75858e10a7626e20233e6e94dbf554
 
+Best regards,
 -- 
-ben
+Thierry Reding <thierry.reding@gmail.com>
