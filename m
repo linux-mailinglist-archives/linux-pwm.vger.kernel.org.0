@@ -2,64 +2,73 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF8E673E14F
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jun 2023 15:59:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A266A73E2BD
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jun 2023 17:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjFZN7j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Jun 2023 09:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
+        id S229690AbjFZPFY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Jun 2023 11:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbjFZN7h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jun 2023 09:59:37 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693EC1990;
-        Mon, 26 Jun 2023 06:59:06 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-78362f57500so22532439f.3;
-        Mon, 26 Jun 2023 06:59:06 -0700 (PDT)
+        with ESMTP id S230383AbjFZPFU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jun 2023 11:05:20 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D77910C2
+        for <linux-pwm@vger.kernel.org>; Mon, 26 Jun 2023 08:05:19 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-3112f256941so3054607f8f.1
+        for <linux-pwm@vger.kernel.org>; Mon, 26 Jun 2023 08:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1687791917; x=1690383917;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=348adPXQRKrKNTWGAwb9z5LOcOD3S5LIRa6IrQyqmGc=;
+        b=BpdMkRqMxf6XEjAul5+0XQ4Uqv2kRvyAG7uM//NhkYVZS74eHBo+NlzGx6Km7k8dew
+         blQILAw7fwJy27T2x3DKaUlmEQcDJRSCj8uKQURAmWzo7FGHZNgXP+PTFSBy3ViEwxDK
+         bwUXavKKzBgmLv3XDq49ITl/dbsCckPuHheh1OyxNCa9H1yrYB1OubNaNBFQMYfXVyf9
+         4jZ/Dp+NUWclfn5YkfLFegJDrQ6plDOZ1zLMYwpsVnYWM2AtacotDLe1spyxM2z0yHPk
+         j0ZN67PMABHain93jKjzWnpDNib5oPHQXOXXsIpIXONZ9UFxlFj04vrTDLF/c98FZA07
+         LqIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687787940; x=1690379940;
+        d=1e100.net; s=20221208; t=1687791917; x=1690383917;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7arvl2nBBD5MstmpqoXDL1oSTmykovk9ay3oSDEsgug=;
-        b=dozEU0O3YCd+c9Huqvu2YpHjkie8l1wO1iDsxbjHz93vA3sLC4JF2GoeXyEqAAJF1p
-         Ao/o59sxJJf9vO9gMP6LGf6+nDxu8IOBpTzfptrbFk5g8Q4cjHGLerIq4mCWQYPQZJEj
-         G365nEcy+b0jD2ZHJLtimM6O0cdTCgz+DUdgwb6GdAz5r2eYIA8lvJtlRMgurrvIeQlT
-         sixj1t6euhqZBAfZ3Ld9wvPnsvOowhOZafe4vObuFpJhuChMyf+i+7p4MSezZueh1W+v
-         buCLZ0ac2RlNqjRMLBXB+hqyjssZGfkMHSlNLB/fFF/nVUaAXf1NsSHPntOt2VHGIHuL
-         ouaw==
-X-Gm-Message-State: AC+VfDzcfLXfEG4kNE0za3A9mcVwVeCVVSWAg0/U5vIudrMpHuYEEYDI
-        dIhBEUujzaJqyt+I7sOnQfmnS74xRQ==
-X-Google-Smtp-Source: ACHHUZ4Dq6Kj4OVVjRedrWE2k0g0MD5IUWH7/vW1EM89UG+RgV5C4A4eanJhgKS3G0bH/Su3I5qiUg==
-X-Received: by 2002:a5d:8f96:0:b0:780:c8a1:f86d with SMTP id l22-20020a5d8f96000000b00780c8a1f86dmr15362864iol.11.1687787939947;
-        Mon, 26 Jun 2023 06:58:59 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id r23-20020a5d96d7000000b00760e7a343c1sm2221814iol.30.2023.06.26.06.58.58
+        bh=348adPXQRKrKNTWGAwb9z5LOcOD3S5LIRa6IrQyqmGc=;
+        b=QKaQ5mKQ44Z4q3KDkhhvHh63gGPnc0P5UOqq3Q8HpNjUDN/mAbj9WjxeyiPVGQwk+K
+         695C54R69272+hYvBpvAU8HMFZWVmqcZws4G4AO8SA2q8qw8If4h14dz0s6hiU95Uxd9
+         SWTwVf9B1kFgkkroRZEdmnvjeOZM4DK/NmiodFaH/FJegy5w4ykxFSTCBgNSx6OII8tA
+         s10HBUXY/c01vs3gHzIMeEuIh5ERjylax1qpnU4qsPdcY9e1WJY0oEQKjv4tznyoe8Ix
+         DyqRzgUXaDfXupELPzNoHhCfc+bwQwRKZIQtHHIDLrf0Gz4GQZ058wjiaWMXErkJZdpD
+         P6tw==
+X-Gm-Message-State: AC+VfDwDJXtjQy5Wz4nYB0wjLNUq2c+JFQPdtduSCI8a4fDqDF4d5dbi
+        fDpTxJ+LjJUJ6PlXjWf2XztQtw==
+X-Google-Smtp-Source: ACHHUZ5VYTqqVMy0dhtZ4hxs5N4mrJgTTvouyQr7HxLT3nJwXi1SuqaAezHLUswOmb65Bowi8io8Mg==
+X-Received: by 2002:a5d:5960:0:b0:30f:c56c:b5b3 with SMTP id e32-20020a5d5960000000b0030fc56cb5b3mr8897292wri.4.1687791917522;
+        Mon, 26 Jun 2023 08:05:17 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id e15-20020adfe7cf000000b0030fae360f14sm7644766wrn.68.2023.06.26.08.05.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 06:58:59 -0700 (PDT)
-Received: (nullmailer pid 3121044 invoked by uid 1000);
-        Mon, 26 Jun 2023 13:58:57 -0000
-Date:   Mon, 26 Jun 2023 07:58:57 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anjelique Melendez <quic_amelende@quicinc.com>
-Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        u.kleine-koenig@pengutronix.de, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/7] dt-bindings: soc: qcom: Add qcom-pbs bindings
-Message-ID: <20230626135857.GA3118929-robh@kernel.org>
-References: <20230621185949.2068-1-quic_amelende@quicinc.com>
- <20230621185949.2068-2-quic_amelende@quicinc.com>
+        Mon, 26 Jun 2023 08:05:16 -0700 (PDT)
+Date:   Mon, 26 Jun 2023 16:05:14 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker applying
+ initial PWM state
+Message-ID: <20230626150514.GD95170@aspen.lan>
+References: <20230608-backlight-pwm-avoid-flicker-v1-1-afd380d50174@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230621185949.2068-2-quic_amelende@quicinc.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <20230608-backlight-pwm-avoid-flicker-v1-1-afd380d50174@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,63 +76,17 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 11:59:45AM -0700, Anjelique Melendez wrote:
-> Add binding for the Qualcomm Programmable Boot Sequencer device.
-> 
-> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> ---
->  .../bindings/soc/qcom/qcom-pbs.yaml           | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
-> new file mode 100644
-> index 000000000000..0a89c334f95c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
-> @@ -0,0 +1,41 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/qcom/qcom-pbs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. PBS
-> +
-> +maintainers:
-> +  - Anjelique Melendez <quic_amelende@quicinc.com>
-> +
-> +description: |
-> +  Qualcomm PBS (programmable boot sequencer) supports triggering sequences
-> +  for clients upon request.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,pbs
-> +
-> +  reg:
-> +    description: |
-> +      Base address of the PBS peripheral.
-> +    maxItems: 1
-> +
-> +required:
-> + - compatible
-> + - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pmic {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      qcom,pbs@7400 {
-> +        compatible = "qcom,pbs";
-> +        reg = <0x7400>;
-> +      };
+On Thu, Jun 08, 2023 at 04:11:14PM +0200, Philipp Zabel wrote:
+> The initial PWM state returned by pwm_init_state() has a duty cycle
+> of 0 ns. To avoid backlight flicker when taking over an enabled
+> display from the bootloader, skip the initial pwm_apply_state()
+> and leave the PWM be until backlight_update_state() will apply the
+> state with the desired brightness.
 
-Why do you need a child node for this? Is there more than 1 instance in 
-a PMIC? Every sub-function of a PMIC doesn't have to have a DT node.
+backlight_update_state() uses pwm_get_state() to update the PWM.
 
-Rob
+Without applying something that came from pwm_init_state() then
+we will never adopt the reference values from pwm->args.
+
+
+Daniel.
