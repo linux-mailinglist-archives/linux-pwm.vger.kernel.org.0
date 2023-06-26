@@ -2,91 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A266A73E2BD
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jun 2023 17:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D204373E799
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jun 2023 20:16:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229690AbjFZPFY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Jun 2023 11:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34382 "EHLO
+        id S230487AbjFZSQz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 26 Jun 2023 14:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjFZPFU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jun 2023 11:05:20 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D77910C2
-        for <linux-pwm@vger.kernel.org>; Mon, 26 Jun 2023 08:05:19 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-3112f256941so3054607f8f.1
-        for <linux-pwm@vger.kernel.org>; Mon, 26 Jun 2023 08:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687791917; x=1690383917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=348adPXQRKrKNTWGAwb9z5LOcOD3S5LIRa6IrQyqmGc=;
-        b=BpdMkRqMxf6XEjAul5+0XQ4Uqv2kRvyAG7uM//NhkYVZS74eHBo+NlzGx6Km7k8dew
-         blQILAw7fwJy27T2x3DKaUlmEQcDJRSCj8uKQURAmWzo7FGHZNgXP+PTFSBy3ViEwxDK
-         bwUXavKKzBgmLv3XDq49ITl/dbsCckPuHheh1OyxNCa9H1yrYB1OubNaNBFQMYfXVyf9
-         4jZ/Dp+NUWclfn5YkfLFegJDrQ6plDOZ1zLMYwpsVnYWM2AtacotDLe1spyxM2z0yHPk
-         j0ZN67PMABHain93jKjzWnpDNib5oPHQXOXXsIpIXONZ9UFxlFj04vrTDLF/c98FZA07
-         LqIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687791917; x=1690383917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=348adPXQRKrKNTWGAwb9z5LOcOD3S5LIRa6IrQyqmGc=;
-        b=QKaQ5mKQ44Z4q3KDkhhvHh63gGPnc0P5UOqq3Q8HpNjUDN/mAbj9WjxeyiPVGQwk+K
-         695C54R69272+hYvBpvAU8HMFZWVmqcZws4G4AO8SA2q8qw8If4h14dz0s6hiU95Uxd9
-         SWTwVf9B1kFgkkroRZEdmnvjeOZM4DK/NmiodFaH/FJegy5w4ykxFSTCBgNSx6OII8tA
-         s10HBUXY/c01vs3gHzIMeEuIh5ERjylax1qpnU4qsPdcY9e1WJY0oEQKjv4tznyoe8Ix
-         DyqRzgUXaDfXupELPzNoHhCfc+bwQwRKZIQtHHIDLrf0Gz4GQZ058wjiaWMXErkJZdpD
-         P6tw==
-X-Gm-Message-State: AC+VfDwDJXtjQy5Wz4nYB0wjLNUq2c+JFQPdtduSCI8a4fDqDF4d5dbi
-        fDpTxJ+LjJUJ6PlXjWf2XztQtw==
-X-Google-Smtp-Source: ACHHUZ5VYTqqVMy0dhtZ4hxs5N4mrJgTTvouyQr7HxLT3nJwXi1SuqaAezHLUswOmb65Bowi8io8Mg==
-X-Received: by 2002:a5d:5960:0:b0:30f:c56c:b5b3 with SMTP id e32-20020a5d5960000000b0030fc56cb5b3mr8897292wri.4.1687791917522;
-        Mon, 26 Jun 2023 08:05:17 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id e15-20020adfe7cf000000b0030fae360f14sm7644766wrn.68.2023.06.26.08.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 08:05:16 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 16:05:14 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker applying
- initial PWM state
-Message-ID: <20230626150514.GD95170@aspen.lan>
-References: <20230608-backlight-pwm-avoid-flicker-v1-1-afd380d50174@pengutronix.de>
+        with ESMTP id S230397AbjFZSQy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jun 2023 14:16:54 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CCD94;
+        Mon, 26 Jun 2023 11:16:52 -0700 (PDT)
+Received: from [192.168.1.141] ([37.4.248.15]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N63NQ-1pyGlv1Q2S-016R6o; Mon, 26 Jun 2023 20:16:19 +0200
+Message-ID: <47eac53a-8d93-16fa-a8db-68bbd40020a8@i2se.com>
+Date:   Mon, 26 Jun 2023 20:16:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230608-backlight-pwm-avoid-flicker-v1-1-afd380d50174@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer
+ bindings to YAML
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        dmaengine@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Vinod Koul <vkoul@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>
+References: <20230617133620.53129-1-stefan.wahren@i2se.com>
+ <20230617133620.53129-8-stefan.wahren@i2se.com>
+ <02d1d74a-1476-41c8-6d94-3eb477352309@linaro.org>
+ <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
+Content-Language: en-US
+In-Reply-To: <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Pf+nK9VlP6UkuRXw6XpNBDYvdhpAMd7zCnAyEYISBTYUuWfZsGA
+ KhKvXGty+Tb7YBrwQDkiXzvssgyiuvbh1qNHvlEzU1uVAt5DaVXhSukj4YlEdnFCxs/Kc56
+ 3AMyVt0eNBGYqT6Mww9J1VWG19uSHT850Q67pFWJcxQ70YrI6gKDTGufkCQGnZf5q9B0Eef
+ PkC3ZofiennUM481xaQrg==
+UI-OutboundReport: notjunk:1;M01:P0:9baAdFLbfrw=;I04Bud++nv5QiIFcrr0i7NvorWL
+ bmeG4KE1VO4eQSh+Wj84BLTzHYeNd7sAo9plxWLSlm6+wrJ6+eZSH5Tz5es+/silzRfMkHNvr
+ QX7EBXAf3+4lnnI3dajXM5Bl/lntwtvh/wZlRUBrrYrejthXr6YQE160LSVzKSNCg5liKHvOl
+ MtqTce1vS0xdsg2XNHdDarkIl3Q0yA4v/7tyl1VL+OgBcU92YQVyvzx7+4gq58wcc6vhAxyt5
+ RvPgZ5+Fi/ui0GvojkXoMu4a40PhD4SrnI4gyfPOctRZc9EVW0YcNk5XRXXrNFZcrAOWYNR0n
+ DLudhGKTeokM39AuofC6vHIvSS091Jm9S8XmwQVLhhMKdgw+AHAp5nq2EECpbgqu9/jRwTCH1
+ AyUwgAz38xB9x4D9qJKC5vf7Z5duDMFLOhe0zjUYJxdxr5Es9nqHcdhwV1KgCh+xRELVs67dU
+ A2e8NrLjZYOUovtmKtR+N7fa0tq0N7faVL8B/uwby3e9hCly8/UYPkUBKSWwfF9fFTIeVOqsL
+ IFgnG0Dw/McbUSSnV9+RP3QEpvO3XLK9SiOF6p3HMZwbXaPe8OT5ec8kSkb6tAOjVDtVuB1nH
+ 4Mxn4KibjxdPfaKfCCG/vdsXETLLunRNoixCqqk8IwifTw7aL/NZ2Ukr9ZLELEbFkFJAYaww7
+ aC56FuQq3AdG5s/Yt/gCc4ryMTEhg2wkLZmfXso8RA==
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 04:11:14PM +0200, Philipp Zabel wrote:
-> The initial PWM state returned by pwm_init_state() has a duty cycle
-> of 0 ns. To avoid backlight flicker when taking over an enabled
-> display from the bootloader, skip the initial pwm_apply_state()
-> and leave the PWM be until backlight_update_state() will apply the
-> state with the desired brightness.
+Hi Rob,
 
-backlight_update_state() uses pwm_get_state() to update the PWM.
+Am 19.06.23 um 20:57 schrieb Stefan Wahren:
+> Hi Daniel,
+> 
+> Am 19.06.23 um 19:00 schrieb Daniel Lezcano:
+>> On 17/06/2023 15:36, Stefan Wahren wrote:
+>>> Convert the DT binding document for bcm2835-system-timer from .txt
+>>> to YAML.
+>>>
+>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>   .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
+>>>   .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
+>>>   2 files changed, 48 insertions(+), 22 deletions(-)
+>>>   delete mode 100644 
+>>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>> deleted file mode 100644
+>>> index 844bd5fbd04c..000000000000
+>>> --- 
+>>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>
+>> Appliedp patch #7
+> 
+> i'm so sorry but i accidentially added a Reviewed-by from Rob, which is 
+> wrong here. I should have added to the patch 6 :-(
 
-Without applying something that came from pwm_init_state() then
-we will never adopt the reference values from pwm->args.
+did you noticed the problem about the accidentially wrong added Reviewed-by?
 
+Best regards
 
-Daniel.
+> 
+> Regards Stefan
+> 
+>>
+>> Thanks
+>>
