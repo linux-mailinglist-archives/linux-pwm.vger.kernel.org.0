@@ -2,116 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D204373E799
-	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jun 2023 20:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60BA473F5F2
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 Jun 2023 09:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230487AbjFZSQz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 26 Jun 2023 14:16:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
+        id S229900AbjF0HqW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 27 Jun 2023 03:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230397AbjFZSQy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 26 Jun 2023 14:16:54 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CCD94;
-        Mon, 26 Jun 2023 11:16:52 -0700 (PDT)
-Received: from [192.168.1.141] ([37.4.248.15]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N63NQ-1pyGlv1Q2S-016R6o; Mon, 26 Jun 2023 20:16:19 +0200
-Message-ID: <47eac53a-8d93-16fa-a8db-68bbd40020a8@i2se.com>
-Date:   Mon, 26 Jun 2023 20:16:18 +0200
+        with ESMTP id S229567AbjF0HqV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Jun 2023 03:46:21 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80116196;
+        Tue, 27 Jun 2023 00:46:18 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 9E82424E261;
+        Tue, 27 Jun 2023 15:46:15 +0800 (CST)
+Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 27 Jun
+ 2023 15:46:15 +0800
+Received: from [192.168.120.57] (171.223.208.138) by EXMBX068.cuchost.com
+ (172.16.6.68) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 27 Jun
+ 2023 15:46:14 +0800
+Message-ID: <c3c7fb8a-7c0c-5966-88cd-e004db69de83@starfivetech.com>
+Date:   Tue, 27 Jun 2023 15:46:08 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer
- bindings to YAML
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        dmaengine@vger.kernel.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        Vinod Koul <vkoul@kernel.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v4 0/4] StarFive's Pulse Width Modulation driver support
+To:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Scott Branden <sbranden@broadcom.com>
-References: <20230617133620.53129-1-stefan.wahren@i2se.com>
- <20230617133620.53129-8-stefan.wahren@i2se.com>
- <02d1d74a-1476-41c8-6d94-3eb477352309@linaro.org>
- <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Hal Feng <hal.feng@starfivetech.com>
+References: <20230601085154.36938-1-william.qiu@starfivetech.com>
 Content-Language: en-US
-In-Reply-To: <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Pf+nK9VlP6UkuRXw6XpNBDYvdhpAMd7zCnAyEYISBTYUuWfZsGA
- KhKvXGty+Tb7YBrwQDkiXzvssgyiuvbh1qNHvlEzU1uVAt5DaVXhSukj4YlEdnFCxs/Kc56
- 3AMyVt0eNBGYqT6Mww9J1VWG19uSHT850Q67pFWJcxQ70YrI6gKDTGufkCQGnZf5q9B0Eef
- PkC3ZofiennUM481xaQrg==
-UI-OutboundReport: notjunk:1;M01:P0:9baAdFLbfrw=;I04Bud++nv5QiIFcrr0i7NvorWL
- bmeG4KE1VO4eQSh+Wj84BLTzHYeNd7sAo9plxWLSlm6+wrJ6+eZSH5Tz5es+/silzRfMkHNvr
- QX7EBXAf3+4lnnI3dajXM5Bl/lntwtvh/wZlRUBrrYrejthXr6YQE160LSVzKSNCg5liKHvOl
- MtqTce1vS0xdsg2XNHdDarkIl3Q0yA4v/7tyl1VL+OgBcU92YQVyvzx7+4gq58wcc6vhAxyt5
- RvPgZ5+Fi/ui0GvojkXoMu4a40PhD4SrnI4gyfPOctRZc9EVW0YcNk5XRXXrNFZcrAOWYNR0n
- DLudhGKTeokM39AuofC6vHIvSS091Jm9S8XmwQVLhhMKdgw+AHAp5nq2EECpbgqu9/jRwTCH1
- AyUwgAz38xB9x4D9qJKC5vf7Z5duDMFLOhe0zjUYJxdxr5Es9nqHcdhwV1KgCh+xRELVs67dU
- A2e8NrLjZYOUovtmKtR+N7fa0tq0N7faVL8B/uwby3e9hCly8/UYPkUBKSWwfF9fFTIeVOqsL
- IFgnG0Dw/McbUSSnV9+RP3QEpvO3XLK9SiOF6p3HMZwbXaPe8OT5ec8kSkb6tAOjVDtVuB1nH
- 4Mxn4KibjxdPfaKfCCG/vdsXETLLunRNoixCqqk8IwifTw7aL/NZ2Ukr9ZLELEbFkFJAYaww7
- aC56FuQq3AdG5s/Yt/gCc4ryMTEhg2wkLZmfXso8RA==
+From:   William Qiu <william.qiu@starfivetech.com>
+In-Reply-To: <20230601085154.36938-1-william.qiu@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [171.223.208.138]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX068.cuchost.com
+ (172.16.6.68)
+X-YovoleRuleAgent: yovoleflag
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Rob,
 
-Am 19.06.23 um 20:57 schrieb Stefan Wahren:
-> Hi Daniel,
-> 
-> Am 19.06.23 um 19:00 schrieb Daniel Lezcano:
->> On 17/06/2023 15:36, Stefan Wahren wrote:
->>> Convert the DT binding document for bcm2835-system-timer from .txt
->>> to YAML.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> ---
->>>   .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
->>>   .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
->>>   2 files changed, 48 insertions(+), 22 deletions(-)
->>>   delete mode 100644 
->>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
->>> deleted file mode 100644
->>> index 844bd5fbd04c..000000000000
->>> --- 
->>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
->>
->> Appliedp patch #7
-> 
-> i'm so sorry but i accidentially added a Reviewed-by from Rob, which is 
-> wrong here. I should have added to the patch 6 :-(
 
-did you noticed the problem about the accidentially wrong added Reviewed-by?
-
-Best regards
-
+On 2023/6/1 16:51, William Qiu wrote:
+> Hi,
 > 
-> Regards Stefan
+> This patchset adds initial rudimentary support for the StarFive
+> Pulse Width Modulation controller driver. And this driver will
+> be used in StarFive's VisionFive 2 board.The first patch add
+> Documentations for the device and Patch 2 adds device probe for
+> the module.
 > 
->>
->> Thanks
->>
+> Changes v2->v3:
+> - Rebased to v6.4rc3.
+> - Sorted the header files in alphabetic order.
+> - Changed iowrite32() to writel().
+> - Added a way to turn off.
+> - Moified polarity inversion implementation.
+> - Added 7100 support.
+> - Added dts patches.
+> - Used the various helpers in linux/math.h.
+> - Corrected formatting problems.
+> - Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
+> - Dropped the redundant code.
+> 
+> Changes v2->v3:
+> - Fixed some formatting issues.
+> 
+> Changes v1->v2:
+> - Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml'.
+> - Dropped the compatible's Items.
+> - Dropped the unuse defines.
+> - Modified the code to follow the Linux coding style.
+> - Changed return value to dev_err_probe.
+> - Dropped the unnecessary local variable.
+> 
+> The patch series is based on v6.4rc3.
+> 
+> William Qiu (4):
+>   dt-bindings: pwm: Add StarFive PWM module
+>   pwm: starfive: Add PWM driver support
+>   riscv: dts: starfive: jh7110: Add PWM node and pins configuration
+>   riscv: dts: starfive: jh7100: Add PWM node and pins configuration
+> 
+>  .../bindings/pwm/starfive,jh7100-pwm.yaml     |  55 +++++
+>  MAINTAINERS                                   |   7 +
+>  .../boot/dts/starfive/jh7100-common.dtsi      |  24 +++
+>  arch/riscv/boot/dts/starfive/jh7100.dtsi      |   9 +
+>  .../jh7110-starfive-visionfive-2.dtsi         |  22 ++
+>  arch/riscv/boot/dts/starfive/jh7110.dtsi      |   9 +
+>  drivers/pwm/Kconfig                           |   9 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-starfive-ptc.c                | 192 ++++++++++++++++++
+>  9 files changed, 328 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/starfive,jh7100-pwm.yaml
+>  create mode 100644 drivers/pwm/pwm-starfive-ptc.c
+> 
+> --
+> 2.34.1
+> 
+Hi everyone,
+
+Could you please help me review this patch series to see if there is
+anything that needs to be modified?
+Thanks for taking time to review this patch series.
+
+Best Regards,
+William
