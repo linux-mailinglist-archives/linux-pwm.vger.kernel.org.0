@@ -2,127 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60BA473F5F2
-	for <lists+linux-pwm@lfdr.de>; Tue, 27 Jun 2023 09:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D3E873F6F8
+	for <lists+linux-pwm@lfdr.de>; Tue, 27 Jun 2023 10:24:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjF0HqW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 27 Jun 2023 03:46:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41038 "EHLO
+        id S230012AbjF0IYc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 27 Jun 2023 04:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjF0HqV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Jun 2023 03:46:21 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80116196;
-        Tue, 27 Jun 2023 00:46:18 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 9E82424E261;
-        Tue, 27 Jun 2023 15:46:15 +0800 (CST)
-Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 27 Jun
- 2023 15:46:15 +0800
-Received: from [192.168.120.57] (171.223.208.138) by EXMBX068.cuchost.com
- (172.16.6.68) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 27 Jun
- 2023 15:46:14 +0800
-Message-ID: <c3c7fb8a-7c0c-5966-88cd-e004db69de83@starfivetech.com>
-Date:   Tue, 27 Jun 2023 15:46:08 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v4 0/4] StarFive's Pulse Width Modulation driver support
-To:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S231618AbjF0IYb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 27 Jun 2023 04:24:31 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD44026A5;
+        Tue, 27 Jun 2023 01:23:53 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4f122ff663eso5708593e87.2;
+        Tue, 27 Jun 2023 01:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687854231; x=1690446231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GDNIl3iXFQ1gjAWKdZ7tZ4fSEMXf+XK06wLBhL78YQA=;
+        b=ZsG0eKWLD4RrDhszvy0jCNn5SxS8lRq06BUqbDkRPdWd2dpro9AIC3anJvSNMNGVYP
+         qqM2TOST/hDRserCkiIqfe5a96DIVS0mZXNk8OLcdtaCKdMOcIyBDWGQWpJl+3Jurm3A
+         tqM/xj5WqaSBs1Z8/2g/lTTXame6RxFD0J55lUEo1hleJ71uRiR6ab2BIV15pzGZsH4c
+         ED6sXTFn48+46ZZ+EZgqOTPNWrCNm7JxE0I/C1tsFJGLBc6kCOAWvXcTOJFNk87n7sMe
+         iIEkLV862i2rBPa19Q7RYWDOVFlv9dmPfWP3IHmbyRqf+8Sgv5FQnhREAcXxrZvELZ4b
+         73rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687854231; x=1690446231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GDNIl3iXFQ1gjAWKdZ7tZ4fSEMXf+XK06wLBhL78YQA=;
+        b=FHK5BTX+DK6TvLCra4+0q6NBINO+epiXcejvp3FOyqwY2gOtXBn7rnwZSL3+tgtXM9
+         cSNjWKODQBGUGF8HAhj6O5iWNEUk8i5ICrT2CyE/UNYe6NQV71mQ10yBMe8hSXo0Lqqb
+         XmFf5o5Qz+LtCGAtlxCM51pGPhhc5gULGUoiI3AGsTvMmdjNJfvnJRFHl/XCYxS1CzNO
+         Q2tOSFVYXn9R10bFAUx/N68L547C/SJW7Md0BG7a4BNLWuFu+ZnLVv2scX9Z3BfAEOGR
+         DRYAfUXmxPbK+7GkamJPWLeoMkQKFsuRgV/lcEGbb28G1j26u28srBs6d4wDy/r0XjAX
+         7Fmg==
+X-Gm-Message-State: AC+VfDwzS6hn71N53m0o7dOWYAq6YnPG887XkLcF0ztxt7mYxgaiYknV
+        7ZAsFRcPadqvJzb7fsZibf0jSuCPDVOhcrc=
+X-Google-Smtp-Source: ACHHUZ73/pqlFjvrz0cp867rPg1rxGDDBjPhXGKKuH8Dye21hRqvSYSwI3xGt9P1QHy84HJNYNoHOQ==
+X-Received: by 2002:a19:da11:0:b0:4f8:7617:6445 with SMTP id r17-20020a19da11000000b004f876176445mr12607528lfg.48.1687854230312;
+        Tue, 27 Jun 2023 01:23:50 -0700 (PDT)
+Received: from localhost.localdomain (mail.pulsar-telecom.ru. [94.181.180.60])
+        by smtp.gmail.com with ESMTPSA id i12-20020a056512006c00b004eb12329053sm1420673lfo.256.2023.06.27.01.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jun 2023 01:23:49 -0700 (PDT)
+From:   Aleksandr Shubin <privatesub2@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Hal Feng <hal.feng@starfivetech.com>
-References: <20230601085154.36938-1-william.qiu@starfivetech.com>
-Content-Language: en-US
-From:   William Qiu <william.qiu@starfivetech.com>
-In-Reply-To: <20230601085154.36938-1-william.qiu@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [171.223.208.138]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX068.cuchost.com
- (172.16.6.68)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v3 0/3] Add support for Allwinner PWM on D1/T113s/R329 SoCs
+Date:   Tue, 27 Jun 2023 11:23:23 +0300
+Message-Id: <20230627082334.1253020-1-privatesub2@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi,
 
+This series adds support for PWM controller on new
+Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
+provides basic functionality for control PWM channels.
 
-On 2023/6/1 16:51, William Qiu wrote:
-> Hi,
-> 
-> This patchset adds initial rudimentary support for the StarFive
-> Pulse Width Modulation controller driver. And this driver will
-> be used in StarFive's VisionFive 2 board.The first patch add
-> Documentations for the device and Patch 2 adds device probe for
-> the module.
-> 
-> Changes v2->v3:
-> - Rebased to v6.4rc3.
-> - Sorted the header files in alphabetic order.
-> - Changed iowrite32() to writel().
-> - Added a way to turn off.
-> - Moified polarity inversion implementation.
-> - Added 7100 support.
-> - Added dts patches.
-> - Used the various helpers in linux/math.h.
-> - Corrected formatting problems.
-> - Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
-> - Dropped the redundant code.
-> 
-> Changes v2->v3:
-> - Fixed some formatting issues.
-> 
-> Changes v1->v2:
-> - Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml'.
-> - Dropped the compatible's Items.
-> - Dropped the unuse defines.
-> - Modified the code to follow the Linux coding style.
-> - Changed return value to dev_err_probe.
-> - Dropped the unnecessary local variable.
-> 
-> The patch series is based on v6.4rc3.
-> 
-> William Qiu (4):
->   dt-bindings: pwm: Add StarFive PWM module
->   pwm: starfive: Add PWM driver support
->   riscv: dts: starfive: jh7110: Add PWM node and pins configuration
->   riscv: dts: starfive: jh7100: Add PWM node and pins configuration
-> 
->  .../bindings/pwm/starfive,jh7100-pwm.yaml     |  55 +++++
->  MAINTAINERS                                   |   7 +
->  .../boot/dts/starfive/jh7100-common.dtsi      |  24 +++
->  arch/riscv/boot/dts/starfive/jh7100.dtsi      |   9 +
->  .../jh7110-starfive-visionfive-2.dtsi         |  22 ++
->  arch/riscv/boot/dts/starfive/jh7110.dtsi      |   9 +
->  drivers/pwm/Kconfig                           |   9 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-starfive-ptc.c                | 192 ++++++++++++++++++
->  9 files changed, 328 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/starfive,jh7100-pwm.yaml
->  create mode 100644 drivers/pwm/pwm-starfive-ptc.c
-> 
-> --
-> 2.34.1
-> 
-Hi everyone,
+v2:
+ - fix dt-bindings
+ - fix a remark in the driver
 
-Could you please help me review this patch series to see if there is
-anything that needs to be modified?
-Thanks for taking time to review this patch series.
+v3:
+ - fix dt-bindings
+ - fix sunxi-d1s-t113.dtsi
 
-Best Regards,
-William
+Aleksandr Shubin (3):
+  dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
+    controller
+  pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
+  riscv: dts: allwinner: d1: Add pwm node
+
+ .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  86 +++++
+ .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  11 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sun20i.c                      | 322 ++++++++++++++++++
+ 5 files changed, 430 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-sun20i.c
+
+-- 
+2.25.1
+
