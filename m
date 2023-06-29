@@ -2,44 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE395742373
-	for <lists+linux-pwm@lfdr.de>; Thu, 29 Jun 2023 11:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7ED674236F
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Jun 2023 11:49:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbjF2JtD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Jun 2023 05:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
+        id S231821AbjF2Js7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 29 Jun 2023 05:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbjF2Js6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Jun 2023 05:48:58 -0400
+        with ESMTP id S231918AbjF2Jsz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Jun 2023 05:48:55 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BD52D50
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 02:48:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D78297B
+        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 02:48:52 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qEoGh-0006UR-0Q; Thu, 29 Jun 2023 11:48:51 +0200
+        id 1qEoGh-0006US-0Q; Thu, 29 Jun 2023 11:48:51 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qEoGf-00Aro6-UN; Thu, 29 Jun 2023 11:48:49 +0200
+        id 1qEoGg-00AroB-9Y; Thu, 29 Jun 2023 11:48:50 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qEoGf-000kwn-A6; Thu, 29 Jun 2023 11:48:49 +0200
+        id 1qEoGf-000kwq-GX; Thu, 29 Jun 2023 11:48:49 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>, linux-mips@vger.kernel.org,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 3/8] pwm: jz4740: Put per-channel clk into driver data
-Date:   Thu, 29 Jun 2023 11:48:34 +0200
-Message-Id: <20230629094839.757092-4-u.kleine-koenig@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 4/8] pwm: lp3943: Drop usage of pwm_[gs]et_chip_data()
+Date:   Thu, 29 Jun 2023 11:48:35 +0200
+Message-Id: <20230629094839.757092-5-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230629094839.757092-1-u.kleine-koenig@pengutronix.de>
 References: <20230629094839.757092-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1843; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=BNcyLyO1aA/JMy+GZlQNt66HAk1rZSLQbjRlPuLBvLY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBknVNnFbjMM5/BgK4deOspaDLNeW9SamEzyGCOO R0ENB5uJpaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZJ1TZwAKCRCPgPtYfRL+ TuvoB/9mmEbYVFZlMGzt3UAaIge2vFt34ojHkfUSiPlZLlcAyXN3XxGRua4wEXl6XXHY+k35cth 15E16TZkwqxy2PnEcwnFv5kFcnpVTqxnKc/p4atZu67wImhFRuTPLsiHEaIYNo3BhEU055KmVxC 4os/o0U7BGOXVdvyPZ2fWgprmbyXWmfNiSGYUyk2UyPjPuiLIINGA3MQavtt9j5iwylSXf5yE7F oGCpGdQz2NgjdqOXixg2A7l/20p63EteIqCPxb53CAbjPKWSXEkVmlP5eUh3giD8K+phIzahSbn k4v5R9oGuaKyG8z3L6+6FOwrYWirSalvG8qtigLlRcyn5nrF
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3606; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=Chtu/7SKo1s7BYNWtUexjtR/JbqbTxDcAOZQOjuIFp0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBknVNoyrR5IWsEDqkf5ytUtH5NChG2MScbZGoTx cIjx03dHWCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZJ1TaAAKCRCPgPtYfRL+ TrvNCACprQYLNBHgZ7r81OjPUBZPddFjfIEi2AHhSwAy+LAZV4WK4t1fobUcx9WhppJmezgS5Tl 3N3c5ulaYATwRtZ6fTvmb1CgoYmbW2dk++TjZk2qhNvF2bB2gakyIGCt0v6xhIfAuPJwyAtTIQC uKYtvi53FlyU4tBKhGytsU2xtfeOLbhzsSD+IV5OKODq1jG+lq9hLiJZGW8EraZIP7tt6eRMPjN u70NQ2s126tnOF3ekIR1buR2sD6BJPiDBjP/aYBjFLPUCBLt2EYDN1hKqmtzhSC14qzcFq4wwqX fYGL8rvKJ9fG9Y23f6A54Z+J/ofSqAQC6DbCFUZNK/+rTJeW
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -47,7 +46,7 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,63 +54,101 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Stop using chip_data which is about to go away. Instead track the
-per-channel clk in struct jz4740_pwm_chip.
+Instead of distributing the driver's bookkeeping over 3 (i.e.
+LP3943_NUM_PWMS + 1) separately allocated memory chunks, put all
+together in struct lp3943_pwm. This reduces the number of memory
+allocations and so fragmentation and maybe even the number of cache
+misses. Also &lp3943_pwm->pwm_map[pwm->hwpwm] is cheaper to evaluate
+than pwm_get_chip_data(pwm) as the former is just an addition in machine
+code while the latter involves a function call.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-jz4740.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-lp3943.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index 3b7067f6cd0d..e0a57d71a60c 100644
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -27,6 +27,7 @@ struct soc_info {
- struct jz4740_pwm_chip {
+diff --git a/drivers/pwm/pwm-lp3943.c b/drivers/pwm/pwm-lp3943.c
+index 35675e4058c6..00e7f63a73fe 100644
+--- a/drivers/pwm/pwm-lp3943.c
++++ b/drivers/pwm/pwm-lp3943.c
+@@ -22,6 +22,7 @@ struct lp3943_pwm {
  	struct pwm_chip chip;
- 	struct regmap *map;
-+	struct clk *clk[];
+ 	struct lp3943 *lp3943;
+ 	struct lp3943_platform_data *pdata;
++	struct lp3943_pwm_map pwm_map[LP3943_NUM_PWMS];
  };
  
- static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
-@@ -70,14 +71,15 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 		return err;
+ static inline struct lp3943_pwm *to_lp3943_pwm(struct pwm_chip *_chip)
+@@ -34,13 +35,9 @@ lp3943_pwm_request_map(struct lp3943_pwm *lp3943_pwm, int hwpwm)
+ {
+ 	struct lp3943_platform_data *pdata = lp3943_pwm->pdata;
+ 	struct lp3943 *lp3943 = lp3943_pwm->lp3943;
+-	struct lp3943_pwm_map *pwm_map;
++	struct lp3943_pwm_map *pwm_map = &lp3943_pwm->pwm_map[hwpwm];
+ 	int i, offset;
+ 
+-	pwm_map = kzalloc(sizeof(*pwm_map), GFP_KERNEL);
+-	if (!pwm_map)
+-		return ERR_PTR(-ENOMEM);
+-
+ 	pwm_map->output = pdata->pwms[hwpwm]->output;
+ 	pwm_map->num_outputs = pdata->pwms[hwpwm]->num_outputs;
+ 
+@@ -48,10 +45,8 @@ lp3943_pwm_request_map(struct lp3943_pwm *lp3943_pwm, int hwpwm)
+ 		offset = pwm_map->output[i];
+ 
+ 		/* Return an error if the pin is already assigned */
+-		if (test_and_set_bit(offset, &lp3943->pin_used)) {
+-			kfree(pwm_map);
++		if (test_and_set_bit(offset, &lp3943->pin_used))
+ 			return ERR_PTR(-EBUSY);
+-		}
  	}
  
--	pwm_set_chip_data(pwm, clk);
-+	jz->clk[pwm->hwpwm] = clk;
+ 	return pwm_map;
+@@ -66,7 +61,7 @@ static int lp3943_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	if (IS_ERR(pwm_map))
+ 		return PTR_ERR(pwm_map);
  
- 	return 0;
+-	return pwm_set_chip_data(pwm, pwm_map);
++	return 0;
  }
  
- static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ static void lp3943_pwm_free_map(struct lp3943_pwm *lp3943_pwm,
+@@ -79,14 +74,12 @@ static void lp3943_pwm_free_map(struct lp3943_pwm *lp3943_pwm,
+ 		offset = pwm_map->output[i];
+ 		clear_bit(offset, &lp3943->pin_used);
+ 	}
+-
+-	kfree(pwm_map);
+ }
+ 
+ static void lp3943_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
  {
--	struct clk *clk = pwm_get_chip_data(pwm);
-+	struct jz4740_pwm_chip *jz = to_jz4740(chip);
-+	struct clk *clk = jz->clk[pwm->hwpwm];
+ 	struct lp3943_pwm *lp3943_pwm = to_lp3943_pwm(chip);
+-	struct lp3943_pwm_map *pwm_map = pwm_get_chip_data(pwm);
++	struct lp3943_pwm_map *pwm_map = &lp3943_pwm->pwm_map[pwm->hwpwm];
  
- 	clk_disable_unprepare(clk);
- 	clk_put(clk);
-@@ -123,7 +125,7 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	lp3943_pwm_free_map(lp3943_pwm, pwm_map);
+ }
+@@ -158,7 +151,7 @@ static int lp3943_pwm_set_mode(struct lp3943_pwm *lp3943_pwm,
+ static int lp3943_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
  {
- 	struct jz4740_pwm_chip *jz4740 = to_jz4740(pwm->chip);
- 	unsigned long long tmp = 0xffffull * NSEC_PER_SEC;
--	struct clk *clk = pwm_get_chip_data(pwm);
-+	struct clk *clk = jz4740->clk[pwm->hwpwm];
- 	unsigned long period, duty;
- 	long rate;
- 	int err;
-@@ -229,7 +231,8 @@ static int jz4740_pwm_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -EINVAL;
+ 	struct lp3943_pwm *lp3943_pwm = to_lp3943_pwm(chip);
+-	struct lp3943_pwm_map *pwm_map = pwm_get_chip_data(pwm);
++	struct lp3943_pwm_map *pwm_map = &lp3943_pwm->pwm_map[pwm->hwpwm];
+ 	u8 val;
  
--	jz4740 = devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
-+	jz4740 = devm_kzalloc(dev, sizeof(*jz4740) + info->num_pwms * sizeof(jz4740->clk[0]),
-+			      GFP_KERNEL);
- 	if (!jz4740)
- 		return -ENOMEM;
+ 	if (pwm->hwpwm == 0)
+@@ -177,7 +170,7 @@ static int lp3943_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+ static void lp3943_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct lp3943_pwm *lp3943_pwm = to_lp3943_pwm(chip);
+-	struct lp3943_pwm_map *pwm_map = pwm_get_chip_data(pwm);
++	struct lp3943_pwm_map *pwm_map = &lp3943_pwm->pwm_map[pwm->hwpwm];
  
+ 	/*
+ 	 * LP3943 outputs are open-drain, so the pin should be configured
 -- 
 2.39.2
 
