@@ -2,50 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA9AA742376
-	for <lists+linux-pwm@lfdr.de>; Thu, 29 Jun 2023 11:49:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3481A74236D
+	for <lists+linux-pwm@lfdr.de>; Thu, 29 Jun 2023 11:49:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232000AbjF2JtF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Jun 2023 05:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
+        id S231546AbjF2Js6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 29 Jun 2023 05:48:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231783AbjF2JtB (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Jun 2023 05:49:01 -0400
+        with ESMTP id S231879AbjF2Jsz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Jun 2023 05:48:55 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811A42682
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 02:49:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB2E2118
+        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 02:48:52 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qEoGj-0006UO-Aj; Thu, 29 Jun 2023 11:48:53 +0200
+        id 1qEoGh-0006UP-0Q; Thu, 29 Jun 2023 11:48:51 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qEoGf-00Arnv-Fd; Thu, 29 Jun 2023 11:48:49 +0200
+        id 1qEoGf-00Arny-I0; Thu, 29 Jun 2023 11:48:49 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qEoGe-000kwe-N9; Thu, 29 Jun 2023 11:48:48 +0200
+        id 1qEoGe-000kwh-Tm; Thu, 29 Jun 2023 11:48:48 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Benson Leung <bleung@chromium.org>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-mips@vger.kernel.org, Lee Jones <lee@kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        chrome-platform@lists.linux.dev
-Subject: [PATCH 0/8] pwm: Get rid of pwm_[sg]et_chip_data()
-Date:   Thu, 29 Jun 2023 11:48:31 +0200
-Message-Id: <20230629094839.757092-1-u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 1/8] pwm: berlin: Put channel config into driver data
+Date:   Thu, 29 Jun 2023 11:48:32 +0200
+Message-Id: <20230629094839.757092-2-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230629094839.757092-1-u.kleine-koenig@pengutronix.de>
+References: <20230629094839.757092-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1592; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=vTBoe0szjeRFsJmSFfrm4GaXs0V1pmwEr32Z/7UAAN8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBknVNk4mOQNpCLEXK0ne8XaGGCwFjHjCatJMuWf 3M1nytIn7yJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZJ1TZAAKCRCPgPtYfRL+ TqhrCACxH7/c/rG9EsJOq2kZfE8KqdHhgxYFZnTCfLZSdCPc2S4dwMBYBati++HUbOlkNjrLmlY RRdUW82a6HKM0TtRQUqNpUPPNAOvLm7/YKQskKdnhKgz1sbCEqt2smiDaTHieSrjnO1AE0WHYVj /K2bmL7vh5yvazlD7JlSjE97/dWf84YH68ZME+qblM1N7GGVvZMrEboKeS6cr8zAm9Ur8X29P3i 4s0FjnZ7PP2R3r73RyP/LdwTPrpH56rF6kVtZBL4IWWQUGNS70Ntx+kKXGCE12boRR6Au3hvyaU bKrEc++TeAMhO9tOV/V1SR2pdkgr5xf0Ao3SHG0dL8ctiIB5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3363; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=sMWSgIk60cPeGRd1zx37s8tb4EIGg5ANZBZAmstlcBE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBknVNlzd+MphKXOe1UDh6eXqIa/M+3vLJoVjEAk bxTpCE+3+iJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZJ1TZQAKCRCPgPtYfRL+ TgJrB/4nehIpKGO7Rdvxup+vXHsRPTLCSzcs3ARGARbMq7K8egqngIqgcS0zyZlVQfx7QNt5ZYh 5gkGcuF2MlReO5ORDh7yAgVcR862sEmHw83EFFkf7SRNj6EY/AEszbSkaLLSyUKJbamec2nEX0J J0yGi2aST0FuykeYS5KUVq0ummMHab9ktE2XRuypHSy5S/6ba9zer2mOnJ9LF3oy6OhQlRcPVlS nsQ2rf0C7FLdq7PI/17XUW89QnGgoMPyW2GfDhsQqpklFl79TbJoZiP2/LVgEjbXorCjPt5jJ9p I4lZUpE4NxfqHpK90d1Hcs7SzGECCnQXyshhTeZYSF2j4afZ
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -61,43 +54,108 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello,
+Instead of allocating extra data in .request() provide the needed memory
+in struct berlin_pwm_chip. This reduces the number of allocations. A
+side effect is that on suspend and resume the state for all four
+channels is always saved and restored. This is easier (and probably
+quicker) than looking up the matching pwm_device and checking its
+PWMF_REQUESTED bit.
 
-the semantic of pwm_[sg]et_chip_data() overlaps with that of the
-standard dev_[sg]et_drvdata() functions. Also as noted by George Stark
-there is a problem in pwm-sti that relies on chipdata being available
-even after a pwm_put (which clears chipdata).
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-berlin.c | 37 ++++++-------------------------------
+ 1 file changed, 6 insertions(+), 31 deletions(-)
 
-To improve the situation this series converts all drivers that make use
-of pwm chipdata to use well-known driver data instead and drop chipdata
-support from the pwm framework.
-
-Best regards
-Uwe
-
-Uwe Kleine-König (8):
-  pwm: berlin: Put channel config into driver data
-  pwm: samsung: Put channel data into driver data
-  pwm: jz4740: Put per-channel clk into driver data
-  pwm: lp3943: Drop usage of pwm_[gs]et_chip_data()
-  pwm: renesas: Drop usage of pwm_[gs]et_chip_data()
-  pwm: sti: Reduce number of allocations and drop usage of chip_data
-  pwm: cros-ec: Put per channel data into driver data
-  pwm: Drop pwm_[sg]et_chip_data()
-
- drivers/pwm/core.c            | 31 -----------------------------
- drivers/pwm/pwm-berlin.c      | 37 ++++++-----------------------------
- drivers/pwm/pwm-cros-ec.c     | 31 +++++++----------------------
- drivers/pwm/pwm-jz4740.c      | 11 +++++++----
- drivers/pwm/pwm-lp3943.c      | 21 +++++++-------------
- drivers/pwm/pwm-renesas-tpu.c | 22 ++++++++++-----------
- drivers/pwm/pwm-samsung.c     | 20 +++++--------------
- drivers/pwm/pwm-sti.c         | 29 +++++++++++++--------------
- include/linux/pwm.h           | 14 -------------
- 9 files changed, 57 insertions(+), 159 deletions(-)
-
-
-base-commit: 92554cdd428fce212d2a71a06939e7cab90f7c77
+diff --git a/drivers/pwm/pwm-berlin.c b/drivers/pwm/pwm-berlin.c
+index 0c5992a046b2..38dcd0c99efd 100644
+--- a/drivers/pwm/pwm-berlin.c
++++ b/drivers/pwm/pwm-berlin.c
+@@ -38,6 +38,8 @@
+ #define BERLIN_PWM_TCNT			0xc
+ #define  BERLIN_PWM_MAX_TCNT		65535
+ 
++#define BERLIN_PWM_NUMPWMS		4
++
+ struct berlin_pwm_channel {
+ 	u32 enable;
+ 	u32 ctrl;
+@@ -49,6 +51,7 @@ struct berlin_pwm_chip {
+ 	struct pwm_chip chip;
+ 	struct clk *clk;
+ 	void __iomem *base;
++	struct berlin_pwm_channel channel[BERLIN_PWM_NUMPWMS];
+ };
+ 
+ static inline struct berlin_pwm_chip *to_berlin_pwm_chip(struct pwm_chip *chip)
+@@ -69,24 +72,6 @@ static inline void berlin_pwm_writel(struct berlin_pwm_chip *bpc,
+ 	writel_relaxed(value, bpc->base + channel * 0x10 + offset);
+ }
+ 
+-static int berlin_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct berlin_pwm_channel *channel;
+-
+-	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+-	if (!channel)
+-		return -ENOMEM;
+-
+-	return pwm_set_chip_data(pwm, channel);
+-}
+-
+-static void berlin_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct berlin_pwm_channel *channel = pwm_get_chip_data(pwm);
+-
+-	kfree(channel);
+-}
+-
+ static int berlin_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     u64 duty_ns, u64 period_ns)
+ {
+@@ -201,8 +186,6 @@ static int berlin_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ }
+ 
+ static const struct pwm_ops berlin_pwm_ops = {
+-	.request = berlin_pwm_request,
+-	.free = berlin_pwm_free,
+ 	.apply = berlin_pwm_apply,
+ 	.owner = THIS_MODULE,
+ };
+@@ -236,7 +219,7 @@ static int berlin_pwm_probe(struct platform_device *pdev)
+ 
+ 	bpc->chip.dev = &pdev->dev;
+ 	bpc->chip.ops = &berlin_pwm_ops;
+-	bpc->chip.npwm = 4;
++	bpc->chip.npwm = BERLIN_PWM_NUMPWMS;
+ 
+ 	ret = pwmchip_add(&bpc->chip);
+ 	if (ret < 0) {
+@@ -266,11 +249,7 @@ static int berlin_pwm_suspend(struct device *dev)
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < bpc->chip.npwm; i++) {
+-		struct berlin_pwm_channel *channel;
+-
+-		channel = pwm_get_chip_data(&bpc->chip.pwms[i]);
+-		if (!channel)
+-			continue;
++		struct berlin_pwm_channel *channel = &bpc->channel[i];
+ 
+ 		channel->enable = berlin_pwm_readl(bpc, i, BERLIN_PWM_ENABLE);
+ 		channel->ctrl = berlin_pwm_readl(bpc, i, BERLIN_PWM_CONTROL);
+@@ -294,11 +273,7 @@ static int berlin_pwm_resume(struct device *dev)
+ 		return ret;
+ 
+ 	for (i = 0; i < bpc->chip.npwm; i++) {
+-		struct berlin_pwm_channel *channel;
+-
+-		channel = pwm_get_chip_data(&bpc->chip.pwms[i]);
+-		if (!channel)
+-			continue;
++		struct berlin_pwm_channel *channel = &bpc->channel[i];
+ 
+ 		berlin_pwm_writel(bpc, i, channel->ctrl, BERLIN_PWM_CONTROL);
+ 		berlin_pwm_writel(bpc, i, channel->duty, BERLIN_PWM_DUTY);
 -- 
 2.39.2
 
