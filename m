@@ -2,81 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0338D74314A
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jun 2023 01:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 194AD7433C6
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jun 2023 06:54:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbjF2X6T (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 29 Jun 2023 19:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
+        id S229455AbjF3Eyn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 30 Jun 2023 00:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230189AbjF2X6R (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 29 Jun 2023 19:58:17 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DC62972
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 16:58:14 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fb9fd28025so1323737e87.2
-        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 16:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688083093; x=1690675093;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ueD+uH6+uolSqOb/KOmer89E0lbuYFQXR9mvlSuuqO4=;
-        b=EZJ1yF3JTqqdMIP2Bl6er2+KH9NIdrA5bBXjC33uNQB2xxfAyAzSpdenCoJj5Z5IkF
-         CVEnCgdL4qwujUBCYTea0RtlpvmSYPU5/6s6DikQRqsmWgzPxxYmc+vOSHxeac1iSEo9
-         wO6UNnMDT+HgIrabYKRE4vD3QQ/8ewNZDMoIsUCB3R1wYJS7bZsgSvQwWqR6Kmz5sj1J
-         T6dtjbQa3uQ5JNao5vqBjjITJ9691f9p4U0LnBISCP3QMiW1U83iutQDyfV1+pnuC/ha
-         uasVS6KpQdlyEJAXZPMY7qGMKxu8gEmMw3G9oYSnx+qHTcB5K4Dl62aQEeg4AVx66hKw
-         JwmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688083093; x=1690675093;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ueD+uH6+uolSqOb/KOmer89E0lbuYFQXR9mvlSuuqO4=;
-        b=BP3wU8IP6SW8OexAx+9KjFi/UnBSca9n6o0lpM2nNZnl9m7pti+Q5zTjWyu7htxsFU
-         7vcVKXFBJjGb/IsgJPaxNY3r4qncUupZD8Fpsgg818s9wi8Fa6dsD01mKCv2Rdl4M/CG
-         mENIlJ8O1JOHjyPW0Lbs3KL51kJ3hB4ewInIf30UVfxeLKPLGZLCo2zKCCgHFhJQQTeU
-         NqeBjFahmuaLMcYlI8et/az1lRq+j3/JNn60KkvxddInuRVdjpd+bbQCIQ4dXWpr73G2
-         9khJo3J4mJ/g1biNhhVJ7JdSQeG1YorScAKrD7n+5eSu7rYu08TQ5VO2kTCqqJxDmywC
-         1qOw==
-X-Gm-Message-State: ABy/qLZVZer8IjcWd5NXsWX48rcmXobkLd1YEBHknTMrlkBCgAmCvtMp
-        YYByCQK3RkCrTwCuqAFMiDiKDA==
-X-Google-Smtp-Source: APBJJlEU7owUCp3Ouj0l00PmFkoHYwQVcVoX+ns3jwEmm+267n22cDF2Cf9DhR6TPZdSpXcFMJ272A==
-X-Received: by 2002:a05:6512:2216:b0:4fb:97e8:ed8c with SMTP id h22-20020a056512221600b004fb97e8ed8cmr1201823lfu.4.1688083092898;
-        Thu, 29 Jun 2023 16:58:12 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:a0db:1f00::8a5? (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id t24-20020ac243b8000000b004f625831d85sm2508524lfl.126.2023.06.29.16.58.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Jun 2023 16:58:12 -0700 (PDT)
-Message-ID: <7f4a4264-c0d3-312a-3e1b-93d9dd768d7e@linaro.org>
-Date:   Fri, 30 Jun 2023 02:58:11 +0300
+        with ESMTP id S229850AbjF3Eym (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 30 Jun 2023 00:54:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C818F268F
+        for <linux-pwm@vger.kernel.org>; Thu, 29 Jun 2023 21:54:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E7EE6164B
+        for <linux-pwm@vger.kernel.org>; Fri, 30 Jun 2023 04:54:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D53AC433C8;
+        Fri, 30 Jun 2023 04:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688100880;
+        bh=eoliOSaKGQAolA79oDzqjjwO5r3sAUMUdDNg2GHu2Sc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lOgRhFl+3XlQKNPz+wz2Y0Zk1Jc0K6SgOMpaMVUVPhozQ5IJ0CPRfqEAiwM7/aZO9
+         sHVoCmMPFrjJqYKbraSY6Hm5xBNJV3Cw9Z2dYN3f4VskOIiH+yJiRxBbuGRv21FFIJ
+         gVSnKg4hgIEvyjSaXj1rjHlNRUCtXB+64Q5jPL0hS1wsL0KmEcv7KgtFl1k+tL9xM4
+         Upf5xZkvAANTxVOGr6yzcKE1FJcE+luSmkac+MyDXiFNJg81qoTJg9LsCn+QmuBP+F
+         pKO081uOX3GYXnrRfiml4s3wVNMOophB/9dKRoQtC+QbYmsJRJ9JuSV8QQDF7QXGGQ
+         0Kk0F6mgp7slA==
+Date:   Fri, 30 Jun 2023 12:54:37 +0800
+From:   Tzung-Bi Shih <tzungbi@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
+        chrome-platform@lists.linux.dev, kernel@pengutronix.de
+Subject: Re: [PATCH 7/8] pwm: cros-ec: Put per channel data into driver data
+Message-ID: <ZJ5gDWlm38qYguyH@google.com>
+References: <20230629094839.757092-1-u.kleine-koenig@pengutronix.de>
+ <20230629094839.757092-8-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 1/7] dt-bindings: soc: qcom: Add qcom-pbs bindings
-Content-Language: en-GB
-To:     Anjelique Melendez <quic_amelende@quicinc.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        u.kleine-koenig@pengutronix.de, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20230621185949.2068-1-quic_amelende@quicinc.com>
- <20230621185949.2068-2-quic_amelende@quicinc.com>
- <20230626135857.GA3118929-robh@kernel.org>
- <2e871e21-a81d-0d7d-993b-9a9d7bd9d962@quicinc.com>
- <f274247c-f45b-8a48-92f2-cff4597aff15@linaro.org>
- <fa12dd5d-af9d-235d-a6c7-3dcf690dcd67@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <fa12dd5d-af9d-235d-a6c7-3dcf690dcd67@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+In-Reply-To: <20230629094839.757092-8-u.kleine-koenig@pengutronix.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,94 +59,33 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 30/06/2023 00:53, Anjelique Melendez wrote:
+On Thu, Jun 29, 2023 at 11:48:38AM +0200, Uwe Kleine-K�nig wrote:
+> Instead of an allocation of a single u16 per channel, allocate them all
+> in a single chunk which greatly reduces memory fragmentation and also
+> the overhead to track the allocated memory. Also put the channel data in
+> driver data where it's cheaper to determine the address (no function
+> call involved, just a trivial pointer addition).
 > 
+> This also allows to get rid of the request and free callbacks.
 > 
-> On 6/29/2023 1:45 AM, Dmitry Baryshkov wrote:
->> On 29/06/2023 04:19, Anjelique Melendez wrote:
->>>
->>>
->>> On 6/26/2023 6:58 AM, Rob Herring wrote:
->>>> On Wed, Jun 21, 2023 at 11:59:45AM -0700, Anjelique Melendez wrote:
->>>>> Add binding for the Qualcomm Programmable Boot Sequencer device.
->>>>>
->>>>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->>>>> ---
->>>>>    .../bindings/soc/qcom/qcom-pbs.yaml           | 41 +++++++++++++++++++
->>>>>    1 file changed, 41 insertions(+)
->>>>>    create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..0a89c334f95c
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
->>>>> @@ -0,0 +1,41 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/soc/qcom/qcom-pbs.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: Qualcomm Technologies, Inc. PBS
->>>>> +
->>>>> +maintainers:
->>>>> +  - Anjelique Melendez <quic_amelende@quicinc.com>
->>>>> +
->>>>> +description: |
->>>>> +  Qualcomm PBS (programmable boot sequencer) supports triggering sequences
->>>>> +  for clients upon request.
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    const: qcom,pbs
->>>>> +
->>>>> +  reg:
->>>>> +    description: |
->>>>> +      Base address of the PBS peripheral.
->>>>> +    maxItems: 1
->>>>> +
->>>>> +required:
->>>>> + - compatible
->>>>> + - reg
->>>>> +
->>>>> +additionalProperties: false
->>>>> +
->>>>> +examples:
->>>>> +  - |
->>>>> +    pmic {
->>>>> +      #address-cells = <1>;
->>>>> +      #size-cells = <0>;
->>>>> +
->>>>> +      qcom,pbs@7400 {
->>>>> +        compatible = "qcom,pbs";
->>>>> +        reg = <0x7400>;
->>>>> +      };
->>>>
->>>> Why do you need a child node for this? Is there more than 1 instance in
->>>> a PMIC? Every sub-function of a PMIC doesn't have to have a DT node.
->>>>
->>>
->>> We currently have another downstream driver (which is planned to get upstreamed)
->>> which also needs a handle to a pbs device in order to properly trigger events.
->>
->> Does it have to be a separate driver? Or is it a part of the LPG driver, just being artificially split away?
+> The only cost is that the channel data is allocated early, and even for
+> unused channels.
 > 
-> Sure, I just discussed with team and we are ok with removing this as a separate driver. Will have that
-> for next version.
+> Signed-off-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 
-I saw that the PBS can also be used with the haptics device. Will it 
-talk to the LPG driver?
+With comments addressed below:
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
->>
->>>
->>>> Rob
->>>
->>>
->>>
->>
+> @@ -27,6 +27,7 @@ struct cros_ec_pwm_device {
+>  	struct cros_ec_device *ec;
+>  	struct pwm_chip chip;
+>  	bool use_pwm_type;
+> +	struct cros_ec_pwm *channel;
 
--- 
-With best wishes
-Dmitry
+Please update the kernel-doc too.  Otherwise:
+$ ./scripts/kernel-doc -none drivers/pwm/pwm-cros-ec.c
+drivers/pwm/pwm-cros-ec.c:31: warning: Function parameter or member 'channel'
+not described in 'cros_ec_pwm_device'
 
+I have no strong preference: please consider to use `channels` if it makes
+sense.
