@@ -2,60 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6402F74A4CB
-	for <lists+linux-pwm@lfdr.de>; Thu,  6 Jul 2023 22:21:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86FA474ACA6
+	for <lists+linux-pwm@lfdr.de>; Fri,  7 Jul 2023 10:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231721AbjGFUVX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 6 Jul 2023 16:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59004 "EHLO
+        id S232786AbjGGITQ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 7 Jul 2023 04:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231482AbjGFUVW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 6 Jul 2023 16:21:22 -0400
+        with ESMTP id S232740AbjGGITP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Jul 2023 04:19:15 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF73FDB
-        for <linux-pwm@vger.kernel.org>; Thu,  6 Jul 2023 13:21:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C892C1FC4
+        for <linux-pwm@vger.kernel.org>; Fri,  7 Jul 2023 01:19:14 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qHVTK-00079V-RD; Thu, 06 Jul 2023 22:21:02 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1qHgg8-0000hE-1u; Fri, 07 Jul 2023 10:19:00 +0200
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qHVTG-00Ca44-Ox; Thu, 06 Jul 2023 22:20:58 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qHVTG-002pmZ-02; Thu, 06 Jul 2023 22:20:58 +0200
-Date:   Thu, 6 Jul 2023 22:20:57 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     privatesub2@gmail.com, linux-kernel@vger.kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1qHgg5-00Cgor-M5; Fri, 07 Jul 2023 10:18:57 +0200
+Received: from pza by lupine with local (Exim 4.96)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1qHgg5-0002o2-13;
+        Fri, 07 Jul 2023 10:18:57 +0200
+Message-ID: <38ffed42bb021ea75bc662edd943a8e4ca92172b.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Aleksandr Shubin <privatesub2@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, p.zabel@pengutronix.de,
-        cristian.ciocaltea@collabora.com,
-        Greg KH <gregkh@linuxfoundation.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 0/3] Add support for Allwinner PWM on D1/T113s/R329
- SoCs
-Message-ID: <20230706202057.k6rfwfhe3msfkrc4@pengutronix.de>
+Date:   Fri, 07 Jul 2023 10:18:57 +0200
+In-Reply-To: <20230627082334.1253020-3-privatesub2@gmail.com>
 References: <20230627082334.1253020-1-privatesub2@gmail.com>
- <mhng-0cca3d46-6031-4e8a-8e8f-2c479a20b95d@palmer-ri-x1c9a>
+         <20230627082334.1253020-3-privatesub2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.4-2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bwmf3jgjaq2y6ndf"
-Content-Disposition: inline
-In-Reply-To: <mhng-0cca3d46-6031-4e8a-8e8f-2c479a20b95d@palmer-ri-x1c9a>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,75 +70,14 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Di, 2023-06-27 at 11:23 +0300, Aleksandr Shubin wrote:
+[...]
+> +static int sun20i_pwm_probe(struct platform_device *pdev)
+> +{
+[...]
+> +	sun20i_chip->rst = devm_reset_control_get(&pdev->dev, NULL);
 
---bwmf3jgjaq2y6ndf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please use devm_reset_control_get_exclusive() directly.
 
-Hello,
-
-On Thu, Jul 06, 2023 at 10:08:47AM -0700, Palmer Dabbelt wrote:
-> On Tue, 27 Jun 2023 01:23:23 PDT (-0700), privatesub2@gmail.com wrote:
-> > Hi,
-> >=20
-> > This series adds support for PWM controller on new
-> > Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
-> > provides basic functionality for control PWM channels.
-> >=20
-> > v2:
-> >  - fix dt-bindings
-> >  - fix a remark in the driver
-> >=20
-> > v3:
-> >  - fix dt-bindings
-> >  - fix sunxi-d1s-t113.dtsi
-> >=20
-> > Aleksandr Shubin (3):
-> >   dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
-> >     controller
-> >   pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
-> >   riscv: dts: allwinner: d1: Add pwm node
-> >=20
-> >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  86 +++++
-> >  .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  11 +
-> >  drivers/pwm/Kconfig                           |  10 +
-> >  drivers/pwm/Makefile                          |   1 +
-> >  drivers/pwm/pwm-sun20i.c                      | 322 ++++++++++++++++++
-> >  5 files changed, 430 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun=
-20i-pwm.yaml
-> >  create mode 100644 drivers/pwm/pwm-sun20i.c
->=20
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
->=20
-> I'm not sure if this ended up somewhere, but I'm assuming it's not aimed =
-at
-> my tree.  LMK if you guys want me to pick it up, I'm dropping it from
-> patchwork.
-
-At least patch #2 should go via the pwm tree. It's on my list to review.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bwmf3jgjaq2y6ndf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSnIigACgkQj4D7WH0S
-/k6gIwgArBV+EKUdCW1iBFu0o7FWEVZpy0poxb9iDyJN0csWczfWqJw3UbnGdVrq
-l8Nt25eIW8lbOaL7Xl1hK49QCeuWFkt7IRk+ZYzD4coLOcK87MrJNJe43SDBOAXX
-LiHvL22jR6y5aNpiAgTiXW6mYnX9qrz6cAUzTKqeOqm/s4bwuWR13jHpTQ6lOt1F
-w3LuV9R5h38LqFjfPCbQxgstp5816SdoBIiwitKZfyBfCPt7yYDpAq2zn0OQmp2k
-cKkqQEOGqE+IzH046/h0PdsmBc7wPqrG+5/GSvdPt6sa2aUkF2TO5nbjaaK/w+GJ
-F+8Bd8vtafCPp+QmG+fV9IcYTEqZ6Q==
-=VC6G
------END PGP SIGNATURE-----
-
---bwmf3jgjaq2y6ndf--
+regards
+Philipp
