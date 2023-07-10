@@ -2,82 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86FA474ACA6
-	for <lists+linux-pwm@lfdr.de>; Fri,  7 Jul 2023 10:19:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBD8374CF95
+	for <lists+linux-pwm@lfdr.de>; Mon, 10 Jul 2023 10:13:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232786AbjGGITQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 7 Jul 2023 04:19:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
+        id S232291AbjGJIMy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 10 Jul 2023 04:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232740AbjGGITP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 7 Jul 2023 04:19:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C892C1FC4
-        for <linux-pwm@vger.kernel.org>; Fri,  7 Jul 2023 01:19:14 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1qHgg8-0000hE-1u; Fri, 07 Jul 2023 10:19:00 +0200
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1qHgg5-00Cgor-M5; Fri, 07 Jul 2023 10:18:57 +0200
-Received: from pza by lupine with local (Exim 4.96)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1qHgg5-0002o2-13;
-        Fri, 07 Jul 2023 10:18:57 +0200
-Message-ID: <38ffed42bb021ea75bc662edd943a8e4ca92172b.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Aleksandr Shubin <privatesub2@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-riscv@lists.infradead.org
-Date:   Fri, 07 Jul 2023 10:18:57 +0200
-In-Reply-To: <20230627082334.1253020-3-privatesub2@gmail.com>
-References: <20230627082334.1253020-1-privatesub2@gmail.com>
-         <20230627082334.1253020-3-privatesub2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.4-2 
+        with ESMTP id S232597AbjGJIMw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 10 Jul 2023 04:12:52 -0400
+Received: from mail.loanfly.pl (mail.loanfly.pl [141.94.250.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B24CFE7
+        for <linux-pwm@vger.kernel.org>; Mon, 10 Jul 2023 01:12:46 -0700 (PDT)
+Received: by mail.loanfly.pl (Postfix, from userid 1002)
+        id B869CA49AB; Mon, 10 Jul 2023 08:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=loanfly.pl; s=mail;
+        t=1688976675; bh=flSgn4+IJB03yMaHNopPnR0v50wun3P5Hd/CkHJx2Bc=;
+        h=Date:From:To:Subject:From;
+        b=Fq8uDGszUc9bOO3jsa4RwxdbfHTbtApruwpLDmcNFcUjNyBP1fs+K0MnfCENtsSJL
+         hLRwzs8dT8EwczbMEUURnqMUOKCN25dJxcyUsN5Z9fhQnL8gpYk4g55MuWV38dIgpf
+         R56zWbih6sanC8i/jfpfRxRR7WnLWvWn7EKuwYmETuNcAwl7yXN2zLOz7HzCo3r7i+
+         eCU2YukSBuFWPppOdETkPEXIJxZh1tLjRkIz0df/49YyWCw1Tcz21GXxEQRZkbCOrS
+         3zuGPmANSMHiPBOKXRhRzS5W6Yf3Rtcs3OqC+W8rXO7WczrD/kabryE8ZQqM1AJO7S
+         aPvrqkzidnF5g==
+Received: by mail.loanfly.pl for <linux-pwm@vger.kernel.org>; Mon, 10 Jul 2023 08:10:35 GMT
+Message-ID: <20230710064501-0.1.b6.1bvnu.0.l43ow1w6eb@loanfly.pl>
+Date:   Mon, 10 Jul 2023 08:10:35 GMT
+From:   "Damian Cichocki" <damian.cichocki@loanfly.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: Prezentacja
+X-Mailer: mail.loanfly.pl
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_ABUSE_SURBL,URIBL_CSS_A autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Di, 2023-06-27 at 11:23 +0300, Aleksandr Shubin wrote:
-[...]
-> +static int sun20i_pwm_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	sun20i_chip->rst = devm_reset_control_get(&pdev->dev, NULL);
+Dzie=C5=84 dobry!
 
-Please use devm_reset_control_get_exclusive() directly.
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
-regards
-Philipp
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
+dostaw.
+
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
+
+
+Pozdrawiam,
+Damian Cichocki
