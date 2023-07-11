@@ -2,81 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 347D374F7CE
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jul 2023 20:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F256D74F8C3
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jul 2023 22:09:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230180AbjGKSKX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 11 Jul 2023 14:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
+        id S229537AbjGKUJW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 11 Jul 2023 16:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231308AbjGKSKW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Jul 2023 14:10:22 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4118C10D2;
-        Tue, 11 Jul 2023 11:10:21 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fbc656873eso74240035e9.1;
-        Tue, 11 Jul 2023 11:10:21 -0700 (PDT)
+        with ESMTP id S231334AbjGKUJV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Jul 2023 16:09:21 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E216C171E;
+        Tue, 11 Jul 2023 13:09:17 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-668730696a4so3446551b3a.1;
+        Tue, 11 Jul 2023 13:09:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689099020; x=1691691020;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DN7SKT5YDMsR3KLZsulL1k2cEGxGqiu83tf4hiEqzbU=;
-        b=im/1f6USttl0PouwJHsl8oeTUnxojJWtSZG491nIXLs46KPt7ROCw91xJTOyHfWwU/
-         Xclj03qDL2nnO631QYUGdOC+5GIfuOU1v6j2zYAwY9lNkR0htj0Y4Lo+Bt57c/w8uWOE
-         GNARBXdLwJLhXUGgqwCHpFF+IYttDDQnh3gNX/8n9G1A/g1sfzEfTaupsnvTFUO/gnrs
-         65JSUrxGcUCbjsehFA61GacHlNKz79Sdc9lpnUJDJF61O3+8d6wG3DqTU8M0Bq6Rs+z8
-         Ue+3xNlzmqNoUg/2yeM26G8NwZExCqhmNl3Ei0hYkoBUGbthIYtCVdUH4i3K50vcpyw6
-         oqVA==
+        d=gmail.com; s=20221208; t=1689106157; x=1691698157;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0AjrurSLjCfnq22wQVPyzNWuhvJYbXtr4WWuyj0oB9s=;
+        b=smN2+HX0faRVYygGOZFPccaAota1KFLmMs1jQjvZhI3B9d8PAf3rFlwY9kdCT7kktV
+         UunleB1j7AOzmZkoPtTcx496fwQsKRkLhmGIwiWAAofX0QAAMMQagFRvWkv2x+KBc9kE
+         pnTrvemOtC5P2PNJfBaTY64JKpZcwmT9foE0IoyBrAPGhszG2fXx6uS7QOMmFRY5D7Yw
+         TORYFr/ThLsC6nQaD2VxzuzAyE5eYf4rCJrCoBwUIDySEKc0lRkGNJG8wSZ2mFcFFLNz
+         GdAMrAiVgGFanSg/x/8WnpLC8OTL6cpjVGhtA2YaaHiDcJSxIl8BoShUuMCChsvWdAxd
+         WOuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689099020; x=1691691020;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DN7SKT5YDMsR3KLZsulL1k2cEGxGqiu83tf4hiEqzbU=;
-        b=i9kUGAzzHQVugI1K18a+8v1GULJZ90r9CLW8D5eSlMSpgjqB23HkfgJtLzopW2qRmm
-         2vZo1G8LwjP5fJx80hg7wFPdcdQzWicSndWEzGkHfoBVk/7OCr8RWwifNue+hyqhgjAE
-         ndmvBACSE3jjSsYHaytsdkYBMHima3510W1X83paxoA98X8WCoeu+TMwqVWgn2yT6Bnv
-         17l0SOYBhEltTFUvcAF7oyFt6YpizeBSQUFsIqSNF23mMLnP4IxNz41mMcZDdJlCC4sp
-         I0erPVpvWelUMv3UrjfCaBD/FctU1qFCmLh1xeQKOSBR2k0R5GOdJjeAexHMXHY8LYgJ
-         G/kw==
-X-Gm-Message-State: ABy/qLZ9Wtq3PU3YuyOX5Dnaqwn0j3sxjTscf0zE5OXTYZ/cVgZmwPCv
-        PmFn/LjaK9On2hhwHgMe/AY=
-X-Google-Smtp-Source: APBJJlF2BZKCrWmEhTh/350w2TFfo/9EYgx+QZBOKTKsh9nhH1eoZObr6KPDzwISpk3jEX8ZvMVbGA==
-X-Received: by 2002:a7b:ca47:0:b0:3fc:855:db42 with SMTP id m7-20020a7bca47000000b003fc0855db42mr12672343wml.34.1689099019465;
-        Tue, 11 Jul 2023 11:10:19 -0700 (PDT)
-Received: from jernej-laptop.localnet (82-149-1-233.dynamic.telemach.net. [82.149.1.233])
-        by smtp.gmail.com with ESMTPSA id o5-20020a1c7505000000b003fbd9e390e1sm13613422wmc.47.2023.07.11.11.10.18
+        d=1e100.net; s=20221208; t=1689106157; x=1691698157;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0AjrurSLjCfnq22wQVPyzNWuhvJYbXtr4WWuyj0oB9s=;
+        b=LKMLSNap2x/0W5M34SbbXD1tEfcBfcehEzFWF7qzdF5+gmapBzuXRSVxgF1YUXzxrk
+         MeW6okjkE5AEo4phP3caxn/QRN1CE1fJjZfyYsj6lMn9GvIvWOMVMYEqCpgidLdAW7ui
+         SExAd8GecDCogt7HNrjecF+9nvYREAqN8LVDa5t5IGS5eYri1oMGYGMtXEXrCiOx5+Uz
+         JS7mkOOwCir98dSFH733q7eYLv9d+G2uKTtxoPWaaT35MirxXZx0nxCHAgZ+heux7Sd3
+         ngz4TumKUZJB39OG1Zeu0n7GvWiqaBsdH27XwvGEKkSu1Zg2+Rhc0cLIy+rrxeQqWnoF
+         9gVA==
+X-Gm-Message-State: ABy/qLaAIQ+ckU/UX6mKk3nsbwe0b1HZ1iWoT+QSBHJVg4XYQGvNDfme
+        hGW5yAwFOoap3djmTREZ5IU=
+X-Google-Smtp-Source: APBJJlGDQu2odG6nQ82sJP4Hvl6xC0g6W/0X6YKALLPC2oPn9xZJg+vaExMRgdxQvRyTgsW8Dx4LMQ==
+X-Received: by 2002:a05:6a00:1745:b0:67a:c810:3cb0 with SMTP id j5-20020a056a00174500b0067ac8103cb0mr15187493pfc.3.1689106157228;
+        Tue, 11 Jul 2023 13:09:17 -0700 (PDT)
+Received: from localhost.localdomain ([113.103.7.132])
+        by smtp.gmail.com with ESMTPSA id j6-20020a633c06000000b0051b36aee4f6sm1964047pga.83.2023.07.11.13.09.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 11:10:18 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     privatesub2@gmail.com, linux-kernel@vger.kernel.org,
-        thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        wens@csie.org, samuel@sholland.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, p.zabel@pengutronix.de,
-        cristian.ciocaltea@collabora.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 0/3] Add support for Allwinner PWM on D1/T113s/R329 SoCs
-Date:   Tue, 11 Jul 2023 20:10:16 +0200
-Message-ID: <2287998.ElGaqSPkdT@jernej-laptop>
-In-Reply-To: <20230706202057.k6rfwfhe3msfkrc4@pengutronix.de>
-References: <20230627082334.1253020-1-privatesub2@gmail.com>
- <mhng-0cca3d46-6031-4e8a-8e8f-2c479a20b95d@palmer-ri-x1c9a>
- <20230706202057.k6rfwfhe3msfkrc4@pengutronix.de>
+        Tue, 11 Jul 2023 13:09:16 -0700 (PDT)
+From:   Guiting Shen <aarongt.shen@gmail.com>
+To:     claudiu.beznea@microchip.com
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guiting Shen <aarongt.shen@gmail.com>
+Subject: [PATCH v3] pwm: atmel: Enable clk when pwm already enabled in bootloader
+Date:   Wed, 12 Jul 2023 04:09:05 +0800
+Message-Id: <20230711200905.6464-1-aarongt.shen@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,61 +70,70 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dne =C4=8Detrtek, 06. julij 2023 ob 22:20:57 CEST je Uwe Kleine-K=C3=B6nig =
-napisal(a):
-> Hello,
->=20
-> On Thu, Jul 06, 2023 at 10:08:47AM -0700, Palmer Dabbelt wrote:
-> > On Tue, 27 Jun 2023 01:23:23 PDT (-0700), privatesub2@gmail.com wrote:
-> > > Hi,
-> > >=20
-> > > This series adds support for PWM controller on new
-> > > Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
-> > > provides basic functionality for control PWM channels.
-> > >=20
-> > > v2:
-> > >  - fix dt-bindings
-> > >  - fix a remark in the driver
-> > >=20
-> > > v3:
-> > >  - fix dt-bindings
-> > >  - fix sunxi-d1s-t113.dtsi
-> > >=20
-> > > Aleksandr Shubin (3):
-> > >   dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
-> > >  =20
-> > >     controller
-> > >  =20
-> > >   pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
-> > >   riscv: dts: allwinner: d1: Add pwm node
-> > > =20
-> > >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  86 +++++
-> > >  .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  11 +
-> > >  drivers/pwm/Kconfig                           |  10 +
-> > >  drivers/pwm/Makefile                          |   1 +
-> > >  drivers/pwm/pwm-sun20i.c                      | 322 ++++++++++++++++=
-++
-> > >  5 files changed, 430 insertions(+)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml crea=
-te
-> > >  mode 100644 drivers/pwm/pwm-sun20i.c
-> >=20
-> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> >=20
-> > I'm not sure if this ended up somewhere, but I'm assuming it's not aimed
-> > at
-> > my tree.  LMK if you guys want me to pick it up, I'm dropping it from
-> > patchwork.
->=20
-> At least patch #2 should go via the pwm tree. It's on my list to review.
+The driver would never call clk_enable() if the PWM channel was already
+enabled in bootloader which lead to dump the warning message "the PWM
+clock already disabled" when turning off the PWM channel.
 
-Rest will go through sunxi tree, although DT bindings patches are usually=20
-picked together with driver patches. I'm fine either way.
+Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
+the PWM channel was already enabled in bootloader.
 
-Best regards,
-Jernej
+Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
+---
+ drivers/pwm/pwm-atmel.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-
-
+diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+index cdbc23649032..f8f1fbb8732d 100644
+--- a/drivers/pwm/pwm-atmel.c
++++ b/drivers/pwm/pwm-atmel.c
+@@ -464,6 +464,31 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
+ 
++static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm)
++{
++	unsigned int i;
++	int err;
++	u32 sr;
++
++	sr = atmel_pwm_readl(atmel_pwm, PWM_SR);
++	if (!sr)
++		return 0;
++
++	for (i = 0; i < atmel_pwm->chip.npwm; i++) {
++		if (!(sr & (1 << i)))
++			continue;
++
++		err = clk_enable(atmel_pwm->clk);
++		if (err) {
++			dev_err(atmel_pwm->chip.dev,
++				"failed to enable clock: %pe\n", ERR_PTR(err));
++			return err;
++		}
++	}
++
++	return 0;
++}
++
+ static int atmel_pwm_probe(struct platform_device *pdev)
+ {
+ 	struct atmel_pwm_chip *atmel_pwm;
+@@ -504,8 +529,15 @@ static int atmel_pwm_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, atmel_pwm);
+ 
++	ret = atmel_pwm_enable_clk_if_on(atmel_pwm);
++	if (ret < 0)
++		goto remove_pwmchip;
++
+ 	return ret;
+ 
++remove_pwmchip:
++	pwmchip_remove(&atmel_pwm->chip);
++
+ unprepare_clk:
+ 	clk_unprepare(atmel_pwm->clk);
+ 	return ret;
+-- 
+2.25.1
 
