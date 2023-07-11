@@ -2,96 +2,143 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E4F274F5EA
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jul 2023 18:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 347D374F7CE
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Jul 2023 20:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbjGKQpC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 11 Jul 2023 12:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43636 "EHLO
+        id S230180AbjGKSKX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 11 Jul 2023 14:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233113AbjGKQoc (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Jul 2023 12:44:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92C21738;
-        Tue, 11 Jul 2023 09:44:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2CE561573;
-        Tue, 11 Jul 2023 16:44:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AEE6C433C7;
-        Tue, 11 Jul 2023 16:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689093845;
-        bh=zaf2CZqYHNb3WqOn3g5/TSKwC8Wg0LJ436Q4TrZp4RA=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=KGVJGsnCZruy2hUuUpH7ijZulq48NN9mnjYRkxxJjynGm26JcUksScIF1TfoPCX/i
-         r6f3ggg+UqlnfDC8exH6e7PS74/XlFttq9p+kmOU9hYXf1ImUimWTMY0z2+2tj2l3/
-         Jk1VB0hRL9DKcciP3cxJhjOMlekjAJH3P6RJPKHWorzn/EFP5qzmufgEyFzhTE2rL1
-         89rukrhKXE24SakUpiwTCpCEb6JU6Th6JehZathj/7UQ3uIHAEQuV4g4S9FgAcVBuE
-         SqvqShT6i3EAPE7sAEcTYX9r0drCG/0POAcYJRJMJYVtt5bAFNFPay3NAIxZKXTEfX
-         Qpv9VDnwO9Q1w==
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-In-Reply-To: <20230617133620.53129-1-stefan.wahren@i2se.com>
-References: <20230617133620.53129-1-stefan.wahren@i2se.com>
-Subject: Re: (subset) [PATCH V2 0/7] ARM: dts: bcm283x: Improve
- device-trees and bindings
-Message-Id: <168909383906.208679.14234810400324537529.b4-ty@kernel.org>
-Date:   Tue, 11 Jul 2023 22:13:59 +0530
+        with ESMTP id S231308AbjGKSKW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 11 Jul 2023 14:10:22 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4118C10D2;
+        Tue, 11 Jul 2023 11:10:21 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3fbc656873eso74240035e9.1;
+        Tue, 11 Jul 2023 11:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689099020; x=1691691020;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DN7SKT5YDMsR3KLZsulL1k2cEGxGqiu83tf4hiEqzbU=;
+        b=im/1f6USttl0PouwJHsl8oeTUnxojJWtSZG491nIXLs46KPt7ROCw91xJTOyHfWwU/
+         Xclj03qDL2nnO631QYUGdOC+5GIfuOU1v6j2zYAwY9lNkR0htj0Y4Lo+Bt57c/w8uWOE
+         GNARBXdLwJLhXUGgqwCHpFF+IYttDDQnh3gNX/8n9G1A/g1sfzEfTaupsnvTFUO/gnrs
+         65JSUrxGcUCbjsehFA61GacHlNKz79Sdc9lpnUJDJF61O3+8d6wG3DqTU8M0Bq6Rs+z8
+         Ue+3xNlzmqNoUg/2yeM26G8NwZExCqhmNl3Ei0hYkoBUGbthIYtCVdUH4i3K50vcpyw6
+         oqVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689099020; x=1691691020;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DN7SKT5YDMsR3KLZsulL1k2cEGxGqiu83tf4hiEqzbU=;
+        b=i9kUGAzzHQVugI1K18a+8v1GULJZ90r9CLW8D5eSlMSpgjqB23HkfgJtLzopW2qRmm
+         2vZo1G8LwjP5fJx80hg7wFPdcdQzWicSndWEzGkHfoBVk/7OCr8RWwifNue+hyqhgjAE
+         ndmvBACSE3jjSsYHaytsdkYBMHima3510W1X83paxoA98X8WCoeu+TMwqVWgn2yT6Bnv
+         17l0SOYBhEltTFUvcAF7oyFt6YpizeBSQUFsIqSNF23mMLnP4IxNz41mMcZDdJlCC4sp
+         I0erPVpvWelUMv3UrjfCaBD/FctU1qFCmLh1xeQKOSBR2k0R5GOdJjeAexHMXHY8LYgJ
+         G/kw==
+X-Gm-Message-State: ABy/qLZ9Wtq3PU3YuyOX5Dnaqwn0j3sxjTscf0zE5OXTYZ/cVgZmwPCv
+        PmFn/LjaK9On2hhwHgMe/AY=
+X-Google-Smtp-Source: APBJJlF2BZKCrWmEhTh/350w2TFfo/9EYgx+QZBOKTKsh9nhH1eoZObr6KPDzwISpk3jEX8ZvMVbGA==
+X-Received: by 2002:a7b:ca47:0:b0:3fc:855:db42 with SMTP id m7-20020a7bca47000000b003fc0855db42mr12672343wml.34.1689099019465;
+        Tue, 11 Jul 2023 11:10:19 -0700 (PDT)
+Received: from jernej-laptop.localnet (82-149-1-233.dynamic.telemach.net. [82.149.1.233])
+        by smtp.gmail.com with ESMTPSA id o5-20020a1c7505000000b003fbd9e390e1sm13613422wmc.47.2023.07.11.11.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jul 2023 11:10:18 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     privatesub2@gmail.com, linux-kernel@vger.kernel.org,
+        thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        wens@csie.org, samuel@sholland.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, p.zabel@pengutronix.de,
+        cristian.ciocaltea@collabora.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 0/3] Add support for Allwinner PWM on D1/T113s/R329 SoCs
+Date:   Tue, 11 Jul 2023 20:10:16 +0200
+Message-ID: <2287998.ElGaqSPkdT@jernej-laptop>
+In-Reply-To: <20230706202057.k6rfwfhe3msfkrc4@pengutronix.de>
+References: <20230627082334.1253020-1-privatesub2@gmail.com>
+ <mhng-0cca3d46-6031-4e8a-8e8f-2c479a20b95d@palmer-ri-x1c9a>
+ <20230706202057.k6rfwfhe3msfkrc4@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.2
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Dne =C4=8Detrtek, 06. julij 2023 ob 22:20:57 CEST je Uwe Kleine-K=C3=B6nig =
+napisal(a):
+> Hello,
+>=20
+> On Thu, Jul 06, 2023 at 10:08:47AM -0700, Palmer Dabbelt wrote:
+> > On Tue, 27 Jun 2023 01:23:23 PDT (-0700), privatesub2@gmail.com wrote:
+> > > Hi,
+> > >=20
+> > > This series adds support for PWM controller on new
+> > > Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
+> > > provides basic functionality for control PWM channels.
+> > >=20
+> > > v2:
+> > >  - fix dt-bindings
+> > >  - fix a remark in the driver
+> > >=20
+> > > v3:
+> > >  - fix dt-bindings
+> > >  - fix sunxi-d1s-t113.dtsi
+> > >=20
+> > > Aleksandr Shubin (3):
+> > >   dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
+> > >  =20
+> > >     controller
+> > >  =20
+> > >   pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
+> > >   riscv: dts: allwinner: d1: Add pwm node
+> > > =20
+> > >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  86 +++++
+> > >  .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  11 +
+> > >  drivers/pwm/Kconfig                           |  10 +
+> > >  drivers/pwm/Makefile                          |   1 +
+> > >  drivers/pwm/pwm-sun20i.c                      | 322 ++++++++++++++++=
+++
+> > >  5 files changed, 430 insertions(+)
+> > >  create mode 100644
+> > >  Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml crea=
+te
+> > >  mode 100644 drivers/pwm/pwm-sun20i.c
+> >=20
+> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> >=20
+> > I'm not sure if this ended up somewhere, but I'm assuming it's not aimed
+> > at
+> > my tree.  LMK if you guys want me to pick it up, I'm dropping it from
+> > patchwork.
+>=20
+> At least patch #2 should go via the pwm tree. It's on my list to review.
 
-On Sat, 17 Jun 2023 15:36:13 +0200, Stefan Wahren wrote:
-> This series fix some dtbs_check warning for the Raspberry Pi boards
-> and convert 4 txt DT bindings for BCM2835 to YAML.
-> 
-> Changes in V2:
-> - drop already applied patches (bcm2835-sdhost, bcm2835-thermal)
-> - drop patch "dmaengine: bcm2835: also support generic dma-channel-mask"
-> - keep brcm,bcm2835-dma for ABI compatibility which also resolve
->   dependency between patch 2 and 3
-> - drop quotes in patch 2 as noted by Rob Herring
-> - add interrupt description as suggested by Rob
-> - add Rob's and Uwe's Reviewed-by
-> 
-> [...]
-
-Applied, thanks!
-
-[2/7] dt-bindings: dma: convert bcm2835-dma bindings to YAML
-      commit: c60d5060b019e8095df7eebd1716747edfbd192a
+Rest will go through sunxi tree, although DT bindings patches are usually=20
+picked together with driver patches. I'm fine either way.
 
 Best regards,
--- 
-~Vinod
+Jernej
+
+
 
 
