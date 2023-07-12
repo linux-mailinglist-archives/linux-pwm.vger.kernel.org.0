@@ -2,175 +2,148 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59FF1750AF6
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jul 2023 16:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E24F9750B1D
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jul 2023 16:35:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbjGLO2g (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Jul 2023 10:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58760 "EHLO
+        id S229879AbjGLOfV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Jul 2023 10:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232198AbjGLO2Z (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jul 2023 10:28:25 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F38198A;
-        Wed, 12 Jul 2023 07:28:22 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1b8bd586086so52563135ad.2;
-        Wed, 12 Jul 2023 07:28:22 -0700 (PDT)
+        with ESMTP id S232845AbjGLOfU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jul 2023 10:35:20 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2CCE65
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Jul 2023 07:35:17 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-c2cf4e61bc6so8061730276.3
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Jul 2023 07:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689172102; x=1691764102;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=d29G4UGHTOvrTSdXfUvhc04mvubBfv0bY2JOgTNo1uw=;
-        b=S5lb9XL/Txqs3htFjYU4g4xgB8ToehOwqWly4eW6k5f42z60BVHh7NPAXDHwA7DCEs
-         ki5Es3nsXzaayC4Gzl3AodsZusY/r64YhWgol+5Cs56yQbwmAJp8g6FiQWj+DQkYQsg9
-         GpaZdqSJabAURvlSlv1Y52jRGXcAuwMfH0pol/RWPJbbYmbIB0ZkRmi+zdVHmLN/iFwR
-         aJsjRC4e2OoHBogGqcgS4+fo6fYqHmNdysDvIleV/zd0pHUZZutuUlpLsf5MnYLX19wv
-         /1NYQKK8Ki8qEQj/1kS8y5rsf069n27XSpzysG+dGRF/haUjEQ8bXiTwO0SNyrHNi3LV
-         g8wQ==
+        d=linaro.org; s=google; t=1689172517; x=1691764517;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tbTllEpx0I78Ic+EXBEuRDRVhQRIepaTuBVKvfQ1Ua0=;
+        b=Ea4t93dvufzwmX3xkWz194R62FMWEMLF5hGPXmr+Y8OTIswfM6BhkHA4tXPKbpGZZz
+         BpbPiPy+45hZHL5QeCJSPDi5L96WAq+JXo6qe6DnBsrvcDljaT8VnDtuhoysa3YH4MAN
+         FCvMUb3pmvSTyhzvx6dUX+rQbdiuknJALnYg4PmGZ4I/s2u8i4sFlr8h8VWyDlb0rr34
+         kplTU06AqliDIhK21A/1kQ/6jKyqkrAyMa93dDVzTgSmFFjHQRED64NKu/6fp/G9PGKr
+         T/fvmgnCg2juBVFsD5Y/iZGkvVdKQrdvVvEKcOYHtSxGd7Lbu8Ij10I/RWrKtzgzkRSu
+         bZRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689172102; x=1691764102;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d29G4UGHTOvrTSdXfUvhc04mvubBfv0bY2JOgTNo1uw=;
-        b=JeNe92wRhLY3CgtVg4+rN9TatE3CjL0Y7YUmm8czJLe2eOPeaikJqUmmhT9nLdCaYH
-         jILjfbea7LrRnw9HtlGHUhliCpVqcA44KScvN+lnXlpefZTwj2ISUuuWqCfZC02K6r0y
-         Y3koZgE5zkiNpar+FLl9v7evJ/mNo4ys6ka62pyTsI9Br5RwxQ6pgoGUOD+kkCfvFb/A
-         Mc69LJ78CYbTDREelFxQWv0ymhr4JnbfnjKnBDAXsRRDvFV15/1pZl0PiP59Dmg8FK+Z
-         hbrf5HoVOXd7TGLD6X9eqZd9c80YlQ52xmkWLJab9GZDdyfOv3PXqE4iJ9FBEk8xVJ8i
-         8zcQ==
-X-Gm-Message-State: ABy/qLbpOco2fXcWmmoFnUa0oMyb9ToCxiyttHiHH2a65P5VnEZSF1z6
-        GNNOUS2aZfQi9OXYu5fCZyw=
-X-Google-Smtp-Source: APBJJlE4muskuJqQfw5y483vMIOjSxPzLKDViBfxKtYogxy0Ldpk2GEZmu9/LB7RYYbsQ3FTFAn/7w==
-X-Received: by 2002:a17:902:788c:b0:1ae:8892:7d27 with SMTP id q12-20020a170902788c00b001ae88927d27mr10222431pll.42.1689172101946;
-        Wed, 12 Jul 2023 07:28:21 -0700 (PDT)
-Received: from [192.168.1.5] ([113.103.7.132])
-        by smtp.gmail.com with ESMTPSA id x6-20020a1709027c0600b001b8a37ffb5asm4037587pll.4.2023.07.12.07.28.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 07:28:21 -0700 (PDT)
-Message-ID: <d1c9dce9-9dbc-46bf-0d18-6d90a3ae7610@gmail.com>
-Date:   Wed, 12 Jul 2023 22:28:12 +0800
+        d=1e100.net; s=20221208; t=1689172517; x=1691764517;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tbTllEpx0I78Ic+EXBEuRDRVhQRIepaTuBVKvfQ1Ua0=;
+        b=lVN/J44a/PuSrprxt1BZsk6TWTtsrcyVAHaMWj0ZJ144T2cTcR529M8MkAPCNzG4QU
+         F7h98dZOrZE3HiSDC/dG9uPyF/GtByHZVxhYh49ElrIze8eV5ZFMWd7rbOvNlRCsM1Mm
+         Qkpp/GZOUTzCXLmCvtvtSML1F1gmGccJdz5ANKmN+qX99l7NpDIPAUQ56d+ZzQl9Rj+K
+         q0NO/U/X3rYWqdw51gdYDM+y/jmJUUTEEYhfDfb8km1wkpXPL165O1C0nKyHj2Dxsrwy
+         M3BXuTEndigsH+YD1/8Kb29uaUvINJ2MW8Rzy3OLaDGk0YiIcrpc0sjRdTHa+OShCwel
+         2IzQ==
+X-Gm-Message-State: ABy/qLaSiHGkIOROw192K3IMnk0IglOY3FlBmXQKHIvxpQUuAhbaa9wb
+        IQN+72yGXXmmTdS5s1cShpeNFVMUx3sSzj08k9wMuA==
+X-Google-Smtp-Source: APBJJlFOHb2fSETsP1eqkByIGa7pIKNcHsnSCp51EV4sxfvYWl2o5Ta3vmVszePPggalPaZErD7+82N+DHVr7KfUX1A=
+X-Received: by 2002:a25:1e55:0:b0:c4f:c0eb:451b with SMTP id
+ e82-20020a251e55000000b00c4fc0eb451bmr18583653ybe.25.1689172517157; Wed, 12
+ Jul 2023 07:35:17 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4] pwm: atmel: Enable clk when pwm already enabled in
- bootloader
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     thierry.reding@gmail.com, claudiu.beznea@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230712134347.14897-1-aarongt.shen@gmail.com>
- <20230712135553.trqkxtcuiemwzgwe@pengutronix.de>
-From:   Guiting Shen <aarongt.shen@gmail.com>
-In-Reply-To: <20230712135553.trqkxtcuiemwzgwe@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230621185949.2068-1-quic_amelende@quicinc.com>
+ <20230621185949.2068-2-quic_amelende@quicinc.com> <20230626135857.GA3118929-robh@kernel.org>
+ <2e871e21-a81d-0d7d-993b-9a9d7bd9d962@quicinc.com> <e7298704-5a03-0961-90a3-dab4af60c326@linaro.org>
+ <32e9a512-fd74-b2f6-6b8a-fefb9ad5912d@quicinc.com> <431faa87-d152-5f7a-40fd-8b6fe26f0bb9@linaro.org>
+ <71e1f36f-8fd8-9d61-d563-577d4fb54f10@quicinc.com> <69c01f0f-4eb0-bb44-a238-5c9ce5beede9@linaro.org>
+In-Reply-To: <69c01f0f-4eb0-bb44-a238-5c9ce5beede9@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Wed, 12 Jul 2023 17:35:05 +0300
+Message-ID: <CAA8EJppCSnEg1GjX8CavxRPiiE19JwVAOTspjWJR-OzdQMcu+g@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: soc: qcom: Add qcom-pbs bindings
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Anjelique Melendez <quic_amelende@quicinc.com>,
+        Rob Herring <robh@kernel.org>, pavel@ucw.cz, lee@kernel.org,
+        thierry.reding@gmail.com, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, 12 Jul 2023 at 17:22, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 11/07/2023 22:12, Anjelique Melendez wrote:
+>
+> >>>
+> >>> On PMI632, peripherals are partitioned over 2 different SIDs
+> >>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/pmi632.dtsi?h=v6.5-rc1#n42
+> >>> and https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/pmi632.dtsi?h=v6.5-rc1#n149).
+> >>> Unfortunately, the pbs peripheral and the lpg peripherals are on different
+> >>> PMI632 devices and therefore have different regmaps.
+> >>>
+> >>> If we get rid of the pbs node we need to get a handle to the proper regmap.
+> >>> I see two possible options, we could either introduce a new client property
+> >>> which points to a peripheral on the same device as pbs.
+> >>>
+> >>> i.e.
+> >>>     led-controller {
+> >>>             compatible = "qcom,pmi632-lpg";
+> >>>                     #address-cells = <1>;
+> >>>                     #size-cells = <0>;
+> >>>                     #pwm-cells = <2>;
+> >>>                     nvmem-names = "lpg_chan_sdam";
+> >>>                     nvmem = <&pmi632_sdam7>;
+> >>>                     qcom,pbs-phandle = <&pmi632_gpios>;
+> >>>                     .....
+> >>>     };
+> >>> Then when client is probing could do something like the following to get the regmap
+> >>>
+> >>>     dn = of_parse_phandle(node, "qcom,pbs-phandle", 0);
+> >>>     pdev = of_find_device_by_node(dn);
+> >>>     pbs_regmap = dev_get_regmap(&pdev->dev->parent, NULL);
+> >>>
+> >>>
+> >>>
+> >>> Or we could use the nvmem phandle and just have something like this in client's probe
+> >>>
+> >>>     dn = of_parse_phandle(node, "nvmem", 0);
+> >>>     pdev = of_find_device_by_node(dn);
+> >>>     pbs_regmap = dev_get_regmap(&pdev->dev->parent, NULL);
+> >>>
+> >>>
+> >>>
+> >>> Let me know what your thoughts are on this.
+> >>
+> >> Rob asked you - "Is there more than 1 instance in a PMIC?" - and you did
+> >> not answer positively, just mentioned something about drivers in
+> >> downstream, which do not matter. So is the answer for that question:
+> >> yes, you have two instances of the same PMIC differing by presence of
+> >> PBS and other features"?
+> >>
+> > Sorry that was a misunderstanding on my part.
+> > Yes, answer to Rob's question should have been "We have two instances of PMI632,
+> > where one instance holds the pbs peripheral and the other holds the lpg
+> > peripherals. The child node for pbs is needed so lpg client can access
+> > the PMI632 regmap which contains the pbs peripheral."
+>
+> I guess I miss here something. What is "LPG client"? I don't understand
+> why this LPG client needs existence of PBS node, to be able to get the
+> regmap.
+>
+> PBS is a child of PMIC, so it can get regmap from the parent. What's
+> more, which DT property passes the regmap from PMIC to LPG client?
 
-
-On Wed,Jul 12,2023 at 21:55:53PM GMT+8, Uwe Kleine-König wrote:
-> On Wed, Jul 12, 2023 at 09:43:47PM +0800, Guiting Shen wrote:
->> The driver would never call clk_enable() if the PWM channel was already
->> enabled in bootloader which lead to dump the warning message "the PWM
->> clock already disabled" when turning off the PWM channel.
->>
->> Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
->> the PWM channel was already enabled in bootloader.
->>
->> Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
->> ---
->>   drivers/pwm/pwm-atmel.c | 40 +++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 39 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
->> index cdbc23649032..28ea0f7267ca 100644
->> --- a/drivers/pwm/pwm-atmel.c
->> +++ b/drivers/pwm/pwm-atmel.c
->> @@ -36,7 +36,7 @@
->>   #define PWM_SR			0x0C
->>   #define PWM_ISR			0x1C
->>   /* Bit field in SR */
->> -#define PWM_SR_ALL_CH_ON	0x0F
->> +#define PWM_SR_ALL_CH_MASK	0x0F
->>   
->>   /* The following register is PWM channel related registers */
->>   #define PWM_CH_REG_OFFSET	0x200
->> @@ -464,6 +464,37 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
->>   };
->>   MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
->>   
->> +static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm)
->> +{
->> +	unsigned int i;
->> +	int err;
->> +	u32 sr;
->> +
->> +	sr = atmel_pwm_readl(atmel_pwm, PWM_SR);
->> +	if (!(sr & PWM_SR_ALL_CH_MASK))
->> +		return 0;
->> +
->> +	for (i = 0; i < atmel_pwm->chip.npwm; i++) {
->> +		if (!(sr & (1 << i)))
->> +			continue;
->> +
->> +		err = clk_enable(atmel_pwm->clk);
->> +		if (err) {
->> +			dev_err(atmel_pwm->chip.dev,
->> +				"failed to enable clock for pwm #%d: %pe\n",
->> +							i, ERR_PTR(err));
->> +
->> +			while (i--) {
->> +				if (sr & (1 << i))
->> +					clk_disable(atmel_pwm->clk);
->> +			}
->> +			return err;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int atmel_pwm_probe(struct platform_device *pdev)
->>   {
->>   	struct atmel_pwm_chip *atmel_pwm;
->> @@ -504,8 +535,15 @@ static int atmel_pwm_probe(struct platform_device *pdev)
->>   
->>   	platform_set_drvdata(pdev, atmel_pwm);
->>   
->> +	ret = atmel_pwm_enable_clk_if_on(atmel_pwm);
->> +	if (ret < 0)
->> +		goto remove_pwmchip;
->> +
->>   	return ret;
->>   
->> +remove_pwmchip:
->> +	pwmchip_remove(&atmel_pwm->chip);
->> +
-> 
-> I'd consider it more natural to do the atmel_pwm_enable_clk_if_on() call
-> before registering the pwmchip. But I guess it works like this, too.
-> (Well unless it's possible that there are set bits in PWM_SR and the
-> clock is off.)
-
-It need to invoke something like atmel_pwm_disable_clk_if_on() after 
-failing to register the pwmchip when call the 
-atmel_pwm_enable_clk_if_on() first which I feel inconvenient.
-And it's impossible to enable PWM channels before enabling the clock.
-The bits set in PWM_SR means that the PWM channel and the clock turn on.
-
+There are some PMICs which claim two SPMI SIDs. For such PMICs, each
+SID is a separate device, so it is not directly possible to get the
+regmap of the other SID.
 
 -- 
-Best regards,
-Guiting Shen
+With best wishes
+Dmitry
