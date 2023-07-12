@@ -2,170 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13DA2750A23
-	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jul 2023 15:56:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA584750AB8
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Jul 2023 16:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232082AbjGLN4G (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 12 Jul 2023 09:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37298 "EHLO
+        id S231218AbjGLOWu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 12 Jul 2023 10:22:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231302AbjGLN4F (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jul 2023 09:56:05 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F14EB4
-        for <linux-pwm@vger.kernel.org>; Wed, 12 Jul 2023 06:56:04 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qJaJw-00063o-9Q; Wed, 12 Jul 2023 15:55:56 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qJaJv-00Du13-80; Wed, 12 Jul 2023 15:55:55 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qJaJt-004JiZ-W3; Wed, 12 Jul 2023 15:55:54 +0200
-Date:   Wed, 12 Jul 2023 15:55:53 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Guiting Shen <aarongt.shen@gmail.com>
-Cc:     thierry.reding@gmail.com, claudiu.beznea@microchip.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] pwm: atmel: Enable clk when pwm already enabled in
- bootloader
-Message-ID: <20230712135553.trqkxtcuiemwzgwe@pengutronix.de>
-References: <20230712134347.14897-1-aarongt.shen@gmail.com>
+        with ESMTP id S229632AbjGLOWt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 12 Jul 2023 10:22:49 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C86111997
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Jul 2023 07:22:40 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-51a52a7d859so1804184a12.0
+        for <linux-pwm@vger.kernel.org>; Wed, 12 Jul 2023 07:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689171759; x=1691763759;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IqgIPueFUvObMdtqLpPDVT+S6vncjR3E3Hz6m9Y1oow=;
+        b=cIIzWRE4mtjWnQxfXCjdWnyeBPXXR53TA75FPRduSJYczxPCyzNzrbmb4czW05Prbo
+         J6JcIoLHWVTcj9tmtg45QVny+awIbjTF7+gnYbTIzra6CdEfaka1/j26SzZ4ndm+T3HN
+         l6QV5s6EFKIhjSn6g94sai9Bd7IveDKmX8h4n+GgUTkMkGUN62jEhbN2JscQw85yVC2K
+         zWY8QDfRTYBsKe3JhsN7TmuX/LmIKX46GhMBoM4gLccMBtJfLG4ZhYbbT7IlAFzJRqHL
+         bupDja5RwzdjuRx9LJNEo7O4YhGes2zYaVGfCZIyVPL1CIpUdb0KOLt45d3sHQ1kPfjH
+         UtDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689171759; x=1691763759;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IqgIPueFUvObMdtqLpPDVT+S6vncjR3E3Hz6m9Y1oow=;
+        b=iJ0zVneU+eI4wjierC4C31CS6G64qxrGr3vwdQZlMvsiQRlcsOZLQUYXp8Qvnz9GDU
+         EWSk9Dp6PonZjxEZquWpnH2agGLA20/v4k2j+1uKGJOIII5bLvfpO9/H/T/aanUNHEl8
+         Lwt/Qkvw3EGdXbgg1AmVdnTZtmA1Z+jFN52q/FsAmOJuhvli0MdQX5kFoUBcMYNBMwWN
+         /Bj13KYGUdFtmdeyiwRv1YP/H064+cJ7fKr+dwtuOZ1FWcNzGbIgrjmQZ4xyCOPBmX4c
+         K/fGUfHd0Y2srsvb7CGBGOQq4jcNZBnGcuHyi6SCZBbYx2HFl2JEBJMBACrwDe7Utt/f
+         8BUw==
+X-Gm-Message-State: ABy/qLbcIJaWled53C0hZLUW/5J7HMPU5e5mjSRX0k0fk2NY/MyZozwt
+        Bu95eBPQocoT1T0qZG4TwOswgQ==
+X-Google-Smtp-Source: APBJJlH4rWD1FiIK9TcwLHZ7qIEY9eOufK42OGUuMk0um7uxrlk9UIxsBVKWnp2Z884Kt/9jVeE4hw==
+X-Received: by 2002:a05:6402:440b:b0:51f:e0f0:f2cd with SMTP id y11-20020a056402440b00b0051fe0f0f2cdmr2774872eda.3.1689171759329;
+        Wed, 12 Jul 2023 07:22:39 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id e3-20020a50ec83000000b0051e0ea53eaasm2833835edr.97.2023.07.12.07.22.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jul 2023 07:22:38 -0700 (PDT)
+Message-ID: <69c01f0f-4eb0-bb44-a238-5c9ce5beede9@linaro.org>
+Date:   Wed, 12 Jul 2023 16:22:36 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bq7xgtgt4lzusxg7"
-Content-Disposition: inline
-In-Reply-To: <20230712134347.14897-1-aarongt.shen@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/7] dt-bindings: soc: qcom: Add qcom-pbs bindings
+Content-Language: en-US
+To:     Anjelique Melendez <quic_amelende@quicinc.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        u.kleine-koenig@pengutronix.de, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20230621185949.2068-1-quic_amelende@quicinc.com>
+ <20230621185949.2068-2-quic_amelende@quicinc.com>
+ <20230626135857.GA3118929-robh@kernel.org>
+ <2e871e21-a81d-0d7d-993b-9a9d7bd9d962@quicinc.com>
+ <e7298704-5a03-0961-90a3-dab4af60c326@linaro.org>
+ <32e9a512-fd74-b2f6-6b8a-fefb9ad5912d@quicinc.com>
+ <431faa87-d152-5f7a-40fd-8b6fe26f0bb9@linaro.org>
+ <71e1f36f-8fd8-9d61-d563-577d4fb54f10@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <71e1f36f-8fd8-9d61-d563-577d4fb54f10@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 11/07/2023 22:12, Anjelique Melendez wrote:
 
---bq7xgtgt4lzusxg7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>
+>>> On PMI632, peripherals are partitioned over 2 different SIDs
+>>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/pmi632.dtsi?h=v6.5-rc1#n42
+>>> and https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/pmi632.dtsi?h=v6.5-rc1#n149).
+>>> Unfortunately, the pbs peripheral and the lpg peripherals are on different
+>>> PMI632 devices and therefore have different regmaps.
+>>>  
+>>> If we get rid of the pbs node we need to get a handle to the proper regmap.
+>>> I see two possible options, we could either introduce a new client property
+>>> which points to a peripheral on the same device as pbs.
+>>>
+>>> i.e.
+>>> 	led-controller {
+>>> 		compatible = "qcom,pmi632-lpg";
+>>>       		#address-cells = <1>;
+>>>       		#size-cells = <0>;
+>>>       		#pwm-cells = <2>;
+>>>      		nvmem-names = "lpg_chan_sdam";
+>>>       		nvmem = <&pmi632_sdam7>;
+>>>       		qcom,pbs-phandle = <&pmi632_gpios>;
+>>>       		..... 
+>>> 	};
+>>> Then when client is probing could do something like the following to get the regmap
+>>>
+>>> 	dn = of_parse_phandle(node, "qcom,pbs-phandle", 0);
+>>> 	pdev = of_find_device_by_node(dn);
+>>> 	pbs_regmap = dev_get_regmap(&pdev->dev->parent, NULL);
+>>>
+>>>
+>>>
+>>> Or we could use the nvmem phandle and just have something like this in client's probe
+>>>
+>>> 	dn = of_parse_phandle(node, "nvmem", 0);
+>>> 	pdev = of_find_device_by_node(dn);
+>>> 	pbs_regmap = dev_get_regmap(&pdev->dev->parent, NULL);
+>>>
+>>>
+>>>
+>>> Let me know what your thoughts are on this.
+>>
+>> Rob asked you - "Is there more than 1 instance in a PMIC?" - and you did
+>> not answer positively, just mentioned something about drivers in
+>> downstream, which do not matter. So is the answer for that question:
+>> yes, you have two instances of the same PMIC differing by presence of
+>> PBS and other features"?
+>>
+> Sorry that was a misunderstanding on my part.
+> Yes, answer to Rob's question should have been "We have two instances of PMI632,
+> where one instance holds the pbs peripheral and the other holds the lpg
+> peripherals. The child node for pbs is needed so lpg client can access
+> the PMI632 regmap which contains the pbs peripheral."
 
-On Wed, Jul 12, 2023 at 09:43:47PM +0800, Guiting Shen wrote:
-> The driver would never call clk_enable() if the PWM channel was already
-> enabled in bootloader which lead to dump the warning message "the PWM
-> clock already disabled" when turning off the PWM channel.
->=20
-> Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
-> the PWM channel was already enabled in bootloader.
->=20
-> Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
-> ---
->  drivers/pwm/pwm-atmel.c | 40 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index cdbc23649032..28ea0f7267ca 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -36,7 +36,7 @@
->  #define PWM_SR			0x0C
->  #define PWM_ISR			0x1C
->  /* Bit field in SR */
-> -#define PWM_SR_ALL_CH_ON	0x0F
-> +#define PWM_SR_ALL_CH_MASK	0x0F
-> =20
->  /* The following register is PWM channel related registers */
->  #define PWM_CH_REG_OFFSET	0x200
-> @@ -464,6 +464,37 @@ static const struct of_device_id atmel_pwm_dt_ids[] =
-=3D {
->  };
->  MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
-> =20
-> +static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm)
-> +{
-> +	unsigned int i;
-> +	int err;
-> +	u32 sr;
-> +
-> +	sr =3D atmel_pwm_readl(atmel_pwm, PWM_SR);
-> +	if (!(sr & PWM_SR_ALL_CH_MASK))
-> +		return 0;
-> +
-> +	for (i =3D 0; i < atmel_pwm->chip.npwm; i++) {
-> +		if (!(sr & (1 << i)))
-> +			continue;
-> +
-> +		err =3D clk_enable(atmel_pwm->clk);
-> +		if (err) {
-> +			dev_err(atmel_pwm->chip.dev,
-> +				"failed to enable clock for pwm #%d: %pe\n",
-> +							i, ERR_PTR(err));
-> +
-> +			while (i--) {
-> +				if (sr & (1 << i))
-> +					clk_disable(atmel_pwm->clk);
-> +			}
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int atmel_pwm_probe(struct platform_device *pdev)
->  {
->  	struct atmel_pwm_chip *atmel_pwm;
-> @@ -504,8 +535,15 @@ static int atmel_pwm_probe(struct platform_device *p=
-dev)
-> =20
->  	platform_set_drvdata(pdev, atmel_pwm);
-> =20
-> +	ret =3D atmel_pwm_enable_clk_if_on(atmel_pwm);
-> +	if (ret < 0)
-> +		goto remove_pwmchip;
-> +
->  	return ret;
-> =20
-> +remove_pwmchip:
-> +	pwmchip_remove(&atmel_pwm->chip);
-> +
+I guess I miss here something. What is "LPG client"? I don't understand
+why this LPG client needs existence of PBS node, to be able to get the
+regmap.
 
-I'd consider it more natural to do the atmel_pwm_enable_clk_if_on() call
-before registering the pwmchip. But I guess it works like this, too.
-(Well unless it's possible that there are set bits in PWM_SR and the
-clock is off.)
+PBS is a child of PMIC, so it can get regmap from the parent. What's
+more, which DT property passes the regmap from PMIC to LPG client?
 
-Best regards
-Uwe
+Best regards,
+Krzysztof
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bq7xgtgt4lzusxg7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSusOgACgkQj4D7WH0S
-/k6plgf/d0M/JWWv6RhsftHVKBbI2LRjln4d8uZhGCHkzt6UtSXQpc4n+eocnaWb
-fUraq4V0u7CEqaaKHFlC5LbCWq2OE3hfw0egCRAEo63c7HJs1Tzs6nmglGv4NWlO
-c1tiOfXute9EsJvQD1bfKN0WUET8lTn+T6ytDjjQAG/hLfGVDSPNrui37aw02ZwU
-Uzyi3x+wznEN7gvAw0mRXHpe8iLXBP7WC2vGUBeWDDJ9omaJ46YjKGR6KpL+r/MW
-V6vs5N2tcHM63CueQTi3hIaP4fZba2FGZ3wKTuRJAVOY9wfrdFI4u2ytBpG/fKlk
-qwsFBmN9eFlfKCthd6i37oy2+JmnFw==
-=LQrl
------END PGP SIGNATURE-----
-
---bq7xgtgt4lzusxg7--
