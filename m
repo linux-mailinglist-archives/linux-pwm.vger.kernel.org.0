@@ -2,51 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3FD4754880
-	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 14:13:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4195675498C
+	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 17:04:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbjGOMNP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 15 Jul 2023 08:13:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52086 "EHLO
+        id S229574AbjGOPEv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 15 Jul 2023 11:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjGOMNP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 08:13:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F3A35BC
-        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 05:13:13 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qKe91-0003DU-2e; Sat, 15 Jul 2023 14:13:03 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qKe8x-00EZIu-9o; Sat, 15 Jul 2023 14:12:59 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qKe8w-0053fu-6V; Sat, 15 Jul 2023 14:12:58 +0200
-Date:   Sat, 15 Jul 2023 14:12:53 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Guiting Shen <aarongt.shen@gmail.com>
-Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] pwm: atmel: Enable clk when pwm already enabled in
- bootloader
-Message-ID: <20230715121253.gvhcszjoqxwh4gjz@pengutronix.de>
-References: <20230715023653.56872-1-aarongt.shen@gmail.com>
+        with ESMTP id S229506AbjGOPEu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 11:04:50 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45D32738
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 08:04:47 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-345ff33d286so13749315ab.3
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 08:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google; t=1689433487; x=1692025487;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8gOGWAD6wBVovUk2BHvSqIfOjzXSeVMRftgvw0qpfvg=;
+        b=Dq890GHuhMH3ZbDuB9bZXTLcJD42Y7MTkD+Fb+3WQZMCsN4S7EW/o8q/zy8vwm1ewH
+         2WkvXs/uUU5MO+7s5tdCYy4R3zwhpiOhhGqAdRIClaywsmn8BLqJ+kFswcWpdylW3Acc
+         9+WnXhEzLih006uvdqL9Mpf+JT/dQS0WEP7V8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689433487; x=1692025487;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8gOGWAD6wBVovUk2BHvSqIfOjzXSeVMRftgvw0qpfvg=;
+        b=cWZAhKfTHdV9eaPM1oDMYahWUyBlMP+dxs8W6rLqNA3QdMfM3sI7Ezd0Ob3nCyROgN
+         dibKc4+fPD4WJj5W8t0cCM5hqVd1Y2/kIha2znXb5sGaWgWHKxlKm/4APVOB8g9IB8If
+         ooxGMsFNu5f5BMjvMAIzZzkBOodHECSWeYNRHzDzAu67AWnZlNqA4GRj7FEpXkM+CIyw
+         R9XlufsX+IGWQGOJwgXPnuHKfQyP8JV+Zwzsjdgcin8p3Kc9TlprJQjmNoDWatO667qJ
+         vfUIi7tg0MSzRjelVDkZ7Pnx1Fs1mIP9eKKdtnp1glXHHk5kgcaF17LiAts8aHyHqXGg
+         iU/Q==
+X-Gm-Message-State: ABy/qLZpAk6M6Eq/pl8DhQqQksD+K6y5l4MJ6/CAWzGcT8Th/Owg+Pcl
+        bWcgHoLQ4hPXu8bndFIDkciLuw==
+X-Google-Smtp-Source: APBJJlFLQ3qqt+bf2ZY7TjorWA6fP5Mtk4I1NR6VlGwIKrAhe/fQRo9Dg0t06pQGdEpXhw8baAKnrg==
+X-Received: by 2002:a6b:917:0:b0:77e:3e85:34ee with SMTP id t23-20020a6b0917000000b0077e3e8534eemr7761979ioi.13.1689433487040;
+        Sat, 15 Jul 2023 08:04:47 -0700 (PDT)
+Received: from [10.211.55.3] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
+        by smtp.googlemail.com with ESMTPSA id z16-20020a6b5c10000000b0076373f90e46sm3414217ioh.33.2023.07.15.08.04.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Jul 2023 08:04:46 -0700 (PDT)
+Message-ID: <f8aec2a1-45ae-712f-db60-f923f2bf2a5b@ieee.org>
+Date:   Sat, 15 Jul 2023 10:04:45 -0500
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qyte6fnzbfe3tcpo"
-Content-Disposition: inline
-In-Reply-To: <20230715023653.56872-1-aarongt.shen@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 10/10] staging: greybus: pwm: Consistenly name pwm_chip
+ variables "chip"
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+        kernel@pengutronix.de, linux-pwm@vger.kernel.org
+References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
+ <20230714205623.2496590-11-u.kleine-koenig@pengutronix.de>
+From:   Alex Elder <elder@ieee.org>
+In-Reply-To: <20230714205623.2496590-11-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,113 +76,52 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 7/14/23 3:56 PM, Uwe Kleine-König wrote:
+> All function parameters of type pointer to struct pwm_chip in this
+> driver are called chip which is also the usual name of function
+> parameters and local variables in most other pwm drivers. For consistency
+> use the same name for the local variable of that type.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
---qyte6fnzbfe3tcpo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me.
 
-On Sat, Jul 15, 2023 at 10:36:53AM +0800, Guiting Shen wrote:
-> The driver would never call clk_enable() if the PWM channel was already
-> enabled in bootloader which lead to dump the warning message "the PWM
-> clock already disabled" when turning off the PWM channel.
->=20
-> Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
-> the PWM channel was already enabled in bootloader.
->=20
-> Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
+Reviewed-by: Alex Elder <elder@linaro.org>
+
 > ---
->  drivers/pwm/pwm-atmel.c | 50 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 48 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index cdbc23649032..4dd6e1319343 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -36,7 +36,7 @@
->  #define PWM_SR			0x0C
->  #define PWM_ISR			0x1C
->  /* Bit field in SR */
-> -#define PWM_SR_ALL_CH_ON	0x0F
-> +#define PWM_SR_ALL_CH_MASK	0x0F
-> =20
->  /* The following register is PWM channel related registers */
->  #define PWM_CH_REG_OFFSET	0x200
-> @@ -464,6 +464,45 @@ static const struct of_device_id atmel_pwm_dt_ids[] =
-=3D {
->  };
->  MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
-> =20
-> +static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm, =
-bool on)
-> +{
-> +	unsigned int i, cnt =3D 0;
-> +	int ret =3D 0;
-> +	u32 sr;
-> +
-> +	sr =3D atmel_pwm_readl(atmel_pwm, PWM_SR) & PWM_SR_ALL_CH_MASK;
-> +	if (!sr)
-> +		return 0;
-> +
-> +	for (i =3D 0; i < atmel_pwm->chip.npwm; i++) {
-> +		if (sr & (1 << i))
-> +			cnt++;
-> +	}
+>   drivers/staging/greybus/pwm.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+> index 88da1d796f13..c483e1f0738e 100644
+> --- a/drivers/staging/greybus/pwm.c
+> +++ b/drivers/staging/greybus/pwm.c
+> @@ -267,7 +267,7 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
+>   {
+>   	struct gb_connection *connection;
+>   	struct gb_pwm_chip *pwmc;
+> -	struct pwm_chip *pwm;
+> +	struct pwm_chip *chip;
+>   	int ret;
+>   
+>   	pwmc = kzalloc(sizeof(*pwmc), GFP_KERNEL);
+> @@ -295,13 +295,13 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
+>   	if (ret)
+>   		goto exit_connection_disable;
+>   
+> -	pwm = &pwmc->chip;
+> +	chip = &pwmc->chip;
+>   
+> -	pwm->dev = &gbphy_dev->dev;
+> -	pwm->ops = &gb_pwm_ops;
+> -	pwm->npwm = pwmc->pwm_max + 1;
+> +	chip->dev = &gbphy_dev->dev;
+> +	chip->ops = &gb_pwm_ops;
+> +	chip->npwm = pwmc->pwm_max + 1;
+>   
+> -	ret = pwmchip_add(pwm);
+> +	ret = pwmchip_add(chip);
+>   	if (ret) {
+>   		dev_err(&gbphy_dev->dev,
+>   			"failed to register PWM: %d\n", ret);
 
-If it's just about counting the set bits, there is the function
-bitmap_weight().
-
-> +	if (!on)
-> +		goto disable_clk;
-> +
-> +	for (i =3D 0; i < cnt; i++) {
-> +		ret =3D clk_enable(atmel_pwm->clk);
-> +		if (ret) {
-> +			dev_err(atmel_pwm->chip.dev,
-> +				"failed to enable clock for pwm #%d: %pe\n",
-> +							i, ERR_PTR(ret));
-
-The output is bogus here. If SR is say 0xc, and the second enable
-fails, it's about pwm #3, but then i is 1.
-
-> +			cnt =3D i;
-> +			goto disable_clk;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	while (cnt--)
-> +		clk_disable(atmel_pwm->clk);
-> +
-> +	return ret;
-> +}
-> +
->  static int atmel_pwm_probe(struct platform_device *pdev)
->  {
->  	struct atmel_pwm_chip *atmel_pwm;
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qyte6fnzbfe3tcpo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSyjUUACgkQj4D7WH0S
-/k40lAf/TetcyCjfKtZR6x71B/fcDlAupMaT9uk53KRdVAYxj8JsWJbSyDywmLOI
-5LIwDVk+rbqGsSZO1Dwn8nrDPQBiCj6bo0OZwSVTRp/HiNiOEkN3nkXxDvEJr6Up
-YwmsxAhZZTUWqYKcSILhTufWTWVvTQ5Ma2tTshwFf3CUGGYBQnYze1ikokrAfIJO
-hPji7P+aiSjyfwMjg+l0I4FQV2br8zqAqPdBtPePrObErBQLAjS3NFqdDGgHhAwG
-CNb8HpYCBsZ18o+CPtp9fo8YA7+x99dYIu0S2gm1fD8iaU2v5A4dtBxoTREc4P9l
-EjEB9exdmwFUfi2bZ5J4i4+KI4yOpw==
-=wsAe
------END PGP SIGNATURE-----
-
---qyte6fnzbfe3tcpo--
