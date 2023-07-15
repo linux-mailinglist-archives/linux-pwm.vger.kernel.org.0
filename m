@@ -2,126 +2,227 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4195675498C
-	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 17:04:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E544B754BAE
+	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 21:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbjGOPEv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 15 Jul 2023 11:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
+        id S229768AbjGOTSJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 15 Jul 2023 15:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjGOPEu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 11:04:50 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45D32738
-        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 08:04:47 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-345ff33d286so13749315ab.3
-        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 08:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1689433487; x=1692025487;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8gOGWAD6wBVovUk2BHvSqIfOjzXSeVMRftgvw0qpfvg=;
-        b=Dq890GHuhMH3ZbDuB9bZXTLcJD42Y7MTkD+Fb+3WQZMCsN4S7EW/o8q/zy8vwm1ewH
-         2WkvXs/uUU5MO+7s5tdCYy4R3zwhpiOhhGqAdRIClaywsmn8BLqJ+kFswcWpdylW3Acc
-         9+WnXhEzLih006uvdqL9Mpf+JT/dQS0WEP7V8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689433487; x=1692025487;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8gOGWAD6wBVovUk2BHvSqIfOjzXSeVMRftgvw0qpfvg=;
-        b=cWZAhKfTHdV9eaPM1oDMYahWUyBlMP+dxs8W6rLqNA3QdMfM3sI7Ezd0Ob3nCyROgN
-         dibKc4+fPD4WJj5W8t0cCM5hqVd1Y2/kIha2znXb5sGaWgWHKxlKm/4APVOB8g9IB8If
-         ooxGMsFNu5f5BMjvMAIzZzkBOodHECSWeYNRHzDzAu67AWnZlNqA4GRj7FEpXkM+CIyw
-         R9XlufsX+IGWQGOJwgXPnuHKfQyP8JV+Zwzsjdgcin8p3Kc9TlprJQjmNoDWatO667qJ
-         vfUIi7tg0MSzRjelVDkZ7Pnx1Fs1mIP9eKKdtnp1glXHHk5kgcaF17LiAts8aHyHqXGg
-         iU/Q==
-X-Gm-Message-State: ABy/qLZpAk6M6Eq/pl8DhQqQksD+K6y5l4MJ6/CAWzGcT8Th/Owg+Pcl
-        bWcgHoLQ4hPXu8bndFIDkciLuw==
-X-Google-Smtp-Source: APBJJlFLQ3qqt+bf2ZY7TjorWA6fP5Mtk4I1NR6VlGwIKrAhe/fQRo9Dg0t06pQGdEpXhw8baAKnrg==
-X-Received: by 2002:a6b:917:0:b0:77e:3e85:34ee with SMTP id t23-20020a6b0917000000b0077e3e8534eemr7761979ioi.13.1689433487040;
-        Sat, 15 Jul 2023 08:04:47 -0700 (PDT)
-Received: from [10.211.55.3] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
-        by smtp.googlemail.com with ESMTPSA id z16-20020a6b5c10000000b0076373f90e46sm3414217ioh.33.2023.07.15.08.04.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Jul 2023 08:04:46 -0700 (PDT)
-Message-ID: <f8aec2a1-45ae-712f-db60-f923f2bf2a5b@ieee.org>
-Date:   Sat, 15 Jul 2023 10:04:45 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 10/10] staging: greybus: pwm: Consistenly name pwm_chip
- variables "chip"
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        with ESMTP id S229549AbjGOTSI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 15:18:08 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA832119
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 12:18:06 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qKkmF-00017C-QM; Sat, 15 Jul 2023 21:17:59 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qKkmD-00Edbe-EW; Sat, 15 Jul 2023 21:17:57 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qKkmC-0058Mx-LD; Sat, 15 Jul 2023 21:17:56 +0200
+Date:   Sat, 15 Jul 2023 21:17:54 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc:     Angelo Compagnucci <angelo@amarulasolutions.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
-        kernel@pengutronix.de, linux-pwm@vger.kernel.org
-References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
- <20230714205623.2496590-11-u.kleine-koenig@pengutronix.de>
-From:   Alex Elder <elder@ieee.org>
-In-Reply-To: <20230714205623.2496590-11-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        Thierry Reding <thierry.reding@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GENERIC PWM SERVO DRIVER" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] misc: servo-pwm: driver for controlling servo
+ motors via PWM
+Message-ID: <20230715191754.ktflbhelouxudqrg@pengutronix.de>
+References: <20230217161038.3130053-1-angelo@amarulasolutions.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tl4v7hwjfkdh3za7"
+Content-Disposition: inline
+In-Reply-To: <20230217161038.3130053-1-angelo@amarulasolutions.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 7/14/23 3:56 PM, Uwe Kleine-König wrote:
-> All function parameters of type pointer to struct pwm_chip in this
-> driver are called chip which is also the usual name of function
-> parameters and local variables in most other pwm drivers. For consistency
-> use the same name for the local variable of that type.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Looks good to me.
+--tl4v7hwjfkdh3za7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Alex Elder <elder@linaro.org>
-
+On Fri, Feb 17, 2023 at 05:10:35PM +0100, Angelo Compagnucci wrote:
+> This patch adds a simple driver to control servo motor position via
+> PWM signal.
+> The driver allows to set the angle from userspace, while min/max
+> positions duty cycle and the motor degrees aperture are defined in
+> the dts.
+>=20
+> Signed-off-by: Angelo Compagnucci <angelo@amarulasolutions.com>
 > ---
->   drivers/staging/greybus/pwm.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-> index 88da1d796f13..c483e1f0738e 100644
-> --- a/drivers/staging/greybus/pwm.c
-> +++ b/drivers/staging/greybus/pwm.c
-> @@ -267,7 +267,7 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
->   {
->   	struct gb_connection *connection;
->   	struct gb_pwm_chip *pwmc;
-> -	struct pwm_chip *pwm;
-> +	struct pwm_chip *chip;
->   	int ret;
->   
->   	pwmc = kzalloc(sizeof(*pwmc), GFP_KERNEL);
-> @@ -295,13 +295,13 @@ static int gb_pwm_probe(struct gbphy_device *gbphy_dev,
->   	if (ret)
->   		goto exit_connection_disable;
->   
-> -	pwm = &pwmc->chip;
-> +	chip = &pwmc->chip;
->   
-> -	pwm->dev = &gbphy_dev->dev;
-> -	pwm->ops = &gb_pwm_ops;
-> -	pwm->npwm = pwmc->pwm_max + 1;
-> +	chip->dev = &gbphy_dev->dev;
-> +	chip->ops = &gb_pwm_ops;
-> +	chip->npwm = pwmc->pwm_max + 1;
->   
-> -	ret = pwmchip_add(pwm);
-> +	ret = pwmchip_add(chip);
->   	if (ret) {
->   		dev_err(&gbphy_dev->dev,
->   			"failed to register PWM: %d\n", ret);
+> v2:
+> * Driver mostly rewritten for kernel 6.2
+> v3:
+> * Fixed sysfs_emit (greg k-h)
+>=20
+>  MAINTAINERS              |   6 ++
+>  drivers/misc/Kconfig     |  11 +++
+>  drivers/misc/Makefile    |   1 +
+>  drivers/misc/servo-pwm.c | 149 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 167 insertions(+)
+>  create mode 100644 drivers/misc/servo-pwm.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 39ff1a717625..8f4af64deb1b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8737,6 +8737,12 @@ F:	Documentation/devicetree/bindings/power/power?d=
+omain*
+>  F:	drivers/base/power/domain*.c
+>  F:	include/linux/pm_domain.h
+> =20
+> +GENERIC PWM SERVO DRIVER
+> +M:	"Angelo Compagnucci" <angelo@amarulasolutions.com>
+> +L:	linux-pwm@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/misc/servo-pwm.c
+> +
+>  GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
+>  M:	Eugen Hristev <eugen.hristev@microchip.com>
+>  L:	linux-input@vger.kernel.org
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 9947b7892bd5..8a74087149ac 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -518,6 +518,17 @@ config VCPU_STALL_DETECTOR
+> =20
+>  	  If you do not intend to run this kernel as a guest, say N.
+> =20
+> +config SERVO_PWM
+> +	tristate "Servo motor positioning"
+> +	depends on PWM
+> +	help
+> +	  Driver to control generic servo motor positioning.
+> +	  Writing to the "angle" device attribute, the motor will move to
+> +	  the angle position.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called servo-pwm.
+> +
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index 87b54a4a4422..936629b648a9 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -64,3 +64,4 @@ obj-$(CONFIG_HI6421V600_IRQ)	+=3D hi6421v600-irq.o
+>  obj-$(CONFIG_OPEN_DICE)		+=3D open-dice.o
+>  obj-$(CONFIG_GP_PCI1XXXX)	+=3D mchp_pci1xxxx/
+>  obj-$(CONFIG_VCPU_STALL_DETECTOR)	+=3D vcpu_stall_detector.o
+> +obj-$(CONFIG_SERVO_PWM)	+=3D servo-pwm.o
+> diff --git a/drivers/misc/servo-pwm.c b/drivers/misc/servo-pwm.c
+> new file mode 100644
+> index 000000000000..1303ddda8d07
+> --- /dev/null
+> +++ b/drivers/misc/servo-pwm.c
+> @@ -0,0 +1,149 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (c) 2023 Angelo Compagnucci <angelo@amarulasolutions.com>
+> + * servo-pwm.c - driver for controlling servo motors via pwm.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/err.h>
+> +#include <linux/pwm.h>
+> +
+> +#define DEFAULT_DUTY_MIN	500000
+> +#define DEFAULT_DUTY_MAX	2500000
+> +#define DEFAULT_DEGREES		175
+> +#define DEFAULT_ANGLE		0
+> +
+> +struct servo_pwm_data {
+> +	u32 duty_min;
+> +	u32 duty_max;
+> +	u32 degrees;
+> +	u32 angle;
+> +
+> +	struct mutex lock;
+> +	struct pwm_device *pwm;
+> +	struct pwm_state pwmstate;
+> +};
+> +
+> +static int servo_pwm_set(struct servo_pwm_data *data, int val)
+> +{
+> +	u64 new_duty =3D (((data->duty_max - data->duty_min) /
+> +			data->degrees) * val) + data->duty_min;
 
+You're loosing precision here. Always divide as late as possible. (If
+you need an example: With
+
+	duty_max =3D 1000
+	duty_min =3D 0
+	degrees =3D 251
+	val =3D 79
+
+the exact result for new_duty would be 314.7410358565737. Your term
+yields 237. If you divide after multiplying with val you get 314.
+
+All in all I think this driver is too specialized on a single motor
+type. IMHO what we would be more helpful is a generic framework that can
+abstract various different motors with the same API.=20
+
+A while back I already thought about a suitable driver API. The
+abstraction I came up with back then was:
+
+	.setspeed(struct motor_device *motor, signed int speed)
+	.disable(struct motor_device *motor)
+
+In the end this is probably too simple because it doesn't allow the
+consumer to specify how fast the new target speed is to be reached.
+(Consider the motor running at 1000 and .setspeed(mymotor, 0) is called.
+Should this mean "actively brake", or "stop driving and just coast
+down"? I don't have a good idea yet that is both simple enough and still
+expressive that it's both useful to consumers and sensible to implement
+for different motor types.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--tl4v7hwjfkdh3za7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSy8OIACgkQj4D7WH0S
+/k5c7ggArPp1t16bQIhyFaKjLPGLCgIdbGWbz+sdypPz4Qfu+sdonmUf7qkZvGZ9
+v9JzRbb+ZBua0acfDKWopd+hKZz/pc0uRp3YfoDK9yYVv+5QYKH9CWiPKCOSlNxg
+ZhmLeLZIO7Qafm6bQuYX+FlMy/EYv//fgRR4W4I/gnLcOzVh8UZZt2g04QhSjFe+
+89Wu4kXWvelhTtx7IynCPRn+l+iNcPJPpZtLgCoVhUalNQytQ938D+oBSgUT8JgJ
+079v9A11+h+522NemEuAaFb5dfpPBCSepAo3EjIYzNsv0jT1wnFJp+TRELwRgJ1G
+yC1GsDzoUz86HsCQ2DaDyDtW4JJV3A==
+=eczq
+-----END PGP SIGNATURE-----
+
+--tl4v7hwjfkdh3za7--
