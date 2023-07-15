@@ -2,59 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B6D9754733
-	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 09:22:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3FD4754880
+	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 14:13:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbjGOHWZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 15 Jul 2023 03:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33382 "EHLO
+        id S229574AbjGOMNP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 15 Jul 2023 08:13:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229895AbjGOHWY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 03:22:24 -0400
+        with ESMTP id S229436AbjGOMNP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 08:13:15 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396D126BC
-        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 00:22:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F3A35BC
+        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 05:13:13 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qKZbW-0001bz-FF; Sat, 15 Jul 2023 09:22:10 +0200
+        id 1qKe91-0003DU-2e; Sat, 15 Jul 2023 14:13:03 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qKZbU-00EWXC-18; Sat, 15 Jul 2023 09:22:08 +0200
+        id 1qKe8x-00EZIu-9o; Sat, 15 Jul 2023 14:12:59 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qKZbT-0050eI-Ck; Sat, 15 Jul 2023 09:22:07 +0200
-Date:   Sat, 15 Jul 2023 09:22:03 +0200
+        id 1qKe8w-0053fu-6V; Sat, 15 Jul 2023 14:12:58 +0200
+Date:   Sat, 15 Jul 2023 14:12:53 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Jaewon Kim <jaewon02.kim@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Chanho Park <chanho61.park@samsung.com>
-Subject: Re: [PATCH v2 2/3] pwm: samsung: Add compatible for ExynosAutov9 SoC
-Message-ID: <20230715072203.ecz7wg4novvhpyuj@pengutronix.de>
-References: <20230714100929.94563-1-jaewon02.kim@samsung.com>
- <CGME20230714101434epcas2p3e2475698c527ca72dee797225d3dad37@epcas2p3.samsung.com>
- <20230714100929.94563-3-jaewon02.kim@samsung.com>
+To:     Guiting Shen <aarongt.shen@gmail.com>
+Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] pwm: atmel: Enable clk when pwm already enabled in
+ bootloader
+Message-ID: <20230715121253.gvhcszjoqxwh4gjz@pengutronix.de>
+References: <20230715023653.56872-1-aarongt.shen@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kqo2ocrcjovppqzr"
+        protocol="application/pgp-signature"; boundary="qyte6fnzbfe3tcpo"
 Content-Disposition: inline
-In-Reply-To: <20230714100929.94563-3-jaewon02.kim@samsung.com>
+In-Reply-To: <20230715023653.56872-1-aarongt.shen@gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -62,24 +56,91 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---kqo2ocrcjovppqzr
+--qyte6fnzbfe3tcpo
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Fri, Jul 14, 2023 at 07:09:28PM +0900, Jaewon Kim wrote:
-> Add new compatible string to support ExynosAutov9 SoC.
+On Sat, Jul 15, 2023 at 10:36:53AM +0800, Guiting Shen wrote:
+> The driver would never call clk_enable() if the PWM channel was already
+> enabled in bootloader which lead to dump the warning message "the PWM
+> clock already disabled" when turning off the PWM channel.
 >=20
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
+> the PWM channel was already enabled in bootloader.
+>=20
+> Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
+> ---
+>  drivers/pwm/pwm-atmel.c | 50 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 48 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> index cdbc23649032..4dd6e1319343 100644
+> --- a/drivers/pwm/pwm-atmel.c
+> +++ b/drivers/pwm/pwm-atmel.c
+> @@ -36,7 +36,7 @@
+>  #define PWM_SR			0x0C
+>  #define PWM_ISR			0x1C
+>  /* Bit field in SR */
+> -#define PWM_SR_ALL_CH_ON	0x0F
+> +#define PWM_SR_ALL_CH_MASK	0x0F
+> =20
+>  /* The following register is PWM channel related registers */
+>  #define PWM_CH_REG_OFFSET	0x200
+> @@ -464,6 +464,45 @@ static const struct of_device_id atmel_pwm_dt_ids[] =
+=3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
+> =20
+> +static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm, =
+bool on)
+> +{
+> +	unsigned int i, cnt =3D 0;
+> +	int ret =3D 0;
+> +	u32 sr;
+> +
+> +	sr =3D atmel_pwm_readl(atmel_pwm, PWM_SR) & PWM_SR_ALL_CH_MASK;
+> +	if (!sr)
+> +		return 0;
+> +
+> +	for (i =3D 0; i < atmel_pwm->chip.npwm; i++) {
+> +		if (sr & (1 << i))
+> +			cnt++;
+> +	}
 
-Looks good to me:
+If it's just about counting the set bits, there is the function
+bitmap_weight().
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> +	if (!on)
+> +		goto disable_clk;
+> +
+> +	for (i =3D 0; i < cnt; i++) {
+> +		ret =3D clk_enable(atmel_pwm->clk);
+> +		if (ret) {
+> +			dev_err(atmel_pwm->chip.dev,
+> +				"failed to enable clock for pwm #%d: %pe\n",
+> +							i, ERR_PTR(ret));
 
-What are the merge plans here? The whole series via pwm or a samsung
-tree? Or a mixture?
+The output is bogus here. If SR is say 0xc, and the second enable
+fails, it's about pwm #3, but then i is 1.
+
+> +			cnt =3D i;
+> +			goto disable_clk;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +disable_clk:
+> +	while (cnt--)
+> +		clk_disable(atmel_pwm->clk);
+> +
+> +	return ret;
+> +}
+> +
+>  static int atmel_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct atmel_pwm_chip *atmel_pwm;
 
 Best regards
 Uwe
@@ -88,19 +149,19 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---kqo2ocrcjovppqzr
+--qyte6fnzbfe3tcpo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSySRoACgkQj4D7WH0S
-/k5f/wgAopsGxq70NXlUC/uGjOQh4t7xUaf3gadY0sFhLBGjxS0NEH/2RD1NNS1N
-4lJ8+t1dK5M6u1JWjIFQUKmUrxtur1g5Ziy4JDOM76OV7s270E5tOTyeaeKwHzYU
-YD6vLY3GF98CM7Z8zfR+n9Ucxfsyj2MOAjxkmkGDCk9kkbye08szbkFc/+t28V94
-X3iMPkKrGTN9Kt2NMGBGQ/5ejqZOyeMDB7gioobTciTJO5uqtoaH6r82eLemfYTa
-4mLyg7EGxhrHLXic9TaXzQpRK4uSzWjvaBSVH6b0gHMQTdPoBwAjv9tNnv9omyUH
-EmuybPj4oWswBnqf4MzVux1vpDevCQ==
-=K4Ru
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSyjUUACgkQj4D7WH0S
+/k40lAf/TetcyCjfKtZR6x71B/fcDlAupMaT9uk53KRdVAYxj8JsWJbSyDywmLOI
+5LIwDVk+rbqGsSZO1Dwn8nrDPQBiCj6bo0OZwSVTRp/HiNiOEkN3nkXxDvEJr6Up
+YwmsxAhZZTUWqYKcSILhTufWTWVvTQ5Ma2tTshwFf3CUGGYBQnYze1ikokrAfIJO
+hPji7P+aiSjyfwMjg+l0I4FQV2br8zqAqPdBtPePrObErBQLAjS3NFqdDGgHhAwG
+CNb8HpYCBsZ18o+CPtp9fo8YA7+x99dYIu0S2gm1fD8iaU2v5A4dtBxoTREc4P9l
+EjEB9exdmwFUfi2bZ5J4i4+KI4yOpw==
+=wsAe
 -----END PGP SIGNATURE-----
 
---kqo2ocrcjovppqzr--
+--qyte6fnzbfe3tcpo--
