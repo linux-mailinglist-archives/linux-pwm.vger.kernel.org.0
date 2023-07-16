@@ -2,175 +2,180 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F346754EC6
-	for <lists+linux-pwm@lfdr.de>; Sun, 16 Jul 2023 15:17:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7E29754F92
+	for <lists+linux-pwm@lfdr.de>; Sun, 16 Jul 2023 18:08:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbjGPNRf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 16 Jul 2023 09:17:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55044 "EHLO
+        id S229920AbjGPQIc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 16 Jul 2023 12:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbjGPNRf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 16 Jul 2023 09:17:35 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2931E67
-        for <linux-pwm@vger.kernel.org>; Sun, 16 Jul 2023 06:17:33 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-31434226a2eso3772676f8f.1
-        for <linux-pwm@vger.kernel.org>; Sun, 16 Jul 2023 06:17:33 -0700 (PDT)
+        with ESMTP id S229617AbjGPQIb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 16 Jul 2023 12:08:31 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADECDE64
+        for <linux-pwm@vger.kernel.org>; Sun, 16 Jul 2023 09:08:28 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9923833737eso452469366b.3
+        for <linux-pwm@vger.kernel.org>; Sun, 16 Jul 2023 09:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1689513452; x=1692105452;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1689523707; x=1692115707;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bmfAeWrrqVPeSkZg9dIHhxIlmmrykDXgz8hEhOGRWN0=;
-        b=MREiTVSmpTvtlWDoIlnykkVP5hCOzf2VUc6KNugTi/EJt7VZdQkKy1tHyDYesyOoOP
-         Rh3FawYUbgltfUk8CEAquytvNggJeChn9X/ZWqY5yOph3rkyNopNC+w3DR/0g4BZd8e/
-         ubZALIWIDNzIZyYmEcvZuzMDAq6DJgM11b2jDbhr7z1sryX9GkMbsWfbF3AgkGcltJli
-         9F/TBnrDLsjSwkinoRaKJFm2uYWAEqNQQwJDCak8aZgsS57jFQnm3pYb9oHTGoSF3boa
-         mLQa0FmVRX4yVLur8SREnc4of1Ydi2FBUpJbSRe4dkXuHzJo/bbaiUf7X/djl06476L3
-         Z2nA==
+        bh=yFNOxCkZidbalN7CuyDDRpdo9zeZvLW7A53Aw1rLKbM=;
+        b=HE//uS2g8oJofWthSV32zbw+CJapJ/Tm9PZHDtSngUqz/r5XkJc+b4Tc0sLTaTvKec
+         zqJ00IlLi8lak5WeR8YLitYN3Bkzh817YQi9Bp7ypzpZB2bE3EEk+U+xjVZ695Bn+EPt
+         mERPLvOewkPUntu/559HrttHK4qFScRiUc8NPkyH4rEam7+/cn+U4N+UJkBVrQGoPJMV
+         tnzvlkqbfdhnGCGytVmUv+CPan6p/vMJHvJ/lFJ4uq/721YrER1nWvVr/45mHJkJttAy
+         6z2Hd9W8kMAP1CXmTvbfuQZbYSJwG5k0dgs0vQi6Iox0liE8LmiFvew9Hb13NsKLOVk5
+         CkUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689513452; x=1692105452;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1689523707; x=1692115707;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bmfAeWrrqVPeSkZg9dIHhxIlmmrykDXgz8hEhOGRWN0=;
-        b=bFX3nWpr1YIsobblKheLwSvi4neSNcg71acdSeiVr/W4M9x/aPTRuw2ebhW5pWmQgw
-         Nu1V4yQf+Onju2A9zcDIr1arLNS7s9ngQCJ7H9bMQhntlT8a2KNeSUshsLM+/AIHqpMT
-         ZLqAgg1flLvsyUDWjOhpEUvDi776xwljL58z8Ck1XfcqMRDKhiP20uBsub7Jc1B/eVXb
-         wFsCInn16rWSSBd/5W6SbS9lyrPgb+6aN9deQvDXGBgnjwEuiVYs0Rni3HgetEAOy2JX
-         abXeruQuDr/8Bq0ZYnyegVWOA+q0YDgrB7n+nimwmRw82tYfGeD06iFU4YkwYm4z65qB
-         OdCg==
-X-Gm-Message-State: ABy/qLY/uIgyYqmcw5q3hLkNzI7Dw3b8zDXG+wKo2ViUmaMuivIuxhD0
-        Xv9y1vmPqSnead0vzVFWPXaG8w==
-X-Google-Smtp-Source: APBJJlGJrdX/nLoqDtRSoOx1zIs/qfGhjHSgsRR/LbDY3E2Xp30BZn2AhG1gGcSP1SEb7/fOxsHVqw==
-X-Received: by 2002:a5d:4dcc:0:b0:314:385d:6099 with SMTP id f12-20020a5d4dcc000000b00314385d6099mr8997377wru.35.1689513452005;
-        Sun, 16 Jul 2023 06:17:32 -0700 (PDT)
-Received: from [10.0.2.15] ([82.78.167.79])
-        by smtp.gmail.com with ESMTPSA id t16-20020a5d49d0000000b003143bb5ecd5sm16436704wrs.69.2023.07.16.06.17.30
+        bh=yFNOxCkZidbalN7CuyDDRpdo9zeZvLW7A53Aw1rLKbM=;
+        b=lWDufnLH3v2U3gLkBo8ontaqrhO5lEUl9dUME2OkYgybHqJdvvWtXv8RZHWmOkecvh
+         BIeT8lj+HGLLn0t4ZvyeleER6Jrl3R7GLtqDRmqbONJuqPF7ObCLcWg115IZDPsPqHHe
+         no+Mi3Fq3NxrKucZPF76PC3A5BCgK3Bpq6vGfGTZ5mKa27bGextyWpPsGsJdK87wIGAB
+         2MmvEBhe33k3gwFtzipCAYqIwr7hB/kP+2tXFKxSdPOaoMz5/IDw9YJvixIZoF9jqCWG
+         PzlIYI3L4MUqBeJpDXcAs7ymqX9rSD8q7qiYaxdifgkmnAgbVg4qlQWg6j+hOgDnVk2K
+         pYOg==
+X-Gm-Message-State: ABy/qLYW4bdJXqBiAFLl6v0xQUroigYTUA8q2aPgkYOOqJ4z+Ja4Z1y5
+        T1d39qgGwF47TEcroBBPMB5/9w==
+X-Google-Smtp-Source: APBJJlGTep8KdTxvuPl0WnJS8vyPvSMZi8aDsQQ+H0L3EiFiiq2Ww4jKrPFs5gGwcbADlAqstdyWEA==
+X-Received: by 2002:a17:906:1114:b0:98e:4c96:6e1f with SMTP id h20-20020a170906111400b0098e4c966e1fmr9722967eja.69.1689523706778;
+        Sun, 16 Jul 2023 09:08:26 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170906230900b0099342c87775sm8124189eja.20.2023.07.16.09.08.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Jul 2023 06:17:31 -0700 (PDT)
-Message-ID: <8d9726de-a9e4-009d-44cc-57d362473bed@tuxon.dev>
-Date:   Sun, 16 Jul 2023 16:17:29 +0300
+        Sun, 16 Jul 2023 09:08:25 -0700 (PDT)
+Message-ID: <cf91edc9-1093-495b-48eb-6b05198c2541@linaro.org>
+Date:   Sun, 16 Jul 2023 18:08:23 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v6] pwm: atmel: Enable clk when pwm already enabled in
- bootloader
+Subject: Re: [v6 2/4] dt-bindings: hwmon: Add ASPEED TACH Control
+ documentation
+To:     =?UTF-8?B?6JSh5om/6YGU?= <billyking19920205@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     "jdelvare@suse.com" <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+References: <CAGUgbhCqOJaEPjS96o2au21uW4NhqFScm4Ayd8PzOQvqxQ94SQ@mail.gmail.com>
+ <0b9dd5cf-f4ca-2e6b-624d-0b451bbc2f30@linaro.org>
+ <0ba3767c-d481-6e2c-2d32-b79af0e1efd8@roeck-us.net>
+ <CAGUgbhC34-pUp4ECULc0ScaN7hUF1L-z69h+ji-TiVrv4gKd3Q@mail.gmail.com>
+ <7b198d57-ddec-3074-314a-3e5e5b8f48f9@roeck-us.net>
+ <CAGUgbhDbFedVe-pc+muD_NtDpjHpGqMDdrS3A73C-QbxeHn4oQ@mail.gmail.com>
 Content-Language: en-US
-To:     Guiting Shen <aarongt.shen@gmail.com>, claudiu.beznea@microchip.com
-Cc:     linux-pwm@vger.kernel.org, alexandre.belloni@bootlin.com,
-        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-References: <20230716020652.18557-1-aarongt.shen@gmail.com>
-From:   claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20230716020652.18557-1-aarongt.shen@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM,NICE_REPLY_A,
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAGUgbhDbFedVe-pc+muD_NtDpjHpGqMDdrS3A73C-QbxeHn4oQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 16.07.2023 05:06, Guiting Shen wrote:
-> The driver would never call clk_enable() if the PWM channel was already
-> enabled in bootloader which lead to dump the warning message "the PWM
-> clock already disabled" when turning off the PWM channel.
+On 14/07/2023 13:17, 蔡承達 wrote:
+> Guenter Roeck <linux@roeck-us.net> 於 2023年7月14日 週五 下午6:26寫道：
+>>
+>> On 7/14/23 03:18, 蔡承達 wrote:
+>>> Guenter Roeck <linux@roeck-us.net> 於 2023年7月14日 週五 下午5:59寫道：
+>>>>
+>>>> On 7/14/23 00:13, Krzysztof Kozlowski wrote:
+>>>>> On 14/07/2023 09:04, 蔡承達 wrote:
+>>>>>
+>>>>>>           > This is because our register layout for PWM and Tach is not
+>>>>>> continuous.
+>>>>>>
+>>>>>>           > PWM0 used 0x0 0x4, Tach0 used 0x8 0xc
+>>>>>>
+>>>>>>           > PWM1 used 0x10 0x14, Tach1 used 0x18 0x1c
+>>>>>>
+>>>>>>           > ...
+>>>>>>
+>>>>>>           > Each PWM/Tach instance has its own controller register and is not
+>>>>>> dependent on others.
+>>>>>
+>>>>> Your email reply quoting style is very difficult to read.
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Hi Guenter,
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Did you receive a response to my previous email?
+>>>>>>
+>>>>>> I would like to inquire if you have any further concerns regarding the PWM
+>>>>>> and Tach with 16 instances.
+>>>>>
+>>>>> But isn't like this in all PWMs in all SoCs?
+>>>>>
+>>>>
+>>>> Correct, pretty much every fan controller is implemented that way.
+>>>> I don't understand the logic.
+>>>>
+>>>
+>>> Hi Krzysztof and Guenter,
+>>>
+>>> Apologies for any confusion earlier.
+>>> So, you think that the implementation with 16 instances of TACH/PWM
+>>> device nodes in dts instead of one is ok to you, right?
+>>>
+>>
+>> Did I say that ? No, it is not ok with me. It is confusing and doesn't make
+>> sense to me. This is one fan controller with 16 channels, not 16 separate
+>> controllers.
+>>
 > 
-> Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
-> the PWM channel was already enabled in bootloader.
-> 
-> Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
+> This patch serial doesn't use to binding the fan control h/w. It is
+> used to binding the two independent h/w blocks.
+> One is used to provide pwm output and another is used to monitor the
+> speed of the input.
+> My patch is used to point out that the pwm and the tach is the
+> different function and don't need to
+> bind together. You can not only combine them as the fan usage but also
+> treat them as the individual module for
+> use. For example: the pwm can use to be the beeper (pwm-beeper.c), the
+> tach can be used to monitor the heart beat signal.
 
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Isn't this exactly the same as in every other SoC? PWMs can be used in
+different ways?
 
-> ---
->   drivers/pwm/pwm-atmel.c | 47 +++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 45 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index cdbc23649032..fc89282db645 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -36,7 +36,7 @@
->   #define PWM_SR			0x0C
->   #define PWM_ISR			0x1C
->   /* Bit field in SR */
-> -#define PWM_SR_ALL_CH_ON	0x0F
-> +#define PWM_SR_ALL_CH_MASK	0x0F
->   
->   /* The following register is PWM channel related registers */
->   #define PWM_CH_REG_OFFSET	0x200
-> @@ -464,6 +464,42 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
->   };
->   MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
->   
-> +static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm, bool on)
-> +{
-> +	unsigned int i, cnt = 0;
-> +	int ret = 0;
-> +	u32 sr;
-> +
-> +	sr = atmel_pwm_readl(atmel_pwm, PWM_SR) & PWM_SR_ALL_CH_MASK;
-> +	if (!sr)
-> +		return 0;
-> +
-> +	cnt = bitmap_weight((unsigned long *)&sr, atmel_pwm->chip.npwm);
-> +
-> +	if (!on)
-> +		goto disable_clk;
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		ret = clk_enable(atmel_pwm->clk);
-> +		if (ret) {
-> +			dev_err(atmel_pwm->chip.dev,
-> +				"failed to enable clock for pwm %pe\n",
-> +				ERR_PTR(ret));
-> +
-> +			cnt = i;
-> +			goto disable_clk;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	while (cnt--)
-> +		clk_disable(atmel_pwm->clk);
-> +
-> +	return ret;
-> +}
-> +
->   static int atmel_pwm_probe(struct platform_device *pdev)
->   {
->   	struct atmel_pwm_chip *atmel_pwm;
-> @@ -496,16 +532,23 @@ static int atmel_pwm_probe(struct platform_device *pdev)
->   	atmel_pwm->chip.ops = &atmel_pwm_ops;
->   	atmel_pwm->chip.npwm = 4;
->   
-> +	ret = atmel_pwm_enable_clk_if_on(atmel_pwm, true);
-> +	if (ret < 0)
-> +		goto unprepare_clk;
-> +
->   	ret = pwmchip_add(&atmel_pwm->chip);
->   	if (ret < 0) {
->   		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
-> -		goto unprepare_clk;
-> +		goto disable_clk;
->   	}
->   
->   	platform_set_drvdata(pdev, atmel_pwm);
->   
->   	return ret;
->   
-> +disable_clk:
-> +	atmel_pwm_enable_clk_if_on(atmel_pwm, false);
-> +
->   unprepare_clk:
->   	clk_unprepare(atmel_pwm->clk);
->   	return ret;
+Anyway, it is tricky to keep the discussion since you avoid posting
+entire DTS. I already said:
+
+"I will start NAKing such patches without DTS user. It's like reviewing
+fake code for some unknown solution and trying to get from you piece of
+answers one by one, because you do not want to share entire part."
+
+
+
+Best regards,
+Krzysztof
+
