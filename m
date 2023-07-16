@@ -2,57 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEB81754BDB
-	for <lists+linux-pwm@lfdr.de>; Sat, 15 Jul 2023 21:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB97E754D19
+	for <lists+linux-pwm@lfdr.de>; Sun, 16 Jul 2023 04:04:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbjGOTwE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 15 Jul 2023 15:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39928 "EHLO
+        id S229632AbjGPCD7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 15 Jul 2023 22:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjGOTwD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 15:52:03 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23624E5C
-        for <linux-pwm@vger.kernel.org>; Sat, 15 Jul 2023 12:52:02 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qKlJA-00044x-JJ; Sat, 15 Jul 2023 21:52:00 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qKlJ9-00Edgc-2g; Sat, 15 Jul 2023 21:51:59 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qKlJ7-0058U7-RP; Sat, 15 Jul 2023 21:51:57 +0200
-Date:   Sat, 15 Jul 2023 21:51:56 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ben.dooks@codethink.co.uk,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        jarkko.nikula@linux.intel.com,
-        William Salmon <william.salmon@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: Re: [PATCH v8 5/5] pwm: dwc: add of/platform support
-Message-ID: <20230715195156.fahd2btntvbqpd66@pengutronix.de>
-References: <20230614171457.69191-1-ben.dooks@sifive.com>
- <20230614171457.69191-6-ben.dooks@sifive.com>
+        with ESMTP id S229460AbjGPCD6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 15 Jul 2023 22:03:58 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6BC26BC;
+        Sat, 15 Jul 2023 19:03:57 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-66767d628e2so2177517b3a.2;
+        Sat, 15 Jul 2023 19:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689473037; x=1692065037;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fN1+B9rujjxMw1qUBg2KMt93qZtXYxGTcSrggvR1cyI=;
+        b=DMTq/CDj5lnEkF5AI7MFu46NGv6cH1/1r3J7Ms1dTQJ3u2E8P3Cr+XYKLm5Mk2bJdz
+         mBAYZx8jwR+Ac62jHV/299RhG0Lh5eO/nf1wEKY6OkJL+Uvvn0/wRIUQ9Jse6OMzi9aT
+         BsnozozdfUNxbXvpgsqlJc2dGcy8JMxODu8iTkii2JNHAXKSU6MpYmoM7uVDj8q1qt+c
+         PA4yxwDTp9NTCuVoIKCRERPe952oHSHaRJAXC/dKyoOuW9xb3eeJcSLpjD+iaCDAC986
+         C300uyjnJg1GcgbRXaX9VNsPBLIHdNmH1Wx2Hw5h71j+hjrvikOOPY9ThiCEjMR7UiY0
+         G5bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689473037; x=1692065037;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fN1+B9rujjxMw1qUBg2KMt93qZtXYxGTcSrggvR1cyI=;
+        b=D+hwdauKAh1ReU3p8P+CBPTk1aR3ppAGB1cp0Kk4m/2JtjEfk1XnR/tIcSxrZnjRVE
+         yz7tI3J78YQtOWHRCJBdz/LUeMDW64bLSuNcmlUKjxdgXTHryisn6jNVX5ytuctaz+/6
+         lgaeGY82nnfQFoVKHaK3c+7gBktZJ7nAeukGrmxxjjxvXEvwTGK3hE/sqxwwFiyVyGnd
+         J7iw5xiPadwfemgB/BhrmOm7uMgOJvfqxDIuSCs7qtfcLRmj5CN201noSjcuhB7oWTgU
+         xTbOOeXTN7sixruVuEQF7J/Cd1Vq+BTRXQvp/qDsKqSPdpy2oeOkZcHXTsE+/hoNIxLQ
+         kwew==
+X-Gm-Message-State: ABy/qLbVi8RfRSwkwlEw1FhN6N1ASdc0rH11yvdBCNnz6SMI10CfzCCS
+        aFAjL/PSsI2nQNoqBoWDdc8=
+X-Google-Smtp-Source: APBJJlHh3l7nMx/Z3ghRrpGo+77oJordFcXeo2vYt64bsJ5/5fmPdoyk6ruDCTHKMbsulGIDe0ixig==
+X-Received: by 2002:a05:6a00:2d01:b0:66d:263f:d923 with SMTP id fa1-20020a056a002d0100b0066d263fd923mr10153782pfb.20.1689473036830;
+        Sat, 15 Jul 2023 19:03:56 -0700 (PDT)
+Received: from [192.168.1.5] ([121.32.71.42])
+        by smtp.gmail.com with ESMTPSA id q1-20020a656a81000000b00553dcfc2179sm9129942pgu.52.2023.07.15.19.03.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Jul 2023 19:03:56 -0700 (PDT)
+Message-ID: <db6ba884-7125-c2bb-de65-83b2f980e7a1@gmail.com>
+Date:   Sun, 16 Jul 2023 10:03:30 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uk3g2pfod6i5g7sl"
-Content-Disposition: inline
-In-Reply-To: <20230614171457.69191-6-ben.dooks@sifive.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v5] pwm: atmel: Enable clk when pwm already enabled in
+ bootloader
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     claudiu.beznea@microchip.com, thierry.reding@gmail.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230715023653.56872-1-aarongt.shen@gmail.com>
+ <20230715121253.gvhcszjoqxwh4gjz@pengutronix.de>
+From:   Guiting Shen <aarongt.shen@gmail.com>
+In-Reply-To: <20230715121253.gvhcszjoqxwh4gjz@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -60,229 +79,99 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---uk3g2pfod6i5g7sl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 14, 2023 at 06:14:57PM +0100, Ben Dooks wrote:
-> The dwc pwm controller can be used in non-PCI systems, so allow
-> either platform or OF based probing.
+On Sat,Jul 15,2023 at 20:12:53PM GMT+8, Uwe Kleine-König wrote:
+> On Sat, Jul 15, 2023 at 10:36:53AM +0800, Guiting Shen wrote:
+>> The driver would never call clk_enable() if the PWM channel was already
+>> enabled in bootloader which lead to dump the warning message "the PWM
+>> clock already disabled" when turning off the PWM channel.
+>>
+>> Add atmel_pwm_enable_clk_if_on() in probe function to enable clock if
+>> the PWM channel was already enabled in bootloader.
+>>
+>> Signed-off-by: Guiting Shen <aarongt.shen@gmail.com>
+>> ---
+>>   drivers/pwm/pwm-atmel.c | 50 +++++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 48 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+>> index cdbc23649032..4dd6e1319343 100644
+>> --- a/drivers/pwm/pwm-atmel.c
+>> +++ b/drivers/pwm/pwm-atmel.c
+>> @@ -36,7 +36,7 @@
+>>   #define PWM_SR			0x0C
+>>   #define PWM_ISR			0x1C
+>>   /* Bit field in SR */
+>> -#define PWM_SR_ALL_CH_ON	0x0F
+>> +#define PWM_SR_ALL_CH_MASK	0x0F
+>>   
+>>   /* The following register is PWM channel related registers */
+>>   #define PWM_CH_REG_OFFSET	0x200
+>> @@ -464,6 +464,45 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
+>>   
+>> +static int atmel_pwm_enable_clk_if_on(struct atmel_pwm_chip *atmel_pwm, bool on)
+>> +{
+>> +	unsigned int i, cnt = 0;
+>> +	int ret = 0;
+>> +	u32 sr;
+>> +
+>> +	sr = atmel_pwm_readl(atmel_pwm, PWM_SR) & PWM_SR_ALL_CH_MASK;
+>> +	if (!sr)
+>> +		return 0;
+>> +
+>> +	for (i = 0; i < atmel_pwm->chip.npwm; i++) {
+>> +		if (sr & (1 << i))
+>> +			cnt++;
+>> +	}
+> 
+> If it's just about counting the set bits, there is the function
+> bitmap_weight().
 
-A document describing the binding is needed here.
+Got it, Thank you.
 
->=20
-> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-> ---
-> v8:
->  - add compile test for of-case
->  - add module namespace
->  - move later in the series
-> v7:
->  - fixup kconfig from previous pcie changes
-> v5:
->  - fix missing " in kconfig
->  - remove .remove method, devm already sorts this.
->  - merge pwm-number code
->  - split the of code out of the core
->  - get bus clock
-> v4:
->  - moved the compile test code earlier
->  - fixed review comments
->  - used NS_PER_SEC
->  - use devm_clk_get_enabled
->  - ensure we get the bus clock
-> v3:
->  - changed compatible name
-> ---
->  drivers/pwm/Kconfig        | 10 +++++
->  drivers/pwm/Makefile       |  1 +
->  drivers/pwm/pwm-dwc-core.c |  6 +++
->  drivers/pwm/pwm-dwc-of.c   | 78 ++++++++++++++++++++++++++++++++++++++
->  drivers/pwm/pwm-dwc.c      |  1 +
->  drivers/pwm/pwm-dwc.h      |  1 +
->  6 files changed, 97 insertions(+)
->  create mode 100644 drivers/pwm/pwm-dwc-of.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 7c54cdcb97a0..61f5d3f30fd7 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -205,6 +205,16 @@ config PWM_DWC
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-dwc.
-> =20
-> +config PWM_DWC_OF
-> +	tristate "DesignWare PWM Controller (OF bus)"
-> +	depends on HAS_IOMEM && (OF || COMPILE_TEST)
-> +	select PWM_DWC_CORE
-> +	help
-> +	  PWM driver for Synopsys DWC PWM Controller on an OF bus.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-dwc-of.
-> +
->  config PWM_EP93XX
->  	tristate "Cirrus Logic EP93xx PWM support"
->  	depends on ARCH_EP93XX || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index de3ed77e8d7c..d27dfbb850b7 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -17,6 +17,7 @@ obj-$(CONFIG_PWM_CRC)		+=3D pwm-crc.o
->  obj-$(CONFIG_PWM_CROS_EC)	+=3D pwm-cros-ec.o
->  obj-$(CONFIG_PWM_DWC_CORE)	+=3D pwm-dwc-core.o
->  obj-$(CONFIG_PWM_DWC)		+=3D pwm-dwc.o
-> +obj-$(CONFIG_PWM_DWC_OF)	+=3D pwm-dwc-of.o
->  obj-$(CONFIG_PWM_EP93XX)	+=3D pwm-ep93xx.o
->  obj-$(CONFIG_PWM_FSL_FTM)	+=3D pwm-fsl-ftm.o
->  obj-$(CONFIG_PWM_HIBVT)		+=3D pwm-hibvt.o
-> diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
-> index 0f07e26e6c30..ed102fc4b30a 100644
-> --- a/drivers/pwm/pwm-dwc-core.c
-> +++ b/drivers/pwm/pwm-dwc-core.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/clk.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pwm.h>
-> =20
-> @@ -44,6 +45,9 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dw=
-c,
->  	u32 high;
->  	u32 low;
-> =20
-> +	if (dwc->clk)
-> +		dwc->clk_rate =3D clk_get_rate(dwc->clk);
-> +
->  	/*
->  	 * Calculate width of low and high period in terms of input clock
->  	 * periods and check are the result within HW limits between 1 and
-> @@ -128,6 +132,8 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
-> =20
->  	pm_runtime_get_sync(chip->dev);
-> =20
-> +	if (dwc->clk)
-> +		dwc->clk_rate =3D clk_get_rate(dwc->clk);
->  	clk_rate =3D dwc->clk_rate;
-> =20
->  	ctrl =3D dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
-> diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
-> new file mode 100644
-> index 000000000000..13a0b534b383
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-dwc-of.c
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * DesignWare PWM Controller driver OF
-> + *
-> + * Copyright (C) 2022 SiFive, Inc.
-> + */
-> +
-> +#define DEFAULT_MODULE_NAMESACE dwc_pwm
 
-missing P? I'd have put this into drivers/pwm/pwm-dwc.h.
+>> +	if (!on)
+>> +		goto disable_clk;
+>> +
+>> +	for (i = 0; i < cnt; i++) {
+>> +		ret = clk_enable(atmel_pwm->clk);
+>> +		if (ret) {
+>> +			dev_err(atmel_pwm->chip.dev,
+>> +				"failed to enable clock for pwm #%d: %pe\n",
+>> +							i, ERR_PTR(ret));
+> 
+> The output is bogus here. If SR is say 0xc, and the second enable
+> fails, it's about pwm #3, but then i is 1.
 
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/export.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/clk.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pwm.h>
-> +#include <linux/io.h>
-> +
-> +#include "pwm-dwc.h"
-> +
-> +static int dwc_pwm_plat_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct dwc_pwm *dwc;
-> +	struct clk *bus;
-> +	u32 nr_pwm;
-> +
-> +	dwc =3D dwc_pwm_alloc(dev);
-> +	if (!dwc)
-> +		return -ENOMEM;
-> +
-> +	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
-> +		if (nr_pwm > DWC_TIMERS_TOTAL)
-> +			dev_err(dev, "too many PWMs (%d) specified, capping at %d\n",
-> +				nr_pwm, dwc->chip.npwm);
-> +		else
-> +			dwc->chip.npwm =3D nr_pwm;
-> +	}
-> +
-> +	dwc->base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(dwc->base))
-> +		return PTR_ERR(dwc->base);
-> +
-> +	bus =3D devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(bus))
-> +		return dev_err_probe(dev, PTR_ERR(bus),
-> +				     "failed to get clock\n");
-> +
-> +	dwc->clk =3D devm_clk_get_enabled(dev, "timer");
-> +	if (IS_ERR(dwc->clk))
-> +		return dev_err_probe(dev, PTR_ERR(dwc->clk),
-> +				     "failed to get timer clock\n");
-> +
-> +	dwc->clk_rate =3D clk_get_rate(dwc->clk);
+I would just output the error clock message like this to fix it:
+	dev_err(atmel_pwm->chip.dev,
+		"failed to enable clock for pwm %pe\n", ERR_PTR(ret));
 
-Do you need this here? Isn't clk_rate assigned each time it's used when
-clk !=3D NULL?
 
-> +	return devm_pwmchip_add(dev, &dwc->chip);
-> +}
-> +
-> +static const struct of_device_id dwc_pwm_dt_ids[] =3D {
-> +	{ .compatible =3D "snps,dw-apb-timers-pwm2" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, dwc_pwm_dt_ids);
-> +
-> +static struct platform_driver dwc_pwm_plat_driver =3D {
-> +	.driver =3D {
-> +		.name		=3D "dwc-pwm",
-> +		.of_match_table  =3D dwc_pwm_dt_ids,
-> +	},
-> +	.probe	=3D dwc_pwm_plat_probe,
-> +};
-> +
-> +module_platform_driver(dwc_pwm_plat_driver);
-> +
-> +MODULE_ALIAS("platform:dwc-pwm-of");
-> +MODULE_AUTHOR("Ben Dooks <ben.dooks@sifive.com>");
+>> +			cnt = i;
+>> +			goto disable_clk;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +disable_clk:
+>> +	while (cnt--)
+>> +		clk_disable(atmel_pwm->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static int atmel_pwm_probe(struct platform_device *pdev)
+>>   {
+>>   	struct atmel_pwm_chip *atmel_pwm;
+> 
+> Best regards
+> Uwe
+> 
 
-Given that this email address is (or soon will be) unavailable, maybe
-better put your codethink address here?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---uk3g2pfod6i5g7sl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSy+NsACgkQj4D7WH0S
-/k4BVQgAgfQrkmy+1RRLl6Zk0usiTE06K0JbHbbmLLWB3uN8Cvs93wmS6zP+Fj87
-rvkghgOBWnxYNK85RLDvG7ywrEsahkXJhfgJlVtqYsT4JysZCTwqUzr8Ewd7id75
-mCrdJbEOfHENR7C0TvJ5Zg4sW+TDDTnNCAm4p6wvb9Wkj3+F7IUwnQ0SFqWlaGt0
-2ORJsKR/bLjK3389fIhBCuU0XMrAg+7l6ypk2Q4nqrfqzFYP7+w+oQhJU1TFcli3
-4Be0CErhKkiTfzWiVSatzRYWtM4ylvH7O7hwgC8FEG2PwbuzoQKjJtCKeQf1qT/p
-jpfiiIGI/5LFOguflEhupNKS6DGO5g==
-=22Se
------END PGP SIGNATURE-----
-
---uk3g2pfod6i5g7sl--
+-- 
+Best regards,
+Guiting Shen
