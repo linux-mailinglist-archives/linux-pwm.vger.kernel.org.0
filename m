@@ -2,176 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A569755F88
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jul 2023 11:41:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F96C755FBD
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jul 2023 11:47:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjGQJlG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Jul 2023 05:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45594 "EHLO
+        id S229608AbjGQJrf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 17 Jul 2023 05:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbjGQJkp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 05:40:45 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEB73C26
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 02:39:05 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so11403094a12.1
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 02:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689586744; x=1692178744;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W0Abj6UC9IBcOuGYotmVfSuiZNB5aYWz62cWUjDEEUg=;
-        b=oNVQ4IxLU5eX07C5sklU29DxI6u6wg6e2WB+o1jYa8ec1pIsG+BAHCXbIxFDRp3qTl
-         /dzmITQUrQQAtrbiRbTKZ7mq/rdWdu+IY4bT2jTa5aUo9wx6WkrAvvLb0bRSd7M0ZydQ
-         b29rvFfZZGyNnhzH4VVO4rGTo0TGUdB9O6a27CQXtCHKjU0W1AvEl5NC9OA7pA5Ua0WT
-         2QAa11Z87kgv9ExsFKCWzMZMoLOgRhBMS8YGxwsV7sbWrTqGIVGhrip83rrcvyfi851o
-         rJzoec2YkfyS05pvyryJhBl8FoshXHTLwU2JZW7ssjAP1OaNkbGfKIRVXNLz5N+4DxLD
-         lKcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689586744; x=1692178744;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W0Abj6UC9IBcOuGYotmVfSuiZNB5aYWz62cWUjDEEUg=;
-        b=huyeQXKzr6mVe+aDLKgd/fSEDAcqKxNwuGJMdIgeRQ1EyblN8MWua1mTsjZclqznBn
-         NcWxk8jqIeIOSgU2OKau0b2DOWisrJVRDGO5gtMr+wdBdpVFSayRxMmz5Pma56MkI88S
-         TDgmSzeAN2wUbHBYZkQQfwbETntMP5VU/3fXKUU9tVlgwRvpkYP/gLjbPv32VG9cH8Z5
-         lousfSM4ynUzDeIRIBCiLk4EOT1A32KmiCFciqem0PHix2A6qETblgHFsDXTQ9HoP1Xt
-         8zPDrb0VraNeSOkCSLp0VfUT1/nYeUm+uzr/u2ztgG4qOL5nfeUWuS+ehtntKsEoZyXy
-         DbOQ==
-X-Gm-Message-State: ABy/qLZnmOoYhuVN0P72MxKMYLoMxW++K4yfyRZTaRXhAbUJ8spvQY9K
-        l2EVnjtTwp0e1/P9ZwhCiSCwd5JUyz9T832+G7P6Dg==
-X-Google-Smtp-Source: APBJJlESrTNaJcx/BujEXJeNKPZNlBYFJGnbXsuE/wnWYk8Pltb8LBwpD6Msb01kwBYC5AzGsjQodw==
-X-Received: by 2002:a17:906:28a:b0:988:15f4:fdba with SMTP id 10-20020a170906028a00b0098815f4fdbamr12038269ejf.14.1689586744230;
-        Mon, 17 Jul 2023 02:39:04 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id ov4-20020a170906fc0400b00992b50fbbe9sm9051066ejb.90.2023.07.17.02.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 02:39:03 -0700 (PDT)
-Message-ID: <b22b2ccc-6760-0db6-067b-109c3864d2e8@linaro.org>
-Date:   Mon, 17 Jul 2023 11:39:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [v6 2/4] dt-bindings: hwmon: Add ASPEED TACH Control
- documentation
-To:     =?UTF-8?B?6JSh5om/6YGU?= <billyking19920205@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     "jdelvare@suse.com" <jdelvare@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
-References: <CAGUgbhCqOJaEPjS96o2au21uW4NhqFScm4Ayd8PzOQvqxQ94SQ@mail.gmail.com>
- <0b9dd5cf-f4ca-2e6b-624d-0b451bbc2f30@linaro.org>
- <0ba3767c-d481-6e2c-2d32-b79af0e1efd8@roeck-us.net>
- <CAGUgbhC34-pUp4ECULc0ScaN7hUF1L-z69h+ji-TiVrv4gKd3Q@mail.gmail.com>
- <7b198d57-ddec-3074-314a-3e5e5b8f48f9@roeck-us.net>
- <CAGUgbhDbFedVe-pc+muD_NtDpjHpGqMDdrS3A73C-QbxeHn4oQ@mail.gmail.com>
- <cf91edc9-1093-495b-48eb-6b05198c2541@linaro.org>
- <7a69bda1-5f4c-5b1f-8eb6-6fd58917a9b1@roeck-us.net>
- <CAGUgbhCTDPGt_vpbfaEreX+iuLJ3WUBqt4kppxyaFZQus9Zf0Q@mail.gmail.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAGUgbhCTDPGt_vpbfaEreX+iuLJ3WUBqt4kppxyaFZQus9Zf0Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S230394AbjGQJrc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 05:47:32 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F1FE5A
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 02:47:27 -0700 (PDT)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230717094723epoutp01da46cb0cef1431ee23933bc35eabf311~ynqVXBh4V2410524105epoutp01u
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 09:47:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230717094723epoutp01da46cb0cef1431ee23933bc35eabf311~ynqVXBh4V2410524105epoutp01u
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1689587243;
+        bh=hSqi/S35ojzEsEC+p5nu+EzlKrVijorLEKMPbYfHXpg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=K4cKYjgtCUEt9ufdWZfRB/AnHWTIUFbWgRe+ASecWcOe8LB5st4XFILg1iGls+3Ud
+         Vjp4CHpN4U+vpHAb6jCXkKQ+Er+uA2hnkJB/HA0oQuWzd8Z24OV7O2oRTtf4VjvQnb
+         HCDoTOzYAC0xrmnFwY+2tips9IK7u4CeyCw73D+U=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20230717094722epcas2p297c26ec37231df8fd3bead09540ff81f~ynqU6Su_p1018810188epcas2p2z;
+        Mon, 17 Jul 2023 09:47:22 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.98]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4R4HLL2jLrz4x9Pt; Mon, 17 Jul
+        2023 09:47:22 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.59.55279.A2E05B46; Mon, 17 Jul 2023 18:47:22 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20230717094721epcas2p238ffd2f218899dc3c43f3fe68a079c54~ynqUHDVwr0714307143epcas2p2F;
+        Mon, 17 Jul 2023 09:47:21 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230717094721epsmtrp11dfc1c9e10223d1b1301c41c62ffc27a~ynqUGPqQu2680726807epsmtrp1h;
+        Mon, 17 Jul 2023 09:47:21 +0000 (GMT)
+X-AuditID: b6c32a43-557fb7000001d7ef-f1-64b50e2a5c96
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4E.0D.30535.92E05B46; Mon, 17 Jul 2023 18:47:21 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.55]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230717094721epsmtip2104abcd272e0805cd0afccce9cab3eee~ynqT4FX080585405854epsmtip2n;
+        Mon, 17 Jul 2023 09:47:21 +0000 (GMT)
+From:   Jaewon Kim <jaewon02.kim@samsung.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH v4 0/2] support PWM for exynosautov9
+Date:   Mon, 17 Jul 2023 18:42:00 +0900
+Message-Id: <20230717094202.18296-1-jaewon02.kim@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIKsWRmVeSWpSXmKPExsWy7bCmqa4W39YUg+sdghYP5m1js1iz9xyT
+        xfwj51gtdjQcYbXoe/GQ2WLT42usFpd3zWGzuHt3FaPFjPP7mCxa9x5ht/i5ax6Lxe2Jkxkd
+        eDx2zrrL7rFpVSebx51re9g8Ni+p9+j/a+DRt2UVo8fnTXIB7FHZNhmpiSmpRQqpecn5KZl5
+        6bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAdyoplCXmlAKFAhKLi5X07WyK8ktL
+        UhUy8otLbJVSC1JyCswL9IoTc4tL89L18lJLrAwNDIxMgQoTsjN+rzvLXvCdpeLhpG6WBsaf
+        zF2MnBwSAiYS784uYuti5OIQEtjBKLH59UMo5xOjxOm3N6Gcb4wSH1+dYYRp6T68mAkisZdR
+        omnvHlYI5yOjxPTOmywgVWwC2hLf1y9mBbFFBBYySTy7XwZSxCxwmlFi7a0nYEXCQKMen1oM
+        dgmLgKrE5nOrwRp4BWwljt04wwqxTl5i9YYDzCDNEgL32CV+zu2ASrhIvN/8jAnCFpZ4dXwL
+        O4QtJfGyvw3KzpZon/4Hqr5C4uKG2WwQtrHErGftQP9wAF2kKbF+lz6IKSGgLHHkFthpzAJ8
+        Eh2H/7JDhHklOtqEIBrVJO5PPQc1REZi0pGVUAd4SPRtfQD2iZBArMS1HRPZJzDKzkKYv4CR
+        cRWjWGpBcW56arJRgSE8lpLzczcxgtOelvMOxivz/+kdYmTiYDzEKMHBrCTC+33VphQh3pTE
+        yqrUovz4otKc1OJDjKbA4JrILCWanA9MvHkl8YYmlgYmZmaG5kamBuZK4rz3WuemCAmkJ5ak
+        ZqemFqQWwfQxcXBKNTDt5+aa/9vvhld1ZvyZ3m2b3Sun7Q8LmFn7omJGQu76pwU7uGKvfjs9
+        /dPRLbJFL5qrjijK/fFolfd/1LZj18e9HNvkBTc5aZZM0Aj92DWrYGmoyDW9EMOPiW4smT8n
+        nfoa2pnBtujX+n+Vxstt7y9jYlKPZJ8jceWxRfblYPMZ+1TO/zaYfSQvJsF1evvJUynPX1ZV
+        9B9x3fNEVG++cUrsk8ZY35/JJmcslzqta5haINuyQZhjzvEbdRfOif/Z3P/KocijsVKtXeiU
+        0IbSopiKi9O6q6fOmBG/6tPZD+karv/d9ijvnrlE4HjBt5/60Ys3JNSf4r4XcjDx+5c4Md8F
+        rXO3tesxqwnemC3NL+eqxFKckWioxVxUnAgAEfojhAQEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrELMWRmVeSWpSXmKPExsWy7bCSvK4m39YUgzmz9CwezNvGZrFm7zkm
+        i/lHzrFa7Gg4wmrR9+Ihs8Wmx9dYLS7vmsNmcffuKkaLGef3MVm07j3CbvFz1zwWi9sTJzM6
+        8HjsnHWX3WPTqk42jzvX9rB5bF5S79H/18Cjb8sqRo/Pm+QC2KO4bFJSczLLUov07RK4Mn6v
+        O8te8J2l4uGkbpYGxp/MXYycHBICJhLdhxczdTFycQgJ7GaU+PBlCTtEQkZi+bM+NghbWOJ+
+        yxFWiKL3jBKHWz+zgiTYBLQlvq9fDJYQEVjMJPGm+yGYwyxwkVHixJ8rYKOEgXY8PrUYbB+L
+        gKrE5nOrwbp5BWwljt04wwqxQl5i9YYDzBMYeRYwMqxilEwtKM5Nzy02LDDKSy3XK07MLS7N
+        S9dLzs/dxAgORi2tHYx7Vn3QO8TIxMF4iFGCg1lJhPf7qk0pQrwpiZVVqUX58UWlOanFhxil
+        OViUxHm/ve5NERJITyxJzU5NLUgtgskycXBKNTBZ/rbfeExq8xfpR965v7533vAKmFo4uWn1
+        6+fTI/h+nlr64LadP/ekOfverf9X8OuVdfmGntvxi5ab6S3Xk4vy0ZL6ILb3+BmTZ/uWHlut
+        E6dj26Oz4sfvq14twl7lQb1Var8Kjq2X8udxeGCU93CvVfgDzfJzLyorA4Pi2o+9rpklZ+eQ
+        pPsy1ufpgfMCO/MuSBo91k3fbREk+WmvZnpFsIKm2/0nQutYLv26J7PycMP3sPwjjYayrZuL
+        n5o+0OY5u0hm6wNJ85ebjh1X+1/uYpUjwCDn9iRhkfWCrTOuN5ycNNPG7uUdu+v9Eun5zGq+
+        eZPDTqy+ev5Z+pR0prXV9h5cp2+ZLL5i6Mc1v+yqEktxRqKhFnNRcSIAkZiUVrUCAAA=
+X-CMS-MailID: 20230717094721epcas2p238ffd2f218899dc3c43f3fe68a079c54
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230717094721epcas2p238ffd2f218899dc3c43f3fe68a079c54
+References: <CGME20230717094721epcas2p238ffd2f218899dc3c43f3fe68a079c54@epcas2p2.samsung.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17/07/2023 11:01, 蔡承達 wrote:
-> Guenter Roeck <linux@roeck-us.net> 於 2023年7月17日 週一 上午1:00寫道：
->>
->> On 7/16/23 09:08, Krzysztof Kozlowski wrote:
->>
->> [ ... ]
->>
->>>>
->>>> This patch serial doesn't use to binding the fan control h/w. It is
->>>> used to binding the two independent h/w blocks.
->>>> One is used to provide pwm output and another is used to monitor the
->>>> speed of the input.
->>>> My patch is used to point out that the pwm and the tach is the
->>>> different function and don't need to
->>>> bind together. You can not only combine them as the fan usage but also
->>>> treat them as the individual module for
->>>> use. For example: the pwm can use to be the beeper (pwm-beeper.c), the
->>>> tach can be used to monitor the heart beat signal.
->>>
->>> Isn't this exactly the same as in every other SoC? PWMs can be used in
->>> different ways?
->>>
->>
->> ... and in every fan controller. Not that it really makes sense because
->> normally the pwm controller part of such chips is tied to the fan input,
->> to enable automatic fan control, but it is technically possible.
->> In many cases this is also the case in SoCs, for example, in ast2500.
->> Apparently this was redesigned in ast2600 where they two blocks are
->> only lightly coupled (there are two pwm status bits in the fan status
->> register, but I have no idea what those mean). If the blocks are tightly
->> coupled, separate drivers don't really make sense.
->>
->> There are multiple ways to separate the pwm controller part from the
->> fan inputs if that is really necessary. One would be to provide a
->> sequence of address mappings, the other would be to pass the memory
->> region from an mfd driver. It is not necessary to have N instances
->> of the fan controller, even if the address space is not continuous.
->>
-> 
-> Hi Guenter,
-> 
-> May I ask about the meaning of the sequence of address mappings? It appears
-> to consist of multiple tuples within the 'reg' property, indicating
-> the usage of PWM/Tach
-> registers within a single instance. After that I can use the dts like following:
-> 
-> pwm: pwm@1e610000 {
-> ...
-> reg = <0x1e610000 0x8
-> 0x1e610010 0x8
-> 0x1e610020 0x8
-> 0x1e610030 0x8
-> 0x1e610040 0x8
-> 0x1e610050 0x8
-> 0x1e610060 0x8
-> 0x1e610070 0x8
-> 0x1e610080 0x8
-> 0x1e610090 0x8
-> 0x1e6100A0 0x8
-> 0x1e6100B0 0x8
-> 0x1e6100C0 0x8
-> 0x1e6100D0 0x8
-> 0x1e6100E0 0x8
-> 0x1e6100F0 0x8>;
+Add pwm nodes to support PWM fan on exynosautov9-sadk board.
 
+---
+Changes in v4:
+ - add document file.
 
-Uh, no... I mean, why? We keep pointing out that this should not be done
-differently than any other SoC. Open any other SoC PWM controller and
-tell me why this is different? Why this cannot be one address space?
+Changes in v3:
+ - removed adding compatible to driver.
 
-Best regards,
-Krzysztof
+Changes in v2:
+ - add compatible string to driver.
+
+Jaewon Kim (2):
+  dt-bindings: pwm: samsung: add exynosautov9 compatible
+  arm64: dts: exynos: add pwm node for exynosautov9-sadk
+
+ .../devicetree/bindings/pwm/pwm-samsung.yaml     | 16 ++++++++++------
+ arch/arm64/boot/dts/exynos/exynosautov9-sadk.dts |  6 ++++++
+ arch/arm64/boot/dts/exynos/exynosautov9.dtsi     | 10 ++++++++++
+ 3 files changed, 26 insertions(+), 6 deletions(-)
+
+-- 
+2.17.1
 
