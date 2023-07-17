@@ -2,136 +2,113 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2698275629F
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jul 2023 14:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F27A756653
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jul 2023 16:28:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbjGQMXF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Jul 2023 08:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
+        id S231193AbjGQO2I (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 17 Jul 2023 10:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjGQMXE (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 08:23:04 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D535CD8
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 05:23:02 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9891c73e0fbso910223866b.1
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 05:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689596581; x=1692188581;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2vhwu1zp3S5PiRdDu32pUjkHXYPNpSh6XO9BtN9Bqmk=;
-        b=x8Kpuu7atosaYgXr1dMB4cVtN0RBwRi9X2gwVon76DSiXtTX2vvl23/e5Svst2LMSL
-         ixVyWJ/mvM/mxMBMFHgiGZuxaXrxuce+QMW3iFsWK/5UHiLWpPvQ30p2fPuXezclwT5u
-         JwQ9JD+HZhA24SSm73STxLXKlzHYSGgSDoXy7pemnb7O2TCa/HkDGYY+Mu9SVen1VfHJ
-         R2T80S64RwZy9CXAlDjxrDJzVxxQuPSWzhFeDlrqIJoVxpqeSVssAbIhDRcsYgPmviyO
-         /+2IHLKIEd4GFmKMwaJBHMZvV1G8BNagDL4NRvHx+PO5KQnBlcJQ11fFwvvybNrFxVEs
-         fxNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689596581; x=1692188581;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2vhwu1zp3S5PiRdDu32pUjkHXYPNpSh6XO9BtN9Bqmk=;
-        b=JF7JSs+FfeuNU0ST/gUw9DqjxQHvGJlJJgvh1gzDQS1+Cq6pwy3muSgcLVCM8thmZL
-         Ms42sNfOKHn4u24DXQm0aUk6lc2up/JkVZ/fgR+TgI4DyQl8QCGX+/CnokFadSHmKlt8
-         +Doqg5AXPYnv4Mu30fKTrkYNoEWweFeD29IJsLCPNluAZI+sPXtS+0/Sj8ujB0JkPA9r
-         p+j5IJlB5CoKGFagIVsjsdUKMsqdv/NpCG9mzOPDuK7iQ198J9+st2uwehtbgn3IhDqp
-         iqognoYP3AD17hZ1ASDgcIot5qAkSdgL0dESvO5oe8jkoQ7cEjh4zJmaBeR++bmBv7SK
-         mjuw==
-X-Gm-Message-State: ABy/qLYMsgXgIFc1kxFDGiRW1CFZC6R9gCWLJfCXpNyjAD4SSdBEmXW2
-        niHEDqPgLr94cxHEV+jtpE69Hw==
-X-Google-Smtp-Source: APBJJlHPBiZufczBjnjB/8OgazGqsfTjzsPvN3r4urbCM8aFAGsuynBEWcPDR8TS01nu7v5Oot8HmA==
-X-Received: by 2002:a17:906:2d1:b0:994:5457:269e with SMTP id 17-20020a17090602d100b009945457269emr9126055ejk.0.1689596581219;
-        Mon, 17 Jul 2023 05:23:01 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id y27-20020a1709063a9b00b00992ca779f42sm9171089ejd.97.2023.07.17.05.22.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 05:23:00 -0700 (PDT)
-Message-ID: <5b5299b6-a0b9-2ece-6c8c-5374ec18cd1c@linaro.org>
-Date:   Mon, 17 Jul 2023 14:22:58 +0200
+        with ESMTP id S231790AbjGQO2E (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 10:28:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F7DE4F
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 07:28:02 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLPCb-0003bC-SL; Mon, 17 Jul 2023 16:27:53 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLPCa-0009vu-S8; Mon, 17 Jul 2023 16:27:52 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLPCa-005cIf-5a; Mon, 17 Jul 2023 16:27:52 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>
+Cc:     Jason Gunthorpe <jgunthorpe@obsidianresearch.com>,
+        Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
+        Ralph Sennhauser <ralph.sennhauser@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] gpio: mvebu: Make use of devm_pwmchip_add
+Date:   Mon, 17 Jul 2023 16:27:43 +0200
+Message-Id: <20230717142743.2555739-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4 1/2] dt-bindings: pwm: samsung: add exynosautov9
- compatible
-Content-Language: en-US
-To:     Jaewon Kim <jaewon02.kim@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <20230717094202.18296-1-jaewon02.kim@samsung.com>
- <CGME20230717094721epcas2p1c5c1254e24d4a1d0fb366e1b4d551536@epcas2p1.samsung.com>
- <20230717094202.18296-2-jaewon02.kim@samsung.com>
- <9b09afec-4e0e-a600-92e1-2104a1b2e36e@linaro.org>
- <68aacadd-f27d-76d3-36a1-78f5662ecb97@samsung.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <68aacadd-f27d-76d3-36a1-78f5662ecb97@samsung.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1587; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ejT5aQfyA6pTJ5H2R38jzRs4Yj8LSNb3pnMNxNOdQXA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBktU/cZJijdnTRp4/hOtMpOlsUGVrnLTOM0CRqU RPmgdC3RFWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZLVP3AAKCRCPgPtYfRL+ TioqB/9KNmCU+lO7rs8CcBvE1XEZZtttTPSQSkCXa5kt9mJxFeOhkcrRevOx2HEDjZqc4rQkFWJ tmafWkI0rZ6xg+AWUBFTQA2O10NVi6XuZ1EOQD27AIw3VrcpyUNDiI8vnQMPOOrAAG2wvNST92a Ir7KGEnE5HztL8rqkUhww5ZyzqGI7B4t3sMKv4MwDKhybJJCPK+fYMSYaKzmshx/751KnPVHlWL 1ct/VwDs2aTDqzd6GbSrRt4llCai+iLws6DXf2K3ugHNLHKHJdya3uSR4SdkgmujPR0Ovm7pmkV nUi9B6B9kuxFr/kYcX/xNuMLgwc0+M5CuLdl4TG3DlPQgovP
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17/07/2023 13:26, Jaewon Kim wrote:
-> 
-> On 23. 7. 17. 19:59, Krzysztof Kozlowski wrote:
->> On 17/07/2023 11:42, Jaewon Kim wrote:
->>> Add samsung,exynosautov9-pwm compatible string to binding document.
->>>
->>> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
->>> ---
->>>   .../devicetree/bindings/pwm/pwm-samsung.yaml     | 16 ++++++++++------
->>>   1 file changed, 10 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
->>> index fe603fb1b2cc..6f65e2b52f52 100644
->>> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
->>> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
->>> @@ -20,12 +20,16 @@ description: |+
->>>   
->>>   properties:
->>>     compatible:
->>> -    enum:
->>> -      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
->>> -      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
->>> -      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
->>> -      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
->>> -      - samsung,exynos4210-pwm          # 32-bit, Exynos
->>> +    oneOf:
->>> +      - const: samsung,s3c2410-pwm        # 16-bit
->>> +      - const: samsung,s3c6400-pwm        # 32-bit, S3C64xx
->>> +      - const: samsung,s5p6440-pwm        # 32-bit, S5P64x0
->>> +      - const: samsung,s5pc100-pwm        # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
->>> +      - const: samsung,exynos4210-pwm     # 32-bit, Exynos
->> These are still an enum.
-> Okay I will change const to enum.
->>
->>> +      - items:
->>> +          - enum:
->>> +              - samsung,exynosautov9-pwm  # 32-bit, ExynosAutov9
->> Let's drop the comment?
-> 
-> Should I just delete this comment or delete all comments in the 
-> enum(16-bit,S3C24xx, .....).
+This allows to get rid of a call to pwmchip_remove() in the error path. There
+is no .remove function for this driver, so this change fixes a resource leak
+when a gpio-mvebu device is unbound.
 
-No, the other can stay. Here it is redundant, since Autov9 is obvious -
-comes from compatible - and rest is coming from compatibility with older
-models.
+Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Best regards,
-Krzysztof
+Note that irq_domain_remove() also isn't called so there is another
+resource leak introduced by 812d47889a8e ("gpio/mvebu: Use
+irq_domain_add_linear")
+
+ drivers/gpio/gpio-mvebu.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a68f682aec01..a35958e7adf6 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -874,7 +874,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 
+ 	spin_lock_init(&mvpwm->lock);
+ 
+-	return pwmchip_add(&mvpwm->chip);
++	return devm_pwmchip_add(dev, &mvpwm->chip);
+ }
+ 
+ #ifdef CONFIG_DEBUG_FS
+@@ -1243,8 +1243,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	if (!mvchip->domain) {
+ 		dev_err(&pdev->dev, "couldn't allocate irq domain %s (DT).\n",
+ 			mvchip->chip.label);
+-		err = -ENODEV;
+-		goto err_pwm;
++		return -ENODEV;
+ 	}
+ 
+ 	err = irq_alloc_domain_generic_chips(
+@@ -1296,9 +1295,6 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 
+ err_domain:
+ 	irq_domain_remove(mvchip->domain);
+-err_pwm:
+-	pwmchip_remove(&mvchip->mvpwm->chip);
+-
+ 	return err;
+ }
+ 
+
+base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
+-- 
+2.39.2
 
