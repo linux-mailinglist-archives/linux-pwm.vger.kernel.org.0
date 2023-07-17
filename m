@@ -2,49 +2,100 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07DCF756858
-	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jul 2023 17:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1C5975688E
+	for <lists+linux-pwm@lfdr.de>; Mon, 17 Jul 2023 18:00:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231833AbjGQPxM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Jul 2023 11:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48502 "EHLO
+        id S230322AbjGQQAa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 17 Jul 2023 12:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231706AbjGQPxL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 11:53:11 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1950713D
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 08:53:09 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qLQX5-0006fv-Uc; Mon, 17 Jul 2023 17:53:07 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qLQX5-000AcV-48; Mon, 17 Jul 2023 17:53:07 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qLQX4-005dR2-Eo; Mon, 17 Jul 2023 17:53:06 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pwm: lpc32xx: remove handling of PWM channels
-Date:   Mon, 17 Jul 2023 17:52:57 +0200
-Message-Id: <20230717155257.2568627-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229793AbjGQQAa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 12:00:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB8ED8;
+        Mon, 17 Jul 2023 09:00:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ED8D261138;
+        Mon, 17 Jul 2023 16:00:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EDEDC433CB;
+        Mon, 17 Jul 2023 16:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689609627;
+        bh=dZQcAw1zSoJbieoMVSknj3lKolfzlek5nECTMuXlJTI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kev7TG2o9s8LS1U/OrbHxP2+DikpEYtenqHzdUHa+C5S0uRyXnW5U6HBWbWDoDXQI
+         HGuFTdRhkqm+GwCuyGUiQCrQIBnNUsB43hwdyHSN8YFnaj7h/DGE77zsXN5/+VMP/L
+         YZNJDo3H5Rte1xRxXFxY/vQafP1OutAKGHgMHhaOjddTl8pfPhKoOStSUpOiHr1dKy
+         9Esfh+1CxXaorLzzKihoO8Sl3pYodrhThchtNG/BLLJFkFde3kvadEvySbQHCQTsrX
+         oku76bkYJnNGA5Z2PWzj46Y85htWLlOTNocpmM9fMndXvi310760mH+GIq47ReDgB7
+         lKnqY07zhEUHg==
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-3fb4146e8ceso42833265e9.0;
+        Mon, 17 Jul 2023 09:00:27 -0700 (PDT)
+X-Gm-Message-State: ABy/qLYrILw4++OlF9rO+0zeQF4CnqP8Y7EW6iCauwfX8Ga2UycNufgR
+        dOBdtzWZIhI+SuI6Nai2NeIfD6QB2geIIFcP3g==
+X-Google-Smtp-Source: APBJJlHA4mgilySogAP42lUQSMVRT/qbV5Oma2JALtCafuqV/cUjtluoVPGDaYM362s9DRx6+5c70nlKH/JRTpSuRMY=
+X-Received: by 2002:a2e:9206:0:b0:2b7:15d:24 with SMTP id k6-20020a2e9206000000b002b7015d0024mr9106273ljg.41.1689609605034;
+ Mon, 17 Jul 2023 09:00:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3022; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=zatuQth9EAY08kesXmS74oQHMHnj/bDngN3aPGB3Oog=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBktWPYRg0BCaK6FgzEhjrhgGUZueH7EfcEssZ9g eMgnRXRPCmJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZLVj2AAKCRCPgPtYfRL+ TuMOB/9ptm3p2NQj4YiS2VxQREWCaLbFxmMhdCUet51Oa+HIY4NS7IPKpik9oLbj5npe8n5FyAJ Gdwu1AR6LlpTKKxWvCidrtOSiO1WeTVTaWb3oOIkJEaIsFZ7PuVnP9T/hsjRDZN5N5c8ecZe9II 9szA9wXL2d9G5ZQ8uyp8ICOWR3p/8sE2GEN9Z+yeAAc7YuekL6R/mMa1LCsaMY/jgY77B74ju1T BD5JfB2z1gwqWEKLlIhCdY656am2rx3QvU9+z/qwcfGIQqTwTXYRYbQaNokRtuDGyXn8nAPS6Fb mSAWWd7XMcTtNCDK8P0iranUnXv49Ceh5bcI/m1y8NbRiK5O
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+References: <20230714174852.4062251-1-robh@kernel.org> <20230717074352.dz3ex7fwi77loayc@pengutronix.de>
+In-Reply-To: <20230717074352.dz3ex7fwi77loayc@pengutronix.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 17 Jul 2023 09:59:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKDGeDrK6-cgsZpcpmAvQN-SVUv+W1nJRRiYD3BGAj-_g@mail.gmail.com>
+Message-ID: <CAL_JsqKDGeDrK6-cgsZpcpmAvQN-SVUv+W1nJRRiYD3BGAj-_g@mail.gmail.com>
+Subject: Re: [PATCH] pwm: Explicitly include correct DT includes
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Walle <michael@walle.cc>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        chrome-platform@lists.linux.dev, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        asahi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,92 +104,146 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+On Mon, Jul 17, 2023 at 1:44=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Fri, Jul 14, 2023 at 11:48:50AM -0600, Rob Herring wrote:
+> > The DT of_device.h and of_platform.h date back to the separate
+> > of_platform_bus_type before it as merged into the regular platform bus.
+> > As part of that merge prepping Arm DT support 13 years ago, they
+> > "temporarily" include each other. They also include platform_device.h
+> > and of.h. As a result, there's a pretty much random mix of those includ=
+e
+> > files used throughout the tree. In order to detangle these headers and
+> > replace the implicit includes with struct declarations, users need to
+> > explicitly include the correct includes.
+>
+> so the eventual goal here is to prepare for:
+>
+>  - drop #include <linux/of_device.h> from include/linux/of_platform.h
+>  - drop #include <linux/of.h> from include/linux/of_device.h
+>  - drop #include <linux/of_platform.h> from include/linux/of_device.h
+>  - drop #include <linux/platform_device.h> from include/linux/of_device.h
+>  - drop #include <linux/platform_device.h> from include/linux/of_platform=
+.h
 
-Because LPC32xx PWM controllers have only a single output which is
-registered as the only PWM device/channel per controller, it is known in
-advance that pwm->hwpwm value is always 0. On basis of this fact
-simplify the code by removing operations with pwm->hwpwm, there is no
-controls which require channel number as input.
+Yes.
 
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  drivers/pwm/core.c               | 1 +
+> >  drivers/pwm/pwm-apple.c          | 1 +
+> >  drivers/pwm/pwm-atmel-hlcdc.c    | 1 +
+> >  drivers/pwm/pwm-atmel-tcb.c      | 3 +--
+> >  drivers/pwm/pwm-atmel.c          | 1 -
+> >  drivers/pwm/pwm-berlin.c         | 1 +
+> >  drivers/pwm/pwm-cros-ec.c        | 1 +
+> >  drivers/pwm/pwm-fsl-ftm.c        | 3 +--
+> >  drivers/pwm/pwm-hibvt.c          | 2 +-
+> >  drivers/pwm/pwm-imx1.c           | 1 -
+> >  drivers/pwm/pwm-jz4740.c         | 2 +-
+> >  drivers/pwm/pwm-lp3943.c         | 1 +
+> >  drivers/pwm/pwm-lpc18xx-sct.c    | 1 +
+> >  drivers/pwm/pwm-mediatek.c       | 1 -
+> >  drivers/pwm/pwm-meson.c          | 1 -
+> >  drivers/pwm/pwm-microchip-core.c | 2 +-
+> >  drivers/pwm/pwm-mtk-disp.c       | 1 -
+> >  drivers/pwm/pwm-pxa.c            | 1 +
+> >  drivers/pwm/pwm-sifive.c         | 1 +
+> >  drivers/pwm/pwm-sl28cpld.c       | 1 +
+> >  drivers/pwm/pwm-sprd.c           | 1 +
+> >  drivers/pwm/pwm-sun4i.c          | 1 -
+> >  drivers/pwm/pwm-sunplus.c        | 1 +
+> >  drivers/pwm/pwm-tegra.c          | 1 -
+> >  drivers/pwm/pwm-tiecap.c         | 2 +-
+> >  drivers/pwm/pwm-tiehrpwm.c       | 2 +-
+> >  drivers/pwm/pwm-visconti.c       | 2 +-
+> >  drivers/pwm/pwm-vt8500.c         | 5 +----
+> >  28 files changed, 21 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > index 3dacceaef4a9..d37617c60eae 100644
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -8,6 +8,7 @@
+> >
+> >  #include <linux/acpi.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of.h>
+> >  #include <linux/pwm.h>
+> >  #include <linux/radix-tree.h>
+> >  #include <linux/list.h>
+>
+> This file includes neither of_device.h nor of_platform.h and up to now
+> gets of.h via <linux/pwm.h>.
 
-this is a patch that was submitted before by Vladimir in 2016[1]. I
-stumbled over hwpwm always being 0 while doing some restructuring of all
-pwm drivers. I thought this wasn't the first time I diagnosed this and
-while searching for such a patch by me, I found Vladimir's :-)
+Indeed.
 
-I added "only a" to the commit log and rebased to v6.5-rc1. I considered
-adding
-[ukl: improved wording of commit log and rebase to v6.5-rc1]
-to the commit log, but the adaptions seemed too trivial to me.
+> What is your plan for <linux/pwm.h>'s include? I think it would only need
+>
+>         struct of_phandle_args;
 
-Best regards
-Uwe
+Here's what I'm testing with:
 
-[1] https://lore.kernel.org/linux-pwm/20161205014308.1741-2-vz@mleia.com
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 04ae1d9073a7..5a59a7d53be8 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -4,8 +4,10 @@
 
- drivers/pwm/pwm-lpc32xx.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ #include <linux/err.h>
+ #include <linux/mutex.h>
+-#include <linux/of.h>
 
-diff --git a/drivers/pwm/pwm-lpc32xx.c b/drivers/pwm/pwm-lpc32xx.c
-index 86a0ea0f6955..806f0bb3ad6d 100644
---- a/drivers/pwm/pwm-lpc32xx.c
-+++ b/drivers/pwm/pwm-lpc32xx.c
-@@ -51,10 +51,10 @@ static int lpc32xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (duty_cycles > 255)
- 		duty_cycles = 255;
- 
--	val = readl(lpc32xx->base + (pwm->hwpwm << 2));
-+	val = readl(lpc32xx->base);
- 	val &= ~0xFFFF;
- 	val |= (period_cycles << 8) | duty_cycles;
--	writel(val, lpc32xx->base + (pwm->hwpwm << 2));
-+	writel(val, lpc32xx->base);
- 
- 	return 0;
- }
-@@ -69,9 +69,9 @@ static int lpc32xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	if (ret)
- 		return ret;
- 
--	val = readl(lpc32xx->base + (pwm->hwpwm << 2));
-+	val = readl(lpc32xx->base);
- 	val |= PWM_ENABLE;
--	writel(val, lpc32xx->base + (pwm->hwpwm << 2));
-+	writel(val, lpc32xx->base);
- 
- 	return 0;
- }
-@@ -81,9 +81,9 @@ static void lpc32xx_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct lpc32xx_pwm_chip *lpc32xx = to_lpc32xx_pwm_chip(chip);
- 	u32 val;
- 
--	val = readl(lpc32xx->base + (pwm->hwpwm << 2));
-+	val = readl(lpc32xx->base);
- 	val &= ~PWM_ENABLE;
--	writel(val, lpc32xx->base + (pwm->hwpwm << 2));
-+	writel(val, lpc32xx->base);
- 
- 	clk_disable_unprepare(lpc32xx->clk);
- }
-@@ -141,9 +141,9 @@ static int lpc32xx_pwm_probe(struct platform_device *pdev)
- 	lpc32xx->chip.npwm = 1;
- 
- 	/* If PWM is disabled, configure the output to the default value */
--	val = readl(lpc32xx->base + (lpc32xx->chip.pwms[0].hwpwm << 2));
-+	val = readl(lpc32xx->base);
- 	val &= ~PWM_PIN_LEVEL;
--	writel(val, lpc32xx->base + (lpc32xx->chip.pwms[0].hwpwm << 2));
-+	writel(val, lpc32xx->base);
- 
- 	ret = devm_pwmchip_add(&pdev->dev, &lpc32xx->chip);
- 	if (ret < 0) {
++struct device;
++struct fwnode_handle;
++struct of_phandle_args;
+ struct pwm_chip;
 
-base-commit: fdf0eaf11452d72945af31804e2a1048ee1b574c
--- 
-2.39.2
+ /**
 
+>
+> to replace that. (But that would need another patch like this one, as
+> then e.g. drivers/pwm/pwm-sl28cpld.c fails to compile because
+> device_property_read_u32() is undeclared. It would need to #include
+> <linux/property.h> which now it gets transitively via <linux/of.h>.)
+
+property.h is added in this patch, so it should be okay?
+
+> If <linux/pwm.h> is planed to continue #including <linux/of.h>, the
+> explicit include here isn't necessary (and probably elsewhere).
+
+I would like to drop including of.h, but probably not this cycle.
+Either way, I thought kernel best practice was to not rely on implicit
+includes.
+
+BTW, linux/i2c.h is another source of lots of implicit of.h includes.
+That one looks like we can't get rid of.
+
+> I don't care much either way, but maybe your quest would be a bit
+> simpler if you only touch files that include the two files you want to
+> modify?
+
+Yes, that's how it started. I kind of decided it wasn't worth trying
+to split things up by every separate reason explicit includes were not
+correct.
+
+>
+> *shrug*, this patch is still an improvement so:
+>
+> Acked-by: Uwe Kleine-K=C3=B6ng <u.kleine-koenig@pengutronix.de>
+>
+> Another thing I wonder is: How did you identify the files that need
+> these includes. I guess you have a list of types for each header and
+> search for files that use any of the types but doesn't include the
+> respecitve header? I wonder if tracking this type -> header mapping in
+> machine readable form somewhere would be nice, to e.g. make checkpatch
+> warn if a file uses struct of_node but only gets it by chance?
+
+It's been less automated than I'd like. It's been a lot of grepping
+with a list of symbols the headers provide. For example, I get all the
+files including of_device.h and then get the ones with no symbols from
+of_device.h. And then do a manual review of what are the correct
+headers for the file. And then run thru builds and fix all the issues.
+
+Rob
