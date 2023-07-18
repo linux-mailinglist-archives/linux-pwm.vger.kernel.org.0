@@ -2,221 +2,142 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 737E6757AC3
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 13:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8660757B41
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 14:06:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231421AbjGRLoK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 07:44:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
+        id S232287AbjGRMGG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 18 Jul 2023 08:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232229AbjGRLnv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 07:43:51 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6AD10FE;
-        Tue, 18 Jul 2023 04:43:48 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-5216569f9e3so6157795a12.0;
-        Tue, 18 Jul 2023 04:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689680626; x=1692272626;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=trXL8e/lwqtV++Zs9uqD1Gu9wHh+J65evfBXtcfp+yA=;
-        b=GDYG4LOZ2qE7YG9Glyfm7uLRWc85jvebxYBI5piT/qzB93y9nrXEFAoEfAkeCCyyOr
-         PYICI6kWPmKMBgoZ6gvu5ZmN027t8C7Yrus7IKcQPKh7IdN7CABiuQHUj0heXf93JlWe
-         tTBBKFsKPj6lun6TUIn9+eb7z4surJaO9my5sdTq0e5/d3QD2Eeki8Ach9CCQ7wHBXAc
-         NGa9KKH4V1QzLvMEmVUJWWTby7+YFcxaETFIgNvYM5ZUfmMwsordFei8ayo2CEwTVbR+
-         dj+8+3MAFLLMh02DTESQxQvy83+x6vITjJqllZWsvmzNT3SuTbXS9MLWsEN1R2YF+c4Q
-         26Yw==
+        with ESMTP id S232307AbjGRMGD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 08:06:03 -0400
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56C0172D;
+        Tue, 18 Jul 2023 05:05:56 -0700 (PDT)
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-563439ea4a2so3535118eaf.0;
+        Tue, 18 Jul 2023 05:05:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689680626; x=1692272626;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1689681955; x=1692273955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=trXL8e/lwqtV++Zs9uqD1Gu9wHh+J65evfBXtcfp+yA=;
-        b=Vn0OQ6CYUlV8wusf9TXUpLxITsRA/CR8AKlKCjxvtgD2EVj/GhY7595dLby/iRdgTi
-         faRwgQox/RxOMimA+jgfB8LYmIUyTaq+L4X80EmZYKIc+VWVJ27cZPRO+lIT1g04R42a
-         scV+REHXn1He4IzQV+9wsSmZ3zlUgvumq6ADc1x/tOw7XDfDa/UuqfnqnZ9Tr3M2Y9gw
-         vBPv70k64cC7K4eq+UY0odpvGXE+lStNR4i9e3wO7+/cWCb1y7WqcT0m2zRWk7qny2Xj
-         mEWFVFF6IzpbYF9fPIeVUavZCuwPOgomgwKbxDtnGrhiNUoxhmIu3Ak6XIcOuVndNHVf
-         cANQ==
-X-Gm-Message-State: ABy/qLb5y2Q5oe1eEmsIcdgNKcGmcjaX/pJeMkZhUdDUBobKXk15eMvm
-        yo6c98aNR0xcL9eauHH1ujrGM8ERc7k=
-X-Google-Smtp-Source: APBJJlGVvi0RJtGwTkMeNsK0KOdN+gFWQ9SPwhKnes/9dgPDRxTAvufJv7csFAyhElWIjPR04Y7Gpw==
-X-Received: by 2002:a17:906:7a0b:b0:994:4ebe:7a6d with SMTP id d11-20020a1709067a0b00b009944ebe7a6dmr12027850ejo.19.1689680626290;
-        Tue, 18 Jul 2023 04:43:46 -0700 (PDT)
-Received: from orome (p200300e41f4b7100f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4b:7100:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id z20-20020a17090665d400b00997e99a662bsm30358ejn.20.2023.07.18.04.43.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 04:43:45 -0700 (PDT)
-Date:   Tue, 18 Jul 2023 13:43:44 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Randy Dunlap <rd.dunlab@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
-Message-ID: <ZLZ68OUizlOqoZmn@orome>
-References: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
- <OS0PR01MB5922D3163524299B94166B178638A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+        bh=mruK4CcEV2Y+7wEbISBr4ytxp2ssbiMoV3xOD12S4I8=;
+        b=lvblrOylRBFqpXVZnDt4NqAxFB3kvsk0p2TclTCMgUkespSP1ifvggA1Vbod67MUi+
+         Psi9UfFmiEfe8MJa86CcA9wMtV8/pX277VH3+lhgLsR1Ds52sBnH0n86xD5aBW4LMlVs
+         sFTYHAO+iaj74yhyNvmnJf7Oai5LLwYO52MIjqjlJ7CeRhleOQDKRaX0xJLkKd85g8m/
+         QEZ/8VJZUoLdrZjmqEXAKgMBqSPEVoNxM8GeTYl0VD805s3PfC1Z95gMtBG4aUxews6X
+         AyPy7Ob3LzZSc8dy727ulrYi5PAXBltAZxx5IOwgtCGmVEaPR4q24yVH8HuiUm3CAT+M
+         TD6w==
+X-Gm-Message-State: ABy/qLarLKdMOJDFuCceVmJbt/VbLgBNxj8iAAsp51O//UFhOaKgtK/r
+        BuJaOtbQ3rItUe9VCOHKdjZovCE/DsbHOQ==
+X-Google-Smtp-Source: APBJJlHhImNcKZgCFXK4b0vF8NcrTrJGaqfHx7r82sTtY89HWzUG94MvWpFBkNfzSw6kJCAInnjNlw==
+X-Received: by 2002:a05:6808:14d6:b0:3a3:f932:4b80 with SMTP id f22-20020a05680814d600b003a3f9324b80mr17597390oiw.5.1689681955319;
+        Tue, 18 Jul 2023 05:05:55 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id a84-20020a0dd857000000b0057a560a9832sm428194ywe.1.2023.07.18.05.05.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jul 2023 05:05:55 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-c4cb4919bb9so5576042276.3;
+        Tue, 18 Jul 2023 05:05:55 -0700 (PDT)
+X-Received: by 2002:a25:f81f:0:b0:c4e:3060:41f5 with SMTP id
+ u31-20020a25f81f000000b00c4e306041f5mr13037468ybd.33.1689681954806; Tue, 18
+ Jul 2023 05:05:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="D90jt/TQ2RxVcnZA"
-Content-Disposition: inline
-In-Reply-To: <OS0PR01MB5922D3163524299B94166B178638A@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
+In-Reply-To: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Jul 2023 14:05:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV-wu_XHy_qYGM+_UOAXN8etip731WxmgEmbQdv+SPwbw@mail.gmail.com>
+Message-ID: <CAMuHMdV-wu_XHy_qYGM+_UOAXN8etip731WxmgEmbQdv+SPwbw@mail.gmail.com>
+Subject: Re: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
+To:     Randy Dunlap <rd.dunlab@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Randy,
 
---D90jt/TQ2RxVcnZA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 18, 2023 at 8:44 AM Randy Dunlap <rd.dunlab@gmail.com> wrote:
+> From: Randy Dunlap <rd.dunlab@gmail.com>
+>
+> When (MFD) RZ_MTU3=m and PWM_RZ_MTU3=y, there are numerous build errors:
+>
+> ld: vmlinux.o: in function `rz_mtu3_pwm_config':
+> drivers/pwm/pwm-rz-mtu3.c:374: undefined reference to `rz_mtu3_disable'
+> ld: drivers/pwm/pwm-rz-mtu3.c:377: undefined reference to `rz_mtu3_8bit_ch_write'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
+> drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to `rz_mtu3_16bit_ch_write'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_config':
+> drivers/pwm/pwm-rz-mtu3.c:382: undefined reference to `rz_mtu3_8bit_ch_write'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
+> drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to `rz_mtu3_16bit_ch_write'
+> ld: drivers/pwm/pwm-rz-mtu3.c:111: undefined reference to `rz_mtu3_16bit_ch_write'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_config':
+> drivers/pwm/pwm-rz-mtu3.c:397: undefined reference to `rz_mtu3_enable'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_disable':
+> drivers/pwm/pwm-rz-mtu3.c:259: undefined reference to `rz_mtu3_8bit_ch_write'
+> ld: drivers/pwm/pwm-rz-mtu3.c:264: undefined reference to `rz_mtu3_disable'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_enable':
+> drivers/pwm/pwm-rz-mtu3.c:230: undefined reference to `rz_mtu3_8bit_ch_write'
+> ld: drivers/pwm/pwm-rz-mtu3.c:234: undefined reference to `rz_mtu3_8bit_ch_write'
+> ld: drivers/pwm/pwm-rz-mtu3.c:238: undefined reference to `rz_mtu3_enable'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_is_ch_enabled':
+> drivers/pwm/pwm-rz-mtu3.c:155: undefined reference to `rz_mtu3_is_enabled'
+> ld: drivers/pwm/pwm-rz-mtu3.c:162: undefined reference to `rz_mtu3_8bit_ch_read'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_read_tgr_registers':
+> drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to `rz_mtu3_16bit_ch_read'
+> ld: drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to `rz_mtu3_16bit_ch_read'
+> ld: drivers/pwm/pwm-rz-mtu3.c:103: undefined reference to `rz_mtu3_16bit_ch_read'
+> ld: vmlinux.o: in function `rz_mtu3_pwm_get_state':
+> drivers/pwm/pwm-rz-mtu3.c:296: undefined reference to `rz_mtu3_8bit_ch_read'
+>
+> Modify the dependencies of PWM_RZ_MTU3 so that COMPILE_TEST is
+> still allowed but PWM_RZ_MTU3 depends on RZ_MTU3 if it is being built
+> but also allow the latter not to be built.
+>
+> Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
+> Signed-off-by: Randy Dunlap <rd.dunlab@gmail.com
 
-On Tue, Jul 18, 2023 at 11:26:28AM +0000, Biju Das wrote:
-> Hi Randy,
->=20
-> > -----Original Message-----
-> > From: Randy Dunlap <rd.dunlab@gmail.com>
-> > Sent: Tuesday, July 18, 2023 7:41 AM
-> > To: linux-kernel@vger.kernel.org; linux-pwm@vger.kernel.org
-> > Cc: Biju Das <biju.das.jz@bp.renesas.com>; Thierry Reding
-> > <thierry.reding@gmail.com>; Uwe Kleine-K=C3=B6nig <u.kleine-
-> > koenig@pengutronix.de>
-> > Subject: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
-> >=20
-> > From: Randy Dunlap <rd.dunlab@gmail.com>
-> >=20
-> > When (MFD) RZ_MTU3=3Dm and PWM_RZ_MTU3=3Dy, there are numerous build er=
-rors:
-> >=20
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_config':
-> > drivers/pwm/pwm-rz-mtu3.c:374: undefined reference to `rz_mtu3_disable'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:377: undefined reference to
-> > `rz_mtu3_8bit_ch_write'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
-> > drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to
-> > `rz_mtu3_16bit_ch_write'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_config':
-> > drivers/pwm/pwm-rz-mtu3.c:382: undefined reference to
-> > `rz_mtu3_8bit_ch_write'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
-> > drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to
-> > `rz_mtu3_16bit_ch_write'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:111: undefined reference to
-> > `rz_mtu3_16bit_ch_write'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_config':
-> > drivers/pwm/pwm-rz-mtu3.c:397: undefined reference to `rz_mtu3_enable'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_disable':
-> > drivers/pwm/pwm-rz-mtu3.c:259: undefined reference to
-> > `rz_mtu3_8bit_ch_write'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:264: undefined reference to
-> > `rz_mtu3_disable'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_enable':
-> > drivers/pwm/pwm-rz-mtu3.c:230: undefined reference to
-> > `rz_mtu3_8bit_ch_write'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:234: undefined reference to
-> > `rz_mtu3_8bit_ch_write'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:238: undefined reference to `rz_mtu3_enab=
-le'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_is_ch_enabled':
-> > drivers/pwm/pwm-rz-mtu3.c:155: undefined reference to `rz_mtu3_is_enabl=
-ed'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:162: undefined reference to
-> > `rz_mtu3_8bit_ch_read'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_read_tgr_registers':
-> > drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to
-> > `rz_mtu3_16bit_ch_read'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to
-> > `rz_mtu3_16bit_ch_read'
-> > ld: drivers/pwm/pwm-rz-mtu3.c:103: undefined reference to
-> > `rz_mtu3_16bit_ch_read'
-> > ld: vmlinux.o: in function `rz_mtu3_pwm_get_state':
-> > drivers/pwm/pwm-rz-mtu3.c:296: undefined reference to
-> > `rz_mtu3_8bit_ch_read'
-> >=20
-> > Modify the dependencies of PWM_RZ_MTU3 so that COMPILE_TEST is still
-> > allowed but PWM_RZ_MTU3 depends on RZ_MTU3 if it is being built but also
-> > allow the latter not to be built.
-> >=20
-> > Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
-> > Signed-off-by: Randy Dunlap <rd.dunlab@gmail.com
-> > Cc: Biju Das <biju.das.jz@bp.renesas.com>
-> > Cc: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: linux-pwm@vger.kernel.org
-> > ---
-> > v2: fix typo in Subject;
-> >     correct my email address while infradead.org is down;
-> >=20
-> >  drivers/pwm/Kconfig |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff -- a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > --- a/drivers/pwm/Kconfig
-> > +++ b/drivers/pwm/Kconfig
-> > @@ -505,7 +505,8 @@ config PWM_ROCKCHIP
-> >=20
-> >  config PWM_RZ_MTU3
-> >  	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
-> > -	depends on RZ_MTU3 || COMPILE_TEST
-> > +	depends on COMPILE_TEST
-> > +	depends on RZ_MTU3 || RZ_MTU3=3Dn
-> >  	depends on HAS_IOMEM
-> >  	help
-> >  	  This driver exposes the MTU3a PWM Timer controller found in
->=20
->=20
-> The below patch also works fine,
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 1c8dbb064ee5..56ab2f4b91fe 100644
+Thanks for your patch!
+
 > --- a/drivers/pwm/Kconfig
 > +++ b/drivers/pwm/Kconfig
-> @@ -505,7 +505,7 @@ config PWM_ROCKCHIP
-> =20
+> @@ -505,7 +505,8 @@ config PWM_ROCKCHIP
+>
 >  config PWM_RZ_MTU3
 >         tristate "Renesas RZ/G2L MTU3a PWM Timer support"
 > -       depends on RZ_MTU3 || COMPILE_TEST
-> +       depends on RZ_MTU3 || (COMPILE_TEST && RZ_MTU3)
+> +       depends on COMPILE_TEST
 
-That's a bit pointless, isn't it? That effectively reduces to just:
+This makes the driver always depend on COMPILE_TEST,
+which is definitely not what we want.
 
-	depends on RZ_MTU3
+> +       depends on RZ_MTU3 || RZ_MTU3=n
+>         depends on HAS_IOMEM
+>         help
+>           This driver exposes the MTU3a PWM Timer controller found in Renesas
 
-Thierry
+Gr{oetje,eeting}s,
 
---D90jt/TQ2RxVcnZA
-Content-Type: application/pgp-signature; name="signature.asc"
+                        Geert
 
------BEGIN PGP SIGNATURE-----
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS2evAACgkQ3SOs138+
-s6EJ6BAAm/1a5iFP5YYhXGdTWZAK2fkfqxfSnZjUnPrwkMHgKFZLq+lcL+tvazAA
-HFiSRhn3fak7A/itAIOXqEh9dxIisKIsJgdr6PH1wsgpl1h7Otcv0Vo/nD3cntoM
-xcJfrXKzsGpGCrMqy8nSEE16i0r47Vn+hDoFBjFAvQQOzwKi6F7C645utYSFx7CB
-PnuzfN5qFWGTx9RAeMxaYPAHNwqWCGsZxff+yonrVf1KPdv6eD+r6sWckIF3zmI8
-KYlLOT0s6IkWVTqgzJZuzwfw5qmt7upk4+dkZRBTJrxaVaBSMi51b2z3P3eMIgqC
-KhsyHIvhQVf6kFVWbbxtRhpKrZSik19hhkEAAQsEpIVad5F3KobcYEitA+zIt3tX
-86Vd5AuQuAb28Y/CwfRP/68bb/sTh9Nx+f8aoXOqTl8m/dsovu/yVkkO1VD20xyv
-uDrlAtUzLmFyB1ueDXaaIxGS7fEwAxXChidA8ZQiGYD/zCgLJRmsHlyKp0H4H15/
-tdcWSFSLzn6xKfH7sWzweZa3TzbHHG4w+9DBMnZt1T4g46jB1CDktIvEUfYZO3rv
-xfbZCnJh9PYBOGPEDQYP8DRQu3rfYGP3QiQhOAYGEfXYr4l8wEqXBWB+Gg4HFXgQ
-hJhgdp0hvnE3nsBdpd9CIpWQYHBS3C/lboMxbKK74B0Aug4uzu8=
-=i0DA
------END PGP SIGNATURE-----
-
---D90jt/TQ2RxVcnZA--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
