@@ -2,46 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28947757744
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 11:00:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55EE5757753
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 11:03:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230457AbjGRJAb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 05:00:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
+        id S232147AbjGRJD3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 05:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbjGRJAb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 05:00:31 -0400
+        with ESMTP id S232004AbjGRJD0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 05:03:26 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA498198
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 02:00:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B402FC
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 02:03:25 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qLgZI-0006qK-91; Tue, 18 Jul 2023 11:00:28 +0200
+        id 1qLgc8-0007Bk-3E; Tue, 18 Jul 2023 11:03:24 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qLgZG-000KZF-Sg; Tue, 18 Jul 2023 11:00:26 +0200
+        id 1qLgc7-000Kzf-B4; Tue, 18 Jul 2023 11:03:23 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qLgZG-005oLv-0G; Tue, 18 Jul 2023 11:00:26 +0200
-Date:   Tue, 18 Jul 2023 11:00:23 +0200
+        id 1qLgc6-005oNj-L3; Tue, 18 Jul 2023 11:03:22 +0200
+Date:   Tue, 18 Jul 2023 11:03:20 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Randy Dunlap <rd.dunlab@gmail.com>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH] pwm: fi pwm-rz-mtu3.c build errors
-Message-ID: <20230718090023.wo6m6ffzaifgctkj@pengutronix.de>
-References: <8a4de6c6-8d7c-a115-2a14-d264d6d28ccf@gmail.com>
+        linux-pwm@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
+Message-ID: <20230718090320.ns4d3aaqpmppt4gt@pengutronix.de>
+References: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7oh2zo6fvw2hzrdc"
+        protocol="application/pgp-signature"; boundary="plaf3xg2dccs477t"
 Content-Disposition: inline
-In-Reply-To: <8a4de6c6-8d7c-a115-2a14-d264d6d28ccf@gmail.com>
+In-Reply-To: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
@@ -56,15 +54,13 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---7oh2zo6fvw2hzrdc
-Content-Type: text/plain; charset=utf-8
+--plaf3xg2dccs477t
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Mon, Jul 17, 2023 at 10:59:02PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Mon, Jul 17, 2023 at 11:41:06PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rd.dunlab@gmail.com>
 >=20
 > When (MFD) RZ_MTU3=3Dm and PWM_RZ_MTU3=3Dy, there are numerous build erro=
 rs:
@@ -117,75 +113,39 @@ ad'
 > but also allow the latter not to be built.
 >=20
 > Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Randy Dunlap <rd.dunlab@gmail.com
 > Cc: Biju Das <biju.das.jz@bp.renesas.com>
-> Cc: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Cc: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
 > Cc: linux-pwm@vger.kernel.org
 
-While testing here I hit another (unrelated) problem:
+I missed this v2 while I still looked at (implicit) v1. The things I
+said there still apply for v2. I don't repeat my writings, but here is a
+link to the archive with what I wrote:
 
-drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function =E2=80=98rzg2l_gpio_fr=
-ee=E2=80=99:
-drivers/pinctrl/renesas/pinctrl-rzg2l.c:917:37: error: =E2=80=98struct gpio=
-_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
-  917 |         virq =3D irq_find_mapping(chip->irq.domain, offset);
-      |                                     ^~
-
-Did someone address that one already? I guess PINCTRL_RZG2L should
-select GPIOLIB_IRQCHIP. Also RZ_MTU3 should select MFD_CORE as I hit:
-
-	aarch64-linux-gnu-ld: rz-mtu3.c:(.text+0x544): undefined reference to `mfd=
-_remove_devices'
-
-Commit 654c293e1687b31819f9bf1ac71b5a85a8053210 added RZ_MTU3 as bool,
-and it's still bool in 254d3a72742. I think the problem started only
-with b8b28b718ddd ("mfd: Add module build support for RZ/G2L MTU3a").
-
-The patch looks fine, but the commit log needs some adaption.
-
-The following patch would fix the build failure, too:
-
-diff --git a/include/linux/mfd/rz-mtu3.h b/include/linux/mfd/rz-mtu3.h
-index c5173bc06270..4f15c0dead60 100644
---- a/include/linux/mfd/rz-mtu3.h
-+++ b/include/linux/mfd/rz-mtu3.h
-@@ -151,7 +151,7 @@ struct rz_mtu3 {
- 	void *priv_data;
- };
-=20
--#if IS_ENABLED(CONFIG_RZ_MTU3)
-+#if IS_REACHABLE(CONFIG_RZ_MTU3)
- static inline bool rz_mtu3_request_channel(struct rz_mtu3_channel *ch)
- {
- 	mutex_lock(&ch->lock);
-
-
-maybe doing that additionally is a good idea? (Well, not entirely sure
-as the above setting then would result in a non-functioning PWM driver.
-Maybe that's worse than a build failure?)
+	https://lore.kernel.org/linux-pwm/20230718090023.wo6m6ffzaifgctkj@pengutro=
+nix.de/
 
 Best regards
 Uwe
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---7oh2zo6fvw2hzrdc
+--plaf3xg2dccs477t
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmS2VKYACgkQj4D7WH0S
-/k5r4Qf/WPJW5a1+eaEyMYnF/9wG23kXGfsmgQP6c6rZDe3GkKYVCw41i+9ceMJ0
-J6As+jEdrEiomf9S3i66eik76jYdzI8vTlTPTUdvBtMETrqmDEGoGZHNlqwDGotY
-QrLlUfnf8vnNYGVk6WskAvfgHoPNn2dei/EdptTD1htty3FbUb45l/8L84i4cAof
-cztJOBP/11zTte4Tx1z2l0nhCGtWfEEboqv/c90z7MrecamYkdpgxDoSallD2ckt
-yfY2jUHRcBYm6AwdxeGAjB4jX8NMTaVsIE0ylZRfCX7dYtY2+tBM+uaAPVLTIwsu
-d28eyGChibI5qbwjmQQLdAVISNKs4A==
-=wk8g
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmS2VVcACgkQj4D7WH0S
+/k4ecAgAkM/NEJ5PP0iofIu8pTnn0qGSaXoUQXdt7kT+QfXqTTAltVZvbmLqgVAm
+VBREIjeJ7eLyXozsn1MPFk3RtBQxP3uz53fE//h3FNvK91Mr3B53T+7QPC+GvDV1
+8ZHI3iH5eni8KXgu9k1s/ULbA4S9NKG0fJLG/5L8C93XMC7SaIVgKvCJDYxI8Mqw
+PJ+FmqIJv+V2dbuYpCKlmAh0oZhrjeQiuKchZ0QRGHRhthkx9+wFN5JmKmJf6j7L
+tHNjvGNRo6JnMYycfaII4iL0yS0j5JNQKgSEbQ/LDEk7Xm09uOSTEzCeBwzZ1hm8
+s5gYq9bfwVP33sKclymBhvOAFACvbw==
+=3D+z
 -----END PGP SIGNATURE-----
 
---7oh2zo6fvw2hzrdc--
+--plaf3xg2dccs477t--
