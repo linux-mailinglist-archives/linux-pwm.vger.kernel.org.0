@@ -2,72 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AC78757559
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 09:30:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E17FC757584
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 09:40:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231690AbjGRHaT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 03:30:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43864 "EHLO
+        id S229861AbjGRHki (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 03:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231686AbjGRHaQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 03:30:16 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8B1AC;
-        Tue, 18 Jul 2023 00:30:12 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-31441bc0092so5197956f8f.1;
-        Tue, 18 Jul 2023 00:30:12 -0700 (PDT)
+        with ESMTP id S231769AbjGRHki (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 03:40:38 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A94DA19BA;
+        Tue, 18 Jul 2023 00:40:11 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4fba8f2197bso8830226e87.3;
+        Tue, 18 Jul 2023 00:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689665410; x=1692257410;
+        d=gmail.com; s=20221208; t=1689666005; x=1692258005;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UOxv6RlPtRQPUg3pZ2EfLHp019vUXq6b634A2+YLSY4=;
-        b=WUX+f9s6Q4AOZv2hEfP8NWA/Dv+c/KHTGJPIizE1JcrqhVt9rkKdPsmDSNs+/GqbeH
-         YPfdYrsN9b38BtshtUlEfJXw8sIHuin5ZGORF9tNMHkw1R8WXtBaADujgiIXledPYS5J
-         v2CMXIeOT6tltKzLbRFoCLtIpURZXNhjDyFQb0nVhf6TuPs9ov2rUW06xFoK5lVX5S5/
-         D5uIQoYeaGu3kgM3RpDkJTVKqbRSuXBkPa6SO2RGKTt5kWy3m/pEXDVwizVHm+T5XFcV
-         5q4n+DD4EjBGbb9pWWKFZXNHsb8nF56x2Nn9A6OTlP+lh/Aba6gLDyHH5cPYXPBUKsU3
-         WpoA==
+        bh=hlUUoYrCI/PAw1b9Jcxa6W/yhkHrrsXYB8ywBb4Zdcw=;
+        b=kjDicRWDABKhbwaNAQ0t5axb/afcaD0DP5Q4MPYeRPIHpGD7r2KtF58q4y93nWfF2b
+         49VVL9MukYEaIY6p3upv0Jkd6SzR1QnGGcqIuKMylp1Ud+AKaEmngB4ed/VJeurAE7AD
+         VdStOvapIk/cV//SDyf22g05q5gnj043/39V2HeYNDgUzlZv2Hnd8xasORgd9uOZLAMc
+         9g6wuZRboi64mU4ggfU/KgZwggakOtkwFtimgJOd/xoxzdveeHrYG2O4AqAKp0tnrR+B
+         htXPjftOOvDBTuJ5hzjX3CsyclAoUAhb5Yar5MxyrP4mZzoCTcuWiDdEVOA2A1xhxkCb
+         kg+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689665410; x=1692257410;
+        d=1e100.net; s=20221208; t=1689666005; x=1692258005;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UOxv6RlPtRQPUg3pZ2EfLHp019vUXq6b634A2+YLSY4=;
-        b=iY0yt3kQQtLSpPxRBpNYRc5iar2MHdi3bKAa5cye2HgLSFqcXqpBeVW1qAVte7U8Fi
-         okPJqOjeIyG7Zghv2ktcwQPHpEUlk1dmG6LmfrC35hdlpJzyQ/MrJkBZNqcjbo3GbB3X
-         XqE0sFBD4/z9qlu0ia1JbkfjhTkB8M3P+9etmZfcBIDMxJZGVLByKqlIr+jqJ+21sTuA
-         pJNt2GzNSAudZJmyMSgup/8CYRO2PG9bLDiQWaxj2K+Wn7J6TPEWUZSayAdj8FnFoU4t
-         hQYrs2Yj+C0HPCYCBGBl/IA7V8aCdGjFqV58ernA3bt9LR8SGYlAd52SWARXqMgmILej
-         9Nnw==
-X-Gm-Message-State: ABy/qLY0sJbyacFadW/hnsFW81GykNK1vy4+fi2PW3+y0ICdPg8bKCeR
-        OfdJchI00x1L7uBDxpcJtWA=
-X-Google-Smtp-Source: APBJJlGd2Ifui1poUv1aZUdKI8gYX8iEPIxgqJJtVIVEhide0moYe92EeJy/EuFeYdYGfH3NA/AJ5g==
-X-Received: by 2002:a5d:428b:0:b0:314:d31:f7 with SMTP id k11-20020a5d428b000000b003140d3100f7mr11254090wrq.63.1689665410245;
-        Tue, 18 Jul 2023 00:30:10 -0700 (PDT)
+        bh=hlUUoYrCI/PAw1b9Jcxa6W/yhkHrrsXYB8ywBb4Zdcw=;
+        b=IE+iJTixa63GCHX3jv9dZtDtRIEd7mWVCUhuJgJ01DwQmoOg6S9F8qQqmqeOOWQS0d
+         UKmX94LqaFooZGyB5tcQTyn4OdeHVit+FdKlAp7x1KkuP1ImRlUwb3br/xy5iREq7O2M
+         Li5F2hJYzwIdNpl2hzE08R4p6mB6+ramW5jD1rcZiXKleB1GrotUPW7DYSzGEkLK9lJ1
+         loB9Ha6oG38J0y5lGkfZCLBFIZXxEPKfPUiYN/Qw+0t+aM8bGtSxjoghC4W5U/fwyxDF
+         znA0tOSgzVNbpnl/ADbfmNLEmwiWwnEu4vuQzEco6HoAk6zbI5zQLzS/IQJ1ovLqtmVd
+         cg9Q==
+X-Gm-Message-State: ABy/qLYdsj9ZVQ3bUBPADtGrOjd6BJyk7tp7bZ35+1nqo0Ahc75J/UFc
+        L+5Pl1GDDr5mqF65aoc5Fwo=
+X-Google-Smtp-Source: APBJJlEX8zzhQn7Ou05/CQZQgAl+5rvY7vzNrtVjpZZJO0DRW82rk/rzW43gjG3e1aiIIPG6nLE4Cg==
+X-Received: by 2002:a05:6512:3248:b0:4fb:73d1:58e5 with SMTP id c8-20020a056512324800b004fb73d158e5mr8279860lfr.53.1689666004642;
+        Tue, 18 Jul 2023 00:40:04 -0700 (PDT)
 Received: from orome (p200300e41f4b7100f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4b:7100:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id t7-20020a5d5347000000b003143add4396sm1526055wrv.22.2023.07.18.00.30.09
+        by smtp.gmail.com with ESMTPSA id n17-20020aa7c791000000b005215eb17bb7sm779736eds.88.2023.07.18.00.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 00:30:09 -0700 (PDT)
-Date:   Tue, 18 Jul 2023 09:30:08 +0200
+        Tue, 18 Jul 2023 00:40:04 -0700 (PDT)
+Date:   Tue, 18 Jul 2023 09:40:02 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Jaewon Kim <jaewon02.kim@samsung.com>,
         Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: stm32: Implement .get_state()
-Message-ID: <ZLY_gER7FeEB07cw@orome>
-References: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: pwm: samsung: add exynosautov9
+ compatible
+Message-ID: <ZLZB0om1y9qLXDdF@orome>
+References: <20230718034201.136800-1-jaewon02.kim@samsung.com>
+ <CGME20230718034723epcas2p3913ad208c70659965b4ec204570aa0a1@epcas2p3.samsung.com>
+ <20230718034201.136800-2-jaewon02.kim@samsung.com>
+ <4e546dbf-8f10-a27e-dd8b-052151ebf00a@linaro.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pr3XEzmve5GXh8Qb"
+        protocol="application/pgp-signature"; boundary="dlM6TTb11shujLiI"
 Content-Disposition: inline
-In-Reply-To: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
+In-Reply-To: <4e546dbf-8f10-a27e-dd8b-052151ebf00a@linaro.org>
 User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -80,150 +85,45 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---pr3XEzmve5GXh8Qb
+--dlM6TTb11shujLiI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 08, 2023 at 04:06:02PM +0200, Philipp Zabel wrote:
-> Stop stm32_pwm_detect_channels() from disabling all channels and count
-> the number of enabled PWMs to keep the clock running. Implement the
-> &pwm_ops->get_state callback so drivers can inherit PWM state set by
-> the bootloader.
+On Tue, Jul 18, 2023 at 08:04:51AM +0200, Krzysztof Kozlowski wrote:
+> On 18/07/2023 05:42, Jaewon Kim wrote:
+> > Add samsung,exynosautov9-pwm compatible string to binding document.
+> >=20
+> > Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> > ---
 >=20
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Make the necessary changes to allow inheriting PWM state set by the
-> bootloader, for example to avoid flickering with a pre-enabled PWM
-> backlight.
-> ---
->  drivers/pwm/pwm-stm32.c | 75 ++++++++++++++++++++++++++++++++++++++-----=
-------
->  1 file changed, 59 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 62e397aeb9aa..e0677c954bdf 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -52,6 +52,21 @@ static u32 active_channels(struct stm32_pwm *dev)
->  	return ccer & TIM_CCER_CCXE;
->  }
-> =20
-> +static int read_ccrx(struct stm32_pwm *dev, int ch, u32 *value)
-> +{
-> +	switch (ch) {
-> +	case 0:
-> +		return regmap_read(dev->regmap, TIM_CCR1, value);
-> +	case 1:
-> +		return regmap_read(dev->regmap, TIM_CCR2, value);
-> +	case 2:
-> +		return regmap_read(dev->regmap, TIM_CCR3, value);
-> +	case 3:
-> +		return regmap_read(dev->regmap, TIM_CCR4, value);
-> +	}
-> +	return -EINVAL;
-> +}
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Looking at the register definitions we should be able to replace this
-with a single line and parameterize based on channel.
+Do you prefer to take this through the Samsung tree for DT validation
+and whatnot, or should I pick this up via the PWM tree?
 
-I realize you probably just copied from write_ccrx(), but might as well
-improve this while at it. Could be a separate patch, though.
+In case of the former:
 
-Also, ch should be unsigned int since it comes from pwm->hwpwm.
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
-> +
->  static int write_ccrx(struct stm32_pwm *dev, int ch, u32 value)
->  {
->  	switch (ch) {
-> @@ -486,9 +501,40 @@ static int stm32_pwm_apply_locked(struct pwm_chip *c=
-hip, struct pwm_device *pwm,
->  	return ret;
->  }
-> =20
-> +static int stm32_pwm_get_state(struct pwm_chip *chip,
-> +			       struct pwm_device *pwm, struct pwm_state *state)
-> +{
-> +	struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
-> +	int ch =3D pwm->hwpwm;
-
-This should reflect the type of pwm->hwpwm.
-
-> +	unsigned long rate;
-> +	u32 ccer, psc, arr, ccr;
-> +	u64 dty, prd;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(priv->regmap, TIM_CCER, &ccer);
-> +	if (ret)
-> +		return ret;
-> +
-> +	state->enabled =3D ccer & (TIM_CCER_CC1E << (ch * 4));
-> +	state->polarity =3D (ccer & (TIM_CCER_CC1P << (ch * 4))) ?
-> +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-> +	regmap_read(priv->regmap, TIM_PSC, &psc);
-> +	regmap_read(priv->regmap, TIM_ARR, &arr);
-
-We should probably check regmap_read() consistently here.
-
-> +	read_ccrx(priv, ch, &ccr);
-> +	rate =3D clk_get_rate(priv->clk);
-> +
-> +	prd =3D (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
-> +	state->period =3D DIV_ROUND_UP_ULL(prd, rate);
-> +	dty =3D (u64)NSEC_PER_SEC * (psc + 1) * ccr;
-> +	state->duty_cycle =3D DIV_ROUND_UP_ULL(dty, rate);
-> +
-> +	return ret;
-> +}
-> +
->  static const struct pwm_ops stm32pwm_ops =3D {
->  	.owner =3D THIS_MODULE,
->  	.apply =3D stm32_pwm_apply_locked,
-> +	.get_state =3D stm32_pwm_get_state,
->  	.capture =3D IS_ENABLED(CONFIG_DMA_ENGINE) ? stm32_pwm_capture : NULL,
->  };
-> =20
-> @@ -579,30 +625,22 @@ static void stm32_pwm_detect_complementary(struct s=
-tm32_pwm *priv)
->  	priv->have_complementary_output =3D (ccer !=3D 0);
->  }
-> =20
-> -static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
-> +static int stm32_pwm_detect_channels(struct stm32_pwm *priv, int *n_enab=
-led)
-
-unsigned int * for n_enabled.
-
->  {
-> -	u32 ccer;
-> -	int npwm =3D 0;
-> +	u32 ccer, ccer_backup;
-> +	int npwm;
-
-Also make this and the return value unsigned int while at it. These can
-never be negative.
-
-Thierry
-
---pr3XEzmve5GXh8Qb
+--dlM6TTb11shujLiI
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS2P30ACgkQ3SOs138+
-s6FVgQ/8DwHqcWHq8jW8Cj3oeOb2zx0zcFsabJGySzaN0DEG0+tG6QRqqaUj+kSy
-J5G81hoLnLTiO3xyvFFM/5rh6LQe2cUUqiDJ3scER7YUGYShE6ay9tBfLY+jrPlw
-rGI37WyPb8XgrnaHJLaHRBGGMkNhHWJu5mf4CEq+XW8NcsbS7mK+lPgDBjHMX5MC
-rCk5a43je5potHQUmh+Cn+1JEz9S/RrulvneiA2J7AktjSWWPLkX4Ul9ALSqUXUh
-cUDQsZxX7zk0TloXSUDfMlW+/E9ZlhYxDD1x1w1fXy8yEg95Le1v1YTJmejSNo8c
-HAvjh4RDa//dsI+nEQJqmaE7VNdUhxODs4udliCy9RUsAzk7cMAShbCAAIvBuZ2v
-dvvfxXdRv0gWIukq5B75bpYUsbs0k3liRL8E+McbWmoHBl6JJ2u7mSXU4m27ogIO
-MFgCEhc1rVhd5sqVc+vuPMGkjAdFHYsjxX2lfWJLEYnb7lVvQbq5ee44+QYDmN4a
-KL5vOwR0TFfWmVTzARSEI4P35Ls9nxFemdSj7zZ4FChTQ/VvHRVg/2NnYRJ2YEk/
-wymb4HeIgBu6R0GUoZdhzs1NTYgz0PLgCYE/Yp0tW9q7R6wuoT4Ml4lJbSF8yyyv
-Du2MFCxrqMnemzC8NB60GQDAlEHT3N9CgViwElAfzXUnzwEvhpc=
-=6iB+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS2QdIACgkQ3SOs138+
+s6GPvQ//TUOiCPcnWeVXaAwdZc2XSAxzoylvus3O4J09K1PohEs9vtWqQgeC0t+R
+TLPHjqnvTyxLPv8V3xCKOTotz9ygzHan5jwrbjL+YFvVSKAY+PoveltFqE9cZ58B
+IS8LOpKNM1QlIXWAtAiO/S0GSHnj8QkKHuuLyTx6Che3+PXA1KcZP4Rkj6qaCFV5
+/TVfgNXwG2EdpalIHQL/9h2E45cxSPiwUZKRVf/9nZH20cKFJzlnSSvKXM1XMlbx
+qkkWeODv0I3gqzJYmxDKIK/ud44QqtT8eNE359nfFvlGHNaaxTuM2g9Z7SItqkFx
+BlEHroATKiJ/9pLv6rZPb7l3Pq76JwFzr2/hVZg/TMqDblJnpIbKE3VsLHvBFpQk
+BRa9ggt4+PYbRcaD1Phs+XgRHxiLBTJJqLk/VWsjy17eGseL77WBwrEkI9+I8cgH
+n67pjD6X2lo1mpnUvwKxPzZ3t/SUOHMTOnrBdAciwywItpK4Qc7wHRQah4DVW/q+
+69cPxUAvl25iIvOioNzDbmZ41Dkn5jJkfQakFp4kKCxO8xJzv+cBz1wKmU/vcLlU
+JrVUtIIFZ+9lY/NxIjd8qOCCO6hjQCOcm+7aq0NVW2UX1DxTe5YE1dwYUQhRCOf/
+khwiyqRpotI0D1kjPtNG8MPd3WM5bGEDV+7TTo97T86zGFMREnE=
+=PPnI
 -----END PGP SIGNATURE-----
 
---pr3XEzmve5GXh8Qb--
+--dlM6TTb11shujLiI--
