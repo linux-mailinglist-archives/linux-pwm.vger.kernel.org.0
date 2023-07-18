@@ -2,191 +2,190 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 278E6757B92
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 14:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 433B6757D5D
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 15:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231382AbjGRMNP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 08:13:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42974 "EHLO
+        id S231657AbjGRNZH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 09:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232488AbjGRMNG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 08:13:06 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2117.outbound.protection.outlook.com [40.107.113.117])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351D9BD;
-        Tue, 18 Jul 2023 05:13:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OBnWCk4iySlL5XA5hgEZ0a4Z81wHjLwt/ZfQN7WkXYwe6QcWMhoqO2pW1zNn84fXOd0YOgXrH7TxjGpuUStl+9GzOIFw7TvaTEohUAwtm6hoBtd5zUAJpnI3u/7BfqmYD46vQZeHWR+YxSfC27sMX0T1MiLLvpDdrZ0aEnO26JCthEoQff9/vG1/dbGnuhE5SSoiazANrT6aGe9+SMcEXqtnGyyXg1NKv1sxkNvWn44F3dkrZsa1AObh/Ct9+TWU64FNpxJD0wUhsD1p/KwYNFb0ewa00lDJpkWYF5ukzy6vg+J26NaILgNL67TWUrhRrwbsuDTY/pUAPFLjWYAPZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nMlbKwv7KeW6RaS48LfLSIz+xKmpcATJUYxPL0xb5Pg=;
- b=Go/yIKrz1xxT2JIH1WdsgYp5mYHSXgW7K+ZZHRD8RDFi8NkDlk4YwUWHnY2VWHMP4YCzwi3zecgcI3jCGMyIhVpN3KWg1SrAbn/FAAz8tfB1vVyY/EGN/bkeJ3tIsDKKLyXiEOa5DaMOlK8rKlcXD8DsypCfvfWCyihn8ZKXJLVPCaV2SFWEBh8q25tHkaB2et+p2Guyln6XBSBqikOml/kEj8h0IIL3kqrRokZadLe5Bkve5Pkf0Zdi1xaTjDexsAI/JkH7arIXNrz960JW5xDUAE7R5HUbuM/eQhBeymLSqDp6QjxIdQG+lkW5sDQvDqHYGe9RupJ9mn3BCM8WXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nMlbKwv7KeW6RaS48LfLSIz+xKmpcATJUYxPL0xb5Pg=;
- b=X6AX6m5M509PXJrxA1MMVJBpxkEKMUk+n9WSf7Lk7/D1GqoIl4N9rS0XV08noJXSp2RPQGQQqg1zlXd1/geUcMs1zpxFbRZC+4mF0g9xOvl716cenItaNVz8Lbbz9HhiIZdIhJsFjnFCXUxF2nAKcsUBZ6k42z3c7Ir9OZYoYic=
-Received: from TYWPR01MB8775.jpnprd01.prod.outlook.com (2603:1096:400:169::11)
- by TYCPR01MB11335.jpnprd01.prod.outlook.com (2603:1096:400:3c2::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.33; Tue, 18 Jul
- 2023 12:13:01 +0000
-Received: from TYWPR01MB8775.jpnprd01.prod.outlook.com
- ([fe80::231a:7573:1ada:5bc0]) by TYWPR01MB8775.jpnprd01.prod.outlook.com
- ([fe80::231a:7573:1ada:5bc0%7]) with mapi id 15.20.6588.031; Tue, 18 Jul 2023
- 12:13:01 +0000
-From:   Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To:     Randy Dunlap <rd.dunlab@gmail.com>,
+        with ESMTP id S231587AbjGRNZG (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 09:25:06 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0D2137;
+        Tue, 18 Jul 2023 06:25:02 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id 38308e7fff4ca-2b708e49059so88957461fa.3;
+        Tue, 18 Jul 2023 06:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689686701; x=1692278701;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kji3NHZ/u0WcOPGwQMfakUnOBLU6uV+khPNtxxTA/2E=;
+        b=sY+NPODTv4711TolEVIr05g9scK/6qu/UxpFs+pA8h/ciggmOSv2JCqIqZCr2TN6RU
+         hD+lnNxNhcHYvOPhNR3O93uZt2JsOr5HYok29qBXst/k8K9BonshRMmA0zmSqvedAPyu
+         1l+2hpPbUOUOUUW9jgkkudPGuAmS7w8w+ToSFWK9TIMNOJ7GBdjvqP3WMwbA3IL7S9cU
+         KZaJ4pCLvM9TsO9jKPYSdre0T3ZJDu5Fsv6fk25YMwAyciXZxYfIoegiwI2SWwD9fwjp
+         NRbgCyI25oOOcXTmKP1WHF5Bvlh1yTd2k6vg4HNDUf29sSLBUFs/6hssie4shJRb2pfL
+         fliw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689686701; x=1692278701;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kji3NHZ/u0WcOPGwQMfakUnOBLU6uV+khPNtxxTA/2E=;
+        b=Km7xU2RFv1aXVTRRWVb80D47tzYXFA6GfOYfqs04UyZk2dLJptdGiWXwb/vrJYSSL/
+         OcnlV1B0WgPmFoarUbo82FLEw/wlc//VVqk+UHoeO6asBFJbsYXtC0O8BrVVZHDxpSaZ
+         LvIHBfoJBr/fXHGRlI3eGQSabq8WG1EAbQlkq+kPxqjLV7wQLsioHCdePkaCnV49HGha
+         pgUouUQxskwYyWkEwnMTalvdny2AevLWMPiIXvPit/m0WmKC7UyKfcBjhWq9eOYQlZgJ
+         co6jZtT6ekf/IraNjd/bQ64iT6GTDMbYzdJEyNKyvLqf0EOuDy5a5dJ+Ik99NNY7q5GC
+         7tFQ==
+X-Gm-Message-State: ABy/qLbd4KX/XUk2QINWdS3E9lfHl+jPWLAWxiG8cq8uvfaEPC4TPHuG
+        BXKpcnzAadm4PtIWfm/XfdQ=
+X-Google-Smtp-Source: APBJJlFJBCYCEw/T1eesusdKpJnG04ctuUTDZwBkKmocildT0EqZN47eSvxkdG250M3IzfW5eO0Yew==
+X-Received: by 2002:a2e:9184:0:b0:2ad:a78a:df0d with SMTP id f4-20020a2e9184000000b002ada78adf0dmr9298943ljg.44.1689686700502;
+        Tue, 18 Jul 2023 06:25:00 -0700 (PDT)
+Received: from orome (p200300e41f4b7100f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4b:7100:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id gj19-20020a170906e11300b00992ea405a79sm1004701ejb.166.2023.07.18.06.24.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jul 2023 06:24:59 -0700 (PDT)
+Date:   Tue, 18 Jul 2023 15:24:58 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Randy Dunlap <rd.dunlab@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-CC:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        linux-pwm@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Subject: RE: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
-Thread-Topic: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
-Thread-Index: AQHZuULZAAUI+Oq1mUSjty3QZPTfk6+/b6ug
-Date:   Tue, 18 Jul 2023 12:13:01 +0000
-Message-ID: <TYWPR01MB877550F95CF000B63E9AD022C238A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+Subject: Re: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
+Message-ID: <ZLaSqhsJr2qH5Y6E@orome>
 References: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
-In-Reply-To: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYWPR01MB8775:EE_|TYCPR01MB11335:EE_
-x-ms-office365-filtering-correlation-id: 57f9e4a1-e29d-4964-455e-08db87885532
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8Fr0v765G9jl3yV5ERufohy/TFVNl7+hXMrQx0k0aKNJZyVqg+uC3D8rbgAheLdEeaBDiWIIBpc9/3hwMpfu0O/CtXRFY2w2B/R9HaV6XckBAFXMgbScN6GzXI0r4TZo4mj+OUVh824U7ktttzRlax+5YxTAhejuPeJZNTcdbLWqg9fLpf4fJFklZf4WkXSvazw5ouZOC3D3O9JxyqjpcAhp7n4jPKlXFkLB/6EhP+H84wgWyh8X8Vpu7+AkQPdBMVkA/z1hgfnoJU77m7hga/tC1C6J19toHyOQHs31paEqXTu+pM3IYGNL3uiZfGCZc+uohT4CJO/7PRm91KwT7ib/kaRsnQIxLXf5Vn143TUOVaABWPsAWW2XxytqbBjLameVANyIdbO+5QUTXMv1tEnO2/sHSo+6naGjGFpSF2LSo33kz/5SOwoTeLFXnHTMMEhHP803LkB0Aa0nw8HM5IUU+XUs4A6jhxPTh5Y05ZVZFCi71sINBhp0bof+i2QakEZJuE93RdcPC62oncsXbbJY8E4dsppSbDBeyygaktIwoYnrNu5kMRadzjc1096PUpjOXoVcxFVXVYKarryZExGNIYkKOo7i5rmw4qZkNU3y0RJdMJ5ivDRSh1uVXIx/
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWPR01MB8775.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(451199021)(38070700005)(38100700002)(8936002)(8676002)(33656002)(83380400001)(2906002)(66574015)(52536014)(6506007)(5660300002)(55016003)(122000001)(186003)(66446008)(64756008)(86362001)(76116006)(66946007)(4326008)(66476007)(66556008)(54906003)(110136005)(7696005)(71200400001)(41300700001)(478600001)(9686003)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SDJrQ1ZRTXN6SlNZWTJKb1kxeWwxMlVLZTNHdGRDY1d6MktPY3hSSzhvOG1Y?=
- =?utf-8?B?aWZoZURjSWVkNFNVcEx3ZDN3TmY0RGNhampRdDhDeUUvbXJCQlhYeENIb24y?=
- =?utf-8?B?Vkk3RWdrVC9qOXozeE1XaTdxeUVYeVR4VHpQWkZ0MXZHUnZLbDRjMlk5TGF5?=
- =?utf-8?B?VndER01DT2RtSnFZbE9yYVkrRzRLUE5MeUZZdkVvWHd4c2ZsTUdNZ0ZzcXFZ?=
- =?utf-8?B?TmNZR3kyY1BXdTNzbmY3SGg4eVRQOUZuUXFzU3RXakpMWHJuT3dWU3BwMDlH?=
- =?utf-8?B?MjRxcUorMlNJcHh0S1lENk4wNWlRQ0h2ZWRLMEJUdTNtYXVrNHNwOW1JaVpz?=
- =?utf-8?B?TSt0WHdqSGk5cjRjOFZhb3VSMTgrcXBhUExxVXc1VnhlUHBRQVhZODVuRVEv?=
- =?utf-8?B?U1RKNDMrQnNmU3Awc0kyNlNiUTlQVDVlMG5BclZUNEU3elJDU0NwQy90M1NJ?=
- =?utf-8?B?MHNIdmFkQ3M2TkN4VkVyRWNNc1NnNVdxcEtzWGFGaU13a1VvRVMxc2huY0Fv?=
- =?utf-8?B?cFhHdEFyN3RMaEdpWC9Sb3pjeTVIL3FJdUlQSlZOeVdoT2lzNkRLbG84SVoy?=
- =?utf-8?B?UFpySUJuZlNadTlsZ2JlUWdYbERYbG9GTVcvYTh5YlQ0K1lzenBZNFhIVHVQ?=
- =?utf-8?B?bk5VdjFzSVJEME92bFF5TVdZcXMxUWxkUjVJT2hkWVp0WWlpRWF4Q3dZbW9R?=
- =?utf-8?B?a1Y2UXZMVlVHeUdYZVVWalJibFEwc1JrZkxjUEpPRUw4UnkyaEhKWkVrNElo?=
- =?utf-8?B?QlpPczFUazEzQlU4ZnE2OFo5SEFlaUdJSm9remNjeVdnYk9NTndFWEQxUXpk?=
- =?utf-8?B?YXlHTURLTkF0SDVPdEF3TkgvNDA0aGR5ZG8zdElhaUFiZHEyR2JJR2VCeVhQ?=
- =?utf-8?B?bUQzdUs4V2p3b21EbG5nODBqM3F1QVVrVFJzRDdnaWlSNnZQT3JDNnlTazd5?=
- =?utf-8?B?eXRLdFJjeHhmTS94c3hVSDBIRVVxZzFPbDBpVWNSNGdveXdXV3Q3ZzJNVVlk?=
- =?utf-8?B?QU9RQUVyT0VJNkRIb3VqSC9jWHhUSm1ibG85STZlVW0zZzJXZk5DYXg4YXFQ?=
- =?utf-8?B?cVI5azdCT3d6eXhVVEUyeDBjT3dBa0tBN1VhWnI5c0Q2WG1HaUZTOThpVnk0?=
- =?utf-8?B?SUVlZUhGNzFkaG9GQUtzNU5HMXZObG11WTMxVGlmcjNFeFdCQ3l6d0t0eWZn?=
- =?utf-8?B?ZzZpcUE1N09LeCsyWDhuaGhTQnN2Wkpod2prRVpCL0hranFETWVWQUtuQ091?=
- =?utf-8?B?Zi8wSi9Rb1hNZVAvTThUcFp3eDFaYUlUZG55TUdZWGE0c1Q4ZnJmaTFPNGtR?=
- =?utf-8?B?bjBMUVNCT2Zna0pMOWI3aXdaQ1N6T0ErT0JyLzMySWdhYkhpWHVVeE9xUVFU?=
- =?utf-8?B?VE1wc0wvNDJjcS82MkhNUGplZFZiWm9IdHlzdzhNYzBVTGtaYVFRQnhpZy9k?=
- =?utf-8?B?cCtZN1lWZ0tEUmlyODJjNXJ0dHpESW4yVVpnOG14a2hTMytxOFlGNCtMZVl5?=
- =?utf-8?B?K1BzU09RZmVKWDduTnEzOWs3eGtkV1h0UE95LzNDeWJhN0hmNHpoUU0vSnhP?=
- =?utf-8?B?cFBRS1JnZkR4Wm1IZHBDdFZjckcyaEFleCtBQ3BDS1RwbTFhWDBvckMyczVl?=
- =?utf-8?B?QkdwczFscVM2ZEpvYmkxMnVRZW4vdlhDSmw2OXZzMjkyWUhGR0M3Q1pML29v?=
- =?utf-8?B?S01FN0NQY0g0QVFPY3pjUGxYcTV5cHhmSXBRaHJxcTlBaWo3cjZjcFpTWFh4?=
- =?utf-8?B?YnlqcUFrZ1FmUHNOeHdIS0NEQmMrY2hoWXQraWdUK0pwcDJsRkVjV0x2NFlr?=
- =?utf-8?B?L0ZYcmY2cUlzajhmWDNFU0l5SVZ4TnkwNWhTb003NW1kQVp3WTBJYmVPMENQ?=
- =?utf-8?B?cklEUkFmVjJ5NE0wVTFFaE9DSnpmSGFuSkNoeHM0VFpEZWRuYXdIek1MN2dP?=
- =?utf-8?B?S3ExZkc0ajVwb1VVRi90TmswWVMyNmVZTWgrc2F6MDc2am5DeExJUEhtZFQ2?=
- =?utf-8?B?b3RPYzFpeW4rZ1FhTmxOWGlIY3JjY3IyZ0dsbjU2TTY3R3VRSENvSzRpUjVD?=
- =?utf-8?B?cmVkUWZ0RmZDU1o1cjg5b3JCdzdKYU04Wk5BZUdPUys3Y2hwNXg5OG5tbSth?=
- =?utf-8?Q?TJ7SY2OEhM/Qp+sc813kyAbbX?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <CAMuHMdV-wu_XHy_qYGM+_UOAXN8etip731WxmgEmbQdv+SPwbw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYWPR01MB8775.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57f9e4a1-e29d-4964-455e-08db87885532
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jul 2023 12:13:01.7615
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +eACtQW4fgqifyreQ+i0snLJngI0wwhV0DZn2QQ87PXglPHCXcJPo02kw0Cr0aBFbQPZ0IRpRpt9smpRv9WKpCibyyUciUxl6nHZbCo7ThY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB11335
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vG5bQDXGZvDGeDiV"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV-wu_XHy_qYGM+_UOAXN8etip731WxmgEmbQdv+SPwbw@mail.gmail.com>
+User-Agent: Mutt/2.2.10 (2023-03-25)
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLY,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgUmFuZHksDQoNCj4gRnJvbTogUmFuZHkgRHVubGFwIDxyZC5kdW5sYWJAZ21haWwuY29tPg0K
-PiBTdWJqZWN0OiBbUEFUQ0ggdjJdIHB3bTogZml4IHB3bS1yei1tdHUzLmMgYnVpbGQgZXJyb3Jz
-DQo+IA0KPiBGcm9tOiBSYW5keSBEdW5sYXAgPHJkLmR1bmxhYkBnbWFpbC5jb20+DQo+IA0KPiBX
-aGVuIChNRkQpIFJaX01UVTM9bSBhbmQgUFdNX1JaX01UVTM9eSwgdGhlcmUgYXJlIG51bWVyb3Vz
-IGJ1aWxkDQo+IGVycm9yczoNCj4gDQo+IGxkOiB2bWxpbnV4Lm86IGluIGZ1bmN0aW9uIGByel9t
-dHUzX3B3bV9jb25maWcnOg0KPiBkcml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjM3NDogdW5kZWZp
-bmVkIHJlZmVyZW5jZSB0bw0KPiBgcnpfbXR1M19kaXNhYmxlJw0KPiBsZDogZHJpdmVycy9wd20v
-cHdtLXJ6LW10dTMuYzozNzc6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8NCj4gYHJ6X210dTNfOGJp
-dF9jaF93cml0ZScNCj4gbGQ6IHZtbGludXgubzogaW4gZnVuY3Rpb24gYHJ6X210dTNfcHdtX3dy
-aXRlX3Rncl9yZWdpc3RlcnMnOg0KPiBkcml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjExMDogdW5k
-ZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBgcnpfbXR1M18xNmJpdF9jaF93cml0ZScNCj4gbGQ6IHZt
-bGludXgubzogaW4gZnVuY3Rpb24gYHJ6X210dTNfcHdtX2NvbmZpZyc6DQo+IGRyaXZlcnMvcHdt
-L3B3bS1yei1tdHUzLmM6MzgyOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvDQo+IGByel9tdHUzXzhi
-aXRfY2hfd3JpdGUnDQo+IGxkOiB2bWxpbnV4Lm86IGluIGZ1bmN0aW9uIGByel9tdHUzX3B3bV93
-cml0ZV90Z3JfcmVnaXN0ZXJzJzoNCj4gZHJpdmVycy9wd20vcHdtLXJ6LW10dTMuYzoxMTA6IHVu
-ZGVmaW5lZCByZWZlcmVuY2UgdG8NCj4gYHJ6X210dTNfMTZiaXRfY2hfd3JpdGUnDQo+IGxkOiBk
-cml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjExMTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBg
-cnpfbXR1M18xNmJpdF9jaF93cml0ZScNCj4gbGQ6IHZtbGludXgubzogaW4gZnVuY3Rpb24gYHJ6
-X210dTNfcHdtX2NvbmZpZyc6DQo+IGRyaXZlcnMvcHdtL3B3bS1yei1tdHUzLmM6Mzk3OiB1bmRl
-ZmluZWQgcmVmZXJlbmNlIHRvIGByel9tdHUzX2VuYWJsZScNCj4gbGQ6IHZtbGludXgubzogaW4g
-ZnVuY3Rpb24gYHJ6X210dTNfcHdtX2Rpc2FibGUnOg0KPiBkcml2ZXJzL3B3bS9wd20tcnotbXR1
-My5jOjI1OTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBgcnpfbXR1M184Yml0X2NoX3dyaXRl
-Jw0KPiBsZDogZHJpdmVycy9wd20vcHdtLXJ6LW10dTMuYzoyNjQ6IHVuZGVmaW5lZCByZWZlcmVu
-Y2UgdG8NCj4gYHJ6X210dTNfZGlzYWJsZScNCj4gbGQ6IHZtbGludXgubzogaW4gZnVuY3Rpb24g
-YHJ6X210dTNfcHdtX2VuYWJsZSc6DQo+IGRyaXZlcnMvcHdtL3B3bS1yei1tdHUzLmM6MjMwOiB1
-bmRlZmluZWQgcmVmZXJlbmNlIHRvDQo+IGByel9tdHUzXzhiaXRfY2hfd3JpdGUnDQo+IGxkOiBk
-cml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjIzNDogdW5kZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBg
-cnpfbXR1M184Yml0X2NoX3dyaXRlJw0KPiBsZDogZHJpdmVycy9wd20vcHdtLXJ6LW10dTMuYzoy
-Mzg6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8NCj4gYHJ6X210dTNfZW5hYmxlJw0KPiBsZDogdm1s
-aW51eC5vOiBpbiBmdW5jdGlvbiBgcnpfbXR1M19wd21faXNfY2hfZW5hYmxlZCc6DQo+IGRyaXZl
-cnMvcHdtL3B3bS1yei1tdHUzLmM6MTU1OiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvDQo+IGByel9t
-dHUzX2lzX2VuYWJsZWQnDQo+IGxkOiBkcml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjE2MjogdW5k
-ZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBgcnpfbXR1M184Yml0X2NoX3JlYWQnDQo+IGxkOiB2bWxp
-bnV4Lm86IGluIGZ1bmN0aW9uIGByel9tdHUzX3B3bV9yZWFkX3Rncl9yZWdpc3RlcnMnOg0KPiBk
-cml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjEwMjogdW5kZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBg
-cnpfbXR1M18xNmJpdF9jaF9yZWFkJw0KPiBsZDogZHJpdmVycy9wd20vcHdtLXJ6LW10dTMuYzox
-MDI6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8NCj4gYHJ6X210dTNfMTZiaXRfY2hfcmVhZCcNCj4g
-bGQ6IGRyaXZlcnMvcHdtL3B3bS1yei1tdHUzLmM6MTAzOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
-DQo+IGByel9tdHUzXzE2Yml0X2NoX3JlYWQnDQo+IGxkOiB2bWxpbnV4Lm86IGluIGZ1bmN0aW9u
-IGByel9tdHUzX3B3bV9nZXRfc3RhdGUnOg0KPiBkcml2ZXJzL3B3bS9wd20tcnotbXR1My5jOjI5
-NjogdW5kZWZpbmVkIHJlZmVyZW5jZSB0bw0KPiBgcnpfbXR1M184Yml0X2NoX3JlYWQnDQo+IA0K
-PiBNb2RpZnkgdGhlIGRlcGVuZGVuY2llcyBvZiBQV01fUlpfTVRVMyBzbyB0aGF0IENPTVBJTEVf
-VEVTVCBpcw0KPiBzdGlsbCBhbGxvd2VkIGJ1dCBQV01fUlpfTVRVMyBkZXBlbmRzIG9uIFJaX01U
-VTMgaWYgaXQgaXMgYmVpbmcgYnVpbHQNCj4gYnV0IGFsc28gYWxsb3cgdGhlIGxhdHRlciBub3Qg
-dG8gYmUgYnVpbHQuDQo+IA0KPiBGaXhlczogMjU0ZDNhNzI3NDIxICgicHdtOiBBZGQgUmVuZXNh
-cyBSWi9HMkwgTVRVM2EgUFdNIGRyaXZlciIpDQo+IFNpZ25lZC1vZmYtYnk6IFJhbmR5IER1bmxh
-cCA8cmQuZHVubGFiQGdtYWlsLmNvbQ0KPiBDYzogQmlqdSBEYXMgPGJpanUuZGFzLmp6QGJwLnJl
-bmVzYXMuY29tPg0KPiBDYzogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5n
-dXRyb25peC5kZT4NCj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5j
-b20+DQo+IENjOiBsaW51eC1wd21Admdlci5rZXJuZWwub3JnDQo+IC0tLQ0KPiB2MjogZml4IHR5
-cG8gaW4gU3ViamVjdDsNCj4gICAgIGNvcnJlY3QgbXkgZW1haWwgYWRkcmVzcyB3aGlsZSBpbmZy
-YWRlYWQub3JnIGlzIGRvd247DQo+IA0KPiAgZHJpdmVycy9wd20vS2NvbmZpZyB8ICAgIDMgKyst
-DQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0K
-PiBkaWZmIC0tIGEvZHJpdmVycy9wd20vS2NvbmZpZyBiL2RyaXZlcnMvcHdtL0tjb25maWcNCj4g
-LS0tIGEvZHJpdmVycy9wd20vS2NvbmZpZw0KPiArKysgYi9kcml2ZXJzL3B3bS9LY29uZmlnDQo+
-IEBAIC01MDUsNyArNTA1LDggQEAgY29uZmlnIFBXTV9ST0NLQ0hJUA0KPiANCj4gIGNvbmZpZyBQ
-V01fUlpfTVRVMw0KPiAgCXRyaXN0YXRlICJSZW5lc2FzIFJaL0cyTCBNVFUzYSBQV00gVGltZXIg
-c3VwcG9ydCINCj4gLQlkZXBlbmRzIG9uIFJaX01UVTMgfHwgQ09NUElMRV9URVNUDQo+ICsJZGVw
-ZW5kcyBvbiBDT01QSUxFX1RFU1QNCj4gKwlkZXBlbmRzIG9uIFJaX01UVTMgfHwgUlpfTVRVMz1u
-DQoNCklzbid0IHRoaXMgYSB0YXV0b2xvZ3k/DQoNCkNoZWVycywNCkZhYg0KDQo+ICAJZGVwZW5k
-cyBvbiBIQVNfSU9NRU0NCj4gIAloZWxwDQo+ICAJICBUaGlzIGRyaXZlciBleHBvc2VzIHRoZSBN
-VFUzYSBQV00gVGltZXIgY29udHJvbGxlciBmb3VuZCBpbg0KPiBSZW5lc2FzDQoNCg==
+
+--vG5bQDXGZvDGeDiV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 18, 2023 at 02:05:42PM +0200, Geert Uytterhoeven wrote:
+> Hi Randy,
+>=20
+> On Tue, Jul 18, 2023 at 8:44=E2=80=AFAM Randy Dunlap <rd.dunlab@gmail.com=
+> wrote:
+> > From: Randy Dunlap <rd.dunlab@gmail.com>
+> >
+> > When (MFD) RZ_MTU3=3Dm and PWM_RZ_MTU3=3Dy, there are numerous build er=
+rors:
+> >
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_config':
+> > drivers/pwm/pwm-rz-mtu3.c:374: undefined reference to `rz_mtu3_disable'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:377: undefined reference to `rz_mtu3_8bit=
+_ch_write'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
+> > drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to `rz_mtu3_16bit_ch=
+_write'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_config':
+> > drivers/pwm/pwm-rz-mtu3.c:382: undefined reference to `rz_mtu3_8bit_ch_=
+write'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
+> > drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to `rz_mtu3_16bit_ch=
+_write'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:111: undefined reference to `rz_mtu3_16bi=
+t_ch_write'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_config':
+> > drivers/pwm/pwm-rz-mtu3.c:397: undefined reference to `rz_mtu3_enable'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_disable':
+> > drivers/pwm/pwm-rz-mtu3.c:259: undefined reference to `rz_mtu3_8bit_ch_=
+write'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:264: undefined reference to `rz_mtu3_disa=
+ble'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_enable':
+> > drivers/pwm/pwm-rz-mtu3.c:230: undefined reference to `rz_mtu3_8bit_ch_=
+write'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:234: undefined reference to `rz_mtu3_8bit=
+_ch_write'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:238: undefined reference to `rz_mtu3_enab=
+le'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_is_ch_enabled':
+> > drivers/pwm/pwm-rz-mtu3.c:155: undefined reference to `rz_mtu3_is_enabl=
+ed'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:162: undefined reference to `rz_mtu3_8bit=
+_ch_read'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_read_tgr_registers':
+> > drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to `rz_mtu3_16bit_ch=
+_read'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to `rz_mtu3_16bi=
+t_ch_read'
+> > ld: drivers/pwm/pwm-rz-mtu3.c:103: undefined reference to `rz_mtu3_16bi=
+t_ch_read'
+> > ld: vmlinux.o: in function `rz_mtu3_pwm_get_state':
+> > drivers/pwm/pwm-rz-mtu3.c:296: undefined reference to `rz_mtu3_8bit_ch_=
+read'
+> >
+> > Modify the dependencies of PWM_RZ_MTU3 so that COMPILE_TEST is
+> > still allowed but PWM_RZ_MTU3 depends on RZ_MTU3 if it is being built
+> > but also allow the latter not to be built.
+> >
+> > Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
+> > Signed-off-by: Randy Dunlap <rd.dunlab@gmail.com
+>=20
+> Thanks for your patch!
+>=20
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -505,7 +505,8 @@ config PWM_ROCKCHIP
+> >
+> >  config PWM_RZ_MTU3
+> >         tristate "Renesas RZ/G2L MTU3a PWM Timer support"
+> > -       depends on RZ_MTU3 || COMPILE_TEST
+> > +       depends on COMPILE_TEST
+>=20
+> This makes the driver always depend on COMPILE_TEST,
+> which is definitely not what we want.
+
+Honestly, do we really need all of this complexity? I have specific
+configurations to test all of the PWM drivers to make sure they build.
+There's probably edge cases that don't get tested, but sooner or later I
+expect some build bot will encounter those and then we can rectify
+things. But in many cases that I've seen COMPILE_TEST just happens to do
+more harm than good.
+
+Thierry
+
+--vG5bQDXGZvDGeDiV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS2kqoACgkQ3SOs138+
+s6GEOQ//VtNdm+2x3n6p51On9dx6Gf3lyf3PYkQRuysyun3013E1AidkmKW/pJIt
+6h9hTIRmrlK36r+vmNYd0HmDavF+d7t5Bo5MVvO8nTuHEz6TgyteNLeFY2+35lwf
+UVlojoYV50PZPaCF+lt6IC3GFJSMqD7hsbjtk6aMLo0thovgyzuLMaTGI6+iQPMk
+grhbGnmHe/JD7r5hFVaMhi0ewfBSJkncKeXjQ6hOyXOqUpOM6YpkM/HeWTOuiRcS
+akNXMlsDxMv9zribgOlHRxji6ZQCHmMzQCkG9ZT9AxiSAdUyiXH5tgQfiQTWCNQF
+SuCmoD+5qyeDXSMwnxHPRG58WWhppXznNO/lwSPz69KBAoX5oGvLVtOq2iRlYM/S
+Vcr61u3Si6X5Aiah111m18dZB3EpI/Jz/Er4rsWovvhzjtx06TF1PtZce6zsBI+F
+gHC8tBOEA74PBGeylyNjt9EmDSHtJ4c2J8aokYSCgHjkbV4FwsMCDz+IcX1UN1uA
+5MQOPOHVWD8smQljJpRv0pKWEmIUfYgFnHGmq4MaglkPCSXrf/Y2iBT80pqkRjyn
+AJKi0G6dl3fBZPK4CQQsdl4qiNPSWv415rJxlXfirV3kHreypxiQbka/e5/kkz+f
+qyXylxDLlE/orSnwQ7bseNnQhplt6EmgN0JXzL8PdZf5L68HcOk=
+=dql7
+-----END PGP SIGNATURE-----
+
+--vG5bQDXGZvDGeDiV--
