@@ -2,56 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E3DB757F75
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 16:29:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DF66757FC9
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 16:39:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232946AbjGRO3g convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 18 Jul 2023 10:29:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
+        id S232674AbjGROjm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 10:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231512AbjGRO3a (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 10:29:30 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B939E4C
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 07:29:29 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1qLlhd-0006wE-C5; Tue, 18 Jul 2023 16:29:25 +0200
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1qLlhc-000OTD-NP; Tue, 18 Jul 2023 16:29:24 +0200
-Received: from pza by lupine with local (Exim 4.96)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1qLlhc-000Ero-17;
-        Tue, 18 Jul 2023 16:29:24 +0200
-Message-ID: <d3df6f565421576bbf06140942593cd4d0af712e.camel@pengutronix.de>
-Subject: Re: [PATCH] pwm: stm32: Implement .get_state()
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Jul 2023 16:29:24 +0200
-In-Reply-To: <ZLY_gER7FeEB07cw@orome>
-References: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
-         <ZLY_gER7FeEB07cw@orome>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.4-2 
+        with ESMTP id S230005AbjGROjm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 10:39:42 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 256A2EC;
+        Tue, 18 Jul 2023 07:39:41 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b9ecf0cb4cso34988145ad.2;
+        Tue, 18 Jul 2023 07:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689691180; x=1692283180;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9YjbH/cYJ2PSUK6dxbLLOnKRzrSg51mtuQEdl2JaXwE=;
+        b=gL0tFQjNN8biOJamPJJfy44kw7s40tsXNw9jqPr7YfxT22wzc3ofdkm+F+GH4Q9QSE
+         s7neCAqGR/hs1OhMFFAH9siFxoPGlrVPC+0obIBN0p4hffwOAVt/l+zoENXEBc7EaVeC
+         eYdKQq8nlK3bafoOVWRZjthIQ0mThb6POY4dYJEFOwh07BOTYdj0cbticuDrqJLJR+Dh
+         FZyx+bizRqAoGme9gwzp0Pc+DzRHymL84H0sftKzvDspikiVzcnCZE+LTRq5l3SnTtcq
+         hF0QbkfFpXU1p8JYzY7YbPspVSCu0aFwymMSaUW5aLp2ysqsENbAJ0tw4hoX+V3ZMHuR
+         SxdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689691180; x=1692283180;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9YjbH/cYJ2PSUK6dxbLLOnKRzrSg51mtuQEdl2JaXwE=;
+        b=RvpIFTd04LG7iPZ2u5ETiLASoDp3HaW3NZwvTrNMWpFIHKB/e38GUn7lP+0twq5GyV
+         s+ej9/KYUf1EY03jWrKormeR70lk5e1zI1abxNggfFp9NAKXufYPRvYB09ZPw+1/+QQR
+         9/5BAElkgNtqHccX5VRmvkFP996HPuzN/Zt7Ut2n/0hCTxIcg13ta7r9hmmMMBgeMLa1
+         xYRKzuGRbnT3D7GR8aVD1jneV8YCV6nwJKvDg+V5Y8d1X/1ZgbCg94HEgQxR5mrC4XR5
+         /noIP+2OCg35e72MMZrWkUQoKiae//oNjK6lpAfCFjpcuG9LbTyHWe54U3CyCOKJzwqJ
+         N5ag==
+X-Gm-Message-State: ABy/qLYaCQAW9KdicZk+uhuk1CENegMaar96uQaulvldE7exuTVEQPUv
+        aorQBJ9wjxJwxuOqKBl0wn4=
+X-Google-Smtp-Source: APBJJlHI97bUK0iK9LMlvLm46mZIfpEdRIHdjU2Cg78mA1CdqVmN/EQn9jS5vsQwIC6Jzwmy/RywGw==
+X-Received: by 2002:a17:902:f681:b0:1b6:bced:1dc2 with SMTP id l1-20020a170902f68100b001b6bced1dc2mr34502plg.0.1689691180518;
+        Tue, 18 Jul 2023 07:39:40 -0700 (PDT)
+Received: from ?IPV6:2601:1c2:980:9ec0::2764? ([2601:1c2:980:9ec0::2764])
+        by smtp.gmail.com with ESMTPSA id v11-20020a170902b7cb00b001a24cded097sm1936371plz.236.2023.07.18.07.39.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jul 2023 07:39:40 -0700 (PDT)
+Message-ID: <364507a5-ea2e-6280-cc9e-394e09d6edf7@gmail.com>
+Date:   Tue, 18 Jul 2023 07:39:39 -0700
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
+Content-Language: en-US
+To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+References: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
+ <TYWPR01MB877550F95CF000B63E9AD022C238A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+From:   Randy Dunlap <rd.dunlab@gmail.com>
+In-Reply-To: <TYWPR01MB877550F95CF000B63E9AD022C238A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,134 +78,46 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Thierry,
-
-On Di, 2023-07-18 at 09:30 +0200, Thierry Reding wrote:
-> On Thu, Jun 08, 2023 at 04:06:02PM +0200, Philipp Zabel wrote:
-> > Stop stm32_pwm_detect_channels() from disabling all channels and count
-> > the number of enabled PWMs to keep the clock running. Implement the
-> > &pwm_ops->get_state callback so drivers can inherit PWM state set by
-> > the bootloader.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> > Make the necessary changes to allow inheriting PWM state set by the
-> > bootloader, for example to avoid flickering with a pre-enabled PWM
-> > backlight.
-> > ---
-> >  drivers/pwm/pwm-stm32.c | 75 ++++++++++++++++++++++++++++++++++++++-----------
-> >  1 file changed, 59 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> > index 62e397aeb9aa..e0677c954bdf 100644
-> > --- a/drivers/pwm/pwm-stm32.c
-> > +++ b/drivers/pwm/pwm-stm32.c
-> > @@ -52,6 +52,21 @@ static u32 active_channels(struct stm32_pwm *dev)
-> >  	return ccer & TIM_CCER_CCXE;
-> >  }
-> >  
-> > +static int read_ccrx(struct stm32_pwm *dev, int ch, u32 *value)
-> > +{
-> > +	switch (ch) {
-> > +	case 0:
-> > +		return regmap_read(dev->regmap, TIM_CCR1, value);
-> > +	case 1:
-> > +		return regmap_read(dev->regmap, TIM_CCR2, value);
-> > +	case 2:
-> > +		return regmap_read(dev->regmap, TIM_CCR3, value);
-> > +	case 3:
-> > +		return regmap_read(dev->regmap, TIM_CCR4, value);
-> > +	}
-> > +	return -EINVAL;
-> > +}
+On 7/18/23 05:13, Fabrizio Castro wrote:
+> Hi Randy,
 > 
-> Looking at the register definitions we should be able to replace this
-> with a single line and parameterize based on channel.
+>> From: Randy Dunlap <rd.dunlab@gmail.com>
+>> Subject: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
+>>
+>> From: Randy Dunlap <rd.dunlab@gmail.com>
+>>
+>> When (MFD) RZ_MTU3=m and PWM_RZ_MTU3=y, there are numerous build
+>> errors:
+>>
+>>
+>> Modify the dependencies of PWM_RZ_MTU3 so that COMPILE_TEST is
+>> still allowed but PWM_RZ_MTU3 depends on RZ_MTU3 if it is being built
+>> but also allow the latter not to be built.
+>>
+>>  drivers/pwm/Kconfig |    3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff -- a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> --- a/drivers/pwm/Kconfig
+>> +++ b/drivers/pwm/Kconfig
+>> @@ -505,7 +505,8 @@ config PWM_ROCKCHIP
+>>
+>>  config PWM_RZ_MTU3
+>>  	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
+>> -	depends on RZ_MTU3 || COMPILE_TEST
+>> +	depends on COMPILE_TEST
+>> +	depends on RZ_MTU3 || RZ_MTU3=n
 > 
-> I realize you probably just copied from write_ccrx(), but might as well
-> improve this while at it. Could be a separate patch, though.
-> 
-> Also, ch should be unsigned int since it comes from pwm->hwpwm.
+> Isn't this a tautology?
 
-Thank you, I'll make both changes separately.
+Not at all. It's used in Kconfig quite a bit.
+This is tristate logic.
 
-> >  static int write_ccrx(struct stm32_pwm *dev, int ch, u32 value)
-> >  {
-> >  	switch (ch) {
-> > @@ -486,9 +501,40 @@ static int stm32_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *pwm,
-> >  	return ret;
-> >  }
-> >  
-> > +static int stm32_pwm_get_state(struct pwm_chip *chip,
-> > +			       struct pwm_device *pwm, struct pwm_state *state)
-> > +{
-> > +	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
-> > +	int ch = pwm->hwpwm;
-> 
-> This should reflect the type of pwm->hwpwm.
+It says that if RZ_MTU3 is y/m, PWM_RZ_MTU3 is limited by that.
+But if RZ_MTU3 is n, PWM_RZ_MTU3 can be y or m.
 
-Ok.
+Is that clearer?
 
-> > +	unsigned long rate;
-> > +	u32 ccer, psc, arr, ccr;
-> > +	u64 dty, prd;
-> > +	int ret;
-> > +
-> > +	ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	state->enabled = ccer & (TIM_CCER_CC1E << (ch * 4));
-> > +	state->polarity = (ccer & (TIM_CCER_CC1P << (ch * 4))) ?
-> > +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
-> > +	regmap_read(priv->regmap, TIM_PSC, &psc);
-> > +	regmap_read(priv->regmap, TIM_ARR, &arr);
-> 
-> We should probably check regmap_read() consistently here.
+-- 
+~Randy
 
-Will do.
-
-I'll also add locking so we can't PSC/ARR/CCRx in an in-between state.
-
-> > +	read_ccrx(priv, ch, &ccr);
-> > +	rate = clk_get_rate(priv->clk);
-> > +
-> > +	prd = (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
-> > +	state->period = DIV_ROUND_UP_ULL(prd, rate);
-> > +	dty = (u64)NSEC_PER_SEC * (psc + 1) * ccr;
-> > +	state->duty_cycle = DIV_ROUND_UP_ULL(dty, rate);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  static const struct pwm_ops stm32pwm_ops = {
-> >  	.owner = THIS_MODULE,
-> >  	.apply = stm32_pwm_apply_locked,
-> > +	.get_state = stm32_pwm_get_state,
-> >  	.capture = IS_ENABLED(CONFIG_DMA_ENGINE) ? stm32_pwm_capture : NULL,
-> >  };
-> >  
-> > @@ -579,30 +625,22 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
-> >  	priv->have_complementary_output = (ccer != 0);
-> >  }
-> >  
-> > -static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
-> > +static int stm32_pwm_detect_channels(struct stm32_pwm *priv, int *n_enabled)
-> 
-> unsigned int * for n_enabled.
-
-Ok.
-
-> >  {
-> > -	u32 ccer;
-> > -	int npwm = 0;
-> > +	u32 ccer, ccer_backup;
-> > +	int npwm;
-> 
-> Also make this and the return value unsigned int while at it. These can
-> never be negative.
-
-Thanks, I'll split this out into a separate patch.
-
-regards
-Philipp
