@@ -2,130 +2,129 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AC3A758471
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 20:19:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C727585EA
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 22:05:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229681AbjGRSTO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 14:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
+        id S229755AbjGRUFg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 16:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjGRSTJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 14:19:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6213D11C
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 11:19:03 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qLpHo-0001tm-52; Tue, 18 Jul 2023 20:19:00 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qLpHn-000Qnf-Ds; Tue, 18 Jul 2023 20:18:59 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qLpHm-005uoV-IZ; Tue, 18 Jul 2023 20:18:58 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        with ESMTP id S229504AbjGRUFg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 16:05:36 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A689B9D;
+        Tue, 18 Jul 2023 13:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689710734; x=1721246734;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=mnxKohf2xPQKgrCKJyNvtxb6h6YDhp8sG/+vF3Y5qeA=;
+  b=KQKLvePxb48ZxmD4lnOHF0gj7KUy9rvtDjlgNxJcbNm2BWNqQPTNyVPN
+   tvqtaKquouDsypCEykRPWDpr5fjVXQhoUGa08anka3Td4UdIQburnkbEy
+   NHLsvCgZi+Tn4duquCgXVT+sezyj4+VJVYH5F/hM7rjrJHUrGzmwfZAWX
+   +LMZVV4VlG5cqeWaU6nh7GaB6lNyfJBU60dsjlb+BKDQuxBWIngkfwdlR
+   HphWlGgVPkzt3iYhwKy9vmUTwZAQKuuip07uj5kVnKSDNAiZH8nL54jYb
+   C0ZvqlIpVKUdWrfSpQojIA6zfdVCgeijVvGf1QgvFADiveS3mxUX8JzzW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="346601842"
+X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
+   d="scan'208";a="346601842"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 13:05:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="793749516"
+X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
+   d="scan'208";a="793749516"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Jul 2023 13:05:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qLqwr-00BDgm-1E;
+        Tue, 18 Jul 2023 23:05:29 +0300
+Date:   Tue, 18 Jul 2023 23:05:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 18/18] gpio: mvebu: Make use of devm_pwmchip_alloc() function
-Date:   Tue, 18 Jul 2023 20:18:49 +0200
-Message-Id: <20230718181849.3947851-19-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        James Clark <james.clark@arm.com>, linux-doc@vger.kernel.org,
+        kernel@pengutronix.de, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 01/18] pwm: Provide devm_pwmchip_alloc() function
+Message-ID: <ZLbwib753V6wSHKB@smile.fi.intel.com>
 References: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
+ <20230718181849.3947851-2-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2192; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=xBvdsZeiXAEcdnH58UItARY2e7eMwPEcvQJ6V4tOakY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkttb8Ml74uT9Ms7jH2ybcBr/sYyoqPwWwbGVsr 6JV4tQiib+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZLbW/AAKCRCPgPtYfRL+ Tpe7CACInEAGAG9ZOrW1yCrRg0ZA+e8bhc4tI97V89h3V2D3N9rfFu05I7vSYOL5sDDLeEazmWY M48zMTVsvUfccZLRWYoadYeKVjseY0B9u0AIOrwOqShTHCUFmIcXUB4UoeihCNdh69axeHaE5xP BmHyhqv9E7aS7d7mR1BXaQR+tKcvcsby4L5F++1F2iqVl3QilZddhGeO4grjAGQb9zOj0egQwSu Lfg9Zn01+KSsUX5ZNA8z7YfjEBaZv0+4cAiPS7njoDkK4+84B4t6G9OGfR0PJYXHD70uPtQlOIy HWSDVSq8FrH6iy1saF0SdPTKHsG4RgeoWHrkIW2/Gn22W6W4
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230718181849.3947851-2-u.kleine-koenig@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This prepares the pwm sub-driver to further changes of the pwm core
-outlined in the commit introducing devm_pwmchip_alloc(). There is no
-intended semantical change and the driver should behave as before.
+On Tue, Jul 18, 2023 at 08:18:32PM +0200, Uwe Kleine-König wrote:
+> This function allocates a struct pwm_chip and driver data. Compared to
+> the status quo the split into pwm_chip and driver data is new, otherwise
+> it doesn't change anything relevant (yet).
+> 
+> The intention is that after all drivers are switched to use this
+> allocation function, its possible to add a struct device to struct
+> pwm_chip to properly track the latter's lifetime without touching all
+> drivers again. Proper lifetime tracking is a necessary precondition to
+> introduce character device support for PWMs (that implements atomic
+> setting and doesn't suffer from the sysfs overhead of the /sys/class/pwm
+> userspace support).
+> 
+> The new function pwmchip_priv() (obviously?) only works for chips
+> allocated with devm_pwmchip_alloc().
 
-Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-mvebu.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+...
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index a35958e7adf6..9557cac807f9 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -98,7 +98,6 @@ struct mvebu_pwm {
- 	u32			 offset;
- 	unsigned long		 clk_rate;
- 	struct gpio_desc	*gpiod;
--	struct pwm_chip		 chip;
- 	spinlock_t		 lock;
- 	struct mvebu_gpio_chip	*mvchip;
- 
-@@ -614,7 +613,7 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
-  */
- static struct mvebu_pwm *to_mvebu_pwm(struct pwm_chip *chip)
- {
--	return container_of(chip, struct mvebu_pwm, chip);
-+	return pwmchip_priv(chip);
- }
- 
- static int mvebu_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -789,6 +788,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- {
- 	struct device *dev = &pdev->dev;
- 	struct mvebu_pwm *mvpwm;
-+	struct pwm_chip *chip;
- 	void __iomem *base;
- 	u32 offset;
- 	u32 set;
-@@ -813,9 +813,11 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	if (IS_ERR(mvchip->clk))
- 		return PTR_ERR(mvchip->clk);
- 
--	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
--	if (!mvpwm)
-+	chip = devm_pwmchip_alloc(dev, sizeof(struct mvebu_pwm));
-+	if (!chip)
- 		return -ENOMEM;
-+	mvpwm = pwmchip_priv(chip);
-+
- 	mvchip->mvpwm = mvpwm;
- 	mvpwm->mvchip = mvchip;
- 	mvpwm->offset = offset;
-@@ -868,13 +870,12 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
--	mvpwm->chip.dev = dev;
--	mvpwm->chip.ops = &mvebu_pwm_ops;
--	mvpwm->chip.npwm = mvchip->chip.ngpio;
-+	chip->ops = &mvebu_pwm_ops;
-+	chip->npwm = mvchip->chip.ngpio;
- 
- 	spin_lock_init(&mvpwm->lock);
- 
--	return devm_pwmchip_add(dev, &mvpwm->chip);
-+	return devm_pwmchip_add(dev, chip);
- }
- 
- #ifdef CONFIG_DEBUG_FS
+> +void *pwmchip_priv(struct pwm_chip *chip)
+> +{
+> +	return (char *)chip + ALIGN(sizeof(*chip), 32);
+
+Why 32? I haven't found any explanation on the choice. I can understand arch
+minimum align, but hard coded value is a bit hard to get.
+
+> +}
+
+...
+
+> +struct pwm_chip *devm_pwmchip_alloc(struct device *parent, size_t sizeof_priv)
+> +{
+> +	struct pwm_chip *chip;
+> +	size_t alloc_size;
+
+> +	alloc_size = ALIGN(sizeof(*chip), 32) + sizeof_priv;
+
+Ditto.
+
+Shouldn't it use a macro from overflow.h?
+
+> +	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
+> +	if (!chip)
+> +		return NULL;
+> +
+> +	chip->dev = parent;
+> +
+> +	return chip;
+> +}
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
