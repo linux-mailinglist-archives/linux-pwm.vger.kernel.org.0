@@ -2,74 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DF66757FC9
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 16:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 889B4757FD7
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 16:41:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232674AbjGROjm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 10:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57080 "EHLO
+        id S231709AbjGROlf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 10:41:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230005AbjGROjm (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 10:39:42 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 256A2EC;
-        Tue, 18 Jul 2023 07:39:41 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b9ecf0cb4cso34988145ad.2;
-        Tue, 18 Jul 2023 07:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689691180; x=1692283180;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9YjbH/cYJ2PSUK6dxbLLOnKRzrSg51mtuQEdl2JaXwE=;
-        b=gL0tFQjNN8biOJamPJJfy44kw7s40tsXNw9jqPr7YfxT22wzc3ofdkm+F+GH4Q9QSE
-         s7neCAqGR/hs1OhMFFAH9siFxoPGlrVPC+0obIBN0p4hffwOAVt/l+zoENXEBc7EaVeC
-         eYdKQq8nlK3bafoOVWRZjthIQ0mThb6POY4dYJEFOwh07BOTYdj0cbticuDrqJLJR+Dh
-         FZyx+bizRqAoGme9gwzp0Pc+DzRHymL84H0sftKzvDspikiVzcnCZE+LTRq5l3SnTtcq
-         hF0QbkfFpXU1p8JYzY7YbPspVSCu0aFwymMSaUW5aLp2ysqsENbAJ0tw4hoX+V3ZMHuR
-         SxdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689691180; x=1692283180;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9YjbH/cYJ2PSUK6dxbLLOnKRzrSg51mtuQEdl2JaXwE=;
-        b=RvpIFTd04LG7iPZ2u5ETiLASoDp3HaW3NZwvTrNMWpFIHKB/e38GUn7lP+0twq5GyV
-         s+ej9/KYUf1EY03jWrKormeR70lk5e1zI1abxNggfFp9NAKXufYPRvYB09ZPw+1/+QQR
-         9/5BAElkgNtqHccX5VRmvkFP996HPuzN/Zt7Ut2n/0hCTxIcg13ta7r9hmmMMBgeMLa1
-         xYRKzuGRbnT3D7GR8aVD1jneV8YCV6nwJKvDg+V5Y8d1X/1ZgbCg94HEgQxR5mrC4XR5
-         /noIP+2OCg35e72MMZrWkUQoKiae//oNjK6lpAfCFjpcuG9LbTyHWe54U3CyCOKJzwqJ
-         N5ag==
-X-Gm-Message-State: ABy/qLYaCQAW9KdicZk+uhuk1CENegMaar96uQaulvldE7exuTVEQPUv
-        aorQBJ9wjxJwxuOqKBl0wn4=
-X-Google-Smtp-Source: APBJJlHI97bUK0iK9LMlvLm46mZIfpEdRIHdjU2Cg78mA1CdqVmN/EQn9jS5vsQwIC6Jzwmy/RywGw==
-X-Received: by 2002:a17:902:f681:b0:1b6:bced:1dc2 with SMTP id l1-20020a170902f68100b001b6bced1dc2mr34502plg.0.1689691180518;
-        Tue, 18 Jul 2023 07:39:40 -0700 (PDT)
-Received: from ?IPV6:2601:1c2:980:9ec0::2764? ([2601:1c2:980:9ec0::2764])
-        by smtp.gmail.com with ESMTPSA id v11-20020a170902b7cb00b001a24cded097sm1936371plz.236.2023.07.18.07.39.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jul 2023 07:39:40 -0700 (PDT)
-Message-ID: <364507a5-ea2e-6280-cc9e-394e09d6edf7@gmail.com>
-Date:   Tue, 18 Jul 2023 07:39:39 -0700
+        with ESMTP id S230268AbjGROlf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 10:41:35 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40275F9
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 07:41:34 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLltM-0000fr-3q; Tue, 18 Jul 2023 16:41:32 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLltK-000OWr-JP; Tue, 18 Jul 2023 16:41:30 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qLltJ-005s12-Sp; Tue, 18 Jul 2023 16:41:29 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de
+Subject: [PATCH] pwm: lpc18xx-sct: Simplify using devm_clk_get_enabled()
+Date:   Tue, 18 Jul 2023 16:41:28 +0200
+Message-Id: <20230718144128.371818-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
-Content-Language: en-US
-To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-References: <ac8d6190-06ae-b538-1293-07efedbfe94e@gmail.com>
- <TYWPR01MB877550F95CF000B63E9AD022C238A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
-From:   Randy Dunlap <rd.dunlab@gmail.com>
-In-Reply-To: <TYWPR01MB877550F95CF000B63E9AD022C238A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2895; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=q3I6a2iRMSAMGg2/yW8ey2YZmnmkBcgKC2f17BPfnTY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBktqSX198L4VQGC0DM6QnbeYgsKTfkYJjSMTkng wSkQibqQ0GJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZLaklwAKCRCPgPtYfRL+ Tn+qB/40LN6qFPZUkfM2ymLKMUZlF9sBQLQba6NbE0CLhmgavDxW0G6lnH0GG9VYVtWpKhs7hUu r6QMU9G8/M9wp3pgnw+sWifu73eHtLhSrji/x41ebl+ozI0+jWgzAaMnX7lCqF8TAUgt9gN0R2G yrSP4JUpISj1VOz3iukHVFWqQHJgO+Lf5wcdQO8Lkl5NDdLpAdUOIq1Ckq42i//dQFo4Tflq2mQ IZaca0N6iWpnWRMvmE5e+OegyIlLGpme6MM5KYrw0I25a/GOaGYyUNUBVvjWoBjs/qaz9PVVMDP fPonGj/JS/g+MAEoyZY+b5Mt/vRwtUT+WaM6loW0OOFrm/VH
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -78,46 +54,87 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 7/18/23 05:13, Fabrizio Castro wrote:
-> Hi Randy,
-> 
->> From: Randy Dunlap <rd.dunlab@gmail.com>
->> Subject: [PATCH v2] pwm: fix pwm-rz-mtu3.c build errors
->>
->> From: Randy Dunlap <rd.dunlab@gmail.com>
->>
->> When (MFD) RZ_MTU3=m and PWM_RZ_MTU3=y, there are numerous build
->> errors:
->>
->>
->> Modify the dependencies of PWM_RZ_MTU3 so that COMPILE_TEST is
->> still allowed but PWM_RZ_MTU3 depends on RZ_MTU3 if it is being built
->> but also allow the latter not to be built.
->>
->>  drivers/pwm/Kconfig |    3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff -- a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -505,7 +505,8 @@ config PWM_ROCKCHIP
->>
->>  config PWM_RZ_MTU3
->>  	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
->> -	depends on RZ_MTU3 || COMPILE_TEST
->> +	depends on COMPILE_TEST
->> +	depends on RZ_MTU3 || RZ_MTU3=n
-> 
-> Isn't this a tautology?
+With devm_clk_get_enabled() the call to clk_disable_unprepare() can be
+dropped from the error path and the remove callback.
 
-Not at all. It's used in Kconfig quite a bit.
-This is tristate logic.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pwm/pwm-lpc18xx-sct.c | 33 ++++++++-------------------------
+ 1 file changed, 8 insertions(+), 25 deletions(-)
 
-It says that if RZ_MTU3 is y/m, PWM_RZ_MTU3 is limited by that.
-But if RZ_MTU3 is n, PWM_RZ_MTU3 can be y or m.
+diff --git a/drivers/pwm/pwm-lpc18xx-sct.c b/drivers/pwm/pwm-lpc18xx-sct.c
+index b9bf5b366f4b..0bf0893a5d52 100644
+--- a/drivers/pwm/pwm-lpc18xx-sct.c
++++ b/drivers/pwm/pwm-lpc18xx-sct.c
+@@ -366,30 +366,21 @@ static int lpc18xx_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(lpc18xx_pwm->base))
+ 		return PTR_ERR(lpc18xx_pwm->base);
+ 
+-	lpc18xx_pwm->pwm_clk = devm_clk_get(&pdev->dev, "pwm");
++	lpc18xx_pwm->pwm_clk = devm_clk_get_enabled(&pdev->dev, "pwm");
+ 	if (IS_ERR(lpc18xx_pwm->pwm_clk))
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(lpc18xx_pwm->pwm_clk),
+ 				     "failed to get pwm clock\n");
+ 
+-	ret = clk_prepare_enable(lpc18xx_pwm->pwm_clk);
+-	if (ret < 0)
+-		return dev_err_probe(&pdev->dev, ret,
+-				     "could not prepare or enable pwm clock\n");
+-
+ 	lpc18xx_pwm->clk_rate = clk_get_rate(lpc18xx_pwm->pwm_clk);
+-	if (!lpc18xx_pwm->clk_rate) {
+-		ret = dev_err_probe(&pdev->dev,
+-				    -EINVAL, "pwm clock has no frequency\n");
+-		goto disable_pwmclk;
+-	}
++	if (!lpc18xx_pwm->clk_rate)
++		return dev_err_probe(&pdev->dev,
++				     -EINVAL, "pwm clock has no frequency\n");
+ 
+ 	/*
+ 	 * If clkrate is too fast, the calculations in .apply() might overflow.
+ 	 */
+-	if (lpc18xx_pwm->clk_rate > NSEC_PER_SEC) {
+-		ret = dev_err_probe(&pdev->dev, -EINVAL, "pwm clock to fast\n");
+-		goto disable_pwmclk;
+-	}
++	if (lpc18xx_pwm->clk_rate > NSEC_PER_SEC)
++		return dev_err_probe(&pdev->dev, -EINVAL, "pwm clock to fast\n");
+ 
+ 	mutex_init(&lpc18xx_pwm->res_lock);
+ 	mutex_init(&lpc18xx_pwm->period_lock);
+@@ -435,18 +426,12 @@ static int lpc18xx_pwm_probe(struct platform_device *pdev)
+ 	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_CTRL, val);
+ 
+ 	ret = pwmchip_add(&lpc18xx_pwm->chip);
+-	if (ret < 0) {
+-		dev_err_probe(&pdev->dev, ret, "pwmchip_add failed\n");
+-		goto disable_pwmclk;
+-	}
++	if (ret < 0)
++		return dev_err_probe(&pdev->dev, ret, "pwmchip_add failed\n");
+ 
+ 	platform_set_drvdata(pdev, lpc18xx_pwm);
+ 
+ 	return 0;
+-
+-disable_pwmclk:
+-	clk_disable_unprepare(lpc18xx_pwm->pwm_clk);
+-	return ret;
+ }
+ 
+ static void lpc18xx_pwm_remove(struct platform_device *pdev)
+@@ -459,8 +444,6 @@ static void lpc18xx_pwm_remove(struct platform_device *pdev)
+ 	val = lpc18xx_pwm_readl(lpc18xx_pwm, LPC18XX_PWM_CTRL);
+ 	lpc18xx_pwm_writel(lpc18xx_pwm, LPC18XX_PWM_CTRL,
+ 			   val | LPC18XX_PWM_CTRL_HALT);
+-
+-	clk_disable_unprepare(lpc18xx_pwm->pwm_clk);
+ }
+ 
+ static struct platform_driver lpc18xx_pwm_driver = {
 
-Is that clearer?
-
+base-commit: fdf0eaf11452d72945af31804e2a1048ee1b574c
 -- 
-~Randy
+2.39.2
 
