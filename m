@@ -2,173 +2,201 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE1D3757283
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 05:47:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE1E7572A4
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 06:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbjGRDri (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 17 Jul 2023 23:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43680 "EHLO
+        id S231167AbjGREB1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 00:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230231AbjGRDre (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 17 Jul 2023 23:47:34 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E081137
-        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 20:47:28 -0700 (PDT)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230718034725epoutp03545e5e8ed09d1f67db26edb117873047~y2ZVgo2uo0156701567epoutp036
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 03:47:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230718034725epoutp03545e5e8ed09d1f67db26edb117873047~y2ZVgo2uo0156701567epoutp036
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1689652045;
-        bh=tSxJqs0xAf2OaWmufD5SkySGQ2OZB+41Bzu1pYFCO/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCuDX7kR0/o8m4QSWvWluh/iIWX95+4OaSh+yL4MyFA/ZI1b+ijsdBKL76Wiw2IpW
-         L4lFv8CFIxjEmrK6laqQ6UO+d8Ev/JHhoI0M/EfLEz1th8NLV76A9J7kZdQP4NOgIw
-         YXUP0ZXpEr2PTXbCL5VA5O93ahyyenTw8dLEaatU=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230718034725epcas2p2f1d5bc519b331eba4b8411b25db56864~y2ZU-7INq0276202762epcas2p2s;
-        Tue, 18 Jul 2023 03:47:25 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.101]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4R4lJX6kl3z4x9Q0; Tue, 18 Jul
-        2023 03:47:24 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DF.F1.29526.C4B06B46; Tue, 18 Jul 2023 12:47:24 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230718034723epcas2p354fc5502d4ed212c7f748d2849e6b60a~y2ZTw1Z962503525035epcas2p3N;
-        Tue, 18 Jul 2023 03:47:23 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230718034723epsmtrp14272200f11328471aa854323ef32883b~y2ZTwDb5y2910429104epsmtrp1T;
-        Tue, 18 Jul 2023 03:47:23 +0000 (GMT)
-X-AuditID: b6c32a4d-853ff70000047356-d0-64b60b4c0c3b
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1A.2E.30535.B4B06B46; Tue, 18 Jul 2023 12:47:23 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.55]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230718034723epsmtip139f202407c47967a4b07ef91488358e1~y2ZTjdTV32248222482epsmtip1p;
-        Tue, 18 Jul 2023 03:47:23 +0000 (GMT)
-From:   Jaewon Kim <jaewon02.kim@samsung.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Jaewon Kim <jaewon02.kim@samsung.com>
-Subject: [PATCH v5 2/2] arm64: dts: exynos: add pwm node for
- exynosautov9-sadk
-Date:   Tue, 18 Jul 2023 12:42:01 +0900
-Message-Id: <20230718034201.136800-3-jaewon02.kim@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230718034201.136800-1-jaewon02.kim@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHKsWRmVeSWpSXmKPExsWy7bCmqa4P97YUgzkzTS0ezNvGZrFm7zkm
-        i/lHzrFa7Gg4wmrR9+Ihs8Wmx9dYLS7vmsNmcffuKkaLGef3MVm07j3CbvFz1zwWi9sTJzM6
-        8HjsnHWX3WPTqk42jzvX9rB5bF5S79H/18Cjb8sqRo/Pm+QC2KOybTJSE1NSixRS85LzUzLz
-        0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA7lRSKEvMKQUKBSQWFyvp29kU5ZeW
-        pCpk5BeX2CqlFqTkFJgX6BUn5haX5qXr5aWWWBkaGBiZAhUmZGdsaXrJUvCIu+LInpmMDYwP
-        ObsYOTkkBEwk9s6cxtzFyMUhJLCHUeLIhb1sEM4nRokfKy6yglQJCXxjlLgzURqm4/yB6cwQ
-        8b2MEr095hANHxklnl/8xQaSYBPQlvi+fjFYs4jAQiaJZ/fLQIqYBU4zSqy99YQFJCEsECAx
-        s70FqIiDg0VAVeL3JmMQk1fATuLU9CCIXfISqzccANvFKWAvMWH3HnaQMRICf9klJl+/yAhR
-        5CJx6P12NghbWOLV8S3sELaUxMv+Nig7W6J9+h9WCLtC4uKG2VD1xhKznrUzguxlFtCUWL9L
-        H8SUEFCWOHIL7EhmAT6JjsN/2SHCvBIdbUIQjWoS96eegxoiIzHpyEomCNtD4uTVblZIiExi
-        lJjw/Sf7BEa5WQgLFjAyrmKUSi0ozk1PTTYqMNTNSy2HR1lyfu4mRnBC1PLdwfh6/V+9Q4xM
-        HIyHGCU4mJVEeL+v2pQixJuSWFmVWpQfX1Sak1p8iNEUGHoTmaVEk/OBKTmvJN7QxNLAxMzM
-        0NzI1MBcSZz3XuvcFCGB9MSS1OzU1ILUIpg+Jg5OqQYmG7EZOakHU1RM52Z18tZzNDw8re84
-        8ayxVqTgofmSQQ6Lf291XCpf9P/c7i2bKiKyCw0blb2djDQWL5a51bbzdmXqxR0LHJ/vcHRz
-        eSFQvPtUpW5kBvOJz7lne/jkdkju+L+F6Tm34NQTSzP8+WfNfiTBIn/sxK7H/zoNdZds/Bs3
-        8+uzqMvBX9hZVPpE7/d/6HqVZxSaF2X3yM1p950HV/UOqG6f638heK3F5SoXOduG60z3r7e2
-        vP4vbfIq8f3b69+2GyusOaZ+Yfdsgw72PU2L5b7YZZu+nSM6mWt9Qmy7nGdYwgsvkz06Z2Z3
-        TnOeLM/Kq3p48++smNluKuu+hoe9l6gSFEnMzPAIP1ujxFKckWioxVxUnAgAS1ZPQhEEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBLMWRmVeSWpSXmKPExsWy7bCSnK4397YUg2PPjCwezNvGZrFm7zkm
-        i/lHzrFa7Gg4wmrR9+Ihs8Wmx9dYLS7vmsNmcffuKkaLGef3MVm07j3CbvFz1zwWi9sTJzM6
-        8HjsnHWX3WPTqk42jzvX9rB5bF5S79H/18Cjb8sqRo/Pm+QC2KO4bFJSczLLUov07RK4MrY0
-        vWQpeMRdcWTPTMYGxoecXYycHBICJhLnD0xn7mLk4hAS2M0o8Xv/HlaIhIzE8md9bBC2sMT9
-        liOsEEXvGSUabn8FS7AJaEt8X78YLCEisJhJ4k33QzCHWeAio8SJP1fYQaqEBfwk2q5sAdrB
-        wcEioCrxe5MxiMkrYCdxanoQxAJ5idUbDjCD2JwC9hITdu8B6xQCKvm49BvjBEa+BYwMqxgl
-        UwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxggNXS2sH455VH/QOMTJxMB5ilOBgVhLh/b5q
-        U4oQb0piZVVqUX58UWlOavEhRmkOFiVx3m+ve1OEBNITS1KzU1MLUotgskwcnFINTBO5C+8F
-        TXJKDfjy+8bpQ3l31/efZWvdFnyyRPmbyvTU1za/vqS7VH36sMIo+YSym6+ig65P/Fa1NIMs
-        xY93TF5fmststfaC4S/DR+9y03wn7L2WMePa/SXOtTuffPukuupsmKv42RyHJM+TNSxiS7cl
-        dG6a2hY2i8voV9iTiqB7z+ddCyvoYVCz+/P9tOrNMuVui4qX55Y2tNRtCX8+LSWkwnRj0JfG
-        6M11b1k43j9jnXpBTCk6flLik0+zs911zrPbCdU9l5qy99yhXTZLH/w7PeGy65HHJ7JyuLS2
-        hzs11s37n8Ka5HvXwUde6p+buNq8ScbMEdnuzE3V15/8m+V/eXZtfnXQ4caYT7t/3VZiKc5I
-        NNRiLipOBAC31DPfywIAAA==
-X-CMS-MailID: 20230718034723epcas2p354fc5502d4ed212c7f748d2849e6b60a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230718034723epcas2p354fc5502d4ed212c7f748d2849e6b60a
-References: <20230718034201.136800-1-jaewon02.kim@samsung.com>
-        <CGME20230718034723epcas2p354fc5502d4ed212c7f748d2849e6b60a@epcas2p3.samsung.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S229496AbjGREB0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 00:01:26 -0400
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D43194;
+        Mon, 17 Jul 2023 21:01:25 -0700 (PDT)
+Received: by mail-oi1-x234.google.com with SMTP id 5614622812f47-3a43cbb4326so2466140b6e.2;
+        Mon, 17 Jul 2023 21:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689652885; x=1692244885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TFDsYeU09QyX9nMGiHdFlrICPlkCawySijwdpTw5NLM=;
+        b=fCpfi36ddfNUO4DxSsb38t1Gm9qcZ2cyxe1ho9CTdR0NF3RYOvfxRFg8sjudYuMA35
+         YbfxUYupQDgG7zx/tJKMpfhNlAXcnXKnKu1xoxJeOd362zxKXkWrBRU1KfqYzmif3OuM
+         yaNzfCWTnY5jtYBCPD8/LkyjZIgn1wuVPT6F5YHmK4DWR/VkTpeXKdunCmjQIxdZVknY
+         g9x+RMMYiTVo243FOHcCk/5Jy98HLDIzKYer4s9KRVaLv3052hDn3acFvxHfSrMDlK0t
+         f7vauHUJk9r0tJqPad+Iv4P+drE/i5dirMTQfBoPV+8/VkfMy62mQxYR2YHYrR0Y+2M0
+         F5ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689652885; x=1692244885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TFDsYeU09QyX9nMGiHdFlrICPlkCawySijwdpTw5NLM=;
+        b=li1lho2sIO894N4aZBZ/Fk8nXEET5W4AXkHLabgGT2xIykiaXyDW9fne4S7joIr7az
+         Zq20r7kycRo9NdAZC6kcXHUVc9KuMa52tVqv4GQoGPNNWURxAJRZw8q1umeI7cDjdExv
+         kcs1dVefOk46jOreqP3z5JhFnaRnReAArtGSIVbqILHkjJHkqI5DoeY2vhkaUXGAqiW9
+         d8nBGtr8e4pjRcge0MUhQ7AIpsG8Le7pNk/LxNUMV4+nPvLbk+K2pi2K+XsvxHo/nNqy
+         F7acRRtQ5LICAq9Et1HKS1RDaKk3dRB7Wo8M8D75zb9bpyLHxH/lLOHQ90X97RYvCNUC
+         EtiQ==
+X-Gm-Message-State: ABy/qLZSIeFTsL3BjxdWpNmb0oMF4FeSGZZek/eXvVFLo5rMpYe7nqeM
+        /ya9Wf0INmdJAcG3v8fbyvnsnYTVX2o0tZHekysEOnvkEdq5ry4+
+X-Google-Smtp-Source: APBJJlFei5nTsv62G4RI+NBkc29pl0jchtNvubF4SKpPkRcKNsh9fO5zwyBsd/MW55rbHWgSub5On7KihHxl/Remrv4=
+X-Received: by 2002:a05:6808:199c:b0:3a3:ac49:77dc with SMTP id
+ bj28-20020a056808199c00b003a3ac4977dcmr15295760oib.1.1689652884633; Mon, 17
+ Jul 2023 21:01:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAGUgbhCqOJaEPjS96o2au21uW4NhqFScm4Ayd8PzOQvqxQ94SQ@mail.gmail.com>
+ <0b9dd5cf-f4ca-2e6b-624d-0b451bbc2f30@linaro.org> <0ba3767c-d481-6e2c-2d32-b79af0e1efd8@roeck-us.net>
+ <CAGUgbhC34-pUp4ECULc0ScaN7hUF1L-z69h+ji-TiVrv4gKd3Q@mail.gmail.com>
+ <7b198d57-ddec-3074-314a-3e5e5b8f48f9@roeck-us.net> <CAGUgbhDbFedVe-pc+muD_NtDpjHpGqMDdrS3A73C-QbxeHn4oQ@mail.gmail.com>
+ <cf91edc9-1093-495b-48eb-6b05198c2541@linaro.org> <7a69bda1-5f4c-5b1f-8eb6-6fd58917a9b1@roeck-us.net>
+ <CAGUgbhCTDPGt_vpbfaEreX+iuLJ3WUBqt4kppxyaFZQus9Zf0Q@mail.gmail.com> <b22b2ccc-6760-0db6-067b-109c3864d2e8@linaro.org>
+In-Reply-To: <b22b2ccc-6760-0db6-067b-109c3864d2e8@linaro.org>
+From:   =?UTF-8?B?6JSh5om/6YGU?= <billyking19920205@gmail.com>
+Date:   Tue, 18 Jul 2023 12:01:13 +0800
+Message-ID: <CAGUgbhDmXnyxYCL9h9C0P4ByDSTstWnGqW=uFoDVVHeK3BerHA@mail.gmail.com>
+Subject: Re: [v6 2/4] dt-bindings: hwmon: Add ASPEED TACH Control documentation
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add pwm node to support fan on exynosautov9-sadk board.
-PWM channel 3 of ExynosAutov9 is connected to fan for SoC cooling
-in SADK board.
+>
+> On 17/07/2023 11:01, =E8=94=A1=E6=89=BF=E9=81=94 wrote:
+> > Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2023=E5=B9=B47=E6=9C=8817=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=881:00=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> >>
+> >> On 7/16/23 09:08, Krzysztof Kozlowski wrote:
+> >>
+> >> [ ... ]
+> >>
+> >>>>
+> >>>> This patch serial doesn't use to binding the fan control h/w. It is
+> >>>> used to binding the two independent h/w blocks.
+> >>>> One is used to provide pwm output and another is used to monitor the
+> >>>> speed of the input.
+> >>>> My patch is used to point out that the pwm and the tach is the
+> >>>> different function and don't need to
+> >>>> bind together. You can not only combine them as the fan usage but al=
+so
+> >>>> treat them as the individual module for
+> >>>> use. For example: the pwm can use to be the beeper (pwm-beeper.c), t=
+he
+> >>>> tach can be used to monitor the heart beat signal.
+> >>>
+> >>> Isn't this exactly the same as in every other SoC? PWMs can be used i=
+n
+> >>> different ways?
+> >>>
+> >>
+> >> ... and in every fan controller. Not that it really makes sense becaus=
+e
+> >> normally the pwm controller part of such chips is tied to the fan inpu=
+t,
+> >> to enable automatic fan control, but it is technically possible.
+> >> In many cases this is also the case in SoCs, for example, in ast2500.
+> >> Apparently this was redesigned in ast2600 where they two blocks are
+> >> only lightly coupled (there are two pwm status bits in the fan status
+> >> register, but I have no idea what those mean). If the blocks are tight=
+ly
+> >> coupled, separate drivers don't really make sense.
+> >>
+> >> There are multiple ways to separate the pwm controller part from the
+> >> fan inputs if that is really necessary. One would be to provide a
+> >> sequence of address mappings, the other would be to pass the memory
+> >> region from an mfd driver. It is not necessary to have N instances
+> >> of the fan controller, even if the address space is not continuous.
+> >>
+> >
+> > Hi Guenter,
+> >
+> > May I ask about the meaning of the sequence of address mappings? It app=
+ears
+> > to consist of multiple tuples within the 'reg' property, indicating
+> > the usage of PWM/Tach
+> > registers within a single instance. After that I can use the dts like f=
+ollowing:
+> >
+> > pwm: pwm@1e610000 {
+> > ...
+> > reg =3D <0x1e610000 0x8
+> > 0x1e610010 0x8
+> > 0x1e610020 0x8
+> > 0x1e610030 0x8
+> > 0x1e610040 0x8
+> > 0x1e610050 0x8
+> > 0x1e610060 0x8
+> > 0x1e610070 0x8
+> > 0x1e610080 0x8
+> > 0x1e610090 0x8
+> > 0x1e6100A0 0x8
+> > 0x1e6100B0 0x8
+> > 0x1e6100C0 0x8
+> > 0x1e6100D0 0x8
+> > 0x1e6100E0 0x8
+> > 0x1e6100F0 0x8>;
+>
+>
+> Uh, no... I mean, why? We keep pointing out that this should not be done
+> differently than any other SoC. Open any other SoC PWM controller and
+> tell me why this is different? Why this cannot be one address space?
 
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynosautov9-sadk.dts |  6 ++++++
- arch/arm64/boot/dts/exynos/exynosautov9.dtsi     | 10 ++++++++++
- 2 files changed, 16 insertions(+)
+Hi Krzysztof,
 
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov9-sadk.dts b/arch/arm64/boot/dts/exynos/exynosautov9-sadk.dts
-index 101f51bf565a..bc1815f6ada2 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov9-sadk.dts
-+++ b/arch/arm64/boot/dts/exynos/exynosautov9-sadk.dts
-@@ -49,6 +49,12 @@
- 	};
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_tout3>;
-+	status = "okay";
-+};
-+
- &serial_0 {
- 	pinctrl-0 = <&uart0_bus_dual>;
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov9.dtsi b/arch/arm64/boot/dts/exynos/exynosautov9.dtsi
-index d3c5cdeff47f..3b906f4db907 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov9.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynosautov9.dtsi
-@@ -1560,6 +1560,16 @@
- 			samsung,syscon-phandle = <&pmu_system_controller>;
- 			samsung,cluster-index = <1>;
- 		};
-+
-+		pwm: pwm@103f0000 {
-+			compatible = "samsung,exynosautov9-pwm",
-+				     "samsung,exynos4210-pwm";
-+			reg = <0x103f0000 0x100>;
-+			samsung,pwm-outputs = <0>, <1>, <2>, <3>;
-+			#pwm-cells = <3>;
-+			clocks = <&xtcxo>;
-+			clock-names = "timers";
-+		};
- 	};
- };
- 
--- 
-2.17.1
+This is because the register layout for PWM and Tach is not continuous.
+Each PWM/Tach instance has its own set of controller registers, and they
+are independent of each other.
 
+For example:
+PWM0 uses registers 0x0 and 0x4, while Tach0 uses registers 0x8 and 0xc.
+PWM1 uses registers 0x10 and 0x14, while Tach1 uses registers 0x18 and 0x1c=
+.
+...
+
+To separate the PWM controller part from the fan inputs, Guenter has
+provided two methods.
+The first method involves passing the memory region from an MFD
+driver, which was the
+initial method I intended to use. However, it seems that this method
+does not make sense to you.
+
+Therefore, I would like to explore the second method suggested by
+Guenter, which involves providing
+a sequence of address mappings.
+
+Thanks
+
+Best Regards,
+Billy Tsai
