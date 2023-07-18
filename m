@@ -2,135 +2,211 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87B1275737B
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 07:59:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0E4E757390
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 08:04:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229678AbjGRF7F (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 01:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48116 "EHLO
+        id S230526AbjGRGEe (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 18 Jul 2023 02:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjGRF7F (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 01:59:05 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 256C6D1;
-        Mon, 17 Jul 2023 22:59:04 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6726d5d92afso3938556b3a.1;
-        Mon, 17 Jul 2023 22:59:04 -0700 (PDT)
+        with ESMTP id S229674AbjGRGEb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 02:04:31 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99198EA
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 23:04:28 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-98e011f45ffso652540666b.3
+        for <linux-pwm@vger.kernel.org>; Mon, 17 Jul 2023 23:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689659943; x=1692251943;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rXYEcHFxyrbA69rtii4+ZKfjZ9itoGUX8c0WkuXiT6w=;
-        b=CDjXPKboGZfn+pwk2wCl8kF9+EUUdqmuP7TCwW5MLsM4lxATRgjYHAbePatj5OlIxk
-         eYyW1rDRoUP1n+RwYTyVi/rbToK/w3nEGm60fG2ds1H3rJVuPKwWWFYzuorEY9Mlwzf8
-         yvIZ03M4cVaC4nJ0GCW/aAcQ3OdEUmrYoFj3HLdSQiCv51ZaQevv1ZzhL8r7hgYhTSIZ
-         ABjPybq+fqqBUdyPSOkQIOqGLZiFGaxgvCPOTYASkI/apBU42OAk7ZZgVe+keK786rrd
-         kcAbSKM9ByWhJDSzzxh2tEA3Vv5o3hVaIxtXoD5w2zGPZgfCp5mA+DxiWWLdkcgPp8rv
-         VykA==
+        d=linaro.org; s=google; t=1689660267; x=1692252267;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g5f7NuoL+/s8bYQq96dyzOfuTIeGEJ1Q95iMxVbPcgI=;
+        b=MHy1+SYOHT+v734z3zl3xn74SFQLQkv9kc8FKVktNOw56L3SKY61lRQ78NIIT3vUvo
+         ulEO0QRsuhEpb++gPsLvHzmZR9h1DhUbLG+tnxxmWjOQNTgFAM/zzIPRJN5S564tH9aG
+         LKIoq5w8p7yTYcR2U+mEg4zzpFSaGpI7TSg03jHUaydmbWxAr6QYzKjJxs4VunuwN9Y5
+         erITxs2iEJt++4glBFj7M9wvY+9uDAsrKqiQfwy++246qnXAKWZ/LswXgt+Zlm093oxp
+         LflpWgjGKXAiljfK4QfjQrV0dyBSIuLuX3rZEV8tjv21Lw/kBNmk6WPdQKFb3W6UYtuw
+         9iMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689659943; x=1692251943;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rXYEcHFxyrbA69rtii4+ZKfjZ9itoGUX8c0WkuXiT6w=;
-        b=BCaKT3j69HhbS2P62V3+gfUVzZrKbazfFXLzPwq2EOui0CpRqktjNP8HCXkX96YhYt
-         4fz91gFP1WWsyrpDF5nvRvcn9F7ChnXD8uR+LI0ZlNdY0DpMsVWkBW1Jw/6f0WosYanT
-         Xkeyi1R86MVM+9ffUqVZQVD//MAiRO+z10XadVgGAfXK/je3ln5vZuMsXc/v1ZwlFvtw
-         rNM2HaP8Dbwf0UTqXwVRPRuV0xmWETmCWB/WQ/Z9Vfh9O2xdiAcBkBYgPZEEduunUkDx
-         aNB8xuta7sUILoiHTE8IPBgf54GTvzuOOYaZrmUpvrOtvnajRswPQuXfxwAFJd0Lna5H
-         F6kw==
-X-Gm-Message-State: ABy/qLbRT9/BKWSJ0GBGf3rhit9Q2oldXYzb9IIrHX91Nas++45Gwq/Q
-        WJOVRVXZ0ftbKuH8SDZSN4E/qMiid+2hSg==
-X-Google-Smtp-Source: APBJJlE2eIrn11lRxoaLgXD7wyDe8gOQRxnwTrjWGEZStH/z7olIv7Cb6qKuzLBXtHi4UfaWTVkaJw==
-X-Received: by 2002:a17:902:c94e:b0:1b4:5699:aac1 with SMTP id i14-20020a170902c94e00b001b45699aac1mr14246327pla.12.1689659943315;
-        Mon, 17 Jul 2023 22:59:03 -0700 (PDT)
-Received: from ?IPV6:2601:1c2:980:9ec0::2764? ([2601:1c2:980:9ec0::2764])
-        by smtp.gmail.com with ESMTPSA id z13-20020a170903018d00b001a6d4ea7301sm858033plg.251.2023.07.17.22.59.02
+        d=1e100.net; s=20221208; t=1689660267; x=1692252267;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g5f7NuoL+/s8bYQq96dyzOfuTIeGEJ1Q95iMxVbPcgI=;
+        b=It7sEi+jUDJHpt6zRFOMxfs52r4PkLbeJv2cjEs5sZVaoEcRk4M5qS+tud0zop1Dm+
+         9GtzRO1+jCQBxcoZba9VxWmaxUUmUmm5zKe/H3hXrPswv+4NcJ3hQaPOhVSTgQor4wpF
+         AXtOQtx1yK2H1Gilf3ki3KKzs5/UKnkSsAeXIJcaxbE/ZOY4e82L0oEr+zcCsKM/kRSF
+         jmrZBv0avAhQBXA5VGex0I1LEOezdw/+ZCb33qt8rY5fQ9IBg8Sju06VwS7e54at7A5/
+         jgDDw4qwxkdSGGPnmI4Hb/7Sqmhfigq9obf5mBTmtifdLP4jgnhLEswE58BA6d45IDtn
+         js1Q==
+X-Gm-Message-State: ABy/qLYOVUJMws15tKDzbt5BwwjQ3Jdk0SzZWplEa0O3kIBYAFGX6Ppw
+        bZgwkjRw4Cgqdk6ofe52oUb07Q==
+X-Google-Smtp-Source: APBJJlFZbIMU5j4Cb+CtvRvuwgexr97UBWi37cXm30GLf2vtnoY8xEMV54HgvT+rU0dOhPyaqKQscQ==
+X-Received: by 2002:a17:906:e17:b0:993:ffcb:ad4e with SMTP id l23-20020a1709060e1700b00993ffcbad4emr10760990eji.13.1689660267020;
+        Mon, 17 Jul 2023 23:04:27 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id l22-20020a170906231600b00992e4d8cc89sm571966eja.57.2023.07.17.23.04.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 22:59:03 -0700 (PDT)
-Message-ID: <8a4de6c6-8d7c-a115-2a14-d264d6d28ccf@gmail.com>
-Date:   Mon, 17 Jul 2023 22:59:02 -0700
+        Mon, 17 Jul 2023 23:04:26 -0700 (PDT)
+Message-ID: <3756dffd-1407-d656-485a-9cf1eefd9ae1@linaro.org>
+Date:   Tue, 18 Jul 2023 08:04:24 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
+Subject: Re: [v6 2/4] dt-bindings: hwmon: Add ASPEED TACH Control
+ documentation
+To:     =?UTF-8?B?6JSh5om/6YGU?= <billyking19920205@gmail.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
+        Billy Tsai <billy_tsai@aspeedtech.com>
+References: <CAGUgbhCqOJaEPjS96o2au21uW4NhqFScm4Ayd8PzOQvqxQ94SQ@mail.gmail.com>
+ <0b9dd5cf-f4ca-2e6b-624d-0b451bbc2f30@linaro.org>
+ <0ba3767c-d481-6e2c-2d32-b79af0e1efd8@roeck-us.net>
+ <CAGUgbhC34-pUp4ECULc0ScaN7hUF1L-z69h+ji-TiVrv4gKd3Q@mail.gmail.com>
+ <7b198d57-ddec-3074-314a-3e5e5b8f48f9@roeck-us.net>
+ <CAGUgbhDbFedVe-pc+muD_NtDpjHpGqMDdrS3A73C-QbxeHn4oQ@mail.gmail.com>
+ <cf91edc9-1093-495b-48eb-6b05198c2541@linaro.org>
+ <7a69bda1-5f4c-5b1f-8eb6-6fd58917a9b1@roeck-us.net>
+ <CAGUgbhCTDPGt_vpbfaEreX+iuLJ3WUBqt4kppxyaFZQus9Zf0Q@mail.gmail.com>
+ <b22b2ccc-6760-0db6-067b-109c3864d2e8@linaro.org>
+ <CAGUgbhDmXnyxYCL9h9C0P4ByDSTstWnGqW=uFoDVVHeK3BerHA@mail.gmail.com>
 Content-Language: en-US
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Cc:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-From:   Randy Dunlap <rd.dunlab@gmail.com>
-Subject: [PATCH] pwm: fi pwm-rz-mtu3.c build errors
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAGUgbhDmXnyxYCL9h9C0P4ByDSTstWnGqW=uFoDVVHeK3BerHA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On 18/07/2023 06:01, 蔡承達 wrote:
+>>
+>> On 17/07/2023 11:01, 蔡承達 wrote:
+>>> Guenter Roeck <linux@roeck-us.net> 於 2023年7月17日 週一 上午1:00寫道：
+>>>>
+>>>> On 7/16/23 09:08, Krzysztof Kozlowski wrote:
+>>>>
+>>>> [ ... ]
+>>>>
+>>>>>>
+>>>>>> This patch serial doesn't use to binding the fan control h/w. It is
+>>>>>> used to binding the two independent h/w blocks.
+>>>>>> One is used to provide pwm output and another is used to monitor the
+>>>>>> speed of the input.
+>>>>>> My patch is used to point out that the pwm and the tach is the
+>>>>>> different function and don't need to
+>>>>>> bind together. You can not only combine them as the fan usage but also
+>>>>>> treat them as the individual module for
+>>>>>> use. For example: the pwm can use to be the beeper (pwm-beeper.c), the
+>>>>>> tach can be used to monitor the heart beat signal.
+>>>>>
+>>>>> Isn't this exactly the same as in every other SoC? PWMs can be used in
+>>>>> different ways?
+>>>>>
+>>>>
+>>>> ... and in every fan controller. Not that it really makes sense because
+>>>> normally the pwm controller part of such chips is tied to the fan input,
+>>>> to enable automatic fan control, but it is technically possible.
+>>>> In many cases this is also the case in SoCs, for example, in ast2500.
+>>>> Apparently this was redesigned in ast2600 where they two blocks are
+>>>> only lightly coupled (there are two pwm status bits in the fan status
+>>>> register, but I have no idea what those mean). If the blocks are tightly
+>>>> coupled, separate drivers don't really make sense.
+>>>>
+>>>> There are multiple ways to separate the pwm controller part from the
+>>>> fan inputs if that is really necessary. One would be to provide a
+>>>> sequence of address mappings, the other would be to pass the memory
+>>>> region from an mfd driver. It is not necessary to have N instances
+>>>> of the fan controller, even if the address space is not continuous.
+>>>>
+>>>
+>>> Hi Guenter,
+>>>
+>>> May I ask about the meaning of the sequence of address mappings? It appears
+>>> to consist of multiple tuples within the 'reg' property, indicating
+>>> the usage of PWM/Tach
+>>> registers within a single instance. After that I can use the dts like following:
+>>>
+>>> pwm: pwm@1e610000 {
+>>> ...
+>>> reg = <0x1e610000 0x8
+>>> 0x1e610010 0x8
+>>> 0x1e610020 0x8
+>>> 0x1e610030 0x8
+>>> 0x1e610040 0x8
+>>> 0x1e610050 0x8
+>>> 0x1e610060 0x8
+>>> 0x1e610070 0x8
+>>> 0x1e610080 0x8
+>>> 0x1e610090 0x8
+>>> 0x1e6100A0 0x8
+>>> 0x1e6100B0 0x8
+>>> 0x1e6100C0 0x8
+>>> 0x1e6100D0 0x8
+>>> 0x1e6100E0 0x8
+>>> 0x1e6100F0 0x8>;
+>>
+>>
+>> Uh, no... I mean, why? We keep pointing out that this should not be done
+>> differently than any other SoC. Open any other SoC PWM controller and
+>> tell me why this is different? Why this cannot be one address space?
+> 
+> Hi Krzysztof,
+> 
+> This is because the register layout for PWM and Tach is not continuous.
+> Each PWM/Tach instance has its own set of controller registers, and they
+> are independent of each other.
 
-When (MFD) RZ_MTU3=m and PWM_RZ_MTU3=y, there are numerous build errors:
+Register layout is not continuous in many other devices, so again - why
+this must be different?
 
-ld: vmlinux.o: in function `rz_mtu3_pwm_config':
-drivers/pwm/pwm-rz-mtu3.c:374: undefined reference to `rz_mtu3_disable'
-ld: drivers/pwm/pwm-rz-mtu3.c:377: undefined reference to `rz_mtu3_8bit_ch_write'
-ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
-drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to `rz_mtu3_16bit_ch_write'
-ld: vmlinux.o: in function `rz_mtu3_pwm_config':
-drivers/pwm/pwm-rz-mtu3.c:382: undefined reference to `rz_mtu3_8bit_ch_write'
-ld: vmlinux.o: in function `rz_mtu3_pwm_write_tgr_registers':
-drivers/pwm/pwm-rz-mtu3.c:110: undefined reference to `rz_mtu3_16bit_ch_write'
-ld: drivers/pwm/pwm-rz-mtu3.c:111: undefined reference to `rz_mtu3_16bit_ch_write'
-ld: vmlinux.o: in function `rz_mtu3_pwm_config':
-drivers/pwm/pwm-rz-mtu3.c:397: undefined reference to `rz_mtu3_enable'
-ld: vmlinux.o: in function `rz_mtu3_pwm_disable':
-drivers/pwm/pwm-rz-mtu3.c:259: undefined reference to `rz_mtu3_8bit_ch_write'
-ld: drivers/pwm/pwm-rz-mtu3.c:264: undefined reference to `rz_mtu3_disable'
-ld: vmlinux.o: in function `rz_mtu3_pwm_enable':
-drivers/pwm/pwm-rz-mtu3.c:230: undefined reference to `rz_mtu3_8bit_ch_write'
-ld: drivers/pwm/pwm-rz-mtu3.c:234: undefined reference to `rz_mtu3_8bit_ch_write'
-ld: drivers/pwm/pwm-rz-mtu3.c:238: undefined reference to `rz_mtu3_enable'
-ld: vmlinux.o: in function `rz_mtu3_pwm_is_ch_enabled':
-drivers/pwm/pwm-rz-mtu3.c:155: undefined reference to `rz_mtu3_is_enabled'
-ld: drivers/pwm/pwm-rz-mtu3.c:162: undefined reference to `rz_mtu3_8bit_ch_read'
-ld: vmlinux.o: in function `rz_mtu3_pwm_read_tgr_registers':
-drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to `rz_mtu3_16bit_ch_read'
-ld: drivers/pwm/pwm-rz-mtu3.c:102: undefined reference to `rz_mtu3_16bit_ch_read'
-ld: drivers/pwm/pwm-rz-mtu3.c:103: undefined reference to `rz_mtu3_16bit_ch_read'
-ld: vmlinux.o: in function `rz_mtu3_pwm_get_state':
-drivers/pwm/pwm-rz-mtu3.c:296: undefined reference to `rz_mtu3_8bit_ch_read'
+> 
+> For example:
+> PWM0 uses registers 0x0 and 0x4, while Tach0 uses registers 0x8 and 0xc.
+> PWM1 uses registers 0x10 and 0x14, while Tach1 uses registers 0x18 and 0x1c.
+> ...
+> 
+> To separate the PWM controller part from the fan inputs, Guenter has
+> provided two methods.
+> The first method involves passing the memory region from an MFD
+> driver, which was the
 
-Modify the dependencies of PWM_RZ_MTU3 so that COMPILE_TEST is
-still allowed but PWM_RZ_MTU3 depends on RZ_MTU3 if it is being built
-but also allow the latter not to be built.
+I have no clue how can you pass memory region
+(Documentation/devicetree/bindings/reserved-memory/) from MFD and why
+does it make sense here.
 
-Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org
----
- drivers/pwm/Kconfig |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> initial method I intended to use. However, it seems that this method
+> does not make sense to you.
+> 
+> Therefore, I would like to explore the second method suggested by
+> Guenter, which involves providing
+> a sequence of address mappings.
 
-diff -- a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -505,7 +505,8 @@ config PWM_ROCKCHIP
- 
- config PWM_RZ_MTU3
- 	tristate "Renesas RZ/G2L MTU3a PWM Timer support"
--	depends on RZ_MTU3 || COMPILE_TEST
-+	depends on COMPILE_TEST
-+	depends on RZ_MTU3 || RZ_MTU3=n
- 	depends on HAS_IOMEM
- 	help
- 	  This driver exposes the MTU3a PWM Timer controller found in Renesas
+Best regards,
+Krzysztof
+
