@@ -2,47 +2,47 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5ED4757F72
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 16:29:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3DB757F75
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 16:29:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjGRO3Y convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 18 Jul 2023 10:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
+        id S232946AbjGRO3g convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Tue, 18 Jul 2023 10:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232181AbjGRO3X (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 10:29:23 -0400
+        with ESMTP id S231512AbjGRO3a (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 10:29:30 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DCEDFD
-        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 07:29:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B939E4C
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Jul 2023 07:29:29 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1qLlhV-0006tl-VW; Tue, 18 Jul 2023 16:29:18 +0200
+        id 1qLlhd-0006wE-C5; Tue, 18 Jul 2023 16:29:25 +0200
 Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1qLlhV-000OT8-9t; Tue, 18 Jul 2023 16:29:17 +0200
+        id 1qLlhc-000OTD-NP; Tue, 18 Jul 2023 16:29:24 +0200
 Received: from pza by lupine with local (Exim 4.96)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1qLlhV-000ErN-07;
-        Tue, 18 Jul 2023 16:29:17 +0200
-Message-ID: <7c0a264a9a70fbb49e8024acdbc3aaa56f76441a.camel@pengutronix.de>
+        id 1qLlhc-000Ero-17;
+        Tue, 18 Jul 2023 16:29:24 +0200
+Message-ID: <d3df6f565421576bbf06140942593cd4d0af712e.camel@pengutronix.de>
 Subject: Re: [PATCH] pwm: stm32: Implement .get_state()
 From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         linux-pwm@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Jul 2023 16:29:16 +0200
-In-Reply-To: <20230614073345.5ejzkbcdiel5v7zg@pengutronix.de>
+Date:   Tue, 18 Jul 2023 16:29:24 +0200
+In-Reply-To: <ZLY_gER7FeEB07cw@orome>
 References: <20230608-pwm-stm32-get-state-v1-1-db7e58a7461b@pengutronix.de>
-         <20230614073345.5ejzkbcdiel5v7zg@pengutronix.de>
+         <ZLY_gER7FeEB07cw@orome>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 User-Agent: Evolution 3.46.4-2 
@@ -60,9 +60,9 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hi Thierry,
 
-On Mi, 2023-06-14 at 09:33 +0200, Uwe Kleine-König wrote:
+On Di, 2023-07-18 at 09:30 +0200, Thierry Reding wrote:
 > On Thu, Jun 08, 2023 at 04:06:02PM +0200, Philipp Zabel wrote:
 > > Stop stm32_pwm_detect_channels() from disabling all channels and count
 > > the number of enabled PWMs to keep the clock running. Implement the
@@ -101,41 +101,16 @@ On Mi, 2023-06-14 at 09:33 +0200, Uwe Kleine-König wrote:
 > > +	return -EINVAL;
 > > +}
 > 
-> I'd prefer having something like:
+> Looking at the register definitions we should be able to replace this
+> with a single line and parameterize based on channel.
 > 
-> 	#define TIM_CCR(i)	(0x30 + 4 * (i))	/* Capt/Comp Register i, for i in 1 .. 4 */
-> 	#define TIM_CCR1	TIM_CCR(1)
-> 	#define TIM_CCR2	TIM_CCR(2)
-> 	#define TIM_CCR3	TIM_CCR(3)
-> 	#define TIM_CCR4	TIM_CCR(4)
-
-I find this a bit confusing due to the 1-based register numbering. For
-example, 0x30 is not one of the CCR registers at all.
-When TIM_CCR(i) is used in the code, it's not evident that the valid
-range is 1...4.
-
-I'd prefer to leave this as is ...
-
-> and then read_ccrx could be simplified to:
+> I realize you probably just copied from write_ccrx(), but might as well
+> improve this while at it. Could be a separate patch, though.
 > 
-> 	return regmap_read(dev->regmap, TIM_CCR(i + 1), value);
+> Also, ch should be unsigned int since it comes from pwm->hwpwm.
 
-... and just turn this into
+Thank you, I'll make both changes separately.
 
-	regmap_read(regmap, TIM_CCR1 + 4 * ch, value);
-
-> . (Not sure if passing an invalid channel really needs handling.)
-
-I think it is not necessary.
-
-ch is set to pwm->hwpwm, which is < pwm->npwm, which is <= 4.
-
-> But given that write_ccrx looks the same, I'm ok with that.
-
-I'd like to drop read/write_ccrx altogether and replace them with a
-single regmap_read/write.
-
-> > +
 > >  static int write_ccrx(struct stm32_pwm *dev, int ch, u32 value)
 > >  {
 > >  	switch (ch) {
@@ -148,6 +123,11 @@ single regmap_read/write.
 > > +{
 > > +	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
 > > +	int ch = pwm->hwpwm;
+> 
+> This should reflect the type of pwm->hwpwm.
+
+Ok.
+
 > > +	unsigned long rate;
 > > +	u32 ccer, psc, arr, ccr;
 > > +	u64 dty, prd;
@@ -158,69 +138,27 @@ single regmap_read/write.
 > > +		return ret;
 > > +
 > > +	state->enabled = ccer & (TIM_CCER_CC1E << (ch * 4));
-> 
-> Other parts of the driver use the macros from <linux/bitfield.h>. With a
-> similar approach as suggested for TIM_CCR above, this could be made to
-> read as:
-> 
-> 	state->enabled = FIELD_GET(TIM_CCER_CCxE(ch + 1), ccer);
-
-Again this feels like an unnecessary indirection to me. I think it
-doesn't work like this either, the mask has to be a compile time
-constant.
-
-There's already a few examples of the (TIM_CCER_CC1E << (ch * 4))
-pattern in the driver. If they must be converted to something else, I'd
-prefer this to be done separately, for all of them.
-
 > > +	state->polarity = (ccer & (TIM_CCER_CC1P << (ch * 4))) ?
 > > +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
 > > +	regmap_read(priv->regmap, TIM_PSC, &psc);
 > > +	regmap_read(priv->regmap, TIM_ARR, &arr);
-> > +	read_ccrx(priv, ch, &ccr);
 > 
-> You don't use the return value of read_ccrx(), so make it void (or check
-> it)? If you check it, also do it for regmap_read().
+> We should probably check regmap_read() consistently here.
 
-Yes, thanks.
+Will do.
 
+I'll also add locking so we can't PSC/ARR/CCRx in an in-between state.
+
+> > +	read_ccrx(priv, ch, &ccr);
 > > +	rate = clk_get_rate(priv->clk);
 > > +
 > > +	prd = (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
-> 
-> This might overflow?!
-
-In practice this can't happen because PSC, ARR, and CCRx fields are
-only 16-bit.
-Although I'm not sure whether this will be true for future designs.
-
 > > +	state->period = DIV_ROUND_UP_ULL(prd, rate);
 > > +	dty = (u64)NSEC_PER_SEC * (psc + 1) * ccr;
 > > +	state->duty_cycle = DIV_ROUND_UP_ULL(dty, rate);
 > > +
 > > +	return ret;
 > > +}
-> 
-> While looking at stm32_pwm_config() to check if it matches your
-> stm32_pwm_get_state() implementation, I noticed that for small values of
-> period_ns, prd might become 0 which than yields surprising effects in
-> combination with
-> 
-> 	regmap_write(priv->regmap, TIM_ARR, prd - 1);
-
-What to do about this, "prd = max(1, div);"?
-This should probably be fixed separately.
-
-> Also the driver needs locking because of the PSC and ARR registers are
-> shared for all channels
-
-I'll lock priv->lock in get_state.
-
-> and there are rounding issues (prd is used for
-> the calculation of dty).
-
-This should be fixed separately as well.
-
 > > +
 > >  static const struct pwm_ops stm32pwm_ops = {
 > >  	.owner = THIS_MODULE,
@@ -235,52 +173,21 @@ This should be fixed separately as well.
 > >  
 > > -static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
 > > +static int stm32_pwm_detect_channels(struct stm32_pwm *priv, int *n_enabled)
+> 
+> unsigned int * for n_enabled.
+
+Ok.
+
 > >  {
 > > -	u32 ccer;
 > > -	int npwm = 0;
 > > +	u32 ccer, ccer_backup;
 > > +	int npwm;
-> >  
-> >  	/*
-> >  	 * If channels enable bits don't exist writing 1 will have no
-> >  	 * effect so we can detect and count them.
-> >  	 */
-> > +	regmap_read(priv->regmap, TIM_CCER, &ccer_backup);
-> >  	regmap_set_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
-> >  	regmap_read(priv->regmap, TIM_CCER, &ccer);
-> > -	regmap_clear_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
-> > +	regmap_write(priv->regmap, TIM_CCER, ccer_backup);
-> >  
-> > -	if (ccer & TIM_CCER_CC1E)
-> > -		npwm++;
-> > -
-> > -	if (ccer & TIM_CCER_CC2E)
-> > -		npwm++;
-> > -
-> > -	if (ccer & TIM_CCER_CC3E)
-> > -		npwm++;
-> > -
-> > -	if (ccer & TIM_CCER_CC4E)
-> > -		npwm++;
-> > +	npwm = hweight32(ccer & TIM_CCER_CCXE);
-> > +	*n_enabled = hweight32(ccer_backup & TIM_CCER_CCXE);
 > 
-> hweight32 returns an unsigned int. While there is probably no problem
-> with values that don't fit, using unsigned for *n_enabled (and also
-> npwm) looks better IMHO. Maybe split making npwm unsigned and using
-> hweight32 to assign it to a separate preparing patch?
+> Also make this and the return value unsigned int while at it. These can
+> never be negative.
 
-Yes, I'll do that.
+Thanks, I'll split this out into a separate patch.
 
-> The inconsistency
-> between "npwm" (without underscore) and "n_enabled" (with underscore)
-> strikes me a bit. given that struct pwm_chip has "npwm", too, maybe drop
-> the _ from "n_enabled"?
-
-I can't properly read "nenabled", I'll turn it into "num_enabled"
-(there's precedence with "priv->num_breakinputs") and drop "npwm"
-altogether, as the value can be returned directly.
-
-> 
 regards
 Philipp
