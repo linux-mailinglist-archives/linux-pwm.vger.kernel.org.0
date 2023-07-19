@@ -2,129 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C727585EA
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Jul 2023 22:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B37A758F25
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jul 2023 09:36:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbjGRUFg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 18 Jul 2023 16:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39328 "EHLO
+        id S229704AbjGSHgb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 19 Jul 2023 03:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjGRUFg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 18 Jul 2023 16:05:36 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A689B9D;
-        Tue, 18 Jul 2023 13:05:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689710734; x=1721246734;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=mnxKohf2xPQKgrCKJyNvtxb6h6YDhp8sG/+vF3Y5qeA=;
-  b=KQKLvePxb48ZxmD4lnOHF0gj7KUy9rvtDjlgNxJcbNm2BWNqQPTNyVPN
-   tvqtaKquouDsypCEykRPWDpr5fjVXQhoUGa08anka3Td4UdIQburnkbEy
-   NHLsvCgZi+Tn4duquCgXVT+sezyj4+VJVYH5F/hM7rjrJHUrGzmwfZAWX
-   +LMZVV4VlG5cqeWaU6nh7GaB6lNyfJBU60dsjlb+BKDQuxBWIngkfwdlR
-   HphWlGgVPkzt3iYhwKy9vmUTwZAQKuuip07uj5kVnKSDNAiZH8nL54jYb
-   C0ZvqlIpVKUdWrfSpQojIA6zfdVCgeijVvGf1QgvFADiveS3mxUX8JzzW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="346601842"
-X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
-   d="scan'208";a="346601842"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 13:05:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="793749516"
-X-IronPort-AV: E=Sophos;i="6.01,214,1684825200"; 
-   d="scan'208";a="793749516"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Jul 2023 13:05:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qLqwr-00BDgm-1E;
-        Tue, 18 Jul 2023 23:05:29 +0300
-Date:   Tue, 18 Jul 2023 23:05:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        James Clark <james.clark@arm.com>, linux-doc@vger.kernel.org,
-        kernel@pengutronix.de, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 01/18] pwm: Provide devm_pwmchip_alloc() function
-Message-ID: <ZLbwib753V6wSHKB@smile.fi.intel.com>
-References: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
- <20230718181849.3947851-2-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S230143AbjGSHgX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jul 2023 03:36:23 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C711FED
+        for <linux-pwm@vger.kernel.org>; Wed, 19 Jul 2023 00:36:19 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-51e48e1f6d1so8931889a12.1
+        for <linux-pwm@vger.kernel.org>; Wed, 19 Jul 2023 00:36:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689752177; x=1692344177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6DbQclnO5/rfDYXUIQCGeTR+bKwq13YyL6Z/DX92Aak=;
+        b=MVrDWEr/Mgufbd8XfQwnR4vsEwPQnbIBgKWtAq9uNdxYhZy0dh2IlLyJaB4WVjTyyL
+         TR7Shia/RpeyW/4bjYC7A8fEYW7b3UC+iQr7z6fLcuPv3klq4CU4OydfXmVfDbQ/Pdo/
+         mdogA5NeOtPChG2mN+bukpmxxKUaENgoECEkVsxpX/CwPdrjpe/R3WXpzWeo45y4+3RM
+         KZQ+gUqmA5Ao/hpwrHLfRn8R5XLagdQ5yMrjP2T6l9VNbSucZksZjhigdog/Kce1y5g8
+         f71/W/jhQiqeajq6QG1e7JzQprnmOgjnZIhtlOiGBUYhO6sQEB/hXBjTPVrNZcIUBmwY
+         wXgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689752177; x=1692344177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6DbQclnO5/rfDYXUIQCGeTR+bKwq13YyL6Z/DX92Aak=;
+        b=GACvpka7PWTkXOocHoDId1SqmjccRjm7NVdELYwXzvq/wwWd0U+hzEJDIpVDMmHOdj
+         FwxfROuXhqk0muk1N+CdeI0uexV2KlK06zsPYF1mNgnD+v82HyD4Lh6hivCbwdrjRzlb
+         cJSdBzcYDGcc3Icl4YEjsvTeCoCuyZNwNMsl28vcUY+IP3MeAQ0Sl8BzYyBrm9Ry2gsF
+         15jiKe2mEFU9kb2/0V0cxVAx6Vt2KwjMecNdIDJkG8J+EEaBOIxLnCJtikE5eBUwB46H
+         fHQowwDt/QV3cmPmSmmTCwrb4eKsGN18hbRecyg3tjUxxO8edNKAUjlnG1vAnR01aMbh
+         QSig==
+X-Gm-Message-State: ABy/qLae9/2PEwsP7rXJ7yRWVnxNH+xEB6GeKDydgYhG4rbrt14HLc1g
+        0VdcKOUEMRgDQULlBORHtRT75g==
+X-Google-Smtp-Source: APBJJlE3IYLxLeZ+oZiMrjzQhsCuQurBTVwa3yKhhUh2cYJPhH59g7l9R6lYn6KTSVEjMzuKrOrulg==
+X-Received: by 2002:a05:6402:1817:b0:51c:dd99:a211 with SMTP id g23-20020a056402181700b0051cdd99a211mr1716655edy.27.1689752177612;
+        Wed, 19 Jul 2023 00:36:17 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id v5-20020aa7cd45000000b0051e069ebee3sm2310594edw.14.2023.07.19.00.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jul 2023 00:36:17 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Jaewon Kim <jaewon02.kim@samsung.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v6 0/2] support PWM for exynosautov9
+Date:   Wed, 19 Jul 2023 09:36:10 +0200
+Message-Id: <168975215983.14599.604884288213493709.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230718062200.79306-1-jaewon02.kim@samsung.com>
+References: <CGME20230718062723epcas2p4fa1d2b07220c873a4d7de2d1899f1699@epcas2p4.samsung.com> <20230718062200.79306-1-jaewon02.kim@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230718181849.3947851-2-u.kleine-koenig@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 08:18:32PM +0200, Uwe Kleine-König wrote:
-> This function allocates a struct pwm_chip and driver data. Compared to
-> the status quo the split into pwm_chip and driver data is new, otherwise
-> it doesn't change anything relevant (yet).
+
+On Tue, 18 Jul 2023 15:21:58 +0900, Jaewon Kim wrote:
+> Add pwm nodes to support PWM fan on exynosautov9-sadk board.
 > 
-> The intention is that after all drivers are switched to use this
-> allocation function, its possible to add a struct device to struct
-> pwm_chip to properly track the latter's lifetime without touching all
-> drivers again. Proper lifetime tracking is a necessary precondition to
-> introduce character device support for PWMs (that implements atomic
-> setting and doesn't suffer from the sysfs overhead of the /sys/class/pwm
-> userspace support).
-> 
-> The new function pwmchip_priv() (obviously?) only works for chips
-> allocated with devm_pwmchip_alloc().
 
-...
+Applied, thanks!
 
-> +void *pwmchip_priv(struct pwm_chip *chip)
-> +{
-> +	return (char *)chip + ALIGN(sizeof(*chip), 32);
+[1/2] dt-bindings: pwm: samsung: add exynosautov9 compatible
+      https://git.kernel.org/krzk/linux/c/8188b984dea9df7bfa128fc6f8ec0b01edff2d43
+[2/2] arm64: dts: exynos: add pwm node for exynosautov9-sadk
+      https://git.kernel.org/krzk/linux/c/74641f4a79af8dd3138a7e9a0ec352fdca5d7aba
 
-Why 32? I haven't found any explanation on the choice. I can understand arch
-minimum align, but hard coded value is a bit hard to get.
-
-> +}
-
-...
-
-> +struct pwm_chip *devm_pwmchip_alloc(struct device *parent, size_t sizeof_priv)
-> +{
-> +	struct pwm_chip *chip;
-> +	size_t alloc_size;
-
-> +	alloc_size = ALIGN(sizeof(*chip), 32) + sizeof_priv;
-
-Ditto.
-
-Shouldn't it use a macro from overflow.h?
-
-> +	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
-> +	if (!chip)
-> +		return NULL;
-> +
-> +	chip->dev = parent;
-> +
-> +	return chip;
-> +}
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
