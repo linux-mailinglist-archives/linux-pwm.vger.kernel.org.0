@@ -2,97 +2,87 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DC847598DF
-	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jul 2023 16:55:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05A65759E5D
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Jul 2023 21:20:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229942AbjGSOzf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 19 Jul 2023 10:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46574 "EHLO
+        id S229604AbjGSTU3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 19 Jul 2023 15:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231651AbjGSOze (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jul 2023 10:55:34 -0400
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715111711
-        for <linux-pwm@vger.kernel.org>; Wed, 19 Jul 2023 07:55:33 -0700 (PDT)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id D8AFFA4E;
-        Wed, 19 Jul 2023 16:55:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1689778531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/BezhgEZ3QJmVt+9N/3+8JtxlC8yi1o/bzbB/y9p854=;
-        b=S0oemUShZVYBo3j+OmsIkSWbQf1gMAFfwOEE8uTIo5ZxdxYzQPElZBbGfdUT9aSsBja8WI
-        85sh+hVmWwKbDSFY16+qbEYECosDIVyOsDe/543G1EGV8FTEJ6hbIbvV73b7PErV82qyKP
-        aOQ9UBP/mlazRMo3wIx00dLruq6gCgaUED8RAWZp8iirbs1zZOFTjPYSufc0QwrhAvy0tA
-        Ny40c5+3fx38J3dwvv5Ky5apqoPGnCVjbPbIOqQnXJywE3cUghFLVWLO49qNB4H+zaogaj
-        JUmciCObGNc8t3B1fQPnkhpX+FhopVbCXqUaiDBYFgVgXnJDUTh8QMe5U2Ao/Q==
-MIME-Version: 1.0
-Date:   Wed, 19 Jul 2023 16:55:31 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S230267AbjGSTU1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 19 Jul 2023 15:20:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11CF1FEC
+        for <linux-pwm@vger.kernel.org>; Wed, 19 Jul 2023 12:20:24 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qMCig-0000LX-8g; Wed, 19 Jul 2023 21:20:18 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qMCie-000fhk-Ur; Wed, 19 Jul 2023 21:20:16 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qMCie-006B2c-Ar; Wed, 19 Jul 2023 21:20:16 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel@pengutronix.de
-Subject: Re: [PATCH 09/10] pwm: sl28cpld: Consistenly name pwm_chip variables
- "chip"
-In-Reply-To: <20230719143956.6sv3feiroiwrcosb@pengutronix.de>
-References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
- <20230714205623.2496590-10-u.kleine-koenig@pengutronix.de>
- <bc30d8483cb3eb901feb986ca88a02b9@walle.cc>
- <20230719143956.6sv3feiroiwrcosb@pengutronix.de>
-Message-ID: <9cb1b141e206dd9afd215d8886d688d9@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH 0/5] pwm: atmel-tcb: Some driver maintenance
+Date:   Wed, 19 Jul 2023 21:20:08 +0200
+Message-Id: <20230719192013.4051193-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1131; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=XvuAit+M16d7pdB721g4IBznB+J6lmlI6WpU+BDvjPY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkuDdkwwqutjRZQvqflhmCr6npioR38rvoIosGB hS8f+g+kZ2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZLg3ZAAKCRCPgPtYfRL+ Tr3nB/9npHz/acM18ZCN0RAwQC2KEzZ0ljtRaJnlntIkc4OEJHYzf4V+UpndO5Xx+2yaq++FJ/U tJZGQOa5bjIYt3iw7jfvBJBx13NgdL4pO2l08z9pny4kMHMP3zAvjL0WzopUjVP89vOuATSWSTz tZonxn/Ptf1WVupdiGLMjeLQvpqqJQ+5W/CaT8/n+kY9DbZVhg1RftrGOWDMKDUVU8+is6lyhH5 xerTL/YLLfQgkxaxlCtGN5Jz2FCEuxzrMATt52kC7teicCk399+WgwbwMEzh6K/cTVJuO6mVTJE VYY/sOi4E2YEK0nxg2V4nfAutOJEAA6umwKvRbHxwY/HKLBd
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+Hello,
 
->> I'd expect it to be:
->> #define sl28cpld_pwm_from_chip(_chip) \
->> 	container_of(_chip, struct sl28cpld_pwm, chip)
-> 
-> Indeed, that's bogus. My preference would be to make this a static
-> inline, i.e.
-> 
-> diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
-> index 98b0024f9658..c789e934671e 100644
-> --- a/drivers/pwm/pwm-sl28cpld.c
-> +++ b/drivers/pwm/pwm-sl28cpld.c
-> @@ -84,8 +84,11 @@ struct sl28cpld_pwm {
->  	struct regmap *regmap;
->  	u32 offset;
->  };
-> -#define sl28cpld_pwm_from_chip(chip) \
-> -	container_of(chip, struct sl28cpld_pwm, chip)
-> +
-> +static inline struct sl28cpld_pwm *sl28cpld_pwm_from_chip(struct 
-> pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct sl28cpld_pwm, chip);
-> +}
-> 
->  static int sl28cpld_pwm_get_state(struct pwm_chip *chip,
->  				  struct pwm_device *pwm,
-> 
-> but I can live with _chip, too.
+here come some improvements to the pwm-atmel-tcb driver.
 
-I don't have a strong preference. Looks like most drivers use
-the inline. Go with that :)
+There are still a few opportunities to improve the driver. For example
+.duty shouldn't be relevant for atmel_tcb_pwm_disable(). Also the driver
+could be converted from of_clk_get_by_name to devm_clk_get() (and then
+also devm_pwmchip_add()). Further more I think all members of
+atmel_tcb_pwm_device could be dropped as they are all only used in
+.apply() after they were assigned earlier in the same function; similar
+to how I removed the polarity member. Maybe someone with the hardware
+wants to chime in?
 
--michael
+Best regards
+Uwe
+
+Uwe Kleine-König (5):
+  pwm: atmel-tcb: Harmonize resource allocation order
+  pwm: atmel-tcb: Fix resource freeing in error path and remove
+  pwm: atmel-tcb: Put per-channel data into driver data
+  pwm: atmel-tcb: Unroll atmel_tcb_pwm_set_polarity() into only caller
+  pwm: atmel-tcb: Don't track polarity in driver data
+
+ drivers/pwm/pwm-atmel-tcb.c | 120 ++++++++++++++----------------------
+ 1 file changed, 47 insertions(+), 73 deletions(-)
+
+base-commit: 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5
+-- 
+2.39.2
+
