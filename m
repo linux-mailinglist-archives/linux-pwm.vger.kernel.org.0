@@ -2,138 +2,155 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1F5975B169
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jul 2023 16:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E490E75B19F
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jul 2023 16:50:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbjGTOl0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 Jul 2023 10:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33936 "EHLO
+        id S232332AbjGTOuM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Jul 2023 10:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231279AbjGTOlZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jul 2023 10:41:25 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C9910FC
-        for <linux-pwm@vger.kernel.org>; Thu, 20 Jul 2023 07:41:24 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-991fe70f21bso148273166b.3
-        for <linux-pwm@vger.kernel.org>; Thu, 20 Jul 2023 07:41:24 -0700 (PDT)
+        with ESMTP id S230212AbjGTOuL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jul 2023 10:50:11 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4996326BB
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Jul 2023 07:50:08 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-483a629c3a3so655542e0c.0
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Jul 2023 07:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689864083; x=1690468883;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1689864607; x=1690469407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wLrHxYUorj4cRATSl4FYWOBY6cgIskL8/uHYHedoFV8=;
-        b=gWcKKtu+NPxLWPKoWi3l0E4hcgurpq8rsryPV5UeUd/jTyTcdlvtGzb8gh0vph929W
-         hr/RMZNCEsxLG3NWBSl60PCuiWYcdsfPONdHgFdAOnDMUgDNA1qOo8kUP2AUFiJiMcDf
-         UKtBS/ErkKBVFXl2mZncl0VCjfxioeF1wCFhisv/VGv0JbxKwdQHnjdMPtQl8dpjxT6I
-         ccyE8q9NPMzASWLBYhw4sR4Pzu1xv2BMCVLl+k0kZzQkNDpSaiv7UzSVPpeN6wSITaAf
-         ZXLIBD5HlyMKXxRDkrj7j3QZ1sgaderLBP6XGfHj0oYi4LU4XCdssHqdMFcQCOiWQo+d
-         QWFQ==
+        bh=44I4QTXSdpRlGQNX01aNu7Q8jYmgKrsVdvaz0FbrT9w=;
+        b=VHsv4k0q2otI210G2fx8UlqZVBouT1yhHPQeX4/iYKRduLbBfujemaFd84GC3ZVtWX
+         jIbCktQqByAp5iqMc/vfuiwpcDzR/b7VidjqvAa00eAxbSRDadKzFL7ftVkL0wpM8mY4
+         3nANvQf6LnRvO72e3X3PIZq6dwVKEuHJlUuToqWh59bGJFqRqqo0SosmrUxvzzRd1bBC
+         FBz8bvcUB7PznBNwhuRezNy3z5i/4TW+ggCxtW15DP+i0Lj50o4B9jSN9WUDe5Vyw8rc
+         EUeWyncBdaKXPsUBWXs360RXDU8t4kC/iicYJ16kjPZL2O0Kgs5iYg9GIm/a1AZfdPvo
+         1iNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689864083; x=1690468883;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1689864607; x=1690469407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wLrHxYUorj4cRATSl4FYWOBY6cgIskL8/uHYHedoFV8=;
-        b=kwnsOAUAcg40NwmOVUVZ9+NNFWCvCaYgC0coNofODkSBRFATxGXZc+LXibLvI98knM
-         BEWxqcTs0LKz0UpECcpUYVlPPh+DEIKBoJtjiCDW1qMF2a89HtIhSdJswTR+idj5R3Ph
-         ZybLLPNLIrsi3kRxEIDG5mmch47NCHDCvRIaBfNH0wbeEgl/BYzsVuvE6ymLOa8Dl2/e
-         M6je31L/QXcE1fQ+SCTEakEYweIopmXXqs0vA+Mo+J+FIyknFaxTVOy/UksGXHvRCtR6
-         /ZCsFV9KSoBiisCFFqNILrLuIgZ9EOliRViv1H0hSYnVFbhZNyoWopHmSGmXlsnVa+eL
-         jT6w==
-X-Gm-Message-State: ABy/qLafQ6cWg9FluUstngdHdH4BNKHAoi7i1PG5uVutygyMnGhQtljj
-        nFAsC+Ig/6k1IUSOsDzPb+M=
-X-Google-Smtp-Source: APBJJlHgueNlqW0haDo5hRGUxcvhVV7/ihvmmvg/gwqzFV0iohHNBCeqNUuKd8ZztzBQESq59FBD8w==
-X-Received: by 2002:a17:906:8488:b0:970:1b2d:45cc with SMTP id m8-20020a170906848800b009701b2d45ccmr4904840ejx.57.1689864082442;
-        Thu, 20 Jul 2023 07:41:22 -0700 (PDT)
-Received: from localhost (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id c11-20020a170906924b00b0098e34446464sm799399ejx.25.2023.07.20.07.41.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 07:41:21 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Benson Leung <bleung@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        chrome-platform@lists.linux.dev,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org, greybus-dev@lists.linaro.org,
-        linux-staging@lists.linux.dev
-Subject: Re: [PATCH 00/10] pwm: Constistenly name pwm_chip variables "chip"
-Date:   Thu, 20 Jul 2023 16:41:16 +0200
-Message-ID: <168986404868.1519829.8131310221840364014.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
-References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
+        bh=44I4QTXSdpRlGQNX01aNu7Q8jYmgKrsVdvaz0FbrT9w=;
+        b=OX//mGdFJJitKPIKig0Yyr6D1N5fk3cYF1EoFNsW3S1ZJc/VTCSaITY8CCOyJxjO68
+         vbV0goBXwYpo+79Vo0NXWcfA0SwrAMRYzlrtz+MO9QxUvH1p/2zvJCvtLbGVW7eYcqmN
+         Cu4yurT55SkRZfzgnhUlTOsH5mYnRKUXQd4eeOQP1jMjmtcjj83+0SbeAKREH0rjrO+i
+         nN37nsISL9f8PHCwfCnaG69UKp4n8ZaO8WljPHft0KAXNEQHNgvOpQbnYeWh3/IdJOQc
+         WLOoJaolMWg24AMZG+Xk9owkd5ep8Gn+hbAD8WgLKrVbQVQ2nOi7gctPNPSBhVusFiUu
+         S6Eg==
+X-Gm-Message-State: ABy/qLaVb2LTNKAiJXcuduWoPfHkavfCp70GtNvdMIvuCX9q23ICy1Wh
+        9CKWtIOnDYUskGzUnsim61S7RMcx5VLVp4vnzjX7mw==
+X-Google-Smtp-Source: APBJJlHcVbVjnQaUrT7V7jD6HpKLdUNhc+KcBHJVAgkGL82QQnDc268rPznkIAv5GUoMxsi+qdzT6lIi9u/QnbbIPgk=
+X-Received: by 2002:a05:6122:929:b0:481:5132:48c7 with SMTP id
+ j41-20020a056122092900b00481513248c7mr2136264vka.1.1689864607273; Thu, 20 Jul
+ 2023 07:50:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me> <20230605-ep93xx-v3-33-3d63a5f1103e@maquefel.me>
+In-Reply-To: <20230605-ep93xx-v3-33-3d63a5f1103e@maquefel.me>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 20 Jul 2023 16:49:56 +0200
+Message-ID: <CAMRc=McbD1w47GsfvY6p==jDiTQrwg96jFvVKO-9bPhNOBmapw@mail.gmail.com>
+Subject: Re: [PATCH v3 33/42] gpio: ep93xx: add DT support for gpio-ep93xx
+To:     nikita.shubin@maquefel.me
+Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Jul 20, 2023 at 10:30=E2=80=AFAM Nikita Shubin via B4 Relay
+<devnull+nikita.shubin.maquefel.me@kernel.org> wrote:
+>
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
+>
+> Add OF ID match table.
+>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> ---
+>  drivers/gpio/gpio-ep93xx.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
+> index 9a25bb0caf17..c4e272a8773d 100644
+> --- a/drivers/gpio/gpio-ep93xx.c
+> +++ b/drivers/gpio/gpio-ep93xx.c
+> @@ -360,9 +360,15 @@ static int ep93xx_gpio_probe(struct platform_device =
+*pdev)
+>         return devm_gpiochip_add_data(&pdev->dev, gc, egc);
+>  }
+>
+> +static const struct of_device_id ep93xx_gpio_match[] =3D {
+> +       { .compatible =3D "cirrus,ep9301-gpio" },
+> +       { /* sentinel */ }
+> +};
+> +
+>  static struct platform_driver ep93xx_gpio_driver =3D {
+>         .driver         =3D {
+>                 .name   =3D "gpio-ep93xx",
+> +               .of_match_table =3D ep93xx_gpio_match,
+>         },
+>         .probe          =3D ep93xx_gpio_probe,
+>  };
+>
+> --
+> 2.39.2
+>
 
-On Fri, 14 Jul 2023 22:56:13 +0200, Uwe Kleine-König wrote:
-> while working on an extension for the pwm framework, I noticed that some
-> drivers and even the core only nearly consistently named all variables
-> and struct members holding a pointer to a struct pwm_chip "chip":
-> 
-> $ git grep -Pho 'struct pwm_chip \**[a-z0-9_]+(*nla:[\(a-z0-9_])' v6.5-rc1 | sort | uniq -c | sort -n
->       1 struct pwm_chip *pwm
->       1 struct pwm_chip pwm
->       1 struct pwm_chip pwm_chip
->       2 struct pwm_chip *_chip
->       4 struct pwm_chip *c
->       8 struct pwm_chip *pc
->      57 struct pwm_chip chip
->     358 struct pwm_chip *chip
-> 
-> [...]
-
-Applied, thanks!
-
-[01/10] pwm: Use a consistent name for pwm_chip pointers in the core
-        commit: b4f78ff746ec5274fffa92fa2a4dc531360b5016
-[02/10] pwm: atmel-hlcdc: Use consistent variable naming
-        commit: 509143926e184762cdaffb6b67d3809fddd7f4d9
-[03/10] pwm: bcm-kona: Consistenly name pwm_chip variables "chip"
-        commit: af87385c7ad278207d34ff3681fa325a240ae87c
-[04/10] pwm: crc: Consistenly name pwm_chip variables "chip"
-        commit: fc30826d50d10d67628addfabb9367b5067efa42
-[05/10] pwm: cros-ec: Consistenly name pwm_chip variables "chip"
-        commit: 6b5fdb2b655ac9abe6fbd2cbcb25c8837e3e8553
-[06/10] pwm: lp3943: Consistenly name pwm_chip variables "chip"
-        commit: dd499b63618e523b47f30d99bf20f417de1187ff
-[07/10] pwm: rockchip: Consistenly name pwm_chip variables "chip"
-        commit: 8c297d1fdb5d2b81d39ada6b435fb92a41be9f17
-[08/10] pwm: sifive: Consistenly name pwm_chip variables "chip"
-        commit: cb69f40ea7cb139223901fcfc81e4e0a0a03673c
-[09/10] pwm: sl28cpld: Consistenly name pwm_chip variables "chip"
-        commit: e79974c5c3ddc3e8181f582117c4368557524f20
-[10/10] staging: greybus: pwm: Consistenly name pwm_chip variables "chip"
-        commit: efd1d1ad7f525809fcdf7538638a08274b75c99f
-
-Best regards,
--- 
-Thierry Reding <thierry.reding@gmail.com>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
