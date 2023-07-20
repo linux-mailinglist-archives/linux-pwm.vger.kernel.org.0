@@ -2,78 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 698E775B3A0
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jul 2023 17:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F48075B563
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jul 2023 19:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbjGTP5e (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 Jul 2023 11:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60434 "EHLO
+        id S231543AbjGTRRT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Jul 2023 13:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbjGTP5d (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jul 2023 11:57:33 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA5CE0;
-        Thu, 20 Jul 2023 08:57:30 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-992ace062f3so160894266b.2;
-        Thu, 20 Jul 2023 08:57:30 -0700 (PDT)
+        with ESMTP id S229526AbjGTRRR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jul 2023 13:17:17 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C82CB3;
+        Thu, 20 Jul 2023 10:17:16 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-666edfc50deso756139b3a.0;
+        Thu, 20 Jul 2023 10:17:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689868649; x=1690473449;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c+QYvjk4JswBL9BSCn/o4aTnoq/NNAUPcNRmWTlC0Fw=;
-        b=SzY0RAhGiSq+AX526QQ+qqBDw/ILGBgZkfpNp8dnMvKFv43Nken9eOtnikyaMq7bNX
-         QtVICXaFoHxE3DY2pcfnmg+OVv8IAraX1yrB0niz04gR0Mv0Q4LJtqpvE0t5XmBe0NDp
-         d7GEeseVmHCLg/wjJ2K4yGYuOpF4Ah5Uv9nWq1/B6sBYwVjquo4I5jGImb1pE7aI9XMb
-         inSV+EEWp1Jl6rCy3Jibot00QAItF8lUCIGhs6hl/Jt+E6zgTKuAsNTIHg21/X3HZnEv
-         OWPS9Qodd7ySKaoOm/w5/WeWo/9QsiBOEm4JyayVDSCiV7uM8LMAPwKsAqZD8JR/EDgC
-         ONmg==
+        d=gmail.com; s=20221208; t=1689873435; x=1690478235;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J0uAt1FpVvgdk69DWGVo/B/WilumnjHo3ckls2wQj2c=;
+        b=MK+qmNNORXwB0I5M1ECJrML+kKdViRer5kBwEH13jqFqWPrvH9qpVwD+NCq/1d018c
+         dmHLfc1tu6kO/ikoIBoIR1krTQBsGZ3+q9u5v3XSZyYbOkyC67YXvHVlcxgsQWsqZgtm
+         4SH2TD93EzA0VP1rFamx/Cxpixhc1xvinZAjcekhOe3ngbMxphygvDdsOviDfTtnsbmZ
+         umZ7UPenNo+uzSz1TkMIjeWQt9QLKY1ACnKSlpgNnzP7MRX/LNX+PoEOdVdbQQ+Lidiy
+         cOGFq119CJN/FS7RftR/9pmwUsBDbw0jIdcDb2SJf2KjVezldwj7jUFTSW8pAI6VW6KZ
+         ONLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689868649; x=1690473449;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c+QYvjk4JswBL9BSCn/o4aTnoq/NNAUPcNRmWTlC0Fw=;
-        b=Y4drXMcJtqg7vFMJGk5mzEACP/BW6qEPIvDkFM+4AMlQ2z6M6AIw/PVON9L63E7qBz
-         SH2l8LSvj6M4MFCg7cdUPxGE1+UJmjEzRNjUgCwVVbIfLCWv5csTDCEyis1hIIENymH/
-         DfBxk3i2tbyWuD+pgdmx6q50/vDdrOdjjA9L0xTPRm5j3Tj8bN4ACmPNSZE/Ykosrr6n
-         PVTDQiZbfuKrVF/zjnH0XdZ92amw9suxdp7pmWu9HiGV6xWEFcx0q7sGyeHNKbuc3iR/
-         /aEa1gl7ylKw0HbOHRVFdSZW/ChxMOTMdWQ60w9AkxCQu+zviw9WJhn2SkKG3ud6WmVE
-         cwdw==
-X-Gm-Message-State: ABy/qLZG1ueeABATJqC8n/CsUd3kKR1GD1C9LlIUqG4N9iHtxnUIcTnf
-        /z6rQMm8LlrWNT3n4anOSGE=
-X-Google-Smtp-Source: APBJJlHyWzaJn4RDg4hoe1kskMsVjmKfGD9qXIgRJQTCFm5VexEnWOBYPCaIv5bHvtHrLy8hiE8MqA==
-X-Received: by 2002:a17:907:7613:b0:99b:574f:d201 with SMTP id jx19-20020a170907761300b0099b574fd201mr1958976ejc.40.1689868649222;
-        Thu, 20 Jul 2023 08:57:29 -0700 (PDT)
-Received: from orome (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id qn15-20020a170907210f00b009892cca8ae3sm859740ejb.165.2023.07.20.08.57.28
+        d=1e100.net; s=20221208; t=1689873435; x=1690478235;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J0uAt1FpVvgdk69DWGVo/B/WilumnjHo3ckls2wQj2c=;
+        b=SLm+b5tlr6idsm/Yh1OQVSEsFtlc4bsB3oIrbg7a6piuUQm/ZuPan8n2n9DoPkTLMu
+         wOouxBPgOKjtdycelh+Owyg+FDTD0XDr5FkceD9DjC2JO9ZGhEkYrn2RgXAIzMDXsPGf
+         1LYkpSfQ4zZ4qa5xSLiLDYP0dRKJZfvektyxQHUzLoAw9Qbkcx88gONRfKUEjNfWOov5
+         zF/IbP/LYpNHxyPMk3dvhisJ13icMpMyjE1vecx4ABbVH0H+VJGPWgs4YzcvcofaYH4U
+         OQMa9/VHWCtt1o/JRYPVylphSmNgbiBQ3tnl3FjdrUeiu+1sF1cbQbhq+/T36KjnLrHn
+         jaYg==
+X-Gm-Message-State: ABy/qLar+Z0aibssi6q/TIvf/KkwNyztO8QdBYkuDZzdKZQurFJJ8eFs
+        6fxfpq4tfyo3GsfUyGmvies=
+X-Google-Smtp-Source: APBJJlEkTI4A4ZrOCc+WXlC2nBipWy2JSRmd1c5HMwU8MruA6yjpC2qz2tfZemAEl4HUzSYjKYO5qQ==
+X-Received: by 2002:a05:6a00:24d1:b0:668:8ad5:778f with SMTP id d17-20020a056a0024d100b006688ad5778fmr10559001pfv.17.1689873434754;
+        Thu, 20 Jul 2023 10:17:14 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:e754:74d1:c368:67a2])
+        by smtp.gmail.com with ESMTPSA id h18-20020a62b412000000b00682a75a50e3sm1502944pfn.17.2023.07.20.10.17.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 08:57:28 -0700 (PDT)
-Date:   Thu, 20 Jul 2023 17:57:27 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jaewon Kim <jaewon02.kim@samsung.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 20 Jul 2023 10:17:14 -0700 (PDT)
+Date:   Thu, 20 Jul 2023 10:17:09 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     nikita.shubin@maquefel.me
+Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: pwm: samsung: add exynosautov9
- compatible
-Message-ID: <ZLlZZyR19tQUfsx-@orome>
-References: <20230718062200.79306-1-jaewon02.kim@samsung.com>
- <CGME20230718062724epcas2p4c5e986c62fba72f722a37973e721a452@epcas2p4.samsung.com>
- <20230718062200.79306-2-jaewon02.kim@samsung.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 28/42] input: keypad: ep93xx: add DT support for
+ Cirrus EP93xx
+Message-ID: <ZLlsFTe2nvFw698l@google.com>
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-28-3d63a5f1103e@maquefel.me>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qpP/98MEhHRgR+z4"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230718062200.79306-2-jaewon02.kim@samsung.com>
-User-Agent: Mutt/2.2.10 (2023-03-25)
+In-Reply-To: <20230605-ep93xx-v3-28-3d63a5f1103e@maquefel.me>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FSL_HELO_FAKE,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,49 +116,35 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Jul 20, 2023 at 02:29:28PM +0300, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
+> 
+> - drop flags, they were not used anyway
+> - add OF ID match table
+> - process "autorepeat", "debounce-delay-ms", prescale from device tree
+> - drop platform data usage and it's header
+> - keymap goes from device tree now on
+> 
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
---qpP/98MEhHRgR+z4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is awesome, thank you!
 
-On Tue, Jul 18, 2023 at 03:21:59PM +0900, Jaewon Kim wrote:
-> Add samsung,exynosautov9-pwm compatible string to binding document.
->=20
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../devicetree/bindings/pwm/pwm-samsung.yaml    | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+>  
+>  #include <linux/bits.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
 
-Kryzsztof,
+Are you sure you need this? I think the only OF-specific structure that
+is being used is of_device_id, which comes from mod_devicetable.h that
+you include below.
 
-do you want to pick this up along with the DT change? If so:
+Otherwise:
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Let me know if you prefer for this to go through the PWM tree.
+Please feel free to merge with the rest of the series.
 
-Thierry
+Thanks.
 
---qpP/98MEhHRgR+z4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS5WWQACgkQ3SOs138+
-s6GaVg/7Ba0ikWx8DB0QbrMH/jkLqyKpqiTtQeHGCstsWiEY5SsWs5q/h36+OP9C
-1TMkR1trJ78Zm+eu+Wk48pWxaBO/ir2BGUO7nPzPK8ieQMVNZBnreu02kCtO3f6H
-304nRMowPhzB4PR3OkHJN/Lxj1wQOlFQaQDBLa5L+spYIysf/0IM5L4h0FFt+zN3
-Ion7FegVkIaT6Le7VwmiDJw562m+EKjnVpVaIM3zG+/QajitvBP5rETG1BGXA5Lc
-M1WQllwSu0ulf8Mm2KA1WAJ6iHWlxif8k0OYua14+rpjmG3zfqMEZ1ai4vyOhsll
-3FkwL1485b5czLkG/Ty2AO7E7/ReYwOsBtdL+v6k6q91PifBuJvVGuGUl5qwb+e1
-mz+f57/25v+1sQVNEjqmOjt2FgorI+D7uOWhaftaTJIV04Sy6BG99BLDUBXIBlR7
-sS3UWNlOoTQ5K9MO3g0XEeAj//tJCNO0TcFZCULtmszopKWGYrIJ8xTG9tOzGQkM
-5RWaILnfzoev4vNGZHRFgp84uTBNcyenpR1+8uoFSNMdpEdpGy3j2SX+o5ubWW2F
-6tdFaWieiS6A1TNuRYW1VOYbA4IQhq+lCPSWtXfbnzj+5VPzg8GBZs64DML8Yygr
-QvZnp49socumO8J/uYfFYFjxMdDgc1PRvHxTG58LJC7YuZ/zPW8=
-=9FdW
------END PGP SIGNATURE-----
-
---qpP/98MEhHRgR+z4--
+-- 
+Dmitry
