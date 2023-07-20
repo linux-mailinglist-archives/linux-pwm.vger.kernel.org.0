@@ -2,77 +2,90 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D89D175B1E2
-	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jul 2023 17:00:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A827475B1F2
+	for <lists+linux-pwm@lfdr.de>; Thu, 20 Jul 2023 17:03:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232139AbjGTPAc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 20 Jul 2023 11:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44258 "EHLO
+        id S232390AbjGTPDW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 20 Jul 2023 11:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230382AbjGTPAb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jul 2023 11:00:31 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB4726B7;
-        Thu, 20 Jul 2023 08:00:22 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-521dd3d93bbso789912a12.1;
-        Thu, 20 Jul 2023 08:00:21 -0700 (PDT)
+        with ESMTP id S232378AbjGTPDV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 20 Jul 2023 11:03:21 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 634D926B7
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Jul 2023 08:03:12 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-3158a5e64b6so763730f8f.0
+        for <linux-pwm@vger.kernel.org>; Thu, 20 Jul 2023 08:03:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689865220; x=1690470020;
+        d=gmail.com; s=20221208; t=1689865391; x=1690470191;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rUaf4gWLINZFBA0dqPiheaqiJjRPRICeXKr+4KTVKtI=;
-        b=M82Pp31uZyTTn7PdzqKNmJk8gZ3xG/AC56Qz0Nb2apc7PfHib5LJB2ygkOTOekgPSk
-         NRTDaPTEZ7h7QzLLd+qnOXta/CofdDclBCmnuOiPJ4IwB0wb4nljhWydy7tYNg+Jo9lv
-         K+afpSdH9Ux2O84Y8I8RT+Ldoia2G3KEre46izxnHJokm1oRwpe2v2qOJy/lVTMDb8kT
-         JL6i9U998DsAsb661gF1H8D4RKAsYFCmm6LORjVL9UMTSR0nvyueKkIM2pJT3rXQZBMW
-         M8zmArRFY/nwkYI6CB0YGvZs4kFI1/covAwzZUVjecj+HNdXyU9M/OZVGOYtrMnwxHC2
-         noMQ==
+        bh=h9T6xDcaGdFqXpwnBEyH6XzquYN88GIZKDHbykcmRxA=;
+        b=dSEvn9QPxO9EVVW5ZGjUhUJUE3+OUOg7VWh6lwkKx+3zaEg/BnEepLUNRdoNU0j7Cz
+         wyhm0EPH/tozgy0H1KYAWbgzLNDLTv8CvmCaXaZcclLRcMskp29IBudDp7X/9DhmiKlm
+         HL3p3EUj9WhCU9sm01p/KtbD9vEAw+f1on0TfS8ssJvHluib1iHupvByidVbsWqzvzXJ
+         6plME6LqTd/dyZ2j8xrx60lVKVk/7Tgyw88nHVYl1y57WOuQHaBuNQ1Rm2bmDTG7ahlF
+         +jtPpxoBXCsAOQGw9+0lC721Of0twvgTCR7lhDxfAEnAywVrrsQ0izAvo5qRXad0Ld+Y
+         D+bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689865220; x=1690470020;
+        d=1e100.net; s=20221208; t=1689865391; x=1690470191;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rUaf4gWLINZFBA0dqPiheaqiJjRPRICeXKr+4KTVKtI=;
-        b=MHFfDHomSLVRwCmCEvNb6XOgQ6iBFuJ25Ld8mfvNr3g/UnkA0W3Bu5ow1YfB7IlWUb
-         55Ue684SwDQsWOb86ITY6WpRx60zPbNfLngVHVb+em0sffJpkXbkCuOgAsMVfjBCWzZf
-         IDtpg8Z0+1L5zv1BxiG5FSayvuuVI6JCiclAwCtGNGTwprVVkBQcLrj/YPTI1L4FyyTH
-         8jbfmzDw8FdLrHtURXsLmJ5mz1KxQZwKSalVwYQW2UhZT/0LpaZLWe0MiYhvrEsM89pv
-         1KG96R5346SP80OndLNgiKcVBPwA3taIRBRiVmz/m44/lYYUun5GQqqccEd+NxRFDuNI
-         6Nhw==
-X-Gm-Message-State: ABy/qLZHvClcO7hLMRXjz+FV8Ol7aqFWRUrpDJBuNulfeQ37Tddf4nFE
-        Lz7nOK3NJaJLSCxhVzwy8Pc=
-X-Google-Smtp-Source: APBJJlFFRHPquURhC+Xbg2wu19XDlOqWRNysFJVh6NesJvC97yquLrH3/wnsZPcx6ujqVwG5BaIB0w==
-X-Received: by 2002:a17:906:95:b0:978:928:3b99 with SMTP id 21-20020a170906009500b0097809283b99mr5459760ejc.46.1689865220270;
-        Thu, 20 Jul 2023 08:00:20 -0700 (PDT)
+        bh=h9T6xDcaGdFqXpwnBEyH6XzquYN88GIZKDHbykcmRxA=;
+        b=imgZsPg28bIoxKStTYJtK8URqPDHKVDz7BIZsC+fI6ceFyEUotJdU6uKDOkot9bHK7
+         F+6YEpMNF5+c/tIHP8RWQQPob8MEAqpO+HN8qedXYTTL3H0doqvIyyaAluIn6kKvp8jw
+         V+XwxuC4XogNoxkP3eJqCucYaBErHiXn6R8EVTrf8OIVAom3UJQAymDSDU5iJ6O4aNov
+         li6rnKvs+RgKkistsiBr42fbTT3aHfJRPL6f259vaEvJIqmPgbob9NbtYWIYw7QQFX3I
+         FtD95yOhjRy7+f85Cp+MR+zYtyiFPjInRUuCBvd8XacUPZPGWGDkh7454MTHiPuDcdeG
+         OaVQ==
+X-Gm-Message-State: ABy/qLYkd1w6cinvnA2G2l9RxqlbSt/iXuVwlAdWQvwM/ZYEMsp4EBZY
+        7pye+PDoqdutl0xZHkE2CSwU3WEzPNQ=
+X-Google-Smtp-Source: APBJJlEr5CyHhhpLYp3q/AVdeWKExZ21rYH+UIIgwfGMQMwnqR91YpoT/wK/430U56C5ddPybLCc+g==
+X-Received: by 2002:a5d:55ce:0:b0:313:e8bf:a77 with SMTP id i14-20020a5d55ce000000b00313e8bf0a77mr2183185wrw.5.1689865390637;
+        Thu, 20 Jul 2023 08:03:10 -0700 (PDT)
 Received: from orome (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id lo19-20020a170906fa1300b00992665694f7sm819845ejb.107.2023.07.20.08.00.19
+        by smtp.gmail.com with ESMTPSA id y16-20020a5d6150000000b00313e59cb371sm1599728wrt.12.2023.07.20.08.03.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 08:00:19 -0700 (PDT)
-Date:   Thu, 20 Jul 2023 17:00:17 +0200
+        Thu, 20 Jul 2023 08:03:10 -0700 (PDT)
+Date:   Thu, 20 Jul 2023 17:03:07 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     William Breathitt Gray <william.gray@linaro.org>,
-        Lee Jones <lee@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] mfd: rz-mtu3: link time dependencies
-Message-ID: <ZLlMAZPzEmSlzlbV@orome>
-References: <20230719090430.1925182-1-arnd@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-riscv@lists.infradead.org, chrome-platform@lists.linux.dev,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        linux-staging@lists.linux.dev, linux-rockchip@lists.infradead.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>, linux-pwm@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>, Johan Hovold <johan@kernel.org>,
+        greybus-dev@lists.linaro.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Alex Elder <elder@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Michael Walle <michael@walle.cc>,
+        Palmer Dabbelt <palmer@dabbelt.com>, kernel@pengutronix.de,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH 00/10] pwm: Constistenly name pwm_chip variables "chip"
+Message-ID: <ZLlMqwAnoPzI8ONt@orome>
+References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
+ <ZLjYqwGh178EHrVY@orome>
+ <20230720071033.e72hjkpghf5ooe73@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="slp7OkdABcuJ1sYm"
+        protocol="application/pgp-signature"; boundary="CL52jB4nG8OB1M/q"
 Content-Disposition: inline
-In-Reply-To: <20230719090430.1925182-1-arnd@kernel.org>
+In-Reply-To: <20230720071033.e72hjkpghf5ooe73@pengutronix.de>
 User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,75 +94,74 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---slp7OkdABcuJ1sYm
-Content-Type: text/plain; charset=us-ascii
+--CL52jB4nG8OB1M/q
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 19, 2023 at 11:02:23AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Jul 20, 2023 at 09:10:33AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Thierry,
 >=20
-> The new set of drivers for RZ/G2L MTU3a tries to enable compile-testing t=
-he
-> individual client drivers even when the MFD portion is disabled but gets =
-it
-> wrong, causing a link failure when the core is in a loadable module but t=
-he
-> other drivers are built-in:
+> On Thu, Jul 20, 2023 at 08:48:11AM +0200, Thierry Reding wrote:
+> > On Fri, Jul 14, 2023 at 10:56:13PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > Uwe Kleine-K=C3=B6nig (10):
+> > >   pwm: Use a consistent name for pwm_chip pointers in the core
+> > >   pwm: atmel-hlcdc: Use consistent variable naming
+> > >   pwm: bcm-kona: Consistenly name pwm_chip variables "chip"
+> > >   pwm: crc: Consistenly name pwm_chip variables "chip"
+> > >   pwm: cros-ec: Consistenly name pwm_chip variables "chip"
+> > >   pwm: lp3943: Consistenly name pwm_chip variables "chip"
+> > >   pwm: rockchip: Consistenly name pwm_chip variables "chip"
+> > >   pwm: sifive: Consistenly name pwm_chip variables "chip"
+> > >   pwm: sl28cpld: Consistenly name pwm_chip variables "chip"
+> > >   staging: greybus: pwm: Consistenly name pwm_chip variables "chip"
+> >=20
+> > This would've been much easier if it had been a single patch. Now I have
+> > to either make you redo the whole series because you've misspelled PWM
+> > or I have to go and update it myself in most of the above patches. Hint:
+> > I'll do the latter.
 >=20
-> x86_64-linux-ld: drivers/pwm/pwm-rz-mtu3.o: in function `rz_mtu3_pwm_appl=
-y':
-> pwm-rz-mtu3.c:(.text+0x4bf): undefined reference to `rz_mtu3_8bit_ch_writ=
-e'
-> x86_64-linux-ld: pwm-rz-mtu3.c:(.text+0x509): undefined reference to `rz_=
-mtu3_disable'
+> I guess you want to do s/pwm driver/PWM driver/? Fine for me, thanks.
 >=20
-> arm-linux-gnueabi-ld: drivers/counter/rz-mtu3-cnt.o: in function `rz_mtu3=
-_cascade_counts_enable_get':
-> rz-mtu3-cnt.c:(.text+0xbec): undefined reference to `rz_mtu3_shared_reg_r=
-ead'
+> > There is really no reason to split this up into this many patches for
+> > such a trivial change.
 >=20
-> It seems better not to add the extra complexity here but instead just use
-> a normal hard dependency, so remove the #else portion in the header along
-> with the "|| COMPILE_TEST". This could also be fixed by having slightly m=
-ore
-> elaborate Kconfig dependencies or using the cursed 'IS_REACHABLE()' helpe=
-r,
-> but in practice it's already possible to compile-test all these drivers
-> by enabling the mtd portion.
->=20
-> Fixes: 254d3a727421c ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
-> Fixes: 0be8907359df4 ("counter: Add Renesas RZ/G2L MTU3a counter driver")
-> Fixes: 654c293e1687b ("mfd: Add Renesas RZ/G2L MTU3a core driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/counter/Kconfig     |  2 +-
->  drivers/pwm/Kconfig         |  2 +-
->  include/linux/mfd/rz-mtu3.h | 66 -------------------------------------
->  3 files changed, 2 insertions(+), 68 deletions(-)
+> Well, that's a subjective view. There are reasons to prefer several
+> small patches over one big one, too. A small patch can be indiviually
+> reviewed, so the "Reviewed-by: Alex Elder ..." tag only goes to the one
+> change that he actually looked at and if later a fix to the sifive
+> driver is to be backported to stable, the stable maintainers just pick
+> the sifive one instead of one big patch.
 
-Assuming that Lee will pick this up:
+Backports becoming more complicated would actually be a good reason not
+to do this in the first place, but we've already discussed that enough
+elsewhere.
 
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
+> Did you skip the sl28cpld patch, or squash the fixup I sent in the reply
+> to Michael Walle?
 
---slp7OkdABcuJ1sYm
+I squashed the fixup.
+
+Thierry
+
+--CL52jB4nG8OB1M/q
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS5S/8ACgkQ3SOs138+
-s6EUEg/6Anop3hMP3iGcBnMEcu0SxusT0pTyZCNLPL1doGbdncByqE1q1zdEca0S
-3z9U1vwKHKl+tOfx15dDlS+EBz7wQpkYaU3UUeXVoX7rzGuzDNfe9dmYo63LvoRI
-/7ikGCZDb6lfzEhFznRBpNnXQhm4k0+9HDVIH5riXgIc/wepTsENaymyCBxg9ocs
-PAZTDaDRt+4mdeP3A7JrCihqU6P8LiSTetGwydHp04s9xVrnlhYHpy7AecnkJH3K
-CzkhykUji/qjWHUkcOUp2JGOrEWMFwleadLqvMOZwBm6i5d701K5TospTFvIS4WA
-b8u61aSXevOqxcU/IZ2HEqk91uTDFIPNwx/KaupITl3q0SBlxPky9YGnsuy3K4Gg
-uEYokiYYqVvAAb83B5IijBq7BQnEYmVR7bc6U7wmQaDtstiHsTgDu1+T44glMVxR
-FH0vNUGrw/iekN340d7w6/0DKmtm9UxQsoFzLdSbYOSRU+Go3kSHRG+zJYeryamr
-w0CRz+YIV0ZuqXEqys+VS4326WQJM78rXHsbhETcCzH/8xEEweX9BPvmCqsMpP9E
-s+jt/jzTPiRgi4a4sHy0X+JF9b7qS0LoIiJ5/NZhPCWThmxcTs7iK3Xa3aIcsfhb
-d6kRQ9XjgJ5FqfAVU93Epnl0bzaCKIpSFWSl8eKdT1CenRlI6Lc=
-=eYIX
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmS5TKsACgkQ3SOs138+
+s6F+LQ//Zs8K61taGOGqAeIFgMkT8WRglsOSZQPOn2E1/c4RWwUspgRCfQs6nAN3
+n1D2d2th0c0z2xfswoA6Q4TIzMyfejDbfKdslO705EbwQLXXLsOrrPJ0ART1RfsD
+rfsvJ/xiJlVX9AEFK9BvNyICipw36JhttBLrai9rVpd6Qw9SrhTt635P5xY5+DhY
+YK+dKHlwQYICb6dr4v14AbszZOAZsQLq2tro0AhcB7CwCUKvmZIAhGKfbj4jlsWd
+Q6iS2UWxdBMV7rjl9v3OwU2+MqNQwSKQ/RAFWIN/w/jHH7gdj9H/z7I7yBVDJMyg
+21uVm556sofBlWFwlVSfkng9YkM6fTBOt8Su7mV3AUZ4ufy03RMqXV29t6ks+8S+
+CTztOmWniJT/lJdhkAA3H9Sv010rjRKZjvHiOCilbgDyZ8B7BNY2gl1zoBUC/WrJ
+HzIwcpbVc6NQsnjFtnBMsczS9MHqIFXjHnUMSIYIhoUxRc5mnZWs+cgbzc9y16UD
+N/WWzMSwkhtaXIGVo4PSkNxuTl0vHFRHdXiy7o34cANT+UwWhHrJgNFx9VTphYHY
+VeP/0Qv+NWY4/6B113lh2Bq7cXY7RtyDXygdB3yraplPW3/vdU9d/kHeiHCTPRDK
+/w3AlUr10ciCY/6VXaGVt3JsNpWKpK3qaI/B0lkLNJt0+ZOwHFE=
+=Z1TB
 -----END PGP SIGNATURE-----
 
---slp7OkdABcuJ1sYm--
+--CL52jB4nG8OB1M/q--
