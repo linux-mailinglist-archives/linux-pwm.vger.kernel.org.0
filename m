@@ -2,59 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2798775C8B8
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jul 2023 15:58:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0AAD75C8DB
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jul 2023 16:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231560AbjGUN6w (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 21 Jul 2023 09:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55720 "EHLO
+        id S231691AbjGUOB4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 Jul 2023 10:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230353AbjGUN6u (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Jul 2023 09:58:50 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBB230F1
-        for <linux-pwm@vger.kernel.org>; Fri, 21 Jul 2023 06:58:29 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fb5bcb9a28so3250943e87.3
-        for <linux-pwm@vger.kernel.org>; Fri, 21 Jul 2023 06:58:29 -0700 (PDT)
+        with ESMTP id S231689AbjGUOBv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Jul 2023 10:01:51 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0F430DA
+        for <linux-pwm@vger.kernel.org>; Fri, 21 Jul 2023 07:01:45 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fc04692e20so17442555e9.0
+        for <linux-pwm@vger.kernel.org>; Fri, 21 Jul 2023 07:01:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689947907; x=1690552707;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1689948104; x=1690552904;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Uoi5Y4jjgnWGfQC+MA3PSzDO/nJ69a0U86XqjtM9qm4=;
-        b=hovoUSXRq28HNft26oRNivk53rfhvkFzFlsE+3eJGaPu6W9o4Hh4e/ClQ4euEk52Lc
-         Ek5BSaAroh2dCUY6scEF0qTX6SJCRLeM3gAKGHAwhgN2TXx3tl8zBKhqZNypY/tWkFHc
-         oe7SRYPVtulOU518is+mkTPudusWNGrbXpmSCwGn9SIS+3Qdck423+6xju48zvzmYRLu
-         SrCXzGzyT5RKNGORyZpIV27gIbAKSA970kJAUEzrStzCaI6yIn2cD69S96IGPnLOrWz9
-         MC4iNZlM1SAONUv1Jf8RdW+s5o5HTVZUOtOFBP3reutBNZI02r+6aCCx7r231ZzUbq/y
-         Rnqg==
+        bh=kGZ5LqU0Zryf5RXxHBpf5dofqREFTyZTeFWlFYPBfA8=;
+        b=ZiVB2hHSTZRmiaMmbMREaMhbawMx/KUt3cg1qeF1gBfCQQAGIBGPHjWK50hX362tpU
+         fMapfTUkHNiMW2EcbBz3SgWGkAp6pnHxDhqm4HHqfVuIIfYvxWb4ogcWbai4vpYhJADI
+         nWulY7lsgECJ57xXy/eajLo129aMmkczTVRAjkIe0wiSagmvvtOEMM8dttszF+P0remm
+         RGTV8zYGxv0/wyu9CCIL2fyYMd0tbEu3edlaV1yZeI84Bkx+jEwwKA/R03nUuupkA/DL
+         bFjJcVPJ1Os8KPfwF5c406w0MGIwcfg3il9N5GJ9UXq+jvImjTaQ3Zov5AQGHQM9OcQ+
+         H5mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689947907; x=1690552707;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1689948104; x=1690552904;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uoi5Y4jjgnWGfQC+MA3PSzDO/nJ69a0U86XqjtM9qm4=;
-        b=RHjT/Tely0jiKH0JKsFjbQI6kCRXnSa7iBlrhHEclWf0uZlqXfVOwRjkSh1PmgyGQM
-         g45mBeKRlMixFMEOszWvP/XIgP+0xddeilITjN2M+kSZruL3OX8tyF1qkfdg80dqaIh6
-         hAb8DntPKkltmvlPJtvvThiEDREKrBf63XoF5hgBu3K0aSeYRfWIjYe3TzD75blZR9H5
-         BGYl+j/cKuK8ChzpREPmmkidODfuQmeJAbtAiQOMRk7z2Ha9PxE4aR5cEOXStX6q8T6n
-         iq7cKpowV0QHrnBWt/tA2xCfYDOOktsq8gn1csRZ34/tSxmBabE2k62UK+LGjDvCaHiL
-         0nBQ==
-X-Gm-Message-State: ABy/qLabYDTsLAtzh3b69t5b4HcRQZ0dMe1mMLgg1gGMbPQ9ULvIQkIH
-        iN+cNCJmDAiD9l2+rQYIjssSQw==
-X-Google-Smtp-Source: APBJJlFJQPGeO+dM+/CogGYGFX3IbIoIu/R+CmmEzNoP5XS6uM+gVvd5Uqi6hxrOAM8nRxnGkKL4wA==
-X-Received: by 2002:a05:6512:1095:b0:4f8:cd67:88e6 with SMTP id j21-20020a056512109500b004f8cd6788e6mr1382568lfg.44.1689947907244;
-        Fri, 21 Jul 2023 06:58:27 -0700 (PDT)
+        bh=kGZ5LqU0Zryf5RXxHBpf5dofqREFTyZTeFWlFYPBfA8=;
+        b=DqxjSMxcAjhhOZU5VwQv6mxkhO8YO9ZViFoHfKs+NIjU6sutiDgFKsgvVW9opazX5G
+         n/ScoOpPKOOFsEL5/txy5UFPb8Gkkqah4RYUCBu8zJdrVNTPKtCBS+nX0bQX/9ReVpHx
+         EpXZrkz9gqU1/hAgD6O6CZ9HunfHpOOPXODoZtMruCQW5H6Fw4H3j+gDrHdzZoQ1t82J
+         mT6UDy/TfP2189cK7R5ik1Lpq4lBLLb+E1KQV8Bq+puw8DmH0e+ccjg8KzmgHwhUZEh6
+         f+B8IKtu/DjsnxY5JvZh9yP+DIPVYxthMkNlKEG564ewmtSjtFiwvxD8Aw/xpBjRp2b2
+         VVKg==
+X-Gm-Message-State: ABy/qLZ2XDSdjWLysm6SPyBJpZfKEDPj7ohn8wo/e2N/p6dswGa/dgUT
+        3jo6jv2AJtzg1wmgcdc7osVXgA==
+X-Google-Smtp-Source: APBJJlFl0X021T0an8cBRN2rsT+BJ+nZ0MYlRyFEpg2gd2RFuh46KGFuFZP+LfRCosw99RkgkE80Jg==
+X-Received: by 2002:adf:ea50:0:b0:314:2732:e81e with SMTP id j16-20020adfea50000000b003142732e81emr1636390wrn.8.1689948103685;
+        Fri, 21 Jul 2023 07:01:43 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id h15-20020aa7c94f000000b0051d890b2407sm2111001edt.81.2023.07.21.06.58.23
+        by smtp.gmail.com with ESMTPSA id r5-20020adff105000000b003145521f4e5sm4278545wro.116.2023.07.21.07.01.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jul 2023 06:58:26 -0700 (PDT)
-Message-ID: <53c26a74-3374-cbc4-57cf-3b1cc0904300@linaro.org>
-Date:   Fri, 21 Jul 2023 15:58:22 +0200
+        Fri, 21 Jul 2023 07:01:42 -0700 (PDT)
+Message-ID: <66fba798-c6ef-1105-656a-5d593a056448@linaro.org>
+Date:   Fri, 21 Jul 2023 16:01:38 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v3 02/42] dt-bindings: clock: Add Cirrus EP93xx
+Subject: Re: [PATCH v3 04/42] dt-bindings: pinctrl: Add Cirrus EP93xx
+Content-Language: en-US
 To:     nikita.shubin@maquefel.me,
         Hartley Sweeten <hsweeten@visionengravers.com>,
         Lennert Buytenhek <kernel@wantstofly.org>,
@@ -104,10 +105,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
         linux-input@vger.kernel.org, alsa-devel@alsa-project.org
 References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
- <20230605-ep93xx-v3-2-3d63a5f1103e@maquefel.me>
-Content-Language: en-US
+ <20230605-ep93xx-v3-4-3d63a5f1103e@maquefel.me>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230605-ep93xx-v3-2-3d63a5f1103e@maquefel.me>
+In-Reply-To: <20230605-ep93xx-v3-4-3d63a5f1103e@maquefel.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -123,28 +123,27 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 On 20/07/2023 13:29, Nikita Shubin via B4 Relay wrote:
 > From: Nikita Shubin <nikita.shubin@maquefel.me>
 > 
-> This adds device tree bindings for the Cirrus Logic EP93xx
-> clock block used in these SoCs.
+> Add YAML bindings for ep93xx SoC pinctrl.
 > 
 > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  .../bindings/clock/cirrus,ep9301-clk.yaml          | 46 ++++++++++++++++++++++
->  include/dt-bindings/clock/cirrus,ep93xx-clock.h    | 41 +++++++++++++++++++
->  2 files changed, 87 insertions(+)
+>  .../bindings/pinctrl/cirrus,ep9301-pinctrl.yaml    | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/cirrus,ep9301-clk.yaml b/Documentation/devicetree/bindings/clock/cirrus,ep9301-clk.yaml
+> diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml
 > new file mode 100644
-> index 000000000000..111e016601fb
+> index 000000000000..d5682531b0da
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/cirrus,ep9301-clk.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/pinctrl/cirrus,ep9301-pinctrl.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/clock/cirrus,ep9301-clk.yaml#
+> +$id: http://devicetree.org/schemas/pinctrl/cirrus,ep9301-pinctrl.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Cirrus Logic ep93xx SoC's clock controller
+> +title: Cirrus ep93xx pins mux controller
 > +
 > +maintainers:
 > +  - Nikita Shubin <nikita.shubin@maquefel.me>
@@ -153,44 +152,25 @@ On 20/07/2023 13:29, Nikita Shubin via B4 Relay wrote:
 > +properties:
 > +  compatible:
 > +    oneOf:
-> +      - const: cirrus,ep9301-clk
+> +      - const: cirrus,ep9301-pinctrl
 > +      - items:
 > +          - enum:
-> +              - cirrus,ep9302-clk
-> +              - cirrus,ep9307-clk
-> +              - cirrus,ep9312-clk
-> +              - cirrus,ep9315-clk
-> +          - const: cirrus,ep9301-clk
+> +              - cirrus,ep9302-pinctrl
+> +              - cirrus,ep9307-pinctrl
+> +              - cirrus,ep9312-pinctrl
+> +              - cirrus,ep9315-pinctrl
+> +          - const: cirrus,ep9301-pinctrl
 > +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: reference clock
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clock-controller {
-> +      compatible = "cirrus,ep9301-clk";
-> +      #clock-cells = <1>;
-> +      clocks = <&xtali>;
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/cirrus,ep93xx-clock.h b/include/dt-bindings/clock/cirrus,ep93xx-clock.h
-> new file mode 100644
-> index 000000000000..3cd053c0fdea
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/cirrus,ep93xx-clock.h
+> +patternProperties:
+> +  '^pins-':
+> +    type: object
+> +    description: pin node
+> +    $ref: pinmux-node.yaml#
 
-Keep the same filename as bindings file.
+You need:
+unevaluatedProperties: false
+
+
 
 Best regards,
 Krzysztof
