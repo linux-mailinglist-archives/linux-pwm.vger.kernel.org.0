@@ -2,124 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C24BF75CFE7
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jul 2023 18:43:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7324A75D0FC
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jul 2023 19:58:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbjGUQn2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 21 Jul 2023 12:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43630 "EHLO
+        id S229829AbjGUR6Y (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 Jul 2023 13:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjGUQnY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Jul 2023 12:43:24 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689E3273E;
-        Fri, 21 Jul 2023 09:43:13 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="351946345"
-X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
-   d="scan'208";a="351946345"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 09:42:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="728169179"
-X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
-   d="scan'208";a="728169179"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jul 2023 09:42:45 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qMtDF-00Cx3r-2P;
-        Fri, 21 Jul 2023 19:42:41 +0300
-Date:   Fri, 21 Jul 2023 19:42:41 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
+        with ESMTP id S229707AbjGUR6X (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Jul 2023 13:58:23 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D253588
+        for <linux-pwm@vger.kernel.org>; Fri, 21 Jul 2023 10:58:18 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qMuOI-0004q2-F7; Fri, 21 Jul 2023 19:58:10 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qMuOH-0017RA-DW; Fri, 21 Jul 2023 19:58:09 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qMuOG-006hgs-HH; Fri, 21 Jul 2023 19:58:08 +0200
+Date:   Fri, 21 Jul 2023 19:58:04 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 18/42] spi: ep93xx: add DT support for Cirrus EP93xx
-Message-ID: <ZLq1gQKWWE/2WCYd@smile.fi.intel.com>
-References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
- <20230605-ep93xx-v3-18-3d63a5f1103e@maquefel.me>
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        kernel@pengutronix.de,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 02/10] pwm: atmel-hlcdc: Use consistent variable naming
+Message-ID: <20230721175804.ent7umly5jjdyy4t@pengutronix.de>
+References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
+ <20230714205623.2496590-3-u.kleine-koenig@pengutronix.de>
+ <ZLjZ_lllJ1PT3O5H@orome>
+ <20230720072958.r54d23cefbrytw7r@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bb3gkgkuzy5py7vq"
 Content-Disposition: inline
-In-Reply-To: <20230605-ep93xx-v3-18-3d63a5f1103e@maquefel.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20230720072958.r54d23cefbrytw7r@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,
+        T_SPF_TEMPERROR,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 02:29:18PM +0300, Nikita Shubin via B4 Relay wrote:
-> From: Nikita Shubin <nikita.shubin@maquefel.me>
-> 
-> - add OF ID match table
-> 
-> Instead of platform use_dma flag - check if DT dmas property is present to
-> decide to use dma ot not.
 
-...
+--bb3gkgkuzy5py7vq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +#ifdef CONFIG_OF
+Hello Thierry,
 
-Why ifdeffery?
+On Thu, Jul 20, 2023 at 09:29:58AM +0200, Uwe Kleine-K=F6nig wrote:
+> On Thu, Jul 20, 2023 at 08:53:50AM +0200, Thierry Reding wrote:
+> > On Fri, Jul 14, 2023 at 10:56:15PM +0200, Uwe Kleine-K=F6nig wrote:
+> > > [...]
+> > > -	struct atmel_hlcdc_pwm *chip =3D to_atmel_hlcdc_pwm(c);
+> > > -	struct atmel_hlcdc *hlcdc =3D chip->hlcdc;
+> > > +	struct atmel_hlcdc_pwm *ddata =3D to_atmel_hlcdc_pwm(chip);
+> >=20
+> > Can we not just use something like "data", "priv" or "atmel"? "ddata" is
+> > horrific and looks like a typo.
+>=20
+> I like "ddata" which isn't so uncommon (pwm-atmel-hlcdc and pwm-sifive
+> use it
 
-Can't it be first checked for firmware provided info and fell back to platdata?
+I have to correct this. pwm-atmel-hlcdc only used it after this patch of
+course. But there is pwm-sti which uses it and the two stm32 drivers use
+if for driver data of the pwm's parent device.
 
-> +static struct ep93xx_spi_info dt_spi_info;
+> and git grep '\<ddata\>' suggests it's common in other parts of
+> the kernel, too.)
+> It's the same naming scheme as "pdata". If you feel strong here, do you
+> like "drvdata" better? Among your suggestions my favourite is "priv".
 
-...
+I noticed you applied my patch and replaced "ddata" by "atmel" without
+mentioning that in the commit log or this thread.
 
-> +#endif
+After my reply above, that's pretty steep.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--bb3gkgkuzy5py7vq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmS6xywACgkQj4D7WH0S
+/k6HOwf9EHV2opiYgy+lvBXmGIpTvhGQtGtgIYiHRLgSNQOn6qJsfDkEcRhaeC5Q
+u5gc/qwHcxpboAprCXIPhzmDLbyeXfY4ODI+HuyM00R9wM6rPwovFhn4KgePsX6v
+BvaV/dkKydQu8+bEoiKkHiMrIaPKHI2jKuoafSJZfxHrXWjpEHGNnOoTE2eepV6t
+eS3XA6AP5Q9Waz3Uw6ugWKNrCccB7MUxu5l9zjeMe9pU2P4KP/mXwiFR/414OKhi
+ym6sPIXa8crFmCPot/WyRvR26mQdDgK8jgcnadTfv4JcDbAranttoaq9E1TpGyt+
+dqUgZmdKq0RWdB8znKlSPS+0xrBHBw==
+=LgY0
+-----END PGP SIGNATURE-----
+
+--bb3gkgkuzy5py7vq--
