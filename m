@@ -2,283 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25A1275CBC2
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jul 2023 17:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37C2E75CBD5
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Jul 2023 17:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231995AbjGUPan (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 21 Jul 2023 11:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
+        id S231997AbjGUPeF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 21 Jul 2023 11:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbjGUPal (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Jul 2023 11:30:41 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7980C30EA;
-        Fri, 21 Jul 2023 08:30:39 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="397941557"
-X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
-   d="scan'208";a="397941557"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 08:30:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="898741295"
-X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
-   d="scan'208";a="898741295"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 21 Jul 2023 08:30:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1qMs5C-00AR8R-2V;
-        Fri, 21 Jul 2023 18:30:18 +0300
-Date:   Fri, 21 Jul 2023 18:30:18 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     nikita.shubin@maquefel.me
-Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229801AbjGUPeE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 21 Jul 2023 11:34:04 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B64B30DD;
+        Fri, 21 Jul 2023 08:34:03 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-521dc8ae899so2406454a12.3;
+        Fri, 21 Jul 2023 08:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689953641; x=1690558441;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+J3maWKZDLZOHu0KMClUTkcLoWuu+H0TcJ6B1ppGIM=;
+        b=fmDH21f77I25libj1wRrEk4TILKZ1kLWnMOmbSvfilgvRDaX/q9nI0LnO6BRwwLGyw
+         g4JnW+IFQt+HznIwYpdXczSCO43cnfYgNAcCU5ljr0kBxTgU46cr6ev4SqEIZ2yHYbZl
+         /+31gkI32NDaV/JIDkwmoD/mS26kbmdXRdCJFwQ7l5ihDpRHzBRd42vr6SM2dQ+gRKoa
+         RCj0DGnoWV384OkZm/EzMt3wXooPGX9thKsillns/ckLFVKOCyzMFv5ezIDO3PxdEIpj
+         XfuuKMAWBPKVZiOXw7/6NTCYGPvW3oaqbjYUfWeoQlvX098jxbIdIyLkRjlYP7SKMuHc
+         5JEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689953641; x=1690558441;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e+J3maWKZDLZOHu0KMClUTkcLoWuu+H0TcJ6B1ppGIM=;
+        b=Ro3MFcytaO7kVIbqUU6RsW8knv9lGbWJ1shRgz5JrKzzehiJKIsGEaKx9N8QMPnLMd
+         Lq+41KIhGvAo9uOS6XyqMwJYvptga3+1zPpyzHFmg6UJy7YI9QiZjECftthexPbTWpot
+         C3zNisD0FiAZ7uhSkb366jBYQw7CHsyz7THPpSE54QCDOAI2dLx0g0jzzHUKpKO5YzMk
+         VfK9ZyypmpBZ5uhp77Ch1SiweyuTT+jsAXmISHdY91s2cI4tEZfoZ5c3XUIky4/Gq8UL
+         +nrzxKHBrlxMtcNw/kQM5ouFgKEJe5WcshdlNdGfBGsJltUNp3mWzob7yhX9IhLB7Mk8
+         lieA==
+X-Gm-Message-State: ABy/qLYKIqY3ohvdALQzwc9A4RQg9XOeOymcbssnROf9TUnIRCekP5/5
+        tLqDMXfoGImci4+iwh8LAiQ=
+X-Google-Smtp-Source: APBJJlHxHpHitpRJOlz0XvfBo0jSQ+i1+osJAXEtnMET5LtbtSRMYQN2nySPQ57QEZdfL8+yUCjgKQ==
+X-Received: by 2002:aa7:c982:0:b0:51e:404:1e6d with SMTP id c2-20020aa7c982000000b0051e04041e6dmr1981954edt.38.1689953641105;
+        Fri, 21 Jul 2023 08:34:01 -0700 (PDT)
+Received: from localhost (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id u11-20020a056402064b00b0051dfa2e30b2sm2244385edx.9.2023.07.21.08.34.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jul 2023 08:34:00 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
+        Artur Weber <aweber.kernel@gmail.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 05/42] pinctrl: add a Cirrus ep93xx SoC pin controller
-Message-ID: <ZLqkiqUSgohVLnbo@smile.fi.intel.com>
-References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
- <20230605-ep93xx-v3-5-3d63a5f1103e@maquefel.me>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Helge Deller <deller@gmx.de>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Luca Weiss <luca@z3ntu.xyz>,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: (subset) [PATCH v2 0/4] video: backlight: lp855x: modernize bindings
+Date:   Fri, 21 Jul 2023 17:33:58 +0200
+Message-ID: <168995363315.3656835.14137740606773160898.b4-ty@nvidia.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230519180728.2281-1-aweber.kernel@gmail.com>
+References: <20230519180728.2281-1-aweber.kernel@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230605-ep93xx-v3-5-3d63a5f1103e@maquefel.me>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 02:29:05PM +0300, Nikita Shubin via B4 Relay wrote:
-> From: Nikita Shubin <nikita.shubin@maquefel.me>
+From: Thierry Reding <treding@nvidia.com>
+
+
+On Fri, 19 May 2023 20:07:24 +0200, Artur Weber wrote:
+> Convert TI LP855X backlight controller bindings from TXT to YAML and,
+> while we're at it, rework some of the code related to PWM handling.
+> Also correct existing DTS files to avoid introducing new dtb_check
+> errors.
 > 
-> This adds a pin control (only multiplexing) driver for ep93xx
-> SoC so we can fully convert ep93xx to device tree.
+> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 > 
-> This driver is capable of muxing ep9301/ep9302/ep9307/ep9312/ep9315
-> variants, this is chosen based on "compatible" in device tree.
+> [...]
 
-...
+Applied, thanks!
 
-> +config PINCTRL_EP93XX
-> +	bool
-> +	depends on OF && (ARCH_EP93XX || COMPILE_TEST)
+[4/4] arm64: dts: adapt to LP855X bindings changes
+      commit: faae0778fa10fa4e8909fe9164f06acab170f1e9
 
-The OF seems to be functional dependency and not compile time one.
-Thus
-
-	depends on (OF && ARCH_EP93XX) || COMPILE_TEST
-
-> +	select PINMUX
-> +	select GENERIC_PINCONF
-> +	select MFD_SYSCON
-
-...
-
-> +#define EP93XX_SYSCON_DEVCFG_D1ONG	BIT(30) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_D0ONG	BIT(29) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_IONU2	BIT(28) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_GONK	BIT(27) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_TONG	BIT(26) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_MONG	BIT(25) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_A2ONG	BIT(22) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_A1ONG	BIT(21) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_HONIDE	BIT(11) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_GONIDE	BIT(10) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_PONG	BIT(9) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_EONIDE	BIT(8) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_I2SONSSP	BIT(7) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_I2SONAC97	BIT(6) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_RASONP3	BIT(4) /* done */
-
-> +#define PADS_MASK		(GENMASK(30, 25) | BIT(22) | BIT(21) | GENMASK(11, 6) | BIT(4))
-
-Seems better to spell each bit as by definition given above.
-
-...
-
-> +/* Ordered by bit index */
-> +static const char * const ep93xx_padgroups[] = {
-> +	NULL, NULL, NULL, NULL,
-> +	"RasOnP3",
-> +	NULL,
-> +	"I2SonAC97",
-> +	"I2SonSSP",
-> +	"EonIDE",
-> +	"PonG",
-> +	"GonIDE",
-> +	"HonIDE",
-> +	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-> +	"A1onG",
-> +	"A2onG",
-> +	NULL, NULL,
-> +	"MonG",
-> +	"TonG",
-> +	"GonK",
-> +	"IonU2",
-> +	"D0onG",
-> +	"D1onG",
-
-Instead of tons of NULLs, use
-
-	[NN] = "...",
-
-which is much less error prone.
-
-> +};
-
-...
-
-> +/** ep9301, ep9302*/
-
-Is it really kernel doc (besides missing space)?
-Please, run
-
-	scripts/kernel-doc -v -Wall -none $YOUR_FILE
-
-for each file you contributed in the entire series and fix all warnings.
-
-...
-
-> +static const char *ep93xx_get_group_name(struct pinctrl_dev *pctldev,
-> +					 unsigned int selector)
-> +{
-> +	struct ep93xx_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	switch (pmx->model) {
-> +	case EP93XX_9301_PINCTRL:
-> +		return ep9301_pin_groups[selector].grp.name;
-> +	case EP93XX_9307_PINCTRL:
-> +		return ep9307_pin_groups[selector].grp.name;
-> +	case EP93XX_9312_PINCTRL:
-> +		return ep9312_pin_groups[selector].grp.name;
-> +	}
-
-> +	return NULL;
-
-Use default case instead.
-
-> +}
-
-...
-
-> +	/* Which bits changed */
-> +	before &= PADS_MASK;
-> +	after &= PADS_MASK;
-> +	expected = before & ~grp->mask;
-> +	expected |= grp->value;
-> +	expected &= PADS_MASK;
-
-Instead of above:
-
-	expected = (before & ~grp->mask) | grp->value;
-
-> +	/* Print changed states */
-> +	tmp = expected ^ after;
-
-	tmp = (expected ^ after) & PADS_MASK;
-
-> +	for_each_set_bit(i, &tmp, PADS_MAXBIT) {
-> +		bool enabled = expected & BIT(i);
-> +
-> +		dev_err(pmx->dev,
-> +			    "pin group %s could not be %s: probably a hardware limitation\n",
-> +			    ep93xx_padgroups[i], str_enabled_disabled(enabled));
-
-Wrong indentation.
-
-> +		dev_err(pmx->dev,
-> +				"DeviceCfg before: %08x, after %08x, expected %08x\n",
-> +				before, after, expected);
-
-Wrong indentation.
-
-I believe this one can go to debug level.
-
-> +	}
-
-...
-
-> +	pmx->model = (int)of_device_get_match_data(dev);
-
-(uintptr_t) is more appropriate here.
-
-...
-
-> +	pmx->pctl = devm_pinctrl_register(dev, &ep93xx_pmx_desc, pmx);
-> +	if (IS_ERR(pmx->pctl)) {
-> +		dev_err(dev, "could not register pinmux driver\n");
-> +		return PTR_ERR(pmx->pctl);
-
-Why not dev_err_probe() as elsewhere?
-
-> +	}
-
-...
-
-> +static int __init ep93xx_pmx_init(void)
-> +{
-> +	return platform_driver_register(&ep93xx_pmx_driver);
-> +}
-> +arch_initcall(ep93xx_pmx_init);
-
-+ blank line.
-
-Also add everywhere MODULE_DESCRIPTION() as modpost recently started to
-complain (probably with `make W=1` which you should execute anyway for
-your new code).
-
-> +MODULE_IMPORT_NS(EP93XX_SOC);
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thierry Reding <treding@nvidia.com>
