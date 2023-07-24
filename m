@@ -2,48 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDA3275EC6F
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jul 2023 09:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A61075EF21
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jul 2023 11:30:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjGXHYr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Jul 2023 03:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56968 "EHLO
+        id S229628AbjGXJag (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Jul 2023 05:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjGXHYq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jul 2023 03:24:46 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88547E1
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Jul 2023 00:24:45 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qNpvv-0006gf-Vh; Mon, 24 Jul 2023 09:24:44 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qNpvv-001hdk-21; Mon, 24 Jul 2023 09:24:43 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qNpvu-007Lg3-7u; Mon, 24 Jul 2023 09:24:42 +0200
-Date:   Mon, 24 Jul 2023 09:24:42 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
+        with ESMTP id S229577AbjGXJaf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jul 2023 05:30:35 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D07F3
+        for <linux-pwm@vger.kernel.org>; Mon, 24 Jul 2023 02:30:34 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2b70404a5a0so58316621fa.2
+        for <linux-pwm@vger.kernel.org>; Mon, 24 Jul 2023 02:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1690191032; x=1690795832;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HR6qSxyiyJpt9A/Z8cWAd/ggm03WbEHNOfBsVLzhOho=;
+        b=JMC9eNdgoo6Brfu0hns2+P79kub2hqCd0bkXWjTS0hQqZYq3cwZDzELTW66LR5XcoT
+         /vCKkbB8KrPZd/Gohzr9ABGCKrplWeH2UE/7UWC0m9uS30kUeSl8Jf7buxX+NhiU4Dms
+         9wX4clq4wSpUonUhszkTKcpi8yIVQVxwvOEBcKzPuVpTOVd9rA1VLnQvorD1iuajIdB5
+         GrWmzHDU5cEBwp6j6Zzf8vw2a7kPeQ3mbp4S09c+qEcI/tfHNpDKlvFA6+1M124S1p5x
+         EnB4N1CTO6J6//8SZ9Mm0RASdn0YrSCQiESjaG3omYevCyW8He07q6qaI/rOlRS9taYX
+         ZUYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690191032; x=1690795832;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HR6qSxyiyJpt9A/Z8cWAd/ggm03WbEHNOfBsVLzhOho=;
+        b=XSlq5MY0PVSzQtZS5qPGHbU+4lUFQVOIIuL+pnUvR/5CljQ2WuWCqDdE/cCf6K+LJ2
+         0QLILB4Rd7SaFyRogHDNvdg6Avh/8YaBznqRFjKgsKPJTY/DefxhFHdIR0ZPwY/ie74j
+         RTbasob5m5IxYKw8NWlBV7ltzmVhgOsgvWCpeD0xfdkNhFgjjTq8+H13QbdwkfUKFs3Y
+         YcvdEa9yJa4IJmmhKZP2JDTuu6DiMnp1jb+epeJhaDGbzro8CGtkP6zHLbOP9pfPEdKN
+         x2XlvvNwCC41bDsE8/kwT+q7etOBPdufk1qNjHAA0KBL/mwSYhXECVKWxmAlWoQjZSna
+         wniQ==
+X-Gm-Message-State: ABy/qLbeB22KqbpMQTbo7bDQ/8gLOtjCfYd4O8E0gNFcbzAG/tZSMYqy
+        Ckm+FrdvVuHCJVhYrF1hHPmwcRQOe8neIHpJSwg=
+X-Google-Smtp-Source: APBJJlF4Qb1v5tBfKCy/g8MhmuCMS/FA0jTIzvi4q310YTJSB2ew9aGSyAj1fQ15+U9YJ97wONUrNA==
+X-Received: by 2002:a2e:9214:0:b0:2b6:e292:85ab with SMTP id k20-20020a2e9214000000b002b6e29285abmr5657993ljg.25.1690191032659;
+        Mon, 24 Jul 2023 02:30:32 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id 13-20020a05600c22cd00b003fbcf032c55sm12320330wmg.7.2023.07.24.02.30.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jul 2023 02:30:32 -0700 (PDT)
+Date:   Mon, 24 Jul 2023 12:30:28 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     u.kleine-koenig@pengutronix.de
 Cc:     linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: Explicitly include correct DT includes
-Message-ID: <20230724072442.yb4fa3vkw34nojwn@pengutronix.de>
-References: <20230714174852.4062251-1-robh@kernel.org>
- <20230717074352.dz3ex7fwi77loayc@pengutronix.de>
+Subject: [bug report] pwm: lpc32xx: Don't modify HW state in .probe() after
+ the PWM chip was registered
+Message-ID: <919cac5d-491e-4534-baed-bf813181192d@moroto.mountain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qgjv7qoirny7mgrw"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230717074352.dz3ex7fwi77loayc@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -52,43 +70,61 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Uwe Kleine-König,
 
---qgjv7qoirny7mgrw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch 3d2813fb17e5: "pwm: lpc32xx: Don't modify HW state in
+.probe() after the PWM chip was registered" from Jul 7, 2021
+(linux-next), leads to the following Smatch static checker warning:
 
-Hello Thierry,
+	drivers/pwm/pwm-lpc32xx.c:144 lpc32xx_pwm_probe()
+	warn: pointer dereferenced without being set 'lpc32xx->chip.pwms'
 
-On Mon, Jul 17, 2023 at 09:43:52AM +0200, Uwe Kleine-K=F6nig wrote:
-> Acked-by: Uwe Kleine-K=F6ng <u.kleine-koenig@pengutronix.de>
+drivers/pwm/pwm-lpc32xx.c
+    121 static int lpc32xx_pwm_probe(struct platform_device *pdev)
+    122 {
+    123         struct lpc32xx_pwm_chip *lpc32xx;
+    124         int ret;
+    125         u32 val;
+    126 
+    127         lpc32xx = devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
+    128         if (!lpc32xx)
+    129                 return -ENOMEM;
+    130 
+    131         lpc32xx->base = devm_platform_ioremap_resource(pdev, 0);
+    132         if (IS_ERR(lpc32xx->base))
+    133                 return PTR_ERR(lpc32xx->base);
+    134 
+    135         lpc32xx->clk = devm_clk_get(&pdev->dev, NULL);
+    136         if (IS_ERR(lpc32xx->clk))
+    137                 return PTR_ERR(lpc32xx->clk);
+    138 
+    139         lpc32xx->chip.dev = &pdev->dev;
+    140         lpc32xx->chip.ops = &lpc32xx_pwm_ops;
+    141         lpc32xx->chip.npwm = 1;
+    142 
+    143         /* If PWM is disabled, configure the output to the default value */
+--> 144         val = readl(lpc32xx->base + (lpc32xx->chip.pwms[0].hwpwm << 2));
+                                             ^^^^^^^^^^^^^^^^^^^^^
+This is a NULL dereference
 
-I mistyped my name and this made it into your for-next branch. It would
-be great if you fixed it, e.g. using:
+    145         val &= ~PWM_PIN_LEVEL;
+    146         writel(val, lpc32xx->base + (lpc32xx->chip.pwms[0].hwpwm << 2));
+                                             ^^^^^^^^^^^^^^^^^^^^^
+Same.
 
-	FILTER_BRANCH_SQUELCH_WARNING=3D1 git filter-branch -f --msg-filter 'sed "=
-s/ng <u.kl/nig <u.kl/"' linus/master..
+    147 
+    148         ret = devm_pwmchip_add(&pdev->dev, &lpc32xx->chip);
+                      ^^^^^^^^^^^^^^^^
 
-Thanks
-Uwe
+lpc32xx->chip.pwms gets set to non-NULL here.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+    149         if (ret < 0) {
+    150                 dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
+    151                 return ret;
+    152         }
+    153 
+    154         return 0;
+    155 }
 
---qgjv7qoirny7mgrw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmS+JzkACgkQj4D7WH0S
-/k5Vygf+OLBx3GzJy5o99PmlpLHAyrGzuRnnyg+DZPKjDMo0IgZ+n9pHdG08tk0t
-IKxdRkUUgjIScBAwphwY+XfMLfOZKggI45BjrRMk5CNUAAKer/nPAe4CEAdnbJEx
-KLsdLlkYiJGbTryydCCgxh5mDvddBwmFcB2V8n/SHjtpwUxe3zHkfWW6O8+pA82p
-xgATG5MH17N0RKG9BaIcGKPQuB0pAZd23arFjNp7v/PoVhIG3s6zbiLVD82j4BZ1
-6PX4X6CVXbij6fAV7XEVjSLr19ue9ra6e9nycZZILjvUYC6ypCL2xLkw2dfhtL3z
-Vv1vLbORoKKOg1ymFRTL9/U6knVGVQ==
-=W8MP
------END PGP SIGNATURE-----
-
---qgjv7qoirny7mgrw--
+regards,
+dan carpenter
