@@ -2,66 +2,56 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A61075EF21
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jul 2023 11:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D181D75F2F3
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Jul 2023 12:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjGXJag (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 24 Jul 2023 05:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
+        id S231666AbjGXKXv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 24 Jul 2023 06:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjGXJaf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jul 2023 05:30:35 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D07F3
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Jul 2023 02:30:34 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2b70404a5a0so58316621fa.2
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Jul 2023 02:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690191032; x=1690795832;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HR6qSxyiyJpt9A/Z8cWAd/ggm03WbEHNOfBsVLzhOho=;
-        b=JMC9eNdgoo6Brfu0hns2+P79kub2hqCd0bkXWjTS0hQqZYq3cwZDzELTW66LR5XcoT
-         /vCKkbB8KrPZd/Gohzr9ABGCKrplWeH2UE/7UWC0m9uS30kUeSl8Jf7buxX+NhiU4Dms
-         9wX4clq4wSpUonUhszkTKcpi8yIVQVxwvOEBcKzPuVpTOVd9rA1VLnQvorD1iuajIdB5
-         GrWmzHDU5cEBwp6j6Zzf8vw2a7kPeQ3mbp4S09c+qEcI/tfHNpDKlvFA6+1M124S1p5x
-         EnB4N1CTO6J6//8SZ9Mm0RASdn0YrSCQiESjaG3omYevCyW8He07q6qaI/rOlRS9taYX
-         ZUYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690191032; x=1690795832;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HR6qSxyiyJpt9A/Z8cWAd/ggm03WbEHNOfBsVLzhOho=;
-        b=XSlq5MY0PVSzQtZS5qPGHbU+4lUFQVOIIuL+pnUvR/5CljQ2WuWCqDdE/cCf6K+LJ2
-         0QLILB4Rd7SaFyRogHDNvdg6Avh/8YaBznqRFjKgsKPJTY/DefxhFHdIR0ZPwY/ie74j
-         RTbasob5m5IxYKw8NWlBV7ltzmVhgOsgvWCpeD0xfdkNhFgjjTq8+H13QbdwkfUKFs3Y
-         YcvdEa9yJa4IJmmhKZP2JDTuu6DiMnp1jb+epeJhaDGbzro8CGtkP6zHLbOP9pfPEdKN
-         x2XlvvNwCC41bDsE8/kwT+q7etOBPdufk1qNjHAA0KBL/mwSYhXECVKWxmAlWoQjZSna
-         wniQ==
-X-Gm-Message-State: ABy/qLbeB22KqbpMQTbo7bDQ/8gLOtjCfYd4O8E0gNFcbzAG/tZSMYqy
-        Ckm+FrdvVuHCJVhYrF1hHPmwcRQOe8neIHpJSwg=
-X-Google-Smtp-Source: APBJJlF4Qb1v5tBfKCy/g8MhmuCMS/FA0jTIzvi4q310YTJSB2ew9aGSyAj1fQ15+U9YJ97wONUrNA==
-X-Received: by 2002:a2e:9214:0:b0:2b6:e292:85ab with SMTP id k20-20020a2e9214000000b002b6e29285abmr5657993ljg.25.1690191032659;
-        Mon, 24 Jul 2023 02:30:32 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id 13-20020a05600c22cd00b003fbcf032c55sm12320330wmg.7.2023.07.24.02.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 02:30:32 -0700 (PDT)
-Date:   Mon, 24 Jul 2023 12:30:28 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     u.kleine-koenig@pengutronix.de
-Cc:     linux-pwm@vger.kernel.org
-Subject: [bug report] pwm: lpc32xx: Don't modify HW state in .probe() after
- the PWM chip was registered
-Message-ID: <919cac5d-491e-4534-baed-bf813181192d@moroto.mountain>
+        with ESMTP id S233508AbjGXKXK (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 24 Jul 2023 06:23:10 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACC249D0;
+        Mon, 24 Jul 2023 03:16:53 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 0988C24E35D;
+        Mon, 24 Jul 2023 18:16:52 +0800 (CST)
+Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 24 Jul
+ 2023 18:16:52 +0800
+Received: from [192.168.120.57] (171.223.208.138) by EXMBX068.cuchost.com
+ (172.16.6.68) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 24 Jul
+ 2023 18:16:51 +0800
+Message-ID: <eb258dcd-a8f0-26ed-2d77-f49269ebb469@starfivetech.com>
+Date:   Mon, 24 Jul 2023 18:16:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 0/4] StarFive's Pulse Width Modulation driver support
+Content-Language: en-US
+From:   William Qiu <william.qiu@starfivetech.com>
+To:     <devicetree@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Hal Feng <hal.feng@starfivetech.com>
+References: <20230601085154.36938-1-william.qiu@starfivetech.com>
+ <c3c7fb8a-7c0c-5966-88cd-e004db69de83@starfivetech.com>
+In-Reply-To: <c3c7fb8a-7c0c-5966-88cd-e004db69de83@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [171.223.208.138]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX068.cuchost.com
+ (172.16.6.68)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,61 +60,82 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Uwe Kleine-König,
 
-The patch 3d2813fb17e5: "pwm: lpc32xx: Don't modify HW state in
-.probe() after the PWM chip was registered" from Jul 7, 2021
-(linux-next), leads to the following Smatch static checker warning:
 
-	drivers/pwm/pwm-lpc32xx.c:144 lpc32xx_pwm_probe()
-	warn: pointer dereferenced without being set 'lpc32xx->chip.pwms'
+On 2023/6/27 15:46, William Qiu wrote:
+> 
+> 
+> On 2023/6/1 16:51, William Qiu wrote:
+>> Hi,
+>> 
+>> This patchset adds initial rudimentary support for the StarFive
+>> Pulse Width Modulation controller driver. And this driver will
+>> be used in StarFive's VisionFive 2 board.The first patch add
+>> Documentations for the device and Patch 2 adds device probe for
+>> the module.
+>> 
+>> Changes v2->v3:
+>> - Rebased to v6.4rc3.
+>> - Sorted the header files in alphabetic order.
+>> - Changed iowrite32() to writel().
+>> - Added a way to turn off.
+>> - Moified polarity inversion implementation.
+>> - Added 7100 support.
+>> - Added dts patches.
+>> - Used the various helpers in linux/math.h.
+>> - Corrected formatting problems.
+>> - Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
+>> - Dropped the redundant code.
+>> 
+>> Changes v2->v3:
+>> - Fixed some formatting issues.
+>> 
+>> Changes v1->v2:
+>> - Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml'.
+>> - Dropped the compatible's Items.
+>> - Dropped the unuse defines.
+>> - Modified the code to follow the Linux coding style.
+>> - Changed return value to dev_err_probe.
+>> - Dropped the unnecessary local variable.
+>> 
+>> The patch series is based on v6.4rc3.
+>> 
+>> William Qiu (4):
+>>   dt-bindings: pwm: Add StarFive PWM module
+>>   pwm: starfive: Add PWM driver support
+>>   riscv: dts: starfive: jh7110: Add PWM node and pins configuration
+>>   riscv: dts: starfive: jh7100: Add PWM node and pins configuration
+>> 
+>>  .../bindings/pwm/starfive,jh7100-pwm.yaml     |  55 +++++
+>>  MAINTAINERS                                   |   7 +
+>>  .../boot/dts/starfive/jh7100-common.dtsi      |  24 +++
+>>  arch/riscv/boot/dts/starfive/jh7100.dtsi      |   9 +
+>>  .../jh7110-starfive-visionfive-2.dtsi         |  22 ++
+>>  arch/riscv/boot/dts/starfive/jh7110.dtsi      |   9 +
+>>  drivers/pwm/Kconfig                           |   9 +
+>>  drivers/pwm/Makefile                          |   1 +
+>>  drivers/pwm/pwm-starfive-ptc.c                | 192 ++++++++++++++++++
+>>  9 files changed, 328 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pwm/starfive,jh7100-pwm.yaml
+>>  create mode 100644 drivers/pwm/pwm-starfive-ptc.c
+>> 
+>> --
+>> 2.34.1
+>> 
+> Hi everyone,
+> 
+> Could you please help me review this patch series to see if there is
+> anything that needs to be modified?
+> Thanks for taking time to review this patch series.
+> 
+> Best Regards,
+> William
 
-drivers/pwm/pwm-lpc32xx.c
-    121 static int lpc32xx_pwm_probe(struct platform_device *pdev)
-    122 {
-    123         struct lpc32xx_pwm_chip *lpc32xx;
-    124         int ret;
-    125         u32 val;
-    126 
-    127         lpc32xx = devm_kzalloc(&pdev->dev, sizeof(*lpc32xx), GFP_KERNEL);
-    128         if (!lpc32xx)
-    129                 return -ENOMEM;
-    130 
-    131         lpc32xx->base = devm_platform_ioremap_resource(pdev, 0);
-    132         if (IS_ERR(lpc32xx->base))
-    133                 return PTR_ERR(lpc32xx->base);
-    134 
-    135         lpc32xx->clk = devm_clk_get(&pdev->dev, NULL);
-    136         if (IS_ERR(lpc32xx->clk))
-    137                 return PTR_ERR(lpc32xx->clk);
-    138 
-    139         lpc32xx->chip.dev = &pdev->dev;
-    140         lpc32xx->chip.ops = &lpc32xx_pwm_ops;
-    141         lpc32xx->chip.npwm = 1;
-    142 
-    143         /* If PWM is disabled, configure the output to the default value */
---> 144         val = readl(lpc32xx->base + (lpc32xx->chip.pwms[0].hwpwm << 2));
-                                             ^^^^^^^^^^^^^^^^^^^^^
-This is a NULL dereference
+Hi Thierry Reding,
 
-    145         val &= ~PWM_PIN_LEVEL;
-    146         writel(val, lpc32xx->base + (lpc32xx->chip.pwms[0].hwpwm << 2));
-                                             ^^^^^^^^^^^^^^^^^^^^^
-Same.
-
-    147 
-    148         ret = devm_pwmchip_add(&pdev->dev, &lpc32xx->chip);
-                      ^^^^^^^^^^^^^^^^
-
-lpc32xx->chip.pwms gets set to non-NULL here.
-
-    149         if (ret < 0) {
-    150                 dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
-    151                 return ret;
-    152         }
-    153 
-    154         return 0;
-    155 }
-
-regards,
-dan carpenter
+Could you please help me review this patch series to see if there is
+anything that needs to be modified?
+Thanks for taking time to review this patch series.
+ 
+Best Regards,
+William
