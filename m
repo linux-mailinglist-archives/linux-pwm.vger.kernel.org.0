@@ -2,78 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A30276227D
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jul 2023 21:37:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E08147623E9
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Jul 2023 22:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbjGYThD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 25 Jul 2023 15:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        id S229767AbjGYUuF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 25 Jul 2023 16:50:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231757AbjGYTgo (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jul 2023 15:36:44 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB45A271B;
-        Tue, 25 Jul 2023 12:36:32 -0700 (PDT)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36PH8x8j009975;
-        Tue, 25 Jul 2023 19:36:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=qcppdkim1;
- bh=tRtCAqvU57hpM6qzhnUi/RA39R44nWQijBPjThBPfZQ=;
- b=ZVmiaqnVkAo8mFxo9XUr/MfuH/ieR6F1lgxxuJuwwqrDV/YMc3w2Pdxr2JThgWYxicxb
- euSF0I27y2jgq4jgCDPZAVVcUPbLXIpCiAOxZlLljgaF7zoOK3CN3qE3h2znRp4x4own
- XFko4ATVWcgFsenPl7Zg5upuOEpPoURlgGk1Y7azOa/FuaIC+v3d36qkEzmn+VzjJtwC
- y3cRSUEyuu8HpvdN+ArCr93+AWGrRZhSJGxxK00E9nLEKABOMS/X7lWPU9Y6Uw5WLFay
- 2oI14peMdE4uEjWQO+HrkZE6NICuYpshOqYfik3U8f4xqmL5eCZay6QsWmXRgXyQ6/++ EA== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s2dqah529-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 19:36:24 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36PJaBEZ013286
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Jul 2023 19:36:11 GMT
-Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Tue, 25 Jul 2023 12:36:11 -0700
-From:   Anjelique Melendez <quic_amelende@quicinc.com>
-To:     <pavel@ucw.cz>, <lee@kernel.org>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>
-CC:     <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
-        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Subject: [PATCH v2 7/7] leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
-Date:   Tue, 25 Jul 2023 12:34:23 -0700
-Message-ID: <20230725193423.25047-8-quic_amelende@quicinc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230725193423.25047-1-quic_amelende@quicinc.com>
-References: <20230725193423.25047-1-quic_amelende@quicinc.com>
-MIME-Version: 1.0
+        with ESMTP id S229683AbjGYUuE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 25 Jul 2023 16:50:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C78B10F6;
+        Tue, 25 Jul 2023 13:50:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A17436190B;
+        Tue, 25 Jul 2023 20:50:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2942EC433C8;
+        Tue, 25 Jul 2023 20:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690318202;
+        bh=OxHy1M+w3k5feey0r7EI3cqLr0BlVNtReBhSOwd11qk=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=cgnLAJk3fYihilvzDBpn4mTbVuTl8dlTjQFjLuVU6jHODXYR1vuKl4dDRTLQvHa6l
+         mQh8a0kZOJJl26BMt3nN7Hr+whILmI3NyN59lEa0Ap/9enm7IJvI5qdKXeaULvcSfx
+         ueRfE5oDiHmXRdAmWVupels1Qw/Vf3q2CsqMTM/hLymvrjwyi8D2rGTCG/2UmHaI3I
+         AtqynrXwfRUgezbUCIhFiHei4j07zRojGzbkGXQ1vRzkwkPk7jPcbOBIMff9ZUYblz
+         PQ4T2bRHjkOz18HmGO7mK0eP0AgsEAgN0lyFXXOqBPLnxeqnfuwO9RY6aQZK34LcA1
+         yiORDThMi5umQ==
+Received: (nullmailer pid 3767420 invoked by uid 1000);
+        Tue, 25 Jul 2023 20:49:59 -0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: W920sjGfeVEw6QyYtiLrvUqqlg3Jh7XR
-X-Proofpoint-ORIG-GUID: W920sjGfeVEw6QyYtiLrvUqqlg3Jh7XR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-25_10,2023-07-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- phishscore=0 suspectscore=0 clxscore=1015 spamscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307250168
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
+To:     Anjelique Melendez <quic_amelende@quicinc.com>
+Cc:     linux-pwm@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, luca.weiss@fairphone.com,
+        konrad.dybcio@linaro.org, agross@kernel.org,
+        thierry.reding@gmail.com, pavel@ucw.cz, conor+dt@kernel.org,
+        andersson@kernel.org, u.kleine-koenig@pengutronix.de,
+        quic_subbaram@quicinc.com, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-leds@vger.kernel.org,
+        lee@kernel.org, krzysztof.kozlowski+dt@linaro.org
+In-Reply-To: <20230725193423.25047-2-quic_amelende@quicinc.com>
+References: <20230725193423.25047-1-quic_amelende@quicinc.com>
+ <20230725193423.25047-2-quic_amelende@quicinc.com>
+Message-Id: <169031819898.3767391.330263271365632827.robh@kernel.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: soc: qcom: Add qcom-pbs bindings
+Date:   Tue, 25 Jul 2023 14:49:59 -0600
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,37 +63,39 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Update the pm8350c lpg_data struct so that pm8350c devices are treated as
-PWM devices that support two-nvmem PPG scheme.
 
-Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
----
- drivers/leds/rgb/leds-qcom-lpg.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+On Tue, 25 Jul 2023 12:34:17 -0700, Anjelique Melendez wrote:
+> Add binding for the Qualcomm Programmable Boot Sequencer device.
+> 
+> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+> ---
+>  .../bindings/soc/qcom/qcom-pbs.yaml           | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom-pbs.yaml
+> 
 
-diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-index f3f83925ab41..bd54b023d509 100644
---- a/drivers/leds/rgb/leds-qcom-lpg.c
-+++ b/drivers/leds/rgb/leds-qcom-lpg.c
-@@ -1826,11 +1826,15 @@ static const struct lpg_data pm8150l_lpg_data = {
- static const struct lpg_data pm8350c_pwm_data = {
- 	.triled_base = 0xef00,
- 
-+	.lut_size = 122,
-+	.lut_sdam_base = 0x45,
-+	.nvmem_count = 2,
-+
- 	.num_channels = 4,
- 	.channels = (const struct lpg_channel_data[]) {
--		{ .base = 0xe800, .triled_mask = BIT(7) },
--		{ .base = 0xe900, .triled_mask = BIT(6) },
--		{ .base = 0xea00, .triled_mask = BIT(5) },
-+		{ .base = 0xe800, .triled_mask = BIT(7), .sdam_offset = 0x48 },
-+		{ .base = 0xe900, .triled_mask = BIT(6), .sdam_offset = 0x56 },
-+		{ .base = 0xea00, .triled_mask = BIT(5), .sdam_offset = 0x64 },
- 		{ .base = 0xeb00 },
- 	},
- };
--- 
-2.41.0
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/soc/qcom/qcom-pbs.example.dts:18.16-26.11: Warning (unit_address_vs_reg): /example-0/pmic@0: node has a unit name, but no reg or ranges property
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230725193423.25047-2-quic_amelende@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
