@@ -2,76 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F58476465A
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jul 2023 07:59:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1676576465B
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jul 2023 07:59:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbjG0F7n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 27 Jul 2023 01:59:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48152 "EHLO
+        id S231202AbjG0F75 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 27 Jul 2023 01:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230369AbjG0F7m (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Jul 2023 01:59:42 -0400
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4324F94
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:59:41 -0700 (PDT)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-1a28de15c8aso522122fac.2
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:59:41 -0700 (PDT)
+        with ESMTP id S230369AbjG0F74 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Jul 2023 01:59:56 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301BF92
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:59:55 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-63d2b7d77bfso4360256d6.3
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1690437580; x=1691042380;
+        d=tuxon.dev; s=google; t=1690437594; x=1691042394;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gt22TqQ8ghDnrhlwqflaEUuOLAWst+A9lTaKuY+EuqQ=;
-        b=KfhYiOiaezJr/Ibb9qovf6fhc2BoeqJnKJB9ModdeDrsf28AdK+HuFQU6fyIWla9Zl
-         pu5GtMoWnFSW6qa7+MIED/hWMBf3sWDECi2CgUkv/wpaDJlCDp80tc7xId7GU6XEU722
-         ld0BeG+4Dz+lxhy/RilxgQkdRwn3XIHlyNaeZXuM92uQZ9YJdHkd+GaIq8G/MxJPHyq2
-         Nwp15DDkcvcO++tOAXunx2TUPcRO947mVwFYp9W33jCnxBwoq1CNMoxv8eiVhhxKcNbi
-         fnmowA9UViEDjDkvWxYcIjoQ1shN98strLz7ysmoqpGDyQjXjrb0pCksS88kJjn8gMwc
-         AzNg==
+        bh=7Q/MVEZh/dayqwddeCvnC4H216XnM0Geeo+ApH94KXE=;
+        b=lfkasZE2beA/u8e8/ZK7+BcwATeWD0PdFFhHspfjXgmF5GJKG/iLnZRuD6WSi+ePTR
+         UIKP1JjUY9L3vzvRgBH7wC9jPxsaJhrnKAwxYBOGPbMxZ7uos6jVMNmAyZ4LQGJbWdDR
+         kq1dxJdz964Jctomx72yhY4nA80Yj94ue2MWgEEHFlr1nr1Dy7vhQtPOEx9K8oX8V3oR
+         HfYHpWcRXRLN3OfwziM+UuV1eE/UF9FEUFWGfaRWQ0mUm1JBtgdP2pg32sztnYrrezir
+         2zl4jvf5exigvWwka/huCMCWLJ3RDc0ko+Wj8Uhyh2xsRDLLmw9tLRmpHRjPc2B5jl2J
+         YbrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690437580; x=1691042380;
+        d=1e100.net; s=20221208; t=1690437594; x=1691042394;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gt22TqQ8ghDnrhlwqflaEUuOLAWst+A9lTaKuY+EuqQ=;
-        b=GRg72qss5qiNdcWgEVEKuKxPiiQlMQLFOU6ffaGzB0NTpa+TB8pSTXjvfQpwURQxDl
-         WkWyIFqXXgAkw5wWiPDVqKw1DKlggwuNdg8vJdXVBDKAdOw+jSeUdhspry16T/EwZ3+t
-         08akaGuARIUHAZhJ4+1TswSQdbpyWFXjc3+4u6xa/WFCiz2UEUpUI6hwWQMzTVyZ9dxb
-         ymRDv1KnbQToLC2fMvted1rjmsh5g75JneMt6pOTjEV/dEC4+EVeAgn/KLZBcO4Xj6oi
-         SKZMBQ/EW9xYNkGyD2LI6BPhdoh/X80ZA+WM2AFOvCJdz0ErjINyS1zLEsazGOHh3PQ3
-         m4Lg==
-X-Gm-Message-State: ABy/qLZkjD3og5GJER6v75y44XqA79h2TuwJGjjpdxcvGYdAfbThKbSC
-        BGjZP1DboeW+5lDqLqG4W8Ky1g==
-X-Google-Smtp-Source: APBJJlF0WWfDysWyFbO+9gAdMR/2+zWRKGY3DewsMjdCIAkRZixXfAcqDzX1r3RK3useuKJrRjwcvQ==
-X-Received: by 2002:a05:6870:c1d4:b0:1bb:d808:da72 with SMTP id i20-20020a056870c1d400b001bbd808da72mr1162974oad.57.1690437580561;
-        Wed, 26 Jul 2023 22:59:40 -0700 (PDT)
+        bh=7Q/MVEZh/dayqwddeCvnC4H216XnM0Geeo+ApH94KXE=;
+        b=Opw4TLJmcKwMEiFbjTUw36GytFoGmi6/SIy42f7QD96PyL4ex9jiyZD9nT49qYFZU6
+         rJ1dPgTkN20w1BlS+USkPtby0dP0sF/MrTaOVSAj0Ph72Sk1mC+z7Zxdw0RfDT2+vz8o
+         S9otukGYiKsSojLIscj5RNmf8Mt3Lx7JwtheKJ/eXmDMDvTRPFsWjOqyhX7ROYrRKtOz
+         fsh+5BLzxFYJy4N4pMKd3XMKggiFd6i4A8W5MCkVc0w0NmOQGFqZibvRnXdC/0CawUWo
+         X4hikQClMzQXJujTi+C3ib57skX3dHN802EQg5HFtYyYWFJgkLDyRshfQEFYuHU5bs4T
+         yz8Q==
+X-Gm-Message-State: ABy/qLbSG1OuEYJxE7Wtp7QA+kNhoP3uQUrCgL2lsdOXgywMeV2k3In4
+        /bjyVlzquCmI975jFkLsrF09+w==
+X-Google-Smtp-Source: APBJJlEffbQSrk0Y43Ba6VHY01oc4IyQVXvTAkE5DyJytuDJ4lxfm1L9QU8X+hVkNp1fK64s8bTnPA==
+X-Received: by 2002:a05:620a:4d2:b0:767:3d52:fb7 with SMTP id 18-20020a05620a04d200b007673d520fb7mr4215962qks.61.1690437594338;
+        Wed, 26 Jul 2023 22:59:54 -0700 (PDT)
 Received: from [10.0.2.15] ([82.78.167.79])
-        by smtp.gmail.com with ESMTPSA id t6-20020a17090a024600b002682392506bsm507688pje.50.2023.07.26.22.59.35
+        by smtp.gmail.com with ESMTPSA id j5-20020a170902c3c500b001bb40b880efsm622024plj.101.2023.07.26.22.59.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jul 2023 22:59:40 -0700 (PDT)
-Message-ID: <7027b456-8f77-56d7-f6a2-89049685244a@tuxon.dev>
-Date:   Thu, 27 Jul 2023 08:59:29 +0300
+        Wed, 26 Jul 2023 22:59:54 -0700 (PDT)
+Message-ID: <6ec02864-6e18-d2c7-3ad6-e3c2c3df73e8@tuxon.dev>
+Date:   Thu, 27 Jul 2023 08:59:45 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 5/5] pwm: atmel-tcb: Don't track polarity in driver data
+Subject: Re: [PATCH 4/5] pwm: atmel-tcb: Unroll atmel_tcb_pwm_set_polarity()
+ into only caller
 Content-Language: en-US
 To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel@pengutronix.de
 References: <20230719192013.4051193-1-u.kleine-koenig@pengutronix.de>
- <20230719192013.4051193-6-u.kleine-koenig@pengutronix.de>
+ <20230719192013.4051193-5-u.kleine-koenig@pengutronix.de>
 From:   claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20230719192013.4051193-6-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20230719192013.4051193-5-u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -81,93 +83,53 @@ X-Mailing-List: linux-pwm@vger.kernel.org
 
 
 On 19.07.2023 22:20, Uwe Kleine-König wrote:
-> struct atmel_tcb_pwm_device::polarity is only used in atmel_tcb_pwm_enable
-> and atmel_tcb_pwm_disable(). These functions are only called by
-> atmel_tcb_pwm_apply() after the member variable was assigned to
-> state->polarity. So the value assigned in atmel_tcb_pwm_request() is
-> never used and the member can be dropped from struct atmel_tcb_pwm_device.
+> atmel_tcb_pwm_set_polarity() is only called once and effectively wraps
+> an assignment only. Replace the function call by the respective
+> assignment.
 > 
 > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
 Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
 > ---
->   drivers/pwm/pwm-atmel-tcb.c | 18 ++++++------------
->   1 file changed, 6 insertions(+), 12 deletions(-)
+>   drivers/pwm/pwm-atmel-tcb.c | 17 +++--------------
+>   1 file changed, 3 insertions(+), 14 deletions(-)
 > 
 > diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
-> index 32a60d7f8ed2..30c966238e41 100644
+> index ae274bd7907d..32a60d7f8ed2 100644
 > --- a/drivers/pwm/pwm-atmel-tcb.c
 > +++ b/drivers/pwm/pwm-atmel-tcb.c
-> @@ -34,7 +34,6 @@
->   				 ATMEL_TC_BEEVT | ATMEL_TC_BSWTRG)
->   
->   struct atmel_tcb_pwm_device {
-> -	enum pwm_polarity polarity;	/* PWM polarity */
->   	unsigned div;			/* PWM clock divider */
->   	unsigned duty;			/* PWM duty expressed in clk cycles */
->   	unsigned period;		/* PWM period expressed in clk cycles */
-> @@ -80,7 +79,6 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
->   	if (ret)
->   		return ret;
->   
-> -	tcbpwm->polarity = PWM_POLARITY_NORMAL;
->   	tcbpwm->duty = 0;
->   	tcbpwm->period = 0;
->   	tcbpwm->div = 0;
-> @@ -123,12 +121,12 @@ static void atmel_tcb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
->   	clk_disable_unprepare(tcbpwmc->clk);
+> @@ -68,18 +68,6 @@ static inline struct atmel_tcb_pwm_chip *to_tcb_chip(struct pwm_chip *chip)
+>   	return container_of(chip, struct atmel_tcb_pwm_chip, chip);
 >   }
 >   
-> -static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-> +static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				  enum pwm_polarity polarity)
+> -static int atmel_tcb_pwm_set_polarity(struct pwm_chip *chip,
+> -				      struct pwm_device *pwm,
+> -				      enum pwm_polarity polarity)
+> -{
+> -	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> -	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
+> -
+> -	tcbpwm->polarity = polarity;
+> -
+> -	return 0;
+> -}
+> -
+>   static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+>   				 struct pwm_device *pwm)
 >   {
->   	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
->   	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
->   	unsigned cmr;
-> -	enum pwm_polarity polarity = tcbpwm->polarity;
->   
->   	/*
->   	 * If duty is 0 the timer will be stopped and we have to
-> @@ -180,12 +178,12 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->   	spin_unlock(&tcbpwmc->lock);
->   }
->   
-> -static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> +static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				enum pwm_polarity polarity)
->   {
->   	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
->   	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
->   	u32 cmr;
-> -	enum pwm_polarity polarity = tcbpwm->polarity;
->   
->   	/*
->   	 * If duty is 0 the timer will be stopped and we have to
-> @@ -345,15 +343,11 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> @@ -357,11 +345,12 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
 >   static int atmel_tcb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 >   			       const struct pwm_state *state)
 >   {
-> -	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
-> -	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
+> +	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> +	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
 >   	int duty_cycle, period;
 >   	int ret;
 >   
-> -	tcbpwm->polarity = state->polarity;
-> -
+> -	/* This function only sets a flag in driver data */
+> -	atmel_tcb_pwm_set_polarity(chip, pwm, state->polarity);
+> +	tcbpwm->polarity = state->polarity;
+>   
 >   	if (!state->enabled) {
-> -		atmel_tcb_pwm_disable(chip, pwm);
-> +		atmel_tcb_pwm_disable(chip, pwm, state->polarity);
->   		return 0;
->   	}
->   
-> @@ -364,7 +358,7 @@ static int atmel_tcb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->   	if (ret)
->   		return ret;
->   
-> -	return atmel_tcb_pwm_enable(chip, pwm);
-> +	return atmel_tcb_pwm_enable(chip, pwm, state->polarity);
->   }
->   
->   static const struct pwm_ops atmel_tcb_pwm_ops = {
+>   		atmel_tcb_pwm_disable(chip, pwm);
