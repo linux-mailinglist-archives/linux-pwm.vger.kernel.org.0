@@ -2,272 +2,156 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A48C3763B31
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Jul 2023 17:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 549C9764542
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jul 2023 07:06:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233491AbjGZPgR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 26 Jul 2023 11:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43044 "EHLO
+        id S230236AbjG0FGx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 27 Jul 2023 01:06:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233621AbjGZPgQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 26 Jul 2023 11:36:16 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236C1106
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 08:36:13 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4fdfefdf5abso3858261e87.1
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 08:36:13 -0700 (PDT)
+        with ESMTP id S231195AbjG0FGv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Jul 2023 01:06:51 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645C2723
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:06:48 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3fbc63c2e84so5685025e9.3
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:06:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690385771; x=1690990571;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O+W+dqmHY3oDSoUaAbXjHwkO+njuNaAcS/shrCuC458=;
-        b=ewcXk2PXdG1aOg6qArX1EO342l5M19dX0BLwzHZCzO7wpvr5cGN/ecB5JnRyDp5S26
-         gafBet5LduTLPF/IZ2ubc4YaMfhO8TJz8pn6Zj9l3vIDUKQKIaOLNA1KdKF7xiTQg2vQ
-         4APNbu3QTrQIqDkxv6a6SfTVW9DUvpyiSiFRBJIHK4FIZgYQtWZXtPHfC1BUGbjZMdXu
-         B9OOiv6h3S4SuXBp2/7uHKkYHbgqQ8ouTIW1rMdvbmz0XI0ys5po9brQBFXKO2o0NyM6
-         EERvsi/eIm+Yr/3VQv5pzN0B9OCvdJvC32yPEP18zhTqjdR9G8s7vWB/L9gIRn0StNM3
-         bxwA==
+        d=linaro.org; s=google; t=1690434407; x=1691039207;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=milfg91uG9nlhd9aFLAx/8EHBpoWNiimDW9/5MxR5qE=;
+        b=SqR9wDcJ/K9nwJZJepovao+MkVJ0TdNofeVh2YnRg6VO5GiudH5oFn9h/1FfQVVRvE
+         8ZlNCHSEvsdhsZZLJ/5/Qf6CQU21Up1ossb+IZGHnWbf3PBHoWsebzYMi7f6OFiplMtg
+         vxOHMSqN7wXgOitTUOvdlJvqxngxskbpjADUWJ5O9YwOwTDGd5d65DZWQXSIRGR3uIvh
+         eJFw4HlIr+gmRESJdtIIdDKmvInlWwYviZwGGR/2npA+DAy/Vx2D9df3Cyh2YOuxOaUw
+         UrJW3ILC8IxAsiSNhTUwdSZjzW5ONxcy9Uev32d5oWZE0JPFcth5s74HwccZfDhaNYbq
+         PLug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690385771; x=1690990571;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O+W+dqmHY3oDSoUaAbXjHwkO+njuNaAcS/shrCuC458=;
-        b=F97vBedyaQt0NiqX55cUp46yH0L7fj0En8CIeCURoY5WYNSpBCtk5sF9Jn+Ixa2Kwa
-         BMQTBYtyIHjK5oYsDEyADGr9XsTZ1y21+nuIocwK0jpxLjVFhOu9+AuyxZm41cll+k3Y
-         9gzve5hSqrS0ddwraEwstToao8V6+RPxC5NuK9tgmw1D4NiyTP8IrF0FjQJRIsYOor/O
-         9Z3nukaEBegYkKiYtgCqGlzpzg6PEJoW6KMBOEn8xxRMnw41pb1AdzzQIDcS7O7sHR0n
-         PmczW60terpglSCQnN3JXjurmydy3xnbaLXUY8QpZqt5XY1mhqltYMmHDm3z4Qpvohkc
-         fvgw==
-X-Gm-Message-State: ABy/qLb4Q2YJSNV8bepP6GtKb8HVG4ZOx+KdNdsnWa2z4znGba1b9uK8
-        RneWkaV2v7SbE8oH+IKuVh+L4A==
-X-Google-Smtp-Source: APBJJlH3ju/ljQnYzFrocTUuL5yUFlXhlzmd5VWmTIfmjUtDw2OQ1peSH70SIuEgmqApvpDo9O+R7w==
-X-Received: by 2002:a05:6512:44d:b0:4f9:596d:c803 with SMTP id y13-20020a056512044d00b004f9596dc803mr1836717lfk.53.1690385771119;
-        Wed, 26 Jul 2023 08:36:11 -0700 (PDT)
-Received: from [192.168.1.101] (abxh240.neoplus.adsl.tpnet.pl. [83.9.1.240])
-        by smtp.gmail.com with ESMTPSA id s7-20020a19ad47000000b004fbbef8d4dbsm3368900lfd.121.2023.07.26.08.36.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jul 2023 08:36:10 -0700 (PDT)
-Message-ID: <de3b4739-5446-c1ab-571f-a36c4aff5e0f@linaro.org>
-Date:   Wed, 26 Jul 2023 17:36:08 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] soc: qcom: add QCOM PBS driver
-Content-Language: en-US
-To:     Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
+        d=1e100.net; s=20221208; t=1690434407; x=1691039207;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=milfg91uG9nlhd9aFLAx/8EHBpoWNiimDW9/5MxR5qE=;
+        b=TqmmeXdlZjfHPUK1hRgiGFAu03pPsMqUvNFgQnVBtKNh4ZzTpQPljwvBbKmQ3sHnoI
+         TASFgH+tCsTR8Pikdnj57OT+t5C9hZKLMLzBd49hnUZ8rdwIzYQhZ5xbnixmXIPIkok6
+         CRe+z6kcZ1k16l7yPDbLzzscGbbpFu5zRdhc+hy1ropqy6zBI/x7UTQIPr9glB3SqxY2
+         bxN3l0AquCaNmHZTVLip8Xe46ibiFuYJY8YZePdQ/k1EETvhEaOywjt96LpHvH2wWfT+
+         JixvFNeO27MNdt71ZVQ+D0l5JuY/fhXSeS49GgvOge4XwHZpQvwCGifr7s8Zy1BFFy9O
+         RGaA==
+X-Gm-Message-State: ABy/qLahjpKZ8Gk8v/62WnIvqrlkBfNm1l+/uJgauLuSvGl8gUubWOWr
+        HJaJZReolRcIGk37Bs3cCR0ciA==
+X-Google-Smtp-Source: APBJJlG46aaIJPrxFkx4O+Yb8zxZMWWUWxRjBLDV7QlqtwQ/xfDUhdChhPo0mRSZ0sY0wDCljBBp8w==
+X-Received: by 2002:adf:f4c6:0:b0:314:ca7:f30b with SMTP id h6-20020adff4c6000000b003140ca7f30bmr767822wrp.54.1690434407115;
+        Wed, 26 Jul 2023 22:06:47 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id n7-20020a5d6b87000000b003175fef2a32sm820827wrx.55.2023.07.26.22.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 22:06:46 -0700 (PDT)
+Date:   Thu, 27 Jul 2023 08:06:44 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     oe-kbuild@lists.linux.dev,
+        Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
         lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
         agross@kernel.org, andersson@kernel.org
-Cc:     luca.weiss@fairphone.com, u.kleine-koenig@pengutronix.de,
-        quic_subbaram@quicinc.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20230725193423.25047-1-quic_amelende@quicinc.com>
- <20230725193423.25047-4-quic_amelende@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
+Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+        luca.weiss@fairphone.com, konrad.dybcio@linaro.org,
+        u.kleine-koenig@pengutronix.de, quic_subbaram@quicinc.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Anjelique Melendez <quic_amelende@quicinc.com>
+Subject: Re: [PATCH v2 3/7] soc: qcom: add QCOM PBS driver
+Message-ID: <85e4f0ef-baf8-4588-a10c-d64821c8c518@kadam.mountain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20230725193423.25047-4-quic_amelende@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 25.07.2023 21:34, Anjelique Melendez wrote:
-> Add the Qualcomm PBS (Programmable Boot Sequencer) driver. The QCOM PBS
-> driver supports configuring software PBS trigger events through PBS RAM
-> on Qualcomm Technologies, Inc (QTI) PMICs.
-> 
-> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> ---
-[...]
+Hi Anjelique,
 
-> +
-> +	u32			base;
-> +};
-> +
-> +static int qcom_pbs_read(struct pbs_dev *pbs, u32 address, u8 *val)
-> +{
-> +	int ret;
-> +
-> +	address += pbs->base;
-Any reason not to just keep the base address in struct pbs_dev and use
-normal regmap r/w helpers?
+kernel test robot noticed the following build warnings:
 
-[...]
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +
-> +static int qcom_pbs_wait_for_ack(struct pbs_dev *pbs, u8 bit_pos)
-> +{
-> +	u16 retries = 2000, delay = 1000;
-> +	int ret;
-> +	u8 val;
-> +
-> +	while (retries--) {
-> +		ret = qcom_pbs_read(pbs, PBS_CLIENT_SCRATCH2, &val);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (val == 0xFF) {
-This should be a constant, not a magic value
+url:    https://github.com/intel-lab-lkp/linux/commits/Anjelique-Melendez/dt-bindings-soc-qcom-Add-qcom-pbs-bindings/20230726-034011
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20230725193423.25047-4-quic_amelende%40quicinc.com
+patch subject: [PATCH v2 3/7] soc: qcom: add QCOM PBS driver
+config: parisc-randconfig-m041-20230726 (https://download.01.org/0day-ci/archive/20230727/202307270539.1JVFQf6W-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230727/202307270539.1JVFQf6W-lkp@intel.com/reproduce)
 
-> +			/* PBS error - clear SCRATCH2 register */
-> +			ret = qcom_pbs_write(pbs, PBS_CLIENT_SCRATCH2, 0);
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +			dev_err(pbs->dev, "NACK from PBS for bit %u\n", bit_pos);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (val & BIT(bit_pos)) {
-> +			dev_dbg(pbs->dev, "PBS sequence for bit %u executed!\n", bit_pos);
-> +			break;
-> +		}
-> +
-> +		usleep_range(delay, delay + 100);
-So worst case scenario this will wait for over 2 seconds?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202307270539.1JVFQf6W-lkp@intel.com/
 
-> +	}
-> +
-> +	if (!retries) {
-> +		dev_err(pbs->dev, "Timeout for PBS ACK/NACK for bit %u\n", bit_pos);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-return 0 instead of break above?
+smatch warnings:
+drivers/soc/qcom/qcom-pbs.c:97 qcom_pbs_wait_for_ack() warn: should this be 'retries == -1'
 
-> +}
-> +
-> +/**
-> + * qcom_pbs_trigger_event() - Trigger the PBS RAM sequence
-> + * @pbs: Pointer to PBS device
-> + * @bitmap: bitmap
-> + *
-> + * This function is used to trigger the PBS RAM sequence to be
-> + * executed by the client driver.
-> + *
-> + * The PBS trigger sequence involves
-> + * 1. setting the PBS sequence bit in PBS_CLIENT_SCRATCH1
-> + * 2. Initiating the SW PBS trigger
-> + * 3. Checking the equivalent bit in PBS_CLIENT_SCRATCH2 for the
-> + *    completion of the sequence.
-> + * 4. If PBS_CLIENT_SCRATCH2 == 0xFF, the PBS sequence failed to execute
-> + *
-> + * Returns: 0 on success, < 0 on failure
-> + */
-> +int qcom_pbs_trigger_event(struct pbs_dev *pbs, u8 bitmap)
-> +{
-> +	u8 val, mask;
-> +	u16 bit_pos;
-> +	int ret;
-> +
-> +	if (!bitmap) {
-> +		dev_err(pbs->dev, "Invalid bitmap passed by client\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (IS_ERR_OR_NULL(pbs))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&pbs->lock);
-> +	ret = qcom_pbs_read(pbs, PBS_CLIENT_SCRATCH2, &val);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	if (val == 0xFF) {
-> +		/* PBS error - clear SCRATCH2 register */
-> +		ret = qcom_pbs_write(pbs, PBS_CLIENT_SCRATCH2, 0);
-> +		if (ret < 0)
-> +			goto out;
-> +	}
-> +
-> +	for (bit_pos = 0; bit_pos < 8; bit_pos++) {
-> +		if (bitmap & BIT(bit_pos)) {
-> +			/*
-> +			 * Clear the PBS sequence bit position in
-> +			 * PBS_CLIENT_SCRATCH2 mask register.
-> +			 */
-Don't think the "in the X register" parts are useful.
+vim +97 drivers/soc/qcom/qcom-pbs.c
 
-> +			ret = qcom_pbs_masked_write(pbs, PBS_CLIENT_SCRATCH2, BIT(bit_pos), 0);
-> +			if (ret < 0)
-> +				goto error;
-> +
-> +			/*
-> +			 * Set the PBS sequence bit position in
-> +			 * PBS_CLIENT_SCRATCH1 register.
-> +			 */
-> +			val = mask = BIT(bit_pos);
-You're using mask/val for half the function calls..
-Stick with one approach.
+c261225d90e1d3 Anjelique Melendez 2023-07-25   68  static int qcom_pbs_wait_for_ack(struct pbs_dev *pbs, u8 bit_pos)
+c261225d90e1d3 Anjelique Melendez 2023-07-25   69  {
+c261225d90e1d3 Anjelique Melendez 2023-07-25   70  	u16 retries = 2000, delay = 1000;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   71  	int ret;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   72  	u8 val;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   73  
+c261225d90e1d3 Anjelique Melendez 2023-07-25   74  	while (retries--) {
 
-[...]
+Change this to while (--retries) {
 
-> +struct pbs_dev *get_pbs_client_device(struct device *dev)
-> +{
-> +	struct device_node *pbs_dev_node;
-> +	struct platform_device *pdev;
-> +	struct pbs_dev *pbs;
-> +
-> +	pbs_dev_node = of_parse_phandle(dev->of_node, "qcom,pbs", 0);
-> +	if (!pbs_dev_node) {
-> +		dev_err(dev, "Missing qcom,pbs property\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	pdev = of_find_device_by_node(pbs_dev_node);
-> +	if (!pdev) {
-> +		dev_err(dev, "Unable to find PBS dev_node\n");
-> +		pbs = ERR_PTR(-EPROBE_DEFER);
-> +		goto out;
-> +	}
-> +
-> +	pbs = platform_get_drvdata(pdev);
-> +	if (!pbs) {
-This check seems unnecessary, the PBS driver would have had to fail
-probing if set_drvdata never got called.
+c261225d90e1d3 Anjelique Melendez 2023-07-25   75  		ret = qcom_pbs_read(pbs, PBS_CLIENT_SCRATCH2, &val);
+c261225d90e1d3 Anjelique Melendez 2023-07-25   76  		if (ret < 0)
+c261225d90e1d3 Anjelique Melendez 2023-07-25   77  			return ret;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   78  
+c261225d90e1d3 Anjelique Melendez 2023-07-25   79  		if (val == 0xFF) {
+c261225d90e1d3 Anjelique Melendez 2023-07-25   80  			/* PBS error - clear SCRATCH2 register */
+c261225d90e1d3 Anjelique Melendez 2023-07-25   81  			ret = qcom_pbs_write(pbs, PBS_CLIENT_SCRATCH2, 0);
+c261225d90e1d3 Anjelique Melendez 2023-07-25   82  			if (ret < 0)
+c261225d90e1d3 Anjelique Melendez 2023-07-25   83  				return ret;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   84  
+c261225d90e1d3 Anjelique Melendez 2023-07-25   85  			dev_err(pbs->dev, "NACK from PBS for bit %u\n", bit_pos);
+c261225d90e1d3 Anjelique Melendez 2023-07-25   86  			return -EINVAL;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   87  		}
+c261225d90e1d3 Anjelique Melendez 2023-07-25   88  
+c261225d90e1d3 Anjelique Melendez 2023-07-25   89  		if (val & BIT(bit_pos)) {
+c261225d90e1d3 Anjelique Melendez 2023-07-25   90  			dev_dbg(pbs->dev, "PBS sequence for bit %u executed!\n", bit_pos);
+c261225d90e1d3 Anjelique Melendez 2023-07-25   91  			break;
+c261225d90e1d3 Anjelique Melendez 2023-07-25   92  		}
+c261225d90e1d3 Anjelique Melendez 2023-07-25   93  
+c261225d90e1d3 Anjelique Melendez 2023-07-25   94  		usleep_range(delay, delay + 100);
+c261225d90e1d3 Anjelique Melendez 2023-07-25   95  	}
+c261225d90e1d3 Anjelique Melendez 2023-07-25   96  
+c261225d90e1d3 Anjelique Melendez 2023-07-25  @97  	if (!retries) {
 
-Konrad
+Otherwise this check needs to be: "if (retries == USHRT_MAX)".
+
+Btw, I really feel like people are generally better off declaring list
+iterators as int whenever possible.  I have written a very rude blog
+to that effect.
+https://staticthinking.wordpress.com/2022/06/01/unsigned-int-i-is-stupid/
+
+c261225d90e1d3 Anjelique Melendez 2023-07-25   98  		dev_err(pbs->dev, "Timeout for PBS ACK/NACK for bit %u\n", bit_pos);
+c261225d90e1d3 Anjelique Melendez 2023-07-25   99  		return -ETIMEDOUT;
+c261225d90e1d3 Anjelique Melendez 2023-07-25  100  	}
+c261225d90e1d3 Anjelique Melendez 2023-07-25  101  
+c261225d90e1d3 Anjelique Melendez 2023-07-25  102  	return 0;
+c261225d90e1d3 Anjelique Melendez 2023-07-25  103  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
