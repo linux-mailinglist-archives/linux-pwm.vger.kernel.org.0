@@ -2,75 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 549C9764542
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jul 2023 07:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F58476465A
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Jul 2023 07:59:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbjG0FGx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 27 Jul 2023 01:06:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
+        id S230294AbjG0F7n (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 27 Jul 2023 01:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231195AbjG0FGv (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Jul 2023 01:06:51 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A645C2723
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:06:48 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3fbc63c2e84so5685025e9.3
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:06:48 -0700 (PDT)
+        with ESMTP id S230369AbjG0F7m (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 27 Jul 2023 01:59:42 -0400
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4324F94
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:59:41 -0700 (PDT)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-1a28de15c8aso522122fac.2
+        for <linux-pwm@vger.kernel.org>; Wed, 26 Jul 2023 22:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1690434407; x=1691039207;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=milfg91uG9nlhd9aFLAx/8EHBpoWNiimDW9/5MxR5qE=;
-        b=SqR9wDcJ/K9nwJZJepovao+MkVJ0TdNofeVh2YnRg6VO5GiudH5oFn9h/1FfQVVRvE
-         8ZlNCHSEvsdhsZZLJ/5/Qf6CQU21Up1ossb+IZGHnWbf3PBHoWsebzYMi7f6OFiplMtg
-         vxOHMSqN7wXgOitTUOvdlJvqxngxskbpjADUWJ5O9YwOwTDGd5d65DZWQXSIRGR3uIvh
-         eJFw4HlIr+gmRESJdtIIdDKmvInlWwYviZwGGR/2npA+DAy/Vx2D9df3Cyh2YOuxOaUw
-         UrJW3ILC8IxAsiSNhTUwdSZjzW5ONxcy9Uev32d5oWZE0JPFcth5s74HwccZfDhaNYbq
-         PLug==
+        d=tuxon.dev; s=google; t=1690437580; x=1691042380;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gt22TqQ8ghDnrhlwqflaEUuOLAWst+A9lTaKuY+EuqQ=;
+        b=KfhYiOiaezJr/Ibb9qovf6fhc2BoeqJnKJB9ModdeDrsf28AdK+HuFQU6fyIWla9Zl
+         pu5GtMoWnFSW6qa7+MIED/hWMBf3sWDECi2CgUkv/wpaDJlCDp80tc7xId7GU6XEU722
+         ld0BeG+4Dz+lxhy/RilxgQkdRwn3XIHlyNaeZXuM92uQZ9YJdHkd+GaIq8G/MxJPHyq2
+         Nwp15DDkcvcO++tOAXunx2TUPcRO947mVwFYp9W33jCnxBwoq1CNMoxv8eiVhhxKcNbi
+         fnmowA9UViEDjDkvWxYcIjoQ1shN98strLz7ysmoqpGDyQjXjrb0pCksS88kJjn8gMwc
+         AzNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690434407; x=1691039207;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=milfg91uG9nlhd9aFLAx/8EHBpoWNiimDW9/5MxR5qE=;
-        b=TqmmeXdlZjfHPUK1hRgiGFAu03pPsMqUvNFgQnVBtKNh4ZzTpQPljwvBbKmQ3sHnoI
-         TASFgH+tCsTR8Pikdnj57OT+t5C9hZKLMLzBd49hnUZ8rdwIzYQhZ5xbnixmXIPIkok6
-         CRe+z6kcZ1k16l7yPDbLzzscGbbpFu5zRdhc+hy1ropqy6zBI/x7UTQIPr9glB3SqxY2
-         bxN3l0AquCaNmHZTVLip8Xe46ibiFuYJY8YZePdQ/k1EETvhEaOywjt96LpHvH2wWfT+
-         JixvFNeO27MNdt71ZVQ+D0l5JuY/fhXSeS49GgvOge4XwHZpQvwCGifr7s8Zy1BFFy9O
-         RGaA==
-X-Gm-Message-State: ABy/qLahjpKZ8Gk8v/62WnIvqrlkBfNm1l+/uJgauLuSvGl8gUubWOWr
-        HJaJZReolRcIGk37Bs3cCR0ciA==
-X-Google-Smtp-Source: APBJJlG46aaIJPrxFkx4O+Yb8zxZMWWUWxRjBLDV7QlqtwQ/xfDUhdChhPo0mRSZ0sY0wDCljBBp8w==
-X-Received: by 2002:adf:f4c6:0:b0:314:ca7:f30b with SMTP id h6-20020adff4c6000000b003140ca7f30bmr767822wrp.54.1690434407115;
-        Wed, 26 Jul 2023 22:06:47 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id n7-20020a5d6b87000000b003175fef2a32sm820827wrx.55.2023.07.26.22.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 22:06:46 -0700 (PDT)
-Date:   Thu, 27 Jul 2023 08:06:44 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     oe-kbuild@lists.linux.dev,
-        Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
-        lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org
-Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-        luca.weiss@fairphone.com, konrad.dybcio@linaro.org,
-        u.kleine-koenig@pengutronix.de, quic_subbaram@quicinc.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Subject: Re: [PATCH v2 3/7] soc: qcom: add QCOM PBS driver
-Message-ID: <85e4f0ef-baf8-4588-a10c-d64821c8c518@kadam.mountain>
+        d=1e100.net; s=20221208; t=1690437580; x=1691042380;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gt22TqQ8ghDnrhlwqflaEUuOLAWst+A9lTaKuY+EuqQ=;
+        b=GRg72qss5qiNdcWgEVEKuKxPiiQlMQLFOU6ffaGzB0NTpa+TB8pSTXjvfQpwURQxDl
+         WkWyIFqXXgAkw5wWiPDVqKw1DKlggwuNdg8vJdXVBDKAdOw+jSeUdhspry16T/EwZ3+t
+         08akaGuARIUHAZhJ4+1TswSQdbpyWFXjc3+4u6xa/WFCiz2UEUpUI6hwWQMzTVyZ9dxb
+         ymRDv1KnbQToLC2fMvted1rjmsh5g75JneMt6pOTjEV/dEC4+EVeAgn/KLZBcO4Xj6oi
+         SKZMBQ/EW9xYNkGyD2LI6BPhdoh/X80ZA+WM2AFOvCJdz0ErjINyS1zLEsazGOHh3PQ3
+         m4Lg==
+X-Gm-Message-State: ABy/qLZkjD3og5GJER6v75y44XqA79h2TuwJGjjpdxcvGYdAfbThKbSC
+        BGjZP1DboeW+5lDqLqG4W8Ky1g==
+X-Google-Smtp-Source: APBJJlF0WWfDysWyFbO+9gAdMR/2+zWRKGY3DewsMjdCIAkRZixXfAcqDzX1r3RK3useuKJrRjwcvQ==
+X-Received: by 2002:a05:6870:c1d4:b0:1bb:d808:da72 with SMTP id i20-20020a056870c1d400b001bbd808da72mr1162974oad.57.1690437580561;
+        Wed, 26 Jul 2023 22:59:40 -0700 (PDT)
+Received: from [10.0.2.15] ([82.78.167.79])
+        by smtp.gmail.com with ESMTPSA id t6-20020a17090a024600b002682392506bsm507688pje.50.2023.07.26.22.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jul 2023 22:59:40 -0700 (PDT)
+Message-ID: <7027b456-8f77-56d7-f6a2-89049685244a@tuxon.dev>
+Date:   Thu, 27 Jul 2023 08:59:29 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725193423.25047-4-quic_amelende@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 5/5] pwm: atmel-tcb: Don't track polarity in driver data
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de
+References: <20230719192013.4051193-1-u.kleine-koenig@pengutronix.de>
+ <20230719192013.4051193-6-u.kleine-koenig@pengutronix.de>
+From:   claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20230719192013.4051193-6-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,80 +78,96 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Anjelique,
 
-kernel test robot noticed the following build warnings:
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 19.07.2023 22:20, Uwe Kleine-König wrote:
+> struct atmel_tcb_pwm_device::polarity is only used in atmel_tcb_pwm_enable
+> and atmel_tcb_pwm_disable(). These functions are only called by
+> atmel_tcb_pwm_apply() after the member variable was assigned to
+> state->polarity. So the value assigned in atmel_tcb_pwm_request() is
+> never used and the member can be dropped from struct atmel_tcb_pwm_device.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anjelique-Melendez/dt-bindings-soc-qcom-Add-qcom-pbs-bindings/20230726-034011
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20230725193423.25047-4-quic_amelende%40quicinc.com
-patch subject: [PATCH v2 3/7] soc: qcom: add QCOM PBS driver
-config: parisc-randconfig-m041-20230726 (https://download.01.org/0day-ci/archive/20230727/202307270539.1JVFQf6W-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20230727/202307270539.1JVFQf6W-lkp@intel.com/reproduce)
+Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202307270539.1JVFQf6W-lkp@intel.com/
-
-smatch warnings:
-drivers/soc/qcom/qcom-pbs.c:97 qcom_pbs_wait_for_ack() warn: should this be 'retries == -1'
-
-vim +97 drivers/soc/qcom/qcom-pbs.c
-
-c261225d90e1d3 Anjelique Melendez 2023-07-25   68  static int qcom_pbs_wait_for_ack(struct pbs_dev *pbs, u8 bit_pos)
-c261225d90e1d3 Anjelique Melendez 2023-07-25   69  {
-c261225d90e1d3 Anjelique Melendez 2023-07-25   70  	u16 retries = 2000, delay = 1000;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   71  	int ret;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   72  	u8 val;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   73  
-c261225d90e1d3 Anjelique Melendez 2023-07-25   74  	while (retries--) {
-
-Change this to while (--retries) {
-
-c261225d90e1d3 Anjelique Melendez 2023-07-25   75  		ret = qcom_pbs_read(pbs, PBS_CLIENT_SCRATCH2, &val);
-c261225d90e1d3 Anjelique Melendez 2023-07-25   76  		if (ret < 0)
-c261225d90e1d3 Anjelique Melendez 2023-07-25   77  			return ret;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   78  
-c261225d90e1d3 Anjelique Melendez 2023-07-25   79  		if (val == 0xFF) {
-c261225d90e1d3 Anjelique Melendez 2023-07-25   80  			/* PBS error - clear SCRATCH2 register */
-c261225d90e1d3 Anjelique Melendez 2023-07-25   81  			ret = qcom_pbs_write(pbs, PBS_CLIENT_SCRATCH2, 0);
-c261225d90e1d3 Anjelique Melendez 2023-07-25   82  			if (ret < 0)
-c261225d90e1d3 Anjelique Melendez 2023-07-25   83  				return ret;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   84  
-c261225d90e1d3 Anjelique Melendez 2023-07-25   85  			dev_err(pbs->dev, "NACK from PBS for bit %u\n", bit_pos);
-c261225d90e1d3 Anjelique Melendez 2023-07-25   86  			return -EINVAL;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   87  		}
-c261225d90e1d3 Anjelique Melendez 2023-07-25   88  
-c261225d90e1d3 Anjelique Melendez 2023-07-25   89  		if (val & BIT(bit_pos)) {
-c261225d90e1d3 Anjelique Melendez 2023-07-25   90  			dev_dbg(pbs->dev, "PBS sequence for bit %u executed!\n", bit_pos);
-c261225d90e1d3 Anjelique Melendez 2023-07-25   91  			break;
-c261225d90e1d3 Anjelique Melendez 2023-07-25   92  		}
-c261225d90e1d3 Anjelique Melendez 2023-07-25   93  
-c261225d90e1d3 Anjelique Melendez 2023-07-25   94  		usleep_range(delay, delay + 100);
-c261225d90e1d3 Anjelique Melendez 2023-07-25   95  	}
-c261225d90e1d3 Anjelique Melendez 2023-07-25   96  
-c261225d90e1d3 Anjelique Melendez 2023-07-25  @97  	if (!retries) {
-
-Otherwise this check needs to be: "if (retries == USHRT_MAX)".
-
-Btw, I really feel like people are generally better off declaring list
-iterators as int whenever possible.  I have written a very rude blog
-to that effect.
-https://staticthinking.wordpress.com/2022/06/01/unsigned-int-i-is-stupid/
-
-c261225d90e1d3 Anjelique Melendez 2023-07-25   98  		dev_err(pbs->dev, "Timeout for PBS ACK/NACK for bit %u\n", bit_pos);
-c261225d90e1d3 Anjelique Melendez 2023-07-25   99  		return -ETIMEDOUT;
-c261225d90e1d3 Anjelique Melendez 2023-07-25  100  	}
-c261225d90e1d3 Anjelique Melendez 2023-07-25  101  
-c261225d90e1d3 Anjelique Melendez 2023-07-25  102  	return 0;
-c261225d90e1d3 Anjelique Melendez 2023-07-25  103  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+> ---
+>   drivers/pwm/pwm-atmel-tcb.c | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+> index 32a60d7f8ed2..30c966238e41 100644
+> --- a/drivers/pwm/pwm-atmel-tcb.c
+> +++ b/drivers/pwm/pwm-atmel-tcb.c
+> @@ -34,7 +34,6 @@
+>   				 ATMEL_TC_BEEVT | ATMEL_TC_BSWTRG)
+>   
+>   struct atmel_tcb_pwm_device {
+> -	enum pwm_polarity polarity;	/* PWM polarity */
+>   	unsigned div;			/* PWM clock divider */
+>   	unsigned duty;			/* PWM duty expressed in clk cycles */
+>   	unsigned period;		/* PWM period expressed in clk cycles */
+> @@ -80,7 +79,6 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
+>   	if (ret)
+>   		return ret;
+>   
+> -	tcbpwm->polarity = PWM_POLARITY_NORMAL;
+>   	tcbpwm->duty = 0;
+>   	tcbpwm->period = 0;
+>   	tcbpwm->div = 0;
+> @@ -123,12 +121,12 @@ static void atmel_tcb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+>   	clk_disable_unprepare(tcbpwmc->clk);
+>   }
+>   
+> -static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				  enum pwm_polarity polarity)
+>   {
+>   	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+>   	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
+>   	unsigned cmr;
+> -	enum pwm_polarity polarity = tcbpwm->polarity;
+>   
+>   	/*
+>   	 * If duty is 0 the timer will be stopped and we have to
+> @@ -180,12 +178,12 @@ static void atmel_tcb_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>   	spin_unlock(&tcbpwmc->lock);
+>   }
+>   
+> -static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +static int atmel_tcb_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				enum pwm_polarity polarity)
+>   {
+>   	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+>   	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
+>   	u32 cmr;
+> -	enum pwm_polarity polarity = tcbpwm->polarity;
+>   
+>   	/*
+>   	 * If duty is 0 the timer will be stopped and we have to
+> @@ -345,15 +343,11 @@ static int atmel_tcb_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>   static int atmel_tcb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   			       const struct pwm_state *state)
+>   {
+> -	struct atmel_tcb_pwm_chip *tcbpwmc = to_tcb_chip(chip);
+> -	struct atmel_tcb_pwm_device *tcbpwm = &tcbpwmc->pwms[pwm->hwpwm];
+>   	int duty_cycle, period;
+>   	int ret;
+>   
+> -	tcbpwm->polarity = state->polarity;
+> -
+>   	if (!state->enabled) {
+> -		atmel_tcb_pwm_disable(chip, pwm);
+> +		atmel_tcb_pwm_disable(chip, pwm, state->polarity);
+>   		return 0;
+>   	}
+>   
+> @@ -364,7 +358,7 @@ static int atmel_tcb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	if (ret)
+>   		return ret;
+>   
+> -	return atmel_tcb_pwm_enable(chip, pwm);
+> +	return atmel_tcb_pwm_enable(chip, pwm, state->polarity);
+>   }
+>   
+>   static const struct pwm_ops atmel_tcb_pwm_ops = {
