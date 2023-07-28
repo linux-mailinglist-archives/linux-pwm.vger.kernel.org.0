@@ -2,72 +2,49 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF1037665C4
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 09:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3C13766624
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234532AbjG1Hu2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Jul 2023 03:50:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
+        id S234627AbjG1IBU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Jul 2023 04:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234501AbjG1HuU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 03:50:20 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C9E135BF
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 00:50:11 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3fbc63c2e84so20199575e9.3
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 00:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690530610; x=1691135410;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDrQSF4flbfX31MTNsZ15td23C3i0hNJdQ7UI0vCA3I=;
-        b=DJXTLmy58DH82+ndYnRhovf0F46i4Qt08gyosVKYjJaphIunwDUwAzldq17njcyipw
-         26pLbTBaOdB3JYXsJoFdcXPWy7flzVbsdlKiZEfyzzYj6AcyQPQ29RjWE8eTLmbJY86P
-         dYK718jc4GtH7GdMCLY1g4FhRK8c0X0OtY2m9r16b79F5J69pOb7genW+sPoMKqvVIR6
-         /MIAXbW+qxMPhX9L4SEsn4ulVqwoztDabTSdLzcSnBN1lcF7xBmLmZjDd3dUWPQDnfZU
-         ObWglzNlQBifg+6WGmKCl+PQN8NlOft/lPIDp8kOvQHi8ZWimM/PYJYj8BUQLarguzWD
-         A6+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690530610; x=1691135410;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DDrQSF4flbfX31MTNsZ15td23C3i0hNJdQ7UI0vCA3I=;
-        b=Z4495hPD7ol3Epa1XILJf8Q3L3rYpdDJ7JTdvEmIMtQWwyXB7NfJml9VBhQjXYr5W1
-         Cg26VP5nupBdmQS6xdaB8onZOLrAoQ6gPjzYAWVEiHpLCQ6gmHCG6V9KyE686U/wVlTT
-         ga4K0SNyn1L0Mudo1I5I9fMY9YbHXWNAfP+Mdmg6EAQvZxKId/191nvQNExEVLoNV5DN
-         NZmTTbpzOQ4ixdIIAGC3BB4TVzUTdi5WwxvOSAqYg9k33aXLTAuIWI78b/h8Fcclwmlq
-         6Ufx6eAw5SdLyeO3FpN0PKrYnMtfdh6IHxXamcecePHHNFqD79xlhrYUdqVvtm/ggTvo
-         4N3A==
-X-Gm-Message-State: ABy/qLa6Op+HaNjUPxM8+vCfr0rKImNv+gbhPhy8tYU01c75JE//SJAH
-        E1XHGGBZCrDgZG1+Hnjx3J9tmf4YtLU=
-X-Google-Smtp-Source: APBJJlEgSiKQeIzrK/jf6155faui04e89WIa1lf3pSVZA/JOpzJggqhsijVHEfTfWO5PmXty8T+t1g==
-X-Received: by 2002:a5d:4533:0:b0:317:69c7:98ad with SMTP id j19-20020a5d4533000000b0031769c798admr1181655wra.3.1690530609932;
-        Fri, 28 Jul 2023 00:50:09 -0700 (PDT)
-Received: from localhost (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id y8-20020adffa48000000b003159d2dabbasm4080107wrr.94.2023.07.28.00.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 00:50:09 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, kernel@pengutronix.de
-Subject: Re: (subset) [PATCH 1/2] pwm: stmpe: Handle errors when disabling the signal
-Date:   Fri, 28 Jul 2023 09:50:07 +0200
-Message-ID: <169053057431.3515253.3807570644936028334.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230714214519.2503468-1-u.kleine-koenig@pengutronix.de>
-References: <20230714214519.2503468-1-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S234706AbjG1IAg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:00:36 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BAA949E8
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 00:59:45 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPINr-000173-Oz; Fri, 28 Jul 2023 09:59:35 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPINr-002esQ-4L; Fri, 28 Jul 2023 09:59:35 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPINq-008RfE-Ge; Fri, 28 Jul 2023 09:59:34 +0200
+Date:   Fri, 28 Jul 2023 09:59:34 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: Drop unused #include <linux/radix-tree.h>
+Message-ID: <20230728075934.4t5p6qqibey25vuf@pengutronix.de>
+References: <20230728071259.590902-1-u.kleine-koenig@pengutronix.de>
+ <ZMNuhcw1CIczzfxe@orome>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pw5w4t4toxn7t27x"
+Content-Disposition: inline
+In-Reply-To: <ZMNuhcw1CIczzfxe@orome>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,21 +53,52 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On Fri, 14 Jul 2023 23:45:18 +0200, Uwe Kleine-König wrote:
-> Before the pwm framework implementedatomic updates (with the .apply()
-> callback) the .disable() callback returned void. This is still visible
-> in the stmpe driver which drops errors in the disable path.
-> 
-> Improve the driver to forward failures in stmpe_24xx_pwm_disable() to
-> the caller of pwm_apply_state().
-> 
-> [...]
+--pw5w4t4toxn7t27x
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+On Fri, Jul 28, 2023 at 09:30:13AM +0200, Thierry Reding wrote:
+> On Fri, Jul 28, 2023 at 09:12:59AM +0200, Uwe Kleine-K=F6nig wrote:
+> > core.c doens't use any of the symbols provided by linux/radix-tree.h
+> > and compiles just fine without this include. So drop the #include.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/pwm/core.c | 1 -
+> >  1 file changed, 1 deletion(-)
+>=20
+> Looks like I forgot to remove that when the radix tree support was
+> dropped in 247ee6c780406513c6031a7f4ea41f1648b03295. This didn't apply
+> cleanly, so it breaks the b4 tracking.
 
-[1/2] pwm: stmpe: Handle errors when disabling the signal
-      commit: b2c71e9f8dd0d023a847f6c38f9a83c0949ec01a
+Ah right, I based it on v6.5-rc1 while it conflicts with commit
+0a41b0c5d97a ("pwm: Explicitly include correct DT includes"). If you
+pass -3 to git am, it applies fine though.
 
-Best regards,
--- 
-Thierry Reding <thierry.reding@gmail.com>
+I don't know what you mean by "b4 tracking", maybe git am -3 fixes that,
+too?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--pw5w4t4toxn7t27x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTDdWUACgkQj4D7WH0S
+/k5tywf/SLKrzhymag4nUvlabbjQn36VxPXQVmm4bX0Ut2CDacfST3NrtrfC9asc
+0DxnXV1JULkDy2yUwA9gEmk4XvC+4QBhgS+hApNtkirMe/ewZUTGZdsbTNInpa4F
+YsgrfQFk4cskPBezi5+FHU+Q5TAEgw5KWXIX0Eu1AUlHi+vfjGBNb7yzY+f18jaj
+3EU8z4MsLjzwbfljf2Tl44n5spAFQYBwrRBrP8b19PztVz/LObiNbb0rE3C8h02O
+XUqbt/5Xc/LReCBlgc9hrlyBNkhSW8Fj2vBhgAzOTivTO6op2825kPzRsmoLGMc1
+OFIQz+NiSDz2ZndB63BNpx5rphcOKQ==
+=9Uqw
+-----END PGP SIGNATURE-----
+
+--pw5w4t4toxn7t27x--
