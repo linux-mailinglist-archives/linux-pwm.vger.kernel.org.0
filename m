@@ -2,53 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 104CD766687
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:12:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C8376669D
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:13:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234835AbjG1IL6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Jul 2023 04:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51156 "EHLO
+        id S234045AbjG1INy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Jul 2023 04:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234713AbjG1ILb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:11:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B91F3AB1
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 01:11:29 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qPIZ7-00052I-Ga; Fri, 28 Jul 2023 10:11:13 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qPIZ6-002fNR-Nz; Fri, 28 Jul 2023 10:11:12 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qPIZ5-008S6E-Sp; Fri, 28 Jul 2023 10:11:11 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH v2] pwm: atmel: Simplify using devm functions
-Date:   Fri, 28 Jul 2023 10:11:05 +0200
-Message-Id: <20230728081105.595161-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S234756AbjG1INg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:13:36 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F073C11;
+        Fri, 28 Jul 2023 01:13:26 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99454855de1so245528066b.2;
+        Fri, 28 Jul 2023 01:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690532005; x=1691136805;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S8jQrccsPc+Yci+ONr3TsmC4imyyjo9X+IFR2I4Ay5I=;
+        b=GmOdYJLbZqJo3SA5BqvtqN7S2msoqTc8OXT9WGmg/YUlNeR6ayCRn7jqA2TRw7+VVa
+         Qd20oAqCvl+vEKTo8NT1k/uGOVt0e9857bbDT9lnOsgKqJ9so2uqY7LxyJIVFZAODx99
+         JhjBjc4CRVQGrYZ4oDfCQxfBU4maEo9Ls1tkKJmJELfq1YJhKKEYUmqaQMbZL4qAzA7f
+         v3k/NIehKZQsFIIv4WXDmOlHnY6bdy1SGsURMuIgNxFBvnBVMsL5+7bgUHuQpsjGyALu
+         H8yvjD/Ng6OIYVpetSvt1c4NHPTXOLmD3Xh4K+WnW0rf1l7lsRG0FuGHysTCjHaXc1Fz
+         nGlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690532005; x=1691136805;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S8jQrccsPc+Yci+ONr3TsmC4imyyjo9X+IFR2I4Ay5I=;
+        b=asyyTUymBs2IwWcgBPFZmXX+syOdaRdHQzRBP0uGjAeqim5N1aNudSt4TvNuvaTr7T
+         urkNKQNmyHqTrAAPcofVG4rzXljn0yS/VQsOJ/lA/gKWx2acAc7f6807rDey5jfhL5CY
+         XaDiOKMgtqDi1Q0SiVNbKls+inEq2Q9x5vO5h6ahWl+vGsg7BwJP0SYJ0o2d4io+EehR
+         /dcvrfKAbk1xdn4yFzb3PhodM3Y6LNpEHqc8nfoXzVKWbC8gr/rHiOHurVbzchKh6IU5
+         Sj7WZP8JbboS58ItN19kdwPZR6QKGKsrL8BJqLQc5q8XPFH2B/x4RUPNf2iK54N/D2IT
+         nHBA==
+X-Gm-Message-State: ABy/qLb5KipmfJF6AQ1HDq5ZgpoAR7WZxZZ09trjNzxp9z+rpT1DB5y5
+        prPFBxal9mD0T1qGAQq/9Xs=
+X-Google-Smtp-Source: APBJJlFy7shLRCnh1rx0nPjpKfoveclxsf4mIU6Cr1i93tFVItp3jezGvRFx9BiegdVzXsOX/b4OqA==
+X-Received: by 2002:a17:907:a06c:b0:99b:bc52:8d2 with SMTP id ia12-20020a170907a06c00b0099bbc5208d2mr1296250ejc.6.1690532004876;
+        Fri, 28 Jul 2023 01:13:24 -0700 (PDT)
+Received: from localhost (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id e6-20020a1709067e0600b00992b66e54e9sm1736948ejr.214.2023.07.28.01.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jul 2023 01:13:24 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stanislav Jakubek <stano.jakubek@gmail.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
+Date:   Fri, 28 Jul 2023 10:13:20 +0200
+Message-ID: <169053199369.3516709.17303093302143505470.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230618142327.GA20367@standask-GA-A55M-S2HP>
+References: <20230618142327.GA20367@standask-GA-A55M-S2HP>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2964; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=5BDb4lnapcJD9aVhX2R255TUCTQkGk36VXRTmH24CKg=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkw3gYc/UKSgLmaqMAgHX7QCvQGvV1lz2yrtabz J6VfizeO3qJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZMN4GAAKCRCPgPtYfRL+ Tp2SCACTQPV/DsIcM3ZFRleVB/8BloyLXti/VQ0yk+Qiz0kz7tCR2Kp5vjZS15UbmrkR1DEvgfi +p+VZwmylyjPE+ol0FxyIroj2wgD+JOgE6k4JoS1PFQLa0wUuWqtWVXxRS9TqQhSTCdyqkuUicI OLU0QoTwrH0UY2xjrKlZWLGY3AHogp9KZCJZIDblJoDXHxgcwHSIpJn4jh7XvxkgTiLaBpDmG0N JhI1Kwn5Kfic/bkFCtyBvWcFJMbBzMo5Dld1CeRD92DpFYX2ZJ2H6EyIqAXmbfAs/Gd4ikG7b0T qxkOm2iTsc2/f+zYxTM94YCDp86XF1RQJvRIcfSYodZRb255
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,104 +79,20 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-For all resources used by the driver there is a devm variant to allocate
-these. This simplifies the error path in the probe callback and allows
-to drop the remove callback.
 
-While at it also use dev_err_probe() to compact returning an error.
+On Sun, 18 Jun 2023 16:23:27 +0200, Stanislav Jakubek wrote:
+> Convert Broadcom Kona family PWM controller bindings to DT schema.
+> 
+> Change during conversion:
+>   - add used, but previously undocumented brcm,bcm11351-pwm compatible
+> 
+> 
 
-With the remove callback gone, there is no user of driver data left, so
-the call to platform_set_drvdata() can also be dropped.
+Applied, thanks!
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+[1/1] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
+      commit: 8b9d91d23c18423d4e4bda735f20b669fb28115f
 
-changes compared to (implicit) v1:
-
- - Rebased on pwm/for-next due to conflicts with commit a2f68c7e312f
-   ("pwm: atmel: Enable clk when pwm already enabled in bootloader")
- - Adapt changelog as now the error path in probe is still used while it
-   could be dropped before commit a2f68c7e312f.
-   
-Thanks
-Uwe
-
- drivers/pwm/pwm-atmel.c | 33 +++++++--------------------------
- 1 file changed, 7 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 03c7810416b8..1f73325d1bea 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -517,15 +517,10 @@ static int atmel_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(atmel_pwm->base))
- 		return PTR_ERR(atmel_pwm->base);
- 
--	atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+	atmel_pwm->clk = devm_clk_get_prepared(&pdev->dev, NULL);
- 	if (IS_ERR(atmel_pwm->clk))
--		return PTR_ERR(atmel_pwm->clk);
--
--	ret = clk_prepare(atmel_pwm->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "failed to prepare PWM clock\n");
--		return ret;
--	}
-+		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->clk),
-+				     "failed to get prepared PWM clock\n");
- 
- 	atmel_pwm->chip.dev = &pdev->dev;
- 	atmel_pwm->chip.ops = &atmel_pwm_ops;
-@@ -533,42 +528,28 @@ static int atmel_pwm_probe(struct platform_device *pdev)
- 
- 	ret = atmel_pwm_enable_clk_if_on(atmel_pwm, true);
- 	if (ret < 0)
--		goto unprepare_clk;
-+		return ret;
- 
--	ret = pwmchip_add(&atmel_pwm->chip);
-+	ret = devm_pwmchip_add(&pdev->dev, &atmel_pwm->chip);
- 	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
-+		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
- 		goto disable_clk;
- 	}
- 
--	platform_set_drvdata(pdev, atmel_pwm);
--
--	return ret;
-+	return 0;
- 
- disable_clk:
- 	atmel_pwm_enable_clk_if_on(atmel_pwm, false);
- 
--unprepare_clk:
--	clk_unprepare(atmel_pwm->clk);
- 	return ret;
- }
- 
--static void atmel_pwm_remove(struct platform_device *pdev)
--{
--	struct atmel_pwm_chip *atmel_pwm = platform_get_drvdata(pdev);
--
--	pwmchip_remove(&atmel_pwm->chip);
--
--	clk_unprepare(atmel_pwm->clk);
--}
--
- static struct platform_driver atmel_pwm_driver = {
- 	.driver = {
- 		.name = "atmel-pwm",
- 		.of_match_table = of_match_ptr(atmel_pwm_dt_ids),
- 	},
- 	.probe = atmel_pwm_probe,
--	.remove_new = atmel_pwm_remove,
- };
- module_platform_driver(atmel_pwm_driver);
- 
-
-base-commit: a2f68c7e312f94c8f78740449a88e8d7308ab18d
+Best regards,
 -- 
-2.39.2
-
+Thierry Reding <thierry.reding@gmail.com>
