@@ -2,74 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 170C676664A
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:04:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 104CD766687
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234094AbjG1IEr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Jul 2023 04:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
+        id S234835AbjG1IL6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Jul 2023 04:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234069AbjG1IEK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:04:10 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CD93C26
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 01:02:25 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3fe104df822so1677055e9.1
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 01:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690531344; x=1691136144;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kYM+7Hxeiy/zYV2rA6It/fCBYA1mIgJrIwwqnoyI16Q=;
-        b=Wy6PcTqm0lASLVO6XrA5cXAZ52JkBtE7hd5w5A3ou1OOQPfgRembi0F9CnF7+ugo4t
-         LOqGmFrEoDGMhl9IRBiFmtwcisMIiaFastrV7CS5mtzan8yo+L15Q0A63BtkyFGM4xvg
-         9fJ5koXRFLWGuCXunOD3XCPvvUe9mjyZMk55UBf59Bef56hWE5m6pP4kTDSRXTcclP3P
-         rcCToVZz6HkyTZMUxRsCNmEKxUR2Tc7wv19FzabfmP9Q/9LDOZqhgPjMSducLxNMd+YX
-         QFVd/QtSDPPUIsDpfE0W5E0DLbBN55bbEsZyvCUeMEgpMg74i5vvjm5TEkhfLJhAm5pX
-         oSXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690531344; x=1691136144;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kYM+7Hxeiy/zYV2rA6It/fCBYA1mIgJrIwwqnoyI16Q=;
-        b=KskzcKuvH8RV2JDfaVPSYmQYgsj6h5NUT2sAOwu25RZrnzp59IdSyv84S3O4oyR7o+
-         oueZCpWTDwzwE6AgpBCrB4Znl6KOJvHh5qHw9JkeGbXTogp/ogQYU/M7IpeGr1jUiccv
-         MS5HKBLPPMUyjT4+xXcRJcphmu18d2rWkNvx6kW0zFW7Yzo+W1wxqik4ephl8Es/JxNU
-         uwGE2h9cGWFjCXMXCMjpM3fe7atiSgqatDVEsAAi/6mL90W/alyvcPty93Xn4IpphVfY
-         e57P9cyWKvkm9+LPwevsZqqk95uNkrAtcFLE7YPbvw1jD6WMYJ6qtVskayZwTJRVH/b8
-         3bqw==
-X-Gm-Message-State: ABy/qLbo/Xzd8YVPe7WzSjD0VInOe2NZt/A5JKvekQwnuRIRVFcXowJ2
-        QOE9jIX1798GatNE0eUak50=
-X-Google-Smtp-Source: APBJJlElOTovIl2beeM+x0POT8VUO9qTc95oQ0L0Cyj7z/JG5/PDMHQsUoAqguf1s0EMmkcGlgs07Q==
-X-Received: by 2002:a1c:f309:0:b0:3fc:182:7eac with SMTP id q9-20020a1cf309000000b003fc01827eacmr1322726wmq.33.1690531344075;
-        Fri, 28 Jul 2023 01:02:24 -0700 (PDT)
-Received: from orome (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id o20-20020a05600c511400b003f7f475c3bcsm19727225wms.1.2023.07.28.01.02.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 01:02:23 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 10:02:22 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, kernel@pengutronix.de
-Subject: Re: [PATCH 2/2] pwm: stmpe: Don't issue error messages for problems
- in .apply_state()
-Message-ID: <ZMN2DtpxEpHcseTi@orome>
-References: <20230714214519.2503468-1-u.kleine-koenig@pengutronix.de>
- <20230714214519.2503468-2-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S234713AbjG1ILb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:11:31 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B91F3AB1
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 01:11:29 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPIZ7-00052I-Ga; Fri, 28 Jul 2023 10:11:13 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPIZ6-002fNR-Nz; Fri, 28 Jul 2023 10:11:12 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qPIZ5-008S6E-Sp; Fri, 28 Jul 2023 10:11:11 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH v2] pwm: atmel: Simplify using devm functions
+Date:   Fri, 28 Jul 2023 10:11:05 +0200
+Message-Id: <20230728081105.595161-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bpX/+TxFeOrauri4"
-Content-Disposition: inline
-In-Reply-To: <20230714214519.2503468-2-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2964; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=5BDb4lnapcJD9aVhX2R255TUCTQkGk36VXRTmH24CKg=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkw3gYc/UKSgLmaqMAgHX7QCvQGvV1lz2yrtabz J6VfizeO3qJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZMN4GAAKCRCPgPtYfRL+ Tp2SCACTQPV/DsIcM3ZFRleVB/8BloyLXti/VQ0yk+Qiz0kz7tCR2Kp5vjZS15UbmrkR1DEvgfi +p+VZwmylyjPE+ol0FxyIroj2wgD+JOgE6k4JoS1PFQLa0wUuWqtWVXxRS9TqQhSTCdyqkuUicI OLU0QoTwrH0UY2xjrKlZWLGY3AHogp9KZCJZIDblJoDXHxgcwHSIpJn4jh7XvxkgTiLaBpDmG0N JhI1Kwn5Kfic/bkFCtyBvWcFJMbBzMo5Dld1CeRD92DpFYX2ZJ2H6EyIqAXmbfAs/Gd4ikG7b0T qxkOm2iTsc2/f+zYxTM94YCDp86XF1RQJvRIcfSYodZRb255
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,149 +56,104 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+For all resources used by the driver there is a devm variant to allocate
+these. This simplifies the error path in the probe callback and allows
+to drop the remove callback.
 
---bpX/+TxFeOrauri4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+While at it also use dev_err_probe() to compact returning an error.
 
-On Fri, Jul 14, 2023 at 11:45:19PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> pwm drivers are supposed to be silent for failures in .apply_state()
-> because a problem is likely to be persistent and so it can easily flood
-> the kernel log. So remove all error messages from .apply_state() and the
-> functions that are (only) called by that callback.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/pwm-stmpe.c | 35 ++++++-----------------------------
->  1 file changed, 6 insertions(+), 29 deletions(-)
+With the remove callback gone, there is no user of driver data left, so
+the call to platform_set_drvdata() can also be dropped.
 
-I don't necessarily agree with that claim. Given that some of the
-implementations can be quite complex, the error messages may be useful
-to diagnose what exactly is going wrong. It's also quite rare for any
-consumers to call pwm_apply_state() in quick succession, so I don't
-think "flooding" is really a problem.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Is this an actual problem anywhere?
+changes compared to (implicit) v1:
 
-Looking at where these errors would originate, these can be either from
-I2C or SPI and the MFD driver will do some probing and failures in that
-code would lead to probe failure, so any persistent problems are likely
-going to be detected early on. And if there are errors that start to
-happen at runtime, it's probably not a bad idea to be as noisy as
-possible.
+ - Rebased on pwm/for-next due to conflicts with commit a2f68c7e312f
+   ("pwm: atmel: Enable clk when pwm already enabled in bootloader")
+ - Adapt changelog as now the error path in probe is still used while it
+   could be dropped before commit a2f68c7e312f.
+   
+Thanks
+Uwe
 
-On the other hand, the stmpe_reg_read() and stmpe_reg_write() produce
-error messages of their own, so the ones in this driver mainly serve as
-adding context. Perhaps rather than removing these, turning them into
-dev_dbg() would be a good compromise?
+ drivers/pwm/pwm-atmel.c | 33 +++++++--------------------------
+ 1 file changed, 7 insertions(+), 26 deletions(-)
 
-Thierry
+diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+index 03c7810416b8..1f73325d1bea 100644
+--- a/drivers/pwm/pwm-atmel.c
++++ b/drivers/pwm/pwm-atmel.c
+@@ -517,15 +517,10 @@ static int atmel_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(atmel_pwm->base))
+ 		return PTR_ERR(atmel_pwm->base);
+ 
+-	atmel_pwm->clk = devm_clk_get(&pdev->dev, NULL);
++	atmel_pwm->clk = devm_clk_get_prepared(&pdev->dev, NULL);
+ 	if (IS_ERR(atmel_pwm->clk))
+-		return PTR_ERR(atmel_pwm->clk);
+-
+-	ret = clk_prepare(atmel_pwm->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to prepare PWM clock\n");
+-		return ret;
+-	}
++		return dev_err_probe(&pdev->dev, PTR_ERR(atmel_pwm->clk),
++				     "failed to get prepared PWM clock\n");
+ 
+ 	atmel_pwm->chip.dev = &pdev->dev;
+ 	atmel_pwm->chip.ops = &atmel_pwm_ops;
+@@ -533,42 +528,28 @@ static int atmel_pwm_probe(struct platform_device *pdev)
+ 
+ 	ret = atmel_pwm_enable_clk_if_on(atmel_pwm, true);
+ 	if (ret < 0)
+-		goto unprepare_clk;
++		return ret;
+ 
+-	ret = pwmchip_add(&atmel_pwm->chip);
++	ret = devm_pwmchip_add(&pdev->dev, &atmel_pwm->chip);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "failed to add PWM chip %d\n", ret);
++		dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
+ 		goto disable_clk;
+ 	}
+ 
+-	platform_set_drvdata(pdev, atmel_pwm);
+-
+-	return ret;
++	return 0;
+ 
+ disable_clk:
+ 	atmel_pwm_enable_clk_if_on(atmel_pwm, false);
+ 
+-unprepare_clk:
+-	clk_unprepare(atmel_pwm->clk);
+ 	return ret;
+ }
+ 
+-static void atmel_pwm_remove(struct platform_device *pdev)
+-{
+-	struct atmel_pwm_chip *atmel_pwm = platform_get_drvdata(pdev);
+-
+-	pwmchip_remove(&atmel_pwm->chip);
+-
+-	clk_unprepare(atmel_pwm->clk);
+-}
+-
+ static struct platform_driver atmel_pwm_driver = {
+ 	.driver = {
+ 		.name = "atmel-pwm",
+ 		.of_match_table = of_match_ptr(atmel_pwm_dt_ids),
+ 	},
+ 	.probe = atmel_pwm_probe,
+-	.remove_new = atmel_pwm_remove,
+ };
+ module_platform_driver(atmel_pwm_driver);
+ 
 
->=20
-> diff --git a/drivers/pwm/pwm-stmpe.c b/drivers/pwm/pwm-stmpe.c
-> index e205405c4828..4a8d0d9b9cfc 100644
-> --- a/drivers/pwm/pwm-stmpe.c
-> +++ b/drivers/pwm/pwm-stmpe.c
-> @@ -43,22 +43,12 @@ static int stmpe_24xx_pwm_enable(struct pwm_chip *chi=
-p, struct pwm_device *pwm)
->  	int ret;
-> =20
->  	ret =3D stmpe_reg_read(stmpe_pwm->stmpe, STMPE24XX_PWMCS);
-> -	if (ret < 0) {
-> -		dev_err(chip->dev, "error reading PWM#%u control\n",
-> -			pwm->hwpwm);
-> +	if (ret < 0)
->  		return ret;
-> -	}
-> =20
->  	value =3D ret | BIT(pwm->hwpwm);
-> =20
-> -	ret =3D stmpe_reg_write(stmpe_pwm->stmpe, STMPE24XX_PWMCS, value);
-> -	if (ret) {
-> -		dev_err(chip->dev, "error writing PWM#%u control\n",
-> -			pwm->hwpwm);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> +	return stmpe_reg_write(stmpe_pwm->stmpe, STMPE24XX_PWMCS, value);
->  }
-> =20
->  static int stmpe_24xx_pwm_disable(struct pwm_chip *chip,
-> @@ -69,19 +59,12 @@ static int stmpe_24xx_pwm_disable(struct pwm_chip *ch=
-ip,
->  	int ret;
-> =20
->  	ret =3D stmpe_reg_read(stmpe_pwm->stmpe, STMPE24XX_PWMCS);
-> -	if (ret < 0) {
-> -		dev_err(chip->dev, "error reading PWM#%u control\n",
-> -			pwm->hwpwm);
-> +	if (ret < 0)
->  		return ret;
-> -	}
-> =20
->  	value =3D ret & ~BIT(pwm->hwpwm);
-> =20
-> -	ret =3D stmpe_reg_write(stmpe_pwm->stmpe, STMPE24XX_PWMCS, value);
-> -	if (ret)
-> -		dev_err(chip->dev, "error writing PWM#%u control\n",
-> -			pwm->hwpwm);
-> -	return ret;
-> +	return stmpe_reg_write(stmpe_pwm->stmpe, STMPE24XX_PWMCS, value);
->  }
-> =20
->  /* STMPE 24xx PWM instructions */
-> @@ -124,11 +107,8 @@ static int stmpe_24xx_pwm_config(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
-> =20
->  		ret =3D stmpe_set_altfunc(stmpe_pwm->stmpe, BIT(pin),
->  					STMPE_BLOCK_PWM);
-> -		if (ret) {
-> -			dev_err(chip->dev, "unable to connect PWM#%u to pin\n",
-> -				pwm->hwpwm);
-> +		if (ret)
->  			return ret;
-> -		}
->  	}
-> =20
->  	/* STMPE24XX */
-> @@ -241,11 +221,8 @@ static int stmpe_24xx_pwm_config(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
->  		value =3D program[i] & 0xff;
-> =20
->  		ret =3D stmpe_reg_write(stmpe_pwm->stmpe, offset, value);
-> -		if (ret) {
-> -			dev_err(chip->dev, "error writing register %02x: %d\n",
-> -				offset, ret);
-> +		if (ret)
->  			return ret;
-> -		}
->  	}
-> =20
->  	/* If we were enabled, re-enable this PWM */
-> --=20
-> 2.39.2
->=20
+base-commit: a2f68c7e312f94c8f78740449a88e8d7308ab18d
+-- 
+2.39.2
 
---bpX/+TxFeOrauri4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmTDdgsACgkQ3SOs138+
-s6EpzA//fjFlgQrloiZWpkw958vNc6JYHa3kpUjykvO5CmGEHDdqjI9Tmmbl/5cB
-0t/FOBs+YG8CharyF4EKmqQRCQjy1OdTNivMI4AcnDKxoUR4WVYKII1e4fyOPLcp
-NUzKeED7qj4rsF02HHq8DEabLcWSOOSqN32Tr/6a1Rp2jxCD/ORsAEAxXDmFa+FY
-pJyWlrs7d8V20UVOtsSnNRFTJwtdDT3hhZqETL35wKxrGch4z6MxhFnNoh2Iysov
-CxhTLpZdnw+seuKtV6lgy+DexEIhbVr2LqFE09XqzJK3Fq3Rd95aLG4zWkJFlZyp
-tQim1sRprsvhBYoHPCo9r4RCpGyNk1HkT3z737VtxxIELQKmymCRXrkEuDR2lcsn
-XTqC8C+9GbSmsRyrrArIY1O+KmC3cw5cQPmCHkVpcYuVd3eWX73iTn4NlCfanfgo
-vu2Bk5WLZ33Szl3/4kDqZEj1lb1cJiTnykx/uj17jY5JJmPZKYP79+FxcFvHw73E
-UfaZxwervfhi3yIaweR4ARzpJc0G6wyvIKgKnkngV2sF9MI/E2/baEDJWy/aJSik
-Xg/4FZ84a0ELogv+J0MDZDLGTKsTiK0/6rh9PtxrS8cUTb4zIdMBMBE0uo9wcVmR
-VV8IVMIOJi456Vrb8NLkiMRe0aLyiipmUrLQyUTlny+Kcfz6Gz0=
-=ZY6e
------END PGP SIGNATURE-----
-
---bpX/+TxFeOrauri4--
