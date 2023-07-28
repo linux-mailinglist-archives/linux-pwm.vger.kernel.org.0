@@ -2,70 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1C8376669D
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F8DC7666B2
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Jul 2023 10:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234045AbjG1INy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 28 Jul 2023 04:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51242 "EHLO
+        id S234788AbjG1IQC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 28 Jul 2023 04:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234756AbjG1INg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:13:36 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F073C11;
-        Fri, 28 Jul 2023 01:13:26 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99454855de1so245528066b.2;
-        Fri, 28 Jul 2023 01:13:26 -0700 (PDT)
+        with ESMTP id S234712AbjG1IP7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 28 Jul 2023 04:15:59 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24989198A
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 01:15:57 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-98df3dea907so250421266b.3
+        for <linux-pwm@vger.kernel.org>; Fri, 28 Jul 2023 01:15:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690532005; x=1691136805;
+        d=gmail.com; s=20221208; t=1690532155; x=1691136955;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S8jQrccsPc+Yci+ONr3TsmC4imyyjo9X+IFR2I4Ay5I=;
-        b=GmOdYJLbZqJo3SA5BqvtqN7S2msoqTc8OXT9WGmg/YUlNeR6ayCRn7jqA2TRw7+VVa
-         Qd20oAqCvl+vEKTo8NT1k/uGOVt0e9857bbDT9lnOsgKqJ9so2uqY7LxyJIVFZAODx99
-         JhjBjc4CRVQGrYZ4oDfCQxfBU4maEo9Ls1tkKJmJELfq1YJhKKEYUmqaQMbZL4qAzA7f
-         v3k/NIehKZQsFIIv4WXDmOlHnY6bdy1SGsURMuIgNxFBvnBVMsL5+7bgUHuQpsjGyALu
-         H8yvjD/Ng6OIYVpetSvt1c4NHPTXOLmD3Xh4K+WnW0rf1l7lsRG0FuGHysTCjHaXc1Fz
-         nGlw==
+        bh=luEtBSD5i6niiqesHv04zZ5IrUTPE0FOO01DxpI9kLs=;
+        b=oyE3Ju2TqnEuKEdRc0iAOtWeDmSX+9OUZb//OHbYor3emEZchx69TP2eghCmucH4g/
+         Rqj3tGHooJH9tWDcffcNJjmpcBEsiLQofRz0tAkDG4VinIGtkInjhjmcVHzZkjed36Yh
+         U9Oi3yqlCwKPiQXbEJejkE/CeieCgbVFWgJfZnX0Y5WuHHbSDOZQkbzkbrAxkbIyfsuu
+         TAyiiCW88C3BA9UrIpc8O/Sysbnn0g5vpZYiKrlnSuaOWovfXBaROh3P9sW/aiqYF6yV
+         EgSo6J5r54onXselt5GAbLiIB1UxNPrOyhFBtbZfz1Sc7XOoVCdz/bpeiT3/jaii+nx8
+         noaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690532005; x=1691136805;
+        d=1e100.net; s=20221208; t=1690532155; x=1691136955;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S8jQrccsPc+Yci+ONr3TsmC4imyyjo9X+IFR2I4Ay5I=;
-        b=asyyTUymBs2IwWcgBPFZmXX+syOdaRdHQzRBP0uGjAeqim5N1aNudSt4TvNuvaTr7T
-         urkNKQNmyHqTrAAPcofVG4rzXljn0yS/VQsOJ/lA/gKWx2acAc7f6807rDey5jfhL5CY
-         XaDiOKMgtqDi1Q0SiVNbKls+inEq2Q9x5vO5h6ahWl+vGsg7BwJP0SYJ0o2d4io+EehR
-         /dcvrfKAbk1xdn4yFzb3PhodM3Y6LNpEHqc8nfoXzVKWbC8gr/rHiOHurVbzchKh6IU5
-         Sj7WZP8JbboS58ItN19kdwPZR6QKGKsrL8BJqLQc5q8XPFH2B/x4RUPNf2iK54N/D2IT
-         nHBA==
-X-Gm-Message-State: ABy/qLb5KipmfJF6AQ1HDq5ZgpoAR7WZxZZ09trjNzxp9z+rpT1DB5y5
-        prPFBxal9mD0T1qGAQq/9Xs=
-X-Google-Smtp-Source: APBJJlFy7shLRCnh1rx0nPjpKfoveclxsf4mIU6Cr1i93tFVItp3jezGvRFx9BiegdVzXsOX/b4OqA==
-X-Received: by 2002:a17:907:a06c:b0:99b:bc52:8d2 with SMTP id ia12-20020a170907a06c00b0099bbc5208d2mr1296250ejc.6.1690532004876;
-        Fri, 28 Jul 2023 01:13:24 -0700 (PDT)
+        bh=luEtBSD5i6niiqesHv04zZ5IrUTPE0FOO01DxpI9kLs=;
+        b=dj1tb57/tlSBcR+oQE7pIdHqxKT4RmLRa/mXddGX47A2E2DXJKi+LnEqlDEU1oj+tZ
+         YzCMuskXZvrFC+eRxYYzX3gW9BNNyeFmcQ6NPaL47xC/zntkAQsP8R2MUDalXD4GVCa+
+         4aZvLlruL8Q+EAIpnhFOZVzv6x5SXNBodn+6bsWgafCeCDfeZWBrIokbQWj8WPb7ItgB
+         8fAARhEswBxkkQ7NoYbNIjZeNCGnH/wQBN/NRX4MSFGlNpZgbcvJVGnKTwRiDuL/kYxn
+         RfXlxlrxyC5IDfh6zK6q9uJzGnFHzzi5V8RkOY5S0F/WESnzttYqOfXzH849boJFDDgZ
+         dA2g==
+X-Gm-Message-State: ABy/qLZ94K23T49dWM/WM9dmszD5ijdWKwQ2hNtvAD9kEb4CGcQnfZ2z
+        wqhqdGZkIEr7joyrMhxqr4Q=
+X-Google-Smtp-Source: APBJJlGZf2zibPIcMSN7jAJ5LY/cR8/D2NlXcE5JN8Mqi9dMU8rPNlVvG1lhbmh4V5dz2Px6aE83sg==
+X-Received: by 2002:a17:906:77d3:b0:993:f4cd:34b3 with SMTP id m19-20020a17090677d300b00993f4cd34b3mr1302328ejn.43.1690532155404;
+        Fri, 28 Jul 2023 01:15:55 -0700 (PDT)
 Received: from localhost (p200300e41f1bd600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1b:d600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id e6-20020a1709067e0600b00992b66e54e9sm1736948ejr.214.2023.07.28.01.13.24
+        by smtp.gmail.com with ESMTPSA id by24-20020a170906a2d800b00993b381f808sm1751804ejb.38.2023.07.28.01.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 01:13:24 -0700 (PDT)
+        Fri, 28 Jul 2023 01:15:55 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stanislav Jakubek <stano.jakubek@gmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
-Date:   Fri, 28 Jul 2023 10:13:20 +0200
-Message-ID: <169053199369.3516709.17303093302143505470.b4-ty@gmail.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2] pwm: atmel: Simplify using devm functions
+Date:   Fri, 28 Jul 2023 10:15:53 +0200
+Message-ID: <169053214868.3516997.12448597572019188130.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230618142327.GA20367@standask-GA-A55M-S2HP>
-References: <20230618142327.GA20367@standask-GA-A55M-S2HP>
+In-Reply-To: <20230728081105.595161-1-u.kleine-koenig@pengutronix.de>
+References: <20230728081105.595161-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -80,18 +77,22 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On Sun, 18 Jun 2023 16:23:27 +0200, Stanislav Jakubek wrote:
-> Convert Broadcom Kona family PWM controller bindings to DT schema.
+On Fri, 28 Jul 2023 10:11:05 +0200, Uwe Kleine-König wrote:
+> For all resources used by the driver there is a devm variant to allocate
+> these. This simplifies the error path in the probe callback and allows
+> to drop the remove callback.
 > 
-> Change during conversion:
->   - add used, but previously undocumented brcm,bcm11351-pwm compatible
+> While at it also use dev_err_probe() to compact returning an error.
 > 
+> With the remove callback gone, there is no user of driver data left, so
+> the call to platform_set_drvdata() can also be dropped.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: pwm: brcm,kona-pwm: convert to YAML
-      commit: 8b9d91d23c18423d4e4bda735f20b669fb28115f
+[1/1] pwm: atmel: Simplify using devm functions
+      commit: b22bb0d6a828b4eab579056647d2f362ac116cf2
 
 Best regards,
 -- 
