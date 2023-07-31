@@ -2,106 +2,178 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 174B6769330
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jul 2023 12:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64E07769539
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jul 2023 13:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjGaKf4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Jul 2023 06:35:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
+        id S231719AbjGaLtx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jul 2023 07:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230304AbjGaKfz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jul 2023 06:35:55 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F13FE59
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jul 2023 03:35:52 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-686bc261111so3038324b3a.3
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jul 2023 03:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=edgeble-ai.20221208.gappssmtp.com; s=20221208; t=1690799752; x=1691404552;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j/jFm2EzRpW7YYRmDR1o3UOuJLAvOI+SSUOIxC7DbfY=;
-        b=3Q8MaEX0FCITILh4l23NdZ2/fektqPWl0L0cwzxnKJ8H3Mpn7FgkyUhoVsGe4TKNu0
-         A2jc3GzdQvpCg+PTgThwmm07h415Db1UHUsew63eeOrNbp6ogVqHPGrVWxAT0KI3QpuU
-         vaK/A7XzHrvKXZzgDwqUk2/JH9OViutmle/jPAV8mssQYJljZ+T4ro7ktlvWfdL5tQip
-         RHd1d3OCpN8JSzPMykmoud6EhfAW9C3hlEAS9v1zpQwTw1MKT8+QVm2Ib091G+7q/1Us
-         M4BWg/g4PPEAjdHsIi3sSli3kl1KOeFJkH02GjuGSpSWQkAfU6Yl4+op+MFP2X7N7HBL
-         GDBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690799752; x=1691404552;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j/jFm2EzRpW7YYRmDR1o3UOuJLAvOI+SSUOIxC7DbfY=;
-        b=QeKBrwEvzcQyhLes5pgpMBCnHzCvVYZVQPvfGdYGvwbznYO4nF3XuVQtFiLZemOjD/
-         dqws/hg5f6akvgVVpc5G2D0o316W7z4AlU2+mst59hsfNvCciYVjrAZHryYTOOMjh06q
-         nnQ5WUCrdWPOYgqGz4MKnKUb75nO87qzJw7lzvdsvlVHR5lkIqhXW9qywwNLfG11eneQ
-         SrHw15KhxwtOw2cF/SSrVY4VTo5lF0zggldzCIV6exOKTOFXOIKCHmCKlUULpeJZ0ouC
-         mz5HEDpvofkatKzSpS1czwuJ9Pj1v4TYyNuIg0rtUAGvC3gNk/etIICjzIZK5meq8qEX
-         whMw==
-X-Gm-Message-State: ABy/qLYXrvCIUiozXfJ8j4bXi3wneCTGCJ3+Ds8/9NTexA9h83969x09
-        UzlW66c85+Z9Pw6mTq0OKIgT8Q==
-X-Google-Smtp-Source: APBJJlEASV+m7M7Ne+9wp9+AGK/il4FTsj4zAPmMSVbef7qpRBcvAXj1Ug4zaIDvsKBhTv8lZH4Lvw==
-X-Received: by 2002:a05:6300:8005:b0:12d:4c17:bb2d with SMTP id an5-20020a056300800500b0012d4c17bb2dmr9331462pzc.26.1690799751926;
-        Mon, 31 Jul 2023 03:35:51 -0700 (PDT)
-Received: from localhost.localdomain ([49.205.243.15])
-        by smtp.gmail.com with ESMTPSA id c13-20020aa7880d000000b00640f51801e6sm5906115pfo.159.2023.07.31.03.35.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 03:35:51 -0700 (PDT)
-From:   Jagan Teki <jagan@edgeble.ai>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, Jagan Teki <jagan@edgeble.ai>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH 01/13] dt-bindings: pwm: rockchip: Document rv1126-pwm
-Date:   Mon, 31 Jul 2023 16:05:06 +0530
-Message-Id: <20230731103518.2906147-2-jagan@edgeble.ai>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230731103518.2906147-1-jagan@edgeble.ai>
-References: <20230731103518.2906147-1-jagan@edgeble.ai>
+        with ESMTP id S231490AbjGaLtw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jul 2023 07:49:52 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDB8A1;
+        Mon, 31 Jul 2023 04:49:50 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id 51889869DE;
+        Mon, 31 Jul 2023 13:49:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1690804188;
+        bh=5YdrhcvpRE4z7qmJuIymjcAWrX64KhH0ogyWQYQjweo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=OSEqc+WwGwp1Ja1MLjJKFxrsf4S/M9qUN1VnDtJLD+KuJmV6gjgywrQ8tWNv6tiOW
+         Hjms9yKmk7K1JqDRsWCMwg7E+x1Ouc03aS2NwIRbwfFkrb0PMpdMGdU2Aio1A6M9Tg
+         RpSbM603GxR9QoMKaZnwcadLozAfs+DRmYZprVH4EAIdZPijgr6xhId6t7s9jEYVVv
+         rg69SO3ZL2Lj/8eVEz22WANX8k26idgpqAd2OmSGn4oHXssTOQLhTmBuUudvxOPUSE
+         0gmlMHMgnmW06/SKLb5J149J4hr9woKamWqAlMbEJjpIu1H7Cwr1KmGyAxsYWIjaCv
+         AvvjtORPe1+xg==
+Message-ID: <63adce9a-df65-b462-9055-0ece5216d680@denx.de>
+Date:   Mon, 31 Jul 2023 13:49:46 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: [PATCH] Input: pwm-beeper - Support volume setting via sysfs
+Content-Language: en-US
+To:     Takashi Iwai <tiwai@suse.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jeff LaBundy <jeff@labundy.com>, linux-input@vger.kernel.org,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Manuel Traut <manuel.traut@mt.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, alsa-devel@alsa-project.org,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+References: <20230512185551.183049-1-marex@denx.de> <ZF7kCjKGVjsxK8ec@nixie71>
+ <0ef98ec1-6191-c72e-2362-310db7f09b84@denx.de>
+ <06379f26-ab24-85f9-783f-0c49d4291b23@denx.de> <ZMdIZiC453onyeHh@google.com>
+ <873514d2ju.wl-tiwai@suse.de>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <873514d2ju.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Document pwm compatible for rv1126 which is fallback compatible
-of rk3328-pwm group.
+On 7/31/23 08:21, Takashi Iwai wrote:
+> On Mon, 31 Jul 2023 07:36:38 +0200,
+> Dmitry Torokhov wrote:
+>>
+>> On Sat, May 13, 2023 at 11:02:30PM +0200, Marek Vasut wrote:
+>>> On 5/13/23 03:51, Marek Vasut wrote:
+>>>> On 5/13/23 03:12, Jeff LaBundy wrote:
+>>>>> Hi Marek,
+>>>>
+>>>> Hi,
+>>>>
+>>>>> On Fri, May 12, 2023 at 08:55:51PM +0200, Marek Vasut wrote:
+>>>>>> The PWM beeper volume can be controlled by adjusting the PWM duty cycle,
+>>>>>> expose volume setting via sysfs, so users can make the beeper quieter.
+>>>>>> This patch adds sysfs attribute 'volume' in range 0..50000, i.e. from 0
+>>>>>> to 50% in 1/1000th of percent steps, this resolution should be
+>>>>>> sufficient.
+>>>>>>
+>>>>>> The reason for 50000 cap on volume or PWM duty cycle is because
+>>>>>> duty cycle
+>>>>>> above 50% again reduces the loudness, the PWM wave form is inverted wave
+>>>>>> form of the one for duty cycle below 50% and the beeper gets quieter the
+>>>>>> closer the setting is to 100% . Hence, 50% cap where the wave
+>>>>>> form yields
+>>>>>> the loudest result.
+>>>>>>
+>>>>>> Signed-off-by: Marek Vasut <marex@denx.de>
+>>>>>> ---
+>>>>>> An alternative option would be to extend the userspace input
+>>>>>> ABI, e.g. by
+>>>>>> using SND_TONE top 16bits to encode the duty cycle in 0..50000
+>>>>>> range, and
+>>>>>> bottom 16bit to encode the existing frequency in Hz . Since frequency in
+>>>>>> Hz is likely to be below some 25 kHz for audible bell, this fits
+>>>>>> in 16bits
+>>>>>> just fine. Thoughts ?
+>>>>>> ---
+>>>>>
+>>>>> Thanks for the patch; this seems like a useful feature.
+>>>>>
+>>>>> My first thought is that 50000 seems like an oddly specific limit to
+>>>>> impose
+>>>>> upon user space. Ideally, user space need not even care that the
+>>>>> beeper is
+>>>>> implemented via PWM and why 50000 is significant.
+>>>>>
+>>>>> Instead, what about accepting 0..255 as the LED subsystem does for
+>>>>> brightness,
+>>>>> then map these values to 0..50000 internally? In fact, the leds-pwm
+>>>>> driver
+>>>>> does something similar.
+>>>>
+>>>> The pwm_set_relative_duty_cycle() function can map whatever range to
+>>>> whatever other range of the PWM already, so that's not an issues here.
+>>>> It seems to me the 0..127 or 0..255 range is a bit too limiting . I
+>>>> think even for the LEDs the reason for that limit is legacy design, but
+>>>> here I might be wrong.
+>>>>
+>>>>> I'm also curious as to whether this function should be a rogue sysfs
+>>>>> control
+>>>>> limited to this driver, or a generic operation in input. For
+>>>>> example, input
+>>>>> already allows user space to specify the magnitude of an FF effect;
+>>>>> perhaps
+>>>>> something similar is warranted here?
+>>>>
+>>>> See the "An alternative ..." part above, I was wondering about this too,
+>>>> whether this can be added into the input ABI, but I am somewhat
+>>>> reluctant to fiddle with the ABI.
+>>>
+>>> Thinking about this further, we could try and add some
+>>>
+>>> EV_SND SND_TONE_WITH_VOLUME
+>>>
+>>> to avoid overloading EV_SND SND_TONE , and at the same time allow the user
+>>> to set both frequency and volume for the tone without any race condition
+>>> between the two.
+>>>
+>>> The EV_SND SND_TONE_WITH_VOLUME would still take one 32bit parameter, except
+>>> this time the parameter 16 LSbits would be the frequency and 16 MSbits would
+>>> be the volume.
+>>>
+>>> But again, here I would like input from the maintainers.
+>>
+>> Beeper was supposed to be an extremely simple device with minimal
+>> controls. I wonder if there is need for volume controls, etc, etc are we
+>> not better moving it over to the sound subsystem. We already have:
+>>
+>> 	sound/drivers/pcsp/pcsp.c
+>>
+>> and
+>>
+>> 	sound/pci/hda/hda_beep.c
+>>
+>> there, can we have other "advanced" beepers there as well? Adding sound
+>> maintainers to CC...
+> 
+> I don't mind it put to sound/*.  But, note that pcsp.c you pointed in
+> the above is a PCM tone generator driver with a PC beep device, and it
+> provides the normal SND_BEEP input only for compatibility.
+> 
+> Indeed there have been already many sound drivers providing the beep
+> capability, and they bind with the input device using SND_BEEP.  And,
+> for the beep volume, "Beep Playback Volume" mixer control is provided,
+> too.
 
-Signed-off-by: Jagan Teki <jagan@edgeble.ai>
----
-Cc: linux-pwm@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-
- Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-index f2d1dc7e7b3f..65bfb492b3a4 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-+++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
-@@ -32,6 +32,7 @@ properties:
-               - rockchip,rk3308-pwm
-               - rockchip,rk3568-pwm
-               - rockchip,rk3588-pwm
-+              - rockchip,rv1126-pwm
-           - const: rockchip,rk3328-pwm
- 
-   reg:
--- 
-2.25.1
-
+Uh, I don't need a full sound device to emit beeps, that's not even 
+possible with this hardware. I only need to control loudness of the 
+beeper that is controlled by PWM output. That's why I am trying to 
+extend the pwm-beeper driver, which seems the best fit for such a 
+device, it is only missing this one feature (loudness control).
