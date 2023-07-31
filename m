@@ -2,110 +2,106 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB54768FC8
-	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jul 2023 10:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 174B6769330
+	for <lists+linux-pwm@lfdr.de>; Mon, 31 Jul 2023 12:35:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbjGaIOa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 31 Jul 2023 04:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
+        id S229542AbjGaKf4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 31 Jul 2023 06:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbjGaIOD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jul 2023 04:14:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265813A8F
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jul 2023 01:10:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690791028;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wsHzc5Afx1z/5KjDEZBNQHniASDdnavGgK/qk3C3lP0=;
-        b=OaJMxhGl4Fc7Da6/zL4h+x20rnzf1n8IGSTnxAAtqdnp5LL0DDs5EWcIhqxqWn8ogmrq26
-        YdED5ecVHSJ/0Xd+tjuXX4WxX7Rb8CvHFpMqbrr7c4zF5nCgku0yXnng0JDTpVT8GF5WF9
-        YiP3BXHG0GuIovXk/i6IpMdDr6Aa408=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-380-GqCbE1pnNJSnvZcdW3MI2w-1; Mon, 31 Jul 2023 04:10:26 -0400
-X-MC-Unique: GqCbE1pnNJSnvZcdW3MI2w-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3fc07d4c63eso26517435e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 31 Jul 2023 01:10:26 -0700 (PDT)
+        with ESMTP id S230304AbjGaKfz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 31 Jul 2023 06:35:55 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F13FE59
+        for <linux-pwm@vger.kernel.org>; Mon, 31 Jul 2023 03:35:52 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-686bc261111so3038324b3a.3
+        for <linux-pwm@vger.kernel.org>; Mon, 31 Jul 2023 03:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=edgeble-ai.20221208.gappssmtp.com; s=20221208; t=1690799752; x=1691404552;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j/jFm2EzRpW7YYRmDR1o3UOuJLAvOI+SSUOIxC7DbfY=;
+        b=3Q8MaEX0FCITILh4l23NdZ2/fektqPWl0L0cwzxnKJ8H3Mpn7FgkyUhoVsGe4TKNu0
+         A2jc3GzdQvpCg+PTgThwmm07h415Db1UHUsew63eeOrNbp6ogVqHPGrVWxAT0KI3QpuU
+         vaK/A7XzHrvKXZzgDwqUk2/JH9OViutmle/jPAV8mssQYJljZ+T4ro7ktlvWfdL5tQip
+         RHd1d3OCpN8JSzPMykmoud6EhfAW9C3hlEAS9v1zpQwTw1MKT8+QVm2Ib091G+7q/1Us
+         M4BWg/g4PPEAjdHsIi3sSli3kl1KOeFJkH02GjuGSpSWQkAfU6Yl4+op+MFP2X7N7HBL
+         GDBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690791025; x=1691395825;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wsHzc5Afx1z/5KjDEZBNQHniASDdnavGgK/qk3C3lP0=;
-        b=ciNrnAyRPv8xJuHQ1jjpuKUzg+e28e3eBWxg7t/G15KBl/DsZJDqNnywZ62S4flSiW
-         nW7LqyBdUHa+NG1NkZVdpyDPcfgheMXlWQfRnUV++BKJmF7TjVJN8xOZ2vtQKK5H6BZv
-         +CmJbMKRmA3rbIyXQP1pGowZT6IEQYe48Jxqk2Zv8Um6LqgY5CYDyv2v5v7UjUaN53iJ
-         +8Q+++2Kwuih4tpizJiaYKAqCmWnRubeo09JRy/vDh+ui/0L4ZdfAvC39sybJDjzcFRP
-         1iMNYruP2uLbO5D21o30dH/Lq6rd69n/X+dEAM9ErHsBlxQe6B80OFW6coAJT6v05TwR
-         2HLw==
-X-Gm-Message-State: ABy/qLaI5uszJJ/snU3LeUMH4zXnb5KScgwF3fxlvEKgIgpFrrKnn048
-        hysvsOd+a56HuLPjG0ZD6060OhSuOwf8J1JSi7wafGYT0Yq3SWFg/bKzuZbkY9V4b9W9y7HMOyq
-        EJVDNADBkTS+TCAkPiU3A
-X-Received: by 2002:a05:600c:21c1:b0:3fe:1b5e:82 with SMTP id x1-20020a05600c21c100b003fe1b5e0082mr2780344wmj.20.1690791025232;
-        Mon, 31 Jul 2023 01:10:25 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlH6WxCPiuCjMbvYCs3Muyf80T7yG1isIk70DQ2GXEQ5HFv4E9qlsTMMGH0Y/lz+Uk1eIK+VGw==
-X-Received: by 2002:a05:600c:21c1:b0:3fe:1b5e:82 with SMTP id x1-20020a05600c21c100b003fe1b5e0082mr2780332wmj.20.1690791024920;
-        Mon, 31 Jul 2023 01:10:24 -0700 (PDT)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id o12-20020a05600c378c00b003fc0062f0f8sm10824433wmr.9.2023.07.31.01.10.24
+        d=1e100.net; s=20221208; t=1690799752; x=1691404552;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j/jFm2EzRpW7YYRmDR1o3UOuJLAvOI+SSUOIxC7DbfY=;
+        b=QeKBrwEvzcQyhLes5pgpMBCnHzCvVYZVQPvfGdYGvwbznYO4nF3XuVQtFiLZemOjD/
+         dqws/hg5f6akvgVVpc5G2D0o316W7z4AlU2+mst59hsfNvCciYVjrAZHryYTOOMjh06q
+         nnQ5WUCrdWPOYgqGz4MKnKUb75nO87qzJw7lzvdsvlVHR5lkIqhXW9qywwNLfG11eneQ
+         SrHw15KhxwtOw2cF/SSrVY4VTo5lF0zggldzCIV6exOKTOFXOIKCHmCKlUULpeJZ0ouC
+         mz5HEDpvofkatKzSpS1czwuJ9Pj1v4TYyNuIg0rtUAGvC3gNk/etIICjzIZK5meq8qEX
+         whMw==
+X-Gm-Message-State: ABy/qLYXrvCIUiozXfJ8j4bXi3wneCTGCJ3+Ds8/9NTexA9h83969x09
+        UzlW66c85+Z9Pw6mTq0OKIgT8Q==
+X-Google-Smtp-Source: APBJJlEASV+m7M7Ne+9wp9+AGK/il4FTsj4zAPmMSVbef7qpRBcvAXj1Ug4zaIDvsKBhTv8lZH4Lvw==
+X-Received: by 2002:a05:6300:8005:b0:12d:4c17:bb2d with SMTP id an5-20020a056300800500b0012d4c17bb2dmr9331462pzc.26.1690799751926;
+        Mon, 31 Jul 2023 03:35:51 -0700 (PDT)
+Received: from localhost.localdomain ([49.205.243.15])
+        by smtp.gmail.com with ESMTPSA id c13-20020aa7880d000000b00640f51801e6sm5906115pfo.159.2023.07.31.03.35.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 01:10:24 -0700 (PDT)
-From:   Javier Martinez Canillas <javierm@redhat.com>
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc:     airlied@gmail.com, daniel@ffwll.ch, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH] drm/ssd130x: clean up some inconsistent indenting
-In-Reply-To: <20230731074927.22755-1-jiapeng.chong@linux.alibaba.com>
-References: <20230731074927.22755-1-jiapeng.chong@linux.alibaba.com>
-Date:   Mon, 31 Jul 2023 10:10:23 +0200
-Message-ID: <87pm48wlg0.fsf@minerva.mail-host-address-is-not-set>
+        Mon, 31 Jul 2023 03:35:51 -0700 (PDT)
+From:   Jagan Teki <jagan@edgeble.ai>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, Jagan Teki <jagan@edgeble.ai>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 01/13] dt-bindings: pwm: rockchip: Document rv1126-pwm
+Date:   Mon, 31 Jul 2023 16:05:06 +0530
+Message-Id: <20230731103518.2906147-2-jagan@edgeble.ai>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230731103518.2906147-1-jagan@edgeble.ai>
+References: <20230731103518.2906147-1-jagan@edgeble.ai>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Jiapeng Chong <jiapeng.chong@linux.alibaba.com> writes:
+Document pwm compatible for rv1126 which is fallback compatible
+of rk3328-pwm group.
 
-Hello Jiapeng,
+Signed-off-by: Jagan Teki <jagan@edgeble.ai>
+---
+Cc: linux-pwm@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
 
-Thanks for your patch.
+ Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> No functional modification involved.
->
-> drivers/gpu/drm/solomon/ssd130x.c:715 ssd130x_primary_plane_duplicate_state() warn: inconsistent indenting.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-
-Interesting that checkpatch didn't catch this, even when running with --strict.
-
-Do you know which tool this bot is using to catch these inconsistencies?
-
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=6034
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> ---
-
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-
-Pushed to drm-misc (drm-misc-next). Thanks!
-
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+index f2d1dc7e7b3f..65bfb492b3a4 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.yaml
+@@ -32,6 +32,7 @@ properties:
+               - rockchip,rk3308-pwm
+               - rockchip,rk3568-pwm
+               - rockchip,rk3588-pwm
++              - rockchip,rv1126-pwm
+           - const: rockchip,rk3328-pwm
+ 
+   reg:
 -- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+2.25.1
 
