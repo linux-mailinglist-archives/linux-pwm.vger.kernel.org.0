@@ -2,58 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79CE676A8B6
-	for <lists+linux-pwm@lfdr.de>; Tue,  1 Aug 2023 08:11:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BB0876A9F5
+	for <lists+linux-pwm@lfdr.de>; Tue,  1 Aug 2023 09:28:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbjHAGLO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 1 Aug 2023 02:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
+        id S231215AbjHAH2f (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 1 Aug 2023 03:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbjHAGLM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Aug 2023 02:11:12 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244671BF3;
-        Mon, 31 Jul 2023 23:11:07 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 9542621E50;
-        Tue,  1 Aug 2023 06:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690870265; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fdJTYqhdHyFSYpY5y6RQJQGLe9d83A/vO6eFw4zlLVU=;
-        b=MqCIiy0xuDG9ACWVMMBUfhQg34RA+KNZqZ8sQUMHxm1q00dMofH4GDv2p2s6ijlY+vUVs/
-        74FZcP72tE6nExTxhmgyLXDfQ+tukLGcVqeA0we1TR1oesNntpEBtYkl+4crdWoAiAJYfJ
-        PRPl8526KdeqQld5NHySaxFXfv3VYtA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690870265;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fdJTYqhdHyFSYpY5y6RQJQGLe9d83A/vO6eFw4zlLVU=;
-        b=h+T9V/Ueu9iXSQjcjILxyPcNF2I1sFuPGcKidtmxfcHikAtOuVypmDQt01AwJbps8uuxP4
-        h8SzBv5EmJFWWNCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 10B47139BD;
-        Tue,  1 Aug 2023 06:11:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id YvAbAfmhyGTQWwAAMHmgww
-        (envelope-from <tiwai@suse.de>); Tue, 01 Aug 2023 06:11:05 +0000
-Date:   Tue, 01 Aug 2023 08:11:04 +0200
-Message-ID: <87a5vbi96v.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
+        with ESMTP id S229999AbjHAH2e (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 1 Aug 2023 03:28:34 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A56610C7;
+        Tue,  1 Aug 2023 00:28:33 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6873a30d02eso1286527b3a.3;
+        Tue, 01 Aug 2023 00:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690874913; x=1691479713;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=19fkat+AwmoIDmk7TMp4T2FCh4hY7EdvW+uqAE+YRjE=;
+        b=juO4Yk9afn0VTy18or87R1uPLi1F1tC+NR2Qr5M5jo5aZ+aCxMXkQJMnZ/o74rIlPR
+         NAHNgt0stjKMMIj5s4xUTTv6by2qrUVH1OwFt2sh3LGXDpS2UAXkBM7CAFku9e+AfbWA
+         pbkH/+RagAjQzESjKt7Ea94GAcmrfrS3HUaiIYusletQCtsOzJ2VxDOzYPQuhtMuc5YI
+         maQ4AuwovU2HXb52vntQc1ulFPEpEl+50sKDdS8eV8BBVooQwNptiN5+qxbzsD1CLOKD
+         1Rc6r4BCDsEo8XD/UqxAvCu0d6pDooqkm5tBldp5+XlfWqOBUv+90jRlAzmiVHe1VXn3
+         jZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690874913; x=1691479713;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=19fkat+AwmoIDmk7TMp4T2FCh4hY7EdvW+uqAE+YRjE=;
+        b=GLmnw6WMyn59XlHNEWI5IfDMoDty+dYH+0WtgKMTqsOekMmCiJaXU6QULDO6M07IY9
+         VdcZCGwH1pNqDOT9NK8eLliAqQVNt+XcGQjDY2K+DPlvKPTMn+Lb5i+Hfn/Q0mllF05l
+         XsD7BolPoOhrYseFVTWIVGL3NvPuliq+vx4F1ojy046UY3tqpIQunnGg1jGvXH9jztsr
+         h3/hNmLutFhMfN9iBMAlBi3bTLfCUc4L3EASEdAZSG/QQicxhD2LzNCK0fgmWlSY5JLi
+         w8kzuxYM5mYdb//gVjt/2yJVP955DigsF8DsP0XwviHXyEtzoRe3eWMuOZz10pRSHEHM
+         Rx9w==
+X-Gm-Message-State: ABy/qLZBQ8rBqESC9t9xMXDSqtlAd+0XyN+5+jRyhMcRFUTDzbetB64a
+        XdvI2+b6ELyfMn3vRHW+Aqk=
+X-Google-Smtp-Source: APBJJlELLqDFM+PStFjKGXZPFUWsqqqPnh+1/CHn6w1eOq56smmbSNaPHOrgV6k3Z94uAO6TsZLjqA==
+X-Received: by 2002:a05:6a00:1782:b0:687:38aa:9461 with SMTP id s2-20020a056a00178200b0068738aa9461mr5899107pfg.26.1690874912454;
+        Tue, 01 Aug 2023 00:28:32 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:e9c5:ca03:62a0:85ae])
+        by smtp.gmail.com with ESMTPSA id e18-20020a62aa12000000b006875493da1fsm530162pff.10.2023.08.01.00.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Aug 2023 00:28:32 -0700 (PDT)
+Date:   Tue, 1 Aug 2023 00:28:29 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     Marek Vasut <marex@denx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc:     Marek Vasut <marex@denx.de>, Takashi Iwai <tiwai@suse.de>,
         linux-input@vger.kernel.org,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Frieder Schrempf <frieder.schrempf@kontron.de>,
         Manuel Traut <manuel.traut@mt.com>,
@@ -61,24 +61,24 @@ Cc:     Marek Vasut <marex@denx.de>,
         linux-pwm@vger.kernel.org, alsa-devel@alsa-project.org,
         Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Subject: Re: [PATCH] Input: pwm-beeper - Support volume setting via sysfs
+Message-ID: <ZMi0HT/yaTo9uTyi@google.com>
+References: <ZMdIZiC453onyeHh@google.com>
+ <873514d2ju.wl-tiwai@suse.de>
+ <63adce9a-df65-b462-9055-0ece5216d680@denx.de>
+ <87tttkjmyu.wl-tiwai@suse.de>
+ <0cffe366-75af-d8a8-8920-6fb94c321a89@denx.de>
+ <87h6pkjh7q.wl-tiwai@suse.de>
+ <618add56-3675-4efe-5b20-665c10040e03@denx.de>
+ <ZMfgJ3o00nApkXGp@google.com>
+ <f4612dc5-a7d4-74ba-2ed8-ea70314625b6@denx.de>
+ <ZMh0Sa9s25JHhWw5@nixie71>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <ZMh0Sa9s25JHhWw5@nixie71>
-References: <06379f26-ab24-85f9-783f-0c49d4291b23@denx.de>
-        <ZMdIZiC453onyeHh@google.com>
-        <873514d2ju.wl-tiwai@suse.de>
-        <63adce9a-df65-b462-9055-0ece5216d680@denx.de>
-        <87tttkjmyu.wl-tiwai@suse.de>
-        <0cffe366-75af-d8a8-8920-6fb94c321a89@denx.de>
-        <87h6pkjh7q.wl-tiwai@suse.de>
-        <618add56-3675-4efe-5b20-665c10040e03@denx.de>
-        <ZMfgJ3o00nApkXGp@google.com>
-        <f4612dc5-a7d4-74ba-2ed8-ea70314625b6@denx.de>
-        <ZMh0Sa9s25JHhWw5@nixie71>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FSL_HELO_FAKE,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,9 +86,7 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 01 Aug 2023 04:56:09 +0200,
-Jeff LaBundy wrote:
-> 
+On Mon, Jul 31, 2023 at 09:56:09PM -0500, Jeff LaBundy wrote:
 > Hi all,
 > 
 > On Mon, Jul 31, 2023 at 07:49:50PM +0200, Marek Vasut wrote:
@@ -224,145 +222,33 @@ Jeff LaBundy wrote:
 > instead of PCM, but input already has pwm-beeper; it seems harmless to
 > gently extend the latter for this use-case as opposed to reworking the
 > former.
+> 
+> I agree that we should not invest too heavily in a legacy ABI, however
+> something like SND_BELL_VOL seems like a low-cost addition that doesn't
+> work against extending pcsp in the future. In fact, input already has
+> precedent for this exact same thing by way of FF rumble effects, which
+> are often PWM-based themselves.
+> 
+> If SND_BELL_VOL or similar is not acceptable, then the original sysfs
+> approach seems like the next-best compromise. My only issue with it was
+> that I felt the range was not abstracted enough.
 
-Nah, please forget pcsp driver.  As mentioned earlier, it's a driver
-that is present just for fun.
+If we want to extend the API we will need to define exactly how it will
+all work. I.e. what happens if userspace mixes the old SND_TONE and
+SND_BELL with the new SND_BELL_VOL or whatever. Does it play with
+previously set volume? The default one? How to set the default one? How
+to figure out what the current volume is if we decide to make volume
+"sticky"?
 
-I believe what we need is a simple sound card instance providing a
-mixer control for the beep volume, something like a patch like below
-(totally untested!)
+As far as userspace I expect it is more common to have one program (or
+component of a program) to set volume and then something else requests
+sound, so having one-shot API is of dubious value to me.
 
+I hope we can go with Takashi's proposal downthread, but if not I wonder
+if the sysfs approach is not the simplest one. Do we expect more beepers
+that can control volume besides pwm-beeper?
 
-Takashi
+Thanks.
 
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -595,6 +595,13 @@ config INPUT_PWM_BEEPER
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called pwm-beeper.
- 
-+config INPUT_PWM_BEEPER_MIXER
-+	bool "Mixer volume support for PWM beeper"
-+	depends on INPUT_PWM_BEEPER
-+	depends on SND=y || INPUT_PWM_BEEPER=SND
-+	help
-+	  Say Y here to enable sound mixer for PWM beeper volume.
-+
- config INPUT_PWM_VIBRA
- 	tristate "PWM vibrator support"
- 	depends on PWM
---- a/drivers/input/misc/pwm-beeper.c
-+++ b/drivers/input/misc/pwm-beeper.c
-@@ -14,6 +14,8 @@
- #include <linux/pwm.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-+#include <sound/core.h>
-+#include <sound/control.h>
- 
- struct pwm_beeper {
- 	struct input_dev *input;
-@@ -21,6 +23,7 @@ struct pwm_beeper {
- 	struct regulator *amplifier;
- 	struct work_struct work;
- 	unsigned long period;
-+	unsigned long duty_cycle;
- 	unsigned int bell_frequency;
- 	bool suspended;
- 	bool amplifier_on;
-@@ -37,7 +40,7 @@ static int pwm_beeper_on(struct pwm_beeper *beeper, unsigned long period)
- 
- 	state.enabled = true;
- 	state.period = period;
--	pwm_set_relative_duty_cycle(&state, 50, 100);
-+	pwm_set_relative_duty_cycle(&state, beeper->duty_cycle, 100000);
- 
- 	error = pwm_apply_state(beeper->pwm, &state);
- 	if (error)
-@@ -112,6 +115,66 @@ static void pwm_beeper_stop(struct pwm_beeper *beeper)
- 	pwm_beeper_off(beeper);
- }
- 
-+#ifdef CONFIG_INPUT_PWM_BEEPER_MIXER
-+static int pwm_beeper_mixer_info(struct snd_kcontrol *kcontrol,
-+				 struct snd_ctl_elem_info *uinfo)
-+{
-+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
-+	uinfo->count = 1;
-+	uinfo->value.integer.min = 0;
-+	uinfo->value.integer.max = 50000;
-+	return 0;
-+}
-+
-+static int pwm_beeper_mixer_get(struct snd_kcontrol *kcontrol,
-+				struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct pwm_beeper *beeper = snd_kcontrol_chip(kcontrol);
-+
-+	ucontrol->value.integer.value[0] = beeper->duty_cycle;
-+	return 0;
-+}
-+
-+static int pwm_beeper_mixer_put(struct snd_kcontrol *kcontrol,
-+				struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct pwm_beeper *beeper = snd_kcontrol_chip(kcontrol);
-+	unsigned long val = ucontrol->value.integer.value[0];
-+
-+	val = min(val, 50000UL);
-+	if (beeper->duty_cycle == val)
-+		return 0;
-+	beeper->duty_cycle = val;
-+	if (!beeper->suspended)
-+		schedule_work(&beeper->work);
-+	return 1;
-+}
-+
-+static const struct snd_kcontrol_new pwm_beeper_mixer_ctl = {
-+	.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
-+	.name =	"Beep Playback Switch",
-+	.info = pwm_beeper_mixer_info,
-+	.get = pwm_beeper_mixer_get,
-+	.put = pwm_beeper_mixer_put,
-+};
-+
-+static int pwm_beeper_mixer_attach(struct device *dev, struct pwm_beeper *beeper)
-+{
-+	struct snd_card *card;
-+	int err;
-+
-+	err = snd_devm_card_new(dev, 0, NULL, THIS_MODULE, 0, &card);
-+	if (err)
-+		return err;
-+
-+	err = snd_ctl_add(card, snd_ctl_new1(&pwm_beeper_mixer_ctl, beeper));
-+	if (err)
-+		return err;
-+
-+	return snd_card_register(card);
-+}
-+#endif /* CONFIG_INPUT_PWM_BEEPER_MIXER */
-+
- static void pwm_beeper_close(struct input_dev *input)
- {
- 	struct pwm_beeper *beeper = input_get_drvdata(input);
-@@ -189,6 +252,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
- 
- 	beeper->input->event = pwm_beeper_event;
- 	beeper->input->close = pwm_beeper_close;
-+	beeper->duty_cycle = 50000;
- 
- 	input_set_drvdata(beeper->input, beeper);
- 
-@@ -200,6 +264,11 @@ static int pwm_beeper_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, beeper);
- 
-+#ifdef CONFIG_INPUT_PWM_BEEPER_MIXER
-+	error = pwm_beeper_mixer_attach(dev, beeper);
-+	if (error)
-+		return error;
-+#endif
- 	return 0;
- }
- 
+-- 
+Dmitry
