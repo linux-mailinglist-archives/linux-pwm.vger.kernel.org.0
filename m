@@ -2,101 +2,204 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A68D776C7D6
-	for <lists+linux-pwm@lfdr.de>; Wed,  2 Aug 2023 10:03:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF74076DC91
+	for <lists+linux-pwm@lfdr.de>; Thu,  3 Aug 2023 02:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjHBIDd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 2 Aug 2023 04:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
+        id S231196AbjHCAZH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 2 Aug 2023 20:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231320AbjHBICx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Aug 2023 04:02:53 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76691716
-        for <linux-pwm@vger.kernel.org>; Wed,  2 Aug 2023 01:02:50 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qR6ob-00014N-Je; Wed, 02 Aug 2023 10:02:41 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qR6oZ-000Z21-8a; Wed, 02 Aug 2023 10:02:39 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qR6oY-009oiE-C2; Wed, 02 Aug 2023 10:02:38 +0200
-Date:   Wed, 2 Aug 2023 10:02:38 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Raphael Gallais-Pou <rgallaispou@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: st: convert sti-pwm to DT schema
-Message-ID: <20230802080238.d3nam6elnern65rb@pengutronix.de>
-References: <20230801220559.32530-1-rgallaispou@gmail.com>
+        with ESMTP id S229685AbjHCAZH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 2 Aug 2023 20:25:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059BE11D;
+        Wed,  2 Aug 2023 17:25:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9597F61B95;
+        Thu,  3 Aug 2023 00:25:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6861C433C8;
+        Thu,  3 Aug 2023 00:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691022304;
+        bh=Ak6kWgpita0ccStQUBSLTHQZ7Qxm2852u+BDrFi7RTQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oxoeAZAGjuZLO3hoE98/N44RKxRUPG41IhNvI224eG9LzGYuPJ8KxOHPpB05W3om9
+         5b5TuYFEiAHtFZ2fL7L9JR+ldk+TrfSE0YhaBJJHVmh5mn7nDHfVruAH97TJK9hood
+         gLYnjUG1/u8MMHPdk4BzKhpk3JqQ2dPHz5nvlEqmccwuBMgtJE7TMz5k0WHn5BF7uH
+         +DupCeCicS+5gCblQeAizSgrN0sPOwSEuLBc4GEt/q6nYNtTI3A2/GQ0iBkuL7Glxl
+         RLD0GwnXsX4J71uei464iGVOTgdXaegNN4hvxit/2wWQgS9Y4HiONI/Nkp6+y+fRMA
+         9wDKyN8IyhgtQ==
+Received: (nullmailer pid 1580378 invoked by uid 1000);
+        Thu, 03 Aug 2023 00:25:02 -0000
+Date:   Wed, 2 Aug 2023 18:25:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anjelique Melendez <quic_amelende@quicinc.com>
+Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
+        konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
+        quic_subbaram@quicinc.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: leds: leds-qcom-lpg: Add support for
+ LPG PPG
+Message-ID: <20230803002502.GA1569972-robh@kernel.org>
+References: <20230725193423.25047-1-quic_amelende@quicinc.com>
+ <20230725193423.25047-3-quic_amelende@quicinc.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eqf6j4lfzsakv7hz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230801220559.32530-1-rgallaispou@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230725193423.25047-3-quic_amelende@quicinc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, Jul 25, 2023 at 12:34:18PM -0700, Anjelique Melendez wrote:
+> Update leds-qcom-lpg bindings to support LPG PPG.
+> 
+> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+> ---
+>  .../bindings/leds/leds-qcom-lpg.yaml          | 92 ++++++++++++++++++-
+>  1 file changed, 91 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+> index e6f1999cb22f..6feca859fb74 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+> @@ -11,7 +11,7 @@ maintainers:
+>  
+>  description: >
+>    The Qualcomm Light Pulse Generator consists of three different hardware blocks;
+> -  a ramp generator with lookup table, the light pulse generator and a three
+> +  a ramp generator with lookup table (LUT), the light pulse generator and a three
+>    channel current sink. These blocks are found in a wide range of Qualcomm PMICs.
+>  
+>  properties:
+> @@ -63,6 +63,27 @@ properties:
+>          - description: dtest line to attach
+>          - description: flags for the attachment
+>  
+> +  nvmem:
+> +    description: >
+> +      This property is required for PMICs that supports PPG, which is when a
+> +      PMIC stores LPG per-channel data and pattern LUT in SDAM modules instead
+> +      of in a LUT peripheral. For PMICs, such as PM8350C, per-channel data
+> +      and pattern LUT is separated into 2 SDAM modules. In that case, phandles
+> +      to both SDAM modules need to be specified.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  nvmem-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  qcom,pbs:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: >
+> +      Phandle of the Qualcomm Programmable Boot Sequencer node (PBS).
+> +      PBS node is used to trigger LPG pattern sequences for PMICs that support
+> +      single SDAM PPG.
+> +
+>    multi-led:
+>      type: object
+>      $ref: leds-class-multicolor.yaml#
+> @@ -106,6 +127,44 @@ required:
+>  
+>  additionalProperties: false
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,pmi632-lpg
+> +    then:
+> +      properties:
+> +        nvmem:
+> +          maxItems: 1
+> +        nvmem-names:
+> +          items:
+> +            - const: lpg_chan_sdam
+> +        qcom,pbs:
+> +          maxItems: 1
+> +      required:
+> +        - nvmem
+> +        - nvmem-names
+> +        - qcom,pbs
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,pm8350c-pwm
+> +              - qcom,pm8550-pwm
+> +    then:
+> +      properties:
+> +        nvmem:
+> +          minItems: 2
+> +        nvmem-names:
+> +          items:
+> +            - const: lpg_chan_sdam
+> +            - const: lut_sdam
 
---eqf6j4lfzsakv7hz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This can go into the main section and then here you just say 
+'minItems: 2'. And similar for the 1st if/then.
 
-Hello,
+> +      required:
+> +        - nvmem
+> +        - nvmem-names
 
-On Wed, Aug 02, 2023 at 12:05:59AM +0200, Raphael Gallais-Pou wrote:
-> +  st,capture-num-chan:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> +    description: Number of available Capture channels.
+Looks like these are always required.
 
-I have the theory that nobody actually uses the capture feature and I'd
-like to get rid of it. People who do use it, should better switch to the
-counter driver.
-
-I wonder if this is the opportunity to drop st,capture-num-chan. There
-is no mainline user.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---eqf6j4lfzsakv7hz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTKDZ0ACgkQj4D7WH0S
-/k5zTgf/YMXkn4+IaR5EJs87z5iA9g5W0naGT+tEOMy4cjKWUqo0+cox5GIingac
-Llf7sagBGptLz1QaAxmDN15xttJN3UKlMAPjEqd4qoGImtKHD4BJB/h3hTws4oou
-kmczBRqACrMc6dK94h5tBALgr8pSJTbS0uBTh876LUd4SOt7E87RtYW2vAt35egg
-BWRYDboRuoYOgdqooovR5aMNRdF2DO1J4pj81e1QStZkmO7tLhltoIdBiAVgljpM
-Vznh9oB3uAm7u8vXoXolhhxEuFvtNoN8cqRcCTkXD1NJlVAuIu/ExBN8+p0Us7eJ
-9Raywx/nuKQGqlp5Hz7Sx83egthP6w==
-=PiiY
------END PGP SIGNATURE-----
-
---eqf6j4lfzsakv7hz--
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/leds/common.h>
+> @@ -191,4 +250,35 @@ examples:
+>        compatible = "qcom,pm8916-pwm";
+>        #pwm-cells = <2>;
+>      };
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    led-controller {
+> +      compatible = "qcom,pmi632-lpg";
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      #pwm-cells = <2>;
+> +      nvmem-names = "lpg_chan_sdam";
+> +      nvmem = <&pmi632_sdam_7>;
+> +      qcom,pbs = <&pmi632_pbs_client3>;
+> +
+> +      led@1 {
+> +        reg = <1>;
+> +        color = <LED_COLOR_ID_RED>;
+> +        label = "red";
+> +      };
+> +
+> +      led@2 {
+> +        reg = <2>;
+> +        color = <LED_COLOR_ID_GREEN>;
+> +        label = "green";
+> +      };
+> +
+> +      led@3 {
+> +        reg = <3>;
+> +        color = <LED_COLOR_ID_BLUE>;
+> +        label = "blue";
+> +      };
+> +    };
+> +
+>  ...
+> -- 
+> 2.41.0
+> 
