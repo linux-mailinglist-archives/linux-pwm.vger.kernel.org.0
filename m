@@ -2,59 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3690E77084E
-	for <lists+linux-pwm@lfdr.de>; Fri,  4 Aug 2023 20:57:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6366770897
+	for <lists+linux-pwm@lfdr.de>; Fri,  4 Aug 2023 21:07:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbjHDS5E (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 4 Aug 2023 14:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
+        id S230245AbjHDTHI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 4 Aug 2023 15:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjHDS5A (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Aug 2023 14:57:00 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 645CE46B2
-        for <linux-pwm@vger.kernel.org>; Fri,  4 Aug 2023 11:56:58 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-5645bbc82aaso1636677a12.2
-        for <linux-pwm@vger.kernel.org>; Fri, 04 Aug 2023 11:56:58 -0700 (PDT)
+        with ESMTP id S230178AbjHDTG4 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 4 Aug 2023 15:06:56 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBC54EDD;
+        Fri,  4 Aug 2023 12:06:53 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-31768ce2e81so2146823f8f.1;
+        Fri, 04 Aug 2023 12:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1691175418; x=1691780218;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=mahsxZIoRNml4vxVLU71xcRaWVOgvN5yXEdJXeWxjC4=;
-        b=QmrR79YiRmPtSmorXbgBNAIx+IoFFjr/LdHum2I4jIe0dsF9i1H1QUGHdCckXfzgMu
-         k2EHjbDZQwSt5wotnCKnFew3je0oAi2SE95Kv0MqDYjiJ2opmwG4P3KChc6EosItfPXW
-         +MQIXYCMcqrtCPiBPQLDYFXh/0Ru5h0TaxICs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691175418; x=1691780218;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1691176012; x=1691780812;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mahsxZIoRNml4vxVLU71xcRaWVOgvN5yXEdJXeWxjC4=;
-        b=JJ5YvBSmgIyg+RvFTKvurxAD0pVurSrzGRehZHdWYVPdLBfE0HT+zRC06uwwc1w953
-         0YS+Y/jlwtN65JZcweUfLUQDMux1XHtdp1EqQkTCCbvQqg8O1cGpGK20LW1lk+JFyOml
-         +53rSut/bw+PArS8m2xYtugTFPE3LP1te7MtGceO2q2MM8zq+6JiTatWR70kNWWyDgbk
-         8ulYznUNShHjTidE3Cau2nbSi8VfacpVS5PBDcUcvAYpvGCMpiPm86T+tFZuv0A/JE1w
-         EPcfWqwDkkPTuMYzOxCW98D71i29UKUPem1lkjv2llQuwJf8yBXow151zupQk81iWpBW
-         zeUQ==
-X-Gm-Message-State: AOJu0YxCndCmjfOiS5bKgYoXekb1FFvjey1t35sIjgmose9txx+xHWBR
-        +51cuLerSfDj0V3Hpvi1JZtwRA==
-X-Google-Smtp-Source: AGHT+IHBS1aolLevWVoYHi+cWiOyJWHEoMaX4uvgp0421SMlYIfGbWzZCh9jd/K4KcB/zsIIMfOYKA==
-X-Received: by 2002:a17:90a:bf81:b0:268:5fd9:b660 with SMTP id d1-20020a17090abf8100b002685fd9b660mr2551798pjs.39.1691175417763;
-        Fri, 04 Aug 2023 11:56:57 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id i14-20020a17090acf8e00b00267ae12b80bsm4460168pju.34.2023.08.04.11.56.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Aug 2023 11:56:57 -0700 (PDT)
-Message-ID: <71bf173d-09f9-a336-08e6-3d9be882ce2d@broadcom.com>
-Date:   Fri, 4 Aug 2023 11:56:50 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for
- drivers
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+        bh=c+mKs9GVqXrgLKiydu37dkxuWRwX9m6vUvXBGA4iGEQ=;
+        b=pJXcyaij59wykiKOA9tCEB8S4gg3Z1GHrOT8L9w9quvTeK3CJwd93TcMmgeH9qsTmX
+         jA5YMPXtem49OKIeZuBW/B7z7dS8WFJdH65DKww5XyYHLXhgTnbsAwscbEHTb6mbtrZZ
+         BZa8BIBGOH4Q+SkpavEdH0otXnzRijACuCopeESvO+XHcmL3ZXNW9EGslJl77px9Boeb
+         GqQnVqw0k6HMm2l7+XHIGKAPYRVqgCsnRSsJE1fnLs2Nj797U07C0NurMSGCn8/yNgCc
+         lDyCVZnGxxnzNo6RW2GsgNpucmHIvVKiEjxprA51NTiam2O4cd25vg7MKR2tt8ini3Xu
+         IdIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691176012; x=1691780812;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c+mKs9GVqXrgLKiydu37dkxuWRwX9m6vUvXBGA4iGEQ=;
+        b=Wu7jjT0EN/N9IwppfS2wmhz7vgwLoqwyYLMDOVKcfT2rl3x1tAu4K2Zbz9/6hdsoqg
+         M0MTH/AhDnfvVqpwLx9JN38lajFNpDFkp6wb3RjjTz8aYMi7bngw1Te1XOIuIRcMGmTr
+         cdegJcsi26D44SOj493R7lRKyXxlSK+wob7eJ/rCVYJtxTKFxew32M9uDAvb+Fn6Z2dK
+         NjzOr7q+TgEVyb+G5Ay0nkTZJJ9417MpxvSiwr7g3rBep9zpGPtBhN6PEmcW/bObp4s1
+         UfMhJDKV4kfM9ze8d2CPvFyHJZlU30YfjA3oeLmb0fgbkYVH4B/6+6SFIyEmvOmMn1Yo
+         kXKw==
+X-Gm-Message-State: AOJu0YzOuCrurJQ/Vd40QRJu8aeK54FXEIoK4xMpF4EAodSntAruZkt1
+        lbsBxCk1zbS1dHhbMibFdKg=
+X-Google-Smtp-Source: AGHT+IHpybGIS5pubkiM9vt8iNkqlu2gS6LosaHfJR1MT91WNa9XG7Bef9hWZF/8p1yMJF9KzrDRaA==
+X-Received: by 2002:a5d:4a4a:0:b0:317:6175:95fd with SMTP id v10-20020a5d4a4a000000b00317617595fdmr1855584wrs.43.1691176011920;
+        Fri, 04 Aug 2023 12:06:51 -0700 (PDT)
+Received: from jernej-laptop.localnet (82-149-1-233.dynamic.telemach.net. [82.149.1.233])
+        by smtp.gmail.com with ESMTPSA id x12-20020adfec0c000000b0031274a184d5sm3143402wrn.109.2023.08.04.12.06.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Aug 2023 12:06:51 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>,
@@ -63,7 +62,6 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Neil Armstrong <neil.armstrong@linaro.org>,
         Robert Foss <rfoss@kernel.org>,
         Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>, Pavel Machek <pavel@ucw.cz>,
         Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
@@ -76,6 +74,7 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Scott Branden <sbranden@broadcom.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
         Alexander Shiyan <shc_work@mail.ru>,
         Benson Leung <bleung@chromium.org>,
         Guenter Roeck <groeck@chromium.org>,
@@ -94,7 +93,7 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
         Heiko Stuebner <heiko@sntech.de>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Alim Akhtar <alim.akhtar@samsung.com>,
@@ -132,130 +131,114 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
         greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
+Subject: Re: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for drivers
+Date:   Fri, 04 Aug 2023 21:06:45 +0200
+Message-ID: <4820522.GXAFRqVoOG@jernej-laptop>
+In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
 References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
  <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000000d32e306021d7639"
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
---0000000000000d32e306021d7639
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 8/4/23 07:27, Uwe Kleine-König wrote:
+Dne petek, 04. avgust 2023 ob 16:27:06 CEST je Uwe Kleine-K=F6nig napisal(a=
+):
 > Instead of requiring each driver to care for assigning the owner member
 > of struct pwm_ops, handle that implicitly using a macro. Note that the
 > owner member has to be moved to struct pwm_chip, as the ops structure
 > usually lives in read-only memory and so cannot be modified.
-> 
+>=20
 > The upside is that new lowlevel drivers cannot forget the assignment and
 > save one line each. The pwm-crc driver didn't assign .owner, that's not
 > a problem in practise though as the driver cannot be compiled as a
 > module.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de> > ---
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/gpio/gpio-mvebu.c             |  1 -
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c |  1 -
+>  drivers/leds/rgb/leds-qcom-lpg.c      |  1 -
+>  drivers/pwm/core.c                    | 24 ++++++++++++++----------
+>  drivers/pwm/pwm-ab8500.c              |  1 -
+>  drivers/pwm/pwm-apple.c               |  1 -
+>  drivers/pwm/pwm-atmel-hlcdc.c         |  1 -
+>  drivers/pwm/pwm-atmel-tcb.c           |  1 -
+>  drivers/pwm/pwm-atmel.c               |  1 -
+>  drivers/pwm/pwm-bcm-iproc.c           |  1 -
+>  drivers/pwm/pwm-bcm-kona.c            |  1 -
+>  drivers/pwm/pwm-bcm2835.c             |  1 -
+>  drivers/pwm/pwm-berlin.c              |  1 -
+>  drivers/pwm/pwm-brcmstb.c             |  1 -
+>  drivers/pwm/pwm-clk.c                 |  1 -
+>  drivers/pwm/pwm-clps711x.c            |  1 -
+>  drivers/pwm/pwm-cros-ec.c             |  1 -
+>  drivers/pwm/pwm-dwc.c                 |  1 -
+>  drivers/pwm/pwm-ep93xx.c              |  1 -
+>  drivers/pwm/pwm-fsl-ftm.c             |  1 -
+>  drivers/pwm/pwm-hibvt.c               |  1 -
+>  drivers/pwm/pwm-img.c                 |  1 -
+>  drivers/pwm/pwm-imx-tpm.c             |  1 -
+>  drivers/pwm/pwm-imx1.c                |  1 -
+>  drivers/pwm/pwm-imx27.c               |  1 -
+>  drivers/pwm/pwm-intel-lgm.c           |  1 -
+>  drivers/pwm/pwm-iqs620a.c             |  1 -
+>  drivers/pwm/pwm-jz4740.c              |  1 -
+>  drivers/pwm/pwm-keembay.c             |  1 -
+>  drivers/pwm/pwm-lp3943.c              |  1 -
+>  drivers/pwm/pwm-lpc18xx-sct.c         |  1 -
+>  drivers/pwm/pwm-lpc32xx.c             |  1 -
+>  drivers/pwm/pwm-lpss.c                |  1 -
+>  drivers/pwm/pwm-mediatek.c            |  1 -
+>  drivers/pwm/pwm-meson.c               |  1 -
+>  drivers/pwm/pwm-microchip-core.c      |  1 -
+>  drivers/pwm/pwm-mtk-disp.c            |  1 -
+>  drivers/pwm/pwm-mxs.c                 |  1 -
+>  drivers/pwm/pwm-ntxec.c               |  1 -
+>  drivers/pwm/pwm-omap-dmtimer.c        |  1 -
+>  drivers/pwm/pwm-pca9685.c             |  1 -
+>  drivers/pwm/pwm-pxa.c                 |  1 -
+>  drivers/pwm/pwm-raspberrypi-poe.c     |  1 -
+>  drivers/pwm/pwm-rcar.c                |  1 -
+>  drivers/pwm/pwm-renesas-tpu.c         |  1 -
+>  drivers/pwm/pwm-rockchip.c            |  1 -
+>  drivers/pwm/pwm-rz-mtu3.c             |  1 -
+>  drivers/pwm/pwm-samsung.c             |  1 -
+>  drivers/pwm/pwm-sifive.c              |  1 -
+>  drivers/pwm/pwm-sl28cpld.c            |  1 -
+>  drivers/pwm/pwm-spear.c               |  1 -
+>  drivers/pwm/pwm-sprd.c                |  1 -
+>  drivers/pwm/pwm-sti.c                 |  1 -
+>  drivers/pwm/pwm-stm32-lp.c            |  1 -
+>  drivers/pwm/pwm-stm32.c               |  1 -
+>  drivers/pwm/pwm-stmpe.c               |  1 -
+>  drivers/pwm/pwm-sun4i.c               |  1 -
 
->   drivers/pwm/pwm-bcm-iproc.c           |  1 -
->   drivers/pwm/pwm-bcm-kona.c            |  1 -
->   drivers/pwm/pwm-bcm2835.c             |  1 -
->   drivers/pwm/pwm-brcmstb.c             |  1 -
+=46or sun4i:
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com> # 
-pwm-{bcm,brcm}*.c
--- 
-Florian
+Best regards,
+Jernej
+
+>  drivers/pwm/pwm-sunplus.c             |  1 -
+>  drivers/pwm/pwm-tegra.c               |  1 -
+>  drivers/pwm/pwm-tiecap.c              |  1 -
+>  drivers/pwm/pwm-tiehrpwm.c            |  1 -
+>  drivers/pwm/pwm-twl-led.c             |  2 --
+>  drivers/pwm/pwm-twl.c                 |  2 --
+>  drivers/pwm/pwm-visconti.c            |  1 -
+>  drivers/pwm/pwm-vt8500.c              |  1 -
+>  drivers/pwm/pwm-xilinx.c              |  1 -
+>  drivers/staging/greybus/pwm.c         |  1 -
+>  include/linux/pwm.h                   | 10 ++++++----
 
 
---0000000000000d32e306021d7639
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIJVRVnh23gou/ZXM
-xLrWWCgmQn2xtMRA162GbBO9/dNGMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMDgwNDE4NTY1OFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCeY2JA/KgWM4vPAV31zSzVzYrfPMRXCIfF
-Rj6R9XYhPgxWP6TQxPlLR4V/MpPiWo6qnCPNgx6CkJeICGvCTgq/KWzIsFjdcJZL2fUYca6Mfkas
-FokG+I0ubYubKlhIl2dNeIpXuoH/pCpDkMUU9X29YXGRKVmBiWZUOhlSiHxZ/od/W85OvJowoNpk
-BnTN/oPXXlu/PmOvJA9x6pma9s4JS9RjQaYJ3oXm4MXK03xn8mVRKMq1xZ8+ANWfsn2mFjGaYrAr
-uFGIHrxGw/4GhdVVG5Tau+NsC+WPDU9UtRtXbW+1PxKKJnvEO+APaMuGEhkZJX0aAJKAxa+uYIcm
-/Jjt
---0000000000000d32e306021d7639--
