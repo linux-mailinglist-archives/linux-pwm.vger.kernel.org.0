@@ -2,74 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 283C8772E99
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Aug 2023 21:25:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCCDC773011
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Aug 2023 22:03:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbjHGTZN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 7 Aug 2023 15:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
+        id S231156AbjHGUD3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Aug 2023 16:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjHGTZM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Aug 2023 15:25:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AA4E1715;
-        Mon,  7 Aug 2023 12:25:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D1C4262189;
-        Mon,  7 Aug 2023 19:25:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4C3C433C8;
-        Mon,  7 Aug 2023 19:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691436310;
-        bh=HBhmn9HKnS8/O4AzZaFEuYjZPHI6Gi65ywDrGFhu+O0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iSgi+eNKKTdMVpyW4QT8CWFt2D/ck3D8JFsVcpRQZt8qC3K8iW0GNCQ74ZjKY3T1x
-         RXHFscGL/uKRCEYjTWZAIS8fOSWf7o3y8HJgai22AzGjxiPMVyOpfd7F/b0NcRD1DP
-         Y81MHqQ/P+pWUDVfZ/VRfbQSmf3so9ouxkxbnj73Ra0LZdZtG6OzzRAwtreCoIk2MJ
-         24kI+jifaiY98fTAlm4iRCFGDM/V23pCUMCBi8RT5oWkSNVMkMwcPDAfbgi0pB6qcg
-         ubCVJkTca1I6BDmxeBqCoCLxOm2hRMnmqerH3nGEXqRfboWZ92AwjHsfs9tdm8VDUN
-         NfDqeClA+N67w==
-Date:   Mon, 7 Aug 2023 12:25:08 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc:     nicolas.ferre@microchip.com, conor.dooley@microchip.com,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, maz@kernel.org, srinivas.kandagatla@linaro.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        sre@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        alsa-devel@alsa-project.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: update Claudiu Beznea's email address
-Message-ID: <20230807122508.403c1972@kernel.org>
-In-Reply-To: <20230804050007.235799-1-claudiu.beznea@tuxon.dev>
-References: <20230804050007.235799-1-claudiu.beznea@tuxon.dev>
+        with ESMTP id S230389AbjHGUD0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Aug 2023 16:03:26 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF54172B;
+        Mon,  7 Aug 2023 13:03:21 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 377HUMfN016146;
+        Mon, 7 Aug 2023 20:03:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=iuZ3TDQo1tozN5VS9Wo/E3D3xrzfQoD/Zc3kj7u+4tc=;
+ b=i7m7+5zDsDl65yll7O8V+0VXjZ2JB0/0xyII8rp/O9xXwYePXbpkplVQxe5PI6Y8q2jA
+ 4fePmJPuDZm8c0PhzKkN5tUTEY/IDyyTk3cUTfJ/kAKBcjpVfmTlhLRToMozcCakGiXI
+ s4HVeQW+Wt5PYkgliGFVXVRKr8Z5r6eCkLIHDcqEgz87I1z9rsCzgtkdS483t740lCLU
+ rArF5CBgKPrfZOmjwI1JlT4UzAf69sMyprbyvjotv/DMmdg3z14Sm/yB2COPKrLPKqUt
+ AnKB/LsBUIc1TW58ny0nxPaF3lNSuSTygvS5stC5YrxCV/axkoMjSC3HaSEdlRPbfriv tg== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sawbg9dan-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Aug 2023 20:03:08 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 377K37Js019208
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 7 Aug 2023 20:03:07 GMT
+Received: from [10.110.62.211] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Mon, 7 Aug
+ 2023 13:03:06 -0700
+Message-ID: <900b3b16-cfad-d043-39b4-8ea6802f87bc@quicinc.com>
+Date:   Mon, 7 Aug 2023 13:03:05 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v2 2/7] dt-bindings: leds: leds-qcom-lpg: Add support for
+ LPG PPG
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+CC:     <pavel@ucw.cz>, <lee@kernel.org>, <thierry.reding@gmail.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
+        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>
+References: <20230725193423.25047-1-quic_amelende@quicinc.com>
+ <20230725193423.25047-3-quic_amelende@quicinc.com>
+ <20230803002502.GA1569972-robh@kernel.org>
+From:   Anjelique Melendez <quic_amelende@quicinc.com>
+In-Reply-To: <20230803002502.GA1569972-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tA45PtcBV9TNqiAInbRxmq3CJjyHZ6KV
+X-Proofpoint-GUID: tA45PtcBV9TNqiAInbRxmq3CJjyHZ6KV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-07_22,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=745
+ impostorscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
+ mlxscore=0 priorityscore=1501 malwarescore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308070183
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri,  4 Aug 2023 08:00:07 +0300 Claudiu Beznea wrote:
-> Update MAINTAINERS entries with a valid email address as the Microchip
-> one is no longer valid.
+
+
+On 8/2/2023 5:25 PM, Rob Herring wrote:
+> On Tue, Jul 25, 2023 at 12:34:18PM -0700, Anjelique Melendez wrote:
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,pm8350c-pw
+>> +              - qcom,pm8550-pwm
+>> +    then:
+>> +      properties:
+>> +        nvmem:
+>> +          minItems: 2
+>> +        nvmem-names:
+>> +          items:
+>> +            - const: lpg_chan_sdam
+>> +            - const: lut_sdam
 > 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> This can go into the main section and then here you just say 
+> 'minItems: 2'. And similar for the 1st if/then.
+> 
+ACK
+>> +      required:
+>> +        - nvmem
+>> +        - nvmem-names
+> 
+> Looks like these are always required.
+These are only required for the compatibles properties that do not
+have lut peripherals. Right now this is is only for qcom,pmi632-lpg, 
+qcom,pm8350c-pwm and qcom,pm8550-pwm.
 
-Thanks for updating the email!
 
-A bit of a cross-tree change. Is there anyone in particular that you'd
-expect to apply it? If nobody speaks up we can pick it up in networking
-and send to Linus on Thu.
