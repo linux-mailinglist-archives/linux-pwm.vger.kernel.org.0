@@ -2,344 +2,437 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61479771793
-	for <lists+linux-pwm@lfdr.de>; Mon,  7 Aug 2023 02:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD28877230D
+	for <lists+linux-pwm@lfdr.de>; Mon,  7 Aug 2023 13:50:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230191AbjHGAtI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 6 Aug 2023 20:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48538 "EHLO
+        id S229598AbjHGLui (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 7 Aug 2023 07:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbjHGAtG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 6 Aug 2023 20:49:06 -0400
-Received: from mo-csw.securemx.jp (mo-csw1122.securemx.jp [210.130.202.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73AEB1700;
-        Sun,  6 Aug 2023 17:49:04 -0700 (PDT)
-Received: by mo-csw.securemx.jp (mx-mo-csw1122) id 3770kewA3541981; Mon, 7 Aug 2023 09:46:42 +0900
-X-Iguazu-Qid: 2rWhi9UHctJRCPunNS
-X-Iguazu-QSIG: v=2; s=0; t=1691369200; q=2rWhi9UHctJRCPunNS; m=jrhgtdijEgMzX+Vu4ym46y1lQAiePzBjFmiF7FNvJAs=
-Received: from imx12-a.toshiba.co.jp ([38.106.60.135])
-        by relay.securemx.jp (mx-mr1122) id 3770kVI7683717
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 7 Aug 2023 09:46:31 +0900
+        with ESMTP id S231689AbjHGLug (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 7 Aug 2023 07:50:36 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2102.outbound.protection.outlook.com [40.107.113.102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D453C92;
+        Mon,  7 Aug 2023 04:50:33 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KGsVZci9eC2KiNeYVvWFZc14ENTeNFFd8JgDTMtEbC93HiXF+8SIHIeUR7gc5DOFgZ0uIdxPc5bYJa5hc3IyjriVBrXdXcz7DVS5erCaLWr14ZKUqnJuy6qJWTQCzZOMpWilCAy/5KOYtAlaobG4w3qqsYHvjfJTY0IcgYhhZqiOC4O7xxFafsBxjmEXVeKLxun/5AiIMwf+I1FYNyCFWgds103bTwV/sgmMGZxBY8UKXFhZTOh0Uv26w/7P4htk3xeeeKZK7zFNaUQ5OV2I7dVah3eXzqBKOBuZdzMWKTlzKDnjodW1MR+zyhNi2Lau4XFKmMLvWjw3HjogeoB2rg==
+ b=VjKTA+VwSEVemfm4oTLslHHmyYM4qZ4Gm/tG8dEVb7dDDZVzDbHj4qeU/HYjS0ADwpqjmul/lxmB0GtQ95bwsFdJqR4vFpvX7X0pDd8gJidmEzD9VBMK7AsuT/dPci+roAvztm4nCSQ2gqcocM5qXMel7SkRRnfqc0v6WqF9uiL0bsq0v+lVtQZ19Nw5luvVhnZIVwhXGVbx/TSR8RuRbaNlZezevmMdpT/xjWrqs6gJKxBa7RlsCtXUmlh63x1WpjT7Ew01wBB0fxzdCOiO52JQdv6Q9VhMSmDvM5m/LN9AyLCM/VYnF18JGsvqaB+E2S8I9/ah0ve3HRinZJm2zQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TmlVcp/nJHdL+ideVRUfJHoNO7rffrKyMrVJ3dGWORQ=;
- b=Ct5p0+5oTPtymapLsYAG3O4q+AiDgxpY9EjdOD6hoKC0hyp9wKcb1UTf3e3xPof45sDG70ZNj13gDq4F0HUu++bbyxG5kV0irZhnR6MrAdu417bAKzsy5iP10vj4gQSYY5ZMvDu3izLx+OugxXFUokvM250wXoX9tG3pOjRxIxySDQNMAKTdjsteO5sXBV2l5hCpU1sIowuKR2e0rfCQ5U+SRCnZAqTIcgD7T/uiSXh/6M2mqV7CyVzkyjbPhimBm4RLcDoko5WxanUlP3vqIA5wPvrrPeheZjzTBG+ZTGdK71dotcasquNgDhctx8TA7xYwwo/AcIhN64M5y18Qrw==
+ bh=qJGdtBITaieDb++uasIBqDg1FcK3TTIw2OKPJdCGICk=;
+ b=eacZOsE1YR1aumPNkCenpZszD5nXAQ+nbXGxkIcS6e8eRCoaa03YXYECoV2uOEqwME8RURZu8KQwlOFMt0o6vWrqxoxC6LYi5YsFWc3Gsj3R5FIruHFFkH7I8MrQaRSv+agO3HJA1gmcxJfZqarUuNJI2xD9SVA6k9fQfdCXBYdC6IebBcHlZzQpU18vhu9B0YDT1/fYC0umidw+rQbXgvYW1UzZaxsQx+2V7iCQzMfY0OtSI8GZ1b5e/MLlmW/iM77beXMyWpNYLb+4DGYreeED6oaZXoXC134D0Nrx5HQP8hqRfYyuHOpaGeWJntHFYsZDmP+8kVnhIhYKvLZt6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
- header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
-From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     <u.kleine-koenig@pengutronix.de>, <thierry.reding@gmail.com>,
-        <Laurent.pinchart@ideasonboard.com>
-CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
-        <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>, <jonas@kwiboo.se>,
-        <jernej.skrabec@gmail.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <pavel@ucw.cz>, <lee@kernel.org>, <marcan@marcan.st>,
-        <sven@svenpeter.dev>, <alyssa@rosenzweig.io>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <claudiu.beznea@microchip.com>, <rjui@broadcom.com>,
-        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-        <florian.fainelli@broadcom.com>, <shc_work@mail.ru>,
-        <bleung@chromium.org>, <groeck@chromium.org>,
-        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <paul@crapouillou.net>, <vz@mleia.com>, <khilman@baylibre.com>,
-        <jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
-        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
-        <matthias.bgg@gmail.com>,
-        <angelogioacchino.delregno@collabora.com>, <j.neuschaefer@gmx.net>,
-        <heiko@sntech.de>, <krzysztof.kozlowski@linaro.org>,
-        <alim.akhtar@samsung.com>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <michael@walle.cc>,
-        <orsonzhai@gmail.com>, <baolin.wang@linux.alibaba.com>,
-        <zhang.lyra@gmail.com>, <fabrice.gasnier@foss.st.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <wens@csie.org>, <samuel@sholland.org>, <hammerh0314@gmail.com>,
-        <jonathanh@nvidia.com>, <sean.anderson@seco.com>,
-        <michal.simek@amd.com>, <johan@kernel.org>, <elder@kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_amelende@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <luca@z3ntu.xyz>,
-        <quic_bjorande@quicinc.com>, <linux-pwm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-leds@vger.kernel.org>, <asahi@lists.linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <chrome-platform@lists.linux.dev>, <linux-mips@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-sunxi@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
-        <greybus-dev@lists.linaro.org>, <linux-staging@lists.linux.dev>
-Subject: RE: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for
- drivers
-Thread-Topic: [PATCH v2 1/2] pwm: Manage owner assignment implicitly for
- drivers
-Thread-Index: AQHZxt/9rzh2lixcHUWwJjEI7Tv9T6/eAw4g
-Date:   Mon, 7 Aug 2023 00:46:27 +0000
-X-TSB-HOP2: ON
-Message-ID: <TYWPR01MB9420275DEE9D8E68EE79FE6C920CA@TYWPR01MB9420.jpnprd01.prod.outlook.com>
-References: <20230804142707.412137-1-u.kleine-koenig@pengutronix.de>
- <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20230804142707.412137-2-u.kleine-koenig@pengutronix.de>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJGdtBITaieDb++uasIBqDg1FcK3TTIw2OKPJdCGICk=;
+ b=lCdk3yoU5eYjFM6v8KYakZOL7GxsWl256N0eIgaHmOn707bvNdx9ptg92RGt0DfcBLKOTT47zHvv8LBivXO5QJ7Zhgp55nGF/SohJ9zHhN1fTsOpOCwJbi/7KgZJSGrBBJe0s9SJ6H5hDqkWVEmb2LRQe3L9mfmee4pU/uWRc1s=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by OS3PR01MB5991.jpnprd01.prod.outlook.com (2603:1096:604:d0::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.26; Mon, 7 Aug
+ 2023 11:50:30 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::f4c1:5f6e:abd1:2bf9]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::f4c1:5f6e:abd1:2bf9%6]) with mapi id 15.20.6652.026; Mon, 7 Aug 2023
+ 11:50:30 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v15 0/4] Add support for RZ/G2L GPT
+Thread-Topic: [PATCH v15 0/4] Add support for RZ/G2L GPT
+Thread-Index: AQHZu5nRS9UEj1xjhEKw73iL/YoZtq/e00cA
+Date:   Mon, 7 Aug 2023 11:50:30 +0000
+Message-ID: <OS0PR01MB5922774DA08EBD836460BAC8860CA@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20230721060840.8546-1-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20230721060840.8546-1-biju.das.jz@bp.renesas.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=toshiba.co.jp;
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYWPR01MB9420:EE_|TYCPR01MB9554:EE_
-x-ms-office365-filtering-correlation-id: e987abb3-52a5-4649-7486-08db96dfbb8b
+x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|OS3PR01MB5991:EE_
+x-ms-office365-filtering-correlation-id: e18dde35-d033-41b5-354b-08db973c8037
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: izKuq1nmeJVt/HOHsJcvqLAo59nGd3/Cr/uUPRvJ7CUJmNuslh9nRF3LYst1NhbXwp/weOFThIqlvWTER9qERQLsw5jhDxoNvvMP0GDxTqL1PojMuz+JAuYxl747W/KWsTTC6GHPR7PnwNy8pk8NInytVh6OQbhoh27+R5ZYCW/DHN8+gBZIVKoA7PfE1GyQQAsl6baXLEtWLClNRh1xJikOS7Jj2whQcVK/TMEMEn3bhknYD4xK07H16zt20VtcfWk0jr/X6pum62MSI0z/lxs4tdWN9GN/UQ//OS7UaDw9XFh6hr3+rfiZvjYLh2cZWwJuQ8cTi1HhdBoaZMS908UdbXVhq5dHWGbumDrU/cYCijyTeVbxJZBVex9IwR+8QW01+iUQkcwx7ZlCb6oiHOfhAzI672dZ4IpKVgAPtuiDOXesmpCFl/BI5LFidDiXacy1SqGJijVic4FI1tETSp1/0GyuxUho98PeJzFMVq8Yhzlss4v68tbqdkq5Y/WxJTiOsPyzta8zTbUP0PVdEym97nv1BZ/PtSVehxqcrf/qm1IJXhVw3QQPQtg8LOfxYnbfnFRB2QW5jlc/9NM9SxqwM4IcsDwmTjAFIgnjz1L7oZ0m+U8aLUVAc8QfafmQqTsxVEWJ+lesTV1hM9caJA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWPR01MB9420.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(366004)(136003)(396003)(346002)(451199021)(1800799003)(186006)(66556008)(66446008)(76116006)(64756008)(66476007)(4326008)(316002)(66946007)(41300700001)(2906002)(110136005)(54906003)(478600001)(6506007)(7696005)(9686003)(7336002)(71200400001)(26005)(53546011)(7416002)(7366002)(7406005)(8676002)(8936002)(5660300002)(52536014)(33656002)(83380400001)(38070700005)(86362001)(55016003)(122000001)(38100700002)(241875001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: txANtUBKelIp/CV4RSxdKc372WJeBZiDJDPuN82aeR8vnrws+uM4AxI4BcVR0jP5GI23P4MLeDGMpaAOmuHrELWaw7la/zYQO2CSxfLDQv4TaP1uXWWRAC28eiL5uF3uT6ba1Ro4m5vc8pxlXDEWMNlMh2a7iRFfdJHqLpj51b7F3BppgpJer7Ydykknd3BMKXEOuyGb/7+0DMbBrh0XFPSVSTIrvn/pf0sxiLNWynnLR8WRKwoB7T8Qn3tqSbfp+XDQ/PJr9CTno75G1nnLNAuJWqdswpHdseITCIwrzUxn/4+x+PsIZEy4FvnGnGdxaNbd0xSEEd1DnUJoAiAwDUTQSdLa8VvGCZ1CD8wZWXNX3zB6gIRo7rQRdxBl4pV7wilsWGbPLY5Hsa7OTJFmxP86QedRhlFlNTDzNl1/1ER2qtzfIRhXkoNGuHf8T/i1U5rViyPfN+TvNYbsZQYftrCi9pCgi7SMSGXY04x1TV8Q5sCpT0nLQbK+TQCsL39q4i0jBfaPVpdlFR+GbpXdN2VHGGYeMHYAEdmppy7c6ZJVRdeAnZj3HRKlgGYmNX9jqB8+g/iEH13TIdDcv1c3V/bXtiSgypVyIRZMLTU9GJ8=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(451199021)(1800799003)(186006)(9686003)(966005)(55016003)(6506007)(54906003)(110136005)(38100700002)(5660300002)(7416002)(38070700005)(52536014)(86362001)(30864003)(4326008)(2906002)(66946007)(64756008)(66556008)(76116006)(66476007)(41300700001)(33656002)(66446008)(8936002)(8676002)(316002)(71200400001)(7696005)(122000001)(45080400002)(478600001)(83380400001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?N3pPTlRyS3ZRZ045QUtxQmYzUDd5d1BnbEE5ZFo3dWRzcXQvcHRoZDFDNlAr?=
- =?utf-8?B?L1htSGlRdHR1dVFDUGhvQ0hnc1dUczZIOTdSLy9KT2I2YldYOWg1eURkVHZw?=
- =?utf-8?B?U20zZS9HSWpJeWRXVkVmWmNxTlFWRndTYzBnM1paTkxMRXFKUXlmc2RTaDdJ?=
- =?utf-8?B?OVJTVGJlbFN0S1diY2NYMjdhdzZLaVFSUnlvTm9sWkVDcXlncjEwZ1BaTkJv?=
- =?utf-8?B?Y3djVHJWRk5pYTU5VC90bVplWHNQK00xV0g2S2w4SW4xNjVsM21tYnBzUGpo?=
- =?utf-8?B?Y2Z2UW56ZHVicXVCNEZPZmVkRkVBTkx4WjE3eE9LQXBidFRDZ05zWGJZZnhm?=
- =?utf-8?B?aldvbXZFUWZMUXcwQzF1bXI0bXQyUEdKY3lFZFVLWnppczNnYXk4V3IrVEFl?=
- =?utf-8?B?S3dSNXVRVzZTb0JqNkVOVlgxbXMyZm5vSjF2LzJMWEhSWVRTWEl3RkNOZi9E?=
- =?utf-8?B?bE90SFpGZThsakVDRFllRWdJUG11NlRBTlcrcEt1dTJ0SGplcUNYcDkrQWgw?=
- =?utf-8?B?L2kvUEIweXFIakhvSTF3MVdEcTBHdUFyWXprZ2xhYkJSWGQ4Sk4wekI0c1lD?=
- =?utf-8?B?M05oeGtUZDlIRDN3cUxtdm1HZVkrU09pUmQrcy9aeGozU3dNNVJ5eUJoZnFP?=
- =?utf-8?B?WVU0eXowdXlqTnowY2o5ZjY4Vy9KYllBMW5DM2lFT1c4YSt0WkdHUUVGSnlB?=
- =?utf-8?B?NmZZMzRZTmFqS3V4MDFraGRZYVhLQUo4OXpkUHZ0YzRHSmxQaVV5SUpsL09S?=
- =?utf-8?B?dnowbzZ0WUNCVFNhYnIrblNiVmlzL2NBSXM4SXQ3QXNvRStTV0swL2srT0RL?=
- =?utf-8?B?VEZFTTFrSGVJYU5WWlFqZmRiQjNDTHUzYjhqMXhYbG5MWk8vTHdnZGI5bHk2?=
- =?utf-8?B?ei9neGRmdm5XQS8xcUY0WklmaTFHMitUbGplaHBTcTFnTlVNQ3N1QVNOR0VP?=
- =?utf-8?B?c0s0L1p4NW5KbU55QUNld1ovNmxKb3YzM1NyOE9XODBMTkFIN2VwRmZDM0dX?=
- =?utf-8?B?TGwxbDFKQTR5WHNWdm9YbDhZSnJXRW9ITjZYTWJqbndmb0NoZHAxdHc0OEJ3?=
- =?utf-8?B?QTlsdmtOQ2tPNE1tcDdNdjFHRnhRUUdNQWFlMlh4bnVrVnJzRHRtallnbTFH?=
- =?utf-8?B?UnJPdkl3ckZzSW5FYXE3dEZ3S3BmYTdubjl3WHZJSWMrWXIwbllkMGltRWVh?=
- =?utf-8?B?VjVBZ0ZVdWlqNkFkOTR6Y045Y1JWcFd5c2hvSmh2cERCZExLaDRWTHYydzdG?=
- =?utf-8?B?UjNKWXRPR2V0R1g0Znp3dUk4ZFpycDlLcjZBQUtZMmpkdytERE1sY0w5alRO?=
- =?utf-8?B?RzlsVUZNakRNZjFyMmF4ZTJSWFdOTjBTaHBFWVJDOUFubWhBM2l6VGp5cHpJ?=
- =?utf-8?B?KzZVWFg3dHM3K2Z0eHFMWjRQVHBZNTREQ0dRRFJzZEZ6QWVYeXliMzVtMW9z?=
- =?utf-8?B?anFqUWxIaEMrQkNxQkttZFJ2OUV5MHhBUDgwTHF2MFR5ZkVWdUtwVDlJMm1R?=
- =?utf-8?B?VStDckYzeTBDK3B4UDJ2KzRBd0g3ZUhYUkhwWVoxZDV6YTJ3dU9Lb3R3RDBq?=
- =?utf-8?B?djR1QzVWOVdTN0xxeFlYK0xFTkd2N3pwWEgwbmwwTGtiaFpCTHRZWm4zbkVJ?=
- =?utf-8?B?ZWlzNjBLN0lzc3c2VG1HbFZOSFlKSEFFTEFxaFl3N3lNaFV4disrOU9ZR01r?=
- =?utf-8?B?SmM5K2Y0NXRRQjREUWRUb3ZFUndpZUpYVU01SmxDeEhWN21mc3FJY0FMTUtK?=
- =?utf-8?B?MmhtZklyUnNiL2d3YWkvUVZZaUFMbGVVS2xuOXhmdU8rUlRQdTdxZTRvNHRZ?=
- =?utf-8?B?S2wzc25rWExobnkxMTBteXlpaXdDNE9aN1kwTTROeUxGVENqcldsUXRmTkEw?=
- =?utf-8?B?SW9TcHJ4TTcycEV2Z05ITU8xMnRoVk5ydEl1MW0rWnpKNWNzWGtiWHphK2s3?=
- =?utf-8?B?QjlBQ3RDZ2ZXZ2NnZUhZT054eTAycE9IcFJlVnR5Y2syTFVqNWZ2OTBuQzV2?=
- =?utf-8?B?c2ltWHNHVCtpc1ExWkZBV1dIQmR3eXNDcnI4VlcwM05QL0FvRnh4OEdKRTRM?=
- =?utf-8?B?aXBEYXAyemVLZExkdEJQeHdqUlNHMk1RVkJKMkNQN2cxOHFMTWl2UEpNdHpM?=
- =?utf-8?B?TXd5YUs5ZXlyWXFlWHBRVW05RnZsaHVQZFdhTEdSZDNHRmZXaDc4VFcrSlNt?=
- =?utf-8?B?b1E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?UZZ5gadJTHIZuE35VV8ufigEhwefW99lultqrfO0Tf1VCWcr6S1ZGJ+8xD?=
+ =?iso-8859-1?Q?6YTJCXf3TYOigOEIKZKWzpNPPCuN2l+1uXJcjb+XPr1DdD2RqjZoPCJl4L?=
+ =?iso-8859-1?Q?uhqe/dFcObD5LGPYi7uQXmB7qTEphy5J1uMumPnnd5AzgVbvAfH7P8Vf5a?=
+ =?iso-8859-1?Q?mR82c8PHuh9xZi7Ge9Df9E5pu7zn/Yy+0NKV/NLgS8f492UnvqFZd71Gf5?=
+ =?iso-8859-1?Q?X4W867MY/xIbpXSdn3z2V38MRDEB5yvjCL2Qe2r00l+fCsi/Lhwupg3tvK?=
+ =?iso-8859-1?Q?0pbEjPYt1qN6o09ssLJxqOXo/O1z7fKWUY8KBE5cDzU12G8m4y0u4IG5md?=
+ =?iso-8859-1?Q?iEzaKFawEamSMlorKu3fOfZOwAcWyf+MF+2K5J/8N2faoxPfBbjXGQrPC1?=
+ =?iso-8859-1?Q?j8Mf86Iz3ksACHdEM/ELBKMJ0J1Has+s1b9F63ZxPHqDmM3KMqdOB6Nj4l?=
+ =?iso-8859-1?Q?0J/qvf3wP+ccs6hTpG2cU6UQlpsp+4KSbjFhR9GykpSGu7hw0F0B6NDnUV?=
+ =?iso-8859-1?Q?MiVXSxgiRjhREQk4ZPyPKAB4SkjvvUlRP76K4QaGRWXh6VKCt61PWRfzrj?=
+ =?iso-8859-1?Q?H4044nq7XGS06lZBjwKI44gmpVSLwF49pAEONVVJ/3BZBcO8/qjetuo8Ic?=
+ =?iso-8859-1?Q?myCCH/RrJdXnJLqNVwy3Y7WUFDA97SuMsjev7o6dOfE1GDZ/C0p48QeCrp?=
+ =?iso-8859-1?Q?qvhZvv8Ucn5qrDG9yniKGMFeKrL8CK+0eVf+qUXOEhS4yrR0VdFKxaCT0c?=
+ =?iso-8859-1?Q?+I1yDvcUHR68407CfI2zXKa9jI/FqdWB6iijG1iIkjLxa0MNvsCoVu1Vap?=
+ =?iso-8859-1?Q?NyjOtxqNYk70O57E2yFEA5TNeBDIkellQxjSHLzIvmZFPM3fxdgQ4KWbXe?=
+ =?iso-8859-1?Q?uIKtuh4VN9kgKYL9hROOGX11h3ZD719z894MY/kVQzfYm7Qy7NWzy0/lCr?=
+ =?iso-8859-1?Q?8rx359Cb9VmIj0Atl6UMGD6hSQoe3HxBXG2tVEJ0l6rAUh38m7eGWKMsKA?=
+ =?iso-8859-1?Q?SaSdr+jF1RufJD95mIy5M/ssXwm9JTChbjvOcD6+5ZUiyvusB3IEnZqset?=
+ =?iso-8859-1?Q?qSTGB0qwgca4ygBrsMen8B98s+VSpt2sw6+yIi9a6wap/lAJUijU2d1wT5?=
+ =?iso-8859-1?Q?/hjgQxiOEnYuG/vFzQOiZmcb0jXXVdCcamHE7N8+oy29V/Hqin6BEH1OuM?=
+ =?iso-8859-1?Q?ksPiFebOsNC+diQ47O1z0UJkZ2LcBAwbv1GKYKQoMWbONfHhhAKFarhaIL?=
+ =?iso-8859-1?Q?5vv31F15VjpbOAtlch/+hc+Fzz5X9R1Ce0fCAYN9SNSliGQInNEKgsHU2K?=
+ =?iso-8859-1?Q?yDOK7usG0cQpE0OteFCCuEGkLH36ML6KMbcBRhMhrGDMtnNma/d3b9lhVt?=
+ =?iso-8859-1?Q?M6bGf/sMweX3jnUIU7hiHJQdSbaS1P9DClNlGiGDBKFGgqZfOZP9VwieVX?=
+ =?iso-8859-1?Q?JE9Kg3ioMVpY/fBGuF8QajTr2JbHRKD/aRlmGe3s5Xj1W0j9b0wGcdvRKS?=
+ =?iso-8859-1?Q?rQj+/PP81AzC7zeMjob7f/BUyU/jNNkh18PAC+EHSb7ywXpfMyCTry8ndg?=
+ =?iso-8859-1?Q?DJBTz/lSAqfRg9iQcAmejUfIaI+Mtq4Ftq2C1GBcL69ZnBXH0TT7zIsJz+?=
+ =?iso-8859-1?Q?iBF4Ew469yFYs=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?U0MzeUZBaFBiSTcvRDBBTGd4VXNrVm5kZ3BZYzU2N0s3MEdST2thRk9CcWhN?=
- =?utf-8?B?VitIWXFLMXBaZXkrWUpFam5uNlZIWjJIVG1iN2llMXBiZy9laHBVOVlRMlRB?=
- =?utf-8?B?OGtXM09Nd2FkL0VBYW9jU2dFemxXVUF4UGJVZXc4UmhiM2V3Tk1NL3NvT2U5?=
- =?utf-8?B?M2VlZXBndGJIblVYQkc1UUNiR2YzVTVMOU5KSnNuN0NNN2tva3p4Ykdzdkw5?=
- =?utf-8?B?U1h2V1d1VGhVbGhoWTFUaFJLek9xYnZNT3ZBVmkrNGJ6amREMXc3QW5YTTY4?=
- =?utf-8?B?UW5IK2lscktBTEhVcGhqTkd2cVJqamVibkdMZWFFT3h1aEt3Tk11OXVnZk9P?=
- =?utf-8?B?SXUwbFREZk1LQlM3QktJcDRVaXNhMkdYVGYyZUhzVnd1YnRWWjhmWVh6TzJB?=
- =?utf-8?B?MmM2cTkyZ2gydC9GcTNubG93clhaVDUvQXM5UzBNMi9sZm02WGVtSTZzSk5a?=
- =?utf-8?B?Y1pqRXBEZjdtTmFBck1rWUpkZUozZFBhby84eW9OSFRyTGtWVG1OOUc5V2Rq?=
- =?utf-8?B?TDVGci9Ha09IOE15OFpuTUJXOTkwRWhpeEp2aVRrbHNOZ3hzTUhaSW9yNDlx?=
- =?utf-8?B?V2lyc013WjEyWEdMWng5ai9wRnd0MXhDdWNmR0Y3NjVwYVhJN1ZaVFN5YkFI?=
- =?utf-8?B?Q0tWUi9nZFhWQ2Y0cDl0Vm5Qc3Fna2piWkFjb3dNemNoU01hNVNjWW1LYWN0?=
- =?utf-8?B?d09ZYzZva0hrbDBDeTFWM3pveG8zK1lpVXZ6R3FmYnNORjhjeDl3OUNaVTAx?=
- =?utf-8?B?NnBRSVFTRXVzK09vblJibVVsS1k0UUhodzJiZUwvT09Ea3Z4TnB6Smc2TTlK?=
- =?utf-8?B?bG1mNHlJQVVZQmVLOGl3bjRuQ2thbG42S2Y1ek1YL1JQU25nS0UzUlBnNjZQ?=
- =?utf-8?B?ZmdweVAwREowK2h2Yk9QNnFNc2UwU0JxZk5kcjdKdUwxMTlNQ3Z3TXh5dmx5?=
- =?utf-8?B?OHZ5ZnNqemhUMGZ0TVdqQ2ZnV2pyVmxHaVE5UVZTM1FtdHZDak5FYkdWWjE4?=
- =?utf-8?B?N2pSN3FCaFl4T0xEUUVjcnJoR3lNWDV0N05kNXJhM0ZiLytFaDdtb1g4N1Mx?=
- =?utf-8?B?YWs3Y2pSZGZsQnlPb05jb2FuR3FUY1laUzRSclBmVFlZTGpOdnpKUWx3TFh1?=
- =?utf-8?B?OUROMHZhOTJuSTlZNmtxbHUwazZvRHZRL0VrT2xYY215c2RFS3l5RERha1lV?=
- =?utf-8?B?YUh3d3BqSTUyb1k2QkFKRjl6Y1RYS0JvRHI2VjE4QU8yeUhhOGpPYkM5MXNy?=
- =?utf-8?B?ZWlrWG56MWJmWmMvTS9SUzNiT2pFd2ZxTmx0V21PMm5qbTdIUTZLM0F0YWtX?=
- =?utf-8?B?TVdjaVhlcTJ4RUprM1ljK084Y0R1R1o5dE11bjkxM1pTR3BqU3FPZEYyRjhM?=
- =?utf-8?B?YzlaOXRmZFZ1S2NBQjVOMzRjVndXTjFYYXFidm14WjhrQ3c5OTNiMXVteDNw?=
- =?utf-8?B?dkVRdk1EeUg4dkNDT1ZKUDJzaVNzb2ExMzF3ZWR2eU0zZjUxbncreDl5L3Zs?=
- =?utf-8?B?djdHaytsQW96T2lRR1NDVDEycGlRMXBnMkZkakRucTlFeFN4R1hJcS9OMEVX?=
- =?utf-8?B?Yk9SZ2ZqRGN0bloyRlR0Uk11WFl0TVFPSjV0Z21YR2NzMzE1WE9lTkp3aFFE?=
- =?utf-8?B?Sk8wMFozajBDSTF2OWZQNnJXYS85QU5KWVVOZmxsUGhZUFZLWnorb0Y1NS8v?=
- =?utf-8?B?NDdJRTdzMUJ0MVhKY29wemQrY25lTm1uTjRld21uTUZ2UHRKZ2lnemZSaXE2?=
- =?utf-8?B?eXkxazNTT2FoUlN0L1JqdktzU3NOMFBKNjNJNFhIajhodzNLbDVVK1B0Y1V0?=
- =?utf-8?B?a3JJcnd3d3BteWVGT0ptMEVGd2YzQS8ra0lPZzNJK0pKZzFQenlhaG5wSFFq?=
- =?utf-8?B?U3AwQVFLOVg0akp5ZnBNc1N0WnpkMHU4SW1PUTBqRjN2Nm1TaHJ6a2sybDJz?=
- =?utf-8?B?VDZEQzlGL1BEUU5ZN04zZ3NGUFpwTGc3aGJsejJzeTNKWnhvdUVTbmkxdHRF?=
- =?utf-8?B?dHJqOWVnL2NGWEFkbzdNS2ZJdjZYelZxL0IwNjk4eSt1ZmM1a0FER21aR1lh?=
- =?utf-8?B?YzQ3SmwxRFRkVnBPUnJEQjAzRWtvNlh6eHpIMFdjaTRqY1dRZDZlSW9WaTds?=
- =?utf-8?B?clBaRGdrMVVoZnY5Wm9jWDlkOTFNYU5jdWsxUGJpbGw2ZGY2bUJ3ZEdXczFq?=
- =?utf-8?B?ZW5vdmIwMXhDdmM1UWtNaGZ4S3BaZWtNbUdrVUxBYllLVjQyOS9KSXJ6RmxL?=
- =?utf-8?B?SEZTcVNRSWFsUG5kTnJKTHg4TTFkNWtHbTFsbHN6WkJIMWZJajEyOUlaelBs?=
- =?utf-8?B?dlBDUTIzQU16UlAvWTFwOUhZWHltSDZPcEd1Y3VvYlZIUFU1RFJvWTY5MjZm?=
- =?utf-8?Q?LsGMtyfyM8kKzh/Q4h8DX3KXoLEK9styhObG2QG2b/V92?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-1: OyX75RbbnCV4aBCUbviiY5Wy5PW5tNnC7cASHzWnO/yVZaunY21dQKIJu/F68sTsvO9MDCLwoSMdAz9AaAe3W09f4reZ+19VvCuzthkRwWoT3Pfi82Yrwev9QAYEGMwO4u6/J0wUPU7nP3yAsHEOolCjrJZ8p5ySjJOzIoUDE7sgAKkERe6yvObv2WcscZS///giPF5rM2dgSq3SlFVrODnqMtBO+nXXNFS+N88tvRfYcsiNJF0rLuxl/odM4rbHJnLJCOhDAe2PIsv9JM/+fTTG8Nndt2jtdbElgwD6JBr4QKhYvLNLHgeTHvTBzqqhwASdM7eMunMOPe4zz9rvpoamPKvmrPjs6/dhHAc7dJIyxtAF88hNNgBTuPHWryA+lAhscsX3NuaxfXUAVQHc6dyRzichAe+sv4nfoYo0dJXmg3QRAiiZJ/MlmcKOfERfVqRfpDNKOyyJxatL0FSt38lNnQBQsDhrBzYevKE2KUcEtoCBAmMmNdkEUAJ3sE5J9obc4RH4MXulrY5I74XEigt6c3CHJ7lzY1Y=
-X-OriginatorOrg: toshiba.co.jp
+X-OriginatorOrg: bp.renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYWPR01MB9420.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e987abb3-52a5-4649-7486-08db96dfbb8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2023 00:46:27.0808
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e18dde35-d033-41b5-354b-08db973c8037
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Aug 2023 11:50:30.7488
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QX8qs0eEVY+masL+cPpF84CCSP728TBziblWOUrcvq1+hw93plctqiLGXkFNP3QLq04zhRoSq0MSkLJMaqPPioaGjZ0MfUPME1YiDSTOINdGaS5Xn3CyfeWTYDpoZmo4
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9554
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-userprincipalname: W/7duSVQ1l1Ko6LJtyhQ7xZH54ysMv3+OfFli6ELhvlaT0Dr/9T6byb9oeFaS34dbjs69LFYRgdtqqZBfHVlyQ6fUBwi1pEAoK1hatOkLKE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB5991
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-SGkgVXdlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFV3ZSBLbGVp
-bmUtS8O2bmlnIDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+DQo+IFNlbnQ6IEZyaWRh
-eSwgQXVndXN0IDQsIDIwMjMgMTE6MjcgUE0NCj4gVG86IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5
-LnJlZGluZ0BnbWFpbC5jb20+OyBMYXVyZW50IFBpbmNoYXJ0DQo+IDxMYXVyZW50LnBpbmNoYXJ0
-QGlkZWFzb25ib2FyZC5jb20+DQo+IENjOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxp
-bmFyby5vcmc+OyBCYXJ0b3N6IEdvbGFzemV3c2tpDQo+IDxicmdsQGJnZGV2LnBsPjsgQW5keSBT
-aGV2Y2hlbmtvIDxhbmR5QGtlcm5lbC5vcmc+OyBEb3VnbGFzIEFuZGVyc29uDQo+IDxkaWFuZGVy
-c0BjaHJvbWl1bS5vcmc+OyBBbmRyemVqIEhhamRhIDxhbmRyemVqLmhhamRhQGludGVsLmNvbT47
-IE5laWwNCj4gQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPjsgUm9iZXJ0IEZv
-c3MgPHJmb3NzQGtlcm5lbC5vcmc+Ow0KPiBKb25hcyBLYXJsbWFuIDxqb25hc0Brd2lib28uc2U+
-OyBKZXJuZWogU2tyYWJlYw0KPiA8amVybmVqLnNrcmFiZWNAZ21haWwuY29tPjsgRGF2aWQgQWly
-bGllIDxhaXJsaWVkQGdtYWlsLmNvbT47IERhbmllbCBWZXR0ZXINCj4gPGRhbmllbEBmZndsbC5j
-aD47IFBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3LmN6PjsgTGVlIEpvbmVzDQo+IDxsZWVAa2VybmVs
-Lm9yZz47IEhlY3RvciBNYXJ0aW4gPG1hcmNhbkBtYXJjYW4uc3Q+OyBTdmVuIFBldGVyDQo+IDxz
-dmVuQHN2ZW5wZXRlci5kZXY+OyBBbHlzc2EgUm9zZW56d2VpZyA8YWx5c3NhQHJvc2VuendlaWcu
-aW8+OyBOaWNvbGFzDQo+IEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+OyBBbGV4
-YW5kcmUgQmVsbG9uaQ0KPiA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+OyBDbGF1ZGl1
-IEJlem5lYQ0KPiA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT47IFJheSBKdWkgPHJqdWlA
-YnJvYWRjb20uY29tPjsgU2NvdHQNCj4gQnJhbmRlbiA8c2JyYW5kZW5AYnJvYWRjb20uY29tPjsg
-QnJvYWRjb20gaW50ZXJuYWwga2VybmVsIHJldmlldyBsaXN0DQo+IDxiY20ta2VybmVsLWZlZWRi
-YWNrLWxpc3RAYnJvYWRjb20uY29tPjsgRmxvcmlhbiBGYWluZWxsaQ0KPiA8Zmxvcmlhbi5mYWlu
-ZWxsaUBicm9hZGNvbS5jb20+OyBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29ya0BtYWlsLnJ1PjsN
-Cj4gQmVuc29uIExldW5nIDxibGV1bmdAY2hyb21pdW0ub3JnPjsgR3VlbnRlciBSb2Vjaw0KPiA8
-Z3JvZWNrQGNocm9taXVtLm9yZz47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IFNh
-c2NoYQ0KPiBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT47IFBlbmd1dHJvbml4IEtlcm5l
-bCBUZWFtDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxmZXN0ZXZh
-bUBnbWFpbC5jb20+OyBOWFANCj4gTGludXggVGVhbSA8bGludXgtaW14QG54cC5jb20+OyBQYXVs
-IENlcmN1ZWlsIDxwYXVsQGNyYXBvdWlsbG91Lm5ldD47DQo+IFZsYWRpbWlyIFphcG9sc2tpeSA8
-dnpAbWxlaWEuY29tPjsgS2V2aW4gSGlsbWFuIDxraGlsbWFuQGJheWxpYnJlLmNvbT47DQo+IEpl
-cm9tZSBCcnVuZXQgPGpicnVuZXRAYmF5bGlicmUuY29tPjsgTWFydGluIEJsdW1lbnN0aW5nbA0K
-PiA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT47IENvbm9yIERvb2xleQ0KPiA8
-Y29ub3IuZG9vbGV5QG1pY3JvY2hpcC5jb20+OyBEYWlyZSBNY05hbWFyYQ0KPiA8ZGFpcmUubWNu
-YW1hcmFAbWljcm9jaGlwLmNvbT47IE1hdHRoaWFzIEJydWdnZXINCj4gPG1hdHRoaWFzLmJnZ0Bn
-bWFpbC5jb20+OyBBbmdlbG9HaW9hY2NoaW5vIERlbCBSZWdubw0KPiA8YW5nZWxvZ2lvYWNjaGlu
-by5kZWxyZWdub0Bjb2xsYWJvcmEuY29tPjsgSm9uYXRoYW4gTmV1c2Now6RmZXINCj4gPGoubmV1
-c2NoYWVmZXJAZ214Lm5ldD47IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+OyBLcnp5
-c3p0b2YNCj4gS296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+OyBBbGlt
-IEFraHRhcg0KPiA8YWxpbS5ha2h0YXJAc2Ftc3VuZy5jb20+OyBQYWxtZXIgRGFiYmVsdCA8cGFs
-bWVyQGRhYmJlbHQuY29tPjsgUGF1bA0KPiBXYWxtc2xleSA8cGF1bC53YWxtc2xleUBzaWZpdmUu
-Y29tPjsgTWljaGFlbCBXYWxsZSA8bWljaGFlbEB3YWxsZS5jYz47DQo+IE9yc29uIFpoYWkgPG9y
-c29uemhhaUBnbWFpbC5jb20+OyBCYW9saW4gV2FuZw0KPiA8YmFvbGluLndhbmdAbGludXguYWxp
-YmFiYS5jb20+OyBDaHVueWFuIFpoYW5nDQo+IDx6aGFuZy5seXJhQGdtYWlsLmNvbT47IEZhYnJp
-Y2UgR2FzbmllciA8ZmFicmljZS5nYXNuaWVyQGZvc3Muc3QuY29tPjsNCj4gTWF4aW1lIENvcXVl
-bGluIDxtY29xdWVsaW4uc3RtMzJAZ21haWwuY29tPjsgQWxleGFuZHJlIFRvcmd1ZQ0KPiA8YWxl
-eGFuZHJlLnRvcmd1ZUBmb3NzLnN0LmNvbT47IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz47
-IFNhbXVlbA0KPiBIb2xsYW5kIDxzYW11ZWxAc2hvbGxhbmQub3JnPjsgSGFtbWVyIEhzaWVoDQo+
-IDxoYW1tZXJoMDMxNEBnbWFpbC5jb20+OyBKb25hdGhhbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlk
-aWEuY29tPjsNCj4gaXdhbWF0c3Ugbm9idWhpcm8o5bKp5p2+IOS/oea0iyDil4vvvKTvvKnvvLTv
-vKPilqHvvKTvvKnvvLTil4vvvK/vvLPvvLQpDQo+IDxub2J1aGlybzEuaXdhbWF0c3VAdG9zaGli
-YS5jby5qcD47IFNlYW4gQW5kZXJzb24NCj4gPHNlYW4uYW5kZXJzb25Ac2Vjby5jb20+OyBNaWNo
-YWwgU2ltZWsgPG1pY2hhbC5zaW1la0BhbWQuY29tPjsNCj4gSm9oYW4gSG92b2xkIDxqb2hhbkBr
-ZXJuZWwub3JnPjsgQWxleCBFbGRlciA8ZWxkZXJAa2VybmVsLm9yZz47IEdyZWcNCj4gS3JvYWgt
-SGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBBbmplbGlxdWUgTWVsZW5kZXoN
-Cj4gPHF1aWNfYW1lbGVuZGVAcXVpY2luYy5jb20+OyBEbWl0cnkgQmFyeXNoa292DQo+IDxkbWl0
-cnkuYmFyeXNoa292QGxpbmFyby5vcmc+OyBMdWNhIFdlaXNzIDxsdWNhQHozbnR1Lnh5ej47IEJq
-b3JuDQo+IEFuZGVyc3NvbiA8cXVpY19iam9yYW5kZUBxdWljaW5jLmNvbT47IGxpbnV4LXB3bUB2
-Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnOyBkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiBsaW51eC1sZWRzQHZnZXIua2VybmVsLm9yZzsgYXNh
-aGlAbGlzdHMubGludXguZGV2Ow0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IGxpbnV4LXJwaS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gY2hyb21lLXBsYXRm
-b3JtQGxpc3RzLmxpbnV4LmRldjsgbGludXgtbWlwc0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
-LWFtbG9naWNAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFk
-Lm9yZzsNCj4gbGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtcm9ja2No
-aXBAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgtc2Ftc3VuZy1zb2NAdmdlci5rZXJuZWwu
-b3JnOw0KPiBsaW51eC1zdG0zMkBzdC1tZC1tYWlsbWFuLnN0b3JtcmVwbHkuY29tOyBsaW51eC1z
-dW54aUBsaXN0cy5saW51eC5kZXY7DQo+IGxpbnV4LXRlZ3JhQHZnZXIua2VybmVsLm9yZzsgZ3Jl
-eWJ1cy1kZXZAbGlzdHMubGluYXJvLm9yZzsNCj4gbGludXgtc3RhZ2luZ0BsaXN0cy5saW51eC5k
-ZXYNCj4gU3ViamVjdDogW1BBVENIIHYyIDEvMl0gcHdtOiBNYW5hZ2Ugb3duZXIgYXNzaWdubWVu
-dCBpbXBsaWNpdGx5IGZvciBkcml2ZXJzDQo+IA0KPiBJbnN0ZWFkIG9mIHJlcXVpcmluZyBlYWNo
-IGRyaXZlciB0byBjYXJlIGZvciBhc3NpZ25pbmcgdGhlIG93bmVyIG1lbWJlciBvZg0KPiBzdHJ1
-Y3QgcHdtX29wcywgaGFuZGxlIHRoYXQgaW1wbGljaXRseSB1c2luZyBhIG1hY3JvLiBOb3RlIHRo
-YXQgdGhlIG93bmVyDQo+IG1lbWJlciBoYXMgdG8gYmUgbW92ZWQgdG8gc3RydWN0IHB3bV9jaGlw
-LCBhcyB0aGUgb3BzIHN0cnVjdHVyZSB1c3VhbGx5IGxpdmVzDQo+IGluIHJlYWQtb25seSBtZW1v
-cnkgYW5kIHNvIGNhbm5vdCBiZSBtb2RpZmllZC4NCj4gDQo+IFRoZSB1cHNpZGUgaXMgdGhhdCBu
-ZXcgbG93bGV2ZWwgZHJpdmVycyBjYW5ub3QgZm9yZ2V0IHRoZSBhc3NpZ25tZW50IGFuZCBzYXZl
-DQo+IG9uZSBsaW5lIGVhY2guIFRoZSBwd20tY3JjIGRyaXZlciBkaWRuJ3QgYXNzaWduIC5vd25l
-ciwgdGhhdCdzIG5vdCBhIHByb2JsZW0gaW4NCj4gcHJhY3Rpc2UgdGhvdWdoIGFzIHRoZSBkcml2
-ZXIgY2Fubm90IGJlIGNvbXBpbGVkIGFzIGEgbW9kdWxlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-VXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4NCj4gLS0t
-DQo+ICBkcml2ZXJzL2dwaW8vZ3Bpby1tdmVidS5jICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS90aS1zbjY1ZHNpODYuYyB8ICAxIC0NCj4gIGRyaXZlcnMvbGVk
-cy9yZ2IvbGVkcy1xY29tLWxwZy5jICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9jb3JlLmMg
-ICAgICAgICAgICAgICAgICAgIHwgMjQNCj4gKysrKysrKysrKysrKystLS0tLS0tLS0tDQo+ICBk
-cml2ZXJzL3B3bS9wd20tYWI4NTAwLmMgICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9w
-d20vcHdtLWFwcGxlLmMgICAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1h
-dG1lbC1obGNkYy5jICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tYXRtZWwtdGNi
-LmMgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLWF0bWVsLmMgICAgICAgICAg
-ICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1iY20taXByb2MuYyAgICAgICAgICAgfCAg
-MSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tYmNtLWtvbmEuYyAgICAgICAgICAgIHwgIDEgLQ0KPiAg
-ZHJpdmVycy9wd20vcHdtLWJjbTI4MzUuYyAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMv
-cHdtL3B3bS1iZXJsaW4uYyAgICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20t
-YnJjbXN0Yi5jICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLWNsay5jICAg
-ICAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1jbHBzNzExeC5jICAgICAg
-ICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tY3Jvcy1lYy5jICAgICAgICAgICAgIHwg
-IDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLWR3Yy5jICAgICAgICAgICAgICAgICB8ICAxIC0NCj4g
-IGRyaXZlcnMvcHdtL3B3bS1lcDkzeHguYyAgICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJz
-L3B3bS9wd20tZnNsLWZ0bS5jICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdt
-LWhpYnZ0LmMgICAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1pbWcuYyAg
-ICAgICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20taW14LXRwbS5jICAgICAg
-ICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLWlteDEuYyAgICAgICAgICAgICAgICB8
-ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1pbXgyNy5jICAgICAgICAgICAgICAgfCAgMSAtDQo+
-ICBkcml2ZXJzL3B3bS9wd20taW50ZWwtbGdtLmMgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVy
-cy9wd20vcHdtLWlxczYyMGEuYyAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3
-bS1qejQ3NDAuYyAgICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20ta2VlbWJh
-eS5jICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLWxwMzk0My5jICAgICAg
-ICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1scGMxOHh4LXNjdC5jICAgICAgICAg
-fCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tbHBjMzJ4eC5jICAgICAgICAgICAgIHwgIDEgLQ0K
-PiAgZHJpdmVycy9wd20vcHdtLWxwc3MuYyAgICAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZl
-cnMvcHdtL3B3bS1tZWRpYXRlay5jICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9w
-d20tbWVzb24uYyAgICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLW1pY3Jv
-Y2hpcC1jb3JlLmMgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1tdGstZGlzcC5jICAg
-ICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tbXhzLmMgICAgICAgICAgICAgICAg
-IHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLW50eGVjLmMgICAgICAgICAgICAgICB8ICAxIC0N
-Cj4gIGRyaXZlcnMvcHdtL3B3bS1vbWFwLWRtdGltZXIuYyAgICAgICAgfCAgMSAtDQo+ICBkcml2
-ZXJzL3B3bS9wd20tcGNhOTY4NS5jICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20v
-cHdtLXB4YS5jICAgICAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1yYXNw
-YmVycnlwaS1wb2UuYyAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tcmNhci5jICAgICAg
-ICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLXJlbmVzYXMtdHB1LmMgICAgICAg
-ICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1yb2NrY2hpcC5jICAgICAgICAgICAgfCAgMSAt
-DQo+ICBkcml2ZXJzL3B3bS9wd20tcnotbXR1My5jICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJp
-dmVycy9wd20vcHdtLXNhbXN1bmcuYyAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdt
-L3B3bS1zaWZpdmUuYyAgICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tc2wy
-OGNwbGQuYyAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLXNwZWFyLmMgICAg
-ICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1zcHJkLmMgICAgICAgICAgICAg
-ICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tc3RpLmMgICAgICAgICAgICAgICAgIHwgIDEg
-LQ0KPiAgZHJpdmVycy9wd20vcHdtLXN0bTMyLWxwLmMgICAgICAgICAgICB8ICAxIC0NCj4gIGRy
-aXZlcnMvcHdtL3B3bS1zdG0zMi5jICAgICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3
-bS9wd20tc3RtcGUuYyAgICAgICAgICAgICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLXN1
-bjRpLmMgICAgICAgICAgICAgICB8ICAxIC0NCj4gIGRyaXZlcnMvcHdtL3B3bS1zdW5wbHVzLmMg
-ICAgICAgICAgICAgfCAgMSAtDQo+ICBkcml2ZXJzL3B3bS9wd20tdGVncmEuYyAgICAgICAgICAg
-ICAgIHwgIDEgLQ0KPiAgZHJpdmVycy9wd20vcHdtLXRpZWNhcC5jICAgICAgICAgICAgICB8ICAx
-IC0NCj4gIGRyaXZlcnMvcHdtL3B3bS10aWVocnB3bS5jICAgICAgICAgICAgfCAgMSAtDQo+ICBk
-cml2ZXJzL3B3bS9wd20tdHdsLWxlZC5jICAgICAgICAgICAgIHwgIDIgLS0NCj4gIGRyaXZlcnMv
-cHdtL3B3bS10d2wuYyAgICAgICAgICAgICAgICAgfCAgMiAtLQ0KPiAgZHJpdmVycy9wd20vcHdt
-LXZpc2NvbnRpLmMgICAgICAgICAgICB8ICAxIC0NCg0KRm9yIFZpc2NvbnRpOg0KQWNrZWQtYnk6
-IE5vYnVoaXJvIEl3YW1hdHN1IDxub2J1aGlybzEuaXdhbWF0c3VAdG9zaGliYS5jby5qcCA+DQoN
-CkJlc3QgcmVnYXJkcywNCiAgTm9idWhpcm8NCg0K
+Hi Uwe,
+
+Gentle ping.
+
+Cheers,
+Biju
+
+> Subject: [PATCH v15 0/4] Add support for RZ/G2L GPT
+>
+> RZ/G2L General PWM Timer (GPT) composed of 8 channels with 32-bit timer
+> (GPT32E). It supports the following functions
+>  * 32 bits =D7 8 channels
+>  * Up-counting or down-counting (saw waves) or up/down-counting
+>    (triangle waves) for each counter.
+>  * Clock sources independently selectable for each channel
+>  * Two I/O pins per channel
+>  * Two output compare/input capture registers per channel
+>  * For the two output compare/input capture registers of each channel,
+>    four registers are provided as buffer registers and are capable of
+>    operating as comparison registers when buffering is not in use.
+>  * In output compare operation, buffer switching can be at crests or
+>    troughs, enabling the generation of laterally asymmetric PWM waveforms=
+.
+>  * Registers for setting up frame cycles in each channel (with capability
+>    for generating interrupts at overflow or underflow)
+>  * Generation of dead times in PWM operation
+>  * Synchronous starting, stopping and clearing counters for arbitrary
+>    channels
+>  * Starting, stopping, clearing and up/down counters in response to input
+>    level comparison
+>  * Starting, clearing, stopping and up/down counters in response to a
+>    maximum of four external triggers
+>  * Output pin disable function by dead time error and detected
+>    short-circuits between output pins
+>  * A/D converter start triggers can be generated (GPT32E0 to GPT32E3)
+>  * Enables the noise filter for input capture and external trigger
+>    operation
+>
+> This patch series aims to add basic pwm support for RZ/G2L GPT driver by
+> creating separate logical channels for each IOs.
+>
+> v14->v15:
+> * Added enable_count and ch_en_bits variables to struct rzg2l_gpt_chip
+>   based on feedback for pwm_mtu3 driver.
+> * Updated copyright header and commit description by replacing "This patc=
+h
+>   adds"-> "Add"
+> * Replaced macro RZG2L_GET_CH_INDEX->RZG2L_GET_CH and replaced ch_index-
+> >ch
+>   throughout
+> * rzg2l_gpt_{enable,disable}() enables/disables PWM based on the
+>   enable_count.
+> * Replaced pm_runtime_get_sync->pm_runtime_resume_and_get and propogated
+>   the error in rzg2l_gpt_get_state() and rzg2l_gpt_config()
+> * Reduced variable scope in rzg2l_gpt_get_state() by moving most of
+> variables
+>   inside the if statement.
+> * Updated rzg2l_gpt_get_state() by moving duty > period check
+>   inside the top if block.
+> * Added helper functions rzg2l_gpt_calculate_pv_or_dc()to simplify config=
+.
+>   Also Improved the logic in rzg2l_gpt_calculate_pv_or_dc() by using
+>   min(period_or_duty_cycle >> (2 * prescale), (u64)U32_MAX);
+> * Updated rzg2l_gpt_get_state() by moving duty > period check
+>   inside the top if block.
+> * Simplified rzg2l_gpt_config() for updating registers
+> * Dropped pm_runtime_get_sync() and used bitmap variable "ch_en_bits"
+>   to make balanced PM usage count in rzg2l_gpt_reset_assert_pm_disable()
+>   For case were unbind is called before apply where pwm is enabled by
+>   bootloader.
+> * Added error check for clk_rate_exclusive_get() and clk_get_rate() in
+>   probe().
+> * Dropped prescale from struct rzg2l_gpt_chip.
+> * Replaced of_match_ptr(rzg2l_gpt_of_table)->rzg2l_gpt_of_table in struct
+>   rzg2l_gpt_driver
+> * Updated commit description of patch#4 by replacing "This patch add"->
+>   "Add".
+> v13->v14:
+> * Moved the patch from series[1] to here.
+>  [1]
+> https://lore.ker/
+> nel.org%2Flinux-renesas-soc%2F20221215205843.4074504-1-
+> biju.das.jz%40bp.renesas.com%2FT%2F%23t&data=3D05%7C01%7Cbiju.das.jz%40bp=
+.re
+> nesas.com%7C5e49c1dce57a4fb65f8008db89b0f2bc%7C53d82571da1947e49cb4625a16=
+6
+> a4a2a%7C0%7C0%7C638255165297945656%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj=
+A
+> wMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=
+=3D
+> zS%2FQnDta9svTRgCKwNQzxIZnK7ie8QOQufDZ6K18hc0%3D&reserved=3D0
+>  * Add Rb tag from Rob for patch#2
+>  * Removed parenthesis for RZG2L_MAX_HW_CHANNELS and RZG2L_CHANNELS_PER_I=
+O
+>  * Removed duty_cycle variable from struct rzg2l_gpt_chip and added
+> comment
+>    for cache for prescale variable.
+>  * Fixed a bug in rzg2l_gpt_cntr_need_stop().
+>  * Reordered rzg2l_gpt_config() just above apply()
+>  * Replaced pwm_is_enabled()->pwm->state.enabled in config
+>  * Replaced pm_runtime_resume_and_get with unconditional
+> pm_runtime_get_sync()
+>    in config().
+>  * Restored duty_cycle > period check in rzg2l_gpt_get_state().
+>  * Added error check for clk_prepare_enable() in probe() and propagating
+> error
+>    to the caller for pm_runtime_resume()
+>  * clk_get_rate() is called after enabling the clock and
+> clk_rate_exclusive_get()
+>  * Simplified rzg2l_gpt_probe() by removing bitmap variables.
+>  * Added pm_runtime_idle() to suspend the device during probe.
+>  * Moved overflow condition check from config->probe().
+>  * Simplified rzg2l_gpt_reset_assert_pm_disable().
+>  * Removed the parenthesis for RZG2L_MAX_POEG_GROUPS.
+>  * Renamed rzg2l_gpt_parse_properties()->rzg2l_gpt_poeg_init() as it not
+> only parse
+>    the properties but also implements the needed register writes.
+>  * Added acomment here about the purpose of the function
+> rzg2l_gpt_poeg_init()
+>  * Removed magic numbers from rzg2l_gpt_poeg_init()
+>  * Fixed resource leak in rzg2l_gpt_poeg_init().
+> v12->v13:
+>  * Added test logs in [1] below
+>  * Replaced Kconfig dependency from ARCH_RENESAS->ARCH_RZG2L
+>  * Sorted #include <linux/limits.h> alphabetically
+>  * Added a comment for mutex_lock to fix check patch warning
+>  * Replaced data type of duty_cycle from unsigned int->u32 as
+>    the maximum value stored is U32_MAX.
+>  * Improved rzg2l_gpt_config() by removing unwanted duty_cycle related
+> code.
+>  * Improved rzg2l_gpt_get_state() by setting "val =3D rzg2l_gpt-
+> >duty_cycle[pwm->hwpwm];",
+>    and factor "tmp =3D NSEC_PER_SEC * (u64)val;" out of the if-statement.
+>  * Started using DEFINE_RUNTIME_DEV_PM_OPS(), and dropped __maybe_unused
+>    from the callbacks.
+> v11->v12:
+>  * Added return code for get_state()
+>  * Cache duty cycle/prescale as the driver cannot read the current duty
+>    cycle/prescale from the hardware if the hardware is disabled. Cache th=
+e
+>    last programmed duty cycle/prescale value to return in that case.
+>  * Updated rzg2l_gpt_enable to enable the clocks.
+>  * Updated rzg2l_gpt_disable to disable the clocks.
+>  * Updated rzg2l_gpt_config() to cache duty cucle/prescale value
+>  * Updated rzg2l_gpt_get_state to use cached value of duty
+> cycle/prescale,If the PWM
+>    is disabled.
+>  * Simplified rzg2l_gpt_apply()
+>  * Added comments in rzg2l_gpt_reset_assert_pm_disable()
+> v10->v11:
+>  * Used bitmap_zero for initializing bitmap varable.
+>  * Fixed clock imbalance during remove for the case bootloader turning
+>    on PWM and module unload is called just after the boot.
+>  * Fixed over flow condition in get_state() for a prescale value of 2 &
+> more.
+>  * Improved rzg2l_gpt_cntr_need_stop() based on prescale as it is the
+>    only runtime variable.
+>  * Added array for Cache variables state_period and prescale
+>  * Probe caches the prescale value set by the bootloader.
+>  * Updated rzg2l_gpt_config() to make use of array variables.
+> v9->v10:
+>  * Updated the example gpt4: pwm@10048400-> gpt: pwm@10048000
+>  * Keep Rb tag from Rob as the above change is trivial one.
+>  * Updated the error handling in probe(), clk_disable_unprepare called
+>    on the error path.
+>  * Removed ch_en array and started using bitmask instead.
+> v8->v9:
+>  * Added Rb tag from Rob.
+>  * deassert after devm_clk_get() to avoid reset stays deasserted,in case
+>    clk_get() fails.
+>  * Removed ch_offs from struct rzg2l_gpt_chip and use macro instead.
+>  * Updated error handling in probe()
+> v7->v8:
+>  * Removed Rb tags from Rob and Geert as it modelled as single GPT
+>    device handling multiple channels.
+>  * Updated description
+>  * Updated interrupts and interrupt-names properties
+>  * Updated binding example
+>  * Modelled as single PWM device handling multiple channels
+>  * Replaced shared reset->devm_reset_control_get_exclusive()
+>  * Added PM runtime callbacks
+>  * Updated PM handling and removed "pwm_enabled_by_bootloader" variable
+>  * Replaced iowrite32->writel and ioread32->readl
+>  * Updated prescale calculation
+>  * Introduced rzg2l_gpt_is_ch_enabled for checking enable status on both
+>    IO's
+>  * Moved enable/disable output pins from config->enable/disable.
+>  * Added rzg2l_gpt_cntr_need_stop() for caching prescalar/mode values.
+> v6->v7:
+>  * Added the comment for cacheing rzg2l_gpt->state_period.
+>  * Fixed boundary values for pv and dc.
+>  * Added comment for modifying mode, prescaler, timer counter and buffer
+> enable
+>    registers.
+>  * Fixed buffer overflow in get_state()
+>  * Removed unnecessary assignment of state->period value in get_state().
+>  * Fixed state->duty_cycle value in get_state().
+>  * Added a limitation for disabling the channels, when both channels used
+> v5->v6:
+>  * Updated macros RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH and
+>    RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH with computation
+>    involving FIELD_PREP macro.
+>  * Removed struct rzg2l_gpt_phase and started using RZG2L_GTCCR macro
+>    for duty_offset.
+>  * replaced misnomer real_period->state_period.
+>  * Added handling for values >=3D (1024 << 32) for both period
+>    and duty cycle.
+>  * Added comments for pwm {en,dis}abled by bootloader during probe.
+> v4->v5:
+>  * Added Hardware manual details
+>  * Replaced the comment GTCNT->Counter
+>  * Removed the macros RZG2L_GPT_IO_PER_CHANNEL and chip.npwm directly
+>    used in probe.
+>  * Removed the unsed macro RZG2L_GTPR_MAX_VALUE
+>  * Added driver prefix for the type name and the variable.
+>  * Initialization of per_channel data moved from request->probe.
+>  * Updated clr parameter for rzg2l_gpt_modify for Start count.
+>  * Started using mutex and usage_count for handling shared
+>    period and prescalar for the 2 channels.
+>  * Updated the comment cycle->period.
+>  * Removed clk_disable from rzg2l_gpt_reset_assert_pm_disable()
+>  * Replaced pc->rzg2l_gpt.
+>  * Updated prescale calculation.
+>  * Moved pm_runtime_{get_sync,put} from {request,free}->{enable,disable}
+>  * Removed platform_set_drvdata as it is unused
+>  * Removed the variable pwm_enabled_by_bootloader
+>  * Added dev_err_probe in various probe error path.
+>  * Added an error message, if devm_pwmchip_add fails.
+> v3->v4:
+>  * Changed the local variable type i from u16->u8 and prescaled_period_
+>    cycles from u64->u32 in calculate_prescale().
+>  * Replaced mul_u64_u64_div_u64()->mul_u64_u32_div()
+>  * Dropped the comma after the sentinel.
+>  * Add a variable to track pwm enabled by bootloader and added comments
+>    in probe().
+>  * Removed unnecessary rzg2l_gpt_reset_assert_pm_disable() from probe.
+>  * Replaced devm_clk_get()->devm_clk_get_prepared()
+>  * Removed devm_clk_get_optional_enabled()
+> v2->v3:
+>  * Added Rb tag from Rob for the bindings.
+>  * Updated limitation section
+>  * Added prefix "RZG2L_" for all macros
+>  * Modified prescale calculation
+>  * Removed pwm_set_chip_data
+>  * Updated comment related to modifying Mode and Prescaler
+>  * Updated setting of prescale value in rzg2l_gpt_config()
+>  * Removed else branch from rzg2l_gpt_get_state()
+>  * removed the err label from rzg2l_gpt_apply()
+>  * Added devm_clk_get_optional_enabled() to retain clk on status,
+>    in case bootloader turns on the clk of pwm.
+>  * Replaced devm_reset_control_get_exclusive-
+> >devm_reset_control_get_shared
+>    as single reset shared between 8 channels.
+> v1->v2:
+>  * Added '|' after 'description:' to preserve formatting.
+>  * Removed description for pwm_cells as it is common property.
+>  * Changed the reg size in example from 0xa4->0x100
+>  * Added Rb tag from Geert for bindings.
+>  * Added Limitations section
+>  * dropped "_MASK" from the define names.
+>  * used named initializer for struct phase
+>  * Added gpt_pwm_device into a flexible array member in rzg2l_gpt_chip
+>  * Revised the logic for prescale
+>  * Added .get_state callback
+>  * Improved error handling in rzg2l_gpt_apply
+>  * Removed .remove callback
+>  * Tested the driver with PWM_DEBUG enabled.
+>
+> RFC->v1:
+>  * Added Description in binding patch
+>  * Removed comments from reg and clock
+>  * replaced rzg2l_gpt_write_mask()->rzg2l_gpt_modify()
+>  * Added rzg2l_gpt_read() and updated macros
+>  * Removed dtsi patches, will send it separately
+>
+> RFC:
+>  *
+> https://lore.ker/
+> nel.org%2Flinux-renesas-soc%2F20220430075915.5036-1-
+> biju.das.jz%40bp.renesas.com%2FT%2F%23t&data=3D05%7C01%7Cbiju.das.jz%40bp=
+.re
+> nesas.com%7C5e49c1dce57a4fb65f8008db89b0f2bc%7C53d82571da1947e49cb4625a16=
+6
+> a4a2a%7C0%7C0%7C638255165297945656%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj=
+A
+> wMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=
+=3D
+> 8Z2uXHblS94d1zundM01wgdT3pmasWhLuMlmPrSZAAQ%3D&reserved=3D0
+>
+> Biju Das (4):
+>   dt-bindings: pwm: Add RZ/G2L GPT binding
+>   dt-bindings: pwm: rzg2l-gpt: Document renesas,poegs property
+>   pwm: Add support for RZ/G2L GPT
+>   pwm: rzg2l-gpt: Add support for gpt linking with poeg
+>
+>  .../bindings/pwm/renesas,rzg2l-gpt.yaml       | 401 +++++++++++
+>  drivers/pwm/Kconfig                           |  11 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-rzg2l-gpt.c                   | 640 ++++++++++++++++++
+>  4 files changed, 1053 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l-
+> gpt.yaml
+>  create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
+>
+>
+> base-commit: 92554cdd428fce212d2a71a06939e7cab90f7c77
+> --
+> 2.25.1
 
