@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CC6377485A
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 21:31:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA82774409
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 20:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236327AbjHHTbx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Aug 2023 15:31:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46574 "EHLO
+        id S235484AbjHHSOs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Aug 2023 14:14:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232541AbjHHTbg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 15:31:36 -0400
+        with ESMTP id S235398AbjHHSOS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 14:14:18 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B6D1DD7B
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B51A1DD79
         for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 10:20:19 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQND-0007Tm-AF; Tue, 08 Aug 2023 19:19:59 +0200
+        id 1qTQND-0007Tg-8j; Tue, 08 Aug 2023 19:19:59 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNB-00228j-Vr; Tue, 08 Aug 2023 19:19:57 +0200
+        id 1qTQNB-00228f-Sf; Tue, 08 Aug 2023 19:19:57 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNB-00BTEv-09; Tue, 08 Aug 2023 19:19:57 +0200
+        id 1qTQNB-00BTEz-6s; Tue, 08 Aug 2023 19:19:57 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 074/101] pwm: ep93xx: Store parent device in driver data
-Date:   Tue,  8 Aug 2023 19:19:04 +0200
-Message-Id: <20230808171931.944154-75-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1 075/101] pwm: fsl-ftm: Store parent device in driver data
+Date:   Tue,  8 Aug 2023 19:19:05 +0200
+Message-Id: <20230808171931.944154-76-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1768; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=OrV6AyToXA66fQ4T2Nne0dj4277PjMb9E7m28Iebttw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nkEf1T00zXwNikaw2uC3Dxx4qoDlHg91UNiC TN7XIK7owWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ5BAAKCRCPgPtYfRL+ TklbB/4rDGtisc3TfyWslr16apf6ybBjgiyO7gYR3EeX/nAujP/lSkDMpNmCgqfhKE7UfqO1k1Z UESNy1y090kSZvCRPb0kQuB2Co87RsTcsC6UBJHEg27RqRYkzh1vjm1jdeDFwa45Y7XAq/3MDX7 Zs3AGdC8d5bQkGrqnY6nncmOhkJH8wQVGVVa00y6Bo4nCwkm9CNFfo2Sm8dfNY13LF8TUv1c1LJ JogOwTsfiqSOn4ycCQWBRGYQyRJ2+AfypmZ6gQCrxJ7E0hA4brAduUlo91Tp4cG1K7DXsH0n63u lDO2/KGuOpJBuC+2q9Z1HQ1Rfu8heYwx5yYzVUI983vIq96x
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1620; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=0XKobqxyrapOr+hYznUDyFVfHxTF+IoV2oDTPa7CdeU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nkFYDu4XCJ7n+V64rXFFW2G+s7osn4c0neWu USxTSCLpxGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ5BQAKCRCPgPtYfRL+ ToJjCACX5Ly/WzmP3B3OgUouOAKNWFkSBk6YmICQE3sq8ryi7GMrEd7zZ7Lkh4M777owb7P//pm fs0WRMOTciRyTLRkknklfx4EreZh4JvzI7mZfW/6Wyaul7A7WYH4j6y0H0Hk/Ej0cNASPGMmkrv +U28FoUGL/zzXccxCh2vYGtijR/3zpssk4he2esi8wctNY8wGKWaXErXDZ39T059saX9NBNIK/3 2marN2Dv/gwS8N3qGbojcdCxV8XhvaupWYRNfPi2HjN4rfcKUhwcx5j4rxjr1NzIu2DwFU9mLIr +18o82r0UBAXMY1vJXbtEhpsSib5yA4W85u9CSEdMhUTz+u7
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -62,51 +62,47 @@ the parent device in driver data.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-ep93xx.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-fsl-ftm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-ep93xx.c b/drivers/pwm/pwm-ep93xx.c
-index 394013c545ac..4d5147b403a4 100644
---- a/drivers/pwm/pwm-ep93xx.c
-+++ b/drivers/pwm/pwm-ep93xx.c
-@@ -34,6 +34,7 @@
- #define EP93XX_PWMx_INVERT	0x0c
- 
- struct ep93xx_pwm {
-+	struct platform_device *pdev;
- 	void __iomem *base;
- 	struct clk *clk;
+diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
+index f56c7e9f491a..48e37a9df629 100644
+--- a/drivers/pwm/pwm-fsl-ftm.c
++++ b/drivers/pwm/pwm-fsl-ftm.c
+@@ -40,6 +40,7 @@ struct fsl_pwm_periodcfg {
  };
-@@ -45,16 +46,16 @@ static inline struct ep93xx_pwm *to_ep93xx_pwm(struct pwm_chip *chip)
  
- static int ep93xx_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct platform_device *pdev = to_platform_device(chip->dev);
-+	struct ep93xx_pwm *ep93xx_pwm = to_ep93xx_pwm(chip);
+ struct fsl_pwm_chip {
++	struct device *parent;
+ 	struct mutex lock;
+ 	struct regmap *regmap;
  
--	return ep93xx_pwm_acquire_gpio(pdev);
-+	return ep93xx_pwm_acquire_gpio(ep93xx_pwm->pdev);
- }
+@@ -232,7 +233,7 @@ static int fsl_pwm_apply_config(struct pwm_chip *chip,
+ 	bool do_write_period = false;
  
- static void ep93xx_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct platform_device *pdev = to_platform_device(chip->dev);
-+	struct ep93xx_pwm *ep93xx_pwm = to_ep93xx_pwm(chip);
+ 	if (!fsl_pwm_calculate_period(fpc, newstate->period, &periodcfg)) {
+-		dev_err(chip->dev, "failed to calculate new period\n");
++		dev_err(fpc->parent, "failed to calculate new period\n");
+ 		return -EINVAL;
+ 	}
  
--	ep93xx_pwm_release_gpio(pdev);
-+	ep93xx_pwm_release_gpio(ep93xx_pwm->pdev);
- }
+@@ -246,7 +247,7 @@ static int fsl_pwm_apply_config(struct pwm_chip *chip,
+ 	 */
+ 	else if (!fsl_pwm_periodcfg_are_equal(&fpc->period, &periodcfg)) {
+ 		if (fsl_pwm_is_other_pwm_enabled(fpc, pwm)) {
+-			dev_err(chip->dev,
++			dev_err(fpc->parent,
+ 				"Cannot change period for PWM %u, disable other PWMs first\n",
+ 				pwm->hwpwm);
+ 			return -EBUSY;
+@@ -404,6 +405,7 @@ static int fsl_pwm_probe(struct platform_device *pdev)
  
- static int ep93xx_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-@@ -171,6 +172,8 @@ static int ep93xx_pwm_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip);
- 	ep93xx_pwm = to_ep93xx_pwm(chip);
+ 	mutex_init(&fpc->lock);
  
-+	ep93xx_pwm->pdev = pdev;
-+
- 	ep93xx_pwm->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ep93xx_pwm->base))
- 		return PTR_ERR(ep93xx_pwm->base);
++	fpc->parent = &pdev->dev;
+ 	fpc->soc = of_device_get_match_data(&pdev->dev);
+ 
+ 	base = devm_platform_ioremap_resource(pdev, 0);
 -- 
 2.40.1
 
