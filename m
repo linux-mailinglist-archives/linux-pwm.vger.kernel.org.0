@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F184777488E
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 21:35:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A6B77440B
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 20:14:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236506AbjHHTfj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Aug 2023 15:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
+        id S235441AbjHHSOu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Aug 2023 14:14:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236358AbjHHTfY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 15:35:24 -0400
+        with ESMTP id S235444AbjHHSOX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 14:14:23 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07041DD7C
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 10:20:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED631DD15
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 10:20:23 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNE-0007b3-LL; Tue, 08 Aug 2023 19:20:00 +0200
+        id 1qTQNE-0007cH-RK; Tue, 08 Aug 2023 19:20:00 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQND-00229L-N7; Tue, 08 Aug 2023 19:19:59 +0200
+        id 1qTQND-00229R-U1; Tue, 08 Aug 2023 19:19:59 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNC-00BTFV-VR; Tue, 08 Aug 2023 19:19:58 +0200
+        id 1qTQND-00BTFZ-5q; Tue, 08 Aug 2023 19:19:59 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 083/101] pwm: mtk-disp: Store parent device in driver data
-Date:   Tue,  8 Aug 2023 19:19:13 +0200
-Message-Id: <20230808171931.944154-84-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1 084/101] pwm: omap: Store parent device in driver data
+Date:   Tue,  8 Aug 2023 19:19:14 +0200
+Message-Id: <20230808171931.944154-85-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2215; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=0whGQweE69mJRsEkX+qNMIZ/biiuHfY/HyDbA50LCd8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nkO7BEazb1T71vKMCz6u9cJiS2Hm/04RHDmi WBZWX2IRhCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ5DgAKCRCPgPtYfRL+ TnGxCACxr1jG+gNkawM7yAU7rweR17eOCV++Q9tyq1RQFrAwkuC0po0STkdoZJlxHbaYQ9wMVKO f8pBN2PCOlsdjvK058ZAWujdymyaLowsZnadEFbOPtgpRuOc7YHM1Vzc8qzIb7iuJ7BEuxIGRMt QZYgk2uLcNobwWmmQGvkPdSGH0+Cu/Xnj1auPcJ+yLKFZqFh82iaw88tRsrDFUlFyJ11N5Qsm4Z qjWy2LYzSmdg+/u21b9iw2/QFa6coa16YlVJyt8SGY8N+F8J8In9XMkfbJmqRDqcM6GktC8boFK L8azsUounfkjdLU1Ley1dcuQxfbNn+a/gFK8oO4UVktV11nU
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3892; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=oZ/yzhw8N5dt0UiAbUX3gWSc4dsV0Pcy1+Mqkzy65SY=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nkP4b8Tu10w9OwCvL7dmfy/nOr1F1E/tr7QA v5MshQysvCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ5DwAKCRCPgPtYfRL+ TiS2B/wL73ht7I6ZQmr8S58BRYTUMRVilHpJ7r7W932D3uQnBbzNkAQJuAVgjrDlb0r1lqPWXFC pxWELJIPaYtCk8qLXUV3Gdhv9LEM5dFUjtN5tvzdtRlTTgEd9d4hmIAWASik8l26BBjprs3HVSo Ffl6Bkef6ac5s+7Cxp95Mxex1sucutK1PIIwleBXmy/hohm1MDhA0HL30POSLv6ycsTuv+HuTxb EEbC451l4pxYVbDsoiCa1TAdjxJnZw5n0eVs2jYE0lv7U5SlACn/rp18ZG+fRwfxqzHL3GHpL7Z 7m4lfhnTP/NsPwBC2166GQahAJ2Q2yQ3TqzmVGDSRjub5M2N
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -62,62 +62,102 @@ the parent device in driver data.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-mtk-disp.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/pwm/pwm-omap-dmtimer.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-index 0c4f88145dc6..9e51be25b2bb 100644
---- a/drivers/pwm/pwm-mtk-disp.c
-+++ b/drivers/pwm/pwm-mtk-disp.c
-@@ -42,6 +42,7 @@ struct mtk_pwm_data {
- };
- 
- struct mtk_disp_pwm {
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index c8d2db240b9e..d00133d44324 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -61,6 +61,7 @@
+  * @dm_timer_pdev:	Pointer to omap dm timer platform device
+  */
+ struct pwm_omap_dmtimer_chip {
 +	struct device *parent;
- 	const struct mtk_pwm_data *data;
- 	struct clk *clk_main;
- 	struct clk *clk_mm;
-@@ -90,14 +91,14 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (!mdp->enabled) {
- 		err = clk_prepare_enable(mdp->clk_main);
- 		if (err < 0) {
--			dev_err(chip->dev, "Can't enable mdp->clk_main: %pe\n",
-+			dev_err(mdp->parent, "Can't enable mdp->clk_main: %pe\n",
- 				ERR_PTR(err));
- 			return err;
- 		}
+ 	/* Mutex to protect pwm apply state */
+ 	struct mutex mutex;
+ 	struct omap_dm_timer *dm_timer;
+@@ -157,7 +158,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+ 	unsigned long clk_rate;
+ 	struct clk *fclk;
  
- 		err = clk_prepare_enable(mdp->clk_mm);
- 		if (err < 0) {
--			dev_err(chip->dev, "Can't enable mdp->clk_mm: %pe\n",
-+			dev_err(mdp->parent, "Can't enable mdp->clk_mm: %pe\n",
- 				ERR_PTR(err));
- 			clk_disable_unprepare(mdp->clk_main);
- 			return err;
-@@ -180,13 +181,13 @@ static int mtk_disp_pwm_get_state(struct pwm_chip *chip,
+-	dev_dbg(chip->dev, "requested duty cycle: %d ns, period: %d ns\n",
++	dev_dbg(omap->parent, "requested duty cycle: %d ns, period: %d ns\n",
+ 		duty_ns, period_ns);
  
- 	err = clk_prepare_enable(mdp->clk_main);
- 	if (err < 0) {
--		dev_err(chip->dev, "Can't enable mdp->clk_main: %pe\n", ERR_PTR(err));
-+		dev_err(mdp->parent, "Can't enable mdp->clk_main: %pe\n", ERR_PTR(err));
- 		return err;
+ 	if (duty_ns == pwm_get_duty_cycle(pwm) &&
+@@ -166,17 +167,17 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+ 
+ 	fclk = omap->pdata->get_fclk(omap->dm_timer);
+ 	if (!fclk) {
+-		dev_err(chip->dev, "invalid pmtimer fclk\n");
++		dev_err(omap->parent, "invalid pmtimer fclk\n");
+ 		return -EINVAL;
  	}
  
- 	err = clk_prepare_enable(mdp->clk_mm);
- 	if (err < 0) {
--		dev_err(chip->dev, "Can't enable mdp->clk_mm: %pe\n", ERR_PTR(err));
-+		dev_err(mdp->parent, "Can't enable mdp->clk_mm: %pe\n", ERR_PTR(err));
- 		clk_disable_unprepare(mdp->clk_main);
- 		return err;
+ 	clk_rate = clk_get_rate(fclk);
+ 	if (!clk_rate) {
+-		dev_err(chip->dev, "invalid pmtimer fclk rate\n");
++		dev_err(omap->parent, "invalid pmtimer fclk rate\n");
+ 		return -EINVAL;
  	}
-@@ -239,6 +240,7 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip);
- 	mdp = to_mtk_disp_pwm(chip);
  
-+	mdp->parent = &pdev->dev;
- 	mdp->data = of_device_get_match_data(&pdev->dev);
+-	dev_dbg(chip->dev, "clk rate: %luHz\n", clk_rate);
++	dev_dbg(omap->parent, "clk rate: %luHz\n", clk_rate);
  
- 	mdp->base = devm_platform_ioremap_resource(pdev, 0);
+ 	/*
+ 	 * Calculate the appropriate load and match values based on the
+@@ -198,27 +199,27 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+ 	duty_cycles = pwm_omap_dmtimer_get_clock_cycles(clk_rate, duty_ns);
+ 
+ 	if (period_cycles < 2) {
+-		dev_info(chip->dev,
++		dev_info(omap->parent,
+ 			 "period %d ns too short for clock rate %lu Hz\n",
+ 			 period_ns, clk_rate);
+ 		return -EINVAL;
+ 	}
+ 
+ 	if (duty_cycles < 1) {
+-		dev_dbg(chip->dev,
++		dev_dbg(omap->parent,
+ 			"duty cycle %d ns is too short for clock rate %lu Hz\n",
+ 			duty_ns, clk_rate);
+-		dev_dbg(chip->dev, "using minimum of 1 clock cycle\n");
++		dev_dbg(omap->parent, "using minimum of 1 clock cycle\n");
+ 		duty_cycles = 1;
+ 	} else if (duty_cycles >= period_cycles) {
+-		dev_dbg(chip->dev,
++		dev_dbg(omap->parent,
+ 			"duty cycle %d ns is too long for period %d ns at clock rate %lu Hz\n",
+ 			duty_ns, period_ns, clk_rate);
+-		dev_dbg(chip->dev, "using maximum of 1 clock cycle less than period\n");
++		dev_dbg(omap->parent, "using maximum of 1 clock cycle less than period\n");
+ 		duty_cycles = period_cycles - 1;
+ 	}
+ 
+-	dev_dbg(chip->dev, "effective duty cycle: %lld ns, period: %lld ns\n",
++	dev_dbg(omap->parent, "effective duty cycle: %lld ns, period: %lld ns\n",
+ 		DIV_ROUND_CLOSEST_ULL((u64)NSEC_PER_SEC * duty_cycles,
+ 				      clk_rate),
+ 		DIV_ROUND_CLOSEST_ULL((u64)NSEC_PER_SEC * period_cycles,
+@@ -230,7 +231,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
+ 	omap->pdata->set_load(omap->dm_timer, load_value);
+ 	omap->pdata->set_match(omap->dm_timer, true, match_value);
+ 
+-	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
++	dev_dbg(omap->parent, "load value: %#08x (%d), match value: %#08x (%d)\n",
+ 		load_value, load_value,	match_value, match_value);
+ 
+ 	return 0;
+@@ -386,6 +387,7 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
+ 	omap->pdata = pdata;
+ 	omap->dm_timer = dm_timer;
+ 	omap->dm_timer_pdev = timer_pdev;
++	omap->parent = &pdev->dev;
+ 
+ 	/*
+ 	 * Ensure that the timer is stopped before we allow PWM core to call
 -- 
 2.40.1
 
