@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECBF077440D
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 20:14:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C7777440F
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 20:14:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235445AbjHHSOw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Aug 2023 14:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
+        id S233297AbjHHSOx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Aug 2023 14:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235447AbjHHSOY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 14:14:24 -0400
+        with ESMTP id S235448AbjHHSOZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 14:14:25 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB571DD19
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2FD75874
         for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 10:20:24 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNF-0007eF-3x; Tue, 08 Aug 2023 19:20:01 +0200
+        id 1qTQNF-0007fx-Bj; Tue, 08 Aug 2023 19:20:01 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNE-00229X-9D; Tue, 08 Aug 2023 19:20:00 +0200
+        id 1qTQNE-00229h-IB; Tue, 08 Aug 2023 19:20:00 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQND-00BTFg-Hp; Tue, 08 Aug 2023 19:19:59 +0200
+        id 1qTQND-00BTFo-V7; Tue, 08 Aug 2023 19:19:59 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 086/101] pwm: raspberrypi-poe: Store parent device in driver data
-Date:   Tue,  8 Aug 2023 19:19:16 +0200
-Message-Id: <20230808171931.944154-87-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1 088/101] pwm: rz-mtu3: Make use of parent device pointer in driver data
+Date:   Tue,  8 Aug 2023 19:19:18 +0200
+Message-Id: <20230808171931.944154-89-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1382; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=uh0rgrmQPHrfr16s2cVas2GYzM8IjDcbhCijKb/nltU=; b=owGbwMvMwMXY3/A7olbonx/jabUkhpRLlYLLmM8V5efZbdM5e9Jpi0dXZ8uepe8S1zROZTxUJ rRpjZNTJ6MxCwMjF4OsmCKLfeOaTKsqucjOtf8uwwxiZQKZwsDFKQATafrK/j/kUg+rRk4aw/rk tbpzsvxd322fuo+75ZZClJTSac77T08/Wi794+0dfiv70t4fKxZP3JtoGLblvqVR9OzbMnLG6i+ tec9Yn3x1UMPFRsA7Nrul98GcF0zuS/gmsimbRR57H6qaJrqH8+8sOyWp29N07cr23fktHrRuR6 JGSIp+6u3TwSc/Ct3JjH55WW4Cj7f26mWOtbKr5YsUu0PvpXoLySnd6rG6F2fJfqR+4ikp73VfX Ws2e+XNdSt5lCQQVu+a8dmy6XyIr+W3o4JScRNufUrZvsWXq3d1xLG1KxXjp+s61V1qYypZ1ma+ +8whsyiD23ubE11K3aYE8imYebo+uuT40qXF631i6/syAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1687; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=61f3C7cGtZUleth5O8MMntZDhhhsheUf2Tw0n8JCMyE=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nkT6rT3QiPfIeKdWLL8hJ8kOZdHKUlliWdfu XNyiYadoK+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ5EwAKCRCPgPtYfRL+ TownCAC5kSYASY5iw0SD9wvl+jJxbpq3SWw/gbu2xsGKdho3DKPkhqkAPlpBTS+PYiPePGUnlNU j/jC8/h733ZiuSCHIJ1iZu5kBFIVVUPUFUwBnKyRdEde6di//9eWon0lzkCy0xd/kpOewZ23/rg dIzvmjSzpFo95KHPX2mwByR66sYMx9nSL66O4TwQ7E+FP92iJs09bsUpsnBrJSAhARsDUGCLd2D sVQ17KAnT1RW8VaiecubCna3maS2i+mOtafDXp0nvkygBmxe+7WOH3xQH9ZugjNqqYJRggic1+3 WakTearqyaKOtz7BjobsvGvd0xkeU+a3OGHKi/WxWFyjh22g
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -57,43 +57,54 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 struct pwm_chip::dev is about to change. To not have to touch this
-driver in the same commit as struct pwm_chip::dev, store a pointer to
-the parent device in driver data.
+driver in the same commit as struct pwm_chip::dev, make use of the
+already existing pointer to the parent device in driver data.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-raspberrypi-poe.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-rz-mtu3.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberrypi-poe.c
-index 4b2711d59e7c..b6d1326a3741 100644
---- a/drivers/pwm/pwm-raspberrypi-poe.c
-+++ b/drivers/pwm/pwm-raspberrypi-poe.c
-@@ -26,6 +26,7 @@
- #define RPI_PWM_CUR_DUTY_REG		0x0
+diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
+index ff396e2de7ab..2dedeaa35de8 100644
+--- a/drivers/pwm/pwm-rz-mtu3.c
++++ b/drivers/pwm/pwm-rz-mtu3.c
+@@ -274,7 +274,7 @@ static int rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
+ 	int rc;
  
- struct raspberrypi_pwm {
-+	struct device *parent;
- 	struct rpi_firmware *firmware;
- 	unsigned int duty_cycle;
- };
-@@ -121,7 +122,7 @@ static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	ret = raspberrypi_pwm_set_property(rpipwm->firmware, RPI_PWM_CUR_DUTY_REG,
- 					   duty_cycle);
- 	if (ret) {
--		dev_err(chip->dev, "Failed to set duty cycle: %pe\n",
-+		dev_err(rpipwm->parent, "Failed to set duty cycle: %pe\n",
- 			ERR_PTR(ret));
- 		return ret;
+-	rc = pm_runtime_resume_and_get(chip->dev);
++	rc = pm_runtime_resume_and_get(rz_mtu3_pwm->parent);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -307,7 +307,7 @@ static int rz_mtu3_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
  	}
-@@ -163,6 +164,7 @@ static int raspberrypi_pwm_probe(struct platform_device *pdev)
- 		return PTR_ERR(chip);
- 	rpipwm = raspberrypi_pwm_from_chip(chip);
  
-+	rpipwm->parent = &pdev->dev;
- 	rpipwm->firmware = firmware;
- 	chip->ops = &raspberrypi_pwm_ops;
+ 	state->polarity = PWM_POLARITY_NORMAL;
+-	pm_runtime_put(chip->dev);
++	pm_runtime_put(rz_mtu3_pwm->parent);
  
+ 	return 0;
+ }
+@@ -362,7 +362,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (!pwm->state.enabled) {
+ 		int rc;
+ 
+-		rc = pm_runtime_resume_and_get(chip->dev);
++		rc = pm_runtime_resume_and_get(rz_mtu3_pwm->parent);
+ 		if (rc)
+ 			return rc;
+ 	}
+@@ -399,7 +399,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	/* If the PWM is not enabled, turn the clock off again to save power. */
+ 	if (!pwm->state.enabled)
+-		pm_runtime_put(chip->dev);
++		pm_runtime_put(rz_mtu3_pwm->parent);
+ 
+ 	return 0;
+ }
 -- 
 2.40.1
 
