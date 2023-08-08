@@ -2,45 +2,45 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C79A8774405
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 20:14:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 469C577488F
+	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 21:35:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235361AbjHHSOp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Aug 2023 14:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
+        id S236502AbjHHTfj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Aug 2023 15:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235372AbjHHSOQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 14:14:16 -0400
+        with ESMTP id S236355AbjHHTfY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 15:35:24 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ADDC1DD6D
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 10:20:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC5171DD6A
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 10:20:17 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNB-0007RL-PG; Tue, 08 Aug 2023 19:19:57 +0200
+        id 1qTQNB-0007RV-Sg; Tue, 08 Aug 2023 19:19:57 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQNA-002285-9a; Tue, 08 Aug 2023 19:19:56 +0200
+        id 1qTQNA-002289-CB; Tue, 08 Aug 2023 19:19:56 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qTQN9-00BTET-Gg; Tue, 08 Aug 2023 19:19:55 +0200
+        id 1qTQN9-00BTEX-Ng; Tue, 08 Aug 2023 19:19:55 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 067/101] drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
-Date:   Tue,  8 Aug 2023 19:18:57 +0200
-Message-Id: <20230808171931.944154-68-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1 068/101] leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
+Date:   Tue,  8 Aug 2023 19:18:58 +0200
+Message-Id: <20230808171931.944154-69-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2447; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=OJBTltTN+wZJC9+Thju+57NUGpgGJb55yG5h5ViKOZw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nj88VDaGhC03tc+DB+6i32/L0mShM5Tvmn0u WqqMwIHXQGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ4/AAKCRCPgPtYfRL+ TtA5B/44AZ2bSMw2aB1FJdpSqnXwuNVg9E85HKAOHg+wFkt0JsKsPcKZF+Gt/n5aPA6vCGQi+uS 4q9CJ/NwWvA+HEiLA62RZh9LkfUTw30NMyihwTPj5aqGSDBijK1eowMDfxRtF2mknTPscxh8ZGu UlMx+AlbZJv83HKGAmOYI2ni3/A643tuBncVWLZGgQCmKROxi7/2yBNAHSubST0nWlgpmh9xaR+ /uXbH1X8rI2r7eNSMatogd7NxD3C8hto8Xh2pbojexqpbxY+HD3wC8yJK/t88wg5BRyIRZ7ce5e wPWdI8mXKYocAR6uz4GCJm/QDGmZH2CMHLnL0/nj5ljG3fe0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2962; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=iz21kDZ8eSUTIi/hoTLlvvGLRnFZ5Spz36bOZu6NAzA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBk0nj9RDKGeBcEYdRG+An8djkfbyvmMzJ0bg/Zp I4tziGSGcuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZNJ4/QAKCRCPgPtYfRL+ TlDMB/9swbN8dslpe0QsWiktAOFJtA/BMNgMjDdUljWbYkJbXfaQYS4u6x40F/bk5xF56aSyw0Q 7NMjd5K9C+YsHGxvFNAUyMdR7r5ULPXheAbDWg2YBq855ITE02kg39+ARxNEYVJ9kYbhKNrPn+g s12D3jh6lugqLf39c4Ficd0EfZ0tmmKaFISG+E7sm3zkIjn7O4kgFi7yidKepDysuJADhWeCw6t 6xJWc2PEzq4C3ZMrdaW5BRbZfyXXwgEVf43t6ilvmaxq4ZAtmhS+ma5ov9+NRwNlRt5/ALskjbj R2pVF5urQt61gc3VaUG2URgqJjrk0W2xsKSGVpb9Q9KJo77R
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -56,75 +56,96 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This prepares the pwm driver of the ti-sn65dsi86 to further changes of
-the pwm core outlined in the commit introducing devm_pwmchip_alloc().
-There is no intended semantical change and the driver should behave as
-before.
+This prepares the pwm sub-driver to further changes of the pwm core
+outlined in the commit introducing devm_pwmchip_alloc(). There is no
+intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/leds/rgb/leds-qcom-lpg.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 53d133d18c18..1469993acda9 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -197,7 +197,7 @@ struct ti_sn65dsi86 {
- 	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
- #endif
- #if defined(CONFIG_PWM)
--	struct pwm_chip			pchip;
-+	struct pwm_chip			*pchip;
- 	bool				pwm_enabled;
- 	atomic_t			pwm_pin_busy;
- #endif
-@@ -1363,7 +1363,8 @@ static void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata)
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index 9e5a03f66543..182412cb0384 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -78,7 +78,7 @@ struct lpg {
  
- static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip *chip)
- {
--	return container_of(chip, struct ti_sn65dsi86, pchip);
-+	struct ti_sn65dsi86 **pdata = pwmchip_priv(chip);
-+	return *pdata;
+ 	struct mutex lock;
+ 
+-	struct pwm_chip pwm;
++	struct pwm_chip *pwm;
+ 
+ 	const struct lpg_data *data;
+ 
+@@ -978,9 +978,15 @@ static int lpg_pattern_mc_clear(struct led_classdev *cdev)
+ 	return lpg_pattern_clear(led);
  }
  
- static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -1576,22 +1577,28 @@ static const struct pwm_ops ti_sn_pwm_ops = {
- static int ti_sn_pwm_probe(struct auxiliary_device *adev,
- 			   const struct auxiliary_device_id *id)
++static inline struct lpg *lpg_pwm_from_chip(struct pwm_chip *chip)
++{
++	struct lpg **lpg = pwmchip_priv(chip);
++	return *lpg;
++}
++
+ static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct lpg *lpg = container_of(chip, struct lpg, pwm);
++	struct lpg *lpg = lpg_pwm_from_chip(chip);
+ 	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+ 
+ 	return chan->in_use ? -EBUSY : 0;
+@@ -996,7 +1002,7 @@ static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 const struct pwm_state *state)
+ {
+-	struct lpg *lpg = container_of(chip, struct lpg, pwm);
++	struct lpg *lpg = lpg_pwm_from_chip(chip);
+ 	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+ 	int ret = 0;
+ 
+@@ -1027,7 +1033,7 @@ static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ static int lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     struct pwm_state *state)
+ {
+-	struct lpg *lpg = container_of(chip, struct lpg, pwm);
++	struct lpg *lpg = lpg_pwm_from_chip(chip);
+ 	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+ 	unsigned int resolution;
+ 	unsigned int pre_div;
+@@ -1090,13 +1096,19 @@ static const struct pwm_ops lpg_pwm_ops = {
+ 
+ static int lpg_add_pwm(struct lpg *lpg)
  {
 +	struct pwm_chip *chip;
- 	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
+ 	int ret;
  
--	pdata->pchip.dev = pdata->dev;
--	pdata->pchip.ops = &ti_sn_pwm_ops;
--	pdata->pchip.npwm = 1;
--	pdata->pchip.of_xlate = of_pwm_single_xlate;
--	pdata->pchip.of_pwm_n_cells = 1;
-+	/* XXX: should this better use adev->dev instead of pdata->dev? */
-+	pdata->pchip = chip = devm_pwmchip_alloc(pdata->dev, 1, sizeof(&pdata));
+-	lpg->pwm.dev = lpg->dev;
+-	lpg->pwm.npwm = lpg->num_channels;
+-	lpg->pwm.ops = &lpg_pwm_ops;
++	lpg->pwm = chip = devm_pwmchip_alloc(lpg->dev, lpg->num_channels,
++					     sizeof(&lpg));
 +	if (IS_ERR(chip))
 +		return PTR_ERR(chip);
  
--	return pwmchip_add(&pdata->pchip);
-+	*(struct ti_sn65dsi86 **)pwmchip_priv(chip) = pdata;
+-	ret = pwmchip_add(&lpg->pwm);
++	*(struct lpg **)pwmchip_priv(chip) = lpg;
 +
-+	chip->ops = &ti_sn_pwm_ops;
-+	chip->of_xlate = of_pwm_single_xlate;
-+	chip->of_pwm_n_cells = 1;
++	chip->ops = &lpg_pwm_ops;
 +
-+	return pwmchip_add(chip);
- }
++	ret = pwmchip_add(chip);
+ 	if (ret)
+ 		dev_err(lpg->dev, "failed to add PWM chip: ret %d\n", ret);
  
- static void ti_sn_pwm_remove(struct auxiliary_device *adev)
+@@ -1368,7 +1380,7 @@ static int lpg_remove(struct platform_device *pdev)
  {
- 	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
+ 	struct lpg *lpg = platform_get_drvdata(pdev);
  
--	pwmchip_remove(&pdata->pchip);
-+	pwmchip_remove(pdata->pchip);
+-	pwmchip_remove(&lpg->pwm);
++	pwmchip_remove(lpg->pwm);
  
- 	if (pdata->pwm_enabled)
- 		pm_runtime_put_sync(pdata->dev);
+ 	return 0;
+ }
 -- 
 2.40.1
 
