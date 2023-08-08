@@ -2,70 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD42774CAB
-	for <lists+linux-pwm@lfdr.de>; Tue,  8 Aug 2023 23:14:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 880DF774DD9
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Aug 2023 00:00:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236278AbjHHVOL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Aug 2023 17:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
+        id S230020AbjHHWAX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 8 Aug 2023 18:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236292AbjHHVOC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 17:14:02 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4089014FA28
-        for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 12:18:12 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-3176a439606so4631569f8f.3
-        for <linux-pwm@vger.kernel.org>; Tue, 08 Aug 2023 12:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691522290; x=1692127090;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eAR8OwHxneGOD6cI9OMaaTZwonF32CaBU6KMe777AfQ=;
-        b=GYb0KE38yc0513D306z6euTVYEtRDsXyJDYJF9xtzTY/iEpzNUqk5aCn/pp2gJQwtu
-         Aws838RXhY/e2sxx19cqhctw8drI/MWis2wokpmhDIwjXXL7HZSSMiXg/7OEf6UZ13eS
-         dPgSxsdTZmbA4yuHH5q/CAV2H2A68dCDhiDSpCbs6WnZFMr2NOmODgZbEB3E/q0R+2Ty
-         BaIxfWrSu9gbS3kGfz+jUQpxTuFXliL8TMJ3dQ4mCBas+jF0SO4Nukmpq2qfdke46m0+
-         9iqzI4avsA6eYVbZaECiZ9YXE4dtDvNwcfOS6nJIUG6SJG8/dzyLkfKjEKdLUkEZHptA
-         W9kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691522290; x=1692127090;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eAR8OwHxneGOD6cI9OMaaTZwonF32CaBU6KMe777AfQ=;
-        b=YfT15GzAKs6zi5Lbe48OZX6H0V4O6YcaMwqsibEAsK42nMPhOIz2lOZ/LV7RSywlRg
-         TZyiDT3CI0rfeH+D8t1l0HVkQHo5gbInXYVsb1YYjhzhBI6Xn9VXJk/qN/ak7YFh4yCr
-         pfYhz8X/sA93KzvfihoMyg/C8gphR544k6fcej4Ha+AUDhRpj03r7OBbIv+ncw/OwjIu
-         ghB5PCfNco5ETwPPmPtvKeyg+ZRkimw99taOY/EG3eZ6lZzfm/uEM9Q6HbqG0oeksKQ0
-         qwQ3W3Tp4br7qompTQXfaI7lAsYNO5ja0eOwCH0Z1Pct7z8GyArZm1qd8a4CbIf0QeTK
-         Oikg==
-X-Gm-Message-State: AOJu0YyvC6eUTH09ZwbDH1liKwLH9Bw5DZdiXVTlYjubaDMufpszPeCe
-        hPBxkUh/Pv6gb2u8G5I4QFvu367pwgbTCMENtGo=
-X-Google-Smtp-Source: AGHT+IFwUhkdpyDx6NkneWEHJHizkzu6HcS0X+J4bhSttR+5Zomkjk6WEZyH/sBch9W5BL8lMAf1TrUQ7vQD8+K5TGU=
-X-Received: by 2002:a5d:6341:0:b0:30f:c42e:3299 with SMTP id
- b1-20020a5d6341000000b0030fc42e3299mr270874wrw.60.1691522289657; Tue, 08 Aug
- 2023 12:18:09 -0700 (PDT)
+        with ESMTP id S229702AbjHHWAX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 18:00:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3DF12D;
+        Tue,  8 Aug 2023 15:00:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8359362D8C;
+        Tue,  8 Aug 2023 22:00:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D9F24C433C9;
+        Tue,  8 Aug 2023 22:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691532021;
+        bh=0CjdeW56CS2059Vkt0DNasnDqdrqZiTUPNvFROKH9Ko=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=ZFemw6DCXpLlNx2M8biWQnKG3G228tzyxO2dijgeS5BR8kYOhiNBGzBKha5+8d+b2
+         H+k1cuGzP7aOdznQujTvJWUvn2gbn5el8wfXv0ckwsOco5A349k4qSpCkdR2l2rDPJ
+         /VjtO3ISJJnBU0HNKQG//Cco7C9TWwu0woPCTD18X8jWuxJSRRV+RzWBejgo/u9tTd
+         jbq3m4HVzjWmd4F3Pa9xDXTAf89j+F2oyLPA4YKE2BKJwajq/nn22fqOOwpOLhVdS4
+         2UaIpasp0qBxfi2P/3Ciw85m047r/IcMGcuaKbF08+sZx2IlAYJIflQoRUIWKIs9l1
+         iIzTLi4REA3dA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9192C395C5;
+        Tue,  8 Aug 2023 22:00:21 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Received: by 2002:a5d:4536:0:b0:317:75fc:c5d6 with HTTP; Tue, 8 Aug 2023
- 12:18:09 -0700 (PDT)
-From:   AREF ABDULQADER <abdulqaderaref115@gmail.com>
-Date:   Tue, 8 Aug 2023 20:18:09 +0100
-Message-ID: <CAJNCi-xscokmZ7kVNPZ8oLXwt=fw4XFPBSKu0XQG9yEg_AP2wQ@mail.gmail.com>
-Subject: we can meet in dubai
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=3.4 required=5.0 tests=BAYES_50,DEAR_FRIEND,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] MAINTAINERS: update Claudiu Beznea's email address
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <169153202174.6931.11202742037860925480.git-patchwork-notify@kernel.org>
+Date:   Tue, 08 Aug 2023 22:00:21 +0000
+References: <20230804050007.235799-1-claudiu.beznea@tuxon.dev>
+In-Reply-To: <20230804050007.235799-1-claudiu.beznea@tuxon.dev>
+To:     claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc:     nicolas.ferre@microchip.com, conor.dooley@microchip.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, sre@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, alsa-devel@alsa-project.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dear friend
-my name is Mohamed Abdul please send me your what-sap number for easy
-communication i have millions of dollars to invest
-thanks
-Mohamed Abdul
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri,  4 Aug 2023 08:00:07 +0300 you wrote:
+> Update MAINTAINERS entries with a valid email address as the Microchip
+> one is no longer valid.
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> 
+> [...]
+
+Here is the summary with links:
+  - MAINTAINERS: update Claudiu Beznea's email address
+    https://git.kernel.org/netdev/net/c/fa40ea27ede3
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
