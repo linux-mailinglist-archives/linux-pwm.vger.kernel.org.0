@@ -2,89 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 880DF774DD9
-	for <lists+linux-pwm@lfdr.de>; Wed,  9 Aug 2023 00:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC4A5775292
+	for <lists+linux-pwm@lfdr.de>; Wed,  9 Aug 2023 08:10:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjHHWAX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 8 Aug 2023 18:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51642 "EHLO
+        id S230432AbjHIGKU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 9 Aug 2023 02:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbjHHWAX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 8 Aug 2023 18:00:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3DF12D;
-        Tue,  8 Aug 2023 15:00:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8359362D8C;
-        Tue,  8 Aug 2023 22:00:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D9F24C433C9;
-        Tue,  8 Aug 2023 22:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691532021;
-        bh=0CjdeW56CS2059Vkt0DNasnDqdrqZiTUPNvFROKH9Ko=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ZFemw6DCXpLlNx2M8biWQnKG3G228tzyxO2dijgeS5BR8kYOhiNBGzBKha5+8d+b2
-         H+k1cuGzP7aOdznQujTvJWUvn2gbn5el8wfXv0ckwsOco5A349k4qSpCkdR2l2rDPJ
-         /VjtO3ISJJnBU0HNKQG//Cco7C9TWwu0woPCTD18X8jWuxJSRRV+RzWBejgo/u9tTd
-         jbq3m4HVzjWmd4F3Pa9xDXTAf89j+F2oyLPA4YKE2BKJwajq/nn22fqOOwpOLhVdS4
-         2UaIpasp0qBxfi2P/3Ciw85m047r/IcMGcuaKbF08+sZx2IlAYJIflQoRUIWKIs9l1
-         iIzTLi4REA3dA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9192C395C5;
-        Tue,  8 Aug 2023 22:00:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S230433AbjHIGKT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 9 Aug 2023 02:10:19 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D5A1BE1
+        for <linux-pwm@vger.kernel.org>; Tue,  8 Aug 2023 23:10:18 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qTcOf-0004fu-7J; Wed, 09 Aug 2023 08:10:17 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qTcOe-0029Q9-Ed; Wed, 09 Aug 2023 08:10:16 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qTcOd-00Bb9M-GZ; Wed, 09 Aug 2023 08:10:15 +0200
+Date:   Wed, 9 Aug 2023 08:10:15 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v1 080/101] pwm: lpss: Store parent device in driver data
+Message-ID: <20230809061015.qz5r737byhzg4qyb@pengutronix.de>
+References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
+ <20230808171931.944154-81-u.kleine-koenig@pengutronix.de>
+ <ZNKAQV4VXVwkyYBV@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] MAINTAINERS: update Claudiu Beznea's email address
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <169153202174.6931.11202742037860925480.git-patchwork-notify@kernel.org>
-Date:   Tue, 08 Aug 2023 22:00:21 +0000
-References: <20230804050007.235799-1-claudiu.beznea@tuxon.dev>
-In-Reply-To: <20230804050007.235799-1-claudiu.beznea@tuxon.dev>
-To:     claudiu beznea <claudiu.beznea@tuxon.dev>
-Cc:     nicolas.ferre@microchip.com, conor.dooley@microchip.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, sre@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, alsa-devel@alsa-project.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cd2pk7mlsk5figoc"
+Content-Disposition: inline
+In-Reply-To: <ZNKAQV4VXVwkyYBV@smile.fi.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello:
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+--cd2pk7mlsk5figoc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri,  4 Aug 2023 08:00:07 +0300 you wrote:
-> Update MAINTAINERS entries with a valid email address as the Microchip
-> one is no longer valid.
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> 
-> [...]
+Hello Andy,
 
-Here is the summary with links:
-  - MAINTAINERS: update Claudiu Beznea's email address
-    https://git.kernel.org/netdev/net/c/fa40ea27ede3
+On Tue, Aug 08, 2023 at 08:49:53PM +0300, Andy Shevchenko wrote:
+> On Tue, Aug 08, 2023 at 07:19:10PM +0200, Uwe Kleine-K=F6nig wrote:
+> > struct pwm_chip::dev is about to change. To not have to touch this
+> > driver in the same commit as struct pwm_chip::dev, store a pointer to
+> > the parent device in driver data.
+>=20
+> I'm not against this change, so
+> Acked-by: Andy Shevchenko <andy@kernel.org>
+> bu see some comments below.
+>=20
+> I think ideally pwm_chip should be an opaque to the driver
+> (or something near to it). OTOH it may be I understood that
+> wrong.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+What would be the benefit of making it opaque? True, the drivers only
+use .ops which could be added to devm_pwmchip_alloc() as a parameter to
+drop the need to assign .ops, but the benefit of hiding the details
+isn't clear to me.
 
+> >  	if (state->enabled) {
+> >  		if (!pwm_is_enabled(pwm)) {
+> > -			pm_runtime_get_sync(chip->dev);
+> > +			pm_runtime_get_sync(lpwm->parent);
+> >  			ret =3D pwm_lpss_prepare_enable(lpwm, pwm, state);
+> >  			if (ret)
+> > -				pm_runtime_put(chip->dev);
+> > +				pm_runtime_put(lpwm->parent);
+> >  		} else {
+> >  			ret =3D pwm_lpss_prepare_enable(lpwm, pwm, state);
+> >  		}
+> >  	} else if (pwm_is_enabled(pwm)) {
+> >  		pwm_lpss_write(pwm, pwm_lpss_read(pwm) & ~PWM_ENABLE);
+> > -		pm_runtime_put(chip->dev);
+> > +		pm_runtime_put(lpwm->parent);
+> >  	}
+>=20
+> I'm wondering why PM runtime calls can't be part of PWM core?
+> We may cleanup a lot of code with it, no?
 
+Yes, I wondered about that one during the conversion, too. One thing at
+a time. (There are also a few drivers using SET_SYSTEM_SLEEP_PM_OPS /
+SET_RUNTIME_PM_OPS which could be converted to moderner variants.)
+
+> > -	pm_runtime_get_sync(chip->dev);
+> > +	pm_runtime_get_sync(lpwm->parent);
+>=20
+>=20
+> > -	pm_runtime_put(chip->dev);
+> > +	pm_runtime_put(lpwm->parent);
+>=20
+> Ditto.
+>=20
+> ...
+>=20
+> >  struct pwm_lpss_chip {
+> > +	struct device *parent;
+>=20
+> Have you checked IIO approach with the public and private members
+> (under private the opaque pointer is meant)? Maybe something of that
+> can be applied to PWM code as well, dunno.
+
+Not sure I see what you mean. I guess it's about iio_device_alloc() and
+how the size calculations are done there? I didn't do any measurements
+if aligning the priv data helps. ISTR that for net the aligning is done
+because some drivers do DMA to/from their priv data area. That's not the
+case for PWMs. So I kept that simple. I'm open to address that, but
+unless there is an obvious reason that doesn't involve extensive runtime
+testing, I'd postpone that for a later time and concentrate on getting
+the groundwork for my character device plans done.
+
+Thanks for your feedback
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--cd2pk7mlsk5figoc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmTTLcYACgkQj4D7WH0S
+/k6ZtAf/e/uRtw6ImntxnMDhffJNcgLzUwujJdHYjOotn2XWXig5YrSAIKDUDc6i
+8Pj7Zq9ipiB5aEawJnKj7bQQOtRxH0kJxT2lUXBkjNMkGcWoXw9VNtxz15SzCrre
+jd/oTo9uElm/AYRHg8lcLMr0PyLouG14FZlDRhX5NxglSynQvfPSnstg7Gtb5A6F
+Hc4J8VSN3egwwH4CQfuVqUQBd+BNw6Wq9v8wb8QY/zypvrjDBzYkW/z2WB5JiQjv
+85KNAHSJstnpm7gh6p5425YvG+LEO72t/8iPFGvIvtL7O62QnwwLWvur3cwkBdSp
+p2exCyruVA2Zmr8URYG5i7AKynAXiQ==
+=+0HL
+-----END PGP SIGNATURE-----
+
+--cd2pk7mlsk5figoc--
