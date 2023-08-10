@@ -2,34 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83F777771C4
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Aug 2023 09:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32E2D7771C3
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Aug 2023 09:43:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjHJHnp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Aug 2023 03:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35610 "EHLO
+        id S230091AbjHJHno (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Aug 2023 03:43:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233970AbjHJHni (ORCPT
+        with ESMTP id S232921AbjHJHni (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Aug 2023 03:43:38 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3222683
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Aug 2023 00:43:34 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4RLzR01BV8z1L9f7;
-        Thu, 10 Aug 2023 15:42:20 +0800 (CST)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871D41703
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Aug 2023 00:43:36 -0700 (PDT)
+Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RLzP63WNjzqSnC;
+        Thu, 10 Aug 2023 15:40:42 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
  (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 10 Aug
- 2023 15:43:31 +0800
+ 2023 15:43:33 +0800
 From:   Ruan Jinjie <ruanjinjie@huawei.com>
 To:     <claudiu.beznea@tuxon.dev>, <thierry.reding@gmail.com>,
         <u.kleine-koenig@pengutronix.de>, <nicolas.ferre@microchip.com>,
         <alexandre.belloni@bootlin.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-pwm@vger.kernel.org>
 CC:     <ruanjinjie@huawei.com>
-Subject: [PATCH -next 1/2] pwm: atmel: Remove redundant of_match_ptr()
-Date:   Thu, 10 Aug 2023 15:42:57 +0800
-Message-ID: <20230810074258.2390629-2-ruanjinjie@huawei.com>
+Subject: [PATCH -next 2/2] pwm: omap-dmtimer: Remove redundant of_match_ptr()
+Date:   Thu, 10 Aug 2023 15:42:58 +0800
+Message-ID: <20230810074258.2390629-3-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230810074258.2390629-1-ruanjinjie@huawei.com>
 References: <20230810074258.2390629-1-ruanjinjie@huawei.com>
@@ -54,22 +54,22 @@ of_match_ptr() here.
 
 Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
 ---
- drivers/pwm/pwm-atmel.c | 2 +-
+ drivers/pwm/pwm-omap-dmtimer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 1f73325d1bea..35ae876bf2ea 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -547,7 +547,7 @@ static int atmel_pwm_probe(struct platform_device *pdev)
- static struct platform_driver atmel_pwm_driver = {
+diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
+index 4889fbd8a431..94faa4650686 100644
+--- a/drivers/pwm/pwm-omap-dmtimer.c
++++ b/drivers/pwm/pwm-omap-dmtimer.c
+@@ -466,7 +466,7 @@ MODULE_DEVICE_TABLE(of, pwm_omap_dmtimer_of_match);
+ static struct platform_driver pwm_omap_dmtimer_driver = {
  	.driver = {
- 		.name = "atmel-pwm",
--		.of_match_table = of_match_ptr(atmel_pwm_dt_ids),
-+		.of_match_table = atmel_pwm_dt_ids,
+ 		.name = "omap-dmtimer-pwm",
+-		.of_match_table = of_match_ptr(pwm_omap_dmtimer_of_match),
++		.of_match_table = pwm_omap_dmtimer_of_match,
  	},
- 	.probe = atmel_pwm_probe,
- };
+ 	.probe = pwm_omap_dmtimer_probe,
+ 	.remove_new = pwm_omap_dmtimer_remove,
 -- 
 2.34.1
 
