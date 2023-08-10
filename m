@@ -2,58 +2,42 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DECD777B69
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Aug 2023 16:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F76B777DCE
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Aug 2023 18:12:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235956AbjHJO4m (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 10 Aug 2023 10:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54522 "EHLO
+        id S234157AbjHJQM1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 10 Aug 2023 12:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234687AbjHJO4m (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Aug 2023 10:56:42 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD7126A0;
-        Thu, 10 Aug 2023 07:56:40 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4fe28e4671dso1548258e87.0;
-        Thu, 10 Aug 2023 07:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691679399; x=1692284199;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9pjgEmaLZWbZLKm+zTsTjeEOP7/LCJvRIUhdiZyAT1I=;
-        b=NblbJO7/2Ss674guLQHVjj8RzFXtFbwGuEzHos0GJr94LzO88o0Iev47abuxJLfP4y
-         g+8Z6r0kL6ByXiVbTnkfUkRXH+ji09/lMHqwT9cTlD4+YU3jP6SCA4O2rIcE3RtE9OGT
-         +NgolV9kq/VPKDREHjuQ+7kVcLuQ7Tk662uuVQVSyUIH999syuH/Y8hicQcoFyYUlHa/
-         cbGGoZSBpeE91tcpORHnz/7mU39Cn8MaztKKLtrF1NNimy6g0D6sTmd4uk/soqByzQC+
-         Ws/iq/BXsn/Mhwgg7A7tz8ZgDvBRI8puL+mguwKRVo2YKgBkjQdVS8GsqDBkh6iQS0Y7
-         TOqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691679399; x=1692284199;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9pjgEmaLZWbZLKm+zTsTjeEOP7/LCJvRIUhdiZyAT1I=;
-        b=lRpK47fGx69/AY2i2Lm+kxu/PzFEwXJlaqM/0eh7FwXLyUVHGK0dMRJLIrqUu/BF4n
-         Hmqa5X4dwbthLnjXuzjs6gTItR6HYl1RwuS3An7KPItDEJAJtSax9S1/fAR8H+79K1Xq
-         Plcy+1QaDWBWK7I5jk3FbVfdeNKc2+HJP0ESyJfkvMyhZf8hmUhzdFr9Fp5e0gMYnvAE
-         DqHFW9kz6zPdKOnKhivphVrlO+fjxAOByURvyI7u1drqaI2ZsKuPNSPWOi58oshU2l2o
-         N3XBNBoJqwJioyo2wkPikDseO5U9t4UYDFEd0m8FMMvQONOKhZ7z0kBGCdiSwEodthBK
-         2cAg==
-X-Gm-Message-State: AOJu0YwhfH3RLNknczCXVYm1iD1zSSjSsuRWM6K4BLXmliAZKPDgQ2ao
-        6SANvOVx0j4XC6rpDitdLdlsvdnKIFdGET0=
-X-Google-Smtp-Source: AGHT+IGc4D1yN43d/fMmdFFXBfx2I/wJfkAD5m7dIiQY5P19trltKvl/MLc6FmifEgRKE5Q9FmWa6A==
-X-Received: by 2002:a05:6512:1093:b0:4f6:1779:b1c1 with SMTP id j19-20020a056512109300b004f61779b1c1mr2878454lfg.48.1691679398692;
-        Thu, 10 Aug 2023 07:56:38 -0700 (PDT)
-Received: from localhost.localdomain (mail.pulsar-telecom.ru. [94.181.180.60])
-        by smtp.gmail.com with ESMTPSA id p12-20020ac246cc000000b004fe0de39fddsm308496lfo.290.2023.08.10.07.56.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 07:56:38 -0700 (PDT)
-From:   Aleksandr Shubin <privatesub2@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
+        with ESMTP id S233284AbjHJQM0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 10 Aug 2023 12:12:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17741994;
+        Thu, 10 Aug 2023 09:12:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77B26661B9;
+        Thu, 10 Aug 2023 16:12:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E2FC433C8;
+        Thu, 10 Aug 2023 16:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691683944;
+        bh=OcqNCzObC1EKNtRyWAawRvnOnyFp+jPeVcOHVtyLdMw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vEo1uoMv6Je3nMeV7pnuPSOi0e1OXzWRNRWkvPlyow/fdcmg8gRAOP7G7HjXWA29a
+         bv2TunAq0eHA7i/nX5/c8Lr3eqJxGOFyojctbtX88Xn2WOZF6W1aKmAKv+9kD/cZRy
+         q4u0QFM8Y9TRu3sc8TI48543QfAtnPYQro/kWvU5ROFhCVj5Crl6LWDP9BHORlwAYd
+         CgNt6oU4afQgMZaikM8EWBfjNPaBiJMaP1t9gC4S96mfJYinPZK+T6NOReYJvMpQNN
+         mrUtttZloojwATvGTQBcPpDRuAat/MoNtR0bGfrfvYhrt6mt2ZgKbPAOAhIAyvdmTU
+         OAm4nvN75CS3w==
+Date:   Thu, 10 Aug 2023 17:12:18 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Aleksandr Shubin <privatesub2@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -69,56 +53,71 @@ Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
         linux-riscv@lists.infradead.org
-Subject: [PATCH v4 3/3] riscv: dts: allwinner: d1: Add pwm node
-Date:   Thu, 10 Aug 2023 17:54:28 +0300
-Message-Id: <20230810145443.1053387-4-privatesub2@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230810145443.1053387-1-privatesub2@gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+Message-ID: <20230810-unmasking-sprinkler-d75e728cc0ee@spud>
 References: <20230810145443.1053387-1-privatesub2@gmail.com>
+ <20230810145443.1053387-2-privatesub2@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hPg5kcy3KfBtOZY7"
+Content-Disposition: inline
+In-Reply-To: <20230810145443.1053387-2-privatesub2@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-D1 and T113s contain a pwm controller with 8 channels.
-This controller is supported by the sun20i-pwm driver.
 
-Add a device tree node for it.
+--hPg5kcy3KfBtOZY7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
----
- arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Thu, Aug 10, 2023 at 05:54:26PM +0300, Aleksandr Shubin wrote:
 
-diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-index 922e8e0e2c09..e24543b6aff7 100644
---- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-+++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
-@@ -127,6 +127,17 @@ uart3_pb_pins: uart3-pb-pins {
- 			};
- 		};
- 
-+		pwm: pwm@2000c00 {
-+			compatible = "allwinner,sun20i-d1-pwm";
-+			reg = <0x02000c00 0x400>;
-+			clocks = <&dcxo>,
-+				 <&ccu CLK_BUS_PWM>;
-+			clock-names = "hosc", "bus";
-+			resets = <&ccu RST_BUS_PWM>;
-+			status = "disabled";
-+			#pwm-cells = <0x3>;
-+		};
-+
- 		ccu: clock-controller@2001000 {
- 			compatible = "allwinner,sun20i-d1-ccu";
- 			reg = <0x2001000 0x1000>;
--- 
-2.25.1
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun20i-r329-pwm
+> +
+> +    then:
+> +      required:
+> +        - allwinner,pwm-channels
+> +
+> +    else:
+> +      not:
+> +        required:
+> +          - allwinner,pwm-channels
 
+Hmm, I realise I lead you astray a little. This can be reduced to
+    else:
+      properties:
+        allwinner,pwm-channels: false
+
+If you respin, please update to that. Otherwise,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+--hPg5kcy3KfBtOZY7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNUMYgAKCRB4tDGHoIJi
+0k5XAPwK6ZnDy6YMcS7YyTbkZhp9bNvTudr9mvnqvkaKJWAqdQEAj6Ky6dhw1dD2
+9IZEmfA6h0yN/+zGi1B3HLfafbpNzg4=
+=Pcfq
+-----END PGP SIGNATURE-----
+
+--hPg5kcy3KfBtOZY7--
