@@ -2,105 +2,215 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44117778FCF
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Aug 2023 14:46:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C50EA7797C7
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Aug 2023 21:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235494AbjHKMp7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 11 Aug 2023 08:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48924 "EHLO
+        id S236833AbjHKT3t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 11 Aug 2023 15:29:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235465AbjHKMp6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Aug 2023 08:45:58 -0400
-X-Greylist: delayed 332 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 11 Aug 2023 05:45:56 PDT
-Received: from out-108.mta0.migadu.com (out-108.mta0.migadu.com [IPv6:2001:41d0:1004:224b::6c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811D626A0
-        for <linux-pwm@vger.kernel.org>; Fri, 11 Aug 2023 05:45:56 -0700 (PDT)
-Date:   Fri, 11 Aug 2023 22:39:54 +1000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-        t=1691757620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8vNMSKN+vtwKFHAf06jkI6GM9sIuZ9HaDo3mOdRlVL0=;
-        b=BchVAq6XdbomT9nJbHcoXXXO290cJ6HsWBHEoegfNiBXIvC9sMXlAhFNYv8k87Ja8wK6Wb
-        0uTwT/ou6jTOVhBmR/kaiJ4p36ruEdBegikdugGr+cszRl+OlTzPh7JXDMojRQBlbF0XnU
-        Jeu1r+jLz0YH5IHoNCnDgiocILxQmdcZk0zZlT9j7AgGgZSQIyt/yrH3VVShoqt7ve3vf0
-        /MqDD8yYX2fG/UDnO8efHTMtm+FFoTMp3aKgpiRwVYmghaGH0uIZlzj/7jBVdwWASKze/j
-        len8GdK8MNuEPLJ1Ui5zfEz3YjdTfFcbQf6cgGHS7xFx/8zBd3jPAdbNacClFA==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   John Watts <contact@jookia.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jeff LaBundy <jeff@labundy.com>, Marek Vasut <marex@denx.de>,
-        Takashi Iwai <tiwai@suse.de>, linux-input@vger.kernel.org,
+        with ESMTP id S236820AbjHKT3t (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Aug 2023 15:29:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDE23580;
+        Fri, 11 Aug 2023 12:29:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 15A066797B;
+        Fri, 11 Aug 2023 19:29:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD39DC433C7;
+        Fri, 11 Aug 2023 19:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691782180;
+        bh=C3b8Pt48FA8HS2uxnTsnGzXHudg/cGiI78XFQzwaeM4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KAddTeAfG/R6O6bJmcsFRrSW3LAtKFDFanW6OTR8/MQtYcdGIizSJnz6d8S+5a5m6
+         E8+qkuXUzOk6YeopDMTAu/UwR0Fc6Ivv3O/Bt1dO44dLqM0ZsMqk+cI1SR+Ad8zW4U
+         lDBhZTcXl3OEzNopgRbgMm9cTDa2/3I2m/JcQu1/EsWkOg8F1uqxaaC7SarZhMHaGY
+         Yhf5NKJDNsjfZeQP8JjxN/SsWWX2yj/TIfp2gafQHXtrE0RW3FeZOSPq1tixiqR2xq
+         LNRbJ8qf6prUqkcat3iK7zDHgtuVDcHYS/6SU65oM0QGSqhQIRXfbzyNTAiyD0KWB4
+         WpQ/qTE8g/Rpg==
+Received: (nullmailer pid 3992613 invoked by uid 1000);
+        Fri, 11 Aug 2023 19:29:38 -0000
+Date:   Fri, 11 Aug 2023 13:29:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Raphael Gallais-Pou <rgallaispou@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Manuel Traut <manuel.traut@mt.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, alsa-devel@alsa-project.org,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH] Input: pwm-beeper - Support volume setting via sysfs
-Message-ID: <ZNYsGr6yBeVTtNMK@titan>
-References: <873514d2ju.wl-tiwai@suse.de>
- <63adce9a-df65-b462-9055-0ece5216d680@denx.de>
- <87tttkjmyu.wl-tiwai@suse.de>
- <0cffe366-75af-d8a8-8920-6fb94c321a89@denx.de>
- <87h6pkjh7q.wl-tiwai@suse.de>
- <618add56-3675-4efe-5b20-665c10040e03@denx.de>
- <ZMfgJ3o00nApkXGp@google.com>
- <f4612dc5-a7d4-74ba-2ed8-ea70314625b6@denx.de>
- <ZMh0Sa9s25JHhWw5@nixie71>
- <ZMi0HT/yaTo9uTyi@google.com>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: st: convert sti-pwm to DT schema
+Message-ID: <20230811192938.GA3990758-robh@kernel.org>
+References: <20230801220559.32530-1-rgallaispou@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZMi0HT/yaTo9uTyi@google.com>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230801220559.32530-1-rgallaispou@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 12:28:29AM -0700, Dmitry Torokhov wrote:
-> If we want to extend the API we will need to define exactly how it will
-> all work. I.e. what happens if userspace mixes the old SND_TONE and
-> SND_BELL with the new SND_BELL_VOL or whatever. Does it play with
-> previously set volume? The default one? How to set the default one? How
-> to figure out what the current volume is if we decide to make volume
-> "sticky"?
+On Wed, Aug 02, 2023 at 12:05:59AM +0200, Raphael Gallais-Pou wrote:
+> Converts st,sti-pwm binding to DT schema format
 > 
-> As far as userspace I expect it is more common to have one program (or
-> component of a program) to set volume and then something else requests
-> sound, so having one-shot API is of dubious value to me.
+> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-st.txt        | 43 -----------
+>  .../devicetree/bindings/pwm/st,sti-pwm.yaml   | 74 +++++++++++++++++++
+>  2 files changed, 74 insertions(+), 43 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-st.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml
 > 
-> I hope we can go with Takashi's proposal downthread, but if not I wonder
-> if the sysfs approach is not the simplest one. Do we expect more beepers
-> that can control volume besides pwm-beeper?
-> 
-> Thanks.
-> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> deleted file mode 100644
+> index 19fce774cafa..000000000000
+> --- a/Documentation/devicetree/bindings/pwm/pwm-st.txt
+> +++ /dev/null
+> @@ -1,43 +0,0 @@
+> -STMicroelectronics PWM driver bindings
+> ---------------------------------------
+> -
+> -Required parameters:
+> -- compatible :		"st,pwm"
+> -- #pwm-cells : 		Number of cells used to specify a PWM. First cell
+> -			specifies the per-chip index of the PWM to use and the
+> -			second cell is the period in nanoseconds - fixed to 2
+> -			for STiH41x.
+> -- reg :			Physical base address and length of the controller's
+> -			registers.
+> -- pinctrl-names: 	Set to "default".
+> -- pinctrl-0: 		List of phandles pointing to pin configuration nodes
+> -			for PWM module.
+> -			For Pinctrl properties, please refer to [1].
+> -- clock-names: 		Valid entries are "pwm" and/or "capture".
+> -- clocks: 		phandle of the clock used by the PWM module.
+> -			For Clk properties, please refer to [2].
+> -- interrupts:		IRQ for the Capture device
+> -
+> -Optional properties:
+> -- st,pwm-num-chan:	Number of available PWM channels.  Default is 0.
+> -- st,capture-num-chan:	Number of available Capture channels.  Default is 0.
+> -
+> -[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> -[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -
+> -Example:
+> -
+> -pwm1: pwm@fe510000 {
+> -	compatible = "st,pwm";
+> -	reg = <0xfe510000 0x68>;
+> -	#pwm-cells = <2>;
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_pwm1_chan0_default
+> -		     &pinctrl_pwm1_chan1_default
+> -		     &pinctrl_pwm1_chan2_default
+> -		     &pinctrl_pwm1_chan3_default>;
+> -	clocks = <&clk_sysin>;
+> -	clock-names = "pwm";
+> -	st,pwm-num-chan = <4>;
+> -	st,capture-num-chan = <2>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml b/Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml
+> new file mode 100644
+> index 000000000000..8a7833e9c10c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml
+> @@ -0,0 +1,74 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/st,sti-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STi PWM controller
+> +
+> +maintainers:
+> +  - Patrice Chotard <patrice.chotard@foss.st.com>
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: st,sti-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  pinctrl-names:
+> +    const: default
+> +
+> +  pinctrl-0:
+> +    description: Configuration for the default state.
+> +
+> +  clock-names:
+> +    const: pwm
+> +
+> +  clocks:
+> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+
+Drop quotes
+
+> +
+> +  st,pwm-num-chan:
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> +    description: Number of available PWM channels.
+
+Constraints?
+
+> +
+> +  st,capture-num-chan:
+> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+> +    description: Number of available Capture channels.
+
+Constraints?
+
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clock-names
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pwm1: pwm@9510000 {
+> +        compatible = "st,sti-pwm";
+> +        #pwm-cells = <2>;
+> +        reg = <0x9510000 0x68>;
+> +        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pinctrl_pwm1_chan0_default
+> +                 &pinctrl_pwm1_chan1_default
+> +                 &pinctrl_pwm1_chan2_default
+> +                 &pinctrl_pwm1_chan3_default>;
+> +        clock-names = "pwm";
+> +        clocks = <&clk_sysin>;
+> +        st,pwm-num-chan = <4>;
+> +    };
+> +...
 > -- 
-> Dmitry
-
-(Just to duck in as someone that has written a little program to play beeps and
-tones using the EV_TONE API)
-
-It might be worth distinguishing between the goals of having some beeps with
-different volumes compared to all beeps with different volumes.
-
-Sound card mixers generally control some sort of global volume while I would
-imagine the tone API would control per-tone volume. I don't know too much about
-safety guarantees but writing an input then sysfs or mixer then input again
-seems like it could get jumbled up.
-
-In that speicfic case I think it would make more sense to send volume and tone
-from whatever beep API is being used, with the volume being a multiplier of the
-loudest volume. This is similar to how audio works with PCM output. Existing
-beeps would have the volume set to 100%.
-
-John.
+> 2.41.0
+> 
