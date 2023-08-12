@@ -2,59 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C50EA7797C7
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Aug 2023 21:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB7CA77A088
+	for <lists+linux-pwm@lfdr.de>; Sat, 12 Aug 2023 16:46:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236833AbjHKT3t (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 11 Aug 2023 15:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
+        id S229645AbjHLOqT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 12 Aug 2023 10:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236820AbjHKT3t (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 11 Aug 2023 15:29:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDE23580;
-        Fri, 11 Aug 2023 12:29:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 15A066797B;
-        Fri, 11 Aug 2023 19:29:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD39DC433C7;
-        Fri, 11 Aug 2023 19:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691782180;
-        bh=C3b8Pt48FA8HS2uxnTsnGzXHudg/cGiI78XFQzwaeM4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KAddTeAfG/R6O6bJmcsFRrSW3LAtKFDFanW6OTR8/MQtYcdGIizSJnz6d8S+5a5m6
-         E8+qkuXUzOk6YeopDMTAu/UwR0Fc6Ivv3O/Bt1dO44dLqM0ZsMqk+cI1SR+Ad8zW4U
-         lDBhZTcXl3OEzNopgRbgMm9cTDa2/3I2m/JcQu1/EsWkOg8F1uqxaaC7SarZhMHaGY
-         Yhf5NKJDNsjfZeQP8JjxN/SsWWX2yj/TIfp2gafQHXtrE0RW3FeZOSPq1tixiqR2xq
-         LNRbJ8qf6prUqkcat3iK7zDHgtuVDcHYS/6SU65oM0QGSqhQIRXfbzyNTAiyD0KWB4
-         WpQ/qTE8g/Rpg==
-Received: (nullmailer pid 3992613 invoked by uid 1000);
-        Fri, 11 Aug 2023 19:29:38 -0000
-Date:   Fri, 11 Aug 2023 13:29:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Raphael Gallais-Pou <rgallaispou@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        with ESMTP id S229447AbjHLOqS (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 12 Aug 2023 10:46:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01CCC1B5;
+        Sat, 12 Aug 2023 07:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691851581; x=1723387581;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YCfr+Nz7HHzCOXY0udKVpPrS0ljXtJL5gnyuyd57AMw=;
+  b=L24JQcUww4+c1RQP0GW4r1l7idd1QDK1x/AR7xv5cZmzBxnOkWBtO5oT
+   bi9iFZ23EuH3/RuA9K7WX9IwuTW3YOQki6fQCTOKc48pYr0xzcMZvNBch
+   CkcqPrz5ILlPNgE9FPKisrUB7ZcVl3vVeiqZP6O6DNrvB6ZHpp7g+oeBW
+   QkBQE8qy8MhbbWEeMew3j1dXhndN9lr0R2yfQ4ck4OhybT4aVuriRHiSb
+   2HzMzxm99Uc4AR7iCJFY5ZMNABlz+AR/c3tlOfTiG6ovD73Izp2tu3LTe
+   mGLYZL4kH8VexQBPzMlljlX9DB1+QuT2D8Ffa9NgmD/WbSto8Zj22Tp10
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10800"; a="370731525"
+X-IronPort-AV: E=Sophos;i="6.01,168,1684825200"; 
+   d="scan'208";a="370731525"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2023 07:46:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10800"; a="979503000"
+X-IronPort-AV: E=Sophos;i="6.01,168,1684825200"; 
+   d="scan'208";a="979503000"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Aug 2023 07:46:16 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qUpsd-0008d2-1y;
+        Sat, 12 Aug 2023 14:46:15 +0000
+Date:   Sat, 12 Aug 2023 22:46:02 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Aleksandr Shubin <privatesub2@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pwm: st: convert sti-pwm to DT schema
-Message-ID: <20230811192938.GA3990758-robh@kernel.org>
-References: <20230801220559.32530-1-rgallaispou@gmail.com>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Aleksandr Shubin <privatesub2@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+Message-ID: <202308122212.SOHP09RP-lkp@intel.com>
+References: <20230810145443.1053387-3-privatesub2@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230801220559.32530-1-rgallaispou@gmail.com>
+In-Reply-To: <20230810145443.1053387-3-privatesub2@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,155 +83,161 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 12:05:59AM +0200, Raphael Gallais-Pou wrote:
-> Converts st,sti-pwm binding to DT schema format
-> 
-> Signed-off-by: Raphael Gallais-Pou <rgallaispou@gmail.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-st.txt        | 43 -----------
->  .../devicetree/bindings/pwm/st,sti-pwm.yaml   | 74 +++++++++++++++++++
->  2 files changed, 74 insertions(+), 43 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-st.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> deleted file mode 100644
-> index 19fce774cafa..000000000000
-> --- a/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> +++ /dev/null
-> @@ -1,43 +0,0 @@
-> -STMicroelectronics PWM driver bindings
-> ---------------------------------------
-> -
-> -Required parameters:
-> -- compatible :		"st,pwm"
-> -- #pwm-cells : 		Number of cells used to specify a PWM. First cell
-> -			specifies the per-chip index of the PWM to use and the
-> -			second cell is the period in nanoseconds - fixed to 2
-> -			for STiH41x.
-> -- reg :			Physical base address and length of the controller's
-> -			registers.
-> -- pinctrl-names: 	Set to "default".
-> -- pinctrl-0: 		List of phandles pointing to pin configuration nodes
-> -			for PWM module.
-> -			For Pinctrl properties, please refer to [1].
-> -- clock-names: 		Valid entries are "pwm" and/or "capture".
-> -- clocks: 		phandle of the clock used by the PWM module.
-> -			For Clk properties, please refer to [2].
-> -- interrupts:		IRQ for the Capture device
-> -
-> -Optional properties:
-> -- st,pwm-num-chan:	Number of available PWM channels.  Default is 0.
-> -- st,capture-num-chan:	Number of available Capture channels.  Default is 0.
-> -
-> -[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> -[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -
-> -Example:
-> -
-> -pwm1: pwm@fe510000 {
-> -	compatible = "st,pwm";
-> -	reg = <0xfe510000 0x68>;
-> -	#pwm-cells = <2>;
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&pinctrl_pwm1_chan0_default
-> -		     &pinctrl_pwm1_chan1_default
-> -		     &pinctrl_pwm1_chan2_default
-> -		     &pinctrl_pwm1_chan3_default>;
-> -	clocks = <&clk_sysin>;
-> -	clock-names = "pwm";
-> -	st,pwm-num-chan = <4>;
-> -	st,capture-num-chan = <2>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml b/Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml
-> new file mode 100644
-> index 000000000000..8a7833e9c10c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/st,sti-pwm.yaml
-> @@ -0,0 +1,74 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/st,sti-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STi PWM controller
-> +
-> +maintainers:
-> +  - Patrice Chotard <patrice.chotard@foss.st.com>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: st,sti-pwm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  pinctrl-names:
-> +    const: default
-> +
-> +  pinctrl-0:
-> +    description: Configuration for the default state.
-> +
-> +  clock-names:
-> +    const: pwm
-> +
-> +  clocks:
-> +    $ref: "/schemas/types.yaml#/definitions/phandle"
+Hi Aleksandr,
 
-Drop quotes
+kernel test robot noticed the following build warnings:
 
-> +
-> +  st,pwm-num-chan:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> +    description: Number of available PWM channels.
+[auto build test WARNING on thierry-reding-pwm/for-next]
+[also build test WARNING on sunxi/sunxi/for-next robh/for-next linus/master v6.5-rc5 next-20230809]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Constraints?
+url:    https://github.com/intel-lab-lkp/linux/commits/Aleksandr-Shubin/dt-bindings-pwm-Add-binding-for-Allwinner-D1-T113-S3-R329-PWM-controller/20230810-225849
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
+patch link:    https://lore.kernel.org/r/20230810145443.1053387-3-privatesub2%40gmail.com
+patch subject: [PATCH v4 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230812/202308122212.SOHP09RP-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230812/202308122212.SOHP09RP-lkp@intel.com/reproduce)
 
-> +
-> +  st,capture-num-chan:
-> +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> +    description: Number of available Capture channels.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308122212.SOHP09RP-lkp@intel.com/
 
-Constraints?
+All warnings (new ones prefixed by >>):
 
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clock-names
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    pwm1: pwm@9510000 {
-> +        compatible = "st,sti-pwm";
-> +        #pwm-cells = <2>;
-> +        reg = <0x9510000 0x68>;
-> +        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_pwm1_chan0_default
-> +                 &pinctrl_pwm1_chan1_default
-> +                 &pinctrl_pwm1_chan2_default
-> +                 &pinctrl_pwm1_chan3_default>;
-> +        clock-names = "pwm";
-> +        clocks = <&clk_sysin>;
-> +        st,pwm-num-chan = <4>;
-> +    };
-> +...
-> -- 
-> 2.41.0
-> 
+   drivers/pwm/pwm-sun20i.c: In function 'sun20i_pwm_apply':
+>> drivers/pwm/pwm-sun20i.c:121:48: warning: unused variable 'tmp' [-Wunused-variable]
+     121 |         u64 bus_rate, hosc_rate, clk_div, val, tmp;
+         |                                                ^~~
+
+
+vim +/tmp +121 drivers/pwm/pwm-sun20i.c
+
+   115	
+   116	static int sun20i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+   117				    const struct pwm_state *state)
+   118	{
+   119		struct sun20i_pwm_chip *sun20i_chip = to_sun20i_pwm_chip(chip);
+   120		u32 clk_gate, clk_cfg, pwm_en, ctl, period;
+ > 121		u64 bus_rate, hosc_rate, clk_div, val, tmp;
+   122		u32 prescaler, div_m;
+   123		bool use_bus_clk;
+   124		int ret = 0;
+   125	
+   126		mutex_lock(&sun20i_chip->mutex);
+   127	
+   128		pwm_en = sun20i_pwm_readl(sun20i_chip, PWM_ENABLE);
+   129	
+   130		if (state->enabled != pwm->state.enabled)
+   131			clk_gate = sun20i_pwm_readl(sun20i_chip, PWM_CLK_GATE);
+   132	
+   133		if (state->enabled != pwm->state.enabled && !state->enabled) {
+   134			clk_gate &= ~PWM_CLK_GATE_GATING(pwm->hwpwm);
+   135			pwm_en &= ~PWM_ENABLE_EN(pwm->hwpwm);
+   136			sun20i_pwm_writel(sun20i_chip, pwm_en, PWM_ENABLE);
+   137			sun20i_pwm_writel(sun20i_chip, clk_gate, PWM_CLK_GATE);
+   138		}
+   139	
+   140		if (state->polarity != pwm->state.polarity ||
+   141		    state->duty_cycle != pwm->state.duty_cycle ||
+   142		    state->period != pwm->state.period) {
+   143			ctl = sun20i_pwm_readl(sun20i_chip, PWM_CTL(pwm->hwpwm));
+   144			clk_cfg = sun20i_pwm_readl(sun20i_chip, PWM_CLK_CFG(pwm->hwpwm));
+   145			hosc_rate = clk_get_rate(sun20i_chip->clk_hosc);
+   146			bus_rate = clk_get_rate(sun20i_chip->clk_bus);
+   147			if (pwm_en & PWM_ENABLE_EN(pwm->hwpwm ^ 1)) {
+   148				/* if the neighbor channel is enable, check period only */
+   149				use_bus_clk = FIELD_GET(PWM_CLK_CFG_SRC, clk_cfg) != 0;
+   150				val = state->period * (use_bus_clk ? bus_rate : hosc_rate);
+   151				do_div(val, NSEC_PER_SEC);
+   152	
+   153				div_m = FIELD_GET(PWM_CLK_CFG_DIV_M, clk_cfg);
+   154			} else {
+   155				/* check period and select clock source */
+   156				use_bus_clk = false;
+   157				val = state->period * hosc_rate;
+   158				do_div(val, NSEC_PER_SEC);
+   159				if (val <= 1) {
+   160					use_bus_clk = true;
+   161					val = state->period * bus_rate;
+   162					do_div(val, NSEC_PER_SEC);
+   163					if (val <= 1) {
+   164						ret = -EINVAL;
+   165						goto unlock_mutex;
+   166					}
+   167				}
+   168				div_m = fls(DIV_ROUND_DOWN_ULL(val, PWM_MAGIC));
+   169				if (div_m >= 9) {
+   170					ret = -EINVAL;
+   171					goto unlock_mutex;
+   172				}
+   173	
+   174				/* set up the CLK_DIV_M and clock CLK_SRC */
+   175				clk_cfg = FIELD_PREP(PWM_CLK_CFG_DIV_M, div_m);
+   176				clk_cfg |= FIELD_PREP(PWM_CLK_CFG_SRC, use_bus_clk);
+   177	
+   178				sun20i_pwm_writel(sun20i_chip, clk_cfg, PWM_CLK_CFG(pwm->hwpwm));
+   179			}
+   180	
+   181			/* calculate prescaler, PWM entire cycle */
+   182			clk_div = val >> div_m;
+   183			if (clk_div <= 65534) {
+   184				prescaler = 0;
+   185			} else {
+   186				prescaler = DIV_ROUND_UP_ULL(clk_div - 65534, 65535);
+   187				if (prescaler >= 256) {
+   188					ret = -EINVAL;
+   189					goto unlock_mutex;
+   190				}
+   191				do_div(clk_div, prescaler + 1);
+   192			}
+   193	
+   194			period = FIELD_PREP(PWM_PERIOD_ENTIRE_CYCLE, clk_div);
+   195	
+   196			/* set duty cycle */
+   197			val = state->duty_cycle * (use_bus_clk ? bus_rate : hosc_rate);
+   198			do_div(val, NSEC_PER_SEC);
+   199			clk_div = val >> div_m;
+   200			do_div(clk_div, prescaler + 1);
+   201	
+   202			/*
+   203			 * The formula of the output period and the duty-cycle for PWM are as follows.
+   204			 * T period = (PWM01_CLK / PWM0_PRESCALE_K)^-1 * (PPR0.PWM_ENTIRE_CYCLE + 1)
+   205			 * T high-level = (PWM01_CLK / PWM0_PRESCALE_K)^-1 * PPR0.PWM_ACT_CYCLE
+   206			 * Duty-cycle = T high-level / T period
+   207			 * In accordance with this formula, in order to set the duty-cycle to 100%,
+   208			 * it is necessary that PWM_ACT_CYCLE >= PWM_ENTIRE_CYCLE + 1
+   209			 */
+   210			if (state->duty_cycle == state->period)
+   211				clk_div++;
+   212			period |= FIELD_PREP(PWM_PERIOD_ACT_CYCLE, clk_div);
+   213			sun20i_pwm_writel(sun20i_chip, period, PWM_PERIOD(pwm->hwpwm));
+   214	
+   215			ctl = FIELD_PREP(PWM_CTL_PRESCAL_K, prescaler);
+   216			if (state->polarity == PWM_POLARITY_NORMAL)
+   217				ctl |= PWM_CTL_ACT_STA;
+   218	
+   219			sun20i_pwm_writel(sun20i_chip, ctl, PWM_CTL(pwm->hwpwm));
+   220		}
+   221	
+   222		if (state->enabled != pwm->state.enabled && state->enabled) {
+   223			clk_gate &= ~PWM_CLK_GATE_BYPASS(pwm->hwpwm);
+   224			clk_gate |= PWM_CLK_GATE_GATING(pwm->hwpwm);
+   225			pwm_en |= PWM_ENABLE_EN(pwm->hwpwm);
+   226			sun20i_pwm_writel(sun20i_chip, pwm_en, PWM_ENABLE);
+   227			sun20i_pwm_writel(sun20i_chip, clk_gate, PWM_CLK_GATE);
+   228		}
+   229	
+   230	unlock_mutex:
+   231		mutex_unlock(&sun20i_chip->mutex);
+   232	
+   233		return ret;
+   234	}
+   235	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
