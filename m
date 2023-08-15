@@ -2,37 +2,37 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A99A877CF45
-	for <lists+linux-pwm@lfdr.de>; Tue, 15 Aug 2023 17:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE5BA77CFFB
+	for <lists+linux-pwm@lfdr.de>; Tue, 15 Aug 2023 18:15:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238114AbjHOPgl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Aug 2023 11:36:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44818 "EHLO
+        id S238485AbjHOQPC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 15 Aug 2023 12:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238167AbjHOPgb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Aug 2023 11:36:31 -0400
+        with ESMTP id S230336AbjHOQOe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Aug 2023 12:14:34 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1001BF8;
-        Tue, 15 Aug 2023 08:36:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D128398;
+        Tue, 15 Aug 2023 09:14:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CCD765B81;
-        Tue, 15 Aug 2023 15:36:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E811C433C8;
-        Tue, 15 Aug 2023 15:35:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5C50F65901;
+        Tue, 15 Aug 2023 16:14:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BA68C433C8;
+        Tue, 15 Aug 2023 16:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692113760;
-        bh=L16qJr+cFxC8bq6xHZ74yo7NYUNzP7Haus3/eItPbts=;
+        s=k20201202; t=1692116071;
+        bh=ZA+SlCsBMcnj/rlUUuHXJT4uMLI0+8HJJCCwjUgVjFE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=la6rSjDL1f4g5Zmbr3A10iwxtMj2mVfTXuYlO81tgA2Rkns7gdsiaYgk970dq2UCd
-         IBuerixPe5n6fWDzhVfXjfW5PSI+jNW2wygb9AJxAmN2Ifx/YDDlQ2BORgl3VzVPRW
-         VtgI3f7BwffxYlqa2VSgYKNGa5U3Wg7HVuk2HZdUGoLek07KxrIIM9pgngAZ++8p4z
-         I84uxug8xnyyaN7nwYGKk6nJGrBXlwHkcx/MDCDWRbLxuWXv72hESAZWjOAY61YkR2
-         jNrD4GF7VD6eF9F8kA+ZPPT8L9C/tmkWagzmyLpypLF1iv4kdH6ORM5HWaeZNLiIqZ
-         vG1W50lFFq7Kw==
-Date:   Tue, 15 Aug 2023 08:38:44 -0700
+        b=jiXjZ/81Cq1PNFPGEq8fDFH9sKNNd9snIxjKN94/udALhDGffa5XO8k6sSggzXt7Q
+         dUTHTmc2oD4jtfaMh9mnRRGjNKR5iHe8gNc8aTryVXvvGCcJozWt5Q0b9V9rNyZA4c
+         Pzov2uJeQ6YfHGRKAEdQLgX5fhdbUozgnsYv8BEJEahk3Tn+9Qb13ZpKhqtTZKPiQi
+         ffpGYM8muRKPD7U+I5NDrSY/B00x46Y0uMX8Kdj2ORT4CDGVzQeMQAyK38mRTKPS1H
+         /0Im8Y0PCxOgrIjQSWs8AEfdEr7+sMjc5vSJgvrCpI+VIMAG9J98mqqYFvMoQvdCQ6
+         bV6JU3T2nLmLw==
+Date:   Tue, 15 Aug 2023 09:17:15 -0700
 From:   Bjorn Andersson <andersson@kernel.org>
 To:     Anjelique Melendez <quic_amelende@quicinc.com>
 Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
@@ -41,280 +41,260 @@ Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
         konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
         quic_subbaram@quicinc.com, linux-leds@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG
- through single SDAM
-Message-ID: <vt2ma5qiqv4uvzdhhouvxo6ykvfcwlqjjvctcsorfy6dfh2efp@g4viqt2rqvz4>
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Guru Das Srinagesh <quic_gurus@quicinc.com>
+Subject: Re: [PATCH v3 6/7] leds: rgb: leds-qcom-lpg: Support two-nvmem PPG
+ Scheme
+Message-ID: <ho2oldc5dgwc274tc7unxuw6dymaz4i6amssfnkaauxhgzmjqx@in7yjuhyezm6>
 References: <20230814235918.10396-1-quic_amelende@quicinc.com>
- <20230814235918.10396-5-quic_amelende@quicinc.com>
+ <20230814235918.10396-7-quic_amelende@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230814235918.10396-5-quic_amelende@quicinc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230814235918.10396-7-quic_amelende@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 04:59:15PM -0700, Anjelique Melendez wrote:
-> In some PMICs like pmi632, the LUT pattern and LPG configuration can be
-> stored in a single SDAM module instead of LUT peripheral. This feature is
-> called PPG.
+On Mon, Aug 14, 2023 at 04:59:17PM -0700, Anjelique Melendez wrote:
+> On PMICs such as PM8350C, the lookup table containing the pattern data
+> is stored in a separate nvmem device from the one where the per-channel
+
+I think it would be better to say "separate SDAM" instead of "separate
+nvmem device", to make it clearer to the reader what's being done.
+
+> data is stored.
 > 
+> Add support for two separate nvmems to handle this case while maintaining
 
-You also introduce the abbreviation PBS in the driver, I think it would
-be useful to mention what that is as well.
+You're only adding the support for the dedicated LUT SDAM, not "for two
+separate nvmems".
 
-It would also be preferred if you expanded (some of) these abbreviations
-in this description, to make the TLA-soup taste better.
-
-> Add support for configuring and using LUT pattern from SDAM.
+> backward compatibility for those targets that use only a single nvmem
+> device.
 > 
+> Signed-off-by: Guru Das Srinagesh <quic_gurus@quicinc.com>
+
+If Guru was the first to sign off the change, then he must have authored
+the patch. Or add a Co-developed-by if that's appropriate.
+
 > Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
 > ---
->  drivers/leds/rgb/leds-qcom-lpg.c | 309 ++++++++++++++++++++++++++++---
->  1 file changed, 283 insertions(+), 26 deletions(-)
+>  drivers/leds/rgb/leds-qcom-lpg.c | 112 ++++++++++++++++++++++++-------
+>  1 file changed, 89 insertions(+), 23 deletions(-)
 > 
 > diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-[..]
-> @@ -65,7 +83,12 @@ struct lpg_data;
->   * @lut_base:	base address of the LUT block (optional)
->   * @lut_size:	number of entries in the LUT block
+> index 822c7bff00df..f3f83925ab41 100644
+> --- a/drivers/leds/rgb/leds-qcom-lpg.c
+> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
+> @@ -60,6 +60,7 @@
+>  #define RAMP_STEP_DURATION(x)		(((x) * 1000 / DEFAULT_TICK_DURATION_US) & 0xff)
+>  
+>  /* LPG common config settings for PPG */
+> +#define SDAM_START_BASE			0x40
+
+I really wish that we hid this offset in the SDAM nvmem driver - but
+that ship has sailed...
+
+>  #define SDAM_REG_RAMP_STEP_DURATION		0x47
+>  #define SDAM_LUT_COUNT_MAX			64
+>  
+> @@ -69,6 +70,8 @@
+>  #define SDAM_END_INDEX_OFFSET			0x3
+>  #define SDAM_START_INDEX_OFFSET		0x4
+>  #define SDAM_PBS_SCRATCH_LUT_COUNTER_OFFSET	0x6
+> +#define SDAM_PAUSE_HI_MULTIPLIER_OFFSET	0x8
+> +#define SDAM_PAUSE_LO_MULTIPLIER_OFFSET	0x9
+>  
+>  struct lpg_channel;
+>  struct lpg_data;
+> @@ -85,7 +88,9 @@ struct lpg_data;
 >   * @lut_bitmap:	allocation bitmap for LUT entries
-> - * @triled_base: base address of the TRILED block (optional)
-> + * @pbs_dev:	PBS device
-> + * @lpg_chan_nvmem:	LPG nvmem peripheral device
-> + * @pbs_en_bitmap:	bitmap for tracking PBS triggers
-> + * @lut_sdam_base:	offset where LUT pattern begins in nvmem
-> + * @ppg_en:	Flag indicating whether PPG is enabled/used
-
-Looking at its usage, it doesn't feel so much "is PPG enabled" as "does
-this instance use PPG", it's not a thing that can be enabled/disabled in
-runtime.
-
-So "has_ppg" seems like a better name, or perhaps even "use_sdam" and
-avoid "PPG" completely and make it clearer to the average reader?
-
-[..]
-> @@ -192,21 +229,87 @@ struct lpg_channel_data {
->   * @lut_base:		base address of LUT block
->   * @lut_size:		number of entries in LUT
->   * @triled_base:	base address of TRILED
-> + * @lut_sdam_base:	base address where LUT pattern begins in nvmem device
->   * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
->   * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
->   * @num_channels:	number of channels in LPG
+>   * @pbs_dev:	PBS device
+>   * @lpg_chan_nvmem:	LPG nvmem peripheral device
+> + * @lut_nvmem:	LUT nvmem peripheral device
+>   * @pbs_en_bitmap:	bitmap for tracking PBS triggers
 > + * @nvmem_count:	number of nvmems used for LUT and PPG config
->   * @channels:		list of channel initialization data
->   */
->  struct lpg_data {
->  	unsigned int lut_base;
->  	unsigned int lut_size;
->  	unsigned int triled_base;
-> +	unsigned int lut_sdam_base;
->  	bool triled_has_atc_ctl;
->  	bool triled_has_src_sel;
->  	int num_channels;
-> +	int nvmem_count;
 
-I can't think of a reason for this to ever be negative, so please mark
-it unsigned.
+I find the concept of "how many nvmem do we have" slightly unclear.
+Perhaps we could split this that into two separate boolean properties,
+something like use_sdam and use_sdam_lut?
 
-(It seems to have been an oversight to make this num_channels signed,
-when the two other instances are unsigned. But that's an unrelated
-change)
 
->  	const struct lpg_channel_data *channels;
->  };
+On the other hand, use_sdam and use_sdam_lut should afaict always be
+equal to lpg_chan_nvmem != NULL and lut_nvmem != NULL. So you could use
+these directly instead.
+
+>   * @lut_sdam_base:	offset where LUT pattern begins in nvmem
+>   * @ppg_en:	Flag indicating whether PPG is enabled/used
+>   * @triled_base:	base address of the TRILED block (optional)
+> @@ -111,7 +116,9 @@ struct lpg {
 >  
-> +static int lpg_sdam_write(struct lpg *lpg, u16 addr, u8 val)
-> +{
-> +	int rc;
-> +
-> +	rc = nvmem_device_write(lpg->lpg_chan_nvmem, addr, 1, &val);
-> +	if (rc < 0)
-> +		dev_err(lpg->dev, "writing %u to SDAM addr %#x failed, rc=%d\n",
-> +			val, addr, rc);
-> +
-> +	return rc > 0 ? 0 : rc;
+>  	struct pbs_dev *pbs_dev;
+>  	struct nvmem_device *lpg_chan_nvmem;
+> +	struct nvmem_device *lut_nvmem;
+>  	unsigned long pbs_en_bitmap;
+> +	unsigned int nvmem_count;
+>  	u32 lut_sdam_base;
+>  	bool ppg_en;
+>  
+> @@ -261,6 +268,8 @@ static int lpg_sdam_write(struct lpg *lpg, u16 addr, u8 val)
+>  }
+>  
+>  #define SDAM_REG_PBS_SEQ_EN		0x42
+> +#define SDAM_PBS_TRIG_SET		0xe5
+> +#define SDAM_PBS_TRIG_CLR		0xe6
 
-Suggestion. It's idiomatic to deal with the error path first in the
-kernel, so writing this as "if it's an error propagate that, otherwise
-return 0" would feel more natural. It would have also saved me from
-wondering if you consider 0 to be an error or not.
+Please add these at the top, like requested in the previous patch.
 
-> +}
-> +
-> +#define SDAM_REG_PBS_SEQ_EN		0x42
-
-It seems I choose to sprinkle the bit defines throughout the driver, but
-all other register definitions are gathered at the top of the file. So
-please put this one there as well (and keep the PBS_SW_TRIG_BIT here).
-
-> +#define PBS_SW_TRIG_BIT		BIT(0)
-> +
+>  #define PBS_SW_TRIG_BIT		BIT(0)
+>  
 [..]
-> +static void lpg_sdam_configure_triggers(struct lpg_channel *chan)
-> +{
-> +	if (!chan->lpg->ppg_en)
-> +		return;
-> +
-> +	if (chan->enabled && chan->pattern_set) {
-> +		lpg_sdam_write(chan->lpg, SDAM_LUT_EN_OFFSET + chan->sdam_offset, 1);
-> +		lpg_set_pbs_trigger(chan);
-> +		chan->pattern_set = false;
-
-Forgive me if I'm confused, but doesn't this mean that if I configure a
-pattern and then set the brightness twice the pattern will be disabled
-again?
-
-> +	} else {
-> +		lpg_sdam_write(chan->lpg, SDAM_LUT_EN_OFFSET + chan->sdam_offset, 0);
-> +		lpg_clear_pbs_trigger(chan);
-> +	}
-> +}
-> +
-[..]
->  static void lpg_apply_lut_control(struct lpg_channel *chan)
+>  static void lpg_sdam_apply_lut_control(struct lpg_channel *chan)
 >  {
+>  	u8 val, conf = 0;
+> +	unsigned int hi_pause, lo_pause;
 >  	struct lpg *lpg = chan->lpg;
-> @@ -476,6 +634,9 @@ static void lpg_apply_lut_control(struct lpg_channel *chan)
->  	if (!chan->ramp_enabled || chan->pattern_lo_idx == chan->pattern_hi_idx)
->  		return;
 >  
-> +	if (lpg->ppg_en)
-> +		return lpg_sdam_apply_lut_control(chan);
-
-Perhaps cleaner to just call lpg_sdam_apply_lut_control() directly from
-lpg_apply() instead of bouncing in this function?
-
+> +	hi_pause = DIV_ROUND_UP(chan->ramp_hi_pause_ms, chan->ramp_tick_ms);
+> +	lo_pause = DIV_ROUND_UP(chan->ramp_lo_pause_ms, chan->ramp_tick_ms);
 > +
->  	hi_pause = DIV_ROUND_UP(chan->ramp_hi_pause_ms, step);
->  	lo_pause = DIV_ROUND_UP(chan->ramp_lo_pause_ms, step);
+>  	if (!chan->ramp_oneshot)
+>  		conf |= LPG_PATTERN_CONFIG_REPEAT;
+> +	if (chan->ramp_hi_pause_ms && lpg->nvmem_count != 1)
+> +		conf |= LPG_PATTERN_CONFIG_PAUSE_HI;
+> +	if (chan->ramp_lo_pause_ms && lpg->nvmem_count != 1)
+> +		conf |= LPG_PATTERN_CONFIG_PAUSE_LO;
 >  
-> @@ -632,7 +793,7 @@ static void lpg_brightness_set(struct lpg_led *led, struct led_classdev *cdev,
->  		} else {
->  			lpg_calc_freq(chan, NSEC_PER_MSEC);
+>  	lpg_sdam_write(lpg, SDAM_PBS_SCRATCH_LUT_COUNTER_OFFSET + chan->sdam_offset, 0);
+>  	lpg_sdam_write(lpg, SDAM_PATTERN_CONFIG_OFFSET + chan->sdam_offset, conf);
 >  
-> -			duty = div_u64(brightness * chan->period, cdev->max_brightness);
-> +			duty = div_u64(brightness * chan->period, LPG_RESOLUTION_9BIT);
+> -	lpg_sdam_write(lpg, SDAM_END_INDEX_OFFSET + chan->sdam_offset, chan->pattern_hi_idx);
+> -	lpg_sdam_write(lpg, SDAM_START_INDEX_OFFSET + chan->sdam_offset, chan->pattern_lo_idx);
+> +	val = lpg_get_sdam_lut_idx(chan, chan->pattern_hi_idx);
 
-This changes the divisor for the non-ppg case from LPG_RESOLUTION_9BIT
-- 1 to LPG_RESOLUTION_9BIT.
+I'd suggest adding a local variable "lut_offset" to the values here,
+instead of calling out to a separate function to perhaps adjust the
+values.
 
-Please perform any modifications to the non-ppg behavior in a separate
-commit, so that any potential regression can be easily identified as
-coming from refactoring, intentional changes or the introduction of new
-the new support.
+> +	lpg_sdam_write(lpg, SDAM_END_INDEX_OFFSET + chan->sdam_offset, val);
+> +
+> +	val = lpg_get_sdam_lut_idx(chan, chan->pattern_lo_idx);
+> +	lpg_sdam_write(lpg, SDAM_START_INDEX_OFFSET + chan->sdam_offset, val);
+>  
+>  	val = RAMP_STEP_DURATION(chan->ramp_tick_ms);
+>  	if (val > 0)
+>  		val--;
+>  	lpg_sdam_write(lpg, SDAM_REG_RAMP_STEP_DURATION, val);
+> +
+> +	if (lpg->nvmem_count != 1) {
+> +		lpg_sdam_write(lpg, SDAM_PAUSE_HI_MULTIPLIER_OFFSET + chan->sdam_offset, hi_pause);
+> +		lpg_sdam_write(lpg, SDAM_PAUSE_LO_MULTIPLIER_OFFSET + chan->sdam_offset, lo_pause);
+> +	}
+> +
+>  }
+>  
+>  static void lpg_apply_lut_control(struct lpg_channel *chan)
+> @@ -1000,8 +1050,8 @@ static int lpg_pattern_set(struct lpg_led *led, struct led_pattern *led_pattern,
+>  	 * enabled. In this scenario the delta_t of the middle entry (i.e. the
+>  	 * last in the programmed pattern) determines the "high pause".
+>  	 *
+> -	 * NVMEM devices supporting LUT do not support "low pause", "high pause"
+> -	 * or "ping pong"
+> +	 * All NVMEM devices supporting LUT do not support "ping pong"
+> +	 * Single NVMEM devices supporting LUT do not support "low pause" and "high pause"
 
+How about: "SDAM-based devices does not support "ping pong", and only
+supports "low pause" and "high pause" with dedicated SDAM LUT." ?
 
-
->  			lpg_calc_duty(chan, duty);
->  			chan->enabled = true;
->  			chan->ramp_enabled = false;
+>  	 */
+>  
+>  	/* Detect palindromes and use "ping pong" to reduce LUT usage */
 [..]
-> +static int lpg_parse_sdam(struct lpg *lpg)
-> +{
-> +	int rc = 0;
-> +
-> +	if (lpg->data->nvmem_count == 0)
-> +		return 0;
-> +
-> +	/* get the nvmem device for LPG/LUT config */
-> +	lpg->lpg_chan_nvmem = devm_nvmem_device_get(lpg->dev, "lpg_chan_sdam");
-> +	if (IS_ERR(lpg->lpg_chan_nvmem)) {
-> +		rc = PTR_ERR(lpg->lpg_chan_nvmem);
-> +		if (rc != -EPROBE_DEFER)
-> +			dev_err(lpg->dev, "Failed to get nvmem device, rc=%d\n", rc);
-> +		return rc;
-
-return dev_err_probe(lpg->dev, "PTR_ERR(lpg->lpg_chan_nvmem, "Failed
-to...") will handle the EPROBE_DEFER conditioning and make the error
-message show up in /sys/kernel/debug/devices_deferred after boot.
-
-> +	}
-> +
-> +	lpg->pbs_dev = get_pbs_client_device(lpg->dev);
-> +	if (IS_ERR(lpg->pbs_dev)) {
-> +		rc = PTR_ERR(lpg->pbs_dev);
-> +		if (rc != -EPROBE_DEFER)
-> +			dev_err(lpg->dev, "Failed to get PBS client device, rc=%d\n", rc);
-> +		return rc;
-
-Same here.
-
-> +	}
-> +
-> +	lpg->ppg_en = true;
-> +
-> +	return rc;
-
-rc is 0 here. return 0 would make that obvious to the reader, and save
-you from having to zero-initialize the variable.
-
-> +}
-> +
-> +static int lpg_init_sdam(struct lpg *lpg)
-> +{
-> +	struct lpg_channel *chan;
-> +	int i, rc;
-> +
-> +	if (!lpg->ppg_en)
-
-This is effectively checking if the previous function also bailed.
-Perhaps it would be cleaner to just string these two together?
-
-> +		return 0;
-> +
-> +	for (i = 0; i < lpg->num_channels; i++) {
-> +		chan = &lpg->channels[i];
-> +		if (chan->sdam_offset) {
-> +			rc = lpg_sdam_write(lpg, SDAM_LUT_EN_OFFSET + chan->sdam_offset, 0);
-> +			if (rc < 0)
-> +				break;
-> +
-> +			rc = lpg_sdam_write(lpg,
-> +					SDAM_PBS_SCRATCH_LUT_COUNTER_OFFSET + chan->sdam_offset, 0);
-> +			if (rc < 0)
-> +				break;
-> +		}
-> +	}
-> +
-> +	return rc;
-> +}
-> +
->  static int lpg_probe(struct platform_device *pdev)
+> @@ -1509,29 +1559,45 @@ static int lpg_parse_sdam(struct lpg *lpg)
 >  {
->  	struct device_node *np;
-> @@ -1348,6 +1595,14 @@ static int lpg_probe(struct platform_device *pdev)
->  	if (ret < 0)
->  		return ret;
+>  	int rc = 0;
 >  
-> +	ret = lpg_parse_sdam(lpg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = lpg_init_sdam(lpg);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	ret = lpg_init_lut(lpg);
->  	if (ret < 0)
->  		return ret;
-> @@ -1363,7 +1618,9 @@ static int lpg_probe(struct platform_device *pdev)
->  	for (i = 0; i < lpg->num_channels; i++)
->  		lpg_apply_dtest(&lpg->channels[i]);
+> -	if (lpg->data->nvmem_count == 0)
+> +	lpg->nvmem_count = lpg->data->nvmem_count;
+> +	if (lpg->nvmem_count == 0)
+>  		return 0;
 >  
-> -	return lpg_add_pwm(lpg);
-> +	ret = lpg_add_pwm(lpg);
+> -	/* get the nvmem device for LPG/LUT config */
+> +	if (lpg->nvmem_count > 2)
+> +		return -EINVAL;
 > +
-> +	return ret;
+> +	/* get the 1st nvmem device for LPG/LUT config */
+>  	lpg->lpg_chan_nvmem = devm_nvmem_device_get(lpg->dev, "lpg_chan_sdam");
+>  	if (IS_ERR(lpg->lpg_chan_nvmem)) {
+>  		rc = PTR_ERR(lpg->lpg_chan_nvmem);
+> -		if (rc != -EPROBE_DEFER)
+> -			dev_err(lpg->dev, "Failed to get nvmem device, rc=%d\n", rc);
+> -		return rc;
+> +		goto err;
+>  	}
+>  
+> -	lpg->pbs_dev = get_pbs_client_device(lpg->dev);
+> -	if (IS_ERR(lpg->pbs_dev)) {
+> -		rc = PTR_ERR(lpg->pbs_dev);
+> -		if (rc != -EPROBE_DEFER)
+> -			dev_err(lpg->dev, "Failed to get PBS client device, rc=%d\n", rc);
+> -		return rc;
+> +	if (lpg->nvmem_count == 1) {
+> +		/* get PBS device node if single NVMEM device */
+> +		lpg->pbs_dev = get_pbs_client_device(lpg->dev);
+> +		if (IS_ERR(lpg->pbs_dev)) {
+> +			rc = PTR_ERR(lpg->pbs_dev);
+> +			if (rc != -EPROBE_DEFER)
+> +				dev_err(lpg->dev, "Failed to get PBS client device, rc=%d\n", rc);
+> +			return rc;
 
-I'm failing to see the usefulness of this change.
+return dev_err_probe() please.
+
+> +		}
+> +	} else if (lpg->nvmem_count == 2) {
+> +		/* get the 2nd nvmem device for LUT pattern */
+> +		lpg->lut_nvmem = devm_nvmem_device_get(lpg->dev, "lut_sdam");
+> +		if (IS_ERR(lpg->lut_nvmem)) {
+> +			rc = PTR_ERR(lpg->lut_nvmem);
+> +			goto err;
+> +		}
+>  	}
+>  
+>  	lpg->ppg_en = true;
+>  
+>  	return rc;
+
+rc is still 0 here.
+
+> +err:
+> +	if (rc != -EPROBE_DEFER)
+> +		dev_err(lpg->dev, "Failed to get nvmem device, rc=%d\n", rc);
+
+The idiomatic usage of goto is to share error handling, and release
+resources in a reverse order that they where acquired. It's therefor
+going to confuse future readers when you do:
+
+if (error)
+  goto err;
+
+if (error2)
+  return rc;
+
+if (error3)
+  goto err;
+
+
+But more importantly, this error message gives no indication about which
+nvmem device the driver failed to find. If you move the error print up,
+and use dev_err_probe() the code will be easier to follow and you can
+afford making the error message more helpful.
 
 Regards,
 Bjorn
