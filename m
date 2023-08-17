@@ -2,149 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 441D077D6E6
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Aug 2023 02:11:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6E8B77F1BF
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Aug 2023 10:04:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240747AbjHPAKm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 15 Aug 2023 20:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49106 "EHLO
+        id S233881AbjHQIEK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Aug 2023 04:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240745AbjHPAKf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 15 Aug 2023 20:10:35 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF0B71FF9;
-        Tue, 15 Aug 2023 17:10:33 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37FNk2fp014657;
-        Wed, 16 Aug 2023 00:10:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=/sp3AgrnBEmHamq/qC++wlsR2QVoM6XWuGxyCMF61Ig=;
- b=co+KvoqKdbGCQ/5pk2N5jWWD4+kkZL2nJ5pG7kZ1YhX8fgD3vVN/hcSAy9M8w5//6YRK
- VyJXxBChWoeNHoYhCvaNRyJ6E95QOJlWclqFjYzL3FXc04pOEFLpnO24B5Yzoqs7xZtF
- yxnyxGQ83e2fcA8Q2OV8sFaPp0UqzczRWMtoJ2gQDnRBwDorErRoMpCh1LOmq/Y+83+G
- yqvNnpkCwuIW+43aS3wVN8tEHSFkat8BWCk05u2ThyB+rXy2PfHX3cWuPIKqiiZnwg7X
- Y6R/S3ccDo4OlToo6hwSat2dkd0gT7yO88PBwV5g6Lj8xAMCYzxWuj5c1w0GHX2u5BoB nw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sfqp1jy25-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 00:10:08 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37G0A7NP008345
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Aug 2023 00:10:07 GMT
-Received: from [10.110.36.106] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Tue, 15 Aug
- 2023 17:10:06 -0700
-Message-ID: <23a46503-ca45-26cb-c1df-f765e6db95d4@quicinc.com>
-Date:   Tue, 15 Aug 2023 17:09:58 -0700
+        with ESMTP id S1348762AbjHQIDe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Aug 2023 04:03:34 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FCB2D7B;
+        Thu, 17 Aug 2023 01:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1692259403; x=1723795403;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Q4P7tpRGW5q4XoGYaMtzXxey1EvyzRfYaU+GmMtoXMY=;
+  b=ZNjz7kffQvwJ7ktyS/Xq8aDpwLC7xuOi2oqGhdmTZNKIUrjtJwas5QOK
+   2PQUcprj+ivn4wrM0B857J7ER/c8IRCFcgnqpwj1pOa0Ec9NjJ1oQwqhl
+   UKim9cGzpFHsPClNnjOI9h2kJtWTDEGy6+bJCaqbOsT1am4QKkFH1tAaA
+   WIGycPg9u3jveVbJDl2ME08TcRelCiWCg31Dq1cMpX3ZTGRn5tSR8TQ2r
+   sScZnyI2bXWQqpG4Zqd24gvvfPssjns6/hTzrFzPrK8WgHq3+LG0eFx/5
+   94AMjGiSp0MMTD5tC4fzgUJOYaF9YcmeaIiQpa0Zn6uAHF1Sk9EEjrPjb
+   g==;
+X-IronPort-AV: E=Sophos;i="6.01,179,1684792800"; 
+   d="scan'208";a="32487371"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 17 Aug 2023 10:03:21 +0200
+Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id EF914280075;
+        Thu, 17 Aug 2023 10:03:20 +0200 (CEST)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: imx8qxp: add adma_pwm in adma
+Date:   Thu, 17 Aug 2023 10:03:20 +0200
+Message-ID: <8261600.T7Z3S40VBb@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20230604095038.GA4199@dragon>
+References: <20230424082108.26512-1-alexander.stein@ew.tq-group.com> <20230424082108.26512-2-alexander.stein@ew.tq-group.com> <20230604095038.GA4199@dragon>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG
- through single SDAM
-Content-Language: en-US
-To:     Bjorn Andersson <andersson@kernel.org>
-CC:     <pavel@ucw.cz>, <lee@kernel.org>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>,
-        <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
-        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>
-References: <20230814235918.10396-1-quic_amelende@quicinc.com>
- <20230814235918.10396-5-quic_amelende@quicinc.com>
- <vt2ma5qiqv4uvzdhhouvxo6ykvfcwlqjjvctcsorfy6dfh2efp@g4viqt2rqvz4>
-From:   Anjelique Melendez <quic_amelende@quicinc.com>
-In-Reply-To: <vt2ma5qiqv4uvzdhhouvxo6ykvfcwlqjjvctcsorfy6dfh2efp@g4viqt2rqvz4>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: negTXOjxz5dJg7NOVlXcGyezP1bGwF8U
-X-Proofpoint-ORIG-GUID: negTXOjxz5dJg7NOVlXcGyezP1bGwF8U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-15_21,2023-08-15_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 mlxscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308150217
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Shawn,
+
+Am Sonntag, 4. Juni 2023, 11:50:38 CEST schrieb Shawn Guo:
+> On Mon, Apr 24, 2023 at 10:21:08AM +0200, Alexander Stein wrote:
+> > Add PWM device and the corresponding clock gating device in adma
+> > subsystem.
+> >=20
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+>=20
+> Looks good to me.  I will pick it up after dt-bindings one gets
+> accepted/picked first.
+
+Did this get missed accidentally? Patch 1 was picked by Thierry already.
+
+Best regards,
+Alexander
+
+> Shawn
+>=20
+> > ---
+> > * New in v2
+> >=20
+> >  .../arm64/boot/dts/freescale/imx8-ss-dma.dtsi | 25 +++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> > b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi index
+> > 2dce8f2ee3ea..7d5f96c99020 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> > @@ -124,6 +124,19 @@ lpuart3: serial@5a090000 {
+> >=20
+> >  		status =3D "disabled";
+> >  =09
+> >  	};
+> >=20
+> > +	adma_pwm: pwm@5a190000 {
+> > +		compatible =3D "fsl,imx8qxp-pwm", "fsl,imx27-pwm";
+> > +		reg =3D <0x5a190000 0x1000>;
+> > +		interrupts =3D <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks =3D <&adma_pwm_lpcg 1>,
+> > +			 <&adma_pwm_lpcg 0>;
+> > +		clock-names =3D "ipg", "per";
+> > +		assigned-clocks =3D <&clk IMX_SC_R_LCD_0_PWM_0=20
+IMX_SC_PM_CLK_PER>;
+> > +		assigned-clock-rates =3D <24000000>;
+> > +		#pwm-cells =3D <2>;
+> > +		power-domains =3D <&pd IMX_SC_R_LCD_0_PWM_0>;
+> > +	};
+> > +
+> >=20
+> >  	spi0_lpcg: clock-controller@5a400000 {
+> >  =09
+> >  		compatible =3D "fsl,imx8qxp-lpcg";
+> >  		reg =3D <0x5a400000 0x10000>;
+> >=20
+> > @@ -220,6 +233,18 @@ uart3_lpcg: clock-controller@5a490000 {
+> >=20
+> >  		power-domains =3D <&pd IMX_SC_R_UART_3>;
+> >  =09
+> >  	};
+> >=20
+> > +	adma_pwm_lpcg: clock-controller@5a590000 {
+> > +		compatible =3D "fsl,imx8qxp-lpcg";
+> > +		reg =3D <0x5a590000 0x10000>;
+> > +		#clock-cells =3D <1>;
+> > +		clocks =3D <&clk IMX_SC_R_LCD_0_PWM_0 IMX_SC_PM_CLK_PER>,
+> > +			 <&dma_ipg_clk>;
+> > +		clock-indices =3D <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
+> > +		clock-output-names =3D "adma_pwm_lpcg_clk",
+> > +				     "adma_pwm_lpcg_ipg_clk";
+> > +		power-domains =3D <&pd IMX_SC_R_LCD_0_PWM_0>;
+> > +	};
+> > +
+> >=20
+> >  	i2c0: i2c@5a800000 {
+> >  =09
+> >  		reg =3D <0x5a800000 0x4000>;
+> >  		interrupts =3D <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
 
 
-On 8/15/2023 8:38 AM, Bjorn Andersson wrote:
-> On Mon, Aug 14, 2023 at 04:59:15PM -0700, Anjelique Melendez wrote:
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-[...]>> @@ -65,7 +83,12 @@ struct lpg_data;
->>   * @lut_base:	base address of the LUT block (optional)
->>   * @lut_size:	number of entries in the LUT block
->>   * @lut_bitmap:	allocation bitmap for LUT entries
->> - * @triled_base: base address of the TRILED block (optional)
->> + * @pbs_dev:	PBS device
->> + * @lpg_chan_nvmem:	LPG nvmem peripheral device
->> + * @pbs_en_bitmap:	bitmap for tracking PBS triggers
->> + * @lut_sdam_base:	offset where LUT pattern begins in nvmem
->> + * @ppg_en:	Flag indicating whether PPG is enabled/used
-> 
-> Looking at its usage, it doesn't feel so much "is PPG enabled" as "does
-> this instance use PPG", it's not a thing that can be enabled/disabled in
-> runtime.
-> 
-> So "has_ppg" seems like a better name, or perhaps even "use_sdam" and
-> avoid "PPG" completely and make it clearer to the average reader?
-Sure, can update to be "use_sdam"
-
-
-[...]
->> +static void lpg_sdam_configure_triggers(struct lpg_channel *chan)
->> +{
->> +	if (!chan->lpg->ppg_en)
->> +		return;
->> +
->> +	if (chan->enabled && chan->pattern_set) {
->> +		lpg_sdam_write(chan->lpg, SDAM_LUT_EN_OFFSET + chan->sdam_offset, 1);
->> +		lpg_set_pbs_trigger(chan);
->> +		chan->pattern_set = false;
-> 
-> Forgive me if I'm confused, but doesn't this mean that if I configure a
-> pattern and then set the brightness twice the pattern will be disabled
-> again?
-Yes, you are correct. With current code we continuously disable pattern.
-I took a look at the code again and found that it makes more sense to
-disable pattern in clear_pattern().
-
-
-[...]
->> @@ -1363,7 +1618,9 @@ static int lpg_probe(struct platform_device *pdev)
->>  	for (i = 0; i < lpg->num_channels; i++)
->>  		lpg_apply_dtest(&lpg->channels[i]);
->>  
->> -	return lpg_add_pwm(lpg);
->> +	ret = lpg_add_pwm(lpg);
->> +
->> +	return ret;
-> 
-> I'm failing to see the usefulness of this change.
-Sorry, looks like this was never reverted from an old change when I was debugging.
-Will revert back to original for next version. 
-
-Thanks,
-Anjelique
 
