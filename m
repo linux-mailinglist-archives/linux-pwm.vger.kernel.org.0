@@ -2,61 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD6977FC10
-	for <lists+linux-pwm@lfdr.de>; Thu, 17 Aug 2023 18:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2738577FE37
+	for <lists+linux-pwm@lfdr.de>; Thu, 17 Aug 2023 20:58:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353275AbjHQQ1N (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 17 Aug 2023 12:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40762 "EHLO
+        id S243313AbjHQS6D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 17 Aug 2023 14:58:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353645AbjHQQ0u (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Aug 2023 12:26:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3946B2713;
-        Thu, 17 Aug 2023 09:26:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C111561CC4;
-        Thu, 17 Aug 2023 16:26:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 465CEC433C8;
-        Thu, 17 Aug 2023 16:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692289588;
-        bh=C6cONN092jxbsvu6AqqhB938PWlN9DTWuSYANuWmSlc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hew43YNwx2uX+I9+4JQSkfx7TeHoCJdr00GXdo04pjdW2uLEACj32vmwyf5j+aexI
-         twQgNjva7/igs1wkM7OyNmHL6SpX35odruS0MdkTVKWAvB/+jOD3vtB95AuODKI+WZ
-         KDUMZ8nN+omfA39bN53W66/VWzuQan91UenFb2Kjb37ObvLosKa01MSI9dum1P9c9/
-         EqxIM2uF9lXe1SHgasBmSUrgQhp6yZZ8hWs9Rmh40wHKqSLWHP5gfegvHlSSO12uMf
-         FfRHuPU4ifOf3YxKhM67jKYdb25qVaq4NbBQBydjDa9HArOZredF1Gcgy62gsxW30S
-         JNmx4j2EudsXg==
-Received: (nullmailer pid 1446733 invoked by uid 1000);
-        Thu, 17 Aug 2023 16:26:24 -0000
-Date:   Thu, 17 Aug 2023 11:26:24 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
-        konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
-        quic_subbaram@quicinc.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 1/7] dt-bindings: soc: qcom: Add qcom,pbs bindings
-Message-ID: <20230817162624.GA1444880-robh@kernel.org>
-References: <20230814235918.10396-1-quic_amelende@quicinc.com>
- <20230814235918.10396-2-quic_amelende@quicinc.com>
- <102328fa-5699-4731-d639-079bce8863a5@linaro.org>
+        with ESMTP id S1353742AbjHQS6D (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 17 Aug 2023 14:58:03 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 229DDC1;
+        Thu, 17 Aug 2023 11:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692298682; x=1723834682;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7yo3tNXh31iOl1DRSqLjn8gRj2unBq2YatRzwFJUzDI=;
+  b=UAdcOeR7wxX3kuko9KmQOLUTNxavPGflmbrrXKDT/xAfereJa1Vtuv4S
+   tcvLQ0YSO0mFbqdAksTjwXKdBggDppayRdNYNrzK7nGLzC1Y94PefclQU
+   K6aRqUoEirnR1DJLhKDuVcOP4pzfkdSi14pf0v5fTXzh4eHose445opOA
+   3DRwibtdMcRl7yji1+BAqW17djQXo2ji21EbfqNxG84XOh5qC1x5D+E7X
+   idM8JMTvCL3w9d5wucb++qYhker/IDJIpffFKoZhvaSs0xDCUukP/SUFR
+   2S5sbhjI66Ec23jq2M3syAxB/WWjvSFkzLlP5y+CRQgt0esJiplBsOKGy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="371805533"
+X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
+   d="scan'208";a="371805533"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2023 11:58:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="734766972"
+X-IronPort-AV: E=Sophos;i="6.01,180,1684825200"; 
+   d="scan'208";a="734766972"
+Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 17 Aug 2023 11:57:51 -0700
+Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qWiBp-0001Ox-34;
+        Thu, 17 Aug 2023 18:57:49 +0000
+Date:   Fri, 18 Aug 2023 02:57:08 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
+        linux@roeck-us.net, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        corbet@lwn.net, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        BMC-SW@aspeedtech.com, patrick@stwcx.xyz
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED
+ g6 PWM/Fan tach
+Message-ID: <202308180218.lgWU1tp1-lkp@intel.com>
+References: <20230817120029.221484-3-billy_tsai@aspeedtech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <102328fa-5699-4731-d639-079bce8863a5@linaro.org>
+In-Reply-To: <20230817120029.221484-3-billy_tsai@aspeedtech.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,64 +73,61 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Aug 15, 2023 at 10:36:39PM +0200, Krzysztof Kozlowski wrote:
-> On 15/08/2023 01:59, Anjelique Melendez wrote:
-> > Add binding for the Qualcomm Programmable Boot Sequencer device.
-> > 
-> > Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> > ---
-> >  .../bindings/soc/qcom/qcom,pbs.yaml           | 46 +++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
-> > new file mode 100644
-> > index 000000000000..b502ca72266a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
-> > @@ -0,0 +1,46 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/soc/qcom/qcom,pbs.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Technologies, Inc. Programmable Boot Sequencer
-> > +
-> > +maintainers:
-> > +  - Anjelique Melendez <quic_amelende@quicinc.com>
-> > +
-> > +description: |
-> > +  The Qualcomm Technologies, Inc. Programmable Boot Sequencer (PBS)
-> > +  supports triggering power up and power down sequences for clients
-> > +  upon request.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - qcom,pmi632-pbs
-> > +      - const: qcom,pbs
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/spmi/spmi.h>
-> > +
-> > +    pmic@0 {
-> 
-> This should be rather just "pmic", because the examples have
-> address-cells=1 and size-cells=1, which is not correct in this context.
+Hi Billy,
 
-But there's a 'reg' property so you can't drop the unit-address. The bus 
-node (spmi) needs to be added.
+kernel test robot noticed the following build warnings:
 
-Rob
+[auto build test WARNING on groeck-staging/hwmon-next]
+[also build test WARNING on linus/master v6.5-rc6 next-20230817]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Billy-Tsai/dt-bindings-hwmon-Support-Aspeed-g6-PWM-TACH-Control/20230817-200427
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20230817120029.221484-3-billy_tsai%40aspeedtech.com
+patch subject: [PATCH v7 2/2] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED g6 PWM/Fan tach
+config: powerpc-randconfig-r011-20230818 (https://download.01.org/0day-ci/archive/20230818/202308180218.lgWU1tp1-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+reproduce: (https://download.01.org/0day-ci/archive/20230818/202308180218.lgWU1tp1-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308180218.lgWU1tp1-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/hwmon/aspeed-g6-pwm-tach.c:431:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+     431 |         int ret, count;
+         |             ^
+   1 warning generated.
+
+
+vim +/ret +431 drivers/hwmon/aspeed-g6-pwm-tach.c
+
+   426	
+   427	static int aspeed_tach_create_fan(struct device *dev,
+   428					  struct aspeed_pwm_tach_data *priv)
+   429	{
+   430		u8 *tach_ch;
+ > 431		int ret, count;
+   432	
+   433		count = of_property_count_u8_elems(dev->of_node, "aspeed,fan-tach-ch");
+   434		if (count < 1)
+   435			return -EINVAL;
+   436		tach_ch = devm_kcalloc(dev, count, sizeof(*tach_ch), GFP_KERNEL);
+   437		if (!tach_ch)
+   438			return -ENOMEM;
+   439		ret = of_property_read_u8_array(dev->of_node, "aspeed,fan-tach-ch",
+   440						tach_ch, count);
+   441	
+   442		aspeed_present_fan_tach(priv, tach_ch, count);
+   443	
+   444		return 0;
+   445	}
+   446	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
