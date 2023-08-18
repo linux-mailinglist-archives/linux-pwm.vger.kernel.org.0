@@ -2,36 +2,36 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93CA6780D5D
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 16:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA61780D91
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 16:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377364AbjHROEI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Aug 2023 10:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60052 "EHLO
+        id S1347488AbjHROIl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Aug 2023 10:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357948AbjHRODt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 10:03:49 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 822CC2102;
-        Fri, 18 Aug 2023 07:03:48 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="352694992"
+        with ESMTP id S239086AbjHROIR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 10:08:17 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D3730F6;
+        Fri, 18 Aug 2023 07:08:16 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="370566119"
 X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="352694992"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 07:03:47 -0700
+   d="scan'208";a="370566119"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 07:07:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="764573508"
+X-IronPort-AV: E=McAfee;i="6600,9927,10806"; a="825131348"
 X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
-   d="scan'208";a="764573508"
+   d="scan'208";a="825131348"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2023 07:03:43 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Aug 2023 07:07:54 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andy@kernel.org>)
-        id 1qX04i-00B01t-2T;
-        Fri, 18 Aug 2023 17:03:40 +0300
-Date:   Fri, 18 Aug 2023 17:03:40 +0300
+        id 1qX08m-00B935-01;
+        Fri, 18 Aug 2023 17:07:52 +0300
+Date:   Fri, 18 Aug 2023 17:07:51 +0300
 From:   Andy Shevchenko <andy@kernel.org>
-To:     Li Zetao <lizetao1@huawei.com>, Tony Lindgren <tony@atomide.com>
+To:     Li Zetao <lizetao1@huawei.com>
 Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, j-keerthy@ti.com,
         vz@mleia.com, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
@@ -40,15 +40,15 @@ Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, j-keerthy@ti.com,
         michal.simek@amd.com, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
         linux-omap@vger.kernel.org
-Subject: Re: [PATCH -next 02/11] gpio: davinci: Use helper function
+Subject: Re: [PATCH -next 04/11] gpio: lpc18xx: Use helper function
  devm_clk_get_enabled()
-Message-ID: <ZN96PKnk8gLZ/+Ug@smile.fi.intel.com>
+Message-ID: <ZN97N474CZvYLWRL@smile.fi.intel.com>
 References: <20230818093018.1051434-1-lizetao1@huawei.com>
- <20230818093018.1051434-3-lizetao1@huawei.com>
+ <20230818093018.1051434-5-lizetao1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230818093018.1051434-3-lizetao1@huawei.com>
+In-Reply-To: <20230818093018.1051434-5-lizetao1@huawei.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
@@ -59,7 +59,7 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 05:30:09PM +0800, Li Zetao wrote:
+On Fri, Aug 18, 2023 at 05:30:11PM +0800, Li Zetao wrote:
 > Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
 > prepared and enabled clocks"), devm_clk_get() and clk_prepare_enable()
 > can now be replaced by devm_clk_get_enabled() when the driver enables
@@ -67,10 +67,14 @@ On Fri, Aug 18, 2023 at 05:30:09PM +0800, Li Zetao wrote:
 > Moreover, it is no longer necessary to unprepare and disable the clocks
 > explicitly.
 
-It seems it fixes a bug that we try to remove the enabled clock on unbinding.
-Maybe Tony can shed a light here. If this is the case, add a Fixes tag.
-Otherwise it might be (undesired?) functional change and in any case has to
-be mentioned in the commit message.
+...
+
+> -		dev_err(dev, "input clock not found\n");
+> +		dev_err(dev,
+> +			"input clock not found or unable to enable clock\n");
+
+Do not alter the message right now. With the dev_err_probe() conversion it can
+be done, if you wish. So it will be less churn.
 
 -- 
 With Best Regards,
