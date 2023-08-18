@@ -2,71 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 499CB780811
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:13:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65112780857
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358960AbjHRJNL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Aug 2023 05:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
+        id S1359144AbjHRJbI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Aug 2023 05:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358969AbjHRJM7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 05:12:59 -0400
-X-Greylist: delayed 369 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Aug 2023 02:12:57 PDT
-Received: from mail.cassleycruden.pl (mail.cassleycruden.pl [217.61.97.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FAE8E
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 02:12:57 -0700 (PDT)
-Received: by mail.cassleycruden.pl (Postfix, from userid 1001)
-        id 4F03B84342; Fri, 18 Aug 2023 10:06:36 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cassleycruden.pl;
-        s=mail; t=1692349606;
-        bh=PMKe/ZGJ6BzTndUs3U4s+9I0+VR2MMUK715AFNxw4AM=;
-        h=Date:From:To:Subject:From;
-        b=SE4J1IrnsNFtyZBUVnT3kzwZZ/ThEAJfKM8QsBDy1YEJllKykavoeKixKpgAzm4TV
-         EdSmF35fGBj6ZECb+6tiVA/d/xJRejaHAtcx4rMHqYPSRqpIeXuAeZyPiJJy9q3AiE
-         +58357Hlv38yVE8E/711g8MeBo+Hz15ryKZ0ITGdhj2HczLiake2K2ePKAWI9fEi1K
-         TD1HF+MR4L3MtfCRulSjHDdEyBIO+UBr61VSGdSD/JpTKaK4e2MESWnXAWuvnHSC18
-         rWTZ/NgPTtcYEHr8zPKL9fInVgD8qRmrQcJAJPQmcMalSKvJ8gbu55BkpdMaqSvcs6
-         wwx4Lk2anIOJg==
-Received: by mail.cassleycruden.pl for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 09:05:41 GMT
-Message-ID: <20230818090522-0.1.6m.f5az.0.l20nlk1vpb@cassleycruden.pl>
-Date:   Fri, 18 Aug 2023 09:05:41 GMT
-From:   "Adrian Giermata" <adrian.giermata@cassleycruden.pl>
-To:     <linux-pwm@vger.kernel.org>
-Subject: Nowa strona www
-X-Mailer: mail.cassleycruden.pl
+        with ESMTP id S1359126AbjHRJak (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 05:30:40 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D936E3A88;
+        Fri, 18 Aug 2023 02:30:36 -0700 (PDT)
+Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4RRxNk0sV0zFqlR;
+        Fri, 18 Aug 2023 17:27:34 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi500012.china.huawei.com
+ (7.221.188.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 18 Aug
+ 2023 17:30:33 +0800
+From:   Li Zetao <lizetao1@huawei.com>
+To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
+        <j-keerthy@ti.com>, <vz@mleia.com>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <grygorii.strashko@ti.com>,
+        <ssantosh@kernel.org>, <khilman@kernel.org>,
+        <shubhrajyoti.datta@amd.com>, <srinivas.neeli@amd.com>,
+        <michal.simek@amd.com>
+CC:     <lizetao1@huawei.com>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pwm@vger.kernel.org>, <linux-omap@vger.kernel.org>
+Subject: [PATCH -next 00/11] gpio: Use devm_clk_get_*() helper function to simplify the drivers.
+Date:   Fri, 18 Aug 2023 17:30:07 +0800
+Message-ID: <20230818093018.1051434-1-lizetao1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500012.china.huawei.com (7.221.188.12)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Szanowni Pa=C5=84stwo,
+Commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for prepared
+and enabled clocks") provides a a series of new helper function for
+prepared and enabled clocks when a driver keeps a clock prepared
+(or enabled) during the whole lifetime of the driver. So where drivers
+get clocks and enable them immediately, it can be combined into a single
+function devm_clk_get_*(). Moreover, the unprepare and disable function
+has been registered to devm_clk_state, and before devm_clk_state is
+released, the clocks will be unprepareed and disable, so it is unnecessary
+to unprepare and disable clock explicitly when remove drivers or in the
+error handling path.
 
-czy wiedz=C4=85 Pa=C5=84stwo, =C5=BCe internauta ocenia Pa=C5=84stwa firm=
-ow=C4=85 stron=C4=99 www ju=C5=BC w ci=C4=85gu pierwszych 5 sekund?
+Li Zetao (11):
+  gpio: cadence: Use helper function devm_clk_get_enabled()
+  gpio: davinci: Use helper function devm_clk_get_enabled()
+  gpio: ftgpio010: Use helper function devm_clk_get_enabled()
+  gpio: lpc18xx: Use helper function devm_clk_get_enabled()
+  gpio: mb86s7x: Use helper function devm_clk_get_optional_enabled()
+  gpio: mvebu: Use helper function devm_clk_get_enabled()
+  gpio: mxc: Use helper function devm_clk_get_optional_enabled()
+  gpio: omap: Use helper function devm_clk_get_prepared()
+  gpio: stp-xway: Use helper function devm_clk_get_enabled()
+  gpio: xilinx: Use helper function devm_clk_get_optional_enabled()
+  gpio: zynq: Use helper function devm_clk_get_enabled()
 
-Je=C5=9Bli pierwsze wra=C5=BCenie, jakie wywrze witryna, jest pozytywne, =
-to klient zak=C5=82ada, =C5=BCe za dobr=C4=85 stron=C4=85 stoi godna zauf=
-ania i rzetelna firma, a jej oferta jest atrakcyjna.
+ drivers/gpio/gpio-cadence.c   | 20 +++++---------------
+ drivers/gpio/gpio-davinci.c   | 13 ++-----------
+ drivers/gpio/gpio-ftgpio010.c | 29 +++++++----------------------
+ drivers/gpio/gpio-lpc18xx.c   | 14 +++-----------
+ drivers/gpio/gpio-mb86s7x.c   |  8 +-------
+ drivers/gpio/gpio-mvebu.c     |  4 +---
+ drivers/gpio/gpio-mxc.c       |  9 +--------
+ drivers/gpio/gpio-omap.c      |  8 +-------
+ drivers/gpio/gpio-stp-xway.c  | 10 ++--------
+ drivers/gpio/gpio-xilinx.c    | 14 +++-----------
+ drivers/gpio/gpio-zynq.c      | 13 +++----------
+ 11 files changed, 29 insertions(+), 113 deletions(-)
 
-Reprezentuj=C4=99 software house, kt=C3=B3ry buduje nowoczesne strony int=
-ernetowe oraz dochodowe sklepy online, zmieniaj=C4=85c wirtualny =C5=9Bwi=
-at w rzeczywiste zyski. Dzi=C4=99ki nowoczesnym funkcjonalno=C5=9Bciom i =
-niestandardowej kreacji umacniamy wizerunek marki, dodaj=C4=85c jej warto=
-=C5=9Bci i to=C5=BCsamo=C5=9Bci, kt=C3=B3rej szukaj=C4=85 Klienci.
+-- 
+2.34.1
 
-Z przyjemno=C5=9Bci=C4=85 poznamy Pa=C5=84stwa oczekiwania, aby wsp=C3=B3=
-lnie przeanalizowa=C4=87 potencja=C5=82 wsp=C3=B3=C5=82pracy. Prosz=C4=99=
- o kontakt zwrotny, przedstawimy dok=C5=82adniej nasze mo=C5=BCliwo=C5=9B=
-ci.
-
-
-Pozdrawiam
-Adrian Giermata
