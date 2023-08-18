@@ -2,79 +2,43 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B42AB7807A1
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:00:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 499CB780811
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:13:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358825AbjHRI7l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Aug 2023 04:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33300 "EHLO
+        id S1358960AbjHRJNL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Aug 2023 05:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358826AbjHRI7N (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 04:59:13 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9543130E9
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 01:59:11 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fe389d6f19so864176e87.3
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 01:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692349150; x=1692953950;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xJm4S8usi6aiGwBH5M9kQvrP7KTSyu9RrSuKCbpG3qc=;
-        b=uhWStpwsgqhysvBfgJM2Y4/I23javHbK8RpVUJTsKU2LIHQGgHEztHaUQaHH+00WMU
-         A0MxbS+x+GBeUeKrhhD5PzIiUAfQzsqvEppREpmYsL597po+xJPOfyjsIIJ8WDXrOkoM
-         kxece0OZmjftOcz+gD0JD3TKqHCDpwptqQFsyEe4uuxmISCoCzqWLRo/oXQWCnMwoBVm
-         nEALUpEMxEeAXEGPK7PAQOlXzKi96Ez66WWF9c3wG8pcaxDY0nRHXqAksN5CjO9J7+Xl
-         saDyo9jfyZa81Nc3VNc1I9Lgqb58WnUvNxixtDZp/MhnOVqwyw8G/nhrnNcNPKdXqfC6
-         lyGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692349150; x=1692953950;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJm4S8usi6aiGwBH5M9kQvrP7KTSyu9RrSuKCbpG3qc=;
-        b=i6xh9iMCqdUD4s3faGVeAz58KMBGmQMYO+ltcmqtvlc+M6Hvd9B/EAaAhTrbN0JtRe
-         eRxvhpv3sn9godZQ9X6b1P7QUKMBclq08ngnyJ3CuORFQBQq34E3wr1jQbDaYReMazMe
-         Oy63xA7D7/QSMaij+7oB2FrXtXDv0yltvpe+R/2PN5otg1/6fk/kbEd9VAakXLy6L9K7
-         RYvySwRfFGcnJuZBFD+b/R4v61mBTW2myaC8xM+b/cuAFfch4LGnZZe8IESM93gnLQaV
-         p6NxgBc1LP6hWs0+Vyb0K6KTVWx1r0ytnozEd1x4dKaOyi13lS5W3scKPr05lRpnYqPF
-         gr5Q==
-X-Gm-Message-State: AOJu0YwzGi5E2+D0ffBOubczAGoIbRlxob7mfVGgpmvgNtzkz6Uk41PR
-        X47e8n2ktzI3XEUdjsQkkzatUw==
-X-Google-Smtp-Source: AGHT+IHhngfMVyaJ/vZRalrs4RKZIIe8Zsyq7PkcVRaJypLYHHr1czYftbfcIR3E9G5BsBjw3kIcqg==
-X-Received: by 2002:ac2:5b0c:0:b0:4f8:5885:61e with SMTP id v12-20020ac25b0c000000b004f85885061emr1196962lfn.40.1692349149818;
-        Fri, 18 Aug 2023 01:59:09 -0700 (PDT)
-Received: from [192.168.0.22] ([77.252.47.198])
-        by smtp.gmail.com with ESMTPSA id x12-20020aa7cd8c000000b0052595b17fd4sm841685edv.26.2023.08.18.01.59.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Aug 2023 01:59:09 -0700 (PDT)
-Message-ID: <10495cea-b8bb-df1d-3971-6a635ba301fb@linaro.org>
-Date:   Fri, 18 Aug 2023 10:59:07 +0200
+        with ESMTP id S1358969AbjHRJM7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 05:12:59 -0400
+X-Greylist: delayed 369 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Aug 2023 02:12:57 PDT
+Received: from mail.cassleycruden.pl (mail.cassleycruden.pl [217.61.97.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FAE8E
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 02:12:57 -0700 (PDT)
+Received: by mail.cassleycruden.pl (Postfix, from userid 1001)
+        id 4F03B84342; Fri, 18 Aug 2023 10:06:36 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cassleycruden.pl;
+        s=mail; t=1692349606;
+        bh=PMKe/ZGJ6BzTndUs3U4s+9I0+VR2MMUK715AFNxw4AM=;
+        h=Date:From:To:Subject:From;
+        b=SE4J1IrnsNFtyZBUVnT3kzwZZ/ThEAJfKM8QsBDy1YEJllKykavoeKixKpgAzm4TV
+         EdSmF35fGBj6ZECb+6tiVA/d/xJRejaHAtcx4rMHqYPSRqpIeXuAeZyPiJJy9q3AiE
+         +58357Hlv38yVE8E/711g8MeBo+Hz15ryKZ0ITGdhj2HczLiake2K2ePKAWI9fEi1K
+         TD1HF+MR4L3MtfCRulSjHDdEyBIO+UBr61VSGdSD/JpTKaK4e2MESWnXAWuvnHSC18
+         rWTZ/NgPTtcYEHr8zPKL9fInVgD8qRmrQcJAJPQmcMalSKvJ8gbu55BkpdMaqSvcs6
+         wwx4Lk2anIOJg==
+Received: by mail.cassleycruden.pl for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 09:05:41 GMT
+Message-ID: <20230818090522-0.1.6m.f5az.0.l20nlk1vpb@cassleycruden.pl>
+Date:   Fri, 18 Aug 2023 09:05:41 GMT
+From:   "Adrian Giermata" <adrian.giermata@cassleycruden.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: Nowa strona www
+X-Mailer: mail.cassleycruden.pl
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v3 1/7] dt-bindings: soc: qcom: Add qcom,pbs bindings
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
-        konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
-        quic_subbaram@quicinc.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20230814235918.10396-1-quic_amelende@quicinc.com>
- <20230814235918.10396-2-quic_amelende@quicinc.com>
- <102328fa-5699-4731-d639-079bce8863a5@linaro.org>
- <20230817162624.GA1444880-robh@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230817162624.GA1444880-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -83,70 +47,26 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17/08/2023 18:26, Rob Herring wrote:
-> On Tue, Aug 15, 2023 at 10:36:39PM +0200, Krzysztof Kozlowski wrote:
->> On 15/08/2023 01:59, Anjelique Melendez wrote:
->>> Add binding for the Qualcomm Programmable Boot Sequencer device.
->>>
->>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->>> ---
->>>  .../bindings/soc/qcom/qcom,pbs.yaml           | 46 +++++++++++++++++++
->>>  1 file changed, 46 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
->>> new file mode 100644
->>> index 000000000000..b502ca72266a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
->>> @@ -0,0 +1,46 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/soc/qcom/qcom,pbs.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Qualcomm Technologies, Inc. Programmable Boot Sequencer
->>> +
->>> +maintainers:
->>> +  - Anjelique Melendez <quic_amelende@quicinc.com>
->>> +
->>> +description: |
->>> +  The Qualcomm Technologies, Inc. Programmable Boot Sequencer (PBS)
->>> +  supports triggering power up and power down sequences for clients
->>> +  upon request.
->>> +
->>> +properties:
->>> +  compatible:
->>> +    items:
->>> +      - enum:
->>> +          - qcom,pmi632-pbs
->>> +      - const: qcom,pbs
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/spmi/spmi.h>
->>> +
->>> +    pmic@0 {
->>
->> This should be rather just "pmic", because the examples have
->> address-cells=1 and size-cells=1, which is not correct in this context.
-> 
-> But there's a 'reg' property so you can't drop the unit-address. The bus 
-> node (spmi) needs to be added.
+Szanowni Pa=C5=84stwo,
 
-reg also can be dropped. I am not sure whether parent PMIC bus is
-important here.
+czy wiedz=C4=85 Pa=C5=84stwo, =C5=BCe internauta ocenia Pa=C5=84stwa firm=
+ow=C4=85 stron=C4=99 www ju=C5=BC w ci=C4=85gu pierwszych 5 sekund?
 
-Best regards,
-Krzysztof
+Je=C5=9Bli pierwsze wra=C5=BCenie, jakie wywrze witryna, jest pozytywne, =
+to klient zak=C5=82ada, =C5=BCe za dobr=C4=85 stron=C4=85 stoi godna zauf=
+ania i rzetelna firma, a jej oferta jest atrakcyjna.
 
+Reprezentuj=C4=99 software house, kt=C3=B3ry buduje nowoczesne strony int=
+ernetowe oraz dochodowe sklepy online, zmieniaj=C4=85c wirtualny =C5=9Bwi=
+at w rzeczywiste zyski. Dzi=C4=99ki nowoczesnym funkcjonalno=C5=9Bciom i =
+niestandardowej kreacji umacniamy wizerunek marki, dodaj=C4=85c jej warto=
+=C5=9Bci i to=C5=BCsamo=C5=9Bci, kt=C3=B3rej szukaj=C4=85 Klienci.
+
+Z przyjemno=C5=9Bci=C4=85 poznamy Pa=C5=84stwa oczekiwania, aby wsp=C3=B3=
+lnie przeanalizowa=C4=87 potencja=C5=82 wsp=C3=B3=C5=82pracy. Prosz=C4=99=
+ o kontakt zwrotny, przedstawimy dok=C5=82adniej nasze mo=C5=BCliwo=C5=9B=
+ci.
+
+
+Pozdrawiam
+Adrian Giermata
