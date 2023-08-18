@@ -2,65 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D62E780681
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 09:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B42AB7807A1
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:00:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349466AbjHRHm3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 18 Aug 2023 03:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        id S1358825AbjHRI7l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 18 Aug 2023 04:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353097AbjHRHmN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 03:42:13 -0400
-Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9FE10C0
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 00:42:12 -0700 (PDT)
-Received: by mail.durme.pl (Postfix, from userid 1002)
-        id 85725498CE; Fri, 18 Aug 2023 07:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
-        t=1692344499; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
-        h=Date:From:To:Subject:From;
-        b=CgteVhP5V4cJYqTHQEbwDTCkf4Dvhj1MEivX1USrVNrH1B8jkX+XYnJ4JQXBah/jY
-         yzYmjkiJzOQ2HgA9p6p7rVmDZG3wwp9Rtmwy5pDcmOO2/Sx0zZrQkt/ibFNDWklP9y
-         sq8JY/GK2bp5iD2o+A4FRdOIMM81rOS/Te6BXsRFtmC3jN1F7Etz72VvfhzWQoEZS6
-         rAKbbQI12s70CYpxTKFovBv2LD0RtGmM24qbF6Y4w4ZDKIU8fzWM5UoFa9N71rsRua
-         GBibxAtJmRIrmPlMJ/E1QX3JE0yBH5oo/sQl1ZtNkA8OopgMUNqudHZXmH+MPYNO1+
-         v1mpM+/qYolLA==
-Received: by mail.durme.pl for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 07:40:52 GMT
-Message-ID: <20230818064500-0.1.3r.dnlr.0.l9ixlmp6pe@durme.pl>
-Date:   Fri, 18 Aug 2023 07:40:52 GMT
-From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
-To:     <linux-pwm@vger.kernel.org>
-Subject: W sprawie samochodu
-X-Mailer: mail.durme.pl
+        with ESMTP id S1358826AbjHRI7N (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 04:59:13 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9543130E9
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 01:59:11 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fe389d6f19so864176e87.3
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Aug 2023 01:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692349150; x=1692953950;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xJm4S8usi6aiGwBH5M9kQvrP7KTSyu9RrSuKCbpG3qc=;
+        b=uhWStpwsgqhysvBfgJM2Y4/I23javHbK8RpVUJTsKU2LIHQGgHEztHaUQaHH+00WMU
+         A0MxbS+x+GBeUeKrhhD5PzIiUAfQzsqvEppREpmYsL597po+xJPOfyjsIIJ8WDXrOkoM
+         kxece0OZmjftOcz+gD0JD3TKqHCDpwptqQFsyEe4uuxmISCoCzqWLRo/oXQWCnMwoBVm
+         nEALUpEMxEeAXEGPK7PAQOlXzKi96Ez66WWF9c3wG8pcaxDY0nRHXqAksN5CjO9J7+Xl
+         saDyo9jfyZa81Nc3VNc1I9Lgqb58WnUvNxixtDZp/MhnOVqwyw8G/nhrnNcNPKdXqfC6
+         lyGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692349150; x=1692953950;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJm4S8usi6aiGwBH5M9kQvrP7KTSyu9RrSuKCbpG3qc=;
+        b=i6xh9iMCqdUD4s3faGVeAz58KMBGmQMYO+ltcmqtvlc+M6Hvd9B/EAaAhTrbN0JtRe
+         eRxvhpv3sn9godZQ9X6b1P7QUKMBclq08ngnyJ3CuORFQBQq34E3wr1jQbDaYReMazMe
+         Oy63xA7D7/QSMaij+7oB2FrXtXDv0yltvpe+R/2PN5otg1/6fk/kbEd9VAakXLy6L9K7
+         RYvySwRfFGcnJuZBFD+b/R4v61mBTW2myaC8xM+b/cuAFfch4LGnZZe8IESM93gnLQaV
+         p6NxgBc1LP6hWs0+Vyb0K6KTVWx1r0ytnozEd1x4dKaOyi13lS5W3scKPr05lRpnYqPF
+         gr5Q==
+X-Gm-Message-State: AOJu0YwzGi5E2+D0ffBOubczAGoIbRlxob7mfVGgpmvgNtzkz6Uk41PR
+        X47e8n2ktzI3XEUdjsQkkzatUw==
+X-Google-Smtp-Source: AGHT+IHhngfMVyaJ/vZRalrs4RKZIIe8Zsyq7PkcVRaJypLYHHr1czYftbfcIR3E9G5BsBjw3kIcqg==
+X-Received: by 2002:ac2:5b0c:0:b0:4f8:5885:61e with SMTP id v12-20020ac25b0c000000b004f85885061emr1196962lfn.40.1692349149818;
+        Fri, 18 Aug 2023 01:59:09 -0700 (PDT)
+Received: from [192.168.0.22] ([77.252.47.198])
+        by smtp.gmail.com with ESMTPSA id x12-20020aa7cd8c000000b0052595b17fd4sm841685edv.26.2023.08.18.01.59.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Aug 2023 01:59:09 -0700 (PDT)
+Message-ID: <10495cea-b8bb-df1d-3971-6a635ba301fb@linaro.org>
+Date:   Fri, 18 Aug 2023 10:59:07 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v3 1/7] dt-bindings: soc: qcom: Add qcom,pbs bindings
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>,
+        Anjelique Melendez <quic_amelende@quicinc.com>
+Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
+        konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
+        quic_subbaram@quicinc.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <20230814235918.10396-1-quic_amelende@quicinc.com>
+ <20230814235918.10396-2-quic_amelende@quicinc.com>
+ <102328fa-5699-4731-d639-079bce8863a5@linaro.org>
+ <20230817162624.GA1444880-robh@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230817162624.GA1444880-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On 17/08/2023 18:26, Rob Herring wrote:
+> On Tue, Aug 15, 2023 at 10:36:39PM +0200, Krzysztof Kozlowski wrote:
+>> On 15/08/2023 01:59, Anjelique Melendez wrote:
+>>> Add binding for the Qualcomm Programmable Boot Sequencer device.
+>>>
+>>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+>>> ---
+>>>  .../bindings/soc/qcom/qcom,pbs.yaml           | 46 +++++++++++++++++++
+>>>  1 file changed, 46 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
+>>> new file mode 100644
+>>> index 000000000000..b502ca72266a
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
+>>> @@ -0,0 +1,46 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/soc/qcom/qcom,pbs.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Qualcomm Technologies, Inc. Programmable Boot Sequencer
+>>> +
+>>> +maintainers:
+>>> +  - Anjelique Melendez <quic_amelende@quicinc.com>
+>>> +
+>>> +description: |
+>>> +  The Qualcomm Technologies, Inc. Programmable Boot Sequencer (PBS)
+>>> +  supports triggering power up and power down sequences for clients
+>>> +  upon request.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - qcom,pmi632-pbs
+>>> +      - const: qcom,pbs
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    #include <dt-bindings/spmi/spmi.h>
+>>> +
+>>> +    pmic@0 {
+>>
+>> This should be rather just "pmic", because the examples have
+>> address-cells=1 and size-cells=1, which is not correct in this context.
+> 
+> But there's a 'reg' property so you can't drop the unit-address. The bus 
+> node (spmi) needs to be added.
 
-chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
-, je=C5=9Bli chodzi o system monitoringu GPS.
+reg also can be dropped. I am not sure whether parent PMIC bus is
+important here.
 
-Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
-e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
-a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
+Best regards,
+Krzysztof
 
-Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
-dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
-szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
-mne znaczenie.
-
-Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
-b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
-
-
-Pozdrawiam
-Krystian Wieczorek
