@@ -2,25 +2,25 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DADC78086A
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:31:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABEC478086E
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Aug 2023 11:31:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359162AbjHRJbK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        id S1359156AbjHRJbK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
         Fri, 18 Aug 2023 05:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359178AbjHRJao (ORCPT
+        with ESMTP id S1359180AbjHRJao (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Fri, 18 Aug 2023 05:30:44 -0400
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937843C27;
-        Fri, 18 Aug 2023 02:30:40 -0700 (PDT)
-Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RRxN33xm2ztS9J;
-        Fri, 18 Aug 2023 17:26:59 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DFE53A89;
+        Fri, 18 Aug 2023 02:30:41 -0700 (PDT)
+Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RRxQg33gqzkXDb;
+        Fri, 18 Aug 2023 17:29:15 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi500012.china.huawei.com
  (7.221.188.12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 18 Aug
- 2023 17:30:37 +0800
+ 2023 17:30:38 +0800
 From:   Li Zetao <lizetao1@huawei.com>
 To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
         <j-keerthy@ti.com>, <vz@mleia.com>, <thierry.reding@gmail.com>,
@@ -31,9 +31,9 @@ To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
 CC:     <lizetao1@huawei.com>, <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-pwm@vger.kernel.org>, <linux-omap@vger.kernel.org>
-Subject: [PATCH -next 08/11] gpio: omap: Use helper function devm_clk_get_prepared()
-Date:   Fri, 18 Aug 2023 17:30:15 +0800
-Message-ID: <20230818093018.1051434-9-lizetao1@huawei.com>
+Subject: [PATCH -next 09/11] gpio: stp-xway: Use helper function devm_clk_get_enabled()
+Date:   Fri, 18 Aug 2023 17:30:16 +0800
+Message-ID: <20230818093018.1051434-10-lizetao1@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230818093018.1051434-1-lizetao1@huawei.com>
 References: <20230818093018.1051434-1-lizetao1@huawei.com>
@@ -54,53 +54,47 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
-prepared and enabled clocks"), devm_clk_get() and clk_prepare() can now be
-replaced by devm_clk_get_prepared() when the driver enables (and possibly
-prepares) the clocks for the whole lifetime of the device. Moreover, it is
-no longer necessary to unprepare and disable the clocks explicitly.
+prepared and enabled clocks"), devm_clk_get() and clk_prepare_enable()
+can now be replaced by devm_clk_get_enabled() when the driver enables
+(and possibly prepares) the clocks for the whole lifetime of the device.
+Moreover, it is no longer necessary to unprepare and disable the clocks
+explicitly.
 
 Signed-off-by: Li Zetao <lizetao1@huawei.com>
 ---
- drivers/gpio/gpio-omap.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/gpio/gpio-stp-xway.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index a927680c66f8..c0131ee0f90c 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1450,13 +1450,11 @@ static int omap_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpio-stp-xway.c b/drivers/gpio/gpio-stp-xway.c
+index 053d616f2e02..5a6406d1f03a 100644
+--- a/drivers/gpio/gpio-stp-xway.c
++++ b/drivers/gpio/gpio-stp-xway.c
+@@ -296,23 +296,17 @@ static int xway_stp_probe(struct platform_device *pdev)
+ 	if (!of_property_read_bool(pdev->dev.of_node, "lantiq,rising"))
+ 		chip->edge = XWAY_STP_FALLING;
+ 
+-	clk = devm_clk_get(&pdev->dev, NULL);
++	clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "Failed to get clock\n");
+ 		return PTR_ERR(clk);
  	}
  
- 	if (bank->dbck_flag) {
--		bank->dbck = devm_clk_get(dev, "dbclk");
-+		bank->dbck = devm_clk_get_prepared(dev, "dbclk");
- 		if (IS_ERR(bank->dbck)) {
- 			dev_err(dev,
- 				"Could not get gpio dbck. Disable debounce\n");
- 			bank->dbck_flag = false;
--		} else {
--			clk_prepare(bank->dbck);
- 		}
- 	}
+-	ret = clk_prepare_enable(clk);
+-	if (ret)
+-		return ret;
+-
+ 	xway_stp_hw_init(chip);
  
-@@ -1474,8 +1472,6 @@ static int omap_gpio_probe(struct platform_device *pdev)
- 	if (ret) {
- 		pm_runtime_put_sync(dev);
- 		pm_runtime_disable(dev);
--		if (bank->dbck_flag)
--			clk_unprepare(bank->dbck);
+ 	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+-	if (ret) {
+-		clk_disable_unprepare(clk);
++	if (ret)
  		return ret;
- 	}
+-	}
  
-@@ -1496,8 +1492,6 @@ static int omap_gpio_remove(struct platform_device *pdev)
- 	cpu_pm_unregister_notifier(&bank->nb);
- 	gpiochip_remove(&bank->chip);
- 	pm_runtime_disable(&pdev->dev);
--	if (bank->dbck_flag)
--		clk_unprepare(bank->dbck);
+ 	dev_info(&pdev->dev, "Init done\n");
  
- 	return 0;
- }
 -- 
 2.34.1
 
