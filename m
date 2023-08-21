@@ -2,138 +2,128 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D96187817DA
-	for <lists+linux-pwm@lfdr.de>; Sat, 19 Aug 2023 09:05:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A94FF7828AD
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Aug 2023 14:12:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344032AbjHSHDs (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 19 Aug 2023 03:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44030 "EHLO
+        id S234257AbjHUMMU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 21 Aug 2023 08:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343783AbjHSHDS (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 19 Aug 2023 03:03:18 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3129A4208
-        for <linux-pwm@vger.kernel.org>; Sat, 19 Aug 2023 00:03:17 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 5614622812f47-3a7d7de894bso1169426b6e.3
-        for <linux-pwm@vger.kernel.org>; Sat, 19 Aug 2023 00:03:17 -0700 (PDT)
+        with ESMTP id S232667AbjHUMMU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Aug 2023 08:12:20 -0400
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BC1F4
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Aug 2023 05:12:12 -0700 (PDT)
+Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-79af014b555so1018452241.1
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Aug 2023 05:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692428596; x=1693033396;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :reply-to:mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
-        b=JBXWdTgGa+H/8z7x8k6G4qRwkJ3v5AZ/3PYGnj7kkAMZbCITGbjXSuvcuKkaCUxj9A
-         hT+XSYJhdIdPsvN5uxepyoS5Yam8aiBOX7SRpGJgnvsRpFETmvB+u6CDvixjem3Auaz9
-         8XJTWSstONS7IHuP1KyK28Rq9cj9dMxehv9DuKFz97OyC6g6RCaqQCEfd1xPRF022Yxv
-         OVM1DuuVFrZOu0YWpd6OOGdZWk4r+v5LcWVhUS78S2WY/4U2qavTx1YIuX7hrkxe9nGH
-         /u9oCEeYI97+kWDS4PvF+OMWVZVDXeWZlkidVm9mYe1M2ztCdqbJibZhzUQ+rI08LuWJ
-         5AYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692428596; x=1693033396;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692619931; x=1693224731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9kydyMnwD//o0quRqImkimRYfrWW9k+FT8t/oHoxyE8=;
-        b=dtdU8hRPihyo3vm+bpIiIrJpO15wXfsGWTGK7dseXtDY3/z3CcOXf1K/mYTVynoo+m
-         hgaMOV3UcqCeKZ9sFRymMXLpakhOGkzfSkznLBHTDegE1zV/I7eGSLEH9AUtFXbfjBPq
-         68wXZYh3ueA6WnWRUCLbNWldVKmTWSgQSMLqSS7N0kHiheqPtqCGWu/Zqs8e6v/VHwIE
-         FQCUySH9XEj78CKpOtHG2b8llSYbINyCGrnyqfuDUB/Xoy9YFW4qaMPivlNqnnGKoDFY
-         LBtY3+GRM4HexDqx1wXpdtI73oVWnyeWu0UbU57SyfDR+3M2xP77/JBm2Ry+ZteAM8Gv
-         00Lg==
-X-Gm-Message-State: AOJu0YzXm3jSlcUSQ4vtK8Vsh4irhgnt6xcNzRb6dNUmmCp470F4SLrq
-        plM7ceY/6/2JGk4bYijIzrD7NLB+/iqVfgsC+xPvvu+8tqiUCA==
-X-Google-Smtp-Source: AGHT+IHBFHux9W7amy752XAKQ4G+pXj9K8KLABgekYkKVjTaNiUovhqWPJjy5q7mdLIzANUAVG24gzrYlmHT6Kjn7Kk=
-X-Received: by 2002:a81:8782:0:b0:589:a9fc:ffcd with SMTP id
- x124-20020a818782000000b00589a9fcffcdmr1407212ywf.20.1692428576106; Sat, 19
- Aug 2023 00:02:56 -0700 (PDT)
+        bh=NCkbxK8SDHIlpboWoSgSQlBN5th7HtJtXxIERiulQiM=;
+        b=APSyrpMPYPetYFPwGu8psh4/T58NHYXfo9EmQxVEB2eEqAtwPDsGR3yPcXtsEoDizg
+         w1F8zZDM7Ptgp0oFHZ2Hv7K0RJ//2OdiynAnnVqrADpivsx2HvPJ3EMezJLjKanSq2wy
+         yv3eYRNpLIZqZv1ePBKU5YvnlGXSq0YXZia2PpZdjJ/LsaRSmhezJXTQxVLByq4+RzOS
+         DVCA7B//1n0TmHBocoy5pXrEnNg2cJsRIOxPu/E6Lg0C2ha+BT9MfZsU4a34l2Mc7vR2
+         prDXeGEyloWpFbrL8/UaIrpNkvaHxkjUj0mwwuCyYnB8iO0FmwTjKdxGRiRgarandfsU
+         jATA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692619931; x=1693224731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NCkbxK8SDHIlpboWoSgSQlBN5th7HtJtXxIERiulQiM=;
+        b=ZSz4LvmZu43Nuz9fSG8Xptx+ezR+8n5lNR+fHXG5Xa/+53NgE7C1KREqMd2CId/tle
+         Z2PlTEQvV5Ku82DEojhQsB9tHIoaytGY0rgvkxDO58Z90N6B0uIFsYJp9EosEGtRuMcA
+         r/kxZhM+1UA+xzpVFog2S96kU7Gj/PcF0b+Nq0cBeI2uEPfo3FQM0mTDeXM+8SYfavNc
+         Qa3I8MmjtSc5MlULy37AkG/jROI/q8NsRJSyzNIkXeYFjASfCPz9o9F+ebVVff4FgbF9
+         yA3VMgkVaNeeHe1YKI/Rj6l3XThBVu4NHKRz68wqDGsAzw33n/6X3mnkhbJa3XEsMepS
+         kxEg==
+X-Gm-Message-State: AOJu0YwUOVTG+IJB7TQ3+txqhYu257BNL5+Suj2H6Aew+SyD3b/f3qTE
+        2ptkdt/RsKrYJeU66IKK7hE282Z8JJMR21TGORP0MA==
+X-Google-Smtp-Source: AGHT+IGHcHrwZNfxOKdf2tsjJKS8zYT08VjF5/gr7zXAHlAkKDYkTuAjyI5dqrEVndNjZDgESvqCukBqG1iovoR8L2s=
+X-Received: by 2002:a67:ce9a:0:b0:443:9248:3410 with SMTP id
+ c26-20020a67ce9a000000b0044392483410mr5577281vse.32.1692619931538; Mon, 21
+ Aug 2023 05:12:11 -0700 (PDT)
 MIME-Version: 1.0
-Reply-To: razumkoykhailo@gmail.com
-Sender: mrtombaba@gmail.com
-Received: by 2002:a05:7000:5395:b0:4f4:2174:eed4 with HTTP; Sat, 19 Aug 2023
- 00:02:55 -0700 (PDT)
-From:   "Mr.Razum Khailo" <razumkoykhailo@gmail.com>
-Date:   Sat, 19 Aug 2023 00:02:55 -0700
-X-Google-Sender-Auth: TD1SbUwALQWUaG93zNo0ky4SaO8
-Message-ID: <CADXgghn2t3mU_VvtZDjHwnbadg2QnVcJ30yFd0kN8SL6NDhY1g@mail.gmail.com>
-Subject: Greetings from Ukraine,
-To:     undisclosed-recipients:;
+References: <20230818093018.1051434-1-lizetao1@huawei.com> <20230818093018.1051434-8-lizetao1@huawei.com>
+In-Reply-To: <20230818093018.1051434-8-lizetao1@huawei.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 21 Aug 2023 14:12:00 +0200
+Message-ID: <CAMRc=MesfV23yvYoXebuDJXuUxPAV2D8fNQcND0WQxexydgoAQ@mail.gmail.com>
+Subject: Re: [PATCH -next 07/11] gpio: mxc: Use helper function devm_clk_get_optional_enabled()
+To:     Li Zetao <lizetao1@huawei.com>
+Cc:     linus.walleij@linaro.org, andy@kernel.org, j-keerthy@ti.com,
+        vz@mleia.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org,
+        shubhrajyoti.datta@amd.com, srinivas.neeli@amd.com,
+        michal.simek@amd.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
-        MILLION_USD,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:241 listed in]
-        [list.dnswl.org]
-        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mrtombaba[at]gmail.com]
-        *  2.0 MILLION_USD BODY: Talks about millions of dollars
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  2.4 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-R3JlZXRpbmdzwqBmcm9twqBVa3JhaW5lLA0KDQpNci7CoFJhenVta292wqBNeWtoYWlsbyzCoGFu
-wqBlbnRyZXByZW5ldXLCoGJ1c2luZXNzbWFuwqBmcm9twqBPZGVzc2ENClVrcmFpbmUuwqBXaXRo
-aW7CoGHCoHllYXLCoHBsdXPCoHNvbWXCoG1vbnRoc8Kgbm93LMKgbW9yZcKgdGhhbsKgOC4ywqBt
-aWxsaW9uDQpwZW9wbGXCoGFyb3VuZMKgdGhlwqBjaXRpZXPCoG9mwqBtecKgY291bnRyecKgVWty
-YWluZcKgaGF2ZcKgYmVlbsKgZXZhY3VhdGVkwqB0bw0KYcKgc2FmZcKgbG9jYXRpb27CoGFuZMKg
-b3V0wqBvZsKgdGhlwqBjb3VudHJ5LMKgbW9zdMKgZXNwZWNpYWxsecKgY2hpbGRyZW7CoHdpdGgN
-CnRoZWlywqBwYXJlbnRzLMKgbnVyc2luZ8KgbW90aGVyc8KgYW5kwqBwcmVnbmFudMKgd29tZW4s
-wqBhbmTCoHRob3NlwqB3aG/CoGhhdmUNCmJlZW7CoHNlcmlvdXNsecKgd291bmRlZMKgYW5kwqBu
-ZWVkwqB1cmdlbnTCoG1lZGljYWzCoGF0dGVudGlvbi7CoEnCoHdhc8KgYW1vbmcNCnRob3NlwqB0
-aGF0wqB3ZXJlwqBhYmxlwqB0b8KgZXZhY3VhdGXCoHRvwqBvdXLCoG5laWdoYm91cmluZ8KgY291
-bnRyaWVzwqBhbmTCoEnigJltDQpub3fCoGluwqB0aGXCoHJlZnVnZWXCoGNhbXDCoG9mwqBUZXLC
-oEFwZWzCoEdyb25pbmdlbsKgaW7CoHRoZcKgTmV0aGVybGFuZHMuDQoNCknCoG5lZWTCoGHCoGZv
-cmVpZ27CoHBhcnRuZXLCoHRvwqBlbmFibGXCoG1lwqB0b8KgdHJhbnNwb3J0wqBtecKgaW52ZXN0
-bWVudA0KY2FwaXRhbMKgYW5kwqB0aGVuwqByZWxvY2F0ZcKgd2l0aMKgbXnCoGZhbWlseSzCoGhv
-bmVzdGx5wqBpwqB3aXNowqBJwqB3aWxsDQpkaXNjdXNzwqBtb3JlwqBhbmTCoGdldMKgYWxvbmcu
-wqBJwqBuZWVkwqBhwqBwYXJ0bmVywqBiZWNhdXNlwqBtecKgaW52ZXN0bWVudA0KY2FwaXRhbMKg
-aXPCoGluwqBtecKgaW50ZXJuYXRpb25hbMKgYWNjb3VudC7CoEnigJltwqBpbnRlcmVzdGVkwqBp
-bsKgYnV5aW5nDQpwcm9wZXJ0aWVzLMKgaG91c2VzLMKgYnVpbGRpbmfCoHJlYWzCoGVzdGF0ZXMs
-wqBtecKgY2FwaXRhbMKgZm9ywqBpbnZlc3RtZW50DQppc8KgKCQzMMKgTWlsbGlvbsKgVVNEKcKg
-LsKgVGhlwqBmaW5hbmNpYWzCoGluc3RpdHV0aW9uc8KgaW7CoG15wqBjb3VudHJ5DQpVa3JhaW5l
-wqBhcmXCoGFsbMKgc2hvdMKgZG93bsKgZHVlwqB0b8KgdGhlwqBjcmlzaXPCoG9mwqB0aGlzwqB3
-YXLCoG9uwqBVa3JhaW5lDQpzb2lswqBiecKgdGhlwqBSdXNzaWFuwqBmb3JjZXMuwqBNZWFud2hp
-bGUswqBpZsKgdGhlcmXCoGlzwqBhbnnCoHByb2ZpdGFibGUNCmludmVzdG1lbnTCoHRoYXTCoHlv
-dcKgaGF2ZcKgc2/CoG11Y2jCoGV4cGVyaWVuY2XCoGluwqB5b3VywqBjb3VudHJ5LMKgdGhlbsKg
-d2UNCmNhbsKgam9pbsKgdG9nZXRoZXLCoGFzwqBwYXJ0bmVyc8Kgc2luY2XCoEnigJltwqBhwqBm
-b3JlaWduZXIuDQoNCknCoGNhbWXCoGFjcm9zc8KgeW91csKgZS1tYWlswqBjb250YWN0wqB0aHJv
-dWdowqBwcml2YXRlwqBzZWFyY2jCoHdoaWxlwqBpbsKgbmVlZA0Kb2bCoHlvdXLCoGFzc2lzdGFu
-Y2XCoGFuZMKgScKgZGVjaWRlZMKgdG/CoGNvbnRhY3TCoHlvdcKgZGlyZWN0bHnCoHRvwqBhc2vC
-oHlvdcKgaWYNCnlvdcKga25vd8KgYW55wqBsdWNyYXRpdmXCoGJ1c2luZXNzwqBpbnZlc3RtZW50
-wqBpbsKgeW91csKgY291bnRyecKgacKgY2FuDQppbnZlc3TCoG15wqBtb25lecKgc2luY2XCoG15
-wqBjb3VudHJ5wqBVa3JhaW5lwqBzZWN1cml0ecKgYW5kwqBlY29ub21pYw0KaW5kZXBlbmRlbnTC
-oGhhc8KgbG9zdMKgdG/CoHRoZcKgZ3JlYXRlc3TCoGxvd2VywqBsZXZlbCzCoGFuZMKgb3VywqBj
-dWx0dXJlwqBoYXMNCmxvc3TCoGluY2x1ZGluZ8Kgb3VywqBoYXBwaW5lc3PCoGhhc8KgYmVlbsKg
-dGFrZW7CoGF3YXnCoGZyb23CoHVzLsKgT3VywqBjb3VudHJ5DQpoYXPCoGJlZW7CoG9uwqBmaXJl
-wqBmb3LCoG1vcmXCoHRoYW7CoGHCoHllYXLCoG5vdy4NCg0KSWbCoHlvdcKgYXJlwqBjYXBhYmxl
-wqBvZsKgaGFuZGxpbmfCoHRoaXPCoGJ1c2luZXNzwqBwYXJ0bmVyc2hpcCzCoGNvbnRhY3TCoG1l
-DQpmb3LCoG1vcmXCoGRldGFpbHMswqBJwqB3aWxswqBhcHByZWNpYXRlwqBpdMKgaWbCoHlvdcKg
-Y2FuwqBjb250YWN0wqBtZQ0KaW1tZWRpYXRlbHkuwqBZb3XCoG1hecKgYXPCoHdlbGzCoHRlbGzC
-oG1lwqBhwqBsaXR0bGXCoG1vcmXCoGFib3V0wqB5b3Vyc2VsZi4NCkNvbnRhY3TCoG1lwqB1cmdl
-bnRsecKgdG/CoGVuYWJsZcKgdXPCoHRvwqBwcm9jZWVkwqB3aXRowqB0aGXCoGJ1c2luZXNzLsKg
-ScKgd2lsbA0KYmXCoHdhaXRpbmfCoGZvcsKgeW91csKgcmVzcG9uc2UuwqBNecKgc2luY2VyZcKg
-YXBvbG9naWVzwqBmb3LCoHRoZQ0KaW5jb252ZW5pZW5jZS4NCg0KDQpUaGFua8KgeW91IQ0KDQpN
-ci4gUmF6dW1rb3bCoE15a2hhaWxvLg0K
+On Fri, Aug 18, 2023 at 11:30=E2=80=AFAM Li Zetao <lizetao1@huawei.com> wro=
+te:
+>
+> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
+> prepared and enabled clocks"), devm_clk_get_optional() and
+> clk_prepare_enable() can now be replaced by
+> devm_clk_get_optional_enabled() when the driver enables (and possibly
+> prepares) the clocks for the whole lifetime of the device. Moreover,
+> it is no longer necessary to unprepare and disable the clocks explicitly.
+>
+> Signed-off-by: Li Zetao <lizetao1@huawei.com>
+> ---
+>  drivers/gpio/gpio-mxc.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+> index 004c6ad7ce52..4cb455b2bdee 100644
+> --- a/drivers/gpio/gpio-mxc.c
+> +++ b/drivers/gpio/gpio-mxc.c
+> @@ -452,16 +452,10 @@ static int mxc_gpio_probe(struct platform_device *p=
+dev)
+>                 return port->irq;
+>
+>         /* the controller clock is optional */
+> -       port->clk =3D devm_clk_get_optional(&pdev->dev, NULL);
+> +       port->clk =3D devm_clk_get_optional_enabled(&pdev->dev, NULL);
+>         if (IS_ERR(port->clk))
+>                 return PTR_ERR(port->clk);
+>
+> -       err =3D clk_prepare_enable(port->clk);
+> -       if (err) {
+> -               dev_err(&pdev->dev, "Unable to enable clock.\n");
+> -               return err;
+> -       }
+> -
+>         if (of_device_is_compatible(np, "fsl,imx7d-gpio"))
+>                 port->power_off =3D true;
+>
+> @@ -535,7 +529,6 @@ static int mxc_gpio_probe(struct platform_device *pde=
+v)
+>  out_bgio:
+>         pm_runtime_disable(&pdev->dev);
+>         pm_runtime_put_noidle(&pdev->dev);
+> -       clk_disable_unprepare(port->clk);
+>         dev_info(&pdev->dev, "%s failed with errno %d\n", __func__, err);
+>         return err;
+>  }
+> --
+> 2.34.1
+>
+
+Applied, thanks!
+
+Bart
