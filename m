@@ -2,128 +2,125 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A94FF7828AD
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Aug 2023 14:12:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CFAA783A44
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Aug 2023 09:05:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234257AbjHUMMU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 21 Aug 2023 08:12:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
+        id S233093AbjHVHFE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Aug 2023 03:05:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232667AbjHUMMU (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 21 Aug 2023 08:12:20 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BC1F4
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Aug 2023 05:12:12 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id a1e0cc1a2514c-79af014b555so1018452241.1
-        for <linux-pwm@vger.kernel.org>; Mon, 21 Aug 2023 05:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1692619931; x=1693224731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NCkbxK8SDHIlpboWoSgSQlBN5th7HtJtXxIERiulQiM=;
-        b=APSyrpMPYPetYFPwGu8psh4/T58NHYXfo9EmQxVEB2eEqAtwPDsGR3yPcXtsEoDizg
-         w1F8zZDM7Ptgp0oFHZ2Hv7K0RJ//2OdiynAnnVqrADpivsx2HvPJ3EMezJLjKanSq2wy
-         yv3eYRNpLIZqZv1ePBKU5YvnlGXSq0YXZia2PpZdjJ/LsaRSmhezJXTQxVLByq4+RzOS
-         DVCA7B//1n0TmHBocoy5pXrEnNg2cJsRIOxPu/E6Lg0C2ha+BT9MfZsU4a34l2Mc7vR2
-         prDXeGEyloWpFbrL8/UaIrpNkvaHxkjUj0mwwuCyYnB8iO0FmwTjKdxGRiRgarandfsU
-         jATA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692619931; x=1693224731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NCkbxK8SDHIlpboWoSgSQlBN5th7HtJtXxIERiulQiM=;
-        b=ZSz4LvmZu43Nuz9fSG8Xptx+ezR+8n5lNR+fHXG5Xa/+53NgE7C1KREqMd2CId/tle
-         Z2PlTEQvV5Ku82DEojhQsB9tHIoaytGY0rgvkxDO58Z90N6B0uIFsYJp9EosEGtRuMcA
-         r/kxZhM+1UA+xzpVFog2S96kU7Gj/PcF0b+Nq0cBeI2uEPfo3FQM0mTDeXM+8SYfavNc
-         Qa3I8MmjtSc5MlULy37AkG/jROI/q8NsRJSyzNIkXeYFjASfCPz9o9F+ebVVff4FgbF9
-         yA3VMgkVaNeeHe1YKI/Rj6l3XThBVu4NHKRz68wqDGsAzw33n/6X3mnkhbJa3XEsMepS
-         kxEg==
-X-Gm-Message-State: AOJu0YwUOVTG+IJB7TQ3+txqhYu257BNL5+Suj2H6Aew+SyD3b/f3qTE
-        2ptkdt/RsKrYJeU66IKK7hE282Z8JJMR21TGORP0MA==
-X-Google-Smtp-Source: AGHT+IGHcHrwZNfxOKdf2tsjJKS8zYT08VjF5/gr7zXAHlAkKDYkTuAjyI5dqrEVndNjZDgESvqCukBqG1iovoR8L2s=
-X-Received: by 2002:a67:ce9a:0:b0:443:9248:3410 with SMTP id
- c26-20020a67ce9a000000b0044392483410mr5577281vse.32.1692619931538; Mon, 21
- Aug 2023 05:12:11 -0700 (PDT)
+        with ESMTP id S233048AbjHVHFD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Aug 2023 03:05:03 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D970130;
+        Tue, 22 Aug 2023 00:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1692687901; x=1724223901;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mbSEUKxzfd+NdbCyXSlyZygqZr+zo6Ad1ijqItVCU3c=;
+  b=dOS7gX/8JgxcK1Wv/yuQChxxSEVKJbnPHvzWLNkX3lilgkj4zvz1tR1q
+   m1kfZJFAHW4Cg/Yf1WfjC3GFa5c2NmloQCukeprYM20IZQIc/BYyoqlv3
+   pOhTtq1uRjmtaWIULuqJdkXBT/WGV2daTH298C2Rm3NISjaehI6Q8EtM+
+   XofkDcUcHRR07WlN9cDec0T5AanYvqbsN58A5BJZrdtMo5huLExJfbho/
+   kMv9siqw6hbEjpMrF7BQmgH7V602pSI0Kaq19Kyt1Ird9sb9hpKw8oRu6
+   Wla8M8AcccFu6ve01pENjl99ggSNzUrSWSqF6ZFBKA+28Aa7jcdgsS0g9
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,192,1684825200"; 
+   d="scan'208";a="608536"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Aug 2023 00:04:58 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 22 Aug 2023 00:04:54 -0700
+Received: from che-lt-i63539.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.21 via Frontend Transport; Tue, 22 Aug 2023 00:04:50 -0700
+From:   Hari Prasath Gujulan Elango <Hari.PrasathGE@microchip.com>
+To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <claudiu.beznea@tuxon.dev>
+CC:     <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Hari Prasath Gujulan Elango <Hari.PrasathGE@microchip.com>
+Subject: [PATCH] pwm: atmel: add missing clk_disable_unprepare()
+Date:   Tue, 22 Aug 2023 12:34:41 +0530
+Message-ID: <20230822070441.22170-1-Hari.PrasathGE@microchip.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230818093018.1051434-1-lizetao1@huawei.com> <20230818093018.1051434-8-lizetao1@huawei.com>
-In-Reply-To: <20230818093018.1051434-8-lizetao1@huawei.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Aug 2023 14:12:00 +0200
-Message-ID: <CAMRc=MesfV23yvYoXebuDJXuUxPAV2D8fNQcND0WQxexydgoAQ@mail.gmail.com>
-Subject: Re: [PATCH -next 07/11] gpio: mxc: Use helper function devm_clk_get_optional_enabled()
-To:     Li Zetao <lizetao1@huawei.com>
-Cc:     linus.walleij@linaro.org, andy@kernel.org, j-keerthy@ti.com,
-        vz@mleia.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org,
-        shubhrajyoti.datta@amd.com, srinivas.neeli@amd.com,
-        michal.simek@amd.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 11:30=E2=80=AFAM Li Zetao <lizetao1@huawei.com> wro=
-te:
->
-> Since commit 7ef9651e9792 ("clk: Provide new devm_clk helpers for
-> prepared and enabled clocks"), devm_clk_get_optional() and
-> clk_prepare_enable() can now be replaced by
-> devm_clk_get_optional_enabled() when the driver enables (and possibly
-> prepares) the clocks for the whole lifetime of the device. Moreover,
-> it is no longer necessary to unprepare and disable the clocks explicitly.
->
-> Signed-off-by: Li Zetao <lizetao1@huawei.com>
-> ---
->  drivers/gpio/gpio-mxc.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 004c6ad7ce52..4cb455b2bdee 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -452,16 +452,10 @@ static int mxc_gpio_probe(struct platform_device *p=
-dev)
->                 return port->irq;
->
->         /* the controller clock is optional */
-> -       port->clk =3D devm_clk_get_optional(&pdev->dev, NULL);
-> +       port->clk =3D devm_clk_get_optional_enabled(&pdev->dev, NULL);
->         if (IS_ERR(port->clk))
->                 return PTR_ERR(port->clk);
->
-> -       err =3D clk_prepare_enable(port->clk);
-> -       if (err) {
-> -               dev_err(&pdev->dev, "Unable to enable clock.\n");
-> -               return err;
-> -       }
-> -
->         if (of_device_is_compatible(np, "fsl,imx7d-gpio"))
->                 port->power_off =3D true;
->
-> @@ -535,7 +529,6 @@ static int mxc_gpio_probe(struct platform_device *pde=
-v)
->  out_bgio:
->         pm_runtime_disable(&pdev->dev);
->         pm_runtime_put_noidle(&pdev->dev);
-> -       clk_disable_unprepare(port->clk);
->         dev_info(&pdev->dev, "%s failed with errno %d\n", __func__, err);
->         return err;
->  }
-> --
-> 2.34.1
->
+Fix the below smatch warning:
 
-Applied, thanks!
+drivers/pwm/pwm-atmel-hlcdc.c:167 atmel_hlcdc_pwm_apply() warn: 'new_clk' from clk_prepare_enable() not released on lines: 112,137,142,149.
 
-Bart
+Signed-off-by: Hari Prasath Gujulan Elango <Hari.PrasathGE@microchip.com>
+---
+ drivers/pwm/pwm-atmel-hlcdc.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+index 96a709a9d49a..ce46f6c74a14 100644
+--- a/drivers/pwm/pwm-atmel-hlcdc.c
++++ b/drivers/pwm/pwm-atmel-hlcdc.c
+@@ -108,8 +108,10 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 						 ATMEL_HLCDC_CFG(0),
+ 						 ATMEL_HLCDC_CLKPWMSEL,
+ 						 gencfg);
+-			if (ret)
++			if (ret) {
++				clk_disable_unprepare(new_clk);
+ 				return ret;
++			}
+ 		}
+ 
+ 		do_div(pwmcval, state->period);
+@@ -133,20 +135,27 @@ static int atmel_hlcdc_pwm_apply(struct pwm_chip *c, struct pwm_device *pwm,
+ 					 ATMEL_HLCDC_PWMPS_MASK |
+ 					 ATMEL_HLCDC_PWMPOL,
+ 					 pwmcfg);
+-		if (ret)
++		if (ret) {
++			clk_disable_unprepare(new_clk);
+ 			return ret;
++		}
+ 
+ 		ret = regmap_write(hlcdc->regmap, ATMEL_HLCDC_EN,
+ 				   ATMEL_HLCDC_PWM);
+-		if (ret)
++		if (ret) {
++			clk_disable_unprepare(new_clk);
+ 			return ret;
++		}
+ 
+ 		ret = regmap_read_poll_timeout(hlcdc->regmap, ATMEL_HLCDC_SR,
+ 					       status,
+ 					       status & ATMEL_HLCDC_PWM,
+ 					       10, 0);
+-		if (ret)
++		if (ret) {
++			clk_disable_unprepare(new_clk);
+ 			return ret;
++		}
++
+ 	} else {
+ 		ret = regmap_write(hlcdc->regmap, ATMEL_HLCDC_DIS,
+ 				   ATMEL_HLCDC_PWM);
+-- 
+2.34.1
+
