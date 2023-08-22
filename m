@@ -2,440 +2,190 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C08D2783CFE
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Aug 2023 11:38:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED295783D4D
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Aug 2023 11:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234388AbjHVJiH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 22 Aug 2023 05:38:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
+        id S234483AbjHVJtD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 22 Aug 2023 05:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234371AbjHVJiG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Aug 2023 05:38:06 -0400
-X-Greylist: delayed 900 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 22 Aug 2023 02:37:59 PDT
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AADF1B2;
-        Tue, 22 Aug 2023 02:37:59 -0700 (PDT)
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 845441000CF; Tue, 22 Aug 2023 10:12:45 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-        t=1692695565; bh=PBQsppeEQf9CLGbA3nVtyxod687pgnw/ziALrDWwy8A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=evP/jsnd2nyGT8o5I/fX0c6UVQZBR6F8acaK7KMwk21GtCWT+tlDUoe0iDuMV3pWK
-         +QcnC8zY0smM99VJqUimCrl49ayGg4Q2C5HEa5CfYv+/NeAKbo97rVyiW1d3uBtqr7
-         VU9UBifIF7xqe8oEQ2pi3ptELci46cVc5IyaHNEhYH73dYYkHRnGdUiow2/mEiqGqg
-         MLqcDNhjnvlN1seAEJJeYhk9ONnO7vbGeelTP+sAc84LLC8ihMZIMilGjQM2AMdqMO
-         sqOMG3DZLALUOoe/1yxq1mvw+v3CYt4tSj2Aseh3vcRrMlLY7WQP36tXM+4g1JYg0b
-         i565+jfbLjrXA==
-From:   Sean Young <sean@mess.org>
-To:     linux-media@vger.kernel.org
-Cc:     "Sicelo A . Mhlongo" <absicsz@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
+        with ESMTP id S234398AbjHVJtD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 22 Aug 2023 05:49:03 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 27B8F1A1;
+        Tue, 22 Aug 2023 02:49:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5BD011FB;
+        Tue, 22 Aug 2023 02:49:40 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54A3B3F64C;
+        Tue, 22 Aug 2023 02:48:57 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 10:48:54 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Aleksandr Shubin <privatesub2@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Timo Kokkonen <timo.t.kokkonen@iki.fi>
-Subject: [PATCH v2 1/2] media: rc: remove ir-rx51 in favour of generic pwm-ir-tx
-Date:   Tue, 22 Aug 2023 10:12:44 +0100
-Message-Id: <20230822091245.209539-2-sean@mess.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230822091245.209539-1-sean@mess.org>
-References: <20230822091245.209539-1-sean@mess.org>
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+Message-ID: <20230822104854.1fa5f1aa@donnerap.manchester.arm.com>
+In-Reply-To: <20230814133238.741950-2-privatesub2@gmail.com>
+References: <20230814133238.741950-1-privatesub2@gmail.com>
+        <20230814133238.741950-2-privatesub2@gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The ir-rx51 is a pwm-based TX driver specific to the N900. This can be
-handled entirely by the generic pwm-ir-tx driver, and in fact the
-pwm-ir-tx driver has been compatible with ir-rx51 from the start.
+On Mon, 14 Aug 2023 16:32:16 +0300
+Aleksandr Shubin <privatesub2@gmail.com> wrote:
 
-Note that the suspend code in the ir-rx51 driver is unnecessary, since
-during transmit, the process is not in interruptable sleep. The process
-is not put to sleep until the transmit completes.
+Hi Aleksandr,
 
-Tested-by: Sicelo A. Mhlongo <absicsz@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-Cc: linux-omap@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-pwm@vger.kernel.org
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Timo Kokkonen <timo.t.kokkonen@iki.fi>
----
- arch/arm/configs/omap2plus_defconfig |   1 -
- drivers/media/rc/Kconfig             |  10 -
- drivers/media/rc/Makefile            |   1 -
- drivers/media/rc/ir-rx51.c           | 285 ---------------------------
- drivers/media/rc/pwm-ir-tx.c         |   1 +
- 5 files changed, 1 insertion(+), 297 deletions(-)
- delete mode 100644 drivers/media/rc/ir-rx51.c
+> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+> controller witch is different from the previous pwm-sun4i.
+> 
+> The D1 and T113 are identical in terms of peripherals,
+> they differ only in the architecture of the CPU core, and
+> even share the majority of their DT. Because of that,
+> using the same compatible makes sense.
+> The R329 is a different SoC though, and should have
+> a different compatible string added, especially as there
+> is a difference in the number of channels.
+> 
+> D1 and T113s SoCs have one PWM controller with 8 channels.
+> R329 SoC has two PWM controllers in both power domains, one of
+> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
+> 
+> Add a device tree binding for them.
+> 
+> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> ---
+>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> new file mode 100644
+> index 000000000000..9512d4bed322
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner D1, T113-S3 and R329 PWM
+> +
+> +maintainers:
+> +  - Aleksandr Shubin <privatesub2@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: allwinner,sun20i-d1-pwm
+> +      - items:
+> +          - const: allwinner,sun20i-r329-pwm
+> +          - const: allwinner,sun20i-d1-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  clocks:
+> +    items:
+> +      - description: 24 MHz oscillator
+> +      - description: Bus Clock
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 9bd36dd39bd0..b4e3a6d7b606 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -484,7 +484,6 @@ CONFIG_LIRC=y
- CONFIG_RC_DEVICES=y
- CONFIG_IR_GPIO_TX=m
- CONFIG_IR_PWM_TX=m
--CONFIG_IR_RX51=m
- CONFIG_IR_SPI=m
- CONFIG_MEDIA_SUPPORT=m
- CONFIG_V4L_PLATFORM_DRIVERS=y
-diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
-index 07bdf649c60d..2afe67ffa285 100644
---- a/drivers/media/rc/Kconfig
-+++ b/drivers/media/rc/Kconfig
-@@ -338,16 +338,6 @@ config IR_REDRAT3
- 	   To compile this driver as a module, choose M here: the
- 	   module will be called redrat3.
- 
--config IR_RX51
--	tristate "Nokia N900 IR transmitter diode"
--	depends on (OMAP_DM_TIMER && PWM_OMAP_DMTIMER && ARCH_OMAP2PLUS || COMPILE_TEST) && RC_CORE
--	help
--	   Say Y or M here if you want to enable support for the IR
--	   transmitter diode built in the Nokia N900 (RX51) device.
--
--	   The driver uses omap DM timers for generating the carrier
--	   wave and pulses.
--
- config IR_SERIAL
- 	tristate "Homebrew Serial Port Receiver"
- 	depends on HAS_IOPORT
-diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
-index a9285266e944..2bca6f7f07bc 100644
---- a/drivers/media/rc/Makefile
-+++ b/drivers/media/rc/Makefile
-@@ -43,7 +43,6 @@ obj-$(CONFIG_IR_MTK) += mtk-cir.o
- obj-$(CONFIG_IR_NUVOTON) += nuvoton-cir.o
- obj-$(CONFIG_IR_PWM_TX) += pwm-ir-tx.o
- obj-$(CONFIG_IR_REDRAT3) += redrat3.o
--obj-$(CONFIG_IR_RX51) += ir-rx51.o
- obj-$(CONFIG_IR_SERIAL) += serial_ir.o
- obj-$(CONFIG_IR_SPI) += ir-spi.o
- obj-$(CONFIG_IR_STREAMZAP) += streamzap.o
-diff --git a/drivers/media/rc/ir-rx51.c b/drivers/media/rc/ir-rx51.c
-deleted file mode 100644
-index 13e81bf8005d..000000000000
---- a/drivers/media/rc/ir-rx51.c
-+++ /dev/null
-@@ -1,285 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- *  Copyright (C) 2008 Nokia Corporation
-- *
-- *  Based on lirc_serial.c
-- */
--#include <linux/clk.h>
--#include <linux/module.h>
--#include <linux/platform_device.h>
--#include <linux/wait.h>
--#include <linux/pwm.h>
--#include <linux/of.h>
--#include <linux/hrtimer.h>
--
--#include <media/rc-core.h>
--
--#define WBUF_LEN 256
--
--struct ir_rx51 {
--	struct rc_dev *rcdev;
--	struct pwm_device *pwm;
--	struct pwm_state state;
--	struct hrtimer timer;
--	struct device	     *dev;
--	wait_queue_head_t     wqueue;
--
--	unsigned int	freq;		/* carrier frequency */
--	unsigned int	duty_cycle;	/* carrier duty cycle */
--	int		wbuf[WBUF_LEN];
--	int		wbuf_index;
--	unsigned long	device_is_open;
--};
--
--static inline void ir_rx51_on(struct ir_rx51 *ir_rx51)
--{
--	ir_rx51->state.enabled = true;
--	pwm_apply_state(ir_rx51->pwm, &ir_rx51->state);
--}
--
--static inline void ir_rx51_off(struct ir_rx51 *ir_rx51)
--{
--	ir_rx51->state.enabled = false;
--	pwm_apply_state(ir_rx51->pwm, &ir_rx51->state);
--}
--
--static int init_timing_params(struct ir_rx51 *ir_rx51)
--{
--	ir_rx51->state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, ir_rx51->freq);
--	pwm_set_relative_duty_cycle(&ir_rx51->state, ir_rx51->duty_cycle, 100);
--
--	return 0;
--}
--
--static enum hrtimer_restart ir_rx51_timer_cb(struct hrtimer *timer)
--{
--	struct ir_rx51 *ir_rx51 = container_of(timer, struct ir_rx51, timer);
--	ktime_t now;
--
--	if (ir_rx51->wbuf_index < 0) {
--		dev_err_ratelimited(ir_rx51->dev,
--				    "BUG wbuf_index has value of %i\n",
--				    ir_rx51->wbuf_index);
--		goto end;
--	}
--
--	/*
--	 * If we happen to hit an odd latency spike, loop through the
--	 * pulses until we catch up.
--	 */
--	do {
--		u64 ns;
--
--		if (ir_rx51->wbuf_index >= WBUF_LEN)
--			goto end;
--		if (ir_rx51->wbuf[ir_rx51->wbuf_index] == -1)
--			goto end;
--
--		if (ir_rx51->wbuf_index % 2)
--			ir_rx51_off(ir_rx51);
--		else
--			ir_rx51_on(ir_rx51);
--
--		ns = US_TO_NS(ir_rx51->wbuf[ir_rx51->wbuf_index]);
--		hrtimer_add_expires_ns(timer, ns);
--
--		ir_rx51->wbuf_index++;
--
--		now = timer->base->get_time();
--
--	} while (hrtimer_get_expires_tv64(timer) < now);
--
--	return HRTIMER_RESTART;
--end:
--	/* Stop TX here */
--	ir_rx51_off(ir_rx51);
--	ir_rx51->wbuf_index = -1;
--
--	wake_up_interruptible(&ir_rx51->wqueue);
--
--	return HRTIMER_NORESTART;
--}
--
--static int ir_rx51_tx(struct rc_dev *dev, unsigned int *buffer,
--		      unsigned int count)
--{
--	struct ir_rx51 *ir_rx51 = dev->priv;
--
--	if (count > WBUF_LEN)
--		return -EINVAL;
--
--	memcpy(ir_rx51->wbuf, buffer, count * sizeof(unsigned int));
--
--	/* Wait any pending transfers to finish */
--	wait_event_interruptible(ir_rx51->wqueue, ir_rx51->wbuf_index < 0);
--
--	init_timing_params(ir_rx51);
--	if (count < WBUF_LEN)
--		ir_rx51->wbuf[count] = -1; /* Insert termination mark */
--
--	/*
--	 * REVISIT: Adjust latency requirements so the device doesn't go in too
--	 * deep sleep states with pm_qos_add_request().
--	 */
--
--	ir_rx51_on(ir_rx51);
--	ir_rx51->wbuf_index = 1;
--	hrtimer_start(&ir_rx51->timer,
--		      ns_to_ktime(US_TO_NS(ir_rx51->wbuf[0])),
--		      HRTIMER_MODE_REL);
--	/*
--	 * Don't return back to the userspace until the transfer has
--	 * finished
--	 */
--	wait_event_interruptible(ir_rx51->wqueue, ir_rx51->wbuf_index < 0);
--
--	/* REVISIT: Remove pm_qos constraint, we can sleep again */
--
--	return count;
--}
--
--static int ir_rx51_open(struct rc_dev *dev)
--{
--	struct ir_rx51 *ir_rx51 = dev->priv;
--
--	if (test_and_set_bit(1, &ir_rx51->device_is_open))
--		return -EBUSY;
--
--	ir_rx51->pwm = pwm_get(ir_rx51->dev, NULL);
--	if (IS_ERR(ir_rx51->pwm)) {
--		int res = PTR_ERR(ir_rx51->pwm);
--
--		dev_err(ir_rx51->dev, "pwm_get failed: %d\n", res);
--		return res;
--	}
--
--	return 0;
--}
--
--static void ir_rx51_release(struct rc_dev *dev)
--{
--	struct ir_rx51 *ir_rx51 = dev->priv;
--
--	hrtimer_cancel(&ir_rx51->timer);
--	ir_rx51_off(ir_rx51);
--	pwm_put(ir_rx51->pwm);
--
--	clear_bit(1, &ir_rx51->device_is_open);
--}
--
--static struct ir_rx51 ir_rx51 = {
--	.duty_cycle	= 50,
--	.wbuf_index	= -1,
--};
--
--static int ir_rx51_set_duty_cycle(struct rc_dev *dev, u32 duty)
--{
--	struct ir_rx51 *ir_rx51 = dev->priv;
--
--	ir_rx51->duty_cycle = duty;
--
--	return 0;
--}
--
--static int ir_rx51_set_tx_carrier(struct rc_dev *dev, u32 carrier)
--{
--	struct ir_rx51 *ir_rx51 = dev->priv;
--
--	if (carrier > 500000 || carrier < 20000)
--		return -EINVAL;
--
--	ir_rx51->freq = carrier;
--
--	return 0;
--}
--
--#ifdef CONFIG_PM
--
--static int ir_rx51_suspend(struct platform_device *dev, pm_message_t state)
--{
--	/*
--	 * In case the device is still open, do not suspend. Normally
--	 * this should not be a problem as lircd only keeps the device
--	 * open only for short periods of time. We also don't want to
--	 * get involved with race conditions that might happen if we
--	 * were in a middle of a transmit. Thus, we defer any suspend
--	 * actions until transmit has completed.
--	 */
--	if (test_and_set_bit(1, &ir_rx51.device_is_open))
--		return -EAGAIN;
--
--	clear_bit(1, &ir_rx51.device_is_open);
--
--	return 0;
--}
--
--static int ir_rx51_resume(struct platform_device *dev)
--{
--	return 0;
--}
--
--#else
--
--#define ir_rx51_suspend	NULL
--#define ir_rx51_resume	NULL
--
--#endif /* CONFIG_PM */
--
--static int ir_rx51_probe(struct platform_device *dev)
--{
--	struct pwm_device *pwm;
--	struct rc_dev *rcdev;
--
--	pwm = pwm_get(&dev->dev, NULL);
--	if (IS_ERR(pwm))
--		return dev_err_probe(&dev->dev, PTR_ERR(pwm), "pwm_get failed\n");
--
--	/* Use default, in case userspace does not set the carrier */
--	ir_rx51.freq = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm), NSEC_PER_SEC);
--	pwm_init_state(pwm, &ir_rx51.state);
--	pwm_put(pwm);
--
--	hrtimer_init(&ir_rx51.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
--	ir_rx51.timer.function = ir_rx51_timer_cb;
--
--	ir_rx51.dev = &dev->dev;
--
--	rcdev = devm_rc_allocate_device(&dev->dev, RC_DRIVER_IR_RAW_TX);
--	if (!rcdev)
--		return -ENOMEM;
--
--	rcdev->priv = &ir_rx51;
--	rcdev->open = ir_rx51_open;
--	rcdev->close = ir_rx51_release;
--	rcdev->tx_ir = ir_rx51_tx;
--	rcdev->s_tx_duty_cycle = ir_rx51_set_duty_cycle;
--	rcdev->s_tx_carrier = ir_rx51_set_tx_carrier;
--	rcdev->driver_name = KBUILD_MODNAME;
--
--	ir_rx51.rcdev = rcdev;
--
--	return devm_rc_register_device(&dev->dev, ir_rx51.rcdev);
--}
--
--static const struct of_device_id ir_rx51_match[] = {
--	{
--		.compatible = "nokia,n900-ir",
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(of, ir_rx51_match);
--
--static struct platform_driver ir_rx51_platform_driver = {
--	.probe		= ir_rx51_probe,
--	.suspend	= ir_rx51_suspend,
--	.resume		= ir_rx51_resume,
--	.driver		= {
--		.name	= KBUILD_MODNAME,
--		.of_match_table = ir_rx51_match,
--	},
--};
--module_platform_driver(ir_rx51_platform_driver);
--
--MODULE_DESCRIPTION("IR TX driver for Nokia RX51");
--MODULE_AUTHOR("Nokia Corporation");
--MODULE_LICENSE("GPL");
-diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-index 7732054c4621..c5f37c03af9c 100644
---- a/drivers/media/rc/pwm-ir-tx.c
-+++ b/drivers/media/rc/pwm-ir-tx.c
-@@ -23,6 +23,7 @@ struct pwm_ir {
- 
- static const struct of_device_id pwm_ir_of_match[] = {
- 	{ .compatible = "pwm-ir-tx", },
-+	{ .compatible = "nokia,n900-ir" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, pwm_ir_of_match);
--- 
-2.41.0
+The manual tells me that the new PWMs can also use APB0 as the
+input clock, which (finally!) allows PWM frequencies above 24 MHz.
+So we should have an explicit reference to that clock - even if the bus
+clock happens to be gated version of APB0.
+
+Cheers,
+Andre
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: hosc
+> +      - const: bus
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  allwinner,pwm-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of PWM channels configured for this instance
+> +    enum: [6, 9]
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: allwinner,sun20i-r329-pwm
+> +
+> +    then:
+> +      required:
+> +        - allwinner,pwm-channels
+> +
+> +    else:
+> +      properties:
+> +        allwinner,pwm-channels: false
+> +
+> +unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#pwm-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sun20i-d1-ccu.h>
+> +    #include <dt-bindings/reset/sun20i-d1-ccu.h>
+> +
+> +    pwm: pwm@2000c00 {
+> +      compatible = "allwinner,sun20i-d1-pwm";
+> +      reg = <0x02000c00 0x400>;
+> +      clocks = <&dcxo>, <&ccu CLK_BUS_PWM>;
+> +      clock-names = "hosc", "bus";
+> +      resets = <&ccu RST_BUS_PWM>;
+> +      #pwm-cells = <0x3>;
+> +    };
+> +
+> +...
 
