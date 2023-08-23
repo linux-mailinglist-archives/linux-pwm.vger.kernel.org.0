@@ -2,223 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B73D3785716
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Aug 2023 13:49:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB3D9785890
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Aug 2023 15:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234429AbjHWLte (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 23 Aug 2023 07:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60278 "EHLO
+        id S235481AbjHWNNl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 23 Aug 2023 09:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbjHWLte (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Aug 2023 07:49:34 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3DEE0CF;
-        Wed, 23 Aug 2023 04:49:31 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6885F1042;
-        Wed, 23 Aug 2023 04:50:11 -0700 (PDT)
-Received: from [10.57.34.103] (unknown [10.57.34.103])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD2403F64C;
-        Wed, 23 Aug 2023 04:49:26 -0700 (PDT)
-Message-ID: <0fdf4f0b-64e4-9831-36b8-a00d4cbd131a@arm.com>
-Date:   Wed, 23 Aug 2023 12:49:20 +0100
+        with ESMTP id S231472AbjHWNNk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 23 Aug 2023 09:13:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A56E4E;
+        Wed, 23 Aug 2023 06:13:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A14365663;
+        Wed, 23 Aug 2023 13:13:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE786C433C8;
+        Wed, 23 Aug 2023 13:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692796417;
+        bh=DaGglQshpU9aTm/Tv91gnQQDys7dUA7tLk3NwPkPRFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MsPaOqQ+kqB2t/YvmWau52gagC8bfE45jMsvBQnlroxNCZYsBR5PJBhBCc77d10We
+         R3gRHOTSVZom8xz6+Ojn4fSqbgZ0BMreYCIM3zSTszk9NhHhaViyCDsCkeJXaXWII6
+         ydUKJ/3yzfTPSUN1foUMOz44KC2K/4HlcCa5lKFOaDF1FA9SNjSr13HJQuFCiF2Ixp
+         +woHAjlR1Add2jN6/FQFaFCjHvNN8lF0/+HJl2iXAJfeBuP+JIx3SF0XOpWYZ81c/Z
+         f5UiMfKsJAFfxO/5UUpOBKwSFeiXVQJha3FTLJ9ND2ihND+V01vbZHsLTxz2ZrykJV
+         0RjttZkHtsEKw==
+Received: (nullmailer pid 2148592 invoked by uid 1000);
+        Wed, 23 Aug 2023 13:13:34 -0000
+Date:   Wed, 23 Aug 2023 08:13:34 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     jdelvare@suse.com, linux@roeck-us.net,
+        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        corbet@lwn.net, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        BMC-SW@aspeedtech.com, patrick@stwcx.xyz
+Subject: Re: [PATCH v7 1/2] dt-bindings: hwmon: Support Aspeed g6 PWM TACH
+ Control
+Message-ID: <20230823131334.GA2059582-robh@kernel.org>
+References: <20230817120029.221484-1-billy_tsai@aspeedtech.com>
+ <20230817120029.221484-2-billy_tsai@aspeedtech.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v5 1/3] dt-bindings: pwm: Add binding for Allwinner
- D1/T113-S3/R329 PWM controller
-To:     =?UTF-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCo0YPQsdC40L0=?= 
-        <privatesub2@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-riscv@lists.infradead.org
-References: <20230814133238.741950-1-privatesub2@gmail.com>
- <20230814133238.741950-2-privatesub2@gmail.com>
- <20230822104854.1fa5f1aa@donnerap.manchester.arm.com>
- <CAF4idNneb1=40mQC=593Tmy8_OUAGiL4ROjK2XyL2BA35vM_WA@mail.gmail.com>
-Content-Language: en-US
-From:   Andre Przywara <andre.przywara@arm.com>
-In-Reply-To: <CAF4idNneb1=40mQC=593Tmy8_OUAGiL4ROjK2XyL2BA35vM_WA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230817120029.221484-2-billy_tsai@aspeedtech.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
+On Thu, Aug 17, 2023 at 08:00:28PM +0800, Billy Tsai wrote:
+> Document the compatible for aspeed,ast2600-pwm-tach device, which can
+> support upto 16 PWM outputs and 16 fan tach input.
+> 
+> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+> ---
+>  .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+> new file mode 100644
+> index 000000000000..1666304d0b0f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2021 Aspeed, Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hwmon/aspeed,g6-pwm-tach.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ASPEED G6 PWM and Fan Tach controller device driver
+> +
+> +maintainers:
+> +  - Billy Tsai <billy_tsai@aspeedtech.com>
+> +
+> +description: |
+> +  The ASPEED PWM controller can support upto 16 PWM outputs.
+> +  The ASPEED Fan Tacho controller can support upto 16 fan tach input.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pwm-tach
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +  aspeed,fan-tach-ch:
+> +    description: Specify the Fan tach input channels.
+> +    $ref: "/schemas/types.yaml#/definitions/uint8-array"
 
-On 23/08/2023 07:57, Александр Шубин wrote:
-> Hi Andre,
-> 
-> вт, 22 авг. 2023 г. в 12:49, Andre Przywara <andre.przywara@arm.com>:
->>
->> On Mon, 14 Aug 2023 16:32:16 +0300
->> Aleksandr Shubin <privatesub2@gmail.com> wrote:
->>
->> Hi Aleksandr,
->>
->>> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
->>> controller witch is different from the previous pwm-sun4i.
->>>
->>> The D1 and T113 are identical in terms of peripherals,
->>> they differ only in the architecture of the CPU core, and
->>> even share the majority of their DT. Because of that,
->>> using the same compatible makes sense.
->>> The R329 is a different SoC though, and should have
->>> a different compatible string added, especially as there
->>> is a difference in the number of channels.
->>>
->>> D1 and T113s SoCs have one PWM controller with 8 channels.
->>> R329 SoC has two PWM controllers in both power domains, one of
->>> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
->>>
->>> Add a device tree binding for them.
->>>
->>> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
->>> ---
->>>   .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 85 +++++++++++++++++++
->>>   1 file changed, 85 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
->>> new file mode 100644
->>> index 000000000000..9512d4bed322
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
->>> @@ -0,0 +1,85 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Allwinner D1, T113-S3 and R329 PWM
->>> +
->>> +maintainers:
->>> +  - Aleksandr Shubin <privatesub2@gmail.com>
->>> +
->>> +properties:
->>> +  compatible:
->>> +    oneOf:
->>> +      - const: allwinner,sun20i-d1-pwm
->>> +      - items:
->>> +          - const: allwinner,sun20i-r329-pwm
->>> +          - const: allwinner,sun20i-d1-pwm
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  "#pwm-cells":
->>> +    const: 3
->>> +
->>> +  clocks:
->>> +    items:
->>> +      - description: 24 MHz oscillator
->>> +      - description: Bus Clock
->>
->> The manual tells me that the new PWMs can also use APB0 as the
->> input clock, which (finally!) allows PWM frequencies above 24 MHz.
->> So we should have an explicit reference to that clock - even if the bus
->> clock happens to be gated version of APB0.
-> 
-> Should I change it to something like this:
->      pwm: pwm@2000c00 {
->        compatible = "allwinner,sun20i-d1-pwm";
->        reg = <0x02000c00 0x400>;
->        clocks = <&ccu CLK_BUS_PWM>, <&dcxo>, <&ccu CLK_APB0>;
->        clock-names = "bus", "hosc", "apb0";
->        resets = <&ccu RST_BUS_PWM>;
->        #pwm-cells = <0x3>;
->      };
+This property is already defined in aspeed-pwm-tacho.txt as a single u8 
+that goes in a fan node. You can't redefine its type and location here.
 
-Yes, that is what I had in mind!
-It shouldn't be too hard to add support for this in the driver as well.
+To repeat what I've said in previous versions, work with others to 
+define a common fan and fan controller binding. Otherwise, anything new 
+with fan related properties is simply going to be rejected.
 
-Thanks!
-Andre
-
-> 
->>
->> Cheers,
->> Andre
->>
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: hosc
->>> +      - const: bus
->>> +
->>> +  resets:
->>> +    maxItems: 1
->>> +
->>> +  allwinner,pwm-channels:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    description: The number of PWM channels configured for this instance
->>> +    enum: [6, 9]
->>> +
->>> +allOf:
->>> +  - $ref: pwm.yaml#
->>> +
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: allwinner,sun20i-r329-pwm
->>> +
->>> +    then:
->>> +      required:
->>> +        - allwinner,pwm-channels
->>> +
->>> +    else:
->>> +      properties:
->>> +        allwinner,pwm-channels: false
->>> +
->>> +unevaluatedProperties: false
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - "#pwm-cells"
->>> +  - clocks
->>> +  - clock-names
->>> +  - resets
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/clock/sun20i-d1-ccu.h>
->>> +    #include <dt-bindings/reset/sun20i-d1-ccu.h>
->>> +
->>> +    pwm: pwm@2000c00 {
->>> +      compatible = "allwinner,sun20i-d1-pwm";
->>> +      reg = <0x02000c00 0x400>;
->>> +      clocks = <&dcxo>, <&ccu CLK_BUS_PWM>;
->>> +      clock-names = "hosc", "bus";
->>> +      resets = <&ccu RST_BUS_PWM>;
->>> +      #pwm-cells = <0x3>;
->>> +    };
->>> +
->>> +...
->>
-> 
-> Cheers,
-> Aleksandr
-> 
+Rob
