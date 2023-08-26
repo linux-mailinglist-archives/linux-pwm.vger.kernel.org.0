@@ -2,124 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E55788C1C
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Aug 2023 17:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 083C578985C
+	for <lists+linux-pwm@lfdr.de>; Sat, 26 Aug 2023 19:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240885AbjHYPGf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 25 Aug 2023 11:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48624 "EHLO
+        id S230396AbjHZRRa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 26 Aug 2023 13:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343928AbjHYPGX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 25 Aug 2023 11:06:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598AD212C;
-        Fri, 25 Aug 2023 08:06:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C4A1563615;
-        Fri, 25 Aug 2023 15:06:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68185C433C7;
-        Fri, 25 Aug 2023 15:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692975980;
-        bh=Ih/unC5mMCx0JKXD/w7LDAy5yURqSrSqENwjWGzF/uU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U3D3xXWdL3aN3ZNRmG8w4Fh9U/tF6GOzUrF54Ie0lYeuD8w5lgdEY0yLNCTRA875O
-         P91s0EIswGDNhohzkXL/rolyPFEX3Zdb5QyFfBaTOheMmZcUqhiuk/nT5Cl4Und65Z
-         gSZz1H/6rC87Zxghj6HLSgkp7u8rhOvOlAps7uGkGM0GlCVzlFwxqWhSLzH6AQdMxr
-         X1T+LjJsNkvs//VIzsgiadWmIzW6IfBNPx4SpmUFTPGGlqrOacWwz3gu4QWjMp672X
-         OWbgaAw/HTUtx7d9CLxnF4FB4Dl8XuB1ABjJlN5pi86Js7tQWBGMcZZ02OqRf5YuoY
-         ZEaK4WJ/fX0hw==
-Date:   Fri, 25 Aug 2023 16:06:12 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     William Qiu <william.qiu@starfivetech.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        with ESMTP id S230031AbjHZRRP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 26 Aug 2023 13:17:15 -0400
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3633E1BDB;
+        Sat, 26 Aug 2023 10:17:13 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id C134B1000D0; Sat, 26 Aug 2023 18:17:11 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1693070231; bh=Lbm8wzOKC2M9GeSPbw06e8KPiOFgpvPECNpJXbRnIo4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j9u+3HNFtL/ansIVY+kJ3/2edhhGvGpGn6BYGnX27uq8OmsPe8Y19TZW7+NgLx6g5
+         9cdoJ+efWCPyt4YPyi2KRjsqxHa+lxtqIYlIlY+hX9KqLyzbwx1891j7C3pTynEs6J
+         H2ErMmFPJttjPT8iXlbCT4Mp/mKFedFttF86kgGsZSPXLqvAvTxY/rVG8aubFlDPqO
+         xVwicVAj5iHnWZnl6PnQcXNPjXRvf/WIZEnY7qVKLI6hFeAEov860KW3ZoXSnOFZTm
+         5+QuPlFkCALmT3AJOaaAcsKzZ655Djqrt4rs4JJ50f6ebSo2v6cJ1zqm1aCJZ8ku+x
+         oVqbnUtBMdh4Q==
+From:   Sean Young <sean@mess.org>
+To:     linux-media@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Hal Feng <hal.feng@starfivetech.com>
-Subject: Re: [RFC v4 0/4] StarFive's Pulse Width Modulation driver support
-Message-ID: <20230825-exclusion-doing-93532be4fa97@spud>
-References: <20230825081328.204442-1-william.qiu@starfivetech.com>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Timo Kokkonen <timo.t.kokkonen@iki.fi>
+Subject: [PATCH v4 2/2] dt-bindings: media: remove nokia,n900-ir as pwm-ir-tx is compatible
+Date:   Sat, 26 Aug 2023 18:17:11 +0100
+Message-Id: <20230826171711.366710-1-sean@mess.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="M9eiGjMF7i2kmpUJ"
-Content-Disposition: inline
-In-Reply-To: <20230825081328.204442-1-william.qiu@starfivetech.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+The generic pwm-ir-tx driver works for the Nokia n900, so nokia,n900-ir
+can be removed.
 
---M9eiGjMF7i2kmpUJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ .../bindings/leds/irled/pwm-ir-tx.yaml        |  5 ++++-
+ .../devicetree/bindings/media/nokia,n900-ir   | 20 -------------------
+ 2 files changed, 4 insertions(+), 21 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/nokia,n900-ir
 
-On Fri, Aug 25, 2023 at 04:13:24PM +0800, William Qiu wrote:
-> Hi,
->=20
-> This patchset adds initial rudimentary support for the StarFive
-> Pulse Width Modulation controller driver. And this driver will
-> be used in StarFive's VisionFive 2 board.The first patch add
-> Documentations for the device and Patch 2 adds device probe for
-> the module.
->=20
-> Changes v3->v4:
-> - Rebased to v6.5rc7.
-> - Sorted the header files in alphabetic order.
-> - Changed iowrite32() to writel().
-> - Added a way to turn off.
-> - Moified polarity inversion implementation.
-> - Added 7100 support.
-> - Added dts patches.
-> - Used the various helpers in linux/math.h.
-> - Corrected formatting problems.
-> - Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
-> - Dropped the redundant code.
->=20
-> Changes v2->v3:
-> - Fixed some formatting issues.
->=20
-> Changes v1->v2:
-> - Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml=
-'.
-> - Dropped the compatible's Items.
-> - Dropped the unuse defines.
-> - Modified the code to follow the Linux coding style.
-> - Changed return value to dev_err_probe.
-> - Dropped the unnecessary local variable.
->=20
-> The patch series is based on v6.5rc7.
+diff --git a/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.yaml b/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.yaml
+index f2a6fa140f38..7526e3149f72 100644
+--- a/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.yaml
++++ b/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.yaml
+@@ -15,7 +15,10 @@ description:
+ 
+ properties:
+   compatible:
+-    const: pwm-ir-tx
++    oneOf:
++      - const: pwm-ir-tx
++      - const: nokia,n900-ir
++        deprecated: true
+ 
+   pwms:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/media/nokia,n900-ir b/Documentation/devicetree/bindings/media/nokia,n900-ir
+deleted file mode 100644
+index 13a18ce37dd1..000000000000
+--- a/Documentation/devicetree/bindings/media/nokia,n900-ir
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Device-Tree bindings for LIRC TX driver for Nokia N900(RX51)
+-
+-Required properties:
+-	- compatible: should be "nokia,n900-ir".
+-	- pwms: specifies PWM used for IR signal transmission.
+-
+-Example node:
+-
+-	pwm9: dmtimer-pwm@9 {
+-		compatible = "ti,omap-dmtimer-pwm";
+-		ti,timers = <&timer9>;
+-		ti,clock-source = <0x00>; /* timer_sys_ck */
+-		#pwm-cells = <3>;
+-	};
+-
+-	ir: n900-ir {
+-		compatible = "nokia,n900-ir";
+-
+-		pwms = <&pwm9 0 26316 0>; /* 38000 Hz */
+-	};
+-- 
+2.42.0
 
-Out of curiosity, why is this series still an RFC?
-
---M9eiGjMF7i2kmpUJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZOjDZAAKCRB4tDGHoIJi
-0hpMAQCVxJxrRd/qnUytncJTEZTkZhBNWpfnTFJiTWosLONwagEA1gWFXmEkUG4p
-P717RLD26fgyVmB/czA/nZe4Y6jfIwk=
-=QcUj
------END PGP SIGNATURE-----
-
---M9eiGjMF7i2kmpUJ--
