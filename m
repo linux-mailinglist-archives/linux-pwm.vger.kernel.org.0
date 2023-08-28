@@ -2,121 +2,260 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A76D78A6BF
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Aug 2023 09:49:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11EA078A6D6
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Aug 2023 09:54:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjH1Hsc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 28 Aug 2023 03:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49900 "EHLO
+        id S229791AbjH1Hxx (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 28 Aug 2023 03:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbjH1HsG (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Aug 2023 03:48:06 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A02114;
-        Mon, 28 Aug 2023 00:48:00 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 77DBC7FDC;
-        Mon, 28 Aug 2023 15:47:53 +0800 (CST)
-Received: from EXMBX072.cuchost.com (172.16.6.82) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 28 Aug
- 2023 15:47:53 +0800
-Received: from [192.168.125.72] (113.72.145.245) by EXMBX072.cuchost.com
- (172.16.6.82) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 28 Aug
- 2023 15:47:52 +0800
-Message-ID: <8390fffb-c704-286f-44b9-4e0d24818343@starfivetech.com>
-Date:   Mon, 28 Aug 2023 15:47:51 +0800
+        with ESMTP id S229934AbjH1Hxr (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 28 Aug 2023 03:53:47 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A36119
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Aug 2023 00:53:45 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bc5acc627dso16645015ad.1
+        for <linux-pwm@vger.kernel.org>; Mon, 28 Aug 2023 00:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1693209225; x=1693814025;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yc5/64aDDHimpalFyKo/sDYTTFjFL1PiUBqmUUqNYNY=;
+        b=EVNyxX2D6EZ5nzDDCwGTnaKtkt4faXDCrRZB+EWpBULWw6ZofaARnr23A2UfkDFslR
+         VTHjtWH1hVnX6DCHF8Z9iAxLt1b1Tmgg0KwRSx0eTxhQlrrGKB+GRJb+qt+Mp637iu+1
+         djvqqUloB8V3bujW+Mdax+wO37dYgmDLV9XdQZtqymlzzMqCS4QgC6eYtcdeHu2gOPIW
+         42igJq3p/nyBsOyk6dUQ8NMZex3pu71WtSsJKnvwJsXe1yNt3w5luvk/LkE9tHSskA6Q
+         8aYzN4CS3gI9Wvqe8y2VYcVR/yC2qROUREGW0D7O+jxuWsNG/Ttr6n+Pykn3HQTP6FJv
+         Egvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693209225; x=1693814025;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yc5/64aDDHimpalFyKo/sDYTTFjFL1PiUBqmUUqNYNY=;
+        b=aY7J2WEgRvNwAkVPKtRdFVBtVB92tfgFxTu7xMt0LM2JOvE5vJFsMBom0i8YSQxjB1
+         /viAm1C83dhmHF95/Tz9mPAlkhJAg7FY/4ilSDXwEUBnz0Ix6Nd6cinBWTUZ//W5+yXg
+         Z5qpzZFrx0jNetvei9yqrOjqn8KMyJH4/qe27sY8ruBrNJjWw7HeU4oaEN0eeDGlLBLX
+         IJX3ZGd59ist+36bT73lve6MoH/KtSkz2dFO8xOZxV1jVxeSKFNVMf2+g3VPO/pk+A3r
+         +clEB1zHQoa8b18yqoEBhmtunaXFdIkRJY/axihu6W/ALxrE3SeuPoQiBx9TyMa9ci6l
+         ww8A==
+X-Gm-Message-State: AOJu0YyWeFCfsf2QQuLc8ocei2k3xtSVvdexuHDoowXyYxR0SuSTa1NY
+        /yTo8bjMCBPb3tzrOSmgO9qBwND4gKC0nCYj42OVWA==
+X-Google-Smtp-Source: AGHT+IE4ZTuCbpfSd2u26y/GnloivJyZc/YSoHKEwSl0YpsN37Q/7zIWDf5qfNHHW8SlBatqk5kJBNfX4i4HRUvRd2I=
+X-Received: by 2002:a17:90a:3ec1:b0:26d:4642:1bd7 with SMTP id
+ k59-20020a17090a3ec100b0026d46421bd7mr18663702pjc.34.1693209224797; Mon, 28
+ Aug 2023 00:53:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [RFC v4 0/4] StarFive's Pulse Width Modulation driver support
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Conor Dooley <conor@kernel.org>,
-        William Qiu <william.qiu@starfivetech.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>,
-        "Emil Renner Berthing" <kernel@esmil.dk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-References: <20230825081328.204442-1-william.qiu@starfivetech.com>
- <20230825-exclusion-doing-93532be4fa97@spud>
- <a49737f0-0a09-b558-ea06-b3d47a6e4240@starfivetech.com>
- <683df184-6688-f006-c4d8-fa7000b7b771@linaro.org>
-From:   Hal Feng <hal.feng@starfivetech.com>
-In-Reply-To: <683df184-6688-f006-c4d8-fa7000b7b771@linaro.org>
+References: <20230817120029.221484-1-billy_tsai@aspeedtech.com>
+ <20230817120029.221484-2-billy_tsai@aspeedtech.com> <20230823131334.GA2059582-robh@kernel.org>
+ <SG2PR06MB33659FFB0CBFFA55295E6A098B1DA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+In-Reply-To: <SG2PR06MB33659FFB0CBFFA55295E6A098B1DA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+From:   Naresh Solanki <naresh.solanki@9elements.com>
+Date:   Mon, 28 Aug 2023 13:23:33 +0530
+Message-ID: <CABqG17g-s4h810JO-MO_TRRJhPkP=RMLDm7Jq6Sx4Gm1hRKqLg@mail.gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: hwmon: Support Aspeed g6 PWM TACH Control
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>,
+        "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
+        Luke Chen <luke_chen@aspeedtech.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [113.72.145.245]
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX072.cuchost.com
- (172.16.6.82)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 8/28/2023 3:16 PM, Krzysztof Kozlowski wrote:
-> On 28/08/2023 09:12, Hal Feng wrote:
->> On Fri, 25 Aug 2023 16:06:12 +0100, Conor Dooley wrote:
->>> On Fri, Aug 25, 2023 at 04:13:24PM +0800, William Qiu wrote:
->>>> Hi,
->>>>
->>>> This patchset adds initial rudimentary support for the StarFive
->>>> Pulse Width Modulation controller driver. And this driver will
->>>> be used in StarFive's VisionFive 2 board.The first patch add
->>>> Documentations for the device and Patch 2 adds device probe for
->>>> the module.
->>>>
->>>> Changes v3->v4:
->>>> - Rebased to v6.5rc7.
->>>> - Sorted the header files in alphabetic order.
->>>> - Changed iowrite32() to writel().
->>>> - Added a way to turn off.
->>>> - Moified polarity inversion implementation.
->>>> - Added 7100 support.
->>>> - Added dts patches.
->>>> - Used the various helpers in linux/math.h.
->>>> - Corrected formatting problems.
->>>> - Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
->>>> - Dropped the redundant code.
->>>>
->>>> Changes v2->v3:
->>>> - Fixed some formatting issues.
->>>>
->>>> Changes v1->v2:
->>>> - Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml'.
->>>> - Dropped the compatible's Items.
->>>> - Dropped the unuse defines.
->>>> - Modified the code to follow the Linux coding style.
->>>> - Changed return value to dev_err_probe.
->>>> - Dropped the unnecessary local variable.
->>>>
->>>> The patch series is based on v6.5rc7.
->>>
->>> Out of curiosity, why is this series still an RFC?
->> 
->> There was no comments received in v4. So William resend it and
->> request for comments.
-> 
-> The question was: why he requests for comments?
-> 
-> RFC means *it should not be merged, it is not ready*.
+Hi Billy,
 
-Oh, it was misunderstood by William and me.
-So this series is not a RFC.
 
-Best regards,
-Hal
+On Mon, 28 Aug 2023 at 09:33, Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>
+> On Thu, Aug 17, 2023 at 08:00:28PM +0800, Billy Tsai wrote:
+>
+> >> Document the compatible for aspeed,ast2600-pwm-tach device, which can
+>
+> >> support upto 16 PWM outputs and 16 fan tach input.
+>
+> >>
+>
+> >> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+>
+> >> ---
+>
+> >>  .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 57 +++++++++++++++++++
+>
+> >>  1 file changed, 57 insertions(+)
+>
+> >>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+>
+> >>
+>
+> >> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+>
+> >> new file mode 100644
+>
+> >> index 000000000000..1666304d0b0f
+>
+> >> --- /dev/null
+>
+> >> +++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+>
+> >> @@ -0,0 +1,57 @@
+>
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>
+> >> +# Copyright (C) 2021 Aspeed, Inc.
+>
+> >> +%YAML 1.2
+>
+> >> +---
+>
+> >> +$id: http://devicetree.org/schemas/hwmon/aspeed,g6-pwm-tach.yaml#
+>
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+> >> +
+>
+> >> +title: ASPEED G6 PWM and Fan Tach controller device driver
+>
+> >> +
+>
+> >> +maintainers:
+>
+> >> +  - Billy Tsai <billy_tsai@aspeedtech.com>
+>
+> >> +
+>
+> >> +description: |
+>
+> >> +  The ASPEED PWM controller can support upto 16 PWM outputs.
+>
+> >> +  The ASPEED Fan Tacho controller can support upto 16 fan tach input.
+>
+> >> +
+>
+> >> +properties:
+>
+> >> +  compatible:
+>
+> >> +    enum:
+>
+> >> +      - aspeed,ast2600-pwm-tach
+>
+> >> +
+>
+> >> +  reg:
+>
+> >> +    maxItems: 1
+>
+> >> +
+>
+> >> +  clocks:
+>
+> >> +    maxItems: 1
+>
+> >> +
+>
+> >> +  resets:
+>
+> >> +    maxItems: 1
+>
+> >> +
+>
+> >> +  "#pwm-cells":
+>
+> >> +    const: 3
+>
+> >> +
+>
+> >> +  aspeed,fan-tach-ch:
+>
+> >> +    description: Specify the Fan tach input channels.
+>
+> >> +    $ref: "/schemas/types.yaml#/definitions/uint8-array"
+>
+>
+>
+> >This property is already defined in aspeed-pwm-tacho.txt as a single u8
+>
+> >that goes in a fan node. You can't redefine its type and location here.
+>
+>
+>
+> Hi Rob,
+>
+>
+>
+> I didn't redefine the type of property. The type of the aspeed,fan-tach-ch is unit8-array
+>
+> in aspeed-pwm-tacho.txt.
+>
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt#L48
+>
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt#L71
+>
+>
+>
+> >To repeat what I've said in previous versions, work with others to
+>
+> >define a common fan and fan controller binding. Otherwise, anything new
+>
+> >with fan related properties is simply going to be rejected.
+>
+>
+>
+> Okay I will try to work with Naresh for defining a common fan binding.
+>
+>
+>
+> Thanks for your suggestion.
+>
+>
+>
+> Hi Naresh,
+>
+>
+>
+> As Rob mentioned, it would be advisable for my dt-bindings to reference the common fan bindings instead of introducing specific properties.
+>
+> I noticed that you have already submitted a related patch to the community, which seems to be pending for around 10 months.
+>
+> https://lore.kernel.org/lkml/20221116213615.1256297-2-Naresh.Solanki@9elements.com/
+>
+> Do you have plans to send the next version of the patch? Alternatively, can I proceed to cherry-pick this version of the patch and continue with
+>
+> the upstreaming process in my patch serial?
+Sure, go ahead.
+
+Regards,
+Naresh
+>
+>
+>
+> Thanks
+>
+> Best Regards,
+>
+> Billy Tsai
