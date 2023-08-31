@@ -2,141 +2,236 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D5C578E187
-	for <lists+linux-pwm@lfdr.de>; Wed, 30 Aug 2023 23:39:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D14C578F0C1
+	for <lists+linux-pwm@lfdr.de>; Thu, 31 Aug 2023 17:58:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236718AbjH3Vj6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 30 Aug 2023 17:39:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37388 "EHLO
+        id S1346659AbjHaP6i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 31 Aug 2023 11:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241948AbjH3Vj5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 30 Aug 2023 17:39:57 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE7ACF0
-        for <linux-pwm@vger.kernel.org>; Wed, 30 Aug 2023 14:39:29 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-500a398cda5so500913e87.0
-        for <linux-pwm@vger.kernel.org>; Wed, 30 Aug 2023 14:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693431488; x=1694036288; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=msHyshj90vSnmjfMS+CD0pnHPjuRl2jy7F4rESiCNlg=;
-        b=LUrE15J8CeNbIGe+XYtOeSxnLC7aAZUg1lDtJksANLIQjGIty4XtYFCBWxHIGb3Now
-         xsu5z1eTR8GMpjmlfDk0IP+rOEosX45JUTarAiYR4IJ5ek2BuA1Zi8D4K4Dv6DnCJGSL
-         kQTyOmPyApTQlhvFmnmdkdKhGLhbtz+0GuKcB2XU2yWfkvIXA395ijxIqrEsYg5UR/7E
-         w09usj/pCWo41o03Q/GW6EKqVXEicc4AuPOUE+uxUPQme8kXeVY8xpmojzUb0h7obqAh
-         6WmeWdR0SQobfc1Xb+h7BYDSP/HzxAptK8aNR2k99qtpqv5vMnh8IddiX6LKVitpV3GA
-         0bMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693431488; x=1694036288;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=msHyshj90vSnmjfMS+CD0pnHPjuRl2jy7F4rESiCNlg=;
-        b=ZwlXSD/EeJERA2GLIQrSrAeSnkkX/j5Sryg9Zv9xtxbi0BOpAkorjFjsoryK9//gE1
-         GRztHaae7QwVkhUxkZhAm+oUkrdn1wIMo/o/KSxmIq1jwcDrMANVhgiEN9ZSCDqmaSS6
-         O6jcR9zr0sXzHUAPt3UcLl2CyvP4RrRWEP4MMOg0rQVYx0F10883Vhv0pO29DbRGYdws
-         Le+cH72zVkQvvjJpi9aLujc+IL6eEE9qpQuxwdM/XL72ZFkarTIIyKSVsaUqoWCv9TJH
-         vmslZDHY6oqa5p87YoNeLRufkSII8da+f/Gv1AxUUuz+eRiXtxkcqL/BVC4dsTYreC/g
-         fp7A==
-X-Gm-Message-State: AOJu0YyGv88Ih/ubvg+j+7qQCvjkH1MHFBI28jNbC/fbG9g3BrTJ/CGH
-        ei1JTIH9zPFByD7/yOVT7vlbiuC6J/rv6rfK650Y+A==
-X-Google-Smtp-Source: AGHT+IFZN0XFLmTMVpli86I9XELxCx+opSVmKto0P8fKRgp/dvzpFqZUwlf4S3Ov+q1yxFaX3RGzDQ==
-X-Received: by 2002:a05:6512:3da6:b0:500:b2c9:7da9 with SMTP id k38-20020a0565123da600b00500b2c97da9mr2444317lfv.45.1693420497376;
-        Wed, 30 Aug 2023 11:34:57 -0700 (PDT)
-Received: from [192.168.1.101] (abyl195.neoplus.adsl.tpnet.pl. [83.9.31.195])
-        by smtp.gmail.com with ESMTPSA id l12-20020ac24a8c000000b004fe633bfcc7sm2473562lfp.17.2023.08.30.11.34.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Aug 2023 11:34:57 -0700 (PDT)
-Message-ID: <951a2f24-931a-4a25-a3b7-c3009e135d7d@linaro.org>
-Date:   Wed, 30 Aug 2023 20:34:52 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data
- to support PPG
-Content-Language: en-US
-To:     Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
-        lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org
-Cc:     luca.weiss@fairphone.com, u.kleine-koenig@pengutronix.de,
-        quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, kernel@quicinc.com
+        with ESMTP id S231980AbjHaP6i (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 31 Aug 2023 11:58:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BA41B0;
+        Thu, 31 Aug 2023 08:58:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2B6FCB8226C;
+        Thu, 31 Aug 2023 15:58:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE2FC433C7;
+        Thu, 31 Aug 2023 15:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693497512;
+        bh=NlQHAlRSWJmw3BpQmppIzYbTKnU63kdcr30JgkmYLIM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cOd+R2yDkLOJQ3pT9aougIZLtGJ5cWB99CqeZoxE+FnXTRz+YpzH3atrfMaU+6jpO
+         7Il4vRln0t0VxRV5cgysytUuaAM33O6UhY7TwmzXm+Lgs3ZUFR5ZJ618CtWbrpTnE+
+         3UJU+mgbkEShQ2XqXyAZFnOJMKmieFFjNCiRAaU+z5qJ4sPuZTbM46GjrHgZpsgEg3
+         WYYpVPUSYJUaVm4ls/0tHyk1SVZBb6MjEAPTvTttyQ0+4Ll9fGW+Qlu2/plPUsobls
+         Zky75L6m0972WAqFUDYiYFbzoUdAa0pmgHUVyiszj1/i8KRMGs3N8LKZpRXaRontgS
+         NnE4yTVlPp1Ng==
+Date:   Thu, 31 Aug 2023 16:58:26 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Anjelique Melendez <quic_amelende@quicinc.com>
+Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
+        luca.weiss@fairphone.com, konrad.dybcio@linaro.org,
+        u.kleine-koenig@pengutronix.de, quic_subbaram@quicinc.com,
+        quic_gurus@quicinc.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kernel@quicinc.com,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 2/7] dt-bindings: leds: leds-qcom-lpg: Add support for
+ LPG PPG
+Message-ID: <20230831-dose-eligibly-dee96e1f4dc2@spud>
 References: <20230830180600.1865-2-quic_amelende@quicinc.com>
- <20230830180600.1865-8-quic_amelende@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20230830180600.1865-8-quic_amelende@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <20230830180600.1865-5-quic_amelende@quicinc.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="siNBzA7SpfMo2ngy"
+Content-Disposition: inline
+In-Reply-To: <20230830180600.1865-5-quic_amelende@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 30.08.2023 20:06, Anjelique Melendez wrote:
-> Update the pmi632 lpg_data struct so that pmi632 devices use PPG
-> for LUT pattern.
-> 
+
+--siNBzA7SpfMo2ngy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Aug 30, 2023 at 11:05:57AM -0700, Anjelique Melendez wrote:
+> Update leds-qcom-lpg binding to support LPG PPG.
+>=20
 > Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  drivers/leds/rgb/leds-qcom-lpg.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-> index 90dc27d5eb7c..0b37d3b539f8 100644
-> --- a/drivers/leds/rgb/leds-qcom-lpg.c
-> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
-> @@ -1672,11 +1672,14 @@ static const struct lpg_data pm8994_lpg_data = {
->  static const struct lpg_data pmi632_lpg_data = {
->  	.triled_base = 0xd000,
->  
-> +	.lut_size = 64,
-> +	.lut_sdam_base = 0x80,
-Is that a predefined space for use with LPG?
+>  .../bindings/leds/leds-qcom-lpg.yaml          | 89 ++++++++++++++++++-
+>  1 file changed, 88 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/=
+Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+> index e6f1999cb22f..067ebe35ca5e 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
+> @@ -11,7 +11,7 @@ maintainers:
+> =20
+>  description: >
+>    The Qualcomm Light Pulse Generator consists of three different hardwar=
+e blocks;
+> -  a ramp generator with lookup table, the light pulse generator and a th=
+ree
+> +  a ramp generator with lookup table (LUT), the light pulse generator an=
+d a three
+>    channel current sink. These blocks are found in a wide range of Qualco=
+mm PMICs.
+> =20
+>  properties:
+> @@ -63,6 +63,29 @@ properties:
+>          - description: dtest line to attach
+>          - description: flags for the attachment
+> =20
+> +  nvmem:
 
-Or can it be reclaimed for something else?
+> +    description: >
 
-Konrad
+Why do you have these chomping operators? I can't see any formatting
+that'd require them. Unless you're respinning for other reasons, you can
+ignore this comment.
+
+Thanks,
+Conor.
+
+
+> +      This property is required for PMICs that supports PPG, which is wh=
+en a
+> +      PMIC stores LPG per-channel data and pattern LUT in SDAM modules i=
+nstead
+> +      of in a LUT peripheral. For PMICs, such as PM8350C, per-channel da=
+ta
+> +      and pattern LUT is separated into 2 SDAM modules. In that case, ph=
+andles
+> +      to both SDAM modules need to be specified.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  nvmem-names:
+> +    minItems: 1
+> +    items:
+> +      - const: lpg_chan_sdam
+> +      - const: lut_sdam
+> +
+> +  qcom,pbs:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: >
+> +      Phandle of the Qualcomm Programmable Boot Sequencer node (PBS).
+> +      PBS node is used to trigger LPG pattern sequences for PMICs that s=
+upport
+> +      single SDAM PPG.
+> +
+>    multi-led:
+>      type: object
+>      $ref: leds-class-multicolor.yaml#
+> @@ -106,6 +129,39 @@ required:
+> =20
+>  additionalProperties: false
+> =20
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: qcom,pmi632-lpg
+> +    then:
+> +      properties:
+> +        nvmem:
+> +          maxItems: 1
+> +        nvmem-names:
+> +          maxItems: 1
+> +      required:
+> +        - nvmem
+> +        - nvmem-names
+> +        - qcom,pbs
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,pm8350c-pwm
+> +              - qcom,pm8550-pwm
+> +    then:
+> +      properties:
+> +        nvmem:
+> +          minItems: 2
+> +        nvmem-names:
+> +          minItems: 2
+> +      required:
+> +        - nvmem
+> +        - nvmem-names
+> +
+>  examples:
+>    - |
+>      #include <dt-bindings/leds/common.h>
+> @@ -191,4 +247,35 @@ examples:
+>        compatible =3D "qcom,pm8916-pwm";
+>        #pwm-cells =3D <2>;
+>      };
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    led-controller {
+> +      compatible =3D "qcom,pmi632-lpg";
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +      #pwm-cells =3D <2>;
+> +      nvmem-names =3D "lpg_chan_sdam";
+> +      nvmem =3D <&pmi632_sdam_7>;
+> +      qcom,pbs =3D <&pmi632_pbs_client3>;
+> +
+> +      led@1 {
+> +        reg =3D <1>;
+> +        color =3D <LED_COLOR_ID_RED>;
+> +        label =3D "red";
+> +      };
+> +
+> +      led@2 {
+> +        reg =3D <2>;
+> +        color =3D <LED_COLOR_ID_GREEN>;
+> +        label =3D "green";
+> +      };
+> +
+> +      led@3 {
+> +        reg =3D <3>;
+> +        color =3D <LED_COLOR_ID_BLUE>;
+> +        label =3D "blue";
+> +      };
+> +    };
+> +
+>  ...
+> --=20
+> 2.41.0
+>=20
+
+--siNBzA7SpfMo2ngy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZPC4ogAKCRB4tDGHoIJi
+0rvnAQCC/NP8ZnTt8cM3IdN+5mZMI0oAy5tg3F8KoasVqxYwXwEAggM0YFw0w7Vk
+RTdsGwIHbsfaMnnBOL+FBI0RD5ZK1wA=
+=EpUf
+-----END PGP SIGNATURE-----
+
+--siNBzA7SpfMo2ngy--
