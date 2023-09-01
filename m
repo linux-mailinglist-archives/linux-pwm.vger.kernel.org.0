@@ -2,61 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D14C578F0C1
-	for <lists+linux-pwm@lfdr.de>; Thu, 31 Aug 2023 17:58:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1B478F7B4
+	for <lists+linux-pwm@lfdr.de>; Fri,  1 Sep 2023 06:56:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346659AbjHaP6i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 31 Aug 2023 11:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45362 "EHLO
+        id S234433AbjIAE4v (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 1 Sep 2023 00:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231980AbjHaP6i (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 31 Aug 2023 11:58:38 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BA41B0;
-        Thu, 31 Aug 2023 08:58:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2B6FCB8226C;
-        Thu, 31 Aug 2023 15:58:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE2FC433C7;
-        Thu, 31 Aug 2023 15:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693497512;
-        bh=NlQHAlRSWJmw3BpQmppIzYbTKnU63kdcr30JgkmYLIM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cOd+R2yDkLOJQ3pT9aougIZLtGJ5cWB99CqeZoxE+FnXTRz+YpzH3atrfMaU+6jpO
-         7Il4vRln0t0VxRV5cgysytUuaAM33O6UhY7TwmzXm+Lgs3ZUFR5ZJ618CtWbrpTnE+
-         3UJU+mgbkEShQ2XqXyAZFnOJMKmieFFjNCiRAaU+z5qJ4sPuZTbM46GjrHgZpsgEg3
-         WYYpVPUSYJUaVm4ls/0tHyk1SVZBb6MjEAPTvTttyQ0+4Ll9fGW+Qlu2/plPUsobls
-         Zky75L6m0972WAqFUDYiYFbzoUdAa0pmgHUVyiszj1/i8KRMGs3N8LKZpRXaRontgS
-         NnE4yTVlPp1Ng==
-Date:   Thu, 31 Aug 2023 16:58:26 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Anjelique Melendez <quic_amelende@quicinc.com>
-Cc:     pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
-        luca.weiss@fairphone.com, konrad.dybcio@linaro.org,
-        u.kleine-koenig@pengutronix.de, quic_subbaram@quicinc.com,
-        quic_gurus@quicinc.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel@quicinc.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 2/7] dt-bindings: leds: leds-qcom-lpg: Add support for
- LPG PPG
-Message-ID: <20230831-dose-eligibly-dee96e1f4dc2@spud>
-References: <20230830180600.1865-2-quic_amelende@quicinc.com>
- <20230830180600.1865-5-quic_amelende@quicinc.com>
+        with ESMTP id S229733AbjIAE4u (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 1 Sep 2023 00:56:50 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C4412F;
+        Thu, 31 Aug 2023 21:56:48 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c1f8aaab9aso12483865ad.1;
+        Thu, 31 Aug 2023 21:56:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693544207; x=1694149007; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AxMAdQ9JHhbY/6XOYXhohZX4W0hkhsENsmdXA3joCPY=;
+        b=C6+nZqaaqsQRSPdbqP8L9VhVfHF5lwRQqVz+2KlIFc+UicH7DCHsfU0z/KAwH6iGjE
+         yquPphJKmh9YO6hgaidYwSeyqQNY9/MZbiiPywqo/KYxHvP1LQw79lXJpdRCAvrMViOy
+         0RaA7iU20sF5ybiPJVo7R0/Vu5RUZG1aKC6wk31m31oPzi4775c/CWn3s1Ee09Ri5zm2
+         igHl/rqmR3QFHGzbpviAUAD7c1EtOdq+bxEe2UorPI3W2GtfadCDrsDU6oIHdgNT7kR7
+         zX08A8f0YUmUV/QrEZ6BcopK7L5bPxXMhgyalOPP90lYc1wznxksRFDlUgLn33wL5Egg
+         sa2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693544207; x=1694149007;
+        h=content-transfer-encoding:in-reply-to:cc:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AxMAdQ9JHhbY/6XOYXhohZX4W0hkhsENsmdXA3joCPY=;
+        b=QR6+sGb3QSorLYFfd3P4Vw3F1ImaESOCNs48oYGPr18gHxVRKehfyWgLM5TS170GHl
+         9ZuToQMwLiNbh5N11ZHkdf/dU6LHbTkR5O1iZMMmcVsXXIIn0JZEIVVsD3oKQWbInE/L
+         PTF1rk/JKAImC/EO1LPyjIS3B1/ok4r/LffTRxWot230UPIEr3pauc4SnkiZ6Q2Yf8/G
+         RpD8vkZYGdStpi35AoYcIcNQfokAYjyJmPg5Z8ois8fDdOTQ5hlFpGU6OjSw11+z6I+J
+         yYr3IleuBH2iWGCWZkLhJzXQ/agRchQwehZ4PB4EKGIW4spc9e6hHrE+sXqO7SMK8eEc
+         fuWA==
+X-Gm-Message-State: AOJu0YwyFTUF4XJcm2D10XmlhHphmmFNcM8sPJ2mepm+OT27/TNESKtO
+        tH4r1aJ3mrYJ+iEhNWQHqg8=
+X-Google-Smtp-Source: AGHT+IF6QDy3CuYUe+uak82ob23I21g9dB49A8IeXHA8TbCz/H5rYUS4VaHBNmXQXV04PA1Rwb8IDw==
+X-Received: by 2002:a17:902:c40b:b0:1b9:de75:d5bb with SMTP id k11-20020a170902c40b00b001b9de75d5bbmr2191573plk.7.1693544207479;
+        Thu, 31 Aug 2023 21:56:47 -0700 (PDT)
+Received: from [10.10.4.41] (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
+        by smtp.gmail.com with ESMTPSA id e4-20020a170902d38400b001adf6b21c77sm2036354pld.107.2023.08.31.21.56.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 31 Aug 2023 21:56:46 -0700 (PDT)
+Message-ID: <99ffd1fb-14ae-1c83-bc32-2d0aead4d696@gmail.com>
+Date:   Fri, 1 Sep 2023 12:54:33 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="siNBzA7SpfMo2ngy"
-Content-Disposition: inline
-In-Reply-To: <20230830180600.1865-5-quic_amelende@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v8 3/3] hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED
+ g6 PWM/Fan tach
+Content-Language: en-US
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+References: <20230830123202.3408318-1-billy_tsai@aspeedtech.com>
+ <20230830123202.3408318-4-billy_tsai@aspeedtech.com>
+From:   Potin Lai <potin.lai.pt@gmail.com>
+Cc:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        corbet@lwn.net, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
+        naresh.solanki@9elements.com, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        BMC-SW@aspeedtech.com, patrick@stwcx.xyz
+In-Reply-To: <20230830123202.3408318-4-billy_tsai@aspeedtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,172 +84,59 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---siNBzA7SpfMo2ngy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 30, 2023 at 11:05:57AM -0700, Anjelique Melendez wrote:
-> Update leds-qcom-lpg binding to support LPG PPG.
->=20
-> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/leds/leds-qcom-lpg.yaml          | 89 ++++++++++++++++++-
->  1 file changed, 88 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml b/=
-Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> index e6f1999cb22f..067ebe35ca5e 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.yaml
-> @@ -11,7 +11,7 @@ maintainers:
-> =20
->  description: >
->    The Qualcomm Light Pulse Generator consists of three different hardwar=
-e blocks;
-> -  a ramp generator with lookup table, the light pulse generator and a th=
-ree
-> +  a ramp generator with lookup table (LUT), the light pulse generator an=
-d a three
->    channel current sink. These blocks are found in a wide range of Qualco=
-mm PMICs.
-> =20
->  properties:
-> @@ -63,6 +63,29 @@ properties:
->          - description: dtest line to attach
->          - description: flags for the attachment
-> =20
-> +  nvmem:
-
-> +    description: >
-
-Why do you have these chomping operators? I can't see any formatting
-that'd require them. Unless you're respinning for other reasons, you can
-ignore this comment.
-
-Thanks,
-Conor.
-
-
-> +      This property is required for PMICs that supports PPG, which is wh=
-en a
-> +      PMIC stores LPG per-channel data and pattern LUT in SDAM modules i=
-nstead
-> +      of in a LUT peripheral. For PMICs, such as PM8350C, per-channel da=
-ta
-> +      and pattern LUT is separated into 2 SDAM modules. In that case, ph=
-andles
-> +      to both SDAM modules need to be specified.
-> +    minItems: 1
-> +    maxItems: 2
+On 8/30/23 20:32, Billy Tsai wrote:
+> +static int aspeed_tach_hwmon_write(struct device *dev,
+> +				   enum hwmon_sensor_types type, u32 attr,
+> +				   int channel, long val)
+> +{
+> +	struct aspeed_pwm_tach_data *priv = dev_get_drvdata(dev);
+> +	u32 reg_val;
 > +
-> +  nvmem-names:
-> +    minItems: 1
-> +    items:
-> +      - const: lpg_chan_sdam
-> +      - const: lut_sdam
-> +
-> +  qcom,pbs:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: >
-> +      Phandle of the Qualcomm Programmable Boot Sequencer node (PBS).
-> +      PBS node is used to trigger LPG pattern sequences for PMICs that s=
-upport
-> +      single SDAM PPG.
-> +
->    multi-led:
->      type: object
->      $ref: leds-class-multicolor.yaml#
-> @@ -106,6 +129,39 @@ required:
-> =20
->  additionalProperties: false
-> =20
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,pmi632-lpg
-> +    then:
-> +      properties:
-> +        nvmem:
-> +          maxItems: 1
-> +        nvmem-names:
-> +          maxItems: 1
-> +      required:
-> +        - nvmem
-> +        - nvmem-names
-> +        - qcom,pbs
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,pm8350c-pwm
-> +              - qcom,pm8550-pwm
-> +    then:
-> +      properties:
-> +        nvmem:
-> +          minItems: 2
-> +        nvmem-names:
-> +          minItems: 2
-> +      required:
-> +        - nvmem
-> +        - nvmem-names
-> +
->  examples:
->    - |
->      #include <dt-bindings/leds/common.h>
-> @@ -191,4 +247,35 @@ examples:
->        compatible =3D "qcom,pm8916-pwm";
->        #pwm-cells =3D <2>;
->      };
-> +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    led-controller {
-> +      compatible =3D "qcom,pmi632-lpg";
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      #pwm-cells =3D <2>;
-> +      nvmem-names =3D "lpg_chan_sdam";
-> +      nvmem =3D <&pmi632_sdam_7>;
-> +      qcom,pbs =3D <&pmi632_pbs_client3>;
-> +
-> +      led@1 {
-> +        reg =3D <1>;
-> +        color =3D <LED_COLOR_ID_RED>;
-> +        label =3D "red";
-> +      };
-> +
-> +      led@2 {
-> +        reg =3D <2>;
-> +        color =3D <LED_COLOR_ID_GREEN>;
-> +        label =3D "green";
-> +      };
-> +
-> +      led@3 {
-> +        reg =3D <3>;
-> +        color =3D <LED_COLOR_ID_BLUE>;
-> +        label =3D "blue";
-> +      };
-> +    };
-> +
->  ...
-> --=20
-> 2.41.0
->=20
+> +	switch (attr) {
+> +	case hwmon_fan_div:
+> +		if (!is_power_of_2(val) || (ilog2(val) % 2) ||
+> +		    DIV_TO_REG(val) > 0xb)
+> +			return -EINVAL;
+> +		priv->tach_divisor = val;
+> +		reg_val = readl(priv->base + TACH_ASPEED_CTRL(channel));
+> +		reg_val &= ~TACH_ASPEED_CLK_DIV_T_MASK;
+> +		reg_val |= FIELD_GET(TACH_ASPEED_CLK_DIV_T_MASK,
+> +				     DIV_TO_REG(priv->tach_divisor));
+Hi Billy,
+I notice the fanX_div is always shows 1 after I set 1024.
+I think FIELD_GET() needs to replaced with FIELD_PREP().
 
---siNBzA7SpfMo2ngy
-Content-Type: application/pgp-signature; name="signature.asc"
+> +		writel(reg_val, priv->base + TACH_ASPEED_CTRL(channel));
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZPC4ogAKCRB4tDGHoIJi
-0rvnAQCC/NP8ZnTt8cM3IdN+5mZMI0oAy5tg3F8KoasVqxYwXwEAggM0YFw0w7Vk
-RTdsGwIHbsfaMnnBOL+FBI0RD5ZK1wA=
-=EpUf
------END PGP SIGNATURE-----
+> +static void aspeed_present_fan_tach(struct aspeed_pwm_tach_data *priv, u32 tach_ch)
+> +{
+> +	u32 val;
+> +
+> +	priv->tach_present[tach_ch] = true;
+> +	priv->tach_divisor = DEFAULT_TACH_DIV;
+> +
+> +	val = readl(priv->base + TACH_ASPEED_CTRL(tach_ch));
+> +	val &= ~(TACH_ASPEED_INVERS_LIMIT | TACH_ASPEED_DEBOUNCE_MASK |
+> +		 TACH_ASPEED_IO_EDGE_MASK | TACH_ASPEED_CLK_DIV_T_MASK |
+> +		 TACH_ASPEED_THRESHOLD_MASK);
+> +	val |= (DEBOUNCE_3_CLK << TACH_ASPEED_DEBOUNCE_BIT) | F2F_EDGES |
+> +	       FIELD_GET(TACH_ASPEED_CLK_DIV_T_MASK,
+> +			 DIV_TO_REG(priv->tach_divisor));
+And here as well.
 
---siNBzA7SpfMo2ngy--
+> +	writel(val, priv->base + TACH_ASPEED_CTRL(tach_ch));
+> +
+> +	aspeed_tach_ch_enable(priv, tach_ch, true);
+> +}
+> +
+>
+
