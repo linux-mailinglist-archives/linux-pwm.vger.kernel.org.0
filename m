@@ -2,174 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3D2792C92
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Sep 2023 19:39:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 467B47933D3
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Sep 2023 04:47:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240513AbjIERjr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 5 Sep 2023 13:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33206 "EHLO
+        id S231272AbjIFCrF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 5 Sep 2023 22:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239978AbjIERjf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Sep 2023 13:39:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC55395DE;
-        Tue,  5 Sep 2023 10:15:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 14762B815B4;
-        Tue,  5 Sep 2023 17:07:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F2FC433C7;
-        Tue,  5 Sep 2023 17:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693933658;
-        bh=wvydTW5tlFfjmX77STi/JFlf00/5kzHytlOiPmKMEV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uXlbNU97DMqwAC9ZNu5M7ajd6mDymvsmtCU7vrn1VzmDTcTpbt0vvMp1v641v2IQZ
-         SgVsL37pQLJ/Gp4U5eQffjkCedFKhKlriLxtQAh7m7RFlWBXj13W1YVwXqPfOmfJZF
-         vx1JCiQ4Ylx48/d2kHSiqhU93FzLfhAIaKFUhqGmoddtVvktDjJGF3LkiQJlVL++Q0
-         1zVL4u23WIIDcAaP3kxgwZwe32m2/F5Uh6SiFLBZWOUUp8D3ZxzkN+s25HRuMfDEpX
-         VwMPqEwD8llmszk0BL/HJOAZevfkwn64EsM4CTipbwOMQo+5pLTtFrkQYZhoHcNMIG
-         IRFBOOwr4tiIA==
-Received: (nullmailer pid 3568796 invoked by uid 1000);
-        Tue, 05 Sep 2023 17:07:35 -0000
-Date:   Tue, 5 Sep 2023 12:07:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     jdelvare@suse.com, linux@roeck-us.net,
-        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
-        corbet@lwn.net, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, p.zabel@pengutronix.de,
-        naresh.solanki@9elements.com, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        BMC-SW@aspeedtech.com, patrick@stwcx.xyz
-Subject: Re: [PATCH v8 2/3] dt-bindings: hwmon: Support Aspeed g6 PWM TACH
- Control
-Message-ID: <20230905170735.GA3528724-robh@kernel.org>
-References: <20230830123202.3408318-1-billy_tsai@aspeedtech.com>
- <20230830123202.3408318-3-billy_tsai@aspeedtech.com>
+        with ESMTP id S233767AbjIFCrA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 5 Sep 2023 22:47:00 -0400
+Received: from out-226.mta0.migadu.com (out-226.mta0.migadu.com [IPv6:2001:41d0:1004:224b::e2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D83ACC2
+        for <linux-pwm@vger.kernel.org>; Tue,  5 Sep 2023 19:46:56 -0700 (PDT)
+Date:   Wed, 6 Sep 2023 12:46:19 +1000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+        t=1693968412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VHfD1siejuFfvAeKP3/DP7NOiriyePjucPZcxImIuXo=;
+        b=htl8/RL+wFkHtHTJephAZFm4zLDHo0zIzf0usoGMjPKWHxg8GtY90XbJxlS1RAQ9d5BzaK
+        gKYQXdUxTmKcSf/grLIMwgYUT722diAQXj9AkJYxmmmqNjURvVtpSI/XvjsayXE02gzUzI
+        ialFsaH4oxyF3fTj7sOrgwhTdj1adRWzMns7Q5fOOGV7EaHL6RJVg5SeO4n0476Wz7ydy4
+        I920EyYh6j5yxQUz88m0ioNX9vgSj/j3OHx7MLNYzBlx29Gl4swFZ30fI9S3eb31JHC2FW
+        XIXzuYww44oqx6a/u6EGtCX6y4XQJyiRtSx4vgGgVb0uTzs3VzSY5JSBDrVRHw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   John Watts <contact@jookia.org>
+To:     Aleksandr Shubin <privatesub2@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v6 0/3] Add support for Allwinner PWM on D1/T113s/R329
+ SoCs
+Message-ID: <ZPfn-0OAL7-3DCmt@titan>
+References: <20230824114038.891493-1-privatesub2@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230830123202.3408318-3-billy_tsai@aspeedtech.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230824114038.891493-1-privatesub2@gmail.com>
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 08:32:01PM +0800, Billy Tsai wrote:
-> Document the compatible for aspeed,ast2600-pwm-tach device, which can
-> support up to 16 PWM outputs and 16 fan tach input.
+On Thu, Aug 24, 2023 at 02:40:24PM +0300, Aleksandr Shubin wrote:
+> Hi,
 > 
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->  .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-> new file mode 100644
-> index 000000000000..95bac5588c04
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2021 Aspeed, Inc.
+> This series adds support for PWM controller on new
+> Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
+> provides basic functionality for control PWM channels.
 
-A few years out of date.
+I have tested this patch and earlier versions successfully on a Mango Pi MQ
+Dual and verified it outputs a PWM signal.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/hwmon/aspeed,g6-pwm-tach.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ASPEED G6 PWM and Fan Tach controller device driver
-> +
-> +maintainers:
-> +  - Billy Tsai <billy_tsai@aspeedtech.com>
-> +
-> +description: |
-> +  The ASPEED PWM controller can support up to 16 PWM outputs.
-> +  The ASPEED Fan Tacho controller can support up to 16 fan tach input.
-
-Are PWM and tach channels independent? Would be useful to know here.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2600-pwm-tach
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +patternProperties:
-> +  "^fan[0-9a-f]_hwmon+$":
-
-Drop 'hwmon'. Standard practice for naming without 'reg' is 
-'^fan-[0-9]+$'.
-
-> +    $ref: fan-common.yaml#
-
-       unevaluatedProperties: false
-
-> +    required:
-> +      - tach-ch
-> +
-> +required:
-> +  - reg
-> +  - clocks
-> +  - resets
-> +  - "#pwm-cells"
-> +  - compatible
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/aspeed-clock.h>
-> +    pwm_tach: pwm-tach-controller@1e610000 {
-> +      compatible = "aspeed,ast2600-pwm-tach";
-> +      reg = <0x1e610000 0x100>;
-> +      clocks = <&syscon ASPEED_CLK_AHB>;
-> +      resets = <&syscon ASPEED_RESET_PWM>;
-> +      #pwm-cells = <3>;
-
-Blank line.
-
-> +      fan0_hwmon {
-> +        tach-ch = <0x0>;
-
-Don't you need 'pwms'?
-
-> +      };
-
-Blank line.
-
-> +      fan1_hwmon {
-> +        tach-ch = <0x1>;
-> +      };
-> +      fan2_hwmon {
-> +        tach-ch = <0x2>;
-> +      };
-> +    };
-> -- 
-> 2.25.1
-> 
+John.
