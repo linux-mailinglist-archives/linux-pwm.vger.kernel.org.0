@@ -2,62 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E950E797D65
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Sep 2023 22:31:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D53797D7D
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Sep 2023 22:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234501AbjIGUbf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 7 Sep 2023 16:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
+        id S229517AbjIGUmN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 Sep 2023 16:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233628AbjIGUbd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Sep 2023 16:31:33 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B531BCD
-        for <linux-pwm@vger.kernel.org>; Thu,  7 Sep 2023 13:31:21 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-99bf3f59905so165529366b.3
-        for <linux-pwm@vger.kernel.org>; Thu, 07 Sep 2023 13:31:21 -0700 (PDT)
+        with ESMTP id S233910AbjIGUmM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Sep 2023 16:42:12 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3821C1BCE
+        for <linux-pwm@vger.kernel.org>; Thu,  7 Sep 2023 13:42:07 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-99bc9e3cbf1so288120066b.0
+        for <linux-pwm@vger.kernel.org>; Thu, 07 Sep 2023 13:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694118680; x=1694723480; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZefjAhchqyrxVQ2DJ6c4dlOP9vaj1j8yweD0z7WDVhY=;
-        b=HWIvvLTfz4XB14rjtaLjnRf9l8NVNaZiHmcARkIGJ/8OStEkpudHHw+olZ533GvotQ
-         h9QPugdt0B31iGxwtWWlCceYJZBc0CzC+1FpD1o33SqScvJmwv2tRXGl5Da/1lVkuuJE
-         giB066wNyAD+Xaps4z6c0/mzTStkM/lwmpmaCbnAdHMtMdztVLudw8Szgy7Mk8tA3Ps5
-         wmoCfZOvu2qvPlLkq3gdZ5FpzxP8q1sj5JFd0+Ynrs/GkSY9J0ysBPWUF5EPo9mm7E0w
-         oP9nPzSh0C2hXsmUJccGb+QedYgml551p9yG/af9fKHN0hXxeT0Emgsi+rbkpV+a6pbm
-         yFpg==
+        d=linaro.org; s=google; t=1694119325; x=1694724125; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FcnB2B4JPj1CKIc94VubNtdCx3lpL4bBgiHUxMic53E=;
+        b=Lp9JCtqYlwOU0eFTFq83b3f+EjPidwlWMsZLuh0dlidVpCk0yTvVTyyZ/nrOSYk7BL
+         7jpEXx+TyDtNN6Ses08MtQ/gqBFGK5dGS7cJv4vRwRuMNGmQEvzM4ukNljombAvyWasX
+         sByDYgUmSM2gnNgi0t+KjogQpnuBGlXSx4CdNmKqk6vzVvJf3GpsODsucheFv/1OAr4D
+         p1QcpG3DaEC7pqBeG/+ocqo9NQflKRmKbN9tWUFmLEreFuUc8tHuxc7DLi3xcT8OTnjo
+         J/59ko5wxx9MylNrX3sYNBd/SM/5bY8zZU+gnwMfJW/4F4ZzgyvIQqQXbNBFDqISct3n
+         YuzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694118680; x=1694723480;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZefjAhchqyrxVQ2DJ6c4dlOP9vaj1j8yweD0z7WDVhY=;
-        b=mYH9Yq3aUQ0widf82PioEIjpusBXBykmqVeycrH5oLBu5SO2vNi4+Hkp0RjJ9g23g4
-         dROzVZvs+DZKUG/OD6iX+QDJVZBmwtktoReEXj/uRyOo/8b5mqA+vVKn5UOWXg1gKCoh
-         /mMUyp/oa/61rkHfkYDdnT2Cd++TS0+VRcIvL6/mcs74XZKucrHIFUNO/vZYoy8/E4Ae
-         6BjlHZFSs3q1FUAPIKxR2n6ardArgb8Y3ObMaf27aj+THuQ4mk8KDK0U9PimUKUB5Mfa
-         8lW5c6UB2H0uc/SbJ0Z/564ZeLvLLXfqZxboL/gKOkvFC4T8ULaLIbMwO85PIxDkmZho
-         0IJg==
-X-Gm-Message-State: AOJu0Ywr1CZF5ZPJzH4qW+GItkKDUo65xX4+D9traOmNQJmbgRvrbWbN
-        yQMN+oJ0+Q3YhSBCPJTaI/QqWw==
-X-Google-Smtp-Source: AGHT+IH7JJlh/7Du+y2RvkjKLmIqau/6pAfe62XTrJ0/LsPjJUHWz7ru3A3zZycvW48SmvrZIJB/9A==
-X-Received: by 2002:a17:906:2d0:b0:9a1:bd53:b23 with SMTP id 16-20020a17090602d000b009a1bd530b23mr287303ejk.14.1694118680135;
-        Thu, 07 Sep 2023 13:31:20 -0700 (PDT)
-Received: from [192.168.37.234] (178235177164.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.164])
-        by smtp.gmail.com with ESMTPSA id ck19-20020a170906c45300b009a1a653770bsm87318ejb.87.2023.09.07.13.31.17
+        d=1e100.net; s=20230601; t=1694119325; x=1694724125;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FcnB2B4JPj1CKIc94VubNtdCx3lpL4bBgiHUxMic53E=;
+        b=GXozjBoaUbeNToIMInct7HUPIaUssHkpboPpIvg7rnKXE+aUFESTBlYJOxzGS9HN4k
+         ePb6wPaM3p8xe6/dEhcSV4OCi5seQjJeLGqce+SxCqSxme76cVV9tPqaA1DUWxwcq4qh
+         P4DGBYtGSq/4VXICV++bEuN2naXCMELdJcE/Vo18MyVD5qJvmSCzghH4TY2Es8LLLmmt
+         w0inyISnWY+Ezo+waPKkZSNLMBw31LjeeHE68QA5fa2RNiF2A7vFaceq6SOWBF1Daij6
+         Aoyg9EcUstia5lyK92C+d2J80fUIHEL9VYOT+JwdR7ad5YxwWFIR1V/RYBcmZ7QubPvT
+         A5TQ==
+X-Gm-Message-State: AOJu0YwZmFls9qTSlPa3sHC5z1x9M55K+D/Pmzur1KWucCX7+bKMgcER
+        wKefBhP3MYPGkYDRvmcowvErQg==
+X-Google-Smtp-Source: AGHT+IEJOjclVL4SMD7dJtIieatsHU7cbE5c0/hhtQ4Fs9aaE7BXQqpts5EpBKXktYYen78H9OkvQA==
+X-Received: by 2002:a17:907:7604:b0:9a5:bceb:1cf8 with SMTP id jx4-20020a170907760400b009a5bceb1cf8mr521322ejc.3.1694119325610;
+        Thu, 07 Sep 2023 13:42:05 -0700 (PDT)
+Received: from [192.168.37.232] (178235177164.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.164])
+        by smtp.gmail.com with ESMTPSA id ck8-20020a170906c44800b009930c80b87csm93585ejb.142.2023.09.07.13.42.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Sep 2023 13:31:19 -0700 (PDT)
-Message-ID: <83f88e88-5624-4ffd-b2df-f58c6988c649@linaro.org>
-Date:   Thu, 7 Sep 2023 22:31:16 +0200
+        Thu, 07 Sep 2023 13:42:05 -0700 (PDT)
+Message-ID: <09109739-cb9c-42e2-80ab-e919774b4173@linaro.org>
+Date:   Thu, 7 Sep 2023 22:42:02 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data
- to support PPG
+Subject: Re: [PATCH v4 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG
+ through single SDAM
 Content-Language: en-US
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 To:     Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
         lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -68,10 +66,10 @@ Cc:     luca.weiss@fairphone.com, u.kleine-koenig@pengutronix.de,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-pwm@vger.kernel.org, kernel@quicinc.com
 References: <20230830180600.1865-2-quic_amelende@quicinc.com>
- <20230830180600.1865-8-quic_amelende@quicinc.com>
- <951a2f24-931a-4a25-a3b7-c3009e135d7d@linaro.org>
- <ca451c20-57c1-6fb4-8c8e-b3446944a0f6@quicinc.com>
- <ab237850-4724-48a8-bea8-f1287445358f@linaro.org>
+ <20230830180600.1865-7-quic_amelende@quicinc.com>
+ <3b6f6285-ec3b-4e12-aa65-d5f61937de6f@linaro.org>
+ <a9aa7bd9-7d42-3897-443e-b3ef2d73d05c@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
  BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
@@ -107,57 +105,123 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <ab237850-4724-48a8-bea8-f1287445358f@linaro.org>
+In-Reply-To: <a9aa7bd9-7d42-3897-443e-b3ef2d73d05c@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 7.09.2023 22:26, Konrad Dybcio wrote:
-> On 7.09.2023 21:54, Anjelique Melendez wrote:
+On 7.09.2023 21:55, Anjelique Melendez wrote:
+> 
+> 
+> On 8/30/2023 11:34 AM, Konrad Dybcio wrote:
+>> On 30.08.2023 20:05, Anjelique Melendez wrote:
+>>> In some PMICs like pmi632, the pattern look up table (LUT) and LPG
+>>> configuration can be stored in a single SDAM module instead of LUT
+>>> peripheral. This feature is called PPG. PPG uses Qualcomm Programmable
+>>> Boot Sequencer (PBS) inorder to trigger pattern sequences for PMICs.
+>> I still fail to understand what benefit this brings.
 >>
+>> Is this a "can be used", or "should be used", or maybe "must be used"?
 >>
->> On 8/30/2023 11:34 AM, Konrad Dybcio wrote:
->>> On 30.08.2023 20:06, Anjelique Melendez wrote:
->>>> Update the pmi632 lpg_data struct so that pmi632 devices use PPG
->>>> for LUT pattern.
->>>>
->>>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->>>> ---
->>>>  drivers/leds/rgb/leds-qcom-lpg.c | 9 ++++++---
->>>>  1 file changed, 6 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
->>>> index 90dc27d5eb7c..0b37d3b539f8 100644
->>>> --- a/drivers/leds/rgb/leds-qcom-lpg.c
->>>> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
->>>> @@ -1672,11 +1672,14 @@ static const struct lpg_data pm8994_lpg_data = {
->>>>  static const struct lpg_data pmi632_lpg_data = {
->>>>  	.triled_base = 0xd000,
->>>>  
->>>> +	.lut_size = 64,
->>>> +	.lut_sdam_base = 0x80,
->>> Is that a predefined space for use with LPG?
->>>
->>> Or can it be reclaimed for something else?
->>>
->>> Konrad
->> Yes, this is a predefined space for use with LPG
-> We represent the SDAM as a NVMEM device, generally it would
-> be nice to add all regions within it as subnodes in the devicetree.
-Wait hmm.. we already get it as a nvmem cell.. Or at least that's
-how I understand it (lut_sdam_base == lpg_chan_nvmem->start, pseudocode)
+>> Are there any distinct advantages to using one over the other?
+>> I see some limitations in the code below, but that's not being made
+>> obvious.
+>>
+>> This all should be in the commit message, the current one includes
+>> a lot of cryptic names that mean nothing to most people.
+>>
+>> [...]
+> This is a must be used if you would like to trigger patterns. Will update commit message to try and 
+> make that more clear for next patch.
+So essentially without this patchset, PM8350C and PMI632 are not capable
+of producing LED patterns. Is that correct?
 
-Why don't we access it through the nvmem r/w ops then?
+[...]
+
+>>> @@ -860,14 +1043,21 @@ static int lpg_pattern_set(struct lpg_led *led, struct led_pattern *led_pattern,
+>>>  	 * Validate that all delta_t in the pattern are the same, with the
+>>>  	 * exception of the middle element in case of ping_pong.
+>>>  	 */
+>>> -	delta_t = pattern[1].delta_t;
+>>> -	for (i = 2; i < len; i++) {
+>>> +	if (lpg->lpg_chan_nvmem) {
+>>> +		i = 1;
+>>> +		delta_t = pattern[0].delta_t;
+>>> +	} else {
+>>> +		i = 2;
+>>> +		delta_t = pattern[1].delta_t;
+>>> +	}
+>> Why?
+>>
+>> What's the rationale behind this change?
+> Patterns are required to have the same duration for each step of the pattern. Devices with LUT peripherals support low/high
+> pause which is when the first/last entry of the pattern can have a longer duration. This loop checks that the all of the
+> pattern durations are the same with the exception of the first and last entry for low/hi pause.
+That's the explanation I was looking for! :)
+
+Things like these that are only known to inside folks should
+definitely be stated either as a comment, or inside the commit
+message. Since you're changing the code flow in a noticeable manner,
+this could probably be a good fit for a comment.
+
+> 
+> This change was made because devices that use single SDAM do not support low/high pause, so we must check every
+> single pattern duration. Instead of changing the loop arguments with an if statement I was thinking we could either:
+> 
+> a. keep the original loop arguments and when loop exits we can check first element for single SDAM devices
+> 
+>    delta_t = pattern[1].delta_t;
+>    for (i = 2; i < len; i++) {
+> 	if (pattern[i].delta_t != delta_t) {
+> + 		if (i != actual_len - 1 || lpg->lpg_chan_nvmem)
+>   			goto out_free_pattern;
+>   		}
+>   	}
+> 
+> + if (lpg->lpg_chan_nvmem) {
+> +	if (delta_t != pattern[0].delta_t)
+> +		goto out_free_pattern
+> + }
+We assign hi/lo_pause a couple lines below. Moving these assignments
+a bit higher up could let us make this clearer:
+
+/* LPGs using SDAM for patterns require equal duration of all steps */
+if ((delta_t != lo_pause) && lpg->lpg_chan_nvmem)
+	goto out_free_pattern;
+
+Though I think that (in a separate patch, or perhaps series), it would
+be worth redoing the code such that hi/lo_pause expresses the deviation
+from the duration of the rest instead of the duration itself. Then we
+could just:
+
+if ((lo_pause || hi_pause)) && lpg->lpg_chan_nvmem)
+	goto out_free_pattern;
+
+But that's just a suggestion from somebody that didn't work on this code.
+
+Also, I think that using lpg_chan_nvmem interchangeably with SDAM is a
+bit confusing. Do we expect NVMEMs/SRAMs that aren't SDAM to make an
+appearence here?
+
+> 
+> b. Change the loop argument to start with i=0 and for LUT device we could just skip checking first and last element duration
+>   ** We would end up checking if pattern[1].delta_t == pattern[1].delta_t inside the loop when i == 1
+> 
+>    delta_t = pattern[1].delta_t;
+> +  for (i = 0; i < len; i++) {
+> 	if (pattern[i].delta_t != delta_t) {
+> +		if (lpg->lut_base && (i == 0 || i == actual_len - 1)
+> +			continue;
+> +               else
+> +			goto out_free_pattern;
+Meh, too many magic literals for my liking
 
 Konrad
-> 
-> Krzysztof, opinions?
-> 
-> Konrad
