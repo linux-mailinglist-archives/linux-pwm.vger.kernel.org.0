@@ -2,60 +2,62 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A643797D59
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Sep 2023 22:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E950E797D65
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Sep 2023 22:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232142AbjIGU0i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 7 Sep 2023 16:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33106 "EHLO
+        id S234501AbjIGUbf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 Sep 2023 16:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbjIGU0h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Sep 2023 16:26:37 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C251BCE
-        for <linux-pwm@vger.kernel.org>; Thu,  7 Sep 2023 13:26:31 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-52c74a2e8edso1881032a12.1
-        for <linux-pwm@vger.kernel.org>; Thu, 07 Sep 2023 13:26:31 -0700 (PDT)
+        with ESMTP id S233628AbjIGUbd (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Sep 2023 16:31:33 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B531BCD
+        for <linux-pwm@vger.kernel.org>; Thu,  7 Sep 2023 13:31:21 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-99bf3f59905so165529366b.3
+        for <linux-pwm@vger.kernel.org>; Thu, 07 Sep 2023 13:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694118389; x=1694723189; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nQbuLcA/mdrJIiZfYZbG0aXkMvUaPLHwLalgOdmCPQs=;
-        b=qVk/ZJImh7iZoNAFpSnjkDnhIsthtirjAmVwC8vNS0e1I5UxqHhD1ARuC6m8b/qqaz
-         8re276+6Ensr2OfSVkaspU2VfAqO4zxh4dqDRYIdK06/aJ1VDBjk3Elt5MT/j1WzQn0t
-         yNlGBc92LGg/rfb6EI/9EOhb3m7OglPb0ffxJjZA6Nv/lqFeG2x2IxIBpvrLmXLP4b6W
-         3eVQ44Ux0LUVKGAsKltRgAhyFGBWMj/OoqodCTtCrKQqq5TYIFgNK24tHom7YDQr+wVI
-         1W9HbD2IUpyZzTVGuNlB+vkjWiTiYq2ii/YlUQtmvniS7QfEy3nDqUIcPY1U9kJBjd5F
-         DVUg==
+        d=linaro.org; s=google; t=1694118680; x=1694723480; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZefjAhchqyrxVQ2DJ6c4dlOP9vaj1j8yweD0z7WDVhY=;
+        b=HWIvvLTfz4XB14rjtaLjnRf9l8NVNaZiHmcARkIGJ/8OStEkpudHHw+olZ533GvotQ
+         h9QPugdt0B31iGxwtWWlCceYJZBc0CzC+1FpD1o33SqScvJmwv2tRXGl5Da/1lVkuuJE
+         giB066wNyAD+Xaps4z6c0/mzTStkM/lwmpmaCbnAdHMtMdztVLudw8Szgy7Mk8tA3Ps5
+         wmoCfZOvu2qvPlLkq3gdZ5FpzxP8q1sj5JFd0+Ynrs/GkSY9J0ysBPWUF5EPo9mm7E0w
+         oP9nPzSh0C2hXsmUJccGb+QedYgml551p9yG/af9fKHN0hXxeT0Emgsi+rbkpV+a6pbm
+         yFpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694118389; x=1694723189;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nQbuLcA/mdrJIiZfYZbG0aXkMvUaPLHwLalgOdmCPQs=;
-        b=tVS/3QKWIcGAHWdhM2rTPybz1lK08xDCG6i4M7/HDAfmXH+J7OXqrY9pUC+HjiWTGp
-         8oHYR756oycJdkBBUypmLsaR5KHbvmIelSqxcZoiP/HMn31Kumsd/UYsJ7icwj0Zv6vE
-         fNhh/C7UvXfTuUttS3zNSSvI7+OPBVPqhSDg2tmRsIuERmNqu7rg08Z3N3TLThHjpiQx
-         JbOgxx2FsllhAUjWiia4hNXZwrtf09WuPlUyn0iVFhIaEkix2YGD3FwFgWaV8Y/A1RzJ
-         kyWvlJjwAKVDLr9qPRaJUA7vyzZN1KRg+BelqoxA8cR7CL6AkZoblIVVolfQKL/dUROW
-         G+YQ==
-X-Gm-Message-State: AOJu0YwV0iezwJo0jtnHW5aNtDzoXNYTM5F07FkJZvG420c+VfTADekn
-        Od8JKRKXLptJjorsk1p8vyqUeg==
-X-Google-Smtp-Source: AGHT+IGpt5ai8rmJuk04exyN/+5f5XxCj4SdePbKlyIVOeKUOvpWCZX9QEl/HZ+ID138nsQTMFNOBA==
-X-Received: by 2002:a05:6402:1801:b0:51d:d30d:a037 with SMTP id g1-20020a056402180100b0051dd30da037mr290389edy.10.1694118389225;
-        Thu, 07 Sep 2023 13:26:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694118680; x=1694723480;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZefjAhchqyrxVQ2DJ6c4dlOP9vaj1j8yweD0z7WDVhY=;
+        b=mYH9Yq3aUQ0widf82PioEIjpusBXBykmqVeycrH5oLBu5SO2vNi4+Hkp0RjJ9g23g4
+         dROzVZvs+DZKUG/OD6iX+QDJVZBmwtktoReEXj/uRyOo/8b5mqA+vVKn5UOWXg1gKCoh
+         /mMUyp/oa/61rkHfkYDdnT2Cd++TS0+VRcIvL6/mcs74XZKucrHIFUNO/vZYoy8/E4Ae
+         6BjlHZFSs3q1FUAPIKxR2n6ardArgb8Y3ObMaf27aj+THuQ4mk8KDK0U9PimUKUB5Mfa
+         8lW5c6UB2H0uc/SbJ0Z/564ZeLvLLXfqZxboL/gKOkvFC4T8ULaLIbMwO85PIxDkmZho
+         0IJg==
+X-Gm-Message-State: AOJu0Ywr1CZF5ZPJzH4qW+GItkKDUo65xX4+D9traOmNQJmbgRvrbWbN
+        yQMN+oJ0+Q3YhSBCPJTaI/QqWw==
+X-Google-Smtp-Source: AGHT+IH7JJlh/7Du+y2RvkjKLmIqau/6pAfe62XTrJ0/LsPjJUHWz7ru3A3zZycvW48SmvrZIJB/9A==
+X-Received: by 2002:a17:906:2d0:b0:9a1:bd53:b23 with SMTP id 16-20020a17090602d000b009a1bd530b23mr287303ejk.14.1694118680135;
+        Thu, 07 Sep 2023 13:31:20 -0700 (PDT)
 Received: from [192.168.37.234] (178235177164.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.164])
-        by smtp.gmail.com with ESMTPSA id g16-20020aa7c590000000b0051e1660a34esm196815edq.51.2023.09.07.13.26.26
+        by smtp.gmail.com with ESMTPSA id ck19-20020a170906c45300b009a1a653770bsm87318ejb.87.2023.09.07.13.31.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Sep 2023 13:26:28 -0700 (PDT)
-Message-ID: <ab237850-4724-48a8-bea8-f1287445358f@linaro.org>
-Date:   Thu, 7 Sep 2023 22:26:25 +0200
+        Thu, 07 Sep 2023 13:31:19 -0700 (PDT)
+Message-ID: <83f88e88-5624-4ffd-b2df-f58c6988c649@linaro.org>
+Date:   Thu, 7 Sep 2023 22:31:16 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data
  to support PPG
 Content-Language: en-US
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
 To:     Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
         lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -69,7 +71,7 @@ References: <20230830180600.1865-2-quic_amelende@quicinc.com>
  <20230830180600.1865-8-quic_amelende@quicinc.com>
  <951a2f24-931a-4a25-a3b7-c3009e135d7d@linaro.org>
  <ca451c20-57c1-6fb4-8c8e-b3446944a0f6@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+ <ab237850-4724-48a8-bea8-f1287445358f@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
  BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
@@ -105,11 +107,11 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <ca451c20-57c1-6fb4-8c8e-b3446944a0f6@quicinc.com>
+In-Reply-To: <ab237850-4724-48a8-bea8-f1287445358f@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -117,38 +119,45 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 7.09.2023 21:54, Anjelique Melendez wrote:
-> 
-> 
-> On 8/30/2023 11:34 AM, Konrad Dybcio wrote:
->> On 30.08.2023 20:06, Anjelique Melendez wrote:
->>> Update the pmi632 lpg_data struct so that pmi632 devices use PPG
->>> for LUT pattern.
->>>
->>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->>> ---
->>>  drivers/leds/rgb/leds-qcom-lpg.c | 9 ++++++---
->>>  1 file changed, 6 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
->>> index 90dc27d5eb7c..0b37d3b539f8 100644
->>> --- a/drivers/leds/rgb/leds-qcom-lpg.c
->>> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
->>> @@ -1672,11 +1672,14 @@ static const struct lpg_data pm8994_lpg_data = {
->>>  static const struct lpg_data pmi632_lpg_data = {
->>>  	.triled_base = 0xd000,
->>>  
->>> +	.lut_size = 64,
->>> +	.lut_sdam_base = 0x80,
->> Is that a predefined space for use with LPG?
+On 7.09.2023 22:26, Konrad Dybcio wrote:
+> On 7.09.2023 21:54, Anjelique Melendez wrote:
 >>
->> Or can it be reclaimed for something else?
 >>
->> Konrad
-> Yes, this is a predefined space for use with LPG
-We represent the SDAM as a NVMEM device, generally it would
-be nice to add all regions within it as subnodes in the devicetree.
+>> On 8/30/2023 11:34 AM, Konrad Dybcio wrote:
+>>> On 30.08.2023 20:06, Anjelique Melendez wrote:
+>>>> Update the pmi632 lpg_data struct so that pmi632 devices use PPG
+>>>> for LUT pattern.
+>>>>
+>>>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+>>>> ---
+>>>>  drivers/leds/rgb/leds-qcom-lpg.c | 9 ++++++---
+>>>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+>>>> index 90dc27d5eb7c..0b37d3b539f8 100644
+>>>> --- a/drivers/leds/rgb/leds-qcom-lpg.c
+>>>> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
+>>>> @@ -1672,11 +1672,14 @@ static const struct lpg_data pm8994_lpg_data = {
+>>>>  static const struct lpg_data pmi632_lpg_data = {
+>>>>  	.triled_base = 0xd000,
+>>>>  
+>>>> +	.lut_size = 64,
+>>>> +	.lut_sdam_base = 0x80,
+>>> Is that a predefined space for use with LPG?
+>>>
+>>> Or can it be reclaimed for something else?
+>>>
+>>> Konrad
+>> Yes, this is a predefined space for use with LPG
+> We represent the SDAM as a NVMEM device, generally it would
+> be nice to add all regions within it as subnodes in the devicetree.
+Wait hmm.. we already get it as a nvmem cell.. Or at least that's
+how I understand it (lut_sdam_base == lpg_chan_nvmem->start, pseudocode)
 
-Krzysztof, opinions?
+Why don't we access it through the nvmem r/w ops then?
 
 Konrad
+> 
+> Krzysztof, opinions?
+> 
+> Konrad
