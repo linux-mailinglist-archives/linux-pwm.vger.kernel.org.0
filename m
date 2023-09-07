@@ -2,24 +2,24 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0451B797868
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Sep 2023 18:46:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C4D9797BFD
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Sep 2023 20:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242990AbjIGQqq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 7 Sep 2023 12:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38278 "EHLO
+        id S234975AbjIGSgN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 7 Sep 2023 14:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242532AbjIGQqZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Sep 2023 12:46:25 -0400
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFC3211B;
-        Thu,  7 Sep 2023 09:45:48 -0700 (PDT)
+        with ESMTP id S231626AbjIGSgM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 7 Sep 2023 14:36:12 -0400
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88AA1C4;
+        Thu,  7 Sep 2023 11:36:02 -0700 (PDT)
 Received: from [134.238.52.102] (helo=rainbowdash)
-        by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-        id 1qeHce-0052RG-DY; Thu, 07 Sep 2023 17:12:48 +0100
+        by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+        id 1qeHcf-004U1P-DW; Thu, 07 Sep 2023 17:12:49 +0100
 Received: from ben by rainbowdash with local (Exim 4.96)
         (envelope-from <ben@rainbowdash>)
-        id 1qeHcd-000HUv-2c;
+        id 1qeHcd-000HUz-2h;
         Thu, 07 Sep 2023 17:12:47 +0100
 From:   Ben Dooks <ben.dooks@codethink.co.uk>
 To:     linux-pwm@vger.kernel.org
@@ -31,14 +31,13 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         jarkko.nikula@linux.intel.com,
         William Salmon <william.salmon@sifive.com>,
         Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: [PATCH v9 2/6] pwm: dwc: make timer clock configurable
-Date:   Thu,  7 Sep 2023 17:12:38 +0100
-Message-Id: <20230907161242.67190-3-ben.dooks@codethink.co.uk>
+Subject: [PATCH v9 3/6] pwm: dwc: add PWM bit unset in get_state call
+Date:   Thu,  7 Sep 2023 17:12:39 +0100
+Message-Id: <20230907161242.67190-4-ben.dooks@codethink.co.uk>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230907161242.67190-1-ben.dooks@codethink.co.uk>
 References: <20230907161242.67190-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
@@ -49,92 +48,76 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Add a configurable clock base rate for the pwm as when being built
-for non-PCI the block may be sourced from an internal clock.
+If we are not in PWM mode, then the output is technically a 50%
+output based on a single timer instead of the high-low based on
+the two counters. Add a check for the PWM mode in dwc_pwm_get_state()
+and if DWC_TIM_CTRL_PWM is not set, then return a 50% cycle.
+
+This may only be an issue on initialisation, as the rest of the
+code currently assumes we're always going to have the extended
+PWM mode using two counters.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
 v9:
- - moved email to codethink from sifive
+ - fixed multi-line comment
+ - put authour back to codethink email from sifive
 v8:
- - add reviewed by, fixed issue with previous renames.
-v7:
- - remove the "struct clk *" clk field from dwc_pwm_ctx, not used here,
-v6:
- - removed DWC_CLK_PERIOD_NS as it is now not needed
+ - fixed rename issues
 v4:
- - moved earlier before the of changes to make the of changes one patch
-v2:
-  - removed the ifdef and merged the other clock patch in here
+ - fixed review comment on mulit-line calculations
 ---
- drivers/pwm/pwm-dwc-core.c | 9 +++++----
- drivers/pwm/pwm-dwc.h      | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/pwm/pwm-dwc-core.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
-index b693cb7fa812..4b4b7b9e1d82 100644
+index 4b4b7b9e1d82..3fc281a78c9a 100644
 --- a/drivers/pwm/pwm-dwc-core.c
 +++ b/drivers/pwm/pwm-dwc-core.c
-@@ -49,13 +49,13 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * periods and check are the result within HW limits between 1 and
- 	 * 2^32 periods.
- 	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, DWC_CLK_PERIOD_NS);
-+	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
- 	if (tmp < 1 || tmp > (1ULL << 32))
- 		return -ERANGE;
- 	low = tmp - 1;
+@@ -122,24 +122,32 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ {
+ 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+ 	u64 duty, period;
++	u32 ctrl, ld, ld2;
  
- 	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
--				    DWC_CLK_PERIOD_NS);
-+				    dwc->clk_ns);
- 	if (tmp < 1 || tmp > (1ULL << 32))
- 		return -ERANGE;
- 	high = tmp - 1;
-@@ -130,12 +130,12 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	pm_runtime_get_sync(chip->dev);
  
- 	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	duty += 1;
--	duty *= DWC_CLK_PERIOD_NS;
-+	duty *= dwc->clk_ns;
- 	state->duty_cycle = duty;
+-	state->enabled = !!(dwc_pwm_readl(dwc,
+-				DWC_TIM_CTRL(pwm->hwpwm)) & DWC_TIM_CTRL_EN);
++	ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
++	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
++	ld2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
  
- 	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
- 	period += 1;
--	period *= DWC_CLK_PERIOD_NS;
-+	period *= dwc->clk_ns;
- 	period += duty;
- 	state->period = period;
+-	duty = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
+-	duty += 1;
+-	duty *= dwc->clk_ns;
+-	state->duty_cycle = duty;
++	state->enabled = !!(ctrl & DWC_TIM_CTRL_EN);
  
-@@ -160,6 +160,7 @@ struct dwc_pwm *dwc_pwm_alloc(struct device *dev)
- 	if (!dwc)
- 		return NULL;
+-	period = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
+-	period += 1;
+-	period *= dwc->clk_ns;
+-	period += duty;
+-	state->period = period;
++	/*
++	 * If we're not in PWM, technically the output is a 50-50
++	 * based on the timer load-count only.
++	 */
++	if (ctrl & DWC_TIM_CTRL_PWM) {
++		duty = (ld + 1) * dwc->clk_ns;
++		period = (ld2 + 1)  * dwc->clk_ns;
++		period += duty;
++	} else {
++		duty = (ld + 1) * dwc->clk_ns;
++		period = duty * 2;
++	}
  
-+	dwc->clk_ns = 10;
- 	dwc->chip.dev = dev;
- 	dwc->chip.ops = &dwc_pwm_ops;
- 	dwc->chip.npwm = DWC_TIMERS_TOTAL;
-diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-index 56deab4e28ec..64795247c54c 100644
---- a/drivers/pwm/pwm-dwc.h
-+++ b/drivers/pwm/pwm-dwc.h
-@@ -24,7 +24,6 @@ MODULE_IMPORT_NS(dwc_pwm);
- #define DWC_TIMERS_COMP_VERSION	0xac
+ 	state->polarity = PWM_POLARITY_INVERSED;
++	state->period = period;
++	state->duty_cycle = duty;
  
- #define DWC_TIMERS_TOTAL	8
--#define DWC_CLK_PERIOD_NS	10
+ 	pm_runtime_put_sync(chip->dev);
  
- /* Timer Control Register */
- #define DWC_TIM_CTRL_EN		BIT(0)
-@@ -43,6 +42,7 @@ struct dwc_pwm_ctx {
- struct dwc_pwm {
- 	struct pwm_chip chip;
- 	void __iomem *base;
-+	unsigned int clk_ns;
- 	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
- };
- #define to_dwc_pwm(p)	(container_of((p), struct dwc_pwm, chip))
 -- 
 2.40.1
 
