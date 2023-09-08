@@ -2,181 +2,355 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40739798409
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Sep 2023 10:28:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6506C79846B
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Sep 2023 10:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234850AbjIHI2j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 8 Sep 2023 04:28:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
+        id S237986AbjIHItm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 8 Sep 2023 04:49:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230132AbjIHI2i (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Sep 2023 04:28:38 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60B2173B
-        for <linux-pwm@vger.kernel.org>; Fri,  8 Sep 2023 01:28:33 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-501bd164fbfso2905436e87.0
-        for <linux-pwm@vger.kernel.org>; Fri, 08 Sep 2023 01:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694161712; x=1694766512; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RTQvX0l1l8YjMN32TFjMcal8vJX1jxa9/xk94KVFs0k=;
-        b=zxkGRqeu2ogQemmBa1NcwC8LzmDKDbOsjX5FiHy5EBiEMOwNdfWXtIQmLOBtsPkDib
-         k9+VQylhdth4LZi2dP7gCRoOMW7teTl8v9ofCRTgGN4vDP4NR8kKLfxxCGcVQVwKb7jo
-         S6FbcPYRd/xtui9dNwJmO71YtilqiZFMkYGwZFdn4uGyDbl43v6moj0WMnOAtzKTpt52
-         pRTE7w6g/2rkpc7owPqbN/uvpwBRtnR/niBk5v21mjm0Aig4Nf3cmjNf+vWoa1PhsRxI
-         yFwUg3iiHAC6oRBbvcdVvfmyG9aNDjG0I0//0ThMSQU8cWrC1YGKWxBja5DyCsPHUx9l
-         +BRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694161712; x=1694766512;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RTQvX0l1l8YjMN32TFjMcal8vJX1jxa9/xk94KVFs0k=;
-        b=KtS17PfODVQTrmm0bj3ChPVsvCaY/z2I5k1wG5/aEQ9I34s9+p1ve8BfEXEwqgajtG
-         1OKdHGF96Oc2gqFfG0mB2jdg2b/vJfsaaX+mTbtrY5JPsqMHO3B1N36CjqQV8DLvrXzX
-         ua5lGIai4u9Eesym+JYxiM4I0EGm4b/Eh2dn7nMSMO3dmCk+Kfs16KMQKLZZhlAX8lM1
-         X/h2wAKl9lNewZzXYc8LZkp7YC2sGvOALK+lUC3fkCD/C8Cm2qzN33nFthcbcybF31kP
-         Xm0zBnNP7xQ5dOiHFmgR/5abAXeJ2wKsR5xUV9ER2kGN5lNJvisxKTFSEIrTUfVnGCix
-         Zgqw==
-X-Gm-Message-State: AOJu0YyXC0IJCLnn8qXztefnylWLKutb4lrKDAiWhlFpwNxZJhGyNbhz
-        hCWZxdXsDMdrk64W6N8k15Xj+w==
-X-Google-Smtp-Source: AGHT+IHRiwhrH9Jh2MiuihFGwsr2A6/gozx5vuf7KVVzfh0ftGP/iAbRwvSBTx9qHwCylO/9S8VTjQ==
-X-Received: by 2002:a05:6512:3447:b0:500:a694:46f with SMTP id j7-20020a056512344700b00500a694046fmr1148636lfr.19.1694161711960;
-        Fri, 08 Sep 2023 01:28:31 -0700 (PDT)
-Received: from [192.168.37.45] (178235177197.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.197])
-        by smtp.gmail.com with ESMTPSA id f15-20020aa7d84f000000b005255f5735adsm717340eds.24.2023.09.08.01.28.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Sep 2023 01:28:31 -0700 (PDT)
-Message-ID: <cdf51ad9-d342-4a9c-a55d-384e04bd8754@linaro.org>
-Date:   Fri, 8 Sep 2023 10:28:28 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data
- to support PPG
+        with ESMTP id S237336AbjIHItl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 8 Sep 2023 04:49:41 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2110.outbound.protection.outlook.com [40.107.255.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5672E1BEE;
+        Fri,  8 Sep 2023 01:49:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YobqQmROvwANhzjtRpHGG3ML1QQlNtUr1WiEvKysZeo7ep81Xz5xbRw3EQJU/rZhpD9dqsEKifks/Fh3HjIYOAcSrlgCM1Lt0RVFx2xuX7dqtqb0b0NX2D7WdswNfhymNzHGOeEwBefu1plyewC5z/qhcnXZn8ZluCJFIzTZBRJzjXaaWRuXI03FtzxiEzPIqV2QhEtSJ/y2UsPfccAFrE0GDCfpMpZI5eZqUFntEPbmTTPd0ngJelE9Zj4eJVhqyuX2XHgGPdjybd8Lwf3/JWfvHHOQHO/BdH5azzlrinIWMlcyficiQulndmnZzcRiGzntULgu+UFJ6qOEDt+UBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q/sryLcnlRCdI6AMY6X/AxgKrFqlpkF7HkBroAsp28Q=;
+ b=ChuMp1jaP1tWKiOXFRvsNC9nx/GKpax/6YaLJGggMoxg7gR5vt/OAhJAWi16nBHUbnM7hPJUybYt7rrWOb6OPmZEwk59ObXeUZ+WQdwZyI17NXUNexaYJAFerc1thiNWp7zz5mrcRygv8rpwvOfilFo5WDG071KBEAPPVXLliSsbErQxI6Y0+FPDkQRwopDdI1yV3bO5Ac3SShn6UjNhfk57TKSNGAHraeQJtZeLGYfuO/t5ZmTzHrjUrGwtoCQFuV9otqEy5v4F+mTmZQRsE/rfc2a5B7PySXCVveoCQDMnZ5qoYIoF6lSATRi6YsEBS87sUTufQMDV+K9MJTtk6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q/sryLcnlRCdI6AMY6X/AxgKrFqlpkF7HkBroAsp28Q=;
+ b=ZlJ5AnakE/HLdhk9NfbLsZ2vGUX8+1UpnlMjtUtbogcFzrCMKDNDC6NAiRx+gSIhqpOKUr6sIM/uH56/wjR+MUntwU0iO0OimRg9mHFeVAemiyAaKgm2BpveX1FwOVJAXoPqqmSdLIe57M7j9reVwRjSoVdKSdAItOBKOZuabkd7fRzhkcFkICHAny/W0uYDsxnXQplSpuOz2owPxozGelcNFuWL2afJUsJTd2gs6WK87Trnzy6bsG4Rx46+HmMLXFRKYvz32KnHpx+lfqQ1pNVSSL2Nf2uR7d8IMED8GH6nbNFld5wCEHLkMK5xCPbBhaQ9bWHwb66+9dmTwZdoxw==
+Received: from SG2PR06MB3365.apcprd06.prod.outlook.com (2603:1096:4:69::12) by
+ JH0PR06MB6342.apcprd06.prod.outlook.com (2603:1096:990:11::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6768.30; Fri, 8 Sep 2023 08:49:25 +0000
+Received: from SG2PR06MB3365.apcprd06.prod.outlook.com
+ ([fe80::791a:38e8:18cf:d205]) by SG2PR06MB3365.apcprd06.prod.outlook.com
+ ([fe80::791a:38e8:18cf:d205%5]) with mapi id 15.20.6745.030; Fri, 8 Sep 2023
+ 08:49:25 +0000
+From:   Billy Tsai <billy_tsai@aspeedtech.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "naresh.solanki@9elements.com" <naresh.solanki@9elements.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>,
+        "patrick@stwcx.xyz" <patrick@stwcx.xyz>
+Subject: Re: [PATCH v8 1/3] dt-bindings: hwmon: fan: Add fan binding to schema
+Thread-Topic: [PATCH v8 1/3] dt-bindings: hwmon: fan: Add fan binding to
+ schema
+Thread-Index: AQHZ2z4C+uKKem1S50iGi7OYH9WEnLAMfl8AgAKBk6KAANDSgIAA2pqv
+Date:   Fri, 8 Sep 2023 08:49:25 +0000
+Message-ID: <SG2PR06MB3365B916E3AD2CE331A0D4258BEDA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+References: <20230830123202.3408318-1-billy_tsai@aspeedtech.com>
+ <20230830123202.3408318-2-billy_tsai@aspeedtech.com>
+ <20230905170010.GA3505375-robh@kernel.org>
+ <SG2PR06MB336567E43537C7F4947E342F8BEEA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+ <20230907194351.GA2033402-robh@kernel.org>
+In-Reply-To: <20230907194351.GA2033402-robh@kernel.org>
+Accept-Language: en-US, zh-TW
 Content-Language: en-US
-To:     Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
-        lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        agross@kernel.org, andersson@kernel.org
-Cc:     luca.weiss@fairphone.com, u.kleine-koenig@pengutronix.de,
-        quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, kernel@quicinc.com
-References: <20230830180600.1865-2-quic_amelende@quicinc.com>
- <20230830180600.1865-8-quic_amelende@quicinc.com>
- <951a2f24-931a-4a25-a3b7-c3009e135d7d@linaro.org>
- <ca451c20-57c1-6fb4-8c8e-b3446944a0f6@quicinc.com>
- <ab237850-4724-48a8-bea8-f1287445358f@linaro.org>
- <83f88e88-5624-4ffd-b2df-f58c6988c649@linaro.org>
- <2321f4e9-5db2-126a-c5ab-fc18cc507822@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
- BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
- HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
- TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
- zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
- MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
- t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
- UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
- aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
- kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
- Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
- R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
- BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
- yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
- xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
- 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
- GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
- mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
- x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
- BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
- mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
- Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
- xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
- AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
- 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
- jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
- cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
- jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
- cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
- bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
- YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
- bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
- nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
- izWDgYvmBE8=
-In-Reply-To: <2321f4e9-5db2-126a-c5ab-fc18cc507822@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SG2PR06MB3365:EE_|JH0PR06MB6342:EE_
+x-ms-office365-filtering-correlation-id: af7ee160-e128-49e8-05b4-08dbb048814e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QB0cFEOBJI6LQSjrXzyq+mqMgn94pxdccjBrebOBKspGfEeSDIq5hBUXSM7CtfMv+KtGcSvamoRFA4Iuu7XWpZ/QKBsGJdLSx0raaY9eb9Y01Ndcw6aDagRzot2vyiYmd5SS3lyvZ5TWN1XnhpuV6uXn+N09LBItD1L5DeFIZAwrYKXyN8JKmpTUOEWzqYWnK9a9pGryQsWvTq+vjHEz8ktQ5n4lTZ23fD3DVJBISR0uTwNSv+qvUVDmhZCw+5YSxw/QwWT0fehtt8vTyVC/6QIO0MHTddz34QGBkwhRebbhwXlbv8OEeFN4DFq3tYF5I6lhqHrxUglrj53Rx9RNa1tkH9RP//90fgqwOYdRT/iUcTYPeTDTQnUr2ZRKIoVkVu8lxlLSCfoDh6db5yI4rkrx5k/BGILYudAR/UbbS4D3lrR+1Rs0YQ2QqPxTH82WLHCMRZxvVP/u65PDJeD+v62g2oxuIsGmHOQPHEYRa4CY+6ZKmsyskINcSRbNED9j8T358E7x/hGIy7D0fXXrLoMMBNv8pvNINN1KLVEX34k4s1d7JLQ8gGTHMs0SaijDMd2YuEItZ+aQ3uJu82NhCPOD1SIhUfGJCfM0HAsiGTY=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3365.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39850400004)(376002)(366004)(396003)(346002)(1800799009)(186009)(451199024)(41300700001)(9686003)(71200400001)(7696005)(6506007)(55236004)(966005)(478600001)(83380400001)(26005)(76116006)(316002)(7416002)(66476007)(6916009)(54906003)(66946007)(66446008)(64756008)(66556008)(91956017)(52536014)(5660300002)(8676002)(4326008)(2906002)(8936002)(33656002)(38070700005)(86362001)(38100700002)(55016003)(122000001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?cBy7xRqLUgJHE3SgGYqkxUyoH45asUHwOf2PTPTMkJ8zomFfH2LIB/39yF?=
+ =?iso-8859-1?Q?22z7DSqhd3Nq4uLVncowUDmIb/gFxziPMH8wcgRqKHOIE+o+Sy03ASnVzJ?=
+ =?iso-8859-1?Q?Cg6wZ4Bx8E1VEcu8PBcl5AS6s+n96lLP6aeE3IvmGRHSHO8+bnVmp8st9u?=
+ =?iso-8859-1?Q?Kkrs0CJlUX7VmwGluTOMpsUK1v6YAbEFecTtZxilS2nEy0agNVQqzhpWyZ?=
+ =?iso-8859-1?Q?O28x/CuzVkSQAMC9CVjQIVycoueaUvgEvDzNKzjZBxb14yDFwPSD2qUyno?=
+ =?iso-8859-1?Q?DtNezY3SK7Mey//87ptNWVkT3EhmhNUdhmsxfCoCzvaDdkhpbxHAhKNxZ7?=
+ =?iso-8859-1?Q?+nZjbOHm8nv0AVozlVKR70+Zg0eeothcgH8TihyawCYRtW6n1jPrPBPHQY?=
+ =?iso-8859-1?Q?P3p1wunEeVXGrhxymzD8ceH38UA198yIfA65jPslpqQDqpCs/nwzQJ9Oat?=
+ =?iso-8859-1?Q?wnlntleR8V5WyYH62+FkbTg6C0EZbkbDBtgOMD8Hj3/Q0eOCJchXrsU6NH?=
+ =?iso-8859-1?Q?SjLk1liCOxToruOi1ZwF3n7YcdmJAhYH0VTdAFKQE8UvrIN8Xz7vG+sSg4?=
+ =?iso-8859-1?Q?g0rVzZUdD0KDIxOC7quwPToaD6pfY9exY5aaH4UpU4pyLdSq1IrH+ZiFV0?=
+ =?iso-8859-1?Q?BjtgqFguO3LEo2hLS4MWfc++eZutvuvj2XyUybBL0sho8YAqpFxXCT+iTC?=
+ =?iso-8859-1?Q?HTO/GfL/JG+FogSdm7tJur7W0jeY/bl/j6s/5ZEAJEc0rf6qBJNWpJiZal?=
+ =?iso-8859-1?Q?/lBXEPbKvxFXqnUXtMai9IoHl1UXCIJvkAGA/Qm2kB8+ni/WygkaVGHGkl?=
+ =?iso-8859-1?Q?EVu4itNnO8uDzp1tYXC6rn+ge78CDvfqkMbeyBaVinU4ZFNnxBMMw0nMwM?=
+ =?iso-8859-1?Q?86BystXV0/nyiEly1IUNL+a8w9oxja6Ui9OmTpgLOzO/IKuQux6NLRCYIm?=
+ =?iso-8859-1?Q?hG4uK8meguERYb9iqhKDdgs23XFcQ8Kv6GxUCs2+J+vTkKG+Z6k7SOPwUb?=
+ =?iso-8859-1?Q?hg64mjoj9f1bCbM+V3/qNfFiQHNCak4Ryg/PD74fV/hzIO8Y38Jt+BSTsx?=
+ =?iso-8859-1?Q?J2La4Tt8uYFaC2teU+jS5Z1sY/sv+Wfhvf92V4Dgt8Pa7uhz6AlB8HFbn9?=
+ =?iso-8859-1?Q?qRa9cXwIEN3PV/AC4my2HJMpXvy49PvoaQMuIeFodyHYaIo1eZGjAUgJTh?=
+ =?iso-8859-1?Q?6cwedilMmXyadfV1veHqxGHBRvuYPVq7LKCVs55bzpmi7zpgrHj+tWszC+?=
+ =?iso-8859-1?Q?G0dXvEwhh73v4vVIIpwn9XECSm8sRvW7jwW4mg/B8PjZA+U8QcBjhkdwM/?=
+ =?iso-8859-1?Q?qO3pZ+Ni16f7jFy8r2KLBD1suqSDBzgsgWw4AnHOcL1F/tNHW0gXJh9dAe?=
+ =?iso-8859-1?Q?wGVm6PSM42p7LDohiUwUTVxc5VDPofuZVPvkxS20kALrz8LiuGRsdwnRSz?=
+ =?iso-8859-1?Q?gvxsn42ggXnjpTzgZK2g/tk9b3Q0zt9yzbA1gwj5gZgAg35ZRGT4FLrco4?=
+ =?iso-8859-1?Q?ctIfjRBN0gi/LKdj8QARspLBfeJzkGyyJua2k0rSFGObVyh3Uwqc7SdZ4U?=
+ =?iso-8859-1?Q?eW/kQNTsj9DoHd6lBQNe3J4NDTDl1hzQtFEzwwPqj8Uu6B/VXuvnx3VFes?=
+ =?iso-8859-1?Q?7I1skqiD9syEFF0P1g35cWZQVxaFd/n0Bh?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3365.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af7ee160-e128-49e8-05b4-08dbb048814e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2023 08:49:25.6552
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5/yDB/vKKga/qxBblVIdsQZjHOKejk9H8HUGa4Q3M2iDerSOroUx/S3qpxwCyGay+Hue5r0GHz6lljpkmTFya8G+QFxSEXc+EzDHDuZkOyo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6342
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 8.09.2023 02:30, Anjelique Melendez wrote:
-> 
-> 
-> On 9/7/2023 1:31 PM, Konrad Dybcio wrote:
->> On 7.09.2023 22:26, Konrad Dybcio wrote:
->>> On 7.09.2023 21:54, Anjelique Melendez wrote:
->>>>
->>>>
->>>> On 8/30/2023 11:34 AM, Konrad Dybcio wrote:
->>>>> On 30.08.2023 20:06, Anjelique Melendez wrote:
->>>>>> Update the pmi632 lpg_data struct so that pmi632 devices use PPG
->>>>>> for LUT pattern.
->>>>>>
->>>>>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->>>>>> ---
->>>>>>  drivers/leds/rgb/leds-qcom-lpg.c | 9 ++++++---
->>>>>>  1 file changed, 6 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
->>>>>> index 90dc27d5eb7c..0b37d3b539f8 100644
->>>>>> --- a/drivers/leds/rgb/leds-qcom-lpg.c
->>>>>> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
->>>>>> @@ -1672,11 +1672,14 @@ static const struct lpg_data pm8994_lpg_data = {
->>>>>>  static const struct lpg_data pmi632_lpg_data = {
->>>>>>  	.triled_base = 0xd000,
->>>>>>  
->>>>>> +	.lut_size = 64,
->>>>>> +	.lut_sdam_base = 0x80,
->>>>> Is that a predefined space for use with LPG?
->>>>>
->>>>> Or can it be reclaimed for something else?
->>>>>
->>>>> Konrad
->>>> Yes, this is a predefined space for use with LPG
->>> We represent the SDAM as a NVMEM device, generally it would
->>> be nice to add all regions within it as subnodes in the devicetree.
->> Wait hmm.. we already get it as a nvmem cell.. Or at least that's
->> how I understand it (lut_sdam_base == lpg_chan_nvmem->start, pseudocode)
->>
->> Why don't we access it through the nvmem r/w ops then?
->>
->> Konrad
-> I think I might be a little confused on what you are asking so please let
-> me know if this does not answer your question.
-> 
-> lut_sdam_base is the offset where lut pattern begins in the SDAM. So when we are writing back
-> our LED pattern we end up calling nvmem_device_write(lpg_chan_nvmem, lut_sdam_base + offset, 1, brightness).
-> So far for every single SDAM PPG devices we have seen the lpg_sdam_base be 0x80 and every
-> LUT SDAM PPG devices (pm8350c) we have seen lpg_sdam_base be 0x45, which is why we 
-> included this value in the lpg_data rather than as a devicetree property since it has
-> been consistent across a few pmics.
-> 
-> I am ok if you would like the lut_sdam_base to be moved to a devicetree property.
-So.. we have a slice of SDAM represented as an NVMEM cell (and that
-part of SDAM is reserved solely for LPG), and then within that cell,
-we need to add an additional offset to get to what we want. Correct?
-
-What's in LPG_NVMEM_CELL[0:offset-1] then?
-
-Konrad
+On Thu, Sep 07, 2023 at 07:17:55AM +0000, Billy Tsai wrote:=0A=
+> > On Wed, Aug 30, 2023 at 08:32:00PM +0800, Billy Tsai wrote:=0A=
+> > >> From: Naresh Solanki <naresh.solanki@9elements.com>=0A=
+> > >> =0A=
+> > >> Add common fan properties bindings to a schema.=0A=
+> > >> =0A=
+> > >> Bindings for fan controllers can reference the common schema for the=
+=0A=
+> > >> fan=0A=
+=0A=
+=0A=
+> > >> +properties:=0A=
+> > >> +  max-rpm:=0A=
+> > >> +    description:=0A=
+> > >> +      Max RPM supported by fan.=0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > =0A=
+> > > Physics will limit this to something much less than 2^32. Add some =
+=0A=
+> > > constraints. 10000?=0A=
+> > =0A=
+> > =0A=
+> > >> +=0A=
+> > >> +  min-rpm:=0A=
+> > >> +    description:=0A=
+> > >> +      Min RPM supported by fan.=0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > =0A=
+> > > ditto=0A=
+> > =0A=
+> > >> +=0A=
+> > >> +  pulses-per-revolution:=0A=
+> > >> +    description:=0A=
+> > >> +      The number of pulse from fan sensor per revolution.=0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > =0A=
+> > >Needs constraints. I assume this is never more than 4 (or 2 even)?=0A=
+> > =0A=
+> > Do you think we should add the contraint in the common binding?=0A=
+> > In my option, the limit of the max/min rpm should be declared by=0A=
+> > the binding if necessary, because the usage of each fan monitor is=0A=
+> > based on the connection of the tach pin.=0A=
+=0A=
+> Yes, I think we should have default limits.=0A=
+=0A=
+> Unless we go as far as a schema for every specific fan model, then there =
+=0A=
+> is actually no way we can have specific limits unless the fan =0A=
+> controllers have some limits.=0A=
+=0A=
+> The most I see in tree for pulses-per-revolution is 2. There's no value =
+=0A=
+> in more. So set the max to 4 and then if anyone needs more they can bump =
+=0A=
+> the value.=0A=
+=0A=
+> Or maybe there's some electrical/mechanical design reason fans are 1 or =
+=0A=
+> 2 pulses and we'll never see anything else? This document[1] seems to =0A=
+> indicate that is indeed the case. (First hit googling "fan tach signal =
+=0A=
+> pulses")=0A=
+=0A=
+OK, I will add the maximum value for the max-rpm, min-rpm and pulses-per-re=
+volution.=0A=
+=0A=
+> > =0A=
+> > =0A=
+> > >> +  div:=0A=
+> > =0A=
+> > > Too generic of a name.=0A=
+> > =0A=
+> > >> +    description:=0A=
+> > >> +      Fan clock divisor=0A=
+> > =0A=
+> > > But what is a fan clock?=0A=
+> > =0A=
+> > This is the divisor for the tachometer sampling clock, which determines=
+ the sensitivity of the tach pin.=0A=
+> > So, if the name of the property changes to 'tach-div,' is it acceptable=
+ to you?=0A=
+=0A=
+> That sounds like a property of the controller, not the fan, so it =0A=
+> belongs in the controller binding. Is this really a common thing?=0A=
+=0A=
+Yes, I believe this is a common feature for fans. You can refer to the Docu=
+mentation/hwmon/sysfs-interface.rst,=0A=
+where the fan divisor is defined for users, determining the fan's sensitivi=
+ty.=0A=
+ =0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > >> +=0A=
+> > >> +  target-rpm:=0A=
+> > >> +    description:=0A=
+> > >> +      Target RPM the fan should be configured during driver probe.=
+=0A=
+> > =0A=
+> > > What driver? By the time the OS driver runs, a bunch of other boot =
+=0A=
+> > > software has already run on modern systems. So this value would likel=
+y =0A=
+> > > be used much earlier. The point is that when exactly is outside the =
+=0A=
+> > > scope of DT. This is "what RPM do I use in case of no other informati=
+on =0A=
+> > > (e.g. temperature)".=0A=
+> > =0A=
+> > So, the description should be changed to 'The default desired fan speed=
+ in RPM,'=0A=
+> > and we shouldn't mention the timing of the property's operation in the =
+DT, is that correct?=0A=
+=0A=
+> Correct.=0A=
+=0A=
+> > =0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > >> +=0A=
+> > >> +  mode:=0A=
+> > =0A=
+> > > Too generic.=0A=
+> > =0A=
+> > >> +    description:=0A=
+> > >> +      Select the operational mode of the fan.=0A=
+> > =0A=
+> > > What are modes? Spin and don't spin?=0A=
+> > =0A=
+> > The mode is used to indicate the driving mode of the fan (DC, PWM and s=
+o on).=0A=
+> > So, if the name of the property changes to 'fan-driving-mode,' is it ac=
+ceptable to you?=0A=
+=0A=
+> I tend to think that should be implied from the parent node and/or other =
+=0A=
+> properties. PWM if "pwms" property is present. DC if the supply is =0A=
+> variable. We could also use compatible strings in the fan nodes if =0A=
+> there's a need.=0A=
+=0A=
+So, it looks that this property isn't necessary for the fan. And it should =
+be determined by the=0A=
+present of the driving source. is that correct?=0A=
+=0A=
+> That reminds me, both of these modes probably need a table of =0A=
+> voltage/duty-cycle to RPMs. I imagine it's not always a linear response. =
+ =0A=
+> Naresh also privately sent me (don't do that) an updated common binding =
+=0A=
+> which we discussed the need for this. I expect him to comment further =0A=
+> with details.=0A=
+=0A=
+For this purpose, we should add the speed-map like the usage of the gpio-fa=
+n, right?=0A=
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bind=
+ings/hwmon/gpio-fan.txt=0A=
+=0A=
+=0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > >> +=0A=
+> > >> +  pwms:=0A=
+> > >> +    description:=0A=
+> > >> +      PWM provider.=0A=
+> > =0A=
+> > > maxItems: 1=0A=
+> > =0A=
+> > > I don't think there are fans with more than 1 PWM input?=0A=
+> > =0A=
+> > Ok, I will add the constraint for the pwm input.=0A=
+> > =0A=
+> > >> +=0A=
+> > >> +  tach-ch:=0A=
+> > >> +    description:=0A=
+> > >> +      The tach channel used for the fan.=0A=
+> > >> +    $ref: /schemas/types.yaml#/definitions/uint32=0A=
+> > =0A=
+> > > The existing ASpeed version of this property allows more than 1 entry=
+. I =0A=
+> > > don't understand how a fan would have 2 tach signals, but if so, the =
+=0A=
+> > > generic property should allow for that.=0A=
+> > =0A=
+> > Ok, I will modify it to the uint32-array=0A=
+=0A=
+> Perhaps uint8-array to align with existing versions of the property.=0A=
+=0A=
+Ok, I will modify it to the uint8-array.=0A=
+=0A=
+> > =0A=
+> > > Perhaps 'reg' should be defined in here with some text saying 'reg' =
+=0A=
+> > > corresponds to the fan controller specific id which may be the PWM+TA=
+CH =0A=
+> > > channel, PWM channel (deprecated), or TACH channel. I think there are=
+ =0A=
+> > > examples of all 3 of these cases.=0A=
+> > =0A=
+> > I don't think it's necessary for the 'reg' because the case you mention=
+ed is=0A=
+> > already covered by the property 'tach-ch' and the 'pwms'.=0A=
+=0A=
+> Yes, but when we have N child nodes of the same thing, we usually have =
+=0A=
+> "reg" and its value corresponds to how the parent identifies each child. =
+=0A=
+> We already have a mixture using PWM or tach channel. Yes, this can all =
+=0A=
+> just be in the fan controllers binding, but putting it here would just =
+=0A=
+> document the options.=0A=
+=0A=
+Ok, I will add reg property for the option.=0A=
+=0A=
+> Rob=0A=
+=0A=
+=0A=
+> [1] http://www.comairrotron.com/methods-monitoring-fan-performance=
