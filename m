@@ -2,95 +2,116 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DE1979A291
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Sep 2023 06:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1DE79A456
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Sep 2023 09:19:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233572AbjIKEtG (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 11 Sep 2023 00:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50816 "EHLO
+        id S233320AbjIKHTp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 11 Sep 2023 03:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232821AbjIKEtF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Sep 2023 00:49:05 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021A619C
-        for <linux-pwm@vger.kernel.org>; Sun, 10 Sep 2023 21:49:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4AC93C433CD;
-        Mon, 11 Sep 2023 04:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694407740;
-        bh=B+BA/wventHVJsSezWS2OunhdTGAZAZ+4bFsflnSOAY=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=Z3zrXwT/q/hreCYxPS2EE70ljquRd84Fah9X6JkVO3NxaC9eDkqnJ4VHWw85v5dmT
-         Stotx/y+10r9bDYbshfInvSGWR8w7PxzWsKks/sIqhqc5ZnyVhbcF6AIQulFwrvMpj
-         DlsYPOQ605oic6i5NjHH///uQZIeo95OJe7AsQtDoleQvzpeIQUiPTcplU8/M6qBpd
-         D948Mv/Y1Y81wEQjMlHTjxT97AgBOwfgAjXS5VoAL/eqyJJC8pmmM1wcupo+BqB16h
-         A7zeLFelWhnQNvY+B64ILh3nvysOgtbYDft4kq/HRFHPVAyQVvdHxynMtFHIBdDHPn
-         B2BdLJUcHuAxQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 31C47E1F67F;
-        Mon, 11 Sep 2023 04:49:00 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S231231AbjIKHTo (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 11 Sep 2023 03:19:44 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE5FCD1
+        for <linux-pwm@vger.kernel.org>; Mon, 11 Sep 2023 00:19:29 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qfbCc-0003Rt-OL; Mon, 11 Sep 2023 09:19:22 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qfbCc-005Ugm-BH; Mon, 11 Sep 2023 09:19:22 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qfbCb-000bT0-LW; Mon, 11 Sep 2023 09:19:21 +0200
+Date:   Mon, 11 Sep 2023 09:19:21 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     patchwork-bot+chrome-platform@kernel.org,
+        Tzung-Bi Shih <tzungbi@kernel.org>,
+        Benson Leung <bleung@chromium.org>
+Cc:     linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev
+Subject: Re: [PATCH] pwm: Explicitly include correct DT includes
+Message-ID: <20230911071921.6dhadiqmfpedqxvy@pengutronix.de>
+References: <20230714174852.4062251-1-robh@kernel.org>
+ <169440670019.22573.2422972280084635660.git-patchwork-notify@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/10] pwm: Constistenly name pwm_chip variables "chip"
-From:   patchwork-bot+chrome-platform@kernel.org
-Message-Id: <169440774020.22573.10062500641878947449.git-patchwork-notify@kernel.org>
-Date:   Mon, 11 Sep 2023 04:49:00 +0000
-References: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20230714205623.2496590-1-u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@ci.codeaurora.org
-Cc:     thierry.reding@gmail.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
-        florian.fainelli@broadcom.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bleung@chromium.org, heiko@sntech.de,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, michael@walle.cc,
-        johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, groeck@chromium.org,
-        chrome-platform@lists.linux.dev,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org, greybus-dev@lists.linaro.org,
-        linux-staging@lists.linux.dev
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bbuuoqwymefnkym6"
+Content-Disposition: inline
+In-Reply-To: <169440670019.22573.2422972280084635660.git-patchwork-notify@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,T_SPF_HELO_TEMPERROR,T_SPF_TEMPERROR
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello:
 
-This patch was applied to chrome-platform/linux.git (for-next)
-by Thierry Reding <thierry.reding@gmail.com>:
+--bbuuoqwymefnkym6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 14 Jul 2023 22:56:13 +0200 you wrote:
-> while working on an extension for the pwm framework, I noticed that some
-> drivers and even the core only nearly consistently named all variables
-> and struct members holding a pointer to a struct pwm_chip "chip":
-> 
-> $ git grep -Pho 'struct pwm_chip \**[a-z0-9_]+(*nla:[\(a-z0-9_])' v6.5-rc1 | sort | uniq -c | sort -n
->       1 struct pwm_chip *pwm
->       1 struct pwm_chip pwm
->       1 struct pwm_chip pwm_chip
->       2 struct pwm_chip *_chip
->       4 struct pwm_chip *c
->       8 struct pwm_chip *pc
->      57 struct pwm_chip chip
->     358 struct pwm_chip *chip
-> 
-> [...]
+Hello,
 
-Here is the summary with links:
-  - [05/10] pwm: cros-ec: Consistenly name pwm_chip variables "chip"
-    https://git.kernel.org/chrome-platform/c/5996cdf132da
+On Mon, Sep 11, 2023 at 04:31:40AM +0000, patchwork-bot+chrome-platform@ker=
+nel.org wrote:
+> This patch was applied to chrome-platform/linux.git (for-kernelci)
+> by Thierry Reding <thierry.reding@gmail.com>:
+>=20
+> On Fri, 14 Jul 2023 11:48:50 -0600 you wrote:
+> > The DT of_device.h and of_platform.h date back to the separate
+> > of_platform_bus_type before it as merged into the regular platform bus.
+> > As part of that merge prepping Arm DT support 13 years ago, they
+> > "temporarily" include each other. They also include platform_device.h
+> > and of.h. As a result, there's a pretty much random mix of those include
+> > files used throughout the tree. In order to detangle these headers and
+> > replace the implicit includes with struct declarations, users need to
+> > explicitly include the correct includes.
+> >=20
+> > [...]
+>=20
+> Here is the summary with links:
+>   - pwm: Explicitly include correct DT includes
+>     https://git.kernel.org/chrome-platform/c/0a41b0c5d97a
+>=20
+> You are awesome, thank you!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+It's a bit strange to get this notification given that this patch was
+applied via the pwm tree and only made it into the
+chrome-platform/linux.git repo via an update to v6.6-rc1.
 
+It's not a big problem, but if such mail could be suppressed that would
+be nice.
 
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bbuuoqwymefnkym6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmT+v3gACgkQj4D7WH0S
+/k7XPQf/anQ6vlB0uEF5CmCQwzYikHQwTbvnK2tKGA9G3nw6wEIW8ss61ez4jFWZ
+DQ75loTIlF91uC59ZDYxyaL2i2iZFnisMi1hvAbevBA2Z/3b6T5Bcl/prartKxGX
+6IooL+RTaTgJKVwYqauIWIvO3/4synIpsF3YGlD8tZz4vyC4abTDaLPFFXfPE2vb
+h+UVzRT6eQfK94R7W/pP2u9vPLgR6OPAsv6t/z1bXHMU0FokJaOzQSt1sfXaHxUa
+tB8QnrbOQ1StunbalXmqBVdByNupbzAWJX6QipN4BjZ28w1HDs1XunFR/dRifmIo
+lGmG8LVNpr1wKeDktDi68Mtphwtxcg==
+=i3rg
+-----END PGP SIGNATURE-----
+
+--bbuuoqwymefnkym6--
