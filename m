@@ -2,385 +2,227 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DB4A79D440
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Sep 2023 17:04:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F149679D475
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Sep 2023 17:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236119AbjILPEM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Sep 2023 11:04:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57448 "EHLO
+        id S236243AbjILPLg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 12 Sep 2023 11:11:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236091AbjILPEL (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Sep 2023 11:04:11 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2B612E
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Sep 2023 08:04:07 -0700 (PDT)
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 222A03F643
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Sep 2023 15:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1694531046;
-        bh=I+FJ5qUcevTthg+RKBHlanDF25KRUOA3+bky9ouyoIE=;
-        h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=SxMOj2eoinmykrc/Vd+bPsIqXcS4/ZRD37bSmVmFLZoIOajlkbPO4wRO9/1+kapfN
-         lpoG/i1m9qkIQsPF02xDkS0agdRTzaFROAP2Y6QT0GA6HSIiPfvkjzvXVBxPzAvcG0
-         nZYq8PoSfkqsSgusrv658Oc2B1Cvyq4gg89P0BXUchaH8elc8gglHh6YK+zk+DHQYv
-         BWg/Fk/szJSU/Yt17eVmxnODb9heWc+xz4EIwta+84Wj/mPrPUN/KOlWOJRqUuzRcz
-         q4YLI4KFYnQwTPRBxY/5+IGTuOz1on08eNBFR2fe7xuR116DaEjG6v/odf6hpVnyle
-         hmyZdMzr55Ykw==
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-41272f89564so59073871cf.3
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Sep 2023 08:04:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694531045; x=1695135845;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I+FJ5qUcevTthg+RKBHlanDF25KRUOA3+bky9ouyoIE=;
-        b=hW7F2VRC55MLbxf/bERHtmnCO0kAcgpuq2B42EH9VBG9M8sL+Nr5AhLw+KUM/21vB4
-         cCn5CXg8s9mYWg7nm9R8kdpZg7eeaOUSZXxte6ILb3ecDtwu2os+YqhNo4u48+OHdUL+
-         Nyt0n3OkFTkaRTWhrhTDO2EhGytpiXxpuECtzRKFcfXuD4Uu1ft390V+EndVV1nDfunt
-         kkZ8Xu9bb1uLm0AQe0Uq+ijocXlpRa9aRsOZngkDex27sZV7TF03ILKhemE2nVnfuycJ
-         nAaaAMrqSj6nqg46u4F2PmpcgomX+yxbPkcGObDSdc4GeZ/1NnxSuONbPnfrcyuy80LR
-         DlCg==
-X-Gm-Message-State: AOJu0YwMBzE7duB5b7h6e/bVpYDYfP+wy+7FHp2YFcSyC9OLOachbr23
-        tGtv1OohgnUqZwmTIN3XpUMlZQeX+oLFpcfSjPXj5BuYYSjecOBzGvwbz/jNBG1ow7I4hfi4i9P
-        61f/pdTFl1T7L9xkZlzq4IFe4IyCPVL5tac9jJvYrGgkwcLpqsAgkIg==
-X-Received: by 2002:ac8:5792:0:b0:412:1e0a:772a with SMTP id v18-20020ac85792000000b004121e0a772amr14240866qta.17.1694531045052;
-        Tue, 12 Sep 2023 08:04:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFXJZ9tJtDyqupBORgZnQ2b1zZkE/hgUw5vXIjxSTB1REi9bq2ivOEvuFYhLwnb7XJ11MnS4Bh94PJQPVox+1s=
-X-Received: by 2002:ac8:5792:0:b0:412:1e0a:772a with SMTP id
- v18-20020ac85792000000b004121e0a772amr14240794qta.17.1694531044274; Tue, 12
- Sep 2023 08:04:04 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 12 Sep 2023 08:04:03 -0700
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20230825081328.204442-3-william.qiu@starfivetech.com>
-References: <20230825081328.204442-1-william.qiu@starfivetech.com> <20230825081328.204442-3-william.qiu@starfivetech.com>
-Mime-Version: 1.0
-Date:   Tue, 12 Sep 2023 08:04:03 -0700
-Message-ID: <CAJM55Z9RsV7qGr6LUckg2XOeS2xjFO8tki3F4LoJj4COQv8dJw@mail.gmail.com>
-Subject: Re: [RFC v4 2/4] pwm: starfive: Add PWM driver support
-To:     William Qiu <william.qiu@starfivetech.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Hal Feng <hal.feng@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S236355AbjILPLe (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Sep 2023 11:11:34 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3939115;
+        Tue, 12 Sep 2023 08:11:30 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE9DC433C7;
+        Tue, 12 Sep 2023 15:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694531490;
+        bh=XvqdyTkbzYdmIFvzaFz0sUeabWQuIJEg/eBAxc9nVRQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OP3qBhadnTTrB4c6LnMwpMtXpd4trRfjk9GCUS0TFWfaopUqFNZnW7UJz/P2KamPy
+         bQUZqhV/yMRPKcymm9Tw9LBFhQ50yeAxFoJUk8g1X2QPycP7h0M8AeKKjbTi2n0r2x
+         PjKLjVEDvxGvZLO0m1qbWm8Qx6MvtOrvbzmXLBCuewZ7qI6ujXgzbhq5uNUIjFhTPA
+         2fujaj+jQ22/XPML+ropjSomHtLx4H0hNgIoTJ7+jMjQL0/D6QJhVarlKnXKbm+MF/
+         jsINXr7R7mHL49BZVRMNaYZB7YvVS/UQrbQhsSrupWHzyecnNGKEQhFOtyf/EVxD64
+         LT+BBefVm8Icg==
+Received: (nullmailer pid 809556 invoked by uid 1000);
+        Tue, 12 Sep 2023 15:11:27 -0000
+Date:   Tue, 12 Sep 2023 10:11:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Billy Tsai <billy_tsai@aspeedtech.com>
+Cc:     "jdelvare@suse.com" <jdelvare@suse.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "naresh.solanki@9elements.com" <naresh.solanki@9elements.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        BMC-SW <BMC-SW@aspeedtech.com>,
+        "patrick@stwcx.xyz" <patrick@stwcx.xyz>
+Subject: Re: [PATCH v8 1/3] dt-bindings: hwmon: fan: Add fan binding to schema
+Message-ID: <20230912151127.GA752403-robh@kernel.org>
+References: <20230830123202.3408318-1-billy_tsai@aspeedtech.com>
+ <20230830123202.3408318-2-billy_tsai@aspeedtech.com>
+ <20230905170010.GA3505375-robh@kernel.org>
+ <SG2PR06MB336567E43537C7F4947E342F8BEEA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+ <20230907194351.GA2033402-robh@kernel.org>
+ <SG2PR06MB3365B916E3AD2CE331A0D4258BEDA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB3365B916E3AD2CE331A0D4258BEDA@SG2PR06MB3365.apcprd06.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-William Qiu wrote:
-> Add Pulse Width Modulation driver support for StarFive
-> JH7100 and JH7110 SoC.
->
-> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
-> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
-> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
-> ---
->  MAINTAINERS                    |   7 ++
->  drivers/pwm/Kconfig            |   9 ++
->  drivers/pwm/Makefile           |   1 +
->  drivers/pwm/pwm-starfive-ptc.c | 192 +++++++++++++++++++++++++++++++++
->  4 files changed, 209 insertions(+)
->  create mode 100644 drivers/pwm/pwm-starfive-ptc.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d590ce31aa72..0e47818c6f64 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -20299,6 +20299,13 @@ F:	drivers/pinctrl/starfive/pinctrl-starfive-jh71*
->  F:	include/dt-bindings/pinctrl/pinctrl-starfive-jh7100.h
->  F:	include/dt-bindings/pinctrl/starfive,jh7110-pinctrl.h
->
-> +STARFIVE JH71X0 PWM DRIVERS
-> +M:	William Qiu <william.qiu@starfivetech.com>
-> +M:	Hal Feng <hal.feng@starfivetech.com>
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/pwm/starfive,jh7100-pwm.yaml
-> +F:	drivers/pwm/pwm-starfive-ptc.c
-> +
->  STARFIVE JH71X0 RESET CONTROLLER DRIVERS
->  M:	Emil Renner Berthing <kernel@esmil.dk>
->  M:	Hal Feng <hal.feng@starfivetech.com>
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 6210babb0741..48800f33b5c1 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -569,6 +569,15 @@ config PWM_SPRD
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-sprd.
->
-> +config PWM_STARFIVE_PTC
-> +	tristate "StarFive PWM PTC support"
-> +	depends on ARCH_STARFIVE || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for StarFive SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-starfive-ptc.
+On Fri, Sep 08, 2023 at 08:49:25AM +0000, Billy Tsai wrote:
+> On Thu, Sep 07, 2023 at 07:17:55AM +0000, Billy Tsai wrote:
+> > > On Wed, Aug 30, 2023 at 08:32:00PM +0800, Billy Tsai wrote:
+> > > >> From: Naresh Solanki <naresh.solanki@9elements.com>
+> > > >> 
+> > > >> Add common fan properties bindings to a schema.
+> > > >> 
+> > > >> Bindings for fan controllers can reference the common schema for the
+> > > >> fan
+> 
+> 
+> > > >> +properties:
+> > > >> +  max-rpm:
+> > > >> +    description:
+> > > >> +      Max RPM supported by fan.
+> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > 
+> > > > Physics will limit this to something much less than 2^32. Add some 
+> > > > constraints. 10000?
+> > > 
+> > > 
+> > > >> +
+> > > >> +  min-rpm:
+> > > >> +    description:
+> > > >> +      Min RPM supported by fan.
+> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > 
+> > > > ditto
+> > > 
+> > > >> +
+> > > >> +  pulses-per-revolution:
+> > > >> +    description:
+> > > >> +      The number of pulse from fan sensor per revolution.
+> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > 
+> > > >Needs constraints. I assume this is never more than 4 (or 2 even)?
+> > > 
+> > > Do you think we should add the contraint in the common binding?
+> > > In my option, the limit of the max/min rpm should be declared by
+> > > the binding if necessary, because the usage of each fan monitor is
+> > > based on the connection of the tach pin.
+> 
+> > Yes, I think we should have default limits.
+> 
+> > Unless we go as far as a schema for every specific fan model, then there 
+> > is actually no way we can have specific limits unless the fan 
+> > controllers have some limits.
+> 
+> > The most I see in tree for pulses-per-revolution is 2. There's no value 
+> > in more. So set the max to 4 and then if anyone needs more they can bump 
+> > the value.
+> 
+> > Or maybe there's some electrical/mechanical design reason fans are 1 or 
+> > 2 pulses and we'll never see anything else? This document[1] seems to 
+> > indicate that is indeed the case. (First hit googling "fan tach signal 
+> > pulses")
+> 
+> OK, I will add the maximum value for the max-rpm, min-rpm and pulses-per-revolution.
+> 
+> > > 
+> > > 
+> > > >> +  div:
+> > > 
+> > > > Too generic of a name.
+> > > 
+> > > >> +    description:
+> > > >> +      Fan clock divisor
+> > > 
+> > > > But what is a fan clock?
+> > > 
+> > > This is the divisor for the tachometer sampling clock, which determines the sensitivity of the tach pin.
+> > > So, if the name of the property changes to 'tach-div,' is it acceptable to you?
+> 
+> > That sounds like a property of the controller, not the fan, so it 
+> > belongs in the controller binding. Is this really a common thing?
+> 
+> Yes, I believe this is a common feature for fans. You can refer to the Documentation/hwmon/sysfs-interface.rst,
+> where the fan divisor is defined for users, determining the fan's sensitivity.
 
-What is PTC short for? Are there other PWM peripherals on the JH7100 or JH7110
-that are not PTCs?
+It's a feature of the controller, but I guess since it may be a per 
+fan or tach channel setting having it in the fan node is fine. 
+'tach-div' is fine.
 
-If there are both PTC and non-PTC PWMs on these SoCs then the device tree
-compatible strings should reflect that.
+>  
+> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > >> +
+> > > >> +  target-rpm:
+> > > >> +    description:
+> > > >> +      Target RPM the fan should be configured during driver probe.
+> > > 
+> > > > What driver? By the time the OS driver runs, a bunch of other boot 
+> > > > software has already run on modern systems. So this value would likely 
+> > > > be used much earlier. The point is that when exactly is outside the 
+> > > > scope of DT. This is "what RPM do I use in case of no other information 
+> > > > (e.g. temperature)".
+> > > 
+> > > So, the description should be changed to 'The default desired fan speed in RPM,'
+> > > and we shouldn't mention the timing of the property's operation in the DT, is that correct?
+> 
+> > Correct.
+> 
+> > > 
+> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > >> +
+> > > >> +  mode:
+> > > 
+> > > > Too generic.
+> > > 
+> > > >> +    description:
+> > > >> +      Select the operational mode of the fan.
+> > > 
+> > > > What are modes? Spin and don't spin?
+> > > 
+> > > The mode is used to indicate the driving mode of the fan (DC, PWM and so on).
+> > > So, if the name of the property changes to 'fan-driving-mode,' is it acceptable to you?
+> 
+> > I tend to think that should be implied from the parent node and/or other 
+> > properties. PWM if "pwms" property is present. DC if the supply is 
+> > variable. We could also use compatible strings in the fan nodes if 
+> > there's a need.
+> 
+> So, it looks that this property isn't necessary for the fan. And it should be determined by the
+> present of the driving source. is that correct?
 
-If not, maybe just call this driver pwm-starfive / PWM_STARFIVE, or maybe
-pwm-starfive-jh7100 / PWM_STARFIVE_JH7110 if you already know the PWMs on the
-JH81xx will be different.
+Looking back, I see Guenter asked for something like this. So I guess it 
+is fine to keep if he still thinks we need it. I think it could also be 
+implied a bit more clearly if we do 'cooling-levels' as below. The fan 
+controller should know what modes it can do. Duty cycle vs. voltage in 
+uV is pretty easy to distinguish.
 
-> +
->  config PWM_STI
->  	tristate "STiH4xx PWM support"
->  	depends on ARCH_STI || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index c822389c2a24..d2b2a3aeea22 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -52,6 +52,7 @@ obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
->  obj-$(CONFIG_PWM_SL28CPLD)	+= pwm-sl28cpld.o
->  obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
->  obj-$(CONFIG_PWM_SPRD)		+= pwm-sprd.o
-> +obj-$(CONFIG_PWM_STARFIVE_PTC)	+= pwm-starfive-ptc.o
->  obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
->  obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
->  obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
-> diff --git a/drivers/pwm/pwm-starfive-ptc.c b/drivers/pwm/pwm-starfive-ptc.c
-> new file mode 100644
-> index 000000000000..57b5736f6732
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-starfive-ptc.c
-> @@ -0,0 +1,192 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PWM driver for the StarFive JH71x0 SoC
-> + *
-> + * Copyright (C) 2018-2023 StarFive Technology Co., Ltd.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-> +
-> +/* Access PTC register (CNTR, HRC, LRC and CTRL) */
-> +#define REG_PTC_BASE_ADDR_SUB(base, N)	\
-> +((base) + (((N) > 3) ? (((N) % 4) * 0x10 + (1 << 15)) : ((N) * 0x10)))
+> 
+> > That reminds me, both of these modes probably need a table of 
+> > voltage/duty-cycle to RPMs. I imagine it's not always a linear response.  
+> > Naresh also privately sent me (don't do that) an updated common binding 
+> > which we discussed the need for this. I expect him to comment further 
+> > with details.
+> 
+> For this purpose, we should add the speed-map like the usage of the gpio-fan, right?
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/hwmon/gpio-fan.txt
 
-Please indent the line above.
+That should be fine. I guess it comes down to whether we want one 
+property or 3 depending on whether the control is voltage, duty-cycle, 
+GPIO pins state, etc. Unfortunately, it's "gpio-fan,speed-map", not 
+"speed-map", so we can't use that as-is. There's also "cooling-levels" 
+which can accomplish the same thing. We don't know RPMs with that, but 
+do we need to? Maybe, as it seems some drivers want to set speed in RPMs 
+from userspace. Could also do something like this:
 
-> +#define REG_PTC_RPTC_CNTR(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N))
-> +#define REG_PTC_RPTC_HRC(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0x4)
-> +#define REG_PTC_RPTC_LRC(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0x8)
-> +#define REG_PTC_RPTC_CTRL(base, N)	(REG_PTC_BASE_ADDR_SUB(base, N) + 0xC)
-> +
-> +/* PTC_RPTC_CTRL register bits*/
-> +#define PTC_EN      BIT(0)
-> +#define PTC_ECLK    BIT(1)
-> +#define PTC_NEC     BIT(2)
-> +#define PTC_OE      BIT(3)
-> +#define PTC_SIGNLE  BIT(4)
-> +#define PTC_INTE    BIT(5)
-> +#define PTC_INT     BIT(6)
-> +#define PTC_CNTRRST BIT(7)
-> +#define PTC_CAPTE   BIT(8)
-> +
-> +struct starfive_pwm_ptc_device {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	struct reset_control *rst;
-> +	void __iomem *regs;
-> +	u32 clk_rate; /* PWM APB clock frequency */
-> +};
-> +
-> +static inline
-> +struct starfive_pwm_ptc_device *chip_to_starfive_ptc(struct pwm_chip *c)
+cooling-levels = < 33   66  100>;
+rpm-levels =     <500 1000 1500>;
 
-This looks weird. Either just put it on a single line or split between the type
-and function name. Also there was recently a patch to always name pwm_chip
-variables "chip".  Eg.
-
-static inline struct starfive_pwm_ptc_device *
-chip_to_starfive_ptc(struct pwm_chip *chip)
-{
+"rpm-levels" would replace the min-rpm/max-rpm properties.
 
 
-> +{
-> +	return container_of(c, struct starfive_pwm_ptc_device, chip);
-> +}
-> +
-> +static int starfive_pwm_ptc_get_state(struct pwm_chip *chip,
-> +				      struct pwm_device *dev,
-> +				      struct pwm_state *state)
-> +{
-> +	struct starfive_pwm_ptc_device *pwm = chip_to_starfive_ptc(chip);
-> +	u32 period_data, duty_data, ctrl_data;
-> +
-> +	period_data = readl(REG_PTC_RPTC_LRC(pwm->regs, dev->hwpwm));
-> +	duty_data = readl(REG_PTC_RPTC_HRC(pwm->regs, dev->hwpwm));
-> +	ctrl_data = readl(REG_PTC_RPTC_CTRL(pwm->regs, dev->hwpwm));
-> +
-> +	state->period = DIV_ROUND_CLOSEST_ULL((u64)period_data * NSEC_PER_SEC, pwm->clk_rate);
-> +	state->duty_cycle = DIV_ROUND_CLOSEST_ULL((u64)duty_data * NSEC_PER_SEC, pwm->clk_rate);
-> +	state->polarity = PWM_POLARITY_INVERSED;
-> +	state->enabled = (ctrl_data & PTC_EN) ? true : false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int starfive_pwm_ptc_apply(struct pwm_chip *chip,
-> +				  struct pwm_device *dev,
-> +				  const struct pwm_state *state)
-> +{
-> +	struct starfive_pwm_ptc_device *pwm = chip_to_starfive_ptc(chip);
-> +	u32 period_data, duty_data, ctrl_data = 0;
-> +
-> +	if (state->polarity != PWM_POLARITY_INVERSED)
-> +		return -EINVAL;
-> +
-> +	period_data = DIV_ROUND_CLOSEST_ULL(state->period * pwm->clk_rate,
-> +					    NSEC_PER_SEC);
-> +	duty_data = DIV_ROUND_CLOSEST_ULL(state->duty_cycle * pwm->clk_rate,
-> +					  NSEC_PER_SEC);
-> +
-> +	writel(period_data, REG_PTC_RPTC_LRC(pwm->regs, dev->hwpwm));
-> +	writel(duty_data, REG_PTC_RPTC_HRC(pwm->regs, dev->hwpwm));
-> +	writel(0,  REG_PTC_RPTC_CNTR(pwm->regs, dev->hwpwm));
-> +
-> +	ctrl_data = readl(REG_PTC_RPTC_CTRL(pwm->regs, dev->hwpwm));
-> +	if (state->enabled)
-> +		writel(ctrl_data | PTC_EN | PTC_OE, REG_PTC_RPTC_CTRL(pwm->regs, dev->hwpwm));
-> +	else
-> +		writel(ctrl_data & ~(PTC_EN | PTC_OE), REG_PTC_RPTC_CTRL(pwm->regs, dev->hwpwm));
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops starfive_pwm_ptc_ops = {
-> +	.get_state	= starfive_pwm_ptc_get_state,
-> +	.apply		= starfive_pwm_ptc_apply,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int starfive_pwm_ptc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct starfive_pwm_ptc_device *pwm;
-> +	struct pwm_chip *chip;
-> +	int ret;
-> +
-> +	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-> +	if (!pwm)
-> +		return -ENOMEM;
-> +
-> +	chip = &pwm->chip;
-> +	chip->dev = dev;
-> +	chip->ops = &starfive_pwm_ptc_ops;
-> +	chip->npwm = 8;
-> +	chip->of_pwm_n_cells = 3;
-> +
-> +	pwm->regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(pwm->regs))
-> +		return dev_err_probe(dev, PTR_ERR(pwm->regs),
-> +				     "Unable to map IO resources\n");
-> +
-> +	pwm->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(pwm->clk))
-> +		return dev_err_probe(dev, PTR_ERR(pwm->clk),
-> +				     "Unable to get pwm's clock\n");
+Also, looking at gpio-fan.txt, it looks like you should add 
+"#cooling-cells" as well.
 
-I think you can use devm_clk_get_enabled() here and drop the .clk field and
-clk_prepare_enable() and clk_disable_unprepare() calls below.
-
-> +
-> +	pwm->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(pwm->rst))
-> +		return dev_err_probe(dev, PTR_ERR(pwm->rst),
-> +				     "Unable to get pwm's reset\n");
-> +
-> +	ret = clk_prepare_enable(pwm->clk);
-> +	if (ret) {
-> +		dev_err(dev,
-> +			"Failed to enable clock for pwm: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	reset_control_deassert(pwm->rst);
-
-This returns an int that you ignore. Please don't do that.
-
-> +
-> +	pwm->clk_rate = clk_get_rate(pwm->clk);
-> +	if (pwm->clk_rate <= 0) {
-> +		dev_warn(dev, "Failed to get APB clock rate\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Cannot register PTC: %d\n", ret);
-> +		clk_disable_unprepare(pwm->clk);
-> +		reset_control_assert(pwm->rst);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pwm);
-> +
-> +	return 0;
-> +}
-> +
-> +static int starfive_pwm_ptc_remove(struct platform_device *dev)
-> +{
-> +	struct starfive_pwm_ptc_device *pwm = platform_get_drvdata(dev);
-> +
-> +	reset_control_assert(pwm->rst);
-> +	clk_disable_unprepare(pwm->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id starfive_pwm_ptc_of_match[] = {
-> +	{ .compatible = "starfive,jh7100-pwm" },
-> +	{ .compatible = "starfive,jh7110-pwm" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, starfive_pwm_ptc_of_match);
-> +
-> +static struct platform_driver starfive_pwm_ptc_driver = {
-> +	.probe = starfive_pwm_ptc_probe,
-> +	.remove = starfive_pwm_ptc_remove,
-> +	.driver = {
-> +		.name = "pwm-starfive-ptc",
-> +		.of_match_table = starfive_pwm_ptc_of_match,
-> +	},
-> +};
-> +module_platform_driver(starfive_pwm_ptc_driver);
-> +
-> +MODULE_AUTHOR("Jieqin Chen");
-> +MODULE_AUTHOR("Hal Feng <hal.feng@starfivetech.com>");
-> +MODULE_DESCRIPTION("StarFive PWM PTC driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.34.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Rob
