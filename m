@@ -2,227 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F149679D475
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Sep 2023 17:11:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1807A79E4F0
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Sep 2023 12:30:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236243AbjILPLg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 12 Sep 2023 11:11:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
+        id S231246AbjIMKbC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 13 Sep 2023 06:31:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236355AbjILPLe (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 12 Sep 2023 11:11:34 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3939115;
-        Tue, 12 Sep 2023 08:11:30 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE9DC433C7;
-        Tue, 12 Sep 2023 15:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694531490;
-        bh=XvqdyTkbzYdmIFvzaFz0sUeabWQuIJEg/eBAxc9nVRQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OP3qBhadnTTrB4c6LnMwpMtXpd4trRfjk9GCUS0TFWfaopUqFNZnW7UJz/P2KamPy
-         bQUZqhV/yMRPKcymm9Tw9LBFhQ50yeAxFoJUk8g1X2QPycP7h0M8AeKKjbTi2n0r2x
-         PjKLjVEDvxGvZLO0m1qbWm8Qx6MvtOrvbzmXLBCuewZ7qI6ujXgzbhq5uNUIjFhTPA
-         2fujaj+jQ22/XPML+ropjSomHtLx4H0hNgIoTJ7+jMjQL0/D6QJhVarlKnXKbm+MF/
-         jsINXr7R7mHL49BZVRMNaYZB7YvVS/UQrbQhsSrupWHzyecnNGKEQhFOtyf/EVxD64
-         LT+BBefVm8Icg==
-Received: (nullmailer pid 809556 invoked by uid 1000);
-        Tue, 12 Sep 2023 15:11:27 -0000
-Date:   Tue, 12 Sep 2023 10:11:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Billy Tsai <billy_tsai@aspeedtech.com>
-Cc:     "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "naresh.solanki@9elements.com" <naresh.solanki@9elements.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>,
-        "patrick@stwcx.xyz" <patrick@stwcx.xyz>
-Subject: Re: [PATCH v8 1/3] dt-bindings: hwmon: fan: Add fan binding to schema
-Message-ID: <20230912151127.GA752403-robh@kernel.org>
-References: <20230830123202.3408318-1-billy_tsai@aspeedtech.com>
- <20230830123202.3408318-2-billy_tsai@aspeedtech.com>
- <20230905170010.GA3505375-robh@kernel.org>
- <SG2PR06MB336567E43537C7F4947E342F8BEEA@SG2PR06MB3365.apcprd06.prod.outlook.com>
- <20230907194351.GA2033402-robh@kernel.org>
- <SG2PR06MB3365B916E3AD2CE331A0D4258BEDA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+        with ESMTP id S229468AbjIMKbB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 13 Sep 2023 06:31:01 -0400
+X-Greylist: delayed 392 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Sep 2023 03:30:57 PDT
+Received: from mail.modernconcept.pl (mail.modernconcept.pl [217.61.97.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F784D3
+        for <linux-pwm@vger.kernel.org>; Wed, 13 Sep 2023 03:30:57 -0700 (PDT)
+Received: by mail.modernconcept.pl (Postfix, from userid 1001)
+        id 27F9084D80; Wed, 13 Sep 2023 11:24:23 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=modernconcept.pl;
+        s=mail; t=1694600663;
+        bh=Q5fV1w6NnWl58WkRdDH2DK4/1rRr2T27V2HfYy4X7Do=;
+        h=Date:From:To:Subject:From;
+        b=jUDPDclnfk7zqQ9zIkvRKEayUM2sNGK3udfJ3fEIz0HnKqlT1h9HT1CH8HgdozvGF
+         EO4/o+ZhR20ORjCxTv0yDKqLVrDdVg7fG5nzEBn+soJ28CGwh+2iP+/MFFAKl4h//6
+         HnzyVK9Zs/siPqhracmRybObm16NZW4/DgEGPphOFGY4FiWrdzHsac7gfuY0A0uw+c
+         WDZIat0lBFu4QSDhweKrNC0VEF9wiDIMwl80Mbw9p0AWPSbon2NoWXsH/oInDzNKqL
+         V2T7GXdm1QIt9DW+JzxMRJusYh6WFJY8e37GliocavYEggJGrC2i4PK9B+U0QrkLwA
+         C9uFL0Ifz7tNQ==
+Received: by mail.modernconcept.pl for <linux-pwm@vger.kernel.org>; Wed, 13 Sep 2023 10:20:46 GMT
+Message-ID: <20230913104935-0.1.80.10lxe.0.622fhb1zfl@modernconcept.pl>
+Date:   Wed, 13 Sep 2023 10:20:46 GMT
+From:   "Tomasz Chmiel" <tomasz.chmiel@modernconcept.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: =?UTF-8?Q?Nap=C5=82yw_Klient=C3=B3w_ze_strony?=
+X-Mailer: mail.modernconcept.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB3365B916E3AD2CE331A0D4258BEDA@SG2PR06MB3365.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 08:49:25AM +0000, Billy Tsai wrote:
-> On Thu, Sep 07, 2023 at 07:17:55AM +0000, Billy Tsai wrote:
-> > > On Wed, Aug 30, 2023 at 08:32:00PM +0800, Billy Tsai wrote:
-> > > >> From: Naresh Solanki <naresh.solanki@9elements.com>
-> > > >> 
-> > > >> Add common fan properties bindings to a schema.
-> > > >> 
-> > > >> Bindings for fan controllers can reference the common schema for the
-> > > >> fan
-> 
-> 
-> > > >> +properties:
-> > > >> +  max-rpm:
-> > > >> +    description:
-> > > >> +      Max RPM supported by fan.
-> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > 
-> > > > Physics will limit this to something much less than 2^32. Add some 
-> > > > constraints. 10000?
-> > > 
-> > > 
-> > > >> +
-> > > >> +  min-rpm:
-> > > >> +    description:
-> > > >> +      Min RPM supported by fan.
-> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > 
-> > > > ditto
-> > > 
-> > > >> +
-> > > >> +  pulses-per-revolution:
-> > > >> +    description:
-> > > >> +      The number of pulse from fan sensor per revolution.
-> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > 
-> > > >Needs constraints. I assume this is never more than 4 (or 2 even)?
-> > > 
-> > > Do you think we should add the contraint in the common binding?
-> > > In my option, the limit of the max/min rpm should be declared by
-> > > the binding if necessary, because the usage of each fan monitor is
-> > > based on the connection of the tach pin.
-> 
-> > Yes, I think we should have default limits.
-> 
-> > Unless we go as far as a schema for every specific fan model, then there 
-> > is actually no way we can have specific limits unless the fan 
-> > controllers have some limits.
-> 
-> > The most I see in tree for pulses-per-revolution is 2. There's no value 
-> > in more. So set the max to 4 and then if anyone needs more they can bump 
-> > the value.
-> 
-> > Or maybe there's some electrical/mechanical design reason fans are 1 or 
-> > 2 pulses and we'll never see anything else? This document[1] seems to 
-> > indicate that is indeed the case. (First hit googling "fan tach signal 
-> > pulses")
-> 
-> OK, I will add the maximum value for the max-rpm, min-rpm and pulses-per-revolution.
-> 
-> > > 
-> > > 
-> > > >> +  div:
-> > > 
-> > > > Too generic of a name.
-> > > 
-> > > >> +    description:
-> > > >> +      Fan clock divisor
-> > > 
-> > > > But what is a fan clock?
-> > > 
-> > > This is the divisor for the tachometer sampling clock, which determines the sensitivity of the tach pin.
-> > > So, if the name of the property changes to 'tach-div,' is it acceptable to you?
-> 
-> > That sounds like a property of the controller, not the fan, so it 
-> > belongs in the controller binding. Is this really a common thing?
-> 
-> Yes, I believe this is a common feature for fans. You can refer to the Documentation/hwmon/sysfs-interface.rst,
-> where the fan divisor is defined for users, determining the fan's sensitivity.
+Dzie=C5=84 dobry,
 
-It's a feature of the controller, but I guess since it may be a per 
-fan or tach channel setting having it in the fan node is fine. 
-'tach-div' is fine.
+chcia=C5=82bym poinformowa=C4=87 Pa=C5=84stwa o mo=C5=BCliwo=C5=9Bci pozy=
+skania nowych zlece=C5=84 ze strony www.
 
->  
-> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > >> +
-> > > >> +  target-rpm:
-> > > >> +    description:
-> > > >> +      Target RPM the fan should be configured during driver probe.
-> > > 
-> > > > What driver? By the time the OS driver runs, a bunch of other boot 
-> > > > software has already run on modern systems. So this value would likely 
-> > > > be used much earlier. The point is that when exactly is outside the 
-> > > > scope of DT. This is "what RPM do I use in case of no other information 
-> > > > (e.g. temperature)".
-> > > 
-> > > So, the description should be changed to 'The default desired fan speed in RPM,'
-> > > and we shouldn't mention the timing of the property's operation in the DT, is that correct?
-> 
-> > Correct.
-> 
-> > > 
-> > > >> +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > >> +
-> > > >> +  mode:
-> > > 
-> > > > Too generic.
-> > > 
-> > > >> +    description:
-> > > >> +      Select the operational mode of the fan.
-> > > 
-> > > > What are modes? Spin and don't spin?
-> > > 
-> > > The mode is used to indicate the driving mode of the fan (DC, PWM and so on).
-> > > So, if the name of the property changes to 'fan-driving-mode,' is it acceptable to you?
-> 
-> > I tend to think that should be implied from the parent node and/or other 
-> > properties. PWM if "pwms" property is present. DC if the supply is 
-> > variable. We could also use compatible strings in the fan nodes if 
-> > there's a need.
-> 
-> So, it looks that this property isn't necessary for the fan. And it should be determined by the
-> present of the driving source. is that correct?
+Widzimy zainteresowanie potencjalnych Klient=C3=B3w Pa=C5=84stwa firm=C4=85=
+, dlatego ch=C4=99tnie pomo=C5=BCemy Pa=C5=84stwu dotrze=C4=87 z ofert=C4=
+=85 do wi=C4=99kszego grona odbiorc=C3=B3w poprzez efektywne metody pozyc=
+jonowania strony w Google.
 
-Looking back, I see Guenter asked for something like this. So I guess it 
-is fine to keep if he still thinks we need it. I think it could also be 
-implied a bit more clearly if we do 'cooling-levels' as below. The fan 
-controller should know what modes it can do. Duty cycle vs. voltage in 
-uV is pretty easy to distinguish.
-
-> 
-> > That reminds me, both of these modes probably need a table of 
-> > voltage/duty-cycle to RPMs. I imagine it's not always a linear response.  
-> > Naresh also privately sent me (don't do that) an updated common binding 
-> > which we discussed the need for this. I expect him to comment further 
-> > with details.
-> 
-> For this purpose, we should add the speed-map like the usage of the gpio-fan, right?
-> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/hwmon/gpio-fan.txt
-
-That should be fine. I guess it comes down to whether we want one 
-property or 3 depending on whether the control is voltage, duty-cycle, 
-GPIO pins state, etc. Unfortunately, it's "gpio-fan,speed-map", not 
-"speed-map", so we can't use that as-is. There's also "cooling-levels" 
-which can accomplish the same thing. We don't know RPMs with that, but 
-do we need to? Maybe, as it seems some drivers want to set speed in RPMs 
-from userspace. Could also do something like this:
-
-cooling-levels = < 33   66  100>;
-rpm-levels =     <500 1000 1500>;
-
-"rpm-levels" would replace the min-rpm/max-rpm properties.
+Czy m=C3=B3g=C5=82bym liczy=C4=87 na kontakt zwrotny?
 
 
-Also, looking at gpio-fan.txt, it looks like you should add 
-"#cooling-cells" as well.
-
-Rob
+Pozdrawiam serdecznie,
+Tomasz Chmiel
