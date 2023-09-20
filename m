@@ -2,109 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BB4E7A71B7
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Sep 2023 07:00:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A03F7A747A
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 Sep 2023 09:42:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbjITFAD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 20 Sep 2023 01:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39222 "EHLO
+        id S233839AbjITHm6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 20 Sep 2023 03:42:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjITFAD (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 Sep 2023 01:00:03 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758D395;
-        Tue, 19 Sep 2023 21:59:57 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38K4iWGK009386;
-        Wed, 20 Sep 2023 04:59:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=LiOWBEz6joKzNAzPxfFrxb79xYuPQg6L1gLQbvTbbZQ=;
- b=Wtadov1LIKjaoA6JWwlfaSAA/gvUkMpdQ3U/cJcRzu6AIZ4yY+4o+t88k20Tp8H0TFWy
- udbmWJAlom9wjEtAtY/FDA8wkl066LoJpY47lr5Klwj6SHVLoPWVfK1OqS/cWYjKDzID
- qfj8szFCOdMvJMgLCOFLk4Ts6iNncHaL4V9G+GkynZnGBpFgIt6/rf/yKpg337lnSZMv
- RhntY4Pb0aogYXpkdMLXNxLm5o/k1plvVnY17pZYvIgQpCbelNjx6ShfT9KvXlRM8yPE
- HVDL64IjExbw8VVXKZ/rC2kpMTRemv9nr/7OZrhLLj/gOeYq1ZUvHQkoJjgzVnTsuKX7 tA== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t72pfaqtn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Sep 2023 04:59:19 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38K4xGF6016554
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Sep 2023 04:59:16 GMT
-Received: from [10.216.3.234] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Tue, 19 Sep
- 2023 21:59:11 -0700
-Message-ID: <6721cf80-8571-7894-873c-793a05776164@quicinc.com>
-Date:   Wed, 20 Sep 2023 10:28:57 +0530
+        with ESMTP id S233807AbjITHmv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 Sep 2023 03:42:51 -0400
+X-Greylist: delayed 378 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 Sep 2023 00:42:45 PDT
+Received: from mail.venturelinkage.com (mail.venturelinkage.com [80.211.143.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02DBCA
+        for <linux-pwm@vger.kernel.org>; Wed, 20 Sep 2023 00:42:45 -0700 (PDT)
+Received: by mail.venturelinkage.com (Postfix, from userid 1002)
+        id AF8A5826EF; Wed, 20 Sep 2023 09:36:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkage.com;
+        s=mail; t=1695195385;
+        bh=7iowqdzve/IIiUUjcEwx8j3uMrVqqiE7R9zbOCKRV9Q=;
+        h=Date:From:To:Subject:From;
+        b=MX26jspBN3SsajdAizJ1o8O7P83Unz8DJuCJKEMZvOxrYl4RUaNu6T1Io19hbKC0j
+         Yd19o+RpfeuV+v4zS0QSwBkTryPeIm/s5kkFRNFznv4AMIuN0luKNTEe+CiKOVqTwI
+         uE4iiGai5NLHps2ij1afQReF70F1unO3/bHAk1ZGsugVwzBoXXxyTQ/hDAdlReA7lS
+         NL/vHS1ht2jzqHyPxKFNsyOL+hvaUVareE41XdSlvtNXCK6RR/2w2UuttVrFWJwUcs
+         4Ke3XoBqtemG7LfqJvZSb559ITtM6VVDtUhSVbda5FNQFPuq31zJvokz5gxCVome3E
+         zTF59192PHi6g==
+Received: by mail.venturelinkage.com for <linux-pwm@vger.kernel.org>; Wed, 20 Sep 2023 07:36:09 GMT
+Message-ID: <20230920084500-0.1.l.11hw.0.nnu3mye9im@venturelinkage.com>
+Date:   Wed, 20 Sep 2023 07:36:09 GMT
+From:   "Lukas Varga" <lukas.varga@venturelinkage.com>
+To:     <linux-pwm@vger.kernel.org>
+Subject: =?UTF-8?Q?Popt=C3=A1vka?=
+X-Mailer: mail.venturelinkage.com
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 1/3] pwm: driver for qualcomm ipq6018 pwm block
-Content-Language: en-US
-To:     Baruch Siach <baruch@tkos.co.il>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Andy Gross" <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Robert Marko <robert.marko@sartura.hr>,
-        Kathiravan T <quic_kathirav@quicinc.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <17dd231f496d09ed8502bdd505eaa77bb6637e4b.1644226245.git.baruch@tkos.co.il>
- <8a331c88-c7d4-3a14-0ec3-fd616ea24a99@quicinc.com> <87wmwsylup.fsf@tarshish>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <87wmwsylup.fsf@tarshish>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: SODvBlkJojyTfNS1svnDIPgTDguAPWzH
-X-Proofpoint-ORIG-GUID: SODvBlkJojyTfNS1svnDIPgTDguAPWzH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-20_02,2023-09-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- spamscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 phishscore=0
- clxscore=1015 impostorscore=0 lowpriorityscore=0 mlxlogscore=746
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309200040
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.0 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: venturelinkage.com]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [80.211.143.151 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: venturelinkage.com]
+        *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
+        *      DNSWL was blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [80.211.143.151 listed in list.dnswl.org]
+        * -0.5 BAYES_05 BODY: Bayes spam probability is 1 to 5%
+        *      [score: 0.0409]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
+        *      days
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Dobr=C3=A9 r=C3=A1no,
+
+Dovolil jsem si V=C3=A1s kontaktovat, proto=C5=BEe m=C3=A1m z=C3=A1jem ov=
+=C4=9B=C5=99it mo=C5=BEnost nav=C3=A1z=C3=A1n=C3=AD spolupr=C3=A1ce.
+
+Podporujeme firmy p=C5=99i z=C3=ADsk=C3=A1v=C3=A1n=C3=AD nov=C3=BDch obch=
+odn=C3=ADch z=C3=A1kazn=C3=ADk=C5=AF.
+
+M=C5=AF=C5=BEeme si promluvit a poskytnout podrobnosti?
+
+V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
+ anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
 
 
-On 9/15/2023 12:06 PM, Baruch Siach wrote:
->> Just curious to know if you have plans to post the next revision!
-> I have been waiting for comments from pwm maintainers before sending the
-> next revision.
-> 
-> Unfortunately since then I lost access to the hardware, so I can't test
-> suggested implementation changes.  The only pending issue in v11 is the
-> trivial change that Nathan Chancellor suggested, which should be safe.
-> 
-> If you like to take it from here you are welcome.
-
-Sure, Thanks Baruch!
-
-Regards,
-Devi Priya
-> 
-> Thanks,
-> baruch
-> 
+Pozdravy
+Lukas Varga
