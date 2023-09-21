@@ -2,35 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C4267AA441
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 00:03:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B49D7AA45F
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 00:07:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232199AbjIUWDc (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 21 Sep 2023 18:03:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55806 "EHLO
+        id S232924AbjIUWHQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Sep 2023 18:07:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbjIUWDM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Sep 2023 18:03:12 -0400
-Received: from out-216.mta0.migadu.com (out-216.mta0.migadu.com [IPv6:2001:41d0:1004:224b::d8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52781090D
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Sep 2023 14:51:12 -0700 (PDT)
-Date:   Fri, 22 Sep 2023 07:35:19 +1000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-        t=1695333070;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QqdCzsBT+posAOrgjqZp1RU0wbImVm1bMLt0YyYT58w=;
-        b=jvHndayovKeUtX9KhNDnrwvpHYFAY3TGK25k0jym2yigvLtNswLLxKT6Iy0gnikZPeX0Ea
-        9E+iGa5XeByTvqs/zPZqR1u20L7keWeogvvrl433gR3hgExeYnV91T9Q1Wb9KDJ4Ic91lH
-        DRkHzMDCMUsHvHVQlZao+wq6tDL5sqbHKJOX/eVy2cbLpLzp/p7RhaKUdDs63DArSV80Nc
-        /0UlofEZsEnKUE79VvJQDZOheJCmXNIeKvtMomamt0kJgN1KUChQ1Cxln1n7tKHWhQb3o5
-        kUdDzQD+B+oIiLbouzSjs/cLjOvw7xVyOynXPFGXyMx4hAB2VRXRIh8v5sZTtg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   John Watts <contact@jookia.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S232911AbjIUWGy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Sep 2023 18:06:54 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CEC91B153
+        for <linux-pwm@vger.kernel.org>; Thu, 21 Sep 2023 14:27:52 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qjRD0-0005ek-10; Thu, 21 Sep 2023 23:27:38 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qjRCy-00816y-1P; Thu, 21 Sep 2023 23:27:36 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qjRCx-003jNA-Nt; Thu, 21 Sep 2023 23:27:35 +0200
+Date:   Thu, 21 Sep 2023 23:27:36 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     John Watts <contact@jookia.org>
 Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
         linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -50,19 +49,20 @@ Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
         linux-riscv@lists.infradead.org
 Subject: Re: [PATCH v6 0/3] Add support for Allwinner PWM on D1/T113s/R329
  SoCs
-Message-ID: <ZQy3F_VtOL3XWcl0@titan>
+Message-ID: <20230921212736.nw6ctlimtrxfksbu@pengutronix.de>
 References: <20230824114038.891493-1-privatesub2@gmail.com>
  <ZPfn-0OAL7-3DCmt@titan>
- <20230921212736.nw6ctlimtrxfksbu@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hsej65iwiu4uzzgq"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230921212736.nw6ctlimtrxfksbu@pengutronix.de>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=unavailable
+In-Reply-To: <ZPfn-0OAL7-3DCmt@titan>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,28 +70,47 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Sep 21, 2023 at 11:27:36PM +0200, Uwe Kleine-König wrote:
-> Hi John,
-> 
-> On Wed, Sep 06, 2023 at 12:46:19PM +1000, John Watts wrote:
-> > On Thu, Aug 24, 2023 at 02:40:24PM +0300, Aleksandr Shubin wrote:
-> > > This series adds support for PWM controller on new
-> > > Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
-> > > provides basic functionality for control PWM channels.
-> > 
-> > I have tested this patch and earlier versions successfully on a Mango Pi MQ
-> > Dual and verified it outputs a PWM signal.
-> 
-> If you want that documented, the usual thing to do is to include a
-> Tested-by: tag in your reply.
 
-That's a good idea! I'll take a closer look under a scope and against the data
-sheet and give another tested-by then when I can. I'm not sure how close that
-gets to a reviewed-by but I don't have the experience in driver development to
-know if something is off in the design.
+--hsej65iwiu4uzzgq
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Best regards
-> Uwe
+Hi John,
 
-John.
+On Wed, Sep 06, 2023 at 12:46:19PM +1000, John Watts wrote:
+> On Thu, Aug 24, 2023 at 02:40:24PM +0300, Aleksandr Shubin wrote:
+> > This series adds support for PWM controller on new
+> > Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
+> > provides basic functionality for control PWM channels.
+>=20
+> I have tested this patch and earlier versions successfully on a Mango Pi =
+MQ
+> Dual and verified it outputs a PWM signal.
+
+If you want that documented, the usual thing to do is to include a
+Tested-by: tag in your reply.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--hsej65iwiu4uzzgq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUMtUcACgkQj4D7WH0S
+/k6buwf6A0Hc5i21Amtcab5twrhrw6hQ6A5Ooz+1y2NkTKoC1LfIo7H3TlzWFbE0
+9v6vTPc5eeLTrrEvqyuklZj4ZeOfQ59QP8J28sITll556Mexp3qZE2UeEsJ+WWnQ
+VhotAXjZk0kIxPwYlYtpNRuFIu77UapAGa1fIAbCE+YkWe1gylM0C9U4BoN5Bwt0
+YfeNGDLxtFg4fnkdFryQnnt+XdJyZZoP3zyxek759tHYwlV+zyYGtQnqkFrve8O3
+/1ulltb5AMO19uiVuefYGW14yKzs2fQQKHvphjHnLAPd3pvio49reLiFmMIbBVoo
+mcSTWHcLZyx4+qyDqk1pKuC4hprirg==
+=WRok
+-----END PGP SIGNATURE-----
+
+--hsej65iwiu4uzzgq--
