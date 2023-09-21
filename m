@@ -2,55 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E494E7A8E43
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Sep 2023 23:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 468367A9AF5
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Sep 2023 20:52:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbjITVND (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 20 Sep 2023 17:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47434 "EHLO
+        id S230057AbjIUSwd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 21 Sep 2023 14:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230029AbjITVNC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 20 Sep 2023 17:13:02 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AACDC9
-        for <linux-pwm@vger.kernel.org>; Wed, 20 Sep 2023 14:12:56 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qj4VB-00035p-CC; Wed, 20 Sep 2023 23:12:53 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qj4V9-007mBu-3a; Wed, 20 Sep 2023 23:12:51 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qj4V8-003Pvx-QG; Wed, 20 Sep 2023 23:12:50 +0200
-Date:   Wed, 20 Sep 2023 23:12:50 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v15 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <20230920211250.ifzt7vlpl5phjhpu@pengutronix.de>
-References: <20230721060840.8546-1-biju.das.jz@bp.renesas.com>
- <20230721060840.8546-4-biju.das.jz@bp.renesas.com>
+        with ESMTP id S230326AbjIUSwW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 21 Sep 2023 14:52:22 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EDC5ECF4D;
+        Thu, 21 Sep 2023 11:44:28 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-273e3d8b57aso296377a91.0;
+        Thu, 21 Sep 2023 11:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695321868; x=1695926668; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/VCY0QPe02BJazAiQWn34Qew1J3t1PztwawBqHZpK/s=;
+        b=Ycl/BDlDl3w8Fkmb+oyBoP441TDz2y+jxln8r2eJLz2PSUEKftfAiuItle0Cyz+PI+
+         i9QrnE3C15pCMT66qLtO44Ulmv0cNpo3JRSkfiDKff3gzrQjc+xd1TK7YCrkA57WCD3R
+         X/gRk14pg5FqmqoT5aYrfb4CRSqnirYz3fVWiJxOXDyg3xaBjYgmymnKSk0vEU/M4ILI
+         hoim8XH+L+VGqCW9ydiyw3xPrEf9I5IyAgahAu806qZ3sLeqjsj2txq43P+PLmXeRRZX
+         8f+Kb/E1grhqLmRl2j+0gYcp549gJc6k1ssqJSdPZS+b1oUMYyCniGn6xUKttinvzxdC
+         11lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695321868; x=1695926668;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/VCY0QPe02BJazAiQWn34Qew1J3t1PztwawBqHZpK/s=;
+        b=H95eoKH58DfLmI9SwCHgkduWWsMWvCaTeYsZ67iKPK+A57EIw0WKT+6gLWFshPzxBZ
+         O2mV3VxQ/6WUPvTVgHp7ufS/RoH9o0tJY3QAiaX2yizvwKqVyUi34sUdHkLERFlwPtlJ
+         ud2BHvQ1QS4IEs+VGM4isEe0pRuTliU3tBlARhFMmuG3DVIc9G7zNh7N+7xATAlKNaXb
+         OiKhrmgc5P++xYsxdur3EI24eTXWyfllJY9gYvD2MXIUJBSz0Uf5LE9VCfnQQa1WGRgf
+         M4bjlDOQZcSSx7mIgDbiFM2Q+loNRcuEFXxRdlaJGyaae7Zm2CNW2ZBUF17VCuU8bARG
+         XAnQ==
+X-Gm-Message-State: AOJu0YzdW1HQQTfNWPrhquww/0qjSEE379CvZf7byeUR1vk2JRktvb1X
+        liMdG4JjjN9ioWaNSbKyF9U=
+X-Google-Smtp-Source: AGHT+IHfaLm5LLsVw0QZpLicq+/Oqy5BPrWWp55fJIt/cMqSTYenCMib0zdDkQyDB86uJDvPG4+XpA==
+X-Received: by 2002:a17:903:2303:b0:1c3:4073:bf80 with SMTP id d3-20020a170903230300b001c34073bf80mr6543072plh.0.1695321867594;
+        Thu, 21 Sep 2023 11:44:27 -0700 (PDT)
+Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:3568:5db2:51a5:e134])
+        by smtp.gmail.com with ESMTPSA id c8-20020a170903234800b001b8b07bc600sm1852730plh.186.2023.09.21.11.44.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Sep 2023 11:44:26 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, robh+dt@kernel.org, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@denx.de>
+Subject: [PATCH 1/3] dt-bindings: pwm: mxs: Document fsl,imx28-pwm
+Date:   Thu, 21 Sep 2023 15:43:46 -0300
+Message-Id: <20230921184348.290261-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="me5u4pyyx2wczdef"
-Content-Disposition: inline
-In-Reply-To: <20230721060840.8546-4-biju.das.jz@bp.renesas.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,210 +69,36 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Fabio Estevam <festevam@denx.de>
 
---me5u4pyyx2wczdef
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+imx28 uses the same PWM block that is found on imx23.
 
-Hello Biju,
+Add an entry for fsl,imx28-pwm.
 
-sorry it took so long until you got feedback.
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On Fri, Jul 21, 2023 at 07:08:39AM +0100, Biju Das wrote:
-> [...]
-> +static int rzg2l_gpt_get_state(struct pwm_chip *chip, struct pwm_device =
-*pwm,
-> +			       struct pwm_state *state)
-> +{
-> +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
-> +	int rc;
-> +
-> +	rc =3D pm_runtime_resume_and_get(chip->dev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	state->enabled =3D rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm);
-> +	if (state->enabled) {
-> +		u32 ch =3D RZG2L_GET_CH(pwm->hwpwm);
-> +		u32 offs =3D RZG2L_GET_CH_OFFS(ch);
-> +		u8 prescale;
-> +		u64 tmp;
-> +		u32 val;
-> +
-> +		val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTCR);
-> +		prescale =3D FIELD_GET(RZG2L_GTCR_TPCS, val);
-> +
-> +		val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTPR);
-> +		tmp =3D NSEC_PER_SEC * (u64)val;
-> +		state->period =3D DIV_ROUND_UP_ULL(tmp, rzg2l_gpt->rate) << (2 * presc=
-ale);
+diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+index 6ffbed204c25..655f008081d5 100644
+--- a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+@@ -15,8 +15,12 @@ allOf:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx23-pwm
++    oneOf:
++      - const: fsl,imx23-pwm
++      - items:
++          - enum:
++              - fsl,imx28-pwm
++          - const: fsl,imx23-pwm
+ 
+   reg:
+     maxItems: 1
+-- 
+2.34.1
 
-You're loosing precision here. If for example we have: GTPR =3D 0xf, TPCS =
-=3D 5 and
-rzg2l_gpt->rate =3D 26000000, the output wave's period is:
-
-	period =3D 0xf * 1000000000 / 26000000 << 10
-
-The exact value is 590769.2307692308, so the right value to return is
-590770. However your calculation yields 590848.
-
-The problem is that the rounded value is further processed. Maybe we
-need a function mul_u64_u64_div_u64_roundup(), or do you see a clever
-alternative?
-
-> +		val =3D rzg2l_gpt_read(rzg2l_gpt,
-> +				     offs + RZG2L_GTCCR(RZG2L_IS_IOB(pwm->hwpwm)));
-> +
-> +		tmp =3D NSEC_PER_SEC * (u64)val;
-> +		state->duty_cycle =3D DIV_ROUND_UP_ULL(tmp, rzg2l_gpt->rate) << (2 * p=
-rescale);
-> +
-> +		if (state->duty_cycle > state->period)
-> +			state->duty_cycle =3D state->period;
-> +	}
-> +
-> +	state->polarity =3D PWM_POLARITY_NORMAL;
-> +	pm_runtime_put(chip->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static u32 rzg2l_gpt_calculate_pv_or_dc(u64 period_or_duty_cycle, u8 pre=
-scale)
-> +{
-> +	return min(period_or_duty_cycle >> (2 * prescale), (u64)U32_MAX);
-> +}
-> +
-
-Maybe mention in a comment here that rzg2l_gpt_config() is only called
-holding the lock?
-
-> +static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
-> +	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
-> +	u32 offs =3D RZG2L_GET_CH_OFFS(ch);
-> +	unsigned long pv, dc;
-> +	u64 period_cycles;
-> +	u64 duty_cycles;
-> +	u8 prescale;
-> +
-> +	/*
-> +	 * GPT counter is shared by multiple channels, so prescale and period
-> +	 * can NOT be modified when there are multiple channels in use with
-> +	 * different settings.
-> +	 */
-> +	if (state->period !=3D rzg2l_gpt->state_period[ch] && rzg2l_gpt->user_c=
-ount[ch] > 1)
-> +		return -EBUSY;
-
-this is stricter than necessary, but if you don't want to spend
-additional brain cycles (we're at v15 already), that's ok. Can be
-addressed later if the need arises.
-
-> +	period_cycles =3D mul_u64_u32_div(state->period, rzg2l_gpt->rate, NSEC_=
-PER_SEC);
-> +	prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_cycles);
-> +
-> +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_cycles, prescale);
-> +
-> +	duty_cycles =3D mul_u64_u32_div(state->duty_cycle, rzg2l_gpt->rate, NSE=
-C_PER_SEC);
-> +	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_cycles, prescale);
-> +
-> +	/*
-> +	 * GPT counter is shared by multiple channels, we cache the period value
-> +	 * from the first enabled channel and use the same value for both
-> +	 * channels.
-> +	 */
-> +	rzg2l_gpt->state_period[ch] =3D state->period;
-> +
-> +	/*
-> +	 * If the PWM channel is disabled, make sure to turn on the clock
-> +	 * before writing the register.
-> +	 */
-> +	if (!pwm->state.enabled) {
-> +		int rc;
-> +
-> +		rc =3D pm_runtime_resume_and_get(chip->dev);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	/*
-> +	 * Counter must be stopped before modifying mode, prescaler, timer
-> +	 * counter and buffer enable registers. These registers are shared
-> +	 * between both channels. So allow updating these registers only for the
-> +	 * first enabled channel.
-> +	 */
-> +	if (rzg2l_gpt->enable_count[ch] > 1)
-> +		rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR, RZG2L_GTCR_CST, 0);
-
-It's already late here, but I wonder if the condition is wrong here?!
-s/>/<=3D/ ?
-
-> +	/* GPT set operating mode (saw-wave up-counting) */
-> +	rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR, RZG2L_GTCR_MD,
-> +			 RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE);
-> +
-> +	/* Set count direction */
-> +	rzg2l_gpt_write(rzg2l_gpt, offs + RZG2L_GTUDDTYC, RZG2L_UP_COUNTING);
-> +	/* Select count clock */
-> +	rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR, RZG2L_GTCR_TPCS,
-> +			 FIELD_PREP(RZG2L_GTCR_TPCS, prescale));
-> +
-> +	/* Set period */
-> +	rzg2l_gpt_write(rzg2l_gpt, offs + RZG2L_GTPR, pv);
-> +
-> +	/* Set duty cycle */
-> +	rzg2l_gpt_write(rzg2l_gpt, offs + RZG2L_GTCCR(RZG2L_IS_IOB(pwm->hwpwm)),
-> +			dc);
-> +
-> +	/* Set initial value for counter */
-> +	rzg2l_gpt_write(rzg2l_gpt, offs + RZG2L_GTCNT, 0);
-> +
-> +	/* Set no buffer operation */
-> +	rzg2l_gpt_write(rzg2l_gpt, offs + RZG2L_GTBER, 0);
-> +
-> +	/* Restart the counter after updating the registers */
-> +	if (rzg2l_gpt->enable_count[ch] > 1)
-> +		rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR,
-> +				 RZG2L_GTCR_CST, RZG2L_GTCR_CST);
-> +
-> +	/* If the PWM is not enabled, turn the clock off again to save power. */
-> +	if (!pwm->state.enabled)
-> +		pm_runtime_put(chip->dev);
-
-rzg2l_gpt_config() is only called if state->enabled is true, i.e. the
-hardware is about to be enabled. I think it's not sensible in this case
-to call pm_runtime_put().
-
-> +	return 0;
-> +}
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---me5u4pyyx2wczdef
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmULYFEACgkQj4D7WH0S
-/k5emwgAgZZY+y+MZYpfv9KyWPwHo1WKja2C0Ymde/y0X80srH+mjjCrYb/KY8gy
-38aIrhg5i+wA6pZewRd2vp6LzDc/0HEP1tM8/pNvQbMqqRmYMnfpgtBoF+zG0BtU
-cTxNSEOTQSqn0V4GPUpmPJ6ewP20MMYXSnMKDxSuJTB5Tf6bNg449er3TseWCWp4
-fypn4/27MNfk7AAP/o6yvIR3YsFLfPiQ/tJhgRxorjtiI8b2bwrP6y+E+BCRbGk3
-CpXiSX62E1RZtZ5ponhiVOQukwvuRUEFdQFAWSFCkCGIn3xSoKyHLQjivDolWbg/
-eA2L9iMCU7bmgat+xwfIrsCo2XqHmg==
-=KEKa
------END PGP SIGNATURE-----
-
---me5u4pyyx2wczdef--
