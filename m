@@ -2,123 +2,120 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FCF67AB0DB
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 13:34:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CD487AB1FC
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 14:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233869AbjIVLcO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Sep 2023 07:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43206 "EHLO
+        id S233843AbjIVMSJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Sep 2023 08:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233802AbjIVLcJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 07:32:09 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5359ECEC
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 04:31:58 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A02BC433C8;
-        Fri, 22 Sep 2023 11:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695382318;
-        bh=dDlwHF+eiY9+hTkqn2XNMeoXlkZ1Ja1adnUXIXYrsVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jGDkLx6p8bRr/3DfeoGHdwbSJLCHEzTtWl9ylQpGHLQv7/TU8fqPaAKU+T0ca8DWz
-         ZsKzXDvpUquCiRZE5iv8i1+drr1z1tkXUJsfMQdodNYDGgU3XwmOOMfMe3p8bV1NJW
-         7NK5CcSdAk8ZsTR7lwFxj1fzp2Z1wXsYDj2ScRMW1Pu4OwbL7ZA/6I9sWua/EROV2M
-         WlFEsxKalwKXTm45y3KxcMOOFbaaC37HGgQBzFIT00tRoLvwHbgi1GS1u0P4MmcqOs
-         XQWmb5gjH6fd3QPYAsLIcYDy34S9w5GL2kDtJH/DT4WOJdr//NKdR+FiCqWjYgs/pR
-         bgIQSJxtZY4Uw==
-Date:   Fri, 22 Sep 2023 12:31:54 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@denx.de>
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: mxs: Document the clocks property
-Message-ID: <20230922-likewise-twiddling-31da746e1920@spud>
-References: <20230921184348.290261-1-festevam@gmail.com>
- <20230921184348.290261-2-festevam@gmail.com>
+        with ESMTP id S233672AbjIVMSJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 08:18:09 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD71EFB
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 05:18:03 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c4456d595cso3763175ad.1
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 05:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695385083; x=1695989883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F8QW0xVyp70cq29VZ+jp2qESbgV9XkqbeH4Ceb6Mi7s=;
+        b=DzLsRbN3hjTAM2WOL9Qc3PDWho1aR9HE8sGFGJEmM3nrFg3AHBc3tQRGGsHmR0LS/r
+         jH792btC2G7JuGhQKMjzYMJ7FKZRwQqAgT/+XE1VIwDpDxmtm+bOCr1MuxRGUQRcGo8/
+         VldOVS8E7mtoghxLA4JgP3zZJILLP+Lq6l6E01SU+Qt0Z0vjUR5nsHQuJahtCQUevC/F
+         n85tXWQTjIvdE+CFqbF8dLlh01oI7ei8lP2gl6yqcoy0D7q93sLwhZMQSQ1vcQBaMLw9
+         Jg0mYnKJ7AQm+qzkRQv+1UxtuAdDIAhs6XI7dI7xvzt/1wQklQgiIf0U8QWENTd2NvZZ
+         LHJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695385083; x=1695989883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F8QW0xVyp70cq29VZ+jp2qESbgV9XkqbeH4Ceb6Mi7s=;
+        b=oVg3ujQoOPIapGVin4hIpROHvvsIKQXXHIs0ZJpxdoA6hha7YI0qogK4pBX5mRpdyP
+         +mZfXOA6w7OMtZQ2u8cgvUjwEgJCVHsHXIs5e/P4T/UZxLzfOM73gBINyAghNGVE6K1k
+         KegwgNrwV9vVoOKCmv3ug0u6VhOBlgeWeVWieQyPInIF7GOcYNLnIVKRpxSRRBs0aVCm
+         XdTfWcljz0H7dFOcpLx6lZyoGb6BTd5OW+7esz9b2Dy2nyYiKhSIi9w4cRsoNaYpLZ0j
+         ggEnjiCDw0EBM3FQEhjnaNmMFMFw9fawEYaV/l9cRZZ5hcsVbv5BAJO2WAP8+mz4Gg27
+         5Njw==
+X-Gm-Message-State: AOJu0YxrVGd/4YO4i+mrLO3+EtplR1eH6bN5a1wTv8S9PP2kmk/G+dxo
+        HT0xsS9o0d6TeXjDeFaXzN26iQh/Q24=
+X-Google-Smtp-Source: AGHT+IF7gs71VxReEpenYvRcRkBNhTAxqEQi0t1LJxIv5tTHUNmHSKvldAxmxhXnw6uLlVbDlWJ+oA==
+X-Received: by 2002:a17:903:32ca:b0:1c3:8dbe:aecb with SMTP id i10-20020a17090332ca00b001c38dbeaecbmr8135957plr.2.1695385083091;
+        Fri, 22 Sep 2023 05:18:03 -0700 (PDT)
+Received: from fabio-Precision-3551.. ([2804:14c:485:4b61:2546:6c99:4de0:9123])
+        by smtp.gmail.com with ESMTPSA id h13-20020a170902eecd00b001b03cda6389sm3330822plb.10.2023.09.22.05.18.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 05:18:02 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     thierry.reding@gmail.com
+Cc:     u.kleine-koenig@pengutronix.de, linux@rasmusvillemoes.dk,
+        linux-pwm@vger.kernel.org, rogan@dawes.za.net,
+        Fabio Estevam <festevam@denx.de>
+Subject: [PATCH] pwm: mxs: Fix zero duty cycle
+Date:   Fri, 22 Sep 2023 09:17:52 -0300
+Message-Id: <20230922121752.344965-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Kku3baJfA0pbcSa+"
-Content-Disposition: inline
-In-Reply-To: <20230921184348.290261-2-festevam@gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+From: Fabio Estevam <festevam@denx.de>
 
---Kku3baJfA0pbcSa+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently, when a duty cycle of zero is requested, the PWM stops
+getting updated. This causes the minimal brightness of an LED to not
+turned off completely as expected.
 
-On Thu, Sep 21, 2023 at 03:43:47PM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <festevam@denx.de>
->=20
-> The 'clocks' property is mandatory for the PWM to operate.
->=20
-> Document it.
+For example, driving an LED via led-pwm and running:
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+echo 255 >  /sys/class/leds/red/brightness
 
-Thanks,
-Conor.
+makes the LED to go to its maximum brightness as expected.
 
->=20
-> Signed-off-by: Fabio Estevam <festevam@denx.de>
-> ---
->  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documen=
-tation/devicetree/bindings/pwm/mxs-pwm.yaml
-> index 655f008081d5..8f50e23ca8c9 100644
-> --- a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
-> @@ -25,6 +25,9 @@ properties:
->    reg:
->      maxItems: 1
-> =20
-> +  clocks:
-> +    maxItems: 1
-> +
->    "#pwm-cells":
->      const: 3
-> =20
-> @@ -35,6 +38,7 @@ properties:
->  required:
->    - compatible
->    - reg
-> +  - clocks
->    - fsl,pwm-number
-> =20
->  additionalProperties: false
-> @@ -44,6 +48,7 @@ examples:
->      pwm@80064000 {
->          compatible =3D "fsl,imx23-pwm";
->          reg =3D <0x80064000 0x2000>;
-> +        clocks =3D <&clks 30>;
->          #pwm-cells =3D <3>;
->          fsl,pwm-number =3D <8>;
->      };
-> --=20
-> 2.34.1
->=20
+After running:
 
---Kku3baJfA0pbcSa+
-Content-Type: application/pgp-signature; name="signature.asc"
+echo 0 >  /sys/class/leds/red/brightness
 
------BEGIN PGP SIGNATURE-----
+The PWM controlled LED does not turn off. Instead, the LED brightness
+stays at its maximum.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZQ17KgAKCRB4tDGHoIJi
-0nnAAP9aKmv4TvjQRQnrd38ZV4M/TPb47lSdBh4E19+q9epRKgEA2LqRFCTgHtON
-gNHVSJoFelrAc+YikAWG23Bg8hDOIA4=
-=PCgT
------END PGP SIGNATURE-----
+The reason for this behavior is that when brightness is set to 0,
+state->enabled goes to 0 and the PWM is disabled by setting the
+PWM_CTRL + CLR register.
 
---Kku3baJfA0pbcSa+--
+Fix this problem by keeping the PWM controller turned on, even in
+the case when a zero duty cycle is requested.
+
+Fixes: bf29c2ff82fd ("pwm: mxs: Implement ->apply()")
+Reported-by: Rogan Dawes <rogan@dawes.za.net>
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+Tested-by: Rogan Dawes <rogan@dawes.za.net>
+---
+ drivers/pwm/pwm-mxs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+index 766dbc58dad8..f8ad616eaba2 100644
+--- a/drivers/pwm/pwm-mxs.c
++++ b/drivers/pwm/pwm-mxs.c
+@@ -65,7 +65,7 @@ static int mxs_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			return ret;
+ 	}
+ 
+-	if (!state->enabled && pwm_is_enabled(pwm))
++	if (pwm_is_enabled(pwm))
+ 		writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + CLR);
+ 
+ 	rate = clk_get_rate(mxs->clk);
+-- 
+2.34.1
+
