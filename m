@@ -2,76 +2,177 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 349BB7AB555
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 17:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 032517AB7C1
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 19:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbjIVP7W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Sep 2023 11:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60288 "EHLO
+        id S229541AbjIVRgP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Sep 2023 13:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjIVP7W (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 11:59:22 -0400
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A9D83;
-        Fri, 22 Sep 2023 08:59:13 -0700 (PDT)
-Received: from mail.denx.de (unknown [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: festevam@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 276BE8646A;
-        Fri, 22 Sep 2023 17:59:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1695398346;
-        bh=sErq8NJlreRkeeEbGvAm57zpF27Gru13ThY6NB0gH5g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zTwEhzX5UPOFkW9IhycQs/kb9GdIQoyVtmmM3o0U4sOIzFjPd65MM4z3Y/bGZz+Ms
-         Xdm+PNF0wGQckrYuA4+/IA0yeFgg+KpAzOt/POjHM+/SwxHJjqo1u4gsr2mmBcpDp9
-         mBUaEQ9ggMy47VXe3Q9CB/Mzg8qNRt74POoC3XSF0T2SqNxm4ZUAYEJKqDxEjhzPBi
-         v4tE2MKmjtxovNMtiohGPuKcrdcL3jXwyH5HcNWHYADe+TqF4oTeyVw2KB5tpo+VOI
-         hPZMj6DTj488hlG/vomhCLRibtRkYfjLVpeT1vjZza6SU/NBX9KMeEZD8JY0u98c8p
-         vCEwjn0MQmINA==
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 22 Sep 2023 12:59:06 -0300
-From:   Fabio Estevam <festevam@denx.de>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        with ESMTP id S229636AbjIVRgO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 13:36:14 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4AB2FB
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 10:36:07 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qjk4U-00070h-DW; Fri, 22 Sep 2023 19:36:06 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qjk4S-008DaU-I5; Fri, 22 Sep 2023 19:36:04 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qjk4S-003xW5-7s; Fri, 22 Sep 2023 19:36:04 +0200
+Date:   Fri, 22 Sep 2023 19:35:56 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de, Rogan Dawes <rogan@dawes.za.net>
-Subject: Re: [PATCH] leds: pwm: Don't disable the PWM when the LED should be
- off
-In-Reply-To: <20230922142304.1685985-1-u.kleine-koenig@pengutronix.de>
-References: <20230922142304.1685985-1-u.kleine-koenig@pengutronix.de>
-Message-ID: <4b5874469878821a7144fb85f143a88d@denx.de>
-X-Sender: festevam@denx.de
-User-Agent: Roundcube Webmail/1.3.6
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,T_SPF_TEMPERROR,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        jarkko.nikula@linux.intel.com
+Subject: Re: [PATCH v9 3/6] pwm: dwc: add PWM bit unset in get_state call
+Message-ID: <20230922173556.qnn5hj5wkxnfckxm@pengutronix.de>
+References: <20230907161242.67190-1-ben.dooks@codethink.co.uk>
+ <20230907161242.67190-4-ben.dooks@codethink.co.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fpcebxxfb6nwe2en"
+Content-Disposition: inline
+In-Reply-To: <20230907161242.67190-4-ben.dooks@codethink.co.uk>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
 
-On 22/09/2023 11:23, Uwe Kleine-König wrote:
+--fpcebxxfb6nwe2en
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  	led_dat->pwmstate.duty_cycle = duty;
-> -	led_dat->pwmstate.enabled = duty > 0;
-> +	led_dat->pwmstate.enabled = 1;
+Hello,
 
-Thanks for the fix.
+[dropping William Salmon and Jude Onyenegecha from Cc: as in the other
+mails before]
 
-Nit: I would suggest:
+I'd change the Subject to:
 
-led_dat->pwmstate.enabled = true;
+	pwm: dwc: Support DWC_TIM_CTRL_PWM unset in .get_state()
 
-Reviewed-by: Fabio Estevam <festevam@denx.de>
+On Thu, Sep 07, 2023 at 05:12:39PM +0100, Ben Dooks wrote:
+> If we are not in PWM mode, then the output is technically a 50%
+> output based on a single timer instead of the high-low based on
+> the two counters. Add a check for the PWM mode in dwc_pwm_get_state()
+> and if DWC_TIM_CTRL_PWM is not set, then return a 50% cycle.
+>=20
+> This may only be an issue on initialisation, as the rest of the
+> code currently assumes we're always going to have the extended
+> PWM mode using two counters.
+>=20
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+> v9:
+>  - fixed multi-line comment
+>  - put authour back to codethink email from sifive
+> v8:
+>  - fixed rename issues
+> v4:
+>  - fixed review comment on mulit-line calculations
+> ---
+>  drivers/pwm/pwm-dwc-core.c | 30 +++++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
+> index 4b4b7b9e1d82..3fc281a78c9a 100644
+> --- a/drivers/pwm/pwm-dwc-core.c
+> +++ b/drivers/pwm/pwm-dwc-core.c
+> @@ -122,24 +122,32 @@ static int dwc_pwm_get_state(struct pwm_chip *chip,=
+ struct pwm_device *pwm,
+>  {
+>  	struct dwc_pwm *dwc =3D to_dwc_pwm(chip);
+>  	u64 duty, period;
+> +	u32 ctrl, ld, ld2;
+> =20
+>  	pm_runtime_get_sync(chip->dev);
+> =20
+> -	state->enabled =3D !!(dwc_pwm_readl(dwc,
+> -				DWC_TIM_CTRL(pwm->hwpwm)) & DWC_TIM_CTRL_EN);
+> +	ctrl =3D dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
+> +	ld =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
+> +	ld2 =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
+> =20
+> -	duty =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
+> -	duty +=3D 1;
+> -	duty *=3D dwc->clk_ns;
+> -	state->duty_cycle =3D duty;
+> +	state->enabled =3D !!(ctrl & DWC_TIM_CTRL_EN);
+> =20
+> -	period =3D dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
+> -	period +=3D 1;
+> -	period *=3D dwc->clk_ns;
+> -	period +=3D duty;
+> -	state->period =3D period;
+> +	/*
+> +	 * If we're not in PWM, technically the output is a 50-50
+> +	 * based on the timer load-count only.
+> +	 */
+> +	if (ctrl & DWC_TIM_CTRL_PWM) {
+> +		duty =3D (ld + 1) * dwc->clk_ns;
+> +		period =3D (ld2 + 1)  * dwc->clk_ns;
+> +		period +=3D duty;
+> +	} else {
+> +		duty =3D (ld + 1) * dwc->clk_ns;
+> +		period =3D duty * 2;
+> +	}
+> =20
+>  	state->polarity =3D PWM_POLARITY_INVERSED;
+> +	state->period =3D period;
+> +	state->duty_cycle =3D duty;
+> =20
+>  	pm_runtime_put_sync(chip->dev);
+
+The change looks right,=20
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Do you intend to address the review feedback for the other patches in
+this series? It would be sad if you efforts didn't result in these
+improvements getting in.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--fpcebxxfb6nwe2en
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUN0HYACgkQj4D7WH0S
+/k5dOgf/X6q96/fI3FL5Ezo70VF2IVoJaJX5gDkp0zMSkIuLe1RhSdyPY9GZZbv9
+aUUoAEJAtNkJoXUjq1fE9Qf6tzmBvKU9Z/LynKfRilCPw0PE18mEbDV2N0+adfwx
+TX8nlSdKb7q7VizW7fB+b480gdbp1WjhrPANiCUqe1bVr4Sp1YRzi3SN/3iAKPcZ
+WCvzUUv+ttRd/1Q0qRgwv4/7EOFQoh2rMNh0tujlUCF/uo8rMGwYTmc+9lrkgWRg
+FWH59XAYIMrodUKXDulIYq0W9ZAeEtsihsbF73Xdzz8I7sDOG7OK0MOt21CXhgGg
+sfUuF61ZtHpbgWNo4vOXzMs8Em5nkw==
+=z/3Y
+-----END PGP SIGNATURE-----
+
+--fpcebxxfb6nwe2en--
