@@ -2,51 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF2B67AB314
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 15:51:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 301D27AB38B
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 16:23:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234147AbjIVNvZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Sep 2023 09:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56110 "EHLO
+        id S234287AbjIVOXW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Sep 2023 10:23:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234146AbjIVNvZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 09:51:25 -0400
+        with ESMTP id S234279AbjIVOXV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 10:23:21 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E990E92
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 06:51:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A8D7196
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 07:23:15 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qjgYu-0008I6-Kh; Fri, 22 Sep 2023 15:51:16 +0200
+        id 1qjh3l-0000pY-MN; Fri, 22 Sep 2023 16:23:09 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qjgYt-008BA2-3E; Fri, 22 Sep 2023 15:51:15 +0200
+        id 1qjh3i-008Bgp-MT; Fri, 22 Sep 2023 16:23:06 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qjgYs-003uUD-Q3; Fri, 22 Sep 2023 15:51:14 +0200
-Date:   Fri, 22 Sep 2023 15:51:15 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     thierry.reding@gmail.com, linux@rasmusvillemoes.dk,
-        linux-pwm@vger.kernel.org, rogan@dawes.za.net,
-        Fabio Estevam <festevam@denx.de>
-Subject: Re: [PATCH] pwm: mxs: Fix zero duty cycle
-Message-ID: <20230922135115.b54nkj4njwjsbsfw@pengutronix.de>
-References: <20230922121752.344965-1-festevam@gmail.com>
+        id 1qjh3i-003v4x-D5; Fri, 22 Sep 2023 16:23:06 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kernel@pengutronix.de, Fabio Estevam <festevam@denx.de>,
+        Rogan Dawes <rogan@dawes.za.net>
+Subject: [PATCH] leds: pwm: Don't disable the PWM when the LED should be off
+Date:   Fri, 22 Sep 2023 16:23:04 +0200
+Message-Id: <20230922142304.1685985-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tfzopaalzx5d7br4"
-Content-Disposition: inline
-In-Reply-To: <20230922121752.344965-1-festevam@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2358; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=XnBN/XmJZQHCrjBXlLV8sinMK8oe+bJtL8pFLlH92vA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlDaNH8ZcBOorCKNAk1F+c/aYmIXMRpE3Whwz62 /JRGxg8HveJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQ2jRwAKCRCPgPtYfRL+ Th5XB/9Phru/8jkIpHKhK8R3wYSxpyyqNpzFZp2qB62WUqLGi/iyrVy/ojDRg2YQXBA/CErKUby oewmtoXJyNI1oTCX9JKFl43oQD3JoGA2odNVarhtO3/0aX2w7NcHVAUyNwEIRRGV9FDFno5/wAE kaD7vv7ymcfIBp9ef5w4qhFsu1seVeK6MJ3Np9Vso4wuhN0HWSSDI1lXPpQ90tCPWAQx2XX+7y4 o1Cyx5BIiU4nRTFsjG/WyLTRfIgx5EnO/JwNlTP7wRaN2fabHHhYs9mDonXMQCZttKrJm/Ycxmg BSSAeA55jj3IIH6EnZy05p5tpoIdPWn5fEQ2jSp5YASz1dbx
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,86 +56,65 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Disabling a PWM (i.e. calling pwm_apply_state with .enabled = false)
+gives no guarantees about what the PWM output does. It might freeze
+where it currently is, or go in a High-Z state or drive the active or
+inactive state, it might even continue to toggle.
 
---tfzopaalzx5d7br4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To ensure that the LED gets really disabled when brightness is set to
+zero, don't disable the PWM.
 
-Hello Fabio,
+This fixes disabling a leds-pwm LED on i.MX28 (and others). The PWM on
+this SoC is one of those that freezes its output on disable, so if you
+disable an LED that is full on, it stays on. If you disable a LED with
+half brightness it goes off in 50% of the cases and full on in the other
+50%.
 
-On Fri, Sep 22, 2023 at 09:17:52AM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <festevam@denx.de>
->=20
-> Currently, when a duty cycle of zero is requested, the PWM stops
-> getting updated. This causes the minimal brightness of an LED to not
-> turned off completely as expected.
->=20
-> For example, driving an LED via led-pwm and running:
->=20
-> echo 255 >  /sys/class/leds/red/brightness
->=20
-> makes the LED to go to its maximum brightness as expected.
->=20
-> After running:
->=20
-> echo 0 >  /sys/class/leds/red/brightness
->=20
-> The PWM controlled LED does not turn off. Instead, the LED brightness
-> stays at its maximum.
->=20
-> The reason for this behavior is that when brightness is set to 0,
-> state->enabled goes to 0 and the PWM is disabled by setting the
-> PWM_CTRL + CLR register.
->=20
-> Fix this problem by keeping the PWM controller turned on, even in
-> the case when a zero duty cycle is requested.
->=20
-> Fixes: bf29c2ff82fd ("pwm: mxs: Implement ->apply()")
-> Reported-by: Rogan Dawes <rogan@dawes.za.net>
-> Signed-off-by: Fabio Estevam <festevam@denx.de>
-> Tested-by: Rogan Dawes <rogan@dawes.za.net>
-> ---
->  drivers/pwm/pwm-mxs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
-> index 766dbc58dad8..f8ad616eaba2 100644
-> --- a/drivers/pwm/pwm-mxs.c
-> +++ b/drivers/pwm/pwm-mxs.c
-> @@ -65,7 +65,7 @@ static int mxs_pwm_apply(struct pwm_chip *chip, struct =
-pwm_device *pwm,
->  			return ret;
->  	}
-> =20
-> -	if (!state->enabled && pwm_is_enabled(pwm))
-> +	if (pwm_is_enabled(pwm))
->  		writel(1 << pwm->hwpwm, mxs->base + PWM_CTRL + CLR);
-> =20
->  	rate =3D clk_get_rate(mxs->clk);
+Reported-by: Rogan Dawes <rogan@dawes.za.net>
+Reported-by: Fabio Estevam <festevam@denx.de>
+Fixes: 41c42ff5dbe2 ("leds: simple driver for pwm driven LEDs")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-This patch is wrong. I'll prepare a better fix.
+this is a follow up to
+https://lore.kernel.org/linux-pwm/20230922121752.344965-1-festevam@gmail.com
+
+I knew the problem and already tried to address it a few years ago, see e.g.
+https://lore.kernel.org/linux-pwm/20180806155129.cjcc7okmwtaujf43@pengutronix.de
+. Back then the discussion didn't result in a fix, though. So here is
+another effort to fix it. Since 2018 at least the documentation
+situation is a bit clearer and we have:
+
+	As a consumer, don't rely on the output's state for a disabled PWM. If it's
+	easily possible, drivers are supposed to emit the inactive state, but some
+	drivers cannot. If you rely on getting the inactive state, use .duty_cycle=0,
+	.enabled=true.
+
+in the docs since commit 80a22fde803a ("pwm: Document that the pinstate
+of a disabled PWM isn't reliable").
 
 Best regards
 Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+ drivers/leds/leds-pwm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---tfzopaalzx5d7br4
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 419b710984ab..5e26aa34de01 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -53,7 +53,7 @@ static int led_pwm_set(struct led_classdev *led_cdev,
+ 		duty = led_dat->pwmstate.period - duty;
+ 
+ 	led_dat->pwmstate.duty_cycle = duty;
+-	led_dat->pwmstate.enabled = duty > 0;
++	led_dat->pwmstate.enabled = 1;
+ 	return pwm_apply_state(led_dat->pwm, &led_dat->pwmstate);
+ }
+ 
 
------BEGIN PGP SIGNATURE-----
+base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+-- 
+2.40.1
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUNm9MACgkQj4D7WH0S
-/k4HuAf+J2uhL/S4ZKIZstmzqj2OEJDLXrZ7vOtabLqOYDClAu0wMZw0+YziTr9s
-o8+ZqCwbu1Cn2CI5sek0YhuFS9PyCkM0UQlQMh+VT83XAIBHC3XZIkqo6CoXZAz7
-WoVHjXAnmzshPbGn+TmbIPIpc9ldULc6ilCZvIoZi9vfCyWLb0vcA84ouQkE2/Xw
-ABhE2ItczQd40q/mvHhUUQsI00oL3FVnWFrsoINgCQbx7FhGH20LBK+sxZaTXm/W
-W2lWaONDbQYRnmV9oM7waqVFZNcI8nrWb5wT0RitCsnGJMEWWHU/+mwuinybLY5a
-G6MlkCnpXmlU2JgmLVe2z7XS/etgbQ==
-=h416
------END PGP SIGNATURE-----
-
---tfzopaalzx5d7br4--
