@@ -2,133 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F5157AA942
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 08:47:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 008E17AAA6A
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 09:38:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjIVGrb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Sep 2023 02:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
+        id S230494AbjIVHiD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Sep 2023 03:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjIVGra (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 02:47:30 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA8F114
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Sep 2023 23:47:23 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qjZwR-0004KT-P2; Fri, 22 Sep 2023 08:47:07 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qjZwN-0086Rh-Ok; Fri, 22 Sep 2023 08:47:03 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qjZwN-003oy9-DY; Fri, 22 Sep 2023 08:47:03 +0200
-Date:   Fri, 22 Sep 2023 08:47:04 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     John Watts <contact@jookia.org>
-Cc:     Aleksandr Shubin <privatesub2@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v6 0/3] Add support for Allwinner PWM on D1/T113s/R329
- SoCs
-Message-ID: <20230922064704.hlytxjyjo4rekjux@pengutronix.de>
-References: <20230824114038.891493-1-privatesub2@gmail.com>
- <ZPfn-0OAL7-3DCmt@titan>
- <20230921212736.nw6ctlimtrxfksbu@pengutronix.de>
- <ZQy3F_VtOL3XWcl0@titan>
+        with ESMTP id S231200AbjIVHiD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 03:38:03 -0400
+Received: from mail.loanfly.pl (mail.loanfly.pl [141.94.250.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5A9180
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 00:37:55 -0700 (PDT)
+Received: by mail.loanfly.pl (Postfix, from userid 1002)
+        id 84EDAA5CD2; Fri, 22 Sep 2023 07:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=loanfly.pl; s=mail;
+        t=1695368222; bh=Y0HnXqH+26AP5Uq6M8BQXaj1HIAPQY/WndV9tkpAHHU=;
+        h=Date:From:To:Subject:From;
+        b=neNGwBXbbttEFBpZpn21yfwT0ZlKONvkFmcaxpmU0gLpOcs+UAWg6/Qfh3Y4ARgbM
+         /7jR18Tu8V+4nR9G5pl7czYvaKX071BOdOEioUPOvs9BwhJu/gjgGWKQcbtt3h4eSX
+         SP8isFezwosX47IbWtKY0qXU0ypj5JKcM6OV6Y5sNyPwnj7MTOSLXj8228NcfZzFwV
+         HrouiYxcaCjQKKIgyBNUz8haB946AhsXpmmOBOO/ZCVfzUeEMhJbDnzV05xlQWjWiw
+         fMbdGKrH7lbmy2Qm4CDXux7gZ/YpRe6zFs4IrGTLVYBpIJXPmUkYLx6dP3Q9WOLKse
+         kuA6rnhju63Tw==
+Received: by mail.loanfly.pl for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 07:36:20 GMT
+Message-ID: <20230922064500-0.1.cp.1gtxd.0.g6h6042bcn@loanfly.pl>
+Date:   Fri, 22 Sep 2023 07:36:20 GMT
+From:   "Damian Cichocki" <damian.cichocki@loanfly.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: =?UTF-8?Q?Pytanie_o_samoch=C3=B3d?=
+X-Mailer: mail.loanfly.pl
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bww26scqrw5ezmb2"
-Content-Disposition: inline
-In-Reply-To: <ZQy3F_VtOL3XWcl0@titan>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_ABUSE_SURBL,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Dzie=C5=84 dobry,
 
---bww26scqrw5ezmb2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Czy interesuje Pa=C5=84stwa rozwi=C4=85zanie umo=C5=BCliwiaj=C4=85ce moni=
+torowanie samochod=C3=B3w firmowych oraz optymalizacj=C4=99 koszt=C3=B3w =
+ich utrzymania?=20
 
-Hey John,
 
-On Fri, Sep 22, 2023 at 07:35:19AM +1000, John Watts wrote:
-> On Thu, Sep 21, 2023 at 11:27:36PM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hi John,
-> >=20
-> > On Wed, Sep 06, 2023 at 12:46:19PM +1000, John Watts wrote:
-> > > On Thu, Aug 24, 2023 at 02:40:24PM +0300, Aleksandr Shubin wrote:
-> > > > This series adds support for PWM controller on new
-> > > > Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
-> > > > provides basic functionality for control PWM channels.
-> > >=20
-> > > I have tested this patch and earlier versions successfully on a Mango=
- Pi MQ
-> > > Dual and verified it outputs a PWM signal.
-> >=20
-> > If you want that documented, the usual thing to do is to include a
-> > Tested-by: tag in your reply.
->=20
-> That's a good idea! I'll take a closer look under a scope and against the=
- data
-> sheet and give another tested-by then when I can. I'm not sure how close =
-that
-> gets to a reviewed-by but I don't have the experience in driver developme=
-nt to
-> know if something is off in the design.
-
-Tested-by has little to nothing to do with development or review. If you
-tested that patch and it worked for you, that's enough to give such a
-tag.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bww26scqrw5ezmb2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUNOGcACgkQj4D7WH0S
-/k5rHwf/WlCqmSa7FGJOCv1iloPyW8uz1VP/sNtNI2shOtERwNwaZ4iocMFo/o8I
-LMITmzxh2ZgB34KBWh96Qy5i3BvvnU7Fzjy6t3OpR0+hjVCy7/LvgKtlA7q9VEb/
-tpenCJ38H4rWdTPUsX2OnWOeCfVIvc6Lh7HzUwX/01ekwVbni3MxczQ12CsV3/yC
-DIWTheVJrpQHYT9a7qNlzFDralW3MeJrthV04iWvoOpyLMvmx7d0vN5KwlWrMwb2
-bPqgcVOmHnUj3lYPjFVQh8cb4E4DGd0P1QNS8S4gfosRfcMkWq16ymwUVOgSB8+/
-w6DynP75YpVgCXDeg6SYfoL4HF1iTQ==
-=v75W
------END PGP SIGNATURE-----
-
---bww26scqrw5ezmb2--
+Pozdrawiam,
+Damian Cichocki
