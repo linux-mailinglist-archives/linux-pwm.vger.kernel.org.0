@@ -2,52 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C514A7ABA13
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 21:28:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F37B7ABAF5
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Sep 2023 23:17:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233900AbjIVT2z (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 22 Sep 2023 15:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50328 "EHLO
+        id S229844AbjIVVRq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 22 Sep 2023 17:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233950AbjIVT2y (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 15:28:54 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D01DC6
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 12:28:49 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qjlpT-0008Ti-OT; Fri, 22 Sep 2023 21:28:43 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qjlpS-008Ei9-7n; Fri, 22 Sep 2023 21:28:42 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qjlpR-003ymr-UV; Fri, 22 Sep 2023 21:28:41 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        with ESMTP id S229808AbjIVVRp (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 22 Sep 2023 17:17:45 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2469DE8
+        for <linux-pwm@vger.kernel.org>; Fri, 22 Sep 2023 14:17:40 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD6CC433C8;
+        Fri, 22 Sep 2023 21:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695417459;
+        bh=Si8g+TFji3EHeLWTCrwxT+KxSVzn8oTXYkKRkhBHtfU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R9lwbitVfe2UTFqrcwaLcOkCoWPDhRaIhrRBKesWMrrHTfR6MoqdoRbFMKQ/M0QUU
+         vH0Je9qjsGtxwMkVedQm2lcCZeGdTq6wfvGMen5vjv4FKRH9NB/8RH8wOnGJGGRXd7
+         MTQAJ96DFF+qR5+1GDBXSYvPEtods62rksmvzf8M/1KdogFQpAYzomFeVDdsUcMBlf
+         0Zsr0kkFWNY9cQS8QRafspEImWqYApXp/HTeCqJ5Yy1L+ERZ9gqHviJPIWjUy1E5og
+         uXw7RoHS9edmHDMfpzHI1MKLZgqQeDPfSbwrGZl3G/aoUGTbqLtTnyLMwLdsko1mSx
+         jLS6sOzrP+VNg==
+Received: (nullmailer pid 3633302 invoked by uid 1000);
+        Fri, 22 Sep 2023 21:17:37 -0000
+Date:   Fri, 22 Sep 2023 16:17:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>
-To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, Fabio Estevam <festevam@denx.de>,
-        Rogan Dawes <rogan@dawes.za.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de, linux-leds@vger.kernel.org
-Subject: [PATCH v2] leds: pwm: Don't disable the PWM when the LED should be off
-Date:   Fri, 22 Sep 2023 21:28:34 +0200
-Message-Id: <20230922192834.1695727-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
+Cc:     Fabio Estevam <festevam@gmail.com>, thierry.reding@gmail.com,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@denx.de>
+Subject: Re: [PATCH 3/3] dt-bindings: pwm: mxs: Allow passing #pwm-cells = <2>
+Message-ID: <20230922211737.GA3628801-robh@kernel.org>
+References: <20230921184348.290261-1-festevam@gmail.com>
+ <20230921184348.290261-3-festevam@gmail.com>
+ <20230921195909.ulpoqvrixocwqou2@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=YQULS5nn70vH2x9IM1JE9IcARldHBYVPhEH9hJaOOCo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlDerhBE4sCtfRtqVTUH+6U2VMDRD+b3qTqOnpn b0KngBbpciJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZQ3q4QAKCRCPgPtYfRL+ TqCBB/9jmSxn2JnBS6EcdbL+qkiJJQcQvkHo+BCtXDLmgKYZQLlaCgtOXxkVIfwbQ8JkUCGY5Pm 3T/TNSFPEXkIYmqHMwYL/NExJ+zBCF7n7GzDoTXPlrk0yMtvRJFEXKOYFKuTadbE4bRkv/lI7t/ h3e5z4tRJNPUr2OnBwTu8LvBBgI5PRnKiFDmBDXd6QCg4fR0cJVQPIFp1ZT2CBCrfz7posysR+Y +SIYPoRTa5AN/cNNeJFxfyKmsvvT7thppItHaMaLnkqcDMZs9XMuNoE6VRXox82s5/nvWfLb/uz un2Olo8hBQQ8bLx9kgr+VWCq6tDWPTQQ5c4jgHMXzFMkgfZi
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+In-Reply-To: <20230921195909.ulpoqvrixocwqou2@pengutronix.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,62 +55,25 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Disabling a PWM (i.e. calling pwm_apply_state with .enabled = false)
-gives no guarantees what the PWM output does. It might freeze where it
-currently is, or go in a High-Z state or drive the active or inactive
-state, it might even continue to toggle.
+On Thu, Sep 21, 2023 at 09:59:09PM +0200, Uwe Kleine-König wrote:
+> Hello Fabio,
+> 
+> On Thu, Sep 21, 2023 at 03:43:48PM -0300, Fabio Estevam wrote:
+> > From: Fabio Estevam <festevam@denx.de>
+> > 
+> > All the in-tree imx23 and imx28 devicetrees use #pwm-cells = <2>.
+> > 
+> > Allow it in the schema to avoid warnings.
+> > 
+> > It is still possible for a devicetree to pass the third cell with the
+> > PWM polarity though.
+> > 
+> > This is similar to imx-pwm.yaml that allows #pwm-cells to be 2 or 3.
+> 
+> Alternatively switch all devicetrees to use = <3>? That's what I'd
+> prefer given that the PWM supports both polarities.
 
-To ensure that the LED gets really disabled, don't disable the PWM even
-when .duty_cycle is zero.
+Technically, that could break older clients predating 3 cell support. 
+But maybe that's far back enough now to not care. Either way,
 
-This fixes disabling a leds-pwm LED on i.MX28. The PWM on this SoC is
-one of those that freezes its output on disable, so if you disable an
-LED that is full on, it stays on. If you disable a LED with half
-brightness it goes off in 50% of the cases and full on in the other 50%.
-
-Reported-by: Rogan Dawes <rogan@dawes.za.net>
-Reported-by: Fabio Estevam <festevam@denx.de>
-Reviewed-by: Fabio Estevam <festevam@denx.de>
-Fixes: 41c42ff5dbe2 ("leds: simple driver for pwm driven LEDs")
-Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
----
-Hello,
-
-changes since (implicit) v1 sent with Message-Id:
-20230922142304.1685985-1-u.kleine-koenig@pengutronix.de:
-
- - Use true instead of 1 to assign the boot .enabled. Thanks Fabio for
-   that hint.
- - Add Reviewed-by: tag for Fabio
-
-In reply to the first iteration, Rogan wrote that
-"led_dat->pwmstate.enabled = true; also addresses the problem".
-
-BTW, this patch is similar to deaeeda2051f ("backlight: pwm_bl: Don't
-rely on a disabled PWM emiting inactive state") which fixed the same
-issue for PWM backlights.
-
-Best regards
-Uwe
-
- drivers/leds/leds-pwm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 419b710984ab..2b3bf1353b70 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -53,7 +53,7 @@ static int led_pwm_set(struct led_classdev *led_cdev,
- 		duty = led_dat->pwmstate.period - duty;
- 
- 	led_dat->pwmstate.duty_cycle = duty;
--	led_dat->pwmstate.enabled = duty > 0;
-+	led_dat->pwmstate.enabled = true;
- 	return pwm_apply_state(led_dat->pwm, &led_dat->pwmstate);
- }
- 
-
-base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
--- 
-2.40.1
-
+Acked-by: Rob Herring <robh@kernel.org>
