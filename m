@@ -2,104 +2,80 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E3D37AC52A
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 Sep 2023 23:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F6F7ACD5E
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 Sep 2023 03:01:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbjIWVF2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 23 Sep 2023 17:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
+        id S229614AbjIYBBt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 24 Sep 2023 21:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjIWVF1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 23 Sep 2023 17:05:27 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A5511B
-        for <linux-pwm@vger.kernel.org>; Sat, 23 Sep 2023 14:05:20 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qk9oU-0000JV-Q8; Sat, 23 Sep 2023 23:05:18 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qk9oT-008UTq-Od; Sat, 23 Sep 2023 23:05:17 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qk9oT-004F4d-FA; Sat, 23 Sep 2023 23:05:17 +0200
-Date:   Sat, 23 Sep 2023 23:05:17 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     shawnguo@kernel.org, thierry.reding@gmail.com,
+        with ESMTP id S229514AbjIYBBt (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 24 Sep 2023 21:01:49 -0400
+X-Greylist: delayed 82 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 24 Sep 2023 18:01:42 PDT
+Received: from out-206.mta1.migadu.com (out-206.mta1.migadu.com [IPv6:2001:41d0:203:375::ce])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3E8D3
+        for <linux-pwm@vger.kernel.org>; Sun, 24 Sep 2023 18:01:42 -0700 (PDT)
+Date:   Mon, 25 Sep 2023 10:59:30 +1000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
+        t=1695603618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WNjNopcEjQfN12kbCSrhwvqbW3WLiiX1nbplJr5QSuY=;
+        b=Uy2NbfVfgMCJhxEwf5RUAEi72sP541r0gEtly66WLMFGw+E+GK13+B4eOJO9WBf1kr97pf
+        fA8b4PrtfrpEoBBWAM5N4ieLMHYDZgv8sZqx1lJUxBdgEd+puHEvNUOciFuDObBKqqhmHE
+        rJwW8j7SfLM+ge56WO2ivx1UcJvlTtf5pE4O0b8mDQiRsGJ/RoPqr5sS8Oui3OZ8YIk7Tt
+        +mss1ofxS1mCjnXK7WASDHFdA9bOWMzQB7XCRKqFi6zfjV+o97cFHmrbTqP+yR+zOOXINR
+        BLFWywt2VK9Vzz22A3JW5wwVdSL2dmNukowvgN6vflBw2DBKC5f99fVVRMO8Lg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   John Watts <contact@jookia.org>
+To:     Aleksandr Shubin <privatesub2@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
         linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, Fabio Estevam <festevam@denx.de>
-Subject: Re: [PATCH v2 3/3] ARM: dts: mxs: Switch to #pwm-cells = <3>
-Message-ID: <20230923210517.zbipvauk5jfmy3cc@pengutronix.de>
-References: <20230922124229.359543-1-festevam@gmail.com>
- <20230922124229.359543-3-festevam@gmail.com>
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v6 0/3] Add support for Allwinner PWM on D1/T113s/R329
+ SoCs
+Message-ID: <ZRDbcvhO3Z2G4Elf@titan>
+References: <20230824114038.891493-1-privatesub2@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zm6td2pbnnwho3ex"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230922124229.359543-3-festevam@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230824114038.891493-1-privatesub2@gmail.com>
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Aug 24, 2023 at 02:40:24PM +0300, Aleksandr Shubin wrote:
+> Hi,
+> 
+> This series adds support for PWM controller on new
+> Allwinner's SoCs, such as D1, T113s and R329. The implemented driver
+> provides basic functionality for control PWM channels.
 
---zm6td2pbnnwho3ex
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I did some more testing of this and it seems to work on my T113, outputting
+correct periods and duty cycles.
 
-Hello Fabio,
+Tested-by: John Watts <contact@jookia.org>
 
-On Fri, Sep 22, 2023 at 09:42:29AM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <festevam@denx.de>
->=20
-> mxs-pwm.yaml documents that #pwm-cells should be 3.
->=20
-> This is correct as the last cell may indicate the PWM polarity.
->=20
-> Convert all mxs devicetree files to using #pwm-cells =3D <3> for
-> consistency.
->=20
-> Signed-off-by: Fabio Estevam <festevam@denx.de>
-
-Very nice,
-
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks!
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---zm6td2pbnnwho3ex
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUPUwwACgkQj4D7WH0S
-/k70RQf+KK0J/5rruL7ki9dy+rFPYQ7jEf/niXOwLGktTba756QoOH/3FtFf+cma
-zPOLHffLeHduug1DIIMrQonAz41qBlsYlQVZ20CK+ez4o6lH3fR2yp6PePdhOVW9
-42Crp9xN0iD7vTsE3MWkpRa8UGFH54MfG3P/4g1iTxKpOl6QB6pBA3VBCbZm40JI
-Jco5J61GTns88g3eKYTW8uzP1tsrmbHpKuqQ+woRbjZV2cFnHW6Dttti8ryo67U4
-axd/FBTIlsllEAp1M1lCBOEiunEevmDXMVTnJNcCOe2ElQBbEH8TtFmxzmknf837
-CWrFQ79d4SfFamyMCKIrdxWdCIthRw==
-=55uq
------END PGP SIGNATURE-----
-
---zm6td2pbnnwho3ex--
+John.
