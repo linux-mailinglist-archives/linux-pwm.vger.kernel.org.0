@@ -2,66 +2,82 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF0C7AD82C
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 Sep 2023 14:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E9517ADCAC
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 Sep 2023 18:06:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbjIYMjd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 25 Sep 2023 08:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
+        id S233025AbjIYQHC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 25 Sep 2023 12:07:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjIYMja (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 Sep 2023 08:39:30 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E499F9C
-        for <linux-pwm@vger.kernel.org>; Mon, 25 Sep 2023 05:39:23 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qkkrs-0002iA-UL; Mon, 25 Sep 2023 14:39:16 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qkkro-008sBk-4H; Mon, 25 Sep 2023 14:39:12 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qkkrn-004fbH-Qd; Mon, 25 Sep 2023 14:39:11 +0200
-Date:   Mon, 25 Sep 2023 14:39:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc:     William Qiu <william.qiu@starfivetech.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229437AbjIYQHB (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 25 Sep 2023 12:07:01 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6EE7FF;
+        Mon, 25 Sep 2023 09:06:49 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-502e7d66c1eso10989868e87.1;
+        Mon, 25 Sep 2023 09:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695658008; x=1696262808; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FjZKX49WJeWkaYPbNflpa2QWaqaLadeSJAuUwOEodTY=;
+        b=K2ANID33kOdxOpUxB3MgFwKFezipaVNhlsNOPpja4SZ+AhZ/Nj9KLQAT+J5RSNrrUJ
+         UX8NxTSdd2oBj7G2sOyik0xh0WtGuABS3X1d13EY2zCIfDvhOTKV98aX4LiEfnQXEcQf
+         7XREOQd9TamEyo4g9M+EBrmt0AsrHWxoxrrsVBiG6t5YMu52N2yWqLyQue5K5PDsfdTv
+         xwQYnCo/JvkjQHSvC5Afp8Ngpzps3sh43qVahgpceJGQkoFNUPYAbkeIhghTcUX2VLTG
+         7FlnRQ5Ohnm+450Y/YND3U1wJnvJlCodk+bRWwXpjpAc7VAchmBnI/xn25SyWYvcA6U1
+         g/gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695658008; x=1696262808;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FjZKX49WJeWkaYPbNflpa2QWaqaLadeSJAuUwOEodTY=;
+        b=SOLIEkLXjaPcC2A86TD6RHkQyP2l0w5tDEW3/g6t7ipwTGCh3tp2iJW8yXLuIsbPIO
+         vL4woBBaTukneuQZlGKEmCPHwcu/r76pc4C+2Qo6k7WGRoYcaF9c9NmTiVkuHn2UxfWX
+         ULSvK8/ZLKTXYc7AbwbnudQncz1tbEEZNTe3worFmGsyltBydwgtn15QoFdvJmzwN4Mb
+         ilZbMw4uOrkL6oqd3Sa7rL2fUvOXjxLVyXoeLPZVofDk+2SPhDGRoRAiPRlZmhYDd5vf
+         l+NIreYS5BRhzo0ALG21Ni9/hpfhQWms4a9UsQBSnq80+kFUJqWC56/63jXgmdpoRbas
+         98Vw==
+X-Gm-Message-State: AOJu0YzEtSvDkl+5qzwriJ4ysfUvimux6ZUKqdIbi3Wv5TikK9m6rgdR
+        ewbVQGOoTVDKr5Lmd++FCWevgLX0sso=
+X-Google-Smtp-Source: AGHT+IH0wCeQkCSpQeBTRA9+Npw8GsrZOWLPf6GO4bZlYYGot9Sw0NpfireqAbkt3KX+f2GH23iRxA==
+X-Received: by 2002:a05:6512:3b2a:b0:500:780b:5bdc with SMTP id f42-20020a0565123b2a00b00500780b5bdcmr6788554lfv.49.1695658007769;
+        Mon, 25 Sep 2023 09:06:47 -0700 (PDT)
+Received: from [192.168.1.10] ([95.43.220.235])
+        by smtp.googlemail.com with ESMTPSA id h20-20020a0564020e9400b0053441519ed5sm542151eda.88.2023.09.25.09.06.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Sep 2023 09:06:47 -0700 (PDT)
+Subject: Re: [PATCH v5 2/2] media: rc: remove ir-rx51 in favour of generic
+ pwm-ir-tx
+To:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v5 2/4] pwm: starfive: Add PWM driver support
-Message-ID: <20230925123908.4hohhjarviwattgw@pengutronix.de>
-References: <20230922092848.72664-1-william.qiu@starfivetech.com>
- <20230922092848.72664-3-william.qiu@starfivetech.com>
- <CAJM55Z8d368MAQPpnRO8giKmasN5XETP40i3JVdW_0gTF3Ktqg@mail.gmail.com>
- <ade1c061-63d8-8b48-b8e2-69416cd8aa48@starfivetech.com>
- <CAJM55Z83VUkoTNCMbd9GJ7NpwgeQqMjCxPmYonEAXBjr5Tx9Zg@mail.gmail.com>
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Timo Kokkonen <timo.t.kokkonen@iki.fi>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        "Sicelo A . Mhlongo" <absicsz@gmail.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <cover.1693577725.git.sean@mess.org>
+ <e5325e826935f0bd8566152b6a5fa799b2429d43.1693577725.git.sean@mess.org>
+From:   Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Message-ID: <99f0042f-538c-bcaf-96fd-bac24a87f88e@gmail.com>
+Date:   Mon, 25 Sep 2023 19:06:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Firefox/60.0 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xq7ehyumhkwfir4g"
-Content-Disposition: inline
-In-Reply-To: <CAJM55Z83VUkoTNCMbd9GJ7NpwgeQqMjCxPmYonEAXBjr5Tx9Zg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <e5325e826935f0bd8566152b6a5fa799b2429d43.1693577725.git.sean@mess.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -69,50 +85,28 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---xq7ehyumhkwfir4g
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On 1.09.23 г. 17:18 ч., Sean Young wrote:
+> The ir-rx51 is a pwm-based TX driver specific to the N900. This can be
+> handled entirely by the generic pwm-ir-tx driver, and in fact the
+> pwm-ir-tx driver has been compatible with ir-rx51 from the start.
+> 
 
-On Mon, Sep 25, 2023 at 10:31:49AM +0000, Emil Renner Berthing wrote:
-> William Qiu wrote:
-> > The PTC, short for PWM/TIMER/CONUTER, comes from OpenCore's ip, but onl=
-y PWM
-> > mode is used in the JH7110. So the register still has the word "PTC".
-> > s the best way to change all the prefix to STARFIVE?
->=20
-> I see. Yeah, since you're only using the P from PTC the PTC name doesn't =
-make a
-> lot of sense anymore. I'd just call this whole driver
-> STARFIVE_PWM_/starfive_pwm_ consistently.
+Unfortunately, pwm-ir-tx does not work on n900. My investigation shows 
+that for some reason usleep_range() sleeps for at least 300-400 us more 
+than what interval it is requested to sleep. I played with cyclictest 
+from rt-tests package and it gives similar results - increasing the 
+priority helps, but I was not able to make it sleep for less that 300 us 
+in average. I tried cpu_latency_qos_add_request() in pwm-ir-tx, but it 
+made no difference.
 
-I don't care much how the driver is named iff there is only a single
-type of hardware unit on this platform that can be used as a PWM.
-However if the hardware manual calls this unit PTC I'd at least mention
-that in a comment at the top of the driver.
+I get similar results on motorola droid4 (OMAP4), albeit there average 
+sleep is in 200-300 us range, which makes me believe that either OMAPs 
+have issues with hrtimers or the config we use has some issue which 
+leads to scheduler latency. Or, something else...
 
-Thanks
-Uwe
+In either case help is appreciated to dig further trying to find the 
+reason for such a big delay.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xq7ehyumhkwfir4g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmURf2wACgkQj4D7WH0S
-/k6D+Af/UurV0zRPp6nHaILWU8arJcTP6K/TCv9XK/rO3ubSZPfvesG/KvvgwhAL
-NdrQu6EKqRNNIh8gXlBP7VXgQgDlot+E9fNz10BKinKi7i7VFQvJ/W+rzZ91me1+
-Z7uxb+hvVa+GZMdc6VTeosGlnuSjugyggCwjGohFanhF6QqGMxn5hpS1/ZrKlCM+
-gUDVk5fLhLnT/Mo8GlsQEcbULJnmyZ9JSnoif+XJLvs5F55GUlQOlua9PxXegP4p
-Jsp5Oxx+wuy5BTkgVm+y1dwV3p4XNjjS/K29nn6ggZNPolFqm1Hx169DIUqE8Zqg
-YZRA5euMXw7FxnPNLsMic9EoBOzFXw==
-=M19j
------END PGP SIGNATURE-----
-
---xq7ehyumhkwfir4g--
+Regards,
+Ivo
