@@ -2,96 +2,132 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD17B7AE6F9
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Sep 2023 09:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF89C7AE842
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Sep 2023 10:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231908AbjIZHhy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 Sep 2023 03:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51614 "EHLO
+        id S229725AbjIZIqa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 Sep 2023 04:46:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjIZHhx (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 Sep 2023 03:37:53 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DDDC8DC;
-        Tue, 26 Sep 2023 00:37:46 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2D61380A3;
-        Tue, 26 Sep 2023 07:37:46 +0000 (UTC)
-Date:   Tue, 26 Sep 2023 10:37:44 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sean Young <sean@mess.org>
-Cc:     Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        linux-media@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Timo Kokkonen <timo.t.kokkonen@iki.fi>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        "Sicelo A . Mhlongo" <absicsz@gmail.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] media: rc: remove ir-rx51 in favour of generic
- pwm-ir-tx
-Message-ID: <20230926073744.GA5285@atomide.com>
-References: <cover.1693577725.git.sean@mess.org>
- <e5325e826935f0bd8566152b6a5fa799b2429d43.1693577725.git.sean@mess.org>
- <99f0042f-538c-bcaf-96fd-bac24a87f88e@gmail.com>
- <ZRKFUb1vRtn82bgn@gofer.mess.org>
+        with ESMTP id S233997AbjIZIq3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 Sep 2023 04:46:29 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C72116
+        for <linux-pwm@vger.kernel.org>; Tue, 26 Sep 2023 01:46:22 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ql3hx-0001rA-ML; Tue, 26 Sep 2023 10:46:17 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ql3hw-00944b-PE; Tue, 26 Sep 2023 10:46:16 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ql3hw-004v1V-FJ; Tue, 26 Sep 2023 10:46:16 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        kernel@pengutronix.de, Aisheng Dong <aisheng.dong@nxp.com>,
+        Aisheng Dong <asheng.dong@nxp.com>
+Subject: [PATCH v2] backlight: pwm_bl: Disable PWM on shutdown and suspend
+Date:   Tue, 26 Sep 2023 10:46:12 +0200
+Message-Id: <20230926084612.2074692-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2350; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=myBRYCIAZltIzhrPDB4R1oTzNuWS3qCPj8GGNGHtlNM=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlEppT9S2myial7V8bce8oBnlyhiZOIuHU0C9ub d74ywozCDGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRKaUwAKCRCPgPtYfRL+ TgneB/9ytQS103Iv+CcLveNZBMrG4DvhEE8sba5AtuM2KrhjfeqXuvGfMokTKexeKZ2Ljs50CWi 8Yn8r0b3fHFBV8fX191AjL+rzel5IYvQnjMR948QbaTJtiarPBx5VgYv//VW9tR2yFZQjNRFWoJ Geqr2V/Le1BEeCyCK/hNNvAnz+w3cacUI2KeZscWBqKaeg+6Xl2sGKFM9p7++L16wNfvu2EwGN6 hmcsRU1xoCzHIK3MRrFH5BuySUZojHyJh1lFo1MRRV3eyt3YTuxa+8Uigly1c5DLGgb62UfDuBa thqfVxrbFnVH02T5xz0N7Bk7MtBQg1jFn0423s+BP5CT7d5p
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZRKFUb1vRtn82bgn@gofer.mess.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-* Sean Young <sean@mess.org> [230926 07:16]:
-> On Mon, Sep 25, 2023 at 07:06:44PM +0300, Ivaylo Dimitrov wrote:
-> > On 1.09.23 г. 17:18 ч., Sean Young wrote:
-> > > The ir-rx51 is a pwm-based TX driver specific to the N900. This can be
-> > > handled entirely by the generic pwm-ir-tx driver, and in fact the
-> > > pwm-ir-tx driver has been compatible with ir-rx51 from the start.
-> > > 
-> > 
-> > Unfortunately, pwm-ir-tx does not work on n900. My investigation shows that
-> > for some reason usleep_range() sleeps for at least 300-400 us more than what
-> > interval it is requested to sleep. I played with cyclictest from rt-tests
-> > package and it gives similar results - increasing the priority helps, but I
-> > was not able to make it sleep for less that 300 us in average. I tried
-> > cpu_latency_qos_add_request() in pwm-ir-tx, but it made no difference.
-> > 
-> > I get similar results on motorola droid4 (OMAP4), albeit there average sleep
-> > is in 200-300 us range, which makes me believe that either OMAPs have issues
-> > with hrtimers or the config we use has some issue which leads to scheduler
-> > latency. Or, something else...
-> 
-> The pwm-ir-tx driver does suffer from this problem, but I was under the
-> impression that the ir-rx51 has the same problem.
-> 
-> > In either case help is appreciated to dig further trying to find the reason
-> > for such a big delay.
-> 
-> pwm-ir-tx uses usleep_range() and ir-rx51 uses hrtimers. I thought that
-> usleep_range() uses hrtimers; however if you're not seeing the same delay
-> on ir-rx51 then maybe it's time to switch pwm-ir-tx to hrtimers.
+Since commit 00e7e698bff1 ("backlight: pwm_bl: Configure pwm only once
+per backlight toggle") calling pwm_backlight_power_off() doesn't disable
+the PWM any more. However this is necessary to suspend because PWM
+drivers usually refuse to suspend if they are still enabled.
 
-Maybe using fsleep() fixes this issue? See commit c6af13d33475 ("timer: add
-fsleep for flexible sleeping"), and Documentation/timers/timers-howto.rst.
+Also adapt shutdown to disable the PWM for similar reasons.
 
-The long wake-up time for an idle state could explain the values. I think
-Ivaylo already tested with most cpuidle states disabled via sysfs though.
+Fixes: 00e7e698bff1 ("backlight: pwm_bl: Configure pwm only once per backlight toggle")
+Reported-by: Aisheng Dong <aisheng.dong@nxp.com>
+Tested-by: Aisheng Dong <asheng.dong@nxp.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-> I don't have a n900 to test on, unfortunately.
+(implicit) v1 was sent in the mail thread containing the patch that
+became 00e7e698bff1 and had some copy-and-paste-failure in the Subject
+line. Both are fixed here.
 
-If you want one for development, the maemo folks cc:ed here likely have
-some available devices.
+Best regards
+Uwe
 
-Regards,
+ drivers/video/backlight/pwm_bl.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Tony
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index a51fbab96368..3ed7b76aa06c 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -638,8 +638,13 @@ static void pwm_backlight_shutdown(struct platform_device *pdev)
+ {
+ 	struct backlight_device *bl = platform_get_drvdata(pdev);
+ 	struct pwm_bl_data *pb = bl_get_data(bl);
++	struct pwm_state state;
+ 
+ 	pwm_backlight_power_off(pb);
++	pwm_get_state(pb->pwm, &state);
++	state.duty_cycle = 0;
++	state.enabled = false;
++	pwm_apply_state(pb->pwm, &state);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -647,12 +652,24 @@ static int pwm_backlight_suspend(struct device *dev)
+ {
+ 	struct backlight_device *bl = dev_get_drvdata(dev);
+ 	struct pwm_bl_data *pb = bl_get_data(bl);
++	struct pwm_state state;
+ 
+ 	if (pb->notify)
+ 		pb->notify(pb->dev, 0);
+ 
+ 	pwm_backlight_power_off(pb);
+ 
++	/*
++	 * Note that disabling the PWM doesn't guarantee that the output stays
++	 * at its inactive state. However without the PWM disabled, the PWM
++	 * driver refuses to suspend. So disable here even though this might
++	 * enable the backlight on poorly designed boards.
++	 */
++	pwm_get_state(pb->pwm, &state);
++	state.duty_cycle = 0;
++	state.enabled = false;
++	pwm_apply_state(pb->pwm, &state);
++
+ 	if (pb->notify_after)
+ 		pb->notify_after(pb->dev, 0);
+ 
+
+base-commit: 8fff9184d1b5810dca5dd1a02726d4f844af88fc
+-- 
+2.40.1
+
