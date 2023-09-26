@@ -2,158 +2,155 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FB77AEF56
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Sep 2023 17:14:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6581D7AF4EB
+	for <lists+linux-pwm@lfdr.de>; Tue, 26 Sep 2023 22:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjIZPBa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 26 Sep 2023 11:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36688 "EHLO
+        id S235691AbjIZUS1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 26 Sep 2023 16:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233134AbjIZPB3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 Sep 2023 11:01:29 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6496611D
-        for <linux-pwm@vger.kernel.org>; Tue, 26 Sep 2023 08:01:22 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ql9Yt-0008Ns-FK; Tue, 26 Sep 2023 17:01:19 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ql9Ys-009883-5s; Tue, 26 Sep 2023 17:01:18 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ql9Yr-004zRC-Sn; Tue, 26 Sep 2023 17:01:17 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>, linux-pwm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        dri-devel@lists.freedesktop.org,
+        with ESMTP id S233232AbjIZUS1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 26 Sep 2023 16:18:27 -0400
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0BC193;
+        Tue, 26 Sep 2023 13:18:18 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id E979E1000B2; Tue, 26 Sep 2023 21:18:16 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1695759496; bh=T2t6tUV8F3RVHU1NTNGqT5xpfoZaTbVdG1BjZ0eXs5U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZPjwXYcjtXvLSniQ86lo5+xTlypyv4zAqmj+uztkYev+AEyI6GDQFsBV4FpN+6E9h
+         dYIJ33tUeCJWG/DXqk1vajUIKdUTys4INNIVAMcykCeiHPxsGoNBTd1DEDjpfeImKh
+         1LWROf7Sk2j4Bdh0rGx/9jg3KZrLqEZCbSlrRZ6MUW4vcsOtC95Ktwlqg5qfCwis/H
+         Ve2d/qmWEd3JXm0YmYkd/vyn7t2Dy5wvGeIlw0ed1daTMe19aBbCJNNwYgKWQASKog
+         J7ytGkPbUAuDR1XLprXZ1wzig+zhfz2EoEq/qWwvqviy4zYAV2qxfBTtxfaX4s96Ja
+         Tzk/e6bII+G5w==
+Date:   Tue, 26 Sep 2023 21:18:16 +0100
+From:   Sean Young <sean@mess.org>
+To:     Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc:     linux-media@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        kernel@pengutronix.de
-Subject: [PATCH v3] backlight: pwm_bl: Disable PWM on shutdown and suspend
-Date:   Tue, 26 Sep 2023 17:01:16 +0200
-Message-Id: <20230926150116.2124384-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Timo Kokkonen <timo.t.kokkonen@iki.fi>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        "Sicelo A . Mhlongo" <absicsz@gmail.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] media: rc: remove ir-rx51 in favour of generic
+ pwm-ir-tx
+Message-ID: <ZRM8iLORjKw3z/h5@gofer.mess.org>
+References: <cover.1693577725.git.sean@mess.org>
+ <e5325e826935f0bd8566152b6a5fa799b2429d43.1693577725.git.sean@mess.org>
+ <99f0042f-538c-bcaf-96fd-bac24a87f88e@gmail.com>
+ <ZRKFUb1vRtn82bgn@gofer.mess.org>
+ <1715e2bf-5d02-4f20-1476-29a1fdf350b1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3373; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=61FP9G4E8M9F1pTU3wuzp0u70AjlycxIrURHR3QM++A=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlEvI7fKNBv6WMI58kdVa/QJNJIswdnYz9HDjvW tYOgyJzHGqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZRLyOwAKCRCPgPtYfRL+ TsHMCACY/dDub8/nxtStdqOoD5+FVknnQRRC/OVkjMROReL5w0mRNZfZlwSQjiDmaT1M278Bn9E fLCddz5oyxegjFJOhVwF6Yxykfct6HKMG3bUZePVS0z/wlJ0ncuAJ2dc1EK9l5XNpH7SoF5HoSa lLGwS7aUcnaZh+ueKtWVsJrGwtT3ldeddIwnZq+bbHzyQGD3g/DN9JnAaKnpKw2EDtN2tTbtdh4 ZQv4K7DsOKqT4XS55EFrsVvnG+tSU5G9au+kjxDPsvrEFT5xPhqn8B2Y4oqWeRftN0tMoKLwOfl COQj9T89QKgnwHzZb4MdAiE+oISw5CccM+Whma2peneA4QIP
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1715e2bf-5d02-4f20-1476-29a1fdf350b1@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Since commit 00e7e698bff1 ("backlight: pwm_bl: Configure pwm only once
-per backlight toggle") calling pwm_backlight_power_off() doesn't disable
-the PWM any more. However this is necessary to suspend because PWM
-drivers usually refuse to suspend if they are still enabled.
+On Tue, Sep 26, 2023 at 03:43:18PM +0300, Ivaylo Dimitrov wrote:
+> On 26.09.23 г. 10:16 ч., Sean Young wrote:
+> > On Mon, Sep 25, 2023 at 07:06:44PM +0300, Ivaylo Dimitrov wrote:
+> > > On 1.09.23 г. 17:18 ч., Sean Young wrote:
+> > > > The ir-rx51 is a pwm-based TX driver specific to the N900. This can be
+> > > > handled entirely by the generic pwm-ir-tx driver, and in fact the
+> > > > pwm-ir-tx driver has been compatible with ir-rx51 from the start.
+> > > > 
+> > > 
+> > > Unfortunately, pwm-ir-tx does not work on n900. My investigation shows that
+> > > for some reason usleep_range() sleeps for at least 300-400 us more than what
+> > > interval it is requested to sleep. I played with cyclictest from rt-tests
+> > > package and it gives similar results - increasing the priority helps, but I
+> > > was not able to make it sleep for less that 300 us in average. I tried
+> > > cpu_latency_qos_add_request() in pwm-ir-tx, but it made no difference.
+> > > 
+> > > I get similar results on motorola droid4 (OMAP4), albeit there average sleep
+> > > is in 200-300 us range, which makes me believe that either OMAPs have issues
+> > > with hrtimers or the config we use has some issue which leads to scheduler
+> > > latency. Or, something else...
+> > 
+> > The pwm-ir-tx driver does suffer from this problem, but I was under the
+> > impression that the ir-rx51 has the same problem.
+> > 
+> 
+> Could you elaborate on the "pwm-ir-tx driver does suffer from this problem"?
+> Where do you see that?
 
-Also adapt shutdown and remove callbacks to disable the PWM for similar
-reasons.
+So on a raspberry pi (model 3b), if I use the pwm-ir-tx driver, I get random
+delays of up to 100us. It's a bit random and certainly depends on the load.
 
-Fixes: 00e7e698bff1 ("backlight: pwm_bl: Configure pwm only once per backlight toggle")
-Reported-by: Aisheng Dong <aisheng.dong@nxp.com>
-Tested-by: Aisheng Dong <aisheng.dong@nxp.com>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+I'm measuring using a logic analyzer.
 
-On Tue, Sep 26, 2023 at 12:11:37PM +0100, Daniel Thompson wrote:
-> Changes proposed look good (and the comment about badly designed boards
-> going to HiZ state we super helpful).
+There have been reports by others on different machines with random delays
+and/or transmit failures (as in the receiver occassionally fails to decode
+the IR). I usually suggest they use the gpio-ir-tx driver, which does work
+as far as I know (the signal looks perfect with a logic analyzer).
 
-I didn't mention Hi-Z and note that disabling a PWM can even result in
-the hardware driving to the active level. (This can happen for example
-for pwm-mxs and pwm-imx27.)
+So far I've taken the view that the driver works ok for most situations,
+since IR is usually fine with upto 100us missing here or there.
 
-> Only thing from my is why there is no attempt to disable the PWM
-> from the .remove_new() callback.
+The gpio-ir-tx driver works much better because it does the entire send 
+under spinlock - obviously that has its own problems, because an IR transmit
+can be 10s or even 100s of milliseconds.
 
-Good catch, good I didn't manage to send out a v3 for the email address
-fix yet :-) So here comes a v3 with two improvments:
+I've never known of a solution to the pwm-ir-tx driver. If using hrtimers
+directly improves the situation even a bit, then that would be great.
 
-Changes since v2
-(https://lore.kernel.org/dri-devel/20230926084612.2074692-1-u.kleine-koenig@pengutronix.de):
+> ir-rx51 does not suffer from the same problem (albeit it has its own one,
+> see bellow)
+> 
+> > > In either case help is appreciated to dig further trying to find the reason
+> > > for such a big delay.
+> > 
+> > pwm-ir-tx uses usleep_range() and ir-rx51 uses hrtimers. I thought that
+> > usleep_range() uses hrtimers; however if you're not seeing the same delay
+> > on ir-rx51 then maybe it's time to switch pwm-ir-tx to hrtimers.
+> > 
+> 
+> usleep_range() is backed by hrtimers already, however the difference comes
+> from how hrtimer is used in ir-rx51: it uses timer callback function that
+> gets called in softirq context, while usleep_range() puts the task in
+> TASK_UNINTERRUPTIBLE state and then calls schedule_hrtimeout_range(). For
+> some reason it takes at least 200-400 us (on average) even on OMAP4 to
+> switch back to TASK_RUNNING state.
+> 
+> The issue with ir-rx51 and the way it uses hrtimers is that it calls
+> pwm_apply_state() from hrtimer function, which is not ok, per the comment
+> here
+> https://elixir.bootlin.com/linux/v6.6-rc3/source/drivers/pwm/core.c#L502
+> 
+> I can make pwm-ir-tx switch to hrtimers, that's not an issue, but I am
+> afraid that there is some general scheduler or timers (or something else)
+> issue that manifests itself with usleep_range() misbehaving.
 
- - Fix Aisheng Dong's email address
- - also disable PWM in .remove and adapt commit log accordingly (Thanks
-   to Daniel Thompson for spotting that).
+If we can switch pwm-ir-tx to hrtimers, that would be great.
 
- drivers/video/backlight/pwm_bl.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+The ir-rx51 removal patches have already been queued to media_staging;
+we may have to remove them from there if we can't solve this problem.
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index a51fbab96368..390398ae07b9 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -629,6 +629,10 @@ static void pwm_backlight_remove(struct platform_device *pdev)
- 
- 	backlight_device_unregister(bl);
- 	pwm_backlight_power_off(pb);
-+	pwm_get_state(pb->pwm, &state);
-+	state.duty_cycle = 0;
-+	state.enabled = false;
-+	pwm_apply_state(pb->pwm, &state);
- 
- 	if (pb->exit)
- 		pb->exit(&pdev->dev);
-@@ -638,8 +642,13 @@ static void pwm_backlight_shutdown(struct platform_device *pdev)
- {
- 	struct backlight_device *bl = platform_get_drvdata(pdev);
- 	struct pwm_bl_data *pb = bl_get_data(bl);
-+	struct pwm_state state;
- 
- 	pwm_backlight_power_off(pb);
-+	pwm_get_state(pb->pwm, &state);
-+	state.duty_cycle = 0;
-+	state.enabled = false;
-+	pwm_apply_state(pb->pwm, &state);
- }
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -647,12 +656,24 @@ static int pwm_backlight_suspend(struct device *dev)
- {
- 	struct backlight_device *bl = dev_get_drvdata(dev);
- 	struct pwm_bl_data *pb = bl_get_data(bl);
-+	struct pwm_state state;
- 
- 	if (pb->notify)
- 		pb->notify(pb->dev, 0);
- 
- 	pwm_backlight_power_off(pb);
- 
-+	/*
-+	 * Note that disabling the PWM doesn't guarantee that the output stays
-+	 * at its inactive state. However without the PWM disabled, the PWM
-+	 * driver refuses to suspend. So disable here even though this might
-+	 * enable the backlight on poorly designed boards.
-+	 */
-+	pwm_get_state(pb->pwm, &state);
-+	state.duty_cycle = 0;
-+	state.enabled = false;
-+	pwm_apply_state(pb->pwm, &state);
-+
- 	if (pb->notify_after)
- 		pb->notify_after(pb->dev, 0);
- 
+> > I don't have a n900 to test on, unfortunately.
+> > 
+> 
+> I have and once I have an idea what's going on will port pwm-ir-tx to
+> hrtimers, if needed. Don't want to do it now as I am afraid the completion I
+> will have to use will have the same latency problems as usleep_range()
 
-base-commit: 8fff9184d1b5810dca5dd1a02726d4f844af88fc
--- 
-2.40.1
+That would be fantastic. Please do keep us up to date with how you are
+getting on. Like I said, it would be nice to this resolved before the next
+merge window.
 
+Thanks,
+Sean
