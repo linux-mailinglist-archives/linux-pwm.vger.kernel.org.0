@@ -2,86 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D2BA7B4290
-	for <lists+linux-pwm@lfdr.de>; Sat, 30 Sep 2023 19:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 898F27B434F
+	for <lists+linux-pwm@lfdr.de>; Sat, 30 Sep 2023 21:34:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234621AbjI3RN6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 30 Sep 2023 13:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33152 "EHLO
+        id S229489AbjI3TeW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 30 Sep 2023 15:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234618AbjI3RN5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Sep 2023 13:13:57 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DEBDA;
-        Sat, 30 Sep 2023 10:13:55 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38UHAj6m029256;
-        Sat, 30 Sep 2023 17:13:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=tPZUYHwk6HWhrWsa+W5RI018Wu2qZXEBdXlhaDCQaiE=;
- b=cWRmqIzWL0VvxDZfn2pfABHrbn0jb7zZjUlPB2DPoSSIOgC/qiS2Mrh9QhgqHK/3drVD
- oaL6v2gK20JAtb+QjT/+rXcC5IVSMmlrJmWzEnwRiEFbA5EZAVGfLnQMhb+WWufQT5sG
- HOl3ikQpLtO1b7LM2ulBGjOhZJzAq+HDbyscFEFkAPrZcT7MgsTWfQyzzXyKuAGQ5+Yz
- LZ9zsm38ffBVFKIxlmEilPuoYNqb7+JVlRWcI4CIn5TubCCzC/x8aXaFSxBpF2A0djIu
- eovx1pkekAFT5z6LbFg1JoE4lxey0N760A1R2kO017v/LwiY1vvo79kArTJMih6ynDbe FQ== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tebw98uas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 30 Sep 2023 17:13:13 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38UHDCiR015465
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 30 Sep 2023 17:13:12 GMT
-Received: from [10.216.56.186] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Sat, 30 Sep
- 2023 10:13:05 -0700
-Message-ID: <446f4c92-ca04-d325-4a5f-140b9bcdbd19@quicinc.com>
-Date:   Sat, 30 Sep 2023 22:43:02 +0530
+        with ESMTP id S229447AbjI3TeW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 30 Sep 2023 15:34:22 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA58CF
+        for <linux-pwm@vger.kernel.org>; Sat, 30 Sep 2023 12:34:19 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qmfj4-00042n-Ll; Sat, 30 Sep 2023 21:34:06 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qmfj3-00A7Oc-8H; Sat, 30 Sep 2023 21:34:05 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qmfj2-006cq8-Sn; Sat, 30 Sep 2023 21:34:04 +0200
+Date:   Sat, 30 Sep 2023 21:34:04 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Jagan Teki <jagan@edgeble.ai>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 01/13] dt-bindings: pwm: rockchip: Document rv1126-pwm
+Message-ID: <20230930193404.cmr7c4rwprjkk6z7@pengutronix.de>
+References: <20230731103518.2906147-1-jagan@edgeble.ai>
+ <20230731103518.2906147-2-jagan@edgeble.ai>
+ <20230731145129.mrrkb6tcuvlpmxan@pengutronix.de>
+ <5533260.88bMQJbFj6@phil>
+ <3efc0e28-3a5a-bfc7-57e3-e7e3d5ae1740@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH V12 3/3] arm64: dts: ipq6018: add pwm node
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <ndesaulniers@google.com>,
-        <trix@redhat.com>, <baruch@tkos.co.il>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <llvm@lists.linux.dev>
-CC:     <linux-pwm@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <nathan@kernel.org>
-References: <20230925065915.3467964-1-quic_devipriy@quicinc.com>
- <20230925065915.3467964-4-quic_devipriy@quicinc.com>
- <9155c1e3-d163-b2ad-8a7b-57ffeca2b122@quicinc.com>
- <c673ba8e-76e5-4a23-b395-f61ec59d9bc7@linaro.org>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <c673ba8e-76e5-4a23-b395-f61ec59d9bc7@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: c7g7Yw7VwwREmNhpUoa7PRnNfdJa6d9f
-X-Proofpoint-GUID: c7g7Yw7VwwREmNhpUoa7PRnNfdJa6d9f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-09-30_16,2023-09-28_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=982 impostorscore=0 lowpriorityscore=0
- malwarescore=0 bulkscore=0 spamscore=0 adultscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2309300142
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ubitorhfqz2eres4"
+Content-Disposition: inline
+In-Reply-To: <3efc0e28-3a5a-bfc7-57e3-e7e3d5ae1740@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -89,95 +63,61 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--ubitorhfqz2eres4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 9/30/2023 9:05 PM, Krzysztof Kozlowski wrote:
-> On 29/09/2023 13:47, Devi Priya wrote:
->>
->>
->> On 9/25/2023 12:29 PM, Devi Priya wrote:
->>> Describe the PWM block on IPQ6018.
->>>
->>> The PWM is in the TCSR area. Make &tcsr "simple-mfd" compatible, and add
->>> &pwm as child of &tcsr.
->>>
->>> Add also ipq6018 specific compatible string.
->>>
->>> Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
->>> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
->>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->>> ---
->>> v12:
->>>
->>>     No change
->>>
->>> v11:
->>>
->>>     No change
->>>
->>> v10:
->>>
->>>     No change
->>>
->>> v9:
->>>
->>>     Add 'ranges' property (Rob)
->>>
->>> v8:
->>>
->>>     Add size cell to 'reg' (Rob)
->>>
->>> v7:
->>>
->>>     Use 'reg' instead of 'offset' (Rob)
->>>
->>>     Add qcom,tcsr-ipq6018 (Rob)
->>>
->>>     Drop clock-names (Bjorn)
->>>
->>> v6:
->>>
->>>     Make the PWM node child of TCSR (Rob Herring)
->>>
->>>     Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
->>>
->>> v5: Use qcom,pwm-regs for TCSR phandle instead of direct regs
->>>
->>> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
->>>
->>>    arch/arm64/boot/dts/qcom/ipq6018.dtsi | 15 ++++++++++++++-
->>>    1 file changed, 14 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
->>> index 47b8b1d6730a..cadd2c583526 100644
->>> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
->>> @@ -398,8 +398,21 @@ tcsr_mutex: hwlock@1905000 {
->>>    		};
->>>    
->>>    		tcsr: syscon@1937000 {
->>> -			compatible = "qcom,tcsr-ipq6018", "syscon";
->>> +			compatible = "qcom,tcsr-ipq6018", "syscon", "simple-mfd";
->>>    			reg = <0x0 0x01937000 0x0 0x21000>;
->>> +			#address-cells = <1>;
->>> +			#size-cells = <1>;
->>> +			ranges = <0x0 0x0 0x01937000 0x21000>;
->>> +
->> Hi Krzysztof,
->> Referring to
->> https://lore.kernel.org/all/20220909091056.128949-1-krzysztof.kozlowski@linaro.org/,
->> it seems that the TCSR block should
->> not have any child nodes. Could you pls provide your suggestions on pwm
->> being added as the child node?
-> 
-> If you are sure that TCSR contains PWM and all registers are there, then
-> feel free to add proper binding. Sending untested patch is not the way
-> to go.
+Hello Heiko,
 
-Sure, okay
+On Tue, Aug 15, 2023 at 10:59:57PM +0200, Krzysztof Kozlowski wrote:
+> On 09/08/2023 16:02, Heiko Stuebner wrote:
+> > Am Montag, 31. Juli 2023, 16:51:29 CEST schrieb Uwe Kleine-K=F6nig:
+> >> On Mon, Jul 31, 2023 at 04:05:06PM +0530, Jagan Teki wrote:
+> >>> Document pwm compatible for rv1126 which is fallback compatible
+> >>> of rk3328-pwm group.
+> >>>
+> >>> Signed-off-by: Jagan Teki <jagan@edgeble.ai>
+> >>
+> >> Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >>
+> >> Should this go in via the pwm tree, or together with the other patches
+> >> via rockchip?
+> >=20
+> > I have no clue, sadly. I _can_ pick it up, but I guess that would
+> > require an Ack from Thierry? Otherwise I guess we'll need to wait
+> > for him.
+>=20
+> General preference is that binding goes via subsystem (so Thierry), but
+> there are no driver changes here and your DTS branch would benefit from
+> it (less dtbs_check warnings). Therefore I propose - just grab it -
+> unless Thierry wants other way.
 
-Thanks,
-Devi Priya
-> 
-> Best regards,
-> Krzysztof
-> 
+There are no other changes on the list to that file, so I don't think
+we'll run into conflicts. I guess Thierry doesn't feel strong here, so
+I'm with Krzysztof here: Pick up this patch together with patches #2 to
+#5.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ubitorhfqz2eres4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUYeCsACgkQj4D7WH0S
+/k60AAf/RHvVEkErr8WLnxhT5b2uMA4OBD63CyJTpWXV51pjHtuo64WKA4pAKpSZ
+ROgtKqDjV4WE+vJAJfFu7eBLaX42J9G7On+w3sxOi1kNA90BdBQC9Org1Uqnn9Ig
+XUbq05OwRf/2nKWhCq79kbdQgXVoIRTvyxlt5gciQ7nW96RayA0sIoBj5HrxgLC5
+x1iN23uWo0fVM57lMGClHyNQacwXV4D0/p0+ScdgTj1sqC3kbearRNu/epNM+A/B
+76I8Lh4TcKpvL7S4p9sBUB4yXx3mQVOEFuxUWS7Uc2WXNkGtqCBA15qtmdknhMbJ
+3GP4wd6pDarFGTJjmNmO2/fRSIFn5w==
+=Q19Z
+-----END PGP SIGNATURE-----
+
+--ubitorhfqz2eres4--
