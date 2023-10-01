@@ -2,200 +2,188 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C8B87B47E8
-	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 16:15:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1D3D7B4821
+	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 16:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235075AbjJAOP6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 1 Oct 2023 10:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
+        id S235074AbjJAOoL (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 1 Oct 2023 10:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235023AbjJAOP5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 10:15:57 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BFAAB
-        for <linux-pwm@vger.kernel.org>; Sun,  1 Oct 2023 07:15:54 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-9a65f9147ccso2120652766b.1
-        for <linux-pwm@vger.kernel.org>; Sun, 01 Oct 2023 07:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1696169753; x=1696774553; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4DdqFn2Z3bHJeGohpJ3zhXHAdEVBVwH1IEgmvBHO5so=;
-        b=5CRJObg0cpw0c7qP/N3Vdv55MFb98rUPxv/QazH/Uq1XhtrgCjjc5GkPycpXSb4xhJ
-         C+A3Rk6Kj/FBgMMH8uTcZfAkoFjHldkFQI5fF45AyI3ZUsvqW6AK+AJvISRPA17uKtm0
-         eiXHTW+VhXu4cZ7b0KL/IaXZWAAxel7Vvb+tQC4XH9S7xMz4nr78SyFxF7KcUnUJIGU/
-         gawRSyh/XX6u56oJRlIOW4SJkTma68CR4SkbRF3ZDVwcA3Hg2Tp/x+kJUoFvav8+RZF+
-         mtI5RCLBjuJFNoqURB0A2+nR/gC3G/hT0nUxf7fQIfd7Obyd77bofpd2uwhQULsDmBNY
-         upPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696169753; x=1696774553;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4DdqFn2Z3bHJeGohpJ3zhXHAdEVBVwH1IEgmvBHO5so=;
-        b=gxWqYs4Bu3tG1ARqEWRzwbbo/AhMEClZSkL5SQl4Z85osuKndqN3Vb4/t7uicC/Wpl
-         tU2DXc7fWtEVN926bygc34dpv0cE3iuHTaZgqOEEwCnKdmLhtde+v3k6QngLWKYluCAQ
-         6GEPfIlLGzY465E65gsp5AgEWEvnyLCjmFsRsP0mznTl6IHnjJFcxXHnpVAtCXsISUrt
-         bjtu2HUJjwnns9nvS6+NU+zdFwvThKO1bPDIrCjJ21AZyZyPj7SPW7XbsJtv3OHfVl/W
-         IdeCydprrKwd93yIYlNXBPxoAVMzVdbI55Hf9wqB7/b9jLeY1rPCklwq4JuBuBkgwsNq
-         Unqg==
-X-Gm-Message-State: AOJu0YwIy6p60ZQhXEFy/x815XiqdC+Q2wBk1agUGK0Bnyw4wd5R3HhW
-        J8ktePcEkYCwTQ0eFM3bp6NHbQ==
-X-Google-Smtp-Source: AGHT+IGfkqrZpht21J94fVHX40sis+d2WV+7LP64gzm7OfSZf+TfpiTrv+Tt+D/AwQLcsMTUv3Fdiw==
-X-Received: by 2002:a17:906:51c9:b0:9ae:6355:5ef4 with SMTP id v9-20020a17090651c900b009ae63555ef4mr7661552ejk.3.1696169752514;
-        Sun, 01 Oct 2023 07:15:52 -0700 (PDT)
-Received: from localhost (k10064.upc-k.chello.nl. [62.108.10.64])
-        by smtp.gmail.com with ESMTPSA id c6-20020a170906340600b009b2f2451381sm2345488ejb.182.2023.10.01.07.15.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Oct 2023 07:15:52 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Sun, 01 Oct 2023 16:15:50 +0200
-Message-Id: <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
-Cc:     <konrad.dybcio@linaro.org>, <u.kleine-koenig@pengutronix.de>,
-        <quic_subbaram@quicinc.com>, <quic_gurus@quicinc.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <kernel@quicinc.com>
-Subject: Re: [PATCH v5 0/7] Add support for LUT PPG
-From:   "Luca Weiss" <luca.weiss@fairphone.com>
-To:     "Anjelique Melendez" <quic_amelende@quicinc.com>, <pavel@ucw.cz>,
-        <lee@kernel.org>, <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20230929003901.15086-1-quic_amelende@quicinc.com>
-In-Reply-To: <20230929003901.15086-1-quic_amelende@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230173AbjJAOoL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 10:44:11 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D189183;
+        Sun,  1 Oct 2023 07:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696171449; x=1727707449;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eaZ6EntjZndNXd4oKfdQ0McHn3ig2hRV/qhNZ2cj228=;
+  b=PKzuV8KYQ74I0pZl59PncDSnGTv4sVzjyLM9d/FjJyi02NkcAnE2VuX7
+   OgslZok12MS0MXyxkMk4A+HlnocuV/+GCQhOP6Xg/MxQ6LZoRR24P1Pev
+   fIRo18K04oBjIne4niWQRKPSeT8NRpe9Ic7UxboOWR+y73X/IA+cGuVVz
+   sVazSTmTwcxSvXjXOJsnhfkwLEl4D+4yUOcPiiTYu9/fyjialLHH5iOuq
+   aynHYy8WN+4T2gVu3Q3ZcCV47zuR3kLFQrtfAhA141rKHOa7tzGoTO8wu
+   t5AaaQNLWWMgb+QfYVFHm5b9X3VBiBLrXBKuxHF0v6LFohZ6VaWbdxRzz
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="361906869"
+X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
+   d="scan'208";a="361906869"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 07:44:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10850"; a="840769901"
+X-IronPort-AV: E=Sophos;i="6.03,191,1694761200"; 
+   d="scan'208";a="840769901"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Oct 2023 07:44:02 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qmxfo-00058N-1r;
+        Sun, 01 Oct 2023 14:43:57 +0000
+Date:   Sun, 1 Oct 2023 22:43:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Sean Young <sean@mess.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc:     oe-kbuild-all@lists.linux.dev, Sean Young <sean@mess.org>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic
+ context
+Message-ID: <202310012229.ldJwkjOY-lkp@intel.com>
+References: <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri Sep 29, 2023 at 2:38 AM CEST, Anjelique Melendez wrote:
-> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
-> modules instead of LUT peripheral. This feature is called PPG.
->
-> This change series adds support for PPG. Thanks!
->
-> Changes since v4:
->   - Patch 3/7
->     - Get rid of r/w helpers
->     - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
->     - Update error path in qcom_pbs_trigger_event()
->     - Fix reverse christmas tree
->   - Patch 4/7
->     - Get rid of r/w helpers
->     - Update variables to use "sdam" instead of "nvmem"
->     - Fix comments
->     - Fix reverse christmas tree
->     - Update lpg_pattern_set() logic
->   - Patch 5/7
->     - Removed sdam_lut_base from lpg_data
-> Changes since v3:
->   - Patch 4/7
->     - Fix function returns
->     - Move register definition to top of file
->     - Revert max_brightness and probe accidental changes
->     - Combine init_sdam() and parse_sdam()
->     - Change error prints in probe to use dev_err_probe
->     - Remove ppg_en variable
->     - Update when pbs triggers are set/cleared
->   - Patch 6/7
->     - Remove use of nvmem_count
->     - Move register definition to top of file
->     - Remove lpg_get_sdam_lut_idx()
-> Changes since v2:
->   - Patch 1/7
->     - Fix dt_binding_check error
->     - Rename binding file to match compatible
->     - Iclude SoC specific comptaibles
->   - Patch 2/7
->     - Update nvmem-names list
->   - Patch 3/7
->     - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
->     - Fix return/break logic in qcom_pbs_wait_for_ack()
->     - Update iterators to be int
->     - Add constants
->     - Fix function calls in qcom_pbs_trigger_event()
->     - Remove unnessary comments
->     - Return -EPROBE_DEFER from get_pbs_client_device()
-> Changes since v1:
->   - Patch 1/7
->     - Fix dt_binding_check errors
->     - Update binding description
->   - Path 2/7
->     - Fix dt_binding_check errors
->     - Update per variant constraints
->     - Update nvmem description
->   - Patch 3/7
->     - Update get_pbs_client_device()
->     - Drop use of printk
->     - Remove unused function
->
-> Tested-by: Luca Weiss <luca.weiss@fairphone.com> # sdm632-fairphone-fp3 (=
-pmi632)
+Hi Sean,
 
-Hi Anjelique,
+kernel test robot noticed the following build errors:
 
-Actually I've retested this now on PMI632 (and also realized that my
-previous tests weren't correct and wasn't actually using hw_pattern).
+[auto build test ERROR on thierry-reding-pwm/for-next]
+[also build test ERROR on shawnguo/for-next atorgue-stm32/stm32-next media-tree/master linus/master v6.6-rc3 next-20230929]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Using the following commands (after boot) I'm expecting to get a
-500ms on 500ms off blinking pattern between white (255 255 255) and off
-(0 0 0).
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Young/media-pwm-ir-tx-trigger-edges-from-hrtimer-interrupt-context/20231001-194056
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
+patch link:    https://lore.kernel.org/r/1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean%40mess.org
+patch subject: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic context
+config: arm-randconfig-002-20231001 (https://download.01.org/0day-ci/archive/20231001/202310012229.ldJwkjOY-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231001/202310012229.ldJwkjOY-lkp@intel.com/reproduce)
 
-  echo pattern > /sys/class/leds/rgb:status/trigger
-  echo -1 > /sys/class/leds/rgb:status/repeat
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310012229.ldJwkjOY-lkp@intel.com/
 
-  echo "255 255 255" > /sys/class/leds/rgb:status/multi_intensity
-  echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
+All errors (new ones prefixed by >>):
 
-What I actually see is it blinking between cyan (0 255 255) and red (255
-0 0).
-At some point after playing with many patterns I got it to actually
-cycle between white and off, but I couldn't reproduce this again (or I
-didn't try hard enough).
+   In file included from include/linux/cpumask.h:10,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/slab.h:16,
+                    from include/linux/resource_ext.h:11,
+                    from include/linux/acpi.h:13,
+                    from include/linux/i2c.h:13,
+                    from drivers/input/misc/da7280.c:12:
+   include/linux/pwm.h: In function 'pwm_apply_state':
+>> include/linux/pwm.h:428:24: error: implicit declaration of function 'pwm_can_sleep'; did you mean 'cant_sleep'? [-Werror=implicit-function-declaration]
+     428 |         might_sleep_if(pwm_can_sleep(pwm));
+         |                        ^~~~~~~~~~~~~
+   include/linux/kernel.h:194:39: note: in definition of macro 'might_sleep_if'
+     194 | #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
+         |                                       ^~~~
+   In file included from drivers/input/misc/da7280.c:16:
+   include/linux/pwm.h: At top level:
+>> include/linux/pwm.h:455:20: error: conflicting types for 'pwm_can_sleep'; have 'bool(struct pwm_device *)' {aka '_Bool(struct pwm_device *)'}
+     455 | static inline bool pwm_can_sleep(struct pwm_device *pwm)
+         |                    ^~~~~~~~~~~~~
+   include/linux/pwm.h:428:24: note: previous implicit declaration of 'pwm_can_sleep' with type 'int()'
+     428 |         might_sleep_if(pwm_can_sleep(pwm));
+         |                        ^~~~~~~~~~~~~
+   include/linux/kernel.h:194:39: note: in definition of macro 'might_sleep_if'
+     194 | #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
+         |                                       ^~~~
+   cc1: some warnings being treated as errors
 
 
-But with this example it correctly blinks red on-off.
+vim +428 include/linux/pwm.h
 
-  echo "255 0 0" > /sys/class/leds/rgb:status/multi_intensity
-  echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
+   419	
+   420	struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id);
+   421	struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+   422					       struct fwnode_handle *fwnode,
+   423					       const char *con_id);
+   424	#else
+   425	static inline int pwm_apply_state(struct pwm_device *pwm,
+   426					  const struct pwm_state *state)
+   427	{
+ > 428		might_sleep_if(pwm_can_sleep(pwm));
+   429		return -ENOTSUPP;
+   430	}
+   431	
+   432	static inline int pwm_adjust_config(struct pwm_device *pwm)
+   433	{
+   434		return -ENOTSUPP;
+   435	}
+   436	
+   437	static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
+   438				     int period_ns)
+   439	{
+   440		might_sleep_if(pwm_can_sleep(pwm));
+   441		return -EINVAL;
+   442	}
+   443	
+   444	static inline int pwm_enable(struct pwm_device *pwm)
+   445	{
+   446		might_sleep_if(pwm_can_sleep(pwm));
+   447		return -EINVAL;
+   448	}
+   449	
+   450	static inline void pwm_disable(struct pwm_device *pwm)
+   451	{
+   452		might_sleep_if(pwm_can_sleep(pwm));
+   453	}
+   454	
+ > 455	static inline bool pwm_can_sleep(struct pwm_device *pwm)
+   456	{
+   457		return true;
+   458	}
+   459	
 
-With "0 255 0" and "0 0 255" the other colors also work fine, it's just
-the combinations that seem somewhat broken.
-
-Regards
-Luca
-
-
->
-> Anjelique Melendez (7):
->   dt-bindings: soc: qcom: Add qcom,pbs bindings
->   dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
->   soc: qcom: add QCOM PBS driver
->   leds: rgb: leds-qcom-lpg: Add support for single SDAM PPG
->   leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
->   leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT
->     SDAM
->   leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
->
->  .../bindings/leds/leds-qcom-lpg.yaml          |  89 ++++-
->  .../bindings/soc/qcom/qcom,pbs.yaml           |  46 +++
->  drivers/leds/rgb/leds-qcom-lpg.c              | 359 ++++++++++++++++--
->  drivers/soc/qcom/Kconfig                      |   9 +
->  drivers/soc/qcom/Makefile                     |   1 +
->  drivers/soc/qcom/qcom-pbs.c                   | 243 ++++++++++++
->  include/linux/soc/qcom/qcom-pbs.h             |  30 ++
->  7 files changed, 749 insertions(+), 28 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.y=
-aml
->  create mode 100644 drivers/soc/qcom/qcom-pbs.c
->  create mode 100644 include/linux/soc/qcom/qcom-pbs.h
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
