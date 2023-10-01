@@ -2,210 +2,158 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80BFC7B46F8
-	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 12:41:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E16567B4717
+	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 13:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234866AbjJAKlS (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 1 Oct 2023 06:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41596 "EHLO
+        id S234890AbjJALKb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 1 Oct 2023 07:10:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234817AbjJAKlM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 06:41:12 -0400
-X-Greylist: delayed 152457 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 01 Oct 2023 03:41:09 PDT
-Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26960D8;
-        Sun,  1 Oct 2023 03:41:09 -0700 (PDT)
-Received: by gofer.mess.org (Postfix, from userid 501)
-        id 8C6291007F9; Sun,  1 Oct 2023 11:41:07 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-        t=1696156867; bh=RSMxdZlA6dvGl+ue7BCTI/DiHrSS0pIbsuFSiBzaOJ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c9z9EUlgawEqlaCkIPyJ6mNMWC2WE3QL+yucOEtRFySKnL/fb7NL2zshpKzwoTkmv
-         44LYsYUlyznZDNPS6tcJCa6WODDu4ksUgG+bgTqodh7zRtgNaDL0ujp4ahdbJGeWsc
-         /yE/wxsgFWrdmO0FLUCdm306F9vcbcM1QlNDpjAfTLqMNzy5aQZPLVL/ynm9SDdROx
-         vB85Mj+LRA/DGUZEtXEnH59yRl47JPWWwFSzFY6+JBcAUeuB52UcBTw75XsBHouC6x
-         BmOVl48nSleG9qMnPkVIgA/WnlNuGKn2nMQP27/B+U0qB6gGZlBl2AUKqp7LSv/VYa
-         RNitSIyNv/rOQ==
+        with ESMTP id S234892AbjJALKb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 07:10:31 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A683BD
+        for <linux-pwm@vger.kernel.org>; Sun,  1 Oct 2023 04:10:28 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qmuLB-00025c-M3; Sun, 01 Oct 2023 13:10:25 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qmuLA-00AGkD-UN; Sun, 01 Oct 2023 13:10:24 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qmuLA-0070ms-L4; Sun, 01 Oct 2023 13:10:24 +0200
+Date:   Sun, 1 Oct 2023 13:10:24 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
+        Sean Young <sean@mess.org>
+Subject: Re: [PATCH v1 000/101] pwm: Fix lifetime issues for pwm_chips
+Message-ID: <20231001111024.a3ce3het2y3n7kvx@pengutronix.de>
+References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
+ <20230926100625.vudo7qp3h5r2dz62@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uqk2oi6j2yuidlmu"
+Content-Disposition: inline
+In-Reply-To: <20230926100625.vudo7qp3h5r2dz62@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-Received: from bigcore.mess.org (unknown [IPv6:2a02:8011:d000:212:ca7f:54ff:fe51:14d6])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by gofer.mess.org (Postfix) with ESMTPSA id D57F41007F6;
-        Sun,  1 Oct 2023 11:41:00 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-        t=1696156860; bh=RSMxdZlA6dvGl+ue7BCTI/DiHrSS0pIbsuFSiBzaOJ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Burzah2rsgdUFBELWQkDEpvEVUZuZ10sJsnvNNbRfakZycGZ1mt3/98/RYa/iw6D4
-         KU840KaAqRazeBe/+RR/xfltc+SSlg5DrZpoy1IzcnDOIBMozmNiKKpeWLC0MOViLL
-         5sfS5k1nunMjHzxWo94snpO5hz6l4mI0Tv1k8SJsVyDshiWy3q6Zn7svKI06GYwL+I
-         LrrreBQQAdNKv2Vqv8jvYwdX0rDbpj4QaEyK3nX6Z89UVnZ9qfMZqA5l/5qSAq5piT
-         NTHl62yvdP/bq9G9zOo4q7Sxtj7cUPj3PJ5oJf/iaYkQP7pIpeFd2YPU5slpZY1FMv
-         shX3PYzqFLeDA==
-From:   Sean Young <sean@mess.org>
-To:     Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH 2/2] media: pwm-ir-tx: trigger edges from hrtimer interrupt context
-Date:   Sun,  1 Oct 2023 11:40:30 +0100
-Message-ID: <7efe4229514001b835fa70d51973cd3306dc0b04.1696156485.git.sean@mess.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1696156485.git.sean@mess.org>
-References: <cover.1696156485.git.sean@mess.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pwm-ir-tx driver has to turn the pwm signal on and off, and suffers
-from delays as this is done in process context. Make this work in atomic
-context.
 
-This makes the driver much more precise.
+--uqk2oi6j2yuidlmu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Sean Young <sean@mess.org>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
----
- drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++--------
- 1 file changed, 63 insertions(+), 16 deletions(-)
+Hello again,
 
-diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-index c5f37c03af9c..557725a07a67 100644
---- a/drivers/media/rc/pwm-ir-tx.c
-+++ b/drivers/media/rc/pwm-ir-tx.c
-@@ -10,6 +10,8 @@
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/hrtimer.h>
-+#include <linux/completion.h>
- #include <media/rc-core.h>
- 
- #define DRIVER_NAME	"pwm-ir-tx"
-@@ -17,8 +19,13 @@
- 
- struct pwm_ir {
- 	struct pwm_device *pwm;
--	unsigned int carrier;
--	unsigned int duty_cycle;
-+	struct hrtimer timer;
-+	struct completion completion;
-+	uint carrier;
-+	uint duty_cycle;
-+	uint *txbuf;
-+	uint txbuf_len;
-+	uint txbuf_index;
- };
- 
- static const struct of_device_id pwm_ir_of_match[] = {
-@@ -55,33 +62,65 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
- 	struct pwm_ir *pwm_ir = dev->priv;
- 	struct pwm_device *pwm = pwm_ir->pwm;
- 	struct pwm_state state;
--	int i;
--	ktime_t edge;
--	long delta;
-+
-+	reinit_completion(&pwm_ir->completion);
- 
- 	pwm_init_state(pwm, &state);
- 
- 	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
- 	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
-+	state.enabled = false;
- 
--	edge = ktime_get();
-+	pwm_ir->txbuf = txbuf;
-+	pwm_ir->txbuf_len = count;
-+	pwm_ir->txbuf_index = 0;
- 
--	for (i = 0; i < count; i++) {
--		state.enabled = !(i % 2);
--		pwm_apply_state(pwm, &state);
-+	pwm_apply_state(pwm, &state);
- 
--		edge = ktime_add_us(edge, txbuf[i]);
--		delta = ktime_us_delta(edge, ktime_get());
--		if (delta > 0)
--			usleep_range(delta, delta + 10);
--	}
-+	hrtimer_start(&pwm_ir->timer, 1000, HRTIMER_MODE_REL);
- 
--	state.enabled = false;
--	pwm_apply_state(pwm, &state);
-+	wait_for_completion(&pwm_ir->completion);
- 
- 	return count;
- }
- 
-+static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
-+{
-+	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
-+	ktime_t now;
-+
-+	/*
-+	 * If we happen to hit an odd latency spike, loop through the
-+	 * pulses until we catch up.
-+	 */
-+	do {
-+		u64 ns;
-+
-+		if (pwm_ir->txbuf_index >= pwm_ir->txbuf_len) {
-+			/* Stop TX here */
-+			pwm_disable(pwm_ir->pwm);
-+
-+			complete(&pwm_ir->completion);
-+
-+			return HRTIMER_NORESTART;
-+		}
-+
-+		if (pwm_ir->txbuf_index % 2)
-+			pwm_disable(pwm_ir->pwm);
-+		else
-+			pwm_enable(pwm_ir->pwm);
-+
-+		ns = US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
-+		hrtimer_add_expires_ns(timer, ns);
-+
-+		pwm_ir->txbuf_index++;
-+
-+		now = timer->base->get_time();
-+	} while (hrtimer_get_expires_tv64(timer) < now);
-+
-+	return HRTIMER_RESTART;
-+}
-+
- static int pwm_ir_probe(struct platform_device *pdev)
- {
- 	struct pwm_ir *pwm_ir;
-@@ -96,8 +135,16 @@ static int pwm_ir_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm_ir->pwm))
- 		return PTR_ERR(pwm_ir->pwm);
- 
-+	if (pwm_can_sleep(pwm_ir->pwm)) {
-+		dev_err(&pdev->dev, "unsupported pwm device: driver can sleep\n");
-+		return -ENODEV;
-+	}
-+
- 	pwm_ir->carrier = 38000;
- 	pwm_ir->duty_cycle = 50;
-+	init_completion(&pwm_ir->completion);
-+	hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	pwm_ir->timer.function = pwm_ir_timer;
- 
- 	rcdev = devm_rc_allocate_device(&pdev->dev, RC_DRIVER_IR_RAW_TX);
- 	if (!rcdev)
--- 
-2.42.0
+On Tue, Sep 26, 2023 at 12:06:25PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Tue, Aug 08, 2023 at 07:17:50PM +0200, Uwe Kleine-K=F6nig wrote:
+> > this series addresses the issues I reported already earlier to this
+> > list[1]. It is based on pwm/for-next and several patches I already sent
+> > out, too. Maybe some of these have to be reworked (e.g. Thierry already
+> > signalled not to like the patches dropping runtime error messages) but
+> > in the expectation that I will have to create a v2 for this series, too
+> > and it actually fixes a race condition, I sent the patches out for
+> > review anyhow. For the same reason I didn't Cc: all the individual
+> > maintainers.
+> >=20
+> > If you want to actually test I suggest you fetch my complete history
+> > from
+> >=20
+> > 	https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
+> >=20
+> > .=20
+> >=20
+> > In the end drivers have to allocate their pwm_chip using
+> > pwmchip_alloc(). This is important for the memory backing the pwm_chip
+> > being able to have a longer life than the driver.
+> >=20
+> > The motivation for this series is to prepare the pwm framework to add a
+> > character device for each pwm_chip for easier and faster access to PWMs
+> > from userspace compared to the sysfs API. For such an extension proper
+> > lifetime tracking is important, too, as such a device can still be open
+> > if a PWM disappears.
+>=20
+> I wonder how this topic will continue. This series fixes a lifetime
+> issue that can result in a userspace triggered oops and it builds the
+> base for my efforts to create a /dev/pwmchipX for faster control of PWMs
+> from userspace (compared to sysfs). (Currently in the prototype stage.)
+>=20
+> I'd like to get this in during the next merge window, please tell me
+> what needs to be done to make this happen.
 
+One problem I noticed yesterday is that this series depends on patch
+"drm/ssd130x: Print the PWM's label instead of its number" that
+currently waits in drm-misc-next for getting in the main line. The
+series could for sure be reworked to not rely on this patch, but I'd
+prefer to wait until after the next merge window instead of reworking
+it.
+
+Still, getting some feedback here in the mean time would be nice. The
+questions I wonder about myself are:
+
+ - In patch #1, devm_pwmchip_alloc() could get another parameter for the
+   .ops member. This would save a line per driver like
+
+   	chip->ops =3D &pwm_clk_ops;
+
+   in return for an additional parameter that yields longer lines in the
+   drivers.
+
+ - In patch #101 instead of using &pwm_lock a per-pwmchip lock could be
+   used for pwm_apply_state(). This would allow to parallelize pwm calls
+   for different chips; I don't know how much this matters. Maybe the
+   sensible option here is to keep it simple for now (i.e. how I
+   implemented it now) until someone complains? (But see also the next
+   item.)
+
+ - A further complication is the requirement of pwm-ir-tx for faster
+   pwm_apply_state() calls, see
+
+	https://lore.kernel.org/linux-pwm/ZRb5OWvx3GxYWf9g@gofer.mess.org
+   	https://lore.kernel.org/linux-pwm/1bd5241d584ceb4d6b731c4dc3203fb9686ee=
+1d1.1696156485.git.sean@mess.org
+
+   . This complicates the locking scheme, I didn't try to address that
+   yet.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uqk2oi6j2yuidlmu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUZU58ACgkQj4D7WH0S
+/k7iawf+Joydsj+PrvpJn8yDmVhTYD82kORXiXjwGEuk7l5YKP3lmfY/dnoYC+mO
+bdFMzFaaLqgvABPhUDYqlLkvfZ/m8dgiKq7xT7Z4MHykh6OtDGlkmRVFYnFzm5rE
+LEYgroTWIdH+pikIHQy6PSyNwQOa/LTR6U7gUmonvL9f4EQPcMl+uBkSY7dfTrg3
+dks0mc9A1E0Fqpoc+nQUZ3annOcplNTH+YIwBnPOoH23yvseXUHrx4xRyswugm/1
+F1OfDZtWBNTdn+PocVheMTkp+CJJHmOjD1uXfwv2SEkzZdBkmzulrvVuCAIpDq6O
+IrqpUYcFbFK+QjpUfluwi39+n1Bf0Q==
+=twMT
+-----END PGP SIGNATURE-----
+
+--uqk2oi6j2yuidlmu--
