@@ -2,158 +2,200 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E16567B4717
-	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 13:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8B87B47E8
+	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 16:15:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234890AbjJALKb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 1 Oct 2023 07:10:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
+        id S235075AbjJAOP6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 1 Oct 2023 10:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234892AbjJALKb (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 07:10:31 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A683BD
-        for <linux-pwm@vger.kernel.org>; Sun,  1 Oct 2023 04:10:28 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qmuLB-00025c-M3; Sun, 01 Oct 2023 13:10:25 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qmuLA-00AGkD-UN; Sun, 01 Oct 2023 13:10:24 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qmuLA-0070ms-L4; Sun, 01 Oct 2023 13:10:24 +0200
-Date:   Sun, 1 Oct 2023 13:10:24 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
-        Sean Young <sean@mess.org>
-Subject: Re: [PATCH v1 000/101] pwm: Fix lifetime issues for pwm_chips
-Message-ID: <20231001111024.a3ce3het2y3n7kvx@pengutronix.de>
-References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
- <20230926100625.vudo7qp3h5r2dz62@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uqk2oi6j2yuidlmu"
-Content-Disposition: inline
-In-Reply-To: <20230926100625.vudo7qp3h5r2dz62@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S235023AbjJAOP5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 10:15:57 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BFAAB
+        for <linux-pwm@vger.kernel.org>; Sun,  1 Oct 2023 07:15:54 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-9a65f9147ccso2120652766b.1
+        for <linux-pwm@vger.kernel.org>; Sun, 01 Oct 2023 07:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1696169753; x=1696774553; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4DdqFn2Z3bHJeGohpJ3zhXHAdEVBVwH1IEgmvBHO5so=;
+        b=5CRJObg0cpw0c7qP/N3Vdv55MFb98rUPxv/QazH/Uq1XhtrgCjjc5GkPycpXSb4xhJ
+         C+A3Rk6Kj/FBgMMH8uTcZfAkoFjHldkFQI5fF45AyI3ZUsvqW6AK+AJvISRPA17uKtm0
+         eiXHTW+VhXu4cZ7b0KL/IaXZWAAxel7Vvb+tQC4XH9S7xMz4nr78SyFxF7KcUnUJIGU/
+         gawRSyh/XX6u56oJRlIOW4SJkTma68CR4SkbRF3ZDVwcA3Hg2Tp/x+kJUoFvav8+RZF+
+         mtI5RCLBjuJFNoqURB0A2+nR/gC3G/hT0nUxf7fQIfd7Obyd77bofpd2uwhQULsDmBNY
+         upPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696169753; x=1696774553;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4DdqFn2Z3bHJeGohpJ3zhXHAdEVBVwH1IEgmvBHO5so=;
+        b=gxWqYs4Bu3tG1ARqEWRzwbbo/AhMEClZSkL5SQl4Z85osuKndqN3Vb4/t7uicC/Wpl
+         tU2DXc7fWtEVN926bygc34dpv0cE3iuHTaZgqOEEwCnKdmLhtde+v3k6QngLWKYluCAQ
+         6GEPfIlLGzY465E65gsp5AgEWEvnyLCjmFsRsP0mznTl6IHnjJFcxXHnpVAtCXsISUrt
+         bjtu2HUJjwnns9nvS6+NU+zdFwvThKO1bPDIrCjJ21AZyZyPj7SPW7XbsJtv3OHfVl/W
+         IdeCydprrKwd93yIYlNXBPxoAVMzVdbI55Hf9wqB7/b9jLeY1rPCklwq4JuBuBkgwsNq
+         Unqg==
+X-Gm-Message-State: AOJu0YwIy6p60ZQhXEFy/x815XiqdC+Q2wBk1agUGK0Bnyw4wd5R3HhW
+        J8ktePcEkYCwTQ0eFM3bp6NHbQ==
+X-Google-Smtp-Source: AGHT+IGfkqrZpht21J94fVHX40sis+d2WV+7LP64gzm7OfSZf+TfpiTrv+Tt+D/AwQLcsMTUv3Fdiw==
+X-Received: by 2002:a17:906:51c9:b0:9ae:6355:5ef4 with SMTP id v9-20020a17090651c900b009ae63555ef4mr7661552ejk.3.1696169752514;
+        Sun, 01 Oct 2023 07:15:52 -0700 (PDT)
+Received: from localhost (k10064.upc-k.chello.nl. [62.108.10.64])
+        by smtp.gmail.com with ESMTPSA id c6-20020a170906340600b009b2f2451381sm2345488ejb.182.2023.10.01.07.15.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Oct 2023 07:15:52 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Sun, 01 Oct 2023 16:15:50 +0200
+Message-Id: <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
+Cc:     <konrad.dybcio@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+        <quic_subbaram@quicinc.com>, <quic_gurus@quicinc.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <kernel@quicinc.com>
+Subject: Re: [PATCH v5 0/7] Add support for LUT PPG
+From:   "Luca Weiss" <luca.weiss@fairphone.com>
+To:     "Anjelique Melendez" <quic_amelende@quicinc.com>, <pavel@ucw.cz>,
+        <lee@kernel.org>, <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <agross@kernel.org>, <andersson@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20230929003901.15086-1-quic_amelende@quicinc.com>
+In-Reply-To: <20230929003901.15086-1-quic_amelende@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri Sep 29, 2023 at 2:38 AM CEST, Anjelique Melendez wrote:
+> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+> modules instead of LUT peripheral. This feature is called PPG.
+>
+> This change series adds support for PPG. Thanks!
+>
+> Changes since v4:
+>   - Patch 3/7
+>     - Get rid of r/w helpers
+>     - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
+>     - Update error path in qcom_pbs_trigger_event()
+>     - Fix reverse christmas tree
+>   - Patch 4/7
+>     - Get rid of r/w helpers
+>     - Update variables to use "sdam" instead of "nvmem"
+>     - Fix comments
+>     - Fix reverse christmas tree
+>     - Update lpg_pattern_set() logic
+>   - Patch 5/7
+>     - Removed sdam_lut_base from lpg_data
+> Changes since v3:
+>   - Patch 4/7
+>     - Fix function returns
+>     - Move register definition to top of file
+>     - Revert max_brightness and probe accidental changes
+>     - Combine init_sdam() and parse_sdam()
+>     - Change error prints in probe to use dev_err_probe
+>     - Remove ppg_en variable
+>     - Update when pbs triggers are set/cleared
+>   - Patch 6/7
+>     - Remove use of nvmem_count
+>     - Move register definition to top of file
+>     - Remove lpg_get_sdam_lut_idx()
+> Changes since v2:
+>   - Patch 1/7
+>     - Fix dt_binding_check error
+>     - Rename binding file to match compatible
+>     - Iclude SoC specific comptaibles
+>   - Patch 2/7
+>     - Update nvmem-names list
+>   - Patch 3/7
+>     - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+>     - Fix return/break logic in qcom_pbs_wait_for_ack()
+>     - Update iterators to be int
+>     - Add constants
+>     - Fix function calls in qcom_pbs_trigger_event()
+>     - Remove unnessary comments
+>     - Return -EPROBE_DEFER from get_pbs_client_device()
+> Changes since v1:
+>   - Patch 1/7
+>     - Fix dt_binding_check errors
+>     - Update binding description
+>   - Path 2/7
+>     - Fix dt_binding_check errors
+>     - Update per variant constraints
+>     - Update nvmem description
+>   - Patch 3/7
+>     - Update get_pbs_client_device()
+>     - Drop use of printk
+>     - Remove unused function
+>
+> Tested-by: Luca Weiss <luca.weiss@fairphone.com> # sdm632-fairphone-fp3 (=
+pmi632)
 
---uqk2oi6j2yuidlmu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Anjelique,
 
-Hello again,
+Actually I've retested this now on PMI632 (and also realized that my
+previous tests weren't correct and wasn't actually using hw_pattern).
 
-On Tue, Sep 26, 2023 at 12:06:25PM +0200, Uwe Kleine-K=F6nig wrote:
-> On Tue, Aug 08, 2023 at 07:17:50PM +0200, Uwe Kleine-K=F6nig wrote:
-> > this series addresses the issues I reported already earlier to this
-> > list[1]. It is based on pwm/for-next and several patches I already sent
-> > out, too. Maybe some of these have to be reworked (e.g. Thierry already
-> > signalled not to like the patches dropping runtime error messages) but
-> > in the expectation that I will have to create a v2 for this series, too
-> > and it actually fixes a race condition, I sent the patches out for
-> > review anyhow. For the same reason I didn't Cc: all the individual
-> > maintainers.
-> >=20
-> > If you want to actually test I suggest you fetch my complete history
-> > from
-> >=20
-> > 	https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
-> >=20
-> > .=20
-> >=20
-> > In the end drivers have to allocate their pwm_chip using
-> > pwmchip_alloc(). This is important for the memory backing the pwm_chip
-> > being able to have a longer life than the driver.
-> >=20
-> > The motivation for this series is to prepare the pwm framework to add a
-> > character device for each pwm_chip for easier and faster access to PWMs
-> > from userspace compared to the sysfs API. For such an extension proper
-> > lifetime tracking is important, too, as such a device can still be open
-> > if a PWM disappears.
->=20
-> I wonder how this topic will continue. This series fixes a lifetime
-> issue that can result in a userspace triggered oops and it builds the
-> base for my efforts to create a /dev/pwmchipX for faster control of PWMs
-> from userspace (compared to sysfs). (Currently in the prototype stage.)
->=20
-> I'd like to get this in during the next merge window, please tell me
-> what needs to be done to make this happen.
+Using the following commands (after boot) I'm expecting to get a
+500ms on 500ms off blinking pattern between white (255 255 255) and off
+(0 0 0).
 
-One problem I noticed yesterday is that this series depends on patch
-"drm/ssd130x: Print the PWM's label instead of its number" that
-currently waits in drm-misc-next for getting in the main line. The
-series could for sure be reworked to not rely on this patch, but I'd
-prefer to wait until after the next merge window instead of reworking
-it.
+  echo pattern > /sys/class/leds/rgb:status/trigger
+  echo -1 > /sys/class/leds/rgb:status/repeat
 
-Still, getting some feedback here in the mean time would be nice. The
-questions I wonder about myself are:
+  echo "255 255 255" > /sys/class/leds/rgb:status/multi_intensity
+  echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
 
- - In patch #1, devm_pwmchip_alloc() could get another parameter for the
-   .ops member. This would save a line per driver like
+What I actually see is it blinking between cyan (0 255 255) and red (255
+0 0).
+At some point after playing with many patterns I got it to actually
+cycle between white and off, but I couldn't reproduce this again (or I
+didn't try hard enough).
 
-   	chip->ops =3D &pwm_clk_ops;
 
-   in return for an additional parameter that yields longer lines in the
-   drivers.
+But with this example it correctly blinks red on-off.
 
- - In patch #101 instead of using &pwm_lock a per-pwmchip lock could be
-   used for pwm_apply_state(). This would allow to parallelize pwm calls
-   for different chips; I don't know how much this matters. Maybe the
-   sensible option here is to keep it simple for now (i.e. how I
-   implemented it now) until someone complains? (But see also the next
-   item.)
+  echo "255 0 0" > /sys/class/leds/rgb:status/multi_intensity
+  echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
 
- - A further complication is the requirement of pwm-ir-tx for faster
-   pwm_apply_state() calls, see
+With "0 255 0" and "0 0 255" the other colors also work fine, it's just
+the combinations that seem somewhat broken.
 
-	https://lore.kernel.org/linux-pwm/ZRb5OWvx3GxYWf9g@gofer.mess.org
-   	https://lore.kernel.org/linux-pwm/1bd5241d584ceb4d6b731c4dc3203fb9686ee=
-1d1.1696156485.git.sean@mess.org
+Regards
+Luca
 
-   . This complicates the locking scheme, I didn't try to address that
-   yet.
 
-Best regards
-Uwe
+>
+> Anjelique Melendez (7):
+>   dt-bindings: soc: qcom: Add qcom,pbs bindings
+>   dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
+>   soc: qcom: add QCOM PBS driver
+>   leds: rgb: leds-qcom-lpg: Add support for single SDAM PPG
+>   leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
+>   leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT
+>     SDAM
+>   leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
+>
+>  .../bindings/leds/leds-qcom-lpg.yaml          |  89 ++++-
+>  .../bindings/soc/qcom/qcom,pbs.yaml           |  46 +++
+>  drivers/leds/rgb/leds-qcom-lpg.c              | 359 ++++++++++++++++--
+>  drivers/soc/qcom/Kconfig                      |   9 +
+>  drivers/soc/qcom/Makefile                     |   1 +
+>  drivers/soc/qcom/qcom-pbs.c                   | 243 ++++++++++++
+>  include/linux/soc/qcom/qcom-pbs.h             |  30 ++
+>  7 files changed, 749 insertions(+), 28 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.y=
+aml
+>  create mode 100644 drivers/soc/qcom/qcom-pbs.c
+>  create mode 100644 include/linux/soc/qcom/qcom-pbs.h
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---uqk2oi6j2yuidlmu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUZU58ACgkQj4D7WH0S
-/k7iawf+Joydsj+PrvpJn8yDmVhTYD82kORXiXjwGEuk7l5YKP3lmfY/dnoYC+mO
-bdFMzFaaLqgvABPhUDYqlLkvfZ/m8dgiKq7xT7Z4MHykh6OtDGlkmRVFYnFzm5rE
-LEYgroTWIdH+pikIHQy6PSyNwQOa/LTR6U7gUmonvL9f4EQPcMl+uBkSY7dfTrg3
-dks0mc9A1E0Fqpoc+nQUZ3annOcplNTH+YIwBnPOoH23yvseXUHrx4xRyswugm/1
-F1OfDZtWBNTdn+PocVheMTkp+CJJHmOjD1uXfwv2SEkzZdBkmzulrvVuCAIpDq6O
-IrqpUYcFbFK+QjpUfluwi39+n1Bf0Q==
-=twMT
------END PGP SIGNATURE-----
-
---uqk2oi6j2yuidlmu--
