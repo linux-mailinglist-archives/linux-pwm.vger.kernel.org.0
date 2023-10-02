@@ -2,196 +2,244 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFA47B48D3
-	for <lists+linux-pwm@lfdr.de>; Sun,  1 Oct 2023 19:22:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DD2C7B4B38
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Oct 2023 07:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235161AbjJARWA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 1 Oct 2023 13:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
+        id S229798AbjJBFt7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Oct 2023 01:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233932AbjJARV7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 1 Oct 2023 13:21:59 -0400
-X-Greylist: delayed 24047 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 01 Oct 2023 10:21:56 PDT
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F2383;
-        Sun,  1 Oct 2023 10:21:56 -0700 (PDT)
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id 6AC07100092; Sun,  1 Oct 2023 18:21:54 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-        t=1696180914; bh=fmmbBcKFOGuzoHOa2DXFF4bJYUXHzDbTMg4QwhNR9/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lf5hY5+iOE0ePrLTAj1raG3VeaKenQpZ4y1toKOxf4a+wxUW/K6lyp1W5qX4czCeg
-         2WUiacdaqdef9XjlBlvLraa6gYtvycdPM7oCM8j111y1mNHTmEapQsWz0cvEvfK+0f
-         RCJk5Xhnd0ONZvBalMt7zuVja88EHL92lHsPCJcJM0C0xX9zXrPcGxZ2lU0Kyq37RB
-         04rMcZCwhODjLsW7F1gBuIoeXzysulxOBxoEDbMNWcure0ghIvjMvKy3sJDvgFethQ
-         2K63Mwb4NZVmLkj4oip8jxh5L5Yp1+9mDS9L9EjuAlJMX+5Onp7H8s4KyzKanFhjc5
-         Ehed2s+3JgOlA==
-Date:   Sun, 1 Oct 2023 18:21:54 +0100
-From:   Sean Young <sean@mess.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        oe-kbuild-all@lists.linux.dev,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic
- context
-Message-ID: <ZRmqsl+ZyVEtlPbF@gofer.mess.org>
-References: <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
- <202310012348.puyNjoMk-lkp@intel.com>
+        with ESMTP id S229529AbjJBFt6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Oct 2023 01:49:58 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5DAAC;
+        Sun,  1 Oct 2023 22:49:55 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-5333fb34be3so21154149a12.1;
+        Sun, 01 Oct 2023 22:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696225793; x=1696830593; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nmoOR/EI2utIi1unwoyCX1pbMVDR6URKEDRCZKsU5aU=;
+        b=ni8BC8KHQicdxEH7htgdD2NVqb9L+fVtp2DErs6p/4ZJ7I+WNnCGzxNmmPqfMyDa6L
+         BmlMzfr12XCearN85L7UW05OoMB5pG3GS2vM6Zk5UWhxDOFOJ+6tyM9XZs+X6XKOjU1D
+         PQiKhvVYAoWek/+sYUkpUKk00NwuRA6N2eutia7lhrGEhvrg4kixyADoc77qjeQdCh+b
+         RIpXp18p31pZmyQA9d0V+o6UMY2JirBOT1kXovKmu909dhdaCLtJjgopg8ZGYb5C5SFe
+         R4AwazBZ4K+NdT/VBg0SR0QloY5qWdsrpHvKw9QGxweMBHhRhkn25lTC3nuY3Q0BNr9V
+         AfvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696225793; x=1696830593;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmoOR/EI2utIi1unwoyCX1pbMVDR6URKEDRCZKsU5aU=;
+        b=IZA3vnwZikAJa5nCTgWZwBORjpNW3MtlIcbdNy3TtdaQhdzgcvF7BmhPgFfzDPLxxG
+         zSgR+NMtAokLov0lvDxKaL9FQO80SCunI1fnjWEbdEY6YRkqmu7NMer9ZNKGreQBQzb0
+         QuU+nBEa9LZhRS6jt+omgP62PyBvsiIglKPHj9EudvSMOvD7Q+SXJqJDkvc1dnunmTi2
+         AKp9eYYIndcK1xS+4tRivg2QlklZ14xcrnrZOYlgm/P59QP8uNwAGKsvAVVbLvrLLC75
+         9oEvkwePH3ZHKE3i0q7S/EXLcmLEkbwk6gu024tuN5fU/7YG3loxA8zCoeh7ogqRyt5W
+         5W5Q==
+X-Gm-Message-State: AOJu0Yytl+tYYVDLMoNS2qlFcqynE0+BWd6bMCJix+fkx5UvIHsK778F
+        bK0T96dYxVRdOaLayEO3kVuO7pUbi4I=
+X-Google-Smtp-Source: AGHT+IH2kTlGJPH8c+oazo+iqk8M0z2UzLkF9QWbY7H6r7SayPfUiceMx/QyM/Yx0jTWGefcpsaobQ==
+X-Received: by 2002:aa7:d6d2:0:b0:52f:6641:4ecd with SMTP id x18-20020aa7d6d2000000b0052f66414ecdmr9194592edr.37.1696225793294;
+        Sun, 01 Oct 2023 22:49:53 -0700 (PDT)
+Received: from [192.168.1.10] ([95.43.220.235])
+        by smtp.googlemail.com with ESMTPSA id x62-20020a50bac4000000b0053443c8fd90sm9901062ede.24.2023.10.01.22.49.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 01 Oct 2023 22:49:53 -0700 (PDT)
+Subject: Re: [PATCH 2/2] media: pwm-ir-tx: trigger edges from hrtimer
+ interrupt context
+To:     Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+References: <cover.1696156485.git.sean@mess.org>
+ <7efe4229514001b835fa70d51973cd3306dc0b04.1696156485.git.sean@mess.org>
+From:   Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Message-ID: <5982681d-4fb5-0271-fdc5-712d6c8512e3@gmail.com>
+Date:   Mon, 2 Oct 2023 08:49:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Firefox/60.0 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202310012348.puyNjoMk-lkp@intel.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <7efe4229514001b835fa70d51973cd3306dc0b04.1696156485.git.sean@mess.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Oct 02, 2023 at 12:07:58AM +0800, kernel test robot wrote:
-> Hi Sean,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on thierry-reding-pwm/for-next]
-> [also build test ERROR on shawnguo/for-next atorgue-stm32/stm32-next media-tree/master linus/master v6.6-rc3 next-20230929]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hi,
 
-There are indeed some configs in which there are build errors if
-CONFIG_PWM is disabled, I'll fix it in the next version.
+On 1.10.23 г. 13:40 ч., Sean Young wrote:
+> The pwm-ir-tx driver has to turn the pwm signal on and off, and suffers
+> from delays as this is done in process context. Make this work in atomic
+> context.
+> 
+> This makes the driver much more precise.
+> 
+> Signed-off-by: Sean Young <sean@mess.org>
+> Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> ---
+>   drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++--------
+>   1 file changed, 63 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
+> index c5f37c03af9c..557725a07a67 100644
+> --- a/drivers/media/rc/pwm-ir-tx.c
+> +++ b/drivers/media/rc/pwm-ir-tx.c
+> @@ -10,6 +10,8 @@
+>   #include <linux/slab.h>
+>   #include <linux/of.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/hrtimer.h>
+> +#include <linux/completion.h>
+>   #include <media/rc-core.h>
+>   
+>   #define DRIVER_NAME	"pwm-ir-tx"
+> @@ -17,8 +19,13 @@
+>   
+>   struct pwm_ir {
+>   	struct pwm_device *pwm;
+> -	unsigned int carrier;
+> -	unsigned int duty_cycle;
+> +	struct hrtimer timer;
+> +	struct completion completion;
+> +	uint carrier;
+> +	uint duty_cycle;
+> +	uint *txbuf;
+> +	uint txbuf_len;
+> +	uint txbuf_index;
+>   };
+>   
+>   static const struct of_device_id pwm_ir_of_match[] = {
+> @@ -55,33 +62,65 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
+>   	struct pwm_ir *pwm_ir = dev->priv;
+>   	struct pwm_device *pwm = pwm_ir->pwm;
+>   	struct pwm_state state;
+> -	int i;
+> -	ktime_t edge;
+> -	long delta;
+> +
+> +	reinit_completion(&pwm_ir->completion);
 
-In the mean time it would be great to have some feedback on this patch,
-and see if there is any other rework needed.
+You should not need that.
 
-Thanks
-Sean
+>   
+>   	pwm_init_state(pwm, &state);
+>   
+>   	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
+>   	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
+> +	state.enabled = false;
+>   
+> -	edge = ktime_get();
+> +	pwm_ir->txbuf = txbuf;
+> +	pwm_ir->txbuf_len = count;
+> +	pwm_ir->txbuf_index = 0;
+>   
+> -	for (i = 0; i < count; i++) {
+> -		state.enabled = !(i % 2);
+> -		pwm_apply_state(pwm, &state);
+> +	pwm_apply_state(pwm, &state);
+>   
 
+ditto, first pwm control should be in the timer function
+
+> -		edge = ktime_add_us(edge, txbuf[i]);
+> -		delta = ktime_us_delta(edge, ktime_get());
+> -		if (delta > 0)
+> -			usleep_range(delta, delta + 10);
+> -	}
+> +	hrtimer_start(&pwm_ir->timer, 1000, HRTIMER_MODE_REL);
+>   
+
+why not just call it with 0 time?
+
+> -	state.enabled = false;
+> -	pwm_apply_state(pwm, &state);
+> +	wait_for_completion(&pwm_ir->completion);
+>   
+>   	return count;
+>   }
+>   
+> +static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
+> +{
+> +	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
+> +	ktime_t now;
+> +
+> +	/*
+> +	 * If we happen to hit an odd latency spike, loop through the
+> +	 * pulses until we catch up.
+> +	 */
+> +	do {
+> +		u64 ns;
+> +
+> +		if (pwm_ir->txbuf_index >= pwm_ir->txbuf_len) {
+> +			/* Stop TX here */
+> +			pwm_disable(pwm_ir->pwm);
+> +
+> +			complete(&pwm_ir->completion);
+> +
+> +			return HRTIMER_NORESTART;
+> +		}
+> +
+> +		if (pwm_ir->txbuf_index % 2)
+> +			pwm_disable(pwm_ir->pwm);
+> +		else
+> +			pwm_enable(pwm_ir->pwm);
+> +
+
+pwm_ir->pwm->state.enabled = !(pwm_ir->txbuf_index % 2);
+pwm_apply_state(pwm_ir->pwm, pwm_ir->state);
+
+> +		ns = US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
+> +		hrtimer_add_expires_ns(timer, ns);
+> +
+> +		pwm_ir->txbuf_index++;
+> +
+> +		now = timer->base->get_time();
+> +	} while (hrtimer_get_expires_tv64(timer) < now);
+> +
+> +	return HRTIMER_RESTART;
+> +}
+> +
+>   static int pwm_ir_probe(struct platform_device *pdev)
+>   {
+>   	struct pwm_ir *pwm_ir;
+> @@ -96,8 +135,16 @@ static int pwm_ir_probe(struct platform_device *pdev)
+>   	if (IS_ERR(pwm_ir->pwm))
+>   		return PTR_ERR(pwm_ir->pwm);
+>   
+> +	if (pwm_can_sleep(pwm_ir->pwm)) {
+> +		dev_err(&pdev->dev, "unsupported pwm device: driver can sleep\n");
+> +		return -ENODEV;
+> +	}
+> +
+
+I think we shall not limit, but use high priority thread to support 
+those drivers. I have that working on n900 with current (sleeping) pwm, 
+see my reply on the other mail. Maybe we can combine both patches in a 
+way to support both atomic and sleeping pwm drivers.
+
+>   	pwm_ir->carrier = 38000;
+>   	pwm_ir->duty_cycle = 50;
+> +	init_completion(&pwm_ir->completion);
+> +	hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> +	pwm_ir->timer.function = pwm_ir_timer;
+>   
+>   	rcdev = devm_rc_allocate_device(&pdev->dev, RC_DRIVER_IR_RAW_TX);
+>   	if (!rcdev)
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Young/media-pwm-ir-tx-trigger-edges-from-hrtimer-interrupt-context/20231001-194056
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-> patch link:    https://lore.kernel.org/r/1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean%40mess.org
-> patch subject: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic context
-> config: i386-buildonly-randconfig-004-20231001 (https://download.01.org/0day-ci/archive/20231001/202310012348.puyNjoMk-lkp@intel.com/config)
-> compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231001/202310012348.puyNjoMk-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202310012348.puyNjoMk-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from arch/x86/include/asm/percpu.h:27:0,
->                     from arch/x86/include/asm/current.h:10,
->                     from include/linux/sched.h:12,
->                     from include/linux/ratelimit.h:6,
->                     from include/linux/dev_printk.h:16,
->                     from include/linux/device.h:15,
->                     from include/linux/backlight.h:12,
->                     from drivers/video/fbdev/ssd1307fb.c:8:
->    include/linux/pwm.h: In function 'pwm_apply_state':
->    include/linux/pwm.h:428:17: error: implicit declaration of function 'pwm_can_sleep'; did you mean 'gpiod_cansleep'? [-Werror=implicit-function-declaration]
->      might_sleep_if(pwm_can_sleep(pwm));
->                     ^
->    include/linux/kernel.h:194:39: note: in definition of macro 'might_sleep_if'
->     #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
->                                           ^~~~
->    In file included from drivers/video/fbdev/ssd1307fb.c:16:0:
->    include/linux/pwm.h: At top level:
-> >> include/linux/pwm.h:455:20: error: conflicting types for 'pwm_can_sleep'
->     static inline bool pwm_can_sleep(struct pwm_device *pwm)
->                        ^~~~~~~~~~~~~
->    In file included from arch/x86/include/asm/percpu.h:27:0,
->                     from arch/x86/include/asm/current.h:10,
->                     from include/linux/sched.h:12,
->                     from include/linux/ratelimit.h:6,
->                     from include/linux/dev_printk.h:16,
->                     from include/linux/device.h:15,
->                     from include/linux/backlight.h:12,
->                     from drivers/video/fbdev/ssd1307fb.c:8:
->    include/linux/pwm.h:428:17: note: previous implicit declaration of 'pwm_can_sleep' was here
->      might_sleep_if(pwm_can_sleep(pwm));
->                     ^
->    include/linux/kernel.h:194:39: note: in definition of macro 'might_sleep_if'
->     #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
->                                           ^~~~
->    cc1: some warnings being treated as errors
-> --
->    In file included from arch/x86/include/asm/percpu.h:27:0,
->                     from arch/x86/include/asm/preempt.h:6,
->                     from include/linux/preempt.h:79,
->                     from include/linux/spinlock.h:56,
->                     from include/linux/mmzone.h:8,
->                     from include/linux/gfp.h:7,
->                     from include/linux/slab.h:16,
->                     from include/linux/resource_ext.h:11,
->                     from include/linux/acpi.h:13,
->                     from include/linux/i2c.h:13,
->                     from drivers/mfd/intel_soc_pmic_crc.c:11:
->    include/linux/pwm.h: In function 'pwm_apply_state':
->    include/linux/pwm.h:428:17: error: implicit declaration of function 'pwm_can_sleep'; did you mean 'cant_sleep'? [-Werror=implicit-function-declaration]
->      might_sleep_if(pwm_can_sleep(pwm));
->                     ^
->    include/linux/kernel.h:194:39: note: in definition of macro 'might_sleep_if'
->     #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
->                                           ^~~~
->    In file included from drivers/mfd/intel_soc_pmic_crc.c:18:0:
->    include/linux/pwm.h: At top level:
-> >> include/linux/pwm.h:455:20: error: conflicting types for 'pwm_can_sleep'
->     static inline bool pwm_can_sleep(struct pwm_device *pwm)
->                        ^~~~~~~~~~~~~
->    In file included from arch/x86/include/asm/percpu.h:27:0,
->                     from arch/x86/include/asm/preempt.h:6,
->                     from include/linux/preempt.h:79,
->                     from include/linux/spinlock.h:56,
->                     from include/linux/mmzone.h:8,
->                     from include/linux/gfp.h:7,
->                     from include/linux/slab.h:16,
->                     from include/linux/resource_ext.h:11,
->                     from include/linux/acpi.h:13,
->                     from include/linux/i2c.h:13,
->                     from drivers/mfd/intel_soc_pmic_crc.c:11:
->    include/linux/pwm.h:428:17: note: previous implicit declaration of 'pwm_can_sleep' was here
->      might_sleep_if(pwm_can_sleep(pwm));
->                     ^
->    include/linux/kernel.h:194:39: note: in definition of macro 'might_sleep_if'
->     #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
->                                           ^~~~
->    cc1: some warnings being treated as errors
-> 
-> 
-> vim +/pwm_can_sleep +455 include/linux/pwm.h
-> 
->    454	
->  > 455	static inline bool pwm_can_sleep(struct pwm_device *pwm)
->    456	{
->    457		return true;
->    458	}
->    459	
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+
+Regards,
+Ivo
