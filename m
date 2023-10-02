@@ -2,33 +2,33 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E4BE7B5690
-	for <lists+linux-pwm@lfdr.de>; Mon,  2 Oct 2023 17:38:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 919AF7B56B3
+	for <lists+linux-pwm@lfdr.de>; Mon,  2 Oct 2023 17:39:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238039AbjJBPXu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 2 Oct 2023 11:23:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50328 "EHLO
+        id S238014AbjJBP22 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 2 Oct 2023 11:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237877AbjJBPXt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Oct 2023 11:23:49 -0400
+        with ESMTP id S237878AbjJBP22 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 2 Oct 2023 11:28:28 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880E4D8;
-        Mon,  2 Oct 2023 08:23:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0BCC433C7;
-        Mon,  2 Oct 2023 15:23:44 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A467A6;
+        Mon,  2 Oct 2023 08:28:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F18C433C8;
+        Mon,  2 Oct 2023 15:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696260226;
-        bh=J31MH8/2r2BMfbJUBh+R459Cp6pdTI0Bsk+3NWVzrsE=;
+        s=k20201202; t=1696260504;
+        bh=cBsXuH+waMnbRb4zU7K8v3UB85/p7ufJUV9Y1AvcxRI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hPStttAfTWc+lyohHbX38wiESvCZgMH8ITKZQzHcHdm8G7UCp7Q5ImGYlldQGDmwi
-         JIh2c8/pTqJ9a5pQ3NhFY5MyAysWRzFmSLK7X6uevHewo8kIHvFqKI3FTqgCgMsYXe
-         tsrNuodOO+IXVlt+OKJEsk+m2tAC3V5suY4SDpR6BRTAfxHVR4q3imCOiGoVS5Lh5G
-         yl9Gr2QCptI3ctd6eYSpy9H/998tREUU18ydMG1t2acp89rKMAtxzSXe5yZ8IFFyMG
-         SK15YA+ffl5SMze3JNikC4t3pYswRTXVrWrQ9z/bqAf/vDpvm3RhKRBW+PJ319123s
-         w4RiwFX/fxsdw==
-Received: (nullmailer pid 1752918 invoked by uid 1000);
-        Mon, 02 Oct 2023 15:23:43 -0000
-Date:   Mon, 2 Oct 2023 10:23:43 -0500
+        b=VdKIGKKOTx6RCCphHOtVS/Dr/s/B5hcvTW3AukByt1zrZOIpZJw0DS+x9GQjStAVx
+         C77Au3XeTTzvbiNUtG824gBmuwqXxgloskfVs+S8AN5nOCfpzi9SbnZlU1arCJREee
+         DcvqT5Ki92KBnFv/YHTsXVpzOQEybww5AmVYUGhwoKPQ5htUUorEwjW05u5sy0w48M
+         cmePtZHUeuyQERcJBWGnU1Khdvf0qyCeiccLQFn6c4n+YyfyBtj3BKI1MIZMT/iA2i
+         7MpJXE3H6AmIGBwDLUkrn6GiJIO50tbZga685E62N1w/+R8n+l0CWpro5kNA+Rijku
+         EJNvViksJFWgw==
+Received: (nullmailer pid 1757850 invoked by uid 1000);
+        Mon, 02 Oct 2023 15:28:19 -0000
+Date:   Mon, 2 Oct 2023 10:28:19 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Billy Tsai <billy_tsai@aspeedtech.com>
 Cc:     jdelvare@suse.com, linux@roeck-us.net,
@@ -40,14 +40,15 @@ Cc:     jdelvare@suse.com, linux@roeck-us.net,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
         BMC-SW@aspeedtech.com, patrick@stwcx.xyz
-Subject: Re: [PATCH v9 1/3] dt-bindings: hwmon: fan: Add fan binding to schema
-Message-ID: <20231002152343.GA1747496-robh@kernel.org>
+Subject: Re: [PATCH v9 2/3] dt-bindings: hwmon: Support Aspeed g6 PWM TACH
+ Control
+Message-ID: <20231002152819.GB1747496-robh@kernel.org>
 References: <20230918064111.2221594-1-billy_tsai@aspeedtech.com>
- <20230918064111.2221594-2-billy_tsai@aspeedtech.com>
+ <20230918064111.2221594-3-billy_tsai@aspeedtech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230918064111.2221594-2-billy_tsai@aspeedtech.com>
+In-Reply-To: <20230918064111.2221594-3-billy_tsai@aspeedtech.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,120 +58,103 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Sep 18, 2023 at 02:41:09PM +0800, Billy Tsai wrote:
-> From: Naresh Solanki <naresh.solanki@9elements.com>
+On Mon, Sep 18, 2023 at 02:41:10PM +0800, Billy Tsai wrote:
+> Document the compatible for aspeed,ast2600-pwm-tach device, which can
+> support up to 16 PWM outputs and 16 fan tach input.
 > 
-> Add common fan properties bindings to a schema.
-> 
-> Bindings for fan controllers can reference the common schema for the
-> fan
-> 
-> child nodes:
-> 
->   patternProperties:
->     "^fan@[0-2]":
->       type: object
->       $ref: fan-common.yaml#
->       unevaluatedProperties: false
-> 
-> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
 > Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
 > ---
->  .../devicetree/bindings/hwmon/fan-common.yaml | 78 +++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/fan-common.yaml
+>  .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/fan-common.yaml b/Documentation/devicetree/bindings/hwmon/fan-common.yaml
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
 > new file mode 100644
-> index 000000000000..2bd2f57fc9d9
+> index 000000000000..5a679f4ad2fa
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/fan-common.yaml
-> @@ -0,0 +1,78 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2023 Aspeed, Inc.
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/hwmon/fan-common.yaml#
+> +$id: http://devicetree.org/schemas/hwmon/aspeed,g6-pwm-tach.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Common Fan Properties
+> +title: ASPEED G6 PWM and Fan Tach controller device driver
+
+This is binding for the h/w, not a 'device driver'.
+
 > +
 > +maintainers:
-> +  - Naresh Solanki <naresh.solanki@9elements.com>
 > +  - Billy Tsai <billy_tsai@aspeedtech.com>
 > +
+> +description: |
+> +  The ASPEED PWM controller can support up to 16 PWM outputs.
+> +  The ASPEED Fan Tacho controller can support up to 16 fan tach input.
+> +  They are independent hardware blocks, which are different from the
+> +  previous version of the ASPEED chip.
+> +
 > +properties:
-> +  max-rpm:
-> +    description:
-> +      Max RPM supported by fan.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 100000
-> +
-> +  min-rpm:
-> +    description:
-> +      Min RPM supported by fan.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 1000
-> +
-> +  pulses-per-revolution:
-> +    description:
-> +      The number of pulse from fan sensor per revolution.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    maximum: 4
-> +
-> +  tach-div:
-> +    description:
-> +      Divisor for the tach sampling clock, which determines the sensitivity of the tach pin.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  target-rpm:
-> +    description:
-> +      The default desired fan speed in RPM.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  fan-driving-mode:
-> +    description:
-> +      Select the driving mode of the fan.(DC, PWM and so on)
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-What value corresponds to what mode? I'd do strings instead. 'dc', 
-'pwm', etc.
-
-> +
-> +  pwms:
-> +    description:
-> +      PWM provider.
-> +    maxItems: 1
-> +
-> +  "#cooling-cells":
-> +    const: 2
-> +
-> +  cooling-levels:
-> +    description: |
-
-Don't need '|'
-
-> +      The control value which correspond to thermal cooling states.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +
-> +  tach-ch:
-> +    description:
-> +      The tach channel used for the fan.
-> +    $ref: /schemas/types.yaml#/definitions/uint8-array
-> +
-> +  label:
-> +    description:
-> +      Optional fan label
-> +
-> +  fan-supply:
-> +    description:
-> +      Power supply for fan.
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2600-pwm-tach
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +additionalProperties: true
+> +  clocks:
+> +    maxItems: 1
 > +
-> +...
+> +  resets:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +patternProperties:
+> +  "^fan-[0-9a-f]+$":
+
+foo-<index> naming is decimal, not hex. (unit-addresses are hex)
+
+But if 0 and 1 correspond to something in the h/w, then you should 
+probably be using 'reg' instead (which means a unit-address too).
+
+> +    $ref: fan-common.yaml#
+> +    unevaluatedProperties: false
+> +    required:
+> +      - tach-ch
+> +
+> +required:
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - "#pwm-cells"
+> +  - compatible
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/aspeed-clock.h>
+> +    pwm_tach: pwm-tach-controller@1e610000 {
+> +      compatible = "aspeed,ast2600-pwm-tach";
+> +      reg = <0x1e610000 0x100>;
+> +      clocks = <&syscon ASPEED_CLK_AHB>;
+> +      resets = <&syscon ASPEED_RESET_PWM>;
+> +      #pwm-cells = <3>;
+> +
+> +      fan-0 {
+> +        tach-ch = /bits/ 8 <0x0>;
+
+What about the PWM connection?
+
+> +      };
+> +
+> +      fan-1 {
+> +        tach-ch = /bits/ 8 <0x1 0x2>;
+> +      };
+> +    };
 > -- 
 > 2.25.1
 > 
