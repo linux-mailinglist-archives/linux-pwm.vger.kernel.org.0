@@ -2,110 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86FD57B6C28
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Oct 2023 16:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC8237B6D41
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Oct 2023 17:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240231AbjJCOvj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 3 Oct 2023 10:51:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
+        id S232279AbjJCPfv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 3 Oct 2023 11:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240210AbjJCOvi (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 3 Oct 2023 10:51:38 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394DDAD
-        for <linux-pwm@vger.kernel.org>; Tue,  3 Oct 2023 07:51:31 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-405497850dbso10118335e9.0
-        for <linux-pwm@vger.kernel.org>; Tue, 03 Oct 2023 07:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1696344689; x=1696949489; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OPe8AHR8wi1voZ8KVZNMBYnfWuXXWrqVYf9QOeCgRow=;
-        b=Rxs9TAGJdbi2gKUKE0Ia70WFSl84rtSF5PPgjoUU46x6sPf+ErBKZ/VWWnG3ePBxJ8
-         ATfREpXhj5hsKgAPiuK3usk1Ujp8xBvxqdRv1nKWSSG/ixFOUgHcZ67GvbOVAF9XZ2gx
-         KZPNxTnnDQ+Xm1Etk9SE8bCH4hGeTOimyNMqVxJZEbL+sGu9CZym48+oTE+9eJEmuH60
-         A2OOmpbaDQlLRHhdpb56Yrd+NZAeGP9v3Ppll4YoY9+WAdjyE9PZBT3N0vduCSZRpQLh
-         ytudJKuxrZG3DxNfDgBvP/cLIDc1HINKyOHowV0XpQCAMSxdxQG/BwtJ1lc8vDzPY3l1
-         czEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696344689; x=1696949489;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OPe8AHR8wi1voZ8KVZNMBYnfWuXXWrqVYf9QOeCgRow=;
-        b=ofAenn2OFbTInDMXWLm30i3lPo7SiFWsP6PusqgZPElolsX/ANKQwF4nZWBRMG0xpK
-         V30HG/505Th8dROjOrGu97A5AdL0Dgr9KeOwHtdvDsYsogMC2rknHyUjNDaN7XDQpWNr
-         Fh+HFtzwY9l0Qvz1qitUkgMji+rcFOIZeWH4TT6SU20I1KWRBWAtPaM0ulFHlj88p2Hk
-         3ENca9er9PE1pzTEmCsQJxtz0EpnMDFnyPyjmwoB/7NREDLRZs4WqAKPJbdBSuKfJb9R
-         O2oJUKfdzDt5XYgbfSH9OYB/a4EmHomyaDbYDIUVKYxr3aheCWhGn85wWdEZnApQY4V8
-         xjmA==
-X-Gm-Message-State: AOJu0YxH4YCalLpi3iOrRDyV+VI73s6HBWlFusK9LO4RJEfjT5z+3KKw
-        RMg2SV0IW1zdJIO+3edSgEeWiw==
-X-Google-Smtp-Source: AGHT+IE7WkAhpO4uOd0mSjQYrlfWjfBqmbsmbHR1es665edFUjbmy7dIdzgSyEHgJJYKi7QK9qaTsQ==
-X-Received: by 2002:a05:600c:2948:b0:405:3f06:c07e with SMTP id n8-20020a05600c294800b004053f06c07emr12250543wmd.15.1696344689690;
-        Tue, 03 Oct 2023 07:51:29 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:1f2d:3479:a5de:fa35])
-        by smtp.gmail.com with ESMTPSA id c15-20020a05600c0acf00b003fe29f6b61bsm1462773wmr.46.2023.10.03.07.51.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 07:51:29 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org
-Subject: [PATCH 09/36] gpio: mvebu: use new pinctrl GPIO helpers
-Date:   Tue,  3 Oct 2023 16:50:47 +0200
-Message-Id: <20231003145114.21637-10-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231003145114.21637-1-brgl@bgdev.pl>
-References: <20231003145114.21637-1-brgl@bgdev.pl>
+        with ESMTP id S231748AbjJCPfu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 3 Oct 2023 11:35:50 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2270DCC
+        for <linux-pwm@vger.kernel.org>; Tue,  3 Oct 2023 08:35:47 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::646])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id BE9CB381;
+        Tue,  3 Oct 2023 15:35:46 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BE9CB381
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1696347346; bh=O8OXFEzOWi8Ea+8P4dtfyOUhqZkhpx9cd9kQL8AUTwA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=a1NAlf1nkwIESo2vNDbkswP/LStDIO8uR+JbcmeauzMpJxHXWMgn213Y2++3Hu2JR
+         Yd+gv2C1Fv6lsfGXNKtustLDr9tQuyS8i0bV76s8RNRRtCaqUOpWM+6SwswRAuloqr
+         XJFpzXGtU8GfY3A9HDOFY7k8uiGSahjpWOyZcpnypgXjO/M6zkzd35Uoy445VfTszs
+         AC5Gx9jzJV1oH1qyFop28n16UwbNIGs3Vvwmk+uELZC7q/tJz1d6jFnvXlqKun2UEa
+         tEUIE97VtE4eC05AYSYcnMmOJwx1oJMulN58Ob3jwn/fmHN5drF56a3c2TR5Fi0jQk
+         ucCh4Ip/Yf9eA==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, Jens Gehrlein <J.Gehrlein@eckelmann.de>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] pwm: Adapt sysfs API documentation to reality
+In-Reply-To: <20230911154454.675057-1-u.kleine-koenig@pengutronix.de>
+References: <20230911154454.675057-1-u.kleine-koenig@pengutronix.de>
+Date:   Tue, 03 Oct 2023 09:35:46 -0600
+Message-ID: <87ttr7en1p.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> writes:
 
-Replace the pinctrl helpers taking the global GPIO number as argument
-with the improved variants that instead take a pointer to the GPIO chip
-and the controller-relative offset.
+> Most low-level PWM drivers support duty_cycle =3D=3D period, and so does =
+the
+> sysfs API. Also polarity can be changed for enabled PWMs since commit
+> 39100ceea79f ("pwm: Switch to the atomic API").
+>
+> Reported-by: Jens Gehrlein <J.Gehrlein@eckelmann.de>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  Documentation/driver-api/pwm.rst | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/=
+pwm.rst
+> index 3fdc95f7a1d1..bb264490a87a 100644
+> --- a/Documentation/driver-api/pwm.rst
+> +++ b/Documentation/driver-api/pwm.rst
+> @@ -111,13 +111,13 @@ channel that was exported. The following properties=
+ will then be available:
+>=20=20
+>    duty_cycle
+>      The active time of the PWM signal (read/write).
+> -    Value is in nanoseconds and must be less than the period.
+> +    Value is in nanoseconds and must be less than or equal to the period.
+>=20=20
+>    polarity
+>      Changes the polarity of the PWM signal (read/write).
+>      Writes to this property only work if the PWM chip supports changing
+> -    the polarity. The polarity can only be changed if the PWM is not
+> -    enabled. Value is the string "normal" or "inversed".
+> +    the polarity.
+> +    Value is the string "normal" or "inversed".
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-mvebu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't see this in linux-next yet, so I've gone ahead and applied it.
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 67497116ce27..8fada9cd258a 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -345,7 +345,7 @@ static int mvebu_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
- 	 * Check with the pinctrl driver whether this pin is usable as
- 	 * an input GPIO
- 	 */
--	ret = pinctrl_gpio_direction_input(chip->base + pin);
-+	ret = pinctrl_gpio_direction_input_new(chip, pin);
- 	if (ret)
- 		return ret;
- 
-@@ -365,7 +365,7 @@ static int mvebu_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
- 	 * Check with the pinctrl driver whether this pin is usable as
- 	 * an output GPIO
- 	 */
--	ret = pinctrl_gpio_direction_output(chip->base + pin);
-+	ret = pinctrl_gpio_direction_output_new(chip, pin);
- 	if (ret)
- 		return ret;
- 
--- 
-2.39.2
+Thanks,
+
+jon
