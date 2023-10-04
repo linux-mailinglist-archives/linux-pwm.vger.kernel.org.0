@@ -2,60 +2,70 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B7087B7C3B
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Oct 2023 11:36:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FD627B7CBD
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Oct 2023 11:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242029AbjJDJgP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Oct 2023 05:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57078 "EHLO
+        id S232909AbjJDJ7l (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Oct 2023 05:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242023AbjJDJgM (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 05:36:12 -0400
+        with ESMTP id S232854AbjJDJ7k (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 05:59:40 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CA3AB
-        for <linux-pwm@vger.kernel.org>; Wed,  4 Oct 2023 02:36:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10ED99E
+        for <linux-pwm@vger.kernel.org>; Wed,  4 Oct 2023 02:59:37 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qnyIR-0008EB-Mz; Wed, 04 Oct 2023 11:35:59 +0200
+        id 1qnyf5-0002vN-0q; Wed, 04 Oct 2023 11:59:23 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qnyIR-00AztC-AH; Wed, 04 Oct 2023 11:35:59 +0200
+        id 1qnyf3-00Azxr-7z; Wed, 04 Oct 2023 11:59:21 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qnyIR-008tcd-0w; Wed, 04 Oct 2023 11:35:59 +0200
-Date:   Wed, 4 Oct 2023 11:35:58 +0200
+        id 1qnyf2-008uPw-UB; Wed, 04 Oct 2023 11:59:20 +0200
+Date:   Wed, 4 Oct 2023 11:59:20 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Sean Young <sean@mess.org>
-Cc:     Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 2/2] media: pwm-ir-tx: trigger edges from hrtimer
- interrupt context
-Message-ID: <20231004093558.bt7gf3m6erxxpaie@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic
+ context
+Message-ID: <20231004095920.ne7yrrthow6tnuvg@pengutronix.de>
 References: <cover.1696156485.git.sean@mess.org>
- <7efe4229514001b835fa70d51973cd3306dc0b04.1696156485.git.sean@mess.org>
- <5982681d-4fb5-0271-fdc5-712d6c8512e3@gmail.com>
- <ZRp9RE2jOZdL0+1/@gofer.mess.org>
- <7075cfd7-847e-8d28-72be-93761b36b0e0@gmail.com>
- <ZR0Xue8Mu8VZIxm5@gofer.mess.org>
+ <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pe6ujpvp227ivopk"
+        protocol="application/pgp-signature"; boundary="hz3c3li5tw4muaqt"
 Content-Disposition: inline
-In-Reply-To: <ZR0Xue8Mu8VZIxm5@gofer.mess.org>
+In-Reply-To: <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -63,58 +73,83 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---pe6ujpvp227ivopk
-Content-Type: text/plain; charset=utf-8
+--hz3c3li5tw4muaqt
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Sean,
 
-On Wed, Oct 04, 2023 at 08:43:53AM +0100, Sean Young wrote:
-> On Mon, Oct 02, 2023 at 12:52:00PM +0300, Ivaylo Dimitrov wrote:
-> > On 2.10.23 =D0=B3. 11:20 =D1=87., Sean Young wrote:
-> > > Requires a copy of pwm_state in pwm_ir, not a huge difference (copy o=
-f 28
-> > > bytes vs keeping it around).
-> >=20
-> > see my previous comment re struct var. Also, look at the overhead:
-> > https://elixir.bootlin.com/linux/v6.6-rc3/source/include/linux/pwm.h#L3=
-49 -
-> > you call pwm_get_state() for every edge.
->=20
-> That's the 28 bytes copy I was talking about.
+On Sun, Oct 01, 2023 at 11:40:29AM +0100, Sean Young wrote:
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index dc66e3405bf5..d9679ae5b2be 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -505,7 +505,7 @@ int pwm_apply_state(struct pwm_device *pwm, const str=
+uct pwm_state *state)
+>  	 * is a bad idea. So make it explicit that calling this function might
+>  	 * sleep.
+>  	 */
+> -	might_sleep();
+> +	might_sleep_if(pwm_can_sleep(pwm));
+> =20
+>  	if (!pwm || !state || !state->period ||
+>  	    state->duty_cycle > state->period)
 
-Note that pwm_get_state() also has (IMHO) confusing semantics. It gives
-you (most of the time) the state that was last pwm_state_apply()d and
-not the state the hardware is currently in. In my book keeping the
-pwm_state around is the nicer approach that often is also simpler ...
+I'd like to have a mechanism to catch drivers that missed to set
+=2Ecan_sleep. The best idea I currently have for that is to disable
+preemption if IS_ENABLED(CONFIG_PWM_DEBUG) && !pwm_can_sleep(pwm) while
+=2Eapply() is running.
 
-> However keeping a pointer in struct pwm_ir is a good compromise and makes
-> the rest of the code cleaner.
+> diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
+> index b7c6045c5d08..b8b9392844e9 100644
+> --- a/drivers/pwm/pwm-fsl-ftm.c
+> +++ b/drivers/pwm/pwm-fsl-ftm.c
+> @@ -405,6 +405,7 @@ static int fsl_pwm_probe(struct platform_device *pdev)
+> =20
+>  	fpc->soc =3D of_device_get_match_data(&pdev->dev);
+>  	fpc->chip.dev =3D &pdev->dev;
+> +	fpc->chip.can_sleep =3D true;
 
-=2E.. which seems to apply here, too.
+As .apply() being callable in non-sleepable context only depends on
+=2Eapply() I think a better place for this property is in struct pwm_ops.
+
+Also I wonder if the distinction between atomic and sleeping
+pwm_state_apply() should be more explicit. For GPIOs you have a sleeping
+variant gpiod_set_value_cansleep() that allows to immediately determine
+the intended context in the caller. This would allow that programming
+a PWM stays a preemption point (if possible/desired) even if the
+underlying hardware/driver is atomic. To not have to touch all consumer
+drivers, maybe the pair for pwm should better be
+
+	pwm_apply_state()
+	pwm_apply_state_atomic()
+
+instead of a "cansleep" suffix for the sleeping variant? Or maybe it's
+better to accept touching all consumer drivers to get semantics similar
+to gpio? I couldn't decide quickly what I really like better here, so
+that's your chance to comment and influence the outcome :-)
 
 Best regards
 Uwe
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---pe6ujpvp227ivopk
+--hz3c3li5tw4muaqt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUdMf4ACgkQj4D7WH0S
-/k4a8ggAg6OI8IGWfsLy664bxwFXr17DZ7mff8aWmCNyTuzenyyn1ztaclxH9LDA
-90+B2fbt/XxWJzt5pX+OU6wcGDMMmsVQdv87X4ACZBkhQ0k89TJ40SbVNFXoDLUa
-BTjQsYPqOxYUIS7AsGh2NRW1gIwL0ITcVdeaw/jZSc5gtYM/hc8HYzvPsL7V8Rom
-IGRNU0saEMLKiIcXObvQMAoLG4S6YPE0GKiOQZee2BQiEtF0uvfhHRSDcaEybMIg
-uyWqbJqS2i0dW6xsG+sp9ySpxPd9osh5LYhwxa9Xr/a0JPx+fjzTBt8RAefz1qWA
-KyU5n3RpaHKDe3p7eXq8U9HhzEm66A==
-=/8+M
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUdN3gACgkQj4D7WH0S
+/k7Vgwf+OSTM/5a3jTbEn+zj18WbWk6jQQdj6kqyM47GR36RweXbkLMfbl++5ogJ
+z6xjVfn/ov9rQsnn2Em53Zkv7yV/AQb+Hu1tLnuVAsdyxVC/CrCRjWAcrkpoZf6o
+Ru7Nf7hs/mJ57jeLgBfPp+k2kwntn470QPIpzLiruZge1YeEwuYKzeHuO7WI4KCb
+777XYS5j+tntQRSrlm2dzE8H+5lEqc7mEzG22MAd+yIt4dAsuSAdno2hKLMJx960
+4k6Y+UmLJB3cC+BPcAjEllupp1c4turpZ+3P/7D0Fo8P5BgH937nm/wktXJJlPBs
+aJ8B/mMpia+WhQcYdq+TjejxlzAf3Q==
+=THVI
 -----END PGP SIGNATURE-----
 
---pe6ujpvp227ivopk--
+--hz3c3li5tw4muaqt--
