@@ -2,401 +2,490 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AEE77B7FE2
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Oct 2023 14:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8755B7B8199
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Oct 2023 16:01:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233133AbjJDMyp (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Oct 2023 08:54:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
+        id S242761AbjJDOBy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Oct 2023 10:01:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233003AbjJDMyp (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 08:54:45 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7EDA1;
-        Wed,  4 Oct 2023 05:54:41 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-98377c5d53eso373623466b.0;
-        Wed, 04 Oct 2023 05:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696424079; x=1697028879; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8bC74TryHv+J80MOfZq7W8YVW0BJt9KS7QGciFS22VQ=;
-        b=F4pPU0t/FvxFVdCKh15m87DNg2MHncmAArLfI3EygQ1eS3FGGM+TCzAm/bu2nc9deZ
-         YgvkDxLejN/NwSBQgD2SYWQLH8xb4Eyw2ifiqP+wF5wzMfHlX6xqy+qctbXWhnRItzkf
-         jU6zfcmn5QZgmTz+ZUjge+UqSnavvWFmfENAtyzd8lPO0ddF51KnEmf0PC9II/VgQV+b
-         7V60NzqlTPEr0WXxE5Zc8LzKs6iq1BCfKKm3P/LyATgKKydX/isYQFT8Sh/zshtkeG0w
-         XSsAu6Jl0i2VTdlLXX8IeDTnJ0JPPrKHnuakzacGChK7GQFGZmtiIz/Htp/POPZWIjIG
-         BmKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696424079; x=1697028879;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8bC74TryHv+J80MOfZq7W8YVW0BJt9KS7QGciFS22VQ=;
-        b=E6pivdemV1zDZtlBjjbMhrNIKRr5DDsStSq6b+EtZ6TS7QweurRkWgys/r5LCR3gmD
-         mEHRvBYkmlWLcq3WTeMRlTaT8AaYqMOFKJGA7zxQ5VZZBpakqBcUYlP+N2mNnDh53H/d
-         ITipmuuZOQEDY3/jSkSNgoQGa+DJ/j/eqB4G+HiD8cDagpJ2j6dMGuH1LVNyx15KRKYb
-         btYvTAFCSQdVQhJC00cxi/SZVJENmlZ0MiGr1LMEILIM8R+fgL7qiXqwn4ma8K10x1pg
-         vXLWTMR0H8M/fyyq0PPLn3kstleVIcinJL5bLJZOvXxq5ehJb9WXsGocn9XPOt8IlcAf
-         ISvw==
-X-Gm-Message-State: AOJu0Yz+5olfemn5B6g/sonJBYNpkBUzpnh5fHdtQ3ay/cQY9mEchxr+
-        LaAmwCYBW0ts6Q5ap9EsImTfT4xCuoc=
-X-Google-Smtp-Source: AGHT+IECMraJgLOrBHCKmfzZvyl8/4W358Hz44FDzdvBzTNqWeyNxlnZlmBNj7niGD7Br5m6qA/sNg==
-X-Received: by 2002:a17:906:76d3:b0:9ae:65a5:b6f4 with SMTP id q19-20020a17090676d300b009ae65a5b6f4mr1837244ejn.20.1696424079365;
-        Wed, 04 Oct 2023 05:54:39 -0700 (PDT)
-Received: from [192.168.1.10] ([95.43.220.235])
-        by smtp.googlemail.com with ESMTPSA id r13-20020a170906350d00b009a9fbeb15f5sm2740350eja.46.2023.10.04.05.54.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Oct 2023 05:54:38 -0700 (PDT)
-Subject: Re: [PATCH 2/2] media: pwm-ir-tx: trigger edges from hrtimer
- interrupt context
-To:     Sean Young <sean@mess.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <cover.1696156485.git.sean@mess.org>
- <7efe4229514001b835fa70d51973cd3306dc0b04.1696156485.git.sean@mess.org>
- <1647d018-cb4e-7c4a-c80f-c726b1ea3628@gmail.com>
- <ZR0bqBbvM+hHOPXX@gofer.mess.org>
-From:   Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Message-ID: <1c96b6f1-bb88-0027-a7a0-ec85768c6b90@gmail.com>
-Date:   Wed, 4 Oct 2023 15:54:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Firefox/60.0 Thunderbird/60.6.1
+        with ESMTP id S242711AbjJDOBy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 10:01:54 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A32EAD
+        for <linux-pwm@vger.kernel.org>; Wed,  4 Oct 2023 07:01:49 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qo2RV-0007IT-QQ; Wed, 04 Oct 2023 16:01:37 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qo2RU-00B2s9-VL; Wed, 04 Oct 2023 16:01:36 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qo2RU-0090ZQ-Lc; Wed, 04 Oct 2023 16:01:36 +0200
+Date:   Wed, 4 Oct 2023 16:01:30 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jisheng Zhang <jszhang@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] pwm: add T-HEAD PWM driver
+Message-ID: <20231004140130.ljsfpn4axmsmszwm@pengutronix.de>
+References: <20231004092731.1362-1-jszhang@kernel.org>
+ <20231004092731.1362-3-jszhang@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZR0bqBbvM+hHOPXX@gofer.mess.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xfwfxxt6t7o62knb"
+Content-Disposition: inline
+In-Reply-To: <20231004092731.1362-3-jszhang@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi,
 
-On 4.10.23 г. 11:00 ч., Sean Young wrote:
-> Hi,
-> 
-> On Mon, Oct 02, 2023 at 09:16:53AM +0300, Ivaylo Dimitrov wrote:
->> On 1.10.23 г. 13:40 ч., Sean Young wrote:
->>> The pwm-ir-tx driver has to turn the pwm signal on and off, and suffers
->>> from delays as this is done in process context. Make this work in atomic
->>> context.
->>>
->>> This makes the driver much more precise.
->>>
->>> Signed-off-by: Sean Young <sean@mess.org>
->>> Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
->>> ---
->>>    drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++--------
->>>    1 file changed, 63 insertions(+), 16 deletions(-)
->>>
->>
->> what about the following patch(not a proper one, just RFC)? It achieves the
->> same (if not better) precision (on n900 at least) without using atomic pwm.
->> What it does is: create a fifo thread in which we swicth pwm on/off, start
->> hrtimer that is used to signal thread when to switch pwm.
->> As signal comes earlier than needed(because hrtimer runs async to the
->> thread), we do a busy loop wait for the precise time to switch the pwm. At
->> least on n900, this busy loop is less than 200 us per switch(worst case,
->> usually it is less than 100 us). That way, even if we have some latency
->> spike, it is covered by not doing busy loop for that particular pwm switch
->> and we keep the precise timing.
-> 
-> I think this is a good idea.
-> 
->> Maybe we shall merge both patches so fifo thread to be used for sleeping
->> pwms and hrtimer for atomic. I can do that and test it here if you think
->> that approach makes sense.
-> 
-> Let's try and merge this patch for the next merge window, and worry about
-> the atomic version after that. We've already queued the ir-rx51 removal
-> patches to media_stage so it would be nice to have to revert these patches,
-> and improve pwm-ir-tx for the next kernel release.
-> 
+--xfwfxxt6t7o62knb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ir-rx51 is broken without 
-https://www.spinics.net/lists/kernel/msg4953300.html, it is also missing 
-a call to init_waitqueue_head() in the probe() function. So I have no 
-strong opinion on what shall be done with it.
+On Wed, Oct 04, 2023 at 05:27:31PM +0800, Jisheng Zhang wrote:
+> T-HEAD SoCs such as the TH1520 contain a PWM controller used
+> to control the LCD backlight, fan and so on. Add driver for it.
+>=20
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> ---
+>  MAINTAINERS             |   1 +
+>  drivers/pwm/Kconfig     |  11 ++
+>  drivers/pwm/Makefile    |   1 +
+>  drivers/pwm/pwm-thead.c | 274 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 287 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-thead.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d55e40060c46..86cf0926dbfc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18482,6 +18482,7 @@ L:	linux-riscv@lists.infradead.org
+>  S:	Maintained
+>  F:	arch/riscv/boot/dts/thead/
+>  F:	drivers/usb/dwc3/dwc3-thead.c
+> +F:	drivers/pwm/pwm-thead.c
+> =20
+>  RNBD BLOCK DRIVERS
+>  M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 8ebcddf91f7b..428fa365a19a 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -637,6 +637,17 @@ config PWM_TEGRA
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-tegra.
+> =20
+> +config PWM_THEAD
+> +	tristate "T-HEAD PWM support"
+> +	depends on ARCH_THEAD || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Generic PWM framework driver for the PWFM controller found on THEAD
+> +	  SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-thead.
+> +
+>  config PWM_TIECAP
+>  	tristate "ECAP PWM support"
+>  	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARC=
+H_K3 || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index c822389c2a24..4c317e6316e8 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -59,6 +59,7 @@ obj-$(CONFIG_PWM_STMPE)		+=3D pwm-stmpe.o
+>  obj-$(CONFIG_PWM_SUN4I)		+=3D pwm-sun4i.o
+>  obj-$(CONFIG_PWM_SUNPLUS)	+=3D pwm-sunplus.o
+>  obj-$(CONFIG_PWM_TEGRA)		+=3D pwm-tegra.o
+> +obj-$(CONFIG_PWM_THEAD)		+=3D pwm-thead.o
+>  obj-$(CONFIG_PWM_TIECAP)	+=3D pwm-tiecap.o
+>  obj-$(CONFIG_PWM_TIEHRPWM)	+=3D pwm-tiehrpwm.o
+>  obj-$(CONFIG_PWM_TWL)		+=3D pwm-twl.o
+> diff --git a/drivers/pwm/pwm-thead.c b/drivers/pwm/pwm-thead.c
+> new file mode 100644
+> index 000000000000..ba1e3a4f1027
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-thead.c
+> @@ -0,0 +1,274 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * T-HEAD PWM driver
+> + *
+> + * Copyright (C) 2021 Alibaba Group Holding Limited.
+> + * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
+> + *
+> + * Limitations:
+> + * - The THEAD_PWM_START bit is only effective when 0 -> 1, which is use=
+d to
+> + *   start the channel, 1 -> 0 doesn't change anything. so 0 % duty cycl=
+e is
+> + *   used to "disable" the channel.
+> + * - The PWM_CFG_UPDATE atomically updates and only updates period and d=
+uty.
+> + * - To update period and duty, PWM_CFG_UPDATE needs to go through 0 -> =
+1 step,
+> + *   I.E if PWM_CFG_UPDATE is already 1, it's necessary to clear it to 0
+> + *   beforehand.
+> + * - Polarity can only be changed if never started before.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
 
-> I'll test your patch, in the mean time would you mind posting this patch
-> as a proper patch (with review comments below addressed)?
-> 
+Looking at 0a41b0c5d97a3758ad102cec469aaa79c7d406b7 I think you want
+linux/mod_devicetable.h here instead of of_device.h.
 
-ok
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/pwm.h>
+> +#include <linux/slab.h>
+> +
+> +#define THEAD_PWM_MAX_NUM		6
+> +#define THEAD_PWM_MAX_PERIOD		GENMASK(31, 0)
+> +#define THEAD_PWM_MAX_DUTY		GENMASK(31, 0)
+> +
+> +#define THEAD_PWM_CHN_BASE(n)		((n) * 0x20)
+> +#define THEAD_PWM_CTRL(n)		(THEAD_PWM_CHN_BASE(n) + 0x00)
+> +#define THEAD_PWM_RPT(n)		(THEAD_PWM_CHN_BASE(n) + 0x04)
+> +#define THEAD_PWM_PER(n)		(THEAD_PWM_CHN_BASE(n) + 0x08)
+> +#define THEAD_PWM_FP(n)			(THEAD_PWM_CHN_BASE(n) + 0x0c)
+> +#define THEAD_PWM_STATUS(n)		(THEAD_PWM_CHN_BASE(n) + 0x10)
+> +
+> +/* bit definition PWM_CTRL */
+> +#define THEAD_PWM_START			BIT(0)
 
-> Thanks,
-> 
-> Sean
-> 
-> 
->>
->> Regards,
->> Ivo
->>
->> PS: I have a patch that converts timer-ti-dm to non-sleeping one, will send
->> it when it comes to it.
->>
->> diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
->> index 105a9c24f1e3..e8b620f53056 100644
->> --- a/drivers/media/rc/pwm-ir-tx.c
->> +++ b/drivers/media/rc/pwm-ir-tx.c
->> @@ -4,6 +4,7 @@
->>    */
->>
->>   #include <linux/kernel.h>
->> +#include <linux/kthread.h>
->>   #include <linux/module.h>
->>   #include <linux/pwm.h>
->>   #include <linux/delay.h>
->> @@ -17,8 +18,16 @@
->>
->>   struct pwm_ir {
->>   	struct pwm_device *pwm;
->> +	struct hrtimer timer;
->> +	struct task_struct *tx_thread;
->> +	wait_queue_head_t tx_wq;
->> +	struct completion tx_done;
->> +	struct completion edge;
->>   	unsigned int carrier;
->>   	unsigned int duty_cycle;
->> +	unsigned int *txbuf;
->> +	unsigned int count;
->> +	unsigned int index;
->>   };
->>
->>   static const struct of_device_id pwm_ir_of_match[] = {
->> @@ -48,35 +57,103 @@ static int pwm_ir_set_carrier(struct rc_dev *dev, u32
->> carrier)
->>   	return 0;
->>   }
->>
->> -static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
->> -		     unsigned int count)
->> +static enum hrtimer_restart pwm_ir_timer_cb(struct hrtimer *timer)
->> +{
->> +	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
->> +	ktime_t now;
->> +
->> +	/*
->> +	 * If we happen to hit an odd latency spike, loop through the
->> +	 * pulses until we catch up.
->> +	 */
->> +	do {
->> +		u64 edge;
->> +
->> +		if (pwm_ir->index >= pwm_ir->count)
->> +			goto out;
-> 
-> Might as well avoid the goto and put the complete and return in the body of
-> the if.
-> 
+This is a bit in THEAD_PWM_CTRL(n), so I'd propose THEAD_PWM_CTRL_START
+as a name.
 
-right, will fix
+> +#define THEAD_PWM_SOFT_RST		BIT(1)
+> +#define THEAD_PWM_CFG_UPDATE		BIT(2)
+> +#define THEAD_PWM_INT_EN		BIT(3)
+> +#define THEAD_PWM_MODE_MASK		GENMASK(5, 4)
 
->> +
->> +		complete(&pwm_ir->edge);
->> +
->> +		edge = US_TO_NS(pwm_ir->txbuf[pwm_ir->index]);
->> +		hrtimer_add_expires_ns(timer, edge);
->> +
->> +		pwm_ir->index++;
->> +
->> +		now = timer->base->get_time();
->> +
->> +	} while (hrtimer_get_expires_tv64(timer) < now);
->> +
->> +	return HRTIMER_RESTART;
->> +out:
->> +	complete(&pwm_ir->edge);
->> +
->> +	return HRTIMER_NORESTART;
->> +}
->> +
->> +static void _pwm_ir_tx(struct pwm_ir *pwm_ir)
->>   {
->> -	struct pwm_ir *pwm_ir = dev->priv;
->> -	struct pwm_device *pwm = pwm_ir->pwm;
->>   	struct pwm_state state;
->>   	int i;
->>   	ktime_t edge;
->>   	long delta;
->>
->> -	pwm_init_state(pwm, &state);
->> +	pwm_init_state(pwm_ir->pwm, &state);
->>
->>   	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
->>   	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
->>
->> +	hrtimer_start(&pwm_ir->timer, 0, HRTIMER_MODE_REL);
->> +	wait_for_completion(&pwm_ir->edge);
->>   	edge = ktime_get();
->>
->> -	for (i = 0; i < count; i++) {
->> +	for (i = 0; i < pwm_ir->count; i++) {
->>   		state.enabled = !(i % 2);
->> -		pwm_apply_state(pwm, &state);
->> +		pwm_apply_state(pwm_ir->pwm, &state);
->> +
->> +		edge = ktime_add_us(edge, pwm_ir->txbuf[i]);
->> +		wait_for_completion(&pwm_ir->edge);
->>
->> -		edge = ktime_add_us(edge, txbuf[i]);
->>   		delta = ktime_us_delta(edge, ktime_get());
->> +
->>   		if (delta > 0)
->> -			usleep_range(delta, delta + 10);
->> +			udelay(delta);
->>   	}
->>
->>   	state.enabled = false;
->> -	pwm_apply_state(pwm, &state);
->> +	pwm_apply_state(pwm_ir->pwm, &state);
->> +
->> +	pwm_ir->count = 0;
->> +}
->> +
->> +static int pwm_ir_thread(void *data)
->> +{
->> +	struct pwm_ir *pwm_ir = data;
->> +
->> +	for (;;) {
->> +		wait_event_idle(pwm_ir->tx_wq,
->> +				kthread_should_stop() || pwm_ir->count);
->> +
->> +		if (kthread_should_stop())
->> +			break;
->> +
->> +		_pwm_ir_tx(pwm_ir);
->> +		complete(&pwm_ir->tx_done);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
->> +		     unsigned int count)
->> +{
->> +	struct pwm_ir *pwm_ir = dev->priv;
->> +
->> +	pwm_ir->txbuf = txbuf;
->> +	pwm_ir->count = count;
->> +	pwm_ir->index = 0;
->> +
->> +	wake_up(&pwm_ir->tx_wq);
->> +	wait_for_completion(&pwm_ir->tx_done);
->>
->>   	return count;
->>   }
->> @@ -91,12 +168,24 @@ static int pwm_ir_probe(struct platform_device *pdev)
->>   	if (!pwm_ir)
->>   		return -ENOMEM;
->>
->> +	platform_set_drvdata(pdev, pwm_ir);
->> +
->> +	pwm_ir->count = 0;
->> +
->>   	pwm_ir->pwm = devm_pwm_get(&pdev->dev, NULL);
->>   	if (IS_ERR(pwm_ir->pwm))
->>   		return PTR_ERR(pwm_ir->pwm);
->>
->> -	pwm_ir->carrier = 38000;
->> +	init_waitqueue_head(&pwm_ir->tx_wq);
->> +	init_completion(&pwm_ir->edge);
->> +	init_completion(&pwm_ir->tx_done);
->> +
->> +	hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->> +	pwm_ir->timer.function = pwm_ir_timer_cb;
->> +
->>   	pwm_ir->duty_cycle = 50;
->> +	pwm_ir->carrier = DIV_ROUND_CLOSEST_ULL(pwm_get_period(pwm_ir->pwm),
->> +						NSEC_PER_SEC);
->>
->>   	rcdev = devm_rc_allocate_device(&pdev->dev, RC_DRIVER_IR_RAW_TX);
->>   	if (!rcdev)
->> @@ -109,15 +198,38 @@ static int pwm_ir_probe(struct platform_device *pdev)
->>   	rcdev->s_tx_duty_cycle = pwm_ir_set_duty_cycle;
->>   	rcdev->s_tx_carrier = pwm_ir_set_carrier;
->>
->> +	pwm_ir->tx_thread = kthread_create(pwm_ir_thread, pwm_ir, "%s/tx",
->> +					   dev_name(&pdev->dev));
->> +	if (IS_ERR(pwm_ir->tx_thread))
->> +		return PTR_ERR(pwm_ir->tx_thread);
->> +
->> +	sched_set_fifo(pwm_ir->tx_thread);
->> +	wake_up_process(pwm_ir->tx_thread);
-> 
-> This means the thread is always around. How about creating the thread
-> per-tx?
-> 
+I'd drop "_MASK" here (and add _CTRL).
 
-Yes, that can be done, just not sure what the overhead would be.
+> +#define THEAD_PWM_ONE_SHOT_MODE		FIELD_PREP(THEAD_PWM_MODE_MASK, 1)
 
-Also, I think we shall reconsider the way the driver works:
+This is unused
 
-Imagine we have to pretend we are TV remote that supports NEC protocol 
-(for example), especially the "REPEAT CODES" part. Currently, no matter 
-what we do, there is no way to get the timings even remotely right, as 
-we have no idea what the "warmup" and "complete" delays are. Like, 
-starting thread (if needed), hrtimer setup time, completions waiting, 
-contexts switching, etc.
+> +#define THEAD_PWM_CONTINUOUS_MODE	FIELD_PREP(THEAD_PWM_MODE_MASK, 2)
 
-So, I think the correct thing to do is to copy txbuf (as a list of 
-txbufs) into pwm_ir in tx function, start pulses generation and return 
-from pwm_ir_tx() *immediately*, without waiting for tx to finish. If 
-userspace requests submission of another set of pulses while we are 
-still sending the current one, well, we accept it, add it to the list 
-and delay the sending until the current one is finished. When there is 
-nothing more to send (the list is empty), stop the hrtimer (and perhaps 
-the thread)
+THEAD_PWM_CTRL_MODE_CONTINUOUS ?
 
-I think that way userspace will be able to append as many "repeat" 
-pulses with proper timings as it wants (with some sane limits ofc).
+> +#define THEAD_PWM_EVTRIG_MASK		GENMASK(7, 6)
+> +#define THEAD_PWM_FPOUT			BIT(8)
+> +#define THEAD_PWM_INFACTOUT		BIT(9)
+> +
+> +struct thead_pwm_chip {
+> +	struct pwm_chip chip;
+> +	void __iomem *mmio_base;
+> +	struct clk *clk;
+> +	bool ever_started;
+> +};
+> +
+> +static inline struct thead_pwm_chip *thead_pwm_from_chip(struct pwm_chip=
+ *chip)
+> +{
+> +	return container_of(chip, struct thead_pwm_chip, chip);
+> +}
+> +
+> +static int thead_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   const struct pwm_state *state)
+> +{
+> +	struct thead_pwm_chip *priv =3D thead_pwm_from_chip(chip);
+> +	u64 period_cycle, duty_cycle, rate;
+> +	u32 val;
+> +
+> +	/* if ever started, can't change the polarity */
+> +	if (priv->ever_started && state->polarity !=3D pwm->state.polarity)
+> +		return -EINVAL;
+> +
+> +	if (!state->enabled) {
+> +		if (pwm->state.enabled) {
+> +			val =3D readl(priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +			val &=3D ~THEAD_PWM_CFG_UPDATE;
+> +			writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +
+> +			writel(0, priv->mmio_base + THEAD_PWM_FP(pwm->hwpwm));
+> +
+> +			val |=3D THEAD_PWM_CFG_UPDATE;
+> +			writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	if (!pwm->state.enabled)
+> +		pm_runtime_get_sync(chip->dev);
 
-Unless we somehow have API restriction that we shall not return until tx 
-is finished.
+pm_runtime_get_sync() returns an int that you shouldn't ignore.
 
-Does that make any sense to you?
+> +	val =3D readl(priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +	val &=3D ~THEAD_PWM_CFG_UPDATE;
+> +
+> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		val &=3D ~THEAD_PWM_FPOUT;
+> +	else
+> +		val |=3D THEAD_PWM_FPOUT;
 
-Thanks,
-Ivo
+What happens here if the bootloader already touched that flag? Or the
+driver is reloaded/rebound?
 
->> +
->>   	rc = devm_rc_register_device(&pdev->dev, rcdev);
->> -	if (rc < 0)
->> +	if (rc < 0) {
->> +		kthread_stop(pwm_ir->tx_thread);
->>   		dev_err(&pdev->dev, "failed to register rc device\n");
->> +	}
->>
->>   	return rc;
->>   }
->>
->> +static int pwm_ir_remove(struct platform_device *pdev)
->> +{
->> +	struct pwm_ir *pwm_ir = platform_get_drvdata(pdev);
->> +
->> +	if (pwm_ir->tx_thread) {
->> +		kthread_stop(pwm_ir->tx_thread);
->> +		pwm_ir->tx_thread = NULL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static struct platform_driver pwm_ir_driver = {
->>   	.probe = pwm_ir_probe,
->> +	.remove = pwm_ir_remove,
->>   	.driver = {
->>   		.name	= DRIVER_NAME,
->>   		.of_match_table = of_match_ptr(pwm_ir_of_match),
+> +	writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +
+> +	rate =3D clk_get_rate(priv->clk);
+> +	/*
+> +	 * The following calculations might overflow if clk is bigger
+> +	 * than 1 GHz. In practise it's 24MHz, so this limitation
+> +	 * is only theoretic.
+> +	 */
+> +	if (rate > (u64)NSEC_PER_SEC)
+
+this cast isn't needed.
+
+> +		return -EINVAL;
+> +
+> +	period_cycle =3D mul_u64_u64_div_u64(rate, state->period, NSEC_PER_SEC);
+> +	if (period_cycle > THEAD_PWM_MAX_PERIOD)
+> +		period_cycle =3D THEAD_PWM_MAX_PERIOD;
+> +	/*
+> +	 * With limitation above we have period_cycle <=3D THEAD_PWM_MAX_PERIOD,
+> +	 * so this cannot overflow.
+> +	 */
+> +	writel((u32)period_cycle, priv->mmio_base + THEAD_PWM_PER(pwm->hwpwm));
+
+This cast can also be dropped.
+
+> +
+> +	duty_cycle =3D mul_u64_u64_div_u64(rate, state->duty_cycle, NSEC_PER_SE=
+C);
+> +	if (duty_cycle > THEAD_PWM_MAX_DUTY)
+> +		duty_cycle =3D THEAD_PWM_MAX_DUTY;
+> +	/*
+> +	 * With limitation above we have duty_cycle <=3D THEAD_PWM_MAX_PERIOD,
+> +	 * so this cannot overflow.
+> +	 */
+> +	writel((u32)duty_cycle, priv->mmio_base + THEAD_PWM_FP(pwm->hwpwm));
+
+=2E..
+
+> +
+> +	val |=3D THEAD_PWM_CFG_UPDATE;
+> +	writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +
+> +	if (!pwm->state.enabled) {
+> +		val |=3D THEAD_PWM_START;
+> +		writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +		priv->ever_started =3D true;
+> +	}
+
+Further above you conditionally call pm_runtime_get_sync(), there should
+be a matching pm_runtime_put().
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int thead_pwm_get_state(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> +			       struct pwm_state *state)
+> +{
+> +	struct thead_pwm_chip *priv =3D thead_pwm_from_chip(chip);
+> +	u64 rate =3D clk_get_rate(priv->clk);
+> +	u32 val;
+> +
+> +	pm_runtime_get_sync(chip->dev);
+> +
+> +	val =3D readl(priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
+> +	state->enabled =3D !!(val & THEAD_PWM_START);
+> +	if (val & THEAD_PWM_FPOUT)
+> +		state->polarity =3D PWM_POLARITY_NORMAL;
+> +	else
+> +		state->polarity =3D PWM_POLARITY_INVERSED;
+> +
+> +	val =3D readl(priv->mmio_base + THEAD_PWM_PER(pwm->hwpwm));
+> +	/*
+> +	 * val 32 bits, multiply NSEC_PER_SEC, won't overflow.
+> +	 */
+> +	state->period =3D DIV64_U64_ROUND_UP((u64)val * NSEC_PER_SEC, rate);
+> +
+> +	val =3D readl(priv->mmio_base + THEAD_PWM_FP(pwm->hwpwm));
+> +	/*
+> +	 * val 32 bits, multiply NSEC_PER_SEC, won't overflow.
+> +	 */
+> +	state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)val * NSEC_PER_SEC, rate);
+> +
+> +	pm_runtime_put_sync(chip->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops thead_pwm_ops =3D {
+> +	.apply =3D thead_pwm_apply,
+> +	.get_state =3D thead_pwm_get_state,
+> +	.owner =3D THIS_MODULE,
+> +};
+> +
+> +static int __maybe_unused thead_pwm_runtime_suspend(struct device *dev)
+> +{
+> +	struct thead_pwm_chip *priv =3D dev_get_drvdata(dev);
+> +
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused thead_pwm_runtime_resume(struct device *dev)
+> +{
+> +	struct thead_pwm_chip *priv =3D dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret =3D clk_prepare_enable(priv->clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable pwm clock(%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+
+This can be simplified to:
+
+	ret =3D clk_prepare_enable(priv->clk);
+	if (ret)
+		dev_err(dev, "failed to enable pwm clock(%pe)\n", ERR_PTR(ret));
+
+	return ret;
+
+(Note that I used %pe instead of %d which is nicer for error codes)
+
+Having said that, I'm unsure if emitting an error message is useful.
+Maybe the core emits a message anyhow?
+
+> +}
+> +
+> +static int thead_pwm_probe(struct platform_device *pdev)
+> +{
+> +	u32 val =3D THEAD_PWM_INFACTOUT | THEAD_PWM_FPOUT | THEAD_PWM_CONTINUOU=
+S_MODE;
+> +	struct thead_pwm_chip *priv;
+> +	int ret, i;
+> +
+> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	priv->mmio_base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(priv->mmio_base))
+> +		return PTR_ERR(priv->mmio_base);
+> +
+> +	priv->clk =3D devm_clk_get_enabled(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+> +	priv->chip.ops =3D &thead_pwm_ops;
+> +	priv->chip.dev =3D &pdev->dev;
+> +	priv->chip.npwm =3D THEAD_PWM_MAX_NUM;
+> +
+> +	/* set normal polarity and other proper bits for all channels */
+
+Please don't. You're supposed to keep the state of the hardware in
+probe. Consider a bootloader that enabled the backlight of an LCD that
+shows a splash screen.
+
+> +	for (i =3D 0; i < priv->chip.npwm; i++)
+> +		writel(val, priv->mmio_base + THEAD_PWM_CTRL(i));
+> +
+> +	ret =3D devm_pwmchip_add(&pdev->dev, &priv->chip);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pm_runtime_enable(&pdev->dev);
+
+devm_pm_runtime_enable() and then drop .remove()
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void thead_pwm_remove(struct platform_device *pdev)
+> +{
+> +	pm_runtime_disable(&pdev->dev);
+> +}
+> +
+> +static const struct of_device_id thead_pwm_dt_ids[] =3D {
+> +	{.compatible =3D "thead,th1520-pwm",},
+> +	{/* sentinel */}
+> +};
+> +MODULE_DEVICE_TABLE(of, thead_pwm_dt_ids);
+> +
+> +static const struct dev_pm_ops thead_pwm_pm_ops =3D {
+> +	SET_RUNTIME_PM_OPS(thead_pwm_runtime_suspend, thead_pwm_runtime_resume,=
+ NULL)
+> +};
+> +
+> +static struct platform_driver thead_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "thead-pwm",
+> +		.of_match_table =3D thead_pwm_dt_ids,
+> +		.pm =3D &thead_pwm_pm_ops,
+> +	},
+> +	.probe =3D thead_pwm_probe,
+> +	.remove_new =3D thead_pwm_remove,
+> +};
+> +module_platform_driver(thead_pwm_driver);
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xfwfxxt6t7o62knb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUdcDQACgkQj4D7WH0S
+/k5UOAf+OWHM6iM8C0kqvXY/mcGbttQHxN7rRxN/DJFtQ9gzi6Fdrhi0DUJdnbSv
+l1VO8m4qNGe456mJ5uU2y56z6v2tR+tsY5ERIefivH4oWvKJj2eug4XBsq5UZXtX
+YQmgz4QAM/K6SIzu8zukYYCp3Ac6qTMnCNeEjORLUhU7JlYvRoho4iRNKCs5Iff+
+fumkLpzW/a+uzQ0Ly6FMtGVYp8zbSQQ65nZgHlfAFcd1SQsNFe9Y/aeWbTMERcx3
+xJw8oSmFCAVAn+mjRildmxVDJCiogOMVgy54+sWIC/EtU97+edzHa3Wd4rh+Nq9J
+GodhuKouzkH4aX6kYcBF6QVlvxTu9Q==
+=nYFn
+-----END PGP SIGNATURE-----
+
+--xfwfxxt6t7o62knb--
