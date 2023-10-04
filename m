@@ -2,58 +2,52 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 211277B81F7
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Oct 2023 16:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEB2B7B8290
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Oct 2023 16:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242858AbjJDOPd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Oct 2023 10:15:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        id S242897AbjJDOmM (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 4 Oct 2023 10:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242860AbjJDOPd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 10:15:33 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B723AD
-        for <linux-pwm@vger.kernel.org>; Wed,  4 Oct 2023 07:15:28 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qo2ep-0001OW-FX; Wed, 04 Oct 2023 16:15:23 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qo2en-00B3Kc-Nb; Wed, 04 Oct 2023 16:15:21 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qo2en-0091KZ-EJ; Wed, 04 Oct 2023 16:15:21 +0200
-Date:   Wed, 4 Oct 2023 16:15:21 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        with ESMTP id S242935AbjJDOmL (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 10:42:11 -0400
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E993C1;
+        Wed,  4 Oct 2023 07:42:07 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 4CE17100092; Wed,  4 Oct 2023 15:42:05 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1696430525; bh=Fa78l7qohJHkl5Gw25F2o3ZIf+b/JdBvbj8O9ydf7rY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c3TwoBRUOdAHj5cmBTelMsfPgYqzxQrEeL1W2Qpug1KgC5dL//JYVI9eEwNU136//
+         ng2ABitSd5qrvWK9S3NTrt0wBBuD293PgVjLX0K5EBBQoGA9ygGfCQDLRrCO6njLDh
+         ByIfh+4k5Dy749UkkCNoQwwBBnO0MqzQdTxo6MMYtOkZf4OikisclIz2Sg1VCJkH9g
+         ObfUjV8SXX7t9j98FiYmTYZwmjC/Rn+G67j8wi8xVdfcgo0YJn/zJIDLSmWQ/fexok
+         hQV1yZjpJbFIEBOmK14Zzav0Ts9OUjzAfv6MjneQKHjw+fNt27WIieHKDdmcyZNhdX
+         8j/ZcISlS3zTw==
+Date:   Wed, 4 Oct 2023 15:42:05 +0100
+From:   Sean Young <sean@mess.org>
+To:     Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v5 2/4] pwm: Add support for RZ/V2M PWM driver
-Message-ID: <20231004141521.rgm74pepirnvzrwm@pengutronix.de>
-References: <20230630114003.320641-1-biju.das.jz@bp.renesas.com>
- <20230630114003.320641-3-biju.das.jz@bp.renesas.com>
- <20230916153248.27k7erg7i7ruf76w@pengutronix.de>
- <TYWPR01MB8775150932FD1F0A346029B7C2C4A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/2] media: pwm-ir-tx: trigger edges from hrtimer
+ interrupt context
+Message-ID: <ZR15vc0chl/gMDgV@gofer.mess.org>
+References: <cover.1696156485.git.sean@mess.org>
+ <7efe4229514001b835fa70d51973cd3306dc0b04.1696156485.git.sean@mess.org>
+ <1647d018-cb4e-7c4a-c80f-c726b1ea3628@gmail.com>
+ <ZR0bqBbvM+hHOPXX@gofer.mess.org>
+ <1c96b6f1-bb88-0027-a7a0-ec85768c6b90@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jujoux4pgvgy3jaq"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <TYWPR01MB8775150932FD1F0A346029B7C2C4A@TYWPR01MB8775.jpnprd01.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1c96b6f1-bb88-0027-a7a0-ec85768c6b90@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -62,93 +56,105 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Wed, Oct 04, 2023 at 03:54:32PM +0300, Ivaylo Dimitrov wrote:
+> On 4.10.23 г. 11:00 ч., Sean Young wrote:
+> > On Mon, Oct 02, 2023 at 09:16:53AM +0300, Ivaylo Dimitrov wrote:
+> > > On 1.10.23 г. 13:40 ч., Sean Young wrote:
+> > > > The pwm-ir-tx driver has to turn the pwm signal on and off, and suffers
+> > > > from delays as this is done in process context. Make this work in atomic
+> > > > context.
+> > > > 
+> > > > This makes the driver much more precise.
+> > > > 
+> > > > Signed-off-by: Sean Young <sean@mess.org>
+> > > > Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> > > > ---
+> > > >    drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++--------
+> > > >    1 file changed, 63 insertions(+), 16 deletions(-)
+> > > > 
+> > > 
+> > > what about the following patch(not a proper one, just RFC)? It achieves the
+> > > same (if not better) precision (on n900 at least) without using atomic pwm.
+> > > What it does is: create a fifo thread in which we swicth pwm on/off, start
+> > > hrtimer that is used to signal thread when to switch pwm.
+> > > As signal comes earlier than needed(because hrtimer runs async to the
+> > > thread), we do a busy loop wait for the precise time to switch the pwm. At
+> > > least on n900, this busy loop is less than 200 us per switch(worst case,
+> > > usually it is less than 100 us). That way, even if we have some latency
+> > > spike, it is covered by not doing busy loop for that particular pwm switch
+> > > and we keep the precise timing.
+> > 
+> > I think this is a good idea.
+> > 
+> > > Maybe we shall merge both patches so fifo thread to be used for sleeping
+> > > pwms and hrtimer for atomic. I can do that and test it here if you think
+> > > that approach makes sense.
+> > 
+> > Let's try and merge this patch for the next merge window, and worry about
+> > the atomic version after that. We've already queued the ir-rx51 removal
+> > patches to media_stage so it would be nice to have to revert these patches,
+> > and improve pwm-ir-tx for the next kernel release.
+> > 
+> 
+> ir-rx51 is broken without
+> https://www.spinics.net/lists/kernel/msg4953300.html, it is also missing a
+> call to init_waitqueue_head() in the probe() function. So I have no strong
+> opinion on what shall be done with it.
 
---jujoux4pgvgy3jaq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, ok. I guess the pwm-ir-tx driver is less broken in that regard.
 
-Hello Fabrizio,
+In that case I propose we merge the ir-rx51 for the next merge window,
+and further fixes to pwm-ir-tx go in when they're ready.
 
-On Tue, Oct 03, 2023 at 09:19:41PM +0000, Fabrizio Castro wrote:
-> > > +	if (period)
-> > > +		period +=3D 1;
-> >=20
-> > This looks bogus, why don't you add 1 if RZV2M_PWMCYC is 0?
->=20
-> Agreed. We should always add 1.
->=20
-> > Also it suggests that the hardware cannot do a 100% relative duty
-> > cycle?
->=20
-> It does support 100% duty cycle.
-> PWMCYC =3D 0 actually means 1 clock cycle, that's why the faff with
-> increment and decrement operations, and that's why the confusion.
+> > This means the thread is always around. How about creating the thread
+> > per-tx?
+> > 
+> 
+> Yes, that can be done, just not sure what the overhead would be.
+> 
+> Also, I think we shall reconsider the way the driver works:
+> 
+> Imagine we have to pretend we are TV remote that supports NEC protocol (for
+> example), especially the "REPEAT CODES" part. Currently, no matter what we
+> do, there is no way to get the timings even remotely right, as we have no
+> idea what the "warmup" and "complete" delays are. Like, starting thread (if
+> needed), hrtimer setup time, completions waiting, contexts switching, etc.
 
-So it doesn't support a 0% relative duty cycle?
+It's not perfect, but the assumption is that those times are going to be
+the same or very similar for each tx. So, if the setup/warmup time is the same
+and if there is no complete delay, then using usleep() between two txs 
+works fine. I think in reality the setup/complete times are extremely
+short (time to send usb packet or so), and compared to IR timings this is
+insignificant.
 
-> > If I didn't miss anything here, please add that to the list of
-> > Limitations above.
->=20
-> Thankfully not a limitation.
->=20
-> >=20
-> > > +	state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC * (u64)period << (4
-> > * prescale),
-> > > +					 rzv2m_pwm->rate);
-> >=20
-> > The multiplication can overflow. I see no easy way to prevent this
-> > without introducing a mul_u64_u64_div_roundup helper. Maybe I miss
-> > something?
->=20
-> It does overflow, good catch!
-> I think we could split this in three operations for now, and maybe
-> improve it later on:
-> period =3D NSEC_PER_SEC * (cyc + 1);
-> period =3D DIV64_U64_ROUND_UP(period, rzv2m_pwm->rate);
-> period <<=3D rzv2m_pwm_prescale_to_shift(prescale);
+Having said that, maybe a different scheme would be nice, which could offer
+better precision.
+ 
+> So, I think the correct thing to do is to copy txbuf (as a list of txbufs)
+> into pwm_ir in tx function, start pulses generation and return from
+> pwm_ir_tx() *immediately*, without waiting for tx to finish. If userspace
+> requests submission of another set of pulses while we are still sending the
+> current one, well, we accept it, add it to the list and delay the sending
+> until the current one is finished. When there is nothing more to send (the
+> list is empty), stop the hrtimer (and perhaps the thread)
+> 
+> I think that way userspace will be able to append as many "repeat" pulses
+> with proper timings as it wants (with some sane limits ofc).
+> 
+> Unless we somehow have API restriction that we shall not return until tx is
+> finished.
+> 
+> Does that make any sense to you?
 
-You're loosing precision here though. With /^ =3D div_round_up:
+Two problems:
 
-	1000000000 * 5 /^ 3 << 2 =3D=3D 6666666668
-	1000000000 * 5 << 2 /^ 3 =3D=3D 6666666667
+It's a breaking uapi change: for example lircd and ir-ctl use this for 
+calculating the gap between transmits. If we start returning early then
+things break.
 
-So I correct my statement to: I see no easy and exact way to prevent an
-overflow without introducing a mul_u64_u64_div_roundup helper. :-)
+Secondly, not all drivers can support this, or they would need to support
+it using a thread or so, which makes the driver code much more complicated
+and we'd have to change nearly every driver.
 
-> with rzv2m_pwm_prescale_to_shift as below:
-> static inline int rzv2m_pwm_prescale_to_shift(u8 prescale)
-> {
->     return prescale =3D=3D 3 ? 11 : prescale * 4;
-> }
->=20
-> As it turns out "<< (4 * prescale)" and ">> (4 * prescale)" are not
-> correct for prescale =3D=3D 3.
-> As per manual: PWMPS =3D 3 means a frequency division by 2048, and not
-> 4096.
 
-funny hardware.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jujoux4pgvgy3jaq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUdc3gACgkQj4D7WH0S
-/k6rZAf+JMX4TC3zDeH0JWBCNDpdoUHeCmlqAXd9pJW276oxPTa5bZW1lw/0Eyk5
-HE0Lss9N9NNXO/ug+VKkhfM13uaYKZ+DmREfBptoM1IL4lKH6+cMmIUJiNwBccJT
-Dd6+HZiT2MAANuZH+w8qgu3ZGpK7YOHfeHrIGmAzPJETlNTXOt9RgUFMLSXtmS+S
-5uzgl+gH+bIPYHtAhg5NFJtq6hWzWmCVETQITxRci8rnTTGHoUmJyVDfaLb05rJt
-v6xqM++eGtOkz7KPn0f0zPMZjExgmQKdlZ8I1cPV7nUX70p5lJyHY3eFMsTi+IMG
-i2Sr/f5YpJQAJyj3/rBJb3RowbQimw==
-=dqCX
------END PGP SIGNATURE-----
-
---jujoux4pgvgy3jaq--
+Sean
