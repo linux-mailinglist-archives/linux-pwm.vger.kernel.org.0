@@ -2,210 +2,130 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 808BB7B9E20
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 921117B9E2D
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230230AbjJEN64 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 09:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
+        id S229817AbjJEN5X (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 09:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231882AbjJEN5J (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 09:57:09 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F49628126;
-        Thu,  5 Oct 2023 06:45:51 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3952Wv5l000725;
-        Thu, 5 Oct 2023 04:31:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=aNc/qQqVLrd5xCqMkKsIbyqjupUyO0PkNQXzy7ahMHA=;
- b=T2bMfJeSlP+bWY+aPttMPiUF7rC/gMuqJ42qsO0bYvxjWrEz+mLZyWkEEY+cX+wi1cP/
- 0C4YVlBpN1JId0nBVc8wW7tU8X4BBpcppHnrZUVX7TPT3ppG6ORaX4ST64kDVuSLRqT9
- GzH3d0/5gJw4i9e4GOO818F6POEqb4X6xIfbIr1M/8E3Xu6688pY94DeRR3vtOJNv5ZB
- ql+6RpO77DOOcHgpgtvr/PLhM39tCzSab2M9OpFhb9mnfM9sSSDTsC+NQSWyGur98gNu
- 1LD38eK/P5fhD4JCtSAQoK1gJLgsgnQYvR3QDZzbc8k17U9BnYwz71Jmy+GSQ9++hgdi CA== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tgqth3th1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Oct 2023 04:31:58 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3954VvpI011499
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 5 Oct 2023 04:31:57 GMT
-Received: from hu-devipriy-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Wed, 4 Oct 2023 21:31:51 -0700
-From:   Devi Priya <quic_devipriy@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <ndesaulniers@google.com>,
-        <trix@redhat.com>, <baruch@tkos.co.il>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
-CC:     <linux-pwm@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <nathan@kernel.org>
-Subject: [PATCH V14 2/4] dt-bindings: pwm: add IPQ6018 binding
-Date:   Thu, 5 Oct 2023 10:01:25 +0530
-Message-ID: <20231005043127.2690639-3-quic_devipriy@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231005043127.2690639-1-quic_devipriy@quicinc.com>
-References: <20231005043127.2690639-1-quic_devipriy@quicinc.com>
+        with ESMTP id S243861AbjJENzW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 09:55:22 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2347F65B5
+        for <linux-pwm@vger.kernel.org>; Wed,  4 Oct 2023 23:21:10 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qoHjP-0007bo-KR; Thu, 05 Oct 2023 08:21:07 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qoHjO-00BCcF-Sj; Thu, 05 Oct 2023 08:21:06 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qoHjO-009KGU-H5; Thu, 05 Oct 2023 08:21:06 +0200
+Date:   Thu, 5 Oct 2023 08:20:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <florian.fainelli@broadcom.com>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pwm: brcmstb: Utilize appropriate clock APIs in
+ suspend/resume
+Message-ID: <20231005062032.kklxiavdkaix5sod@pengutronix.de>
+References: <20231004175414.1738475-1-florian.fainelli@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lhP7K0QSAbvAMaOZtoyHr8rw6AgOtNox
-X-Proofpoint-GUID: lhP7K0QSAbvAMaOZtoyHr8rw6AgOtNox
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-05_01,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 clxscore=1015 malwarescore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310050037
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ccrp3b53ojxudlcw"
+Content-Disposition: inline
+In-Reply-To: <20231004175414.1738475-1-florian.fainelli@broadcom.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-DT binding for the PWM block in Qualcomm IPQ6018 SoC.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
-Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
-Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
----
-v14:
+--ccrp3b53ojxudlcw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  Picked up the R-b tag
+Hello Florian,
 
-v13:
+On Wed, Oct 04, 2023 at 10:54:14AM -0700, Florian Fainelli wrote:
+> The suspend/resume functions currently utilize
+> clk_disable()/clk_enable() respectively which may be no-ops with certain
+> clock providers such as SCMI. Fix this to use clk_disable_unprepare()
+> and clk_prepare_enable() respectively as we should.
+>=20
+> Fixes: 3a9f5957020f ("pwm: Add Broadcom BCM7038 PWM controller support")
+> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+>  drivers/pwm/pwm-brcmstb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
+> index a3faa9a3de7c..a7d529bf76ad 100644
+> --- a/drivers/pwm/pwm-brcmstb.c
+> +++ b/drivers/pwm/pwm-brcmstb.c
+> @@ -288,7 +288,7 @@ static int brcmstb_pwm_suspend(struct device *dev)
+>  {
+>  	struct brcmstb_pwm *p =3D dev_get_drvdata(dev);
+> =20
+> -	clk_disable(p->clk);
+> +	clk_disable_unprepare(p->clk);
+> =20
+>  	return 0;
+>  }
+> @@ -297,7 +297,7 @@ static int brcmstb_pwm_resume(struct device *dev)
+>  {
+>  	struct brcmstb_pwm *p =3D dev_get_drvdata(dev);
+> =20
+> -	clk_enable(p->clk);
+> +	clk_prepare_enable(p->clk);
 
-  Updated the file name to match the compatible
-  
-  Sorted the properties and updated the order in the required field
+While at it: Add another patch that checks the return value of
+clk_prepare_enable()?
 
-  Dropped the syscon node from examples
+Orthogonally to that, the patch looks fine:
 
-v12:
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-  Picked up the R-b tag
+Best regards
+Uwe
 
-v11:
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-  No change
+--ccrp3b53ojxudlcw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-v10:
+-----BEGIN PGP SIGNATURE-----
 
-  No change
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUeVa8ACgkQj4D7WH0S
+/k64xwgAgYEYSUsqGUELNGbGXzyYRPZJSUtsFciRuZjNR9ZEwUKz+v43kwZaCkuA
+Y32IIriYy62UcIA+qWny7cE/dDnTN8Vo+9dnxINQJX1qIDL3NgT+lak2xE9pdHwh
+1qS7vWvwqLWE7Xo6xJtt6jmNO6Xogxg6s/lrpVBgyQL8ubPw/dxOlP6o9oem5B6V
+IntnjW7+s3xjZ7MdZ8R+YaH9j1pigeP1floudtD8TxRo4hnz6tiWpvyM/qf41AFL
+dM4ck42NE/vNspKRz2lMThpYFIzIbbSIBZrdO6SzaN3xPpIjO7vYFYfi1mmrOGMa
+sT6wG3FZt12kYXNfxVTeUS+dtToi2g==
+=508Y
+-----END PGP SIGNATURE-----
 
-v9:
-
-  Add 'ranges' property to example (Rob)
-
-  Drop label in example (Rob)
-
-v8:
-
-  Add size cell to 'reg' (Rob)
-
-v7:
-
-  Use 'reg' instead of 'offset' (Rob)
-
-  Drop 'clock-names' and 'assigned-clock*' (Bjorn)
-
-  Use single cell address/size in example node (Bjorn)
-
-  Move '#pwm-cells' lower in example node (Bjorn)
-
-  List 'reg' as required
-
-v6:
-
-  Device node is child of TCSR; remove phandle (Rob Herring)
-
-  Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
-
-v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
-    Andersson, Kathiravan T)
-
-v4: Update the binding example node as well (Rob Herring's bot)
-
-v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
-
-v2: Make #pwm-cells const (Rob Herring)
-
- .../bindings/pwm/qcom,ipq6018-pwm.yaml        | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-
-diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-new file mode 100644
-index 000000000000..6d0d7ed271f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/qcom,ipq6018-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm IPQ6018 PWM controller
-+
-+maintainers:
-+  - Baruch Siach <baruch@tkos.co.il>
-+
-+properties:
-+  compatible:
-+    const: qcom,ipq6018-pwm
-+
-+  reg:
-+    description: Offset of PWM register in the TCSR block.
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#pwm-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-+
-+    pwm: pwm@a010 {
-+        compatible = "qcom,ipq6018-pwm";
-+        reg = <0xa010 0x20>;
-+        clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+        assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+        assigned-clock-rates = <100000000>;
-+        #pwm-cells = <2>;
-+    };
--- 
-2.34.1
-
+--ccrp3b53ojxudlcw--
