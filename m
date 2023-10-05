@@ -2,109 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A00BC7BA146
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:53:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48F4B7B9EAB
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239334AbjJEOmN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 10:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
+        id S232756AbjJEOJf (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 10:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236990AbjJEOhj (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:37:39 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2AC783E5;
-        Thu,  5 Oct 2023 07:03:23 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3955buOu012274;
-        Thu, 5 Oct 2023 07:36:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=D8BC3BO3azckk+Ehrf8XzxN2xBK3e06fHyqblWk1k/I=;
- b=X75GR4wzkbqXeGM0oJnfHW2IK106HRJRgI3R5yrGLPC2NhseK4QLVKpMiy+LirA+JNXF
- QdzgRTJQqMEz1KLtFRJ1UxEoDHuV2ZxM0uOoetbuDIBUOQH9Ai/wZ8hmkXaWJPPO+4oI
- HQxgIZBnXOfltTtgPz7NsFGrUpmEFbxhNBYWZxl9ncsZNwVRH2ECBc+mFVbuw9eQxU21
- 1CoUjteGyYxq1STjhmsz5SHQ3NUugZeignhMoWWAE1Dv68NML1VP2qikdGNEoiH0bCAW
- QBKs9CQqlpuTRkoIBkFHmCNxJxpPfDZou5qRcSqwffj/1S9NcnIqdIjqN5wciL0RodKP uQ== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3thn058c5s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Oct 2023 07:36:40 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3957adOs003567
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 5 Oct 2023 07:36:39 GMT
-Received: from [10.216.40.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 5 Oct
- 2023 00:36:32 -0700
-Message-ID: <cc5fef7a-d4d1-d725-36a5-86183bacc5a0@quicinc.com>
-Date:   Thu, 5 Oct 2023 13:06:27 +0530
+        with ESMTP id S232778AbjJEOHY (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:07:24 -0400
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CCF08A71;
+        Thu,  5 Oct 2023 01:30:38 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id EFC201007F6; Thu,  5 Oct 2023 09:30:32 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1696494632; bh=yTqM0lOviMpVtY3gEC2fnjg+lpnZmaa/xqOOO1oFjzg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hM4/6PU/BVCUmsjcFfLAZHOdsLJZBPi+IERfvAziz3nfnEK4C7KS4IvaOhQF74oUa
+         pm/jySTmFQfMxdTKCSDifYiz+6AUgqHrAipeZA/gPtdfM+zALHVTx2Zc3etj0F8Uvj
+         Z+6+P3UfUXB4S+dg6826xd+d4QJrSOPKQf4pOCA+1cpbIPfgjobt3K8v8W29gu2XFf
+         EozsFhCZzdMkmYxxlZzWuHs3+awRG8hRctGYRXzu5lggSBZ9V8y5NfKjZIp5utFREo
+         m8TSihVOCaoYFaigu8xqW/v53d8h8T2slqaY2mkHTgDaQkYnFk+bb6M8VNQI8mAzW8
+         t0IV4IH911NYA==
+Date:   Thu, 5 Oct 2023 09:30:32 +0100
+From:   Sean Young <sean@mess.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic
+ context
+Message-ID: <ZR50KCVNzhlLooLW@gofer.mess.org>
+References: <cover.1696156485.git.sean@mess.org>
+ <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
+ <20231004095920.ne7yrrthow6tnuvg@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH V14 3/4] dt-bindings: mfd: qcom,tcsr: Add simple-mfd
- support for IPQ6018
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <ndesaulniers@google.com>,
-        <trix@redhat.com>, <baruch@tkos.co.il>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
-CC:     <linux-pwm@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <nathan@kernel.org>
-References: <20231005033053.2626465-1-quic_devipriy@quicinc.com>
- <20231005033053.2626465-4-quic_devipriy@quicinc.com>
- <cfbc4805-c2e8-4dee-92bc-14d805dc2320@linaro.org>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <cfbc4805-c2e8-4dee-92bc-14d805dc2320@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6-_sl-_tzVzavNW99DG16uhxP881mC0P
-X-Proofpoint-GUID: 6-_sl-_tzVzavNW99DG16uhxP881mC0P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-05_04,2023-10-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- impostorscore=0 bulkscore=0 spamscore=0 mlxlogscore=644 priorityscore=1501
- mlxscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2310050057
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231004095920.ne7yrrthow6tnuvg@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello Uwe,
 
-
-On 10/5/2023 1:04 PM, Krzysztof Kozlowski wrote:
-> On 05/10/2023 05:30, Devi Priya wrote:
->> Update the binding to include pwm as the child node to TCSR block and
->> add simple-mfd support for IPQ6018.
->>
->> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+On Wed, Oct 04, 2023 at 11:59:20AM +0200, Uwe Kleine-König wrote:
+> On Sun, Oct 01, 2023 at 11:40:29AM +0100, Sean Young wrote:
+> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > index dc66e3405bf5..d9679ae5b2be 100644
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -505,7 +505,7 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+> >  	 * is a bad idea. So make it explicit that calling this function might
+> >  	 * sleep.
+> >  	 */
+> > -	might_sleep();
+> > +	might_sleep_if(pwm_can_sleep(pwm));
+> >  
+> >  	if (!pwm || !state || !state->period ||
+> >  	    state->duty_cycle > state->period)
 > 
-> Why did you send it twice? It's just brings confusion...
+> I'd like to have a mechanism to catch drivers that missed to set
+> .can_sleep. The best idea I currently have for that is to disable
+> preemption if IS_ENABLED(CONFIG_PWM_DEBUG) && !pwm_can_sleep(pwm) while
+> .apply() is running.
 
-Sorry, kindly ignore. As the patches were not delivered to the list,
-tried sending it again.
+If we have pwm_apply_state_atomic(), then CONFIG_DEBUG_ATOMIC_SLEEP will
+catch them, but only in that code path of course.
 
-Regards,
-Devi priya
+How about using non_block_start() and non_block_end() if can_sleep is
+not set?
+
+> > diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
+> > index b7c6045c5d08..b8b9392844e9 100644
+> > --- a/drivers/pwm/pwm-fsl-ftm.c
+> > +++ b/drivers/pwm/pwm-fsl-ftm.c
+> > @@ -405,6 +405,7 @@ static int fsl_pwm_probe(struct platform_device *pdev)
+> >  
+> >  	fpc->soc = of_device_get_match_data(&pdev->dev);
+> >  	fpc->chip.dev = &pdev->dev;
+> > +	fpc->chip.can_sleep = true;
 > 
-> Best regards,
-> Krzysztof
+> As .apply() being callable in non-sleepable context only depends on
+> .apply() I think a better place for this property is in struct pwm_ops.
+
+That makes sense.
+
+> Also I wonder if the distinction between atomic and sleeping
+> pwm_state_apply() should be more explicit. For GPIOs you have a sleeping
+> variant gpiod_set_value_cansleep() that allows to immediately determine
+> the intended context in the caller. This would allow that programming
+> a PWM stays a preemption point (if possible/desired) even if the
+> underlying hardware/driver is atomic. To not have to touch all consumer
+> drivers, maybe the pair for pwm should better be
 > 
+> 	pwm_apply_state()
+> 	pwm_apply_state_atomic()
+
+Do we need pwm_config_atomic(), pwm_enable_atomic(), and pwm_disable_atomic()
+too? These are just convenience functions, so we can probably do without them.
+
+> instead of a "cansleep" suffix for the sleeping variant? Or maybe it's
+> better to accept touching all consumer drivers to get semantics similar
+> to gpio? I couldn't decide quickly what I really like better here, so
+> that's your chance to comment and influence the outcome :-)
+
+If you expect to have more parameters for pwm_apply_state() then a flags
+argument makes sense.
+
+TBH I like the pwm_apply_state_atomic() option.
+
+
+Sean
