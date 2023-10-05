@@ -2,113 +2,137 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4EBC7BA73F
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 19:02:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0D267BA829
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 19:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjJERCZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 13:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
+        id S231202AbjJERfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 13:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbjJERBK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 13:01:10 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD5530C4
-        for <linux-pwm@vger.kernel.org>; Thu,  5 Oct 2023 09:47:40 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-d81afd5273eso1286491276.3
-        for <linux-pwm@vger.kernel.org>; Thu, 05 Oct 2023 09:47:40 -0700 (PDT)
+        with ESMTP id S231634AbjJERfJ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 13:35:09 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85C94449B
+        for <linux-pwm@vger.kernel.org>; Thu,  5 Oct 2023 10:17:17 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-690d2441b95so977185b3a.1
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Oct 2023 10:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1696524459; x=1697129259; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1696526236; x=1697131036; darn=vger.kernel.org;
         h=mime-version:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PoVomi2ZwlMZ7qbjjknKXFPZPpyZXB9jbmXueY034xc=;
-        b=el4JCpJPl8tO91eU982HSzJ+EsdVY3VAVDewAuLR6WgPIw0zrTABvVUHEe/WTexEDC
-         JvpEM0J4ASkbNw6n0/dYqYaEYuWZkDSQsCTYfGy8FlGUYOlyJYFJJiziWyoW/hgS2EHT
-         sKBpw/4c3nuKkvxvNI4VVXwSNFkUNId20inu0=
+        bh=8MLd21syy/a2zztJUpBc5HBbpHVg4IxCNIaPzxp2I1Q=;
+        b=fXXczrR0a7ekuztIhxT5ice90V/9LnPS8sntnW4XFCoTMLgjImggqKeibTRQXPV73b
+         a5V/C6hYkvwfOrtZ7Ra6V3mBDTVXIGNUqTTwTLhLqcfFo3iHIP//L5EEDNTRY9VNlHYC
+         2w5FZYG1slJG3LF/iahN1VjN7hnlYvN4LDSwI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696524459; x=1697129259;
+        d=1e100.net; s=20230601; t=1696526236; x=1697131036;
         h=mime-version:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PoVomi2ZwlMZ7qbjjknKXFPZPpyZXB9jbmXueY034xc=;
-        b=j+m74F6WnqrmEVCZ12d7dRJjbj2xEpVtF7fymuQrBXmOgGNNADARrJxNoTvrYRrZC6
-         eetf8Q9+FEBsAVhxYPsAekkCLZtfiqXFDab+EI7SjjSCMWREmj3r1YIdP+mXE8pWShc/
-         uSTmTFzdr/qE7n6xPRrWgIQPtefj3g4v4E9Sn3IQygBWpOPwkEfdtYiHeQPdK+hLZEvR
-         6T8tCSX/ZXlqcfhX5aQpCxGa6+Oxkrd/dnXUvFhCO4SwlfOXx4t1TkWhr6VLTyOjrabe
-         tR2G/ejQqbw9Cr1lVN3si0eDIQ9UtvRhim50jpJ4D4JbuhA8ofR+b/GgTy2H7+JlYYPq
-         hiMQ==
-X-Gm-Message-State: AOJu0YxTlkbgefuHUYnaWtC/TTwFITDxseH+jct57+4/ljmk8q6w8K1c
-        dum6Fy75JQv+zwsIqPyZ5qaFpFyMmai7CA45/Dj0EsdWzc9QP3WSBAkCfuxixHdA82SgXSUqd08
-        ZRbCbvZ0dUjTR0cPUSjPyzPQm+N1xoS6sHK17BYqAj57+HgRXpcFJiQn8FK4/ikuPUDOk5eovGE
-        VwGKtlSu6gadvb/A==
-X-Google-Smtp-Source: AGHT+IHUvbeX/9TMTGXpNeMZiRb9jaigp92I+hDJiGNTjvImbmpxdtAVzNB0BDPzxvh0h2OlThcAVA==
-X-Received: by 2002:a25:8b84:0:b0:d09:34f4:6698 with SMTP id j4-20020a258b84000000b00d0934f46698mr4993619ybl.36.1696524458725;
-        Thu, 05 Oct 2023 09:47:38 -0700 (PDT)
+        bh=8MLd21syy/a2zztJUpBc5HBbpHVg4IxCNIaPzxp2I1Q=;
+        b=soFRGzlSOjTJZUOV6kdqBgXDtBYvSS32evH9R6zw+T9ZfEZLY4QuLOrOOmYm0rajt7
+         7MjK+5AOCXBr/BLUX+6DdkdblSl9M7d4NaGhCzQdncj8gUEVaeNxxcIPC66GPHt8rcxR
+         LtCn13t1hzaUkDRbIyKAF0oQ90xuJ5NeVW4/OjWVTfaLwOWotNKUr1qw6JmjWT/QKTe3
+         Tl2gFIT+P3HJdmz3z/2inlE5MJ1kl+VykfUVpTq3iU/st2x0wPl7rNlakKcVjoSa6Zv/
+         ChsxvtYOjmKE0Dobt23HY+0EiZm2Jgz774YZtxrcAk6ctGwqqsebUCgMAoCR0nuJsdrA
+         VKFw==
+X-Gm-Message-State: AOJu0Yw4uY+HsLcvg+3uFJHg7QqZHNd4osKy13jmlDwg9r6Y/AGOIVMi
+        Uc7frj/Kaax4EkN00wEmmXqHYHj6zhlWI5VgVPvkcSFrB4vUkgJ8lau6iRYjASrUINoTm/iDZMt
+        iKeEsnEL4xifPb3lYrMZ6HTyHz2ppxelbioFag9GIvraULGlAM4UHcE+7W0WnVV0RwAw0WE6Esp
+        hhYbSYYj4s3NP+Dw==
+X-Google-Smtp-Source: AGHT+IFU2mE+hCk0C4C4wsXX3q7KJ1yEKZ1f0UW3sESJgVBHIzdwPq4vVBQ75id+MBakyFjYmj6/1w==
+X-Received: by 2002:a05:6a00:a1b:b0:68f:cbd3:5b01 with SMTP id p27-20020a056a000a1b00b0068fcbd35b01mr3106904pfh.13.1696526236428;
+        Thu, 05 Oct 2023 10:17:16 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x15-20020a0ce0cf000000b0065b2e561c17sm623761qvk.123.2023.10.05.09.47.37
+        by smtp.gmail.com with ESMTPSA id y36-20020a056a001ca400b0069b772c4325sm189888pfw.87.2023.10.05.10.17.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Oct 2023 09:47:38 -0700 (PDT)
+        Thu, 05 Oct 2023 10:17:15 -0700 (PDT)
 From:   Florian Fainelli <florian.fainelli@broadcom.com>
 To:     linux-pwm@vger.kernel.org
 Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        Angus Clark <angus.clark@broadcom.com>,
         Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] pwm: brcmstb: Checked clk_prepare_enable() return value
-Date:   Thu,  5 Oct 2023 09:47:27 -0700
-Message-Id: <20231005164728.1846726-1-florian.fainelli@broadcom.com>
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] pwm: bcm2835: Add support for suspend/resume
+Date:   Thu,  5 Oct 2023 10:15:15 -0700
+Message-Id: <20231005171516.2908961-1-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000be1bd80606fae109"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        boundary="000000000000b52d400606fb4b58"
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MIME_NO_TEXT,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
---000000000000be1bd80606fae109
-Content-Type: text/plain; charset=UTF-8
+--000000000000b52d400606fb4b58
 Content-Transfer-Encoding: 8bit
 
-Check the clk_prepare_enable() return value and propagate it.
+Similar to other drivers, we need to make sure that the clock is
+disabled during suspend and re-enabled during resume.
 
-Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reported-by: Angus Clark <angus.clark@broadcom.com>
 Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
-This change depends upon:
+ drivers/pwm/pwm-bcm2835.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-https://lore.kernel.org/all/20231004175414.1738475-1-florian.fainelli@broadcom.com/
-
- drivers/pwm/pwm-brcmstb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pwm/pwm-brcmstb.c b/drivers/pwm/pwm-brcmstb.c
-index a7d529bf76ad..de9cbda2e4ff 100644
---- a/drivers/pwm/pwm-brcmstb.c
-+++ b/drivers/pwm/pwm-brcmstb.c
-@@ -297,9 +297,7 @@ static int brcmstb_pwm_resume(struct device *dev)
- {
- 	struct brcmstb_pwm *p = dev_get_drvdata(dev);
- 
--	clk_prepare_enable(p->clk);
--
--	return 0;
-+	return clk_prepare_enable(p->clk);
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index bdfc2a5ec0d6..46c59317ba54 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -182,6 +182,25 @@ static void bcm2835_pwm_remove(struct platform_device *pdev)
+ 	clk_disable_unprepare(pc->clk);
  }
- #endif
  
++static int __maybe_unused bcm2835_pwm_suspend(struct device *dev)
++{
++	struct bcm2835_pwm *pc = dev_get_drvdata(dev);
++
++	clk_disable_unprepare(pc->clk);
++
++	return 0;
++}
++
++static int __maybe_unused bcm2835_pwm_resume(struct device *dev)
++{
++	struct bcm2835_pwm *pc = dev_get_drvdata(dev);
++
++	return clk_prepare_enable(pc->clk);
++}
++
++static SIMPLE_DEV_PM_OPS(bcm2835_pwm_pm_ops, bcm2835_pwm_suspend,
++			 bcm2835_pwm_resume);
++
+ static const struct of_device_id bcm2835_pwm_of_match[] = {
+ 	{ .compatible = "brcm,bcm2835-pwm", },
+ 	{ /* sentinel */ }
+@@ -192,6 +211,7 @@ static struct platform_driver bcm2835_pwm_driver = {
+ 	.driver = {
+ 		.name = "bcm2835-pwm",
+ 		.of_match_table = bcm2835_pwm_of_match,
++		.pm = &bcm2835_pwm_pm_ops,
+ 	},
+ 	.probe = bcm2835_pwm_probe,
+ 	.remove_new = bcm2835_pwm_remove,
 -- 
 2.34.1
 
 
---000000000000be1bd80606fae109
+--000000000000b52d400606fb4b58
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -179,14 +203,14 @@ kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
 NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
 AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
 LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIOyUP796BDTkm9FZ
-oq8JRX0kI1314zDnyE9T67HS7DZDMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMTAwNTE2NDczOVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIN8vGSwQMYkN5EHq
+qNB7aJghcb3jyh68j8jZoO7oyLenMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTIzMTAwNTE3MTcxNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
 AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDz1w6lhp2dT41FOeZgw2zlIAMKYS0WFG7M
-daR91fmyx8hINFncNxy7b0KTja1WsZIlzPVYjEOrfWxSVq8G/nlrnICh48yGA81KL1o4yfbsXk4x
-+c0Hzn8ufoLb5QNSCwPp+DCjsENNiLF31BL6Y5O2PvPpRIxdlQvdTi9OVgqLztMMy/uwL7W7kH03
-yoBolGOShp9h0I1ewjEglC9xY64JwuequWBOdIlGZ3Tn+OGqw3vxrsItuBAzLxZQbWaON8r/1CQf
-1+voNhhzX24Up4hdBo0o3Rt4D4Z9jIE75OeHMyauBwKjSvIrZYxJTZF+fm4InA/NMFjALzQBtz0E
-cMSW
---000000000000be1bd80606fae109--
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAtbmedMVMq2zafjQLhKarFtbZ1vFIHWeBv
+xOu6io3a24lmrAEDyZ7aKZg3151ab6iyc1m/vl6Hq4jDIo5EBFSODhr7+glUfCIZgSk9F5Mkx7kN
+9l1bVh/EyjwIWteJ8hIhVPJXM0NZ7TPtt0hGtfMTj6AClQFG2devhxHJGIxEH95Sax54xGL4+qUi
+QiBRnATutOvVLDzpplHAbAUzHwCwtckJgPHBCEZIp/2HTJsCE2HtsfGvStOxdDVkd5qdYBu3mBB+
+wqtHCmxOviBzvBSKnlNtymRJGi02NcQEcZMMCOsQrtyw0swfRNLoyG6H4QLwf1luR3LLRmtv0MT2
+8bKU
+--000000000000b52d400606fb4b58--
