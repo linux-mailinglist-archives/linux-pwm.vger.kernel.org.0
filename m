@@ -2,59 +2,58 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 987727B9F97
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:26:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 583537B9F94
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233639AbjJEOZy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 10:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55736 "EHLO
+        id S234148AbjJEOZ2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 10:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232756AbjJEOXt (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:23:49 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D538E7AB2
-        for <linux-pwm@vger.kernel.org>; Thu,  5 Oct 2023 00:30:23 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso115624466b.2
-        for <linux-pwm@vger.kernel.org>; Thu, 05 Oct 2023 00:30:23 -0700 (PDT)
+        with ESMTP id S232684AbjJEOXm (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:23:42 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FA57AB9
+        for <linux-pwm@vger.kernel.org>; Thu,  5 Oct 2023 00:31:00 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9b2f73e3af3so111267266b.3
+        for <linux-pwm@vger.kernel.org>; Thu, 05 Oct 2023 00:31:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696491022; x=1697095822; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1696491059; x=1697095859; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=IrxQX+vbTyCLU37A8CyRWOgVwxZd3iygOBbx3rjJHlk=;
-        b=hGw2llgvbCTmNQlbH/8zL651igLRwfIdMOxDovFKTmQfqniKR0GmgMFSR/orrf9Hwp
-         +VA2LWj5QfoD23OJcQJpikdwdsDibmIWlSTF3KQv0xwAnqnTfSfsyWkL2P49X4vVUnIN
-         Bl26qbEjAcV9zzvgKCLZhl0nyMuUMeA/B/2nSXip9TbCSjDWLTuCTQFhbvI1nKCh6P+N
-         dj2tx/ELnKPLU73oquFCdEL8U7XHp+7GN9GbV3s/J7q4Wo2SYPEZ24yBFAEOaRGKP37B
-         8dKe8Vblll//V6TQ3Kxn76uSRHcz5/053vYem4PIHt/ZCyJ1/1KYts9pOXXEWRd09Kac
-         yosg==
+        bh=WPJMTLO+rcQ93eaofl6YvPUICYprHmtKTi2Ba1SS9r8=;
+        b=vRepcQbbDfQ2IST6YRGHeokiOay44JmDKQFADJBOBiYD4RTTcDYOdaozL2uHdlhwOJ
+         7ISG+pe1bx+CC+8dpuaWdKrbZL9D8HEZ5tom8dLhYuN8BJAP017aRboQ/JoO7PHuDYz0
+         Pc+D0xzRte72c5HBd1xHZseTuJrzUZl2P1TpmhCyNwX+mnjvN7J7uKyvX5HzxRr2kgVC
+         g8tXTVBJ2YEyKlPnQxqMWAW7YqcirXEu0tu+qNJfhP1igxuLtPxSfWUwi4BDc6LaWO0Z
+         8xh6DBxBFTUXjaLXjnewzH5KV5iRul3I+1HeTB7x9twbHHI2X9TZsKDnYi/BrTOGqo1Z
+         hG4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696491022; x=1697095822;
+        d=1e100.net; s=20230601; t=1696491059; x=1697095859;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IrxQX+vbTyCLU37A8CyRWOgVwxZd3iygOBbx3rjJHlk=;
-        b=ZDXLr5ahNTZOrrcNtb/SwrsOMxBpb5FF+NVnubLxQzKi+82K4LkN+0/Vyw0ZZVndNv
-         /KhhDqfpy6gG8uYq/ak22Mn5GtJptR90z5mDfjucKurozZRqlWyGagLuDjeNrf4dqrIE
-         0WO4BBsru+JTTrjhY5N7R3eQy20eIa7rNSGCTinwXWANz7lV9wTtK4MAN+a7n0LJkXU4
-         eCDLMvo9WNVnhUB66LRLv4ZUHcciy0J1ox/faNkKovI3brRqKYMqVlQlkKW7OfUQ+qHx
-         8qTbO2n6D6Eqnvr5kY1FuaVSJSm0u/NK7Yv4Nj5ulVhpJoV2bZ5e+LlKzIO4jlMesi0L
-         aRpQ==
-X-Gm-Message-State: AOJu0YzX5hnoz1kkzsxdeOSTVhxewaMczoTL0uZyy/DcW1ZCJs7quHZ5
-        Rpqk0j0ss+o8pv43XHJvVVfEww==
-X-Google-Smtp-Source: AGHT+IFK2fYcFDNsX+Z1gliR/3mIhzxW/1FQDU+Ed7sLJkCc763+dWhIFnvFJQ5nrkrFSpYAsR41Mg==
-X-Received: by 2002:a17:906:53d2:b0:9ad:e2c8:1741 with SMTP id p18-20020a17090653d200b009ade2c81741mr4161906ejo.58.1696491021919;
-        Thu, 05 Oct 2023 00:30:21 -0700 (PDT)
+        bh=WPJMTLO+rcQ93eaofl6YvPUICYprHmtKTi2Ba1SS9r8=;
+        b=OJI9RCm+1frngsdbldL4daWFuTe8llCSuJpcypcr5zPEwvatwx+gMX/SYOiGYmGj9Z
+         yRJQR+g+v7VMEgKZ2ru3Ul08FlYadG4RhgUmbrXAADGzaL7dCsx7dNNY9FUJWYiWonMz
+         y+ZLXaVW2zRVApSu+tkeqY5eVqC0Z7oaY8560RlIqqwm8ERYOC1uLm+a2aWeDpLoT7zd
+         BTfHlGP4F3D+SkEbiNdJ34AndEge3tu0Du1tmsVgDPx/gaHgp33ZBljeTeveyNcw7DGE
+         GCQepRHb4Hh2gWjg7ulfeMLMlZmjwWsoLHAZXeaqlTIc981BEZcxYwc+E8b3W+NTeMoi
+         MDiw==
+X-Gm-Message-State: AOJu0YyxTqWDhxw2AQMbBv/3QnUaZUOevjRT9JjLKvkpy5/SBtDWCf4m
+        M/sVx9il5bp5st2mukvsdnyfWA==
+X-Google-Smtp-Source: AGHT+IHx9rUS9yXnwUuTlpLFWszpnR7P8rb7udY8oUHx7qmTu+UvEIwzJlCuBHFRefkOeDKMgj0r2w==
+X-Received: by 2002:a17:907:78d1:b0:9b3:264:446 with SMTP id kv17-20020a17090778d100b009b302640446mr4269774ejc.0.1696491059133;
+        Thu, 05 Oct 2023 00:30:59 -0700 (PDT)
 Received: from [192.168.1.197] (5-157-101-10.dyn.eolo.it. [5.157.101.10])
-        by smtp.gmail.com with ESMTPSA id gt26-20020a170906f21a00b0099bcf9c2ec6sm692972ejb.75.2023.10.05.00.30.20
+        by smtp.gmail.com with ESMTPSA id gt26-20020a170906f21a00b0099bcf9c2ec6sm692972ejb.75.2023.10.05.00.30.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 00:30:21 -0700 (PDT)
-Message-ID: <1b81ae1f-7f26-4a2d-b15b-1015e9bf57cd@linaro.org>
-Date:   Thu, 5 Oct 2023 09:30:19 +0200
+        Thu, 05 Oct 2023 00:30:58 -0700 (PDT)
+Message-ID: <9afe38a1-193b-494e-a47f-83610d6dabac@linaro.org>
+Date:   Thu, 5 Oct 2023 09:30:57 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V14 3/4] dt-bindings: mfd: qcom,tcsr: Add simple-mfd
- support for IPQ6018
+Subject: Re: [PATCH V14 4/4] arm64: dts: qcom: ipq6018: add pwm node
 Content-Language: en-US
 To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
         andersson@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org,
@@ -66,7 +65,7 @@ To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
 Cc:     linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
         nathan@kernel.org
 References: <20231005043127.2690639-1-quic_devipriy@quicinc.com>
- <20231005043127.2690639-4-quic_devipriy@quicinc.com>
+ <20231005043127.2690639-5-quic_devipriy@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -112,9 +111,9 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231005043127.2690639-4-quic_devipriy@quicinc.com>
+In-Reply-To: <20231005043127.2690639-5-quic_devipriy@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
@@ -126,13 +125,87 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 On 05/10/2023 06:31, Devi Priya wrote:
-> Update the binding to include pwm as the child node to TCSR block and
-> add simple-mfd support for IPQ6018.
+> Describe the PWM block on IPQ6018.
 > 
+> The PWM is in the TCSR area. Make &tcsr "simple-mfd" compatible, and add
+> &pwm as child of &tcsr.
+> 
+> Add also ipq6018 specific compatible string.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
+> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 > Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 > ---
+> v14:
+> 
+>   Moved ranges just after reg as suggested by Krzysztof
+> 
+>   Picked up the R-b tag
+> 
+> v13:
+> 
+>   No change
+> 
+> v12: 
+> 
+>   No change
+> 
+> v11:
+> 
+>   No change
+> 
+> v10:
+> 
+>   No change
+> 
+> v9:
+> 
+>   Add 'ranges' property (Rob)
+> 
+> v8:
+> 
+>   Add size cell to 'reg' (Rob)
+> 
+> v7:
+> 
+>   Use 'reg' instead of 'offset' (Rob)
+> 
+>   Add qcom,tcsr-ipq6018 (Rob)
+> 
+>   Drop clock-names (Bjorn)
+> 
+> v6:
+> 
+>   Make the PWM node child of TCSR (Rob Herring)
+> 
+>   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
+> 
+> v5: Use qcom,pwm-regs for TCSR phandle instead of direct regs
+> 
+> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+> 
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> index e59b9df96c7e..565e61ce382f 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+> @@ -390,8 +390,21 @@ tcsr_mutex: hwlock@1905000 {
+>  		};
+>  
+>  		tcsr: syscon@1937000 {
+> -			compatible = "qcom,tcsr-ipq6018", "syscon";
+> +			compatible = "qcom,tcsr-ipq6018", "syscon", "simple-mfd";
+>  			reg = <0x0 0x01937000 0x0 0x21000>;
+> +			ranges = <0x0 0x0 0x01937000 0x21000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			 pwm: pwm@a010 {
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Broken indentation.
 
 Best regards,
 Krzysztof
