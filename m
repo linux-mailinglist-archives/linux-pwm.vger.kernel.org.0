@@ -2,378 +2,600 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9D7F7BA115
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A5A7BA176
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:53:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239348AbjJEOmO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 10:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45894 "EHLO
+        id S236463AbjJEOmP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 10:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236463AbjJEOg1 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:36:27 -0400
+        with ESMTP id S236779AbjJEOhD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:37:03 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D9A40FA6;
-        Thu,  5 Oct 2023 06:59:06 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6F4C4AF5D;
-        Thu,  5 Oct 2023 13:17:41 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A724787F;
+        Thu,  5 Oct 2023 07:02:58 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651F2C4AF74;
+        Thu,  5 Oct 2023 13:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696511864;
-        bh=zJHDnHWdgIbRM4Y1eO5Uc5GD/FiVY6eNJTs31x3OKu0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SN3M68fTBcN/+fgiT5mi5gxto21HPEE/ZmqljY2sx00hRsPp/RTlUDy69/4QX5fDt
-         +wOSSrz65JQAibM9qUqbAvU5wra5ySEb27H4fLT9KAQzDtUaYwTMR4AyDslFwpmme1
-         KyQNyevOhkIhYQjcpObKVUgTLuhEAfasbCCphb3/MTSPnKSBg9r/m39HHo5aAp4vae
-         tHDiPOG1l/mN4buIb9pQbf6brCwVvIYyobLG33I2Xc/M65qwe89S198eSeyqaDvCov
-         Z7tvwvY1rOrT82cYX3bcRnzxT6VE4KCtkCswe2tKIU/DaW0u76xFZk2RBmtFUxnBEs
-         iRWNqPNGQZHXA==
-From:   Jisheng Zhang <jszhang@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH v3 2/2] pwm: add T-HEAD PWM driver
-Date:   Thu,  5 Oct 2023 21:05:19 +0800
-Message-Id: <20231005130519.3864-3-jszhang@kernel.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20231005130519.3864-1-jszhang@kernel.org>
-References: <20231005130519.3864-1-jszhang@kernel.org>
+        s=k20201202; t=1696513053;
+        bh=gQO8gzEGdkAvnIig++YIzdt2XSzjnK/sMCovAlXVcec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nsMLk3v9sa0Le4rZCkVPgBBMlnc4tFWpH62qc39eH2N15SCHzvCAvn0vmaUv3/wJB
+         Qyw0rIk9li58oSFclEaRxPe3ynG0NXqU02/w+nt03qU3LdwghdjKZYXRlDMf3sVTgK
+         cfDR049tas6X8DDlAbVSyeePDD+i2PTC1A8gglM5tor1YawSY9TYGGpXm8Zi781UyN
+         NSMkDCoPwlADzc81V9SbuSpDS0FXZTyySoI6MlgZaaEhcQukEbx0aFSA6nILZDikcc
+         Ld8CKaa47X100eCxKqIGJ2Z8ZcGV+bozjHnmpK3mUg0ZrBWoWRfSNg6KgcX+GByLTY
+         0q5vT+j2514DQ==
+Date:   Thu, 5 Oct 2023 14:37:26 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Anjelique Melendez <quic_amelende@quicinc.com>
+Cc:     pavel@ucw.cz, thierry.reding@gmail.com, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        agross@kernel.org, andersson@kernel.org, luca.weiss@fairphone.com,
+        konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
+        quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, kernel@quicinc.com
+Subject: Re: [PATCH v5 4/7] leds: rgb: leds-qcom-lpg: Add support for single
+ SDAM PPG
+Message-ID: <20231005133726.GD681678@google.com>
+References: <20230929003901.15086-1-quic_amelende@quicinc.com>
+ <20230929003901.15086-5-quic_amelende@quicinc.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230929003901.15086-5-quic_amelende@quicinc.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-T-HEAD SoCs such as the TH1520 contain a PWM controller used
-to control the LCD backlight, fan and so on. Add driver for it.
+On Thu, 28 Sep 2023, Anjelique Melendez wrote:
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- drivers/pwm/Kconfig     |  11 ++
- drivers/pwm/Makefile    |   1 +
- drivers/pwm/pwm-thead.c | 270 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 282 insertions(+)
- create mode 100644 drivers/pwm/pwm-thead.c
+> In some PMICs like pmi632, the pattern look up table (LUT) and LPG
+> configuration is stored in a single SDAM module instead of LUT
+> peripheral. Currently, PMICs without LUT peripheral will not be
+> able to produce LED patterns.
+> 
+> Add support for PBS Pattern Generation (PPG), which is the feature
+> that allows PMICs without LUT peripherals to produce LED patterns
+> from SDAM module. PPG uses the Qualcomm Programmable Boot
+> Sequencer (PBS) to trigger LED pattern sequences.
+> 
+> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+> ---
+>  drivers/leds/rgb/leds-qcom-lpg.c | 282 ++++++++++++++++++++++++++++---
+>  1 file changed, 261 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 8ebcddf91f7b..428fa365a19a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -637,6 +637,17 @@ config PWM_TEGRA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-tegra.
- 
-+config PWM_THEAD
-+	tristate "T-HEAD PWM support"
-+	depends on ARCH_THEAD || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  Generic PWM framework driver for the PWFM controller found on THEAD
-+	  SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-thead.
-+
- config PWM_TIECAP
- 	tristate "ECAP PWM support"
- 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index c822389c2a24..4c317e6316e8 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -59,6 +59,7 @@ obj-$(CONFIG_PWM_STMPE)		+= pwm-stmpe.o
- obj-$(CONFIG_PWM_SUN4I)		+= pwm-sun4i.o
- obj-$(CONFIG_PWM_SUNPLUS)	+= pwm-sunplus.o
- obj-$(CONFIG_PWM_TEGRA)		+= pwm-tegra.o
-+obj-$(CONFIG_PWM_THEAD)		+= pwm-thead.o
- obj-$(CONFIG_PWM_TIECAP)	+= pwm-tiecap.o
- obj-$(CONFIG_PWM_TIEHRPWM)	+= pwm-tiehrpwm.o
- obj-$(CONFIG_PWM_TWL)		+= pwm-twl.o
-diff --git a/drivers/pwm/pwm-thead.c b/drivers/pwm/pwm-thead.c
-new file mode 100644
-index 000000000000..3b9ffddfe33d
---- /dev/null
-+++ b/drivers/pwm/pwm-thead.c
-@@ -0,0 +1,270 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * T-HEAD PWM driver
-+ *
-+ * Copyright (C) 2021 Alibaba Group Holding Limited.
-+ * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
-+ *
-+ * Limitations:
-+ * - The THEAD_PWM_CTRL_START bit is only effective when 0 -> 1, which is used
-+ *   to start the channel, 1 -> 0 doesn't change anything. so 0 % duty cycle
-+ *   is used to "disable" the channel.
-+ * - The THEAD_PWM_CTRL_START bit is automatically cleared once PWM channel is
-+ *   started.
-+ * - The THEAD_PWM_CFG_UPDATE atomically updates and only updates period and duty.
-+ * - To update period and duty, THEAD_PWM_CFG_UPDATE needs to go through 0 -> 1
-+ *   step, I.E if THEAD_PWM_CFG_UPDATE is already 1, it's necessary to clear it
-+ *   to 0 beforehand.
-+ * - Polarity can only be changed if never started before.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+#define THEAD_PWM_MAX_NUM		6
-+#define THEAD_PWM_MAX_PERIOD		GENMASK(31, 0)
-+#define THEAD_PWM_MAX_DUTY		GENMASK(31, 0)
-+
-+#define THEAD_PWM_CHN_BASE(n)		((n) * 0x20)
-+#define THEAD_PWM_CTRL(n)		(THEAD_PWM_CHN_BASE(n) + 0x00)
-+#define  THEAD_PWM_CTRL_START		BIT(0)
-+#define  THEAD_PWM_CTRL_SOFT_RST		BIT(1)
-+#define  THEAD_PWM_CTRL_CFG_UPDATE	BIT(2)
-+#define  THEAD_PWM_CTRL_INTEN		BIT(3)
-+#define  THEAD_PWM_CTRL_MODE		GENMASK(5, 4)
-+#define  THEAD_PWM_CTRL_MODE_CONTINUOUS	FIELD_PREP(THEAD_PWM_CTRL_MODE, 2)
-+#define  THEAD_PWM_CTRL_EVTRIG		GENMASK(7, 6)
-+#define  THEAD_PWM_CTRL_FPOUT		BIT(8)
-+#define  THEAD_PWM_CTRL_INFACTOUT	BIT(9)
-+#define THEAD_PWM_RPT(n)		(THEAD_PWM_CHN_BASE(n) + 0x04)
-+#define THEAD_PWM_PER(n)		(THEAD_PWM_CHN_BASE(n) + 0x08)
-+#define THEAD_PWM_FP(n)			(THEAD_PWM_CHN_BASE(n) + 0x0c)
-+#define THEAD_PWM_STATUS(n)		(THEAD_PWM_CHN_BASE(n) + 0x10)
-+#define  THEAD_PWM_STATUS_CYCLE		GENMASK(7, 0)
-+
-+struct thead_pwm_chip {
-+	struct pwm_chip chip;
-+	void __iomem *mmio_base;
-+	struct clk *clk;
-+	u8 channel_ever_started;
-+};
-+
-+static inline struct thead_pwm_chip *thead_pwm_from_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct thead_pwm_chip, chip);
-+}
-+
-+static int thead_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   const struct pwm_state *state)
-+{
-+	struct thead_pwm_chip *priv = thead_pwm_from_chip(chip);
-+	u32 val = THEAD_PWM_CTRL_INFACTOUT | THEAD_PWM_CTRL_FPOUT | THEAD_PWM_CTRL_MODE_CONTINUOUS;
-+	u64 period_cycle, duty_cycle, rate;
-+	int ret;
-+
-+	/* if ever started, can't change the polarity */
-+	if ((priv->channel_ever_started & (1 << pwm->hwpwm)) &&
-+	    state->polarity != pwm->state.polarity)
-+		return -EINVAL;
-+
-+	if (!state->enabled) {
-+		if (pwm->state.enabled) {
-+			val = readl(priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+			val &= ~THEAD_PWM_CTRL_CFG_UPDATE;
-+			writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+
-+			writel(0, priv->mmio_base + THEAD_PWM_FP(pwm->hwpwm));
-+
-+			val |= THEAD_PWM_CTRL_CFG_UPDATE;
-+			writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+			pm_runtime_put_sync(chip->dev);
-+		}
-+		return 0;
-+	}
-+
-+	if (!pwm->state.enabled) {
-+		ret = pm_runtime_resume_and_get(chip->dev);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (state->polarity == PWM_POLARITY_INVERSED)
-+		val &= ~THEAD_PWM_CTRL_FPOUT;
-+
-+	writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+
-+	rate = clk_get_rate(priv->clk);
-+	/*
-+	 * The following calculations might overflow if clk is bigger
-+	 * than 1 GHz. In practise it's 24MHz, so this limitation
-+	 * is only theoretic.
-+	 */
-+	if (rate > NSEC_PER_SEC)
-+		return -EINVAL;
-+
-+	period_cycle = mul_u64_u64_div_u64(rate, state->period, NSEC_PER_SEC);
-+	if (period_cycle > THEAD_PWM_MAX_PERIOD)
-+		period_cycle = THEAD_PWM_MAX_PERIOD;
-+	/*
-+	 * With limitation above we have period_cycle <= THEAD_PWM_MAX_PERIOD,
-+	 * so this cannot overflow.
-+	 */
-+	writel(period_cycle, priv->mmio_base + THEAD_PWM_PER(pwm->hwpwm));
-+
-+	duty_cycle = mul_u64_u64_div_u64(rate, state->duty_cycle, NSEC_PER_SEC);
-+	if (duty_cycle > THEAD_PWM_MAX_DUTY)
-+		duty_cycle = THEAD_PWM_MAX_DUTY;
-+	/*
-+	 * With limitation above we have duty_cycle <= THEAD_PWM_MAX_DUTY,
-+	 * so this cannot overflow.
-+	 */
-+	writel(duty_cycle, priv->mmio_base + THEAD_PWM_FP(pwm->hwpwm));
-+
-+	val |= THEAD_PWM_CTRL_CFG_UPDATE;
-+	writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+
-+	if (!pwm->state.enabled) {
-+		val |= THEAD_PWM_CTRL_START;
-+		writel(val, priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+		priv->channel_ever_started |= 1 << pwm->hwpwm;
-+	}
-+
-+	return 0;
-+}
-+
-+static int thead_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       struct pwm_state *state)
-+{
-+	struct thead_pwm_chip *priv = thead_pwm_from_chip(chip);
-+	u64 rate = clk_get_rate(priv->clk);
-+	u32 val;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(chip->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = readl(priv->mmio_base + THEAD_PWM_CTRL(pwm->hwpwm));
-+	if (val & THEAD_PWM_CTRL_FPOUT)
-+		state->polarity = PWM_POLARITY_NORMAL;
-+	else
-+		state->polarity = PWM_POLARITY_INVERSED;
-+
-+	val = readl(priv->mmio_base + THEAD_PWM_PER(pwm->hwpwm));
-+	/*
-+	 * val 32 bits, multiply NSEC_PER_SEC, won't overflow.
-+	 */
-+	state->period = DIV64_U64_ROUND_UP((u64)val * NSEC_PER_SEC, rate);
-+
-+	val = readl(priv->mmio_base + THEAD_PWM_FP(pwm->hwpwm));
-+	state->enabled = !!val;
-+	/*
-+	 * val 32 bits, multiply NSEC_PER_SEC, won't overflow.
-+	 */
-+	state->duty_cycle = DIV64_U64_ROUND_UP((u64)val * NSEC_PER_SEC, rate);
-+
-+	pm_runtime_put_sync(chip->dev);
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops thead_pwm_ops = {
-+	.apply = thead_pwm_apply,
-+	.get_state = thead_pwm_get_state,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int __maybe_unused thead_pwm_runtime_suspend(struct device *dev)
-+{
-+	struct thead_pwm_chip *priv = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused thead_pwm_runtime_resume(struct device *dev)
-+{
-+	struct thead_pwm_chip *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		dev_err(dev, "failed to enable pwm clock(%pe)\n", ERR_PTR(ret));
-+
-+	return ret;
-+}
-+
-+static int thead_pwm_probe(struct platform_device *pdev)
-+{
-+	struct thead_pwm_chip *priv;
-+	int ret, i;
-+	u32 val;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->mmio_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->mmio_base))
-+		return PTR_ERR(priv->mmio_base);
-+
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
-+	priv->chip.ops = &thead_pwm_ops;
-+	priv->chip.dev = &pdev->dev;
-+	priv->chip.npwm = THEAD_PWM_MAX_NUM;
-+
-+	/* check whether PWM is ever started or not */
-+	for (i = 0; i < priv->chip.npwm; i++) {
-+		val = readl(priv->mmio_base + THEAD_PWM_FP(i));
-+		if (val)
-+			priv->channel_ever_started |= 1 << i;
-+	}
-+
-+	ret = devm_pwmchip_add(&pdev->dev, &priv->chip);
-+	if (ret)
-+		return ret;
-+
-+	devm_pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id thead_pwm_dt_ids[] = {
-+	{.compatible = "thead,th1520-pwm",},
-+	{/* sentinel */}
-+};
-+MODULE_DEVICE_TABLE(of, thead_pwm_dt_ids);
-+
-+static const struct dev_pm_ops thead_pwm_pm_ops = {
-+	SET_RUNTIME_PM_OPS(thead_pwm_runtime_suspend, thead_pwm_runtime_resume, NULL)
-+};
-+
-+static struct platform_driver thead_pwm_driver = {
-+	.driver = {
-+		.name = "thead-pwm",
-+		.of_match_table = thead_pwm_dt_ids,
-+		.pm = &thead_pwm_pm_ops,
-+	},
-+	.probe = thead_pwm_probe,
-+};
-+module_platform_driver(thead_pwm_driver);
-+
-+MODULE_AUTHOR("Wei Liu <lw312886@linux.alibaba.com>");
-+MODULE_AUTHOR("Jisheng Zhang <jszhang@kernel.org>");
-+MODULE_DESCRIPTION("T-HEAD pwm driver");
-+MODULE_LICENSE("GPL v2");
+Looking good.  Just a couple of nits and throughts.
+
+> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+> index df469aaa7e6e..4d87686f916c 100644
+> --- a/drivers/leds/rgb/leds-qcom-lpg.c
+> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
+> @@ -8,11 +8,13 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/led-class-multicolor.h>
+>  #include <linux/module.h>
+> +#include <linux/nvmem-consumer.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+> +#include <linux/soc/qcom/qcom-pbs.h>
+>  
+>  #define LPG_SUBTYPE_REG		0x05
+>  #define  LPG_SUBTYPE_LPG	0x2
+> @@ -39,6 +41,8 @@
+>  #define PWM_SEC_ACCESS_REG	0xd0
+>  #define PWM_DTEST_REG(x)	(0xe2 + (x) - 1)
+>  
+> +#define SDAM_REG_PBS_SEQ_EN		0x42
+> +
+>  #define TRI_LED_SRC_SEL		0x45
+>  #define TRI_LED_EN_CTL		0x46
+>  #define TRI_LED_ATC_CTL		0x47
+> @@ -48,9 +52,25 @@
+>  
+>  #define LPG_RESOLUTION_9BIT	BIT(9)
+>  #define LPG_RESOLUTION_15BIT	BIT(15)
+> +#define PPG_MAX_LED_BRIGHTNESS	255
+> +
+>  #define LPG_MAX_M		7
+>  #define LPG_MAX_PREDIV		6
+>  
+> +#define DEFAULT_TICK_DURATION_US	7800
+> +#define RAMP_STEP_DURATION(x)		(((x) * 1000 / DEFAULT_TICK_DURATION_US) & 0xff)
+> +
+> +/* LPG common config settings for PPG */
+> +#define SDAM_REG_RAMP_STEP_DURATION		0x47
+> +#define SDAM_LPG_SDAM_LUT_PATTERN_OFFSET	0x80
+> +
+> +/* LPG per channel config settings for PPG */
+> +#define SDAM_LUT_EN_OFFSET			0x0
+> +#define SDAM_PATTERN_CONFIG_OFFSET		0x1
+> +#define SDAM_END_INDEX_OFFSET			0x3
+> +#define SDAM_START_INDEX_OFFSET		0x4
+> +#define SDAM_PBS_SCRATCH_LUT_COUNTER_OFFSET	0x6
+> +
+>  struct lpg_channel;
+>  struct lpg_data;
+>  
+> @@ -64,7 +84,10 @@ struct lpg_data;
+>   * @lut_base:	base address of the LUT block (optional)
+>   * @lut_size:	number of entries in the LUT block
+>   * @lut_bitmap:	allocation bitmap for LUT entries
+> - * @triled_base: base address of the TRILED block (optional)
+> + * @pbs_dev:	PBS device
+> + * @lpg_chan_sdam:	LPG SDAM peripheral device
+> + * @pbs_en_bitmap:	bitmap for tracking PBS triggers
+> + * @triled_base:	base address of the TRILED block (optional)
+>   * @triled_src:	power-source for the TRILED
+>   * @triled_has_atc_ctl:	true if there is TRI_LED_ATC_CTL register
+>   * @triled_has_src_sel:	true if there is TRI_LED_SRC_SEL register
+> @@ -85,6 +108,10 @@ struct lpg {
+>  	u32 lut_size;
+>  	unsigned long *lut_bitmap;
+>  
+> +	struct pbs_dev *pbs_dev;
+> +	struct nvmem_device *lpg_chan_sdam;
+> +	unsigned long pbs_en_bitmap;
+> +
+>  	u32 triled_base;
+>  	u32 triled_src;
+>  	bool triled_has_atc_ctl;
+> @@ -101,6 +128,8 @@ struct lpg {
+>   * @triled_mask: mask in TRILED to enable this channel
+>   * @lut_mask:	mask in LUT to start pattern generator for this channel
+>   * @subtype:	PMIC hardware block subtype
+> + * @sdam_offset:	Channel offset in LPG SDAM
+
+Nit: De-capitalise Channel.
+
+> + * @lpg_idx:	index of the channel
+>   * @in_use:	channel is exposed to LED framework
+>   * @color:	color of the LED attached to this channel
+>   * @dtest_line:	DTEST line for output, or 0 if disabled
+> @@ -112,6 +141,7 @@ struct lpg {
+>   * @pre_div_sel: divider selector of the reference clock
+>   * @pre_div_exp: exponential divider of the reference clock
+>   * @pwm_resolution_sel:	pwm resolution selector
+> + * @pattern_set: true when setting pattern
+>   * @ramp_enabled: duty cycle is driven by iterating over lookup table
+>   * @ramp_ping_pong: reverse through pattern, rather than wrapping to start
+>   * @ramp_oneshot: perform only a single pass over the pattern
+> @@ -129,6 +159,8 @@ struct lpg_channel {
+>  	unsigned int triled_mask;
+>  	unsigned int lut_mask;
+>  	unsigned int subtype;
+> +	u32 sdam_offset;
+> +	u32 lpg_idx;
+>  
+>  	bool in_use;
+>  
+> @@ -146,6 +178,7 @@ struct lpg_channel {
+>  	unsigned int pre_div_exp;
+>  	unsigned int pwm_resolution_sel;
+>  
+> +	bool pattern_set;
+>  	bool ramp_enabled;
+>  	bool ramp_ping_pong;
+>  	bool ramp_oneshot;
+> @@ -180,8 +213,10 @@ struct lpg_led {
+>   * struct lpg_channel_data - per channel initialization data
+>   * @base:		base address for PWM channel registers
+>   * @triled_mask:	bitmask for controlling this channel in TRILED
+> + * @sdam_offset:	Channel offset in LPG SDAM
+
+Nit: Please keep these ordered.
+
+>   */
+>  struct lpg_channel_data {
+> +	unsigned int sdam_offset;
+>  	unsigned int base;
+>  	u8 triled_mask;
+>  };
+> @@ -206,6 +241,75 @@ struct lpg_data {
+>  	const struct lpg_channel_data *channels;
+>  };
+>  
+> +#define PBS_SW_TRIG_BIT		BIT(0)
+> +
+> +static int lpg_clear_pbs_trigger(struct lpg_channel *chan)
+> +{
+> +	u8 val = 0;
+> +	int rc;
+> +
+> +	clear_bit(chan->lpg_idx, &chan->lpg->pbs_en_bitmap);
+> +	if (!chan->lpg->pbs_en_bitmap) {
+> +		rc = nvmem_device_write(chan->lpg->lpg_chan_sdam, SDAM_REG_PBS_SEQ_EN, 1, &val);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int lpg_set_pbs_trigger(struct lpg_channel *chan)
+> +{
+> +	u8 val = PBS_SW_TRIG_BIT;
+> +	int rc;
+> +
+> +	if (!chan->lpg->pbs_en_bitmap) {
+> +		rc = nvmem_device_write(chan->lpg->lpg_chan_sdam, SDAM_REG_PBS_SEQ_EN, 1, &val);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		rc = qcom_pbs_trigger_event(chan->lpg->pbs_dev, val);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +	set_bit(chan->lpg_idx, &chan->lpg->pbs_en_bitmap);
+> +
+> +	return 0;
+> +}
+> +
+> +static int lpg_sdam_configure_triggers(struct lpg_channel *chan, bool set_trig)
+> +{
+> +	u32 addr = SDAM_LUT_EN_OFFSET + chan->sdam_offset;
+> +	u8 val;
+> +	int rc;
+> +
+> +	if (chan->lpg->lut_base)
+
+Because?  I think I comment here would be handy.
+
+> +		return 0;
+> +
+> +	if (set_trig) {
+> +		val = 1;
+> +		rc = nvmem_device_write(chan->lpg->lpg_chan_sdam, addr, 1, &val);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		rc = lpg_set_pbs_trigger(chan);
+> +		if (rc < 0)
+> +			return rc;
+> +		chan->pattern_set = false;
+> +	} else {
+> +		val = 0;
+> +		rc = nvmem_device_write(chan->lpg->lpg_chan_sdam, addr, 1, &val);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		rc = lpg_clear_pbs_trigger(chan);
+> +		if (rc < 0)
+> +			return rc;
+
+Nothing to be done for pattern_set?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int triled_set(struct lpg *lpg, unsigned int mask, unsigned int enable)
+>  {
+>  	/* Skip if we don't have a triled block */
+> @@ -216,6 +320,41 @@ static int triled_set(struct lpg *lpg, unsigned int mask, unsigned int enable)
+>  				  mask, enable);
+>  }
+>  
+> +static int lpg_lut_store_sdam(struct lpg *lpg, struct led_pattern *pattern,
+> +			 size_t len, unsigned int *lo_idx, unsigned int *hi_idx)
+> +{
+> +	unsigned int idx;
+> +	u8 brightness;
+> +	int i, rc;
+> +	u16 addr;
+> +
+> +	if (len > lpg->lut_size) {
+> +		dev_err(lpg->dev, "Pattern length (%zu) exceeds maximum pattern length (%d)\n",
+> +			len, lpg->lut_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	idx = bitmap_find_next_zero_area(lpg->lut_bitmap, lpg->lut_size,
+> +					 0, len, 0);
+
+These line wraps are inconsistent with some others.
+
+Pick 80 or 100, but be consistent throughout.
+
+> +	if (idx >= lpg->lut_size)
+> +		return -ENOSPC;
+> +
+> +	for (i = 0; i < len; i++) {
+> +		brightness = pattern[i].brightness;
+> +		addr = SDAM_LPG_SDAM_LUT_PATTERN_OFFSET + i + idx;
+> +		rc = nvmem_device_write(lpg->lpg_chan_sdam, addr, 1, &brightness);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +
+> +	bitmap_set(lpg->lut_bitmap, idx, len);
+> +
+> +	*lo_idx = idx;
+> +	*hi_idx = idx + len - 1;
+> +
+> +	return 0;
+> +}
+> +
+>  static int lpg_lut_store(struct lpg *lpg, struct led_pattern *pattern,
+>  			 size_t len, unsigned int *lo_idx, unsigned int *hi_idx)
+>  {
+> @@ -462,6 +601,28 @@ static void lpg_apply_pwm_value(struct lpg_channel *chan)
+>  #define LPG_PATTERN_CONFIG_PAUSE_HI	BIT(1)
+>  #define LPG_PATTERN_CONFIG_PAUSE_LO	BIT(0)
+>  
+> +static void lpg_sdam_apply_lut_control(struct lpg_channel *chan)
+> +{
+> +	struct nvmem_device *lpg_chan_sdam = chan->lpg->lpg_chan_sdam;
+> +	unsigned int lo_idx = chan->pattern_lo_idx;
+> +	unsigned int hi_idx = chan->pattern_hi_idx;
+> +	u8 val = 0, conf = 0;
+> +
+> +	if (!chan->ramp_enabled || chan->pattern_lo_idx == chan->pattern_hi_idx)
+> +		return;
+> +
+> +	if (!chan->ramp_oneshot)
+> +		conf |= LPG_PATTERN_CONFIG_REPEAT;
+> +
+> +	nvmem_device_write(lpg_chan_sdam, SDAM_PBS_SCRATCH_LUT_COUNTER_OFFSET + chan->sdam_offset, 1, &val);
+> +	nvmem_device_write(lpg_chan_sdam, SDAM_PATTERN_CONFIG_OFFSET + chan->sdam_offset, 1, &conf);
+> +	nvmem_device_write(lpg_chan_sdam, SDAM_END_INDEX_OFFSET + chan->sdam_offset, 1, &hi_idx);
+> +	nvmem_device_write(lpg_chan_sdam, SDAM_START_INDEX_OFFSET + chan->sdam_offset, 1, &lo_idx);
+> +
+> +	val = RAMP_STEP_DURATION(chan->ramp_tick_ms);
+> +	nvmem_device_write(lpg_chan_sdam, SDAM_REG_RAMP_STEP_DURATION, 1, &val);
+> +}
+> +
+>  static void lpg_apply_lut_control(struct lpg_channel *chan)
+>  {
+>  	struct lpg *lpg = chan->lpg;
+> @@ -597,7 +758,10 @@ static void lpg_apply(struct lpg_channel *chan)
+>  	lpg_apply_pwm_value(chan);
+>  	lpg_apply_control(chan);
+>  	lpg_apply_sync(chan);
+> -	lpg_apply_lut_control(chan);
+> +	if (chan->lpg->lpg_chan_sdam)
+> +		lpg_sdam_apply_lut_control(chan);
+> +	else
+> +		lpg_apply_lut_control(chan);
+>  	lpg_enable_glitch(chan);
+>  }
+>  
+> @@ -642,6 +806,9 @@ static void lpg_brightness_set(struct lpg_led *led, struct led_classdev *cdev,
+>  		triled_mask |= chan->triled_mask;
+>  
+>  		lpg_apply(chan);
+> +
+> +		if (chan->pattern_set)
+> +			lpg_sdam_configure_triggers(chan, true);
+>  	}
+>  
+>  	/* Toggle triled lines */
+> @@ -836,18 +1003,24 @@ static int lpg_pattern_set(struct lpg_led *led, struct led_pattern *led_pattern,
+>  	 * If the specified pattern is a palindrome the ping pong mode is
+>  	 * enabled. In this scenario the delta_t of the middle entry (i.e. the
+>  	 * last in the programmed pattern) determines the "high pause".
+> +	 *
+> +	 * SDAM devices supporting LUT do not support "low pause", "high pause"
+> +	 * or "ping pong"
+>  	 */
+>  
+>  	/* Detect palindromes and use "ping pong" to reduce LUT usage */
+> -	for (i = 0; i < len / 2; i++) {
+> -		brightness_a = pattern[i].brightness;
+> -		brightness_b = pattern[len - i - 1].brightness;
+> -
+> -		if (brightness_a != brightness_b) {
+> -			ping_pong = false;
+> -			break;
+> +	if (lpg->lut_base) {
+> +		for (i = 0; i < len / 2; i++) {
+> +			brightness_a = pattern[i].brightness;
+> +			brightness_b = pattern[len - i - 1].brightness;
+> +
+> +			if (brightness_a != brightness_b) {
+> +				ping_pong = false;
+> +				break;
+> +			}
+>  		}
+> -	}
+> +	} else
+> +		ping_pong = false;
+>  
+>  	/* The pattern length to be written to the LUT */
+>  	if (ping_pong)
+> @@ -875,12 +1048,27 @@ static int lpg_pattern_set(struct lpg_led *led, struct led_pattern *led_pattern,
+>  	if (delta_t >= BIT(9))
+>  		goto out_free_pattern;
+>  
+> -	/* Find "low pause" and "high pause" in the pattern */
+> -	lo_pause = pattern[0].delta_t;
+> -	hi_pause = pattern[actual_len - 1].delta_t;
+> +	/*
+> +	 * Find "low pause" and "high pause" in the pattern in the LUT case.
+> +	 * LPGs using SDAM for pattern require equal duration of all steps
+> +	 */
+> +	if (lpg->lut_base) {
+> +		lo_pause = pattern[0].delta_t;
+> +		hi_pause = pattern[actual_len - 1].delta_t;
+> +	} else {
+> +		if (delta_t != pattern[0].delta_t ||
+> +		    delta_t != pattern[actual_len - 1].delta_t)
+> +			goto out_free_pattern;
+> +	}
+> +
+>  
+>  	mutex_lock(&lpg->lock);
+> -	ret = lpg_lut_store(lpg, pattern, actual_len, &lo_idx, &hi_idx);
+> +
+> +	if (lpg->lpg_chan_sdam)
+> +		ret = lpg_lut_store_sdam(lpg, pattern, actual_len, &lo_idx, &hi_idx);
+> +	else
+> +		ret = lpg_lut_store(lpg, pattern, actual_len, &lo_idx, &hi_idx);
+> +
+>  	if (ret < 0)
+>  		goto out_unlock;
+>  
+> @@ -896,6 +1084,8 @@ static int lpg_pattern_set(struct lpg_led *led, struct led_pattern *led_pattern,
+>  
+>  		chan->pattern_lo_idx = lo_idx;
+>  		chan->pattern_hi_idx = hi_idx;
+> +
+
+Why are we spacing them out?  They look related?
+
+> +		chan->pattern_set = true;
+>  	}
+>  
+>  out_unlock:
+> @@ -953,6 +1143,7 @@ static int lpg_pattern_clear(struct lpg_led *led)
+>  
+>  	for (i = 0; i < led->num_channels; i++) {
+>  		chan = led->channels[i];
+> +		lpg_sdam_configure_triggers(chan, false);
+>  		chan->pattern_lo_idx = 0;
+>  		chan->pattern_hi_idx = 0;
+>  	}
+> @@ -1188,8 +1379,8 @@ static int lpg_add_led(struct lpg *lpg, struct device_node *np)
+>  		cdev->brightness_set_blocking = lpg_brightness_mc_set;
+>  		cdev->blink_set = lpg_blink_mc_set;
+>  
+> -		/* Register pattern accessors only if we have a LUT block */
+> -		if (lpg->lut_base) {
+> +		/* Register pattern accessors if we have a LUT block or when using PPG */
+> +		if (lpg->lut_base || lpg->lpg_chan_sdam) {
+>  			cdev->pattern_set = lpg_pattern_mc_set;
+>  			cdev->pattern_clear = lpg_pattern_mc_clear;
+>  		}
+> @@ -1202,15 +1393,19 @@ static int lpg_add_led(struct lpg *lpg, struct device_node *np)
+>  		cdev->brightness_set_blocking = lpg_brightness_single_set;
+>  		cdev->blink_set = lpg_blink_single_set;
+>  
+> -		/* Register pattern accessors only if we have a LUT block */
+> -		if (lpg->lut_base) {
+> +		/* Register pattern accessors if we have a LUT block or when using PPG */
+> +		if (lpg->lut_base || lpg->lpg_chan_sdam) {
+>  			cdev->pattern_set = lpg_pattern_single_set;
+>  			cdev->pattern_clear = lpg_pattern_single_clear;
+>  		}
+>  	}
+>  
+>  	cdev->default_trigger = of_get_property(np, "linux,default-trigger", NULL);
+> -	cdev->max_brightness = LPG_RESOLUTION_9BIT - 1;
+> +
+> +	if (lpg->lpg_chan_sdam)
+> +		cdev->max_brightness = PPG_MAX_LED_BRIGHTNESS;
+> +	else
+> +		cdev->max_brightness = LPG_RESOLUTION_9BIT - 1;
+
+Are these not both 0xff (255)?
+
+>  	if (!of_property_read_string(np, "default-state", &state) &&
+>  	    !strcmp(state, "on"))
+> @@ -1251,6 +1446,8 @@ static int lpg_init_channels(struct lpg *lpg)
+>  		chan->base = data->channels[i].base;
+>  		chan->triled_mask = data->channels[i].triled_mask;
+>  		chan->lut_mask = BIT(i);
+> +		chan->sdam_offset = data->channels[i].sdam_offset;
+> +		chan->lpg_idx = i;
+>  
+>  		regmap_read(lpg->map, chan->base + LPG_SUBTYPE_REG, &chan->subtype);
+>  	}
+> @@ -1297,11 +1494,12 @@ static int lpg_init_lut(struct lpg *lpg)
+>  {
+>  	const struct lpg_data *data = lpg->data;
+>  
+> -	if (!data->lut_base)
+> +	if (!data->lut_size)
+>  		return 0;
+>  
+> -	lpg->lut_base = data->lut_base;
+>  	lpg->lut_size = data->lut_size;
+> +	if (data->lut_base)
+> +		lpg->lut_base = data->lut_base;
+>  
+>  	lpg->lut_bitmap = devm_bitmap_zalloc(lpg->dev, lpg->lut_size, GFP_KERNEL);
+>  	if (!lpg->lut_bitmap)
+> @@ -1310,6 +1508,44 @@ static int lpg_init_lut(struct lpg *lpg)
+>  	return 0;
+>  }
+>  
+> +static int lpg_init_sdam(struct lpg *lpg)
+> +{
+> +	struct lpg_channel *chan;
+> +	int i, sdam_count, rc;
+> +	u8 val = 0;
+> +
+> +	sdam_count = of_property_count_strings(lpg->dev->of_node, "nvmem-names");
+> +	if (sdam_count <= 0)
+> +		return 0;
+> +
+> +	/* get the SDAM device for LPG/LUT config */
+
+Nit: Start comments with an uppercase char.
+
+> +	lpg->lpg_chan_sdam = devm_nvmem_device_get(lpg->dev, "lpg_chan_sdam");
+> +	if (IS_ERR(lpg->lpg_chan_sdam))
+> +		return dev_err_probe(lpg->dev, PTR_ERR(lpg->lpg_chan_sdam),
+> +				"Failed to get lpg sdam device\n");
+
+Should these abbreviations be capitalised?
+
+> +	lpg->pbs_dev = get_pbs_client_device(lpg->dev);
+> +	if (IS_ERR(lpg->pbs_dev))
+> +		return dev_err_probe(lpg->dev, PTR_ERR(lpg->pbs_dev),
+> +				"Failed to get PBS client device\n");
+> +
+> +	for (i = 0; i < lpg->num_channels; i++) {
+> +		chan = &lpg->channels[i];
+
+Is 'chan' used outside of this for loop?
+
+If not, move the declaration into here.
+
+> +		if (chan->sdam_offset) {
+> +			rc = nvmem_device_write(lpg->lpg_chan_sdam,
+> +				SDAM_PBS_SCRATCH_LUT_COUNTER_OFFSET + chan->sdam_offset, 1, &val);
+> +			if (rc < 0)
+> +				return rc;
+> +
+> +			rc = lpg_sdam_configure_triggers(chan, false);
+> +			if (rc < 0)
+> +				return rc;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int lpg_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np;
+> @@ -1346,6 +1582,10 @@ static int lpg_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	ret = lpg_init_sdam(lpg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	ret = lpg_init_lut(lpg);
+>  	if (ret < 0)
+>  		return ret;
+> -- 
+> 2.41.0
+> 
+
 -- 
-2.40.1
-
+Lee Jones [李琼斯]
