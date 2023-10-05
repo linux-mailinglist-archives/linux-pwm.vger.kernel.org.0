@@ -2,254 +2,210 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F47C7B9990
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 03:26:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 808BB7B9E20
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244310AbjJEB07 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 4 Oct 2023 21:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54146 "EHLO
+        id S230230AbjJEN64 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 09:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231650AbjJEB07 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 4 Oct 2023 21:26:59 -0400
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2093.outbound.protection.outlook.com [40.107.255.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C994D8;
-        Wed,  4 Oct 2023 18:26:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KieloMr7msAi/kRXM10L0MakpZ3NJS4olFuwNCV+oY47f8cEmZLMIuEzam9AsNUM+k+eVbAh4RYNm/tzioCQ+j2riwRQGEupP2T3OOAnEVubHEjF7hov5KXxQ4AkTcu/9bjDfM4zVGLpks7hezo/RsdUOgCV+bxEgyqlO7FHJjlK2en3+R//lmS5mAnXAq7oFjCXsE12C7ANiap+O2xBfIIwsb6Fuscz5pSuoVmEel+3RyH/xszl0mkS8D8qzdZ/SqhTK5czXKBkwLsJ6ykr4Y0p7Ev8tB/4wvMXiz46pV5y6orsU9590kfIgxcVogtOEL4ln/4XdGG5UmB/dMfvtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=noo/fEzBt1fE2C1J8OnDvTdtPkofJlbXwvy1xaBOZic=;
- b=kELIoEHfKYiLpyfiUHiuB0YmuTirVm9tF1LEIsAyJueBSbZc1wZSKbdL2c0cfiUmuSFMPHEeQv15JnNuZ+JfSI94k7+QW680GIGdZr8AWkq216jPFCLTfvCVQHxOWVtcxFtuhMxAxCN309b8cVHq76U+7MulRxJOEEw2ZAYop9kF9z+g4wIx6e5r4an0K+09IbJq3B9Y6KndbHJI1uCh5rzi+FtEY4L/xqDvGcynyVU6K2bM8YxpUtOGuFOx3wDJXR2wmgnzDDew1f8//aNZSbU7Os6EHqgNGQ6FqisBTeE9OGxBO2ES+kkb+jmTqB2nMEGJe94dEVTscK7x3cRMVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noo/fEzBt1fE2C1J8OnDvTdtPkofJlbXwvy1xaBOZic=;
- b=bQzuYddDZedRVxiouZy+LdPJpbhjtor8CmxuwR71r6qkonygoSbky/m2wb81++EtNaTzwnYjp9LmJbaxwLcOz0E8hBOQxuCPCBoqoQ83IMMeTGwzp81UW9bTuIH5QxIGJ+NPaqls1DdGiWLpgfLySr7PZUovYo0aT2VFQ52bIilnTRnNg0bKVk/XynS8DOea8FRTNEtGmS7bcwE0sqr0KZyDCJ5gYkqkjMmx/lwHfc1OlG10/GPdXZyFgEavxs/YXNShOZSR/QkpvPEMNurMGa6ipJeILx2/cvtzzPfbjpjWAZ8op0+wwPCnUcwPLrFWneZUcVXOocHUqbN5nJJ3vQ==
-Received: from SG2PR06MB3365.apcprd06.prod.outlook.com (2603:1096:4:69::12) by
- SEYPR06MB5648.apcprd06.prod.outlook.com (2603:1096:101:c0::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6838.30; Thu, 5 Oct 2023 01:26:46 +0000
-Received: from SG2PR06MB3365.apcprd06.prod.outlook.com
- ([fe80::956c:2f06:be93:fc3e]) by SG2PR06MB3365.apcprd06.prod.outlook.com
- ([fe80::956c:2f06:be93:fc3e%5]) with mapi id 15.20.6838.033; Thu, 5 Oct 2023
- 01:26:46 +0000
-From:   Billy Tsai <billy_tsai@aspeedtech.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "jdelvare@suse.com" <jdelvare@suse.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "naresh.solanki@9elements.com" <naresh.solanki@9elements.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        BMC-SW <BMC-SW@aspeedtech.com>,
-        "patrick@stwcx.xyz" <patrick@stwcx.xyz>
-Subject: Re: [PATCH v9 2/3] dt-bindings: hwmon: Support Aspeed g6 PWM TACH
- Control
-Thread-Topic: [PATCH v9 2/3] dt-bindings: hwmon: Support Aspeed g6 PWM TACH
- Control
-Thread-Index: AQHZ6fsiTLYVIVnDjUKnszXE1xHHwrA2ti6AgAPFqCE=
-Date:   Thu, 5 Oct 2023 01:26:45 +0000
-Message-ID: <SG2PR06MB33650A58039DF915E4E868E68BCAA@SG2PR06MB3365.apcprd06.prod.outlook.com>
-References: <20230918064111.2221594-1-billy_tsai@aspeedtech.com>
- <20230918064111.2221594-3-billy_tsai@aspeedtech.com>
- <20231002152819.GB1747496-robh@kernel.org>
-In-Reply-To: <20231002152819.GB1747496-robh@kernel.org>
-Accept-Language: en-US, zh-TW
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SG2PR06MB3365:EE_|SEYPR06MB5648:EE_
-x-ms-office365-filtering-correlation-id: fd25256c-f524-46dd-0e0f-08dbc54223aa
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FD25v1BddKoQXWF4XhVSoYWiaftdubRg3vIAQCC3GpJZgxAlw6oiInMz1VxFDyPzk04f3xqmu3crsnL4ShJn1hlujo1DRLEltsOULngJwiuGj++AJnGuMyv7imEA6pitzDLdNbiuA+uW9N7++6ULH0/ZbQeKRn52LPZJFAdku8SlI2VQIexhObj4C0KZ6EUJVpnJFTZOApuLp1uvIYH8/DHC/YKC04ycpFbNQ+etdybFSZgdAXKPhTwWC4pCryxpDYBQAfUmE7dTGXyFhLMkeRnpzgKuWLGHZO/piPDu0oa/D5c8tgWS75vH2Ci3WPmDaOo4M5iwlPhhPZ3g3exs3B/TQoAfGHgp11zU/EmaALllrC5Loq6HNieIsBK2Qnf9X967XI6+XhyA9XZRb/ogmdcosmiN3ILWuoesGMCllbl9u57EL3CNojS0MBTbuRDzNa3r7YBUmM4+wqzdESENCn9mhVCvw/dP0CxiubeNyZTC20q8sX4+rOfT/NdX77Lqwk4hBJ/Z4SeUelVIDYES0ZmXS01Wosuua9olyi3+x/ZMkQnTH3sd1zc9UVVHcGgxXxP8QHh/r4PdWcet96uNRaoT2X0SdhZJX5ukcvENFYk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3365.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(346002)(39850400004)(396003)(136003)(230922051799003)(451199024)(186009)(64100799003)(1800799009)(9686003)(55016003)(6506007)(478600001)(966005)(7696005)(71200400001)(86362001)(122000001)(38070700005)(38100700002)(2906002)(7416002)(91956017)(41300700001)(6916009)(316002)(83380400001)(26005)(54906003)(66946007)(66476007)(76116006)(66556008)(52536014)(33656002)(8936002)(8676002)(5660300002)(4326008)(64756008)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?0gqIfTS5scHL7t1hTYG3Y4L2aCvp27cZrdnOyXg4lxjP5RBL+5qh3/AWb+?=
- =?iso-8859-1?Q?iavrfKPgRKapcyXgYMNzjcFy33IWij1gpmftcrHzS7ZIR4ejK+La/5ZWi6?=
- =?iso-8859-1?Q?67j1eShZw8lx6Mcmqgj/75xKOcmatzDUsQWMrs1WMdiTPTI7B8rFCf8+LD?=
- =?iso-8859-1?Q?+UBrLM7HGgY8KJBmQyKjVG4ZMtL4OOs6/H1gqp88IvzhXOunAAyfeOMpaO?=
- =?iso-8859-1?Q?vrRgj93UKUZ22U5VILhAc0mr1jlcURGmo+NU3NsuaoKs9V93LMNlmDY+/d?=
- =?iso-8859-1?Q?0RNOZmTK3tpHf/YtgobDh0CVOoCElY/Xum8uc74DVFAEtQQPtmRXCyIxXg?=
- =?iso-8859-1?Q?onzMRHRYz/ZTpIDaogM9VaWeNuTJjKtnGPHHUCIUY9MMFmRT46nEIIuypp?=
- =?iso-8859-1?Q?o2X5OkmLUiFw68K6L5skXBib48XxzWUKCFWsQJRu2YQ/PxJ73eSgd3nvX4?=
- =?iso-8859-1?Q?EM8HFIzXAQA47ur+HcUorcpwdc49aZLC+tSuhF9LwDs8Pzs4BzcD4EbDiY?=
- =?iso-8859-1?Q?+VNph5FLBhbgAtR7LBGCY5TXFmnnDCLX1Ly8e2kX8y+HCFGClF8Fj22zwJ?=
- =?iso-8859-1?Q?fOAetJay7bOj+tKBynMTrVx47SHkq1hYwThcq7oZruxxq4oHV6YztnBeVk?=
- =?iso-8859-1?Q?Ku2eliS4Bu6P3KgWFRKazz7SFdwsh52GtRCISfRU01pDZim+x508C+p48z?=
- =?iso-8859-1?Q?pnfcbA0PWHBtBuHo/bUnjWgxCrV717gHQ2Edrw2YnZuvdNz9dynfWVGlrt?=
- =?iso-8859-1?Q?TrRQxELSAUFRV9kv4C4kDuG+VPeE9q9AOT9gpxDIRmwRQW0FJ5bD5elXJc?=
- =?iso-8859-1?Q?umAsq4jYx89r3kWnkwtYLpPYC4vl0pM4P3uU/Mzj0I2fyVOFdIdyfn+yrc?=
- =?iso-8859-1?Q?Ph8hEomKmAL1yrNWC2hv1Zlul271BzWT9qtPq6204vS3JhtRJ577OH/at7?=
- =?iso-8859-1?Q?07GVXRMlPiBzgY75cQZ4VHrEdCzgAyLBU2Gw3wGgLh9sYzStYqDofyOsKx?=
- =?iso-8859-1?Q?bOdcYC40E949Y67HNPt7MgSWtZJKztnkwq6mHCUo2bEIOVYxJtRh2r5y59?=
- =?iso-8859-1?Q?A1UpkcuLSBXkKDdLCp1C25FaVsn8pn7A7KO2ePwUxDjcXT7l45r8uVueUG?=
- =?iso-8859-1?Q?jUeDrDJzJnT1HNp8JmG67rf1n4qICTgBjGjzqYdjrS5RPqtutis/lXEL5K?=
- =?iso-8859-1?Q?IRZkb8+uYPyzhCtkC2WMUoS/dA/yal7/PWFbSp9H1ZmCe3JTexTGhZsO3u?=
- =?iso-8859-1?Q?B95YqXz+ITuwunnTpf5zU5kc5znd19ofgbpIPYtTdSROPB4gAjqzl90apx?=
- =?iso-8859-1?Q?6eVcjFhudE4/IODXjaOC9WJg9KQdZJUndz8BoIWArjGxMtyrA93aRvmP6o?=
- =?iso-8859-1?Q?JkpYfvc8zNh2D7DRi/FYUzcE+3PfsaXjX5FUmrynIrPLvVsmlzgCOcDldF?=
- =?iso-8859-1?Q?BHNn97z+OdLsl+/fbJ1DSMI888aPC9K9RpcNkpWJUO9OPcDJIWaJ9Ka6ND?=
- =?iso-8859-1?Q?dFhFjBcoXZZcyuBOqhLT9F9lgkt9YfY/io2tKMULb5GMWmBwbcCHUwY7FA?=
- =?iso-8859-1?Q?7Q42DB0uhnmItQ3CiohobOFLlCGajFCc4U5pHQRiNATQk7K6jDFCxO2fAD?=
- =?iso-8859-1?Q?TXIfJJu7+zg7+xu1g+yU0VxRhEBCXGcknM?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231882AbjJEN5J (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 09:57:09 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F49628126;
+        Thu,  5 Oct 2023 06:45:51 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3952Wv5l000725;
+        Thu, 5 Oct 2023 04:31:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=aNc/qQqVLrd5xCqMkKsIbyqjupUyO0PkNQXzy7ahMHA=;
+ b=T2bMfJeSlP+bWY+aPttMPiUF7rC/gMuqJ42qsO0bYvxjWrEz+mLZyWkEEY+cX+wi1cP/
+ 0C4YVlBpN1JId0nBVc8wW7tU8X4BBpcppHnrZUVX7TPT3ppG6ORaX4ST64kDVuSLRqT9
+ GzH3d0/5gJw4i9e4GOO818F6POEqb4X6xIfbIr1M/8E3Xu6688pY94DeRR3vtOJNv5ZB
+ ql+6RpO77DOOcHgpgtvr/PLhM39tCzSab2M9OpFhb9mnfM9sSSDTsC+NQSWyGur98gNu
+ 1LD38eK/P5fhD4JCtSAQoK1gJLgsgnQYvR3QDZzbc8k17U9BnYwz71Jmy+GSQ9++hgdi CA== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tgqth3th1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Oct 2023 04:31:58 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3954VvpI011499
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 5 Oct 2023 04:31:57 GMT
+Received: from hu-devipriy-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Wed, 4 Oct 2023 21:31:51 -0700
+From:   Devi Priya <quic_devipriy@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <ndesaulniers@google.com>,
+        <trix@redhat.com>, <baruch@tkos.co.il>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
+CC:     <linux-pwm@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <nathan@kernel.org>
+Subject: [PATCH V14 2/4] dt-bindings: pwm: add IPQ6018 binding
+Date:   Thu, 5 Oct 2023 10:01:25 +0530
+Message-ID: <20231005043127.2690639-3-quic_devipriy@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231005043127.2690639-1-quic_devipriy@quicinc.com>
+References: <20231005043127.2690639-1-quic_devipriy@quicinc.com>
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3365.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd25256c-f524-46dd-0e0f-08dbc54223aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Oct 2023 01:26:45.9544
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Iy8IpYEJzb+RPXwDTe2T5MorytOpwspc8bezfasxT4J0mk+GX1QkAehqQTXRCdhMF14Bsfk/cvDpIiwlLHWMTZ8lc6TqgexCBNUVOKDvstY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5648
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lhP7K0QSAbvAMaOZtoyHr8rw6AgOtNox
+X-Proofpoint-GUID: lhP7K0QSAbvAMaOZtoyHr8rw6AgOtNox
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-05_01,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310050037
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
->> Document the compatible for aspeed,ast2600-pwm-tach device, which can=0A=
->> support up to 16 PWM outputs and 16 fan tach input.=0A=
->>=0A=
->> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>=0A=
->> ---=0A=
->>  .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 69 +++++++++++++++++++=
-=0A=
->>  1 file changed, 69 insertions(+)=0A=
->>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pw=
-m-tach.yaml=0A=
->>=0A=
->> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.=
-yaml b/Documentation/devicetree/>bindings/hwmon/aspeed,g6-pwm-tach.yaml=0A=
->> new file mode 100644=0A=
->> index 000000000000..5a679f4ad2fa=0A=
->> --- /dev/null=0A=
->> +++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml=0A=
->> @@ -0,0 +1,69 @@=0A=
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)=0A=
->> +# Copyright (C) 2023 Aspeed, Inc.=0A=
->> +%YAML 1.2=0A=
->> +---=0A=
->> +$id: http://devicetree.org/schemas/hwmon/aspeed,g6-pwm-tach.yaml#=0A=
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#=0A=
->> +=0A=
->> +title: ASPEED G6 PWM and Fan Tach controller device driver=0A=
-=0A=
-> This is binding for the h/w, not a 'device driver'.=0A=
-=0A=
-Okay, I will remove the 'device driver'.=0A=
-=0A=
->> +=0A=
->> +maintainers:=0A=
->> +  - Billy Tsai <billy_tsai@aspeedtech.com>=0A=
->> +=0A=
->> +description: |=0A=
->> +  The ASPEED PWM controller can support up to 16 PWM outputs.=0A=
->> +  The ASPEED Fan Tacho controller can support up to 16 fan tach input.=
-=0A=
->> +  They are independent hardware blocks, which are different from the=0A=
->> +  previous version of the ASPEED chip.=0A=
->> +=0A=
->> +properties:=0A=
->> +  compatible:=0A=
->> +    enum:=0A=
->> +      - aspeed,ast2600-pwm-tach=0A=
->> +=0A=
->> +  reg:=0A=
->> +    maxItems: 1=0A=
->> +=0A=
->> +  clocks:=0A=
->> +    maxItems: 1=0A=
->> +=0A=
->> +  resets:=0A=
->> +    maxItems: 1=0A=
->> +=0A=
->> +  "#pwm-cells":=0A=
->> +    const: 3=0A=
->> +=0A=
->> +patternProperties:=0A=
->> +  "^fan-[0-9a-f]+$":=0A=
-=0A=
-> foo-<index> naming is decimal, not hex. (unit-addresses are hex)=0A=
-=0A=
-Okay, I will change it to the decimal.=0A=
-=0A=
-> But if 0 and 1 correspond to something in the h/w, then you should=0A=
-> probably be using 'reg' instead (which means a unit-address too).=0A=
-=0A=
-The number doesn't unrelate to the hardware.=0A=
-=0A=
->> +    $ref: fan-common.yaml#=0A=
->> +    unevaluatedProperties: false=0A=
->> +    required:=0A=
->> +      - tach-ch=0A=
->> +=0A=
->> +required:=0A=
->> +  - reg=0A=
->> +  - clocks=0A=
->> +  - resets=0A=
->> +  - "#pwm-cells"=0A=
->> +  - compatible=0A=
->> +=0A=
->> +additionalProperties: false=0A=
->> +=0A=
->> +examples:=0A=
->> +  - |=0A=
->> +    #include <dt-bindings/clock/aspeed-clock.h>=0A=
->> +    pwm_tach: pwm-tach-controller@1e610000 {=0A=
->> +      compatible =3D "aspeed,ast2600-pwm-tach";=0A=
->> +      reg =3D <0x1e610000 0x100>;=0A=
->> +      clocks =3D <&syscon ASPEED_CLK_AHB>;=0A=
->> +      resets =3D <&syscon ASPEED_RESET_PWM>;=0A=
->> +      #pwm-cells =3D <3>;=0A=
->> +=0A=
->> +      fan-0 {=0A=
->> +        tach-ch =3D /bits/ 8 <0x0>;=0A=
-=0A=
-> What about the PWM connection?=0A=
-=0A=
-I only want to create the fan monitor without fan control.=0A=
-So, the PWM connection is unnecessary.=0A=
-=0A=
-Thanks=0A=
-=0A=
->> +      };=0A=
->> +=0A=
->> +      fan-1 {=0A=
->> +        tach-ch =3D /bits/ 8 <0x1 0x2>;=0A=
->> +      };=0A=
->> +    };=0A=
->> --=0A=
->> 2.25.1=0A=
->>=0A=
+DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
+Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+---
+v14:
+
+  Picked up the R-b tag
+
+v13:
+
+  Updated the file name to match the compatible
+  
+  Sorted the properties and updated the order in the required field
+
+  Dropped the syscon node from examples
+
+v12:
+
+  Picked up the R-b tag
+
+v11:
+
+  No change
+
+v10:
+
+  No change
+
+v9:
+
+  Add 'ranges' property to example (Rob)
+
+  Drop label in example (Rob)
+
+v8:
+
+  Add size cell to 'reg' (Rob)
+
+v7:
+
+  Use 'reg' instead of 'offset' (Rob)
+
+  Drop 'clock-names' and 'assigned-clock*' (Bjorn)
+
+  Use single cell address/size in example node (Bjorn)
+
+  Move '#pwm-cells' lower in example node (Bjorn)
+
+  List 'reg' as required
+
+v6:
+
+  Device node is child of TCSR; remove phandle (Rob Herring)
+
+  Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
+
+v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+    Andersson, Kathiravan T)
+
+v4: Update the binding example node as well (Rob Herring's bot)
+
+v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+
+v2: Make #pwm-cells const (Rob Herring)
+
+ .../bindings/pwm/qcom,ipq6018-pwm.yaml        | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+
+diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+new file mode 100644
+index 000000000000..6d0d7ed271f7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/qcom,ipq6018-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm IPQ6018 PWM controller
++
++maintainers:
++  - Baruch Siach <baruch@tkos.co.il>
++
++properties:
++  compatible:
++    const: qcom,ipq6018-pwm
++
++  reg:
++    description: Offset of PWM register in the TCSR block.
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - "#pwm-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
++
++    pwm: pwm@a010 {
++        compatible = "qcom,ipq6018-pwm";
++        reg = <0xa010 0x20>;
++        clocks = <&gcc GCC_ADSS_PWM_CLK>;
++        assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
++        assigned-clock-rates = <100000000>;
++        #pwm-cells = <2>;
++    };
+-- 
+2.34.1
+
