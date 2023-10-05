@@ -2,70 +2,77 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0422E7BA5C2
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 18:20:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F9957BA5E9
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 18:21:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242777AbjJEQTD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 12:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
+        id S241162AbjJEQUu (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 12:20:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241131AbjJEQQd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 12:16:33 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCB9385B;
-        Thu,  5 Oct 2023 08:59:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696521577; x=1728057577;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aKjgMuYZsRtSs4xPdMfRl1emk6n46p2cxkShwocdj+Q=;
-  b=K+jujbEUqiQr/HbMCJN9Kld0p6Z71uuB7cQQveTGGPlRrS6BKzTKDs+E
-   g56Wm4ooImq1+LbI2BGpOxERXVKI7xrVOOYHZ0k7UQCKLhBSnTbYZ2IlZ
-   9nDPPM6FXsrahcVu/0W0+2o4xb8H9sTFm4Z43W1vwQRXiWhTKCikbbLnX
-   Wuqm6vfaWeONG+c521fSPrmmEXqOcJn2oWU65ux4M7g572VzRnKffwPCN
-   79Ae9QnSWVsnbcLkULS1sq+AZeTsXcZyHc3ZZNPbOEv3Seu92mPHLV/Qi
-   PatnErkFmQ811oDLTq9mZVZRPHhRNj33ipFWuFk+w89Y4SofuOkQ8UPaq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="414503502"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="414503502"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 08:59:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="822165819"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="822165819"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Oct 2023 08:59:14 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qoQkq-000Lb9-0c;
-        Thu, 05 Oct 2023 15:59:12 +0000
-Date:   Thu, 5 Oct 2023 23:58:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v16 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <202310052353.flpqN2Di-lkp@intel.com>
-References: <20231004111451.126195-4-biju.das.jz@bp.renesas.com>
+        with ESMTP id S242447AbjJEQSA (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 12:18:00 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C660B3F024;
+        Thu,  5 Oct 2023 09:06:56 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 395ESXaV024333;
+        Thu, 5 Oct 2023 16:06:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=a1aM1vRSIVXNKe9ey/sJJp8ITSVIKnBHHHgqr/71Noo=;
+ b=V2jCbnevPtAH4P7huTKahG6eBI61tiss5vupzEsyAlbBug8mJa8wEsvBS8uSCJxpjsSx
+ QwM58UUFBaOsg5lMWhWWbm1oUa/VfDGiqRgcoPc6thDA+InzDYAZLMYCcHW0fUc2l5uW
+ xP16e0uocpMd4Y9qALCPlv9J0S1UpMLpFJjc/FZQCDSQXRMv4ZOUd2PGH1YfFoJLuEqR
+ qILnZGwDlI/1d7xOnhSbjKm2B4h2VIvxqwq4rk0+A0dSeFfD+uafyOcJ3FzOo6r+qyBO
+ dv5b1qnS1oTLneI5fy+g0O5gobvWUFrO6JS/iQgPZZuV33okfGYst/1EPaT7HYcnhUnq 2g== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3thnfa9b9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Oct 2023 16:06:40 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 395G6F0Z025344
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 5 Oct 2023 16:06:15 GMT
+Received: from hu-devipriy-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Thu, 5 Oct 2023 09:06:10 -0700
+From:   Devi Priya <quic_devipriy@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <ndesaulniers@google.com>,
+        <trix@redhat.com>, <baruch@tkos.co.il>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
+CC:     <linux-pwm@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <nathan@kernel.org>
+Subject: [PATCH V15 0/4] Add PWM support for IPQ chipsets
+Date:   Thu, 5 Oct 2023 21:35:46 +0530
+Message-ID: <20231005160550.2423075-1-quic_devipriy@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231004111451.126195-4-biju.das.jz@bp.renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: J5UNpgl0t--lsTn1f4hyvxjJLvPOcMv1
+X-Proofpoint-ORIG-GUID: J5UNpgl0t--lsTn1f4hyvxjJLvPOcMv1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-05_11,2023-10-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=671 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 clxscore=1015 adultscore=0 phishscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310050126
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,31 +80,31 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Biju,
+Add PWM driver and binding support for IPQ chipsets.
+Also, add support for pwm node in ipq6018.
 
-kernel test robot noticed the following build errors:
+V15:
+Detailed Change logs are added to the respective patches.
 
-[auto build test ERROR on 4aae44f65827f0213a7361cf9c32cfe06114473f]
+V14 can be found at:
+https://lore.kernel.org/linux-arm-msm/20231005043127.2690639-1-quic_devipriy@quicinc.com/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Biju-Das/dt-bindings-pwm-Add-RZ-G2L-GPT-binding/20231004-231907
-base:   4aae44f65827f0213a7361cf9c32cfe06114473f
-patch link:    https://lore.kernel.org/r/20231004111451.126195-4-biju.das.jz%40bp.renesas.com
-patch subject: [PATCH v16 3/4] pwm: Add support for RZ/G2L GPT
-config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20231005/202310052353.flpqN2Di-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231005/202310052353.flpqN2Di-lkp@intel.com/reproduce)
+Devi Priya (4):
+  pwm: driver for qualcomm ipq6018 pwm block
+  dt-bindings: pwm: add IPQ6018 binding
+  dt-bindings: mfd: qcom,tcsr: Add simple-mfd support for IPQ6018
+  arm64: dts: qcom: ipq6018: add pwm node
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310052353.flpqN2Di-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arm-linux-gnueabi-ld: drivers/pwm/pwm-rzg2l-gpt.o: in function `rzg2l_gpt_config':
->> pwm-rzg2l-gpt.c:(.text+0xae8): undefined reference to `__aeabi_uldivmod'
->> arm-linux-gnueabi-ld: pwm-rzg2l-gpt.c:(.text+0xb50): undefined reference to `__aeabi_uldivmod'
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml    | 112 +++++--
+ .../bindings/pwm/qcom,ipq6018-pwm.yaml        |  45 +++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi         |  15 +-
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ipq.c                         | 282 ++++++++++++++++++
+ 6 files changed, 435 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-ipq.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
