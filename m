@@ -2,137 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F07A7B9F15
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:18:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A00BC7BA146
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 16:53:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231394AbjJEORy (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 10:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
+        id S239334AbjJEOmN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 5 Oct 2023 10:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbjJEOQJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:16:09 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09617D82
-        for <linux-pwm@vger.kernel.org>; Thu,  5 Oct 2023 00:34:35 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-533c8f8f91dso1102634a12.0
-        for <linux-pwm@vger.kernel.org>; Thu, 05 Oct 2023 00:34:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696491274; x=1697096074; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RemQ+kO5LWbk4kqvMyW1M9bpjQKJ4AawmNqARJCw5+Y=;
-        b=f23amMM/4IlpXckXjl5Kn1zm7CavESsTOx+3pLt5WoyhYqnB5P+0GF46gnOBl3sqN+
-         mmvn4gfjf/H58atwSXE9dIeWf5dTIso2ynvOi8RnLTfHd7ctw5Z/pyej+8vUaAr2Pf94
-         YoA61NG7Y5Nyfs5BKjq5EoZ259hmyl0YJUi6TV3RD1klJMiiLiYFIDhHaG7uvFXQMbF8
-         iHcPqfWvOGeOWMnw9Rz04fa2CUL+ngErmnGmWFfhG3c2YUpJArMQcB4Fl8pHyPv5BPl/
-         f1BNEYwf4M2C0y4ykZaoA2gvgkoeg1TPqp4wKk9wEwOcc7RHeyDonBoWJwJC0w7BEKtf
-         MAJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696491274; x=1697096074;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RemQ+kO5LWbk4kqvMyW1M9bpjQKJ4AawmNqARJCw5+Y=;
-        b=QubPLEV/ulHAuD9pVRmESj0MHhWCnZXpURNheggroeSZplQMhFj3HKjZTYwPVLv/gu
-         N3VDKP4m3gdHg9J4TIWOK1VwMFhEqmdr7DP1Fr80ffhBzYYf1IW6fjbuDCo4azWCHrxM
-         O4Fd5oNU9VN3ZYW1mhvXBU5/7cna0MbHvBXxc8F9MMmulF2J9sokN9pOGzCb4wD6jSY7
-         vynDaxDHA0rDBtp7qAZI/7cJjH9mfLCdU+xwDxFqc28khP72fLg3V4rQcScmAA/V5S2q
-         gkjnuuk/V6ewP/l6PYUMSWLfiYqlSFYFvjd9pqZ9jdDlgwZxMFhNwu8huCKuXycnsIEA
-         GErQ==
-X-Gm-Message-State: AOJu0Yx9VI3wlcMkrK+eyjJXvabB3WH+iar/1v0Khdf0LzSwOH7mdLI0
-        1+bsE2vfPHFmR1X8KStbM9VRDQ==
-X-Google-Smtp-Source: AGHT+IEO3B7Z233MtcQfx2cBYuFG2/dqEew6/1P7hOXhNe/qdINPPgOU6yCt3Ug/CZyde69oE+fQfA==
-X-Received: by 2002:a50:ed15:0:b0:533:780f:f016 with SMTP id j21-20020a50ed15000000b00533780ff016mr3981422eds.14.1696491274275;
-        Thu, 05 Oct 2023 00:34:34 -0700 (PDT)
-Received: from [192.168.1.197] (5-157-101-10.dyn.eolo.it. [5.157.101.10])
-        by smtp.gmail.com with ESMTPSA id f26-20020a056402005a00b00530bc7cf377sm616810edu.12.2023.10.05.00.34.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Oct 2023 00:34:33 -0700 (PDT)
-Message-ID: <cfbc4805-c2e8-4dee-92bc-14d805dc2320@linaro.org>
-Date:   Thu, 5 Oct 2023 09:34:32 +0200
+        with ESMTP id S236990AbjJEOhj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 10:37:39 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2AC783E5;
+        Thu,  5 Oct 2023 07:03:23 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3955buOu012274;
+        Thu, 5 Oct 2023 07:36:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=D8BC3BO3azckk+Ehrf8XzxN2xBK3e06fHyqblWk1k/I=;
+ b=X75GR4wzkbqXeGM0oJnfHW2IK106HRJRgI3R5yrGLPC2NhseK4QLVKpMiy+LirA+JNXF
+ QdzgRTJQqMEz1KLtFRJ1UxEoDHuV2ZxM0uOoetbuDIBUOQH9Ai/wZ8hmkXaWJPPO+4oI
+ HQxgIZBnXOfltTtgPz7NsFGrUpmEFbxhNBYWZxl9ncsZNwVRH2ECBc+mFVbuw9eQxU21
+ 1CoUjteGyYxq1STjhmsz5SHQ3NUugZeignhMoWWAE1Dv68NML1VP2qikdGNEoiH0bCAW
+ QBKs9CQqlpuTRkoIBkFHmCNxJxpPfDZou5qRcSqwffj/1S9NcnIqdIjqN5wciL0RodKP uQ== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3thn058c5s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Oct 2023 07:36:40 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3957adOs003567
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 5 Oct 2023 07:36:39 GMT
+Received: from [10.216.40.132] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 5 Oct
+ 2023 00:36:32 -0700
+Message-ID: <cc5fef7a-d4d1-d725-36a5-86183bacc5a0@quicinc.com>
+Date:   Thu, 5 Oct 2023 13:06:27 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
 Subject: Re: [PATCH V14 3/4] dt-bindings: mfd: qcom,tcsr: Add simple-mfd
  support for IPQ6018
 Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, thierry.reding@gmail.com,
-        ndesaulniers@google.com, trix@redhat.com, baruch@tkos.co.il,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Cc:     linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        nathan@kernel.org
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <ndesaulniers@google.com>,
+        <trix@redhat.com>, <baruch@tkos.co.il>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>
+CC:     <linux-pwm@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <nathan@kernel.org>
 References: <20231005033053.2626465-1-quic_devipriy@quicinc.com>
  <20231005033053.2626465-4-quic_devipriy@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231005033053.2626465-4-quic_devipriy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+ <cfbc4805-c2e8-4dee-92bc-14d805dc2320@linaro.org>
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <cfbc4805-c2e8-4dee-92bc-14d805dc2320@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 6-_sl-_tzVzavNW99DG16uhxP881mC0P
+X-Proofpoint-GUID: 6-_sl-_tzVzavNW99DG16uhxP881mC0P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-05_04,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 mlxlogscore=644 priorityscore=1501
+ mlxscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
+ definitions=main-2310050057
+X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 05/10/2023 05:30, Devi Priya wrote:
-> Update the binding to include pwm as the child node to TCSR block and
-> add simple-mfd support for IPQ6018.
+
+
+On 10/5/2023 1:04 PM, Krzysztof Kozlowski wrote:
+> On 05/10/2023 05:30, Devi Priya wrote:
+>> Update the binding to include pwm as the child node to TCSR block and
+>> add simple-mfd support for IPQ6018.
+>>
+>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 > 
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> Why did you send it twice? It's just brings confusion...
 
-Why did you send it twice? It's just brings confusion...
+Sorry, kindly ignore. As the patches were not delivered to the list,
+tried sending it again.
 
-Best regards,
-Krzysztof
-
+Regards,
+Devi priya
+> 
+> Best regards,
+> Krzysztof
+> 
