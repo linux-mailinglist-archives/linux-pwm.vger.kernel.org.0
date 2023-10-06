@@ -2,54 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 222967BC106
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 23:16:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C086E7BC258
+	for <lists+linux-pwm@lfdr.de>; Sat,  7 Oct 2023 00:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233625AbjJFVQt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Oct 2023 17:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54016 "EHLO
+        id S233701AbjJFWph (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Oct 2023 18:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233624AbjJFVQs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 17:16:48 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE08BE
-        for <linux-pwm@vger.kernel.org>; Fri,  6 Oct 2023 14:16:46 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qosBg-00058J-Bb; Fri, 06 Oct 2023 23:16:44 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qosBf-00Bc4b-KS; Fri, 06 Oct 2023 23:16:43 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qosBf-00AWMM-Au; Fri, 06 Oct 2023 23:16:43 +0200
-Date:   Fri, 6 Oct 2023 23:16:43 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de
-Subject: Re: [PATCH v1 071/101] pwm: ab8500: Store parent device in driver
- data
-Message-ID: <20231006211643.bvn7yof46znyjij7@pengutronix.de>
-References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
- <20230808171931.944154-72-u.kleine-koenig@pengutronix.de>
- <ZR_WXxqhmRgtpA0n@orome.fritz.box>
- <20231006110951.wkmjvokvnenuypdh@pengutronix.de>
- <ZR_tcmBGOOQVNSz4@orome.fritz.box>
+        with ESMTP id S233796AbjJFWph (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 18:45:37 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3F5A2;
+        Fri,  6 Oct 2023 15:45:36 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0796DC433C7;
+        Fri,  6 Oct 2023 22:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696632335;
+        bh=r0hgPd26vNJNNKdbRDndzXFBSLd85QxGGtazkx8k9RA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TkUiToD41EoSHzdGDHb1BVUYjz2DR57gQ89EBfGdiSV7XyLH003ZIKt983ICbgLtz
+         t+JCHOx8JtpAZ4RXIbc40AgxuVm9wB5xNNe9pHE6uLlwaGiArTZiDXc/6SJPYP65GX
+         sFz803xKiozrR8cnXyva4Gf9I8CEwgye0w+Bjuf5PfvkYSJmwn5uLERDLmkzrqILBW
+         KiEJHJSVsyl0GD8SeMHoaq68xllDN2H57S/hf8APFZrlkAU4gW3jANmKpdbuySY4je
+         v+0UDNjMSPWq6LOsMz6sB2gDoczswQ0wXPAzfhiGyO6UHjO8HzewgP9JDyLto/1VVC
+         k5HX676k/3vIA==
+Received: (nullmailer pid 443988 invoked by uid 1000);
+        Fri, 06 Oct 2023 22:45:34 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Keerthy <j-keerthy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: [PATCH] gpio: Use device_get_match_data()
+Date:   Fri,  6 Oct 2023 17:45:07 -0500
+Message-Id: <20231006224507.443486-1-robh@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mnhu63np2ta7cbrh"
-Content-Disposition: inline
-In-Reply-To: <ZR_tcmBGOOQVNSz4@orome.fritz.box>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,69 +54,115 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Use preferred device_get_match_data() instead of of_match_device() to
+get the driver match data. With this, adjust the includes to explicitly
+include the correct headers.
 
---mnhu63np2ta7cbrh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/gpio/gpio-davinci.c |  9 +++------
+ drivers/gpio/gpio-mmio.c    |  4 ++--
+ drivers/gpio/gpio-mvebu.c   | 10 +++-------
+ 3 files changed, 8 insertions(+), 15 deletions(-)
 
-Hello Thierry,
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 8db5717bdabe..bb499e362912 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -16,10 +16,10 @@
+ #include <linux/irqdomain.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/gpio-davinci.h>
++#include <linux/property.h>
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/spinlock.h>
+ #include <linux/pm_runtime.h>
+@@ -486,7 +486,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	struct davinci_gpio_platform_data *pdata = dev->platform_data;
+ 	struct davinci_gpio_regs __iomem *g;
+ 	struct irq_domain	*irq_domain = NULL;
+-	const struct of_device_id *match;
+ 	struct irq_chip *irq_chip;
+ 	struct davinci_gpio_irq_data *irqdata;
+ 	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
+@@ -495,10 +494,8 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+ 	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
+ 	 */
+ 	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
+-	match = of_match_device(of_match_ptr(davinci_gpio_ids),
+-				dev);
+-	if (match)
+-		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
++	if (dev->of_node)
++		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)device_get_match_data(dev);
+ 
+ 	ngpio = pdata->ngpio;
+ 
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index 74fdf0d87b2c..3ff0ea1e351c 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -56,9 +56,9 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
+ #include <linux/slab.h>
+ #include <linux/bitops.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ 
+ #include "gpiolib.h"
+ 
+@@ -702,7 +702,7 @@ static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev,
+ {
+ 	struct bgpio_pdata *pdata;
+ 
+-	if (!of_match_device(bgpio_of_match, &pdev->dev))
++	if (!pdev->dev.of_node)
+ 		return NULL;
+ 
+ 	pdata = devm_kzalloc(&pdev->dev, sizeof(struct bgpio_pdata),
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 67497116ce27..8f80ca8ec1ed 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -42,9 +42,10 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/mfd/syscon.h>
+-#include <linux/of_device.h>
++#include <linux/of.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -1122,7 +1123,6 @@ static void mvebu_gpio_remove_irq_domain(void *data)
+ static int mvebu_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct mvebu_gpio_chip *mvchip;
+-	const struct of_device_id *match;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
+@@ -1132,11 +1132,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	int i, cpu, id;
+ 	int err;
+ 
+-	match = of_match_device(mvebu_gpio_of_match, &pdev->dev);
+-	if (match)
+-		soc_variant = (unsigned long) match->data;
+-	else
+-		soc_variant = MVEBU_GPIO_SOC_VARIANT_ORION;
++	soc_variant = (unsigned long)device_get_match_data(&pdev->dev);
+ 
+ 	/* Some gpio controllers do not provide irq support */
+ 	err = platform_irq_count(pdev);
+-- 
+2.40.1
 
-On Fri, Oct 06, 2023 at 01:20:18PM +0200, Thierry Reding wrote:
-> On Fri, Oct 06, 2023 at 01:09:51PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Oct 06, 2023 at 11:41:51AM +0200, Thierry Reding wrote:
-> > > Also, you could then just make this a single large patch that renames
-> > > dev to parent in one go rather than making this large set even larger
-> > > with this kind of trivial changes.
-> >=20
-> > The idea here is (again) that I don't have to touch all drivers in the
-> > commit that changes struct pwm_chip.
-> >=20
-> > In the end there is such a parent pointer (pwmchip.dev.parent). Would
-> > you prefer a macro (say) pwmchip_parentdev that can be defined as
-> >=20
-> > 	#define pwmchip_parentdev(chip) (chip)->dev
-> >=20
-> > at the beginning and then be changed to
-> >=20
-> > 	#define pwmchip_parentdev(chip) (chip)->dev.parent
-> >=20
-> > in the right moment? That's the best idea I have here.
->=20
-> No, that's not necessarily better. So I think either we live with the
-> duplicated parent pointer (which is the same whether we keep it in the
-> core structure or the driver-private structure), or we just change all
-> the occurrences at once when the new parent is introduced. I personally
-> much prefer a single big patch with a lot of small one-line fixups over
-> 30 patches that exist purely for the purpose of making patch 31 smaller.
-
-I find that a surprising attitude. We're quite different here, I'd even
-ask a contributor who sends a such a change in a single patch to split
-it. I'll rework this part of the series to the above described macro,
-which opens the opportunity to squash it all into a single patch in the
-end without those (admittedly ugly) added extra pointers in driver
-private data.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---mnhu63np2ta7cbrh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUgeToACgkQj4D7WH0S
-/k4Q3gf/QgwBl+c3FGnMz/Jb9w5dMlJy/u7eIQjo1ipXqTDEbC2ylI9lYR6gBvdK
-EbUtk2RHniioSPbzHcUy/xR5X0OHwMNjtc+lYAXilKufasmOU6GQOeDavc/7z6NO
-641HP8wpEaD7VdjXadKR9ucEjQkG07kdnO++mG5c3sfYJiXc5PWwoe7Vvxv6YhNW
-M5A3s92iU+FTPUdJZry0R7d2zulB5GCg4TC+4TuLWjhoTB6f4UgoWaoiUo2pyMYn
-9olWfIxZBy6yfuiwXU24Gb/XCjblbeQtPdvmwOo2dtm8VIQcq7A1wBMDxyQnCsq6
-q5rQ5y11yxUW+CUAlKEiXQjgyGI/1Q==
-=hlCc
------END PGP SIGNATURE-----
-
---mnhu63np2ta7cbrh--
