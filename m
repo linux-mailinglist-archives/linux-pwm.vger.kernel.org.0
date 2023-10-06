@@ -2,69 +2,85 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FB4D7BB4F7
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 12:16:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A447BB523
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 12:28:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231621AbjJFKQD (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Oct 2023 06:16:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
+        id S231774AbjJFK2B (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Oct 2023 06:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231559AbjJFKQC (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 06:16:02 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BE79F
-        for <linux-pwm@vger.kernel.org>; Fri,  6 Oct 2023 03:15:59 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-405361bb9f7so17090785e9.2
-        for <linux-pwm@vger.kernel.org>; Fri, 06 Oct 2023 03:15:59 -0700 (PDT)
+        with ESMTP id S231745AbjJFK17 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 06:27:59 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C04F0;
+        Fri,  6 Oct 2023 03:27:56 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso356289366b.1;
+        Fri, 06 Oct 2023 03:27:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696587358; x=1697192158; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1696588074; x=1697192874; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vvv05fLy6U70cre8Xe1Nve9HNegoO2ndAUQ5QmhBqkM=;
-        b=FYG3Vv7F1qMV4Hp3KoX74Y7y6GGVnTs/kTH3amoOdCKDTSg/HomR6QLXiC6X+GU3bj
-         N1MAX0HaQQ+ZEvI8EEx1seLC3Aa3uM3l3xtk7aVeeoeD39547niRauJs7CwEM/5Aar3P
-         tjrn/4rSP83Dvwc1gzVJM1sbJMxErgPj87VpEeIZiGfRTY4j4bK5E9Ev4UQkdpLnY6Rv
-         ZlF7cWk/S+irp73JNLjpfEZZPVSOUzmJ9ouua3dgfuF1HM/1hZaWHnPPdNvhPvSIotZ3
-         fjH3E9DSSYvwyy3eMvH/HW0tnhytLb3Mab16NhBGhLhv/E5ATuTlYH0ZeOBMIFSqbEwY
-         FxcA==
+        bh=a9Fc0FVBGB2O2+FJ3vPJiIICpzRP6mifN4XxO0k9PQQ=;
+        b=DXXP7DtkTw8LPdj1fBra1hGl34to9q8Fko1IRHvcvo+NSNYRprNlEc+tAcuCeNRL/R
+         JxkRtLN+W5/3pErgqQDu6Iq2p2574VkAujFMymo5GeLyxDADfJoI0P/tVhZ1f16ZIwx4
+         AuKSl5hGVsdyRNgZgpQojyUN4w6hmkhHTKnwmX3wY/Ct3OuFflqR923dKbw/T6qxR65C
+         WEyt8kvLxjHUL1SEsHM8wshjC3ML2iH9ULlatzLg30HSHHtWzlHwJhGOAIm0YQ936V2P
+         Eva2b1jfs/ppk8s44l8Vs8PwhJ+BOZVR1wOLfCScwAdzsTcj3LO0s7wzePi8mHXbj+jy
+         X+Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696587358; x=1697192158;
+        d=1e100.net; s=20230601; t=1696588074; x=1697192874;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vvv05fLy6U70cre8Xe1Nve9HNegoO2ndAUQ5QmhBqkM=;
-        b=Y92PlJ1wQj0gKMIm97e8I9qfLoJH58Yy9o+dFhvp46tFwMnw3KFWBF+rwMJOky/xd7
-         Uzy7XXTwKnt7oPkbtWXkAYIieIxx7ECTDSxsWwNfr2A37OUalr8+asqD4oZnPp6HxvNv
-         KzCaiD0cRLDA+rxHlkGfkjA6nb32eXyN6X0nhUUCbwDJhh6cThxhs620pgA7+ArZF6sA
-         j8Hrm6Zn+fKxC8CeelHqhOzMDT8p5Ewx5QYdoLeZRODxIHQSDC0map+FcJiEfg7ybLIQ
-         HQkIPnPd4qnP7rjxGG8WFb6dUNL7bpXiLTTnMc2Zo/vPy2KI2NitB4WYSgTLxwaYb0Cb
-         rzVQ==
-X-Gm-Message-State: AOJu0YyDp1eFrhlBub7Kq6BRsf3kU100d8KL6SA3BT8zsLO1UfJEwbzU
-        ePZxYzp2gkSZPvHZ7hUyBYY=
-X-Google-Smtp-Source: AGHT+IG+l5kpIrMwh0x1g/EF6z4ob8/xRj2304K9DZwXQIKGsVRruxJ8IS9Gk+9r+MmE8JoeTJQx/w==
-X-Received: by 2002:a1c:7419:0:b0:406:7d74:a2a6 with SMTP id p25-20020a1c7419000000b004067d74a2a6mr7259592wmc.24.1696587357735;
-        Fri, 06 Oct 2023 03:15:57 -0700 (PDT)
+        bh=a9Fc0FVBGB2O2+FJ3vPJiIICpzRP6mifN4XxO0k9PQQ=;
+        b=GD2Rx7jaAmBM3M6V52k0IOjM8kgeHRPlnrNE+a4Fr1ZbJBeKTGGVFdPRq2vcVEI788
+         gpcis56n5LElg36+JOa+BOoUYsehq+IAyAIfOy5Tch/vQDhfCFgaCtCEV/70dxkFUA3m
+         As2nxjPyij2acgjKx9JQl7vzio86X/hsu7IqxsQFOFpa0wWEr2RIxi+dlegDsz8x1xT7
+         PL7jmyM7ovTCDVeAfW98FKnr6jQ/fVDnu5meIhXJMKOC+AFM38yCTrnw8kXrHItPy0tu
+         htim36pbFLW62Xi0oPTiLR9ENb5dDO9oXbLJL5EOox/IL01KvxKfXl6Sh4OthX6k4jCi
+         EqdQ==
+X-Gm-Message-State: AOJu0Yy8E3L5kAZGQTO1SPFeU+i4YQ6Q33nUix2FVktSm2to+3J9+eIB
+        MIjZvAqjZiBXDYsaXI/ubrA=
+X-Google-Smtp-Source: AGHT+IE/s3qAxgyljikxvjg80luFhar2eIhtc4hXlIZiE/53LwAa/wMyWOcQaAwad6HOJwQdJ6c/EQ==
+X-Received: by 2002:a17:907:72c1:b0:9ad:7d5b:ba68 with SMTP id du1-20020a17090772c100b009ad7d5bba68mr8214636ejc.32.1696588074415;
+        Fri, 06 Oct 2023 03:27:54 -0700 (PDT)
 Received: from orome.fritz.box (p200300e41f3f4900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3f:4900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 17-20020a05600c021100b003feae747ff2sm5670041wmi.35.2023.10.06.03.15.56
+        by smtp.gmail.com with ESMTPSA id fi10-20020a170906da0a00b009ad8796a6aesm2627941ejb.56.2023.10.06.03.27.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 03:15:57 -0700 (PDT)
-Date:   Fri, 6 Oct 2023 12:15:55 +0200
+        Fri, 06 Oct 2023 03:27:54 -0700 (PDT)
+Date:   Fri, 6 Oct 2023 12:27:51 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
-        Sean Young <sean@mess.org>
-Subject: Re: [PATCH v1 000/101] pwm: Fix lifetime issues for pwm_chips
-Message-ID: <ZR_eW-YsYrLUxPfF@orome.fritz.box>
-References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
- <20230926100625.vudo7qp3h5r2dz62@pengutronix.de>
- <20231001111024.a3ce3het2y3n7kvx@pengutronix.de>
+Cc:     Sean Young <sean@mess.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-pwm@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] pwm: make it possible to apply pwm changes in atomic
+ context
+Message-ID: <ZR_hJ05h5O6SpM_D@orome.fritz.box>
+References: <cover.1696156485.git.sean@mess.org>
+ <1bd5241d584ceb4d6b731c4dc3203fb9686ee1d1.1696156485.git.sean@mess.org>
+ <20231004095920.ne7yrrthow6tnuvg@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YbsN5gyW+n/ixS4C"
+        protocol="application/pgp-signature"; boundary="BBvlNbMNXcP/VVb9"
 Content-Disposition: inline
-In-Reply-To: <20231001111024.a3ce3het2y3n7kvx@pengutronix.de>
+In-Reply-To: <20231004095920.ne7yrrthow6tnuvg@pengutronix.de>
 User-Agent: Mutt/2.2.12 (2023-09-09)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -77,121 +93,75 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---YbsN5gyW+n/ixS4C
+--BBvlNbMNXcP/VVb9
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Oct 01, 2023 at 01:10:24PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello again,
+On Wed, Oct 04, 2023 at 11:59:20AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Sean,
 >=20
-> On Tue, Sep 26, 2023 at 12:06:25PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > On Tue, Aug 08, 2023 at 07:17:50PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > this series addresses the issues I reported already earlier to this
-> > > list[1]. It is based on pwm/for-next and several patches I already se=
-nt
-> > > out, too. Maybe some of these have to be reworked (e.g. Thierry alrea=
-dy
-> > > signalled not to like the patches dropping runtime error messages) but
-> > > in the expectation that I will have to create a v2 for this series, t=
-oo
-> > > and it actually fixes a race condition, I sent the patches out for
-> > > review anyhow. For the same reason I didn't Cc: all the individual
-> > > maintainers.
-> > >=20
-> > > If you want to actually test I suggest you fetch my complete history
-> > > from
-> > >=20
-> > > 	https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
-> > >=20
-> > > .=20
-> > >=20
-> > > In the end drivers have to allocate their pwm_chip using
-> > > pwmchip_alloc(). This is important for the memory backing the pwm_chip
-> > > being able to have a longer life than the driver.
-> > >=20
-> > > The motivation for this series is to prepare the pwm framework to add=
- a
-> > > character device for each pwm_chip for easier and faster access to PW=
-Ms
-> > > from userspace compared to the sysfs API. For such an extension proper
-> > > lifetime tracking is important, too, as such a device can still be op=
-en
-> > > if a PWM disappears.
-> >=20
-> > I wonder how this topic will continue. This series fixes a lifetime
-> > issue that can result in a userspace triggered oops and it builds the
-> > base for my efforts to create a /dev/pwmchipX for faster control of PWMs
-> > from userspace (compared to sysfs). (Currently in the prototype stage.)
-> >=20
-> > I'd like to get this in during the next merge window, please tell me
-> > what needs to be done to make this happen.
+> On Sun, Oct 01, 2023 at 11:40:29AM +0100, Sean Young wrote:
+> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > index dc66e3405bf5..d9679ae5b2be 100644
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -505,7 +505,7 @@ int pwm_apply_state(struct pwm_device *pwm, const s=
+truct pwm_state *state)
+> >  	 * is a bad idea. So make it explicit that calling this function might
+> >  	 * sleep.
+> >  	 */
+> > -	might_sleep();
+> > +	might_sleep_if(pwm_can_sleep(pwm));
+> > =20
+> >  	if (!pwm || !state || !state->period ||
+> >  	    state->duty_cycle > state->period)
 >=20
-> One problem I noticed yesterday is that this series depends on patch
-> "drm/ssd130x: Print the PWM's label instead of its number" that
-> currently waits in drm-misc-next for getting in the main line. The
-> series could for sure be reworked to not rely on this patch, but I'd
-> prefer to wait until after the next merge window instead of reworking
-> it.
+> I'd like to have a mechanism to catch drivers that missed to set
+> .can_sleep. The best idea I currently have for that is to disable
+> preemption if IS_ENABLED(CONFIG_PWM_DEBUG) && !pwm_can_sleep(pwm) while
+> .apply() is running.
 >=20
-> Still, getting some feedback here in the mean time would be nice. The
-> questions I wonder about myself are:
+> > diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
+> > index b7c6045c5d08..b8b9392844e9 100644
+> > --- a/drivers/pwm/pwm-fsl-ftm.c
+> > +++ b/drivers/pwm/pwm-fsl-ftm.c
+> > @@ -405,6 +405,7 @@ static int fsl_pwm_probe(struct platform_device *pd=
+ev)
+> > =20
+> >  	fpc->soc =3D of_device_get_match_data(&pdev->dev);
+> >  	fpc->chip.dev =3D &pdev->dev;
+> > +	fpc->chip.can_sleep =3D true;
 >=20
->  - In patch #1, devm_pwmchip_alloc() could get another parameter for the
->    .ops member. This would save a line per driver like
->=20
->    	chip->ops =3D &pwm_clk_ops;
->=20
->    in return for an additional parameter that yields longer lines in the
->    drivers.
->=20
->  - In patch #101 instead of using &pwm_lock a per-pwmchip lock could be
->    used for pwm_apply_state(). This would allow to parallelize pwm calls
->    for different chips; I don't know how much this matters. Maybe the
->    sensible option here is to keep it simple for now (i.e. how I
->    implemented it now) until someone complains? (But see also the next
->    item.)
->=20
->  - A further complication is the requirement of pwm-ir-tx for faster
->    pwm_apply_state() calls, see
->=20
-> 	https://lore.kernel.org/linux-pwm/ZRb5OWvx3GxYWf9g@gofer.mess.org
->    	https://lore.kernel.org/linux-pwm/1bd5241d584ceb4d6b731c4dc3203fb9686=
-ee1d1.1696156485.git.sean@mess.org
->=20
->    . This complicates the locking scheme, I didn't try to address that
->    yet.
+> As .apply() being callable in non-sleepable context only depends on
+> .apply() I think a better place for this property is in struct pwm_ops.
 
-Frankly, I think per-chip locking is the only way to support slow
-busses. If we use the subsystem-wide lock, effectively all chips become
-slow and unusable for things like pwm-ir-tx.
-
-Perhaps we can draw some inspiration from how the IRQ infrastructure
-deals with this? IRQ chips have irq_bus_lock() and irq_bus_sync_unlock()
-callbacks to deal with this. We could have something similar for PWM
-chips. Perhaps that's even something that could be handled in the core
-by checking a "might_sleep" flag for the chip.
+What about drivers for devices that can be either sleeping or not? There
+are things like regmap which can abstract those differences away, so you
+could have a driver that works on both types of devices, so setting this
+in ops wouldn't be correct all the time. I think can_sleep needs to be
+per-chip rather than per-driver.
 
 Thierry
 
---YbsN5gyW+n/ixS4C
+--BBvlNbMNXcP/VVb9
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmUf3lsACgkQ3SOs138+
-s6E4ShAAu3iXektBCTWPpAQa5sFrZWpZARqGpFOpKx5wWJxvB2wZ7R/UaydF1mpv
-jSL94f0wtPoG8H8I+xXmalW1s3jVQ1l++t4pP4y3308F9Hx0ptB1As61KrqPiKIA
-YIA2o88C3Rm8tzGpvjU88QDQjiqMj1tcujL1ScN/YPEC4zAUVBJAcEdlGdADhJRs
-wvSwVH9dhEqfX1BXaxAM9IVqBSEa8w5KNIs1ZyjBffzFjzZEsr3tcRH4yvmTr3+z
-xI6CVmnsT2DxyFGfqjkPiZDb7gkNx9B7ASJxH63oqYBKyCOfoOrRTZWh/dtNXvPy
-6gVDk9sKkHVS0b1rcssMjp6Z7rH5/OF30Dg8ja1HfaJYQVjcvobnzGnDoXlSOeWg
-oc4pq5ZjFRw7nKfYYpklap/i+iWLr2dKYWNFG3C2+jewzn97bqZbr89ZLIBkhPIZ
-kPFDPc2mLc1H/p7VEzNMqN8keG3jjGcmp0NQBqldv9TiSijej1kBO+taS5xgdxhg
-FRpXkTf/czAtKrkAnnWupOWBPvQP/pj9gthm5rpC2hLtSLszGSdjmzHkyOohmRBG
-9rAWVhl5oNGbl2aJGd5bdb79a3s1ntJOh2w1ocH3aaLRAWBLpZ387LsJrgzAuFPu
-vBSGl+yDaDWGYRHsBjq+z7vg4B3tXdBv51Fq42hz/fBLnak5tNI=
-=6fGz
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmUf4SUACgkQ3SOs138+
+s6Hgnw//ccRZMpPdmSrNh4HxesaeJ6IDlrZScm72UvWlvlUAATBRaIcrFiy1VnCC
+WRKKcuPsxwg26Zy8KPZ2IijwVz1zNEQtEtOE53pVnCvcF3rcVBdIZlkPqJjO9Zcc
+0azGAvZ4E9ExFnxycj1GpI475JXS2UkZ98rObXv53zzOVAxBdsyzhOWj9shXxPh5
+d5tQj65dx5EtNFzmuo/lBfG/G8Xpqv5p8gXhWnv80xSdUcWHjhIGoJYVPrqtOXjC
+dvedwv/bL55kMiymSn0oKln/X37KXdRxtHVaHXOCbGZ79kNxipW5x/+7Kuz95wTt
++JA5eClBpGErs/qCJ0JQmgo7H/0gG5CtUQPOMnWfbC5qxDO4ZL2eonCyIcV6JBEO
+i/Scpl+4A24euVRkE1vyXNpihMm3svCEcbviq9aQ75UHL0cjGz9FHeGb0ACo1c6p
+hSA4l+cuSY7dRgNMqcWrxkKDJNE0/hlK1LzcfxskL9jpGgvFfPbrUDKqKOQ0lDFA
+fy8gReA/eA6E0jWgnbDpCs5wukqBFSXcodjz/L4POhL2dpE93MfLpFzAOQZipBD6
+6FNT5jDjZC27gI000KEp5TTiPYEOiRocARTyBEQ7Rnq8UolMPGDxVEZilhRWhxzL
+h8mjM8w60+lKYDG77xjN7M4cLEcOVRzxxVpjaJ0khqMaHxhZdlo=
+=bA40
 -----END PGP SIGNATURE-----
 
---YbsN5gyW+n/ixS4C--
+--BBvlNbMNXcP/VVb9--
