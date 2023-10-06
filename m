@@ -2,117 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C59A97BA91A
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Oct 2023 20:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63CC07BB0F8
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 06:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231332AbjJESaI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 5 Oct 2023 14:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40158 "EHLO
+        id S230009AbjJFExw (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Oct 2023 00:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbjJESaF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 5 Oct 2023 14:30:05 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9601AD;
-        Thu,  5 Oct 2023 11:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696530602; x=1728066602;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mgH9mjU70d488SDsVbeAEChvBEQGjntDusGMNaqHH8g=;
-  b=M88KnO5WUurS4ZIgtHVvhVOVLInkEH9k86+an0xZTt9dBdMy414DWgfd
-   PUjGgeL9JYzPy2TVP7Jr8rALNp3A7W0DpmkET22EbvTSiCWdamytDXYKk
-   SlPFvl10rPjyqZIryDm/H3ogkSwCtbUhIqVzX6/Xzj0kDKLKsozHdWZi7
-   9H1B205wPtenjKJtPnPPDMCyxs4jVRv7fJaf/YWGQhpPFLkaeAdmfVK9M
-   hoxNoSoXB38VLI8lwmPRyqndr4/M7GUIGxJRXVID0l27TT4pfbpJsQc0Q
-   R6HiQ3taA2NdMMi7GwL2NdfhBJXXPBPNRhD8MINm9qJADJct3j63cbJWz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382451966"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="382451966"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 11:30:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="999042597"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="999042597"
-Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Oct 2023 11:29:59 -0700
-Received: from kbuild by c3b01524d57c with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qoT6j-000LmG-0M;
-        Thu, 05 Oct 2023 18:29:57 +0000
-Date:   Fri, 6 Oct 2023 02:29:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v16 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <202310060218.5lQtUezc-lkp@intel.com>
-References: <20231004111451.126195-4-biju.das.jz@bp.renesas.com>
+        with ESMTP id S229918AbjJFExv (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 00:53:51 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53595DB;
+        Thu,  5 Oct 2023 21:53:50 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3964e3Cx010052;
+        Fri, 6 Oct 2023 04:53:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=9GFh1YS01daGYvKQdXjTgJDCh+b5kd4B1nYLfCB+O6A=;
+ b=fraDxTfSIS/64oiZuUlhNQ6mqMAtb+Xwb0iw5ZaXq80ec8d4x9L6G4vHXgTJAwO94Nm0
+ lR5cvV6/Zg94am4PZz/R/BSwFhRcvZD0lJBZXJffR3lPwhG1qrX1gq6Ijw//t5rRBkou
+ Yclt7MGMI0WX57SRwq+iJ1tIN1kBRr5RZD57CNL5mHsExAwIsCmWlYoQ56WiuDJMyDxu
+ ncfe+ir+2JWeHuB0qidR6YojYUbgeA33f2zqyd+tPFAgagjKpvrQoGokGHMpjmKIXU6Z
+ cAxCr5Fq5Ck7VtlcpfNXnh0FFvjOC2G0m2Yb0Xm8/P/kZQA8nKpoSRh2IOqtpAolkpXD /w== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3thn05am04-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Oct 2023 04:53:37 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3964rahf006966
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 6 Oct 2023 04:53:36 GMT
+Received: from hu-devipriy-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Thu, 5 Oct 2023 21:53:31 -0700
+From:   Devi Priya <quic_devipriy@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <baruch@tkos.co.il>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <linux-pwm@vger.kernel.org>
+Subject: [PATCH 0/4] Enable pwm support for IPQ5332 & IPQ9574 SoCs
+Date:   Fri, 6 Oct 2023 10:23:13 +0530
+Message-ID: <20231006045317.1056625-1-quic_devipriy@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231004111451.126195-4-biju.das.jz@bp.renesas.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dhqULUY4BVT7scxAlZMb_OrYfPUQUecf
+X-Proofpoint-GUID: dhqULUY4BVT7scxAlZMb_OrYfPUQUecf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-06_01,2023-10-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 mlxlogscore=549 priorityscore=1501
+ mlxscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
+ definitions=main-2310060036
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Biju,
+Enable pwm support for IPQ5332 & IPQ9574 SoCs and document the
+pwm compatibles.
+While at it, use qcom,ipq6018-pwm as the fallback compatible and extend the
+simple-mfd support for ipq5332 & ipq9574 targets.
 
-kernel test robot noticed the following build errors:
+This series depends on the below series which adds support
+for the PWM driver on IPQ targets:
+https://lore.kernel.org/linux-arm-msm/20231005160550.2423075-1-quic_devipriy@quicinc.com/
 
-[auto build test ERROR on 4aae44f65827f0213a7361cf9c32cfe06114473f]
+Devi Priya (4):
+  dt-bindings: pwm: Document the pwm compatible for ipq5332 & ipq9574
+  dt-bindings: mfd: qcom,tcsr: Extend simple-mfd & pwm support for IPQ
+    targets
+  arm64: dts: qcom: ipq9574: Add pwm support
+  arm64: dts: qcom: ipq5332: Add pwm support
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Biju-Das/dt-bindings-pwm-Add-RZ-G2L-GPT-binding/20231004-231907
-base:   4aae44f65827f0213a7361cf9c32cfe06114473f
-patch link:    https://lore.kernel.org/r/20231004111451.126195-4-biju.das.jz%40bp.renesas.com
-patch subject: [PATCH v16 3/4] pwm: Add support for RZ/G2L GPT
-config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20231006/202310060218.5lQtUezc-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231006/202310060218.5lQtUezc-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310060218.5lQtUezc-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/mips/kernel/head.o: in function `kernel_entry':
-   (.ref.text+0xac): relocation truncated to fit: R_MIPS_26 against `start_kernel'
-   init/main.o: in function `set_reset_devices':
-   main.c:(.init.text+0x10): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x18): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `debug_kernel':
-   main.c:(.init.text+0x50): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x58): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `quiet_kernel':
-   main.c:(.init.text+0x90): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x98): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `warn_bootconfig':
-   main.c:(.init.text+0xd0): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0xd8): relocation truncated to fit: R_MIPS_26 against `__sanitizer_cov_trace_pc'
-   init/main.o: in function `init_setup':
-   main.c:(.init.text+0x108): relocation truncated to fit: R_MIPS_26 against `_mcount'
-   main.c:(.init.text+0x114): additional relocation overflows omitted from the output
-   mips-linux-ld: drivers/pwm/pwm-rzg2l-gpt.o: in function `rzg2l_gpt_calculate_pv_or_dc':
->> pwm-rzg2l-gpt.c:(.text.rzg2l_gpt_calculate_pv_or_dc+0x138): undefined reference to `__udivdi3'
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml        |  9 ++++++---
+ .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml |  9 ++++++++-
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi             | 15 ++++++++++++++-
+ arch/arm64/boot/dts/qcom/ipq9574-rdp418.dts       | 12 ++++++++++++
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi             | 15 ++++++++++++++-
+ 5 files changed, 54 insertions(+), 6 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
