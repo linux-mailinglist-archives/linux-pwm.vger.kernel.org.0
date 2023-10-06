@@ -2,64 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7C507BB35B
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 10:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 693097BB36D
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 10:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231228AbjJFIiF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Oct 2023 04:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
+        id S231228AbjJFIpH (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Oct 2023 04:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231136AbjJFIiF (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 04:38:05 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC5B2BB
-        for <linux-pwm@vger.kernel.org>; Fri,  6 Oct 2023 01:38:02 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9ad810be221so320003366b.2
-        for <linux-pwm@vger.kernel.org>; Fri, 06 Oct 2023 01:38:02 -0700 (PDT)
+        with ESMTP id S231180AbjJFIpH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 04:45:07 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F89B83;
+        Fri,  6 Oct 2023 01:45:05 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-9ae75ece209so352471666b.3;
+        Fri, 06 Oct 2023 01:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696581481; x=1697186281; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1696581904; x=1697186704; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wj4Zy/s4g5o2t9zfXyZUuq0sKsd6wJsRfPq9hO/m7fw=;
-        b=mAjjMSxKJJ/nAZFPvw1/ppxMrxCJzgv0sX3n3pxfakdXBjh1T5llznKHWuJNo++Hjh
-         hduCDUc7WFX4XqtTY1S9CxQDyHBF62B8YtYWEHVZPIyXF0JniiJaSUqBSlnpYffo43XM
-         HDZWLVtAa2ah9vnTECN+N5I1YCVtJ5ZVcygBaKEIWjfQrvtfpu0/rCw2W6Vni8Njklg3
-         Cm+vDJEeqiClCU9bQZaqD6M+Y+lrhmeQEJA2euibDVCtyCxzWVPbLVIXRuNc/AHP6+gE
-         jaJ905HoVWmv8mqCkf7DUbLlfQN8iSyCqIJYXpmpzWbQZhAN9Ndwgjajhfcv3mNdpYK2
-         OBSw==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PiQG9eB+81jnnKh5yBXb7DYjjmAPfSYQYgGlMxFuycQ=;
+        b=Kp5+Uha7qWwlKpAiIeTeA0zBoHwgd2BmOHRaCFW+WwCP+1lADq/WweqfkH9Cics/fK
+         8MEo/z7TABDt/edznmniuSZ+ao11TkYUSbdEHwa6oTOiA46ygrecH25FffRb6xG6Lg7B
+         iJ3zwHZZm5Dwj8gQSpg7pr7TX3H+bOXOuL98E5A7oxY2xNd/n1Wvj693akD5/Kf0DevU
+         OyaJQcMtYYVVi8TKsQx7AG2WWJKiKq669ftpmi8Gv1nMe5T9tMC3adN/KAiLRZ1aZQ+8
+         krMCb0qj7LigwBH1WnNsmrrpphLZkJ9AqkGjeYFz3EnqeUI8BRQmMQ0hJvOWFXNoyJmJ
+         byqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696581481; x=1697186281;
+        d=1e100.net; s=20230601; t=1696581904; x=1697186704;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wj4Zy/s4g5o2t9zfXyZUuq0sKsd6wJsRfPq9hO/m7fw=;
-        b=sNSX5oApg8iyKxydAE2ED4lO4eHEwhuMiXk86ZrGThgoMOpO3JRaDGpuLhHLQuhdr/
-         r3c1WBy1IDiuC6i0OCaSkuwbMzb4EwKK4ozfr4cLWJse1GEDg65mhJbSKKUp8o5jmy5i
-         E25tU2OdNsytslk1Xp9k/eYoGOego3nGGI62HEVCkP1ghF2ad/NdO2EvWC/ghiwMper6
-         d1e7ubnzN30PDD3t8Kp8toc/D8nqUQ0YIeHY6oL+zoWjxi2jEo7Tj/g0VGS/EAPT4IBI
-         pkru2Nco87AUsUJwbq5M4+pE29LVFghMknZb7S6Xq/aaf3O2FtRrfEz3gwhZr4w/T/AF
-         eoIA==
-X-Gm-Message-State: AOJu0YwUSF0vS9H0cUX0YuME9BgEMDOqR1tHCQcpoHU9MlFzd5oZ0K6H
-        RRCl6edt6y57tppKamZSA64=
-X-Google-Smtp-Source: AGHT+IGjKRZppjUDKag4sbgu10zuF0hE2WMQN2Ezg5NfV0jn9fIejSrVTItJuXuiVzFyrmyA31T9YA==
-X-Received: by 2002:a17:906:530c:b0:9ae:3f69:9b8c with SMTP id h12-20020a170906530c00b009ae3f699b8cmr7454739ejo.2.1696581481039;
-        Fri, 06 Oct 2023 01:38:01 -0700 (PDT)
+        bh=PiQG9eB+81jnnKh5yBXb7DYjjmAPfSYQYgGlMxFuycQ=;
+        b=ef3xPd1XMm2RiNI0eijP5CGcMjbtSal24QYvDJYk0EASvuDQPkFoQt8tWJeLaF07DU
+         Nbelih9qLtRi/u9QnU7u6sVFikGLVMaTOa+grwubJ1QdsLAWVRbMUqGJ762ph3Q9VHu/
+         A1qC+87XeCGimR0cmtrBthVgcI5DRAvAVPXe/JDwsWGHIFPqIo2glECoPkpTneob8QdK
+         UxmP7Ap9XDsxjPpdj8RbYUJ+bGYrrpZ1xRk56C4z3XfkOZL9eIhIwvgj/+gd7eO2U2XH
+         fyokOcg83Tm0fm3e/TPaz9qcBwad41lugp9Jws+bj8diQA3A3hVxVPM8rc6DGJ9VdXYz
+         BVFg==
+X-Gm-Message-State: AOJu0YzpgpYIY+nYmS503Oj471rkY3mZrwl2xkertcATtxmAjtWbOYB9
+        JrQgAT/feyUtoQY/gNgnlDk=
+X-Google-Smtp-Source: AGHT+IG7gav62CWXqgxy3Oc+Bt9zEBpNR9pS09uNaXeA3kHMd6ruw2I+CKCVmI2UXUURkmYPneMOlw==
+X-Received: by 2002:a17:906:8a71:b0:9ae:3d75:4c83 with SMTP id hy17-20020a1709068a7100b009ae3d754c83mr5879512ejc.0.1696581903844;
+        Fri, 06 Oct 2023 01:45:03 -0700 (PDT)
 Received: from localhost (p200300e41f3f4900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3f:4900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id i3-20020a1709064ec300b00997d7aa59fasm2559878ejv.14.2023.10.06.01.38.00
+        by smtp.gmail.com with ESMTPSA id gr22-20020a170906e2d600b009b2ba067b37sm2467713ejb.202.2023.10.06.01.45.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 01:38:00 -0700 (PDT)
+        Fri, 06 Oct 2023 01:45:03 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     claudiu.beznea@tuxon.dev, u.kleine-koenig@pengutronix.de,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Ruan Jinjie <ruanjinjie@huawei.com>
-Subject: Re: [PATCH -next 0/2] pwm: Remove redundant of_match_ptr() macro
-Date:   Fri,  6 Oct 2023 10:37:58 +0200
-Message-ID: <169658146444.77951.10429432306521362349.b4-ty@gmail.com>
+To:     shawnguo@kernel.org, Fabio Estevam <festevam@gmail.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        Fabio Estevam <festevam@denx.de>
+Subject: Re: (subset) [PATCH v2 1/3] dt-bindings: pwm: mxs: Document fsl,imx28-pwm
+Date:   Fri,  6 Oct 2023 10:45:01 +0200
+Message-ID: <169658188181.78451.16194002929003687751.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20230810074258.2390629-1-ruanjinjie@huawei.com>
-References: <20230810074258.2390629-1-ruanjinjie@huawei.com>
+In-Reply-To: <20230922124229.359543-1-festevam@gmail.com>
+References: <20230922124229.359543-1-festevam@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -74,22 +75,19 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On Thu, 10 Aug 2023 15:42:56 +0800, Ruan Jinjie wrote:
-> Since these pwm drivers depend on CONFIG_OF, there is
-> no need to wrap the macro of_match_ptr() here.
+On Fri, 22 Sep 2023 09:42:27 -0300, Fabio Estevam wrote:
+> imx28 uses the same PWM block that is found on imx23.
 > 
-> Ruan Jinjie (2):
->   pwm: atmel: Remove redundant of_match_ptr()
->   pwm: omap-dmtimer: Remove redundant of_match_ptr()
+> Add an entry for fsl,imx28-pwm.
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/2] pwm: atmel: Remove redundant of_match_ptr()
-      commit: 2992e07038aa38e1e156a833d6274bf330642722
-[2/2] pwm: omap-dmtimer: Remove redundant of_match_ptr()
-      commit: 7818f0bcc195e7c49eaaa031f0c26c59978469f6
+[1/3] dt-bindings: pwm: mxs: Document fsl,imx28-pwm
+      commit: c3c653422a265a3b5dfdf8567eebd5116311c36d
+[2/3] dt-bindings: pwm: mxs: Document the clocks property
+      commit: 42b9116ce12579692ec18ad9446ea5ad832ea0ef
 
 Best regards,
 -- 
