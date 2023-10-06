@@ -2,72 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B677BB7CD
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 14:37:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 092397BB847
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Oct 2023 14:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231334AbjJFMhX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Oct 2023 08:37:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55324 "EHLO
+        id S232355AbjJFMzb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Oct 2023 08:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231278AbjJFMhW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 08:37:22 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F20C2
-        for <linux-pwm@vger.kernel.org>; Fri,  6 Oct 2023 05:37:18 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so3616549a12.1
-        for <linux-pwm@vger.kernel.org>; Fri, 06 Oct 2023 05:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696595836; x=1697200636; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9j9ypxq47lcYO3kmKyRqdYs2948zPY9f7tVytYIx1ZM=;
-        b=NpiuK2hvJlrzwdOpeF/LBHxH3Znof34l/BaPgi5YL6TbSm9umUyewrZB3bgNboP7uJ
-         UuIeRZmO+QQ5vWjR380iwHvcJpQRSQ2OHc4WNiw+vOhHemxMzb+RgG7Qv730FsStxItm
-         mhxYtUW/sD+qDGrB8xdeu0XS5Gp/8uVIPwpDm9nR/90m+pqAH+0JXmQW0aHIXUbFoga0
-         RQeXSgiXHFvDuP2k6JN0IIuU4znIb/wSwuSv73OeGD9OxkukWyrPryEyCCJLMa3YA2aE
-         DRHQfV6QVjo/XW5EByJbzYerBelCTOIgT3JxbT3O8kTm89c0rooFdY6IkVBQztsJ4VPY
-         WWdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696595836; x=1697200636;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9j9ypxq47lcYO3kmKyRqdYs2948zPY9f7tVytYIx1ZM=;
-        b=WKwwJdzZPFCsJFv1SNY0uCNVRDv/MZwrzlNpIflqWT1eX7YdMH5NsdHoTPoXGNVdqu
-         RWAD1gbt0UqxWkWSF8A5fM4dBZJSuMLAys1y4aQbAzRvsKR4c0yrLtAvrUKx2BmPx8zg
-         kVnx+jygZmTCNXbOKEVbZMi87KuNyDFzfaOLrXa0Id2ovBTbxIDQhzwes6XCk4qiFFrc
-         az2B5rRGGCxkpB7SGB8cbY2nKbmNu8oRgRyOh8XPyYn8uOm3u8bsmJyf9fPaHnfyQ4K1
-         h85B/3aZ2GmSPw645JKLYXdj/M1ZsbGSp2HKfnQZFQZiCdoFlctiT+tX8EdEWsJpB63F
-         y7QQ==
-X-Gm-Message-State: AOJu0Yx6eOl0q4TiQ/jNyANJtje7p1DA6hDbld5f60JZg211OcZxrupV
-        8yG2JVapYaGb9hEyVr0i2S1+GaRVPvo=
-X-Google-Smtp-Source: AGHT+IFd1/PW2O2DNw0D3WJm1W7Csh0Q5c+cXrsSuZ6iOW/58RaOrQxBCqDmP9qeXYmdSkKyu4LA1w==
-X-Received: by 2002:a17:906:cc55:b0:9ae:7088:6e5d with SMTP id mm21-20020a170906cc5500b009ae70886e5dmr6817895ejb.3.1696595836298;
-        Fri, 06 Oct 2023 05:37:16 -0700 (PDT)
-Received: from orome.fritz.box (p200300e41f3f4900f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f3f:4900:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id k18-20020a1709065fd200b009adc7733f98sm2800927ejv.97.2023.10.06.05.37.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 05:37:15 -0700 (PDT)
-Date:   Fri, 6 Oct 2023 14:37:14 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 100/101] pwm: Ensure the memory backing a PWM chip
- isn't freed while used
-Message-ID: <ZR__enSpj7_TBcrj@orome.fritz.box>
-References: <20230808171931.944154-1-u.kleine-koenig@pengutronix.de>
- <20230808171931.944154-101-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S232330AbjJFMz1 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 08:55:27 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA66FF
+        for <linux-pwm@vger.kernel.org>; Fri,  6 Oct 2023 05:55:10 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qokMG-0005Vu-T1; Fri, 06 Oct 2023 14:55:08 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qokMG-00BWNB-Dz; Fri, 06 Oct 2023 14:55:08 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qokMG-00AF9A-4M; Fri, 06 Oct 2023 14:55:08 +0200
+Date:   Fri, 6 Oct 2023 14:55:07 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 1/2] pwm: Change how pwm_chip IDs are determined
+Message-ID: <20231006125507.2lilz37hkpj6c2hv@pengutronix.de>
+References: <20230808165250.942396-1-u.kleine-koenig@pengutronix.de>
+ <20230808165250.942396-2-u.kleine-koenig@pengutronix.de>
+ <ZR_pltZCN1fRjfBB@orome.fritz.box>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uqByKH7ALOBvSX20"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y6xp5ezmka3pbn7e"
 Content-Disposition: inline
-In-Reply-To: <20230808171931.944154-101-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+In-Reply-To: <ZR_pltZCN1fRjfBB@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,68 +55,137 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---uqByKH7ALOBvSX20
-Content-Type: text/plain; charset=utf-8
+--y6xp5ezmka3pbn7e
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 08, 2023 at 07:19:30PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-[...]
-> +static struct pwm_chip *pwmchip_alloc(struct device *parent, unsigned in=
-t npwm, size_t sizeof_priv)
->  {
->  	struct pwm_chip *chip;
-> +	struct device *dev;
->  	size_t alloc_size;
->  	unsigned int i;
-> =20
->  	alloc_size =3D sizeof(*chip) + npwm * sizeof(struct pwm_device) + sizeo=
-f_priv;
-> =20
-> -	chip =3D devm_kzalloc(parent, alloc_size, GFP_KERNEL);
-> +	chip =3D kzalloc(alloc_size, GFP_KERNEL);
->  	if (!chip)
->  		return ERR_PTR(-ENOMEM);
-> =20
-> -	chip->dev =3D parent;
-> +	dev =3D &chip->dev;
-> +
-> +	device_initialize(dev);
-> +	dev->class =3D &pwm_class;
-> +	dev->parent =3D parent;
-> +	dev->release =3D pwmchip_release;
+Hello Thierry,
 
-We could potentially make this a lot simpler if we add the new struct
-device and all of that and add it during pwmchip_add(). Really the only
-thing that we need to make sure is that struct pwm_chip is the first
-field in driver-specific structures and then all of this should work the
-same way.
+On Fri, Oct 06, 2023 at 01:03:50PM +0200, Thierry Reding wrote:
+> On Tue, Aug 08, 2023 at 06:52:49PM +0200, Uwe Kleine-K=F6nig wrote:
+> > Traditionally each PWM device had a unique ID stored in the "pwm" member
+> > of struct pwm_device. However this number was hardly used and dropped in
+> > the previous commit. Further the unique ID of a PWM chip matched the ID
+> > of the first contained PWM device.
+>=20
+> This is slightly confusing. The PWM chip "base" was never supposed to be
+> an ID and its usage in sysfs was more of an accident than actual
+> purpose. The primary purpose of it was to serve as the base number of
+> pins in the global number space, but with that number space gone, there
+> is no use for the base number anymore.
+>=20
+> So I think changing the subject to something like this would be better:
+>=20
+> 	pwm: Replace PWM chip unique base by unique ID
 
-And of course we'd have to eliminate device-managed allocations as well.
-For cases where pwmchip_release() needs to do more than just free the
-memory, we could add a new pwm_ops.release callback that drivers can
-implement if needed.
+Agreed.
 
-Thierry
+> > With the PWM device ID gone PWM chips can get their IDs better and
+> > simpler using an idr.
+> >=20
+> > This is expected to change the numbering of PWM chips, but nothing
+> > should rely on the numbering anyhow.
+> >=20
+> > Other than that the side effects are:
+> >=20
+> >  - The PWM chip IDs are smaller and in most cases consecutive.
+> >  - The ordering in /sys/kernel/debug/pwm is ordered by ascending PWM
+> >    chip ID.
+> >=20
+> > Also use "id" as name for the PWM chip ID which better matches the new
+> > semantic of that number.
+> >=20
+> > For the plan to introduce support for pwmchip character devices this
+> > also simplifies getting the struct pwm_chip matching a given PWM chip ID
+> > (or character device).
+>=20
+> Again, it would be interesting to see how this would work in practice.
+> As things are this is pure speculation, so I'd leave out this comment.
 
---uqByKH7ALOBvSX20
+That's just that you can lookup by ID in an idr, while you have to
+iterate through a linked list otherwise. If you want drop the last
+paragraph?!
+
+> > [...]
+> > -static void free_pwms(struct pwm_chip *chip)
+> > -{
+> > -	bitmap_clear(allocated_pwms, chip->base, chip->npwm);
+> > -
+> > -	kfree(chip->pwms);
+> > -	chip->pwms =3D NULL;
+> > -}
+> > +DEFINE_IDR(pwmchip_idr);
+>=20
+> static?
+
+Agreed.
+
+> I would probably have kept the same pwm_chips as well. We already know
+> that this is an IDR given the type, so no need to repeat that.
+
+You mean:
+
+	static DEFINE_IDR(pwm_chips);
+
+? I don't care much. I probably copied that from spi. A quick grep shows
+_idr being quite typical:
+
+	$ git grep DEFINE_IDR v6.6-rc1 | perl -n -e 'print if s/.*DEFINE_IDR\s*\(.=
+*(_.*)\).*/\1/' | sort | uniq -c      1 _devices
+	      4 _id
+	     53 _idr
+	      2 _index
+	      1 _INIT(name
+	      1 _list
+	      3 _minors
+	      1 _protocols
+	      1 _stats
+
+But if you prefer pwm_chips and take the patch then, I won't oppose.
+
+> > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> > index d2f9f690a9c1..09da803bbd46 100644
+> > --- a/include/linux/pwm.h
+> > +++ b/include/linux/pwm.h
+> > @@ -295,7 +295,7 @@ struct pwm_ops {
+> >  struct pwm_chip {
+> >  	struct device *dev;
+> >  	const struct pwm_ops *ops;
+> > -	int base;
+> > +	int id;
+>=20
+> Why not make this unsigned long while we're at it? Looks like that's the
+> native type for IDRs and we already make sure that whatever is stored in
+> here isn't going to be negative.
+
+Agreed.
+
+> All of the above are minor changes, so I can fix them up as I apply the
+> patch, if you don't have any objections.
+
+That's fine for me.
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--y6xp5ezmka3pbn7e
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmUf/3cACgkQ3SOs138+
-s6EYnA//ZE6EmaS1DftC/QncjtEyzsYfvEq1aESpMbwVsUK/v7byXBSeo/lBsgDC
-O1mkxomgyTo8xa7izGAzcs8i8Lov2u1UNt7g7vz4HB6sWTndAcDkOil+qp2eOgVX
-3+0URT+3sO0e4CrlxgnxWXMTp4wuHkiZqrvaQ+tJhupvjkR5zm+463jMYrWnoosU
-/usF3Uuejq4X7Ibjc38/0SlGonmQKPPzGLKZhOv248zp88+6oF0fqCBasIOe8x+/
-4Sh6ghFaG4KHSwkIqBcPGRZR6hVqni7Hbo50Z1Jrorf/OHompDgLVC6/WCqViToI
-QxWWrPmX0n0F/XgF6TtMI72B6uXaXVGUx4y/oU7tGS5urYZ3rbERPoi/w45lQQ3F
-sik8nDiRleaK32QGg+zLLDSdPpUUbmQOHHCQsqK5u+gmmwcWbnyIv+g1NYx14Egc
-QXb7hDro+xJUE8euI/IVFyU2XQxmRbWQ6oHlk0hHFBkU/O1UbLOZQbPcFV5miaRc
-dxq4b9rbMinQQ1hVthWnw/ZjBOeVONZ+rBSezovBb4paaADQYvUMtNfjs13M9xEA
-zKZD+g1d5ok0bk7kcq/xqhmZD6O99ka/5vmJMjOBwPLDOehjxfoOt/0iIZDeHmp5
-Ie+RrTE08+yavREq+j/qUnBr8IPcDkOkaDMYhlMLtocRvVxSgIY=
-=JGdr
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUgA6sACgkQj4D7WH0S
+/k43kwf9ENevAHjOGWdKZNM1GJplizzSgQ9TdHTbBYpvhUWs8Jh3abHXAlW2xnBi
+0DfiXhwVJqdlCuft83gLOsSjOXVcF/l0yXi3hvvefEHTMpC1DfN6SA+53eMuEPfg
+93TxYorCiGv7HZ0wgy4SSQ+omGM+1bKRNasQSR8eEPPhl5PO14g8V5koHw3wPLMr
+eh302aGBoCB1Ah8he695ODWpkWEumvRk4eTRjjWeU5r4PGC4ONQrkmsWOFu/LiKe
+aPbJkPilc0K4//DfyWla2/0zEjTFFydgI7aamKMM1FrUpFu9LOqVtq+TbHbC3nlT
+HaxaBSZbTJc/w+ghbwQp2LLJrWaVqw==
+=OreJ
 -----END PGP SIGNATURE-----
 
---uqByKH7ALOBvSX20--
+--y6xp5ezmka3pbn7e--
