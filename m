@@ -2,167 +2,140 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C086E7BC258
-	for <lists+linux-pwm@lfdr.de>; Sat,  7 Oct 2023 00:45:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 733707BC32F
+	for <lists+linux-pwm@lfdr.de>; Sat,  7 Oct 2023 02:02:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233701AbjJFWph (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 6 Oct 2023 18:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59990 "EHLO
+        id S233696AbjJGAB7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 6 Oct 2023 20:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233796AbjJFWph (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 18:45:37 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3F5A2;
-        Fri,  6 Oct 2023 15:45:36 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0796DC433C7;
-        Fri,  6 Oct 2023 22:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696632335;
-        bh=r0hgPd26vNJNNKdbRDndzXFBSLd85QxGGtazkx8k9RA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TkUiToD41EoSHzdGDHb1BVUYjz2DR57gQ89EBfGdiSV7XyLH003ZIKt983ICbgLtz
-         t+JCHOx8JtpAZ4RXIbc40AgxuVm9wB5xNNe9pHE6uLlwaGiArTZiDXc/6SJPYP65GX
-         sFz803xKiozrR8cnXyva4Gf9I8CEwgye0w+Bjuf5PfvkYSJmwn5uLERDLmkzrqILBW
-         KiEJHJSVsyl0GD8SeMHoaq68xllDN2H57S/hf8APFZrlkAU4gW3jANmKpdbuySY4je
-         v+0UDNjMSPWq6LOsMz6sB2gDoczswQ0wXPAzfhiGyO6UHjO8HzewgP9JDyLto/1VVC
-         k5HX676k/3vIA==
-Received: (nullmailer pid 443988 invoked by uid 1000);
-        Fri, 06 Oct 2023 22:45:34 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: [PATCH] gpio: Use device_get_match_data()
-Date:   Fri,  6 Oct 2023 17:45:07 -0500
-Message-Id: <20231006224507.443486-1-robh@kernel.org>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S233717AbjJGAB5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 6 Oct 2023 20:01:57 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60076BD
+        for <linux-pwm@vger.kernel.org>; Fri,  6 Oct 2023 17:01:55 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-5068dab8c00so701939e87.0
+        for <linux-pwm@vger.kernel.org>; Fri, 06 Oct 2023 17:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696636913; x=1697241713; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vxBb/fEacQHB9wWPR/CpHe2sp5nl5oUFXbr6032DRc0=;
+        b=E0Y7ENeUyh3G4UF0x2h0Ge0U7B3KpdAa29nXhHlXAYzuEiKbsrmvQjssXSEIYWrOEB
+         p7OfiIue2tdmhWFOk8PdHX+FtnyiEAzfSDVUnFwk3me8kCZt6neaQX5gD12/aQT7Gna1
+         Z5cGVvMGUlz5VZFkYyTBhGAQCe5i8a5EPEIYVgmg2ggtUmIWukHseL/S+TD3DeJxp+WT
+         DZk3movrxL0Mh0O2EbCDZcFwrZnd8vX4i4oj22yqWhrq0GUbvpUJnP5i/KB917fXzywk
+         65q7jJaKGxB5H53XV1bGvOYMt2WukjIp5WVk+KbMVSlkAaGQDvioF2n6M0TXlv+rQNDF
+         USRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696636913; x=1697241713;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vxBb/fEacQHB9wWPR/CpHe2sp5nl5oUFXbr6032DRc0=;
+        b=BrT+ioB2nrHIUwFXCEqvG22TBK5FOPbvAnSpxaRjUhVCHl4GLElv9xhnOZDWEPwXGh
+         mEZOCWTZr8GRLXLJ3WxN67aFjP1zMrBeZ9MWyq1xbrUkBLevGktitEBd4fNzq3eZUN2+
+         M32bk9BBIEXCDJyIV04aIAhq03fGUuwZcqUQtnVGJ7ugBowUGHXT7NVdE95JIfRQbpPH
+         8eT+jtcLapa+fDY557Mu3Bohn+YiAHfrtL4LDp+epYLEIYEZ1tdMvLyXf5IO5A8DS9nU
+         2yY/Qf3a0TvW0i28JS7eE65hgp0HS+lETMkVW/zD33T8rjvlzghrnKY5Qo8NIYACrUom
+         rs0A==
+X-Gm-Message-State: AOJu0YwTzuy10eS1dM1+a8Ro/6sSivMK2KfehvP2Jsr+XMdiTnvor1WS
+        dhtG0P9p7wE64+rZZv/VTB0Xiw==
+X-Google-Smtp-Source: AGHT+IHAEf2yoq/ewBVbR7rd/U7LE53ZFo8um+Ru4U3sr/d4iwC2DVJ6OZ5Ld2siYgTEFcBVVOV+Kg==
+X-Received: by 2002:a05:6512:3256:b0:4fd:c715:5667 with SMTP id c22-20020a056512325600b004fdc7155667mr6889212lfr.20.1696636913647;
+        Fri, 06 Oct 2023 17:01:53 -0700 (PDT)
+Received: from [192.168.200.173] (178235177147.dynamic-4-waw-k-1-1-0.vectranet.pl. [178.235.177.147])
+        by smtp.gmail.com with ESMTPSA id r3-20020a056512102300b005009c4ba3f0sm480526lfr.72.2023.10.06.17.01.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Oct 2023 17:01:53 -0700 (PDT)
+Message-ID: <1d6f2ea9-d2bf-472d-98eb-1b711211ab59@linaro.org>
+Date:   Sat, 7 Oct 2023 02:01:50 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V14 3/4] dt-bindings: mfd: qcom,tcsr: Add simple-mfd
+ support for IPQ6018
+Content-Language: en-US
+To:     Devi Priya <quic_devipriy@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        agross@kernel.org, andersson@kernel.org, lee@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, thierry.reding@gmail.com,
+        ndesaulniers@google.com, trix@redhat.com, baruch@tkos.co.il,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Cc:     linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        nathan@kernel.org
+References: <20231005033053.2626465-1-quic_devipriy@quicinc.com>
+ <20231005033053.2626465-4-quic_devipriy@quicinc.com>
+ <cfbc4805-c2e8-4dee-92bc-14d805dc2320@linaro.org>
+ <cc5fef7a-d4d1-d725-36a5-86183bacc5a0@quicinc.com>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <cc5fef7a-d4d1-d725-36a5-86183bacc5a0@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Use preferred device_get_match_data() instead of of_match_device() to
-get the driver match data. With this, adjust the includes to explicitly
-include the correct headers.
+On 5.10.2023 09:36, Devi Priya wrote:
+> 
+> 
+> On 10/5/2023 1:04 PM, Krzysztof Kozlowski wrote:
+>> On 05/10/2023 05:30, Devi Priya wrote:
+>>> Update the binding to include pwm as the child node to TCSR block and
+>>> add simple-mfd support for IPQ6018.
+>>>
+>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>>
+>> Why did you send it twice? It's just brings confusion...
+> 
+> Sorry, kindly ignore. As the patches were not delivered to the list,
+> tried sending it again.
+In such cases, you should include RESEND in the subjects, like
+this:
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/gpio/gpio-davinci.c |  9 +++------
- drivers/gpio/gpio-mmio.c    |  4 ++--
- drivers/gpio/gpio-mvebu.c   | 10 +++-------
- 3 files changed, 8 insertions(+), 15 deletions(-)
+[RESEND PATCH v6 17/17] media: qcom: camss: Comment CSID dt_id field
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 8db5717bdabe..bb499e362912 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -16,10 +16,10 @@
- #include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_device.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/gpio-davinci.h>
-+#include <linux/property.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/spinlock.h>
- #include <linux/pm_runtime.h>
-@@ -486,7 +486,6 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	struct davinci_gpio_platform_data *pdata = dev->platform_data;
- 	struct davinci_gpio_regs __iomem *g;
- 	struct irq_domain	*irq_domain = NULL;
--	const struct of_device_id *match;
- 	struct irq_chip *irq_chip;
- 	struct davinci_gpio_irq_data *irqdata;
- 	gpio_get_irq_chip_cb_t gpio_get_irq_chip;
-@@ -495,10 +494,8 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- 	 * Use davinci_gpio_get_irq_chip by default to handle non DT cases
- 	 */
- 	gpio_get_irq_chip = davinci_gpio_get_irq_chip;
--	match = of_match_device(of_match_ptr(davinci_gpio_ids),
--				dev);
--	if (match)
--		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)match->data;
-+	if (dev->of_node)
-+		gpio_get_irq_chip = (gpio_get_irq_chip_cb_t)device_get_match_data(dev);
- 
- 	ngpio = pdata->ngpio;
- 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index 74fdf0d87b2c..3ff0ea1e351c 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -56,9 +56,9 @@ o        `                     ~~~~\___/~~~~    ` controller in FPGA is ,.`
- #include <linux/slab.h>
- #include <linux/bitops.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/mod_devicetable.h>
- #include <linux/of.h>
--#include <linux/of_device.h>
- 
- #include "gpiolib.h"
- 
-@@ -702,7 +702,7 @@ static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev,
- {
- 	struct bgpio_pdata *pdata;
- 
--	if (!of_match_device(bgpio_of_match, &pdev->dev))
-+	if (!pdev->dev.of_node)
- 		return NULL;
- 
- 	pdata = devm_kzalloc(&pdev->dev, sizeof(struct bgpio_pdata),
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 67497116ce27..8f80ca8ec1ed 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -42,9 +42,10 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/mfd/syscon.h>
--#include <linux/of_device.h>
-+#include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/pwm.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -1122,7 +1123,6 @@ static void mvebu_gpio_remove_irq_domain(void *data)
- static int mvebu_gpio_probe(struct platform_device *pdev)
- {
- 	struct mvebu_gpio_chip *mvchip;
--	const struct of_device_id *match;
- 	struct device_node *np = pdev->dev.of_node;
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
-@@ -1132,11 +1132,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	int i, cpu, id;
- 	int err;
- 
--	match = of_match_device(mvebu_gpio_of_match, &pdev->dev);
--	if (match)
--		soc_variant = (unsigned long) match->data;
--	else
--		soc_variant = MVEBU_GPIO_SOC_VARIANT_ORION;
-+	soc_variant = (unsigned long)device_get_match_data(&pdev->dev);
- 
- 	/* Some gpio controllers do not provide irq support */
- 	err = platform_irq_count(pdev);
--- 
-2.40.1
-
+Konrad
