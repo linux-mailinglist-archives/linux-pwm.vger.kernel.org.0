@@ -2,49 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B75C7BD7D3
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Oct 2023 12:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DA547BD7F9
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Oct 2023 12:06:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345964AbjJIKBt (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Oct 2023 06:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
+        id S1346064AbjJIKGa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Oct 2023 06:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345708AbjJIKBs (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Oct 2023 06:01:48 -0400
+        with ESMTP id S1346042AbjJIKG3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Oct 2023 06:06:29 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A86C99
-        for <linux-pwm@vger.kernel.org>; Mon,  9 Oct 2023 03:01:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC82EB
+        for <linux-pwm@vger.kernel.org>; Mon,  9 Oct 2023 03:06:27 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qpn55-0006gd-34; Mon, 09 Oct 2023 12:01:43 +0200
+        id 1qpn9W-0007Yw-BU; Mon, 09 Oct 2023 12:06:18 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qpn53-000Nn1-UU; Mon, 09 Oct 2023 12:01:41 +0200
+        id 1qpn9V-000OEu-UH; Mon, 09 Oct 2023 12:06:17 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qpn53-00C6dy-L3; Mon, 09 Oct 2023 12:01:41 +0200
-Date:   Mon, 9 Oct 2023 12:01:41 +0200
+        id 1qpn9V-00C7Dk-Kz; Mon, 09 Oct 2023 12:06:17 +0200
+Date:   Mon, 9 Oct 2023 12:06:17 +0200
 From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Florian Fainelli <florian.fainelli@broadcom.com>
-Cc:     linux-pwm@vger.kernel.org,
+Cc:     linux-pwm@vger.kernel.org, Angus Clark <angus.clark@broadcom.com>,
         Thierry Reding <thierry.reding@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pwm: brcmstb: Checked clk_prepare_enable() return value
-Message-ID: <20231009100141.ec62cpnpengczruf@pengutronix.de>
-References: <20231005164728.1846726-1-florian.fainelli@broadcom.com>
+Subject: Re: [PATCH] pwm: bcm2835: Add support for suspend/resume
+Message-ID: <20231009100617.lzxyg4mm56yoazla@pengutronix.de>
+References: <20231005171516.2908961-1-florian.fainelli@broadcom.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="urt6huwkdspihdur"
+        protocol="application/pgp-signature"; boundary="z4x4pndddec4qowb"
 Content-Disposition: inline
-In-Reply-To: <20231005164728.1846726-1-florian.fainelli@broadcom.com>
+In-Reply-To: <20231005171516.2908961-1-florian.fainelli@broadcom.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
@@ -59,39 +63,43 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---urt6huwkdspihdur
+--z4x4pndddec4qowb
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 05, 2023 at 09:47:27AM -0700, Florian Fainelli wrote:
-> Check the clk_prepare_enable() return value and propagate it.
->=20
-> Suggested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Hello Florian,
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+On Thu, Oct 05, 2023 at 10:15:15AM -0700, Florian Fainelli wrote:
+> +static SIMPLE_DEV_PM_OPS(bcm2835_pwm_pm_ops, bcm2835_pwm_suspend,
+> +			 bcm2835_pwm_resume);
 
-Thanks
+The definition of SIMPLE_DEV_PM_OPS has a comment saying:
+
+	Deprecated. Use DEFINE_SIMPLE_DEV_PM_OPS() instead.
+
+Can you please rework your patch accordingly?
+
+Best regards
 Uwe
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---urt6huwkdspihdur
+--z4x4pndddec4qowb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUjz4QACgkQj4D7WH0S
-/k40ZAgArePhVR9p/liRpbHGcw8zhTyU6IZP090oPPWOf3QEh5djyZ3rLXOdu4Vy
-xU7A3aYx/6viZserc3WZ+EBTpJCGn7jrof2ixBp6nhpifB52O3Z2PtdoQvJQFa/u
-P7qrwDs+IJGloKkLrvsk08C7qvKcDiQI/wJcOqQCqCL2qoSNFsl1fkFWMDan4cxr
-SoVCbyaNuIp+zIopNOnAumvnjGvfhD21Dav9agBeXgsr15VnGNJCfqlaPD5RVYcQ
-GrUi9JQNBEVUS/xmY1qQcbaWU/pZgvtEjGUhGm+tpuypr3UhKtpyo7Cj+zGQwckA
-5D9C9ggeRRpOvz4K6fnJUbJMCIpE3g==
-=BaT2
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUj0JgACgkQj4D7WH0S
+/k76IAf/Rfdj60t96flf+/L/M4w21DvlOcX+c3dDuAu4TBB62jFdMDba2TbmFhAq
+wqR+hXN1AbdGKgrtHXGQpRobK5W4Yj4pU7vM6GHAbryu9k7aFUtSsrKAfWotKV7E
+vSEI+tDhsMuiQH8m7lBES5ejX5bV+GeqB2XHrFizqrS/1VoaktYoUXY0M+GB3lTR
+7E8VkG4JCPshIetW1ibwO+GyKMZDzNXXHtPStwDz5nggawIReLfwo9jpfixdPwwB
+vGTd5xC9bymgPfmQ2IgeLqnkVx20VYlwYH+/AKxazyaquCEb2aYvQYd31eZWdJA+
+t00/P6lfHL8PiVsh0hg4PIGTStKM1Q==
+=N91w
 -----END PGP SIGNATURE-----
 
---urt6huwkdspihdur--
+--z4x4pndddec4qowb--
