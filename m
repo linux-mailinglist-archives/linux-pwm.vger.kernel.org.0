@@ -2,72 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFE1D7BD47C
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Oct 2023 09:41:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2FA17BD714
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Oct 2023 11:32:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345409AbjJIHlA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 9 Oct 2023 03:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
+        id S1345675AbjJIJch (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 9 Oct 2023 05:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345374AbjJIHk7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Oct 2023 03:40:59 -0400
-Received: from mail.venturelinkbiz.com (mail.venturelinkbiz.com [51.195.119.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5AC78F
-        for <linux-pwm@vger.kernel.org>; Mon,  9 Oct 2023 00:40:58 -0700 (PDT)
-Received: by mail.venturelinkbiz.com (Postfix, from userid 1002)
-        id 89042457BC; Mon,  9 Oct 2023 07:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkbiz.com;
-        s=mail; t=1696837257;
-        bh=JBV4b8UUo1MSngn/QBoedt1Dv52bT8rWeq4R22MtJMs=;
-        h=Date:From:To:Subject:From;
-        b=Wd/qHGAHyE1nnnTI2NYbClw7QROz5GCNRJp6PF0u7VJ9M/OGrLu5/TkWef6ypGnch
-         BSMLTIrtyGToWyGjrMNpgM6Znw91RrgiSqfleUTvwBvIyAWyX4ytdf90yijbiDxf+g
-         eyVeYgq+9EjyIS4WSFA8BtOt2b3pp5tvLTBpP5MUoWw0ZZWsSs32ZDeZauFm3EYNq6
-         X35fZAosfPTNU3Tj9byLPiL5NhPk4R6cmxcpYe53M5+V6ZLGZnkXOE2ZDOI5lYlZy8
-         bkAYOkJnsdCtPDt70AdyRZDoOgs62E2FPtyv/OaLS+/GSj/FdbXjRB3ntPfEUBTtfF
-         TcYjS3mF1Udlw==
-Received: by mail.venturelinkbiz.com for <linux-pwm@vger.kernel.org>; Mon,  9 Oct 2023 07:40:52 GMT
-Message-ID: <20231009064500-0.1.2v.7y7a.0.7retrtjlhe@venturelinkbiz.com>
-Date:   Mon,  9 Oct 2023 07:40:52 GMT
-From:   "Michal Rmoutil" <michal.rmoutil@venturelinkbiz.com>
-To:     <linux-pwm@vger.kernel.org>
-Subject: =?UTF-8?Q?Efektivn=C3=AD_sledov=C3=A1n=C3=AD_a_optimalizace_v=C3=BDroby_pro_va=C5=A1i_spole=C4=8Dnost?=
-X-Mailer: mail.venturelinkbiz.com
+        with ESMTP id S1345449AbjJIJcg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 9 Oct 2023 05:32:36 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528CD94
+        for <linux-pwm@vger.kernel.org>; Mon,  9 Oct 2023 02:32:35 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qpmcq-0008RZ-Jd; Mon, 09 Oct 2023 11:32:32 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qpmco-000NZy-UD; Mon, 09 Oct 2023 11:32:30 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qpmco-00C59f-Kj; Mon, 09 Oct 2023 11:32:30 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>, linux-pwm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@pengutronix.de
+Subject: [PATCH v4] backlight: pwm_bl: Disable PWM on shutdown, suspend and remove
+Date:   Mon,  9 Oct 2023 11:32:23 +0200
+Message-Id: <20231009093223.227286-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,URIBL_DBL_SPAM autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2987; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ukp03GXhJGGhriRo81oTqb+ZF09mBJI1HDBsdlZDDEw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlI8imhPFLFc7G9DQzsmEVrBtK7ni6oOsoVVU0d du0W4DICtGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSPIpgAKCRCPgPtYfRL+ TpelB/9veiKkWgBLSFdRf8C/mZU536ZliA4SH6xEfVnniFW/RGorUdbDglV1YQkTaUbtOb6EwCT WKwjQ0OCOnwbxoL6cxSDcUKVgLnHh9wOFP4dnnosQ3thzE83HFaiCLJLNLvWWHzsQIQOTisdCIM FGESqKYG9TSdjVfI/Y8mQo2jTmwP1IdFUFfrU1P0GYum55T8xK8peNaSK1fP6T9/lDIlO6CfeOo 1tjTEGqLjX49b1xNgegMOHzAfkeMg0EETle7IAeCSy9E+x5ajTvgbaBASBH4weevYfseX2h7UR8 uEW0PNIhm4irmPEbl9vEaBh8NUQ6nYUD3/+l3mjsy7kedtKc
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dobr=C3=A9 r=C3=A1no,
+Since commit 00e7e698bff1 ("backlight: pwm_bl: Configure pwm only once
+per backlight toggle") calling pwm_backlight_power_off() doesn't disable
+the PWM any more. However this is necessary to suspend because PWM
+drivers usually refuse to suspend if they are still enabled.
 
-m=C3=A1te mo=C5=BEnost sledovat stav ka=C5=BEd=C3=A9ho stroje a v=C3=BDro=
-bn=C3=ADho procesu z kancel=C3=A1=C5=99e, konferen=C4=8Dn=C3=AD m=C3=ADst=
-nosti nebo dokonce z domova =C4=8Di na cest=C3=A1ch =E2=80=93 na va=C5=A1=
-em telefonu?
+Also adapt shutdown and remove callbacks to disable the PWM for similar
+reasons.
 
-Poskytujeme rychle implementovateln=C3=BD a snadno pou=C5=BEiteln=C3=BD n=
-=C3=A1stroj, kter=C3=BD zachyt=C3=AD i n=C4=9Bkolikasekundov=C3=BD mikrop=
-rostoj a okam=C5=BEit=C4=9B p=C5=99epo=C4=8D=C3=ADt=C3=A1 vyu=C5=BEit=C3=AD=
- stroje v kontextu dan=C3=A9 v=C3=BDrobn=C3=AD zak=C3=A1zky.
+Fixes: 00e7e698bff1 ("backlight: pwm_bl: Configure pwm only once per backlight toggle")
+Reported-by: Aisheng Dong <aisheng.dong@nxp.com>
+Tested-by: Aisheng Dong <aisheng.dong@nxp.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
 
-Kdykoli vid=C3=ADte stav objedn=C3=A1vky a jste informov=C3=A1ni o p=C5=99=
-=C3=ADpadn=C3=A9m sn=C3=AD=C5=BEen=C3=AD efektivity. Syst=C3=A9m s=C3=A1m=
- analyzuje data a p=C5=99ipravuje cenn=C3=A9 reporty, co=C5=BE oper=C3=A1=
-tor=C5=AFm umo=C5=BE=C5=88uje soust=C5=99edit se na v=C3=BDrobn=C3=AD c=C3=
-=ADl.
+Changes since v3 (available at
+https://lore.kernel.org/linux-fbdev/20230926150116.2124384-1-u.kleine-koenig@pengutronix.de):
 
-C=C3=ADl je jednoduch=C3=BD: jeden pohled =E2=80=93 cel=C3=A1 tov=C3=A1rn=
-a. =C4=8Cek=C3=A1m na odpov=C4=9B=C4=8F, jestli vid=C3=ADte mo=C5=BEnost =
-vyu=C5=BEit=C3=AD takov=C3=A9ho n=C3=A1stroje ve va=C5=A1=C3=AD firm=C4=9B=
-=2E
+ - Fix buildfailure identified by the kernel test robot. (*Sigh*, that's
+   what you get if you improve a patch without build testing ...)
+ - Fix the Subject to also mention "remove".
 
+Best regards
+Uwe
 
-Pozdravy
-Michal Rmoutil
+ drivers/video/backlight/pwm_bl.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index a51fbab96368..289bd9ce4d36 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -626,9 +626,14 @@ static void pwm_backlight_remove(struct platform_device *pdev)
+ {
+ 	struct backlight_device *bl = platform_get_drvdata(pdev);
+ 	struct pwm_bl_data *pb = bl_get_data(bl);
++	struct pwm_state state;
+ 
+ 	backlight_device_unregister(bl);
+ 	pwm_backlight_power_off(pb);
++	pwm_get_state(pb->pwm, &state);
++	state.duty_cycle = 0;
++	state.enabled = false;
++	pwm_apply_state(pb->pwm, &state);
+ 
+ 	if (pb->exit)
+ 		pb->exit(&pdev->dev);
+@@ -638,8 +643,13 @@ static void pwm_backlight_shutdown(struct platform_device *pdev)
+ {
+ 	struct backlight_device *bl = platform_get_drvdata(pdev);
+ 	struct pwm_bl_data *pb = bl_get_data(bl);
++	struct pwm_state state;
+ 
+ 	pwm_backlight_power_off(pb);
++	pwm_get_state(pb->pwm, &state);
++	state.duty_cycle = 0;
++	state.enabled = false;
++	pwm_apply_state(pb->pwm, &state);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -647,12 +657,24 @@ static int pwm_backlight_suspend(struct device *dev)
+ {
+ 	struct backlight_device *bl = dev_get_drvdata(dev);
+ 	struct pwm_bl_data *pb = bl_get_data(bl);
++	struct pwm_state state;
+ 
+ 	if (pb->notify)
+ 		pb->notify(pb->dev, 0);
+ 
+ 	pwm_backlight_power_off(pb);
+ 
++	/*
++	 * Note that disabling the PWM doesn't guarantee that the output stays
++	 * at its inactive state. However without the PWM disabled, the PWM
++	 * driver refuses to suspend. So disable here even though this might
++	 * enable the backlight on poorly designed boards.
++	 */
++	pwm_get_state(pb->pwm, &state);
++	state.duty_cycle = 0;
++	state.enabled = false;
++	pwm_apply_state(pb->pwm, &state);
++
+ 	if (pb->notify_after)
+ 		pb->notify_after(pb->dev, 0);
+ 
+
+base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+-- 
+2.40.1
+
