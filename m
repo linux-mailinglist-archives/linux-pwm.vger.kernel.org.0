@@ -2,154 +2,112 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 659667BF3F2
-	for <lists+linux-pwm@lfdr.de>; Tue, 10 Oct 2023 09:19:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 621FF7BF4CE
+	for <lists+linux-pwm@lfdr.de>; Tue, 10 Oct 2023 09:51:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442406AbjJJHTW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 10 Oct 2023 03:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49646 "EHLO
+        id S1442599AbjJJHvd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 10 Oct 2023 03:51:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378097AbjJJHTW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Oct 2023 03:19:22 -0400
+        with ESMTP id S1442582AbjJJHvc (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 10 Oct 2023 03:51:32 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D563B9F
-        for <linux-pwm@vger.kernel.org>; Tue, 10 Oct 2023 00:19:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E714A4
+        for <linux-pwm@vger.kernel.org>; Tue, 10 Oct 2023 00:51:29 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qq71J-00046H-8A; Tue, 10 Oct 2023 09:19:09 +0200
+        id 1qq7WS-00085v-Dq; Tue, 10 Oct 2023 09:51:20 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qq71I-000bZx-HG; Tue, 10 Oct 2023 09:19:08 +0200
+        id 1qq7WO-000big-7a; Tue, 10 Oct 2023 09:51:16 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qq71I-00CuRr-7u; Tue, 10 Oct 2023 09:19:08 +0200
-Date:   Tue, 10 Oct 2023 09:19:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Florian Fainelli <florian.fainelli@broadcom.com>
-Cc:     linux-pwm@vger.kernel.org, Angus Clark <angus.clark@broadcom.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        id 1qq7WN-00CvmQ-Tt; Tue, 10 Oct 2023 09:51:15 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] pwm: bcm2835: Add support for suspend/resume
-Message-ID: <20231010071908.azpqdx3eff442fxh@pengutronix.de>
-References: <20231009204226.3224521-1-florian.fainelli@broadcom.com>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 00/11] pwm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+Date:   Tue, 10 Oct 2023 09:51:01 +0200
+Message-Id: <20231010075112.755178-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="isqqdgvdw4a6nj5a"
-Content-Disposition: inline
-In-Reply-To: <20231009204226.3224521-1-florian.fainelli@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1674; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=A8HP9dusodcVd01/oywSk7GyIKXIzSNIx/3Y74BCkPc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlJQJcnufZamylMhsh8sHRAmnhUy5NU96BFuv1Y +e804696reJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSUCXAAKCRCPgPtYfRL+ Tjh6CACMY4DrmuQjpMLEcju7BTHj+1LkPQrPGzvdAqhyOjGVgG6nn1jcf2VaamQObZChkefRgLs oGITc8kXXHSZrBoDCl/3UmmLnAvW5k3tjbcea5fGxJiYwtHMEHeNP8QN3KvDPJfHdaSBXRSjFxG qeSWUlbgXAxCXPOs+4g2lYNASWm34COaFAlVOM6+RVayhDGxrwp1VpVzb3FoaFsKxd23l6ro6F7 rfSbpRLt9/8ksOGpw8hOrWkkX+yr4FYnGFjHigSeTR3+Pa4R/8DYRXBsd7tiaO4TtfGaE1juULa wGYbs9wy/RogDPwlSXCYddDhVrgS0MNXIWr8BbqF6xiyXxC3
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hello,
 
---isqqdgvdw4a6nj5a
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Oct 09, 2023 at 01:42:26PM -0700, Florian Fainelli wrote:
-> Similar to other drivers, we need to make sure that the clock is
-> disabled during suspend and re-enabled during resume.
->=20
-> Reported-by: Angus Clark <angus.clark@broadcom.com>
-> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> ---
-> Changes in v2:
->=20
-> - use DEFINE_SIMPLE_DEV_PM_OPS as suggested by Uwe
->=20
->  drivers/pwm/pwm-bcm2835.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-> index bdfc2a5ec0d6..938f993ae746 100644
-> --- a/drivers/pwm/pwm-bcm2835.c
-> +++ b/drivers/pwm/pwm-bcm2835.c
-> @@ -182,6 +182,25 @@ static void bcm2835_pwm_remove(struct platform_devic=
-e *pdev)
->  	clk_disable_unprepare(pc->clk);
->  }
-> =20
-> +static int __maybe_unused bcm2835_pwm_suspend(struct device *dev)
-> +{
-> +	struct bcm2835_pwm *pc =3D dev_get_drvdata(dev);
-> +
-> +	clk_disable_unprepare(pc->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused bcm2835_pwm_resume(struct device *dev)
-
-With DEFINE_SIMPLE_DEV_PM_OPS you don't need the __maybe_unused (which
-is one of the upsides of DEFINE_SIMPLE_DEV_PM_OPS compared to
-SIMPLE_DEV_PM_OPS)
-
-> +{
-> +	struct bcm2835_pwm *pc =3D dev_get_drvdata(dev);
-> +
-> +	return clk_prepare_enable(pc->clk);
-> +}
-> +
-> +static DEFINE_SIMPLE_DEV_PM_OPS(bcm2835_pwm_pm_ops, bcm2835_pwm_suspend,
-> +				bcm2835_pwm_resume);
-> +
->  static const struct of_device_id bcm2835_pwm_of_match[] =3D {
->  	{ .compatible =3D "brcm,bcm2835-pwm", },
->  	{ /* sentinel */ }
-> @@ -192,6 +211,7 @@ static struct platform_driver bcm2835_pwm_driver =3D {
->  	.driver =3D {
->  		.name =3D "bcm2835-pwm",
->  		.of_match_table =3D bcm2835_pwm_of_match,
-> +		.pm =3D &bcm2835_pwm_pm_ops,
-
-I think=20
-
-+		.pm =3D pm_ptr(&bcm2835_pwm_pm_ops),
-
-is the right thing here.
+Florian added pm support to the pwm-bcm2835 driver[1]. This made me
+check what is the "modern" way to add pm support. This series modernizes
+the other pwm drivers with the things I learned.
 
 Best regards
 Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+[1] https://lore.kernel.org/linux-pwm/20231009204226.3224521-1-florian.fainelli@broadcom.com
 
---isqqdgvdw4a6nj5a
-Content-Type: application/pgp-signature; name="signature.asc"
+Uwe Kleine-König (11):
+  pwm: atmel-hlcdc: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: atmel-tcb: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: berlin: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: brcmstb: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: dwc: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: imx-tpm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: samsung: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: stm32-lp: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: stm32: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: tiecap: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+  pwm: tiehrpwm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
 
------BEGIN PGP SIGNATURE-----
+ drivers/pwm/pwm-atmel-hlcdc.c |  8 +++-----
+ drivers/pwm/pwm-atmel-tcb.c   |  8 +++-----
+ drivers/pwm/pwm-berlin.c      |  8 +++-----
+ drivers/pwm/pwm-brcmstb.c     | 12 ++++--------
+ drivers/pwm/pwm-dwc.c         |  6 ++----
+ drivers/pwm/pwm-imx-tpm.c     | 10 +++++-----
+ drivers/pwm/pwm-samsung.c     |  6 ++----
+ drivers/pwm/pwm-stm32-lp.c    | 10 +++++-----
+ drivers/pwm/pwm-stm32.c       |  8 ++++----
+ drivers/pwm/pwm-tiecap.c      |  6 ++----
+ drivers/pwm/pwm-tiehrpwm.c    |  8 +++-----
+ 11 files changed, 36 insertions(+), 54 deletions(-)
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUk+usACgkQj4D7WH0S
-/k5ECwf+NPkcT3mWWY2ZBSoYzazNLuQvKMVs9Lt7KSbMFBoHA7ipNqgsZABLPrXU
-4hHgmDZAlpEvzTv/i5g3o2Q1GpGUA+AT42Dm7ds2oAh6g9OwyPcUhju9FztPQ2kJ
-R9sYJwNCdAdFw0w9QSG59Q42PR7Ad6v3wBFfokn96MweTm9GewxVdjsXxWCFa8B9
-gAfv3dEv5fFHjp+wvri89clKGBKn4CCXjtyHGgfkgnV2GnZOXeCFwjagauC+VKSW
-H3FFc5GrhjE0p3Kl0iGoGuNv0ucPAGJdkffObP9MmkNJSfUfySJZt/rNGH54yOZT
-4dkeEJf29RscME49f0Lx2BgFiEND+g==
-=2uy8
------END PGP SIGNATURE-----
+base-commit: 0bb80ecc33a8fb5a682236443c1e740d5c917d1d
+-- 
+2.40.1
 
---isqqdgvdw4a6nj5a--
