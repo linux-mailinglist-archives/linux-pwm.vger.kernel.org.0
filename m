@@ -2,67 +2,135 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DF2A7C4CC3
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Oct 2023 10:14:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA85B7C4D60
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Oct 2023 10:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbjJKIOA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Oct 2023 04:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32846 "EHLO
+        id S229957AbjJKIlW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 11 Oct 2023 04:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229989AbjJKIN7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Oct 2023 04:13:59 -0400
-Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09ACEBA
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Oct 2023 01:13:53 -0700 (PDT)
-Received: by mail.durme.pl (Postfix, from userid 1002)
-        id 043F24E856; Wed, 11 Oct 2023 08:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
-        t=1697011974; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
-        h=Date:From:To:Subject:From;
-        b=e7mgxG5wRA5F6XVO6HZM6eOHqLggiakDZh1XEgxhKGe6XCsXDBbkxWp13cKtnnCe+
-         64QoL3kJWF5dXNtqGwRjOE8evowFvyOT5+WhemAZv1Sr6H4Ef1oepx1GuvAqFKpvJB
-         QYFwDnRbyXXm78XzISDE8Q6Ghx2yP/pYpERDy8vRU8tkL/0d37w9hp6L1f00xCJJVJ
-         C/8k1kl0D7VfGsUse8EAPmvnGToiWJu26qw9aZYPf8OwHX/VHRCjoFkbgGCEiw91gb
-         KvRkamsyNKTMKovcBFIhZKsx9Iz7TCON86DfMBse8DCvYnFBEiqHu1dYse23kozKny
-         SIw63cwHU8GeA==
-Received: by mail.durme.pl for <linux-pwm@vger.kernel.org>; Wed, 11 Oct 2023 08:10:49 GMT
-Message-ID: <20231011064500-0.1.4v.nlef.0.69vpve9444@durme.pl>
-Date:   Wed, 11 Oct 2023 08:10:49 GMT
-From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
-To:     <linux-pwm@vger.kernel.org>
-Subject: W sprawie samochodu
-X-Mailer: mail.durme.pl
+        with ESMTP id S230253AbjJKIlV (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Oct 2023 04:41:21 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C4E9D
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Oct 2023 01:41:20 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qqUmM-0003lH-CK; Wed, 11 Oct 2023 10:41:18 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qqUmL-000rSv-MK; Wed, 11 Oct 2023 10:41:17 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qqUmL-00Dvxv-Cu; Wed, 11 Oct 2023 10:41:17 +0200
+Date:   Wed, 11 Oct 2023 10:41:17 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: pxa: Explicitly include correct DT includes
+Message-ID: <20231011084117.jvfl7xmbcgsu7uyl@pengutronix.de>
+References: <20231009172923.2457844-22-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_CSS_A
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qonxrk3tvlfhlcfv"
+Content-Disposition: inline
+In-Reply-To: <20231009172923.2457844-22-robh@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Dzie=C5=84 dobry,
 
-chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
-, je=C5=9Bli chodzi o system monitoringu GPS.
+--qonxrk3tvlfhlcfv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
-e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
-a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
+On Mon, Oct 09, 2023 at 12:29:17PM -0500, Rob Herring wrote:
+> The DT of_device.h and of_platform.h date back to the separate
+> of_platform_bus_type before it as merged into the regular platform bus.
+> As part of that merge prepping Arm DT support 13 years ago, they
+> "temporarily" include each other. They also include platform_device.h
+> and of.h. As a result, there's a pretty much random mix of those include
+> files used throughout the tree. In order to detangle these headers and
+> replace the implicit includes with struct declarations, users need to
+> explicitly include the correct includes.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pwm/pwm-pxa.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+> index 1e475ed10180..78b04e017c49 100644
+> --- a/drivers/pwm/pwm-pxa.c
+> +++ b/drivers/pwm/pwm-pxa.c
+> @@ -24,7 +24,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/io.h>
+>  #include <linux/pwm.h>
+> -#include <linux/of_device.h>
+> +#include <linux/of.h>
 
-Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
-dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
-szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
-mne znaczenie.
+Even without both headers the driver compiles fine as linux/pwm.h
+includes of.h.
 
-Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
-b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
+I think we should do:
 
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index d2f9f690a9c1..9e35970ca2ab 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -4,8 +4,8 @@
+=20
+ #include <linux/err.h>
+ #include <linux/mutex.h>
+-#include <linux/of.h>
+=20
++struct of_phandle_args;
+ struct pwm_chip;
+=20
+ /**
 
-Pozdrawiam
-Krystian Wieczorek
+drivers/pmw/* compiles fine with this change.
+
+Other than that:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--qonxrk3tvlfhlcfv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUmX6wACgkQj4D7WH0S
+/k6WCAf/VTAkcHY/Xjw1z+3vSnWH9KPBEte2/wm5UF3Ee2iG19jUSsuspIajwQsk
+5ZucpR2CBmXmZ/H4CTm6R0N+bsCq+zDJoSNJMkUwqK4eFosS+oBSbp+HiOq6WzL1
+sg4Mu2DgiGH4hYAeQQ7/rz7d+uE/AYKGHOOMYvjXfUaMYMag7/WRonErwoOvz/Nu
+sflvsEG1cN6WLM6FBB7CuUQ6epDGvJ5hlAB7q1zdpan6o6gDBvsu3knr1RB8nSTT
+vBasw6ULDb5kHAZgPkaNZd7ST14IbhD9HYp6C/B0bmW7IjksdBS6NlsoiwufPloR
+jPIc+17voM6pBq0JcklEcLRlwNWF+w==
+=8SsM
+-----END PGP SIGNATURE-----
+
+--qonxrk3tvlfhlcfv--
