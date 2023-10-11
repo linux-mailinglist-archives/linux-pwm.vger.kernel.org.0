@@ -2,135 +2,109 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA85B7C4D60
-	for <lists+linux-pwm@lfdr.de>; Wed, 11 Oct 2023 10:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B9E7C51BE
+	for <lists+linux-pwm@lfdr.de>; Wed, 11 Oct 2023 13:21:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbjJKIlW (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 11 Oct 2023 04:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60166 "EHLO
+        id S1346720AbjJKLVI convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Wed, 11 Oct 2023 07:21:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230253AbjJKIlV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Oct 2023 04:41:21 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C4E9D
-        for <linux-pwm@vger.kernel.org>; Wed, 11 Oct 2023 01:41:20 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qqUmM-0003lH-CK; Wed, 11 Oct 2023 10:41:18 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qqUmL-000rSv-MK; Wed, 11 Oct 2023 10:41:17 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qqUmL-00Dvxv-Cu; Wed, 11 Oct 2023 10:41:17 +0200
-Date:   Wed, 11 Oct 2023 10:41:17 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: pxa: Explicitly include correct DT includes
-Message-ID: <20231011084117.jvfl7xmbcgsu7uyl@pengutronix.de>
-References: <20231009172923.2457844-22-robh@kernel.org>
+        with ESMTP id S1346400AbjJKLUh (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 11 Oct 2023 07:20:37 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F4C18C
+        for <linux-pwm@vger.kernel.org>; Wed, 11 Oct 2023 04:19:47 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4S59Js0lGPz6K6nF;
+        Wed, 11 Oct 2023 19:19:25 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 11 Oct
+ 2023 12:19:45 +0100
+Date:   Wed, 11 Oct 2023 12:19:44 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        <linux-pwm@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        <kernel@pengutronix.de>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 01/11] pwm: atmel-hlcdc: Use DEFINE_SIMPLE_DEV_PM_OPS
+ for PM functions
+Message-ID: <20231011121944.0000378e@Huawei.com>
+In-Reply-To: <20231010075112.755178-2-u.kleine-koenig@pengutronix.de>
+References: <20231010075112.755178-1-u.kleine-koenig@pengutronix.de>
+        <20231010075112.755178-2-u.kleine-koenig@pengutronix.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qonxrk3tvlfhlcfv"
-Content-Disposition: inline
-In-Reply-To: <20231009172923.2457844-22-robh@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Tue, 10 Oct 2023 09:51:02 +0200
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
 
---qonxrk3tvlfhlcfv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This macro has the advantage over SIMPLE_DEV_PM_OPS that we don't have to
+> care about when the functions are actually used, so the corresponding
+> #ifdef can be dropped.
+> 
+> Also make use of pm_ptr() to discard all PM related stuff if CONFIG_PM
+> isn't enabled.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-On Mon, Oct 09, 2023 at 12:29:17PM -0500, Rob Herring wrote:
-> The DT of_device.h and of_platform.h date back to the separate
-> of_platform_bus_type before it as merged into the regular platform bus.
-> As part of that merge prepping Arm DT support 13 years ago, they
-> "temporarily" include each other. They also include platform_device.h
-> and of.h. As a result, there's a pretty much random mix of those include
-> files used throughout the tree. In order to detangle these headers and
-> replace the implicit includes with struct declarations, users need to
-> explicitly include the correct includes.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  drivers/pwm/pwm-pxa.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
-> index 1e475ed10180..78b04e017c49 100644
-> --- a/drivers/pwm/pwm-pxa.c
-> +++ b/drivers/pwm/pwm-pxa.c
-> @@ -24,7 +24,7 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
->  #include <linux/pwm.h>
-> -#include <linux/of_device.h>
-> +#include <linux/of.h>
+>  drivers/pwm/pwm-atmel-hlcdc.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+> index e271d920151e..95a806c7f623 100644
+> --- a/drivers/pwm/pwm-atmel-hlcdc.c
+> +++ b/drivers/pwm/pwm-atmel-hlcdc.c
+> @@ -181,7 +181,6 @@ static const struct atmel_hlcdc_pwm_errata atmel_hlcdc_pwm_sama5d3_errata = {
+>  	.div1_clk_erratum = true,
+>  };
+>  
+> -#ifdef CONFIG_PM_SLEEP
+>  static int atmel_hlcdc_pwm_suspend(struct device *dev)
+>  {
+>  	struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+> @@ -211,10 +210,9 @@ static int atmel_hlcdc_pwm_resume(struct device *dev)
+>  	return atmel_hlcdc_pwm_apply(&atmel->chip, &atmel->chip.pwms[0],
+>  				     &state);
+>  }
+> -#endif
+>  
+> -static SIMPLE_DEV_PM_OPS(atmel_hlcdc_pwm_pm_ops,
+> -			 atmel_hlcdc_pwm_suspend, atmel_hlcdc_pwm_resume);
+> +static DEFINE_SIMPLE_DEV_PM_OPS(atmel_hlcdc_pwm_pm_ops,
+> +				atmel_hlcdc_pwm_suspend, atmel_hlcdc_pwm_resume);
+>  
+>  static const struct of_device_id atmel_hlcdc_dt_ids[] = {
+>  	{
+> @@ -298,7 +296,7 @@ static struct platform_driver atmel_hlcdc_pwm_driver = {
+>  	.driver = {
+>  		.name = "atmel-hlcdc-pwm",
+>  		.of_match_table = atmel_hlcdc_pwm_dt_ids,
+> -		.pm = &atmel_hlcdc_pwm_pm_ops,
+> +		.pm = pm_ptr(&atmel_hlcdc_pwm_pm_ops),
+>  	},
+>  	.probe = atmel_hlcdc_pwm_probe,
+>  	.remove_new = atmel_hlcdc_pwm_remove,
 
-Even without both headers the driver compiles fine as linux/pwm.h
-includes of.h.
-
-I think we should do:
-
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index d2f9f690a9c1..9e35970ca2ab 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -4,8 +4,8 @@
-=20
- #include <linux/err.h>
- #include <linux/mutex.h>
--#include <linux/of.h>
-=20
-+struct of_phandle_args;
- struct pwm_chip;
-=20
- /**
-
-drivers/pmw/* compiles fine with this change.
-
-Other than that:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qonxrk3tvlfhlcfv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUmX6wACgkQj4D7WH0S
-/k6WCAf/VTAkcHY/Xjw1z+3vSnWH9KPBEte2/wm5UF3Ee2iG19jUSsuspIajwQsk
-5ZucpR2CBmXmZ/H4CTm6R0N+bsCq+zDJoSNJMkUwqK4eFosS+oBSbp+HiOq6WzL1
-sg4Mu2DgiGH4hYAeQQ7/rz7d+uE/AYKGHOOMYvjXfUaMYMag7/WRonErwoOvz/Nu
-sflvsEG1cN6WLM6FBB7CuUQ6epDGvJ5hlAB7q1zdpan6o6gDBvsu3knr1RB8nSTT
-vBasw6ULDb5kHAZgPkaNZd7ST14IbhD9HYp6C/B0bmW7IjksdBS6NlsoiwufPloR
-jPIc+17voM6pBq0JcklEcLRlwNWF+w==
-=8SsM
------END PGP SIGNATURE-----
-
---qonxrk3tvlfhlcfv--
