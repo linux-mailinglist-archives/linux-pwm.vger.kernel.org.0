@@ -2,87 +2,147 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 177037C7852
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 23:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E90E7C78D0
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 23:51:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344202AbjJLVC6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Oct 2023 17:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
+        id S1442949AbjJLVvY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Oct 2023 17:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442372AbjJLVC6 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Oct 2023 17:02:58 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC389D
-        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 14:02:57 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qr2pU-000772-Cv; Thu, 12 Oct 2023 23:02:48 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qr2pQ-001EgW-QN; Thu, 12 Oct 2023 23:02:44 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qr2pQ-00FDqj-HD; Thu, 12 Oct 2023 23:02:44 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel@pengutronix.de, kernel test robot <lkp@intel.com>
-Subject: [PATCH] pwm: samsung: Document new member .channel in struct samsung_pwm_chip
-Date:   Thu, 12 Oct 2023 23:02:29 +0200
-Message-ID: <20231012210228.1009473-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
+        with ESMTP id S1442945AbjJLVvW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Oct 2023 17:51:22 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F09CBB;
+        Thu, 12 Oct 2023 14:51:20 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39CLbjch027956;
+        Thu, 12 Oct 2023 21:51:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=voUltIrLrhXdVJp9/yCwFFwFBu2KkCyxDDIWBrI4Xog=;
+ b=HjSHOCagbHCB6bOReW+vqK+Dfm07myfSFl8yPtmClixpKCcx4C5UnnqZmJp4EkkrDlGk
+ sDingmngYmPHq+uM3HBBqPVeQGzhUBBMSXXi3SA5X0kNnLJQP6XLfqhUZ1vUA3G+umcu
+ gEnsitEU8Llg9JgShMHxB3a5DvlmHMEYr5M5u84mB7GEvxhxzAQTFiqgJF+aWHmqIvr2
+ 9/U+wcedGEb8KGNxTmqgyc7htL3M+bz8iq1TCdvyJkUU1ehqhGC3hPkWpIqnJq0Xm8vL
+ 1+bDS61NU97RlA6x7NV16IlgORC6blhN3ETupnnFsJrRxkKbilBOeheB+98R4nhkHEJx pQ== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tnsmq4h32-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Oct 2023 21:51:03 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39CLp1Wo011405
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Oct 2023 21:51:01 GMT
+Received: from [10.110.43.201] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 12 Oct
+ 2023 14:50:59 -0700
+Message-ID: <a2781978-2081-f4cb-dfe3-0489860dab8e@quicinc.com>
+Date:   Thu, 12 Oct 2023 14:50:42 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1085; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=TinZcVixfWff9r+KWwFdJry6obdM5LE5EMAISvNNtLI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlKF7l6LUqJ6xBMLocRVt/FQXn9YKx6IyvCLH6Z YDeIzqfewCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZShe5QAKCRCPgPtYfRL+ Ti2zB/98m5mKAl8kqq5TU8HWCMKZhHOPU0j/K+ZSOWYWXB+zmnmmLfB7VAcRfpjolGAd1QZJxj3 QBuaMHQwZ9swkzvNSRpLHZdAoc001DPKMD+j0EhYT1std5J6CxUc1s/A4v8+8ts2oUO20WmfOYM +9Q4Xdaz0Hy3iuKC5MYRt8HvQobwGSCtkk/wunKLCTUl89VNxlxAvsQxNkG5a3lNuIyY1zrS5V5 fG66pAm0mtEhQiGP/yoQsPrxLCjU/lWgcMH7ied5+LM4vViLAZQLY0ZrgMvEkighjjA0eedu5c1 +R2+1O/NsM9G50leXkB41r45cnrEGDqk9Rv5svBbgX8YJPy3
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v5 0/7] Add support for LUT PPG
+Content-Language: en-US
+To:     Luca Weiss <luca.weiss@fairphone.com>, <pavel@ucw.cz>,
+        <lee@kernel.org>, <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <agross@kernel.org>, <andersson@kernel.org>
+CC:     <konrad.dybcio@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+        <quic_subbaram@quicinc.com>, <quic_gurus@quicinc.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <kernel@quicinc.com>
+References: <20230929003901.15086-1-quic_amelende@quicinc.com>
+ <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
+From:   Anjelique Melendez <quic_amelende@quicinc.com>
+In-Reply-To: <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: PeOLq1QMggphqx9nLudVIdQ5iZgaUs-J
+X-Proofpoint-ORIG-GUID: PeOLq1QMggphqx9nLudVIdQ5iZgaUs-J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-12_14,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 bulkscore=0 clxscore=1011 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310120183
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-My earlier commit reworking how driver data is tracked added a new
-member to struct samsung_pwm_chip but failed to add matching
-documentation. Make up leeway.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202310130404.uQ33q5Dk-lkp@intel.com/
-Fixes: 4c9548d24c0d ("pwm: samsung: Put per-channel data into driver data")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-samsung.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
-index c437fab7ded8..42f8587087fb 100644
---- a/drivers/pwm/pwm-samsung.c
-+++ b/drivers/pwm/pwm-samsung.c
-@@ -77,6 +77,7 @@ struct samsung_pwm_channel {
-  * @base_clk:		base clock used to drive the timers
-  * @tclk0:		external clock 0 (can be ERR_PTR if not present)
-  * @tclk1:		external clock 1 (can be ERR_PTR if not present)
-+ * @channel:		per channel driver data
-  */
- struct samsung_pwm_chip {
- 	struct pwm_chip chip;
+On 10/1/2023 7:15 AM, Luca Weiss wrote:
+> On Fri Sep 29, 2023 at 2:38 AM CEST, Anjelique Melendez wrote:
+>> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+>> modules instead of LUT peripheral. This feature is called PPG.
+>>
+>> This change series adds support for PPG. Thanks!
+[..]
+>>
+>> Tested-by: Luca Weiss <luca.weiss@fairphone.com> # sdm632-fairphone-fp3 (pmi632)
+> 
+> Hi Anjelique,
+> 
+> Actually I've retested this now on PMI632 (and also realized that my
+> previous tests weren't correct and wasn't actually using hw_pattern).
+> 
+> Using the following commands (after boot) I'm expecting to get a
+> 500ms on 500ms off blinking pattern between white (255 255 255) and off
+> (0 0 0).
+> 
+>   echo pattern > /sys/class/leds/rgb:status/trigger
+>   echo -1 > /sys/class/leds/rgb:status/repeat
+> 
+>   echo "255 255 255" > /sys/class/leds/rgb:status/multi_intensity
+>   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
+> 
+> What I actually see is it blinking between cyan (0 255 255) and red (255
+> 0 0).
+> At some point after playing with many patterns I got it to actually
+> cycle between white and off, but I couldn't reproduce this again (or I
+> didn't try hard enough).
+> 
+> 
+> But with this example it correctly blinks red on-off.
+> 
+>   echo "255 0 0" > /sys/class/leds/rgb:status/multi_intensity
+>   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
+> 
+> With "0 255 0" and "0 0 255" the other colors also work fine, it's just
+> the combinations that seem somewhat broken.
+> 
+> Regards
+> Luca
+> 
+> 
+Hi Luca,
 
-base-commit: 4c9548d24c0d4034f056e2c9f0e72599a382a846
--- 
-2.42.0
+Thanks for testing again and the feedback!
+Looks like for multicolor devices there is a small concurrency issue with
+enabling pattern at the same time for all the led channels. This could be
+why you observed your device blinking between red (255 0 0) and cyan (0 255 255),
+instead of seeing all channels (255 255 255) blink.
+The fix I'm planing to include in the next series is is to disable the multicolor led
+channels first, then configure all channels, and finally re-enable channels
+so that pattern is triggered at the same time for each all of the channels.
 
+I am currently testing with pm8350c device so if you are able to test next series
+on pmi632 it would be very appreciated!
+
+Thanks,
+Anjelique
