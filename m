@@ -2,44 +2,44 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 371DF7C7310
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 18:33:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98CC87C7313
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 18:33:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347334AbjJLQdA (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Oct 2023 12:33:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54586 "EHLO
+        id S1379466AbjJLQdC (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Oct 2023 12:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379466AbjJLQc7 (ORCPT
+        with ESMTP id S1379542AbjJLQc7 (ORCPT
         <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Oct 2023 12:32:59 -0400
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E295C0
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DF08D6
         for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 09:32:56 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qqycI-0000fv-M8; Thu, 12 Oct 2023 18:32:54 +0200
+        id 1qqycI-0000fz-Sc; Thu, 12 Oct 2023 18:32:54 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qqycI-001CC2-9O; Thu, 12 Oct 2023 18:32:54 +0200
+        id 1qqycI-001CC7-Fc; Thu, 12 Oct 2023 18:32:54 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <ukl@pengutronix.de>)
-        id 1qqycI-00F5VT-0D; Thu, 12 Oct 2023 18:32:54 +0200
+        id 1qqycI-00F5VX-6i; Thu, 12 Oct 2023 18:32:54 +0200
 From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v2 102/109] drm/bridge: ti-sn65dsi86: Make use of devm_pwmchip_alloc() function
-Date:   Thu, 12 Oct 2023 18:32:31 +0200
-Message-ID: <20231012163227.1004288-15-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v2 103/109] leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
+Date:   Thu, 12 Oct 2023 18:32:32 +0200
+Message-ID: <20231012163227.1004288-16-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.41.0.rc2.161.g9c6817b8e7dd
 In-Reply-To: <20231012162827.1002444-111-u.kleine-koenig@pengutronix.de>
 References: <20231012162827.1002444-111-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2447; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ItBmtlaQHP7m7f8o58JUP5g0vUwTWVJUdPe+lGKGcPo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlKB+fStx9nVPTprIBN8EbM/Zz1zPZT8uc/u8vB OW4FlamzaiJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSgfnwAKCRCPgPtYfRL+ Tv7tCACjtg0dQkw+5l51ZZ+AyCfD1UxumbiWEGPoNJEVeT+FJqcviATHaK0XmR6ldb8XIbhikGl Jm1vO80OVnGJVlyD+Kzhz/pUSNVRluDhu1gGyYbDqfUik73KJQRlqFCP3bahXbjqHSCJ9fpR6Pe h8maLYBtRMQsbWKxP7xMMLCZr6aDkBlKSCoITZCoD/dYcn+xaYB+QzRDrHg5wtvh+6gIgmOtZCC 4Va5Q1+GFIbp/XQljw9TZszY5Edi4rn0PtZ8BQxwaQ/I9v+AY0S8iZv2AyasQMEebkMZRFOISAQ 0S+SLo7FFl/ypAVfsFvMMkEs9hIGtvcrNdxQ3hI4ZI63vxdC
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2962; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=M/+YrrRNVhGADFKY1/9Jqz6O7NSfLJ8wFbirQ3DzoFQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlKB+g48Qq2HM32kjLOjj0eYxExgrFbf8+eWuwd ur6zwRcWTuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZSgfoAAKCRCPgPtYfRL+ TuDVCAClHq4UxLfh8IznTB47FJH5Byed5OloxEWWaZFgtF1ILh9yvy/hQp3sgb9TAZFALqoFvgm USZi2xQtNFhtoMYZNlLXeeqD8LOHNSC/nDsPY7QWnqR8Buo7SYU/AXaS0MwuAuQuGQaDJKOR9Vs kUukEJ0pJCFclkIJK6+RicEmcARUOPvC/o9anzFk38qk4Y66BIftC0ophqaH5xDI+asCM3gSrFb dOVvv/HudxdEiP+yXv3gXdwoZcnwd54fJQ3JVhFC6CBsWdMZD7o1s6RpU1AQ8ANtMGccVlvFYAr YS7NT9xRiupU18ZZNSe9PFwCdDc4mAQGMNv/0LYvVpONLZsm
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -54,75 +54,96 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This prepares the pwm driver of the ti-sn65dsi86 to further changes of
-the pwm core outlined in the commit introducing devm_pwmchip_alloc().
-There is no intended semantical change and the driver should behave as
-before.
+This prepares the pwm sub-driver to further changes of the pwm core
+outlined in the commit introducing devm_pwmchip_alloc(). There is no
+intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/leds/rgb/leds-qcom-lpg.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 08e8c4f333e3..cb68c035bc2f 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -197,7 +197,7 @@ struct ti_sn65dsi86 {
- 	DECLARE_BITMAP(gchip_output, SN_NUM_GPIOS);
- #endif
- #if defined(CONFIG_PWM)
--	struct pwm_chip			pchip;
-+	struct pwm_chip			*pchip;
- 	bool				pwm_enabled;
- 	atomic_t			pwm_pin_busy;
- #endif
-@@ -1372,7 +1372,8 @@ static void ti_sn_pwm_pin_release(struct ti_sn65dsi86 *pdata)
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index c8525f59748c..57289af9480f 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -77,7 +77,7 @@ struct lpg {
  
- static struct ti_sn65dsi86 *pwm_chip_to_ti_sn_bridge(struct pwm_chip *chip)
- {
--	return container_of(chip, struct ti_sn65dsi86, pchip);
-+	struct ti_sn65dsi86 **pdata = pwmchip_priv(chip);
-+	return *pdata;
+ 	struct mutex lock;
+ 
+-	struct pwm_chip pwm;
++	struct pwm_chip *pwm;
+ 
+ 	const struct lpg_data *data;
+ 
+@@ -977,9 +977,15 @@ static int lpg_pattern_mc_clear(struct led_classdev *cdev)
+ 	return lpg_pattern_clear(led);
  }
  
- static int ti_sn_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -1585,22 +1586,28 @@ static const struct pwm_ops ti_sn_pwm_ops = {
- static int ti_sn_pwm_probe(struct auxiliary_device *adev,
- 			   const struct auxiliary_device_id *id)
++static inline struct lpg *lpg_pwm_from_chip(struct pwm_chip *chip)
++{
++	struct lpg **lpg = pwmchip_priv(chip);
++	return *lpg;
++}
++
+ static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct lpg *lpg = container_of(chip, struct lpg, pwm);
++	struct lpg *lpg = lpg_pwm_from_chip(chip);
+ 	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+ 
+ 	return chan->in_use ? -EBUSY : 0;
+@@ -995,7 +1001,7 @@ static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 const struct pwm_state *state)
+ {
+-	struct lpg *lpg = container_of(chip, struct lpg, pwm);
++	struct lpg *lpg = lpg_pwm_from_chip(chip);
+ 	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+ 	int ret = 0;
+ 
+@@ -1026,7 +1032,7 @@ static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ static int lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     struct pwm_state *state)
+ {
+-	struct lpg *lpg = container_of(chip, struct lpg, pwm);
++	struct lpg *lpg = lpg_pwm_from_chip(chip);
+ 	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
+ 	unsigned int resolution;
+ 	unsigned int pre_div;
+@@ -1089,13 +1095,19 @@ static const struct pwm_ops lpg_pwm_ops = {
+ 
+ static int lpg_add_pwm(struct lpg *lpg)
  {
 +	struct pwm_chip *chip;
- 	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
+ 	int ret;
  
--	pdata->pchip.dev = pdata->dev;
--	pdata->pchip.ops = &ti_sn_pwm_ops;
--	pdata->pchip.npwm = 1;
--	pdata->pchip.of_xlate = of_pwm_single_xlate;
--	pdata->pchip.of_pwm_n_cells = 1;
-+	/* XXX: should this better use adev->dev instead of pdata->dev? */
-+	pdata->pchip = chip = devm_pwmchip_alloc(pdata->dev, 1, sizeof(&pdata));
+-	lpg->pwm.dev = lpg->dev;
+-	lpg->pwm.npwm = lpg->num_channels;
+-	lpg->pwm.ops = &lpg_pwm_ops;
++	lpg->pwm = chip = devm_pwmchip_alloc(lpg->dev, lpg->num_channels,
++					     sizeof(&lpg));
 +	if (IS_ERR(chip))
 +		return PTR_ERR(chip);
  
--	return pwmchip_add(&pdata->pchip);
-+	*(struct ti_sn65dsi86 **)pwmchip_priv(chip) = pdata;
+-	ret = pwmchip_add(&lpg->pwm);
++	*(struct lpg **)pwmchip_priv(chip) = lpg;
 +
-+	chip->ops = &ti_sn_pwm_ops;
-+	chip->of_xlate = of_pwm_single_xlate;
-+	chip->of_pwm_n_cells = 1;
++	chip->ops = &lpg_pwm_ops;
 +
-+	return pwmchip_add(chip);
- }
++	ret = pwmchip_add(chip);
+ 	if (ret)
+ 		dev_err(lpg->dev, "failed to add PWM chip: ret %d\n", ret);
  
- static void ti_sn_pwm_remove(struct auxiliary_device *adev)
+@@ -1367,7 +1379,7 @@ static int lpg_remove(struct platform_device *pdev)
  {
- 	struct ti_sn65dsi86 *pdata = dev_get_drvdata(adev->dev.parent);
+ 	struct lpg *lpg = platform_get_drvdata(pdev);
  
--	pwmchip_remove(&pdata->pchip);
-+	pwmchip_remove(pdata->pchip);
+-	pwmchip_remove(&lpg->pwm);
++	pwmchip_remove(lpg->pwm);
  
- 	if (pdata->pwm_enabled)
- 		pm_runtime_put_sync(pdata->dev);
+ 	return 0;
+ }
 -- 
 2.42.0
 
