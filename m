@@ -2,97 +2,121 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 035827C77B7
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 22:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E42B7C7802
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 22:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442670AbjJLUOJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Oct 2023 16:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38140 "EHLO
+        id S1442228AbjJLUmb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 12 Oct 2023 16:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442682AbjJLUOI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Oct 2023 16:14:08 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DE9DBB
-        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 13:14:06 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qr24K-0000E0-Hf; Thu, 12 Oct 2023 22:14:04 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qr24J-001EXi-UT; Thu, 12 Oct 2023 22:14:03 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qr24J-00FBvu-LO; Thu, 12 Oct 2023 22:14:03 +0200
-Date:   Thu, 12 Oct 2023 22:14:03 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2 027/109] pwm: sifive: Make use of parent device
- pointer in driver data
-Message-ID: <20231012201403.s746dqtymniqa47t@pengutronix.de>
-References: <20231012162827.1002444-111-u.kleine-koenig@pengutronix.de>
- <20231012162827.1002444-138-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S1344079AbjJLUmb (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Oct 2023 16:42:31 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155FDD6
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 13:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697143348; x=1728679348;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GyslXrM6Dvsb0KYL0SNALa215blUsPll26fD93mja/s=;
+  b=BEml6GWwX0ga6MSfzqgJHjTtxHVIO6+60hDSKmXuD78Iix99ZV3NO6H4
+   q0KRsWlqVaJr1iABMuvtp//ZxgmjTEEymnUhMavSwoxjIFEyQkeot0CCo
+   MUVu/RgaY07m0LV+RashbO2b09ryGSkJx4lpLFY6O/Z0eMGAY/YcjhXqZ
+   Jn+IMJysWBsLcthx+gArrQZgx9TDXk1DCp3KsHgutNE4/ZGjk6PCEWntv
+   Cuch8gcsdNQjEez6zNVjug0YLP+C8l6EHGezjL3syk3plJJqmvyF+nPjH
+   LfTSBjLN3Zixbo4PUma6YqPNn7Uf7xchUroNXoG48spST2H1+DW0lx3SQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="375385864"
+X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
+   d="scan'208";a="375385864"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2023 13:42:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10861"; a="824755409"
+X-IronPort-AV: E=Sophos;i="6.03,219,1694761200"; 
+   d="scan'208";a="824755409"
+Received: from lkp-server02.sh.intel.com (HELO f64821696465) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Oct 2023 13:42:05 -0700
+Received: from kbuild by f64821696465 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qr2VP-0003rb-2J;
+        Thu, 12 Oct 2023 20:42:03 +0000
+Date:   Fri, 13 Oct 2023 04:41:30 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: [thierry-reding-pwm:for-next 10/36] drivers/pwm/pwm-samsung.c:92:
+ warning: Function parameter or member 'channel' not described in
+ 'samsung_pwm_chip'
+Message-ID: <202310130404.uQ33q5Dk-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="piankgl35ib6hi6c"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20231012162827.1002444-138-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
+head:   b02229080a8e98c8f944ab1ce0d5df0f2a0e3644
+commit: 4c9548d24c0d4034f056e2c9f0e72599a382a846 [10/36] pwm: samsung: Put per-channel data into driver data
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20231013/202310130404.uQ33q5Dk-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231013/202310130404.uQ33q5Dk-lkp@intel.com/reproduce)
 
---piankgl35ib6hi6c
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310130404.uQ33q5Dk-lkp@intel.com/
 
-On Thu, Oct 12, 2023 at 06:28:55PM +0200, Uwe Kleine-K=F6nig wrote:
-> struct pwm_chip::dev is about to change. To not have to touch this
-> driver in the same commit as struct pwm_chip::dev, make use of the
-> already existing pointer to the parent device in driver data.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+All warnings (new ones prefixed by >>):
 
-This one is wrong, this should also be of the type
+>> drivers/pwm/pwm-samsung.c:92: warning: Function parameter or member 'channel' not described in 'samsung_pwm_chip'
 
-	Make use of pwmchip_parent() macro
 
-I'll fix this in my branch.
+vim +92 drivers/pwm/pwm-samsung.c
 
-Best regards
-Uwe
+11ad39ede24ee4 Tomasz Figa               2013-04-06  69  
+11ad39ede24ee4 Tomasz Figa               2013-04-06  70  /**
+11ad39ede24ee4 Tomasz Figa               2013-04-06  71   * struct samsung_pwm_chip - private data of PWM chip
+11ad39ede24ee4 Tomasz Figa               2013-04-06  72   * @chip:		generic PWM chip
+11ad39ede24ee4 Tomasz Figa               2013-04-06  73   * @variant:		local copy of hardware variant data
+11ad39ede24ee4 Tomasz Figa               2013-04-06  74   * @inverter_mask:	inverter status for all channels - one bit per channel
+08a4d8ec4262c6 Bartlomiej Zolnierkiewicz 2017-04-24  75   * @disabled_mask:	disabled status for all channels - one bit per channel
+11ad39ede24ee4 Tomasz Figa               2013-04-06  76   * @base:		base address of mapped PWM registers
+11ad39ede24ee4 Tomasz Figa               2013-04-06  77   * @base_clk:		base clock used to drive the timers
+11ad39ede24ee4 Tomasz Figa               2013-04-06  78   * @tclk0:		external clock 0 (can be ERR_PTR if not present)
+11ad39ede24ee4 Tomasz Figa               2013-04-06  79   * @tclk1:		external clock 1 (can be ERR_PTR if not present)
+11ad39ede24ee4 Tomasz Figa               2013-04-06  80   */
+11ad39ede24ee4 Tomasz Figa               2013-04-06  81  struct samsung_pwm_chip {
+11ad39ede24ee4 Tomasz Figa               2013-04-06  82  	struct pwm_chip chip;
+11ad39ede24ee4 Tomasz Figa               2013-04-06  83  	struct samsung_pwm_variant variant;
+11ad39ede24ee4 Tomasz Figa               2013-04-06  84  	u8 inverter_mask;
+08a4d8ec4262c6 Bartlomiej Zolnierkiewicz 2017-04-24  85  	u8 disabled_mask;
+11ad39ede24ee4 Tomasz Figa               2013-04-06  86  
+11ad39ede24ee4 Tomasz Figa               2013-04-06  87  	void __iomem *base;
+11ad39ede24ee4 Tomasz Figa               2013-04-06  88  	struct clk *base_clk;
+11ad39ede24ee4 Tomasz Figa               2013-04-06  89  	struct clk *tclk0;
+11ad39ede24ee4 Tomasz Figa               2013-04-06  90  	struct clk *tclk1;
+4c9548d24c0d40 Uwe Kleine-König          2023-07-05  91  	struct samsung_pwm_channel channel[SAMSUNG_PWM_NUM];
+11ad39ede24ee4 Tomasz Figa               2013-04-06 @92  };
+11ad39ede24ee4 Tomasz Figa               2013-04-06  93  
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+:::::: The code at line 92 was first introduced by commit
+:::::: 11ad39ede24ee42909d58dc95031d96da46e33bd pwm: Add new pwm-samsung driver
 
---piankgl35ib6hi6c
-Content-Type: application/pgp-signature; name="signature.asc"
+:::::: TO: Tomasz Figa <tomasz.figa@gmail.com>
+:::::: CC: Tomasz Figa <tomasz.figa@gmail.com>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUoU4oACgkQj4D7WH0S
-/k7O+Af/TiUZZmCypadiWQtVGbzQH5P3XLyma/mpP/ofxcOwOLwp2Ef4MsnYuhGk
-BocD5fwhgpAM1qtf6Wvh8FT9/3C0aA6MWLJF0ZWNopWHKY6XKSZiDNyD7XSC7tjG
-Rsd3YYwHVgFYiRMVNEpi+7SdKiGolPOemWDOLT/M2h9Oj7imOoJyvterWHmLXxBA
-pX63FOGJvHLtrvd2iIhOHKvAOv6qObhVcqcADmX1uuMDMLSpSjPFZO0Vm6u5zViA
-Ych0SX6GFcl1/NC00/QdbgQn4afXDh1DXWk9HSh+65dK9sQKwfz3+ons7B1J5Js8
-oce+QXF7MUhT7PH8l889aFGPgUY38g==
-=poa4
------END PGP SIGNATURE-----
-
---piankgl35ib6hi6c--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
