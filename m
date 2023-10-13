@@ -2,141 +2,261 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15D4D7C8301
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Oct 2023 12:30:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92E7C7C8392
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Oct 2023 12:47:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbjJMKaK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 13 Oct 2023 06:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45654 "EHLO
+        id S230079AbjJMKrb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Oct 2023 06:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbjJMKaK (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Oct 2023 06:30:10 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCA0AD
-        for <linux-pwm@vger.kernel.org>; Fri, 13 Oct 2023 03:30:08 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrFQk-00031O-Uu; Fri, 13 Oct 2023 12:30:06 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrFQk-001NBe-Hp; Fri, 13 Oct 2023 12:30:06 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrFQk-00FVjx-8D; Fri, 13 Oct 2023 12:30:06 +0200
-Date:   Fri, 13 Oct 2023 12:30:06 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2 109/109] WIP: pwm: Add support for pwmchip devices for
- faster and easier userspace access
-Message-ID: <20231013103006.dw5tsromopi443hb@pengutronix.de>
-References: <20231012162827.1002444-111-u.kleine-koenig@pengutronix.de>
- <20231012163227.1004288-22-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5fryr6gtukrctuny"
-Content-Disposition: inline
-In-Reply-To: <20231012163227.1004288-22-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229947AbjJMKra (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Oct 2023 06:47:30 -0400
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA88AD;
+        Fri, 13 Oct 2023 03:47:26 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 501)
+        id B507C1000C4; Fri, 13 Oct 2023 11:47:24 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1697194044; bh=BPGCbyR+TQNm6kx/RctEE5jmHK5Z6c5mZ1jS/g7uJ/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i5ulWeE67zrXNBPSDrHdLWH5A9Cg3aO/ZldoanPVTXu/p1ucYdTI4wXJqtlmNp8kh
+         1rze5jMXQX+BryiZdFJMVWyAeGDYcTKX7YgwdPt/U7hYR+QixoY4YkarRqGZ1GxAR1
+         +UOIAV0jNNU3g3RrTUY1pADCwLLVS4xZP+JvymDaRvR99VQJaKSYYLvX84Q/ITPNpL
+         qDsP3bdRTK5MPBwqMj4vo8oC+6uXTKEr919LX0C+Icaxe7gFtpNNfcLyHtrRF04yal
+         tGJmFCCZ08Aqw+lOYHm4w+zYLr8QIatFmNPjedmIQclIkwkf4LUFbj4iQgstE9g9B2
+         jesrYh9H0mwLg==
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: from bigcore.mess.org (unknown [IPv6:2a02:8011:d000:212:ca7f:54ff:fe51:14d6])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by gofer.mess.org (Postfix) with ESMTPSA id 6154E1000C4;
+        Fri, 13 Oct 2023 11:47:23 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1697194043; bh=BPGCbyR+TQNm6kx/RctEE5jmHK5Z6c5mZ1jS/g7uJ/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YjTcWDQFlQc5ZE2UNkgTGp7+iy64nWdtcYgAXxzPUcbzpkqwe1kQwcew2MfE7y5rr
+         U5VngV/vcehLbJvjVPbrzbY63amvwFMdCRV7HovaB/yKXZZ9TV/u4kapwsEo+3m4E5
+         tM0G333bpew4mkqX9j/eMHIR7vzwEca76EDFnwdkurZn/ezph4/c8q20HKjpDDl/kx
+         mIlVg7VJwyIK46KRhOQKlOaDhqYuFs/+Uh30+Jwrrne8hIkMyyJZF7y7w/d9Gf9qP4
+         +GPE4iwXWARUdIbnnSMzu1aaXCASVRpxxPNgsXSKZCx9MT0ggkc5GB12d1pCQFQSQO
+         MbS7kE2p/oy7w==
+From:   Sean Young <sean@mess.org>
+To:     linux-media@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sean Young <sean@mess.org>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] pwm: make it possible to apply pwm changes in atomic context
+Date:   Fri, 13 Oct 2023 11:46:14 +0100
+Message-ID: <9c0f1616fca5b218336b9321bfefe7abb7e1749f.1697193646.git.sean@mess.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <cover.1697193646.git.sean@mess.org>
+References: <cover.1697193646.git.sean@mess.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Some drivers require sleeping, for example if the pwm device is connected
+over i2c. The pwm-ir-tx requires precise timing, and sleeping causes havoc
+with the generated IR signal when sleeping occurs.
 
---5fryr6gtukrctuny
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch makes it possible to use pwm when the driver does not sleep,
+by introducing the pwm_can_sleep() function.
 
-Hello,
-
-On Thu, Oct 12, 2023 at 06:32:38PM +0200, Uwe Kleine-K=F6nig wrote:
-> Todo:
->  - reshuffle order of functions to get rid of forward decl of __pwm_apply=
-_state
->  - implement remaining ioctls
->  - drop debug output
->  - maybe merge core.c and sysfs.c (separate commit?)
->  - ensure opening /dev/pwmchipX takes a reference to the chip to keep it
->    alive long enough.
-
-The reference handling is fine for opening /dev/pwmchipX, however
-pwmchip_remove() gets it wrong.
-
-I'll squash the following into this patch for the next review round:
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ drivers/pwm/core.c            | 62 ++++++++++++++++++++++++++++-------
+ drivers/pwm/pwm-renesas-tpu.c |  1 -
+ include/linux/pwm.h           | 29 ++++++++++++++--
+ 3 files changed, 78 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 914775ab9403..d779efec81ee 100644
+index dc66e3405bf5..241510ba1823 100644
 --- a/drivers/pwm/core.c
 +++ b/drivers/pwm/core.c
-@@ -456,15 +456,13 @@ int __pwmchip_add(struct pwm_chip *chip, struct modul=
-e *owner)
-=20
- 	mutex_init(&chip->lock);
-=20
--	if (chip->id < 256) {
-+	if (chip->id < 256)
- 		chip->dev.devt =3D MKDEV(MAJOR(pwm_devt), chip->id);
-=20
--		cdev_init(&chip->cdev, &pwm_cdev_fileops);
--		chip->cdev.owner =3D owner;
--		ret =3D cdev_device_add(&chip->cdev, &chip->dev);
--	} else {
--		ret =3D device_add(&chip->dev);
--	}
-+	cdev_init(&chip->cdev, &pwm_cdev_fileops);
-+	chip->cdev.owner =3D owner;
-+
-+	ret =3D cdev_device_add(&chip->cdev, &chip->dev);
- 	if (ret)
- 		goto err_device_add;
-=20
-@@ -527,7 +525,7 @@ void pwmchip_remove(struct pwm_chip *chip)
-=20
- 	module_put(chip->owner);
-=20
--	device_del(&chip->dev);
-+	cdev_device_del(&chip->cdev, &chip->dev);
+@@ -489,24 +489,15 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
  }
- EXPORT_SYMBOL_GPL(pwmchip_remove);
-=20
+ 
+ /**
+- * pwm_apply_state() - atomically apply a new state to a PWM device
++ * pwm_apply_state_unchecked() - atomically apply a new state to a PWM device
+  * @pwm: PWM device
+  * @state: new state to apply
+  */
+-int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
++static int pwm_apply_state_unchecked(struct pwm_device *pwm, const struct pwm_state *state)
+ {
+ 	struct pwm_chip *chip;
+ 	int err;
+ 
+-	/*
+-	 * Some lowlevel driver's implementations of .apply() make use of
+-	 * mutexes, also with some drivers only returning when the new
+-	 * configuration is active calling pwm_apply_state() from atomic context
+-	 * is a bad idea. So make it explicit that calling this function might
+-	 * sleep.
+-	 */
+-	might_sleep();
+-
+ 	if (!pwm || !state || !state->period ||
+ 	    state->duty_cycle > state->period)
+ 		return -EINVAL;
+@@ -535,8 +526,57 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
+ 
+ 	return 0;
+ }
++
++/**
++ * pwm_apply_state() - atomically apply a new state to a PWM device
++ * Cannot be used in atomic context.
++ * @pwm: PWM device
++ * @state: new state to apply
++ */
++int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
++{
++	/*
++	 * Some lowlevel driver's implementations of .apply() make use of
++	 * mutexes, also with some drivers only returning when the new
++	 * configuration is active calling pwm_apply_state() from atomic context
++	 * is a bad idea. So make it explicit that calling this function might
++	 * sleep.
++	 */
++	might_sleep();
++
++	if (IS_ENABLED(CONFIG_PWM_DEBUG) && pwm->chip->ops->atomic) {
++		int err;
++
++		/*
++		 * Catch any sleeping drivers when atomic is set.
++		 */
++		non_block_start();
++		err = pwm_apply_state_unchecked(pwm, state);
++		non_block_end();
++
++		return err;
++	}
++
++	return pwm_apply_state_unchecked(pwm, state);
++}
+ EXPORT_SYMBOL_GPL(pwm_apply_state);
+ 
++/**
++ * pwm_apply_state_atomic() - atomically apply a new state to a PWM device
++ * Can be used from atomic context.
++ * @pwm: PWM device
++ * @state: new state to apply
++ */
++int pwm_apply_state_atomic(struct pwm_device *pwm,
++			   const struct pwm_state *state)
++{
++	WARN_ONCE(!pwm->chip->ops->atomic,
++		  "sleeping pwm driver used in atomic context");
++
++	return pwm_apply_state_unchecked(pwm, state);
++}
++EXPORT_SYMBOL_GPL(pwm_apply_state_atomic);
++
+ /**
+  * pwm_capture() - capture and report a PWM signal
+  * @pwm: PWM device
+diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+index d7311614c846..96797a33d8c6 100644
+--- a/drivers/pwm/pwm-renesas-tpu.c
++++ b/drivers/pwm/pwm-renesas-tpu.c
+@@ -11,7 +11,6 @@
+ #include <linux/init.h>
+ #include <linux/ioport.h>
+ #include <linux/module.h>
+-#include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index d2f9f690a9c1..93f166ab03c1 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -267,6 +267,7 @@ struct pwm_capture {
+  * @get_state: get the current PWM state. This function is only
+  *	       called once per PWM device when the PWM chip is
+  *	       registered.
++ * @atomic: can the driver execute pwm_apply_state in atomic context
+  * @owner: helps prevent removal of modules exporting active PWMs
+  */
+ struct pwm_ops {
+@@ -278,6 +279,7 @@ struct pwm_ops {
+ 		     const struct pwm_state *state);
+ 	int (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 struct pwm_state *state);
++	bool atomic;
+ 	struct module *owner;
+ };
+ 
+@@ -310,6 +312,7 @@ struct pwm_chip {
+ #if IS_ENABLED(CONFIG_PWM)
+ /* PWM user APIs */
+ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state);
++int pwm_apply_state_atomic(struct pwm_device *pwm, const struct pwm_state *state);
+ int pwm_adjust_config(struct pwm_device *pwm);
+ 
+ /**
+@@ -380,6 +383,17 @@ static inline void pwm_disable(struct pwm_device *pwm)
+ 	pwm_apply_state(pwm, &state);
+ }
+ 
++/**
++ * pwm_is_atomic() - is pwm_apply_state_atomic() supported?
++ * @pwm: PWM device
++ *
++ * Returns: true pwm_apply_state_atomic() can be called from atomic context.
++ */
++static inline bool pwm_is_atomic(struct pwm_device *pwm)
++{
++	return pwm->chip->ops->atomic;
++}
++
+ /* PWM provider APIs */
+ int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
+ 		unsigned long timeout);
+@@ -408,16 +422,27 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+ 				       struct fwnode_handle *fwnode,
+ 				       const char *con_id);
+ #else
++static inline bool pwm_is_atomic(struct pwm_device *pwm)
++{
++	return false;
++}
++
+ static inline int pwm_apply_state(struct pwm_device *pwm,
+ 				  const struct pwm_state *state)
+ {
+ 	might_sleep();
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
++}
++
++static inline int pwm_apply_state_atomic(struct pwm_device *pwm,
++					 const struct pwm_state *state)
++{
++	return -EOPNOTSUPP;
+ }
+ 
+ static inline int pwm_adjust_config(struct pwm_device *pwm)
+ {
+-	return -ENOTSUPP;
++	return -EOPNOTSUPP;
+ }
+ 
+ static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
+-- 
+2.42.0
 
-(The first hunk is only cosmetic, the 2nd is the relevant)
-
-My branch on git.pengutronix.de is already fixed accordingly.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---5fryr6gtukrctuny
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUpHC0ACgkQj4D7WH0S
-/k44rAgAispC9lNxBriWHLuNr+CyOxhamEHulDoJkQhbNypIKb2dpnPoUzQefhj4
-UGkFE7dmZCrLgw7oE4U53hcBY17HjRxvuuedzi55A0WD6FJJxs8XWD9u+FxYiuPP
-Gv5uDwf7toPhPuS0SUdLvJHP8+D6k9V/vUUmP7JIKgnMwJy3iFVS/OxD+OSXkMcE
-Uh5X/NMonfDBEJwQheTiQKWMc0HfdBDw7TVnPKFG9kX+Tm03j+oiGpBlqUko7Fwz
-q5RxdsGwUJo/uPW63cPUaDLG1EjMTCZwaNC+u03K04Z1BdrbGEsjFIYWAmWypGgW
-UQw8bdbO6IuarMsGPULbMbmpGq2vtQ==
-=vwdz
------END PGP SIGNATURE-----
-
---5fryr6gtukrctuny--
