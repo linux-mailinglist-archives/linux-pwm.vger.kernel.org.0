@@ -2,147 +2,163 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E90E7C78D0
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Oct 2023 23:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D37B7C7DC3
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Oct 2023 08:35:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1442949AbjJLVvY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 12 Oct 2023 17:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43906 "EHLO
+        id S229730AbjJMGfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Oct 2023 02:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442945AbjJLVvW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 12 Oct 2023 17:51:22 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F09CBB;
-        Thu, 12 Oct 2023 14:51:20 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39CLbjch027956;
-        Thu, 12 Oct 2023 21:51:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=voUltIrLrhXdVJp9/yCwFFwFBu2KkCyxDDIWBrI4Xog=;
- b=HjSHOCagbHCB6bOReW+vqK+Dfm07myfSFl8yPtmClixpKCcx4C5UnnqZmJp4EkkrDlGk
- sDingmngYmPHq+uM3HBBqPVeQGzhUBBMSXXi3SA5X0kNnLJQP6XLfqhUZ1vUA3G+umcu
- gEnsitEU8Llg9JgShMHxB3a5DvlmHMEYr5M5u84mB7GEvxhxzAQTFiqgJF+aWHmqIvr2
- 9/U+wcedGEb8KGNxTmqgyc7htL3M+bz8iq1TCdvyJkUU1ehqhGC3hPkWpIqnJq0Xm8vL
- 1+bDS61NU97RlA6x7NV16IlgORC6blhN3ETupnnFsJrRxkKbilBOeheB+98R4nhkHEJx pQ== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tnsmq4h32-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Oct 2023 21:51:03 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39CLp1Wo011405
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Oct 2023 21:51:01 GMT
-Received: from [10.110.43.201] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 12 Oct
- 2023 14:50:59 -0700
-Message-ID: <a2781978-2081-f4cb-dfe3-0489860dab8e@quicinc.com>
-Date:   Thu, 12 Oct 2023 14:50:42 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
+        with ESMTP id S229644AbjJMGfk (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Oct 2023 02:35:40 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CB1C0
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 23:35:33 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9a6190af24aso289162366b.0
+        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 23:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1697178932; x=1697783732; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mw7d2rWqkx84mECPA0MX5FELEn+q0S5ND1l7U6MlW1M=;
+        b=fm4Dbls/0njpq32LVctJfLhPqWi0yJ2J3EF7WOVckfgZlax20krmmVv5gg2VZIZt8H
+         NhlzC3+gxZ2F6XK/5uapNx04onfXTOVBbcfWS0WW+lINoVpDBp+TI3u7ug5XFIKcbB+a
+         UKvJinKavIL30e8Os1gt2Bav1/RsUt6iMBb6p1zUx+w5bEYJmBu/LsSgW7HzEQBceEpp
+         odky8UsJHB1frVNKCUg8W9NBNp55gWD6j/JsaZt8dHP/qzvK6CqzdyeiGZk0D3cBBYPq
+         h5vwJWeCb/PR/u0o9aRa2ZQZ0Yqg68m774t9QkukPBLVRqBv8mRQ2v6HLJA2YRmUOfvW
+         4nkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697178932; x=1697783732;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mw7d2rWqkx84mECPA0MX5FELEn+q0S5ND1l7U6MlW1M=;
+        b=H4wtKWWmbMD7katK5GY0eWNUuVOziGxIaDMrvP6W3/x42a63K+x5hBAgYMM44XVUef
+         6fJ1Zbtbbezbn+u72yGyZFnE3pTwfW4w9eUStZhAlRlTwUrql8pSCQjcnVmkvKC2ysj0
+         GcCNPkXOE/MbRoU2AcQhXFS3TbdSH6W3LfQMHqCzgiJCDZ8A2f1cFTIbf1dOnUT7KHFG
+         RABICZxDHtJ/k/0Omm8tdRg+wPnsJl8sV5NzbPIyMWGxPu12YZQ90dlZ8Xo+jRxJAyyg
+         G+piTl5Y6W9b2+mqEXwBwKLEY6NhZncWcw0SiU4sMnqUR86KCrxNpS69ce6eMfPBidgi
+         nv1A==
+X-Gm-Message-State: AOJu0YwJXoTKZWqBrGEgivuzHq4f8AGh5Fgi9DzfN0tk/b+ZdeQ04bPV
+        +Z8fFK0lFwspkIG6z+/wqzAFOA==
+X-Google-Smtp-Source: AGHT+IGbjKov6XXZ6PjO42kk5Nimru0P7r6dHP1nYYD+Mxr/9oWhoDfATrLUq4GyB5DEQmuF+pYfpw==
+X-Received: by 2002:a17:906:20d8:b0:9b9:f990:c701 with SMTP id c24-20020a17090620d800b009b9f990c701mr17557436ejc.52.1697178932152;
+        Thu, 12 Oct 2023 23:35:32 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id u13-20020a1709060b0d00b009ad87d1be17sm11920164ejg.22.2023.10.12.23.35.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 23:35:31 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 13 Oct 2023 08:35:31 +0200
+Message-Id: <CW73PXH7OBDG.22PGA47PJR8T2@fairphone.com>
 Subject: Re: [PATCH v5 0/7] Add support for LUT PPG
-Content-Language: en-US
-To:     Luca Weiss <luca.weiss@fairphone.com>, <pavel@ucw.cz>,
+From:   "Luca Weiss" <luca.weiss@fairphone.com>
+To:     "Anjelique Melendez" <quic_amelende@quicinc.com>, <pavel@ucw.cz>,
         <lee@kernel.org>, <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
         <agross@kernel.org>, <andersson@kernel.org>
-CC:     <konrad.dybcio@linaro.org>, <u.kleine-koenig@pengutronix.de>,
+Cc:     <konrad.dybcio@linaro.org>, <u.kleine-koenig@pengutronix.de>,
         <quic_subbaram@quicinc.com>, <quic_gurus@quicinc.com>,
         <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-pwm@vger.kernel.org>, <kernel@quicinc.com>
+X-Mailer: aerc 0.15.2
 References: <20230929003901.15086-1-quic_amelende@quicinc.com>
  <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
-From:   Anjelique Melendez <quic_amelende@quicinc.com>
-In-Reply-To: <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PeOLq1QMggphqx9nLudVIdQ5iZgaUs-J
-X-Proofpoint-ORIG-GUID: PeOLq1QMggphqx9nLudVIdQ5iZgaUs-J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-12_14,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- mlxlogscore=999 lowpriorityscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 bulkscore=0 clxscore=1011 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310120183
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <a2781978-2081-f4cb-dfe3-0489860dab8e@quicinc.com>
+In-Reply-To: <a2781978-2081-f4cb-dfe3-0489860dab8e@quicinc.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu Oct 12, 2023 at 11:50 PM CEST, Anjelique Melendez wrote:
+>
+>
+> On 10/1/2023 7:15 AM, Luca Weiss wrote:
+> > On Fri Sep 29, 2023 at 2:38 AM CEST, Anjelique Melendez wrote:
+> >> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+> >> modules instead of LUT peripheral. This feature is called PPG.
+> >>
+> >> This change series adds support for PPG. Thanks!
+> [..]
+> >>
+> >> Tested-by: Luca Weiss <luca.weiss@fairphone.com> # sdm632-fairphone-fp=
+3 (pmi632)
+> >=20
+> > Hi Anjelique,
+> >=20
+> > Actually I've retested this now on PMI632 (and also realized that my
+> > previous tests weren't correct and wasn't actually using hw_pattern).
+> >=20
+> > Using the following commands (after boot) I'm expecting to get a
+> > 500ms on 500ms off blinking pattern between white (255 255 255) and off
+> > (0 0 0).
+> >=20
+> >   echo pattern > /sys/class/leds/rgb:status/trigger
+> >   echo -1 > /sys/class/leds/rgb:status/repeat
+> >=20
+> >   echo "255 255 255" > /sys/class/leds/rgb:status/multi_intensity
+> >   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_patter=
+n
+> >=20
+> > What I actually see is it blinking between cyan (0 255 255) and red (25=
+5
+> > 0 0).
+> > At some point after playing with many patterns I got it to actually
+> > cycle between white and off, but I couldn't reproduce this again (or I
+> > didn't try hard enough).
+> >=20
+> >=20
+> > But with this example it correctly blinks red on-off.
+> >=20
+> >   echo "255 0 0" > /sys/class/leds/rgb:status/multi_intensity
+> >   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_patter=
+n
+> >=20
+> > With "0 255 0" and "0 0 255" the other colors also work fine, it's just
+> > the combinations that seem somewhat broken.
+> >=20
+> > Regards
+> > Luca
+> >=20
+> >=20
+> Hi Luca,
+>
+> Thanks for testing again and the feedback!
+> Looks like for multicolor devices there is a small concurrency issue with
+> enabling pattern at the same time for all the led channels. This could be
+> why you observed your device blinking between red (255 0 0) and cyan (0 2=
+55 255),
+> instead of seeing all channels (255 255 255) blink.
+> The fix I'm planing to include in the next series is is to disable the mu=
+lticolor led
+> channels first, then configure all channels, and finally re-enable channe=
+ls
+> so that pattern is triggered at the same time for each all of the channel=
+s.
 
+Sounds reasonable I think!
 
-On 10/1/2023 7:15 AM, Luca Weiss wrote:
-> On Fri Sep 29, 2023 at 2:38 AM CEST, Anjelique Melendez wrote:
->> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
->> modules instead of LUT peripheral. This feature is called PPG.
->>
->> This change series adds support for PPG. Thanks!
-[..]
->>
->> Tested-by: Luca Weiss <luca.weiss@fairphone.com> # sdm632-fairphone-fp3 (pmi632)
-> 
-> Hi Anjelique,
-> 
-> Actually I've retested this now on PMI632 (and also realized that my
-> previous tests weren't correct and wasn't actually using hw_pattern).
-> 
-> Using the following commands (after boot) I'm expecting to get a
-> 500ms on 500ms off blinking pattern between white (255 255 255) and off
-> (0 0 0).
-> 
->   echo pattern > /sys/class/leds/rgb:status/trigger
->   echo -1 > /sys/class/leds/rgb:status/repeat
-> 
->   echo "255 255 255" > /sys/class/leds/rgb:status/multi_intensity
->   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
-> 
-> What I actually see is it blinking between cyan (0 255 255) and red (255
-> 0 0).
-> At some point after playing with many patterns I got it to actually
-> cycle between white and off, but I couldn't reproduce this again (or I
-> didn't try hard enough).
-> 
-> 
-> But with this example it correctly blinks red on-off.
-> 
->   echo "255 0 0" > /sys/class/leds/rgb:status/multi_intensity
->   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_pattern
-> 
-> With "0 255 0" and "0 0 255" the other colors also work fine, it's just
-> the combinations that seem somewhat broken.
-> 
-> Regards
-> Luca
-> 
-> 
-Hi Luca,
+>
+> I am currently testing with pm8350c device so if you are able to test nex=
+t series
+> on pmi632 it would be very appreciated!
 
-Thanks for testing again and the feedback!
-Looks like for multicolor devices there is a small concurrency issue with
-enabling pattern at the same time for all the led channels. This could be
-why you observed your device blinking between red (255 0 0) and cyan (0 255 255),
-instead of seeing all channels (255 255 255) blink.
-The fix I'm planing to include in the next series is is to disable the multicolor led
-channels first, then configure all channels, and finally re-enable channels
-so that pattern is triggered at the same time for each all of the channels.
+Will do, thanks for fixing it up!
 
-I am currently testing with pm8350c device so if you are able to test next series
-on pmi632 it would be very appreciated!
+Regards
+Luca
 
-Thanks,
-Anjelique
+>
+> Thanks,
+> Anjelique
+
