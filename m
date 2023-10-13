@@ -2,163 +2,104 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D37B7C7DC3
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Oct 2023 08:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7777C7C7E6B
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Oct 2023 09:12:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbjJMGfm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 13 Oct 2023 02:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        id S229872AbjJMHMq (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 13 Oct 2023 03:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjJMGfk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Oct 2023 02:35:40 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CB1C0
-        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 23:35:33 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9a6190af24aso289162366b.0
-        for <linux-pwm@vger.kernel.org>; Thu, 12 Oct 2023 23:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1697178932; x=1697783732; darn=vger.kernel.org;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mw7d2rWqkx84mECPA0MX5FELEn+q0S5ND1l7U6MlW1M=;
-        b=fm4Dbls/0njpq32LVctJfLhPqWi0yJ2J3EF7WOVckfgZlax20krmmVv5gg2VZIZt8H
-         NhlzC3+gxZ2F6XK/5uapNx04onfXTOVBbcfWS0WW+lINoVpDBp+TI3u7ug5XFIKcbB+a
-         UKvJinKavIL30e8Os1gt2Bav1/RsUt6iMBb6p1zUx+w5bEYJmBu/LsSgW7HzEQBceEpp
-         odky8UsJHB1frVNKCUg8W9NBNp55gWD6j/JsaZt8dHP/qzvK6CqzdyeiGZk0D3cBBYPq
-         h5vwJWeCb/PR/u0o9aRa2ZQZ0Yqg68m774t9QkukPBLVRqBv8mRQ2v6HLJA2YRmUOfvW
-         4nkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697178932; x=1697783732;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mw7d2rWqkx84mECPA0MX5FELEn+q0S5ND1l7U6MlW1M=;
-        b=H4wtKWWmbMD7katK5GY0eWNUuVOziGxIaDMrvP6W3/x42a63K+x5hBAgYMM44XVUef
-         6fJ1Zbtbbezbn+u72yGyZFnE3pTwfW4w9eUStZhAlRlTwUrql8pSCQjcnVmkvKC2ysj0
-         GcCNPkXOE/MbRoU2AcQhXFS3TbdSH6W3LfQMHqCzgiJCDZ8A2f1cFTIbf1dOnUT7KHFG
-         RABICZxDHtJ/k/0Omm8tdRg+wPnsJl8sV5NzbPIyMWGxPu12YZQ90dlZ8Xo+jRxJAyyg
-         G+piTl5Y6W9b2+mqEXwBwKLEY6NhZncWcw0SiU4sMnqUR86KCrxNpS69ce6eMfPBidgi
-         nv1A==
-X-Gm-Message-State: AOJu0YwJXoTKZWqBrGEgivuzHq4f8AGh5Fgi9DzfN0tk/b+ZdeQ04bPV
-        +Z8fFK0lFwspkIG6z+/wqzAFOA==
-X-Google-Smtp-Source: AGHT+IGbjKov6XXZ6PjO42kk5Nimru0P7r6dHP1nYYD+Mxr/9oWhoDfATrLUq4GyB5DEQmuF+pYfpw==
-X-Received: by 2002:a17:906:20d8:b0:9b9:f990:c701 with SMTP id c24-20020a17090620d800b009b9f990c701mr17557436ejc.52.1697178932152;
-        Thu, 12 Oct 2023 23:35:32 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id u13-20020a1709060b0d00b009ad87d1be17sm11920164ejg.22.2023.10.12.23.35.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 23:35:31 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 13 Oct 2023 08:35:31 +0200
-Message-Id: <CW73PXH7OBDG.22PGA47PJR8T2@fairphone.com>
-Subject: Re: [PATCH v5 0/7] Add support for LUT PPG
-From:   "Luca Weiss" <luca.weiss@fairphone.com>
-To:     "Anjelique Melendez" <quic_amelende@quicinc.com>, <pavel@ucw.cz>,
-        <lee@kernel.org>, <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>
-Cc:     <konrad.dybcio@linaro.org>, <u.kleine-koenig@pengutronix.de>,
-        <quic_subbaram@quicinc.com>, <quic_gurus@quicinc.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <kernel@quicinc.com>
-X-Mailer: aerc 0.15.2
-References: <20230929003901.15086-1-quic_amelende@quicinc.com>
- <CVX5ZUGU9BVE.2TA819U1AI6BZ@otso>
- <a2781978-2081-f4cb-dfe3-0489860dab8e@quicinc.com>
-In-Reply-To: <a2781978-2081-f4cb-dfe3-0489860dab8e@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229688AbjJMHMq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 13 Oct 2023 03:12:46 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42659A9
+        for <linux-pwm@vger.kernel.org>; Fri, 13 Oct 2023 00:12:44 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qrCLi-0006cS-Ag; Fri, 13 Oct 2023 09:12:42 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qrCLg-001LHW-Fe; Fri, 13 Oct 2023 09:12:40 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qrCLg-00FOqd-6A; Fri, 13 Oct 2023 09:12:40 +0200
+Date:   Fri, 13 Oct 2023 09:12:40 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] pwm: samsung: Document new member .channel in struct
+ samsung_pwm_chip
+Message-ID: <20231013071240.d4d5cnr25q4ezatv@pengutronix.de>
+References: <20231012210228.1009473-2-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ff4z2vkwr6lxehao"
+Content-Disposition: inline
+In-Reply-To: <20231012210228.1009473-2-u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu Oct 12, 2023 at 11:50 PM CEST, Anjelique Melendez wrote:
->
->
-> On 10/1/2023 7:15 AM, Luca Weiss wrote:
-> > On Fri Sep 29, 2023 at 2:38 AM CEST, Anjelique Melendez wrote:
-> >> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
-> >> modules instead of LUT peripheral. This feature is called PPG.
-> >>
-> >> This change series adds support for PPG. Thanks!
-> [..]
-> >>
-> >> Tested-by: Luca Weiss <luca.weiss@fairphone.com> # sdm632-fairphone-fp=
-3 (pmi632)
-> >=20
-> > Hi Anjelique,
-> >=20
-> > Actually I've retested this now on PMI632 (and also realized that my
-> > previous tests weren't correct and wasn't actually using hw_pattern).
-> >=20
-> > Using the following commands (after boot) I'm expecting to get a
-> > 500ms on 500ms off blinking pattern between white (255 255 255) and off
-> > (0 0 0).
-> >=20
-> >   echo pattern > /sys/class/leds/rgb:status/trigger
-> >   echo -1 > /sys/class/leds/rgb:status/repeat
-> >=20
-> >   echo "255 255 255" > /sys/class/leds/rgb:status/multi_intensity
-> >   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_patter=
-n
-> >=20
-> > What I actually see is it blinking between cyan (0 255 255) and red (25=
-5
-> > 0 0).
-> > At some point after playing with many patterns I got it to actually
-> > cycle between white and off, but I couldn't reproduce this again (or I
-> > didn't try hard enough).
-> >=20
-> >=20
-> > But with this example it correctly blinks red on-off.
-> >=20
-> >   echo "255 0 0" > /sys/class/leds/rgb:status/multi_intensity
-> >   echo "255 500 255 0 0 500 0 0" > /sys/class/leds/rgb:status/hw_patter=
-n
-> >=20
-> > With "0 255 0" and "0 0 255" the other colors also work fine, it's just
-> > the combinations that seem somewhat broken.
-> >=20
-> > Regards
-> > Luca
-> >=20
-> >=20
-> Hi Luca,
->
-> Thanks for testing again and the feedback!
-> Looks like for multicolor devices there is a small concurrency issue with
-> enabling pattern at the same time for all the led channels. This could be
-> why you observed your device blinking between red (255 0 0) and cyan (0 2=
-55 255),
-> instead of seeing all channels (255 255 255) blink.
-> The fix I'm planing to include in the next series is is to disable the mu=
-lticolor led
-> channels first, then configure all channels, and finally re-enable channe=
-ls
-> so that pattern is triggered at the same time for each all of the channel=
-s.
 
-Sounds reasonable I think!
+--ff4z2vkwr6lxehao
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> I am currently testing with pm8350c device so if you are able to test nex=
-t series
-> on pmi632 it would be very appreciated!
+Hello Thierry,
 
-Will do, thanks for fixing it up!
+On Thu, Oct 12, 2023 at 11:02:29PM +0200, Uwe Kleine-K=F6nig wrote:
+> My earlier commit reworking how driver data is tracked added a new
+> member to struct samsung_pwm_chip but failed to add matching
+> documentation. Make up leeway.
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202310130404.uQ33q5Dk-lkp@i=
+ntel.com/
+> Fixes: 4c9548d24c0d ("pwm: samsung: Put per-channel data into driver data=
+")
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Regards
-Luca
+I forgot to mention: Feel free to squash this into 4c9548d24c0d. I guess
+you have to rewrite your for-next anyhow as the commits you took from my
+PR and rebased on your for-next lack your S-o-b.
 
->
-> Thanks,
-> Anjelique
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ff4z2vkwr6lxehao
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUo7ecACgkQj4D7WH0S
+/k5ZuQf+KolNeWfl7PqqToTN0zx7clRq0BvbqOyuVGvxoRUS49GUO3Gck4xNU+pJ
++ff3Ba9LrUbaIi4zt21sWc7Fv2LSGGCtkf99486xA18aJ/FNeLk+MXGnS/jNNB5Q
+3y3ZhOUIcdV4T3SrCkYdL0/14jILGlDFINw/18xEYVrFg+drkRbRQinDkOIbW3Ep
+vRAeVy9IiCyR/MUDVMSvkZXUacXkyBvfCxYrDW59DzyPVElj9Hdz7oMGIsl8wua/
+Lm9cMQ+K5YrUGSNJWLnTTy2Ycykyo75iU89J0wyIaaM6NUD03K4RsOfmFv7VuGej
+1lD5813SS/iWPwSv6SJ3Yr3B1BuDuQ==
+=o57V
+-----END PGP SIGNATURE-----
+
+--ff4z2vkwr6lxehao--
