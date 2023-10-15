@@ -2,64 +2,76 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69B8A7C9552
-	for <lists+linux-pwm@lfdr.de>; Sat, 14 Oct 2023 18:17:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 444537C982C
+	for <lists+linux-pwm@lfdr.de>; Sun, 15 Oct 2023 08:31:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232238AbjJNQRa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 14 Oct 2023 12:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
+        id S229692AbjJOGbv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 15 Oct 2023 02:31:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbjJNQR3 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 14 Oct 2023 12:17:29 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2BCA2
-        for <linux-pwm@vger.kernel.org>; Sat, 14 Oct 2023 09:17:27 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrhKP-0006TD-Pg; Sat, 14 Oct 2023 18:17:25 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrhKN-001f0g-6l; Sat, 14 Oct 2023 18:17:23 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qrhKM-00GJMK-TG; Sat, 14 Oct 2023 18:17:22 +0200
-Date:   Sat, 14 Oct 2023 18:17:21 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     linux-pwm@vger.kernel.org, linux-doc@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Wolfram Sang <wsa@kernel.org>,
+        with ESMTP id S229554AbjJOGbu (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 15 Oct 2023 02:31:50 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0386D8;
+        Sat, 14 Oct 2023 23:31:47 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5384975e34cso6153241a12.0;
+        Sat, 14 Oct 2023 23:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697351506; x=1697956306; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V7BjF49jhYcIOnOxtIyZhIJ7GyT/yGc0vCgKZxiCb78=;
+        b=SgH8L9GWA7hmfllNyi+XUiEhSvIC1AdQ8xyKp4CO/jQ96TtlsDE8dLLZ+196o3xIyc
+         P80H3Jhz1DggDNHTJBC2KkxQVNAZyeV52TNT0++kjubmHUJbx7Qf3ZwxCSTI0wEZwi1v
+         K1g9FJDCvI05SV1MqMajtfeXgaIdWCnFCD8WApw1AjZ5aTi8DpbuNUUwyhRIHb0AiRZ4
+         vpAhRMf0xxPXlD2muPxG+/GZcC0uk+OLEh7tr/QLhU5UdsDzZ+v7Lyuc2EjU6drO7ioU
+         4lNs4bjOYW7hGFHs6G4kKDiAYKdzPN6HBOc7+Ki0BXaXBcWipt6X+AlI6wptnb5JMBrd
+         BRDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697351506; x=1697956306;
+        h=content-transfer-encoding:content-language:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V7BjF49jhYcIOnOxtIyZhIJ7GyT/yGc0vCgKZxiCb78=;
+        b=R2SQ+YY7BaGv+Hb9FAGS+S9uFmNMv2w6i4pmisIvc6XuWLUyKVshRJntyoEF8OtoNf
+         gHLW2JYswrSCTeGxroCE6chb7D3KGsGkTYkRoPUnemjj2hLwuqgWYxF2x/yD+TuztZJ/
+         Nn3nzW8YpukNhAhjyLnWLBRLwbHslV+yHel++aCD8uwk1ROSl44IJJNYOOnruOBippCr
+         S5kluxSgR8SJXmRiX9UeYki8S1Me0lEwL3jW2M2kew6d63HDk0Hbms+eu25ezz3qAs0Z
+         Iy48h+2IxWmEr7UpJ1Bm7hBVGsbcKlb6oPQ01MYH3nMXDFGBGTESE1zHe/bDUoJyRCx8
+         hb0A==
+X-Gm-Message-State: AOJu0YyZKvJSZuNC0gZBLo7SivZ0zUzcOTfPn9ii03mcBtliyCO47RGR
+        v5Hxw5w4yCBHCl9wpg9BPMTOceusQvo=
+X-Google-Smtp-Source: AGHT+IG5GU6Vbn9iHhOSKlxeHGHBMvSeePpqmhHFbwMiiUjBMcRLHfjQuUnfIsI+FpGNZ7dQECfxhQ==
+X-Received: by 2002:a05:6402:354c:b0:53e:5a90:e57 with SMTP id f12-20020a056402354c00b0053e5a900e57mr4820970edd.37.1697351506027;
+        Sat, 14 Oct 2023 23:31:46 -0700 (PDT)
+Received: from [192.168.1.10] ([95.43.220.235])
+        by smtp.googlemail.com with ESMTPSA id cx16-20020a05640222b000b0053dbb214d96sm5714642edb.13.2023.10.14.23.31.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 14 Oct 2023 23:31:45 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] media: pwm-ir-tx: trigger edges from hrtimer
+ interrupt context
+To:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        James Clark <james.clark@arm.com>, kernel@pengutronix.de,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH 01/18] pwm: Provide devm_pwmchip_alloc() function
-Message-ID: <20231014161721.f4iqyroddkcyoefo@pengutronix.de>
-References: <20230718181849.3947851-1-u.kleine-koenig@pengutronix.de>
- <20230718181849.3947851-2-u.kleine-koenig@pengutronix.de>
- <ZLeX4UbFaY592HIa@orome>
- <20230725211004.peqxxb4y3j62gmnp@pengutronix.de>
- <20231010080508.7ssnroaefyaeeedd@pengutronix.de>
- <CAGETcx8CNGLnHdWrDpdm4Sx5cFcFFBT2bZKJzNZttAEknFK4Cw@mail.gmail.com>
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+References: <cover.1697193646.git.sean@mess.org>
+ <1560b474f7d426bc77100665c14c3a29c3af3e75.1697193646.git.sean@mess.org>
+From:   Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Message-ID: <e47d4d33-4689-915d-3169-5c122075df05@gmail.com>
+Date:   Sun, 15 Oct 2023 09:31:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Firefox/60.0 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="56mmcz5vtc7432bh"
-Content-Disposition: inline
-In-Reply-To: <CAGETcx8CNGLnHdWrDpdm4Sx5cFcFFBT2bZKJzNZttAEknFK4Cw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <1560b474f7d426bc77100665c14c3a29c3af3e75.1697193646.git.sean@mess.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,207 +79,144 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---56mmcz5vtc7432bh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 13, 2023 at 02:42:20PM -0700, Saravana Kannan wrote:
-> On Tue, Oct 10, 2023 at 1:05=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > Hello Saravana,
-> >
-> > you were pointed out to me as the expert for device links. I found a
-> > problem with these.
-> >
-> > On Tue, Jul 25, 2023 at 11:10:04PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> > > Today I managed to trigger the problem I intend to address with this
-> > > series. My machine to test this on is an stm32mp157. To be able to
-> > > trigger the problem reliably I applied the following patches on top of
-> > > v6.5-rc1:
-> > >
-> > >  - pwm: stm32: Don't modify HW state in .remove() callback
-> > >    This is a cleanup that I already sent out.
-> > >    https://lore.kernel.org/r/20230713155142.2454010-2-u.kleine-koenig=
-@pengutronix.de
-> > >    The purpose for reproducing the problem is to not trigger further
-> > >    calls to the apply callback.
-> > >
-> > >  - The following patch:
-> > >
-> > > diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> > > index 687967d3265f..c7fc02b0fa3c 100644
-> > > --- a/drivers/pwm/pwm-stm32.c
-> > > +++ b/drivers/pwm/pwm-stm32.c
-> > > @@ -451,6 +451,10 @@ static int stm32_pwm_apply(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> > >       struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
-> > >       int ret;
-> > >
-> > > +     dev_info(chip->dev, "%s:%d\n", __func__, __LINE__);
-> > > +     msleep(5000);
-> > > +     dev_info(chip->dev, "%s:%d\n", __func__, __LINE__);
-> > > +
-> > >       enabled =3D pwm->state.enabled;
-> > >
-> > >       if (enabled && !state->enabled) {
-> > > @@ -650,7 +654,11 @@ static void stm32_pwm_remove(struct platform_dev=
-ice *pdev)
-> > >  {
-> > >       struct stm32_pwm *priv =3D platform_get_drvdata(pdev);
-> > >
-> > > +     dev_info(&pdev->dev, "%s:%d\n", __func__, __LINE__);
-> > >       pwmchip_remove(&priv->chip);
-> > > +     dev_info(&pdev->dev, "%s:%d\n", __func__, __LINE__);
-> > > +
-> > > +     priv->regmap =3D NULL;
-> > >  }
-> > >
-> > >  static int __maybe_unused stm32_pwm_suspend(struct device *dev)
-> > >
-> > > The first hunk is only there to widen the race window. The second is =
-to
-> > > give some diagnostics and make stm32_pwm_apply() crash if it continues
-> > > to run after the msleep. (Without it it didn't crash reproducibly, do=
-n't
-> > > understand why. *shrug*)
-> > >
-> > > The device tree contains a pwm-fan device making use of one of the PW=
-Ms.
-> > >
-> > > Now I do the following:
-> > >
-> > >       echo fan > /sys/bus/platform/drivers/pwm-fan/unbind & sleep 1; =
-echo 40007000.timer:pwm > /sys/bus/platform/drivers/stm32-pwm/unbind
-> > >
-> > > Unbinding the fan device has two effects:
-> > >
-> > >  - The device link between fan and pwm looses its property to unbind =
-fan
-> > >    when pwm gets unbound.
-> > >    (Its .status changes from DL_STATE_ACTIVE to DL_STATE_AVAILABLE)
-> > >  - It calls pwm_fan_cleanup() which triggers a call to
-> > >    pwm_apply_state().
-> > >
-> > > So when the pwm device gets unbound the first thread is sleeping in
-> > > stm32_pwm_apply(). The driver calls pwmchip_remove() and sets
-> > > priv->regmap to NULL. Then a few seconds later the first thread wakes=
- up
-> > > in stm32_pwm_apply() with the chip freed and priv->regmap =3D NULL. B=
-ang!
-> > >
-> > > This looks as follows:
-> > >
-> > > root@crown:~# echo fan > /sys/bus/platform/drivers/pwm-fan/unbind & s=
-leep 1; echo 40007000.timer:pwm > /sys/bus/platform/drivers/stm32-pwm/unbind
-> > > [  187.182113] stm32-pwm 40007000.timer:pwm: stm32_pwm_apply:454
-> > > [  188.164769] stm32-pwm 40007000.timer:pwm: stm32_pwm_remove:657
-> > > [  188.184555] stm32-pwm 40007000.timer:pwm: stm32_pwm_remove:659
-> > > root@crown:~# [  192.236423] platform 40007000.timer:pwm: stm32_pwm_a=
-pply:456
-> > > [  192.240727] 8<--- cut here ---
-> > > [  192.243759] Unable to handle kernel NULL pointer dereference at vi=
-rtual address 0000001c when read
-> > > ...
-> > >
-> > > Even without the crash you can see that stm32_pwm_apply() is still
-> > > running after pwmchip_remove() completed.
-> > >
-> > > I'm unsure if the device link could be improved here to ensure that t=
-he
-> > > fan is completely unbound even if it started unbinding already before
-> > > the pwm device gets unbound. (And if it could, would this fit the dev=
-ice
-> > > links purpose and so be a sensible improvement?)
-> >
-> > While I think that there is something to be done in the pwm core that
-> > this doesn't explode (i.e. do proper lifetime tracking such that a
-> > pwm_chip doesn't disappear while still being used---and I'm working on
-> > that) I expected that the device links between pwm consumer and provider
-> > would prevent the above described oops, too. But somehow the fan already
-> > going away (but still using the PWM) when the PWM is unbound, results in
-> > the PWM disappearing before the fan is completely gone.
-> >
-> > Is this expected, or a problem that can (and should?) be fixed?
->=20
-> I didn't read your full series, but I read this email. With what's in
-> this email, the problem seems to be in the driver or the pwm
-> framework. The pwm driver/framework can't tell the driver core that
-> you successfully unbound (returning from .remove()) before you have
-> finish all your ongoing transactions with the device. If your
-> "apply()" is still running, you need to make sure it's complete before
-> .remove() does any resource releasing/clean up.
->=20
-> Also, how is the consumer driver's .remove() succeeding if it has an
-> ongoing pwm call()?
+On 13.10.23 г. 13:46 ч., Sean Young wrote:
+> This makes the driver much more precise.
+> 
+> Signed-off-by: Sean Young <sean@mess.org>
+> ---
+>   drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++++++++--
+>   1 file changed, 76 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
+> index c5f37c03af9c..3e801fa8ee2c 100644
+> --- a/drivers/media/rc/pwm-ir-tx.c
+> +++ b/drivers/media/rc/pwm-ir-tx.c
+> @@ -10,6 +10,8 @@
+>   #include <linux/slab.h>
+>   #include <linux/of.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/hrtimer.h>
+> +#include <linux/completion.h>
+>   #include <media/rc-core.h>
+>   
+>   #define DRIVER_NAME	"pwm-ir-tx"
+> @@ -17,8 +19,14 @@
+>   
+>   struct pwm_ir {
+>   	struct pwm_device *pwm;
+> -	unsigned int carrier;
+> -	unsigned int duty_cycle;
+> +	struct hrtimer timer;
+> +	struct completion completion;
 
-The thing that works fine and as expected is:
+what about 'struct completion tx_done'?
 
- - trigger unbind of PWM device via sysfs
+> +	struct pwm_state *state;
+> +	uint carrier;
+> +	uint duty_cycle;
 
-Because there is a device link PWM provider -> pwm consumer (fan), the
-fan is removed and once its gone (and not earlier), the PWM gets unbound.
+With my c++ developer hat on, I think either 'u32' or 'unsigned int' is 
+more proper type for carrier and duty_cycle. Both s_tx_duty_cycle and 
+s_tx_carrier are declared with second parameter of type u32, maybe 
+that's what have to be used all over the place if you are to change from 
+'unsigned int'. But better leave as it is, pwm_set_relative_duty_cycle() 
+takes 'unsigned int' anyway.
 
-The failing sequence is:
+> +	uint *txbuf;
+> +	uint txbuf_len;
+> +	uint txbuf_index;
 
- - trigger unbind of fan device in userspace thread A via sysfs. The
-   fan's remove callback blocks for 5s in pwm_apply_state() and so
-   .remove() doesn't complete yet.
+OTOH, it is (*tx_ir)(struct rc_dev *dev, unsigned *txbuf, unsigned n), 
+so maybe you should use 'unsigned' or 'unsigned int' for those.
 
- - a second later: trigger unbind of PWM device via sysfs in thread B.
-   As before I'd expect that the device link results in waiting for the
-   fan to be removed completely, but the PWM is removed immediately.
+I know at the end all those will be compiled to same type, but still :)
 
- - pwm_apply_state's sleep completes (in thread B) and operates on freed
-   resources =3D> bang!
-
-> This all sounds like insufficient locking and
-> critical region protection in both the consumer and supplier.
-
-My (and I think also Thierry's) expectation was, that the device link
-provides the needed synchronisation. But it doesn't as it doesn't block
-the PWM provider going away until the fan is completely gone.
-
-> Device links can't do anything here because you are giving it wrong
-> info -- that the unbind was successful before it actually is.
-
-The fan's unbind is ongoing, but not complete yet and I'd expect that
-the device link blocks unbinding the PWM until the fan is completely
-gone. So I think there is no wrong information.
-
-> Device links will and can make sure that the consumer is unbound
-> successfully before the unbind is called on the supplier. And it looks
-> like that's still true here.
-
-I hope you understood the situation better now and see the problem we
-have.
-
-The problem is fixable in the pwm framework (and I'm working on that),
-but I think there is also something to improve around devicelink
-handling.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---56mmcz5vtc7432bh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUqvxAACgkQj4D7WH0S
-/k6APgf/XzNWco1nZBdD6GZf46Y8QAk5WhDNtaTcX6PONOjKeZW3qmiyaoHPIuZA
-x7zNN9F5j20txPoQwSIM6rsI4r8ZUbRqKRJFOzvtZgSsDL/LUHXYH7WvJBUDEuem
-k8VHzw7NHAXhVYsGn8CFNR657PzANV2Rq5ttuHMI8FGLd/5/UmlUA7jG9RwDcPB7
-eYODY/pRMUkom8PIxXC43DE2i53iOV6vQSBFFEjegSEocdMuVZYpTqp8f3SgbVyM
-t0Z+iNUMoEHhF9oRWwP+XfCgCxHUaqrTGc4aoGYLM2Hf2ewtDe7XRFUad8Qj7pzZ
-vsKLiu8G/EOQmRt3hTenqUXA4ErZOw==
-=mlq/
------END PGP SIGNATURE-----
-
---56mmcz5vtc7432bh--
+>   };
+>   
+>   static const struct of_device_id pwm_ir_of_match[] = {
+> @@ -82,6 +90,62 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
+>   	return count;
+>   }
+>   
+> +static int pwm_ir_tx_atomic(struct rc_dev *dev, unsigned int *txbuf,
+> +			    unsigned int count)
+> +{
+> +	struct pwm_ir *pwm_ir = dev->priv;
+> +	struct pwm_device *pwm = pwm_ir->pwm;
+> +	struct pwm_state state;
+> +
+> +	pwm_init_state(pwm, &state);
+> +
+> +	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
+> +	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
+> +
+> +	pwm_ir->txbuf = txbuf;
+> +	pwm_ir->txbuf_len = count;
+> +	pwm_ir->txbuf_index = 0;
+> +	pwm_ir->state = &state;
+> +
+> +	hrtimer_start(&pwm_ir->timer, 0, HRTIMER_MODE_REL);
+> +
+> +	wait_for_completion(&pwm_ir->completion);
+> +
+> +	return count;
+> +}
+> +
+> +static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
+> +{
+> +	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
+> +	ktime_t now;
+> +
+> +	/*
+> +	 * If we happen to hit an odd latency spike, loop through the
+> +	 * pulses until we catch up.
+> +	 */
+> +	do {
+> +		u64 ns;
+> +
+> +		pwm_ir->state->enabled = !(pwm_ir->txbuf_index % 2);
+> +		pwm_apply_state_atomic(pwm_ir->pwm, pwm_ir->state);
+> +
+> +		if (pwm_ir->txbuf_index >= pwm_ir->txbuf_len) {
+> +			complete(&pwm_ir->completion);
+> +
+> +			return HRTIMER_NORESTART;
+> +		}
+> +
+> +		ns = US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
+> +		hrtimer_add_expires_ns(timer, ns);
+> +
+> +		pwm_ir->txbuf_index++;
+> +
+> +		now = timer->base->get_time();
+> +	} while (hrtimer_get_expires_tv64(timer) < now);
+> +
+> +	return HRTIMER_RESTART;
+> +}
+> +
+>   static int pwm_ir_probe(struct platform_device *pdev)
+>   {
+>   	struct pwm_ir *pwm_ir;
+> @@ -103,10 +167,19 @@ static int pwm_ir_probe(struct platform_device *pdev)
+>   	if (!rcdev)
+>   		return -ENOMEM;
+>   
+> +	if (pwm_is_atomic(pwm_ir->pwm)) {
+> +		init_completion(&pwm_ir->completion);
+> +		hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> +		pwm_ir->timer.function = pwm_ir_timer;
+> +		rcdev->tx_ir = pwm_ir_tx_atomic;
+> +	} else {
+> +		dev_info(&pdev->dev, "tx will not be accurate as pwm device does not support atomic mode");
+> +		rcdev->tx_ir = pwm_ir_tx;
+> +	}
+> +
+>   	rcdev->priv = pwm_ir;
+>   	rcdev->driver_name = DRIVER_NAME;
+>   	rcdev->device_name = DEVICE_NAME;
+> -	rcdev->tx_ir = pwm_ir_tx;
+>   	rcdev->s_tx_duty_cycle = pwm_ir_set_duty_cycle;
+>   	rcdev->s_tx_carrier = pwm_ir_set_carrier;
+>   
+> 
