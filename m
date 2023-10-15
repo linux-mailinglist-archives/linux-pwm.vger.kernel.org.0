@@ -2,76 +2,92 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 444537C982C
-	for <lists+linux-pwm@lfdr.de>; Sun, 15 Oct 2023 08:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DADE37C9BD5
+	for <lists+linux-pwm@lfdr.de>; Sun, 15 Oct 2023 23:18:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjJOGbv (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 15 Oct 2023 02:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51120 "EHLO
+        id S230254AbjJOVSQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 15 Oct 2023 17:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbjJOGbu (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 15 Oct 2023 02:31:50 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0386D8;
-        Sat, 14 Oct 2023 23:31:47 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5384975e34cso6153241a12.0;
-        Sat, 14 Oct 2023 23:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697351506; x=1697956306; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V7BjF49jhYcIOnOxtIyZhIJ7GyT/yGc0vCgKZxiCb78=;
-        b=SgH8L9GWA7hmfllNyi+XUiEhSvIC1AdQ8xyKp4CO/jQ96TtlsDE8dLLZ+196o3xIyc
-         P80H3Jhz1DggDNHTJBC2KkxQVNAZyeV52TNT0++kjubmHUJbx7Qf3ZwxCSTI0wEZwi1v
-         K1g9FJDCvI05SV1MqMajtfeXgaIdWCnFCD8WApw1AjZ5aTi8DpbuNUUwyhRIHb0AiRZ4
-         vpAhRMf0xxPXlD2muPxG+/GZcC0uk+OLEh7tr/QLhU5UdsDzZ+v7Lyuc2EjU6drO7ioU
-         4lNs4bjOYW7hGFHs6G4kKDiAYKdzPN6HBOc7+Ki0BXaXBcWipt6X+AlI6wptnb5JMBrd
-         BRDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697351506; x=1697956306;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V7BjF49jhYcIOnOxtIyZhIJ7GyT/yGc0vCgKZxiCb78=;
-        b=R2SQ+YY7BaGv+Hb9FAGS+S9uFmNMv2w6i4pmisIvc6XuWLUyKVshRJntyoEF8OtoNf
-         gHLW2JYswrSCTeGxroCE6chb7D3KGsGkTYkRoPUnemjj2hLwuqgWYxF2x/yD+TuztZJ/
-         Nn3nzW8YpukNhAhjyLnWLBRLwbHslV+yHel++aCD8uwk1ROSl44IJJNYOOnruOBippCr
-         S5kluxSgR8SJXmRiX9UeYki8S1Me0lEwL3jW2M2kew6d63HDk0Hbms+eu25ezz3qAs0Z
-         Iy48h+2IxWmEr7UpJ1Bm7hBVGsbcKlb6oPQ01MYH3nMXDFGBGTESE1zHe/bDUoJyRCx8
-         hb0A==
-X-Gm-Message-State: AOJu0YyZKvJSZuNC0gZBLo7SivZ0zUzcOTfPn9ii03mcBtliyCO47RGR
-        v5Hxw5w4yCBHCl9wpg9BPMTOceusQvo=
-X-Google-Smtp-Source: AGHT+IG5GU6Vbn9iHhOSKlxeHGHBMvSeePpqmhHFbwMiiUjBMcRLHfjQuUnfIsI+FpGNZ7dQECfxhQ==
-X-Received: by 2002:a05:6402:354c:b0:53e:5a90:e57 with SMTP id f12-20020a056402354c00b0053e5a900e57mr4820970edd.37.1697351506027;
-        Sat, 14 Oct 2023 23:31:46 -0700 (PDT)
-Received: from [192.168.1.10] ([95.43.220.235])
-        by smtp.googlemail.com with ESMTPSA id cx16-20020a05640222b000b0053dbb214d96sm5714642edb.13.2023.10.14.23.31.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Oct 2023 23:31:45 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] media: pwm-ir-tx: trigger edges from hrtimer
- interrupt context
-To:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        with ESMTP id S229500AbjJOVSP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 15 Oct 2023 17:18:15 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429C0A1;
+        Sun, 15 Oct 2023 14:18:11 -0700 (PDT)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 80B0EC0004;
+        Sun, 15 Oct 2023 21:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1697404689;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QyLwk8RWeHwb+iTYV4j14/CAsO9UnmgTLhIoR7pcM84=;
+        b=G5I8ztJvdFI8tTwSCy0AWY+6MRhNlKLte1yNV4fIGQl6O23J6Xdoh0CefROrNByOpZhwE7
+        P/dmdthsO5WAs8rqcbBfrDUN9cugU7l4OxjWmfddhyL0LuZ/a6CfmZiXNmu06TC7W2khE9
+        NDZu0i9NIxBjr696iBip4sRRM3d0VMBYV0oc5glex8E5b5g9pnVjfW5fIkCPQERxPzL1Jd
+        mjqglreUfQeV1UDlGgRG/+b2MG2/c1Vo/UDOnu2p9/qVGfq8Q3Iz2g50VMtUD0J76grZyh
+        DkuCxT22BotwyKZelbq33dd3q4OFLHJ92smEnKVwc5a4qUfDVLMQmLsddUpmAw==
+Date:   Sun, 15 Oct 2023 23:17:56 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <cover.1697193646.git.sean@mess.org>
- <1560b474f7d426bc77100665c14c3a29c3af3e75.1697193646.git.sean@mess.org>
-From:   Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Message-ID: <e47d4d33-4689-915d-3169-5c122075df05@gmail.com>
-Date:   Sun, 15 Oct 2023 09:31:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Firefox/60.0 Thunderbird/60.6.1
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: (subset) [PATCH v4 00/42] ep93xx device tree conversion
+Message-ID: <169740466288.180093.13375010968334465004.b4-ty@bootlin.com>
+References: <20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me>
 MIME-Version: 1.0
-In-Reply-To: <1560b474f7d426bc77100665c14c3a29c3af3e75.1697193646.git.sean@mess.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230915-ep93xx-v4-0-a1d779dcec10@maquefel.me>
+X-GND-Sasl: alexandre.belloni@bootlin.com
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -79,144 +95,30 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-
-On 13.10.23 г. 13:46 ч., Sean Young wrote:
-> This makes the driver much more precise.
+On Fri, 15 Sep 2023 11:10:42 +0300, Nikita Shubin wrote:
+> This series aims to convert ep93xx from platform to full device tree support.
 > 
-> Signed-off-by: Sean Young <sean@mess.org>
-> ---
->   drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++++++++--
->   1 file changed, 76 insertions(+), 3 deletions(-)
+> The main goal is to receive ACK's to take it via Arnd's arm-soc branch.
 > 
-> diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-> index c5f37c03af9c..3e801fa8ee2c 100644
-> --- a/drivers/media/rc/pwm-ir-tx.c
-> +++ b/drivers/media/rc/pwm-ir-tx.c
-> @@ -10,6 +10,8 @@
->   #include <linux/slab.h>
->   #include <linux/of.h>
->   #include <linux/platform_device.h>
-> +#include <linux/hrtimer.h>
-> +#include <linux/completion.h>
->   #include <media/rc-core.h>
->   
->   #define DRIVER_NAME	"pwm-ir-tx"
-> @@ -17,8 +19,14 @@
->   
->   struct pwm_ir {
->   	struct pwm_device *pwm;
-> -	unsigned int carrier;
-> -	unsigned int duty_cycle;
-> +	struct hrtimer timer;
-> +	struct completion completion;
-
-what about 'struct completion tx_done'?
-
-> +	struct pwm_state *state;
-> +	uint carrier;
-> +	uint duty_cycle;
-
-With my c++ developer hat on, I think either 'u32' or 'unsigned int' is 
-more proper type for carrier and duty_cycle. Both s_tx_duty_cycle and 
-s_tx_carrier are declared with second parameter of type u32, maybe 
-that's what have to be used all over the place if you are to change from 
-'unsigned int'. But better leave as it is, pwm_set_relative_duty_cycle() 
-takes 'unsigned int' anyway.
-
-> +	uint *txbuf;
-> +	uint txbuf_len;
-> +	uint txbuf_index;
-
-OTOH, it is (*tx_ir)(struct rc_dev *dev, unsigned *txbuf, unsigned n), 
-so maybe you should use 'unsigned' or 'unsigned int' for those.
-
-I know at the end all those will be compiled to same type, but still :)
-
->   };
->   
->   static const struct of_device_id pwm_ir_of_match[] = {
-> @@ -82,6 +90,62 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
->   	return count;
->   }
->   
-> +static int pwm_ir_tx_atomic(struct rc_dev *dev, unsigned int *txbuf,
-> +			    unsigned int count)
-> +{
-> +	struct pwm_ir *pwm_ir = dev->priv;
-> +	struct pwm_device *pwm = pwm_ir->pwm;
-> +	struct pwm_state state;
-> +
-> +	pwm_init_state(pwm, &state);
-> +
-> +	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
-> +	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
-> +
-> +	pwm_ir->txbuf = txbuf;
-> +	pwm_ir->txbuf_len = count;
-> +	pwm_ir->txbuf_index = 0;
-> +	pwm_ir->state = &state;
-> +
-> +	hrtimer_start(&pwm_ir->timer, 0, HRTIMER_MODE_REL);
-> +
-> +	wait_for_completion(&pwm_ir->completion);
-> +
-> +	return count;
-> +}
-> +
-> +static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
-> +{
-> +	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
-> +	ktime_t now;
-> +
-> +	/*
-> +	 * If we happen to hit an odd latency spike, loop through the
-> +	 * pulses until we catch up.
-> +	 */
-> +	do {
-> +		u64 ns;
-> +
-> +		pwm_ir->state->enabled = !(pwm_ir->txbuf_index % 2);
-> +		pwm_apply_state_atomic(pwm_ir->pwm, pwm_ir->state);
-> +
-> +		if (pwm_ir->txbuf_index >= pwm_ir->txbuf_len) {
-> +			complete(&pwm_ir->completion);
-> +
-> +			return HRTIMER_NORESTART;
-> +		}
-> +
-> +		ns = US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
-> +		hrtimer_add_expires_ns(timer, ns);
-> +
-> +		pwm_ir->txbuf_index++;
-> +
-> +		now = timer->base->get_time();
-> +	} while (hrtimer_get_expires_tv64(timer) < now);
-> +
-> +	return HRTIMER_RESTART;
-> +}
-> +
->   static int pwm_ir_probe(struct platform_device *pdev)
->   {
->   	struct pwm_ir *pwm_ir;
-> @@ -103,10 +167,19 @@ static int pwm_ir_probe(struct platform_device *pdev)
->   	if (!rcdev)
->   		return -ENOMEM;
->   
-> +	if (pwm_is_atomic(pwm_ir->pwm)) {
-> +		init_completion(&pwm_ir->completion);
-> +		hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> +		pwm_ir->timer.function = pwm_ir_timer;
-> +		rcdev->tx_ir = pwm_ir_tx_atomic;
-> +	} else {
-> +		dev_info(&pdev->dev, "tx will not be accurate as pwm device does not support atomic mode");
-> +		rcdev->tx_ir = pwm_ir_tx;
-> +	}
-> +
->   	rcdev->priv = pwm_ir;
->   	rcdev->driver_name = DRIVER_NAME;
->   	rcdev->device_name = DEVICE_NAME;
-> -	rcdev->tx_ir = pwm_ir_tx;
->   	rcdev->s_tx_duty_cycle = pwm_ir_set_duty_cycle;
->   	rcdev->s_tx_carrier = pwm_ir_set_carrier;
->   
+> Major changes:
+> - drop newline at the end from each YAML files
+> - rename dma and clk bindings headers to match first compatible
+> - shrink SoC exported functions number to only 2
+> - dropped some ep93xx_pata fixes from these series
+> - dropped m48t86 stuff from these series
 > 
+> [...]
+
+Applied, thanks!
+
+[13/42] dt-bindings: rtc: Add Cirrus EP93xx
+        commit: 207bddd97881913bcb8bef84737c0971e712fbee
+[14/42] rtc: ep93xx: add DT support for Cirrus EP93xx
+        commit: 1d70f9fe5f1c8fbd5d838223b8aec27c69a7e609
+
+Best regards,
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
