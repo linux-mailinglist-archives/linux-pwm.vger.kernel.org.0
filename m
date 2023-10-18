@@ -2,135 +2,238 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F5D47CE2C7
-	for <lists+linux-pwm@lfdr.de>; Wed, 18 Oct 2023 18:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F3DC7CE94E
+	for <lists+linux-pwm@lfdr.de>; Wed, 18 Oct 2023 22:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229447AbjJRQ3i (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 18 Oct 2023 12:29:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
+        id S232008AbjJRUqb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 18 Oct 2023 16:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229908AbjJRQ3h (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Oct 2023 12:29:37 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1970109
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Oct 2023 09:29:34 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-407da05f05aso15019075e9.3
-        for <linux-pwm@vger.kernel.org>; Wed, 18 Oct 2023 09:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697646573; x=1698251373; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fOxskDfC7UdA36cNfLZwzB1EBzu5Hisy2kWvdoViG+M=;
-        b=IGrXPFmD55pH+pR/RxPHu403PGZO+5zzgRcdVyNI7KJeJij92YZoWXeoqSNI2rNX/z
-         /sM7aZX50h/dasWqrQuNA3HRyNsFgdOO7ID2tJOpFpvnB6mS0wEc664zuW20u5pc+iC4
-         X1cgF0PsmmSDBaBKU+5O83LPB03VeCu29QGgV7FIuQfGwxsUXlhemTFKMCMzDLGMzCMS
-         yHH5BbDdOWYVI+4M9B1kT9km47flMJpa6Xyltyqzeo7SFk839Feq2+NrZd3z2HY8OpsN
-         BaEvAN9FjoUEMQnS8pfvn8rHtkgCqKYtTJubTMZ6JU6mw0386xviqEVhiiMv74Ml29So
-         /Fiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697646573; x=1698251373;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOxskDfC7UdA36cNfLZwzB1EBzu5Hisy2kWvdoViG+M=;
-        b=HoWC+yxSEjgTc8x++TfLq2t/RX0A5P9IhlCPD4Kc6p/DlZtu0Wp9Bu5hh741njIDDd
-         aGyfUWPPQTS/b3hghcKGe4n8Tsu2bWZmP0ljkFd/WOxP8n30K2OVGpHP8OIEqsohLrMm
-         e8aCSj2N6CvzbfyWzAZMHLB9GKbVvGAiimkrvsUMikXYkEKKBwoBTLNfYxc8aI+ktLyt
-         w0Wf6a+BSU7lDVqHfn5SZ0PHZ6DENfYxz7h3kK8GLxdbpxYessprgpWmZ7TR/Gta5JMk
-         zJFJiHXgbMwXCV5UKX2Nyt2j4JWNDF2tMYyFBB41oPIv1mGS4WVIxsR+qgmD9+uuA3rl
-         p3XQ==
-X-Gm-Message-State: AOJu0Yy0n5XmCH2QV/5m75SJ9XgSDTTwiTo4DxYOEHqY0wvOkb1ek2x0
-        DcmStBagQfmYriBwN/Bm0c3YKg==
-X-Google-Smtp-Source: AGHT+IHlbC88Biwr7o4WQnFHw/cwAm5/kJ04aqB5iPYwY5HsICEStH+VlgSjG7uqaR0zaLdpP43TFA==
-X-Received: by 2002:a05:600c:1912:b0:401:bd2e:49fc with SMTP id j18-20020a05600c191200b00401bd2e49fcmr4202862wmq.24.1697646573072;
-        Wed, 18 Oct 2023 09:29:33 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.154])
-        by smtp.gmail.com with ESMTPSA id f19-20020adfb613000000b003232380ffd7sm2424163wre.102.2023.10.18.09.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Oct 2023 09:29:32 -0700 (PDT)
-Message-ID: <f87f480d-6775-44c9-8a2b-05d47bb0dc5d@linaro.org>
-Date:   Wed, 18 Oct 2023 18:29:30 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V15 0/4] Add PWM support for IPQ chipsets
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, thierry.reding@gmail.com,
-        ndesaulniers@google.com, trix@redhat.com, baruch@tkos.co.il,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Cc:     linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        nathan@kernel.org
+        with ESMTP id S230391AbjJRUqa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 18 Oct 2023 16:46:30 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B02BF7
+        for <linux-pwm@vger.kernel.org>; Wed, 18 Oct 2023 13:46:28 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qtDQh-0000gU-1z; Wed, 18 Oct 2023 22:46:11 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qtDQf-002dSA-0e; Wed, 18 Oct 2023 22:46:09 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qtDQe-001EpL-N1; Wed, 18 Oct 2023 22:46:08 +0200
+Date:   Wed, 18 Oct 2023 22:46:08 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Devi Priya <quic_devipriy@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        lee@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        thierry.reding@gmail.com, ndesaulniers@google.com, trix@redhat.com,
+        baruch@tkos.co.il, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-pwm@vger.kernel.org, nathan@kernel.org
+Subject: Re: [PATCH V15 2/4] dt-bindings: pwm: add IPQ6018 binding
+Message-ID: <20231018204608.qyifcnnzgi2bgzn6@pengutronix.de>
 References: <20231005160550.2423075-1-quic_devipriy@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231005160550.2423075-1-quic_devipriy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+ <20231005160550.2423075-3-quic_devipriy@quicinc.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xtsetqyrpzzycxzw"
+Content-Disposition: inline
+In-Reply-To: <20231005160550.2423075-3-quic_devipriy@quicinc.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 05/10/2023 18:05, Devi Priya wrote:
-> Add PWM driver and binding support for IPQ chipsets.
-> Also, add support for pwm node in ipq6018.
-> 
 
-You need to clearly mark dependencies. Next is now broken because of
-this patchset.
+--xtsetqyrpzzycxzw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hello,
 
+On Thu, Oct 05, 2023 at 09:35:48PM +0530, Devi Priya wrote:
+> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+>=20
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
+> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> ---
+> v15:
+>=20
+>   No change
+>=20
+> v14:
+>=20
+>   Picked up the R-b tag
+>=20
+> v13:
+>=20
+>   Updated the file name to match the compatible
+>  =20
+>   Sorted the properties and updated the order in the required field
+>=20
+>   Dropped the syscon node from examples
+>=20
+> v12:
+>=20
+>   Picked up the R-b tag
+>=20
+> v11:
+>=20
+>   No change
+>=20
+> v10:
+>=20
+>   No change
+>=20
+> v9:
+>=20
+>   Add 'ranges' property to example (Rob)
+>=20
+>   Drop label in example (Rob)
+>=20
+> v8:
+>=20
+>   Add size cell to 'reg' (Rob)
+>=20
+> v7:
+>=20
+>   Use 'reg' instead of 'offset' (Rob)
+>=20
+>   Drop 'clock-names' and 'assigned-clock*' (Bjorn)
+>=20
+>   Use single cell address/size in example node (Bjorn)
+>=20
+>   Move '#pwm-cells' lower in example node (Bjorn)
+>=20
+>   List 'reg' as required
+>=20
+> v6:
+>=20
+>   Device node is child of TCSR; remove phandle (Rob Herring)
+>=20
+>   Add assigned-clocks/assigned-clock-rates (Uwe Kleine-K=F6nig)
+>=20
+> v5: Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+>     Andersson, Kathiravan T)
+>=20
+> v4: Update the binding example node as well (Rob Herring's bot)
+>=20
+> v3: s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+>=20
+> v2: Make #pwm-cells const (Rob Herring)
+>=20
+>  .../bindings/pwm/qcom,ipq6018-pwm.yaml        | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/qcom,ipq6018-pw=
+m.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml =
+b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+> new file mode 100644
+> index 000000000000..6d0d7ed271f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/qcom,ipq6018-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ6018 PWM controller
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+
+Not being very fluent in dt and binding yaml I wonder if adding
+
+	allOf:
+	  - $ref: pwm.yaml#
+
+would be beneficial?!
+
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq6018-pwm
+> +
+> +  reg:
+> +    description: Offset of PWM register in the TCSR block.
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+
+The driver only supports normal polarity. Is this a shortcoming of the
+driver, or is the hardware incapable to do that, too?
+
+If it's only the former I'd want #pwm-cells =3D <3> here. For ease of use
+I'd not oppose if you pick #pwm-cells =3D <3> even if the hardware can
+only do normal polarity.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#pwm-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +    pwm: pwm@a010 {
+> +        compatible =3D "qcom,ipq6018-pwm";
+> +        reg =3D <0xa010 0x20>;
+> +        clocks =3D <&gcc GCC_ADSS_PWM_CLK>;
+> +        assigned-clocks =3D <&gcc GCC_ADSS_PWM_CLK>;
+> +        assigned-clock-rates =3D <100000000>;
+> +        #pwm-cells =3D <2>;
+> +    };
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xtsetqyrpzzycxzw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUwRA8ACgkQj4D7WH0S
+/k4+QAf/WN6mLqG3+DlwosYZcJESOcX2S6K+CSxJ+01EkCGvXaNAPnaNasVmGzCa
+iWvYmgoRhuFYuzrppCsUER6+lrHZz/C4HfnOsQlsVfjRIm/Si4qelPWc0jKfvsQ9
+EV82d4hR/X2OT0ujmOcJZvwTMaITfER4B+9lzkVE0NvDzUIxzjZRgLDUX1j75All
+994dvdSy0b6x3NHnCuryt4ORwe8cIj866wXsJgrSC/Cg+9kyqW7UXWriTGQNAcfT
+0cfY92KCimjFjqfCuanOyBBN+41jlwwaiUnsB4gx8ZEh1mFgE50OXX9QK8eEgzzl
+56qTKAjNGv8LdOd+XgAiPuVPd0+6yg==
+=Vd7V
+-----END PGP SIGNATURE-----
+
+--xtsetqyrpzzycxzw--
