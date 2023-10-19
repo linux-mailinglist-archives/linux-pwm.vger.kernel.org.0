@@ -2,128 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF28D7D0303
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Oct 2023 22:07:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 631A17D037E
+	for <lists+linux-pwm@lfdr.de>; Thu, 19 Oct 2023 23:06:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229892AbjJSUHz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Oct 2023 16:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
+        id S1346549AbjJSVGo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 19 Oct 2023 17:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230321AbjJSUHy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Oct 2023 16:07:54 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62F7124
-        for <linux-pwm@vger.kernel.org>; Thu, 19 Oct 2023 13:07:52 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qtZJ7-0000Bd-8J; Thu, 19 Oct 2023 22:07:49 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qtZJ6-002rg4-RO; Thu, 19 Oct 2023 22:07:48 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qtZJ6-001veT-I0; Thu, 19 Oct 2023 22:07:48 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        linux-pwm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: [PATCH 5/5] pwm: stm32: Fix enable count for clk in .probe()
-Date:   Thu, 19 Oct 2023 22:07:04 +0200
-Message-ID: <20231019200658.1754190-12-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231019200658.1754190-7-u.kleine-koenig@pengutronix.de>
-References: <20231019200658.1754190-7-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S235529AbjJSVGn (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Oct 2023 17:06:43 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A54136;
+        Thu, 19 Oct 2023 14:06:42 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82639C433CA;
+        Thu, 19 Oct 2023 21:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697749601;
+        bh=VY5heIBy9yftU7sYBNfoeKWqOwP4esxHzVS+2WzNFSc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CEmtcQ4IqPvbJWnxJuekiXHzD9SNs3kIEH+DgJzWzEXC5Q9YETxOU8YLkGXLGKUZD
+         LnmoApJt7vYJgs5O6OxnIm6mCL+WZifbVTrMqDFyj3j8n9WK/u6a9JGGVw0FrIB4e/
+         5Ec87wTgg1DWo6q0vAky2XeorzhdFNdrkoUOS4P4rw4/UPgQSM3wprhoratuzDCwjB
+         dpQ00Eth8jNgLt60yQ1zOZOn/zmFE6+XPNVVZMV4Pm/yvRQKlzTdZ+j12nTp2epE08
+         GyWZqkZRb5O9qqcNfO4bl/jOeKK02zywE9o1qXRgg2cMd9Y5eLwNO91bQAmpyZ/uK/
+         stJt683nTgvqw==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-507bd19eac8so145444e87.0;
+        Thu, 19 Oct 2023 14:06:41 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwhovISxy2sJd/SVg0h9ENC8NbYVn3plQw43ETPCgGXMeSnYVka
+        Q5pmUT2rtWgSMUDowAY8tGJCY2/AukgH8qPzLA==
+X-Google-Smtp-Source: AGHT+IFNNqLHq7e9rbvmn7g8Kf+819v49MVg4TY+Jdh4Fqqqe3ifpRBgvC9663PPxlQqPustO9R2FgtjwWcYakFNqKY=
+X-Received: by 2002:ac2:5464:0:b0:504:3c1f:cbd9 with SMTP id
+ e4-20020ac25464000000b005043c1fcbd9mr2295837lfn.16.1697749599708; Thu, 19 Oct
+ 2023 14:06:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2288; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=WvXDNthRYYY+rxaLHuzNpUXyl/hU4Ew/1JV88Z5oCuQ=; b=owGbwMvMwMXY3/A7olbonx/jabUkhlTDngzbO2sdlbKje6JKXSKKw/xPvCubItBbH8P/58UVq a+TPzR0MhqzMDByMciKKbLYN67JtKqSi+xc++8yzCBWJpApDFycAjARdR0OhtmvilU+nr2s2aUT aNz4P2RZ+hZTA8v8WZG5DVIn5pim7Q2drbVg7/UbKcL5phekTgf9EWf+u1honmszx4yHGfylfOf NeATCc68qOxw/lGAcHdXwuvxoCGvsxUUnJmTUJ/gmvf8aobk67bx4/71Z2w/lvfcMYJ5naXPrNu 8M+fx5QtZv1rm4hRuz5PQV3uZttToxWyk9cJWB71PPsmjGrPCeOWsKsk5IX2S4WHZLuu2nSbPnM Znpl3uaWH3Wam9K68iNXpespFYbM+3c9vLO1gBz42vL97lWtPv5zN3EMPNE+NprHZmR+9/fPr0x 65vRx73fNq/b3/DiMm+Nkiqf0aFLUWoqN7xP9C2bZb4eAA==
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20231005160550.2423075-1-quic_devipriy@quicinc.com>
+ <20231005160550.2423075-4-quic_devipriy@quicinc.com> <169710517252.1166696.13811645504228005200.b4-ty@kernel.org>
+In-Reply-To: <169710517252.1166696.13811645504228005200.b4-ty@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 19 Oct 2023 16:06:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKdvnb7c_oMaMsQiJQzm1YF5uV+Tb9nQSgX0_+tP1KD8g@mail.gmail.com>
+Message-ID: <CAL_JsqKdvnb7c_oMaMsQiJQzm1YF5uV+Tb9nQSgX0_+tP1KD8g@mail.gmail.com>
+Subject: Re: (subset) [PATCH V15 3/4] dt-bindings: mfd: qcom,tcsr: Add
+ simple-mfd support for IPQ6018
+To:     Lee Jones <lee@kernel.org>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        thierry.reding@gmail.com, ndesaulniers@google.com, trix@redhat.com,
+        baruch@tkos.co.il, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, Devi Priya <quic_devipriy@quicinc.com>,
+        linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        nathan@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+On Thu, Oct 12, 2023 at 5:06=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
+>
+> On Thu, 05 Oct 2023 21:35:49 +0530, Devi Priya wrote:
+> > Update the binding to include pwm as the child node to TCSR block and
+> > add simple-mfd support for IPQ6018.
+> >
+> >
+>
+> Applied, thanks!
+>
+> [3/4] dt-bindings: mfd: qcom,tcsr: Add simple-mfd support for IPQ6018
+>       commit: b4a32d218d424b81a58fbd419e1114b1c1f76168
 
-Make the driver take over hardware state without disabling in .probe()
-and enable the clock for each enabled channel.
+This is dependent on patch 2 being applied.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-[ukleinek: split off from a patch that also implemented .get_state()]
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-stm32.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 68239567a564..97a2c3c09b69 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -605,17 +605,21 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
- 	priv->have_complementary_output = (ccer != 0);
- }
- 
--static unsigned int stm32_pwm_detect_channels(struct stm32_pwm *priv)
-+static unsigned int stm32_pwm_detect_channels(struct stm32_pwm *priv,
-+					      unsigned int *num_enabled)
- {
--	u32 ccer;
-+	u32 ccer, ccer_backup;
- 
- 	/*
- 	 * If channels enable bits don't exist writing 1 will have no
- 	 * effect so we can detect and count them.
- 	 */
-+	regmap_read(priv->regmap, TIM_CCER, &ccer_backup);
- 	regmap_set_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
- 	regmap_read(priv->regmap, TIM_CCER, &ccer);
--	regmap_clear_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
-+	regmap_write(priv->regmap, TIM_CCER, ccer_backup);
-+
-+	*num_enabled = hweight32(ccer_backup & TIM_CCER_CCXE);
- 
- 	return hweight32(ccer & TIM_CCER_CCXE);
- }
-@@ -626,6 +630,8 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct stm32_timers *ddata = dev_get_drvdata(pdev->dev.parent);
- 	struct stm32_pwm *priv;
-+	unsigned int num_enabled;
-+	unsigned int i;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -648,7 +654,11 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 
- 	priv->chip.dev = dev;
- 	priv->chip.ops = &stm32pwm_ops;
--	priv->chip.npwm = stm32_pwm_detect_channels(priv);
-+	priv->chip.npwm = stm32_pwm_detect_channels(priv, &num_enabled);
-+
-+	/* Initialize clock refcount to number of enabled PWM channels. */
-+	for (i = 0; i < num_enabled; i++)
-+		clk_enable(priv->clk);
- 
- 	ret = devm_pwmchip_add(dev, &priv->chip);
- 	if (ret < 0)
--- 
-2.42.0
-
+Rob
