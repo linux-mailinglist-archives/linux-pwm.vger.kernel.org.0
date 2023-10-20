@@ -2,126 +2,74 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6293F7D1564
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Oct 2023 20:04:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 800147D159E
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Oct 2023 20:22:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbjJTSE3 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Oct 2023 14:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
+        id S229695AbjJTSW4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Oct 2023 14:22:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230117AbjJTSE2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Oct 2023 14:04:28 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA17C0
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Oct 2023 11:04:26 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so838285f8f.3
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Oct 2023 11:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697825065; x=1698429865; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jrYybwUMXMQDct16/KSDb1AL83UYfzbsLKEmVGzNrmk=;
-        b=BOaO6fAsSS1BYv2zeHRsxNEG3DxCKyKtjwv0YQj+nFr5iLN3iJeBCG0+XKJbAImB2x
-         07TgIbjBKwHa4xngbu0FZiN8fMoyHRsF0BoUKD4Gg4DfbhaPQnBEisr7/1UGcYrDd3MC
-         OstJdO+z3fPqpoPHL2apG3oepMrgWEr/xA65VWSu00KJuWwGGuOA3tlK+Xqpgj1firR+
-         BhNrwXcc5a2fgEkKlEpl1o2jkaM25sljOBPTs4EpNyP3geDB/bWunnj7MkJt8NrGmh1g
-         9IODW4g242DSBHomcatmGNsd3KNAA/HjflAk21yS+U8qTNQ5DfNUICNeuuMLpaNuAi+q
-         JVxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697825065; x=1698429865;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jrYybwUMXMQDct16/KSDb1AL83UYfzbsLKEmVGzNrmk=;
-        b=LHtnBPI3LN2iTWp95zpohRQOwjNeBSh8CcAxijf8oZuDZq5kHt6sf6oup6RW0nHPys
-         f+mbccMyawXmyCUncFa42p5+BBR1x78XEWldHSDjiKxPKt1Ll7mSEcsY6aM7BAC1x/8p
-         5BVye0kRAqtDMDagNcXnuhIXMi3HuD96NLJ9403MsOIMESVP/hd/vyUJfpmu/ZEPQ9Wd
-         sMkceNDrh9J9SfH06anWArGSxXxIWH4U1Bm1ac4Zd14kSlYjqZ951GkpAQwysvDwfCn2
-         3No4OSLLKtGgz3V9Qw2KRt4M9Qb138aGGY1sncRZCLdTpU+wgPsI7xQPr3ox9eg/0CSD
-         +J6A==
-X-Gm-Message-State: AOJu0YwiyKKqCc63EITk1ZTiBQB2KVTsAkujHmQ+PoKYyeH+999HPeU/
-        SRpcs35VR4l67DP0Q9jAlPNNWg==
-X-Google-Smtp-Source: AGHT+IGAQcB/OoprNSPgK5yZLGsiVkKqJvmE66/NqlSJUrxMppe2XNIXq95JTC4Fb2lqnycn9cH6tw==
-X-Received: by 2002:adf:e5c8:0:b0:32d:6891:f819 with SMTP id a8-20020adfe5c8000000b0032d6891f819mr2224887wrn.41.1697825064975;
-        Fri, 20 Oct 2023 11:04:24 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id o7-20020a056000010700b0032da6f17ffdsm2162312wrx.38.2023.10.20.11.04.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Oct 2023 11:04:24 -0700 (PDT)
-Message-ID: <b0247572-607d-48e9-92ef-a3e0a8fe17f9@linaro.org>
-Date:   Fri, 20 Oct 2023 20:04:21 +0200
+        with ESMTP id S229555AbjJTSWz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Oct 2023 14:22:55 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B54D6A;
+        Fri, 20 Oct 2023 11:22:53 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39KI5fYJ029777;
+        Fri, 20 Oct 2023 18:22:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=e8rxuQk/2ug768QjWGfvPaNQ15UCKIp/Vn0HPG51xrs=;
+ b=G6G4L2sBwszw2r5+DJpEnqhTKTEZtw3nlpCD0lHO7FbpT2lhxzZO0avIZ+pS4EKSHN46
+ uuQq4ulzCBWwt6J9m6msryCsFiuZY3t+J2PC/63dnIv+icgIH5MElerE7l1cF+wW9rxj
+ m4iklosVr0+D9DjULrOXw04aC9zGA/LunF3949y/gFGlAJYbQzOgM7ptZOdHSN6K//uG
+ hF0NH0EuSvVFLygLNHuDFixCfo8eSPctSmrP8LN+o+3dTJEL31wtcQOHdNcga14FAFdR
+ SKgETi5TMj+T+nRmIUx+mZOLpF/MbqHzdcog204bl3bSsMevfnJBRzyvax18J9gsj6mC 9Q== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tuxhc0165-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Oct 2023 18:22:40 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39KIMd5R003806
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Oct 2023 18:22:39 GMT
+Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.39; Fri, 20 Oct 2023 11:22:38 -0700
+From:   Anjelique Melendez <quic_amelende@quicinc.com>
+To:     <pavel@ucw.cz>, <lee@kernel.org>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>
+CC:     <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
+        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
+        <quic_gurus@quicinc.com>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        "Anjelique Melendez" <quic_amelende@quicinc.com>
+Subject: [PATCH v6 0/7] Add support for LUT PPG
+Date:   Fri, 20 Oct 2023 11:22:10 -0700
+Message-ID: <20231020182218.22217-1-quic_amelende@quicinc.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/4] dt-bindings: pwm: Add OpenCores PWM module
-Content-Language: en-US
-To:     Conor Dooley <conor@kernel.org>,
-        William Qiu <william.qiu@starfivetech.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-References: <20231020103741.557735-1-william.qiu@starfivetech.com>
- <20231020103741.557735-2-william.qiu@starfivetech.com>
- <20231020-barley-rosy-92c3688cd515@spud>
- <20231020-giddy-fidgety-f070ef121ff2@spud>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231020-giddy-fidgety-f070ef121ff2@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aGC2Oe30_cV_nQgHf0oFNrbvJPZCh3VY
+X-Proofpoint-ORIG-GUID: aGC2Oe30_cV_nQgHf0oFNrbvJPZCh3VY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-20_10,2023-10-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310170001
+ definitions=main-2310200154
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -131,78 +79,95 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 20/10/2023 16:22, Conor Dooley wrote:
-> On Fri, Oct 20, 2023 at 03:21:15PM +0100, Conor Dooley wrote:
->> Krzysztof, William,
->>
->> On Fri, Oct 20, 2023 at 06:37:38PM +0800, William Qiu wrote:
->>> Add documentation to describe OpenCores Pulse Width Modulation
->>> controller driver.
->>>
->>> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
->>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
->>> ---
->>>  .../bindings/pwm/opencores,pwm-ocores.yaml    | 53 +++++++++++++++++++
->>>  1 file changed, 53 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml b/Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
->>> new file mode 100644
->>> index 000000000000..0f6a3434f155
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
->>> @@ -0,0 +1,53 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pwm/opencores,pwm-ocores.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: OpenCores PWM controller
->>> +
->>> +maintainers:
->>> +  - William Qiu <william.qiu@starfivetech.com>
->>> +
->>> +description:
->>> +  OpenCores PTC ip core contains a PWM controller. When operating in PWM mode, the PTC core
->>> +  generates binary signal with user-programmable low and high periods. All PTC counters and
->>> +  registers are 32-bit.
->>> +
->>> +allOf:
->>> +  - $ref: pwm.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - opencores,pwm-ocores
->>
->> What does the extra "ocores" suffix add, when it just repeats the vendor
->> prefix?
->>
->>> +      - starfive,jh71x0-pwm
->>
->> Krzysztof, did you approve this generic compatible?
+In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+modules instead of LUT peripheral. This feature is called PPG.
 
-Patch was quite different than reviewed by me. This obviously does not
-make any sense. Thanks for spotting.
+This change series adds support for PPG. Thanks!
 
-I guess carrying tags should not be trusted.
+Changes since v5:
+  - Patch 4/7
+    - Update logic so that multicolor led device triggers pattern
+      on all LEDs at the same time
+    - Update nitpicks from Lee
+  - Patch 5/7
+    - Update nitpicks from Lee
+Changes since v4:
+  - Patch 3/7
+    - Get rid of r/w helpers
+    - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
+    - Update error path in qcom_pbs_trigger_event()
+    - Fix reverse christmas tree
+  - Patch 4/7
+    - Get rid of r/w helpers
+    - Update variables to use "sdam" instead of "nvmem"
+    - Fix comments
+    - Fix reverse christmas tree
+    - Update lpg_pattern_set() logic
+  - Patch 5/7
+    - Removed sdam_lut_base from lpg_data
+Changes since v3:
+  - Patch 4/7
+    - Fix function returns
+    - Move register definition to top of file
+    - Revert max_brightness and probe accidental changes
+    - Combine init_sdam() and parse_sdam()
+    - Change error prints in probe to use dev_err_probe
+    - Remove ppg_en variable
+    - Update when pbs triggers are set/cleared
+  - Patch 6/7
+    - Remove use of nvmem_count
+    - Move register definition to top of file
+    - Remove lpg_get_sdam_lut_idx()
+Changes since v2:
+  - Patch 1/7
+    - Fix dt_binding_check error
+    - Rename binding file to match compatible
+    - Iclude SoC specific comptaibles
+  - Patch 2/7
+    - Update nvmem-names list
+  - Patch 3/7
+    - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+    - Fix return/break logic in qcom_pbs_wait_for_ack()
+    - Update iterators to be int
+    - Add constants
+    - Fix function calls in qcom_pbs_trigger_event()
+    - Remove unnessary comments
+    - Return -EPROBE_DEFER from get_pbs_client_device()
+Changes since v1:
+  - Patch 1/7
+    - Fix dt_binding_check errors
+    - Update binding description
+  - Path 2/7
+    - Fix dt_binding_check errors
+    - Update per variant constraints
+    - Update nvmem description
+  - Patch 3/7
+    - Update get_pbs_client_device()
+    - Drop use of printk
+    - Remove unused function
 
->>
->> And the whole thing looks like it should really be something like
->>
->> items:
->>   - enum:
->>       - starfive,jh7100-pwm
->>       - starfive,jh7110-pwm
->>   - const: opencores,pwm
-> 
-> (assuming that the opencores,pwm compatible represents a subset of what
-> is implemented on the jh7100 series)
+Anjelique Melendez (7):
+  dt-bindings: soc: qcom: Add qcom,pbs bindings
+  dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
+  soc: qcom: add QCOM PBS driver
+  leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
+  leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
+  leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT
+    SDAM
+  leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
 
+ .../bindings/leds/leds-qcom-lpg.yaml          |  89 ++++-
+ .../bindings/soc/qcom/qcom,pbs.yaml           |  46 +++
+ drivers/leds/rgb/leds-qcom-lpg.c              | 344 ++++++++++++++++--
+ drivers/soc/qcom/Kconfig                      |   9 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/qcom-pbs.c                   | 243 +++++++++++++
+ include/linux/soc/qcom/qcom-pbs.h             |  30 ++
+ 7 files changed, 733 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
+ create mode 100644 drivers/soc/qcom/qcom-pbs.c
+ create mode 100644 include/linux/soc/qcom/qcom-pbs.h
 
-
-Best regards,
-Krzysztof
+-- 
+2.41.0
 
