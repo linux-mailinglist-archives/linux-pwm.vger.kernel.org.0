@@ -2,81 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 631A17D037E
-	for <lists+linux-pwm@lfdr.de>; Thu, 19 Oct 2023 23:06:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C2AA7D0AF4
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Oct 2023 10:55:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346549AbjJSVGo (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 19 Oct 2023 17:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42644 "EHLO
+        id S1376534AbjJTIzz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Oct 2023 04:55:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235529AbjJSVGn (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 19 Oct 2023 17:06:43 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37A54136;
-        Thu, 19 Oct 2023 14:06:42 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82639C433CA;
-        Thu, 19 Oct 2023 21:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697749601;
-        bh=VY5heIBy9yftU7sYBNfoeKWqOwP4esxHzVS+2WzNFSc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CEmtcQ4IqPvbJWnxJuekiXHzD9SNs3kIEH+DgJzWzEXC5Q9YETxOU8YLkGXLGKUZD
-         LnmoApJt7vYJgs5O6OxnIm6mCL+WZifbVTrMqDFyj3j8n9WK/u6a9JGGVw0FrIB4e/
-         5Ec87wTgg1DWo6q0vAky2XeorzhdFNdrkoUOS4P4rw4/UPgQSM3wprhoratuzDCwjB
-         dpQ00Eth8jNgLt60yQ1zOZOn/zmFE6+XPNVVZMV4Pm/yvRQKlzTdZ+j12nTp2epE08
-         GyWZqkZRb5O9qqcNfO4bl/jOeKK02zywE9o1qXRgg2cMd9Y5eLwNO91bQAmpyZ/uK/
-         stJt683nTgvqw==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-507bd19eac8so145444e87.0;
-        Thu, 19 Oct 2023 14:06:41 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwhovISxy2sJd/SVg0h9ENC8NbYVn3plQw43ETPCgGXMeSnYVka
-        Q5pmUT2rtWgSMUDowAY8tGJCY2/AukgH8qPzLA==
-X-Google-Smtp-Source: AGHT+IFNNqLHq7e9rbvmn7g8Kf+819v49MVg4TY+Jdh4Fqqqe3ifpRBgvC9663PPxlQqPustO9R2FgtjwWcYakFNqKY=
-X-Received: by 2002:ac2:5464:0:b0:504:3c1f:cbd9 with SMTP id
- e4-20020ac25464000000b005043c1fcbd9mr2295837lfn.16.1697749599708; Thu, 19 Oct
- 2023 14:06:39 -0700 (PDT)
+        with ESMTP id S1376546AbjJTIzy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Oct 2023 04:55:54 -0400
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 96248D57;
+        Fri, 20 Oct 2023 01:55:48 -0700 (PDT)
+Received: from localhost.localdomain (unknown [180.167.10.98])
+        by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id F1F88604889BB;
+        Fri, 20 Oct 2023 16:55:35 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From:   Su Hui <suhui@nfschina.com>
+To:     avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        jdelvare@suse.com, linux@roeck-us.net, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de
+Cc:     Su Hui <suhui@nfschina.com>, openbmc@lists.ozlabs.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] hwmon: npcm750-pwm: add an error code check in npcm7xx_en_pwm_fan
+Date:   Fri, 20 Oct 2023 16:55:19 +0800
+Message-Id: <20231020085518.198477-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20231005160550.2423075-1-quic_devipriy@quicinc.com>
- <20231005160550.2423075-4-quic_devipriy@quicinc.com> <169710517252.1166696.13811645504228005200.b4-ty@kernel.org>
-In-Reply-To: <169710517252.1166696.13811645504228005200.b4-ty@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 19 Oct 2023 16:06:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKdvnb7c_oMaMsQiJQzm1YF5uV+Tb9nQSgX0_+tP1KD8g@mail.gmail.com>
-Message-ID: <CAL_JsqKdvnb7c_oMaMsQiJQzm1YF5uV+Tb9nQSgX0_+tP1KD8g@mail.gmail.com>
-Subject: Re: (subset) [PATCH V15 3/4] dt-bindings: mfd: qcom,tcsr: Add
- simple-mfd support for IPQ6018
-To:     Lee Jones <lee@kernel.org>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        thierry.reding@gmail.com, ndesaulniers@google.com, trix@redhat.com,
-        baruch@tkos.co.il, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Devi Priya <quic_devipriy@quicinc.com>,
-        linux-pwm@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        nathan@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,RDNS_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Thu, Oct 12, 2023 at 5:06=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
->
-> On Thu, 05 Oct 2023 21:35:49 +0530, Devi Priya wrote:
-> > Update the binding to include pwm as the child node to TCSR block and
-> > add simple-mfd support for IPQ6018.
-> >
-> >
->
-> Applied, thanks!
->
-> [3/4] dt-bindings: mfd: qcom,tcsr: Add simple-mfd support for IPQ6018
->       commit: b4a32d218d424b81a58fbd419e1114b1c1f76168
+npcm7xx_pwm_config_set() can return '-ENODEV' for failed. So check
+the value of 'ret' after calling npcm7xx_pwm_config_set().
 
-This is dependent on patch 2 being applied.
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+ drivers/hwmon/npcm750-pwm-fan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/drivers/hwmon/npcm750-pwm-fan.c b/drivers/hwmon/npcm750-pwm-fan.c
+index 10ed3f4335d4..4702e4edc662 100644
+--- a/drivers/hwmon/npcm750-pwm-fan.c
++++ b/drivers/hwmon/npcm750-pwm-fan.c
+@@ -875,6 +875,8 @@ static int npcm7xx_en_pwm_fan(struct device *dev,
+ 	data->pwm_present[pwm_port] = true;
+ 	ret = npcm7xx_pwm_config_set(data, pwm_port,
+ 				     NPCM7XX_PWM_CMR_DEFAULT_NUM);
++	if (ret)
++		return ret;
+ 
+ 	ret = of_property_count_u8_elems(child, "cooling-levels");
+ 	if (ret > 0) {
+-- 
+2.30.2
+
