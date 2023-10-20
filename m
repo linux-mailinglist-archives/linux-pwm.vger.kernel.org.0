@@ -2,58 +2,59 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D0DE7D0F6E
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Oct 2023 14:11:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96E607D1170
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Oct 2023 16:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377079AbjJTML6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 20 Oct 2023 08:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53858 "EHLO
+        id S1377534AbjJTOVY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 20 Oct 2023 10:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376937AbjJTML5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Oct 2023 08:11:57 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66FDCD49
-        for <linux-pwm@vger.kernel.org>; Fri, 20 Oct 2023 05:11:55 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qtoM1-0007gt-ST; Fri, 20 Oct 2023 14:11:49 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qtoM0-0031Pm-WD; Fri, 20 Oct 2023 14:11:49 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qtoM0-002VMF-Mo; Fri, 20 Oct 2023 14:11:48 +0200
-Date:   Fri, 20 Oct 2023 14:11:48 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        with ESMTP id S1377541AbjJTOVX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 20 Oct 2023 10:21:23 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05321D5D;
+        Fri, 20 Oct 2023 07:21:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EFABC433C7;
+        Fri, 20 Oct 2023 14:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697811680;
+        bh=Sec4O0KSkSkahb8ChGos0WpVoRI0WMt1czHDEPGpGl4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fk1B4SIJRfOw6CSnTzkzYMkE/x3c54CLHy1M83x5hJJ5ZfslOTX1kXRRSOvLHJQO/
+         jgxu4wkEJu8lU78QW8/QNbFbw22eIloRiTiDupXbkJlfTI+gwvMd7D51AiTgkTtCId
+         7jL9cNcC6jSDWDo+yYAqx2NoQMC89OpGL997DufNCox/0GYQvcSKpMPSlwg2UT09gw
+         +4pY6+5LfIZGrvRhMmQvOi1xE68es+XFGsnAW/ZD9w6QVtR6lXqj4QTQnCQL6JLUhu
+         Zr+ftbCPS/R7MTC+bCcIdefvZk2xc0SBSAU2M2sajUZEfOGjNOKn0uj7j1ZJA2xtGa
+         QHmEnqWalNKTg==
+Date:   Fri, 20 Oct 2023 15:21:15 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     William Qiu <william.qiu@starfivetech.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker applying
- initial PWM state
-Message-ID: <20231020121148.3g6t3v5uuyubifpb@pengutronix.de>
-References: <20230608-backlight-pwm-avoid-flicker-v1-1-afd380d50174@pengutronix.de>
- <20231018210741.6t3yfj6qgmpwhhlo@pengutronix.de>
- <20231020112727.GF23755@aspen.lan>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Hal Feng <hal.feng@starfivetech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v6 1/4] dt-bindings: pwm: Add OpenCores PWM module
+Message-ID: <20231020-barley-rosy-92c3688cd515@spud>
+References: <20231020103741.557735-1-william.qiu@starfivetech.com>
+ <20231020103741.557735-2-william.qiu@starfivetech.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4ujggu4vg72aghiu"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c0ct6Bl9DHRpBcKH"
 Content-Disposition: inline
-In-Reply-To: <20231020112727.GF23755@aspen.lan>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20231020103741.557735-2-william.qiu@starfivetech.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -61,112 +62,119 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---4ujggu4vg72aghiu
-Content-Type: text/plain; charset=iso-8859-1
+--c0ct6Bl9DHRpBcKH
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Daniel,
+Krzysztof, William,
 
-On Fri, Oct 20, 2023 at 12:27:27PM +0100, Daniel Thompson wrote:
-> On Wed, Oct 18, 2023 at 11:07:41PM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello Philipp,
-> >
-> > On Thu, Jun 08, 2023 at 04:11:14PM +0200, Philipp Zabel wrote:
-> > > The initial PWM state returned by pwm_init_state() has a duty cycle
-> > > of 0 ns.
-> >
-> > This is only true for drivers without a .get_state() callback, isn't it?
+On Fri, Oct 20, 2023 at 06:37:38PM +0800, William Qiu wrote:
+> Add documentation to describe OpenCores Pulse Width Modulation
+> controller driver.
 >=20
-> pwm_init_state() explicitly zeros the duty-cycle in order to avoid
-> problems when the default args have a different period to the currently
-> applied config:
-> https://elixir.bootlin.com/linux/latest/source/include/linux/pwm.h#L174
+> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+> ---
+>  .../bindings/pwm/opencores,pwm-ocores.yaml    | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/opencores,pwm-o=
+cores.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.y=
+aml b/Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
+> new file mode 100644
+> index 000000000000..0f6a3434f155
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/opencores,pwm-ocores.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: OpenCores PWM controller
+> +
+> +maintainers:
+> +  - William Qiu <william.qiu@starfivetech.com>
+> +
+> +description:
+> +  OpenCores PTC ip core contains a PWM controller. When operating in PWM=
+ mode, the PTC core
+> +  generates binary signal with user-programmable low and high periods. A=
+ll PTC counters and
+> +  registers are 32-bit.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - opencores,pwm-ocores
 
-Ah right, pwm_init_state() is strange in a different way than I
-remembered :-) pwm_get_state() is only called to get .enabled set
-appropriately.
+What does the extra "ocores" suffix add, when it just repeats the vendor
+prefix?
 
-Looking at the callers:
+> +      - starfive,jh71x0-pwm
 
- - drivers/gpu/drm/solomon/ssd130x.c
-   It does:
- 	pwm_init_state(ssd130x->pwm, &pwmstate);
-	pwm_set_relative_duty_cycle(&pwmstate, 50, 100);
-	pwm_apply_state(ssd130x->pwm, &pwmstate);
-	pwm_enable(ssd130x->pwm);
+Krzysztof, did you approve this generic compatible?
 
-   A probably better result can be reached quicker using:
- 	pwm_init_state(ssd130x->pwm, &pwmstate);
-	pwm_set_relative_duty_cycle(&pwmstate, 50, 100);
-	pwmstate.enabled =3D true;
-	pwm_apply_state(ssd130x->pwm, &pwmstate);
- - drivers/hwmon/pwm-fan.c
-   __set_pwm should probably explicitly set .enabled.
-   All other calls to pwm_apply_state set .enabled explicitly.
+And the whole thing looks like it should really be something like
 
- - drivers/input/misc/da7280.c
-   explicitly sets .enabled after calling pwm_init_state()
+items:
+  - enum:
+      - starfive,jh7100-pwm
+      - starfive,jh7110-pwm
+  - const: opencores,pwm
 
- - drivers/input/misc/pwm-beeper.c
-   explicitly sets .enabled after calling pwm_init_state()
+Cheers,
+Conor.
 
- - drivers/input/misc/pwm-vibra.c
-   explicitly sets .enabled after calling pwm_init_state()
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 3
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pwm@12490000 {
+> +        compatible =3D "opencores,pwm-ocores";
+> +        reg =3D <0x12490000 0x10000>;
+> +        clocks =3D <&clkgen 181>;
+> +        resets =3D <&rstgen 109>;
+> +        #pwm-cells =3D <3>;
+> +    };
+> --=20
+> 2.34.1
+>=20
 
- - drivers/leds/leds-pwm.c
-   explictily sets .enabled before calling pwm_apply_state()
-
- - drivers/leds/rgb/leds-pwm-multicolor.c
-   explictily sets .enabled before calling pwm_apply_state()
-
- - drivers/media/rc/ir-rx51.c
-   explictily sets .enabled before calling pwm_apply_state()
-
- - drivers/media/rc/pwm-ir-tx.c
-   explictily sets .enabled before calling pwm_apply_state()
-
- - drivers/regulator/pwm-regulator.c
-   never sets .enabled, probably a bug
-
- - drivers/video/backlight/lm3630a_bl.c
-   explictily sets .enabled before calling pwm_apply_state()
-
- - drivers/video/backlight/lp855x_bl.c
-   explictily sets .enabled before calling pwm_apply_state()
-
- - drivers/video/backlight/pwm_bl.c
-   This is the one we currently discuss. I think even with the patch
-   applied it uses the .enabled value returned by pwm_init_state() but
-   it shouldn't.
-
- - drivers/video/fbdev/ssd1307fb.c
-   Similar to drivers/gpu/drm/solomon/ssd130x.c. Probably the one was
-   copied to the other given that it seems to handle the same hardware.
-
-So all consumers using pwm_init_state() either don't use the .enabled
-value returned by pwm_init_state() or at least shouldn't do that.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4ujggu4vg72aghiu
+--c0ct6Bl9DHRpBcKH
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmUyboMACgkQj4D7WH0S
-/k6z8QgAk0g406vvpJ815Hdz5BSVMclVmbygCKOIROSOKowNrW6WOgrFvaXeUqyi
-qBw06fdMe3EB3Ak9xeZ0EwZ2TWFvol0KsTcHC/B0NPv3naRvXdcnhQylYtlxNFSN
-Ra677iflQiqyYV/UcOf7bvDm0d6cj8W7PpatbZ+NJLh+qXepNDlZgl7cUgtVWw5u
-N04OLkaAtWtfb3lWyT0fnOTTATCkm8x9qrqxHrSilR4+Xf43PAHSbi/427a9mNv6
-vzIWS7HNi9xdirUsXfQbyP8pJhfhEbJjvwhAubqMlS0xPHujsYJcZ7dquVTmu6tb
-Suaayp81cFoCFdHmtCsA6bTorRVi4Q==
-=yuK5
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTKM2wAKCRB4tDGHoIJi
+0mtkAQDneqmAMFoF4jU76TZRB8bFE0/YWyssA6R28Jn1s3HuawEAiae3jINyrJHZ
+FyfmraP/Nbf35vRKjhrVBRmITylgPQs=
+=uBpZ
 -----END PGP SIGNATURE-----
 
---4ujggu4vg72aghiu--
+--c0ct6Bl9DHRpBcKH--
