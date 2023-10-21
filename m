@@ -2,72 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 593977D1BF8
-	for <lists+linux-pwm@lfdr.de>; Sat, 21 Oct 2023 11:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D206E7D207C
+	for <lists+linux-pwm@lfdr.de>; Sun, 22 Oct 2023 01:55:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbjJUJJU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 21 Oct 2023 05:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52844 "EHLO
+        id S229478AbjJUXzr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 21 Oct 2023 19:55:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbjJUJJP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 21 Oct 2023 05:09:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59BF4DD
-        for <linux-pwm@vger.kernel.org>; Sat, 21 Oct 2023 02:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697879307;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Duv/vRzaqiVheQFpKN6BpeiI42/H7vnpG0VOqBtei/A=;
-        b=IkQ68IauB3aI2rTrH0F3TqDpwaBuX3Tr//V8G087haTLkWxe1F/lBYNzhNrclH2vst8GQu
-        ROCFxxVA4NG8DMPIBNEmmLPmqovnuAheJql9tL0EcFG/fzRYokMNmOM3XPC1nTR9d5qQfn
-        /LCQLLAKDkFA2ibJylVad0oCBfBklEs=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-142-2HZzniMpM-S-M-J28f0wFg-1; Sat, 21 Oct 2023 05:08:26 -0400
-X-MC-Unique: 2HZzniMpM-S-M-J28f0wFg-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9ba247e03aeso102348166b.1
-        for <linux-pwm@vger.kernel.org>; Sat, 21 Oct 2023 02:08:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697879305; x=1698484105;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Duv/vRzaqiVheQFpKN6BpeiI42/H7vnpG0VOqBtei/A=;
-        b=TPNdNgoEO2U/5x1a2gRvJKdLzDLu8k30eikJAj3USMACBDFYcHrIssXUigj6QAv/UE
-         9wbWTsUjASTdMhcN0rzLHy28N7WxOQsAf39siqTW/pQduH4eXZnkoS6/xmxd1dzgUOB6
-         AUuh5ND6v3ISiKWGAPPtemxS+Otl/9A9QYXKzXp1DEshMZmByzs9Nb6kvcTN7z8/oh2a
-         rRYX7Dwd7LzW+RODd0XXKr900rzLE8Ndz39sMedscrXRCRi20GfX83LtKoOfFPahggoo
-         3P/730cvYQCP/xnuiu3q9+A1Zxvrylzfa59xmYwRyodkvxq7MuM/yGqVz/uP3sSYehA+
-         DMUQ==
-X-Gm-Message-State: AOJu0YyGe8TRrGDDpCo0I2aIzrCJxmDLpt1xBAYu7lZJRUqYsA2PtCOW
-        lPmgYn5Pc6qsWufi9N8LlT8jpxgnLT8YHtN2rfOXwDzwPBvXDq/5v0xFVSCHQg8PCXV3Q6srW9F
-        +HLgmWRfJG0zHjQEf5TX8
-X-Received: by 2002:a17:907:2cc4:b0:9c3:d356:ad0c with SMTP id hg4-20020a1709072cc400b009c3d356ad0cmr3284653ejc.24.1697879305139;
-        Sat, 21 Oct 2023 02:08:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNqtW+MndTr+TWmmj2VbzRQsCnDbztAGvz9JDMu9I4Oq15U8bQsUZjmiRgthR6bMx8lB0Nzg==
-X-Received: by 2002:a17:907:2cc4:b0:9c3:d356:ad0c with SMTP id hg4-20020a1709072cc400b009c3d356ad0cmr3284603ejc.24.1697879304753;
-        Sat, 21 Oct 2023 02:08:24 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id k9-20020a1709061c0900b0099ce025f8ccsm3201413ejg.186.2023.10.21.02.08.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Oct 2023 02:08:23 -0700 (PDT)
-Message-ID: <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
-Date:   Sat, 21 Oct 2023 11:08:22 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
- atomic context
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+        with ESMTP id S231624AbjJUXzq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 21 Oct 2023 19:55:46 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E59AD68;
+        Sat, 21 Oct 2023 16:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697932540; x=1729468540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=14/ngXnade/NJsLUk5wX9HBENWxj2wB/+XO3Lt6T00k=;
+  b=nm5MU4Lxga+K3C+RWgBmkbcer6p/wPe0apOu26M1XmolVurLXGonWsgN
+   xBB0UnINcvwFVDtr0uJ6bMtqS7A7ZEFN+EMfQe6CAhpKFf/Y03QNTtfL0
+   Y25alho8kwc4K+k1O9+3c7zWpGOsRj/C9VrFtj8GpzjDlHbztBhOXFDhU
+   EU/k798V65/aWbp8unqCyiW5cNp1mO52U9NplDgbo7VlmopeDn1KIOrx0
+   SQ6N4jWoUsPMbs1H+vASPBkDWXNXY7pOZExSVy3L3s0wmhIqncOLqYjTy
+   Wy/L0o1fgVjsXC+lGECyqQ/YpG8i5l0S9dlsm2tGL5OAoAo3XXaZuiXFU
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10870"; a="472887238"
+X-IronPort-AV: E=Sophos;i="6.03,242,1694761200"; 
+   d="scan'208";a="472887238"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2023 16:55:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10870"; a="751278907"
+X-IronPort-AV: E=Sophos;i="6.03,242,1694761200"; 
+   d="scan'208";a="751278907"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 21 Oct 2023 16:55:32 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1quLoX-0005Oc-30;
+        Sat, 21 Oct 2023 23:55:29 +0000
+Date:   Sun, 22 Oct 2023 07:55:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
         linux-pwm@vger.kernel.org,
         Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
         Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
@@ -81,109 +63,77 @@ Cc:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
         Mark Gross <markgross@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-References: <cover.1697534024.git.sean@mess.org>
- <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
- <90728c06-4c6c-b3d2-4723-c24711be2fa5@redhat.com>
- <20231019105118.64gdzzixwqrztjir@pengutronix.de>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20231019105118.64gdzzixwqrztjir@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
+        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
+ atomic context
+Message-ID: <202310220706.HH9RMDHJ-lkp@intel.com>
+References: <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Uwe,
+Hi Sean,
 
-On 10/19/23 12:51, Uwe Kleine-KÃ¶nig wrote:
-> On Wed, Oct 18, 2023 at 03:57:48PM +0200, Hans de Goede wrote:
->> Hi Sean,
->>
->> On 10/17/23 11:17, Sean Young wrote:
->>> Some drivers require sleeping, for example if the pwm device is connected
->>> over i2c. The pwm-ir-tx requires precise timing, and sleeping causes havoc
->>> with the generated IR signal when sleeping occurs.
->>>
->>> This patch makes it possible to use pwm when the driver does not sleep,
->>> by introducing the pwm_can_sleep() function.
->>>
->>> Signed-off-by: Sean Young <sean@mess.org>
->>
->> I have no objection to this patch by itself, but it seems a bit
->> of unnecessary churn to change all current callers of pwm_apply_state()
->> to a new API.
-> 
-> The idea is to improve the semantic of the function name, see
-> https://lore.kernel.org/linux-pwm/20231013180449.mcdmklbsz2rlymzz@pengutronix.de
-> for more context.
+kernel test robot noticed the following build errors:
 
-Hmm, so the argument here is that the GPIO API has this, but GPIOs
-generally speaking can be set atomically, so there not being able
-to set it atomically is special.
+[auto build test ERROR on media-tree/master]
+[also build test ERROR on linus/master v6.6-rc6]
+[cannot apply to thierry-reding-pwm/for-next dtor-input/next dtor-input/for-linus next-20231020]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-OTOH we have many many many other kernel functions which may sleep
-and we don't all postfix them with _can_sleep.
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Young/pwm-make-it-possible-to-apply-pwm-changes-in-atomic-context/20231017-173221
+base:   git://linuxtv.org/media_tree.git master
+patch link:    https://lore.kernel.org/r/a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean%40mess.org
+patch subject: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in atomic context
+config: openrisc-allmodconfig (https://download.01.org/0day-ci/archive/20231022/202310220706.HH9RMDHJ-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231022/202310220706.HH9RMDHJ-lkp@intel.com/reproduce)
 
-And for PWM controllers pwm_apply_state is IMHO sorta expected to
-sleep. Many of these are attached over I2C so things will sleep,
-others have a handshake to wait for the current dutycycle to
-end before you can apply a second change on top of an earlier
-change during the current dutycycle which often also involves
-sleeping.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310220706.HH9RMDHJ-lkp@intel.com/
 
-So the natural/expeected thing for pwm_apply_state() is to sleep
-and thus it does not need a postfix for this IMHO.
+All errors (new ones prefixed by >>):
 
-> I think it's very subjective if you consider this
-> churn or not.
-
-I consider it churn because I don't think adding a postfix
-for what is the default/expected behavior is a good idea
-(with GPIOs not sleeping is the expected behavior).
-
-I agree that this is very subjective and very much goes
-into the territory of bikeshedding. So please consider
-the above my 2 cents on this and lets leave it at that.
-
-> While it's nice to have every caller converted in a single
-> step, I'd go for
-> 
-> 	#define pwm_apply_state(pwm, state) pwm_apply_cansleep(pwm, state)
-> 
-> , keep that macro for a while and convert all users step by step. This
-> way we don't needlessly break oot code and the changes to convert to the
-> new API can go via their usual trees without time pressure.
-
-I don't think there are enough users of pwm_apply_state() to warrant
-such an exercise.
-
-So if people want to move ahead with the _can_sleep postfix addition
-(still not a fan) here is my acked-by for the drivers/platform/x86
-changes, for merging this through the PWM tree in a single commit:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
+   drivers/media/rc/ir-rx51.c: In function 'ir_rx51_on':
+>> drivers/media/rc/ir-rx51.c:37:9: error: implicit declaration of function 'pwm_apply_state'; did you mean 'pwm_apply_args'? [-Werror=implicit-function-declaration]
+      37 |         pwm_apply_state(ir_rx51->pwm, &ir_rx51->state);
+         |         ^~~~~~~~~~~~~~~
+         |         pwm_apply_args
+   cc1: some warnings being treated as errors
 
 
+vim +37 drivers/media/rc/ir-rx51.c
+
+c332e8472d7db6 Timo Kokkonen 2012-08-10  33  
+a92def1becf33e Sean Young    2016-12-19  34  static inline void ir_rx51_on(struct ir_rx51 *ir_rx51)
+c332e8472d7db6 Timo Kokkonen 2012-08-10  35  {
+99076cd117c4cb Maíra Canal   2021-11-04  36  	ir_rx51->state.enabled = true;
+99076cd117c4cb Maíra Canal   2021-11-04 @37  	pwm_apply_state(ir_rx51->pwm, &ir_rx51->state);
+c332e8472d7db6 Timo Kokkonen 2012-08-10  38  }
+c332e8472d7db6 Timo Kokkonen 2012-08-10  39  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
