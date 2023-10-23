@@ -2,157 +2,181 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8F67D3826
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 15:34:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D254D7D398B
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 16:40:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbjJWNe0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 09:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36330 "EHLO
+        id S233644AbjJWOkX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Oct 2023 10:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbjJWNeZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 09:34:25 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8A19D7D
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 06:34:21 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40806e40fccso24269535e9.2
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 06:34:21 -0700 (PDT)
+        with ESMTP id S233343AbjJWOkW (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 10:40:22 -0400
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE739C
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:40:19 -0700 (PDT)
+Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-49d14708479so1483395e0c.2
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698068060; x=1698672860; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ufOU/q/Ep1kAY17X99uhm7aprCNDlkkpHRrj3TivtTs=;
-        b=sDrgsBPE4bZH4M/PKfy4fQVZVgIVp8rCzYqRM+ZnS7bqcF40tY2FyVgTLRDmGICji+
-         gnXeF5b3difY7SUw0rJoX/AfumLTEYKR8uhgw6vWHVtWYliETIT25l6qf3O4b+oy3PKZ
-         YNKVFnxYFVVpY3R80WZP6nKHg/5gOKOlYv1kUojlwVdRTBKwR0el+6GKUlUXIp+dzxUT
-         wcigzZPhsroIZHW2ZgNwxsjNiVODQ+TyMwqp6eE3KM7vxG1WD7EwkXexfpjlKS8EVIpU
-         f1qv4zivizP49ofivbaVDeBo0HCaF/xpIOB6llezMy+4D+OtzpgUgtyJF/FLPNWjY6yi
-         LsiA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698072019; x=1698676819; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s9ub93Cdf9wtgxlTJaFYfR1eZIPMZ0+ANxwjapwdSNg=;
+        b=ZW0rhwYVaclP9otKrzZ/X/GOkeGCb95AmtlYpt/H+rFrLqjpeP0x52jjuVzWX5sZOH
+         PMgLfTndbdC1Fo1i2LFF94glXyDoLufslPNWPXD1ApnTHOvYmHlMvCTA8YBRLQJfDfWw
+         njIHzzLv50xgilX0E0XMF8ADZ3sDEXyKDT65sycopEtNa6gAgDxi1YzBx+Cyz8c+mj5m
+         9csrdRxvVFYe7gOf1zUKzVBLET50aujx/JiSppTwtCviwhHiwTXJqSX2L379d2R9g7i3
+         Ip7mQFGBP9k7Qp7DHAqrZUTGaLj49OK/mcgOprJCWj+dSefDwNTYqucdYRQZZjRNm8YK
+         b3iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698068060; x=1698672860;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufOU/q/Ep1kAY17X99uhm7aprCNDlkkpHRrj3TivtTs=;
-        b=VbaBVMWPcuqXGZ6dzb8HX6MXcY5MNTjOu12InqnjH9c2Eq0Y2M8e60I/A6v/bbY/H7
-         mTqfaQJodEEzdiQktI71VGSolPQGJlNPBFJISm0XOVLm7fc3SRR9JdSQJEk8ONyox8Gm
-         i3tJd/k+fsRdtt3AY8zInDJsl4QjBlcm1lThHn5zLRSP0I3LRq5hQUjNxnmuNEa9BXWr
-         ziAO0Wp2MBkNEfKTo0yQuNHR67CiqVNIQkuPuY/3cnPEv3zp1EBtztM6wc6kcrjTaoRW
-         kp0s28Kf0zQ2SbWFQQl+hH+ITERwps623vCqkHkhAH4Q8aUhgaPWfejsUpNWcKQ/IxwB
-         mqQQ==
-X-Gm-Message-State: AOJu0Yw+TYDkQaLKTe2cRsLEOk63UP9NfEULJUGn8b1lApTxwLX3NxZN
-        3tKTbgaCT3Lem/n+ML4Z2pXVSw==
-X-Google-Smtp-Source: AGHT+IHwl+E4YFajmY7IWxRpWgtSmDl22RT8PM7nnOAmIYDUhgS2AbK4FuptOkLbmHVvg59kegsf/Q==
-X-Received: by 2002:a05:600c:35c5:b0:405:4002:825a with SMTP id r5-20020a05600c35c500b004054002825amr7494266wmq.13.1698068059941;
-        Mon, 23 Oct 2023 06:34:19 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id 1-20020a05600c028100b004077219aed5sm14125564wmk.6.2023.10.23.06.34.18
+        d=1e100.net; s=20230601; t=1698072019; x=1698676819;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s9ub93Cdf9wtgxlTJaFYfR1eZIPMZ0+ANxwjapwdSNg=;
+        b=N2y122HuDmKLhghiEtFZyGf1aQ/URKEyKvAtd6M7ithLbjDHYGIf4YQTSo1X4AvGFP
+         ZXpY2mduuw6XRV0bceYeo1tD7hJW8nN+5va5knj/F9bu5XL4EnB3wdrgf+47n6jAXrEj
+         5rcD5C15d8Ue8eXVMnIPvYnptZkT4mCzzqgq1ucrgMjS5JJlK3q6vuBINZn407GpIfMr
+         VyChrE74CgrZDq+MbB8VHr3j9jOstSN3V1jAGq29mvi8ErmhjWUs51TPJwscwGFL/HAq
+         WRzJ6qEHPtHhM33XISTVbjSDEBkDDShSI55jJqiGMXZomzMk6wJoKKAFzdRBTi8jiIuV
+         UBrA==
+X-Gm-Message-State: AOJu0YwzUgIKYfJDtDJX9ios6xtbfkLYW5XNl898JJwq51E8HQHWB85S
+        IiKig3ecLIXoVXjnYvwjxP6ACQ==
+X-Google-Smtp-Source: AGHT+IHJKtPN+s3qbQB04ksDdQlqDmncwY1jaiRVU91xSoTR4TpQokxGMohekSd71DOrL0y+Cj2D8Q==
+X-Received: by 2002:a67:b742:0:b0:452:72ed:7020 with SMTP id l2-20020a67b742000000b0045272ed7020mr9517700vsh.32.1698072018696;
+        Mon, 23 Oct 2023 07:40:18 -0700 (PDT)
+Received: from [127.0.1.1] ([93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id f1-20020a05620a408100b007789a3499casm2725020qko.115.2023.10.23.07.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 06:34:19 -0700 (PDT)
-Date:   Mon, 23 Oct 2023 14:34:17 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sean Young <sean@mess.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Mon, 23 Oct 2023 07:40:18 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Subject: [PATCH 00/18] Add display support for the MT8365-EVK board
+Date:   Mon, 23 Oct 2023 16:40:00 +0200
+Message-Id: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMCFNmUC/x2NQQqDQAxFryJZGzAqYnuV4mJmjBoo45BMS4t49
+ 45d/MX78HgHGKuwwb06QPktJnssQHUFYXNxZZS5MLRN21EZzmLp6b5or5R2zRiGnkbfNdzTDYr
+ lnTF6dTFsl5fZMl1/Ul7k8y89pvP8ATvkV+V5AAAA
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
- atomic context
-Message-ID: <20231023133417.GE49511@aspen.lan>
-References: <cover.1697534024.git.sean@mess.org>
- <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
- <90728c06-4c6c-b3d2-4723-c24711be2fa5@redhat.com>
- <20231019105118.64gdzzixwqrztjir@pengutronix.de>
- <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
- <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Xinlei Lee <xinlei.lee@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org,
+        Alexandre Mergnat <amergnat@baylibre.com>,
+        Fabien Parent <fparent@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3206; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=DdZ6/V836kfp880KhEXam0/pg2tqhWjEoh+kbca/7ro=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBlNoXOTmxXiiwg+V6sYJXd2VtFuu8rpxi/5OZ3Bsqm
+ CqwoEM+JAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZTaFzgAKCRArRkmdfjHURakDD/
+ 0Y/V7nSPbcGNYbM6NM+UqrWkjU+MFWZUZLEATcbdpLuCUIcgdBNyWF4+ocFPmgoy79rcrLY4jR4w+2
+ tRDQaQR5qvgcN608HPRe16pHW9WavVDQUggWNMuGm4ePifBnu9bImn5/FIm89fp+CF8fhkh0QEVY9S
+ T6sSplH35tU250AEM4lXGhIwJNhegUQbWfBeixu01aOlVxzOCXOLfLr2aMBkZktYy93zp5B6o4FiEH
+ oHexmjDRB2kNmAS08GEQI4mMXQX98ZBb7sgjdh3IbXsHYKTinFUFH5sbr/qDoBrb7FgbPd/nsxQvEo
+ 1GfhIRNRPvhPsns+1Vf3IbW5bXMrUVDV/2vYTHL6B75ZTKhCDh86E0ykHoqHope+9AajwNwXZnJs7C
+ v2ibGrOHI+6896fihV9LKC5YGrooRFqHLNChFrrOEGikLsYYZOc92gZZfNnI6fSCmTTBnQV7pQNGVM
+ rcQd5AO0BuXPBAad+mSgYXGa5uZTbKynnMzV8zQXsgGmurakj9aqYDcakn1lyxre0w7+bwIPau4vj5
+ z7FerJFtDahPtdvRDp1+D0G2AdgAzfvP/WyG0DMUDQbNaaN9xk+mPtuJkoSeJNz6YCzbhAWHSqeNAa
+ h8YHMoFUk/M/2q2U1lJZaCuHBh7UT53hhnVr/H/suz0GKZrdMSGRNieqzBWg==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Oct 22, 2023 at 11:46:22AM +0100, Sean Young wrote:
-> Hi Hans,
->
-> On Sat, Oct 21, 2023 at 11:08:22AM +0200, Hans de Goede wrote:
-> > On 10/19/23 12:51, Uwe Kleine-König wrote:
-> > > On Wed, Oct 18, 2023 at 03:57:48PM +0200, Hans de Goede wrote:
-> > >> On 10/17/23 11:17, Sean Young wrote:
-> > > I think it's very subjective if you consider this
-> > > churn or not.
-> >
-> > I consider it churn because I don't think adding a postfix
-> > for what is the default/expected behavior is a good idea
-> > (with GPIOs not sleeping is the expected behavior).
-> >
-> > I agree that this is very subjective and very much goes
-> > into the territory of bikeshedding. So please consider
-> > the above my 2 cents on this and lets leave it at that.
->
-> You have a valid point. Let's focus on having descriptive function names.
+The purpose of this series is to add the display support for the mt8365-evk.
 
-For a couple of days I've been trying to resist the bikeshedding (esp.
-given the changes to backlight are tiny) so I'll try to keep it as
-brief as I can:
+This is the list of HWs / IPs support added:
+- Connectors (HW):
+  - HDMI
+  - MIPI DSI (Mobile Industry Processor Interface Display Serial Interface)
+- HDMI bridge (it66121)
+- DSI pannel (startek,kd070fhfid015)
+- SoC display blocks (IP):
+  - OVL0 (Overlay)
+  - RDMA0 (Data Path Read DMA)
+  - Color0
+  - CCorr0 (Color Correction)
+  - AAL0 (Adaptive Ambient Light)
+  - GAMMA0
+  - Dither0
+  - DSI0 (Display Serial Interface)
+  - RDMA1 (Data Path Read DMA)
+  - DPI0 (Display Parallel Interface)
 
-1. I dislike the do_it() and do_it_cansleep() pairing. It is
-   difficult to detect when a client driver calls do_it() by mistake.
-   In fact a latent bug of this nature can only be detected by runtime
-   testing with the small number of PWMs that do not support
-   configuration from an atomic context.
+The Mediatek DSI, DPI and DRM drivers are also improved.
 
-   In contrast do_it() and do_it_atomic()[*] means that although
-   incorrectly calling do_it() from an atomic context can be pretty
-   catastrophic it is also trivially detected (with any PWM driver)
-   simply by running with CONFIG_DEBUG_ATOMIC_SLEEP.
+Regards,
+Alex
 
-   No objections (beyond churn) to fully spelt out pairings such as
-   do_it_cansleep() and do_it_atomic()[*]!
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+Alexandre Mergnat (14):
+      dt-bindings: display: mediatek: aal: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: ccorr: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: color: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: dither: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: dsi: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: gamma: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: ovl: add binding for MT8365 SoC
+      dt-bindings: display: mediatek: rdma: add binding for MT8365 SoC
+      dt-bindings: pwm: add power-domains property
+      dt-bindings: pwm: add binding for mt8365 SoC
+      drm/mediatek: dsi: Improves the DSI lane setup robustness
+      arm64: defconfig: enable display connector support
+      arm64: dts: mediatek: add display blocks support for the MT8365 SoC
+      arm64: dts: mediatek: add display support for mt8365-evk
 
+Fabien Parent (4):
+      dt-bindings: display: mediatek: dpi: add power-domains property
+      dt-bindings: display: mediatek: dpi: add binding for MT8365
+      drm/mediatek: dpi: add support for dpi clock
+      drm/mediatek: add MT8365 SoC support
 
-2. If there is an API rename can we make sure the patch contains no
-   other changes (e.g. don't introduce any new API in the same patch).
-   Seperating renames makes the patches easier to review!
-   It makes each one smaller and easier to review!
+ .../bindings/display/mediatek/mediatek,aal.yaml    |   1 +
+ .../bindings/display/mediatek/mediatek,ccorr.yaml  |   3 +
+ .../bindings/display/mediatek/mediatek,color.yaml  |   1 +
+ .../bindings/display/mediatek/mediatek,dither.yaml |   1 +
+ .../bindings/display/mediatek/mediatek,dpi.yaml    |  24 +++
+ .../bindings/display/mediatek/mediatek,dsi.yaml    |   2 +
+ .../bindings/display/mediatek/mediatek,gamma.yaml  |   1 +
+ .../bindings/display/mediatek/mediatek,ovl.yaml    |   1 +
+ .../bindings/display/mediatek/mediatek,rdma.yaml   |   1 +
+ .../devicetree/bindings/pwm/mediatek,pwm-disp.yaml |   9 +
+ arch/arm64/boot/dts/mediatek/mt8365-evk.dts        | 183 +++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi           | 146 ++++++++++++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/gpu/drm/mediatek/mtk_dpi.c                 |  50 +++++-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  30 ++++
+ drivers/gpu/drm/mediatek/mtk_dsi.c                 |   2 +
+ 16 files changed, 455 insertions(+), 1 deletion(-)
+---
+base-commit: d27bed55ce32b0732ef65561851fec3dc8d01852
+change-id: 20231023-display-support-c6418b30e419
 
+Best regards,
+-- 
+Alexandre Mergnat <amergnat@baylibre.com>
 
-Daniel.
-
-
-[*] or do_it_nosleep()... etc.
