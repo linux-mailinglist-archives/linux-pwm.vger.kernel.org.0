@@ -2,56 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACEF97D3DC0
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 19:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 884B57D3DC8
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 19:32:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233954AbjJWRbk (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 13:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35204 "EHLO
+        id S231264AbjJWRc1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Oct 2023 13:32:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233024AbjJWRbJ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 13:31:09 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987CFD6E
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 10:30:06 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1quyke-00070y-4X; Mon, 23 Oct 2023 19:30:04 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1quykb-003lLS-AE; Mon, 23 Oct 2023 19:30:01 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1quykb-004Ue5-0e; Mon, 23 Oct 2023 19:30:01 +0200
-Date:   Mon, 23 Oct 2023 19:29:58 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        kernel@pengutronix.de,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 01/11] pwm: atmel-hlcdc: Use DEFINE_SIMPLE_DEV_PM_OPS
- for PM functions
-Message-ID: <20231023172958.xbfptbl4khct657g@pengutronix.de>
-References: <20231013174204.1457085-13-u.kleine-koenig@pengutronix.de>
- <20231013174204.1457085-14-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S233839AbjJWRcP (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 13:32:15 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9791711;
+        Mon, 23 Oct 2023 10:31:53 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AAE8C433C9;
+        Mon, 23 Oct 2023 17:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698082312;
+        bh=RoIE1xXK4oaL8rcaDxktETkJEouLHhkNssWXuP5Epe0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qqlLv54Os7Roj262+yZrxTxWxk6jTaW36NOHexBdLV1QrnXB3c7ChlTjcUyjiEM4T
+         UhJxniIAuRLa6zq8WeZEzE/EPPvALijyHrcJ0fxP9UKlcFAz8SZhkugcYe4uzDniEc
+         q5oeD+2GNT1qf8TxI7nm5Qho98DiuSuUX/g0YUFjmiGqFpOMis7QWLeURZLUutX/Z5
+         +BgQxoD9TM8KvjdN/Qn8+evhg6A+xFMCrShDuqJT8UNIIus5cxc1PARM0W7kAH8LFf
+         WY70VXysTuqxjD2S4sEEAFJ9Nx54Sv3kfej8hH868br2TwO6daWLNczPwP2qbjYoad
+         PsVgcZ6Yn1Vsg==
+Date:   Mon, 23 Oct 2023 18:31:45 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Xinlei Lee <xinlei.lee@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 02/18] dt-bindings: display: mediatek: ccorr: add binding
+ for MT8365 SoC
+Message-ID: <20231023-reshoot-liquefy-429aacb68694@spud>
+References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
+ <20231023-display-support-v1-2-5c860ed5c33b@baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hytmesjdv5r4p2ko"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ARUire+fEKHR8b9F"
 Content-Disposition: inline
-In-Reply-To: <20231013174204.1457085-14-u.kleine-koenig@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20231023-display-support-v1-2-5c860ed5c33b@baylibre.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,51 +70,65 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---hytmesjdv5r4p2ko
-Content-Type: text/plain; charset=iso-8859-1
+--ARUire+fEKHR8b9F
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 13, 2023 at 07:42:06PM +0200, Uwe Kleine-K=F6nig wrote:
-> This macro has the advantage over SIMPLE_DEV_PM_OPS that we don't have to
-> care about when the functions are actually used, so the corresponding
+On Mon, Oct 23, 2023 at 04:40:02PM +0200, Alexandre Mergnat wrote:
+> Display Color Correction for MT8365 is compatible with another SoC.
+> Then, add MT8365 binding along with MT8183 SoC.
+
+This commit message's first line is too vague & the second doesn't make
+sense. I suspect something as succinct as "Document the display colour
+correction on mt<foo>, which is compatible with that of the mt<bar>"
+does what you are looking for.
+
+I suspect this is going to apply to the rest of the series...
+
+Cheers,
+Conor.
+
+
 >=20
-> Also make use of pm_ptr() to discard all PM related stuff if CONFIG_PM
-> isn't enabled.
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml |=
+ 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+ccorr.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,cc=
+orr.yaml
+> index 8c2a737237f2..9f8366763831 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.y=
+aml
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.y=
+aml
+> @@ -24,6 +24,9 @@ properties:
+>        - enum:
+>            - mediatek,mt8183-disp-ccorr
+>            - mediatek,mt8192-disp-ccorr
+> +      - items:
+> +          - const: mediatek,mt8365-disp-ccorr
+> +          - const: mediatek,mt8183-disp-ccorr
+>        - items:
+>            - enum:
+>                - mediatek,mt8186-disp-ccorr
+>=20
+> --=20
+> 2.25.1
+>=20
 
-Something in my processing queue ate a line after the first paragraph:
-
-	#ifdef can be dropped.
-
-I don't understand yet where this happend. It also affects a few other
-patches in this series. I'll investigate and resend. In the meantime I
-discard this series from patchwork.
-
-Thanks to Jan L=FCbbe who pointed out that problem to me (by PM).
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---hytmesjdv5r4p2ko
+--ARUire+fEKHR8b9F
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU2rZUACgkQj4D7WH0S
-/k4+hgf+KsA50qBARXgzOw53g2n42Aw6CfQzX+3ap3mZJEuNaoOQN1xBwSh/9P9h
-lMWFWPwwbGkIW7OKS6r0QTV5wuqZAlO+GeJwULEFApvVajt7brL63btvwtgX8FvO
-dA2u0xWDbbTTqIojWI1b4chH3c3K3xT5A5Pwv+Ck/u4XwLIBtQyb0zVfiZoNDwVU
-4JDEgYwk8PTZ1a7IrSI1dWqMeZN4NneQdfbkWn236R7TNwegj4oLAs4+irnaBX2S
-EMMFes1YOFc9ErvAJCxHeOJIKY/fxgupmAQvy+UuDjh3QULi/OeHvkVtWdF2mMt/
-Y8KsYCatREcKZxhGeTPoyd/WldesRA==
-=QD/8
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTauAQAKCRB4tDGHoIJi
+0rG1AQDVNLCTauTO68aeJeXwZERo8tQp+TLgjwiLq+AqZulyQwEA9uXOZb3JrBGq
+ZdzQoSqOFaugEQ+Xa3te/HhYaNLcNwM=
+=fTxV
 -----END PGP SIGNATURE-----
 
---hytmesjdv5r4p2ko--
+--ARUire+fEKHR8b9F--
