@@ -2,60 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A19B27D39DA
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 16:42:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D701E7D39DD
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 16:42:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233658AbjJWOmZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 10:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
+        id S233684AbjJWOme (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Oct 2023 10:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233654AbjJWOlr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 10:41:47 -0400
-Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B281FCB
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:12 -0700 (PDT)
-Received: by mail-vs1-xe33.google.com with SMTP id ada2fe7eead31-457c7177a42so1142844137.2
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:12 -0700 (PDT)
+        with ESMTP id S233670AbjJWOmH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 10:42:07 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501081716
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:16 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id af79cd13be357-7781bc3783fso240857585a.1
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698072071; x=1698676871; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698072074; x=1698676874; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Nk4VEc7GrlonIpYIKhVQ5D+oJ75rejlCYM8CDWNoEgk=;
-        b=Kmh1avlxZufzXl4Ouh9u2p8vfw3yzmlsXAAzMvBDBMK12bMl0N/mMxiGJlSVy4kt9l
-         TzR5hB17bNhHFWdvqCksOPXHXtIU+EqgmdMKXyJ/rMqaqpQfM89+epxZ5hQtQuMWZTbK
-         FxEGTsFyHcUid54Z0F1xaYUmU5fyrQIj40Du0eUpyQRNOiphepsxK+DhF3/cpFmwGTkJ
-         xA2mOqxYvBV422db5063PfzokponTEjvvMuKt6dcgiX8IAJv9VBetiHQnhSNEMG2BStK
-         7dNfZctdblNOY6QVNEHPs1bR8ZOwttoAKvMJkQc04MWNyCoQLV3+TdGzPyItGjUwyxtl
-         KVMw==
+        bh=GnW1vwbTtC2HOu/cZzh2Qo1PkLHHngu1dkPjgS4ENio=;
+        b=WbXjTM0E51V/eSo+q8o1+WjvhQavSqclhyizxayANUTJFArsJmp/UPI3cuXQlHaemv
+         Bb8Z+WmjwiJbH9q3T9vkPr4LEAUfnENf5uVrzZh4Rdl02kpF/g3l7bZXShxrUoxS6XDu
+         uyHZAdDa9H7bPNhEpp08sao9lWdk06MigacxOuYFPqJKV8kOvMm2gB9HilwffWiXhd3u
+         KXJL5khK0v/bLhoP8x4MfmT+5LDyIl30SGIWNqwfDdbfIhIcJCxpTfV92k4SwcmL3c0+
+         EQpUGSnGy8x3E16DXSBlKhLCLctBU2QYNFWlp6ZVNwV3skXoUlyG7BkaVUqj8sa+5lLl
+         tMig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698072071; x=1698676871;
+        d=1e100.net; s=20230601; t=1698072074; x=1698676874;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Nk4VEc7GrlonIpYIKhVQ5D+oJ75rejlCYM8CDWNoEgk=;
-        b=rNqdhO5tEs5i0YZpWeUB3SZaNeFTQ4cjTVQ9RYtZaEsj/+2gPUQXzJ4RT8KpuVNl95
-         EbafhIV/6ntQH3Yiifi24kYJMQqZR9fxJNXdz25ehqlsJZ5ujnDdfua2OR6pKZR76vgg
-         pNFIKsbwRqGnNo7CCKyeYPW8RtlSQQJSQL8RWkfA8OyI67ODRpNFNUAwTm/56wN/Mdo+
-         KwB9txDGhe3JveLGg/pR75qV0IPGn19JuPbiar/ZVAGhscaOZyHLaiS79wfV+5AjQK/N
-         IJ2JuOdgm2U5QYH5UgCRHDO9oQkA/ANKth0TfXobOz94vftg3dO905UGcd7EYqpX+Iab
-         Ezfg==
-X-Gm-Message-State: AOJu0Yz17JQ5MZq8igE9jf9QvDVvmsnkKHVEZ4npMNVSGmkstLfMTxlq
-        7rNBndgmt7cGDJ5mD1shLZOZ0g==
-X-Google-Smtp-Source: AGHT+IGi20COa+cJp6G1XuUW8JjgOjJlZZG7i7oYmIj96ssiOC/4MvZePvje3VpCkVCDHPeEy9cLcA==
-X-Received: by 2002:a67:c085:0:b0:457:cd8b:57b6 with SMTP id x5-20020a67c085000000b00457cd8b57b6mr8547423vsi.31.1698072071111;
-        Mon, 23 Oct 2023 07:41:11 -0700 (PDT)
+        bh=GnW1vwbTtC2HOu/cZzh2Qo1PkLHHngu1dkPjgS4ENio=;
+        b=UZU3Xr6Z9Gcz9gwQEqOK4uEFpLx3sBlcrEYQfvP1TEf2fV8QTN83mJlHETjN3Om9hW
+         YtlvcM8J/MQHCPFqjEmoAqM+Wmc/9SiogTNJdb+GWhv77bIWUpAVGrbRE9Z6GUazLSzw
+         Sel4rl7ZEdXGxDSPHmhw8zBiHTcFpcM0Ox8Z37Uq3Dp35j4EZZmznOx3bHFvlGbSCrv0
+         GtS91cBLN/fI9DsRPs/2MJ5tZ6qRQCzz+i9MZdlGPYzdG9J9EWc1kxQloHs2oNG5vUsG
+         SGcdnfb4f2tYJfF+fLa5CnXwiMABhdm5ks7xcfH5lhGf9rOxiXItA86WagHveTQPg5z9
+         VSPg==
+X-Gm-Message-State: AOJu0YxRmuRKoEWy1U+gkvJXaSpUJZIweWYP330PePi1QnIOhNIxr1iK
+        NEX4t9SV9DynWDAZ5I2Yow75jw==
+X-Google-Smtp-Source: AGHT+IG05HZAMl6qM23cmvchPry/9vyia7XBR6CQbmQYA7BGiJRGKziIDoX543mAemU07ICYeQfxig==
+X-Received: by 2002:a05:620a:2b8c:b0:773:d86f:ec88 with SMTP id dz12-20020a05620a2b8c00b00773d86fec88mr9784107qkb.35.1698072074736;
+        Mon, 23 Oct 2023 07:41:14 -0700 (PDT)
 Received: from [127.0.1.1] ([93.5.22.158])
-        by smtp.googlemail.com with ESMTPSA id f1-20020a05620a408100b007789a3499casm2725020qko.115.2023.10.23.07.41.07
+        by smtp.googlemail.com with ESMTPSA id f1-20020a05620a408100b007789a3499casm2725020qko.115.2023.10.23.07.41.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 07:41:10 -0700 (PDT)
-From:   amergnat@baylibre.com
-Date:   Mon, 23 Oct 2023 16:40:15 +0200
-Subject: [PATCH 15/18] drm/mediatek: add MT8365 SoC support
+        Mon, 23 Oct 2023 07:41:14 -0700 (PDT)
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+Date:   Mon, 23 Oct 2023 16:40:16 +0200
+Subject: [PATCH 16/18] arm64: defconfig: enable display connector support
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231023-display-support-v1-15-5c860ed5c33b@baylibre.com>
+Message-Id: <20231023-display-support-v1-16-5c860ed5c33b@baylibre.com>
 References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
 In-Reply-To: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
 To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
@@ -79,112 +79,51 @@ Cc:     dri-devel@lists.freedesktop.org,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-pwm@vger.kernel.org,
-        Alexandre Mergnat <amergnat@baylibre.com>,
-        Fabien Parent <fparent@baylibre.com>
+        Alexandre Mergnat <amergnat@baylibre.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2718; i=amergnat@baylibre.com;
- h=from:subject:message-id; bh=ZnkaVO4f0o9RizPBgJV2PC+/Ox7JmjKaiFkOq/2YPew=;
- b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBlNoXPvl7J+ly89uTeJkwL0erLnyNQp9pX/flwDfIL
- raGDyHeJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZTaFzwAKCRArRkmdfjHURRWTEA
- Cm6umD5gVmCR7xOl83GRyS+2etvws/qE9QDQtrdSXVazCbRh5I4OqeGTz5Wc/fqy9CeQ5923/lkKam
- Xw/JEizkC4ZVPJZOAe+6s82urCvz70SxQBFupbIl4RPXYIrx49T8ElS6+rr1pHMHn94YucqXY+a32f
- GMDycbKDPS3BcT1to+1F3fia0IpdzlYAS0QTnhxESja3h7ZPuMhNLE0pf8F+IZwrGeLCGifEroUqHE
- yz2eBBwDEsuhpRhwtrfZQONp//kfSqOG+SxxegQMja67q6Af6r+wCgaWtGXF8DD3rXfjHy310goD/Q
- 3kjqLOk2eDKyCdTJLwq9ha1vr2raaT+Saj6ji5h36b7pQyKGusNTU3U4K/m2ICV0PMqY4bz1vTAvtn
- BraK0gFCfeYHz1JplSTOiKjJJOybGT6rhaTHEorLi8lFFtxqntfVvvFHap2mbH5OqE1etzR/51+opn
- mbUeGPQ/WKlStmhdMfmW3BHGD4aHc25cz8gis2NPw/Gri3XVURa3m0PKzoxy5sG+uFs8QTEuyk3+5P
- 4lQvoNrLw/og2NCO2k5EZbGj4BL0KSNV3be5TNYyB+1MY1EwBtmRnqPFAZcy9tMJIyGnueWGJzR1bx
- /8uq/HHOr9EgLyx4kqNAfpC4e+UIsbhOPJiI/k8F23WM3cftiBOKY3nOBjcw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=701; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=UiHNb4i6ojEuqkwvKy30tzrI8LnM4UXa6wUtnNRc7vw=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBlNoXPSDmUpXOWQ9V2uW9CzePYmobdbyaSkVPMW+Ev
+ 5NfjLaiJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZTaFzwAKCRArRkmdfjHURffnD/
+ wM151OCbx3hPLNKgDMuV9MTWFsZul3HyMZSqmD8UVRycvM0Z//6XVSw1gyZYj0W/s9GK6kMKZqs2sO
+ 7c4yH5v+aCP1yvhujwT8YOQlbOii0IrL/umKyYWlhqYzV7wGlmuwk8gYk0JjHZmE5r35l1TpYdDdfp
+ +7tmPg8In/SSN/fxjenTyNXInxy4wVs7upezcGhDIU7jfNubTm8MogNu6F0kiPMyPRlQuzGK8O8GPd
+ 3eT7cLUatFHFfSp2zFnX4G2a8990z4H7mhWu41aYHKQ/zFc25YeIgLPb8l3niEyTl3x3dGQLwpcYc2
+ VOfvJD+nCnmQn14NAhvC4Ln/Gg/V69TduURz6Aixd0GxREtlKpzQF6Ebk4+BfMmujIOu6dh+5D3i7m
+ injvvrxDSaVuqpEhy7ofrRB26+TDj0z+pPASQyxkoc5CfRT3tfZRm60TQ0G8aPOJFd4XlNe9EHEy5C
+ +Wq3GQD0s1mghVWSiXZWiHo38d8vvevolFLn6+OkeVYNyjCBlqQbEnEmqeIyamH0rT1zC5gnFNdiJT
+ FjfkD3Hv/9iWexMBG2WgPeQm/cRJt1VQOncH+Se8YcD1H5QoDTeVv3dl1bVtUdCCnjdBuREG3NpcRQ
+ bUDH4oZTFn1aUt9JzckJmJ0r/DqF/rEceT+liWPK1MWQP3Omymc94kMzEotA==
 X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
  fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-From: Fabien Parent <fparent@baylibre.com>
+Enable this feature for the i350-evk HDMI connector support.
 
-Add DRM support for MT8365 SoC.
-
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
 Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 93552d76b6e7..682ab464186f 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -227,6 +227,22 @@ static const unsigned int mt8195_mtk_ddp_ext[] = {
- 	DDP_COMPONENT_DP_INTF1,
- };
- 
-+static const unsigned int mt8365_mtk_ddp_main[] = {
-+	DDP_COMPONENT_OVL0,
-+	DDP_COMPONENT_RDMA0,
-+	DDP_COMPONENT_COLOR0,
-+	DDP_COMPONENT_CCORR,
-+	DDP_COMPONENT_AAL0,
-+	DDP_COMPONENT_GAMMA,
-+	DDP_COMPONENT_DITHER0,
-+	DDP_COMPONENT_DSI0,
-+};
-+
-+static const unsigned int mt8365_mtk_ddp_ext[] = {
-+	DDP_COMPONENT_RDMA1,
-+	DDP_COMPONENT_DPI0,
-+};
-+
- static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
- 	.main_path = mt2701_mtk_ddp_main,
- 	.main_len = ARRAY_SIZE(mt2701_mtk_ddp_main),
-@@ -311,6 +327,14 @@ static const struct mtk_mmsys_driver_data mt8195_vdosys1_driver_data = {
- 	.mmsys_dev_num = 2,
- };
- 
-+static const struct mtk_mmsys_driver_data mt8365_mmsys_driver_data = {
-+	.main_path = mt8365_mtk_ddp_main,
-+	.main_len = ARRAY_SIZE(mt8365_mtk_ddp_main),
-+	.ext_path = mt8365_mtk_ddp_ext,
-+	.ext_len = ARRAY_SIZE(mt8365_mtk_ddp_ext),
-+	.mmsys_dev_num = 1,
-+};
-+
- static const struct of_device_id mtk_drm_of_ids[] = {
- 	{ .compatible = "mediatek,mt2701-mmsys",
- 	  .data = &mt2701_mmsys_driver_data},
-@@ -336,6 +360,8 @@ static const struct of_device_id mtk_drm_of_ids[] = {
- 	  .data = &mt8195_vdosys0_driver_data},
- 	{ .compatible = "mediatek,mt8195-vdosys1",
- 	  .data = &mt8195_vdosys1_driver_data},
-+	{ .compatible = "mediatek,mt8365-mmsys",
-+	  .data = &mt8365_mmsys_driver_data},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mtk_drm_of_ids);
-@@ -703,6 +729,8 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
- 	  .data = (void *)MTK_DISP_MUTEX },
- 	{ .compatible = "mediatek,mt8195-disp-mutex",
- 	  .data = (void *)MTK_DISP_MUTEX },
-+	{ .compatible = "mediatek,mt8365-disp-mutex",
-+	  .data = (void *)MTK_DISP_MUTEX },
- 	{ .compatible = "mediatek,mt8173-disp-od",
- 	  .data = (void *)MTK_DISP_OD },
- 	{ .compatible = "mediatek,mt2701-disp-ovl",
-@@ -765,6 +793,8 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
- 	  .data = (void *)MTK_DSI },
- 	{ .compatible = "mediatek,mt8186-dsi",
- 	  .data = (void *)MTK_DSI },
-+	{ .compatible = "mediatek,mt8365-dpi",
-+	  .data = (void *)MTK_DPI },
- 	{ }
- };
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5315789f4868..0a60e7616abe 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -839,6 +839,7 @@ CONFIG_DRM_PANEL_RAYDIUM_RM67191=m
+ CONFIG_DRM_PANEL_SITRONIX_ST7703=m
+ CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+ CONFIG_DRM_PANEL_VISIONOX_VTDR6130=m
++CONFIG_DRM_DISPLAY_CONNECTOR=m
+ CONFIG_DRM_LONTIUM_LT8912B=m
+ CONFIG_DRM_LONTIUM_LT9611=m
+ CONFIG_DRM_LONTIUM_LT9611UXC=m
 
 -- 
 2.25.1
