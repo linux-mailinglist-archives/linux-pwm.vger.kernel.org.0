@@ -2,132 +2,130 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B287D305A
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 12:48:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25E847D3727
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 14:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbjJWKsT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 06:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34258 "EHLO
+        id S230023AbjJWMtR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Oct 2023 08:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjJWKsR (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 06:48:17 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B6EEE;
-        Mon, 23 Oct 2023 03:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698058095; x=1729594095;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=j6gkewFE2ehbSRRm8yxR5V6tYph8e2bExlA+57BfIvw=;
-  b=bF0FOYM+BRR4CCf4BbSO3MbwKimuswQBUZn/illY++MONMcfP/6ch2cR
-   4mWlOuZTMAesYi3DqXv2DVGSCqNjxfwWgF5arYrQXnaaB0+xrJzh3EQIm
-   L7zIevLd8uXFgrQyaUAVCBkvkJEMXJ8UIr9sJhuOvmBxGoJxf26YMnbFj
-   l8TyX1xQQqKpRY8iHbvANwAuOkjWHc2FUjiu/OMOsG5cmI/FSuDn2I+uA
-   zJiemBV8RvU0tGA5oKJfXmvXUPdRLNOXpjR3zGeGdzM1K6umaCOZUDz2+
-   4Q5vLqPX+oEnjgxXPPLUrGRFnTiC18tLv7B3lM1ewQrw+FKStW7DW44Le
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="371880227"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="371880227"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 03:47:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="823925172"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="823925172"
-Received: from evlad-mobl.ger.corp.intel.com (HELO localhost) ([10.252.47.180])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 03:47:47 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        with ESMTP id S229933AbjJWMtR (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 08:49:17 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E92DF
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 05:49:13 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2c5720a321aso20487631fa.1
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 05:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698065351; x=1698670151; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5F2/b6x1LCbJBCL/hGp4wgBjwVGE9CeqqG2gwc9QLwU=;
+        b=u39RIBv1Yj049P7EKDELlMkE6cGW3gTDyXQwBj2rcz0m6WyBqMjCkSanN+rhaIzljt
+         +Pg3eXQT/4ew7gmEu2CRa6q5TxI+m0AZhmFGrAvazx91t02ZeWmIU6F7ptY+dxk56Bzc
+         CTumJD39sqiuYB+8CFt/OvlkQsMIHraj549twqWRieHATy0pA6GxhDY5s36JIBxPhIdB
+         CgQKsW4ogTIbVCbRyZq+iYecsQ7/BGdjuoQOKoTEGF6lO1Y7KIjSudYdvjmzWdW0WNgQ
+         3+MnSMXhjtjP0AUW3n5SbvY9PvUsqsfQ7BOamSutWUWHJavf46fplBbE9hSdJoO0TnvS
+         ZZNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698065351; x=1698670151;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5F2/b6x1LCbJBCL/hGp4wgBjwVGE9CeqqG2gwc9QLwU=;
+        b=B3ZkieDEc3cjG6YsoDRCW7FLju1R4M+Jqt9MDe1P/2iVmjn5qTvBXAOYHpED37Bwy0
+         XCGm3+s1C9kR1UIx7Z7yeWM1zIN+3Fvaftj4fWborkjpa8W9geqNIVYQ16qscuK4BDOz
+         qsgp88r34W1iHqVoHHaFgJgd4kvJuVZGc7sYmR9uf8/a8szgEQgQ2DKvctiN7UYVg1+I
+         5IQlUhCMnWGenGUWxZmCx01LaQBjMFrVcc6sQX1JN73+f7ifJpLdxWqwjVJPxQ8BMlcP
+         28K71AQ/6LzGltT5Knfpt+JYWFvmoI95seBO2J95bQSJzWFpDq2RtbJnAmCI+uwEAWfk
+         SdkQ==
+X-Gm-Message-State: AOJu0Yy6QpsyxVbxA4fzYSGpod6BN7ejtJ77/KQHUyphVDLRV70uS+QC
+        2oyv5rbVXOVUcxp7aPY9tdX/jg==
+X-Google-Smtp-Source: AGHT+IGaTg0NdwZ2awpa8SRAqNobR151fbJLl50rAUDEuxtz05JE5xRAXwVriQOeZMaE926br6ZqKw==
+X-Received: by 2002:a2e:7c15:0:b0:2c5:5926:de52 with SMTP id x21-20020a2e7c15000000b002c55926de52mr6031556ljc.53.1698065351491;
+        Mon, 23 Oct 2023 05:49:11 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id j6-20020a05600c488600b004080f0376a0sm9320997wmp.42.2023.10.23.05.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 05:49:11 -0700 (PDT)
+Date:   Mon, 23 Oct 2023 13:49:09 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6ni?= =?utf-8?Q?g?= 
-        <u.kleine-koenig@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
- atomic context
-In-Reply-To: <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1697534024.git.sean@mess.org>
- <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
-Date:   Mon, 23 Oct 2023 13:47:44 +0300
-Message-ID: <87y1ftboof.fsf@intel.com>
+        Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-pwm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] backlight: pwm_bl: Avoid backlight flicker applying
+ initial PWM state
+Message-ID: <20231023124909.GC49511@aspen.lan>
+References: <20230608-backlight-pwm-avoid-flicker-v1-1-afd380d50174@pengutronix.de>
+ <20231018210741.6t3yfj6qgmpwhhlo@pengutronix.de>
+ <20231020112727.GF23755@aspen.lan>
+ <20231020121148.3g6t3v5uuyubifpb@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231020121148.3g6t3v5uuyubifpb@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, 17 Oct 2023, Sean Young <sean@mess.org> wrote:
-> diff --git a/drivers/gpu/drm/i915/display/intel_backlight.c b/drivers/gpu/drm/i915/display/intel_backlight.c
-> index 2e8f17c045222..cf516190cde8f 100644
-> --- a/drivers/gpu/drm/i915/display/intel_backlight.c
-> +++ b/drivers/gpu/drm/i915/display/intel_backlight.c
-> @@ -274,7 +274,7 @@ static void ext_pwm_set_backlight(const struct drm_connector_state *conn_state,
->  	struct intel_panel *panel = &to_intel_connector(conn_state->connector)->panel;
->  
->  	pwm_set_relative_duty_cycle(&panel->backlight.pwm_state, level, 100);
-> -	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
-> +	pwm_apply_cansleep(panel->backlight.pwm, &panel->backlight.pwm_state);
->  }
->  
->  static void
-> @@ -427,7 +427,7 @@ static void ext_pwm_disable_backlight(const struct drm_connector_state *old_conn
->  	intel_backlight_set_pwm_level(old_conn_state, level);
->  
->  	panel->backlight.pwm_state.enabled = false;
-> -	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
-> +	pwm_apply_cansleep(panel->backlight.pwm, &panel->backlight.pwm_state);
->  }
->  
->  void intel_backlight_disable(const struct drm_connector_state *old_conn_state)
-> @@ -749,7 +749,7 @@ static void ext_pwm_enable_backlight(const struct intel_crtc_state *crtc_state,
->  
->  	pwm_set_relative_duty_cycle(&panel->backlight.pwm_state, level, 100);
->  	panel->backlight.pwm_state.enabled = true;
-> -	pwm_apply_state(panel->backlight.pwm, &panel->backlight.pwm_state);
-> +	pwm_apply_cansleep(panel->backlight.pwm, &panel->backlight.pwm_state);
->  }
->  
->  static void __intel_backlight_enable(const struct intel_crtc_state *crtc_state,
+On Fri, Oct 20, 2023 at 02:11:48PM +0200, Uwe Kleine-König wrote:
+> Hello Daniel,
+>
+> On Fri, Oct 20, 2023 at 12:27:27PM +0100, Daniel Thompson wrote:
+> > On Wed, Oct 18, 2023 at 11:07:41PM +0200, Uwe Kleine-König wrote:
+> > > Hello Philipp,
+> > >
+> > > On Thu, Jun 08, 2023 at 04:11:14PM +0200, Philipp Zabel wrote:
+> > > > The initial PWM state returned by pwm_init_state() has a duty cycle
+> > > > of 0 ns.
+> > >
+> > > This is only true for drivers without a .get_state() callback, isn't it?
+> >
+> > pwm_init_state() explicitly zeros the duty-cycle in order to avoid
+> > problems when the default args have a different period to the currently
+> > applied config:
+> > https://elixir.bootlin.com/linux/latest/source/include/linux/pwm.h#L174
+>
+> Ah right, pwm_init_state() is strange in a different way than I
+> remembered :-) pwm_get_state() is only called to get .enabled set
+> appropriately.
+>
+> Looking at the callers:
+>
+>  <snip>
 
-The i915 parts are
+>  - drivers/video/backlight/lm3630a_bl.c
+>    explictily sets .enabled before calling pwm_apply_state()
+>
+>  - drivers/video/backlight/lp855x_bl.c
+>    explictily sets .enabled before calling pwm_apply_state()
+>
+>  - drivers/video/backlight/pwm_bl.c
+>    This is the one we currently discuss. I think even with the patch
+>    applied it uses the .enabled value returned by pwm_init_state() but
+>    it shouldn't.
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+Agreed.
 
-for merging via whichever tree you find most convenient, and with
-whatever naming you end up with.
+> So all consumers using pwm_init_state() either don't use the .enabled
+> value returned by pwm_init_state() or at least shouldn't do that.
 
--- 
-Jani Nikula, Intel
+Looking a little deeper in the PWM code, it looks to me like pwm_bl.c
+could just use pwm_adjust_config() during probe to transition between
+bootloader settings and kernel settings!
+
+
+Daniel.
