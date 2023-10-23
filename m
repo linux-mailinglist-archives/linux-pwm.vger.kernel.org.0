@@ -2,102 +2,180 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E69DF7D3E37
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 19:46:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8E4F7D405F
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 21:40:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbjJWRq4 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 13:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
+        id S230012AbjJWTkF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Oct 2023 15:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjJWRqw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 13:46:52 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2294D94
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 10:46:50 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1quz0q-0001OX-DN; Mon, 23 Oct 2023 19:46:48 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1quz0p-003lQ8-Vz; Mon, 23 Oct 2023 19:46:48 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1quz0p-004VDW-Mr; Mon, 23 Oct 2023 19:46:47 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v3 11/11] pwm: tiehrpwm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
-Date:   Mon, 23 Oct 2023 19:46:28 +0200
-Message-ID: <20231023174616.2282067-24-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231023174616.2282067-13-u.kleine-koenig@pengutronix.de>
-References: <20231023174616.2282067-13-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229568AbjJWTkE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 15:40:04 -0400
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8A2B4;
+        Mon, 23 Oct 2023 12:40:00 -0700 (PDT)
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+        by mx1.sberdevices.ru (Postfix) with ESMTP id AC12F100009;
+        Mon, 23 Oct 2023 22:39:56 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru AC12F100009
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+        s=mail; t=1698089996;
+        bh=Hhd9o3DW9H02Ejo8WGubQDNC+sSIsjqhUPhxroLp0IQ=;
+        h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+        b=Qzlt0w7tTATPGsbMuBs4DaPGSRQmI03REzogB+ki/buGpx2PFXzNGpKqthBzXJXF/
+         shjiwowWttLUICQjG2Sx2B2mOiIn9LtVx3rs9HdmxuZgW4TP9o19dw0RSU7cuXcZSY
+         NqJDExsc0U5rC8EHjFTAlCF1B19hD5E6vTGOG5610j7F3cLiIg6/0W9WVwjld0E83C
+         mgqUmhrQpsd4p4ZZXCCSzg3eSGsYyWYNnffrx8/9BPijeegCItjGGUBL46za6l6se7
+         cAJmooNCJFccC31E7K0+GgAqNhgSxniWvmGBAM61tNIFZnit5UU4/cP3mQZ9ScmZ9t
+         D60edgYn72r+w==
+Received: from p-i-exch-sc-m01.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.sberdevices.ru (Postfix) with ESMTPS;
+        Mon, 23 Oct 2023 22:39:54 +0300 (MSK)
+Received: from [192.168.1.127] (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.37; Mon, 23 Oct 2023 22:39:54 +0300
+Message-ID: <07f978ec-2f18-4079-afb1-4d37827806a3@salutedevices.com>
+Date:   Mon, 23 Oct 2023 22:40:15 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1444; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=zKNx627VcZI0Zve5kENW6QIzT+3jlPN65f9VZpkUp/8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlNrF171FkrEJjLxirSboGiNDHJBqu2t2bF1b5y NhSg+lZU2GJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZTaxdQAKCRCPgPtYfRL+ TjV1B/9HfE6akzL0YNFExg7hAOR3/xHHATJwKV9BiTauFisvUtXqrI9757R+cuBTReytfAdX2IT EaPTgcB/MvteXLvFpAMSBM9BnAdBtb2haQg61DZid/eUS4ljV/nEULnhdlVFdskdM2rXuL5A+tG 3nCiU3VRQqLBhNiuw8ykKdCrTpMxkWwLqmbQ8RM9G3JTosjuXTuz5lmewuFc+3GLH53MMyRS0+z eByIUeIDWTs9uOS1qTHwiXZYWycrPy4+nCn5vejbQAIuo1/A31L0XSxO72E/R/oRKrR1tbkMwa2 87hy11bWvcSL/YjtRG6VFJq23QYyAErpo1SzNSHXwi9uCZZ8
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 RESEND] pwm: meson: add pwm support for S4
+Content-Language: en-US
+To:     Yixun Lan <dlan@gentoo.org>, JunYi Zhao <junyi.zhao@amlogic.com>
+CC:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>,
+        <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
+        <jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
+        <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20231016052457.1191838-1-junyi.zhao@amlogic.com>
+ <20231016223749.GA7647@ofsar>
+From:   George Stark <gnstark@salutedevices.com>
+In-Reply-To: <20231016223749.GA7647@ofsar>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [100.64.160.123]
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 180817 [Oct 23 2023]
+X-KSMG-AntiSpam-Version: 6.0.0.2
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 542 542 3d23828e213bab96daa5e52f9cef518f74e40214, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;lists.infradead.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;p-i-exch-sc-m01.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2023/10/23 18:44:00
+X-KSMG-LinksScanning: Clean, bases: 2023/10/23 18:45:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2023/10/23 18:09:00 #22267281
+X-KSMG-AntiVirus-Status: Clean, skipped
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This macro has the advantage over SIMPLE_DEV_PM_OPS that we don't have to
-care about when the functions are actually used, so the corresponding
-#ifdef can be dropped.
+Hello Yixun Lan
 
-Also make use of pm_ptr() to discard all PM related stuff if CONFIG_PM
-isn't enabled.
+On 10/17/23 01:37, Yixun Lan wrote:
+> Hi JunYi
+> 
+> On 13:24 Mon 16 Oct     , JunYi Zhao wrote:
+>> From: "junyi.zhao" <junyi.zhao@amlogic.com>
+>>
+>> Support PWM for S4 soc.
+>> Now the PWM clock input is done in independent CLKCTRL registers.
+>> And no more in the PWM registers.
+>> PWM needs to obtain an external clock source.
+>>
+>> Signed-off-by: junyi.zhao <junyi.zhao@amlogic.com>
+>> ---
+>> V2 -> V3:
+>> Rebase and Review the latest upstream code again.
+>> After reconstruction, stick to the previous code as much as possible.
+>>   drivers/pwm/pwm-meson.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+>> index 25519cddc2a9..fe9fd75747c4 100644
+>> --- a/drivers/pwm/pwm-meson.c
+>> +++ b/drivers/pwm/pwm-meson.c
+>> @@ -99,6 +99,7 @@ struct meson_pwm_channel {
+>>   struct meson_pwm_data {
+>>   	const char * const *parent_names;
+>>   	unsigned int num_parents;
+>> +	unsigned int extern_clk;
+>>   };
+>>   
+>>   struct meson_pwm {
+>> @@ -396,6 +397,10 @@ static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
+>>   	.num_parents = ARRAY_SIZE(pwm_g12a_ao_cd_parent_names),
+>>   };
+>>   
+>> +static const struct meson_pwm_data pwm_s4_data = {
+>> +	.extern_clk = true,
+>> +};
+>> +
+>>   static const struct of_device_id meson_pwm_matches[] = {
+>>   	{
+>>   		.compatible = "amlogic,meson8b-pwm",
+>> @@ -429,6 +434,10 @@ static const struct of_device_id meson_pwm_matches[] = {
+>>   		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
+>>   		.data = &pwm_g12a_ao_cd_data
+>>   	},
+>> +	{
+>> +		.compatible = "amlogic,s4-pwm",
+>> +		.data = &pwm_s4_data,
+>> +	},
+>>   	{},
+>>   };
+>>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+>> @@ -451,6 +460,16 @@ static int meson_pwm_init_channels(struct meson_pwm *meson)
+>>   		struct clk_parent_data div_parent = {}, gate_parent = {};
+>>   		struct clk_init_data init = {};
+>>   
+>> +		if (meson->data->extern_clk) {
+>> +			snprintf(name, sizeof(name), "clkin%u", i);
+>> +			channel->clk = devm_clk_get(dev, name);
+> use devm_clk_get_optional() which would save you from introducing
+> the 'extern_clk' variable
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-tiehrpwm.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+On S4 and other recent chips PWM clock resides in separate IP and it 
+must be provided to driver in order to control PWM frequency. So this 
+clock is not optional.
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 66ac2655845f..af231fa74fa9 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -521,7 +521,6 @@ static void ehrpwm_pwm_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- }
- 
--#ifdef CONFIG_PM_SLEEP
- static void ehrpwm_pwm_save_context(struct ehrpwm_pwm_chip *pc)
- {
- 	pm_runtime_get_sync(pc->chip.dev);
-@@ -589,16 +588,15 @@ static int ehrpwm_pwm_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif
- 
--static SIMPLE_DEV_PM_OPS(ehrpwm_pwm_pm_ops, ehrpwm_pwm_suspend,
--			 ehrpwm_pwm_resume);
-+static DEFINE_SIMPLE_DEV_PM_OPS(ehrpwm_pwm_pm_ops, ehrpwm_pwm_suspend,
-+				ehrpwm_pwm_resume);
- 
- static struct platform_driver ehrpwm_pwm_driver = {
- 	.driver = {
- 		.name = "ehrpwm",
- 		.of_match_table = ehrpwm_of_match,
--		.pm = &ehrpwm_pwm_pm_ops,
-+		.pm = pm_ptr(&ehrpwm_pwm_pm_ops),
- 	},
- 	.probe = ehrpwm_pwm_probe,
- 	.remove_new = ehrpwm_pwm_remove,
+> 
+>> +			if (IS_ERR(channel->clk)) {
+>> +				dev_err(meson->chip.dev, "can't get device clock\n");
+>> +				return PTR_ERR(channel->clk);
+>> +			}
+>> +			continue;
+>> +		}
+>> +
+>>   		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
+>>   
+>>   		init.name = name;
+>>
+>> base-commit: 4d2c646ac07cf4a35ef1c4a935a1a4fd6c6b1a36
+>> -- 
+>> 2.41.0
+>>
+>>
+>> _______________________________________________
+>> linux-amlogic mailing list
+>> linux-amlogic@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
+
 -- 
-2.42.0
-
+Best regards
+George
