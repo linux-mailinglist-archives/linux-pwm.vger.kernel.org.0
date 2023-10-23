@@ -2,60 +2,61 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC857D39D3
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 16:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9338C7D39D5
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 16:42:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233728AbjJWOmE (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 10:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60618 "EHLO
+        id S233680AbjJWOmJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 23 Oct 2023 10:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233858AbjJWOlV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 10:41:21 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78AC91BCA
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:01 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6cd0963c61cso2012661a34.0
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:01 -0700 (PDT)
+        with ESMTP id S233758AbjJWOl3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 10:41:29 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD3F1705
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:04 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6c4b9e09521so2376734a34.3
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 07:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698072060; x=1698676860; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698072064; x=1698676864; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qudfebjcrf3NxTvPd9cnhg6s1+eggmH9h9XstTC+9Nc=;
-        b=0AlLjbnu/eYv+YprnTPblgV6/AisEUDQnGeo1+NwFRU2wF7AdKyRW8Akx0Icxzy6R4
-         mNblaL/e+/2QFTroCnzAuw+n3dBayiZz9D3+RPxere/L1Hxn4MXnv/nAugmCpbDCmZXa
-         PvirWvLYc2Eiji/UA/QTMLkv6Xw/e8W9mNz+jh86unyAB48N2jzk8b0DvddPvrMiGJAG
-         Zxu5u8zJO44Ux0q35E80wutvqCWHgvFriNiO1CLZ1SbEnmb4vp2xsdb+lfS3SZAQCetU
-         hxNeKbY9mh1v6xxpR8EiVGxJcWfWg4b/0OwZXiSGULyk3OHTiu+d8ktQLQFT50y/PQYt
-         KSjw==
+        bh=pH3GFq5D69xS1Tzi4QqCw1RIdz10bV1qyKuEWVVtejs=;
+        b=prKJdHAHeZeCr6EWLPyJroloWdSm/JdWcrytG1aMhJ+2Uqj/qfwoPBijKk0D9BVB8u
+         t+Nb8eio69BRQekkfb4aEo3HeQ60M2OvO07zqQDwJqoApQzTW0rZbNPkIKPPrxAzRBi7
+         Xtq+bjYCisGp6/ujm6YT1oREiB8yjdA9Ft1LpQvgfw94A3/q6qjCzZ7ZAIqfPeC48NLZ
+         L+jPgOMvcxEnAfypmw4ThWiZAXpZRJ8HAT1UCSycflIRvjb3WgMwxWJumkN67j//Y7NY
+         X1UrLE2eu9dwZhzOf1/4gVCXYOB9MwPFAfVLvttd6nKfzF78dEDKvEIaA52tuPIBo3KI
+         o+DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698072060; x=1698676860;
+        d=1e100.net; s=20230601; t=1698072064; x=1698676864;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qudfebjcrf3NxTvPd9cnhg6s1+eggmH9h9XstTC+9Nc=;
-        b=dBiTOlExQ7tN4SPw2w6NebqafEzV+uYuKjOR7Ifgi1mV7ZJ3VsqXtQjF+lMol0pHTw
-         r/rd5g7/G07rsgqNZyyNCGnVgeHqdOOpsIgKX3+q06U9X/IuQP6cRYTem5OchnFnLwD7
-         9C15e9YyddaP7U/IZafQUiZXF8uZW0UoGVoJCi3lLnF6cYhwQSx7bDN7Fzef/GHGeEzM
-         J0/UlaEP8JU3ZhWDE3gJotoLz+Rdo+zrCJMgbuuCKkwZeCEp4nMOV4Jfpz44B7Rr3fbS
-         Z5A3X6DNoSDCK3OJfOWel/XvApeoys3MGzgW4+DZ25xrdRr6v+XBNkQIOh7HheDypRM0
-         mUDg==
-X-Gm-Message-State: AOJu0YyOQcIvLA8AeDdnAcHyOE9ayu9KDC7cXZ82+5sMcxhQWYifKax+
-        8gOrUF+FuOO+EVRmNtp8WjbocA==
-X-Google-Smtp-Source: AGHT+IEm9PyIg3Jn6Sranv/OuVsKx3BtStd2/S2hWeKlYnsrLCZVCoCeMweFPm/ILO9p7wr+RzI5HQ==
-X-Received: by 2002:a05:6830:12d8:b0:6b9:c41f:ede9 with SMTP id a24-20020a05683012d800b006b9c41fede9mr8427446otq.16.1698072060546;
-        Mon, 23 Oct 2023 07:41:00 -0700 (PDT)
+        bh=pH3GFq5D69xS1Tzi4QqCw1RIdz10bV1qyKuEWVVtejs=;
+        b=EvBpp13Er0wa5125gRSmqqTXrxp1tOpXpKeG0sq99uRcMCV0AiAW+pHUj4Kg/c3Hgj
+         ubSfcMe9H7uYqhNLYtcSbpOB5JpUDkPknqVTDMh0XOjQkEncaEJOSY3bUag0i0R5UPDU
+         xBIsk+gKotCXcp9TJG6eK656Tc+zRmEsiXfSuKtXvOB0rBlbI5+DM2nB5Nsb8ykYoPct
+         8PIy0C/Kjf+cxfqM4N+5PD1ZeFMIfXtWuFQBQRgSo3aP15rxhoM5/94tvi5niLf5M1Yn
+         8aWRm0WdShjZTmUZLTEAAf6yxH/ocWNlcnPzZm8zyr6XWpd/+P9nsjRxO3qenpbzO42p
+         /9Zg==
+X-Gm-Message-State: AOJu0YxyUyFIH4yhbm6YEwSkF2NjJI3FOnm5byRFc8YVtj6qkUcdAbTw
+        Ve9y58kJ6NK6n8jbeQXLI4NnMg==
+X-Google-Smtp-Source: AGHT+IH1IkI6TnT+ttcmCoscPeOrIopE1WBAZEg4r9UimrR6CIMRAoo8nMxYKo95tMWEpnGtVl6eKw==
+X-Received: by 2002:a9d:6188:0:b0:6bd:c8c2:b70f with SMTP id g8-20020a9d6188000000b006bdc8c2b70fmr9880668otk.34.1698072063987;
+        Mon, 23 Oct 2023 07:41:03 -0700 (PDT)
 Received: from [127.0.1.1] ([93.5.22.158])
-        by smtp.googlemail.com with ESMTPSA id f1-20020a05620a408100b007789a3499casm2725020qko.115.2023.10.23.07.40.57
+        by smtp.googlemail.com with ESMTPSA id f1-20020a05620a408100b007789a3499casm2725020qko.115.2023.10.23.07.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 07:41:00 -0700 (PDT)
+        Mon, 23 Oct 2023 07:41:03 -0700 (PDT)
 From:   Alexandre Mergnat <amergnat@baylibre.com>
-Date:   Mon, 23 Oct 2023 16:40:12 +0200
-Subject: [PATCH 12/18] dt-bindings: pwm: add binding for mt8365 SoC
+Date:   Mon, 23 Oct 2023 16:40:13 +0200
+Subject: [PATCH 13/18] drm/mediatek: dsi: Improves the DSI lane setup
+ robustness
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231023-display-support-v1-12-5c860ed5c33b@baylibre.com>
+Message-Id: <20231023-display-support-v1-13-5c860ed5c33b@baylibre.com>
 References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
 In-Reply-To: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
 To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
@@ -81,23 +82,23 @@ Cc:     dri-devel@lists.freedesktop.org,
         linux-pwm@vger.kernel.org,
         Alexandre Mergnat <amergnat@baylibre.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=860; i=amergnat@baylibre.com;
- h=from:subject:message-id; bh=ffAXKXJ9cZhbqlXUqaqX2HWdbChLJu80R5DE84NCORA=;
- b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBlNoXPMQfrIcZqNQJQO0Ys25obPGYM1stc5OlxnvAk
- nFfDrjyJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZTaFzwAKCRArRkmdfjHURdavD/
- 0ZHAZ0Cjk4mWoa9zs6Fp9jRc9KI2yB7gYjoYxe/765Z3sfJIriT6yE7EbmApJeAFwZXuxMtXTxp1ap
- LVnEtyhFnLZn9KfHA+ALiIERlyx6i1MPCmiGtdhBSH2kgn5rVrELtf/LrFTJ9LUEuy5MMzV6vnxU3R
- E+uKJAxMTzdrTUBbvpmehqvKKL05WgmgdrInZWPK+kJHrJ1AYdlXFrFnBPb/WOnmIKBe5agU5m46tc
- fwUSK/zMXFAjySNrRw+spBLwPUIo5T8iCdLo1VnjYRvJtzkMeyc1hzZGTDWkmKoHGmPx3p0Ee5RUFA
- 7OMDbifvVvc5t1VQ5KlsyuJcr2nNZWaVFtNotj2PjUSFaiqVubPTbRdk3hcZAKtGSnA9reIBsmViaJ
- z0e9t0zUGEHa6oTIHkBpFQStDh8lgpeoM+tKKh9RL/OtyNDRvIocFqYTOU8/JVcsUSWlJ0xi3w0EDA
- Uy1/BPSzCu3Xi4oAs2iNbnzwElhIXn7l4/2+s6fXHQL49j8l9+wkpBITfsWZM0++zwWxgIE89bW0q9
- kTB2XBw2jQMfD6NtU9QnfS7D4PztrSV36Dqn0v20qW51tyHLvq4sxPAq2b6GBE9LKE8LKQYx77NnT2
- 3/+4xLlLo34+v7R651isf4We2qMe+NsPxHGpuHQMIF03yxjM02olxLhcaoaQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1234; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=M0lgMNEWbaoZ4qkfmFQ2d2c6SqYe0EzRwVFM4lhot+4=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBlNoXP9F3RAu1ZKmUXEIyW8a/kP5CK+Jb3tGF7IdoH
+ 1RqcA3mJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZTaFzwAKCRArRkmdfjHURTPOD/
+ 9t+6pSLsY0qJ4yNYIAy8Yj64n+qV7yRH4vlC9ppkx91ePv2Sf/rsw1+QRG5hlj0j3d5dWf0ZGe/qPt
+ DjapblIQRzzn7BcMUQD/gavAeQ+YuLMd4IOyVk4uXEBjys9STpAuYQuKC03y3NcyjL6JWTj2fmFXTq
+ FSDDYsV/wNBpk5ALR2J7sE92+GGZXhthAmqro6CeVxpKs8z4H+c8lJOUUGaohZDWJkzoPl3QJssrhq
+ XljafCvUMlRJYbGBRWHusF+de6q6F9tY7mJoX2udGUIrH/cZR16ydBWCpSVaFEKmGEioAQXsFQ1JpS
+ 3/FHHTBX2h2nfGJQ2eT5muUbMii7hB7u5QWiVCF3BFBfzU4ketZCF3bj5Dk9xLBskq1ddV951Z1VJq
+ aWbuUgtjoALtwalhNzN12FffvNPsJIBz4z1TjRHf/cK4a6jaXgVBorbrdg3g+HRu0BH+uAGnC6c1j1
+ BZhh5BAQvMKdxFZnbk/zwmdsmAwXbfIPVcs2R2rk5mriJ4BOy13/lj/L2c/671sxkorHAFPtQUsi9I
+ 4XIePB314S80C1hBbP4Le8sz3x/gPiLeaQOFxu1Y38FmqYPDFc9iZvDBov3qmHwo1awkx6YyeMuOrY
+ kr/y4GCxn8tSG8oU6g3QQsh+p+1wUWzZ6V47BRTgBHkVb5pT5lxJo6zeFjNg==
 X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
  fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -105,26 +106,37 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Display PWM for MT8365 is compatible with MT8183. Then, add MT8365 binding
-along with MT8183 SoC.
+Currently, mtk_dsi_lane_ready (which setup the DSI lane) is triggered
+before mtk_dsi_poweron. lanes_ready flag toggle to true during
+mtk_dsi_lane_ready function, and the DSI module is set up during
+mtk_dsi_poweron.
+
+Later, during panel driver init, mtk_dsi_lane_ready is triggered but does
+nothing because lanes are considered ready. Unfortunately, when the panel
+driver try to communicate, the DSI returns a timeout.
+
+The solution found here is to put lanes_ready flag to false after the DSI
+module setup into mtk_dsi_poweron to init the DSI lanes after the power /
+setup of the DSI module.
 
 Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
- Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-index efe0cacf55b7..e4069bcbf8d5 100644
---- a/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-+++ b/Documentation/devicetree/bindings/pwm/mediatek,pwm-disp.yaml
-@@ -32,6 +32,7 @@ properties:
-               - mediatek,mt8188-disp-pwm
-               - mediatek,mt8192-disp-pwm
-               - mediatek,mt8195-disp-pwm
-+              - mediatek,mt8365-disp-pwm
-           - const: mediatek,mt8183-disp-pwm
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index d8bfc2cce54d..81cf0ddcc399 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -668,6 +668,8 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+ 	mtk_dsi_config_vdo_timing(dsi);
+ 	mtk_dsi_set_interrupt_enable(dsi);
  
-   reg:
++	dsi->lanes_ready = false;
++
+ 	return 0;
+ err_disable_engine_clk:
+ 	clk_disable_unprepare(dsi->engine_clk);
 
 -- 
 2.25.1
