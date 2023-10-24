@@ -2,143 +2,203 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E330C7D4D8E
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 12:19:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E951A7D4F28
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 13:46:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234464AbjJXKTY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Oct 2023 06:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57546 "EHLO
+        id S232824AbjJXLqF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Oct 2023 07:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233977AbjJXKTW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 06:19:22 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5693F111
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 03:19:20 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6b709048f32so3427851b3a.0
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 03:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1698142759; x=1698747559; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a+QZY3JTroucCQn86akp4c5eSM8t3MeXGfG/H9g9b2Y=;
-        b=T2xp4ZbcoN2/12TwNePmsUhIH7cKeqiI0b8NSjGBrwM/SxubEG8rlZo9IWNnCr0Lmw
-         Sn0Px5A5Dg43SU9tLImZyFMLYUfX+9qQ27DCr7MMIXTjYaNp2a0tjWDl4wNYi0/fnK6g
-         9bEvJcha3RXbkTwZzcy8Crz1ZIG93QUEaqWyT/+iKxKwDJDKCOgL339iovypdYEQXvDJ
-         tGdvPZn3z5Zezdlk7R/mgQLNT+s/W4H9+YOtNuk0/knP01Y/8KXgZFXZYVeibJG46yIj
-         ppz0XR2p1Y7dhsoSWvBD8YCq2wt0bRQVqH45SDHOQ7urNaWZY88OUlJ4j4Hk9GQzA2bq
-         oWnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698142759; x=1698747559;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a+QZY3JTroucCQn86akp4c5eSM8t3MeXGfG/H9g9b2Y=;
-        b=L/ezputnV0W7oQb39Vv27sGOqucWrUhIrflE3vRrpEl49BdusptMIiC2jghAcooc4Q
-         vHofZCFrc2BIeN8ndV3rY3gH/D7xkLFZZaKwgVPu1G68dR956ZDJ7b03CfJ7F6/tQhMO
-         +Xq2wdWXb9JIo0xA51OH1IqTY8vFKVpBQzsInj1a+YfH2iJPe06swD5vClE67Y4CxWTi
-         PKJPJvwp3PShUpYLG8pm15BlDLHXtHEH0mZ6qTQt30OxrhCGxOqEb1WhDfo6+LJrsRqy
-         V0sC3D+tOtjkR3pOD9aFLrDB1PDGqxrAN8BDXAhFsgbuA3Yq8CjDUInLDo22cknCcemq
-         bN3w==
-X-Gm-Message-State: AOJu0YyfVYfe4+lnspbXIxdDE2T6XdGl7zO5p0KkBObb0H6HZyPyuI17
-        zmxrZWAUoJ8xPzR9JPJalLFqWOIo+IqiILdSMMMRsgJUPutXz9Rn1s/Wg1IjqeU5c+5yXC6uqnj
-        VvN8D0IxvKTBH9yFFAEyohrhWgLr0O7pElvvemMPv2fH+zw/eEuSV7kOEq5LuhV1HvGcVT7gLrm
-        eSMoNzGLzs
-X-Google-Smtp-Source: AGHT+IFi+LBy3K1fInBf1b4w9fL0mu89D1Uml8OyKSzrTOMcCgH2Wg5GmsKlwoG6/sIn9yhE2ycnEQ==
-X-Received: by 2002:a05:6a00:27a0:b0:690:c306:151a with SMTP id bd32-20020a056a0027a000b00690c306151amr9848589pfb.0.1698142759118;
-        Tue, 24 Oct 2023 03:19:19 -0700 (PDT)
-Received: from hsinchu15.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id u202-20020a6279d3000000b006b3dc56c944sm7708372pfc.133.2023.10.24.03.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 03:19:18 -0700 (PDT)
-From:   Nylon Chen <nylon.chen@sifive.com>
-To:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
-        vincent.chen@sifive.com
-Cc:     nylon.chen@sifive.com, greentime.hu@sifive.com, zong.li@sifive.com,
-        nylon7717@gmail.com
-Subject: [v5 2/2] pwm: sifive: change the PWM controlled LED algorithm
-Date:   Tue, 24 Oct 2023 18:19:02 +0800
-Message-ID: <20231024101902.6689-3-nylon.chen@sifive.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231024101902.6689-1-nylon.chen@sifive.com>
-References: <20231024101902.6689-1-nylon.chen@sifive.com>
+        with ESMTP id S231234AbjJXLqD (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 07:46:03 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC23E8
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 04:46:01 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qvFr8-0000Fe-N7; Tue, 24 Oct 2023 13:45:54 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qvFr5-003vwf-5s; Tue, 24 Oct 2023 13:45:51 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qvFr4-005Dz2-SD; Tue, 24 Oct 2023 13:45:50 +0200
+Date:   Tue, 24 Oct 2023 13:45:45 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     William Qiu <william.qiu@starfivetech.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Hal Feng <hal.feng@starfivetech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v6 2/4] pwm: opencores: Add PWM driver support
+Message-ID: <20231024114545.73ljfceuon2blkxz@pengutronix.de>
+References: <20231020103741.557735-1-william.qiu@starfivetech.com>
+ <20231020103741.557735-3-william.qiu@starfivetech.com>
+ <20231020112539.gctx5uj2rrhryulo@pengutronix.de>
+ <b2ef7299-5d5a-4ef7-89fd-04b6130cb227@starfivetech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w2zicncd2z4lq4pb"
+Content-Disposition: inline
+In-Reply-To: <b2ef7299-5d5a-4ef7-89fd-04b6130cb227@starfivetech.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The `frac` variable represents the pulse inactive time, and the result
-of this algorithm is the pulse active time. Therefore, we must reverse the result.
 
-The reference is SiFive FU740-C000 Manual[0]
+--w2zicncd2z4lq4pb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf [0]
+Hello William,
 
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
----
- drivers/pwm/pwm-sifive.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+On Tue, Oct 24, 2023 at 05:16:49PM +0800, William Qiu wrote:
+> On 2023/10/20 19:25, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > On Fri, Oct 20, 2023 at 06:37:39PM +0800, William Qiu wrote:
+> >> Add Pulse Width Modulation driver support for OpenCores.
+> >>=20
+> >> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
+> >> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+> >> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> >> ---
+> >>  MAINTAINERS              |   7 ++
+> >>  drivers/pwm/Kconfig      |  11 ++
+> >>  drivers/pwm/Makefile     |   1 +
+> >>  drivers/pwm/pwm-ocores.c | 211 +++++++++++++++++++++++++++++++++++++++
+> >>  4 files changed, 230 insertions(+)
+> >>  create mode 100644 drivers/pwm/pwm-ocores.c
+> >>=20
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index 6c4cce45a09d..321af8fa7aad 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -16003,6 +16003,13 @@ F:	Documentation/i2c/busses/i2c-ocores.rst
+> >>  F:	drivers/i2c/busses/i2c-ocores.c
+> >>  F:	include/linux/platform_data/i2c-ocores.h
+> >>=20
+> >> +OPENCORES PWM DRIVER
+> >> +M:	William Qiu <william.qiu@starfivetech.com>
+> >> +M:	Hal Feng <hal.feng@starfivetech.com>
+> >> +S:	Supported
+> >> +F:	Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
+> >> +F:	drivers/pwm/pwm-ocores.c
+> >> +
+> >>  OPENRISC ARCHITECTURE
+> >>  M:	Jonas Bonn <jonas@southpole.se>
+> >>  M:	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> >> index 8ebcddf91f7b..cbfbf227d957 100644
+> >> --- a/drivers/pwm/Kconfig
+> >> +++ b/drivers/pwm/Kconfig
+> >> @@ -434,6 +434,17 @@ config PWM_NTXEC
+> >>  	  controller found in certain e-book readers designed by the original
+> >>  	  design manufacturer Netronix.
+> >>=20
+> >> +config PWM_OCORES
+> >> +	tristate "Opencores PWM support"
+> >> +	depends on HAS_IOMEM && OF
+> >> +	depends on COMMON_CLK && RESET_CONTROLLER
+> >=20
+> > Would it make sense to add something like:
+> >=20
+> > 	depends on ARCH_SOMETHING || COMPILE_TEST
+> >=20
+> > here?
+> >=20
+> But there is no mention of architectural limitations in the OpenCores's
+> specification.
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index eabddb7c7820..353c2342fbf1 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
- 
- 	/* As scale <= 15 the shift operation cannot overflow. */
- 	num = (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scale);
--	ddata->real_period = div64_ul(num, rate);
-+	ddata->real_period = DIV_ROUND_UP_ULL(num, rate);
- 	dev_dbg(ddata->chip.dev,
- 		"New real_period = %u ns\n", ddata->real_period);
- }
-@@ -121,13 +121,14 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 		state->enabled = false;
- 
- 	state->period = ddata->real_period;
-+
-+	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - duty;
- 	state->duty_cycle =
- 		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
--	state->polarity = PWM_POLARITY_INVERSED;
-+	state->polarity = PWM_POLARITY_NORMAL;
- 
- 	return 0;
- }
--
- static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			    const struct pwm_state *state)
- {
-@@ -139,7 +140,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	int ret = 0;
- 	u32 frac;
- 
--	if (state->polarity != PWM_POLARITY_INVERSED)
-+	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -EINVAL;
- 
- 	cur_state = pwm->state;
-@@ -158,6 +159,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
- 	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
- 	/* The hardware cannot generate a 100% duty cycle */
-+	frac = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
- 
- 	mutex_lock(&ddata->lock);
--- 
-2.42.0
+I already guessed that. Still it probably makes no sense to enable that
+option on most machines. The PWM device found in i.MX SoCs can
+theoretically also be implemented on AT91 or S390x. In practice it
+isn't, so there is a dependency on ARCH_MXC || COMPILE_TEST.
 
+Consider the role of someone who does a kernel bump for a certain
+machine (on one end of the spectrum) or a distribution kernel (on the
+other end).
+
+If you take a 6.5 x86_64 allmodconfig + COMPILE_TEST=3Dn and upgrade to
+v6.6-rc7 and do an oldconfig, you get 90 questions[1].
+
+Just looking quickly through this list, among them are:
+
+	DRM support for Loongson Graphics (DRM_LOONGSON) [N/m/?] (NEW)=20
+	Xilinx AXI DMAS Engine (XILINX_DMA) [N/m/y/?] (NEW)
+	Clock driver for Renesas VersaClock 3 devices (COMMON_CLK_VC3) [N/m/y/?] (=
+NEW)
+	Realtek RT1017 SDCA Codec - SDW (SND_SOC_RT1017_SDCA_SDW) [N/m/?] (NEW)
+
+I didn't check in detail and maybe one or the other is valid on x86_64,
+but I'd be surprised if you find two that are sensible to enable on
+x86_64 to support a real machine.
+
+While I think Kconfig cannot be held responsible to only allow
+generating "real world sensible" configurations, we should work a bit
+harder to rule out the obvious violators and make it easy for people
+configuring the kernel where sensible.
+
+In my book it's better to have a too strong dependency at first for a
+new driver (but allow it with COMPILE_TEST). Someone who as a device
+needing that driver will find it out and speak up. However if you allow
+to enable the driver everywhere, many people will disable the driver
+(maybe using yes '' | make oldconfig), some will spend time to research
+about this option to find which machines actually have such a device and
+if the machine(s) they care about are in this set. This is a waste of
+time and opportunities. (And note, this isn't only about people spending
+time to decide if they enable or disable PWM_OCORES, this is also about
+people who use yes '' because there are too many questions and so they
+might miss the handful of useful ones.)
+
+Best regards
+Uwe
+
+[1] measured using
+
+	yes '' | make oldconfig
+
+and counting the occurrences of "(NEW)".
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--w2zicncd2z4lq4pb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU3rmQACgkQj4D7WH0S
+/k5J/Qf+NrB4b444Ylur3Cvou63Nqg11EseoPk/INOD1fQCFZc/DgsqpNDFCfOcr
+8Z+nDdgC1dDs024syUcHnjgMK0ssOP6qBTNJ0OKUpkk+kS+E0grO2U5iZcMGpLtc
+e/ZMQ0fepTQ3PasKQdJ0PpgfMjkDVHTdEL9YwxW/RAm0IJsq7dwnRDQPVRtxrNlr
+oRvKzcODshrZX2C+3FQqCCIVhk2oySokKzCRGC0RHA1kLSf1aujl8wIs7/d9jlcy
+8dv/boJGK/pqtQFKHmtAYAqDC8KzbMiHNgdaOwLla+y+HrI74xsB18BXJM/zARW6
+sHBLPQDsmP7NCAVB+pjYC+s9KbnJAg==
+=FO4l
+-----END PGP SIGNATURE-----
+
+--w2zicncd2z4lq4pb--
