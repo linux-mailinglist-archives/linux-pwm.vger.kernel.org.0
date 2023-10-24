@@ -2,79 +2,54 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D2027D5C61
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 22:30:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6FD27D5CF0
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 23:12:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344167AbjJXUaQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Oct 2023 16:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
+        id S1344249AbjJXVMN (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Oct 2023 17:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343896AbjJXUaP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 16:30:15 -0400
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699DA109;
-        Tue, 24 Oct 2023 13:30:13 -0700 (PDT)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1dceb2b8823so86583fac.1;
-        Tue, 24 Oct 2023 13:30:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698179412; x=1698784212;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f3qsgjZUiGkI+HnQU8qd10Dy5+V7e3QdrB1P5/64d/0=;
-        b=tx/phYrxSK7KnNaFHjkd1d1kUQXlQlgT+tWjtSRIWNpWzB3nI30YA4TeIiI9//5PM2
-         EfjP499gl8JaIpi0L9EUGuuacyEkpyD34044c62guTlazKF67JBhFStmE+cbbLStdL+Y
-         XMeh4lbdLIhixCn47yj5F8CKJs4+ZunFW6jXlJcyPdQB1hfW80xZECMF3By2ut3G8IlE
-         limsdIIeeFvv+4746H/l1lIG5hCnKUYZeN5U4J8Q2hGZUqBthdxq8GkhkGsU6an6D9Bv
-         8zuoJ4OTcGIp+NxkZMTYTDgRbl2JdI0BVYODevtnrR1U1J2jFiq3rP3eXBZBIyNf8d4s
-         D+cA==
-X-Gm-Message-State: AOJu0YzvIlU6r53lGE3FRqBHiY//tlOIkmZcTIhZt+UizcmoBguODOKv
-        p11J+8EPWLrKnrGxrU0hkC1WIGIfoA==
-X-Google-Smtp-Source: AGHT+IE0whMUPrsoD9gh5o2IGz/Y8fxi2DnAYWxZTqLGtOQkx7r5SAEcn/I7BBShMQO37QiqQon48g==
-X-Received: by 2002:a05:6870:e38e:b0:1e9:e413:b9d with SMTP id x14-20020a056870e38e00b001e9e4130b9dmr8879744oad.2.1698179412672;
-        Tue, 24 Oct 2023 13:30:12 -0700 (PDT)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id j2-20020a056870530200b001e9b02b00e9sm2285355oan.22.2023.10.24.13.30.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 13:30:12 -0700 (PDT)
-Received: (nullmailer pid 520032 invoked by uid 1000);
-        Tue, 24 Oct 2023 20:30:10 -0000
-Date:   Tue, 24 Oct 2023 15:30:10 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Xinlei Lee <xinlei.lee@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
+        with ESMTP id S1344160AbjJXVMM (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 17:12:12 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CC610CE
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 14:12:10 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qvOgx-0005EP-SP; Tue, 24 Oct 2023 23:11:59 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qvOgw-00421X-Cl; Tue, 24 Oct 2023 23:11:58 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qvOgw-005XxO-3K; Tue, 24 Oct 2023 23:11:58 +0200
+Date:   Tue, 24 Oct 2023 23:11:57 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 05/18] dt-bindings: display: mediatek: dsi: add binding
- for MT8365 SoC
-Message-ID: <20231024203010.GA518520-robh@kernel.org>
-References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
- <20231023-display-support-v1-5-5c860ed5c33b@baylibre.com>
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] pwm: samsung: Fix a bit test
+Message-ID: <20231024211157.xv3vzqlmxmxwgvle@pengutronix.de>
+References: <917e3890-7895-4b1c-bcee-4eecb3b7fe09@moroto.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nkibwm3sl7ikb3rs"
 Content-Disposition: inline
-In-Reply-To: <20231023-display-support-v1-5-5c860ed5c33b@baylibre.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+In-Reply-To: <917e3890-7895-4b1c-bcee-4eecb3b7fe09@moroto.mountain>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,32 +57,104 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Mon, Oct 23, 2023 at 04:40:05PM +0200, Alexandre Mergnat wrote:
-> Display Serial Interface for MT8365 is compatible with another SoC.
-> Then, add MT8365 binding along with MT8183 SoC.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+
+--nkibwm3sl7ikb3rs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Dan,
+
+On Tue, Oct 17, 2023 at 05:04:08PM +0300, Dan Carpenter wrote:
+> This code has two problems.  First, it passes the wrong bit parameter to
+> test_bit().  Second, it mixes using PWMF_REQUESTED in test_bit() and in
+> open coded bit tests.
+>=20
+> The test_bit() function takes a bit number.  In other words,
+> "if (test_bit(0, &flags))" is the equivalent of "if (flags & (1 << 0))".
+> Passing (1 << 0) to test_bit() is like writing BIT(BIT(0)).  It's a
+> double shift bug.
+>=20
+> In pwm_samsung_resume() these issues mean that the flag is never set and
+> the function is essentially a no-op.
+>=20
+> Fixes: 4c9548d24c0d ("pwm: samsung: Put per-channel data into driver data=
+")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
-> index 12441b937684..2479b9e4abd2 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
-> @@ -34,6 +34,8 @@ properties:
->            - enum:
->                - mediatek,mt6795-dsi
->            - const: mediatek,mt8173-dsi
-> +              - mediatek,mt8365-dsi
+> From static analysis and not tested.
+>=20
+>  drivers/pwm/pwm-samsung.c | 2 +-
+>  include/linux/pwm.h       | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
+> index 10fe2c13cd80..acf4a0d8d990 100644
+> --- a/drivers/pwm/pwm-samsung.c
+> +++ b/drivers/pwm/pwm-samsung.c
+> @@ -630,7 +630,7 @@ static int pwm_samsung_resume(struct device *dev)
+>  		struct pwm_device *pwm =3D &chip->pwms[i];
+>  		struct samsung_pwm_channel *chan =3D &our_chip->channel[i];
+> =20
+> -		if (!(pwm->flags & PWMF_REQUESTED))
+> +		if (!test_bit(PWMF_REQUESTED, &pwm->flags))
+>  			continue;
+> =20
+>  		if (our_chip->variant.output_mask & BIT(i))
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index e3b437587b32..3eee5bf367fb 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -41,8 +41,8 @@ struct pwm_args {
+>  };
+> =20
+>  enum {
+> -	PWMF_REQUESTED =3D 1 << 0,
+> -	PWMF_EXPORTED =3D 1 << 1,
+> +	PWMF_REQUESTED =3D 0,
+> +	PWMF_EXPORTED  =3D 1,
 
-Not valid YAML nor json-schema. Please test your series before sending.
+I'd want s/  / / here. Or even not assign explicit values at all?
 
-> +          - const: mediatek,mt8183-dsi
->  
->    reg:
->      maxItems: 1
-> 
-> -- 
-> 2.25.1
-> 
+>  };
+> =20
+>  /*
+
+I'd say these are two separate issues, with the one in pwm-samsung being
+bad and the one in <linux/pwm.h> "only" ugly.
+
+I wonder how I could get the samsung part wrong. All current usages of
+PMWF_REQUESTED (and also PWMF_EXPORTED) use test_bit (et al). Grepping
+through history pwm-pca9685.c got this wrong in a similar way for some
+time, but otherwise it was always used correctly.
+
+The definition of the flags in <linux/pwm.h> is ugly since=20
+f051c466cf69 ("pwm: Allow chips to support multiple PWMs") from 2011!
+
+@Dan: Would you split the patch in two please?
+
+Thanks for catching that!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--nkibwm3sl7ikb3rs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU4Mx0ACgkQj4D7WH0S
+/k7KQwf/eaAyfpovq4WF+Ttz94ctJhg4PD7Nk9TRKnE72mEh/giRc3ZaQ6RY3ybw
+1ymd1StO/XRx6QtH16VFBW7x3FHcxMedBndun4K33rruSUaaQ9lw+Br8FPNuHFmg
+akDIcusQDG+PUR2K2ERAAELHU0cmFHxG78jbUZ+Y/+lQg7JEiRLW4lFvMSzTsJMs
+I4i3EzBZXRpcFPk80HoA9PhECYqP+OleLpUmuc53hRb8txwJpSJrWjohaXP45ps0
+gEcS7ItZJQOjDvc5bHEy6/DOwdhtbZU/nuOqqGLqs4PIuM2WARmQKrtVCl4IMrJ1
+5sd5d5F3TWurS/8+vXSjNWQj+fMOAQ==
+=qrEt
+-----END PGP SIGNATURE-----
+
+--nkibwm3sl7ikb3rs--
