@@ -2,111 +2,129 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6AFC7D41D8
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Oct 2023 23:44:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3772A7D48D7
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 09:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjJWVot (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 23 Oct 2023 17:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33918 "EHLO
+        id S232399AbjJXHoF (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Oct 2023 03:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjJWVos (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 23 Oct 2023 17:44:48 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFCABD
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Oct 2023 14:44:46 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qv2id-0004tw-1w; Mon, 23 Oct 2023 23:44:15 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qv2ia-003nh8-FN; Mon, 23 Oct 2023 23:44:12 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qv2ia-004fZY-5P; Mon, 23 Oct 2023 23:44:12 +0200
-Date:   Mon, 23 Oct 2023 23:44:11 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Xinlei Lee <xinlei.lee@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 12/18] dt-bindings: pwm: add binding for mt8365 SoC
-Message-ID: <20231023214411.sbrdqgethas25rkd@pengutronix.de>
-References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
- <20231023-display-support-v1-12-5c860ed5c33b@baylibre.com>
+        with ESMTP id S232925AbjJXHoE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 03:44:04 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED10B128
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 00:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1698133436; x=1729669436;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vrCz2QVYVFKF2QhWvOAOh0RDWmITta3TW2s1sbxJbSI=;
+  b=iKzG9rWcG/XFZp78glYZDGCKLvqx++AMsSdw+4eR/tjUYIRwTIpo0WCR
+   BIubKaJPN2EHXc3C1MzYlNOY2kovQPdLUGUJd6ZI55Th2SmAPddfixUa5
+   DYM0bzQydLuQC5e4oCsfo/OmWcpnyH8S1N34geOc5FkEaNG5Wc9Zl001A
+   XINCUlAS3WGRgRxd87bte8uDFFjdbNJUmch/mSif5ZMUsSEBwXja1Jq/Y
+   LK6Sdp3wOGAplocGJ6IjVC1BgA4rrvPiPi9y6r3NA8aVUyT7rlc1yrjJ7
+   6XDl4gO6t/czbRlkiMyqOKBUiMZw8Ri4LM9OWTvOCrkK3pXWt/1+nXTm6
+   A==;
+X-CSE-ConnectionGUID: T6FouotJTrS9Zheu/Quo4A==
+X-CSE-MsgGUID: 7zlp7MJGTa+Z+KUfnfgCkQ==
+X-ThreatScanner-Verdict: Negative
+X-IronPort-AV: E=Sophos;i="6.03,247,1694761200"; 
+   d="scan'208";a="10493903"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Oct 2023 00:43:54 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 24 Oct 2023 00:43:22 -0700
+Received: from [10.159.245.205] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
+ Transport; Tue, 24 Oct 2023 00:43:21 -0700
+Message-ID: <a24c273a-487b-4654-906d-0ff516027707@microchip.com>
+Date:   Tue, 24 Oct 2023 09:42:52 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="b5norgtzwaifdmor"
-Content-Disposition: inline
-In-Reply-To: <20231023-display-support-v1-12-5c860ed5c33b@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/11] pwm: atmel-hlcdc: Use DEFINE_SIMPLE_DEV_PM_OPS
+ for PM functions
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20231023174616.2282067-13-u.kleine-koenig@pengutronix.de>
+ <20231023174616.2282067-14-u.kleine-koenig@pengutronix.de>
+Content-Language: en-US, fr-FR
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <20231023174616.2282067-14-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 23/10/2023 at 19:46, Uwe Kleine-König wrote:
+> This macro has the advantage over SIMPLE_DEV_PM_OPS that we don't have to
+> care about when the functions are actually used, so the corresponding
+> #ifdef can be dropped.
+> 
+> Also make use of pm_ptr() to discard all PM related stuff if CONFIG_PM
+> isn't enabled.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
---b5norgtzwaifdmor
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-On Mon, Oct 23, 2023 at 04:40:12PM +0200, Alexandre Mergnat wrote:
-> Display PWM for MT8365 is compatible with MT8183. Then, add MT8365 binding
-> along with MT8183 SoC.
->=20
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+>   drivers/pwm/pwm-atmel-hlcdc.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-atmel-hlcdc.c b/drivers/pwm/pwm-atmel-hlcdc.c
+> index 07920e034757..3f2c5031a3ba 100644
+> --- a/drivers/pwm/pwm-atmel-hlcdc.c
+> +++ b/drivers/pwm/pwm-atmel-hlcdc.c
+> @@ -180,7 +180,6 @@ static const struct atmel_hlcdc_pwm_errata atmel_hlcdc_pwm_sama5d3_errata = {
+>          .div1_clk_erratum = true,
+>   };
+> 
+> -#ifdef CONFIG_PM_SLEEP
+>   static int atmel_hlcdc_pwm_suspend(struct device *dev)
+>   {
+>          struct atmel_hlcdc_pwm *atmel = dev_get_drvdata(dev);
+> @@ -210,10 +209,9 @@ static int atmel_hlcdc_pwm_resume(struct device *dev)
+>          return atmel_hlcdc_pwm_apply(&atmel->chip, &atmel->chip.pwms[0],
+>                                       &state);
+>   }
+> -#endif
+> 
+> -static SIMPLE_DEV_PM_OPS(atmel_hlcdc_pwm_pm_ops,
+> -                        atmel_hlcdc_pwm_suspend, atmel_hlcdc_pwm_resume);
+> +static DEFINE_SIMPLE_DEV_PM_OPS(atmel_hlcdc_pwm_pm_ops,
+> +                               atmel_hlcdc_pwm_suspend, atmel_hlcdc_pwm_resume);
+> 
+>   static const struct of_device_id atmel_hlcdc_dt_ids[] = {
+>          {
+> @@ -297,7 +295,7 @@ static struct platform_driver atmel_hlcdc_pwm_driver = {
+>          .driver = {
+>                  .name = "atmel-hlcdc-pwm",
+>                  .of_match_table = atmel_hlcdc_pwm_dt_ids,
+> -               .pm = &atmel_hlcdc_pwm_pm_ops,
+> +               .pm = pm_ptr(&atmel_hlcdc_pwm_pm_ops),
+>          },
+>          .probe = atmel_hlcdc_pwm_probe,
+>          .remove_new = atmel_hlcdc_pwm_remove,
+> --
+> 2.42.0
+> 
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-What is the merge plan here? Should the whole series go in via drm?
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---b5norgtzwaifdmor
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU26SsACgkQj4D7WH0S
-/k5kxAf/R3wtiK6qh3Wc2Q4gR52nWYNIG4VuPK2gTmsXJK0QtdJnUAhBk9EZRxrv
-KxLX41glIN1g7bGG9+9Jh95i+ExJ4w59eQLYiJJOWk1mf6yH+YkJVEudZlj0ixSM
-RQu5gUyk2Rh3hed5809Q3uWqiMvzRSccXvaVVZ0GOQ00Ix9eUwnjPAnUtPL6dImI
-zsOkPfGpGySlFQVWlO1OkCNdkpmtvBxUa6rQNDKBDq2KZD1QaPormKtyZwj5m9fo
-KBJ7Ejxt9QpHjYrV1QHEqRGMdP6UIvQ4nicVXKz9LsepygiOLm2wCj3G4sYYjbMb
-9FHfTBcv2lNXdX6iJj0aN+9S5JTIXw==
-=F4fn
------END PGP SIGNATURE-----
-
---b5norgtzwaifdmor--
