@@ -2,199 +2,153 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C79637D547C
-	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 16:55:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE7D17D5487
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Oct 2023 16:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234594AbjJXOz7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 24 Oct 2023 10:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36792 "EHLO
+        id S234632AbjJXO63 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 24 Oct 2023 10:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234526AbjJXOz7 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 10:55:59 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61219CC;
-        Tue, 24 Oct 2023 07:55:56 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F191C433C8;
-        Tue, 24 Oct 2023 14:55:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698159355;
-        bh=vuJgsrEAfHidl/LC9Nby8frF6rGsOt8evp6na8amWoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pMHpAmKrY5a40YB98zv5cEhynF8IqCDt6qfDAfb4kCtLCcfEYiL9OAmfF0K9kSNT+
-         clGdZ70etIcvNEdH2kzEw5bwQDNFjBHvkvfP9Itq2TQYT8D1QKfiqkEbf1BwkpqLFy
-         P5LPZ3OsWVFSCEQakmvXwsYGP5Mj7Zv31WCg25pWhUrQlVq/DfnKY2rLYSa46lMayq
-         hg9xs5ZcwRpPJGohlI6wyZ+eHzYdY8iF8gKMBVkawAQcJiBeqGyG6GBrBfKCRaR3tx
-         KlG7TKZtCzTF3M8xsU42Gr+snuZpjW8Dz+IZxw+9i9PJXd+Rb3aUFTMCdzDJA0SDCT
-         jRkRP0B0T7wjw==
-Date:   Tue, 24 Oct 2023 15:55:50 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Nylon Chen <nylon.chen@sifive.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
-        vincent.chen@sifive.com, greentime.hu@sifive.com,
-        zong.li@sifive.com, nylon7717@gmail.com
-Subject: Re: [v5 1/2] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-Message-ID: <20231024-yin-coliseum-11f5e06fec14@spud>
-References: <20231024101902.6689-1-nylon.chen@sifive.com>
- <20231024101902.6689-2-nylon.chen@sifive.com>
+        with ESMTP id S234610AbjJXO62 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 24 Oct 2023 10:58:28 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103D0CC
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 07:58:26 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-407c3adef8eso39078995e9.2
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 07:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698159504; x=1698764304; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u3070tuVg4Lvo+woOS/YX5K+Iv976VYg/UJe0l40i+w=;
+        b=K1l2sc2yjJWiZqjSxCdEvhZJ1hN0W8OlAubjwK6pduKK650FBEhYLKt8CpLWe0ORjs
+         nypDW5xZrYfTegSAxwS5X+T+O6P0rRn6clPxJceAIoN4aLvJ2PQZj1b7JnEcm9Y2dAbr
+         3hNsITVo/bYcCirxJ0pDtWB4wCBErCrh9iWhluCC37O7/oE2s8qNt48bLxJFLu0UTZQk
+         h/ohloF6oQrcfqEhO6rY8Tyc2U4gAGnkTpvU8HwaNoJWAuXKyDg7yDoRJhhD+n3lVcDy
+         NzPt2erQXsQCjdtfOMIhlx/tvK9PprSZcktxkQCbZ86A1ILJtckZvrCHe9NOlnDdWzDY
+         O0Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698159504; x=1698764304;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u3070tuVg4Lvo+woOS/YX5K+Iv976VYg/UJe0l40i+w=;
+        b=evsRj4B2eTokKYoOTufzL/czUqGNUCXsC0jZBnAsg1fANY855LK8GZQ6VCO7DMlZFX
+         HLMlupIa75vl6UV7sfw5gfvqbW/tFAIK9B+DiTFYM6hjqthESRFBxtRM2TUT0AHPRPYw
+         mLLWYzNvdzPuP62qwsYYrVy0eAmxQPTigY+tGaby9FvjzT7VTpzE/PIA4N+jG9AnMCjH
+         vIh6bkJcB/bmCFNNFbB+JUPZYjRRDPq+VFFQQOj5Qxqeizz8uB/jg5vTALx5BgCc82tv
+         1lcy0VN57+VCIbDGAtETeae+SimhXHnKmmWTOSZwWT9B/DIW7OpO0OWV5EZ9C92z1XVk
+         CtPQ==
+X-Gm-Message-State: AOJu0YzPbJfMjqmOp/on7368sjB3D+tqehxuxoiocE5ePbZqaQ9Jlhpv
+        ncKfaOdf8HXui4y2rXmN+lrlaw==
+X-Google-Smtp-Source: AGHT+IH/Dm0KGboLUGC1vCPwVc5b2QNfECJ1HZnLdgFic1pTzymhvIa+Qy684EaulSmKz+dt7P1RhQ==
+X-Received: by 2002:a05:600c:5115:b0:403:cc64:2dbf with SMTP id o21-20020a05600c511500b00403cc642dbfmr10805190wms.27.1698159504347;
+        Tue, 24 Oct 2023 07:58:24 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.218.126])
+        by smtp.gmail.com with ESMTPSA id az20-20020a05600c601400b004054dcbf92asm12131474wmb.20.2023.10.24.07.58.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Oct 2023 07:58:23 -0700 (PDT)
+Message-ID: <fa624966-176a-47d1-937d-8384fda06513@linaro.org>
+Date:   Tue, 24 Oct 2023 16:58:22 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="H7Zl3g4CczEwNK1s"
-Content-Disposition: inline
-In-Reply-To: <20231024101902.6689-2-nylon.chen@sifive.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pwm: samsung: Document new member .channel in struct
+ samsung_pwm_chip
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>, kernel@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org,
+        kernel test robot <lkp@intel.com>
+References: <20231012210228.1009473-2-u.kleine-koenig@pengutronix.de>
+ <169720375693.285367.8034783567173304872.b4-ty@gmail.com>
+ <20231013172750.nxcw2ftihpemnymx@pengutronix.de>
+ <20231024145524.7qkzrrdm6zg5hfji@pengutronix.de>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231024145524.7qkzrrdm6zg5hfji@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On 24/10/2023 16:55, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Fri, Oct 13, 2023 at 07:27:50PM +0200, Uwe Kleine-König wrote:
+>> On Fri, Oct 13, 2023 at 03:29:35PM +0200, Thierry Reding wrote:
+>>> On Thu, 12 Oct 2023 23:02:29 +0200, Uwe Kleine-König wrote:
+>>>> Fixes: 4c9548d24c0d ("pwm: samsung: Put per-channel data into driver data")
+>>>
+>>> Applied, thanks!
+>>>
+>>> [1/1] pwm: samsung: Document new member .channel in struct samsung_pwm_chip
+>>>       commit: 4bb36d126cb3147d6bbfd00242a5b846dacad595
+>>
+>> You might want to change 4c9548d24c0d to e3fe982b2e4e now that you
+>> rewrote your for-next branch.
+> 
+> This is still open. I wonder there is no automated check that warns if
+> there is a Fixes: line in next that doesn't refer to an ancestor.
 
---H7Zl3g4CczEwNK1s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am using Greg's/Stephen's scripts in commit hooks:
+https://github.com/krzk/tools/blob/master/linux/git-hooks-post-commit
+https://github.com/krzk/tools/blob/master/linux/verify_fixes.sh
 
-Hey,
+Happy to receive more ideas during:
+https://lpc.events/event/17/contributions/1498/
 
-On Tue, Oct 24, 2023 at 06:19:01PM +0800, Nylon Chen wrote:
-> This removes the active-low properties of the PWM-controlled LEDs in
-> the HiFive Unmatched device tree.
->=20
-> The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schemat=
-ics-v3.pdf[1].
->=20
-> Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf845=
-3f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce7=
-6f4192_hifive-unmatched-schematics-v3.pdf [1]
+Best regards,
+Krzysztof
 
->=20
-
-This blank line should be removed if there is a follow-up.
-
-> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-
-What did Vincent contribute to this patch? Are you missing a
-co-developed-by tag, perhaps?
-
-> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-I expect this to go via the pwm tree since this is going to "break" (in
-the loosest possible sense) existing systems if merged separately.
-
-Cheers,
-Conor.
-
-> ---
->  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
->  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
->  2 files changed, 8 insertions(+), 12 deletions(-)
->=20
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/r=
-iscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 900a50526d77..11e7ac1c54bb 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -49,7 +49,7 @@ led-controller {
->  		compatible =3D "pwm-leds";
-> =20
->  		led-d1 {
-> -			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms =3D <&pwm0 0 7812500 0>;
->  			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
-> @@ -57,7 +57,7 @@ led-d1 {
->  		};
-> =20
->  		led-d2 {
-> -			pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms =3D <&pwm0 1 7812500 0>;
->  			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
-> @@ -65,7 +65,7 @@ led-d2 {
->  		};
-> =20
->  		led-d3 {
-> -			pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms =3D <&pwm0 2 7812500 0>;
->  			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
-> @@ -73,7 +73,7 @@ led-d3 {
->  		};
-> =20
->  		led-d4 {
-> -			pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> +			pwms =3D <&pwm0 3 7812500 0>;
->  			active-low;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/r=
-iscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> index 07387f9c135c..b328ee80693f 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> @@ -51,8 +51,7 @@ led-controller-1 {
->  		compatible =3D "pwm-leds";
-> =20
->  		led-d12 {
-> -			pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> -			active-low;
-> +			pwms =3D <&pwm0 0 7812500 0>;
->  			color =3D <LED_COLOR_ID_GREEN>;
->  			max-brightness =3D <255>;
->  			label =3D "d12";
-> @@ -68,20 +67,17 @@ multi-led {
->  			label =3D "d2";
-> =20
->  			led-red {
-> -				pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
-> +				pwms =3D <&pwm0 2 7812500 0>;
->  				color =3D <LED_COLOR_ID_RED>;
->  			};
-> =20
->  			led-green {
-> -				pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
-> +				pwms =3D <&pwm0 1 7812500 0>;
->  				color =3D <LED_COLOR_ID_GREEN>;
->  			};
-> =20
->  			led-blue {
-> -				pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> -				active-low;
-> +				pwms =3D <&pwm0 3 7812500 0>;
->  				color =3D <LED_COLOR_ID_BLUE>;
->  			};
->  		};
-> --=20
-> 2.42.0
->=20
-
---H7Zl3g4CczEwNK1s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTfa9gAKCRB4tDGHoIJi
-0uwlAQCAZQx27sPA2UXRQiyGM6Fg+CQ3RWgDqFwXmisNYn/2GwEAqc5VaZVLOB01
-ub63XDQoIn8tFuAT1jgi10RRbmKjBw0=
-=TgU2
------END PGP SIGNATURE-----
-
---H7Zl3g4CczEwNK1s--
