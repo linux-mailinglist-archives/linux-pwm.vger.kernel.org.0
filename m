@@ -2,141 +2,214 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FC8B7D6391
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 09:38:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDCF17D66D8
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 11:32:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233585AbjJYHiT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 03:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46268 "EHLO
+        id S234034AbjJYJch (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Oct 2023 05:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233864AbjJYHhl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 03:37:41 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353ED1BF0
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 00:35:47 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-507bd19eac8so7864782e87.0
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 00:35:47 -0700 (PDT)
+        with ESMTP id S233714AbjJYJcg (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 05:32:36 -0400
+Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C4B130
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 02:32:34 -0700 (PDT)
+Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-581ed744114so2193842eaf.0
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 02:32:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698219345; x=1698824145; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aBbMMGXhgW9dj85vLrlAsi/scxI5pUmqL1hVksSIORg=;
-        b=yK9rF/SY2yK1krSgnPghSkFbqcU6sG9vgvEiHjZwGUpJN+IrGyKqEfRIuQ6Or6/5m0
-         TGqC9PqJRXetnndOmM3afx516YOzH9AiWnUTsCJFh6teb9gkhyTLEHENLj3ckpCVrPO1
-         NG97PVYojzYt+6X3cRR7YLrPSSHWbvLf73csO5fXlnch7xw87pqsrOnv47qCFV8NR65V
-         YQTBKza1qDJJh7Zxmr7H10sxReXwcAqghNVhJHhte9aWRyKp/+xHQl+gSKSszK68BK9E
-         +XYKGdUD3sl+Q2+crd75oPZe3EyPFghTRNOeP8yszcyi8r2S17EZcBwoo69OrEi2Xt88
-         o0WA==
+        d=sifive.com; s=google; t=1698226353; x=1698831153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JleXfSUkp+S9wegLsWLcm92sHQy5rJ9h3rjZTaRBvnc=;
+        b=OYKclmbKyWktjRtAkSdXs0Ix/x913g4zDh6w1aAKWYDyoETuShoaQDTwZRVDQHd+Gw
+         CnHsjqRK5LaLMAA8AlAAcnqAXfYx0sFYrsPuas4L1MzkwZY3PmBU5IOkJ8p5M++phScJ
+         ITOfRQhfbkJTnv+Oq4YLbJpNqucExlUPOnfKEmGjyjOJkvE4dYT20QTGojo+x4O9cTH6
+         TbS/bwLi+ER1idQxkedtbhJPOf2Y2It4ZfI+IRbAWOLXa5VUC8V10HjOjZziDRdDEkzg
+         joB/EEcelncRdN+3/xlF9Bsj5ZyUdITd8RbjnbinHjPDMYfCgRmoOPJ5dUMDX+zeVQfK
+         vLLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698219345; x=1698824145;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aBbMMGXhgW9dj85vLrlAsi/scxI5pUmqL1hVksSIORg=;
-        b=xKC08XejBLfs1urJ1V5xk6tzfh/8oI4CF6Eu9dp997lLJprKd3trVDnmQq4ZnfGMGh
-         oMxQ9gQsMyymX52jzp/2dzIPBMUcPJ1ZO42z2QTnLv+dH9PjqCDyt2VrDEWMuRikKtS4
-         oYxZTSgd1ieYrKhEwrXkL5Iw1q9QHQ1jSE9KVkKe9S3YsElU+p3QnWHibjA28O5En4Hm
-         mmYVukC/ZbytFZ7gcBT5p4w9OPNA7fofSmO9+Evt+0SKUSNMSWog+m+PKM2K+z2ymNE1
-         o32y/hjE3aPqo7iPKQ8t01ffrwXkafZBR0ykgH7giUdR9hHAIe2Xj9gdVyb/ChphgzVF
-         BIfg==
-X-Gm-Message-State: AOJu0YxliPOwpQpELAZ2QwJCzo3P+bpc90E6v4atX60BGgDHJUmfWWRI
-        rV8v9kbE7mrvLxKrmjqk4X/eNA==
-X-Google-Smtp-Source: AGHT+IGfDcK6b789W6RGHEquV5YMHBAiCzfv/Rctz+XtFqNQN0vhdNvDDXE2hLiVtblka3kNhM2IfQ==
-X-Received: by 2002:ac2:5147:0:b0:507:9777:a34a with SMTP id q7-20020ac25147000000b005079777a34amr10168194lfd.39.1698219345170;
-        Wed, 25 Oct 2023 00:35:45 -0700 (PDT)
-Received: from [192.168.1.172] ([93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id h15-20020a05600c350f00b003fe1fe56202sm13962243wmq.33.2023.10.25.00.35.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Oct 2023 00:35:44 -0700 (PDT)
-Message-ID: <d7d40b45-ca7c-4f84-bdb3-02555094126b@baylibre.com>
-Date:   Wed, 25 Oct 2023 09:35:43 +0200
+        d=1e100.net; s=20230601; t=1698226353; x=1698831153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JleXfSUkp+S9wegLsWLcm92sHQy5rJ9h3rjZTaRBvnc=;
+        b=IGXU78VL9JWtpNRkVIszcKjefjFXhm2oWNM79DM4Nrq0lEAQHJ+FpsBu+RLouIOx7v
+         6WXLL7M2s/INHKjpP9Lm8mUjwP1YlreqZY+J56FlG65bt0SburaXnApPFi6ji9yCDL2j
+         Uro7PlMzFyvnMsrMqScMwO1FPredmzeaAXyQ51UkgITI31AZPQI+UeOt7nbeZDOG4ha+
+         iztOnTS5oS6qR/hWYAtnzVjZSBgjrWYj4p3qsLV6x5ncNeHGQ353DhYfQ5kAancGdMWC
+         uObFv1NMNIp55TnCHTgMyagdjBAq80lUtVkRrtAF40znEQBiIUOGq9Amf5FMg/zSwqbq
+         oVHg==
+X-Gm-Message-State: AOJu0YzVOryEtedIay15B7adoPmj/mTgpmeRCp1XjD945XsaGyCmtqhi
+        bg+cewhxGEwHdVTw4MKwZLzUXkABSNX4LsQfuGiH4A==
+X-Google-Smtp-Source: AGHT+IGZxk2jV1lHWX15BuUJIJfzVkgZuAvuKKi7ENF8WnTrOGFD3ImZuACpY6oAzEWaSNmuZvMv8h2OzLOxHAoarhE=
+X-Received: by 2002:a05:6870:1250:b0:1ea:fca:8ca2 with SMTP id
+ 16-20020a056870125000b001ea0fca8ca2mr12157627oao.56.1698226353289; Wed, 25
+ Oct 2023 02:32:33 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/18] dt-bindings: display: mediatek: dsi: add binding
- for MT8365 SoC
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Xinlei Lee <xinlei.lee@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org
-References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
- <20231023-display-support-v1-5-5c860ed5c33b@baylibre.com>
- <20231024203010.GA518520-robh@kernel.org>
-From:   Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <20231024203010.GA518520-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20231024101902.6689-1-nylon.chen@sifive.com> <20231024101902.6689-2-nylon.chen@sifive.com>
+ <20231024-yin-coliseum-11f5e06fec14@spud>
+In-Reply-To: <20231024-yin-coliseum-11f5e06fec14@spud>
+From:   Nylon Chen <nylon.chen@sifive.com>
+Date:   Wed, 25 Oct 2023 17:32:21 +0800
+Message-ID: <CAHh=Yk_h_1r7ZG+yLK=SoK9AgPkestuQDH-CK621mz=X-PA+cQ@mail.gmail.com>
+Subject: Re: [v5 1/2] riscv: dts: sifive: unleashed/unmatched: Remove PWM
+ controlled LED's active-low properties
+To:     Conor Dooley <conor@kernel.org>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
+        vincent.chen@sifive.com, greentime.hu@sifive.com,
+        zong.li@sifive.com, nylon7717@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi Conor,
 
+Conor Dooley <conor@kernel.org> =E6=96=BC 2023=E5=B9=B410=E6=9C=8824=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8810:55=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hey,
+>
+> On Tue, Oct 24, 2023 at 06:19:01PM +0800, Nylon Chen wrote:
+> > This removes the active-low properties of the PWM-controlled LEDs in
+> > the HiFive Unmatched device tree.
+> >
+> > The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schem=
+atics-v3.pdf[1].
+> >
+> > Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8=
+453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
+> > Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68c=
+e76f4192_hifive-unmatched-schematics-v3.pdf [1]
+>
+> >
+>
+> This blank line should be removed if there is a follow-up.
+thanks, I got it.
+>
+> > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+>
+> What did Vincent contribute to this patch? Are you missing a
+> co-developed-by tag, perhaps?
+Yes, Vincent was the first person to find the PWM driver problem, and
+Zong Li helped me with the relevant review internally.
 
-On 24/10/2023 22:30, Rob Herring wrote:
-> On Mon, Oct 23, 2023 at 04:40:05PM +0200, Alexandre Mergnat wrote:
->> Display Serial Interface for MT8365 is compatible with another SoC.
->> Then, add MT8365 binding along with MT8183 SoC.
->>
->> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
->> ---
->>   Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
->> index 12441b937684..2479b9e4abd2 100644
->> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
->> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
->> @@ -34,6 +34,8 @@ properties:
->>             - enum:
->>                 - mediatek,mt6795-dsi
->>             - const: mediatek,mt8173-dsi
->> +              - mediatek,mt8365-dsi
-> 
-> Not valid YAML nor json-schema. Please test your series before sending.
+so in the next version, I will add the correct tags for these two developer=
+s.
 
-The serie has been successfully tested with the 2 following command 
-before being sent:
-
-make DT_CHECKER_FLAGS=-m dt_binding_check DT_SCHEMA_FILES=mediatek,dsi.yaml
-
-dt-validate -s Documentation/devicetree/bindings 
-arch/arm64/boot/dts/mediatek/mt8365-evk.dtb
-
-
-I made a rebase error, that will be fixed for the next revision thanks.
-
-> 
->> +          - const: mediatek,mt8183-dsi
->>   
->>     reg:
->>       maxItems: 1
->>
->> -- 
->> 2.25.1
->>
-
--- 
-Regards,
-Alexandre
+Thank you again for your time.
+>
+> > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>
+> I expect this to go via the pwm tree since this is going to "break" (in
+> the loosest possible sense) existing systems if merged separately.
+>
+> Cheers,
+> Conor.
+>
+> > ---
+> >  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
+> >  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
+> >  2 files changed, 8 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch=
+/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > index 900a50526d77..11e7ac1c54bb 100644
+> > --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > @@ -49,7 +49,7 @@ led-controller {
+> >               compatible =3D "pwm-leds";
+> >
+> >               led-d1 {
+> > -                     pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
+> > +                     pwms =3D <&pwm0 0 7812500 0>;
+> >                       active-low;
+> >                       color =3D <LED_COLOR_ID_GREEN>;
+> >                       max-brightness =3D <255>;
+> > @@ -57,7 +57,7 @@ led-d1 {
+> >               };
+> >
+> >               led-d2 {
+> > -                     pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
+> > +                     pwms =3D <&pwm0 1 7812500 0>;
+> >                       active-low;
+> >                       color =3D <LED_COLOR_ID_GREEN>;
+> >                       max-brightness =3D <255>;
+> > @@ -65,7 +65,7 @@ led-d2 {
+> >               };
+> >
+> >               led-d3 {
+> > -                     pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
+> > +                     pwms =3D <&pwm0 2 7812500 0>;
+> >                       active-low;
+> >                       color =3D <LED_COLOR_ID_GREEN>;
+> >                       max-brightness =3D <255>;
+> > @@ -73,7 +73,7 @@ led-d3 {
+> >               };
+> >
+> >               led-d4 {
+> > -                     pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
+> > +                     pwms =3D <&pwm0 3 7812500 0>;
+> >                       active-low;
+> >                       color =3D <LED_COLOR_ID_GREEN>;
+> >                       max-brightness =3D <255>;
+> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch=
+/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> > index 07387f9c135c..b328ee80693f 100644
+> > --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> > +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+> > @@ -51,8 +51,7 @@ led-controller-1 {
+> >               compatible =3D "pwm-leds";
+> >
+> >               led-d12 {
+> > -                     pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
+> > -                     active-low;
+> > +                     pwms =3D <&pwm0 0 7812500 0>;
+> >                       color =3D <LED_COLOR_ID_GREEN>;
+> >                       max-brightness =3D <255>;
+> >                       label =3D "d12";
+> > @@ -68,20 +67,17 @@ multi-led {
+> >                       label =3D "d2";
+> >
+> >                       led-red {
+> > -                             pwms =3D <&pwm0 2 7812500 PWM_POLARITY_IN=
+VERTED>;
+> > -                             active-low;
+> > +                             pwms =3D <&pwm0 2 7812500 0>;
+> >                               color =3D <LED_COLOR_ID_RED>;
+> >                       };
+> >
+> >                       led-green {
+> > -                             pwms =3D <&pwm0 1 7812500 PWM_POLARITY_IN=
+VERTED>;
+> > -                             active-low;
+> > +                             pwms =3D <&pwm0 1 7812500 0>;
+> >                               color =3D <LED_COLOR_ID_GREEN>;
+> >                       };
+> >
+> >                       led-blue {
+> > -                             pwms =3D <&pwm0 3 7812500 PWM_POLARITY_IN=
+VERTED>;
+> > -                             active-low;
+> > +                             pwms =3D <&pwm0 3 7812500 0>;
+> >                               color =3D <LED_COLOR_ID_BLUE>;
+> >                       };
+> >               };
+> > --
+> > 2.42.0
+> >
