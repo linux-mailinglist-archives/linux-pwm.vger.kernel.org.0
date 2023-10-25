@@ -2,70 +2,78 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDCF17D66D8
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 11:32:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF7327D679A
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 11:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234034AbjJYJch (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 05:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
+        id S234088AbjJYJxn (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Oct 2023 05:53:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233714AbjJYJcg (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 05:32:36 -0400
-Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C4B130
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 02:32:34 -0700 (PDT)
-Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-581ed744114so2193842eaf.0
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 02:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1698226353; x=1698831153; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JleXfSUkp+S9wegLsWLcm92sHQy5rJ9h3rjZTaRBvnc=;
-        b=OYKclmbKyWktjRtAkSdXs0Ix/x913g4zDh6w1aAKWYDyoETuShoaQDTwZRVDQHd+Gw
-         CnHsjqRK5LaLMAA8AlAAcnqAXfYx0sFYrsPuas4L1MzkwZY3PmBU5IOkJ8p5M++phScJ
-         ITOfRQhfbkJTnv+Oq4YLbJpNqucExlUPOnfKEmGjyjOJkvE4dYT20QTGojo+x4O9cTH6
-         TbS/bwLi+ER1idQxkedtbhJPOf2Y2It4ZfI+IRbAWOLXa5VUC8V10HjOjZziDRdDEkzg
-         joB/EEcelncRdN+3/xlF9Bsj5ZyUdITd8RbjnbinHjPDMYfCgRmoOPJ5dUMDX+zeVQfK
-         vLLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698226353; x=1698831153;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JleXfSUkp+S9wegLsWLcm92sHQy5rJ9h3rjZTaRBvnc=;
-        b=IGXU78VL9JWtpNRkVIszcKjefjFXhm2oWNM79DM4Nrq0lEAQHJ+FpsBu+RLouIOx7v
-         6WXLL7M2s/INHKjpP9Lm8mUjwP1YlreqZY+J56FlG65bt0SburaXnApPFi6ji9yCDL2j
-         Uro7PlMzFyvnMsrMqScMwO1FPredmzeaAXyQ51UkgITI31AZPQI+UeOt7nbeZDOG4ha+
-         iztOnTS5oS6qR/hWYAtnzVjZSBgjrWYj4p3qsLV6x5ncNeHGQ353DhYfQ5kAancGdMWC
-         uObFv1NMNIp55TnCHTgMyagdjBAq80lUtVkRrtAF40znEQBiIUOGq9Amf5FMg/zSwqbq
-         oVHg==
-X-Gm-Message-State: AOJu0YzVOryEtedIay15B7adoPmj/mTgpmeRCp1XjD945XsaGyCmtqhi
-        bg+cewhxGEwHdVTw4MKwZLzUXkABSNX4LsQfuGiH4A==
-X-Google-Smtp-Source: AGHT+IGZxk2jV1lHWX15BuUJIJfzVkgZuAvuKKi7ENF8WnTrOGFD3ImZuACpY6oAzEWaSNmuZvMv8h2OzLOxHAoarhE=
-X-Received: by 2002:a05:6870:1250:b0:1ea:fca:8ca2 with SMTP id
- 16-20020a056870125000b001ea0fca8ca2mr12157627oao.56.1698226353289; Wed, 25
- Oct 2023 02:32:33 -0700 (PDT)
+        with ESMTP id S234684AbjJYJxf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 05:53:35 -0400
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B85B311F;
+        Wed, 25 Oct 2023 02:53:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+        t=1698227607; bh=H1wJkMmM3RLGtqBxcD2SkPsFMAkzEk6Lnx1q4pd00ZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dp64/GGqXplxAhkDT3gedu+Sab+eb/+Hyj0bIZlSKcMYYtDGIKUDEQN6fzQa/xlWi
+         o9URUD2793P3Pd8XVPtqKqWTRAWhOiLBqiz+Xj3KOS85yfdWFhDot+7gzeuGebU2Zt
+         /vOhlmP3zxX9lj7KLBn6IJmZx0z20dln14S9n2x6Yzk09UxcjqI8woHLHXZemEA+ms
+         G8jMY417JT8CLRviQBvZbEnnBRm31/RRtknULdvrSajNWMWruQnWO0D1WntEXQ4bp8
+         kXnb1OiHoBPIJf1LDgFRQcbonrgHZyPUe6PZDp5u9XAfU2Yp3uI/3Mm8Uw7e0+5TWN
+         CKIORt/Tz/lNg==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id DD4071000FC; Wed, 25 Oct 2023 10:53:27 +0100 (BST)
+Date:   Wed, 25 Oct 2023 10:53:27 +0100
+From:   Sean Young <sean@mess.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Javier Martinez Canillas <javierm@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Mark Gross <markgross@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
+ atomic context
+Message-ID: <ZTjll7oTNVWqygbD@gofer.mess.org>
+References: <cover.1697534024.git.sean@mess.org>
+ <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
+ <90728c06-4c6c-b3d2-4723-c24711be2fa5@redhat.com>
+ <20231019105118.64gdzzixwqrztjir@pengutronix.de>
+ <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
+ <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
+ <20231023133417.GE49511@aspen.lan>
 MIME-Version: 1.0
-References: <20231024101902.6689-1-nylon.chen@sifive.com> <20231024101902.6689-2-nylon.chen@sifive.com>
- <20231024-yin-coliseum-11f5e06fec14@spud>
-In-Reply-To: <20231024-yin-coliseum-11f5e06fec14@spud>
-From:   Nylon Chen <nylon.chen@sifive.com>
-Date:   Wed, 25 Oct 2023 17:32:21 +0800
-Message-ID: <CAHh=Yk_h_1r7ZG+yLK=SoK9AgPkestuQDH-CK621mz=X-PA+cQ@mail.gmail.com>
-Subject: Re: [v5 1/2] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-To:     Conor Dooley <conor@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
-        vincent.chen@sifive.com, greentime.hu@sifive.com,
-        zong.li@sifive.com, nylon7717@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231023133417.GE49511@aspen.lan>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -75,141 +83,55 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi Conor,
+On Mon, Oct 23, 2023 at 02:34:17PM +0100, Daniel Thompson wrote:
+> On Sun, Oct 22, 2023 at 11:46:22AM +0100, Sean Young wrote:
+> > On Sat, Oct 21, 2023 at 11:08:22AM +0200, Hans de Goede wrote:
+> > > On 10/19/23 12:51, Uwe Kleine-König wrote:
+> > > > On Wed, Oct 18, 2023 at 03:57:48PM +0200, Hans de Goede wrote:
+> > > >> On 10/17/23 11:17, Sean Young wrote:
+> > > > I think it's very subjective if you consider this
+> > > > churn or not.
+> > >
+> > > I consider it churn because I don't think adding a postfix
+> > > for what is the default/expected behavior is a good idea
+> > > (with GPIOs not sleeping is the expected behavior).
+> > >
+> > > I agree that this is very subjective and very much goes
+> > > into the territory of bikeshedding. So please consider
+> > > the above my 2 cents on this and lets leave it at that.
+> >
+> > You have a valid point. Let's focus on having descriptive function names.
+> 
+> For a couple of days I've been trying to resist the bikeshedding (esp.
+> given the changes to backlight are tiny) so I'll try to keep it as
+> brief as I can:
+> 
+> 1. I dislike the do_it() and do_it_cansleep() pairing. It is
+>    difficult to detect when a client driver calls do_it() by mistake.
+>    In fact a latent bug of this nature can only be detected by runtime
+>    testing with the small number of PWMs that do not support
+>    configuration from an atomic context.
+> 
+>    In contrast do_it() and do_it_atomic()[*] means that although
+>    incorrectly calling do_it() from an atomic context can be pretty
+>    catastrophic it is also trivially detected (with any PWM driver)
+>    simply by running with CONFIG_DEBUG_ATOMIC_SLEEP.
+> 
+>    No objections (beyond churn) to fully spelt out pairings such as
+>    do_it_cansleep() and do_it_atomic()[*]!
 
-Conor Dooley <conor@kernel.org> =E6=96=BC 2023=E5=B9=B410=E6=9C=8824=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8810:55=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hey,
->
-> On Tue, Oct 24, 2023 at 06:19:01PM +0800, Nylon Chen wrote:
-> > This removes the active-low properties of the PWM-controlled LEDs in
-> > the HiFive Unmatched device tree.
-> >
-> > The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schem=
-atics-v3.pdf[1].
-> >
-> > Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8=
-453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> > Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68c=
-e76f4192_hifive-unmatched-schematics-v3.pdf [1]
->
-> >
->
-> This blank line should be removed if there is a follow-up.
-thanks, I got it.
->
-> > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
->
-> What did Vincent contribute to this patch? Are you missing a
-> co-developed-by tag, perhaps?
-Yes, Vincent was the first person to find the PWM driver problem, and
-Zong Li helped me with the relevant review internally.
+I must say I do like the look of this. Uwe, how do you feel about:
+pwm_apply_cansleep() and pwm_apply_atomic()? I know we've talked about
+pwm_apply_atomic in the past, however I think this this the best 
+option I've seen so far.
 
-so in the next version, I will add the correct tags for these two developer=
-s.
+> 2. If there is an API rename can we make sure the patch contains no
+>    other changes (e.g. don't introduce any new API in the same patch).
+>    Seperating renames makes the patches easier to review!
+>    It makes each one smaller and easier to review!
 
-Thank you again for your time.
->
-> > Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
->
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
->
-> I expect this to go via the pwm tree since this is going to "break" (in
-> the loosest possible sense) existing systems if merged separately.
->
-> Cheers,
-> Conor.
->
-> > ---
-> >  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++----
-> >  arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
-> >  2 files changed, 8 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch=
-/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > index 900a50526d77..11e7ac1c54bb 100644
-> > --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> > @@ -49,7 +49,7 @@ led-controller {
-> >               compatible =3D "pwm-leds";
-> >
-> >               led-d1 {
-> > -                     pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> > +                     pwms =3D <&pwm0 0 7812500 0>;
-> >                       active-low;
-> >                       color =3D <LED_COLOR_ID_GREEN>;
-> >                       max-brightness =3D <255>;
-> > @@ -57,7 +57,7 @@ led-d1 {
-> >               };
-> >
-> >               led-d2 {
-> > -                     pwms =3D <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
-> > +                     pwms =3D <&pwm0 1 7812500 0>;
-> >                       active-low;
-> >                       color =3D <LED_COLOR_ID_GREEN>;
-> >                       max-brightness =3D <255>;
-> > @@ -65,7 +65,7 @@ led-d2 {
-> >               };
-> >
-> >               led-d3 {
-> > -                     pwms =3D <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
-> > +                     pwms =3D <&pwm0 2 7812500 0>;
-> >                       active-low;
-> >                       color =3D <LED_COLOR_ID_GREEN>;
-> >                       max-brightness =3D <255>;
-> > @@ -73,7 +73,7 @@ led-d3 {
-> >               };
-> >
-> >               led-d4 {
-> > -                     pwms =3D <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
-> > +                     pwms =3D <&pwm0 3 7812500 0>;
-> >                       active-low;
-> >                       color =3D <LED_COLOR_ID_GREEN>;
-> >                       max-brightness =3D <255>;
-> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch=
-/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > index 07387f9c135c..b328ee80693f 100644
-> > --- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > +++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
-> > @@ -51,8 +51,7 @@ led-controller-1 {
-> >               compatible =3D "pwm-leds";
-> >
-> >               led-d12 {
-> > -                     pwms =3D <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
-> > -                     active-low;
-> > +                     pwms =3D <&pwm0 0 7812500 0>;
-> >                       color =3D <LED_COLOR_ID_GREEN>;
-> >                       max-brightness =3D <255>;
-> >                       label =3D "d12";
-> > @@ -68,20 +67,17 @@ multi-led {
-> >                       label =3D "d2";
-> >
-> >                       led-red {
-> > -                             pwms =3D <&pwm0 2 7812500 PWM_POLARITY_IN=
-VERTED>;
-> > -                             active-low;
-> > +                             pwms =3D <&pwm0 2 7812500 0>;
-> >                               color =3D <LED_COLOR_ID_RED>;
-> >                       };
-> >
-> >                       led-green {
-> > -                             pwms =3D <&pwm0 1 7812500 PWM_POLARITY_IN=
-VERTED>;
-> > -                             active-low;
-> > +                             pwms =3D <&pwm0 1 7812500 0>;
-> >                               color =3D <LED_COLOR_ID_GREEN>;
-> >                       };
-> >
-> >                       led-blue {
-> > -                             pwms =3D <&pwm0 3 7812500 PWM_POLARITY_IN=
-VERTED>;
-> > -                             active-low;
-> > +                             pwms =3D <&pwm0 3 7812500 0>;
-> >                               color =3D <LED_COLOR_ID_BLUE>;
-> >                       };
-> >               };
-> > --
-> > 2.42.0
-> >
+Yes, this should have been separated out. Will fix for next version.
+
+Thanks,
+
+Sean
