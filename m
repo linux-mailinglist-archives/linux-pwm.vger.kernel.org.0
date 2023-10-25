@@ -2,85 +2,69 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BE777D696E
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 12:48:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AFCB7D6A98
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 13:57:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbjJYKss (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 06:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47158 "EHLO
+        id S234986AbjJYL5q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Oct 2023 07:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232789AbjJYKsq (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 06:48:46 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB49C181
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 03:48:43 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qvbQQ-0001DN-Q8; Wed, 25 Oct 2023 12:47:46 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qvbQO-0049gV-FC; Wed, 25 Oct 2023 12:47:44 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qvbQO-005ubj-4j; Wed, 25 Oct 2023 12:47:44 +0200
-Date:   Wed, 25 Oct 2023 12:47:43 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sean Young <sean@mess.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        with ESMTP id S234943AbjJYL5p (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 07:57:45 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF9C13D
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 04:57:42 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40837ebba42so40760065e9.0
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 04:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698235061; x=1698839861; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=j6uVxf5kYe92K+O00MCE5FtASY43IgluJLHruF2586U=;
+        b=yW8cRiy2S28hINm9iivjLPTYHXDnF3RaX0kTa3T6QkKPyMX8rQDb3fSYe4kJbY0RjQ
+         IXHOQLG0QOy8EX2brbHLSzcPNUye+yeFQcvHIDcwJxeoOZMElRHUZvJx3OPa1Vz91Ed0
+         cHworUftdcF4GwVgpVb9D9b1YLbxVKVV4pwtwOOSm6SR4Wn0eSQROQIe5Evxm2j8kmqC
+         cAl8CI+ogGJ0erGyfi3h3lMzwVI5TmZlMDzweXSvZvRYt5ztHk+dFV8S0EUk7ehTxy/M
+         AMF3gmTyP+Qmiq8TUHE8XXKKwnf759+G35iedNDBnuwrmsF5uF+Bj5aIpaDkS60jykGU
+         BiaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698235061; x=1698839861;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j6uVxf5kYe92K+O00MCE5FtASY43IgluJLHruF2586U=;
+        b=aGSkZkVbH4Yq7RjtEvgBGwSLg2LQx6nuGUXCAeu3U9HzgZuREitfD5oj8rVPVO8H5r
+         wzAvL92RXCuD6F6i7DjUA9DffX9YZl3pemACDyKqLF3Ahsxgv2oKCumvPkC4VdHEvPui
+         NjsgUcQz4lNsijjIFS4TbgCjgRcfq2BwijfV/DfCducIgwIju1XeIv8+lUi2KhMqxGo1
+         V4Pe+3pXWXvcnKUzGQRz+08kpitdJJHntbq64oknEWAS7jtmUdNpbaf6Zp5qfA0K89RZ
+         IvauK+0tLDvwPA+4mEiAqGkbA2VCLUJoLsKGVrEarfAH+lGT8zDsbGhnRd011PN6MwUI
+         YwxQ==
+X-Gm-Message-State: AOJu0YxP+c+uGeGiNS3ZPGx9RkPCV+U/OsiwudD71lJaHefH7TevHNBm
+        kvMi/SZdnvD5pBQG1S6kCmkCZA==
+X-Google-Smtp-Source: AGHT+IFlcuVvisAHY6IpOp9uDQk7RA7FjTqkZ2XNTiaE5hdwCeCI/PV48ajajNqa8VjggLSkT9Do7A==
+X-Received: by 2002:a05:600c:3b20:b0:405:4f78:e128 with SMTP id m32-20020a05600c3b2000b004054f78e128mr12172686wms.4.1698235061312;
+        Wed, 25 Oct 2023 04:57:41 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id p30-20020a05600c1d9e00b003fefaf299b6sm14317313wms.38.2023.10.25.04.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 04:57:41 -0700 (PDT)
+Date:   Wed, 25 Oct 2023 14:57:34 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] pwm: make it possible to apply pwm changes in
- atomic context
-Message-ID: <20231025104743.56elaloj3jmojz2v@pengutronix.de>
-References: <cover.1697534024.git.sean@mess.org>
- <a7fcd19938d5422abc59c968ff7b3d5c275577ed.1697534024.git.sean@mess.org>
- <90728c06-4c6c-b3d2-4723-c24711be2fa5@redhat.com>
- <20231019105118.64gdzzixwqrztjir@pengutronix.de>
- <01a505ac-320f-3819-a58d-2b82c1bf2a86@redhat.com>
- <ZTT9fvEF+lqfzGJ/@gofer.mess.org>
- <20231023133417.GE49511@aspen.lan>
- <ZTjll7oTNVWqygbD@gofer.mess.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH v2 1/2] pwm: samsung: Fix a bit test in pwm_samsung_resume()
+Message-ID: <e031db45-add0-4da7-97fa-dee95ee936ad@moroto.mountain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kdxw67dv7iobkbz2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZTjll7oTNVWqygbD@gofer.mess.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+X-Mailer: git-send-email haha only kidding
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -89,113 +73,31 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+The PWMF_REQUESTED enum is supposed to be used with test_bit() and not
+used as in a bitwise AND.  In this specific code the flag will never be
+set so the function is effectively a no-op.
 
---kdxw67dv7iobkbz2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: e3fe982b2e4e ("pwm: samsung: Put per-channel data into driver data")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+v2: Split the patch into two parts
 
-Hello,
+ drivers/pwm/pwm-samsung.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, Oct 25, 2023 at 10:53:27AM +0100, Sean Young wrote:
-> On Mon, Oct 23, 2023 at 02:34:17PM +0100, Daniel Thompson wrote:
-> > On Sun, Oct 22, 2023 at 11:46:22AM +0100, Sean Young wrote:
-> > > On Sat, Oct 21, 2023 at 11:08:22AM +0200, Hans de Goede wrote:
-> > > > On 10/19/23 12:51, Uwe Kleine-K=F6nig wrote:
-> > > > > On Wed, Oct 18, 2023 at 03:57:48PM +0200, Hans de Goede wrote:
-> > > > >> On 10/17/23 11:17, Sean Young wrote:
-> > > > > I think it's very subjective if you consider this
-> > > > > churn or not.
-> > > >
-> > > > I consider it churn because I don't think adding a postfix
-> > > > for what is the default/expected behavior is a good idea
-> > > > (with GPIOs not sleeping is the expected behavior).
-> > > >
-> > > > I agree that this is very subjective and very much goes
-> > > > into the territory of bikeshedding. So please consider
-> > > > the above my 2 cents on this and lets leave it at that.
-> > >
-> > > You have a valid point. Let's focus on having descriptive function na=
-mes.
-> >=20
-> > For a couple of days I've been trying to resist the bikeshedding (esp.
-> > given the changes to backlight are tiny) so I'll try to keep it as
-> > brief as I can:
-> >=20
-> > 1. I dislike the do_it() and do_it_cansleep() pairing. It is
-> >    difficult to detect when a client driver calls do_it() by mistake.
-> >    In fact a latent bug of this nature can only be detected by runtime
-> >    testing with the small number of PWMs that do not support
-> >    configuration from an atomic context.
-> >=20
-> >    In contrast do_it() and do_it_atomic()[*] means that although
-> >    incorrectly calling do_it() from an atomic context can be pretty
-> >    catastrophic it is also trivially detected (with any PWM driver)
-> >    simply by running with CONFIG_DEBUG_ATOMIC_SLEEP.
+diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
+index 568491ed6829..69d9f4577b34 100644
+--- a/drivers/pwm/pwm-samsung.c
++++ b/drivers/pwm/pwm-samsung.c
+@@ -631,7 +631,7 @@ static int pwm_samsung_resume(struct device *dev)
+ 		struct pwm_device *pwm = &chip->pwms[i];
+ 		struct samsung_pwm_channel *chan = &our_chip->channel[i];
+ 
+-		if (!(pwm->flags & PWMF_REQUESTED))
++		if (!test_bit(PWMF_REQUESTED, &pwm->flags))
+ 			continue;
+ 
+ 		if (our_chip->variant.output_mask & BIT(i))
+-- 
+2.42.0
 
-Wrongly calling the atomic variant (no matter how it's named) in a
-context where sleeping is possible is only a minor issue. Being faster
-than necessary is hardly a problem, so it only hurts by not being an
-preemption point with PREEMPT_VOLUNTARY which might not even be relevant
-because we're near to a system call anyhow.
-
-For me the naming is only very loosely related to the possible bugs. I
-think calling the wrong function happens mainly because the driver author
-isn't aware in which context the call happens and not because of wrong
-assumptions about the sleepiness of a certain function call.
-If you consider this an argument however, do_it + do_it_cansleep is
-better than do_it_atomic + do_it as wrongly assuming do_it would sleep
-is less bad than wrongly assuming do_it wouldn't sleep. (The latter is
-catched by CONFIG_DEBUG_ATOMIC_SLEEP, but only if it's enabled.)
-
-Having said that while my subjective preference ordering is (with first
-=3D best):
-
-	do_it + do_it_cansleep
-	do_it_atomic + do_it_cansleep
-	do_it_atomic + do_it
-
-wi(th a _might_sleep or _mightsleep suffix ranging below _cansleep)
-I wouldn't get sleepless nights when I get overruled here
-(uwe_cansleep :-).
-
-> >    No objections (beyond churn) to fully spelt out pairings such as
-> >    do_it_cansleep() and do_it_atomic()[*]!
->=20
-> I must say I do like the look of this. Uwe, how do you feel about:
-> pwm_apply_cansleep() and pwm_apply_atomic()? I know we've talked about
-> pwm_apply_atomic in the past, however I think this this the best=20
-> option I've seen so far.
->=20
-> > 2. If there is an API rename can we make sure the patch contains no
-> >    other changes (e.g. don't introduce any new API in the same patch).
-> >    Seperating renames makes the patches easier to review!
-> >    It makes each one smaller and easier to review!
->=20
-> Yes, this should have been separated out. Will fix for next version.
-
-+1
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---kdxw67dv7iobkbz2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU48k8ACgkQj4D7WH0S
-/k6W3AgAk4aFQs6woLctFKPwObedmFaF4LVusjnyP2JYEuwOcWzfmL/W31PFxuWP
-KEm7kc/16r0LD6qbwwgpOGUucBHmXKkmJa+0tdj/pRKkbkBfbA/RDaly9ZNh9Aql
-dZEuZ4CyAE7Pw6ea3ZQhQL1W4x37ZZwVPMvNmQaydtP5VBP1cBrml1SBcrT+6r0j
-j6N5LZR1Jb1+8XuisgUnufJAbBpykKTDJSdqwsREGb93kuDzhiTB7/YDFXe9P8fs
-NOvV78af278xkuohhXrWRRdqJSd+/PDGii+WImHHQpWcJPmcgwsXMCnjnK7DruZR
-Ket6emGp+CLdMp+GKhD7b53atfLNjQ==
-=7sp5
------END PGP SIGNATURE-----
-
---kdxw67dv7iobkbz2--
