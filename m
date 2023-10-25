@@ -2,158 +2,141 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD2E17D60CB
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 06:18:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FC8B7D6391
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 09:38:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232636AbjJYESY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 00:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54952 "EHLO
+        id S233585AbjJYHiT (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Oct 2023 03:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231732AbjJYESV (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 00:18:21 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F071B128
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 21:18:18 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2c5720a321aso47703581fa.1
-        for <linux-pwm@vger.kernel.org>; Tue, 24 Oct 2023 21:18:18 -0700 (PDT)
+        with ESMTP id S233864AbjJYHhl (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 03:37:41 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353ED1BF0
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 00:35:47 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-507bd19eac8so7864782e87.0
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 00:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698207497; x=1698812297; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Brd8GKY25UMovr2lsG9TvdPpEmwQAUXbZxdfbbkQOpE=;
-        b=FlKaqcyVdAYJtXjhaJt/N2OrkFr4S6OUbh0ngCT+jV1hCUGmqFFjUQXEOE9DFKD4FE
-         zEAIbgWTQDVb5SvLWhglvVWwsaI6RfkHOgEyTkou+boHN3eT/qiSsDz4FPj2xs9g13ua
-         l2ASkiI0fre3XU0YViPHhtPiXDfdVHJBV8bPJIB5QkDFO4EZ3zrNJ+1kPOGcQrnFOcGF
-         gsFTzupCHOGFDr/ZSRRSGMJvgwafyYPWp9CtEKz63tuCGPKPpV2QYyKqnkLYRU+j/SSC
-         pwPfwga59DsWpxDVCFLk2QRmj3GZEwMnyUS94i7EAy3pnzL32FO0GG15q1tQvnH1gMcB
-         nfPA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698219345; x=1698824145; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aBbMMGXhgW9dj85vLrlAsi/scxI5pUmqL1hVksSIORg=;
+        b=yK9rF/SY2yK1krSgnPghSkFbqcU6sG9vgvEiHjZwGUpJN+IrGyKqEfRIuQ6Or6/5m0
+         TGqC9PqJRXetnndOmM3afx516YOzH9AiWnUTsCJFh6teb9gkhyTLEHENLj3ckpCVrPO1
+         NG97PVYojzYt+6X3cRR7YLrPSSHWbvLf73csO5fXlnch7xw87pqsrOnv47qCFV8NR65V
+         YQTBKza1qDJJh7Zxmr7H10sxReXwcAqghNVhJHhte9aWRyKp/+xHQl+gSKSszK68BK9E
+         +XYKGdUD3sl+Q2+crd75oPZe3EyPFghTRNOeP8yszcyi8r2S17EZcBwoo69OrEi2Xt88
+         o0WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698207497; x=1698812297;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1698219345; x=1698824145;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Brd8GKY25UMovr2lsG9TvdPpEmwQAUXbZxdfbbkQOpE=;
-        b=JnBL+ISa5BGhwUw0o3kNKbnOlg80pUQzFGvLZCyr1mJKdG88E5BqeOegRUDf3/LgAa
-         mUZAE05rSmvx3YBlNQvxcNX6sT5QbauypeTIgzu2LJ8gCaa4zBj3PvreNrvHgSBCYTTC
-         4Id4DNTjc9DWh8jGdNipox6w80fIzOkyIUdIM7I/4JqKSL77bxDbkIak6WjqYF3aO65L
-         f4dEsjR3Mbym4ax5uEXElAJxpIoN1uskUI1Blgt1pxmTP5odkyJ0zTT/48nPRhASl/WZ
-         z/pybSpEYqHrxVNZDd8Okxr3el2R++HQs59Y6vegsg7QLf3ydEfUdDLeWHa/oH2GQcQW
-         tcdA==
-X-Gm-Message-State: AOJu0YysPG4TVjSruGZrVcFC/AMTTQZGLDZmLGknsrgvdEPZyZ22g5My
-        fvv6FhftF//PJaMIbvJOnAWDNg==
-X-Google-Smtp-Source: AGHT+IHK9MNBEXuKit4Dyq67gtZ3P+f3+x9ngQPQaqjPnQ9oZd4mGeNK5F+gV0c1lFk5HL0q/K6iHQ==
-X-Received: by 2002:a2e:9691:0:b0:2bf:f32a:1f64 with SMTP id q17-20020a2e9691000000b002bff32a1f64mr10173412lji.18.1698207497173;
-        Tue, 24 Oct 2023 21:18:17 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id q16-20020adfea10000000b00326dd5486dcsm11165440wrm.107.2023.10.24.21.18.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 21:18:16 -0700 (PDT)
-Date:   Wed, 25 Oct 2023 07:18:13 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pwm: samsung: Fix a bit test
-Message-ID: <0d61bf0a-3aca-466c-9198-e937e81b5328@kadam.mountain>
-References: <917e3890-7895-4b1c-bcee-4eecb3b7fe09@moroto.mountain>
- <20231024211157.xv3vzqlmxmxwgvle@pengutronix.de>
+        bh=aBbMMGXhgW9dj85vLrlAsi/scxI5pUmqL1hVksSIORg=;
+        b=xKC08XejBLfs1urJ1V5xk6tzfh/8oI4CF6Eu9dp997lLJprKd3trVDnmQq4ZnfGMGh
+         oMxQ9gQsMyymX52jzp/2dzIPBMUcPJ1ZO42z2QTnLv+dH9PjqCDyt2VrDEWMuRikKtS4
+         oYxZTSgd1ieYrKhEwrXkL5Iw1q9QHQ1jSE9KVkKe9S3YsElU+p3QnWHibjA28O5En4Hm
+         mmYVukC/ZbytFZ7gcBT5p4w9OPNA7fofSmO9+Evt+0SKUSNMSWog+m+PKM2K+z2ymNE1
+         o32y/hjE3aPqo7iPKQ8t01ffrwXkafZBR0ykgH7giUdR9hHAIe2Xj9gdVyb/ChphgzVF
+         BIfg==
+X-Gm-Message-State: AOJu0YxliPOwpQpELAZ2QwJCzo3P+bpc90E6v4atX60BGgDHJUmfWWRI
+        rV8v9kbE7mrvLxKrmjqk4X/eNA==
+X-Google-Smtp-Source: AGHT+IGfDcK6b789W6RGHEquV5YMHBAiCzfv/Rctz+XtFqNQN0vhdNvDDXE2hLiVtblka3kNhM2IfQ==
+X-Received: by 2002:ac2:5147:0:b0:507:9777:a34a with SMTP id q7-20020ac25147000000b005079777a34amr10168194lfd.39.1698219345170;
+        Wed, 25 Oct 2023 00:35:45 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05600c350f00b003fe1fe56202sm13962243wmq.33.2023.10.25.00.35.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Oct 2023 00:35:44 -0700 (PDT)
+Message-ID: <d7d40b45-ca7c-4f84-bdb3-02555094126b@baylibre.com>
+Date:   Wed, 25 Oct 2023 09:35:43 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231024211157.xv3vzqlmxmxwgvle@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/18] dt-bindings: display: mediatek: dsi: add binding
+ for MT8365 SoC
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Xinlei Lee <xinlei.lee@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, dri-devel@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pwm@vger.kernel.org
+References: <20231023-display-support-v1-0-5c860ed5c33b@baylibre.com>
+ <20231023-display-support-v1-5-5c860ed5c33b@baylibre.com>
+ <20231024203010.GA518520-robh@kernel.org>
+From:   Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <20231024203010.GA518520-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 11:11:57PM +0200, Uwe Kleine-König wrote:
-> Hello Dan,
-> 
-> On Tue, Oct 17, 2023 at 05:04:08PM +0300, Dan Carpenter wrote:
-> > This code has two problems.  First, it passes the wrong bit parameter to
-> > test_bit().  Second, it mixes using PWMF_REQUESTED in test_bit() and in
-> > open coded bit tests.
-> > 
-> > The test_bit() function takes a bit number.  In other words,
-> > "if (test_bit(0, &flags))" is the equivalent of "if (flags & (1 << 0))".
-> > Passing (1 << 0) to test_bit() is like writing BIT(BIT(0)).  It's a
-> > double shift bug.
-> > 
-> > In pwm_samsung_resume() these issues mean that the flag is never set and
-> > the function is essentially a no-op.
-> > 
-> > Fixes: 4c9548d24c0d ("pwm: samsung: Put per-channel data into driver data")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > From static analysis and not tested.
-> > 
-> >  drivers/pwm/pwm-samsung.c | 2 +-
-> >  include/linux/pwm.h       | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
-> > index 10fe2c13cd80..acf4a0d8d990 100644
-> > --- a/drivers/pwm/pwm-samsung.c
-> > +++ b/drivers/pwm/pwm-samsung.c
-> > @@ -630,7 +630,7 @@ static int pwm_samsung_resume(struct device *dev)
-> >  		struct pwm_device *pwm = &chip->pwms[i];
-> >  		struct samsung_pwm_channel *chan = &our_chip->channel[i];
-> >  
-> > -		if (!(pwm->flags & PWMF_REQUESTED))
-> > +		if (!test_bit(PWMF_REQUESTED, &pwm->flags))
-> >  			continue;
-> >  
-> >  		if (our_chip->variant.output_mask & BIT(i))
-> > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> > index e3b437587b32..3eee5bf367fb 100644
-> > --- a/include/linux/pwm.h
-> > +++ b/include/linux/pwm.h
-> > @@ -41,8 +41,8 @@ struct pwm_args {
-> >  };
-> >  
-> >  enum {
-> > -	PWMF_REQUESTED = 1 << 0,
-> > -	PWMF_EXPORTED = 1 << 1,
-> > +	PWMF_REQUESTED = 0,
-> > +	PWMF_EXPORTED  = 1,
-> 
-> I'd want s/  / / here. Or even not assign explicit values at all?
-> 
 
-I feel like the 0 and 1 add value.  But sure, I can remove the extra
-space.  You're right that trying to align stuff is potentially going to
-cause pain in the future.
 
-> >  };
-> >  
-> >  /*
+On 24/10/2023 22:30, Rob Herring wrote:
+> On Mon, Oct 23, 2023 at 04:40:05PM +0200, Alexandre Mergnat wrote:
+>> Display Serial Interface for MT8365 is compatible with another SoC.
+>> Then, add MT8365 binding along with MT8183 SoC.
+>>
+>> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>> ---
+>>   Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+>> index 12441b937684..2479b9e4abd2 100644
+>> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+>> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
+>> @@ -34,6 +34,8 @@ properties:
+>>             - enum:
+>>                 - mediatek,mt6795-dsi
+>>             - const: mediatek,mt8173-dsi
+>> +              - mediatek,mt8365-dsi
 > 
-> I'd say these are two separate issues, with the one in pwm-samsung being
-> bad and the one in <linux/pwm.h> "only" ugly.
-> 
-> I wonder how I could get the samsung part wrong. All current usages of
-> PMWF_REQUESTED (and also PWMF_EXPORTED) use test_bit (et al). Grepping
-> through history pwm-pca9685.c got this wrong in a similar way for some
-> time, but otherwise it was always used correctly.
-> 
-> The definition of the flags in <linux/pwm.h> is ugly since 
-> f051c466cf69 ("pwm: Allow chips to support multiple PWMs") from 2011!
-> 
-> @Dan: Would you split the patch in two please?
+> Not valid YAML nor json-schema. Please test your series before sending.
 
-Sure.
+The serie has been successfully tested with the 2 following command 
+before being sent:
 
-regards,
-dan carpenter
+make DT_CHECKER_FLAGS=-m dt_binding_check DT_SCHEMA_FILES=mediatek,dsi.yaml
 
+dt-validate -s Documentation/devicetree/bindings 
+arch/arm64/boot/dts/mediatek/mt8365-evk.dtb
+
+
+I made a rebase error, that will be fixed for the next revision thanks.
+
+> 
+>> +          - const: mediatek,mt8183-dsi
+>>   
+>>     reg:
+>>       maxItems: 1
+>>
+>> -- 
+>> 2.25.1
+>>
+
+-- 
+Regards,
+Alexandre
