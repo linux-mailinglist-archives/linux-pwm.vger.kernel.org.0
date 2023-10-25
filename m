@@ -2,56 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 198667D6EFD
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 16:42:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E6FD7D746E
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 21:36:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344894AbjJYOOl (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 10:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38720 "EHLO
+        id S229573AbjJYTgz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Oct 2023 15:36:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344897AbjJYOOk (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 10:14:40 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D006B18D;
-        Wed, 25 Oct 2023 07:14:37 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B47B4C433C8;
-        Wed, 25 Oct 2023 14:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698243277;
-        bh=Q2K+UCxG5HR86aOzjpKAiJvoYUuL6bLcmGVS8Y8DLyk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cM+3nRwhQW/zDIlM96muJ5l5ED/1LgHnbk15CGUHbuXAhQT9oDaWLnNvKbGuD4HCu
-         5O9FYOntHynMFauPCk5LC6N2A52CgYDm97ZShRTZvJsPfkumbEgONwpG8aJPEn9QuE
-         dGZHxJ5Ji1Oprz6poNFioTU4rM6LEL4CpAaP3XQ3CFeWGrdMu36sZBD6nhlInz61E+
-         Yefh7B6RfKznqZdoKdQOB4/g8JwUwGG65uJBkqZJ5Ft6loHQ+CiEF1jcknwlcAYlXr
-         Ar1wpX5Sof4IqQ/9GDW6UYOUzcsyaV9dI7gupZ6a41wJaxcrKiFVvsB5qfeKWDQ7VZ
-         qOyfVc4uNYZ8Q==
-Date:   Wed, 25 Oct 2023 15:14:30 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Nylon Chen <nylon.chen@sifive.com>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
-        vincent.chen@sifive.com, greentime.hu@sifive.com,
-        zong.li@sifive.com, nylon7717@gmail.com
-Subject: Re: [v5 1/2] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-Message-ID: <20231025-utmost-enforcer-eda125f636ac@spud>
-References: <20231024101902.6689-1-nylon.chen@sifive.com>
- <20231024101902.6689-2-nylon.chen@sifive.com>
- <20231024-yin-coliseum-11f5e06fec14@spud>
- <CAHh=Yk_h_1r7ZG+yLK=SoK9AgPkestuQDH-CK621mz=X-PA+cQ@mail.gmail.com>
+        with ESMTP id S229498AbjJYTgz (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 15:36:55 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7937C13A;
+        Wed, 25 Oct 2023 12:36:53 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6b1d1099a84so91491b3a.1;
+        Wed, 25 Oct 2023 12:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698262613; x=1698867413; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TGbMnAcQD9MpNg1isUp8Xn3wZuZoLOEwvnOJV3Zib1c=;
+        b=bztixrk69l+e/+jYISH76bAmPfZObiC7kZDH/4Ca0ghdA0sPIu2NLK74NWXSabG774
+         eIi7N6H6CW3zUJZD+A0PThMI5RDrXkhd2m5i2cn5sslVklqovQuJGL/4Kesf4rzfg1Hl
+         uDYvAifXSn6gQ99DypxNbMDc2nt3/yo7YtmnnWubxH7W3Y9kXR5T8zhysWdM45yvlm8X
+         snO/8iFmaUf4dr56gp/YQBW40nIqt/PMUVcDM+HjDQg5+heubVA4kenJ4FKejJZnaRkU
+         UeP7mIAU3i1lYmk5F+9amlzCeHKCowKdMhaSamvQiNl/BsSuJmLb7cGVBU1vFhDGRHHM
+         NAuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698262613; x=1698867413;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TGbMnAcQD9MpNg1isUp8Xn3wZuZoLOEwvnOJV3Zib1c=;
+        b=V4BLka9nyp1cTG4/aE90R1SoKUxfxbe9c8q0/1DaFUGIo5upDH3DtM8Cx/36mdZDdG
+         9K8LQHDgegAtpKLzZQiCoPibNuyGrxU0eBiROD9TQ5Hk87GtgRZstSWLwzvwY/iO54mo
+         YnGUak+v+gbJGpzUqFWzEHmNEQf3JlUDda3c67YNOuErT304lQCvgoc2x1nP9VL+zQh8
+         Zi4lBeGbEZ6dJDlgvB28Km+n2WYyamlmJmtTpzbWpdbdV7Gy3fo4YeNFQOOcrsbRamCX
+         uJsl+y9JI3vNtfJfjZyXM/OSi+HO2sjXfKngS8mEiH/ZbRY/pBZxQ9TZ50d05eWB1WyG
+         AZOw==
+X-Gm-Message-State: AOJu0YztsFcZwQPJyqo9bbIwaFHak2s2HA5ch+LbCIAYMNQbVnN3OS6W
+        UVotfw9IhLvWh2CDR+9tYIQ=
+X-Google-Smtp-Source: AGHT+IFDdIs+VkhqOZmhmb39SGTaiCH9s23YjOt7r0Pg9uoy33BcIMUwPDCXdR+5BIBpQO0/ZEH7AQ==
+X-Received: by 2002:a05:6a00:1a4f:b0:6bc:e7f8:821e with SMTP id h15-20020a056a001a4f00b006bce7f8821emr19565769pfv.10.1698262612844;
+        Wed, 25 Oct 2023 12:36:52 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g5-20020aa79f05000000b006be055ab117sm9980413pfr.92.2023.10.25.12.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Oct 2023 12:36:52 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 25 Oct 2023 12:36:51 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Su Hui <suhui@nfschina.com>
+Cc:     avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com,
+        venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        jdelvare@suse.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, openbmc@lists.ozlabs.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] hwmon: npcm750-pwm: add an error code check in
+ npcm7xx_en_pwm_fan
+Message-ID: <5036fed5-ff29-4d9b-a31a-1676a8e4f051@roeck-us.net>
+References: <20231020085518.198477-1-suhui@nfschina.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5+5pPVHOs7iWftBQ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHh=Yk_h_1r7ZG+yLK=SoK9AgPkestuQDH-CK621mz=X-PA+cQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20231020085518.198477-1-suhui@nfschina.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,57 +78,13 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Fri, Oct 20, 2023 at 04:55:19PM +0800, Su Hui wrote:
+> npcm7xx_pwm_config_set() can return '-ENODEV' for failed. So check
+> the value of 'ret' after calling npcm7xx_pwm_config_set().
+> 
+> Signed-off-by: Su Hui <suhui@nfschina.com>
 
---5+5pPVHOs7iWftBQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied.
 
-On Wed, Oct 25, 2023 at 05:32:21PM +0800, Nylon Chen wrote:
-> Hi Conor,
->=20
-> Conor Dooley <conor@kernel.org> =E6=96=BC 2023=E5=B9=B410=E6=9C=8824=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=8810:55=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > Hey,
-> >
-> > On Tue, Oct 24, 2023 at 06:19:01PM +0800, Nylon Chen wrote:
-> > > This removes the active-low properties of the PWM-controlled LEDs in
-> > > the HiFive Unmatched device tree.
-> > >
-> > > The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-sch=
-ematics-v3.pdf[1].
-> > >
-> > > Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7b=
-f8453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> > > Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e6=
-8ce76f4192_hifive-unmatched-schematics-v3.pdf [1]
-> >
-> > >
-> >
-> > This blank line should be removed if there is a follow-up.
-> thanks, I got it.
-> >
-> > > Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> >
-> > What did Vincent contribute to this patch? Are you missing a
-> > co-developed-by tag, perhaps?
-> Yes, Vincent was the first person to find the PWM driver problem, and
-
-That sounds like s/Signed-off-by/Reported-by/ then.
-
-Cheers,
-Conor.
-
---5+5pPVHOs7iWftBQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZTkixQAKCRB4tDGHoIJi
-0uJvAP94stLtCC51rlUcr/efIlHgPjbujxBJny8dAGLd/ft0VQD/YUQqbN7RgnKJ
-7kX9TMUMD4Yn9372hjoBeLmO6a9WJww=
-=VytO
------END PGP SIGNATURE-----
-
---5+5pPVHOs7iWftBQ--
+Thanks,
+Guenter
