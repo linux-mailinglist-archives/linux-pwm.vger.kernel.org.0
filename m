@@ -2,69 +2,67 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AFCB7D6A98
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 13:57:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C427D6A9F
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 13:58:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234986AbjJYL5q (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 07:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
+        id S234901AbjJYL61 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 25 Oct 2023 07:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234943AbjJYL5p (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 07:57:45 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF9C13D
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 04:57:42 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40837ebba42so40760065e9.0
-        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 04:57:42 -0700 (PDT)
+        with ESMTP id S233694AbjJYL61 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 07:58:27 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0FC137
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 04:58:24 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2c514cbbe7eso78367681fa.1
+        for <linux-pwm@vger.kernel.org>; Wed, 25 Oct 2023 04:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698235061; x=1698839861; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j6uVxf5kYe92K+O00MCE5FtASY43IgluJLHruF2586U=;
-        b=yW8cRiy2S28hINm9iivjLPTYHXDnF3RaX0kTa3T6QkKPyMX8rQDb3fSYe4kJbY0RjQ
-         IXHOQLG0QOy8EX2brbHLSzcPNUye+yeFQcvHIDcwJxeoOZMElRHUZvJx3OPa1Vz91Ed0
-         cHworUftdcF4GwVgpVb9D9b1YLbxVKVV4pwtwOOSm6SR4Wn0eSQROQIe5Evxm2j8kmqC
-         cAl8CI+ogGJ0erGyfi3h3lMzwVI5TmZlMDzweXSvZvRYt5ztHk+dFV8S0EUk7ehTxy/M
-         AMF3gmTyP+Qmiq8TUHE8XXKKwnf759+G35iedNDBnuwrmsF5uF+Bj5aIpaDkS60jykGU
-         BiaQ==
+        d=linaro.org; s=google; t=1698235103; x=1698839903; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KfUbynUkW0A2o7wHLTAuig9K/lMD2l5OcDGR5b7mo8I=;
+        b=HYyYR0uMNwcSdS9CVikc8iJGHfOC/5jShavalbMU6vJRt68ZUt1rT8JKwOLZ/49sJ6
+         gvVZsnQJ3RkhSX+MJS8RmKe8iC+jl60pBcvHL1es8DBpk7oTMPb1Ak23xItagqxMm4o3
+         lL3yBozDfXqWPhSryx2B9E8mASZUyY1YToXF+2JVIpxvhwAn5jkE7+0xpiUzrF12ijrR
+         88ZBpJAgvjfqUAV//vCZv9qmm0Wpw+MskL4OfMNext53DqHEQtCrBhuddDnF9Ai40HFr
+         O6AtZwjbe92j4N/66Hz3qHQ9eDmA8cyWaNp8F7NETU4NFSDfVXtyET19GvP5IMOIVML+
+         LCXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698235061; x=1698839861;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j6uVxf5kYe92K+O00MCE5FtASY43IgluJLHruF2586U=;
-        b=aGSkZkVbH4Yq7RjtEvgBGwSLg2LQx6nuGUXCAeu3U9HzgZuREitfD5oj8rVPVO8H5r
-         wzAvL92RXCuD6F6i7DjUA9DffX9YZl3pemACDyKqLF3Ahsxgv2oKCumvPkC4VdHEvPui
-         NjsgUcQz4lNsijjIFS4TbgCjgRcfq2BwijfV/DfCducIgwIju1XeIv8+lUi2KhMqxGo1
-         V4Pe+3pXWXvcnKUzGQRz+08kpitdJJHntbq64oknEWAS7jtmUdNpbaf6Zp5qfA0K89RZ
-         IvauK+0tLDvwPA+4mEiAqGkbA2VCLUJoLsKGVrEarfAH+lGT8zDsbGhnRd011PN6MwUI
-         YwxQ==
-X-Gm-Message-State: AOJu0YxP+c+uGeGiNS3ZPGx9RkPCV+U/OsiwudD71lJaHefH7TevHNBm
-        kvMi/SZdnvD5pBQG1S6kCmkCZA==
-X-Google-Smtp-Source: AGHT+IFlcuVvisAHY6IpOp9uDQk7RA7FjTqkZ2XNTiaE5hdwCeCI/PV48ajajNqa8VjggLSkT9Do7A==
-X-Received: by 2002:a05:600c:3b20:b0:405:4f78:e128 with SMTP id m32-20020a05600c3b2000b004054f78e128mr12172686wms.4.1698235061312;
-        Wed, 25 Oct 2023 04:57:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698235103; x=1698839903;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KfUbynUkW0A2o7wHLTAuig9K/lMD2l5OcDGR5b7mo8I=;
+        b=AVBYPjt+3KQYUSPcq9CIfZ5fcDGnyn3apEBDsn9ijdmI7uk2u4dhyc/gK3EMU2kObk
+         v2FD5e6AQ3q/+1CPwAQeTz8sVEkRXgXAa3H/8Fwe2thEfxFakTLq0aRyLCyZOXZba4ZE
+         tTXRVnT0XntmFldZg1nazI64YvY5Pf3l/l7NPToVQ+bD4XtzJtsJ328NXBcNZwjCKW9P
+         LCpyinOpIYKbFN7ohEjH0uVodicEBofFJJb/DjuklvN0YchDcrh/BNuuNmg3vT3jWoq3
+         GUv1bM4uc1YK0Hnkz38nPvtLyHN/FRXRIz/G2Nd4/UdoZSs52CWIGXdoSc55m/0ZrSCn
+         1uQw==
+X-Gm-Message-State: AOJu0YyhisKYHQLV6bJrf7WvTYEmJMXp9lADqRlID96vYnycjhgdtxUr
+        0mpRtwOOL7gWOPk2k89V6HyUAg==
+X-Google-Smtp-Source: AGHT+IErfEwam0o9Z+S9MmPXBYGKaBe2GqXi5WgE8PLd41wLN6ZsTrlS6woDbrEBK+9ZpW85UKerfw==
+X-Received: by 2002:a05:651c:c8a:b0:2bf:fa62:5d0e with SMTP id bz10-20020a05651c0c8a00b002bffa625d0emr12084791ljb.2.1698235102948;
+        Wed, 25 Oct 2023 04:58:22 -0700 (PDT)
 Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id p30-20020a05600c1d9e00b003fefaf299b6sm14317313wms.38.2023.10.25.04.57.40
+        by smtp.gmail.com with ESMTPSA id c16-20020a05600c0ad000b003fee567235bsm19103191wmr.1.2023.10.25.04.58.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 04:57:41 -0700 (PDT)
-Date:   Wed, 25 Oct 2023 14:57:34 +0300
+        Wed, 25 Oct 2023 04:58:22 -0700 (PDT)
+Date:   Wed, 25 Oct 2023 14:58:18 +0300
 From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-Subject: [PATCH v2 1/2] pwm: samsung: Fix a bit test in pwm_samsung_resume()
-Message-ID: <e031db45-add0-4da7-97fa-dee95ee936ad@moroto.mountain>
+Subject: [PATCH v2 2/2] pwm: Fix double shift bug
+Message-ID: <447a8e49-ee37-4fde-bc4a-ebec3e37a311@moroto.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <e031db45-add0-4da7-97fa-dee95ee936ad@moroto.mountain>
 X-Mailer: git-send-email haha only kidding
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -73,31 +71,36 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The PWMF_REQUESTED enum is supposed to be used with test_bit() and not
-used as in a bitwise AND.  In this specific code the flag will never be
-set so the function is effectively a no-op.
+These enums are passed to set/test_bit().  The set/test_bit() functions
+take a bit number instead of a shifted value.  Passing a shifted value
+is a double shift bug like doing BIT(BIT(1)).  The double shift bug
+doesn't cause a problem here because we are only checking 0 and 1 but
+if the value was 5 or above then it can lead to a buffer overflow.
 
-Fixes: e3fe982b2e4e ("pwm: samsung: Put per-channel data into driver data")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
-v2: Split the patch into two parts
+v2:  White space change.  Split the patch into two parts
 
- drivers/pwm/pwm-samsung.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I didn't put a Fixes tag because it doesn't affect run time
 
-diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
-index 568491ed6829..69d9f4577b34 100644
---- a/drivers/pwm/pwm-samsung.c
-+++ b/drivers/pwm/pwm-samsung.c
-@@ -631,7 +631,7 @@ static int pwm_samsung_resume(struct device *dev)
- 		struct pwm_device *pwm = &chip->pwms[i];
- 		struct samsung_pwm_channel *chan = &our_chip->channel[i];
+ include/linux/pwm.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index e3b437587b32..cda3597b84f2 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -41,8 +41,8 @@ struct pwm_args {
+ };
  
--		if (!(pwm->flags & PWMF_REQUESTED))
-+		if (!test_bit(PWMF_REQUESTED, &pwm->flags))
- 			continue;
+ enum {
+-	PWMF_REQUESTED = 1 << 0,
+-	PWMF_EXPORTED = 1 << 1,
++	PWMF_REQUESTED = 0,
++	PWMF_EXPORTED = 1,
+ };
  
- 		if (our_chip->variant.output_mask & BIT(i))
+ /*
 -- 
 2.42.0
 
