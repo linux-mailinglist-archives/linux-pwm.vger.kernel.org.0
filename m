@@ -2,75 +2,60 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E6FD7D746E
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Oct 2023 21:36:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FD567D8940
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Oct 2023 21:55:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbjJYTgz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 25 Oct 2023 15:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
+        id S229991AbjJZTzY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 26 Oct 2023 15:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjJYTgz (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 25 Oct 2023 15:36:55 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7937C13A;
-        Wed, 25 Oct 2023 12:36:53 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6b1d1099a84so91491b3a.1;
-        Wed, 25 Oct 2023 12:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698262613; x=1698867413; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TGbMnAcQD9MpNg1isUp8Xn3wZuZoLOEwvnOJV3Zib1c=;
-        b=bztixrk69l+e/+jYISH76bAmPfZObiC7kZDH/4Ca0ghdA0sPIu2NLK74NWXSabG774
-         eIi7N6H6CW3zUJZD+A0PThMI5RDrXkhd2m5i2cn5sslVklqovQuJGL/4Kesf4rzfg1Hl
-         uDYvAifXSn6gQ99DypxNbMDc2nt3/yo7YtmnnWubxH7W3Y9kXR5T8zhysWdM45yvlm8X
-         snO/8iFmaUf4dr56gp/YQBW40nIqt/PMUVcDM+HjDQg5+heubVA4kenJ4FKejJZnaRkU
-         UeP7mIAU3i1lYmk5F+9amlzCeHKCowKdMhaSamvQiNl/BsSuJmLb7cGVBU1vFhDGRHHM
-         NAuw==
+        with ESMTP id S229501AbjJZTzX (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 26 Oct 2023 15:55:23 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81C4B9;
+        Thu, 26 Oct 2023 12:55:20 -0700 (PDT)
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6ce291b5df9so710134a34.2;
+        Thu, 26 Oct 2023 12:55:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698262613; x=1698867413;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TGbMnAcQD9MpNg1isUp8Xn3wZuZoLOEwvnOJV3Zib1c=;
-        b=V4BLka9nyp1cTG4/aE90R1SoKUxfxbe9c8q0/1DaFUGIo5upDH3DtM8Cx/36mdZDdG
-         9K8LQHDgegAtpKLzZQiCoPibNuyGrxU0eBiROD9TQ5Hk87GtgRZstSWLwzvwY/iO54mo
-         YnGUak+v+gbJGpzUqFWzEHmNEQf3JlUDda3c67YNOuErT304lQCvgoc2x1nP9VL+zQh8
-         Zi4lBeGbEZ6dJDlgvB28Km+n2WYyamlmJmtTpzbWpdbdV7Gy3fo4YeNFQOOcrsbRamCX
-         uJsl+y9JI3vNtfJfjZyXM/OSi+HO2sjXfKngS8mEiH/ZbRY/pBZxQ9TZ50d05eWB1WyG
-         AZOw==
-X-Gm-Message-State: AOJu0YztsFcZwQPJyqo9bbIwaFHak2s2HA5ch+LbCIAYMNQbVnN3OS6W
-        UVotfw9IhLvWh2CDR+9tYIQ=
-X-Google-Smtp-Source: AGHT+IFDdIs+VkhqOZmhmb39SGTaiCH9s23YjOt7r0Pg9uoy33BcIMUwPDCXdR+5BIBpQO0/ZEH7AQ==
-X-Received: by 2002:a05:6a00:1a4f:b0:6bc:e7f8:821e with SMTP id h15-20020a056a001a4f00b006bce7f8821emr19565769pfv.10.1698262612844;
-        Wed, 25 Oct 2023 12:36:52 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g5-20020aa79f05000000b006be055ab117sm9980413pfr.92.2023.10.25.12.36.52
+        d=1e100.net; s=20230601; t=1698350120; x=1698954920;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P9SEmh3Ti6BweKuBsiI0z3j9kO6wl5de7iuUaFpsagQ=;
+        b=qID3Hdr57cb9Nur07Oa3maNzD7TzNRE4oVUrkozYxDnoQs6++5KaPlKL9IJEAxZc4l
+         c0KVkASptzjCFGNlKkvgPB4MiIQNCN+yxDkaKr/ezK8zZlEfQgymGyt8LNW/YehLv4IG
+         nXSfjlQmMAy0VKf6FTD6/L/MA8mB8CWHoeWbOyLZf4Vf7Jgh5+7xOExJiL3I/SduRLfG
+         dkuO1CMJAgughUgHooAwKir9hOieqZnNyBQziR5IKNIhNrSihlPeLZb0Jq7WXh3SL7BB
+         iQwuNOXSTJqSJainResUKCXb2JhFWZ++TFvehZoOYviKwdD3nY4SDdqxFeCIS0cRpP0P
+         swiA==
+X-Gm-Message-State: AOJu0YyX3trdKa+XqUxfarLVgAiNr+fefIyIshwnm9CVlCIO1kQWF522
+        K9Y8cgkVbuuOaUEROm0GzQ==
+X-Google-Smtp-Source: AGHT+IGFKWUSjFLRB5b0vYmkzpMNPEPkC3HBf+pN5hkdBt1cX6fzmcK5kAGnnfuiZjJO1Sorv/ZI+Q==
+X-Received: by 2002:a05:6830:314c:b0:6b8:9a3a:ea12 with SMTP id c12-20020a056830314c00b006b89a3aea12mr545041ots.12.1698350119860;
+        Thu, 26 Oct 2023 12:55:19 -0700 (PDT)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id d64-20020a4a5243000000b005737ca61829sm5503oob.13.2023.10.26.12.55.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 12:36:52 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 25 Oct 2023 12:36:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Su Hui <suhui@nfschina.com>
-Cc:     avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com,
-        venture@google.com, yuenn@google.com, benjaminfair@google.com,
-        jdelvare@suse.com, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, openbmc@lists.ozlabs.org,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] hwmon: npcm750-pwm: add an error code check in
- npcm7xx_en_pwm_fan
-Message-ID: <5036fed5-ff29-4d9b-a31a-1676a8e4f051@roeck-us.net>
-References: <20231020085518.198477-1-suhui@nfschina.com>
+        Thu, 26 Oct 2023 12:55:19 -0700 (PDT)
+Received: (nullmailer pid 69534 invoked by uid 1000);
+        Thu, 26 Oct 2023 19:55:18 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH v2] pwm: Use device_get_match_data()
+Date:   Thu, 26 Oct 2023 14:54:17 -0500
+Message-ID: <20231026195417.68090-2-robh@kernel.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231020085518.198477-1-suhui@nfschina.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,13 +63,98 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Fri, Oct 20, 2023 at 04:55:19PM +0800, Su Hui wrote:
-> npcm7xx_pwm_config_set() can return '-ENODEV' for failed. So check
-> the value of 'ret' after calling npcm7xx_pwm_config_set().
-> 
-> Signed-off-by: Su Hui <suhui@nfschina.com>
+Use preferred device_get_match_data() instead of of_match_device() to
+get the driver match data. With this, adjust the includes to explicitly
+include the correct headers.
 
-Applied.
+As these drivers only do DT based matching, of_match_device() will never
+return NULL if we've gotten to probe(). Therefore, the NULL check and
+error returns can be dropped.
 
-Thanks,
-Guenter
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - Add to commit message about of_match_device() error checking
+
+ drivers/pwm/pwm-img.c      | 8 ++------
+ drivers/pwm/pwm-rockchip.c | 9 ++-------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index 116fa060e302..0d218c0b690e 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -13,9 +13,9 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -260,7 +260,6 @@ static int img_pwm_probe(struct platform_device *pdev)
+ 	u64 val;
+ 	unsigned long clk_rate;
+ 	struct img_pwm_chip *imgchip;
+-	const struct of_device_id *of_dev_id;
+ 
+ 	imgchip = devm_kzalloc(&pdev->dev, sizeof(*imgchip), GFP_KERNEL);
+ 	if (!imgchip)
+@@ -272,10 +271,7 @@ static int img_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(imgchip->base))
+ 		return PTR_ERR(imgchip->base);
+ 
+-	of_dev_id = of_match_device(img_pwm_of_match, &pdev->dev);
+-	if (!of_dev_id)
+-		return -ENODEV;
+-	imgchip->data = of_dev_id->data;
++	imgchip->data = device_get_match_data(&pdev->dev);
+ 
+ 	imgchip->periph_regs = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+ 							       "img,cr-periph");
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index cce4381e188a..a7c647e37837 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -10,8 +10,8 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+ #include <linux/time.h>
+ 
+@@ -296,16 +296,11 @@ MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
+ 
+ static int rockchip_pwm_probe(struct platform_device *pdev)
+ {
+-	const struct of_device_id *id;
+ 	struct rockchip_pwm_chip *pc;
+ 	u32 enable_conf, ctrl;
+ 	bool enabled;
+ 	int ret, count;
+ 
+-	id = of_match_device(rockchip_pwm_dt_ids, &pdev->dev);
+-	if (!id)
+-		return -EINVAL;
+-
+ 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+ 	if (!pc)
+ 		return -ENOMEM;
+@@ -344,7 +339,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, pc);
+ 
+-	pc->data = id->data;
++	pc->data = device_get_match_data(&pdev->dev);
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &rockchip_pwm_ops;
+ 	pc->chip.npwm = 1;
+-- 
+2.42.0
+
