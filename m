@@ -2,115 +2,65 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D14D7D9A25
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 15:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC65B7DA4DE
+	for <lists+linux-pwm@lfdr.de>; Sat, 28 Oct 2023 04:38:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345458AbjJ0Nib (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 27 Oct 2023 09:38:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50338 "EHLO
+        id S233027AbjJ1CiQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 27 Oct 2023 22:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231302AbjJ0Nia (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 09:38:30 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD35EE5
-        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 06:38:28 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qwN2b-000444-ST; Fri, 27 Oct 2023 15:38:21 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qwN2Z-004eap-CE; Fri, 27 Oct 2023 15:38:19 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qwN2Z-007Lz1-2l; Fri, 27 Oct 2023 15:38:19 +0200
-Date:   Fri, 27 Oct 2023 15:38:18 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sean Young <sean@mess.org>
-Cc:     linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] pwm: bcm2835: allow pwm driver to be used in
- atomic context
-Message-ID: <20231027133818.f5zpeqxfw7ghs7sk@pengutronix.de>
-References: <cover.1698398004.git.sean@mess.org>
- <0b35ca65d6f4d53d3beb1411a64970ea5f969060.1698398004.git.sean@mess.org>
+        with ESMTP id S233011AbjJ1CiQ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 22:38:16 -0400
+Received: from mail.durme.pl (mail.durme.pl [217.182.69.186])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66DD990
+        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 19:38:14 -0700 (PDT)
+Received: by mail.durme.pl (Postfix, from userid 1002)
+        id 754AE62BE5; Thu, 26 Oct 2023 07:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=durme.pl; s=mail;
+        t=1698307986; bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
+        h=Date:From:To:Subject:From;
+        b=dEBBoTejGlvBJOw1lYWWZ7dtosmw79/Cw8hrZY/LE8MoOaxJE17zLJpzEwWeJTTM5
+         Me1tsYZWFwNZ9MbxLKOLPMZuwaZgZFcpL7CWWF3f/BOg1DXSvFWxOiZAu4/aWTIH7f
+         R47Zto/rR9zBj6zHYPEpwPyQ2Bm0tQ6tCYmPSoPZG7mZJKXjVHKka/sx06N2022/30
+         KeBgYShWSFCrd7DAZfI+iKfDplLiI6IbpeHruRkuqY05qJDAHOvZmqXxb3i26c1SsE
+         uWXazhfnMDdaq/jcpNfGviMRF9/QFrYgK1Uup6Z2oNn4mL49GFGMVJapj4u+id2I/M
+         G1fRBIkD9oIEQ==
+Received: by mail.durme.pl for <linux-pwm@vger.kernel.org>; Thu, 26 Oct 2023 07:40:07 GMT
+Message-ID: <20231026064500-0.1.56.pqlz.0.ggpl0ock7f@durme.pl>
+Date:   Thu, 26 Oct 2023 07:40:07 GMT
+From:   "Krystian Wieczorek" <krystian.wieczorek@durme.pl>
+To:     <linux-pwm@vger.kernel.org>
+Subject: W sprawie samochodu
+X-Mailer: mail.durme.pl
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2iiuhlc2f5sp65et"
-Content-Disposition: inline
-In-Reply-To: <0b35ca65d6f4d53d3beb1411a64970ea5f969060.1698398004.git.sean@mess.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Dzie=C5=84 dobry,
 
---2iiuhlc2f5sp65et
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
+, je=C5=9Bli chodzi o system monitoringu GPS.
 
-Hello Sean,
+Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
+e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
+a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
 
-On Fri, Oct 27, 2023 at 10:20:46AM +0100, Sean Young wrote:
-> +	pc->rate =3D clk_get_rate(pc->clk);
-> +	if (!pc->rate) {
-> +		dev_err(pc->dev, "failed to get clock rate\n");
-> +		ret =3D -EINVAL;
+Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
+dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
+szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
+mne znaczenie.
 
-Other error paths in this driver use dev_err_probe(). The most compact
-way here would be:
+Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
+b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
 
-	ret =3D dev_err_probe(pc->dev, -EINVAL, "....");
 
-but maybe
-
-	ret =3D -EINVAL;
-	dev_err_probe(pc->dev, ret, "...");
-
-is a bit easier to parse for a human?!
-
-Otherwise looks reasonable.
-
-Thanks,
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2iiuhlc2f5sp65et
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU7vUoACgkQj4D7WH0S
-/k47IAgApc4G3nyl4kSKMOLLW/jy5u3nlGR3Cbn/NFdCUikfU5kiiAfpFpgsLz8C
-BMmJCw3XmK78YqMX+1v3Zg1MiCCkTfuLFWIFtZWe3BUunh2fVkKtzNuFpZBq7nrd
-D7YHl08Ph2teuVbMYQbGEzpTzQFgHMTJmHZIGDj7VTSkv/TV2nmrX02kzSh6rYnJ
-iAyqRTGH2HTeMDj4vpbqmki2rEJT+lIOR3bMAyoMiWVlcvv4nZdFKZOWPl8OAZ11
-Ci+Uh66I/G+crBuxNBmpISvc0xTP3v0ab5nei1rcl5cNJZRRAk5TlPiUvooKhnTX
-aNZkwf1ewQ17Khp1W4V4XTnI1+nv5Q==
-=oHUW
------END PGP SIGNATURE-----
-
---2iiuhlc2f5sp65et--
+Pozdrawiam
+Krystian Wieczorek
