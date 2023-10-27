@@ -2,63 +2,66 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 669C27D9527
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 12:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 548557D99AA
+	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 15:23:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345592AbjJ0KYJ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 27 Oct 2023 06:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
+        id S1345904AbjJ0NXU (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 27 Oct 2023 09:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231345AbjJ0KYI (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 06:24:08 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD760D7;
-        Fri, 27 Oct 2023 03:24:03 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 70B0724DBFD;
-        Fri, 27 Oct 2023 18:24:01 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 27 Oct
- 2023 18:24:01 +0800
-Received: from [192.168.120.47] (171.223.208.138) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 27 Oct
- 2023 18:24:00 +0800
-Message-ID: <e3faaa46-896a-405d-ac5f-97587e81fba4@starfivetech.com>
-Date:   Fri, 27 Oct 2023 18:23:58 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/4] pwm: opencores: Add PWM driver support
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>,
-        "Emil Renner Berthing" <kernel@esmil.dk>,
+        with ESMTP id S1345780AbjJ0NXT (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 09:23:19 -0400
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5257C9
+        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 06:23:17 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qwMns-0002DL-2O; Fri, 27 Oct 2023 15:23:08 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qwMnp-004eW6-Ek; Fri, 27 Oct 2023 15:23:05 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qwMnp-007LID-4k; Fri, 27 Oct 2023 15:23:05 +0200
+Date:   Fri, 27 Oct 2023 15:23:05 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     William Qiu <william.qiu@starfivetech.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
+        Emil Renner Berthing <kernel@esmil.dk>,
         Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Hal Feng <hal.feng@starfivetech.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v6 2/4] pwm: opencores: Add PWM driver support
+Message-ID: <20231027132305.u6ompbbqd35gjrrw@pengutronix.de>
 References: <20231020103741.557735-1-william.qiu@starfivetech.com>
  <20231020103741.557735-3-william.qiu@starfivetech.com>
  <20231020112539.gctx5uj2rrhryulo@pengutronix.de>
  <b2ef7299-5d5a-4ef7-89fd-04b6130cb227@starfivetech.com>
  <20231024114545.73ljfceuon2blkxz@pengutronix.de>
-Content-Language: en-US
-From:   William Qiu <william.qiu@starfivetech.com>
-In-Reply-To: <20231024114545.73ljfceuon2blkxz@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [171.223.208.138]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+ <e3faaa46-896a-405d-ac5f-97587e81fba4@starfivetech.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3qmjtkogiqqwe4cm"
+Content-Disposition: inline
+In-Reply-To: <e3faaa46-896a-405d-ac5f-97587e81fba4@starfivetech.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,119 +69,40 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
+--3qmjtkogiqqwe4cm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2023/10/24 19:45, Uwe Kleine-König wrote:
-> Hello William,
-> 
-> On Tue, Oct 24, 2023 at 05:16:49PM +0800, William Qiu wrote:
->> On 2023/10/20 19:25, Uwe Kleine-König wrote:
->> > Hello,
->> > 
->> > On Fri, Oct 20, 2023 at 06:37:39PM +0800, William Qiu wrote:
->> >> Add Pulse Width Modulation driver support for OpenCores.
->> >> 
->> >> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
->> >> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
->> >> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
->> >> ---
->> >>  MAINTAINERS              |   7 ++
->> >>  drivers/pwm/Kconfig      |  11 ++
->> >>  drivers/pwm/Makefile     |   1 +
->> >>  drivers/pwm/pwm-ocores.c | 211 +++++++++++++++++++++++++++++++++++++++
->> >>  4 files changed, 230 insertions(+)
->> >>  create mode 100644 drivers/pwm/pwm-ocores.c
->> >> 
->> >> diff --git a/MAINTAINERS b/MAINTAINERS
->> >> index 6c4cce45a09d..321af8fa7aad 100644
->> >> --- a/MAINTAINERS
->> >> +++ b/MAINTAINERS
->> >> @@ -16003,6 +16003,13 @@ F:	Documentation/i2c/busses/i2c-ocores.rst
->> >>  F:	drivers/i2c/busses/i2c-ocores.c
->> >>  F:	include/linux/platform_data/i2c-ocores.h
->> >> 
->> >> +OPENCORES PWM DRIVER
->> >> +M:	William Qiu <william.qiu@starfivetech.com>
->> >> +M:	Hal Feng <hal.feng@starfivetech.com>
->> >> +S:	Supported
->> >> +F:	Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
->> >> +F:	drivers/pwm/pwm-ocores.c
->> >> +
->> >>  OPENRISC ARCHITECTURE
->> >>  M:	Jonas Bonn <jonas@southpole.se>
->> >>  M:	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
->> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> >> index 8ebcddf91f7b..cbfbf227d957 100644
->> >> --- a/drivers/pwm/Kconfig
->> >> +++ b/drivers/pwm/Kconfig
->> >> @@ -434,6 +434,17 @@ config PWM_NTXEC
->> >>  	  controller found in certain e-book readers designed by the original
->> >>  	  design manufacturer Netronix.
->> >> 
->> >> +config PWM_OCORES
->> >> +	tristate "Opencores PWM support"
->> >> +	depends on HAS_IOMEM && OF
->> >> +	depends on COMMON_CLK && RESET_CONTROLLER
->> > 
->> > Would it make sense to add something like:
->> > 
->> > 	depends on ARCH_SOMETHING || COMPILE_TEST
->> > 
->> > here?
->> > 
->> But there is no mention of architectural limitations in the OpenCores's
->> specification.
-> 
-> I already guessed that. Still it probably makes no sense to enable that
-> option on most machines. The PWM device found in i.MX SoCs can
-> theoretically also be implemented on AT91 or S390x. In practice it
-> isn't, so there is a dependency on ARCH_MXC || COMPILE_TEST.
-> 
-> Consider the role of someone who does a kernel bump for a certain
-> machine (on one end of the spectrum) or a distribution kernel (on the
-> other end).
-> 
-> If you take a 6.5 x86_64 allmodconfig + COMPILE_TEST=n and upgrade to
-> v6.6-rc7 and do an oldconfig, you get 90 questions[1].
-> 
-> Just looking quickly through this list, among them are:
-> 
-> 	DRM support for Loongson Graphics (DRM_LOONGSON) [N/m/?] (NEW) 
-> 	Xilinx AXI DMAS Engine (XILINX_DMA) [N/m/y/?] (NEW)
-> 	Clock driver for Renesas VersaClock 3 devices (COMMON_CLK_VC3) [N/m/y/?] (NEW)
-> 	Realtek RT1017 SDCA Codec - SDW (SND_SOC_RT1017_SDCA_SDW) [N/m/?] (NEW)
-> 
-> I didn't check in detail and maybe one or the other is valid on x86_64,
-> but I'd be surprised if you find two that are sensible to enable on
-> x86_64 to support a real machine.
-> 
-> While I think Kconfig cannot be held responsible to only allow
-> generating "real world sensible" configurations, we should work a bit
-> harder to rule out the obvious violators and make it easy for people
-> configuring the kernel where sensible.
-> 
-> In my book it's better to have a too strong dependency at first for a
-> new driver (but allow it with COMPILE_TEST). Someone who as a device
-> needing that driver will find it out and speak up. However if you allow
-> to enable the driver everywhere, many people will disable the driver
-> (maybe using yes '' | make oldconfig), some will spend time to research
-> about this option to find which machines actually have such a device and
-> if the machine(s) they care about are in this set. This is a waste of
-> time and opportunities. (And note, this isn't only about people spending
-> time to decide if they enable or disable PWM_OCORES, this is also about
-> people who use yes '' because there are too many questions and so they
-> might miss the handful of useful ones.)
-> 
-> Best regards
-> Uwe
-> 
-> [1] measured using
-> 
-> 	yes '' | make oldconfig
-> 
-> and counting the occurrences of "(NEW)".
-> 
-I see, I'll think about it.
-Maybe depend on STARFIVE'S SoCs first?
+Hello William,
 
-Best regards,
-William
+On Fri, Oct 27, 2023 at 06:23:58PM +0800, William Qiu wrote:
+> [...]
+> Maybe depend on STARFIVE'S SoCs first?
+
+If these are for now the only known implementers, that sounds about
+right.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--3qmjtkogiqqwe4cm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmU7ubgACgkQj4D7WH0S
+/k4Pzwf8DKveomYTnI/qtW/+NJ/bbFuOW4Ide3qKtQ75kpEVkbIHu/l+ymXJ1TMv
+NjGjmLOXLajnz7Qzsvndobrvj6dFXA4uXlWfJCgommhS/RzwBOz8ndQj/KG7WjsM
+E0U0HSMa/118tZJJxyWc2im29ZauxsGeyTifffuMVdEztcpxcQgiu4tHH4SBMa/h
+LulGyro0VZ1sxOb4GWVt9t6jfSD07Ya+0WPXedmbWFSMcPVXxBmr6PViuAywk9By
+HTW5Ml+hKwp6Ca8nQhukElFK1R0m/ZvqOA9+WKlIzt1BwL2q5r7nd2NsWJ03yP5d
+fJA98G2UirMdGOT14zi9URiFnHKZkQ==
+=B7Fc
+-----END PGP SIGNATURE-----
+
+--3qmjtkogiqqwe4cm--
