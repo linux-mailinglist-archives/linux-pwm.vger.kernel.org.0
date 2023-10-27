@@ -2,71 +2,63 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D26087D94C8
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 12:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 669C27D9527
+	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 12:24:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234978AbjJ0KJg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 27 Oct 2023 06:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35430 "EHLO
+        id S1345592AbjJ0KYJ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 27 Oct 2023 06:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231487AbjJ0KJf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 06:09:35 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D3AD7
-        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 03:09:31 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-32d8c2c6dfdso1191514f8f.1
-        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 03:09:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698401370; x=1699006170; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:to:from:user-agent
-         :references:from:to:cc:subject:date:message-id:reply-to;
-        bh=eCgIckExqjVeeUki95cqbKKediAgvysu6tsWmmMNWo8=;
-        b=tki/2Z5WiL9IEojLoyOHzAllY7xpY7D2ozxNXhWmypjnVPkncwO697r3HnDiC42nJs
-         pYu5aWNMzO10HMGFs/o2BePQ5qBglX6A1vkIrVxiAeRbKqzR/Fy6QqMZdAGh4O3uvGde
-         vEAO7yAd9O50GYfJQ6emQjbJXLa7kh1YzU5jSJT8w656CaZWQ5ERA35Xi39f5JvuCqzo
-         YZzY1tcaekq/ARb0vf+gQzwaJ1RVVypqINR6zEvRhNKKL0ZO2jXY1IJBLUTGlUf2WM+a
-         JBGe34LLzU27VfYjaNXRkUFyNYLNjggQVCH+tDLmY5/zHB6qfPNHZh5cGFj4ZZkf7RFc
-         VY8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698401370; x=1699006170;
-        h=mime-version:message-id:in-reply-to:date:subject:to:from:user-agent
-         :references:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eCgIckExqjVeeUki95cqbKKediAgvysu6tsWmmMNWo8=;
-        b=VE3Nhr1vejpEnOh9Sa9iF5ocr9Wt8ZlHmds+UdLETvOcgMPKCP4h5w+k/qnwr/SUuL
-         qDL9YZ2f9ZDXpMvJXyiGqDwOULnTzEA1ivkzozRQU+Oj92GANS+qsconb3cyDnUq+bNG
-         RpxAAcFb7WgFRXuUaedhHuuTaFEShS43pQBrxpLWHIHfnf8SMBCehaEGu96+/QtiHSiC
-         M3eYxhZyTM/f0czq3QGvxMIskrgs3f6zO45H/QcNUuhh8zzsPg4jpzY8DYd8CXGsqY44
-         F8ZE4DE8OZAOdIbj7lUwTu58f1vNqKP9IImPv7J3Jx17kWXTjdqJzH6IgKa4+9R/kOiL
-         UEiA==
-X-Gm-Message-State: AOJu0Yxqy6TJqseT6GdBEoN8oHVSxX4Hxaz11prTimVClkBwupyM3V3q
-        LmJhMYef6GeMlejZwlF9SM8kd9BYFr5exYIQfPo=
-X-Google-Smtp-Source: AGHT+IGa1T7lEat0slw/AwjDK1QpinPLfhfQndnxOfkNu0bsXcI3kQkBPm8CYqm1V9dqWxwRoE9W/Q==
-X-Received: by 2002:a05:6000:b8d:b0:32d:9395:dec6 with SMTP id dl13-20020a0560000b8d00b0032d9395dec6mr1985532wrb.67.1698401370089;
-        Fri, 27 Oct 2023 03:09:30 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:816f:104b:c6b3:b87d])
-        by smtp.gmail.com with ESMTPSA id t11-20020a5d534b000000b0032da7454ebesm1413195wrv.79.2023.10.27.03.09.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 03:09:29 -0700 (PDT)
-References: <20231016052457.1191838-1-junyi.zhao@amlogic.com>
- <10dcc778-f165-407e-b765-760d277d5e35@salutedevices.com>
-User-agent: mu4e 1.8.13; emacs 29.1
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     George Stark <gnstark@salutedevices.com>,
-        JunYi Zhao <junyi.zhao@amlogic.com>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, neil.armstrong@linaro.org,
-        khilman@baylibre.com, martin.blumenstingl@googlemail.com,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 RESEND] pwm: meson: add pwm support for S4
-Date:   Fri, 27 Oct 2023 12:00:50 +0200
-In-reply-to: <10dcc778-f165-407e-b765-760d277d5e35@salutedevices.com>
-Message-ID: <1jzg041ina.fsf@starbuckisacylon.baylibre.com>
+        with ESMTP id S231345AbjJ0KYI (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 06:24:08 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD760D7;
+        Fri, 27 Oct 2023 03:24:03 -0700 (PDT)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 70B0724DBFD;
+        Fri, 27 Oct 2023 18:24:01 +0800 (CST)
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 27 Oct
+ 2023 18:24:01 +0800
+Received: from [192.168.120.47] (171.223.208.138) by EXMBX168.cuchost.com
+ (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 27 Oct
+ 2023 18:24:00 +0800
+Message-ID: <e3faaa46-896a-405d-ac5f-97587e81fba4@starfivetech.com>
+Date:   Fri, 27 Oct 2023 18:23:58 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/4] pwm: opencores: Add PWM driver support
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>,
+        "Emil Renner Berthing" <kernel@esmil.dk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Hal Feng <hal.feng@starfivetech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+References: <20231020103741.557735-1-william.qiu@starfivetech.com>
+ <20231020103741.557735-3-william.qiu@starfivetech.com>
+ <20231020112539.gctx5uj2rrhryulo@pengutronix.de>
+ <b2ef7299-5d5a-4ef7-89fd-04b6130cb227@starfivetech.com>
+ <20231024114545.73ljfceuon2blkxz@pengutronix.de>
+Content-Language: en-US
+From:   William Qiu <william.qiu@starfivetech.com>
+In-Reply-To: <20231024114545.73ljfceuon2blkxz@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [171.223.208.138]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX168.cuchost.com
+ (172.16.6.78)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,85 +66,119 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On Mon 23 Oct 2023 at 23:07, George Stark <gnstark@salutedevices.com> wrote:
 
-> Hello JunYi Zhao
->
-> On 10/16/23 08:24, JunYi Zhao wrote:
->> From: "junyi.zhao" <junyi.zhao@amlogic.com>
->> Support PWM for S4 soc.
->> Now the PWM clock input is done in independent CLKCTRL registers.
->> And no more in the PWM registers.
->> PWM needs to obtain an external clock source.
->> Signed-off-by: junyi.zhao <junyi.zhao@amlogic.com>
->> ---
->> V2 -> V3:
->> Rebase and Review the latest upstream code again.
->> After reconstruction, stick to the previous code as much as possible.
->>   drivers/pwm/pwm-meson.c | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->> index 25519cddc2a9..fe9fd75747c4 100644
->> --- a/drivers/pwm/pwm-meson.c
->> +++ b/drivers/pwm/pwm-meson.c
->> @@ -99,6 +99,7 @@ struct meson_pwm_channel {
->>   struct meson_pwm_data {
->>   	const char * const *parent_names;
->>   	unsigned int num_parents;
->> +	unsigned int extern_clk;
-> may be bool extern_clk;
->>   };
->>     struct meson_pwm {
->> @@ -396,6 +397,10 @@ static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
->>   	.num_parents = ARRAY_SIZE(pwm_g12a_ao_cd_parent_names),
->>   };
->>   +static const struct meson_pwm_data pwm_s4_data = {
->> +	.extern_clk = true,
->> +};
->> +
->>   static const struct of_device_id meson_pwm_matches[] = {
->>   	{
->>   		.compatible = "amlogic,meson8b-pwm",
->> @@ -429,6 +434,10 @@ static const struct of_device_id meson_pwm_matches[] = {
->>   		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
->>   		.data = &pwm_g12a_ao_cd_data
->>   	},
->> +	{
->> +		.compatible = "amlogic,s4-pwm",
->> +		.data = &pwm_s4_data,
->> +	},
->>   	{},
->>   };
->>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
->> @@ -451,6 +460,16 @@ static int meson_pwm_init_channels(struct meson_pwm *meson)
->>   		struct clk_parent_data div_parent = {}, gate_parent = {};
->>   		struct clk_init_data init = {};
->>   +		if (meson->data->extern_clk) {
+On 2023/10/24 19:45, Uwe Kleine-König wrote:
+> Hello William,
+> 
+> On Tue, Oct 24, 2023 at 05:16:49PM +0800, William Qiu wrote:
+>> On 2023/10/20 19:25, Uwe Kleine-König wrote:
+>> > Hello,
+>> > 
+>> > On Fri, Oct 20, 2023 at 06:37:39PM +0800, William Qiu wrote:
+>> >> Add Pulse Width Modulation driver support for OpenCores.
+>> >> 
+>> >> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
+>> >> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+>> >> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+>> >> ---
+>> >>  MAINTAINERS              |   7 ++
+>> >>  drivers/pwm/Kconfig      |  11 ++
+>> >>  drivers/pwm/Makefile     |   1 +
+>> >>  drivers/pwm/pwm-ocores.c | 211 +++++++++++++++++++++++++++++++++++++++
+>> >>  4 files changed, 230 insertions(+)
+>> >>  create mode 100644 drivers/pwm/pwm-ocores.c
+>> >> 
+>> >> diff --git a/MAINTAINERS b/MAINTAINERS
+>> >> index 6c4cce45a09d..321af8fa7aad 100644
+>> >> --- a/MAINTAINERS
+>> >> +++ b/MAINTAINERS
+>> >> @@ -16003,6 +16003,13 @@ F:	Documentation/i2c/busses/i2c-ocores.rst
+>> >>  F:	drivers/i2c/busses/i2c-ocores.c
+>> >>  F:	include/linux/platform_data/i2c-ocores.h
+>> >> 
+>> >> +OPENCORES PWM DRIVER
+>> >> +M:	William Qiu <william.qiu@starfivetech.com>
+>> >> +M:	Hal Feng <hal.feng@starfivetech.com>
+>> >> +S:	Supported
+>> >> +F:	Documentation/devicetree/bindings/pwm/opencores,pwm-ocores.yaml
+>> >> +F:	drivers/pwm/pwm-ocores.c
+>> >> +
+>> >>  OPENRISC ARCHITECTURE
+>> >>  M:	Jonas Bonn <jonas@southpole.se>
+>> >>  M:	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+>> >> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+>> >> index 8ebcddf91f7b..cbfbf227d957 100644
+>> >> --- a/drivers/pwm/Kconfig
+>> >> +++ b/drivers/pwm/Kconfig
+>> >> @@ -434,6 +434,17 @@ config PWM_NTXEC
+>> >>  	  controller found in certain e-book readers designed by the original
+>> >>  	  design manufacturer Netronix.
+>> >> 
+>> >> +config PWM_OCORES
+>> >> +	tristate "Opencores PWM support"
+>> >> +	depends on HAS_IOMEM && OF
+>> >> +	depends on COMMON_CLK && RESET_CONTROLLER
+>> > 
+>> > Would it make sense to add something like:
+>> > 
+>> > 	depends on ARCH_SOMETHING || COMPILE_TEST
+>> > 
+>> > here?
+>> > 
+>> But there is no mention of architectural limitations in the OpenCores's
+>> specification.
+> 
+> I already guessed that. Still it probably makes no sense to enable that
+> option on most machines. The PWM device found in i.MX SoCs can
+> theoretically also be implemented on AT91 or S390x. In practice it
+> isn't, so there is a dependency on ARCH_MXC || COMPILE_TEST.
+> 
+> Consider the role of someone who does a kernel bump for a certain
+> machine (on one end of the spectrum) or a distribution kernel (on the
+> other end).
+> 
+> If you take a 6.5 x86_64 allmodconfig + COMPILE_TEST=n and upgrade to
+> v6.6-rc7 and do an oldconfig, you get 90 questions[1].
+> 
+> Just looking quickly through this list, among them are:
+> 
+> 	DRM support for Loongson Graphics (DRM_LOONGSON) [N/m/?] (NEW) 
+> 	Xilinx AXI DMAS Engine (XILINX_DMA) [N/m/y/?] (NEW)
+> 	Clock driver for Renesas VersaClock 3 devices (COMMON_CLK_VC3) [N/m/y/?] (NEW)
+> 	Realtek RT1017 SDCA Codec - SDW (SND_SOC_RT1017_SDCA_SDW) [N/m/?] (NEW)
+> 
+> I didn't check in detail and maybe one or the other is valid on x86_64,
+> but I'd be surprised if you find two that are sensible to enable on
+> x86_64 to support a real machine.
+> 
+> While I think Kconfig cannot be held responsible to only allow
+> generating "real world sensible" configurations, we should work a bit
+> harder to rule out the obvious violators and make it easy for people
+> configuring the kernel where sensible.
+> 
+> In my book it's better to have a too strong dependency at first for a
+> new driver (but allow it with COMPILE_TEST). Someone who as a device
+> needing that driver will find it out and speak up. However if you allow
+> to enable the driver everywhere, many people will disable the driver
+> (maybe using yes '' | make oldconfig), some will spend time to research
+> about this option to find which machines actually have such a device and
+> if the machine(s) they care about are in this set. This is a waste of
+> time and opportunities. (And note, this isn't only about people spending
+> time to decide if they enable or disable PWM_OCORES, this is also about
+> people who use yes '' because there are too many questions and so they
+> might miss the handful of useful ones.)
+> 
+> Best regards
+> Uwe
+> 
+> [1] measured using
+> 
+> 	yes '' | make oldconfig
+> 
+> and counting the occurrences of "(NEW)".
+> 
+I see, I'll think about it.
+Maybe depend on STARFIVE'S SoCs first?
 
-Instead of hacking through the existing registration function, it be
-much better to provide the clock registration function as on ops in dt data.
-
-Also, as Neil pointed out on the v2 [1], the meaning of clkin0/1 is changed
-on this SoC.
-* On previous SoC, it was a reference to clock input the PWM block
-  should select from the hard-coded list it has (should fix that
-  someday)
-* Now it is directly the input the PWM block must claim.
-
-You need to update the bindings accordingly for the S4
-
-[1]: https://lore.kernel.org/linux-amlogic/07581fb8-0cd9-5b76-6fa3-1d1a7353d944@baylibre.com
-
->> +			snprintf(name, sizeof(name), "clkin%u", i);
->> +			channel->clk = devm_clk_get(dev, name);
->> +			if (IS_ERR(channel->clk)) {
->> +				dev_err(meson->chip.dev, "can't get device clock\n");
->> +				return PTR_ERR(channel->clk);
->> +			}
->> +			continue;
->> +		}
->> +
->>   		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
->>     		init.name = name;
->> base-commit: 4d2c646ac07cf4a35ef1c4a935a1a4fd6c6b1a36
-
+Best regards,
+William
