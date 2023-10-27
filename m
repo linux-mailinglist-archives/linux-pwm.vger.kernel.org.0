@@ -2,217 +2,157 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D35977D93CA
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 11:35:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D26087D94C8
+	for <lists+linux-pwm@lfdr.de>; Fri, 27 Oct 2023 12:09:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbjJ0Jfg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 27 Oct 2023 05:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
+        id S234978AbjJ0KJg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 27 Oct 2023 06:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230502AbjJ0Jff (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 05:35:35 -0400
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2130.outbound.protection.outlook.com [40.107.255.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EF7AF;
-        Fri, 27 Oct 2023 02:34:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EnTYETFBAq6svaEmfkNyeVFU9GRZ7ciF8qq6JQ8IVcAiOGLxXCTassGDEk7sbf8Jx/oXJfac1pKl7M6ufgOYmIpAaf+VmfS7fvdRx6attzwygft3JTvJNopqABCBc5y+r5EW+pj36vXk/pgMH7vrZLVBRVC74T4bL1rMOExHuNVzBBMxyYYZRIvNC+3cp5i/JWmDxfC4EXq8J87IBe9l69DmHEfaCk6TA7YLAAOkewM7JlU3unssTFMpwem+wXvVb512H5Qv7DJL0Oe028+d8lgWscLtZs/bWcTUW6KRA491rVYffyYeETbVIQLbtciAXP/uYlkfKEDMZclO6c9INw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hCKs9fSMXAADhVrAJ0AswCju7ZB7oRtLeG1Ob5ZtrNI=;
- b=dpuHuitGl3/admJ2ggcQeJH4H68yY7i9K/MdGVYo9w8icKSCy+lWn8ID/4atY8wrA6NyZ6nSwy+6wFMdv2vAvuwQkMaTXbsdug/5AO4CFmFWDIZ23qPItn+2r35dfTB7YFT7fXTh1kQtgHmAQKFFKjebeUMEQLwt5m0P5TGuwIuImlvenEnlCe/nWArdBF2fWDJs4BKRavZYP4PwTrynS5ihVgw2a+okTVLyzXtRUMzQrVP3AQ+Ncl+jPFCaoVEu20xQ2tNg7y9Gvj+I76pF+flztMX+S9SULcl/oSwvZBIFjVUOEofGt5g/6kn0eWAOolTsMOzzOqPQDNkhAczidw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hCKs9fSMXAADhVrAJ0AswCju7ZB7oRtLeG1Ob5ZtrNI=;
- b=QdCTsjsRWk+JLYFz+VZzuMe35UGhPmRYhVaihVtETFbQsG1L3rWbe4OT945BIF1shwuMHu33wyxqG+oJ7cyckgGdU/5Ga5DpAULPZ14FSGGUn27BX430w0VCscVd304z2WmzXcWCwivj3ClmMrgmUpl9OkJlyWKhaDjMk/H8AWSIc5iX9B+CXEqVgWPLF709jBpqV/n7P+2zzQviFaY4F2a8krgnSTCl3A3Uao7KDPjI5rWieUQIEoAQ0PDYWFQsu5qxGxFQ1YSrerzH+e4r2MQF9+Ls6Dp58wtdmpLeFMhedn/YKQBgz8K4J4Kw3+Y90Rh3MtoC03hqrvX2CYRdLg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from KL1PR03MB5732.apcprd03.prod.outlook.com (2603:1096:820:70::7)
- by PSAPR03MB5336.apcprd03.prod.outlook.com (2603:1096:301:45::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6933.19; Fri, 27 Oct
- 2023 09:34:44 +0000
-Received: from KL1PR03MB5732.apcprd03.prod.outlook.com
- ([fe80::639:64cb:4cd:d4c1]) by KL1PR03MB5732.apcprd03.prod.outlook.com
- ([fe80::639:64cb:4cd:d4c1%3]) with mapi id 15.20.6933.024; Fri, 27 Oct 2023
- 09:34:44 +0000
-Message-ID: <5837e8e7-b7fe-48cb-bd82-c8e3f042e500@amlogic.com>
-Date:   Fri, 27 Oct 2023 17:34:39 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 RESEND] pwm: meson: add pwm support for S4
-Content-Language: en-GB
-To:     George Stark <gnstark@salutedevices.com>, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, neil.armstrong@linaro.org,
-        khilman@baylibre.com, jbrunet@baylibre.com,
-        martin.blumenstingl@googlemail.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+        with ESMTP id S231487AbjJ0KJf (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 27 Oct 2023 06:09:35 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D3AD7
+        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 03:09:31 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-32d8c2c6dfdso1191514f8f.1
+        for <linux-pwm@vger.kernel.org>; Fri, 27 Oct 2023 03:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1698401370; x=1699006170; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:to:from:user-agent
+         :references:from:to:cc:subject:date:message-id:reply-to;
+        bh=eCgIckExqjVeeUki95cqbKKediAgvysu6tsWmmMNWo8=;
+        b=tki/2Z5WiL9IEojLoyOHzAllY7xpY7D2ozxNXhWmypjnVPkncwO697r3HnDiC42nJs
+         pYu5aWNMzO10HMGFs/o2BePQ5qBglX6A1vkIrVxiAeRbKqzR/Fy6QqMZdAGh4O3uvGde
+         vEAO7yAd9O50GYfJQ6emQjbJXLa7kh1YzU5jSJT8w656CaZWQ5ERA35Xi39f5JvuCqzo
+         YZzY1tcaekq/ARb0vf+gQzwaJ1RVVypqINR6zEvRhNKKL0ZO2jXY1IJBLUTGlUf2WM+a
+         JBGe34LLzU27VfYjaNXRkUFyNYLNjggQVCH+tDLmY5/zHB6qfPNHZh5cGFj4ZZkf7RFc
+         VY8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698401370; x=1699006170;
+        h=mime-version:message-id:in-reply-to:date:subject:to:from:user-agent
+         :references:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eCgIckExqjVeeUki95cqbKKediAgvysu6tsWmmMNWo8=;
+        b=VE3Nhr1vejpEnOh9Sa9iF5ocr9Wt8ZlHmds+UdLETvOcgMPKCP4h5w+k/qnwr/SUuL
+         qDL9YZ2f9ZDXpMvJXyiGqDwOULnTzEA1ivkzozRQU+Oj92GANS+qsconb3cyDnUq+bNG
+         RpxAAcFb7WgFRXuUaedhHuuTaFEShS43pQBrxpLWHIHfnf8SMBCehaEGu96+/QtiHSiC
+         M3eYxhZyTM/f0czq3QGvxMIskrgs3f6zO45H/QcNUuhh8zzsPg4jpzY8DYd8CXGsqY44
+         F8ZE4DE8OZAOdIbj7lUwTu58f1vNqKP9IImPv7J3Jx17kWXTjdqJzH6IgKa4+9R/kOiL
+         UEiA==
+X-Gm-Message-State: AOJu0Yxqy6TJqseT6GdBEoN8oHVSxX4Hxaz11prTimVClkBwupyM3V3q
+        LmJhMYef6GeMlejZwlF9SM8kd9BYFr5exYIQfPo=
+X-Google-Smtp-Source: AGHT+IGa1T7lEat0slw/AwjDK1QpinPLfhfQndnxOfkNu0bsXcI3kQkBPm8CYqm1V9dqWxwRoE9W/Q==
+X-Received: by 2002:a05:6000:b8d:b0:32d:9395:dec6 with SMTP id dl13-20020a0560000b8d00b0032d9395dec6mr1985532wrb.67.1698401370089;
+        Fri, 27 Oct 2023 03:09:30 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:816f:104b:c6b3:b87d])
+        by smtp.gmail.com with ESMTPSA id t11-20020a5d534b000000b0032da7454ebesm1413195wrv.79.2023.10.27.03.09.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Oct 2023 03:09:29 -0700 (PDT)
 References: <20231016052457.1191838-1-junyi.zhao@amlogic.com>
  <10dcc778-f165-407e-b765-760d277d5e35@salutedevices.com>
-From:   Junyi Zhao <junyi.zhao@amlogic.com>
-In-Reply-To: <10dcc778-f165-407e-b765-760d277d5e35@salutedevices.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYCP286CA0166.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3c6::17) To KL1PR03MB5732.apcprd03.prod.outlook.com
- (2603:1096:820:70::7)
+User-agent: mu4e 1.8.13; emacs 29.1
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     George Stark <gnstark@salutedevices.com>,
+        JunYi Zhao <junyi.zhao@amlogic.com>, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, neil.armstrong@linaro.org,
+        khilman@baylibre.com, martin.blumenstingl@googlemail.com,
+        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 RESEND] pwm: meson: add pwm support for S4
+Date:   Fri, 27 Oct 2023 12:00:50 +0200
+In-reply-to: <10dcc778-f165-407e-b765-760d277d5e35@salutedevices.com>
+Message-ID: <1jzg041ina.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR03MB5732:EE_|PSAPR03MB5336:EE_
-X-MS-Office365-Filtering-Correlation-Id: 74abafa0-fe84-4991-1425-08dbd6cff3e2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EFwusN4GmbvG7KZQk49ZXR0FrdTnttz6z4KgVuIdCSgTc/o0U9CjQ4L6H/vpLFKABi87dsQf2FoUZ1446KPXNYqBfJHTxlzvzQWBeJ1LRC2/NMI7Kp5UIWvM7VRaD6V5MqbcLdSWHXXBfuQfX6MhiezyVpGIyRiU6WfW6i68HLN8ip+mqTNxVoDC/HtQ24o7uoLvRnYIQhqUWSYgsr+9s3A+UamJvyCKiPY4mfQxFPiyCW/nHly5/jwm5PERrh1dmQMdZtVDrX4wyLhQkGhUnkC99oziSW42z4KU0QiLgXyOL013RNTZRr70wHTrZg38p0Fnbfns+RDddgcmmIioPURe0hA44hD6+fRQaWGTyQAk5ONjyQEZXp8qzIaW+o33/2T055mESHSEVoqRRDfZxYIF2l0BJ+a6XD7qUQvmeyjMOz8AxPdaOfdeZgP8xkLMBBASgJW1ww3SH1Igkfcyvub4DaliwbY7PN28bu34oW/gaQLcbvZoltshQRy+A5TMcULb/14dm9zaNiYeVclpGcqpGNp8D/6Hh1Iu25sLeZTk4p/2TVgQK11oOGFQcYsZfYAMXeNpmqZMRf4GVDbnRS039sxRPOeSgInWZ5KDug/G6T//DvWvcH+BnOko0kKhZT4R0UNFa90Qiq3pwXZRp6pkeKmjWicVuZY/PNEIg/2LdG76NeATdevEumxNOg79E/BOrO+C5nAIo0UqLQ4ybI8wtfJnSMChGHPgGagd947SkvKl9BhN0mksq9H5qx9G
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB5732.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(396003)(39850400004)(230922051799003)(230273577357003)(230173577357003)(186009)(64100799003)(451199024)(1800799009)(478600001)(316002)(66946007)(66556008)(66476007)(921008)(8936002)(8676002)(6486002)(31686004)(966005)(5660300002)(53546011)(6506007)(31696002)(86362001)(6512007)(38100700002)(26005)(6666004)(36756003)(44832011)(41300700001)(83380400001)(2906002)(7416002)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MlU3RjF6YitGNzhrNk1obVRmRXBTTVFpelhlZW1NWVU0ajdBRU1hT3lRam9Z?=
- =?utf-8?B?cE1nS2ZTNk44M1gxdkZCSkE5bmZhbkx6TWd2S2I0eUVDYWp5ZkM4TGMxY2lD?=
- =?utf-8?B?US9nci9kZ05xVm9xcWZRbzNMaVd3dklYY0tLOFd5NFljRkZOdU1SOFI5ZEZy?=
- =?utf-8?B?VVdkSE9SZ1JHdjB6eVUrSU1PYnNwUTJDdHZWSnd3cXZiMVY2TmwrQSszTXRI?=
- =?utf-8?B?WEZqVUt5NHMrMnpwMURZTWlQU3lFWkhrZWsyK1pVdmxNRSt5SVI0ZG1kdEVP?=
- =?utf-8?B?OTRWd0R3ekJwbnh3c21MbUZLV0dGNXFSN1VESytvQXozUm1DN3BMeWFoTVly?=
- =?utf-8?B?RjlsbUpRNXlhVlRIZVMwQnJyczhRN0dYL1o4ZDQxK2tkOWczckFVMEdwY2pi?=
- =?utf-8?B?QWFnTDgyZ1I5SmJpZzJ4TlhkSjRYS1pYYjIzbU1zQWZsOUhKczNDcTd6Um9z?=
- =?utf-8?B?UkZoZkZNaGg5QnlQYnA5K1dkbjdUNWYxSlF6U1VVdUx6cWExeFVFMjJOSW5z?=
- =?utf-8?B?MEo1bUtFR2tGYXJ0NVowVDFZM2xVZ0dRZGY4ck1jTEJmS0x4UWdJUzJKZGVk?=
- =?utf-8?B?NXdzUCtGSTAvMmNNN25XZXd2VysyRW1EQS95RGQ5MG1qVkJqcTRNNWtkTWJz?=
- =?utf-8?B?em9GY1M2U1NReEJNckozZFBPK3c0Y2x6czBoTTQ1VW1VUktsQVFlRVRadjF2?=
- =?utf-8?B?OU5OSUMwaTluNGxLVTFtdHYxeWh4OE9lNHFhK0h0UjV0REhTKytLTHNFcU5j?=
- =?utf-8?B?cFdBemYyQkc0V0pMbjNQMERzR2ZpcjJ5bHRIM1pEbFVaeEUrOHdQeVNhSUFw?=
- =?utf-8?B?TGptR1lkSDFBQ0RUVUwrK0RFbStvSnB2NDRlVVdZV2dab0trQUFraGpJcVBx?=
- =?utf-8?B?NU1OYUtyZ3pVWTlKdUVLeFRkMTRLNlZrOEwxNU5lUENiQldNbk10NkhsWTRn?=
- =?utf-8?B?S2FqVFZpQ1lPMU9SWVdUc3NEV3JmeG45R09TS1psN0tTb2kvREZENTk2ZnJw?=
- =?utf-8?B?ek9rcWg3aTVKd25VekhCQ2hwZy9TYVRKRnVCMTVzd3ZZVkVxaklndjljc0FR?=
- =?utf-8?B?M2x1RlBFMmRYL3IwMVBsTWhjTGRGOGtEa2R6VG1hdXlHSnhqMkNKVVcrenhW?=
- =?utf-8?B?RWd3Rlh4Nk00SlB4Vm5jUTFSQ2paR2ZSbGpRcmRmZDRVeUlXQkYvQlBFOU5r?=
- =?utf-8?B?TG1KQU16Y1EzeHZ3SStQS3h5Yk1IdGdYQXVWdWxhVGlnQkdEMFMzTXlob3I5?=
- =?utf-8?B?Umx3aWRCbVo1djBkdHd2T2tnQ3FNVW1zVTBtY1NtSW1MTHV3M0poRk9RRXA3?=
- =?utf-8?B?dVJ1ZGRIYXZYRlVLNVkxUWtIT1FYd3k0LytRNTJRNXU5cHYvWm4xem1DZHlL?=
- =?utf-8?B?ckhUWnpCVWRSdHhTcVRuYlNrSEdKMENncGEzZlNhVS8yN0JEUmlISlZwbDdw?=
- =?utf-8?B?ZlFsSmgzdXVOY3JXODRNZ0t3OTBORDVnYVd0c1VKbU54N2tIOGpVYmNkYlgr?=
- =?utf-8?B?ek1JSW1oNE5mWG0rQTRzc25iUHVOcG5LM3pydHBzUVBxZFhiWkF4UGNiTkJm?=
- =?utf-8?B?aTNhQ0tSOXVzVUcwQkxpZS9DanR1UFkybEgxdGVud3V6NXc3RG45TjU4Ynpm?=
- =?utf-8?B?NTNMYkZZdUpCV0hnTW96ZXc5SkZQbFY3RVk0aWRRUDZPL2txVWdoU0J3VHpP?=
- =?utf-8?B?eGp5Z1ZaQnpWZzF5bW9tK2ljcU8yZU5uZG5kQnVCcVRGME5uWVZUd0RhSGdS?=
- =?utf-8?B?SEZiN2s0K2p0S2d5WnBkR3Fjdm1tS2ozV2lOcUlCbENMb3M2Tit5VDdHTHVo?=
- =?utf-8?B?amlHMElueUZvZ2F1eDUvZS9UQzBTVG8rdmtPaVpzZzNlSUVtOWsxdUVISS9N?=
- =?utf-8?B?ZWtHTTJPZmJ1UmE3TlV4ZCtlNjFkcVpTYlZnWUxJNGY1T09CZnNsd01qYVd5?=
- =?utf-8?B?YUlXejZZRkJRRE1qY3ZVV1FOUGN6K1g5TitkZk5ZR2gvTEdDeFVneEJGS2RR?=
- =?utf-8?B?c2J6LzRNS2hVdDB6aEp5Y29jbVFVMThiNEowRXJGQ1hXMHdaR3RLNXdjS2hD?=
- =?utf-8?B?RHcwcmpZNnl4QkpVdjN4eEtyN0Q5ZWxnWWZEd3hBdFhrWjloWlZNWXNjQ3BQ?=
- =?utf-8?Q?KprHVm0hhj2ZADJ2uXdkbZKma?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74abafa0-fe84-4991-1425-08dbd6cff3e2
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB5732.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2023 09:34:44.3251
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K9bUqcQflvRFJovt5KX/QC88uZV0tHABfiiGSSr6s8JPhTHq1FiGvBngT3RwmojMaPcTkD2Vp/Rsms9maJzl9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR03MB5336
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_VALIDITY_RPBL,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi George, thank u for your review.
-I will change it.
 
-On 2023/10/24 4:07, George Stark wrote:
-> [你通常不会收到来自 gnstark@salutedevices.com 的电子邮件。请访问 
-> https://aka.ms/LearnAboutSenderIdentification，以了解这一点为什么很重要]
-> 
-> [ EXTERNAL EMAIL ]
-> 
+On Mon 23 Oct 2023 at 23:07, George Stark <gnstark@salutedevices.com> wrote:
+
 > Hello JunYi Zhao
-> 
+>
 > On 10/16/23 08:24, JunYi Zhao wrote:
 >> From: "junyi.zhao" <junyi.zhao@amlogic.com>
->>
 >> Support PWM for S4 soc.
 >> Now the PWM clock input is done in independent CLKCTRL registers.
 >> And no more in the PWM registers.
 >> PWM needs to obtain an external clock source.
->>
 >> Signed-off-by: junyi.zhao <junyi.zhao@amlogic.com>
 >> ---
 >> V2 -> V3:
 >> Rebase and Review the latest upstream code again.
 >> After reconstruction, stick to the previous code as much as possible.
->>   drivers/pwm/pwm-meson.c | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
+>>   drivers/pwm/pwm-meson.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
 >> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
 >> index 25519cddc2a9..fe9fd75747c4 100644
 >> --- a/drivers/pwm/pwm-meson.c
 >> +++ b/drivers/pwm/pwm-meson.c
 >> @@ -99,6 +99,7 @@ struct meson_pwm_channel {
->>   struct meson_pwm_data {
->>       const char * const *parent_names;
->>       unsigned int num_parents;
->> +     unsigned int extern_clk;
+>>   struct meson_pwm_data {
+>>   	const char * const *parent_names;
+>>   	unsigned int num_parents;
+>> +	unsigned int extern_clk;
 > may be bool extern_clk;
->>   };
->>
->>   struct meson_pwm {
->> @@ -396,6 +397,10 @@ static const struct meson_pwm_data 
->> pwm_g12a_ao_cd_data = {
->>       .num_parents = ARRAY_SIZE(pwm_g12a_ao_cd_parent_names),
->>   };
->>
->> +static const struct meson_pwm_data pwm_s4_data = {
->> +     .extern_clk = true,
+>>   };
+>>     struct meson_pwm {
+>> @@ -396,6 +397,10 @@ static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
+>>   	.num_parents = ARRAY_SIZE(pwm_g12a_ao_cd_parent_names),
+>>   };
+>>   +static const struct meson_pwm_data pwm_s4_data = {
+>> +	.extern_clk = true,
 >> +};
 >> +
->>   static const struct of_device_id meson_pwm_matches[] = {
->>       {
->>               .compatible = "amlogic,meson8b-pwm",
->> @@ -429,6 +434,10 @@ static const struct of_device_id 
->> meson_pwm_matches[] = {
->>               .compatible = "amlogic,meson-g12a-ao-pwm-cd",
->>               .data = &pwm_g12a_ao_cd_data
->>       },
->> +     {
->> +             .compatible = "amlogic,s4-pwm",
->> +             .data = &pwm_s4_data,
->> +     },
->>       {},
->>   };
->>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
->> @@ -451,6 +460,16 @@ static int meson_pwm_init_channels(struct 
->> meson_pwm *meson)
->>               struct clk_parent_data div_parent = {}, gate_parent = {};
->>               struct clk_init_data init = {};
->>
->> +             if (meson->data->extern_clk) {
->> +                     snprintf(name, sizeof(name), "clkin%u", i);
->> +                     channel->clk = devm_clk_get(dev, name);
->> +                     if (IS_ERR(channel->clk)) {
->> +                             dev_err(meson->chip.dev, "can't get 
->> device clock\n");
->> +                             return PTR_ERR(channel->clk);
->> +                     }
->> +                     continue;
->> +             }
+>>   static const struct of_device_id meson_pwm_matches[] = {
+>>   	{
+>>   		.compatible = "amlogic,meson8b-pwm",
+>> @@ -429,6 +434,10 @@ static const struct of_device_id meson_pwm_matches[] = {
+>>   		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
+>>   		.data = &pwm_g12a_ao_cd_data
+>>   	},
+>> +	{
+>> +		.compatible = "amlogic,s4-pwm",
+>> +		.data = &pwm_s4_data,
+>> +	},
+>>   	{},
+>>   };
+>>   MODULE_DEVICE_TABLE(of, meson_pwm_matches);
+>> @@ -451,6 +460,16 @@ static int meson_pwm_init_channels(struct meson_pwm *meson)
+>>   		struct clk_parent_data div_parent = {}, gate_parent = {};
+>>   		struct clk_init_data init = {};
+>>   +		if (meson->data->extern_clk) {
+
+Instead of hacking through the existing registration function, it be
+much better to provide the clock registration function as on ops in dt data.
+
+Also, as Neil pointed out on the v2 [1], the meaning of clkin0/1 is changed
+on this SoC.
+* On previous SoC, it was a reference to clock input the PWM block
+  should select from the hard-coded list it has (should fix that
+  someday)
+* Now it is directly the input the PWM block must claim.
+
+You need to update the bindings accordingly for the S4
+
+[1]: https://lore.kernel.org/linux-amlogic/07581fb8-0cd9-5b76-6fa3-1d1a7353d944@baylibre.com
+
+>> +			snprintf(name, sizeof(name), "clkin%u", i);
+>> +			channel->clk = devm_clk_get(dev, name);
+>> +			if (IS_ERR(channel->clk)) {
+>> +				dev_err(meson->chip.dev, "can't get device clock\n");
+>> +				return PTR_ERR(channel->clk);
+>> +			}
+>> +			continue;
+>> +		}
 >> +
->>               snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
->>
->>               init.name = name;
->>
+>>   		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
+>>     		init.name = name;
 >> base-commit: 4d2c646ac07cf4a35ef1c4a935a1a4fd6c6b1a36
-> 
-> -- 
-> Best regards
-> George
+
