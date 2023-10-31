@@ -2,56 +2,126 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 356D47DAC56
-	for <lists+linux-pwm@lfdr.de>; Sun, 29 Oct 2023 13:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E80E27DC9EB
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Oct 2023 10:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjJ2MKO (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sun, 29 Oct 2023 08:10:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45280 "EHLO
+        id S234894AbjJaJui (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 31 Oct 2023 05:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjJ2MKN (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sun, 29 Oct 2023 08:10:13 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DD1BE;
-        Sun, 29 Oct 2023 05:10:08 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF153C433C8;
-        Sun, 29 Oct 2023 12:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1698581408;
-        bh=Tt2zBbYMPZAuRK60SLouG6hIoBx1BUwr3/PJQYhilQU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DTJcwgTpcvNVi65l6K3LPvwFBNlhbcf85N51LlceLdolMoiwtQGiPq3oLQrjEtSRr
-         UZpwqUZCJijXj/AXm2QdBq8sSiHFV8zPDzJ69kvN1NeIsl9OAuCnYTRTCz3kAx4xP/
-         IEekay5Z70j4Ct03QyuwStvWsumtnwCgArrs9nhk=
-Date:   Sun, 29 Oct 2023 13:10:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S234260AbjJaJug (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 31 Oct 2023 05:50:36 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB9D115
+        for <linux-pwm@vger.kernel.org>; Tue, 31 Oct 2023 02:50:28 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231031095016epoutp03ea4f5f33135904e61bfc4e045052c787~TKFHXJ4xS1264212642epoutp03v
+        for <linux-pwm@vger.kernel.org>; Tue, 31 Oct 2023 09:50:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231031095016epoutp03ea4f5f33135904e61bfc4e045052c787~TKFHXJ4xS1264212642epoutp03v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1698745816;
+        bh=f+eG3CIC2Plg27fPLJc4QgCsVMHw3i2PoYyxHj/KQpc=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=rqFNF7rT4LevZWU8eiQz29c7i0Gku9zhQRB+R4LDmvGiMgSlYw5DRpuF0neyehVT0
+         lHcrqNH7doalsshzDOXiNdjxevY6O4IaV+nVsm786T510czLsycPnohOnmBmWYpgHV
+         BPS9JrXzcGhlsNY3bUKEGOBzJ85asfxqEpUv3iZw=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20231031095015epcas2p1f291e0f100a4d58694183e3ca63f1184~TKFG2V6EU0993809938epcas2p1j;
+        Tue, 31 Oct 2023 09:50:15 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.98]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4SKQNl2Q4xz4x9Pv; Tue, 31 Oct
+        2023 09:50:15 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C3.95.09607.7DDC0456; Tue, 31 Oct 2023 18:50:15 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98~TKFF11lmE1547915479epcas2p2Y;
+        Tue, 31 Oct 2023 09:50:14 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20231031095014epsmtrp1cab88f028920d5ed826df45dae479e15~TKFF0sfGw2510325103epsmtrp1Y;
+        Tue, 31 Oct 2023 09:50:14 +0000 (GMT)
+X-AuditID: b6c32a48-963ff70000002587-52-6540cdd7522f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CA.11.08817.6DDC0456; Tue, 31 Oct 2023 18:50:14 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.55]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20231031095013epsmtip1fe4d8fca1b9b45ad28fd0b758d4fbee9~TKFFD8EiG2325323253epsmtip1n;
+        Tue, 31 Oct 2023 09:50:13 +0000 (GMT)
+From:   Jaewon Kim <jaewon02.kim@samsung.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org,
-        kernel test robot <lkp@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] pwm: samsung: Document new member .channel in struct
- samsung_pwm_chip
-Message-ID: <2023102946-chain-resource-ae1d@gregkh>
-References: <20231012210228.1009473-2-u.kleine-koenig@pengutronix.de>
- <169720375693.285367.8034783567173304872.b4-ty@gmail.com>
- <20231013172750.nxcw2ftihpemnymx@pengutronix.de>
- <20231024145524.7qkzrrdm6zg5hfji@pengutronix.de>
- <fa624966-176a-47d1-937d-8384fda06513@linaro.org>
- <20231024164627.ejcqrtbhvohduvpg@pengutronix.de>
- <c3495c6d-72e3-493b-99ed-47e8cd3f1108@linaro.org>
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH 00/10] Introduce ExynosAutov920 SoC and SADK board
+Date:   Tue, 31 Oct 2023 18:47:42 +0900
+Message-ID: <20231031094852.118677-1-jaewon02.kim@samsung.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c3495c6d-72e3-493b-99ed-47e8cd3f1108@linaro.org>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0xTVxjN7etrC67uUXRcCJnsEUAxQAsUrg4cYWqeigmiM5sZwYa+tEhp
+        u7ZsbvtjTBQcOqEiiGXAaE1AwFVbYYVQIVDHHA4yJgxFELAhqYJBtll1YNby6uZ/5zv3nO/c
+        7/7gYYKfOCG8PKWO1iglCpLjz+7o34Ri/vg1jRb+vPgGmq7v4KA2+xALNTiGcFRsMnOQrciB
+        o8d1ocj+qJ2Lzi03sZDlwRiOrA3LAP3e9R0HTU62AFQzfJ2Fbpm+5aITdgcX9c+X4uh5Vz0b
+        tXR5dBP6SpAWSHUaJrmUpeUbDnVvrJtD9dS1cSnrxa+o8hUhdeZaC6D+tLydyTuUnyKnJVJa
+        E0Yrc1XSPKUsldyzP+f9HHGSUBQj2oKSyTClpIBOJbdnZMbszFN4xiHDPpUoCj1UpkSrJeO2
+        pWhUhTo6TK7S6lJJWi1VqJPVsVpJgbZQKYtV0rqtIqEwXuwRHs6XuxaO4+pxwdHJcXYRuPpm
+        GfDjQSIRtpoa8TLgzxMQNgCtnU42UywB6J6+4SueAjjS+zfnlWW65iHbiwWEHcDxaT4jegLg
+        rPUxy7vAITZDt9mEe/E64i8Mnp/90ivCiFIWrH/qWnUHEumws2RstSubiIBL16dXeT6xDVa7
+        WzEmbQPsNrpZDB8Ab15wrmowD1/cXot5m0LCxoMzF+bZjGE7PNb4zLfVQPhw4BqXwSHQVV7i
+        w/mw9PwyzuCj8LcrtT59AjTMlYIywPMEbILmrjgvhEQ4dNz1xa6FJ/tXuAzNhydLBIwxEt6v
+        GvI1CYVnHZdYDKZgT1MFzpxVNjzdZsYrwAbDa8MYXhvG8H/u9wBrAW/Ram2BjNbGqxP/u9Nc
+        VYEFrD7oaMoGahcWY/sAiwf6AORh5Dp+vziNFvClks+/oDWqHE2hgtb2AbHnePVYyPpcledH
+        KHU5osQtwsSkJFFyvFiYTAbxp07USQWETKKj82laTWte+Vg8v5AiVvYBZ/vQSNZ8TWXQzKxr
+        reuqTZMyu2Y8fU2rcSdxp5I6sBRkv0zOGV3otrz6nN/w8O6v3bf+uR21z/rL4FSkiXTv2xFs
+        KAfkB3sn7usXn0S92CrMCBefzr5rqYqcu7FLJKpIeHnHWKM3Jy6dUkTu+aHwZtGDHyt6P4vK
+        qFXeC+9cj3PzS8LOOq6MaGY6mm1ZZ4z04McB+injxtaD0VFlzqbd6Qefy0T+HzZvfhncW9yQ
+        Jv/k3YwBueWQc875LKD9FBFx/EU1HWHu2RF0xC4bXTAlvBNastA8agWGwUd1A43+A+8NYmnH
+        9q50Z6Uf/iguOKFqZWJpdOORVrF05nJc/H45ydbKJaJoTKOV/As4v2dwWQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsWy7bCSnO61sw6pBu//qlk8mLeNzWLN3nNM
+        FvOPnGO1aF68ns1iR8MRVot3c2Us9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWd++uYrSY
+        cX4fk8WZxb3sFq17j7BbHH7Tzmrxc9c8FotVu4Dqbk+czOgg7LFz1l12j02rOtk87lzbw+ax
+        f+4ado/NS+o9+v8aePRtWcXo8XmTXABHFJdNSmpOZllqkb5dAlfGy7ctrAU3hCru3mBpYNzI
+        38XIySEhYCLxYMYrli5GLg4hgd2MErvmP2aGSMhILH/WxwZhC0vcbznCClH0nlFi4YkXYEVs
+        AtoS39cvBkuICPxiltg94S4jSIJZoJ9J4vqmBBBbWMBJYmfbNbBJLAKqEp/2PWABsXkF7CSm
+        fV8NtU1eYs+i70wQcUGJkzOfsEDMkZdo3jqbeQIj3ywkqVlIUgsYmVYxSqYWFOem5xYbFhjl
+        pZbrFSfmFpfmpesl5+duYgTHjZbWDsY9qz7oHWJk4mA8xCjBwawkwnvY1CFViDclsbIqtSg/
+        vqg0J7X4EKM0B4uSOO+3170pQgLpiSWp2ampBalFMFkmDk6pBqaUaT3L/vd1ys1M0awQOPtO
+        dt0S9WdVKszl88xXTDOda3NUTMPIePejsuN9vN7xClf2KtQJaR64+UGqlGfurUMm/RqOq73d
+        zhiKsDC2nb7/JjO332CBeMbKrsX5U6LOPPb33Vi0XK8oS2Oq49nu8oqvxp1MCxqnzbsb+f/8
+        +b9uWc4zbjBebr0uu5iBZeOdSFExP+07jy6/t9dSm8g20X1bwoyO5deTuR7MaH0298Aazvv2
+        p34xzVd9/pNhw3svKY4vneLhykxPJ6VfWP7iF8MV6UkJ03fOLeq8/4XRZ6Xsk/8epgfPHZ2S
+        fWijkXdfp8a9WR1Zmy7LW5deOSRtdVYwzMZxQeDO8rkasRM+ydoqsRRnJBpqMRcVJwIAFeuF
+        bgoDAAA=
+X-CMS-MailID: 20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98
+References: <CGME20231031095014epcas2p2814fa2bb5f940ccb0d0951667df34f98@epcas2p2.samsung.com>
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,65 +129,50 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Sun, Oct 29, 2023 at 12:07:02PM +0100, Krzysztof Kozlowski wrote:
-> On 24/10/2023 18:46, Uwe Kleine-König wrote:
-> > On Tue, Oct 24, 2023 at 04:58:22PM +0200, Krzysztof Kozlowski wrote:
-> >> On 24/10/2023 16:55, Uwe Kleine-König wrote:
-> >>> Hello,
-> >>>
-> >>> On Fri, Oct 13, 2023 at 07:27:50PM +0200, Uwe Kleine-König wrote:
-> >>>> On Fri, Oct 13, 2023 at 03:29:35PM +0200, Thierry Reding wrote:
-> >>>>> On Thu, 12 Oct 2023 23:02:29 +0200, Uwe Kleine-König wrote:
-> >>>>>> Fixes: 4c9548d24c0d ("pwm: samsung: Put per-channel data into driver data")
-> >>>>>
-> >>>>> Applied, thanks!
-> >>>>>
-> >>>>> [1/1] pwm: samsung: Document new member .channel in struct samsung_pwm_chip
-> >>>>>       commit: 4bb36d126cb3147d6bbfd00242a5b846dacad595
-> >>>>
-> >>>> You might want to change 4c9548d24c0d to e3fe982b2e4e now that you
-> >>>> rewrote your for-next branch.
-> >>>
-> >>> This is still open. I wonder there is no automated check that warns if
-> >>> there is a Fixes: line in next that doesn't refer to an ancestor.
-> >>
-> >> I am using Greg's/Stephen's scripts in commit hooks:
-> >> https://github.com/krzk/tools/blob/master/linux/git-hooks-post-commit
-> >> https://github.com/krzk/tools/blob/master/linux/verify_fixes.sh
-> > 
-> > Skimming throud the verify_fixes script I'd say the following addition
-> > to verify_fixes should do:
-> > 
-> > diff --git a/linux/verify_fixes.sh b/linux/verify_fixes.sh
-> > index f22384bb6bb8..12e73da82dd4 100755
-> > --- a/linux/verify_fixes.sh
-> > +++ b/linux/verify_fixes.sh
-> > @@ -100,6 +100,13 @@ verify_fixes()
-> >  				continue
-> >  			fi
-> >  
-> > +			if ! git merge-base --is-ancestor "$sha" "$c"; then
-> > +				printf '%s%s\t\t- %s\n' "$commit_msg" "$fixes_msg" 'Target SHA should be an ancestor of your tree'
-> > +				commit_msg=''
-> > +				error=1
-> > +				continue
-> > +			fi
-> > +
-> >  			if [ "${#sha}" -lt 12 ]; then
-> >  				msg="${msg:+${msg}${nl}}${tab}${tab}- SHA1 should be at least 12 digits long${nl}${tab}${tab}  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11${nl}${tab}${tab}  or later) just making sure it is not set (or set to \"auto\")."
-> >  			fi
-> > 
-> 
-> Thanks Uwe for the snippet. I went further and it allowed to simplify
-> checking for commit in Linus' tree.
-> 
-> Cc, Greg, Stephen,
-> Maybe you will find it useful to update your scripts as well (I forked
-> from yours):
-> https://github.com/krzk/tools/commit/39d2c71a72f5d4f30d0752e45b9bcc09b75b5026
-> 
-> https://github.com/krzk/tools/commit/0061331501fac2f4b24709adb0ec5cf267bcb661#diff-0100377e067a4cd4cb89c0f0ae8732d3e814ed25e816a392bf2e0855a392adbcL11
+ExynosAutov920[1] is ARMv8-based automotive-oriented SoC.
+This SoC is the next generation of exynosautov9 and AE(Automotive Enhanced)
+IPs are used for safety.
 
-Thanks, I've applied this to my tree, let's see how it works out.
+This patchset is the minimal set to ExynosAutov920 SoC and SADK board.
+Currently, ramdisk console is available and Clock, UFS, and USI will be
+added after this patchset.
 
-greg k-h
+[1] : https://semiconductor.samsung.com/processor/automotive-processor/exynos-auto-v920/
+
+Jaewon Kim (10):
+  dt-bindings: soc: samsung: exynos-sysreg: add exynosautov920 sysreg
+  dt-bindings: soc: samsung: usi: add exynosautov920-usi compatible
+  dt-bindings: serial: samsung: add exynosautov920-uart compatible
+  dt-bindings: pwm: samsung: add exynosautov9 compatible
+  dt-bindings: pinctrl: samsung: add exynosautov920 pinctrl binding
+  dt-bindings: arm: samsung: Document exynosautov920 SADK board binding
+  soc: samsung: exynos-chipid: add exynosautov920 SoC support
+  pinctrl: samsung: add exynosautv920 pinctrl
+  arm64: dts: exynos: add initial support for exynosautov920 SoC
+  arm64: dts: exynos: add minimal support for exynosautov920 sadk board
+
+ .../bindings/arm/samsung/samsung-boards.yaml  |    6 +
+ .../samsung,pinctrl-wakeup-interrupt.yaml     |    2 +
+ .../bindings/pinctrl/samsung,pinctrl.yaml     |    1 +
+ .../devicetree/bindings/pwm/pwm-samsung.yaml  |    1 +
+ .../bindings/serial/samsung_uart.yaml         |    4 +-
+ .../bindings/soc/samsung/exynos-usi.yaml      |    4 +-
+ .../soc/samsung/samsung,exynos-sysreg.yaml    |    7 +
+ arch/arm64/boot/dts/exynos/Makefile           |    3 +-
+ .../dts/exynos/exynosautov920-pinctrl.dtsi    | 1266 +++++++++++++++++
+ .../boot/dts/exynos/exynosautov920-sadk.dts   |   88 ++
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi |  318 +++++
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    |  131 ++
+ drivers/pinctrl/samsung/pinctrl-exynos.c      |   99 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.h      |   27 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |    5 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h     |   13 +
+ drivers/soc/samsung/exynos-chipid.c           |    1 +
+ 17 files changed, 1966 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+
+-- 
+2.42.0
+
