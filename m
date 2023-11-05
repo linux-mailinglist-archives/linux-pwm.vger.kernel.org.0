@@ -2,154 +2,81 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C38D7DF12F
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Nov 2023 12:30:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0870E7E1722
+	for <lists+linux-pwm@lfdr.de>; Sun,  5 Nov 2023 23:00:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347429AbjKBLae (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 2 Nov 2023 07:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55920 "EHLO
+        id S229955AbjKEWAP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 5 Nov 2023 17:00:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjKBLad (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 2 Nov 2023 07:30:33 -0400
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DBF187
-        for <linux-pwm@vger.kernel.org>; Thu,  2 Nov 2023 04:30:30 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qyVtz-0005lO-6l; Thu, 02 Nov 2023 12:30:19 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qyVtw-0063ea-Mn; Thu, 02 Nov 2023 12:30:16 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qyVtw-00BVjO-DL; Thu, 02 Nov 2023 12:30:16 +0100
-Date:   Thu, 2 Nov 2023 12:30:16 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     William Qiu <william.qiu@starfivetech.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v6 2/4] pwm: opencores: Add PWM driver support
-Message-ID: <20231102113016.jgsh7jru6vjv4vsp@pengutronix.de>
-References: <20231020103741.557735-1-william.qiu@starfivetech.com>
- <20231020103741.557735-3-william.qiu@starfivetech.com>
- <20231020112539.gctx5uj2rrhryulo@pengutronix.de>
- <7d64ea1d-b573-4a69-ba0c-4cbfab638c5e@starfivetech.com>
+        with ESMTP id S229922AbjKEWAO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 5 Nov 2023 17:00:14 -0500
+X-Greylist: delayed 5179 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 05 Nov 2023 14:00:11 PST
+Received: from SMTP-HCRC-200.brggroup.vn (unknown [42.112.212.144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9321CD9
+        for <linux-pwm@vger.kernel.org>; Sun,  5 Nov 2023 14:00:10 -0800 (PST)
+Received: from SMTP-HCRC-200.brggroup.vn (localhost [127.0.0.1])
+        by SMTP-HCRC-200.brggroup.vn (SMTP-CTTV) with ESMTP id 391FD197B6;
+        Mon,  6 Nov 2023 01:58:12 +0700 (+07)
+Received: from zimbra.hcrc.vn (unknown [192.168.200.66])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by SMTP-HCRC-200.brggroup.vn (SMTP-CTTV) with ESMTPS id 32A87195E6;
+        Mon,  6 Nov 2023 01:58:12 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.hcrc.vn (Postfix) with ESMTP id C4E861B824EE;
+        Mon,  6 Nov 2023 01:58:13 +0700 (+07)
+Received: from zimbra.hcrc.vn ([127.0.0.1])
+        by localhost (zimbra.hcrc.vn [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ID_MLmaB3PJG; Mon,  6 Nov 2023 01:58:13 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.hcrc.vn (Postfix) with ESMTP id 944CF1B8250F;
+        Mon,  6 Nov 2023 01:58:13 +0700 (+07)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra.hcrc.vn 944CF1B8250F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hcrc.vn;
+        s=64D43D38-C7D6-11ED-8EFE-0027945F1BFA; t=1699210693;
+        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=uHgYc7uW8mvwtKFJ67uQGGZhAXjJdfQz/2OwXoRFu7GHaDl83YINDqOUVjsZfcPqn
+         6D6lcsUeY0TEK+vF9vQVlr15hkEJUfEr9f+Z+B//MP5YTfsURvJEksxRXqa+CeNRA6
+         xhcxIbI5lUEgTrr4QdSKuhbRKBn7N70Zaux8FxzfWwnz9B31wJVMIHANSSz0Sma9Oe
+         Wh07GYK3dCuMhlDdla5yENHQfvjmFLyQXGNcri+OEZC+RenKT3lJUhjITFt9CgaVBx
+         kzLhj7ESY5QpBxed1wiaIuLnZLhxiMZL7MEkdEtK7FiklL4v5zlXpHfFXuNBOR+569
+         r3u/GnrEcqlIQ==
+X-Virus-Scanned: amavisd-new at hcrc.vn
+Received: from zimbra.hcrc.vn ([127.0.0.1])
+        by localhost (zimbra.hcrc.vn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id EUDrd0LxXRmc; Mon,  6 Nov 2023 01:58:13 +0700 (+07)
+Received: from [192.168.1.152] (unknown [51.179.100.52])
+        by zimbra.hcrc.vn (Postfix) with ESMTPSA id 0E0061B824EE;
+        Mon,  6 Nov 2023 01:58:06 +0700 (+07)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ltmjasklp4ngpzku"
-Content-Disposition: inline
-In-Reply-To: <7d64ea1d-b573-4a69-ba0c-4cbfab638c5e@starfivetech.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
+To:     Recipients <ch.31hamnghi@hcrc.vn>
+From:   ch.31hamnghi@hcrc.vn
+Date:   Sun, 05 Nov 2023 19:57:56 +0100
+Reply-To: joliushk@gmail.com
+Message-Id: <20231105185807.0E0061B824EE@zimbra.hcrc.vn>
+X-Spam-Status: No, score=2.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Goededag,
+Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
+Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
 
---ltmjasklp4ngpzku
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello William,
+Ik wacht op jullie reacties
+Met vriendelijke groeten
+mevrouw Joanna Liu
 
-On Wed, Nov 01, 2023 at 10:22:44AM +0800, William Qiu wrote:
->=20
->=20
-> On 2023/10/20 19:25, Uwe Kleine-K=C3=B6nig wrote:
-> >> +	void __iomem *base =3D pwm->data->get_ch_base ?
-> >> +			     pwm->data->get_ch_base(pwm->regs, dev->hwpwm) : pwm->regs;
-> >> +	u32 period_data, duty_data, ctrl_data;
-> >> +
-> >> +	period_data =3D readl(REG_OCPWM_LRC(base));
-> >> +	duty_data =3D readl(REG_OCPWM_HRC(base));
-> >> +	ctrl_data =3D readl(REG_OCPWM_CTRL(base));
-> >> +
-> >> +	state->period =3D DIV_ROUND_CLOSEST_ULL((u64)period_data * NSEC_PER_=
-SEC, pwm->clk_rate);
-> >> +	state->duty_cycle =3D DIV_ROUND_CLOSEST_ULL((u64)duty_data * NSEC_PE=
-R_SEC, pwm->clk_rate);
-> >=20
-> > Please test your driver with PWM_DEBUG enabled. The rounding is wrong
-> > here.
->=20
-> The conclusion after checking is: when the period or duty_cycle value set
-> by the user is not divisible (1000000000/49.5M), there will be an error.
-> This error is due to hardware accuracy. So why is rounding is wrong?
-> rockchip also has a similar implementation drivers/pwm/ pwm-rockchip.c
-
-I fail to follow. Where is an error?
-
-The general policy (for new drivers at least) is to implement the
-biggest period possible not bigger than the requested period. That means
-that .apply must round down and to make .apply =E2=88=98 .get_state idempot=
-ent
-=2Eget_state must round up to match.
-
-Assuming a clkrate of 49500000 Hz the actual period for REG_OCPWM_LRC =3D
-400 is 8080.808ns and for REG_OCPWM_LRC =3D 401 is 8101.010.
-
-So with REG_OCPWM_LRC =3D 401 .get_state should report state.period =3D 8102
-[ns] because if you call .apply with .period =3D 8101 [ns] you're supposed
-to use REG_OCPWM_LRC =3D 400.
-
-Rounding using DIV_ROUND_CLOSEST doesn't give consistent behaviour in
-some cases. Consider a PWM that can implement the following periods (and
-none in between):
-
-	20.1 ns
-	20.4 ns
-	21.7 ns
-
-With round-to-nearest a request to configure 21 ns will yield 20.4 ns.
-If you call .get_state there the driver will return 20 ns. However
-configuring 20 ns results in a period of 20.1 ns.
-
-With rounding as requested above you get a consistent behaviour. After
-=2Eapply_state(period=3D21) .get_state() returns period=3D21.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ltmjasklp4ngpzku
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVDiEcACgkQj4D7WH0S
-/k5P5Qf/czkHt1isZ7/ZX5Q+xUYicANztUd5HO2YB1j1TaGv02Q8gE7OomO6Nk/8
-NYYx0uxugJPlJlUQ5omGaZzFBE0neKAIfZXuKL7OfIOIIL+dusgvYnY2TRGJWIBQ
-o8z9IyZKGh46aUnC2ZToUYJAYqYAxpr3TkUkPl8xVgSlPvgM8uwWAAxyuJWWR/Pk
-+rm6Kl2Hb3nZ1tnH1OpV2W8kisHQjtyBR0TWtpjioDSpO7IEp1wlg6ayVPcQQTJe
-kHkf/l/RUEVqo7D3nzmg17qT8vzzPGjk2kgm42A9ce6jUAcemq0MOIQtLfS7vWjJ
-vM/+J3PQqV+D4wuWImRyKwZ5chY6Pg==
-=rI74
------END PGP SIGNATURE-----
-
---ltmjasklp4ngpzku--
