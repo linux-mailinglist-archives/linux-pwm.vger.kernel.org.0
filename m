@@ -2,66 +2,72 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AC037E1D7C
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 10:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03D757E1E5E
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 11:33:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjKFJwQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 04:52:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
+        id S229921AbjKFKd0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 05:33:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbjKFJwO (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 04:52:14 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9464E100;
-        Mon,  6 Nov 2023 01:52:10 -0800 (PST)
+        with ESMTP id S229478AbjKFKdZ (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:33:25 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A90FA1
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 02:33:21 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32f78dcf036so3173291f8f.0
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 02:33:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1699264331; x=1730800331;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=n3w1++R+tKubh/JShRcdfaY4sdWM0Thnc5B85fY3mYw=;
-  b=lVi0AHWJvA1wu74TGEGuW5+MhF/ePP0fynh73Q6m962DlihOMV0pVVGc
-   W5C3ziw+b+bwnGjxxxqRHirrrzWmVOjW7wB7CTr2xb617BE7qcSjxXMzv
-   MPvOThwfzng5jNqPnStKFjYup1EY4PVjItNsTBWrVZ8F0LMtnMRFE3F0s
-   dRQgFOe2xnf8RC/UkBgg4pRm0GHPlGJRP1uPwbUIQVTP+l1uZcdFzX6wZ
-   xkNa2+lAJPxF4WVr+uCCqgAieFfqukJ0nAfMU/V8pYBRXi8hXnBZvmzrI
-   c0r1VzqcKzqaKqTqM4PGQyJYFW5BhpM+rqPR0bmr2auv5sQcZzx/TuMpq
-   g==;
-X-IronPort-AV: E=Sophos;i="6.03,281,1694728800"; 
-   d="scan'208";a="33823102"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 06 Nov 2023 10:52:05 +0100
-Received: from steina-w.tq-net.de (steina-w.tq-net.de [10.123.53.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id B1F0928007F;
-        Mon,  6 Nov 2023 10:52:05 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699266799; x=1699871599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jlw5HxIULTW6/Y+wZ7qEz5z78H/my/JnN6AqQuvllNo=;
+        b=WPRBBWX3uYXHjnG4cN1t9SOL7xnD2U4rn66tf52L1f9zcPESNEgcvuk6ZHNBr+5sxp
+         45ilXqSiWLq48TV9Sou5eTKFGe1o3JjI23wNZu52vLpIGxYR539tz1Bl5DY/Aa0l7XMk
+         napLjUxiZ8VIcHTQVUX35UcpvSB2rX1Y3hYgqzBNkQ6P98P27PEHXU2LdJSXqiFznWgt
+         tRqMTb/M18rMiH1SroqfH3usviStWu6j6ayBqSkiQtTjBpfke+8vYLwziJ2UpOZswMn/
+         +sLXot5U7Ikj1GFI4PzeHdA7nMpmHU0gsNHKbm9zntCkkXCq1QXgzQy396DsxYsvyQYc
+         MmfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699266799; x=1699871599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jlw5HxIULTW6/Y+wZ7qEz5z78H/my/JnN6AqQuvllNo=;
+        b=eze1LmOxC47nGueWGwJWlWTxxyPECOeZo5hOsxShO52pBnBTWhtH0fva8ZR++ws25E
+         EYZMghF1B7bjA8iW9p0B73IClvgzVJ5DKlKWsfzqiUqT4A2MBPL3qhdwKQGwDhtn2pWw
+         egaK41qLoVKsKHkaXtwp3XgRVRcpQisVUBkudl5PHhhGXrGnlzDiOjmkTu4lGvziXyai
+         ADvEAbu0sl6LI+zWT9k7xRtzDrfkpXYefPYBR6B4Ph1FVupSZPwykPU36JdqFl9VxIrY
+         QIysgkp7ESdZo+wUlzyqi8ULMWhREFBd7306XOQi2F/+iC5C85KAvHtoXGyacCeJv88N
+         dk7A==
+X-Gm-Message-State: AOJu0Yxkt/iDWUBmL0i5HBXlwiYf8FL8yyCgZz5fX0Xo0Et6fwRt3AUA
+        GOes7j0lTMMz7g6zfvYIicE6cg==
+X-Google-Smtp-Source: AGHT+IHzv/E3x2UyZHstlPEHYl4kHcZKQvmPeHGYQ167btT+c+1bBfLcj35EW0Wc7pkdgodfZZ7zXw==
+X-Received: by 2002:adf:ed4f:0:b0:32d:a366:7073 with SMTP id u15-20020adfed4f000000b0032da3667073mr9251507wro.14.1699266799485;
+        Mon, 06 Nov 2023 02:33:19 -0800 (PST)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:fabf:ec8c:b644:5d3])
+        by smtp.googlemail.com with ESMTPSA id d1-20020a056000114100b0032415213a6fsm9033602wrx.87.2023.11.06.02.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Nov 2023 02:33:19 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] arm64: dts: freescale: imx8-ss-dma: Fix #pwm-cells
-Date:   Mon,  6 Nov 2023 10:52:05 +0100
-Message-Id: <20231106095205.231210-4-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231106095205.231210-1-alexander.stein@ew.tq-group.com>
-References: <20231106095205.231210-1-alexander.stein@ew.tq-group.com>
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: [PATCH 0/6] pwm: meson: dt-bindings fixup
+Date:   Mon,  6 Nov 2023 11:32:47 +0100
+Message-ID: <20231106103259.703417-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,28 +75,72 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-i.MX8QXP supports inverted PWM output, thus #pwm-cells needs to be set
-to 3.
+This patchset aims to:
+* Fix the incorrect bindings for the s4 type of pwm that was introduced
+  while converting the documentation from txt to yaml format.
+* Introduce a new compatible for the existing PWMs to better describe the
+  HW in DT, instead of describing settings.
+* Make the introduction of a new pwm variant (s4) slightly easier.
+* Migrate the supported SoCs to the new compatible.
 
-Fixes: f1d6a6b991ef9 ("arm64: dts: imx8qxp: add adma_pwm in adma")
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Usually, I prefer to send to dts patches separately. This time it seemed
+important to illustrate the change. I don't mind splitting this out and
+re-spinning if this is annoying for the maintainers.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
-index ce66d30a4839b..b0bb77150adcc 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
-@@ -149,7 +149,7 @@ adma_pwm: pwm@5a190000 {
- 		clock-names = "ipg", "per";
- 		assigned-clocks = <&clk IMX_SC_R_LCD_0_PWM_0 IMX_SC_PM_CLK_PER>;
- 		assigned-clock-rates = <24000000>;
--		#pwm-cells = <2>;
-+		#pwm-cells = <3>;
- 		power-domains = <&pd IMX_SC_R_LCD_0_PWM_0>;
- 	};
- 
+Jerome Brunet (6):
+  dt-bindings: pwm: amlogic: fix s4 bindings
+  dt-bindings: pwm: amlogic: add new compatible for meson8 pwm type
+  pwm: meson: prepare addition of new compatible types
+  pwm: meson: add generic compatible for meson8 to sm1
+  arm: dts: amlogic: migrate pwms to new meson8 v2 binding
+  arm64: dts: amlogic: migrate pwms to new meson8 v2 binding
+
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 101 +++++-
+ arch/arm/boot/dts/amlogic/meson.dtsi          |   4 +-
+ arch/arm/boot/dts/amlogic/meson8.dtsi         |  16 +-
+ arch/arm/boot/dts/amlogic/meson8b-ec100.dts   |   2 -
+ arch/arm/boot/dts/amlogic/meson8b-mxq.dts     |   2 -
+ .../arm/boot/dts/amlogic/meson8b-odroidc1.dts |   2 -
+ arch/arm/boot/dts/amlogic/meson8b.dtsi        |  16 +-
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  24 +-
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  28 +-
+ .../dts/amlogic/meson-g12a-radxa-zero.dts     |   4 -
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |   4 -
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |   2 -
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   4 -
+ .../amlogic/meson-g12b-a311d-libretech-cc.dts |   2 -
+ .../dts/amlogic/meson-g12b-bananapi-cm4.dtsi  |   7 -
+ .../boot/dts/amlogic/meson-g12b-bananapi.dtsi |   4 -
+ .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   |   4 -
+ .../boot/dts/amlogic/meson-g12b-odroid.dtsi   |   4 -
+ .../dts/amlogic/meson-g12b-radxa-zero2.dts    |   8 -
+ .../boot/dts/amlogic/meson-g12b-w400.dtsi     |   6 -
+ .../dts/amlogic/meson-gx-libretech-pc.dtsi    |   6 -
+ .../boot/dts/amlogic/meson-gx-p23x-q20x.dtsi  |   2 -
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   8 +-
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |   2 -
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |   2 -
+ .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |   2 -
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi |   2 -
+ .../boot/dts/amlogic/meson-gxbb-wetek.dtsi    |   2 -
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |  26 ++
+ .../boot/dts/amlogic/meson-gxl-s805x-p241.dts |   2 -
+ .../meson-gxl-s905w-jethome-jethub-j80.dts    |   2 -
+ .../meson-gxl-s905x-hwacom-amazetv.dts        |   2 -
+ .../amlogic/meson-gxl-s905x-khadas-vim.dts    |   2 -
+ .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |   2 -
+ .../dts/amlogic/meson-gxl-s905x-p212.dtsi     |   2 -
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  26 ++
+ .../dts/amlogic/meson-gxm-khadas-vim2.dts     |   4 -
+ .../boot/dts/amlogic/meson-gxm-rbox-pro.dts   |   2 -
+ .../amlogic/meson-libretech-cottonwood.dtsi   |   6 -
+ .../boot/dts/amlogic/meson-sm1-ac2xx.dtsi     |   6 -
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |   2 -
+ .../boot/dts/amlogic/meson-sm1-odroid.dtsi    |   2 -
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     |   6 -
+ drivers/pwm/pwm-meson.c                       | 312 +++++++++++-------
+ 44 files changed, 407 insertions(+), 267 deletions(-)
+
 -- 
-2.34.1
+2.42.0
 
