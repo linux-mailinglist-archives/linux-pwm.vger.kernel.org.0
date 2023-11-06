@@ -2,44 +2,34 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6ADD7E1EDC
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 11:49:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8E907E1EE5
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 11:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbjKFKtZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 05:49:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33358 "EHLO
+        id S229799AbjKFKtr (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 05:49:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231377AbjKFKtX (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:49:23 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269FEC6;
-        Mon,  6 Nov 2023 02:49:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1699267759; x=1730803759;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3ClLqCe2MPe30BlSuDnNn0P7ZITlkrf+aHuvKtDI/Mc=;
-  b=q2fXyPiFOqPkVKudnmf3sZDMb7RRMuvJb271IRJCvoaJEH9OSWAnQ9NH
-   WQMWVgGv9ShwZ/RcCzJCBocCpntV6tBg0zl4gMiB55zFQ7GL2biYs+pml
-   EK84BlQvjssGiRuKnmvUNFhNoPfMntu65kRNUkxg5Cr03iV6PI9uKOalz
-   fni9h6x0hnKLMFv9fVLqC3mWaV4HD5/1SPqVxau32rqOrMVAlnZ49UEi0
-   NMNXgfe++OKlkMbvfS2niXmuHyg9lsZvwoPJ3UrCqG4B5oIxb69HDH7Bg
-   maIaNeu1hQuMHhzXYil7l0Z/9giJrVGxKergx8bdTWACnd7XWHlmRqMtF
-   w==;
-X-IronPort-AV: E=Sophos;i="6.03,281,1694728800"; 
-   d="scan'208";a="33824773"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 06 Nov 2023 11:49:17 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9727928007F;
-        Mon,  6 Nov 2023 11:49:16 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S229583AbjKFKtq (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:49:46 -0500
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421ABA1
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 02:49:44 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qzxAl-00082W-Vi; Mon, 06 Nov 2023 11:49:35 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qzxAl-0070O8-Fi; Mon, 06 Nov 2023 11:49:35 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1qzxAl-00DZCD-6J; Mon, 06 Nov 2023 11:49:35 +0100
+Date:   Mon, 6 Nov 2023 11:49:35 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -50,107 +40,87 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         linux-pwm@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: imx-pwm: Add constraints for #pwm-cells
-Date:   Mon, 06 Nov 2023 11:49:19 +0100
-Message-ID: <8300676.T7Z3S40VBb@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20231106103621.2fh6fkpdafpz4toa@pengutronix.de>
-References: <20231106095205.231210-1-alexander.stein@ew.tq-group.com> <20231106095205.231210-2-alexander.stein@ew.tq-group.com> <20231106103621.2fh6fkpdafpz4toa@pengutronix.de>
+Subject: Re: [PATCH 3/3] arm64: dts: freescale: imx8-ss-dma: Fix #pwm-cells
+Message-ID: <20231106104935.z6w3amuyv4ra4tvg@pengutronix.de>
+References: <20231106095205.231210-1-alexander.stein@ew.tq-group.com>
+ <20231106095205.231210-4-alexander.stein@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zirwezzrlcwpmgjo"
+Content-Disposition: inline
+In-Reply-To: <20231106095205.231210-4-alexander.stein@ew.tq-group.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Uwe,
 
-Am Montag, 6. November 2023, 11:36:21 CET schrieb Uwe Kleine-K=F6nig:
-> Hello,
+--zirwezzrlcwpmgjo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+[Cc -=3D Philippe Schenker]
+
+On Mon, Nov 06, 2023 at 10:52:05AM +0100, Alexander Stein wrote:
+> i.MX8QXP supports inverted PWM output, thus #pwm-cells needs to be set
+> to 3.
 >=20
-> [dropped Philippe Schenker from Cc as his email bounced in the past]
+> Fixes: f1d6a6b991ef9 ("arm64: dts: imx8qxp: add adma_pwm in adma")
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> On Mon, Nov 06, 2023 at 10:52:03AM +0100, Alexander Stein wrote:
-> > Only fsl,imx1-pwm comptabile devices use #pwm-cells =3D <2>. Newer SoCs
-> > supportinverted PWM output, thus #pwm-cells needs to be set to 3.
-> >=20
-> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > ---
-> >=20
-> >  .../devicetree/bindings/pwm/imx-pwm.yaml      | 20 ++++++++++++++++---
-> >  1 file changed, 17 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml index
-> > c01dff3b7f843..59a981c0f39ab 100644
-> > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > @@ -9,9 +9,6 @@ title: Freescale i.MX PWM controller
-> >=20
-> >  maintainers:
-> >    - Philipp Zabel <p.zabel@pengutronix.de>
-> >=20
-> > -allOf:
-> > -  - $ref: pwm.yaml#
-> > -
-> >=20
-> >  properties:
-> >    "#pwm-cells":
-> >      description: |
-> >=20
-> > @@ -74,6 +71,23 @@ required:
-> >  additionalProperties: false
-> >=20
-> > +allOf:
-> > +  - $ref: pwm.yaml#
-> > +
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: fsl,imx1-pwm
-> > +    then:
-> > +      properties:
-> > +        "#pwm-cells":
-> > +          enum: [2]
->=20
-> Given that arch/arm/boot/dts/nxp/imx/imx1.dtsi has:
->=20
-> 	pwm: pwm@208000 {
-> 		#pwm-cells =3D <3>;
-> 		compatible =3D "fsl,imx1-pwm";
-> 		...
->=20
-> this looks wrong.
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi b/arch/arm64/=
+boot/dts/freescale/imx8-ss-dma.dtsi
+> index ce66d30a4839b..b0bb77150adcc 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
+> @@ -149,7 +149,7 @@ adma_pwm: pwm@5a190000 {
+>  		clock-names =3D "ipg", "per";
+>  		assigned-clocks =3D <&clk IMX_SC_R_LCD_0_PWM_0 IMX_SC_PM_CLK_PER>;
+>  		assigned-clock-rates =3D <24000000>;
+> -		#pwm-cells =3D <2>;
+> +		#pwm-cells =3D <3>;
+>  		power-domains =3D <&pd IMX_SC_R_LCD_0_PWM_0>;
+>  	};
 
-Indeed, something i doesn't match. Checking with [1] section 22.4.1 there a=
-re=20
-no bits regarding output inversion. Also pwm_imx1_apply returns -EINVAL if=
-=20
-state->polarity !=3D PWM_POLARITY_NORMAL.
-So IMO "#pwm-cells =3D <3>" is wrong for imx1. If fixed to 2, this also mat=
-ches=20
-the description for the value of #pwm-cells in imx-pwm.yaml.
+Even without patch #1 this is a good change. There are no usages of the
+adma_pwm handle as of today's next. So no consumers need adaption.
 
-Best regards,
-Alexander
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-[1] https://www.nxp.com/docs/en/reference-manual/MC9328MX1RM.pdf
+Best regards
+Uwe
 
->=20
-> Best regards
-> Uwe
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--zirwezzrlcwpmgjo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVIxL4ACgkQj4D7WH0S
+/k7bdAf+LItZtATGir/92wmfaAhs4AnfAIsBPqMDs9WdiO0EZ3WrGeq2fQhHEpcO
+dWTunRR9fD4ZM7J5x1fwXB8nZqbjldIAXLnnrpDcyjeKUMCG+Hhv5Y0fy46b/oN6
+rOQpqAzrmDmS03sN39YPYDdsjn3IU3c/oUlN5R5zEPU5hKqS4OJHnqpKYjEz9AWj
+VRm15xIjvRb27HrxAk73iAvH+sYKHIdb3e2z9U5Mw08Ld/+OH5+hAYm2xv/4Lted
+s1UEkDUMfny2/xQ5UV5tZ1koQx+SEfr15UbbGSeTk6HSrhYUIy5OHpyYM9sd1k5S
+LPiIF9QlTJ//sMBGR3b4/s8vJNwWVw==
+=vbOj
+-----END PGP SIGNATURE-----
 
+--zirwezzrlcwpmgjo--
