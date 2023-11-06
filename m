@@ -2,53 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B2E17E1E66
+	by mail.lfdr.de (Postfix) with ESMTP id C063A7E1E68
 	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 11:33:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbjKFKda (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 05:33:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46062 "EHLO
+        id S231243AbjKFKdb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 05:33:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230217AbjKFKd2 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:33:28 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCCA5A1
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 02:33:24 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-409299277bbso30325115e9.2
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 02:33:24 -0800 (PST)
+        with ESMTP id S231206AbjKFKd3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:33:29 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCB5ECC
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 02:33:25 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-32f7bd27c2aso3041864f8f.2
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 02:33:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699266803; x=1699871603; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699266804; x=1699871604; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IEIEnAhYsKepWBm91afApetsN5rpqVotK1JY+P5qDnE=;
-        b=tHMptq0raRABlD1pHOKCf2/SyK9KVtDGhlHatzaYVMP+pZfoTxN01lJEZLxQLJkly/
-         o5FvW3njxSjti9NzjxanyYyJa3hlomafxXX3oUk1B+G/MNMyypElb6kCkPlc8UBcSKy/
-         /nLPwfEWMxZQKQSS+/CxOOeRuQL4omFI7ndRX3jxX47rCFCG67HwBO2st9+QUKMl2i/X
-         s7p785t2BLqw6ij2ivbOKLOMU/rjr/tlu2J+6rwErFC7JMXFLQRVMkMuzMB1rpWTwjlZ
-         xJNlX/1++ZzpHxX0Y6ICKwuZLtkyRQSDhQKQ8SFAL6+72OnmNLeI5bJ+nPz+syeNe34M
-         EcDg==
+        bh=92KaagYK4Q6I8Q+kS3VXik470FxeSDcwqV61XGzdHMc=;
+        b=zlWSZlJzYrihOzHq0xF43byD4qqSalUCPgLvb2Y7VHMEQEGT13KvquQtRjOF2Za1K3
+         LKCIJo3s8Seklmn2r0OrbzU3/YPqBBkdYTIQkO43i+HV46mqO8E8uryhmRsSjP8Fqpb7
+         mLWY62oKZBNMFOCe0UX1ZRXjg7mWrlN5MthE9xihO+1EuIaO9/4Vy7BFCSDvVV0mmwf8
+         8FJxmcePOW/7rNc1FHFQ7bdsAnY0iBiTudccQRlM96/dlQCgkH5Rx7V78Tn6uZccyLci
+         8denZ7i+uYRM4Qul5G1ClBrCO6v44YwSEBKcDfa8Hnr9TRybib2T5kRfmjNzB5i3hPBt
+         zfKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699266803; x=1699871603;
+        d=1e100.net; s=20230601; t=1699266804; x=1699871604;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IEIEnAhYsKepWBm91afApetsN5rpqVotK1JY+P5qDnE=;
-        b=dgBhPum9nr1yPxQWeI6B9qbWOrI7LCPeplT4Rbf/yXKQNzOQ2+ftemde82OgoDu6YW
-         +xZsdcmaUyPHJIXOJj5N1dm4DeI8x21z6+10D5r/Bpu8HBGshPb7A02Y+gyJ6BRIFQAa
-         cRgPwkhtFJ1bpnd8gL0v1xYat90JNffr09bQYj4RcuOjOtPpa54y9ekP4EpcS9WF0EXe
-         m38IfAAbe3JcOym3eJ3zwYW36QgO/hGhNa/JEIj1DH82GLJUOjzPe8d0q1gUW/0SKkJ+
-         57iYvi3iS43QSKL5VpQJAN7vWVndE806Eeq6dKI8kyJnJlqdzvFDv3dENsMl3ZDd98a6
-         9WEw==
-X-Gm-Message-State: AOJu0YyOvnqvGYFFU3WhbNiGVACf+OgCH7yZkfsWzEIs1q617AEibn1L
-        qpbO44s3vzgFFwqxU69GbCSq5SjVtnmvQDGwQdg=
-X-Google-Smtp-Source: AGHT+IGVwhrbtmIzc5AlDT2KYR1FqT+erDyiFUsFe+87wLnTwXX8iP/Qsv51s/ID4uBAQDdOHNeMWw==
-X-Received: by 2002:a5d:6051:0:b0:317:393f:8633 with SMTP id j17-20020a5d6051000000b00317393f8633mr18825987wrt.58.1699266803332;
-        Mon, 06 Nov 2023 02:33:23 -0800 (PST)
+        bh=92KaagYK4Q6I8Q+kS3VXik470FxeSDcwqV61XGzdHMc=;
+        b=nqrOMj0ib4jqI03qsa3BJDrlrgieaTEXi1h8YiTODxv6NgTAIHIU5dDhDAFkIWma24
+         763f05HzGpz3nQzIr/s3mpD5Qm30BclNh1aE6h3F3XN4HeA8cehaG3TXLoKa/BJeHNJK
+         ET7dK9AxWdC82AyAAr8EbV43NFvw6BDbpwSwpX/xRwC27pJMb3r8JDfRrCEHzknQnlfO
+         2sbdClHwNrFjQFp6N3GlpYyby/3v8Ev7uugMX1Ju9IgghqGgBUnnCyPKZIkIFKBbw/Sm
+         7rl5heMgmc6FwvO1JG4DrUfiQuWmcZmwEbBsjMBNDmS33W1HlSSDUZC5KuFhbyd2MJNE
+         QhDg==
+X-Gm-Message-State: AOJu0YxSC/cXqs2FqWeEt3QDZXo1dhokX7Q36+yzst5/wt0dPW76xfaj
+        vck0RgFXx76QMW76r1RnPsY10A==
+X-Google-Smtp-Source: AGHT+IGpgXgs9p/haq5uFAdeKOCNvuVctlHcdsKy+IZR9rejMAGaON1iexlBhPyBttWrugvf4qR/Cg==
+X-Received: by 2002:a5d:59ab:0:b0:32f:8a7f:f00f with SMTP id p11-20020a5d59ab000000b0032f8a7ff00fmr17945772wrr.60.1699266804234;
+        Mon, 06 Nov 2023 02:33:24 -0800 (PST)
 Received: from toaster.lan ([2a01:e0a:3c5:5fb1:fabf:ec8c:b644:5d3])
-        by smtp.googlemail.com with ESMTPSA id d1-20020a056000114100b0032415213a6fsm9033602wrx.87.2023.11.06.02.33.22
+        by smtp.googlemail.com with ESMTPSA id d1-20020a056000114100b0032415213a6fsm9033602wrx.87.2023.11.06.02.33.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 02:33:22 -0800 (PST)
+        Mon, 06 Nov 2023 02:33:23 -0800 (PST)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Neil Armstrong <neil.armstrong@linaro.org>,
@@ -60,9 +60,9 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: [PATCH 4/6] pwm: meson: add generic compatible for meson8 to sm1
-Date:   Mon,  6 Nov 2023 11:32:51 +0100
-Message-ID: <20231106103259.703417-5-jbrunet@baylibre.com>
+Subject: [PATCH 5/6] arm: dts: amlogic: migrate pwms to new meson8 v2 binding
+Date:   Mon,  6 Nov 2023 11:32:52 +0100
+Message-ID: <20231106103259.703417-6-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231106103259.703417-1-jbrunet@baylibre.com>
 References: <20231106103259.703417-1-jbrunet@baylibre.com>
@@ -79,295 +79,158 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Introduce a new compatible support in the Amlogic PWM driver.
-
-The PWM HW is actually the same for all SoCs supported so far.
-A specific compatible is needed only because the clock sources
-of the PWMs are hard-coded in the driver.
-
-It is better to have the clock source described in DT but this
-changes the bindings so a new compatible must be introduced.
-
-When all supported platform have migrated to the new compatible,
-support for the legacy ones may be removed from the driver.
-
-Adding a callback to setup the clock will also make it easier
-to add support for the new PWM HW found in a1, s4, c3 and t7 SoC
-families
+Update Amlogic based SoC PWMs to meson8-pwm-v2 compatible
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/pwm/pwm-meson.c | 224 ++++++++++++++++++++++++----------------
- 1 file changed, 133 insertions(+), 91 deletions(-)
+ arch/arm/boot/dts/amlogic/meson.dtsi           |  4 ++--
+ arch/arm/boot/dts/amlogic/meson8.dtsi          | 16 +++++++++++++---
+ arch/arm/boot/dts/amlogic/meson8b-ec100.dts    |  2 --
+ arch/arm/boot/dts/amlogic/meson8b-mxq.dts      |  2 --
+ arch/arm/boot/dts/amlogic/meson8b-odroidc1.dts |  2 --
+ arch/arm/boot/dts/amlogic/meson8b.dtsi         | 16 +++++++++++++---
+ 6 files changed, 28 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 5c1053884b46..68fcdc0746bd 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -95,6 +95,7 @@ struct meson_pwm_channel {
+diff --git a/arch/arm/boot/dts/amlogic/meson.dtsi b/arch/arm/boot/dts/amlogic/meson.dtsi
+index 8e3860d5d916..80cc004ad5fe 100644
+--- a/arch/arm/boot/dts/amlogic/meson.dtsi
++++ b/arch/arm/boot/dts/amlogic/meson.dtsi
+@@ -83,14 +83,14 @@ i2c_A: i2c@8500 {
+ 			};
  
- struct meson_pwm_data {
- 	const char * const *parent_names;
-+	int (*channels_init)(struct device *dev);
+ 			pwm_ab: pwm@8550 {
+-				compatible = "amlogic,meson-pwm";
++				compatible = "amlogic,meson8-pwm-v2";
+ 				reg = <0x8550 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+ 			};
+ 
+ 			pwm_cd: pwm@8650 {
+-				compatible = "amlogic,meson-pwm";
++				compatible = "amlogic,meson8-pwm-v2";
+ 				reg = <0x8650 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+diff --git a/arch/arm/boot/dts/amlogic/meson8.dtsi b/arch/arm/boot/dts/amlogic/meson8.dtsi
+index 59932fbfd5d5..153b8fe9c506 100644
+--- a/arch/arm/boot/dts/amlogic/meson8.dtsi
++++ b/arch/arm/boot/dts/amlogic/meson8.dtsi
+@@ -450,10 +450,14 @@ analog_top: analog-top@81a8 {
+ 	};
+ 
+ 	pwm_ef: pwm@86c0 {
+-		compatible = "amlogic,meson8-pwm", "amlogic,meson8b-pwm";
++		compatible = "amlogic,meson8-pwm-v2";
+ 		reg = <0x86c0 0x10>;
+ 		#pwm-cells = <3>;
+ 		status = "disabled";
++		clocks = <&xtal>,
++			 <0>,
++			 <&clkc CLKID_FCLK_DIV4>,
++			 <&clkc CLKID_FCLK_DIV3>;
+ 	};
+ 
+ 	clock-measure@8758 {
+@@ -702,11 +706,17 @@ timer@600 {
  };
  
- struct meson_pwm {
-@@ -334,95 +335,6 @@ static const struct pwm_ops meson_pwm_ops = {
- 	.owner = THIS_MODULE,
+ &pwm_ab {
+-	compatible = "amlogic,meson8-pwm", "amlogic,meson8b-pwm";
++	clocks = <&xtal>,
++		 <0>,
++		 <&clkc CLKID_FCLK_DIV4>,
++		 <&clkc CLKID_FCLK_DIV3>;
  };
  
--static const char * const pwm_meson8b_parent_names[] = {
--	"xtal", NULL, "fclk_div4", "fclk_div3"
--};
--
--static const struct meson_pwm_data pwm_meson8b_data = {
--	.parent_names = pwm_meson8b_parent_names,
--};
--
--/*
-- * Only the 2 first inputs of the GXBB AO PWMs are valid
-- * The last 2 are grounded
-- */
--static const char * const pwm_gxbb_ao_parent_names[] = {
--	"xtal", "clk81", NULL, NULL,
--};
--
--static const struct meson_pwm_data pwm_gxbb_ao_data = {
--	.parent_names = pwm_gxbb_ao_parent_names,
--};
--
--static const char * const pwm_axg_ee_parent_names[] = {
--	"xtal", "fclk_div5", "fclk_div4", "fclk_div3"
--};
--
--static const struct meson_pwm_data pwm_axg_ee_data = {
--	.parent_names = pwm_axg_ee_parent_names,
--};
--
--static const char * const pwm_axg_ao_parent_names[] = {
--	"xtal", "axg_ao_clk81", "fclk_div4", "fclk_div5"
--};
--
--static const struct meson_pwm_data pwm_axg_ao_data = {
--	.parent_names = pwm_axg_ao_parent_names,
--};
--
--static const char * const pwm_g12a_ao_ab_parent_names[] = {
--	"xtal", "g12a_ao_clk81", "fclk_div4", "fclk_div5"
--};
--
--static const struct meson_pwm_data pwm_g12a_ao_ab_data = {
--	.parent_names = pwm_g12a_ao_ab_parent_names,
--};
--
--static const char * const pwm_g12a_ao_cd_parent_names[] = {
--	"xtal", "g12a_ao_clk81", NULL, NULL,
--};
--
--static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
--	.parent_names = pwm_g12a_ao_cd_parent_names,
--};
--
--static const struct of_device_id meson_pwm_matches[] = {
--	{
--		.compatible = "amlogic,meson8b-pwm",
--		.data = &pwm_meson8b_data
--	},
--	{
--		.compatible = "amlogic,meson-gxbb-pwm",
--		.data = &pwm_meson8b_data
--	},
--	{
--		.compatible = "amlogic,meson-gxbb-ao-pwm",
--		.data = &pwm_gxbb_ao_data
--	},
--	{
--		.compatible = "amlogic,meson-axg-ee-pwm",
--		.data = &pwm_axg_ee_data
--	},
--	{
--		.compatible = "amlogic,meson-axg-ao-pwm",
--		.data = &pwm_axg_ao_data
--	},
--	{
--		.compatible = "amlogic,meson-g12a-ee-pwm",
--		.data = &pwm_meson8b_data
--	},
--	{
--		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
--		.data = &pwm_g12a_ao_ab_data
--	},
--	{
--		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
--		.data = &pwm_g12a_ao_cd_data
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(of, meson_pwm_matches);
--
- static int meson_pwm_init_clocks_legacy(struct device *dev,
- 					struct clk_parent_data *mux_parent_data)
- {
-@@ -529,12 +441,15 @@ static int meson_pwm_init_clocks_legacy(struct device *dev,
- 	return 0;
- }
+ &pwm_cd {
+-	compatible = "amlogic,meson8-pwm", "amlogic,meson8b-pwm";
++	clocks = <&xtal>,
++		 <0>,
++		 <&clkc CLKID_FCLK_DIV4>,
++		 <&clkc CLKID_FCLK_DIV3>;
+ };
  
--static int meson_pwm_init_channels(struct device *dev)
-+static int meson_pwm_init_channels_legacy(struct device *dev)
- {
- 	struct clk_parent_data mux_parent_data[MESON_NUM_MUX_PARENTS] = {};
- 	struct meson_pwm *meson = dev_get_drvdata(dev);
- 	int i;
+ &rtc {
+diff --git a/arch/arm/boot/dts/amlogic/meson8b-ec100.dts b/arch/arm/boot/dts/amlogic/meson8b-ec100.dts
+index 3da47349eaaf..cdd7d04db256 100644
+--- a/arch/arm/boot/dts/amlogic/meson8b-ec100.dts
++++ b/arch/arm/boot/dts/amlogic/meson8b-ec100.dts
+@@ -441,8 +441,6 @@ &pwm_cd {
+ 	status = "okay";
+ 	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&xtal>, <&xtal>;
+-	clock-names = "clkin0", "clkin1";
+ };
  
-+	dev_info(dev, "using obsolete compatible, please consider updating dt\n");
-+
-+
- 	for (i = 0; i < MESON_NUM_MUX_PARENTS; i++) {
- 		mux_parent_data[i].index = -1;
- 		mux_parent_data[i].name = meson->data->parent_names[i];
-@@ -543,6 +458,133 @@ static int meson_pwm_init_channels(struct device *dev)
- 	return meson_pwm_init_clocks_legacy(dev, mux_parent_data);
- }
+ &rtc {
+diff --git a/arch/arm/boot/dts/amlogic/meson8b-mxq.dts b/arch/arm/boot/dts/amlogic/meson8b-mxq.dts
+index 7adedd3258c3..68f4f70f4f03 100644
+--- a/arch/arm/boot/dts/amlogic/meson8b-mxq.dts
++++ b/arch/arm/boot/dts/amlogic/meson8b-mxq.dts
+@@ -162,8 +162,6 @@ &pwm_cd {
+ 	status = "okay";
+ 	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&xtal>, <&xtal>;
+-	clock-names = "clkin0", "clkin1";
+ };
  
-+static int meson_pwm_init_channels_meson8b_v2(struct device *dev)
-+{
-+	struct clk_parent_data mux_parent_data[MESON_NUM_MUX_PARENTS] = {};
-+	int i;
-+
-+	/*
-+	 * NOTE: Instead of relying on the hard coded names in the driver
-+	 * as the legacy version, this relies on DT to provide the list of
-+	 * clocks.
-+	 * For once, using input numbers actually makes more sense than names.
-+	 * Also DT requires clock-names to be explicitly ordered, so there is
-+	 * no point bothering with clock names in this case.
-+	 */
-+	for (i = 0; i < MESON_NUM_MUX_PARENTS; i++)
-+		mux_parent_data[i].index = i;
-+
-+	return meson_pwm_init_clocks_legacy(dev, mux_parent_data);
-+}
-+
-+static const char * const pwm_meson8b_parent_names[] = {
-+	"xtal", NULL, "fclk_div4", "fclk_div3"
-+};
-+
-+static const struct meson_pwm_data pwm_meson8b_data = {
-+	.parent_names = pwm_meson8b_parent_names,
-+	.channels_init = meson_pwm_init_channels_legacy,
-+};
-+
-+/*
-+ * Only the 2 first inputs of the GXBB AO PWMs are valid
-+ * The last 2 are grounded
-+ */
-+static const char * const pwm_gxbb_ao_parent_names[] = {
-+	"xtal", "clk81", NULL, NULL,
-+};
-+
-+static const struct meson_pwm_data pwm_gxbb_ao_data = {
-+	.parent_names = pwm_gxbb_ao_parent_names,
-+	.channels_init = meson_pwm_init_channels_legacy,
-+};
-+
-+static const char * const pwm_axg_ee_parent_names[] = {
-+	"xtal", "fclk_div5", "fclk_div4", "fclk_div3"
-+};
-+
-+static const struct meson_pwm_data pwm_axg_ee_data = {
-+	.parent_names = pwm_axg_ee_parent_names,
-+	.channels_init = meson_pwm_init_channels_legacy,
-+};
-+
-+static const char * const pwm_axg_ao_parent_names[] = {
-+	"xtal", "axg_ao_clk81", "fclk_div4", "fclk_div5"
-+};
-+
-+static const struct meson_pwm_data pwm_axg_ao_data = {
-+	.parent_names = pwm_axg_ao_parent_names,
-+	.channels_init = meson_pwm_init_channels_legacy,
-+};
-+
-+static const char * const pwm_g12a_ao_ab_parent_names[] = {
-+	"xtal", "g12a_ao_clk81", "fclk_div4", "fclk_div5"
-+};
-+
-+static const struct meson_pwm_data pwm_g12a_ao_ab_data = {
-+	.parent_names = pwm_g12a_ao_ab_parent_names,
-+	.channels_init = meson_pwm_init_channels_legacy,
-+};
-+
-+static const char * const pwm_g12a_ao_cd_parent_names[] = {
-+	"xtal", "g12a_ao_clk81", NULL, NULL,
-+};
-+
-+static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
-+	.parent_names = pwm_g12a_ao_cd_parent_names,
-+	.channels_init = meson_pwm_init_channels_legacy,
-+};
-+
-+static const struct meson_pwm_data pwm_meson8_v2_data = {
-+	.channels_init = meson_pwm_init_channels_meson8b_v2,
-+};
-+
-+static const struct of_device_id meson_pwm_matches[] = {
-+	{
-+		.compatible = "amlogic,meson8-pwm-v2",
-+		.data = &pwm_meson8_v2_data
-+	},
-+	/*
-+	 * The following compatibles are obsolete.
-+	 * Support for these may be removed once the related
-+	 * platforms have been updated
-+	 */
-+	{
-+		.compatible = "amlogic,meson8b-pwm",
-+		.data = &pwm_meson8b_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-pwm",
-+		.data = &pwm_meson8b_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-gxbb-ao-pwm",
-+		.data = &pwm_gxbb_ao_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-axg-ee-pwm",
-+		.data = &pwm_axg_ee_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-axg-ao-pwm",
-+		.data = &pwm_axg_ao_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ee-pwm",
-+		.data = &pwm_meson8b_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
-+		.data = &pwm_g12a_ao_ab_data
-+	},
-+	{
-+		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
-+		.data = &pwm_g12a_ao_cd_data
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, meson_pwm_matches);
-+
- static int meson_pwm_probe(struct platform_device *pdev)
- {
- 	struct meson_pwm *meson;
-@@ -574,7 +616,7 @@ static int meson_pwm_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
+ &uart_AO {
+diff --git a/arch/arm/boot/dts/amlogic/meson8b-odroidc1.dts b/arch/arm/boot/dts/amlogic/meson8b-odroidc1.dts
+index 941682844faf..ff955b960688 100644
+--- a/arch/arm/boot/dts/amlogic/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/amlogic/meson8b-odroidc1.dts
+@@ -347,8 +347,6 @@ &pwm_cd {
+ 	status = "okay";
+ 	pinctrl-0 = <&pwm_c1_pins>, <&pwm_d_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&xtal>, <&xtal>;
+-	clock-names = "clkin0", "clkin1";
+ };
  
--	err = meson_pwm_init_channels(&pdev->dev);
-+	err = meson->data->channels_init(&pdev->dev);
- 	if (err < 0)
- 		return err;
+ &rtc {
+diff --git a/arch/arm/boot/dts/amlogic/meson8b.dtsi b/arch/arm/boot/dts/amlogic/meson8b.dtsi
+index 5198f5177c2c..6c91eda92e8b 100644
+--- a/arch/arm/boot/dts/amlogic/meson8b.dtsi
++++ b/arch/arm/boot/dts/amlogic/meson8b.dtsi
+@@ -404,10 +404,14 @@ analog_top: analog-top@81a8 {
+ 	};
  
+ 	pwm_ef: pwm@86c0 {
+-		compatible = "amlogic,meson8b-pwm";
++		compatible = "amlogic,meson8-pwm-v2";
+ 		reg = <0x86c0 0x10>;
+ 		#pwm-cells = <3>;
+ 		status = "disabled";
++		clocks = <&xtal>,
++			 <0>,
++			 <&clkc CLKID_FCLK_DIV4>,
++			 <&clkc CLKID_FCLK_DIV3>;
+ 	};
+ 
+ 	clock-measure@8758 {
+@@ -677,11 +681,17 @@ timer@600 {
+ };
+ 
+ &pwm_ab {
+-	compatible = "amlogic,meson8b-pwm";
++	clocks = <&xtal>,
++		 <0>,
++		 <&clkc CLKID_FCLK_DIV4>,
++		 <&clkc CLKID_FCLK_DIV3>;
+ };
+ 
+ &pwm_cd {
+-	compatible = "amlogic,meson8b-pwm";
++	clocks = <&xtal>,
++		 <0>,
++		 <&clkc CLKID_FCLK_DIV4>,
++		 <&clkc CLKID_FCLK_DIV3>;
+ };
+ 
+ &rtc {
 -- 
 2.42.0
 
