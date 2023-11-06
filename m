@@ -2,52 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03D757E1E5E
+	by mail.lfdr.de (Postfix) with ESMTP id 72FF57E1E5F
 	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 11:33:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjKFKd0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 05:33:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
+        id S230514AbjKFKd1 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 05:33:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjKFKdZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:33:25 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A90FA1
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 02:33:21 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32f78dcf036so3173291f8f.0
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 02:33:21 -0800 (PST)
+        with ESMTP id S229583AbjKFKd0 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 05:33:26 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CB2D8
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 02:33:22 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-4084095722aso33282525e9.1
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 02:33:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699266799; x=1699871599; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jlw5HxIULTW6/Y+wZ7qEz5z78H/my/JnN6AqQuvllNo=;
-        b=WPRBBWX3uYXHjnG4cN1t9SOL7xnD2U4rn66tf52L1f9zcPESNEgcvuk6ZHNBr+5sxp
-         45ilXqSiWLq48TV9Sou5eTKFGe1o3JjI23wNZu52vLpIGxYR539tz1Bl5DY/Aa0l7XMk
-         napLjUxiZ8VIcHTQVUX35UcpvSB2rX1Y3hYgqzBNkQ6P98P27PEHXU2LdJSXqiFznWgt
-         tRqMTb/M18rMiH1SroqfH3usviStWu6j6ayBqSkiQtTjBpfke+8vYLwziJ2UpOZswMn/
-         +sLXot5U7Ikj1GFI4PzeHdA7nMpmHU0gsNHKbm9zntCkkXCq1QXgzQy396DsxYsvyQYc
-         MmfQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699266800; x=1699871600; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gNIPKS5bjo7Dr0T0Rtv+hJZqj7mUU2yEUzYTVTWO2dY=;
+        b=nSfR5cYNjJ+nQxY4zK+nmulfPquwtkQmMS6pDIsj2BcrRSa20O0TwWFw/gtCZG87ie
+         J56K+iLCj5Y4CyTNr/AMfvsL3tKUGHR2zNkvhGLwR/aLzaCHYw1756qsFxAJhzJgFztR
+         FCI7UjYFwe9CR6l8N/jyLIxvCxDLPLtoggazk59aDU2lBasohgkI+uwHBNfuuVp4o22v
+         fVmVYpV/N+aHP8UimDXOsAKdEQQWsu/Er0S0fEmqmFe00zxHaY7QPZiE0U0ziuv9WY7x
+         eCDa0M11IIk4U3MjOnB/pl+5hfcv6r6rE14xA7tQdMJr/cfTgmbSMoX0gHGG3oselHau
+         m4rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699266799; x=1699871599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jlw5HxIULTW6/Y+wZ7qEz5z78H/my/JnN6AqQuvllNo=;
-        b=eze1LmOxC47nGueWGwJWlWTxxyPECOeZo5hOsxShO52pBnBTWhtH0fva8ZR++ws25E
-         EYZMghF1B7bjA8iW9p0B73IClvgzVJ5DKlKWsfzqiUqT4A2MBPL3qhdwKQGwDhtn2pWw
-         egaK41qLoVKsKHkaXtwp3XgRVRcpQisVUBkudl5PHhhGXrGnlzDiOjmkTu4lGvziXyai
-         ADvEAbu0sl6LI+zWT9k7xRtzDrfkpXYefPYBR6B4Ph1FVupSZPwykPU36JdqFl9VxIrY
-         QIysgkp7ESdZo+wUlzyqi8ULMWhREFBd7306XOQi2F/+iC5C85KAvHtoXGyacCeJv88N
-         dk7A==
-X-Gm-Message-State: AOJu0Yxkt/iDWUBmL0i5HBXlwiYf8FL8yyCgZz5fX0Xo0Et6fwRt3AUA
-        GOes7j0lTMMz7g6zfvYIicE6cg==
-X-Google-Smtp-Source: AGHT+IHzv/E3x2UyZHstlPEHYl4kHcZKQvmPeHGYQ167btT+c+1bBfLcj35EW0Wc7pkdgodfZZ7zXw==
-X-Received: by 2002:adf:ed4f:0:b0:32d:a366:7073 with SMTP id u15-20020adfed4f000000b0032da3667073mr9251507wro.14.1699266799485;
-        Mon, 06 Nov 2023 02:33:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699266800; x=1699871600;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gNIPKS5bjo7Dr0T0Rtv+hJZqj7mUU2yEUzYTVTWO2dY=;
+        b=NiDY4K6hGCmLbjWjI4SB1F5ckhb+m41pdeurDcrGlUGkt6KECluw70j5izKllzqpuX
+         Wn1qhdgUMDFdoFbIifBTO3dj9CBeHaXROedGYkdbw+4kBO21srjF3HGyIX74BS51uAfC
+         mcUzHcp44o2fVsgBRBYMOi5aZsGtncBERN0bEkmjcj27VcRSkpn+ppcyr3U/L+B2eLNA
+         1AdNUAQ8MfEaieYJzivFoDGfLfmwvGJk3c9LBB8IxrPo9xEIfLTPoNXULgfvtBa1ciua
+         /OrqaSGre9W9aeApyv5Mu2NbOBJgilj8uigiBUbLH5yQOAFU2FAXeqXUnM/EqMHhB42t
+         RJ6w==
+X-Gm-Message-State: AOJu0Yy2UczjWAh6iAu1B0CjbLRJMsMijrmiQn7GX7d9/YF0fVCsfJMW
+        KDwQqb5JgxC2R5WtBdbujUkk7A==
+X-Google-Smtp-Source: AGHT+IFZcXHpJEgaNO2TxS6ZjAx7zwqUsBZowvheo5z7hKAXHcnZJDMKQ6s3lTl4gf5lUUnQ+pX+BA==
+X-Received: by 2002:a05:6000:1884:b0:32f:b407:5b77 with SMTP id a4-20020a056000188400b0032fb4075b77mr9038937wri.64.1699266800451;
+        Mon, 06 Nov 2023 02:33:20 -0800 (PST)
 Received: from toaster.lan ([2a01:e0a:3c5:5fb1:fabf:ec8c:b644:5d3])
-        by smtp.googlemail.com with ESMTPSA id d1-20020a056000114100b0032415213a6fsm9033602wrx.87.2023.11.06.02.33.18
+        by smtp.googlemail.com with ESMTPSA id d1-20020a056000114100b0032415213a6fsm9033602wrx.87.2023.11.06.02.33.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 02:33:19 -0800 (PST)
+        Mon, 06 Nov 2023 02:33:20 -0800 (PST)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Neil Armstrong <neil.armstrong@linaro.org>,
@@ -59,10 +60,12 @@ Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
         JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: [PATCH 0/6] pwm: meson: dt-bindings fixup
-Date:   Mon,  6 Nov 2023 11:32:47 +0100
-Message-ID: <20231106103259.703417-1-jbrunet@baylibre.com>
+Subject: [PATCH 1/6] dt-bindings: pwm: amlogic: fix s4 bindings
+Date:   Mon,  6 Nov 2023 11:32:48 +0100
+Message-ID: <20231106103259.703417-2-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231106103259.703417-1-jbrunet@baylibre.com>
+References: <20231106103259.703417-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
 X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
@@ -75,72 +78,135 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This patchset aims to:
-* Fix the incorrect bindings for the s4 type of pwm that was introduced
-  while converting the documentation from txt to yaml format.
-* Introduce a new compatible for the existing PWMs to better describe the
-  HW in DT, instead of describing settings.
-* Make the introduction of a new pwm variant (s4) slightly easier.
-* Migrate the supported SoCs to the new compatible.
+s4 has been added to the compatible list while converting the Amlogic PWM
+binding documentation from txt to yaml.
 
-Usually, I prefer to send to dts patches separately. This time it seemed
-important to illustrate the change. I don't mind splitting this out and
-re-spinning if this is annoying for the maintainers.
+However, on the s4, the clock bindings have different meaning compared to
+previous SoCs.
 
-Jerome Brunet (6):
-  dt-bindings: pwm: amlogic: fix s4 bindings
-  dt-bindings: pwm: amlogic: add new compatible for meson8 pwm type
-  pwm: meson: prepare addition of new compatible types
-  pwm: meson: add generic compatible for meson8 to sm1
-  arm: dts: amlogic: migrate pwms to new meson8 v2 binding
-  arm64: dts: amlogic: migrate pwms to new meson8 v2 binding
+On previous SoCs the clock bindings used to describe which input the PWM
+channel multiplexer should pick among its possible parents.
 
- .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 101 +++++-
- arch/arm/boot/dts/amlogic/meson.dtsi          |   4 +-
- arch/arm/boot/dts/amlogic/meson8.dtsi         |  16 +-
- arch/arm/boot/dts/amlogic/meson8b-ec100.dts   |   2 -
- arch/arm/boot/dts/amlogic/meson8b-mxq.dts     |   2 -
- .../arm/boot/dts/amlogic/meson8b-odroidc1.dts |   2 -
- arch/arm/boot/dts/amlogic/meson8b.dtsi        |  16 +-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  24 +-
- .../boot/dts/amlogic/meson-g12-common.dtsi    |  28 +-
- .../dts/amlogic/meson-g12a-radxa-zero.dts     |   4 -
- .../boot/dts/amlogic/meson-g12a-sei510.dts    |   4 -
- .../boot/dts/amlogic/meson-g12a-u200.dts      |   2 -
- .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   4 -
- .../amlogic/meson-g12b-a311d-libretech-cc.dts |   2 -
- .../dts/amlogic/meson-g12b-bananapi-cm4.dtsi  |   7 -
- .../boot/dts/amlogic/meson-g12b-bananapi.dtsi |   4 -
- .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   |   4 -
- .../boot/dts/amlogic/meson-g12b-odroid.dtsi   |   4 -
- .../dts/amlogic/meson-g12b-radxa-zero2.dts    |   8 -
- .../boot/dts/amlogic/meson-g12b-w400.dtsi     |   6 -
- .../dts/amlogic/meson-gx-libretech-pc.dtsi    |   6 -
- .../boot/dts/amlogic/meson-gx-p23x-q20x.dtsi  |   2 -
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   8 +-
- .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |   2 -
- .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |   2 -
- .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |   2 -
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi |   2 -
- .../boot/dts/amlogic/meson-gxbb-wetek.dtsi    |   2 -
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |  26 ++
- .../boot/dts/amlogic/meson-gxl-s805x-p241.dts |   2 -
- .../meson-gxl-s905w-jethome-jethub-j80.dts    |   2 -
- .../meson-gxl-s905x-hwacom-amazetv.dts        |   2 -
- .../amlogic/meson-gxl-s905x-khadas-vim.dts    |   2 -
- .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |   2 -
- .../dts/amlogic/meson-gxl-s905x-p212.dtsi     |   2 -
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  26 ++
- .../dts/amlogic/meson-gxm-khadas-vim2.dts     |   4 -
- .../boot/dts/amlogic/meson-gxm-rbox-pro.dts   |   2 -
- .../amlogic/meson-libretech-cottonwood.dtsi   |   6 -
- .../boot/dts/amlogic/meson-sm1-ac2xx.dtsi     |   6 -
- .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |   2 -
- .../boot/dts/amlogic/meson-sm1-odroid.dtsi    |   2 -
- .../boot/dts/amlogic/meson-sm1-sei610.dts     |   6 -
- drivers/pwm/pwm-meson.c                       | 312 +++++++++++-------
- 44 files changed, 407 insertions(+), 267 deletions(-)
+This is very much tied to the driver implementation, instead of describing
+the HW for what it is. When support for the Amlogic PWM was first added,
+how to deal with clocks through DT was not as clear as it nowadays.
+The Linux driver now ignores this DT setting, but still relies on the
+hard-coded list of clock sources.
 
+On the s4, the input multiplexer is gone. The clock bindings actually
+describe the clock as it exists, not a setting. The property has a
+different meaning, even if it is still 2 clocks and it would pass the check
+when support is actually added.
+
+Also the s4 cannot work if the clocks are not provided, so the property no
+longer optional.
+
+Finally, for once it makes sense to see the input as being numbered
+somehow. No need to bother with clock-names on the s4 type of PWM.
+
+Fixes: 43a1c4ff3977 ("dt-bindings: pwm: Convert Amlogic Meson PWM binding")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 68 ++++++++++++++++---
+ 1 file changed, 59 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+index 527864a4d855..754b70fc2db0 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
++++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+@@ -9,9 +9,6 @@ title: Amlogic PWM
+ maintainers:
+   - Heiner Kallweit <hkallweit1@gmail.com>
+ 
+-allOf:
+-  - $ref: pwm.yaml#
+-
+ properties:
+   compatible:
+     oneOf:
+@@ -43,12 +40,8 @@ properties:
+     maxItems: 2
+ 
+   clock-names:
+-    oneOf:
+-      - items:
+-          - enum: [clkin0, clkin1]
+-      - items:
+-          - const: clkin0
+-          - const: clkin1
++    minItems: 1
++    maxItems: 2
+ 
+   "#pwm-cells":
+     const: 3
+@@ -57,6 +50,56 @@ required:
+   - compatible
+   - reg
+ 
++allOf:
++  - $ref: pwm.yaml#
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,meson8-pwm
++              - amlogic,meson8b-pwm
++              - amlogic,meson-gxbb-pwm
++              - amlogic,meson-gxbb-ao-pwm
++              - amlogic,meson-axg-ee-pwm
++              - amlogic,meson-axg-ao-pwm
++              - amlogic,meson-g12a-ee-pwm
++              - amlogic,meson-g12a-ao-pwm-ab
++              - amlogic,meson-g12a-ao-pwm-cd
++              - amlogic,meson-gx-pwm
++              - amlogic,meson-gx-ao-pwm
++    then:
++      # Historic bindings tied to the driver implementation
++      # The clocks provided here are meant to be matched with the input
++      # known (hard-coded) in the driver and used to select pwm clock
++      # source. Currently, the linux driver ignores this.
++      properties:
++        clock-names:
++          oneOf:
++            - items:
++                - enum: [clkin0, clkin1]
++            - items:
++                - const: clkin0
++                - const: clkin1
++
++  # Newer IP block take a single input per channel, instead of 4 inputs
++  # for both channels
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,meson-s4-pwm
++    then:
++      properties:
++        clocks:
++          items:
++            - description: input clock of PWM channel A
++            - description: input clock of PWM channel B
++      required:
++        - clocks
++
+ additionalProperties: false
+ 
+ examples:
+@@ -68,3 +111,10 @@ examples:
+       clock-names = "clkin0", "clkin1";
+       #pwm-cells = <3>;
+     };
++  - |
++    pwm@1000 {
++      compatible = "amlogic,meson-s4-pwm";
++      reg = <0x1000 0x10>;
++      clocks = <&pwm_src_a>, <&pwm_src_b>;
++      #pwm-cells = <3>;
++    };
 -- 
 2.42.0
 
