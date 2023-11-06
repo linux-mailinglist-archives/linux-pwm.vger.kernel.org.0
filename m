@@ -2,63 +2,75 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D4507E1F24
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 12:02:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5920D7E20EB
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 13:08:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231453AbjKFLCm (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 06:02:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
+        id S231905AbjKFMIK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 07:08:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231442AbjKFLCl (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 06:02:41 -0500
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6BEE125
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 03:02:37 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qzxNL-0002Ho-O0; Mon, 06 Nov 2023 12:02:35 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qzxNK-0070S0-VC; Mon, 06 Nov 2023 12:02:34 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1qzxNK-00Da6k-LF; Mon, 06 Nov 2023 12:02:34 +0100
-Date:   Mon, 6 Nov 2023 12:02:34 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-pwm@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+        with ESMTP id S231942AbjKFMHw (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 07:07:52 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F029B2727
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 04:05:43 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-407c3adef8eso38434935e9.2
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 04:05:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699272341; x=1699877141; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eo4meWKVFbrqc+IQu3vvUKMXOAHSBvoghj78YURGCoQ=;
+        b=bUD7kvHWOvxx7ddzLf/1RwE7B+hv9xcwrRVik93D7ez9KHUr4kQLYy43NhWr1zVr8x
+         dVZqxBwxC90vWMJf899tZEWs28LRgcn4zUjtzHRxeE0OtjcVEiDyawQebvHEGKiAYFss
+         WvAZSkyvV5AZwsk544wlGmfRG081CMjUjCNx69+eG52hy4hFXVwqIOH+HIaQPxmO5chh
+         OpcV6puktPi1IyqUd5scoI0Casb1NR1+6a10xtrT/w8f6U27phD7juHQgdhSKz/WXPan
+         UJmPw0sRku8Cx7+zyYQJaUs8XcEGQVaJwaGDZLb3AvKmCfPq22TdTNjs4TsMsM5+L6Xg
+         BMEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699272341; x=1699877141;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eo4meWKVFbrqc+IQu3vvUKMXOAHSBvoghj78YURGCoQ=;
+        b=XfHFxGMfZaAjDuxnj4lK94SWWS2qxMGwH5iU8iuyiHPW17UpcbShM88BDVn4N8DrGX
+         m3AocrxDMukAzfkZIlZxIAyYhgpFVJwZFue34cKU6TYDGJQCecxrN6WZRR0pRsIUuycm
+         EIW5PWDKNul7y3NK7VPFqFo6wkaD+TKrWxlQozcQxSb/dEmHITwJP/Aegrcux6ncDn1A
+         uEYWiTO1QKgXHHyGWes6LPvwJDQTycV96cMrja4V+h/MjKoYxUi+A9Ruz+zBBG0ONVwe
+         VGMLKSnSch4vxmCXZbtVhI1QcOcX+tuIEvaXnOkIRewYUL6z+FEbmdNgfQ+SeYAaGw1Z
+         ytqw==
+X-Gm-Message-State: AOJu0Yz0fL09IJsnIE6SFYrLZl9u/D2+cjmyp+X/LoJYYv+hZhD9PgxN
+        m979ghNZHR1TKuIhjLdDigiPYQ==
+X-Google-Smtp-Source: AGHT+IGu95NsFHRZTou3YhjXBBK5ogenE5avfEYXW4hsTBJuOW/jW6etIJgVfKslUMiWzjhlSUBZ4w==
+X-Received: by 2002:a05:600c:3149:b0:402:8c7e:3fc4 with SMTP id h9-20020a05600c314900b004028c7e3fc4mr23843592wmo.30.1699272341427;
+        Mon, 06 Nov 2023 04:05:41 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:78ae:2eac:2baf:467c])
+        by smtp.gmail.com with ESMTPSA id p22-20020a05600c419600b00401d8181f8bsm11695356wmh.25.2023.11.06.04.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Nov 2023 04:05:41 -0800 (PST)
+References: <20231106103259.703417-1-jbrunet@baylibre.com>
+ <20231106103259.703417-3-jbrunet@baylibre.com>
+User-agent: mu4e 1.8.13; emacs 29.1
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: imx-pwm: Add constraints for
- #pwm-cells
-Message-ID: <20231106110234.d62xhsk2za5ohr6d@pengutronix.de>
-References: <20231106095205.231210-1-alexander.stein@ew.tq-group.com>
- <20231106095205.231210-2-alexander.stein@ew.tq-group.com>
- <20231106103621.2fh6fkpdafpz4toa@pengutronix.de>
- <8300676.T7Z3S40VBb@steina-w>
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH 2/6] dt-bindings: pwm: amlogic: add new compatible for
+ meson8 pwm type
+Date:   Mon, 06 Nov 2023 13:03:38 +0100
+In-reply-to: <20231106103259.703417-3-jbrunet@baylibre.com>
+Message-ID: <1jttpz9je3.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vno4u6qwlv7yrytv"
-Content-Disposition: inline
-In-Reply-To: <8300676.T7Z3S40VBb@steina-w>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,111 +78,109 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---vno4u6qwlv7yrytv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon 06 Nov 2023 at 11:32, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-On Mon, Nov 06, 2023 at 11:49:19AM +0100, Alexander Stein wrote:
-> Hello Uwe,
->=20
-> Am Montag, 6. November 2023, 11:36:21 CET schrieb Uwe Kleine-K=F6nig:
-> > Hello,
-> >=20
-> > [dropped Philippe Schenker from Cc as his email bounced in the past]
-> >=20
-> > On Mon, Nov 06, 2023 at 10:52:03AM +0100, Alexander Stein wrote:
-> > > Only fsl,imx1-pwm comptabile devices use #pwm-cells =3D <2>. Newer So=
-Cs
-> > > supportinverted PWM output, thus #pwm-cells needs to be set to 3.
-> > >=20
-> > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > > ---
-> > >=20
-> > >  .../devicetree/bindings/pwm/imx-pwm.yaml      | 20 ++++++++++++++++-=
---
-> > >  1 file changed, 17 insertions(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > > b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml index
-> > > c01dff3b7f843..59a981c0f39ab 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > > +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> > > @@ -9,9 +9,6 @@ title: Freescale i.MX PWM controller
-> > >=20
-> > >  maintainers:
-> > >    - Philipp Zabel <p.zabel@pengutronix.de>
-> > >=20
-> > > -allOf:
-> > > -  - $ref: pwm.yaml#
-> > > -
-> > >=20
-> > >  properties:
-> > >    "#pwm-cells":
-> > >      description: |
-> > >=20
-> > > @@ -74,6 +71,23 @@ required:
-> > >  additionalProperties: false
-> > >=20
-> > > +allOf:
-> > > +  - $ref: pwm.yaml#
-> > > +
-> > > +  - if:
-> > > +      properties:
-> > > +        compatible:
-> > > +          contains:
-> > > +            const: fsl,imx1-pwm
-> > > +    then:
-> > > +      properties:
-> > > +        "#pwm-cells":
-> > > +          enum: [2]
-> >=20
-> > Given that arch/arm/boot/dts/nxp/imx/imx1.dtsi has:
-> >=20
-> > 	pwm: pwm@208000 {
-> > 		#pwm-cells =3D <3>;
-> > 		compatible =3D "fsl,imx1-pwm";
-> > 		...
-> >=20
-> > this looks wrong.
->=20
-> Indeed, something i doesn't match. Checking with [1] section 22.4.1 there=
- are=20
-> no bits regarding output inversion. Also pwm_imx1_apply returns -EINVAL i=
-f=20
-> state->polarity !=3D PWM_POLARITY_NORMAL.
-> So IMO "#pwm-cells =3D <3>" is wrong for imx1. If fixed to 2, this also m=
-atches=20
-> the description for the value of #pwm-cells in imx-pwm.yaml.
+> Add a new compatible for the pwm found in the meson8 to sm1 Amlogic SoCs.
+>
+> The previous clock bindings for these SoCs described the driver and not the
+> HW itself. The clock provided was used to set the parent of the input clock
+> mux among the possible parents hard-coded in the driver.
+>
+> The new bindings allows to describe the actual clock inputs of the PWM in
+> DT, like most bindings do, instead of relying of hard-coded data.
+>
+> The new bindings make the old one deprecated.
+>
+> There is enough experience on this HW to know that the PWM is exactly the
+> same all the supported SoCs. There is no need for a per-SoC compatible.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 35 +++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> index 754b70fc2db0..3aa522c4cae4 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+> @@ -22,6 +22,7 @@ properties:
+>            - amlogic,meson-g12a-ao-pwm-ab
+>            - amlogic,meson-g12a-ao-pwm-cd
+>            - amlogic,meson-s4-pwm
+> +          - amlogic,meson8-pwm-v2
+>        - items:
+>            - const: amlogic,meson-gx-pwm
+>            - const: amlogic,meson-gxbb-pwm
+> @@ -37,7 +38,7 @@ properties:
+>  
+>    clocks:
+>      minItems: 1
+> -    maxItems: 2
+> +    maxItems: 4
+>  
+>    clock-names:
+>      minItems: 1
+> @@ -70,11 +71,14 @@ allOf:
+>                - amlogic,meson-gx-pwm
+>                - amlogic,meson-gx-ao-pwm
+>      then:
+> -      # Historic bindings tied to the driver implementation
+> +      # Obsolete historic bindings tied to the driver implementation
+>        # The clocks provided here are meant to be matched with the input
+>        # known (hard-coded) in the driver and used to select pwm clock
+>        # source. Currently, the linux driver ignores this.
+> +      deprecated: true
+>        properties:
+> +        clocks:
+> +          maxItems: 2
+>          clock-names:
+>            oneOf:
+>              - items:
+> @@ -83,6 +87,26 @@ allOf:
+>                  - const: clkin0
+>                  - const: clkin1
+>  
+> +  # Newer binding where clock describe the actual clock inputs of the pwm
+> +  # block. These are necessary but some inputs may be grounded.
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - amlogic,meson8b-pwm-v2
 
-The reasoning only works in one direction, i.e. if your PWM supports
-inversed polarity you need #pwm-cells =3D <3>. But there no problem in
-using 3 cells for a PWM that doesn't support inversed output. Some might
-call it unnecessary verboseness, other might call it consistency.
+Made a mistake here while making a last minute modification
+it should be meson8, not meson8b
 
-I'd say the right thing to do here is to stick to =3D 3 and adapt this
-patch and the already existing comment in imx-pwm.yaml.
+Will fix this in v2.
 
-Best regards
-Uwe
+> +    then:
+> +      properties:
+> +        clocks:
+> +          minItems: 1
+> +          items:
+> +            - description: input clock 0 of the pwm block
+> +            - description: input clock 1 of the pwm block
+> +            - description: input clock 2 of the pwm block
+> +            - description: input clock 3 of the pwm block
+> +      required:
+> +        - clocks
+> +
+>    # Newer IP block take a single input per channel, instead of 4 inputs
+>    # for both channels
+>    - if:
+> @@ -111,6 +135,13 @@ examples:
+>        clock-names = "clkin0", "clkin1";
+>        #pwm-cells = <3>;
+>      };
+> +  - |
+> +    pwm@2000 {
+> +      compatible = "amlogic,meson8-pwm-v2";
+> +      reg = <0x1000 0x10>;
+> +      clocks = <&xtal>, <0>, <&fdiv4>, <&fdiv5>;
+> +      #pwm-cells = <3>;
+> +    };
+>    - |
+>      pwm@1000 {
+>        compatible = "amlogic,meson-s4-pwm";
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---vno4u6qwlv7yrytv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVIx8kACgkQj4D7WH0S
-/k6uOwf6A3+Bwg80EL0j4sXYxSFniVgXaJSG3Nu8tJhUYFDbOi6Bkq/i6Xmeon8P
-n4CaO0gezvrIFciVA3o+XP8kqpm1z4vzq8OLgoVRGyZ14F1NlQwA1uRxNnjAyu7M
-HEtarFuqLekNmDOj0ckLudiIoqXiN8sJDJyzsw5L08cyvKUXFQlZy6NyDP9UaG2G
-9F1T9K47UA2vIQjWBXhfr8kBEkEuvn3Q45rv5Ia2IzRhlyp8G2oBoSzpqa7a6zDD
-gNNqrOWJvsaYeWbuql29bAap1hyiUsSxjPH4vVe1XIHz3aj1f1eBfMuNG4mqS54L
-TzycPjksXSaoNA6xNqbbDWpRnFZe6w==
-=VXcD
------END PGP SIGNATURE-----
-
---vno4u6qwlv7yrytv--
