@@ -2,185 +2,107 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5920D7E20EB
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 13:08:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C84B47E2805
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 16:02:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231905AbjKFMIK (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 07:08:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        id S232020AbjKFPCP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 10:02:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231942AbjKFMHw (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 07:07:52 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F029B2727
-        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 04:05:43 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-407c3adef8eso38434935e9.2
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Nov 2023 04:05:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1699272341; x=1699877141; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eo4meWKVFbrqc+IQu3vvUKMXOAHSBvoghj78YURGCoQ=;
-        b=bUD7kvHWOvxx7ddzLf/1RwE7B+hv9xcwrRVik93D7ez9KHUr4kQLYy43NhWr1zVr8x
-         dVZqxBwxC90vWMJf899tZEWs28LRgcn4zUjtzHRxeE0OtjcVEiDyawQebvHEGKiAYFss
-         WvAZSkyvV5AZwsk544wlGmfRG081CMjUjCNx69+eG52hy4hFXVwqIOH+HIaQPxmO5chh
-         OpcV6puktPi1IyqUd5scoI0Casb1NR1+6a10xtrT/w8f6U27phD7juHQgdhSKz/WXPan
-         UJmPw0sRku8Cx7+zyYQJaUs8XcEGQVaJwaGDZLb3AvKmCfPq22TdTNjs4TsMsM5+L6Xg
-         BMEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699272341; x=1699877141;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Eo4meWKVFbrqc+IQu3vvUKMXOAHSBvoghj78YURGCoQ=;
-        b=XfHFxGMfZaAjDuxnj4lK94SWWS2qxMGwH5iU8iuyiHPW17UpcbShM88BDVn4N8DrGX
-         m3AocrxDMukAzfkZIlZxIAyYhgpFVJwZFue34cKU6TYDGJQCecxrN6WZRR0pRsIUuycm
-         EIW5PWDKNul7y3NK7VPFqFo6wkaD+TKrWxlQozcQxSb/dEmHITwJP/Aegrcux6ncDn1A
-         uEYWiTO1QKgXHHyGWes6LPvwJDQTycV96cMrja4V+h/MjKoYxUi+A9Ruz+zBBG0ONVwe
-         VGMLKSnSch4vxmCXZbtVhI1QcOcX+tuIEvaXnOkIRewYUL6z+FEbmdNgfQ+SeYAaGw1Z
-         ytqw==
-X-Gm-Message-State: AOJu0Yz0fL09IJsnIE6SFYrLZl9u/D2+cjmyp+X/LoJYYv+hZhD9PgxN
-        m979ghNZHR1TKuIhjLdDigiPYQ==
-X-Google-Smtp-Source: AGHT+IGu95NsFHRZTou3YhjXBBK5ogenE5avfEYXW4hsTBJuOW/jW6etIJgVfKslUMiWzjhlSUBZ4w==
-X-Received: by 2002:a05:600c:3149:b0:402:8c7e:3fc4 with SMTP id h9-20020a05600c314900b004028c7e3fc4mr23843592wmo.30.1699272341427;
-        Mon, 06 Nov 2023 04:05:41 -0800 (PST)
-Received: from localhost ([2a01:e0a:3c5:5fb1:78ae:2eac:2baf:467c])
-        by smtp.gmail.com with ESMTPSA id p22-20020a05600c419600b00401d8181f8bsm11695356wmh.25.2023.11.06.04.05.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Nov 2023 04:05:41 -0800 (PST)
-References: <20231106103259.703417-1-jbrunet@baylibre.com>
- <20231106103259.703417-3-jbrunet@baylibre.com>
-User-agent: mu4e 1.8.13; emacs 29.1
-From:   Jerome Brunet <jbrunet@baylibre.com>
+        with ESMTP id S232345AbjKFPCE (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 10:02:04 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E1BD69;
+        Mon,  6 Nov 2023 07:01:53 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE65C433C7;
+        Mon,  6 Nov 2023 15:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699282913;
+        bh=R/cSiyOAFRrqVhth3W2n5h61tFeVSdShjJRDQj6czH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZUTy7kEFxYsF/koXOeL9ejldwPeR/VMnlbzSAsKZczqy5XRzb+OfUaZG3VAlG2kQS
+         thRBrISP/mcyuHif2TfZM7A/Yw106zfROyEIZTGQN8Om4RW1Aa8CDTVpzB+bckC+Vp
+         yXa7s5lX1p0u2J3AcCTx/nOeNqf0KSkE9Nrm3hkO6YDmcg4gWoQtmoTIZN+LzXMnp1
+         YaBoFQohLbxhKyIM+1VaLfnPLwcvsm/7pZRnBKzz0+XsEXQf7UVHPv1J+obnd8Mi8V
+         gN7hFzEdjVHwBRekbFUi0iRrUdb5bpiYeNlfb7kpvQIQ4bCormrcd9/Er50Vh/x+zj
+         W5RSB+DvZf4Cg==
+Date:   Mon, 6 Nov 2023 22:49:33 +0800
+From:   Jisheng Zhang <jszhang@kernel.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH 2/6] dt-bindings: pwm: amlogic: add new compatible for
- meson8 pwm type
-Date:   Mon, 06 Nov 2023 13:03:38 +0100
-In-reply-to: <20231106103259.703417-3-jbrunet@baylibre.com>
-Message-ID: <1jttpz9je3.fsf@starbuckisacylon.baylibre.com>
+        Conor Dooley <conor+dt@kernel.org>,
+        Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 0/2] pwm: add driver for T-THEAD TH1520 SoC
+Message-ID: <ZUj8/fhitNf8fRMf@xhacker>
+References: <20231005130519.3864-1-jszhang@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231005130519.3864-1-jszhang@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+On Thu, Oct 05, 2023 at 09:05:17PM +0800, Jisheng Zhang wrote:
+> T-HEAD SoCs such as the TH1520 contain a PWM controller used to
+> control the LCD backlight, fan and so on. Add the PWM driver support
+> for it.
+> 
+> Since the clk part isn't mainlined, so SoC dts(i) changes are not
+> included in this series. However, it can be tested by using fixed-clock.
+> 
+> since v2:
+>  - collect Reviewed-by tag
+>  - add CTRL_ prefix for THEAD_PWM_CTRL register bit macros
+>  - use pm_runtime_resume_and_get() instead of pm_runtime_get_sync() and
+>    check its return value.
+>  - remove unnecessary casts
+>  - call pm_runtime_put_sync() when pwm channel is disabled
+>  - use devm_pm_runtime_enable() and then drop .remove()
+>  - properly consider if pwm is programmed by bootloader or other
+>    pre-linux env.
+>  - simplify thead_pwm_runtime_resume() code as Uwe suggested
+>  - bool ever_started -> u8 channel_ever_started since we have 6 channels
+>  - use 3 for #pwm-cells 
+> 
+> since v1:
+>  - update commit msg and yaml filename to address Conor's comment
+>  - use devm_clk_get_enabled() and devm_pwmchip_add()
+>  - implement .get_state()
+>  - properly handle overflow
+>  - introduce thead_pwm_from_chip() inline function
+>  - document Limitations
+>  - address pm_runtime_get/put pingpong comment
+> 
+> 
+> Jisheng Zhang (2):
+>   dt-bindings: pwm: Add T-HEAD PWM controller
+>   pwm: add T-HEAD PWM driver
 
-On Mon 06 Nov 2023 at 11:32, Jerome Brunet <jbrunet@baylibre.com> wrote:
+Hi Thierry, Uwe,
 
-> Add a new compatible for the pwm found in the meson8 to sm1 Amlogic SoCs.
->
-> The previous clock bindings for these SoCs described the driver and not the
-> HW itself. The clock provided was used to set the parent of the input clock
-> mux among the possible parents hard-coded in the driver.
->
-> The new bindings allows to describe the actual clock inputs of the PWM in
-> DT, like most bindings do, instead of relying of hard-coded data.
->
-> The new bindings make the old one deprecated.
->
-> There is enough experience on this HW to know that the PWM is exactly the
-> same all the supported SoCs. There is no need for a per-SoC compatible.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 35 +++++++++++++++++--
->  1 file changed, 33 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> index 754b70fc2db0..3aa522c4cae4 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
-> @@ -22,6 +22,7 @@ properties:
->            - amlogic,meson-g12a-ao-pwm-ab
->            - amlogic,meson-g12a-ao-pwm-cd
->            - amlogic,meson-s4-pwm
-> +          - amlogic,meson8-pwm-v2
->        - items:
->            - const: amlogic,meson-gx-pwm
->            - const: amlogic,meson-gxbb-pwm
-> @@ -37,7 +38,7 @@ properties:
->  
->    clocks:
->      minItems: 1
-> -    maxItems: 2
-> +    maxItems: 4
->  
->    clock-names:
->      minItems: 1
-> @@ -70,11 +71,14 @@ allOf:
->                - amlogic,meson-gx-pwm
->                - amlogic,meson-gx-ao-pwm
->      then:
-> -      # Historic bindings tied to the driver implementation
-> +      # Obsolete historic bindings tied to the driver implementation
->        # The clocks provided here are meant to be matched with the input
->        # known (hard-coded) in the driver and used to select pwm clock
->        # source. Currently, the linux driver ignores this.
-> +      deprecated: true
->        properties:
-> +        clocks:
-> +          maxItems: 2
->          clock-names:
->            oneOf:
->              - items:
-> @@ -83,6 +87,26 @@ allOf:
->                  - const: clkin0
->                  - const: clkin1
->  
-> +  # Newer binding where clock describe the actual clock inputs of the pwm
-> +  # block. These are necessary but some inputs may be grounded.
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - amlogic,meson8b-pwm-v2
+Kind ping, is there any chance for this series to be merged for v6.7?
 
-Made a mistake here while making a last minute modification
-it should be meson8, not meson8b
-
-Will fix this in v2.
-
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 1
-> +          items:
-> +            - description: input clock 0 of the pwm block
-> +            - description: input clock 1 of the pwm block
-> +            - description: input clock 2 of the pwm block
-> +            - description: input clock 3 of the pwm block
-> +      required:
-> +        - clocks
-> +
->    # Newer IP block take a single input per channel, instead of 4 inputs
->    # for both channels
->    - if:
-> @@ -111,6 +135,13 @@ examples:
->        clock-names = "clkin0", "clkin1";
->        #pwm-cells = <3>;
->      };
-> +  - |
-> +    pwm@2000 {
-> +      compatible = "amlogic,meson8-pwm-v2";
-> +      reg = <0x1000 0x10>;
-> +      clocks = <&xtal>, <0>, <&fdiv4>, <&fdiv5>;
-> +      #pwm-cells = <3>;
-> +    };
->    - |
->      pwm@1000 {
->        compatible = "amlogic,meson-s4-pwm";
-
+Thanks
+> 
+>  .../bindings/pwm/thead,th1520-pwm.yaml        |  44 +++
+>  drivers/pwm/Kconfig                           |  11 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-thead.c                       | 270 ++++++++++++++++++
+>  4 files changed, 326 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
+>  create mode 100644 drivers/pwm/pwm-thead.c
+> 
+> -- 
+> 2.40.1
+> 
