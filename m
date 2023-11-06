@@ -2,96 +2,127 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0092F7E2858
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 16:13:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABD8C7E28DD
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Nov 2023 16:39:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231767AbjKFPNg (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Mon, 6 Nov 2023 10:13:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42156 "EHLO
+        id S231827AbjKFPjj (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Mon, 6 Nov 2023 10:39:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230405AbjKFPNf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 10:13:35 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC6BC134;
-        Mon,  6 Nov 2023 07:13:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1699283613; x=1730819613;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NwGOpTGCH6jlDrZDokQHvKzUAiE0do2u0szr8vr6TcM=;
-  b=MoCuAmrMCu+W1ilqth+/K+m333TNBqCDIVoyMbx+2fLB2lDmn+1h50ZJ
-   7C88brcPue1A+TqTEPSlSQw+HoGCNT61qtyDL74tWcVPwFKz6Fjx/zNO0
-   DkbG6FI28cLu0WC4zTdhJ5bu3FiAjolJm5br5LGb8E6lFMHfgb7HwwGgF
-   LG6U9aVry6YfhwmOdEYEnpsASPE5K/C+82gYiASjb7ONOO4i1R58lrdSc
-   31niFV/pq7Jnbxl4aADDwgi+CKQWcrzyJLCQK8Z8XX6naNQxKI4bvNjkM
-   qlANjSl/NRUpzz+dBE/hNJgg7BuJ2z0MfY/3lYLQPtW5icd6rPn7zGXKW
-   A==;
-X-IronPort-AV: E=Sophos;i="6.03,281,1694728800"; 
-   d="scan'208";a="33832046"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 06 Nov 2023 16:13:27 +0100
-Received: from steina-w.tq-net.de (steina-w.tq-net.de [10.123.53.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9A04B280084;
-        Mon,  6 Nov 2023 16:13:27 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S231755AbjKFPjj (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Mon, 6 Nov 2023 10:39:39 -0500
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D730FA
+        for <linux-pwm@vger.kernel.org>; Mon,  6 Nov 2023 07:39:36 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r01hI-0006JE-Bc; Mon, 06 Nov 2023 16:39:28 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r01hH-0074nU-Dn; Mon, 06 Nov 2023 16:39:27 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r01hH-00Dmog-4J; Mon, 06 Nov 2023 16:39:27 +0100
+Date:   Mon, 6 Nov 2023 16:39:26 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Fabio Estevam <festevam@gmail.com>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/3] arm64: dts: freescale: imx8-ss-dma: Fix #pwm-cells
-Date:   Mon,  6 Nov 2023 16:13:26 +0100
-Message-Id: <20231106151326.812099-4-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231106151326.812099-1-alexander.stein@ew.tq-group.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pwm: imx-pwm: Unify #pwm-cells for
+ all compatibles
+Message-ID: <20231106153926.dqvx56fegqpmw3k7@pengutronix.de>
 References: <20231106151326.812099-1-alexander.stein@ew.tq-group.com>
+ <20231106151326.812099-2-alexander.stein@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4hmeir5x3txiqj45"
+Content-Disposition: inline
+In-Reply-To: <20231106151326.812099-2-alexander.stein@ew.tq-group.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-i.MX8QXP supports inverted PWM output, thus #pwm-cells needs to be set
-to 3.
 
-Fixes: f1d6a6b991ef9 ("arm64: dts: imx8qxp: add adma_pwm in adma")
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--4hmeir5x3txiqj45
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
-index ce66d30a4839b..b0bb77150adcc 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi
-@@ -149,7 +149,7 @@ adma_pwm: pwm@5a190000 {
- 		clock-names = "ipg", "per";
- 		assigned-clocks = <&clk IMX_SC_R_LCD_0_PWM_0 IMX_SC_PM_CLK_PER>;
- 		assigned-clock-rates = <24000000>;
--		#pwm-cells = <2>;
-+		#pwm-cells = <3>;
- 		power-domains = <&pd IMX_SC_R_LCD_0_PWM_0>;
- 	};
- 
--- 
-2.34.1
+On Mon, Nov 06, 2023 at 04:13:24PM +0100, Alexander Stein wrote:
+> Use #pwm-cells for all i.MX variants. Only fsl,imx1-pwm does not support
+> inverted PWM output. Keep it the same for consistency.
+>=20
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/imx-pwm.yaml | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml b/Documen=
+tation/devicetree/bindings/pwm/imx-pwm.yaml
+> index c01dff3b7f843..a84a240a61dc1 100644
+> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.yaml
+> @@ -14,12 +14,10 @@ allOf:
+> =20
+>  properties:
+>    "#pwm-cells":
+> -    description: |
+> -      Should be 2 for i.MX1 and 3 for i.MX27 and newer SoCs. See pwm.yaml
+> -      in this directory for a description of the cells format.
+> -    enum:
+> -      - 2
+> -      - 3
+> +    description:
+> +      The only third cell flag supported by this binding is
+> +      PWM_POLARITY_INVERTED. fsl,imx1-pwm does not support this flags.
+> +    const: 3
 
+You dropped the | from the description line, but with my understanding
+of yaml this should be fine.
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4hmeir5x3txiqj45
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVJCK4ACgkQj4D7WH0S
+/k5AWgf/TNn/SASCnyF9eHuY6Z9NqLqPNW2jli5o4YbL4+x2kGgt9SnHBKKLr/6G
+oXtNYH/N7E7t7L02lejEMeKfdRmh8w6xCGb3OcScOF5VzkTNXXqywimSB5dcAO1o
+ldNpprYBVOoUBawXnnc4kLhwnAm3cDjzv1PFTcezvqvS7Rwu6oc4bJ1M1Pbi5wZw
+M8w7Yzex41d+Vu6uEe9Kpeci0wMu2PoMBxvBKCqNDbXEfL9r7u5PIzYkXDhx7daw
+BYei1ViDxWTRB1WzzNzYIEj7rTTDGXorP9GEY6Gd9C7XJKvYgmkwwraG6i2ROS19
+b3u+YTRWULToG1MfelSbO55wOq+tDw==
+=iLvq
+-----END PGP SIGNATURE-----
+
+--4hmeir5x3txiqj45--
