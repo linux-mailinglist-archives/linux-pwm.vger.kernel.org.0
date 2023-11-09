@@ -2,147 +2,131 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 000147E641F
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 08:02:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC6B7E651D
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 09:22:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbjKIHCd (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Nov 2023 02:02:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34496 "EHLO
+        id S233286AbjKIIWI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Nov 2023 03:22:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231223AbjKIHCd (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 02:02:33 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F262186
-        for <linux-pwm@vger.kernel.org>; Wed,  8 Nov 2023 23:02:30 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-d9cbba16084so571485276.1
-        for <linux-pwm@vger.kernel.org>; Wed, 08 Nov 2023 23:02:30 -0800 (PST)
+        with ESMTP id S233389AbjKIIWH (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 03:22:07 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8492D4F
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Nov 2023 00:22:05 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9bf86b77a2aso96767966b.0
+        for <linux-pwm@vger.kernel.org>; Thu, 09 Nov 2023 00:22:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1699513350; x=1700118150; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FoLz//LH1CjVmWy0eAZ6OsQtm1+A5S0uKqoA43bqdiA=;
-        b=Wi7ksFB/O7iVwjJ7qlUs7LUEaK9AsGPYxbUAhj18V6i3jZtwhlK4ynST8IxTd9wG0U
-         2+J+7TBH0zzj7bw+IhZpEwyYeR3TV+UmZcyYTkQO2lmlt5GaD9+oVv6WvcXt416nrgvE
-         KtN26vgPMYfkY6siWe16i4BOIPg8HmnNAWNWUILie9Tm1b6GqAaLrUlwMCjroDXfThQr
-         uSW3p/IujlUI5iS4fNYoQgtDmOEPz29sNjJP+tibgmRdz4BTH9AgoBXxSmMLtAfRBrq/
-         raMmcBn7Zj/exLmMneCrohH/PUj6jJHrEAqaf3bu4OhA2eyX8fz5yZxIo9qtem5BFkvZ
-         SA1g==
+        d=linaro.org; s=google; t=1699518123; x=1700122923; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=hv4PgBiFzbjP9oz6HdNNblDKMIM3N0BIjQs5GkFzzUA=;
+        b=uPCFJbzc5hJJRi+FksSfaRR3vdxtP3Ltl0AqzeGBs5w+6TpzGio+EPq5ZcbWepKzRU
+         ZxZRcO8j6CzB2jZkZdU0PvEvRA/BRHckFdir0Hwx1MuTSjfMcW5r4drZsHJpeOqqvJMJ
+         0UUhz9q/8BDRmmVwT7jIWiK5Yzf+i+iuRaxOlwuFT91tXU31iNmhfB9AhB9oDzN/ijsp
+         SpVeI+O2yZVztsVQ0OB6WaCVNmY3VGW7Tv78K7bIjWxbadPX8babfcGwxpA2ffGcLxBJ
+         wAzw79vLAnosr5h8/aR99NrM2MyjBontKznViX6tC8RXK/OHra+VLzpeUZfGlmUL1Pyw
+         E4tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699513350; x=1700118150;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FoLz//LH1CjVmWy0eAZ6OsQtm1+A5S0uKqoA43bqdiA=;
-        b=ak8v/vNUpngfJC8fhTCMmmr22Hqihs9r8rDYprSj/+VZBqVkac6OV3a+pzDevh+1ao
-         pRdza5Sj+T61gjc0jTwqvzwTJQng24fPGy6/fZA9w+jGWtDnsniaurWy9IVUSA24Mm3k
-         nhFUaku9nPt3X1qIaZSBC5z9Bhgk9D7k9wObP1C4qJI29EcBcyFMPheU7rlyWfSnFE/y
-         OMfbWppXr+3aUo0mPqb1Bd+1vJhiXvO663uvlrnf1/mW28Fb9/mS3+N13BblcbnvwY9T
-         KK8aI32W0ATjh+C35LfA3EZrmAx5uQMBJl5/Wp8avREnIf+l1sBsFR5qrHlHi/rEXwkQ
-         pb2Q==
-X-Gm-Message-State: AOJu0YxqPZKecFej1z83xgAfUj0DuRRezglHZ7au+XsZc6hmHFHCBTBu
-        I6Oftw4esDfULzdlrP1cl5EADtE3rHis2ljUlFmfLCM7adTlt9xshFA=
-X-Google-Smtp-Source: AGHT+IE8BBe1spx8hqF4fLpehhdYAM3HZKZD6rH75vUkL6sQG9EjJs+CVFPxWIJCWp5BEcf+mXPhNKGZGdoG3oWQXio=
-X-Received: by 2002:a25:2396:0:b0:d86:5a8d:6e34 with SMTP id
- j144-20020a252396000000b00d865a8d6e34mr3697289ybj.29.1699513349774; Wed, 08
- Nov 2023 23:02:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699518123; x=1700122923;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hv4PgBiFzbjP9oz6HdNNblDKMIM3N0BIjQs5GkFzzUA=;
+        b=e2JEH5Byey5WHQVLlKHNZM4WRfP3M0w9K1IU+dsVJg8C5a1x+QXSfErfDfXg2XMeVY
+         +Ft0Q9ygSUNcSZ6zhrG+b6nKmHQ8ZVm0h31jD5QVHBIIACoVFDPXSzq1bWTjhSqn0A5H
+         13+inilLCRzeUXmGc1N4zAqjJnIhKvmH8b3g1yhmbLWdkKUCAy+EXq4g6P/EE9iw7Kp1
+         sezqWbIxeozLd91ArG8eO98n8RZOjgVmyGQymbJyspYnY6t3qXCUnQGCuUlJEvzZLX0u
+         2vPsrkS+KmW8A8dvET0hPUF8auGjI24bLdWUJFJMmkxmA61im8v/g85M3w5c49u+Yi36
+         S5JQ==
+X-Gm-Message-State: AOJu0Ywqkgs4QkIDyNZBKo9J1Cpz2gjWsVkq2m5vRjs/AQmL7beSZ+70
+        eR6rSUTdFU45pH+3elfB+6iuGQ==
+X-Google-Smtp-Source: AGHT+IHSHORVaT6XKnK8gUahhTZkt/1vlizz03qWWEmzHwBJDYTNLBuvHHHFPFrGQwnkeAQ9SfFqoA==
+X-Received: by 2002:a17:906:dc8c:b0:9a2:185b:5375 with SMTP id cs12-20020a170906dc8c00b009a2185b5375mr3617729ejc.18.1699518123664;
+        Thu, 09 Nov 2023 00:22:03 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.126])
+        by smtp.gmail.com with ESMTPSA id q8-20020a1709060e4800b009de61c89f6fsm2199570eji.1.2023.11.09.00.22.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Nov 2023 00:22:03 -0800 (PST)
+Message-ID: <21985579-e017-4a56-b5e3-697fd9d0c9d7@linaro.org>
+Date:   Thu, 9 Nov 2023 09:22:00 +0100
 MIME-Version: 1.0
-References: <20231024101902.6689-1-nylon.chen@sifive.com> <20231024101902.6689-3-nylon.chen@sifive.com>
-In-Reply-To: <20231024101902.6689-3-nylon.chen@sifive.com>
-From:   Nylon Chen <nylon.chen@sifive.com>
-Date:   Thu, 9 Nov 2023 15:02:18 +0800
-Message-ID: <CAHh=Yk_i-tH-n_5wuwp6H8QRu3cZovkukDzMbeUZrgiih46V8g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [v5 2/2] pwm: sifive: change the PWM controlled LED algorithm
-To:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+To:     Nylon Chen <nylon.chen@sifive.com>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
         aou@eecs.berkeley.edu, thierry.reding@gmail.com,
         u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
         vincent.chen@sifive.com
 Cc:     greentime.hu@sifive.com, zong.li@sifive.com, nylon7717@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20231024101902.6689-1-nylon.chen@sifive.com>
+ <20231024101902.6689-3-nylon.chen@sifive.com>
+ <CAHh=Yk_i-tH-n_5wuwp6H8QRu3cZovkukDzMbeUZrgiih46V8g@mail.gmail.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAHh=Yk_i-tH-n_5wuwp6H8QRu3cZovkukDzMbeUZrgiih46V8g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hi, Ping on the series.
+On 09/11/2023 08:02, Nylon Chen wrote:
+> Hi, Ping on the series.
+> 
+> Uwe, is there anything more I can do to push the process forward?
 
-Uwe, is there anything more I can do to push the process forward?
+It's merge window. What do you exactly expect to happen?
 
-Nylon Chen <nylon.chen@sifive.com> =E6=96=BC 2023=E5=B9=B410=E6=9C=8824=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=886:19=E5=AF=AB=E9=81=93=EF=BC=9A
+Best regards,
+Krzysztof
 
->
-> The `frac` variable represents the pulse inactive time, and the result
-> of this algorithm is the pulse active time. Therefore, we must reverse th=
-e result.
->
-> The reference is SiFive FU740-C000 Manual[0]
->
-> Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b=
-16acba_fu740-c000-manual-v1p6.pdf [0]
->
-> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> ---
->  drivers/pwm/pwm-sifive.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> index eabddb7c7820..353c2342fbf1 100644
-> --- a/drivers/pwm/pwm-sifive.c
-> +++ b/drivers/pwm/pwm-sifive.c
-> @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive=
-_ddata *ddata,
->
->         /* As scale <=3D 15 the shift operation cannot overflow. */
->         num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH =
-+ scale);
-> -       ddata->real_period =3D div64_ul(num, rate);
-> +       ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
->         dev_dbg(ddata->chip.dev,
->                 "New real_period =3D %u ns\n", ddata->real_period);
->  }
-> @@ -121,13 +121,14 @@ static int pwm_sifive_get_state(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
->                 state->enabled =3D false;
->
->         state->period =3D ddata->real_period;
-> +
-> +       duty =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - duty;
->         state->duty_cycle =3D
->                 (u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
-> -       state->polarity =3D PWM_POLARITY_INVERSED;
-> +       state->polarity =3D PWM_POLARITY_NORMAL;
->
->         return 0;
->  }
-> -
->  static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
->                             const struct pwm_state *state)
->  {
-> @@ -139,7 +140,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->         int ret =3D 0;
->         u32 frac;
->
-> -       if (state->polarity !=3D PWM_POLARITY_INVERSED)
-> +       if (state->polarity !=3D PWM_POLARITY_NORMAL)
->                 return -EINVAL;
->
->         cur_state =3D pwm->state;
-> @@ -158,6 +159,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->         num =3D (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
->         frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
->         /* The hardware cannot generate a 100% duty cycle */
-> +       frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
->         frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
->
->         mutex_lock(&ddata->lock);
-> --
-> 2.42.0
->
