@@ -2,72 +2,79 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CC6B7E651D
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 09:22:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB8EB7E6536
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 09:23:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233286AbjKIIWI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Nov 2023 03:22:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
+        id S233582AbjKIIX6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Nov 2023 03:23:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233389AbjKIIWH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 03:22:07 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8492D4F
-        for <linux-pwm@vger.kernel.org>; Thu,  9 Nov 2023 00:22:05 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-9bf86b77a2aso96767966b.0
-        for <linux-pwm@vger.kernel.org>; Thu, 09 Nov 2023 00:22:05 -0800 (PST)
+        with ESMTP id S233597AbjKIIXx (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 03:23:53 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAE72D5B
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Nov 2023 00:23:50 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-53db360294fso868374a12.3
+        for <linux-pwm@vger.kernel.org>; Thu, 09 Nov 2023 00:23:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699518123; x=1700122923; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=hv4PgBiFzbjP9oz6HdNNblDKMIM3N0BIjQs5GkFzzUA=;
-        b=uPCFJbzc5hJJRi+FksSfaRR3vdxtP3Ltl0AqzeGBs5w+6TpzGio+EPq5ZcbWepKzRU
-         ZxZRcO8j6CzB2jZkZdU0PvEvRA/BRHckFdir0Hwx1MuTSjfMcW5r4drZsHJpeOqqvJMJ
-         0UUhz9q/8BDRmmVwT7jIWiK5Yzf+i+iuRaxOlwuFT91tXU31iNmhfB9AhB9oDzN/ijsp
-         SpVeI+O2yZVztsVQ0OB6WaCVNmY3VGW7Tv78K7bIjWxbadPX8babfcGwxpA2ffGcLxBJ
-         wAzw79vLAnosr5h8/aR99NrM2MyjBontKznViX6tC8RXK/OHra+VLzpeUZfGlmUL1Pyw
-         E4tg==
+        d=linaro.org; s=google; t=1699518229; x=1700123029; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H4KlDa2s73U5ZR+WLe1Ye4zeFuM3NNyCjUsipdRrEUo=;
+        b=XI5l2jTnkLCIdwCr7HGSn/eeEawFnHl40bbJ8QS/I718cqt14cZISfKsQYcz1bboxo
+         Tdwpy1NA4Do4Sks44FK2Id8aKn1YgSvfLUZdDpVbbpcBwAyDrbj7pwPlCn8EVUYo1Q86
+         bg1l8S+/m6/Bz981oAbvx95iwlXyLoATh22iZYAIGwwfSocWEMV5es3oIadc4GmN/38G
+         S1twYgOETXpmX6Xkc9guNa39kVGLTCLgq63aVkTg9sroEmAzZ6hUqbk4rjdN7mobnHRU
+         RojDR8c/r6/mU/JaXbt5qfGZNUlRuWpisM82CPyItJXE/Cl26k9VITyCwqjbdcuWHmk0
+         4NSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699518123; x=1700122923;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hv4PgBiFzbjP9oz6HdNNblDKMIM3N0BIjQs5GkFzzUA=;
-        b=e2JEH5Byey5WHQVLlKHNZM4WRfP3M0w9K1IU+dsVJg8C5a1x+QXSfErfDfXg2XMeVY
-         +Ft0Q9ygSUNcSZ6zhrG+b6nKmHQ8ZVm0h31jD5QVHBIIACoVFDPXSzq1bWTjhSqn0A5H
-         13+inilLCRzeUXmGc1N4zAqjJnIhKvmH8b3g1yhmbLWdkKUCAy+EXq4g6P/EE9iw7Kp1
-         sezqWbIxeozLd91ArG8eO98n8RZOjgVmyGQymbJyspYnY6t3qXCUnQGCuUlJEvzZLX0u
-         2vPsrkS+KmW8A8dvET0hPUF8auGjI24bLdWUJFJMmkxmA61im8v/g85M3w5c49u+Yi36
-         S5JQ==
-X-Gm-Message-State: AOJu0Ywqkgs4QkIDyNZBKo9J1Cpz2gjWsVkq2m5vRjs/AQmL7beSZ+70
-        eR6rSUTdFU45pH+3elfB+6iuGQ==
-X-Google-Smtp-Source: AGHT+IHSHORVaT6XKnK8gUahhTZkt/1vlizz03qWWEmzHwBJDYTNLBuvHHHFPFrGQwnkeAQ9SfFqoA==
-X-Received: by 2002:a17:906:dc8c:b0:9a2:185b:5375 with SMTP id cs12-20020a170906dc8c00b009a2185b5375mr3617729ejc.18.1699518123664;
-        Thu, 09 Nov 2023 00:22:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699518229; x=1700123029;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H4KlDa2s73U5ZR+WLe1Ye4zeFuM3NNyCjUsipdRrEUo=;
+        b=m8X204b8Lyw4bgtpZLzxhMwIZNSKt2VVrVs9t+/U7Pu7tYHZbISOY8qJEiHJXM5mKm
+         K9NuEw+OSIpI24hAaXuQtvMbFaAhz9mxT2f/NHOljsb9TfCUS7biA6uHkU1uqpfflS93
+         u4utVATusYR/0AV5kaWCgOQvVnJYKFsY18CghVEsSw+VYy2umFmZPfmvbbLBxNeZsk0G
+         5i7x1eIPru581n6h0ZLafqeZszp/dkPdEWbrOEpTq0LFMU2E9XmNBPWYJsMYs0EtsmJd
+         1aC1lIW4eVBr+nn3Az8NUpGzl4LZpaNZiwj6wpWhGPZ3dnO5R0sRV3I9usOPp5EvoRl+
+         TDrw==
+X-Gm-Message-State: AOJu0YzwF5hE0dKvcbECHS2zqfiVrYa1jOeFbDL9AgwuDvXiJhecJcnk
+        qzr5Vxbe7OPI+s3Som/hFO0EvQ==
+X-Google-Smtp-Source: AGHT+IH9osJXKtdxF363YAoh9Q62JQgp3QvNBOfLZ2Dbr8h3wEggBPgGAlxYveXAoo2El57DxFB+7g==
+X-Received: by 2002:a50:d4dc:0:b0:543:7812:63cd with SMTP id e28-20020a50d4dc000000b00543781263cdmr3512102edj.17.1699518228753;
+        Thu, 09 Nov 2023 00:23:48 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id q8-20020a1709060e4800b009de61c89f6fsm2199570eji.1.2023.11.09.00.22.01
+        by smtp.gmail.com with ESMTPSA id ba26-20020a0564021ada00b00533dad8a9c5sm7739126edb.38.2023.11.09.00.23.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Nov 2023 00:22:03 -0800 (PST)
-Message-ID: <21985579-e017-4a56-b5e3-697fd9d0c9d7@linaro.org>
-Date:   Thu, 9 Nov 2023 09:22:00 +0100
+        Thu, 09 Nov 2023 00:23:48 -0800 (PST)
+Message-ID: <545b681e-2da7-4adf-9c3c-0d292951ef94@linaro.org>
+Date:   Thu, 9 Nov 2023 09:23:46 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v5 2/2] pwm: sifive: change the PWM controlled LED algorithm
-To:     Nylon Chen <nylon.chen@sifive.com>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, emil.renner.berthing@canonical.com,
-        vincent.chen@sifive.com
-Cc:     greentime.hu@sifive.com, zong.li@sifive.com, nylon7717@gmail.com
-References: <20231024101902.6689-1-nylon.chen@sifive.com>
- <20231024101902.6689-3-nylon.chen@sifive.com>
- <CAHh=Yk_i-tH-n_5wuwp6H8QRu3cZovkukDzMbeUZrgiih46V8g@mail.gmail.com>
+Subject: Re: [PATCH 04/10] dt-bindings: pwm: samsung: add exynosautov9
+ compatible
 Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Jaewon Kim <jaewon02.kim@samsung.com>
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20231031094852.118677-1-jaewon02.kim@samsung.com>
+ <CGME20231031095017epcas2p306a504619cbaf1fc260f6c46f8b75dd8@epcas2p3.samsung.com>
+ <20231031094852.118677-5-jaewon02.kim@samsung.com>
+ <20231109062807.ko53f63arpxgigd5@pengutronix.de>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -113,19 +120,42 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAHh=Yk_i-tH-n_5wuwp6H8QRu3cZovkukDzMbeUZrgiih46V8g@mail.gmail.com>
+In-Reply-To: <20231109062807.ko53f63arpxgigd5@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 09/11/2023 08:02, Nylon Chen wrote:
-> Hi, Ping on the series.
+On 09/11/2023 07:28, Uwe Kleine-König wrote:
+> Hello,
 > 
-> Uwe, is there anything more I can do to push the process forward?
+> On Tue, Oct 31, 2023 at 06:47:46PM +0900, Jaewon Kim wrote:
+>> Add samsung,exynosautov920-pwm compatible string to binding document.
+>>
+>> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pwm-samsung.yaml | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+>> index 2162f661ed5a..b6beca2ae81e 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+>> @@ -30,6 +30,7 @@ properties:
+>>        - items:
+>>            - enum:
+>>                - samsung,exynosautov9-pwm
+>> +              - samsung,exynosautov920-pwm
+>>            - const: samsung,exynos4210-pwm
+> 
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> What is the merge plan here? Should this go via the pwm tree, or can it
+> better go via some exynos tree together with the dts files?
 
-It's merge window. What do you exactly expect to happen?
+I propose I will take it. I will have conflicting change and keeping
+bindings with DTS together allows smooth dtbs_check.
 
 Best regards,
 Krzysztof
