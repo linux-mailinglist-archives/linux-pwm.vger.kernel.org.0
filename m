@@ -2,163 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EF097E7237
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 20:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 485427E724B
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 20:26:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344916AbjKITWh (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Nov 2023 14:22:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
+        id S230119AbjKIT04 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 9 Nov 2023 14:26:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231908AbjKITWf (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 14:22:35 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1781FCB;
-        Thu,  9 Nov 2023 11:22:33 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F579C433C7;
-        Thu,  9 Nov 2023 19:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699557753;
-        bh=omrfxaa+J/5nWgwxOCEybAtDNlYVqN5puZowfEYsMSk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YUeOjbHTod/exJRIzEO3Bc/EhP4cF4eBTgn1g7kTB0rpx5kqwcGVWt0RytI4KLnXh
-         1APpsJe+a4/cr3mx7h7Uz1sxSfi3zFttR3D3cEAVA9q9NABSLncSenV2qHokN/JHUw
-         gSDuYGjsG20CsTuJHqTtJrjS8lAkFUYCOUPtMH74/cndN/Cb2eOWLWNH3WMJ/zkDst
-         Ayxcaa1lS5giHEtUhvmFVbQH4ZvllDtHkIcDRGrH0IrY+vl1v+qchyi4vOJamPRCCL
-         5nqo52Z79ZMrWF/cdVmgNFZAf2rnclaOYArtQYoa3ajhP1rHjT5sn19VZkI8hrAyl3
-         ox1+KO4roURAQ==
-Date:   Thu, 9 Nov 2023 20:22:29 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 03/17] dt-bindings: i2c: samsung,s3c2410-i2c: add
- specific compatibles for existing SoC
-Message-ID: <ZU0xdeMX7g856J81@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        with ESMTP id S231497AbjKIT0z (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 14:26:55 -0500
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529C83ABC
+        for <linux-pwm@vger.kernel.org>; Thu,  9 Nov 2023 11:26:53 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r1Afx-0003aB-CM; Thu, 09 Nov 2023 20:26:49 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r1Aft-007qw5-Bc; Thu, 09 Nov 2023 20:26:45 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r1Aft-00GEJb-2I; Thu, 09 Nov 2023 20:26:45 +0100
+Date:   Thu, 9 Nov 2023 20:26:39 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
         Alim Akhtar <alim.akhtar@samsung.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
         Sam Protsenko <semen.protsenko@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <20231108104343.24192-4-krzysztof.kozlowski@linaro.org>
+        Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH 1/2] pwm: samsung: Fix broken resume after putting
+ per-channel data into driver data
+Message-ID: <20231109192639.77yjq7o2bioyvf5j@pengutronix.de>
+References: <CGME20231109104758eucas1p2e98e8cf22a42aae212a98228e46b4438@eucas1p2.samsung.com>
+ <20231109104748.2746839-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="W725bfiX4yCK58gL"
+        protocol="application/pgp-signature"; boundary="xwwbagn4i2s3ypug"
 Content-Disposition: inline
-In-Reply-To: <20231108104343.24192-4-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231109104748.2746839-1-m.szyprowski@samsung.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
---W725bfiX4yCK58gL
-Content-Type: text/plain; charset=us-ascii
+--xwwbagn4i2s3ypug
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 08, 2023 at 11:43:29AM +0100, Krzysztof Kozlowski wrote:
-> Samsung Exynos SoC reuses several devices from older designs, thus
-> historically we kept the old (block's) compatible only.  This works fine
-> and there is no bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
+Hello,
+
+On Thu, Nov 09, 2023 at 11:47:47AM +0100, Marek Szyprowski wrote:
+> PWMF_EXPORTED is misleadingly used as a bit numer in the pwm->flags, not
+> as a flag value, so the proper test for it must use test_bit() helper.
+> This fixes broken resume after putting per-channel data into driver data.
 >=20
-> Add compatibles specific to each SoC in front of all old-SoC-like
-> compatibles.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->=20
+> Fixes: e3fe982b2e4e ("pwm: samsung: Put per-channel data into driver data=
+")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
+>  drivers/pwm/pwm-samsung.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> I propose to take the patch through Samsung SoC (me). See cover letter
-> for explanation.
+> diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
+> index 568491ed6829..69d9f4577b34 100644
+> --- a/drivers/pwm/pwm-samsung.c
+> +++ b/drivers/pwm/pwm-samsung.c
+> @@ -631,7 +631,7 @@ static int pwm_samsung_resume(struct device *dev)
+>  		struct pwm_device *pwm =3D &chip->pwms[i];
+>  		struct samsung_pwm_channel *chan =3D &our_chip->channel[i];
+> =20
+> -		if (!(pwm->flags & PWMF_REQUESTED))
+> +		if (!test_bit(PWMF_REQUESTED, &pwm->flags))
+>  			continue;
 
-I am fine that you take it once all review comments are addressed. Given
-that:
+This is prior art:
+https://lore.kernel.org/linux-pwm/e031db45-add0-4da7-97fa-dee95ee936ad@moro=
+to.mountain/
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+unfortunately this was missed to be included in Thierry's PR for
+v6.7-rc1 :-\
 
+Best regards
+Uwe
 
---W725bfiX4yCK58gL
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xwwbagn4i2s3ypug
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmVNMXUACgkQFA3kzBSg
-Kbay9g//eXyEFLH18ObMaht1tYo+nQsZvUuCog4jMbrdmYAYGKemdGIdx9SYI5tz
-O8iW5KlaMLIKzUgzCpBLz6RDj18NG3D+MRTVThCprfw7snkHBj/34WRhtzC2LodT
-vZ4vxmCILUOJBZv8p1qdNkeTEHg9O1KiqBlldgEbns/vx5fYloMFBVwmFQygzpqa
-HoZz31DZ0p3V09kpaHoN4Wccv9VxT9vqFxsxsfzsXOoxlQuFTIr/szokmb2Or2N/
-IyjXeWc5XgS9Y+39ti58bW5dCMNaCy4B6VZTQi8eymjIZDAxb+P1Ljp7r8tFuc8p
-sVFUwmY5m0iELY9GSvqzCQeX16pzj/Jmg7hXNY8+JqGjVWBrPCXjgpr80e17tdeN
-4ESfEK5Rc/8EYZ7djg8DTaTM/gVS8A5tAbsQL4v4NUkIodzyJoZBYfAJ5DNKmUTG
-+LuOhGjv8Ut1sdc/v2Mm2Nwz3L+J3Gixde0B9UmPIJ4gTQ56f/Q45wBaBuGAkD5n
-jIGqmIxgC1dg0M5hWoj/AC5WjYBtOMaKhK+FStBH9YuyvekZYq9v/0xFTnvl2emq
-iQ+bcHzNwIVk0NDGhVU3xUARyiRFZRJTYEjNe2gcTtBczA423vOOkPvyNou9hgXw
-uRQYM46Y2STJ5a4NuIcaLNyvbQNWa+LlKaohyW/FxFXW1tF9Z40=
-=0tv7
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVNMmkACgkQj4D7WH0S
+/k6lkggAgvWxcScWiJ4yvqD1A3/K64jwsuFsZk3qh2NAAny5CcCzS+afqgkPSlwm
+oVV4DiGUlWfmOtYRrGiLamUeHBlQXHlvIf56VZry6o8pq3QoM3zUZ9hzZ1iEQfKj
+PnU3Gr9KOuyanoMxZF/krWdyoaNQq2J72DGyP0XPDphvOOQeMKuD315Hb8pjr/NZ
+ESoyk45ykSAvnuSj1Xn565ZhSeP2Y7Mkxo/NOrBiNj+nwG/sC7/5KnExDQEIYads
+lM3N7jfVVV+vcGpaSIaGcKsMg0wbryJ32oBxtil+KAIScr4ojgeuSAjWjV0mteMY
+SzeHTeNn6UKXzTdX6DX0nGx8BSd3Ow==
+=XkgZ
 -----END PGP SIGNATURE-----
 
---W725bfiX4yCK58gL--
+--xwwbagn4i2s3ypug--
