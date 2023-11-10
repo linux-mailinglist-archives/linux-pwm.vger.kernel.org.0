@@ -2,70 +2,68 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82F857E84DF
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Nov 2023 22:02:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48C527E896C
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Nov 2023 07:07:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbjKJVAX (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Nov 2023 16:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53702 "EHLO
+        id S229584AbjKKGHV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sat, 11 Nov 2023 01:07:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbjKJVAW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Nov 2023 16:00:22 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68759D3;
-        Fri, 10 Nov 2023 13:00:18 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFBA2C433C7;
-        Fri, 10 Nov 2023 21:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699650018;
-        bh=wvCSztlYiDjdaJ7JsHORNsg/f6bxUjZEEI05yjatVK4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=KtlBnQhOO2xk0gpqeTv9b6AIXyW6BzIAxWf5mRNrfNNwDLcZDCb5FtgYE+xcVsSeN
-         RRZ8DWRk8NC+rWv6ubtgtsoRfFN8nVXURFyuBcZEQQEQDjh53CB2hXIbLNkfqt+fSl
-         yAl+WrFOrxkThCqInWBJNdSxxQzDM3LZ+yXLToX7tDHfu9RnWmCDdl1T18Ci89l8pz
-         PSdC9jySgKLbVYVVF+1HQUrtxiNOs7BSCu2QtA1KrJFNf0rNG/fm2Oc1kDdsdmwNp+
-         5ljDraS0ROEd1hL/+FTHupS0M2lm3zDXDIeKIBGKL2GphUsU6n5CpuF6yArdgYBseb
-         vhOVyTjnXjMbQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D3C0BEAB08C;
-        Fri, 10 Nov 2023 21:00:17 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Fixes for v6.7-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20231110095013.655597-1-thierry.reding@gmail.com>
-References: <20231110095013.655597-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20231110095013.655597-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.7-rc1-fixes
-X-PR-Tracked-Commit-Id: d27abbfd4888d79dd24baf50e774631046ac4732
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b077b7ee9268bb4a34e22a503a2e6315ae8f97a7
-Message-Id: <169965001780.30005.9874938510989864671.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 Nov 2023 21:00:17 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229594AbjKKGHU (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Nov 2023 01:07:20 -0500
+Received: from mail.maprial.com (mail.maprial.com [190.181.35.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC43B4204
+        for <linux-pwm@vger.kernel.org>; Fri, 10 Nov 2023 22:07:17 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.maprial.com (Postfix) with ESMTP id 8F27E86B6D40;
+        Fri, 10 Nov 2023 21:41:12 -0400 (-04)
+Received: from mail.maprial.com ([127.0.0.1])
+        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id URkIq15RwC6T; Fri, 10 Nov 2023 21:41:11 -0400 (-04)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.maprial.com (Postfix) with ESMTP id A118381718BD;
+        Fri, 10 Nov 2023 17:47:06 -0400 (-04)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.maprial.com A118381718BD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maprial.com;
+        s=8A254412-65B9-11ED-A564-8B9C10001A2B; t=1699652827;
+        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=ZIEkE37xv8o+gBK1gUx6IQX9q9LY8PU2Vf7pZ7YcYJgtN7oPwxBQpO3nW+DkHkgyO
+         R5NiIeYxra1yEOa4UY+06hewpzfG2Sj4Q0jtoaybKKYx3eF6EyYgxV+isawQdG/RvD
+         ORe2VN6mbIxgNbe5lRXHVtr5m+OU+gK5NIG98z8c=
+X-Virus-Scanned: amavisd-new at mail.maprial.com
+Received: from mail.maprial.com ([127.0.0.1])
+        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id BUD2GoTXp4v2; Fri, 10 Nov 2023 17:47:06 -0400 (-04)
+Received: from [192.168.1.152] (unknown [51.179.104.230])
+        by mail.maprial.com (Postfix) with ESMTPSA id 72C9F817189A;
+        Fri, 10 Nov 2023 17:04:26 -0400 (-04)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
+To:     Recipients <gvalencia@maprial.com>
+From:   gvalencia@maprial.com
+Date:   Fri, 10 Nov 2023 22:04:16 +0100
+Reply-To: joliushk@gmail.com
+Message-Id: <20231110210426.72C9F817189A@mail.maprial.com>
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_INVALID,
+        DKIM_SIGNED,FREEMAIL_FORGED_REPLYTO,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Fri, 10 Nov 2023 10:50:08 +0100:
+Goededag,
+Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
+Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.7-rc1-fixes
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b077b7ee9268bb4a34e22a503a2e6315ae8f97a7
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Ik wacht op jullie reacties
+Met vriendelijke groeten
+mevrouw Joanna Liu
