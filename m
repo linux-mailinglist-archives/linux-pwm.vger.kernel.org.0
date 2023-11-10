@@ -2,64 +2,138 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 870337E7459
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Nov 2023 23:28:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6F27E81C6
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Nov 2023 19:34:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345367AbjKIW2W (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 9 Nov 2023 17:28:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
+        id S1345798AbjKJSeB convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pwm@lfdr.de>); Fri, 10 Nov 2023 13:34:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345361AbjKIW2U (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 9 Nov 2023 17:28:20 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA52D62;
-        Thu,  9 Nov 2023 14:28:18 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2257DC433C8;
-        Thu,  9 Nov 2023 22:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699568898;
-        bh=zMVQ1ZqkBnfig6dJAO57aDj8+aPoUhjhlGfoj0AXYT8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=p/Gj5JjtybjIs5Z7sBzEMrqd1S9s2T9WlV89MhtyUN054SV2skgF2b46RRDkBaZf9
-         mrG/AIekSpEpkxvtXJ1mW0oM4cTb1HvSh/5YzYAYywFrBu/d8Pp4ngr58kZ+/+gc5t
-         XjFUSEs6MBVmgyMrQa6tkn6wZhqCMd4EJG2yRFNzebazo0sZNMHVX6BYoIL2a3fABe
-         m53pnvNXSozxWeewPg+BtxonmKlk6b70rlQHWkJ9vp2gyioupBm0pGZrcqk5gccBrm
-         KiLlpTqVrF3mePUjohgY+2xJlQxoqBXoL+xc3ymosgQXrfxnul6yulzOTBFmN6kmDQ
-         OwLJHG72D0WYg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0C730C43158;
-        Thu,  9 Nov 2023 22:28:18 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v6.7-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20231108130608.1321166-1-thierry.reding@gmail.com>
-References: <20231108130608.1321166-1-thierry.reding@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20231108130608.1321166-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.7-rc1
-X-PR-Tracked-Commit-Id: 40592064a1a536adcced4ffea435c392eb9e7192
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f3bfe643304143ce2727adc893cfa134ba27f968
-Message-Id: <169956889804.16549.2262448488713717828.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 Nov 2023 22:28:18 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        with ESMTP id S1346043AbjKJSc6 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Nov 2023 13:32:58 -0500
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE266A5B;
+        Thu,  9 Nov 2023 22:20:52 -0800 (PST)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 5852A24DFED;
+        Fri, 10 Nov 2023 14:20:41 +0800 (CST)
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 10 Nov
+ 2023 14:20:41 +0800
+Received: from williamqiu-virtual-machine.starfivetech.com (171.223.208.138)
+ by EXMBX168.cuchost.com (172.16.6.78) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.42; Fri, 10 Nov 2023 14:20:40 +0800
+From:   William Qiu <william.qiu@starfivetech.com>
+To:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>
+CC:     Emil Renner Berthing <kernel@esmil.dk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        <u.kleine-koenig@pengutronix.de>,
+        "Hal Feng" <hal.feng@starfivetech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        William Qiu <william.qiu@starfivetech.com>
+Subject: [PATCH v7 0/4] StarFive's Pulse Width Modulation driver support
+Date:   Fri, 10 Nov 2023 14:20:35 +0800
+Message-ID: <20231110062039.103339-1-william.qiu@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [171.223.208.138]
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX168.cuchost.com
+ (172.16.6.78)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-The pull request you sent on Wed,  8 Nov 2023 14:06:07 +0100:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-6.7-rc1
+This patchset adds initial rudimentary support for the StarFive
+Pulse Width Modulation controller driver. And this driver will
+be used in StarFive's VisionFive 2 board.The first patch add
+Documentations for the device and Patch 2 adds device probe for
+the module.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f3bfe643304143ce2727adc893cfa134ba27f968
+Changes v6->v7:
+- Rebased to v6.6.
+- Added dependency architecture.
+- Adopted new rounding algorithm.
+- Added limitation descripton.
+- Used function interfaces instead of macro definitions.
+- Followed the linux coding style.
 
-Thank you!
+Changes v5->v6:
+- Rebased to v6.6rc5.
+- Changed driver into a generic OpenCores driver.
+- Modified dt-bindings description into OpenCores.
+- Uesd the StarFive compatible string to parameterize.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Changes v4->v5:
+- Rebased to v6.6rc2.
+- Updated macro definition indent.
+- Replaced the clock initializes the interface.
+- Fixed patch description.
+
+Changes v3->v4:
+- Rebased to v6.5rc7.
+- Sorted the header files in alphabetic order.
+- Changed iowrite32() to writel().
+- Added a way to turn off.
+- Modified polarity inversion implementation.
+- Added 7100 support.
+- Added dts patches.
+- Used the various helpers in linux/math.h.
+- Corrected formatting problems.
+- Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
+- Dropped the redundant code.
+
+Changes v2->v3:
+- Fixed some formatting issues.
+
+Changes v1->v2:
+- Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml'.
+- Dropped the compatible's Items.
+- Dropped the unuse defines.
+- Modified the code to follow the Linux coding style.
+- Changed return value to dev_err_probe.
+- Dropped the unnecessary local variable.
+
+The patch series is based on v6.6.
+
+William Qiu (4):
+  dt-bindings: pwm: Add OpenCores PWM module
+  pwm: opencores: Add PWM driver support
+  riscv: dts: starfive: jh7110: Add PWM node and pins configuration
+  riscv: dts: starfive: jh7100: Add PWM node and pins configuration
+
+ .../bindings/pwm/opencores,pwm.yaml           |  56 +++++
+ MAINTAINERS                                   |   7 +
+ .../boot/dts/starfive/jh7100-common.dtsi      |  24 ++
+ arch/riscv/boot/dts/starfive/jh7100.dtsi      |   9 +
+ .../jh7110-starfive-visionfive-2.dtsi         |  22 ++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      |   9 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ocores.c                      | 236 ++++++++++++++++++
+ 9 files changed, 376 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+ create mode 100644 drivers/pwm/pwm-ocores.c
+
+--
+2.34.1
+
