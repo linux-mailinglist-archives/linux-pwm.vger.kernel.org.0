@@ -2,184 +2,96 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BEE37E80EC
-	for <lists+linux-pwm@lfdr.de>; Fri, 10 Nov 2023 19:20:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DDA87E80C5
+	for <lists+linux-pwm@lfdr.de>; Fri, 10 Nov 2023 19:18:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345858AbjKJSTz (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 10 Nov 2023 13:19:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39650 "EHLO
+        id S229930AbjKJSSJ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 10 Nov 2023 13:18:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345444AbjKJSSH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Nov 2023 13:18:07 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0FE8873
-        for <linux-pwm@vger.kernel.org>; Thu,  9 Nov 2023 23:58:16 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-40859c464daso12993935e9.1
-        for <linux-pwm@vger.kernel.org>; Thu, 09 Nov 2023 23:58:16 -0800 (PST)
+        with ESMTP id S235095AbjKJSRN (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 10 Nov 2023 13:17:13 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C8693D9;
+        Fri, 10 Nov 2023 00:19:18 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9d10f94f70bso291067766b.3;
+        Fri, 10 Nov 2023 00:19:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699603095; x=1700207895; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CmNsSkxGNQJ9Q4GP0q3MvT9no1MR/Ri0odVIQEptAvk=;
-        b=l2JsI4A3ypjEZ3AJjIqfhYM9UrYSuWsC3igICfZ6Jp91/KeHpFC6ryJ8IMFoN9U/nb
-         zni6vUO5a9PgydZmLUVlkinp5VIQ3tiIYoAPGK0EFhQTWXhPbz2ubNxMpQJIasdx1iyO
-         eq8nsby6nz+4tQqE8lhqmS6D3whw0ikHK5xf2TDk4YJ/cHbJL/6WfPAH80lz7o56lzne
-         EGD0nvfeDKVO3aiGEbWyaB58BhS0lLU6fSk06UYniqe2IHRJMo8859RQqx3wjf8V8Beh
-         2oE6Hvp2228G4lxQl1zOELU0IYHi9YCBTAQnWRauzh5uZ2z2TEZk15bX9dVwwSmiJ6c6
-         Vqzg==
+        d=gmail.com; s=20230601; t=1699604357; x=1700209157; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qx1Z0ES+LIHr7AN7W9XAr27O+pEgi0rCLwQKZbW2VIQ=;
+        b=a0lL4BMsBhIKNoAGMLLej8uIHbOHEnN8o+014vYLCVzJkvgew+gzm8FH2urIcq2f5R
+         yWQRGHqrhS01UJQ7n3kzhKEhMuTIgKu2iM+sIZequRIbTH7ulTFxQgJqlLeqStUZMttu
+         ISkPfvus4pGolDa8XhyIZydmNrVJmFdMNaAMgFhB6C3yw0HU/NxA90dSUsLizwzh7L3C
+         TYBER44JGxIlb2Lnen/Po3WS9VtPj6xX3230/lPWsByLhsKEjRRVXbHY7zRCvmW8SeW6
+         LspqcxKnd7UYIA6wQwwUfoUMDKH59XZaeHs6gxmmKKVOVQiNhZL6Vj4t4erKteM3ZX+n
+         8MCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699603095; x=1700207895;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CmNsSkxGNQJ9Q4GP0q3MvT9no1MR/Ri0odVIQEptAvk=;
-        b=uEYEebfcOrN1jFMgtSnw7yO0HzCQYe8MxwFCqMDo2xVVgHLks7ScGdveB/Ml4wE2jz
-         a6BRbXUXzDRbaPSB4UYYItj+3Fm4DfB9Knn82F0FLJM4jO77E/3hj/0fY7lGR/sqTTSl
-         k/wiCvQssFYoLWpkL2L1G9V1tX+Clin/FLeD9RSlfr7drIC6qPicMfv997MAN/qg58Fa
-         OMvSFpB/t+Dfr7fzOJ6WIX9QAoj8H2TCyD1m5xHamGNujrYf7UGsu0cqLTstKgLesSIK
-         L0wE8vCqMvmVFqL/91HQxkj3csGs07MwgpGpGP/pNOZ2D3YxE2AhZZL0ITb6Rqtc7aYp
-         Iv9A==
-X-Gm-Message-State: AOJu0YxybAZsKLJCkkXxRrUlSIqIWP8lZ81XgDZXao4+5IymDRL77i9B
-        99h0P8Q4cXIJQcvnRxFhYb9Nog==
-X-Google-Smtp-Source: AGHT+IGZKQiVi/l3PE3rMUGuuZB9Ya3QDCrJYK8NJRwEd76ii8VtTRZDdWH3qx39UjTk9tcaifEFJA==
-X-Received: by 2002:a05:6000:188c:b0:32d:9850:9e01 with SMTP id a12-20020a056000188c00b0032d98509e01mr4958052wri.61.1699603095075;
-        Thu, 09 Nov 2023 23:58:15 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id j17-20020adfea51000000b0032d829e10c0sm1362413wrn.28.2023.11.09.23.58.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Nov 2023 23:58:14 -0800 (PST)
-Message-ID: <9db77625-8dc0-4963-b200-851c209ac238@linaro.org>
-Date:   Fri, 10 Nov 2023 08:58:11 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/17] dt-bindings: i2c: exynos5: add specific compatibles
- for existing SoC
-Content-Language: en-US
-To:     Alim Akhtar <alim.akhtar@samsung.com>,
-        'David Airlie' <airlied@gmail.com>,
-        'Daniel Vetter' <daniel@ffwll.ch>,
-        'Maarten Lankhorst' <maarten.lankhorst@linux.intel.com>,
-        'Maxime Ripard' <mripard@kernel.org>,
-        'Thomas Zimmermann' <tzimmermann@suse.de>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Krzysztof Kozlowski' <krzysztof.kozlowski+dt@linaro.org>,
-        'Conor Dooley' <conor+dt@kernel.org>,
-        'Andi Shyti' <andi.shyti@kernel.org>,
-        'Jonathan Cameron' <jic23@kernel.org>,
-        'Lars-Peter Clausen' <lars@metafoo.de>,
-        'Lee Jones' <lee@kernel.org>,
-        'Ulf Hansson' <ulf.hansson@linaro.org>,
-        'Tomasz Figa' <tomasz.figa@gmail.com>,
-        'Sylwester Nawrocki' <s.nawrocki@samsung.com>,
-        'Linus Walleij' <linus.walleij@linaro.org>,
-        'Thierry Reding' <thierry.reding@gmail.com>,
-        =?UTF-8?Q?=27Uwe_Kleine-K=C3=B6nig=27?= 
+        d=1e100.net; s=20230601; t=1699604357; x=1700209157;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qx1Z0ES+LIHr7AN7W9XAr27O+pEgi0rCLwQKZbW2VIQ=;
+        b=Xn0MS25C8leqO8bV/PyRg60wd3Lnq3YOwxQsActZJKYFa8apY0lMdCbGHAsj/1C/Ju
+         Xo1oDbhye7y+yLXJWeYonyLZIugOElO633p5356yD+lakwrO1Sqn8ZvyugSGCzHyvnv+
+         nsjF1EkuYBo33qJXa7K2lkId8bxA3L80Nem8c476WiWoRnjRTDOC1LeekoqawJPYKBLu
+         MNmcgQ7lPRwdGWfj7EpacHyOHw44YSmJV7QkdVAbo8rgtbXCnIEy8D1cOCAwbkzVb5fn
+         AEp9003myK28xwNRvP6b7oM0nW2eNlpKVdsO89tK2FzQKKU56ArtHO/9SGdmvewplTjf
+         wi8w==
+X-Gm-Message-State: AOJu0Yw8CnH9mo3wCKQ9VbEKkPhZlYu4Udb+m/VPJYbbalquvCHLjIx7
+        avrlGtCoqSNnS7GTiT2zPHA=
+X-Google-Smtp-Source: AGHT+IGAAojuFpdOwjAGUkWo1zK324czv9t6UG3MKsHY77tFbWHfp7zadrvwIayeBw7sAOGQZ38Enw==
+X-Received: by 2002:a17:907:7f1e:b0:9d5:ecf9:e6a0 with SMTP id qf30-20020a1709077f1e00b009d5ecf9e6a0mr5013918ejc.0.1699604356581;
+        Fri, 10 Nov 2023 00:19:16 -0800 (PST)
+Received: from localhost (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id f4-20020a170906048400b00988e953a586sm3579473eja.61.2023.11.10.00.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 00:19:16 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        'Alessandro Zummo' <a.zummo@towertech.it>,
-        'Alexandre Belloni' <alexandre.belloni@bootlin.com>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        'Jiri Slaby' <jirislaby@kernel.org>,
-        'Liam Girdwood' <lgirdwood@gmail.com>,
-        'Mark Brown' <broonie@kernel.org>,
-        'Jaehoon Chung' <jh80.chung@samsung.com>,
-        'Sam Protsenko' <semen.protsenko@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <CGME20231108104407epcas5p4c52f140b035727b6110ff7d3c0f81bc0@epcas5p4.samsung.com>
- <20231108104343.24192-3-krzysztof.kozlowski@linaro.org>
- <02bb01da1337$65caf5e0$3160e1a0$@samsung.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <02bb01da1337$65caf5e0$3160e1a0$@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pwm: samsung: Fix a bit test in pwm_samsung_resume()
+Date:   Fri, 10 Nov 2023 09:19:11 +0100
+Message-ID: <169960433795.472342.2881020171032605853.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <e031db45-add0-4da7-97fa-dee95ee936ad@moroto.mountain>
+References: <e031db45-add0-4da7-97fa-dee95ee936ad@moroto.mountain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 09/11/2023 19:05, Alim Akhtar wrote:
 
-(...)
-
-Please trim unrelated parts of response/quote before and after your message.
-
->> @@ -25,7 +25,15 @@ properties:
->>            - samsung,exynos5250-hsi2c    # Exynos5250 and Exynos5420
->>            - samsung,exynos5260-hsi2c    # Exynos5260
->>            - samsung,exynos7-hsi2c       # Exynos7
->> -          - samsung,exynosautov9-hsi2c  # ExynosAutoV9 and Exynos850
->> +          - samsung,exynosautov9-hsi2c
->> +      - items:
->> +          - enum:
->> +              - samsung,exynos5433-hsi2c
->> +          - const: samsung,exynos7-hsi2c
->> +      - items:
->> +          - enum:
->> +              - samsung,exynos850-hsi2c
-> Does this need an entry in allOf:? to indicate exynos850 also has 2 clocks?
+On Wed, 25 Oct 2023 14:57:34 +0300, Dan Carpenter wrote:
+> The PWMF_REQUESTED enum is supposed to be used with test_bit() and not
+> used as in a bitwise AND.  In this specific code the flag will never be
+> set so the function is effectively a no-op.
+> 
 > 
 
-No, autov9 is there already.
+Applied, thanks!
 
->> +          - const: samsung,exynosautov9-hsi2c
-
+[1/2] pwm: samsung: Fix a bit test in pwm_samsung_resume()
+      commit: 7d3c568084f8be53f7f59802d625fa69bc7f8d07
+[2/2] pwm: Fix double shift bug
+      commit: 830743dcf301141b4723ae38cf7d7fca566b9c75
 
 Best regards,
-Krzysztof
-
+-- 
+Thierry Reding <thierry.reding@gmail.com>
