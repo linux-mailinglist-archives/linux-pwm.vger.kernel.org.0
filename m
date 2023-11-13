@@ -2,165 +2,89 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F43E7E8CE0
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Nov 2023 22:33:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B9697E956B
+	for <lists+linux-pwm@lfdr.de>; Mon, 13 Nov 2023 04:23:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbjKKVds (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 11 Nov 2023 16:33:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47672 "EHLO
+        id S232983AbjKMDX7 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 12 Nov 2023 22:23:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjKKVdr (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 11 Nov 2023 16:33:47 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2125430CF;
-        Sat, 11 Nov 2023 13:33:44 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-408382da7f0so25426505e9.0;
-        Sat, 11 Nov 2023 13:33:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699738422; x=1700343222; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BjJpwKGCecxdkQ5LjdaCff64J4ZeBO10oL7F7MwcVn4=;
-        b=SoWDJ6UfBqwi53zUN3lqwjEzqeoNaEv5zsc4CMeWzz/pa4MGPZdI9VOIJcxPXDIBXK
-         4ROP0Y0M+5dKmB770QtNeBIstJv2T2waq9KvTEA62oWBNLEK3tn6EpFOzyw9GGtWBiLl
-         +8vMVriKMxML9XTHzs99pBrGIJ2pgUCzNsC/krpkJ4DW+67LIIV033QhiAk/h407sekN
-         7dgneR81A4ZJ6qzpDw/G/X3nhtSAj4wbdrjGmNn7/etm16KaC2w2VT3uteyhr9X8XKNo
-         VPPLSZOuhkiIuszK4PUfU7/99L+ack9ienSwmJqXLSvM4HY0Dmhy8QMLdcAI/ce86wQO
-         Tkrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699738422; x=1700343222;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BjJpwKGCecxdkQ5LjdaCff64J4ZeBO10oL7F7MwcVn4=;
-        b=Hybfyddn3YmL+/eG1Hy+/BMvI3TvTEEYmHeNCUtg5U2fRYWSBljdO3ZgK1vMAd11wk
-         lK04hoaBRwRdCtkCZmUbRh2k307tlfFi5piLK1vfsZRCpSTfXgK31v9T7aJhXh8+a9gy
-         MW/KQyohXQqn1yD4S57z5WCrpWaw6jC/kp8b30IPQqrAV6Fs8DcGN6SILyCsaVNX6tEb
-         uffx9UByCp04rFBnBtOBL6BLTxgMGkm4j6tbSRWvxffFkBv7QuMZVeGtZBm3VZO9VEpV
-         /KnoSMS9k+3kGx8Xwxmr4g7S8Qn76qAItG7IWvjUZv16LtI3qdLTk2QWYWKKdLONWuql
-         P/IA==
-X-Gm-Message-State: AOJu0YwoZRU81bKYCH1So5JLMZQuMV2nYYu4IAh/NCi/ynapwAdf0Thl
-        WteHhhvVGc7pI36hlmTi4/A=
-X-Google-Smtp-Source: AGHT+IGcspAIBmQE8uECroiT5zYPxAfvcuIKjKOjZDZOhwNchFn+oYO8zOgLHmFyk1hPD+Lg8347oA==
-X-Received: by 2002:a05:600c:5121:b0:408:57bb:ef96 with SMTP id o33-20020a05600c512100b0040857bbef96mr2147252wms.30.1699738422278;
-        Sat, 11 Nov 2023 13:33:42 -0800 (PST)
-Received: from giga-mm.home ([2a02:1210:8629:800:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id be14-20020a05600c1e8e00b00401b242e2e6sm8935242wmb.47.2023.11.11.13.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Nov 2023 13:33:41 -0800 (PST)
-Message-ID: <c49f77492cacc5a30079720af58a9f2fca761609.camel@gmail.com>
-Subject: Re: [PATCH v3 07/42] soc: Add SoC driver for Cirrus ep93xx
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To:     Andy Shevchenko <andy@kernel.org>, nikita.shubin@maquefel.me
-Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Date:   Sat, 11 Nov 2023 22:33:38 +0100
-In-Reply-To: <ZLqSo6B5cJXVRJS/@smile.fi.intel.com>
-References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
-         <20230605-ep93xx-v3-7-3d63a5f1103e@maquefel.me>
-         <ZLqSo6B5cJXVRJS/@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+        with ESMTP id S232972AbjKMDX7 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 12 Nov 2023 22:23:59 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E064171A;
+        Sun, 12 Nov 2023 19:23:56 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46C41C433B7;
+        Mon, 13 Nov 2023 03:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699845835;
+        bh=sTORHFHs64nriYPghaE5on9s96E8KHDcO2AObOHSmYs=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=bR1Jq+W7c7tQOEqWMzeeY8RXV+14qqgrDGSEnoFOBf3JAOnMTf6CT7qCg10U0nR0P
+         zQzr1cxfpGj+A1f3T5pDsHW2cIgf0D/bSgWVEWXkH5ohWPzIH/9/iepkE9PjSyz9gC
+         jmrDMsciwX/JQ++Cd1yKWAiMyva+22B8Y4Nyr6Al8AZDNmkcmBMrZwHy8agT7BH3V4
+         GxqmlHUYQz2BxWBYea9u+wF8bm5G/JXACqmX1paJ8AaaB7kKKHFIIUai0XBiz+m0Nc
+         JTNijb89KFoGOaIW3f/8C167H5XzHY21wha3qfX4tQgh+vXZdYdYLzaXrSGv25CNfh
+         31jNlqn+wLybg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 26A71C04DD9;
+        Mon, 13 Nov 2023 03:23:55 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/11] pwm: Some random cleanups
+From:   patchwork-bot+chrome-platform@kernel.org
+Message-Id: <169984583515.27851.15324455433917462968.git-patchwork-notify@kernel.org>
+Date:   Mon, 13 Nov 2023 03:23:55 +0000
+References: <20230929161918.2410424-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20230929161918.2410424-1-u.kleine-koenig@pengutronix.de>
+To:     =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cu=2Ekleine-koenig=40pengutronix=2Ede=3E?=@ci.codeaurora.org
+Cc:     thierry.reding@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        florian.fainelli@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+        linux-mediatek@lists.infradead.org, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+        krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+        linux-samsung-soc@vger.kernel.org, bleung@chromium.org,
+        groeck@chromium.org, chrome-platform@lists.linux.dev
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Hello Andy,
+Hello:
 
-On Fri, 2023-07-21 at 17:13 +0300, Andy Shevchenko wrote:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0spin_lock_irqsave(&ep93xx_sw=
-lock, flags);
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regmap_read(map, EP93XX_SYSC=
-ON_DEVCFG, &val);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val &=3D ~clear_bits;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0val |=3D set_bits;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regmap_write(map, EP93XX_SYS=
-CON_SWLOCK, EP93XX_SWLOCK_MAGICK);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regmap_write(map, EP93XX_SYS=
-CON_DEVCFG, val);
->=20
-> Is this sequence a must?
-> I.o.w. can you first supply magic and then update devcfg?
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0spin_unlock_irqrestore(&ep93=
-xx_swlock, flags);
->=20
-> ...
->=20
-> > +void ep93xx_swlocked_update_bits(struct regmap *map, unsigned int reg,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int mask, unsigned int =
-val)
-> > +{
->=20
-> Same Q as above.
+This patch was applied to chrome-platform/linux.git (for-kernelci)
+by Thierry Reding <thierry.reding@gmail.com>:
 
-EP93xx User Manual [1] has most verbose description of SWLock for ADC
-block:
-"Writing 0xAA to this register will unlock all locked registers until the
-next block access. The ARM lock instruction prefix should be used for the
-two consequtive write cycles when writing to locked chip registers."
+On Fri, 29 Sep 2023 18:19:07 +0200 you wrote:
+> Hello,
+> 
+> this is a set of patches I based my efforts for closing a race condition
+> in the pwm core on. I thought I already sent them out, but it seems I
+> didn't. So here they come!
+> 
+> Best regards
+> Uwe
+> 
+> [...]
 
-One may conclude that RmW (two accesses to the particular block) sequence
-is not appropriate.
+Here is the summary with links:
+  - [11/11] pwm: cros-ec: Simplify using devm_pwmchip_add() and dev_err_probe()
+    https://git.kernel.org/chrome-platform/c/896c450960f5
 
-[1]=C2=A0https://cdn.embeddedts.com/resource-attachments/ts-7000_ep9301-ug.=
-pdf=20
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
---=20
-Alexander Sverdlin.
 
