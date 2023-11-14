@@ -2,51 +2,50 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD8D87EB0D2
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Nov 2023 14:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6237EB0D4
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Nov 2023 14:27:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232103AbjKNN04 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Nov 2023 08:26:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59820 "EHLO
+        id S230229AbjKNN1S (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Nov 2023 08:27:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbjKNN0z (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Nov 2023 08:26:55 -0500
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAB81A1
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Nov 2023 05:26:51 -0800 (PST)
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3AEDN0vU025095;
-        Tue, 14 Nov 2023 14:26:45 +0100
+        with ESMTP id S231203AbjKNN1R (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Nov 2023 08:27:17 -0500
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598CB1AD
+        for <linux-pwm@vger.kernel.org>; Tue, 14 Nov 2023 05:27:13 -0800 (PST)
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3AEBsRff018227;
+        Tue, 14 Nov 2023 14:27:00 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
         message-id:date:mime-version:subject:to:cc:references:from
         :in-reply-to:content-type:content-transfer-encoding; s=
-        selector1; bh=CDqcl3qizlmsvgyIJtirdFlv7IU9taiD9Ey6VLthwRE=; b=Oh
-        npQaIjh4gMjm8jk76JXbItZteVmaqCbwKZt5Mudwu3QCkCFflqdH2ChRxCGlNKu+
-        jW/hOHTg+geMEHQwUEJJ3xiHokDwIuxZp+OlJk2VU/4smxjFVDLWIWCGgeIJpcuK
-        DIP/MHE+rOzS/Z6heQ0/3SLgkDvLuqJmwrmohUDi32ssGqTxu7NkAH9PPyY73SpI
-        UDuvFPb/WzJYQvXryBwVeSaT1gR8NatG6RAH2eAkqR0HLm1hDsmcQIH6RC7cd5Qp
-        +zk+5yPvdmBCxuRjfeX5XuD9mJd1/t/oExG/NBaoF+a0yllqWsZVP9iPRRzm7jZ4
-        dSqGT7GYpabGNyLs/ihw==
+        selector1; bh=evZjVgwNaw4PqAniLHTlx6HSvZiK4aPjgz4DN6JbtEE=; b=ZY
+        jhMjn7iwqbtdi2N3Kx2rv3UXSETDp0I5t9ygiPKpsfqbxaRUDB3EYyfdM3WhUaBG
+        5V/w97UBuKZo6QRHiE5SBhbMQxFFF+digA02j1ertnsvJCspb8pggGAPUEJkfpmO
+        tNvN2Zv9947ZRT1+BQUrKffx46YxuWjHJqb1XXG7nTcZqrk92WzIJoNDfdiVpI8m
+        UIgeanoMQFiuSgy02tCbCOQ759gNreC4vNnPLjjAMozrt8HSnSXrUi5D6tYDd2UJ
+        /IfHXmUlU/ncu9jc5k2xzuHbKrDb5Og3O7JvZ+q0E+HzowY8y7/WMpuRvGcWkkjz
+        nav4kEdeDbw3QtPeAM9g==
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3uam249hw9-1
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ua1ch3yed-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Nov 2023 14:26:45 +0100 (CET)
+        Tue, 14 Nov 2023 14:27:00 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 27477100038;
-        Tue, 14 Nov 2023 14:26:45 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0097B100038;
+        Tue, 14 Nov 2023 14:26:58 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1F25C2122E6;
-        Tue, 14 Nov 2023 14:26:45 +0100 (CET)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ECD922122EF;
+        Tue, 14 Nov 2023 14:26:58 +0100 (CET)
 Received: from [10.201.20.59] (10.201.20.59) by SHFDAG1NODE2.st.com
  (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 14 Nov
- 2023 14:26:43 +0100
-Message-ID: <617f2adf-5dec-4caf-b4d4-a706c0a83f31@foss.st.com>
-Date:   Tue, 14 Nov 2023 14:26:43 +0100
+ 2023 14:26:57 +0100
+Message-ID: <09b09170-697e-44ac-aae1-581ba29481bf@foss.st.com>
+Date:   Tue, 14 Nov 2023 14:26:57 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] pwm: stm32: Use hweight32 in
- stm32_pwm_detect_channels
+Subject: Re: [PATCH 4/5] pwm: stm32: Implement .get_state()
 Content-Language: en-US
 To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
         Thierry Reding <thierry.reding@gmail.com>
@@ -57,9 +56,9 @@ CC:     Philipp Zabel <p.zabel@pengutronix.de>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>
 References: <20231019200658.1754190-7-u.kleine-koenig@pengutronix.de>
- <20231019200658.1754190-10-u.kleine-koenig@pengutronix.de>
+ <20231019200658.1754190-11-u.kleine-koenig@pengutronix.de>
 From:   Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <20231019200658.1754190-10-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231019200658.1754190-11-u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.201.20.59]
@@ -77,20 +76,19 @@ Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-
-
 On 10/19/23 22:07, Uwe Kleine-König wrote:
 > From: Philipp Zabel <p.zabel@pengutronix.de>
 > 
-> Use hweight32() to count the CCxE bits in stm32_pwm_detect_channels().
-> Since the return value is assigned to chip.npwm, change it to unsigned
-> int as well.
+> Implement the &pwm_ops->get_state callback so drivers can inherit PWM
+> state set by the bootloader.
 > 
 > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> [ukl: split off from a patch that also fixes clk enable count in .probe()]
 > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 > ---
->  drivers/pwm/pwm-stm32.c | 17 ++---------------
->  1 file changed, 2 insertions(+), 15 deletions(-)
+>  drivers/pwm/pwm-stm32.c | 42 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
 
 Hi Uwe,
 
@@ -100,41 +98,58 @@ Reviewed-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 Thanks,
 Fabrice
 
-> 
 > diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 009f9c1a5eca..cc6cae07c02c 100644
+> index cc6cae07c02c..68239567a564 100644
 > --- a/drivers/pwm/pwm-stm32.c
 > +++ b/drivers/pwm/pwm-stm32.c
-> @@ -563,10 +563,9 @@ static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
->  	priv->have_complementary_output = (ccer != 0);
+> @@ -471,8 +471,50 @@ static int stm32_pwm_apply_locked(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	return ret;
 >  }
 >  
-> -static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
-> +static unsigned int stm32_pwm_detect_channels(struct stm32_pwm *priv)
->  {
->  	u32 ccer;
-> -	int npwm = 0;
+> +static int stm32_pwm_get_state(struct pwm_chip *chip,
+> +			       struct pwm_device *pwm, struct pwm_state *state)
+> +{
+> +	struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
+> +	int ch = pwm->hwpwm;
+> +	unsigned long rate;
+> +	u32 ccer, psc, arr, ccr;
+> +	u64 dty, prd;
+> +	int ret;
+> +
+> +	mutex_lock(&priv->lock);
+> +
+> +	ret = regmap_read(priv->regmap, TIM_CCER, &ccer);
+> +	if (ret)
+> +		goto out;
+> +
+> +	state->enabled = ccer & (TIM_CCER_CC1E << (ch * 4));
+> +	state->polarity = (ccer & (TIM_CCER_CC1P << (ch * 4))) ?
+> +			  PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
+> +	ret = regmap_read(priv->regmap, TIM_PSC, &psc);
+> +	if (ret)
+> +		goto out;
+> +	ret = regmap_read(priv->regmap, TIM_ARR, &arr);
+> +	if (ret)
+> +		goto out;
+> +	ret = regmap_read(priv->regmap, TIM_CCR1 + 4 * ch, &ccr);
+> +	if (ret)
+> +		goto out;
+> +
+> +	rate = clk_get_rate(priv->clk);
+> +
+> +	prd = (u64)NSEC_PER_SEC * (psc + 1) * (arr + 1);
+> +	state->period = DIV_ROUND_UP_ULL(prd, rate);
+> +	dty = (u64)NSEC_PER_SEC * (psc + 1) * ccr;
+> +	state->duty_cycle = DIV_ROUND_UP_ULL(dty, rate);
+> +
+> +out:
+> +	mutex_unlock(&priv->lock);
+> +	return ret;
+> +}
+> +
+>  static const struct pwm_ops stm32pwm_ops = {
+>  	.apply = stm32_pwm_apply_locked,
+> +	.get_state = stm32_pwm_get_state,
+>  	.capture = IS_ENABLED(CONFIG_DMA_ENGINE) ? stm32_pwm_capture : NULL,
+>  };
 >  
->  	/*
->  	 * If channels enable bits don't exist writing 1 will have no
-> @@ -576,19 +575,7 @@ static int stm32_pwm_detect_channels(struct stm32_pwm *priv)
->  	regmap_read(priv->regmap, TIM_CCER, &ccer);
->  	regmap_clear_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE);
->  
-> -	if (ccer & TIM_CCER_CC1E)
-> -		npwm++;
-> -
-> -	if (ccer & TIM_CCER_CC2E)
-> -		npwm++;
-> -
-> -	if (ccer & TIM_CCER_CC3E)
-> -		npwm++;
-> -
-> -	if (ccer & TIM_CCER_CC4E)
-> -		npwm++;
-> -
-> -	return npwm;
-> +	return hweight32(ccer & TIM_CCER_CCXE);
->  }
->  
->  static int stm32_pwm_probe(struct platform_device *pdev)
