@@ -2,121 +2,138 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90AEB7EB07A
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Nov 2023 14:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B07FB7EB0CE
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Nov 2023 14:26:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232904AbjKNNFQ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Tue, 14 Nov 2023 08:05:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43702 "EHLO
+        id S231203AbjKNN0p (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Tue, 14 Nov 2023 08:26:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232177AbjKNNFP (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Nov 2023 08:05:15 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6A919B
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Nov 2023 05:05:11 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-daef74513e1so5175270276.2
-        for <linux-pwm@vger.kernel.org>; Tue, 14 Nov 2023 05:05:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1699967110; x=1700571910; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y3kLet+ZFc4FiXhXyJTUcUEX1JsMDtWsRFc0PYkqxJM=;
-        b=nMk4bjzWl2OH2sgI2kginq+JqGE7cwEcr+JGDejTGiX2niImmLs4RpluHd3H9DmyOX
-         39NxMktLxD0KR/1jO0DVPvee/GYRKvdT0NGDyOOY9mugEYri1z7tPGOuN1UaDnDslMPM
-         07KVGoolts85BnWYiBEeoDTKbfNmDvu5SMcH8fkerB/VCr7HRL3nOmT0dMFAw6psXo7L
-         PQ/yETAMDp42UEMSaZHW8fDmMccfGZ99jpCF2zkYMbjDRmxmbKkkPuIGDPaJjXwpkPJN
-         6YRQJ9NnpBeWQwKLA6iHGmEX2qiNv1VB3X4ejZsla3zyizgE0zAnjBWzAhmBMv96hrt4
-         Sceg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699967110; x=1700571910;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y3kLet+ZFc4FiXhXyJTUcUEX1JsMDtWsRFc0PYkqxJM=;
-        b=L17Bn3J6r1GQ9LeSuCBc7JP6B0JnFEOlIZvhu8I0tAI88SqZB/cEZMUIIhwTGUfvPS
-         qoVSZyEuH8wBY1TzEJ1EAVBpGn0EWP+OS+EBirGVKOIit5UnZDNi/bfVGJw6Ko7llXR8
-         m101vYJrCKgK8dCDOpHOa/MCAcaoW7kHZsmEFQx+flEp1m8tBiZ51D9mhOqDY5kAVJo+
-         RExnsa26Kkd7Yh17ssEFvsnednZW9NWRWtK+lMaZMUCN1tAn/oPWjdt42mr87E+Hkjm6
-         pjAWGQNYUcmzW6Gb0c+1AN5b+pnQxSALMsuKbf5fY58w6N7vGTccNlRcSA7Niv1JzhG5
-         MuIw==
-X-Gm-Message-State: AOJu0YxyexQshozGH2UYYATiVCMCpA7xn27S7R8dcw50d604cUOIAzdF
-        QPZaIskfIAr4MpdjQqoboL8b6B8grPvEPkO2fCmzdw==
-X-Google-Smtp-Source: AGHT+IHU/EMXoR/AsvwDR5tVM/hTfhag7Py4pB8zx2h4lfdu8R1hVWGA8wCYGXEvgGG4RCO6d/pEhnbc29+P4adFbGc=
-X-Received: by 2002:a25:35d6:0:b0:daf:66f9:cfab with SMTP id
- c205-20020a2535d6000000b00daf66f9cfabmr8292993yba.9.1699967110411; Tue, 14
- Nov 2023 05:05:10 -0800 (PST)
+        with ESMTP id S230229AbjKNN0p (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Tue, 14 Nov 2023 08:26:45 -0500
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66361AA
+        for <linux-pwm@vger.kernel.org>; Tue, 14 Nov 2023 05:26:41 -0800 (PST)
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3AE9EmRn031609;
+        Tue, 14 Nov 2023 14:26:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+        message-id:date:mime-version:subject:to:cc:references:from
+        :in-reply-to:content-type:content-transfer-encoding; s=
+        selector1; bh=v6RHVxwutJkSi6Qco+qNtL7rvalniuJSr5bDH69HBw4=; b=Ja
+        luzfrziUTgr5pbj04et5GPvMTssLHZgSX+oPmD48AIaNpxFPGdij8ZNcqIUyWd3Y
+        G7x7dN2fKSwM4h2mreekTFLV/GpwA4eF2DwwlSXYQvFm6WiZWPzJC0q0goMsP5kY
+        +8cbyGuDUk9yF8fuXM1vVIFL8+eKY8fGGZSZZfp16znrRd0Yvd633x/57P64kSbL
+        aawFKASX3ca07xu8fIh3kIqLnNXY64y4DmhLnGPuy4YIfntvtJpGdRc1VysA5T7Y
+        CP9jkZHmpEGdMQXeqNRcQ5OpwwqhHlBAfKVwCV6WdKNRMZ1E/pGrqmZoo1d32f7n
+        c/F8MBRGIe6aosBI35Xg==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ua1u1uv72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Nov 2023 14:26:29 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8A861100038;
+        Tue, 14 Nov 2023 14:26:28 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 822642122E3;
+        Tue, 14 Nov 2023 14:26:28 +0100 (CET)
+Received: from [10.201.20.59] (10.201.20.59) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 14 Nov
+ 2023 14:26:27 +0100
+Message-ID: <77d75b3e-f9b7-4360-9e92-223befc9b57b@foss.st.com>
+Date:   Tue, 14 Nov 2023 14:26:26 +0100
 MIME-Version: 1.0
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org> <20231108104343.24192-6-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20231108104343.24192-6-krzysztof.kozlowski@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 14 Nov 2023 14:04:59 +0100
-Message-ID: <CACRpkdaSPTjjPA=TS-WbOb3E=TabtP6MFEx6Q+Dar-Mh=EtknQ@mail.gmail.com>
-Subject: Re: [PATCH 05/17] dt-bindings: pinctrl: samsung: add specific
- compatibles for existing SoC
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] pwm: stm32: Replace write_ccrx with regmap_write
+To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-pwm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>
+References: <20231019200658.1754190-7-u.kleine-koenig@pengutronix.de>
+ <20231019200658.1754190-8-u.kleine-koenig@pengutronix.de>
+Content-Language: en-US
+From:   Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <20231019200658.1754190-8-u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.20.59]
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-14_13,2023-11-09_01,2023-05-22_02
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On Wed, Nov 8, 2023 at 11:44=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On 10/19/23 22:07, Uwe Kleine-König wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> The TIM_CCR1...4 registers are consecutive, so replace the switch
+> case with a simple calculation. Since ch is known to be in the 0...3
+> range (it is set to hwpwm < npwm <= 4), drop the unnecessary error
+> handling. The return value was not checked anyway. What remains does
+> not warrant keeping the write_ccrx() function around, so instead call
+> regmap_write() directly at the singular call site.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/pwm/pwm-stm32.c | 17 +----------------
+>  1 file changed, 1 insertion(+), 16 deletions(-)
 
-> Samsung Exynos SoC reuses several devices from older designs, thus
-> historically we kept the old (block's) compatible only.  This works fine
-> and there is no bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
->
-> Add compatibles specific to each SoC in front of all old-SoC-like
-> compatibles.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hi Uwe,
 
-This is more formally correct indeed.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Sorry for the late reply,
+You can add my:
+Reviewed-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 
-Yours,
-Linus Walleij
+Thanks,
+Fabrice
+
+> 
+> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+> index 3303a754ea02..5e48584e3bd4 100644
+> --- a/drivers/pwm/pwm-stm32.c
+> +++ b/drivers/pwm/pwm-stm32.c
+> @@ -52,21 +52,6 @@ static u32 active_channels(struct stm32_pwm *dev)
+>  	return ccer & TIM_CCER_CCXE;
+>  }
+>  
+> -static int write_ccrx(struct stm32_pwm *dev, int ch, u32 value)
+> -{
+> -	switch (ch) {
+> -	case 0:
+> -		return regmap_write(dev->regmap, TIM_CCR1, value);
+> -	case 1:
+> -		return regmap_write(dev->regmap, TIM_CCR2, value);
+> -	case 2:
+> -		return regmap_write(dev->regmap, TIM_CCR3, value);
+> -	case 3:
+> -		return regmap_write(dev->regmap, TIM_CCR4, value);
+> -	}
+> -	return -EINVAL;
+> -}
+> -
+>  #define TIM_CCER_CC12P (TIM_CCER_CC1P | TIM_CCER_CC2P)
+>  #define TIM_CCER_CC12E (TIM_CCER_CC1E | TIM_CCER_CC2E)
+>  #define TIM_CCER_CC34P (TIM_CCER_CC3P | TIM_CCER_CC4P)
+> @@ -369,7 +354,7 @@ static int stm32_pwm_config(struct stm32_pwm *priv, int ch,
+>  	dty = prd * duty_ns;
+>  	do_div(dty, period_ns);
+>  
+> -	write_ccrx(priv, ch, dty);
+> +	regmap_write(priv->regmap, TIM_CCR1 + 4 * ch, dty);
+>  
+>  	/* Configure output mode */
+>  	shift = (ch & 0x1) * CCMR_CHANNEL_SHIFT;
