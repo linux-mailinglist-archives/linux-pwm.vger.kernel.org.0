@@ -2,156 +2,117 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D4BA7ED53A
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 22:02:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7497ED5AF
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 22:11:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344921AbjKOVCV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Nov 2023 16:02:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
+        id S235606AbjKOVLa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Nov 2023 16:11:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343823AbjKOVBy (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 16:01:54 -0500
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8BC199B;
-        Wed, 15 Nov 2023 13:01:27 -0800 (PST)
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-586f68b78ddso55068eaf.2;
-        Wed, 15 Nov 2023 13:01:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700082086; x=1700686886;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K03zmxasEq9FnnjGJz4u1w2YR1+3fOaUQl9N4LzfX7o=;
-        b=JcBbdeVQh1houhbecenMGnI/oO0qUaxntpyhn7QkCg/n8vzYjbgwojFOXHgjtSFzlg
-         vUHXyB8zC3uNQMcgSjfy/c7VoTZqwjyqfZjxQkFS9akr1QYVdMyxLrzxIqy4QUzabgJb
-         PUEHQSCRiXlTkQ555Qk8MVt+8e6Ve2Jqk9pekdOLhuk0xLAMPgvNg53A9Vm6Q54OuVmY
-         upYyKvsATf7ylttGRqqAUjXFeKEcrheaEBnL+HrZV9YX59Ux4m9UBo6DBazKKSqWTrCE
-         ymObh9hpTfkuP+RJ6rLahAELk+hzjh7R+EW2bKIF5Jax32NOspnJGzH31y/tbYhykZtk
-         sBtw==
-X-Gm-Message-State: AOJu0YzqtlJQKXAULfdSjbkHnSX2i1S3SHro9tjT/9pHwfO1Iog6D8tb
-        qw2AQQwoYWsDcPJ8Ji3Drg==
-X-Google-Smtp-Source: AGHT+IHMGTv0+6qVwF7GC4xCcEfHpb+VL7SmBzNPo8jG4WM3SE4T2Y5RwR9z/bwlw/l/h6yWQYLSGA==
-X-Received: by 2002:a4a:7648:0:b0:581:dd3e:dbce with SMTP id w8-20020a4a7648000000b00581dd3edbcemr12906231ooe.0.1700082086640;
-        Wed, 15 Nov 2023 13:01:26 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id 129-20020a4a0687000000b00587947707aasm819964ooj.4.2023.11.15.13.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Nov 2023 13:01:26 -0800 (PST)
-Received: (nullmailer pid 3739323 invoked by uid 1000);
-        Wed, 15 Nov 2023 21:01:25 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [RESEND PATCH] pwm: Use device_get_match_data()
-Date:   Wed, 15 Nov 2023 15:01:20 -0600
-Message-ID: <20231115210121.3738487-1-robh@kernel.org>
-X-Mailer: git-send-email 2.42.0
+        with ESMTP id S229912AbjKOVL3 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 16:11:29 -0500
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2729419F
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 13:01:59 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r3N1J-0007II-KE; Wed, 15 Nov 2023 22:01:57 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r3N1I-009IlP-C8; Wed, 15 Nov 2023 22:01:56 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r3N1I-002BtI-2z; Wed, 15 Nov 2023 22:01:56 +0100
+Date:   Wed, 15 Nov 2023 22:01:55 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc:     linux-pwm@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 5/5] pwm: stm32: Fix enable count for clk in .probe()
+Message-ID: <20231115210155.p6m5rbahpzusy6bc@pengutronix.de>
+References: <20231019200658.1754190-7-u.kleine-koenig@pengutronix.de>
+ <20231019200658.1754190-12-u.kleine-koenig@pengutronix.de>
+ <c2da3f60-595c-4938-809a-c5640388c13c@foss.st.com>
+ <20231114212009.44r742f3xqosswod@pengutronix.de>
+ <e7034e83-7c1a-4706-8382-536b260284eb@foss.st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vb7uxqoeywycjxjr"
+Content-Disposition: inline
+In-Reply-To: <e7034e83-7c1a-4706-8382-536b260284eb@foss.st.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Use preferred device_get_match_data() instead of of_match_device() to
-get the driver match data. With this, adjust the includes to explicitly
-include the correct headers.
 
-As these drivers only do DT based matching, of_match_device() will never
-return NULL if we've gotten to probe(). Therefore, the NULL check and
-error returns can be dropped.
+--vb7uxqoeywycjxjr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/pwm/pwm-img.c      | 8 ++------
- drivers/pwm/pwm-rockchip.c | 9 ++-------
- 2 files changed, 4 insertions(+), 13 deletions(-)
+Hello Fabrice,
 
-diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
-index 116fa060e302..0d218c0b690e 100644
---- a/drivers/pwm/pwm-img.c
-+++ b/drivers/pwm/pwm-img.c
-@@ -13,9 +13,9 @@
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/pwm.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
-@@ -260,7 +260,6 @@ static int img_pwm_probe(struct platform_device *pdev)
- 	u64 val;
- 	unsigned long clk_rate;
- 	struct img_pwm_chip *imgchip;
--	const struct of_device_id *of_dev_id;
- 
- 	imgchip = devm_kzalloc(&pdev->dev, sizeof(*imgchip), GFP_KERNEL);
- 	if (!imgchip)
-@@ -272,10 +271,7 @@ static int img_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(imgchip->base))
- 		return PTR_ERR(imgchip->base);
- 
--	of_dev_id = of_match_device(img_pwm_of_match, &pdev->dev);
--	if (!of_dev_id)
--		return -ENODEV;
--	imgchip->data = of_dev_id->data;
-+	imgchip->data = device_get_match_data(&pdev->dev);
- 
- 	imgchip->periph_regs = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
- 							       "img,cr-periph");
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index cce4381e188a..a7c647e37837 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -10,8 +10,8 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/pwm.h>
- #include <linux/time.h>
- 
-@@ -296,16 +296,11 @@ MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
- 
- static int rockchip_pwm_probe(struct platform_device *pdev)
- {
--	const struct of_device_id *id;
- 	struct rockchip_pwm_chip *pc;
- 	u32 enable_conf, ctrl;
- 	bool enabled;
- 	int ret, count;
- 
--	id = of_match_device(rockchip_pwm_dt_ids, &pdev->dev);
--	if (!id)
--		return -EINVAL;
--
- 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
- 	if (!pc)
- 		return -ENOMEM;
-@@ -344,7 +339,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pc);
- 
--	pc->data = id->data;
-+	pc->data = device_get_match_data(&pdev->dev);
- 	pc->chip.dev = &pdev->dev;
- 	pc->chip.ops = &rockchip_pwm_ops;
- 	pc->chip.npwm = 1;
--- 
-2.42.0
+On Wed, Nov 15, 2023 at 10:02:20AM +0100, Fabrice Gasnier wrote:
+> (with or without a Fixes tag) Could you add a check on global counter
+> enable bit (TIM_CR1_CEN) both in the .get_state(), and in the
+> stm32_pwm_detect_channels(), that counts the num_enabled channels ?
 
+I'd address that separately, mostly because the patches forwarded here
+are not mine.
+
+> In case the TIM_CR1_CEN isn't set (but some of the TIM_CCER_CCXE are),
+> the driver will report enabled channels. But physically, the pwm output
+> will be inactive.
+
+Huuu, that means if channel #0 is running and I start a capture on
+channel #1 which results in unconditionally calling
+regmap_clear_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN); (in
+stm32_pwm_raw_capture()) channel #0 stops to toggle!
+
+> That's more a robustness case... depending on what's been done possibly
+> by bootloader. What to you think ?
+
+I would assume that a bootloader that sets the CCXE bits also enables
+TIM_CR1_CEN and so in practise Philipp's patch is fine. But I agree that
+doing things properly would be better.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--vb7uxqoeywycjxjr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVVMcMACgkQj4D7WH0S
+/k4msggAsie4pFsNw+ow1IXyxv/KRPfpDOJObWnoyIvHIfDZ8xFh3kFoig+ETspm
+qoaQcVbsdaYthLrSRid85joui8quAXnLITqUABh0QU9vdspx0lhj9a1CArH5K7D8
+pJ0zhrUJ/QjUuHw55a+mt2HzQEU0XhRm5uovN7Q6KwKnML51R3tz8rzig56lfZKU
+FLEaFxPazm6ea9/AiGaJFTxzZq0SWa+pfi37JD1Ym9uGZKyQ4DQFue8Pzm29M3uo
+MJ3yVbetp4Ys4PYyrPXvLECr0wkOq8ylm194Sf0QMmmyEp145nfb8aNQYNgsTusE
+YWSgPPacfgdsiF4kTuE0unYZMlEeSg==
+=5udC
+-----END PGP SIGNATURE-----
+
+--vb7uxqoeywycjxjr--
