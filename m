@@ -2,126 +2,156 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D41E17EC347
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 14:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D4BA7ED53A
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 22:02:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343873AbjKONI6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Nov 2023 08:08:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
+        id S1344921AbjKOVCV (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Nov 2023 16:02:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343867AbjKONI5 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 08:08:57 -0500
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B175A121
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 05:08:53 -0800 (PST)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41cc44736f2so42091151cf.3
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 05:08:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700053733; x=1700658533; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=00ATIXVFBGhxLdhohuNcYTvt+T04SzCwSceArLs8rqI=;
-        b=Vm7WabX2L9VJ4kqJcr331iVd9N4UGiHnPmSaHejKrEyaXN4Jhi5cUhJ5KAZ/P0eCaH
-         bLsvoAAf8O3H056aKiYJ1P9/y86IiXCMRiJVlrJke6QYuyHvHHqx6pdGqFvW3PvEAIXO
-         BFUzTuvCiAwtAPoeVvcOvVCh1AhvaawGzHutodxTEyYruNQ0GzkqpTlb9Hdg35yh608q
-         QV3Cwq7uVN+hwT2mcTMSQTJsRL2v9vpvhIEh4+3L4+csxPUSgkReoFKBXCgm1RReKsYo
-         1GihYJGayig9Y4Orf3R+OspAROtoeg2pjAB0YxweE+2UCEJ3tqNX4LB0rIyNCE9qn2IO
-         w43A==
+        with ESMTP id S1343823AbjKOVBy (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 16:01:54 -0500
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8BC199B;
+        Wed, 15 Nov 2023 13:01:27 -0800 (PST)
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-586f68b78ddso55068eaf.2;
+        Wed, 15 Nov 2023 13:01:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700053733; x=1700658533;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=00ATIXVFBGhxLdhohuNcYTvt+T04SzCwSceArLs8rqI=;
-        b=UdbJ1I8zFxmZWpRJ4nhND2PGmHlX9uOKHEJafpN+O1vwZNFlqbd2EMH9JuZ9dSO1MW
-         UXZXTQCTfNNnAXS4kbWjri/NKJdF66aPMgAuFRhvVNrNx5CgFxJNeBWdGr9O2wNO12dI
-         17iYqaWK24ViFWfR2izfI39pYv4Gkebf5XBAGuZTH2A5Lxp31ceBl4i0l78FNtgxpUp5
-         tFJXGOndHwi01YyZ/K2gkcK0YAxPbbgfKWDl2S5its9eVS8BJN3mWbzeq4hX3TlIobwo
-         SWpeZoLZfrdyqommRZiuNY4MwQJjwXM0AjG8D96WrzGKx/AiIvzNwZWToCk/5+497Y6O
-         w6dg==
-X-Gm-Message-State: AOJu0YxqpnqWcj5+EfTIcLhr/PjRHSgAZnWdppRNl5P9Jy1l3Ljk/Itc
-        KlE2Xgmc71iyYfe4F03Kszm/RA==
-X-Google-Smtp-Source: AGHT+IEQT8wvSMBcf62eIW3F4aWMFp+D1AcNgOdwSNIkKMd6dhgIMdRVnWgsbwXwQE6Nult31piXLQ==
-X-Received: by 2002:ac8:5e4d:0:b0:41c:bf67:37bb with SMTP id i13-20020ac85e4d000000b0041cbf6737bbmr6541560qtx.59.1700053732829;
-        Wed, 15 Nov 2023 05:08:52 -0800 (PST)
-Received: from krzk-bin.. ([12.191.197.195])
-        by smtp.gmail.com with ESMTPSA id fp3-20020a05622a508300b00417dd1dd0adsm3549129qtb.87.2023.11.15.05.08.48
+        d=1e100.net; s=20230601; t=1700082086; x=1700686886;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K03zmxasEq9FnnjGJz4u1w2YR1+3fOaUQl9N4LzfX7o=;
+        b=JcBbdeVQh1houhbecenMGnI/oO0qUaxntpyhn7QkCg/n8vzYjbgwojFOXHgjtSFzlg
+         vUHXyB8zC3uNQMcgSjfy/c7VoTZqwjyqfZjxQkFS9akr1QYVdMyxLrzxIqy4QUzabgJb
+         PUEHQSCRiXlTkQ555Qk8MVt+8e6Ve2Jqk9pekdOLhuk0xLAMPgvNg53A9Vm6Q54OuVmY
+         upYyKvsATf7ylttGRqqAUjXFeKEcrheaEBnL+HrZV9YX59Ux4m9UBo6DBazKKSqWTrCE
+         ymObh9hpTfkuP+RJ6rLahAELk+hzjh7R+EW2bKIF5Jax32NOspnJGzH31y/tbYhykZtk
+         sBtw==
+X-Gm-Message-State: AOJu0YzqtlJQKXAULfdSjbkHnSX2i1S3SHro9tjT/9pHwfO1Iog6D8tb
+        qw2AQQwoYWsDcPJ8Ji3Drg==
+X-Google-Smtp-Source: AGHT+IHMGTv0+6qVwF7GC4xCcEfHpb+VL7SmBzNPo8jG4WM3SE4T2Y5RwR9z/bwlw/l/h6yWQYLSGA==
+X-Received: by 2002:a4a:7648:0:b0:581:dd3e:dbce with SMTP id w8-20020a4a7648000000b00581dd3edbcemr12906231ooe.0.1700082086640;
+        Wed, 15 Nov 2023 13:01:26 -0800 (PST)
+Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id 129-20020a4a0687000000b00587947707aasm819964ooj.4.2023.11.15.13.01.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Nov 2023 05:08:51 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Jaewon Kim <jaewon02.kim@samsung.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Wed, 15 Nov 2023 13:01:26 -0800 (PST)
+Received: (nullmailer pid 3739323 invoked by uid 1000);
+        Wed, 15 Nov 2023 21:01:25 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] Introduce ExynosAutov920 SoC and SADK board
-Date:   Wed, 15 Nov 2023 14:08:41 +0100
-Message-Id: <170005362858.21132.4200897251821879805.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231115095609.39883-1-jaewon02.kim@samsung.com>
-References: <CGME20231115095852epcas2p21e067efe75275c6abd2aebf04c5c6166@epcas2p2.samsung.com> <20231115095609.39883-1-jaewon02.kim@samsung.com>
+        linux-rockchip@lists.infradead.org
+Subject: [RESEND PATCH] pwm: Use device_get_match_data()
+Date:   Wed, 15 Nov 2023 15:01:20 -0600
+Message-ID: <20231115210121.3738487-1-robh@kernel.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Use preferred device_get_match_data() instead of of_match_device() to
+get the driver match data. With this, adjust the includes to explicitly
+include the correct headers.
 
-On Wed, 15 Nov 2023 18:55:56 +0900, Jaewon Kim wrote:
-> ExynosAutov920[1] is ARMv8-based automotive-oriented SoC.
-> This SoC is the next generation of exynosautov9 and AE(Automotive Enhanced)
-> IPs are used for safety.
-> 
-> This patchset is the minimal set for ExynosAutov920 SoC and SADK board.
-> Currently, ramdisk console is available and Clock, UFS, and USI will be
-> added after this patchset.
-> 
-> [...]
+As these drivers only do DT based matching, of_match_device() will never
+return NULL if we've gotten to probe(). Therefore, the NULL check and
+error returns can be dropped.
 
-Applied, thanks!
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pwm/pwm-img.c      | 8 ++------
+ drivers/pwm/pwm-rockchip.c | 9 ++-------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
 
-[01/12] dt-bindings: soc: samsung: exynos-sysreg: add exynosautov920 sysreg
-        https://git.kernel.org/krzk/linux/c/20862a23260a3ab76ea5b425f93967d0683b28a2
-[02/12] dt-bindings: soc: samsung: exynos-pmu: add exynosautov920 compatible
-        https://git.kernel.org/krzk/linux/c/705672285530cd513b5549f96f92b2a9fcd63017
-[03/12] dt-bindings: soc: samsung: usi: add exynosautov920-usi compatible
-        https://git.kernel.org/krzk/linux/c/7a5e832d05025a3679d0fcd60584e6e946a3e358
-[04/12] dt-bindings: serial: samsung: add exynosautov920-uart compatible
-        https://git.kernel.org/krzk/linux/c/9433b8d8d35bd0b17d6e0df76ec135dd2fe63e7c
-[05/12] dt-bindings: pwm: samsung: add exynosautov920 compatible
-        https://git.kernel.org/krzk/linux/c/d2d9e80a0ba6b1f507c14d6d8e2b833a474744d3
-[06/12] <DIFFERENT TREE>
-[07/12] dt-bindings: arm: samsung: Document exynosautov920 SADK board binding
-        https://git.kernel.org/krzk/linux/c/8bd05d4a86d5e1cec35dc7b8d1a5c0d925ecde1e
-[08/12] dt-bindings: hwinfo: samsung,exynos-chipid: add exynosautov920 compatible
-        https://git.kernel.org/krzk/linux/c/92b022550ae55527b4ce8f8cae7863857c7b795a
-[09/12] soc: samsung: exynos-chipid: add exynosautov920 SoC support
-        https://git.kernel.org/krzk/linux/c/beea67c7c2ef161c6ee7ef4e39d842fc0be3995c
-[10/12] <NOT APPLIED>
-[11/12] arm64: dts: exynos: add initial support for exynosautov920 SoC
-        https://git.kernel.org/krzk/linux/c/1a035f71803af961fa72264d22716b5b5b85fdc1
-[12/12] arm64: dts: exynos: add minimal support for exynosautov920 sadk board
-        https://git.kernel.org/krzk/linux/c/a0282075cf5e6abc6d8cae89c1d5fedeb8f32c49
-
-Best regards,
+diff --git a/drivers/pwm/pwm-img.c b/drivers/pwm/pwm-img.c
+index 116fa060e302..0d218c0b690e 100644
+--- a/drivers/pwm/pwm-img.c
++++ b/drivers/pwm/pwm-img.c
+@@ -13,9 +13,9 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -260,7 +260,6 @@ static int img_pwm_probe(struct platform_device *pdev)
+ 	u64 val;
+ 	unsigned long clk_rate;
+ 	struct img_pwm_chip *imgchip;
+-	const struct of_device_id *of_dev_id;
+ 
+ 	imgchip = devm_kzalloc(&pdev->dev, sizeof(*imgchip), GFP_KERNEL);
+ 	if (!imgchip)
+@@ -272,10 +271,7 @@ static int img_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(imgchip->base))
+ 		return PTR_ERR(imgchip->base);
+ 
+-	of_dev_id = of_match_device(img_pwm_of_match, &pdev->dev);
+-	if (!of_dev_id)
+-		return -ENODEV;
+-	imgchip->data = of_dev_id->data;
++	imgchip->data = device_get_match_data(&pdev->dev);
+ 
+ 	imgchip->periph_regs = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+ 							       "img,cr-periph");
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index cce4381e188a..a7c647e37837 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -10,8 +10,8 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/pwm.h>
+ #include <linux/time.h>
+ 
+@@ -296,16 +296,11 @@ MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
+ 
+ static int rockchip_pwm_probe(struct platform_device *pdev)
+ {
+-	const struct of_device_id *id;
+ 	struct rockchip_pwm_chip *pc;
+ 	u32 enable_conf, ctrl;
+ 	bool enabled;
+ 	int ret, count;
+ 
+-	id = of_match_device(rockchip_pwm_dt_ids, &pdev->dev);
+-	if (!id)
+-		return -EINVAL;
+-
+ 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+ 	if (!pc)
+ 		return -ENOMEM;
+@@ -344,7 +339,7 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, pc);
+ 
+-	pc->data = id->data;
++	pc->data = device_get_match_data(&pdev->dev);
+ 	pc->chip.dev = &pdev->dev;
+ 	pc->chip.ops = &rockchip_pwm_ops;
+ 	pc->chip.npwm = 1;
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.42.0
+
