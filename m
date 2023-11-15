@@ -2,53 +2,53 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD9E7EC2B7
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 13:44:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D41E17EC347
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 14:08:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343803AbjKOMo0 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Nov 2023 07:44:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47788 "EHLO
+        id S1343873AbjKONI6 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Nov 2023 08:08:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343795AbjKOMoZ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 07:44:25 -0500
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B20121
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 04:44:21 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-daf2eda7efaso5247047276.0
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 04:44:21 -0800 (PST)
+        with ESMTP id S1343867AbjKONI5 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 08:08:57 -0500
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B175A121
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 05:08:53 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41cc44736f2so42091151cf.3
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 05:08:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700052261; x=1700657061; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700053733; x=1700658533; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RDeEkereiAIAe0FUqdP5N5yF0qKzFi4/lgt4oMPVPJ8=;
-        b=KTzIJI0vyEipdbl3RkmUBghLdhKIxCGjx08IvDLQGYLSXpiLWzV4zsn06xPqFp6Kul
-         x5MVsLJNM6FjzzPIahMYN7P6uXvPDjN5e5nlkDwCikUZjqpkamIVPmwdaRIcFCt3C1cK
-         YXnG6jpFSR8GlA/XbjeTJb2DRkgZfLYPfXu8sVA3WeEAriT1k7WFSgu7CBO4rF132lqE
-         dbLUlkACf0Cqoc9XHcR1S8+lbOZtCfl12k1PUqL9S+fwvZav4ynkEkhyOniWf0zF2mlS
-         TfJvEeimiXIokpbiG2DjyFn+xB8teNJMaAUgZmmBErDq2NgKdmGT9hD0IT7ayoIpr3MO
-         X8Pw==
+        bh=00ATIXVFBGhxLdhohuNcYTvt+T04SzCwSceArLs8rqI=;
+        b=Vm7WabX2L9VJ4kqJcr331iVd9N4UGiHnPmSaHejKrEyaXN4Jhi5cUhJ5KAZ/P0eCaH
+         bLsvoAAf8O3H056aKiYJ1P9/y86IiXCMRiJVlrJke6QYuyHvHHqx6pdGqFvW3PvEAIXO
+         BFUzTuvCiAwtAPoeVvcOvVCh1AhvaawGzHutodxTEyYruNQ0GzkqpTlb9Hdg35yh608q
+         QV3Cwq7uVN+hwT2mcTMSQTJsRL2v9vpvhIEh4+3L4+csxPUSgkReoFKBXCgm1RReKsYo
+         1GihYJGayig9Y4Orf3R+OspAROtoeg2pjAB0YxweE+2UCEJ3tqNX4LB0rIyNCE9qn2IO
+         w43A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700052261; x=1700657061;
+        d=1e100.net; s=20230601; t=1700053733; x=1700658533;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RDeEkereiAIAe0FUqdP5N5yF0qKzFi4/lgt4oMPVPJ8=;
-        b=aI98dtfQW6O83ImFnys5VMulD2PLrnFKTuZ3xFR/tc+AAf7BsxPic77thsR1jYD4EZ
-         Tx74XxcKVaFjNksswFQ0pTIWa1o5I1mO5Rx7/ySkVRaWHHLZz2YvG9O3efM8RmrgQ3T/
-         Dmd2fbE/Red3uZyWGJwzxiKsCdvInYABbU0Oni5ky/AVXV/hP9MJhdJ7gx4154YGJo16
-         157xYWXwxE8+b/lVTFy8XGBoyjhrN/kS42MdExOBiBii4/meRGRcFk1vpz9SoAQcwVNa
-         5mdjgpvcEwPkNNsUGjBp/wqzoJ02AyDjasCtQ5qXZsICWL6tgWEGGUSwFxBUe+tBWIvm
-         AjBQ==
-X-Gm-Message-State: AOJu0YxEjZL8qJsECy+5BlYESnrHbqo0pBhWCQgqhyoZDdGx9SDjHRbx
-        dZHDjpdsYTVVl9iTXLz3tGirvA==
-X-Google-Smtp-Source: AGHT+IFfGb6mZX8mGeMVlXdfJR95sgELctz4H5+vZhgwUg6VNMf7lb1HDhee3lSbcSQuhkvaW9Ckxg==
-X-Received: by 2002:a25:ca53:0:b0:c4b:ada8:8b86 with SMTP id a80-20020a25ca53000000b00c4bada88b86mr11872481ybg.64.1700052260882;
-        Wed, 15 Nov 2023 04:44:20 -0800 (PST)
+        bh=00ATIXVFBGhxLdhohuNcYTvt+T04SzCwSceArLs8rqI=;
+        b=UdbJ1I8zFxmZWpRJ4nhND2PGmHlX9uOKHEJafpN+O1vwZNFlqbd2EMH9JuZ9dSO1MW
+         UXZXTQCTfNNnAXS4kbWjri/NKJdF66aPMgAuFRhvVNrNx5CgFxJNeBWdGr9O2wNO12dI
+         17iYqaWK24ViFWfR2izfI39pYv4Gkebf5XBAGuZTH2A5Lxp31ceBl4i0l78FNtgxpUp5
+         tFJXGOndHwi01YyZ/K2gkcK0YAxPbbgfKWDl2S5its9eVS8BJN3mWbzeq4hX3TlIobwo
+         SWpeZoLZfrdyqommRZiuNY4MwQJjwXM0AjG8D96WrzGKx/AiIvzNwZWToCk/5+497Y6O
+         w6dg==
+X-Gm-Message-State: AOJu0YxqpnqWcj5+EfTIcLhr/PjRHSgAZnWdppRNl5P9Jy1l3Ljk/Itc
+        KlE2Xgmc71iyYfe4F03Kszm/RA==
+X-Google-Smtp-Source: AGHT+IEQT8wvSMBcf62eIW3F4aWMFp+D1AcNgOdwSNIkKMd6dhgIMdRVnWgsbwXwQE6Nult31piXLQ==
+X-Received: by 2002:ac8:5e4d:0:b0:41c:bf67:37bb with SMTP id i13-20020ac85e4d000000b0041cbf6737bbmr6541560qtx.59.1700053732829;
+        Wed, 15 Nov 2023 05:08:52 -0800 (PST)
 Received: from krzk-bin.. ([12.191.197.195])
-        by smtp.gmail.com with ESMTPSA id pz28-20020ad4551c000000b00677af708ebfsm504920qvb.126.2023.11.15.04.44.16
+        by smtp.gmail.com with ESMTPSA id fp3-20020a05622a508300b00417dd1dd0adsm3549129qtb.87.2023.11.15.05.08.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Nov 2023 04:44:20 -0800 (PST)
+        Wed, 15 Nov 2023 05:08:51 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Alim Akhtar <alim.akhtar@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -61,24 +61,23 @@ To:     Alim Akhtar <alim.akhtar@samsung.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jirislaby@kernel.org>,
         Jaewon Kim <jaewon02.kim@samsung.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 06/12] dt-bindings: pinctrl: samsung: add exynosautov920 binding
-Date:   Wed, 15 Nov 2023 13:44:13 +0100
-Message-Id: <170005224375.13297.8512275766999804911.b4-ty@linaro.org>
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Introduce ExynosAutov920 SoC and SADK board
+Date:   Wed, 15 Nov 2023 14:08:41 +0100
+Message-Id: <170005362858.21132.4200897251821879805.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231115095609.39883-7-jaewon02.kim@samsung.com>
-References: <20231115095609.39883-1-jaewon02.kim@samsung.com> <CGME20231115095854epcas2p457e0eedcd0b4a001eba8fba012f73920@epcas2p4.samsung.com> <20231115095609.39883-7-jaewon02.kim@samsung.com>
+In-Reply-To: <20231115095609.39883-1-jaewon02.kim@samsung.com>
+References: <CGME20231115095852epcas2p21e067efe75275c6abd2aebf04c5c6166@epcas2p2.samsung.com> <20231115095609.39883-1-jaewon02.kim@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,15 +86,41 @@ List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
 
-On Wed, 15 Nov 2023 18:56:02 +0900, Jaewon Kim wrote:
-> Add compatible string for exynosautov920 pin controller.
+On Wed, 15 Nov 2023 18:55:56 +0900, Jaewon Kim wrote:
+> ExynosAutov920[1] is ARMv8-based automotive-oriented SoC.
+> This SoC is the next generation of exynosautov9 and AE(Automotive Enhanced)
+> IPs are used for safety.
 > 
+> This patchset is the minimal set for ExynosAutov920 SoC and SADK board.
+> Currently, ramdisk console is available and Clock, UFS, and USI will be
+> added after this patchset.
 > 
+> [...]
 
 Applied, thanks!
 
-[06/12] dt-bindings: pinctrl: samsung: add exynosautov920 binding
-        https://git.kernel.org/pinctrl/samsung/c/fe8741faa3d9b4dd187708fed937da2766b29da4
+[01/12] dt-bindings: soc: samsung: exynos-sysreg: add exynosautov920 sysreg
+        https://git.kernel.org/krzk/linux/c/20862a23260a3ab76ea5b425f93967d0683b28a2
+[02/12] dt-bindings: soc: samsung: exynos-pmu: add exynosautov920 compatible
+        https://git.kernel.org/krzk/linux/c/705672285530cd513b5549f96f92b2a9fcd63017
+[03/12] dt-bindings: soc: samsung: usi: add exynosautov920-usi compatible
+        https://git.kernel.org/krzk/linux/c/7a5e832d05025a3679d0fcd60584e6e946a3e358
+[04/12] dt-bindings: serial: samsung: add exynosautov920-uart compatible
+        https://git.kernel.org/krzk/linux/c/9433b8d8d35bd0b17d6e0df76ec135dd2fe63e7c
+[05/12] dt-bindings: pwm: samsung: add exynosautov920 compatible
+        https://git.kernel.org/krzk/linux/c/d2d9e80a0ba6b1f507c14d6d8e2b833a474744d3
+[06/12] <DIFFERENT TREE>
+[07/12] dt-bindings: arm: samsung: Document exynosautov920 SADK board binding
+        https://git.kernel.org/krzk/linux/c/8bd05d4a86d5e1cec35dc7b8d1a5c0d925ecde1e
+[08/12] dt-bindings: hwinfo: samsung,exynos-chipid: add exynosautov920 compatible
+        https://git.kernel.org/krzk/linux/c/92b022550ae55527b4ce8f8cae7863857c7b795a
+[09/12] soc: samsung: exynos-chipid: add exynosautov920 SoC support
+        https://git.kernel.org/krzk/linux/c/beea67c7c2ef161c6ee7ef4e39d842fc0be3995c
+[10/12] <NOT APPLIED>
+[11/12] arm64: dts: exynos: add initial support for exynosautov920 SoC
+        https://git.kernel.org/krzk/linux/c/1a035f71803af961fa72264d22716b5b5b85fdc1
+[12/12] arm64: dts: exynos: add minimal support for exynosautov920 sadk board
+        https://git.kernel.org/krzk/linux/c/a0282075cf5e6abc6d8cae89c1d5fedeb8f32c49
 
 Best regards,
 -- 
