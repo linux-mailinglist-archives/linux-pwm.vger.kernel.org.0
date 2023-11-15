@@ -2,55 +2,55 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB647EC23B
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 13:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E24B7EC2A0
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Nov 2023 13:42:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234916AbjKOM26 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Nov 2023 07:28:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        id S1343789AbjKOMm2 (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Wed, 15 Nov 2023 07:42:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234936AbjKOM25 (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 07:28:57 -0500
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 591D110F
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 04:28:52 -0800 (PST)
-Received: by mail-qv1-xf2d.google.com with SMTP id 6a1803df08f44-66d13ac2796so38694436d6.2
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 04:28:52 -0800 (PST)
+        with ESMTP id S1343717AbjKOMm2 (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 07:42:28 -0500
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D3E10F
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 04:42:24 -0800 (PST)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-1f256362bb5so3965431fac.0
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 04:42:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700051331; x=1700656131; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700052144; x=1700656944; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dwjGBPv0LggRv8ucHbctzDyEB0uQFRFM/3IXkTUdnCo=;
-        b=lTD5ZvvZCoGiMSuKgEYFq2kK4QFgFjoumEiVf91QEpiFd0xLhzO2ENmi4tV2FWmoVD
-         8XwfxtceJF7Wr67GCPoWT0Kv7dc79JLaf/no3/Bw3xvveTROjTpgW9xFZcddSoM9y7HV
-         HyDV4gHkmAfbObHrJRKbsA+31smB96Ob1oX6EZX6NU9CreLPXwMiBKDfXRuxBBHkBTkX
-         5xvJNIyTwlRlM/nz1/rwiOz95vPPLK+ZhZJY4gy+0eN3Q+LcvL0subm5feKGewOaEfCx
-         TQqbs0xvUWQhkO2uo85zppsIFNUyjMunbLejTa8v1yreFcLnIUFB6dYrdzoTgnL9WRLs
-         tBjA==
+        bh=bmdydOm0GoN412Ohuw0jZNTKDZO/tkSVt+tIMTYaly8=;
+        b=xAmHRpBYZ9UuLAt1qRZSVQ2kUdDCDcYmtFaRTJentJJq6kDu9C0oIW3m3ubvdnJZlD
+         WsfwO0xtvAEsgsft9/G5M5XHn1D40f1GWf6Axq9mIL5zpJlYCgHfY++zJ2qFVTHZpky7
+         Uo8+20erk+I3K3ARFsCls5N9sHPVYiVNHYNeMk0+hoyecuHjU4LRE8kUQ32dyUrSueaQ
+         Avi24fdMI6xIBLNVsPDoBhsfAm5uuxQc1XH810lMdzMJBz/Rkq5RfAL+PZNjkeFyFiXl
+         nCtl5yofDp3li6O/Kgx9+phqNzUqJgDPdt8XzfEzIRDLt7LqMiaePJiG0AqVcnIpog1n
+         iGog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700051331; x=1700656131;
+        d=1e100.net; s=20230601; t=1700052144; x=1700656944;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dwjGBPv0LggRv8ucHbctzDyEB0uQFRFM/3IXkTUdnCo=;
-        b=nUJSXL2y/DgedjsPybrBXDUIsZ1I/BgO1uBe51XNs6UpcwLOn/I1IngR39TCIOsg9g
-         Q2bJVcylcHG8zi0oQRW4abEUbz0jwyypR02jObzAXn8d5IEz+qdArc2jBxcKxOpF7svQ
-         /5Jyz+CvRci5fouEwTyEycDMJZELHgZOz2pw8ZlGCw4MWmYiOvVGJD5U72OM7E5ynTEw
-         3fRloSbsj2/iaZ+0KsFcvUo2VMLkqF/81NTQtyx4povPdYV5OTl36OHrC1R1BvhnL/KK
-         6ew5G8tOE5v8Q9MZ2El16NHXCHDq9IqphAvyAArKFOyWSLwDVwJXyq6MI1ArP576lLrx
-         tFQQ==
-X-Gm-Message-State: AOJu0YwMApmFvWtqZIDxIa08mDgSS6yuXnbGfOagLWgUXS1Q74yRse8C
-        NagLW5rdCffVaYJkU41naknQCg==
-X-Google-Smtp-Source: AGHT+IFtow3WlRKFN1IOoty6QWnONoJvytKJit31/+ebAwkvSlyX2HYbGen471zV2MI9N/6R9jevvg==
-X-Received: by 2002:a05:6214:40f:b0:677:a0f6:8f7c with SMTP id z15-20020a056214040f00b00677a0f68f7cmr7674391qvx.24.1700051331495;
-        Wed, 15 Nov 2023 04:28:51 -0800 (PST)
+        bh=bmdydOm0GoN412Ohuw0jZNTKDZO/tkSVt+tIMTYaly8=;
+        b=EmBLbPeDl2sqE/pMO3C76WZC2vMtaGRm/cCWJr14jbvcSGbhYlOpyzKoIwdCJ5GrIL
+         Bd/cZjnZCf+8acJarcExhCE2U5aTQsol1aVFmsV2P7ddTyXqDfwYnbYHEV7w2KMGNlcK
+         z0t8rzC+8FciK6NFUJnVoDtWhW/YoLnpe/pRX7BrKio3CQtFje6Le5vJtqunYcDa1Fbu
+         8Ro4QZcKZ+L1l7s+U+9bFch9XGeh7bN85LC9R2WSbP8y6dyAEiPH7hgRVGTd03sAs9CJ
+         Hw2ExB3ySTYM9h8Cz17hrOMwaZk347W+Kfv/5VAZ6CjOQT2QDzeAZTgUrIE+9NRvf4vx
+         DXew==
+X-Gm-Message-State: AOJu0YzLyrDFDGL1fgDXVwmxedy8R8Jul0e/Bvu0ggZiO7OljUjyZBrp
+        LUzR4H5DYi+pXC/bC7VYz3z5uA==
+X-Google-Smtp-Source: AGHT+IHY2FyShmLdhUviNHa1K7fM0dH60BKVB7NPM7nk4q3bWjhltEuIdAMwfE2vjaQDAs8VqdUVoA==
+X-Received: by 2002:a05:6870:7a10:b0:1dc:7e71:d475 with SMTP id hf16-20020a0568707a1000b001dc7e71d475mr15429827oab.4.1700052144247;
+        Wed, 15 Nov 2023 04:42:24 -0800 (PST)
 Received: from [192.168.212.13] ([12.191.197.195])
-        by smtp.gmail.com with ESMTPSA id pr18-20020a056214141200b0067169e210b3sm494437qvb.70.2023.11.15.04.28.47
+        by smtp.gmail.com with ESMTPSA id q15-20020ae9e40f000000b007742c6823a3sm3438851qkc.108.2023.11.15.04.42.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Nov 2023 04:28:50 -0800 (PST)
-Message-ID: <62b7176d-f99c-49f6-a287-17a6b3604c1c@linaro.org>
-Date:   Wed, 15 Nov 2023 13:28:45 +0100
+        Wed, 15 Nov 2023 04:42:23 -0800 (PST)
+Message-ID: <ae03b902-fa12-4a33-9a4f-ab3a5956ea5c@linaro.org>
+Date:   Wed, 15 Nov 2023 13:42:15 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 10/12] pinctrl: samsung: add exynosautov920 pinctrl
@@ -123,7 +123,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -140,91 +140,12 @@ On 15/11/2023 10:56, Jaewon Kim wrote:
 > 
 > This is a structure to protect the GPIO group with S2MPU in VM environment,
 > and will only be applied in ExynosAuto series SoCs.
-> 
-> Example)
-> -------------------------------------------------
-> | original		| ExynosAutov920	|
-> |-----------------------------------------------|
-> | 0x0	GPIO_CON	| 0x0	GPIO_CON	|
-> | 0x4	GPIO_DAT	| 0x4	GPIO_DAT	|
-> | 0x8	GPIO_PUD	| 0x8	GPIO_PUD	|
-> | 0xc	GPIO_DRV	| 0xc	GPIO_DRV	|
-> | 0x700	EINT_CON	| 0x18	EINT_CON	|
-> | 0x800	EINT_FLTCON	| 0x1c	EINT_FLTCON0	|
-> | 0x900	EINT_MASK	| 0x20	EINT_FLTCON1	|
-> | 0xa00	EINT_PEND	| 0x24	EINT_MASK	|
-> |			| 0x28	EINT_PEND	|
-> -------------------------------------------------
-> 
-> Pinctrl data for ExynosAutoV920 SoC.
->  - GPA0,GPA1 (10): External wake up interrupt
->  - GPQ0 (2): SPMI (PMIC I/F)
->  - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
->  - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
->  - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
->  - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
-> 
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> ---
->  .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 140 ++++++++++++++++++
->  drivers/pinctrl/samsung/pinctrl-exynos.c      | 102 ++++++++++++-
->  drivers/pinctrl/samsung/pinctrl-exynos.h      |  27 ++++
->  drivers/pinctrl/samsung/pinctrl-samsung.c     |   5 +
->  drivers/pinctrl/samsung/pinctrl-samsung.h     |  13 ++
->  5 files changed, 280 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> index cb965cf93705..cf86722a70a3 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> @@ -796,3 +796,143 @@ const struct samsung_pinctrl_of_match_data fsd_of_data __initconst = {
->  	.ctrl		= fsd_pin_ctrl,
->  	.num_ctrl	= ARRAY_SIZE(fsd_pin_ctrl),
->  };
-> +
-> +/* pin banks of exynosautov920 pin-controller 0 (ALIVE) */
-> +static struct samsung_pin_bank_data exynosautov920_pin_banks0[] = {
 
-So you created patch from some downstream code? No, please work on
-upstream. Take upstream code and customize it to your needs. That way
-you won't introduce same mistakes fixes years ago.
+Checkpatch points some warnings:
 
-Missing const.
-
-...
-
-> @@ -31,6 +31,7 @@
->  #define EXYNOS7_WKUP_EMASK_OFFSET	0x900
->  #define EXYNOS7_WKUP_EPEND_OFFSET	0xA00
->  #define EXYNOS_SVC_OFFSET		0xB08
-> +#define EXYNOSAUTOV920_SVC_OFFSET	0xF008
->  
-
-...
-
->  #ifdef CONFIG_PINCTRL_S3C64XX
->  	{ .compatible = "samsung,s3c64xx-pinctrl",
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-> index 9b3db50adef3..cbb78178651b 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-> @@ -122,6 +122,9 @@ struct samsung_pin_bank_type {
->   * @eint_type: type of the external interrupt supported by the bank.
->   * @eint_mask: bit mask of pins which support EINT function.
->   * @eint_offset: SoC-specific EINT register or interrupt offset of bank.
-> + * @mask_offset: SoC-specific EINT mask register offset of bank.
-> + * @pend_offset: SoC-specific EINT pend register offset of bank.
-> + * @combine: EINT register is adjacent to the GPIO control register.
-
-I don't understand it. Adjacent? Are you sure? GPIO control register has
-0xF004 (EXYNOSAUTOV920_SVC_OFFSET + 0x4)? Anyway, this does not scale.
-What if next revision comes with not-adjacent. There will be
-"combine_plus"? Also name confuses me - combine means together.
-
-Also your first map of registers does not have it adjacent...
-
-Anyway first patch is to rework driver to support new register layout.
-Second patch is to add new variant.
+CHECK: Alignment should match open parenthesis
+CHECK: Lines should not end with a '('
+CHECK: Macro argument reuse 'reg' - possible side-effects?
 
 Best regards,
 Krzysztof
