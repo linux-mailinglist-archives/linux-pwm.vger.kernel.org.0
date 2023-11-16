@@ -2,57 +2,57 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F5777EDA7E
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Nov 2023 04:53:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B3E37EDBDC
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Nov 2023 08:21:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbjKPDxR (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Wed, 15 Nov 2023 22:53:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        id S230262AbjKPHVP (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Nov 2023 02:21:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjKPDxQ (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Wed, 15 Nov 2023 22:53:16 -0500
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE0B19B
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 19:53:12 -0800 (PST)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231116035310epoutp01dd6b956b7231ec434c54cdd70154d239~X-h44Wds20638606386epoutp01S
-        for <linux-pwm@vger.kernel.org>; Thu, 16 Nov 2023 03:53:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231116035310epoutp01dd6b956b7231ec434c54cdd70154d239~X-h44Wds20638606386epoutp01S
+        with ESMTP id S229638AbjKPHVO (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Nov 2023 02:21:14 -0500
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7367EC5
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 23:21:08 -0800 (PST)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231116072106epoutp03d0177e2fac634420756d034fb6c172f6~YCXcikkIM0407504075epoutp03y
+        for <linux-pwm@vger.kernel.org>; Thu, 16 Nov 2023 07:21:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231116072106epoutp03d0177e2fac634420756d034fb6c172f6~YCXcikkIM0407504075epoutp03y
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1700106790;
-        bh=pIIlFTM4Wlq3IT9Jc9JjGxdZxFss84n5wkN7Qu/QvFI=;
+        s=mail20170921; t=1700119266;
+        bh=u8E99f1NXOYNCstPOVw2U01/UNiPDcWsjwx3IgmBrr0=;
         h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-        b=HnGZdjSOmujFeu4XRtAKsWniNwYc8x3dy1r58F81UDg5uOM3Btl4b7BD+ULnciTi1
-         aTdRlxPowcp96/V/NJbnvqSrGXohaz+YPWA2zvs3agxU7cPV+U3RkSSfWNxl5SsPbG
-         ydbE/mAIS2fxnoqyCNqlLmEqaQdLE8R1HP7fQcMU=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        b=nsFDoVLNSvPth1+4tEJQgfPY3s9JOHpabCJm3StYmFGDuOkEGIcP5W+oGB5iY1p12
+         FS7/8b3O8wa+VJYs9WmWkJgGj5myGlTwdRln+2ma2Bnpc+2a015sj+LqP6+MQO1UlS
+         IoOZVQTpXEkupv0ojzyBZacys1ddJbxlfzYrVuNw=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
         epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20231116035309epcas2p12d3044f1a97efee4b72c81479cb7508d~X-h4WphoS1017910179epcas2p1u;
-        Thu, 16 Nov 2023 03:53:09 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.101]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4SW5jK1W4Nz4x9Pw; Thu, 16 Nov
-        2023 03:53:09 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        64.F7.08648.52295556; Thu, 16 Nov 2023 12:53:09 +0900 (KST)
+        20231116072106epcas2p127f6a407e41cecf23fa7007cfb2dcb15~YCXcFPkJg2754627546epcas2p1G;
+        Thu, 16 Nov 2023 07:21:06 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.70]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4SWBKF34krz4x9Q4; Thu, 16 Nov
+        2023 07:21:05 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        88.00.10006.1E2C5556; Thu, 16 Nov 2023 16:21:05 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20231116035308epcas2p2ccabb652c85571f3a2697deabd317169~X-h3g6DfU0293602936epcas2p2w;
-        Thu, 16 Nov 2023 03:53:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20231116072104epcas2p32f44be9479074149027c07ee00b90cb3~YCXa0rH8t1977419774epcas2p3O;
+        Thu, 16 Nov 2023 07:21:04 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20231116035308epsmtrp1fd1f12486541cd5bdbd67a98dbb86a74~X-h3gATok2054420544epsmtrp1d;
-        Thu, 16 Nov 2023 03:53:08 +0000 (GMT)
-X-AuditID: b6c32a43-4b3ff700000021c8-e2-6555922511a4
+        20231116072104epsmtrp1c4a7b897c2ff6e30a28fb17111379e72~YCXazagqQ0860308603epsmtrp1o;
+        Thu, 16 Nov 2023 07:21:04 +0000 (GMT)
+X-AuditID: b6c32a45-179ff70000002716-61-6555c2e10ad0
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        70.97.08755.42295556; Thu, 16 Nov 2023 12:53:08 +0900 (KST)
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5F.10.08817.0E2C5556; Thu, 16 Nov 2023 16:21:04 +0900 (KST)
 Received: from [10.229.8.168] (unknown [10.229.8.168]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20231116035308epsmtip1df9058ed61801aa00b83f8201c9303dc~X-h3LSI891299512995epsmtip18;
-        Thu, 16 Nov 2023 03:53:08 +0000 (GMT)
-Message-ID: <221efdec-4940-031c-73b1-30aed96c76b0@samsung.com>
-Date:   Thu, 16 Nov 2023 12:50:21 +0900
+        20231116072104epsmtip1e9d95f8033c6e5a44d6ed5eaecff878a~YCXaeTzXU0695006950epsmtip1U;
+        Thu, 16 Nov 2023 07:21:04 +0000 (GMT)
+Message-ID: <bd312683-c3fc-bb85-3e8e-4b329e7e5719@samsung.com>
+Date:   Thu, 16 Nov 2023 16:18:17 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
         Thunderbird/102.11.0
@@ -74,43 +74,44 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
 From:   Jaewon Kim <jaewon02.kim@samsung.com>
-In-Reply-To: <ae03b902-fa12-4a33-9a4f-ab3a5956ea5c@linaro.org>
+In-Reply-To: <62b7176d-f99c-49f6-a287-17a6b3604c1c@linaro.org>
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRmVeSWpSXmKPExsWy7bCmua7qpNBUgwev2S0ezNvGZrFm7zkm
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRmVeSWpSXmKPExsWy7bCmme7DQ6GpBh/bxCwezNvGZrFm7zkm
         i/lHzrFaNC9ez2bxbq6Mxd7XW9ktpvxZzmSx6fE1VovN8/8wWlzeNYfN4u7dVYwWM87vY7I4
         s7iX3aJ17xF2i8Nv2lktfu6ax2KxahdQ3e2JkxkdhDx2zrrL7rFpVSebx51re9g89s9dw+6x
         eUm9R/9fA4++LasYPT5vkgvgiMq2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdS
         yEvMTbVVcvEJ0HXLzAH6REmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYF6gV5yY
-        W1yal66Xl1piZWhgYGQKVJiQnXFq5y/2gtmcFWd3bmVuYNzN3sXIySEhYCLxe81TRhBbSGAH
-        o8TJtWxdjFxA9idGiad33jFDJL4xStz5XQ7T8O7hKaiivYwSp5ousEIUvWaUmHFPAcTmFbCT
-        mDHhPxuIzSKgKjFn43EmiLigxMmZT1hAbFGBaInWZffBaoQFvCRO7dwDNodZQFzi1pP5YPUi
-        AveZJV63VYMsYxZ4wCgx99xXsFPZBLQlvq9fDNbACbSs589lqGZ5ie1v5zCDNEgIvOCQuLrr
-        NDPE2S4SfzpbGCFsYYlXx7dA/S8l8bK/DcrOlmif/ocVwq6QuLhhNhuEbSwx61k7UC8H0AJN
-        ifW79EFMCQFliSO3WCDW8kl0HP7LDhHmlehoE4JoVJO4P/Uc1BAZiUlHVjJB2B4SzZOns01g
-        VJyFFCqzkHw/C8kzsxD2LmBkWcUollpQnJuemmxUYAiP6uT83E2M4CSu5byD8cr8f3qHGJk4
-        GA8xSnAwK4nwmsuFpArxpiRWVqUW5ccXleakFh9iNAXGzURmKdHkfGAeySuJNzSxNDAxMzM0
-        NzI1MFcS573XOjdFSCA9sSQ1OzW1ILUIpo+Jg1OqgYln0+XSy8vj30zXWv510WZv80TXBcXP
-        22+m8jXMK1j7+VDPnVfr73vcuOWtWt387Bj7UsaTx3OKalXsr0Y/dzqzIX9iwwqzmM0yN6+x
-        +fuu+yh32Y+p+dHuGQrhP0TCzlXpPv9SuGNu+c6ihgXRVsF7CkRTpfMn/TL4l3JwVsaUhbWm
-        WQ+u7xB4dkjl2zrbN6FXz+b1fYnN57e+H7BZ3kxH7+L+P1/4tpzSaHt13ebj3JBXuz3v/nbc
-        W8BdUvggdFHIU0Pv2RmTE/rZvboP3NC7FjJ3L0fX9K2N3tPt7x/6LyP+5a3GhvUicT6f7jG4
-        z3nrHLj8xu2dxTw7K3Ukyp789ni5LfJ4TYJ+XpxflWCXEktxRqKhFnNRcSIAv3fkCGsEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsWy7bCSnK7KpNBUg0l35S0ezNvGZrFm7zkm
-        i/lHzrFaNC9ez2bxbq6Mxd7XW9ktpvxZzmSx6fE1VovN8/8wWlzeNYfN4u7dVYwWM87vY7I4
-        s7iX3aJ17xF2i8Nv2lktfu6ax2KxahdQ3e2JkxkdhDx2zrrL7rFpVSebx51re9g89s9dw+6x
-        eUm9R/9fA4++LasYPT5vkgvgiOKySUnNySxLLdK3S+DKOLXzF3vBbM6Kszu3Mjcw7mbvYuTk
-        kBAwkXj38BRbFyMXh5DAbkaJWzu3QiVkJJY/62ODsIUl7rccYYUoesko8XDvYbAiXgE7iRkT
-        /oMVsQioSszZeJwJIi4ocXLmExYQW1QgWmL15wusILawgJfEqZ17wGxmAXGJW0/mM4EMFRF4
-        zCzxcOp/ZhCHWeABo8TySY+g1v1ilJjfPR9sLJuAtsT39YvB2jmBVvf8uQw1ykyia2sXI4Qt
-        L7H97RzmCYxCs5BcMgvJxllIWmYhaVnAyLKKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93
-        EyM4hrU0dzBuX/VB7xAjEwfjIUYJDmYlEV5zuZBUId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzi
-        L3pThATSE0tSs1NTC1KLYLJMHJxSDUxL7xjP2r/72OztVlGrmU1vnSu9Ps85W6ggd8mDbRda
-        InTmJhpOsNZon2D67/JC/SWT9/qw2MeUlbgtdK14Kze9zCPynMnJxDwDzh3++6OEPNxNmYu4
-        Imqfehz86PP01h2Gr5+YbiT5xm+85qc0MXTtn7zPX2q4RIuqtwovStOxOP1D2cZOYvWsmhOx
-        USoMW9rdm9ijzuecDv14oc9tzj0rGU+LSP/XC6TW9L+7+TLmCoO46ft7bXI2tXfW7+fYucbL
-        vyi36nfvD01T25zs6pYrYqU890o3FBYv05qz4cpD06Mf5B9pewQomxanpXJd2Mf3+MOqwhtH
-        j98NY/ZmldTRY/E+k3dkucYD/tpObSWW4oxEQy3mouJEAKXl4UxQAwAA
-X-CMS-MailID: 20231116035308epcas2p2ccabb652c85571f3a2697deabd317169
+        W1yal66Xl1piZWhgYGQKVJiQndHycj57wV7jirdfTrI3ML7T7GLk5JAQMJG4emMySxcjF4eQ
+        wA5GiTl3XrNDOJ8YJdra3kM53xglPvbsZINpOfzmJTNEYi+jxKwbj5kgnNeMEpNnNwG1cHDw
+        CthJTLshBNLAIqAqMf1vC1gzr4CgxMmZT1hAbFGBaInWZffB4sICXhKndu5hBbGZBcQlbj2Z
+        zwRiiwjcZ5Z43VYNMp9Z4AGjxNxzXxlBEmwC2hLf1y8Ga+AE2jXz+XUmiGZ5ie1v54BdJyHw
+        gUPi4cW7jBBnu0g8OvcRyhaWeHV8CzuELSXxsr8Nys6WaJ/+hxXCrpC4uGE21MvGErOetTOC
+        PMYsoCmxfpc+iCkhoCxx5BYLxFo+iY7Df9khwrwSHW1CEI1qEvennoMaIiMx6chKJgjbQ6J5
+        8nS2CYyKs5BCZRaS72cheWYWwt4FjCyrGMVSC4pz01OLjQoM4ZGdnJ+7iRGcyLVcdzBOfvtB
+        7xAjEwfjIUYJDmYlEV5zuZBUId6UxMqq1KL8+KLSnNTiQ4ymwLiZyCwlmpwPzCV5JfGGJpYG
+        JmZmhuZGpgbmSuK891rnpggJpCeWpGanphakFsH0MXFwSjUwNSu+uR8/W1XllInl/n4Fq0UH
+        s596OU6JWfbr6vHbV9/eSSkO0ORk9VaLluGfa5OSXZ/zmKvjJqP2DpUbH/dxBuuc2R4yf9re
+        Hl+eabGrhdu/MUWzH7k79XbP8iPsGz7tWCwXvOWQ4FmuoKSlugk27Teu/DpWf3BlbfGPKO/K
+        v+Wmz+9e/JHarCH86lh7VtKyAxP2pRc7mAvfXsu1I/i+0yTL+JVGkZ4/mWI/dH6U3pC7NvKY
+        dtBsszX+zLtOGWrt8tr8tKxw/+81c+oUpr2pO3j8P+cdESmzo8cmr2E34W+ec+2P9XzDaYlZ
+        O66+qxCrPrd6VfXba0rilhOKJ5dHKS7Tl+uYtrDVnFPrlFv/GyWW4oxEQy3mouJEAAl1KuNt
+        BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsWy7bCSnO6DQ6GpBo9uqls8mLeNzWLN3nNM
+        FvOPnGO1aF68ns3i3VwZi72vt7JbTPmznMli0+NrrBab5/9htLi8aw6bxd27qxgtZpzfx2Rx
+        ZnEvu0Xr3iPsFofftLNa/Nw1j8Vi1S6gutsTJzM6CHnsnHWX3WPTqk42jzvX9rB57J+7ht1j
+        85J6j/6/Bh59W1YxenzeJBfAEcVlk5Kak1mWWqRvl8CV0fJyPnvBXuOKt19OsjcwvtPsYuTk
+        kBAwkTj85iUziC0ksJtR4uYXJoi4jMTyZ31sELawxP2WI6xdjFxANS8ZJW7c3gBUxMHBK2An
+        Me2GEEgNi4CqxPS/LWD1vAKCEidnPmEBsUUFoiVWf77ACmILC3hJnNq5B8xmFhCXuPVkPhPI
+        TBGBx8wSD6f+ZwZxmAUeMEosn/QIatsvRom+eXPAxrIJaEt8X78YrJ0TaPPM59eZIEaZSXRt
+        7WKEsOUltr+dwzyBUWgWkktmIdk4C0nLLCQtCxhZVjFKphYU56bnFhsWGOWllusVJ+YWl+al
+        6yXn525iBMevltYOxj2rPugdYmTiYDzEKMHBrCTCay4XkirEm5JYWZValB9fVJqTWnyIUZqD
+        RUmc99vr3hQhgfTEktTs1NSC1CKYLBMHp1QD085jt5Zax2434epcZvIwzXzHiycK207eL77S
+        EKgce/Wqtt3puo5Uidm/XevOGj8PLOet2dKRuFKiuL9Uc9d9Jukrr7PDyyeFmN2ZzSCfvIDn
+        csglY0PD3Y5njqbY/VtXv/tafm2C06IFVlUSL9McNaTaWqy797VPWfT2zmlZeeUrm2dnCFy8
+        vuBdyxHxHZPfmokvaN2wNVXrneyt2rPHV/y98JB/11WrkM6Tnxs2xMqf7+DwesctEvdWnXP2
+        9j1BD1MnaXQaCazr2CXPv+D8FZ8zzYXHvljNaH3S1PBysrSOeXSE++lfwsrd287JvFpUxmwk
+        FL9o4qZoDsWYlwE/vaa+bNpwx9XIaU179NvjNUosxRmJhlrMRcWJAGF6i29OAwAA
+X-CMS-MailID: 20231116072104epcas2p32f44be9479074149027c07ee00b90cb3
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
@@ -121,20 +122,25 @@ X-CMS-RootMailID: 20231115095856epcas2p1c3ee85750828bec2ee4ab0adeaeaff28
 References: <20231115095609.39883-1-jaewon02.kim@samsung.com>
         <CGME20231115095856epcas2p1c3ee85750828bec2ee4ab0adeaeaff28@epcas2p1.samsung.com>
         <20231115095609.39883-11-jaewon02.kim@samsung.com>
-        <ae03b902-fa12-4a33-9a4f-ab3a5956ea5c@linaro.org>
+        <62b7176d-f99c-49f6-a287-17a6b3604c1c@linaro.org>
 X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
+Hi all,
 
-On 23. 11. 15. 21:42, Krzysztof Kozlowski wrote:
+
+I sent it again because the mail format was broken due to the HTML part.
+
+
+On 23. 11. 15. 21:28, Krzysztof Kozlowski wrote:
 > On 15/11/2023 10:56, Jaewon Kim wrote:
 >> ExynosAutov920 GPIO has a different register structure.
 >> In the existing Exynos series, EINT control register enumerated after
@@ -144,26 +150,152 @@ On 23. 11. 15. 21:42, Krzysztof Kozlowski wrote:
 >>
 >> This is a structure to protect the GPIO group with S2MPU in VM environment,
 >> and will only be applied in ExynosAuto series SoCs.
-> Checkpatch points some warnings:
+>>
+>> Example)
+>> -------------------------------------------------
+>> | original		| ExynosAutov920	|
+>> |-----------------------------------------------|
+>> | 0x0	GPIO_CON	| 0x0	GPIO_CON	|
+>> | 0x4	GPIO_DAT	| 0x4	GPIO_DAT	|
+>> | 0x8	GPIO_PUD	| 0x8	GPIO_PUD	|
+>> | 0xc	GPIO_DRV	| 0xc	GPIO_DRV	|
+>> | 0x700	EINT_CON	| 0x18	EINT_CON	|
+>> | 0x800	EINT_FLTCON	| 0x1c	EINT_FLTCON0	|
+>> | 0x900	EINT_MASK	| 0x20	EINT_FLTCON1	|
+>> | 0xa00	EINT_PEND	| 0x24	EINT_MASK	|
+>> |			| 0x28	EINT_PEND	|
+>> -------------------------------------------------
+>>
+>> Pinctrl data for ExynosAutoV920 SoC.
+>>   - GPA0,GPA1 (10): External wake up interrupt
+>>   - GPQ0 (2): SPMI (PMIC I/F)
+>>   - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
+>>   - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
+>>   - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
+>>   - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
+>>
+>> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+>> ---
+>>   .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 140 ++++++++++++++++++
+>>   drivers/pinctrl/samsung/pinctrl-exynos.c      | 102 ++++++++++++-
+>>   drivers/pinctrl/samsung/pinctrl-exynos.h      |  27 ++++
+>>   drivers/pinctrl/samsung/pinctrl-samsung.c     |   5 +
+>>   drivers/pinctrl/samsung/pinctrl-samsung.h     |  13 ++
+>>   5 files changed, 280 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
+>> index cb965cf93705..cf86722a70a3 100644
+>> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
+>> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
+>> @@ -796,3 +796,143 @@ const struct samsung_pinctrl_of_match_data fsd_of_data __initconst = {
+>>   	.ctrl		= fsd_pin_ctrl,
+>>   	.num_ctrl	= ARRAY_SIZE(fsd_pin_ctrl),
+>>   };
+>> +
+>> +/* pin banks of exynosautov920 pin-controller 0 (ALIVE) */
+>> +static struct samsung_pin_bank_data exynosautov920_pin_banks0[] = {
+> So you created patch from some downstream code? No, please work on
+> upstream. Take upstream code and customize it to your needs. That way
+> you won't introduce same mistakes fixes years ago.
 >
-> CHECK: Alignment should match open parenthesis
-> CHECK: Lines should not end with a '('
-> CHECK: Macro argument reuse 'reg' - possible side-effects?
+> Missing const.
 
-I don`t know this happens.
+I did not work on downstream source.
 
-When I did the checkpatch, there were no problems as shown below.
+Kernel version is different, and there are numerous SoCs, So bringing 
+the patch
 
----
+form the downstream make conflicts. Don`t worry about it.
 
-./scripts/checkpatch.pl 
-0010-pinctrl-samsung-add-exynosautov920-pinctrl.patch
-total: 0 errors, 0 warnings, 416 lines checked
+Only GPIO struct was copied in the downstream code and the 'const' was 
+missing.
 
-0010-pinctrl-samsung-add-exynosautov920-pinctrl.patch has no obvious 
-style problems and is ready for submission.
+Anyway, I will add const in next version.
 
----
+
+>
+> ...
+>
+>> @@ -31,6 +31,7 @@
+>>   #define EXYNOS7_WKUP_EMASK_OFFSET	0x900
+>>   #define EXYNOS7_WKUP_EPEND_OFFSET	0xA00
+>>   #define EXYNOS_SVC_OFFSET		0xB08
+>> +#define EXYNOSAUTOV920_SVC_OFFSET	0xF008
+>>   
+> ...
+>
+>>   #ifdef CONFIG_PINCTRL_S3C64XX
+>>   	{ .compatible = "samsung,s3c64xx-pinctrl",
+>> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
+>> index 9b3db50adef3..cbb78178651b 100644
+>> --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
+>> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+>> @@ -122,6 +122,9 @@ struct samsung_pin_bank_type {
+>>    * @eint_type: type of the external interrupt supported by the bank.
+>>    * @eint_mask: bit mask of pins which support EINT function.
+>>    * @eint_offset: SoC-specific EINT register or interrupt offset of bank.
+>> + * @mask_offset: SoC-specific EINT mask register offset of bank.
+>> + * @pend_offset: SoC-specific EINT pend register offset of bank.
+>> + * @combine: EINT register is adjacent to the GPIO control register.
+> I don't understand it. Adjacent? Are you sure? GPIO control register has
+> 0xF004 (EXYNOSAUTOV920_SVC_OFFSET + 0x4)? Anyway, this does not scale.
+> What if next revision comes with not-adjacent. There will be
+> "combine_plus"? Also name confuses me - combine means together.
+>
+> Also your first map of registers does not have it adjacent...
+
+I think I should have added more information about new architect.
+
+-------------------------------------------------
+| original		| ExynosAutov920	 |
+|------------------------------------------------|
+| 0x0   GPA_CON		| 0x0    GPA_CON	 |
+| 0x4   GPA_DAT		| 0x4    GPA_DAT	 |
+| 0x8   GPA_PUD		| 0x8    GPA_PUD	 |
+| 0xc   GPA_DRV		| 0xc    GPA_DRV	 |
+|-----------------------| 0x18   EINT_GPA_CON	 |
+| 0x20  GPB_CON		| 0x1c   EINT_GPA_FLTCON0|
+| 0x24  GPB_DAT		| 0x20   EINT_GPA_FLTCON1|
+| 0x28  GPB_PUD		| 0x24   EINT_GPA_MASK	 |
+| 0x2c  GPB_DRV		| 0x28   EINT_GPA_PEND	 |
+|-----------------------|------------------------|
+| 0x700 EINT_GPA_CON	| 0x1000 GPB_CON	 |
+| 0x704 EINT_GPB_CON	| 0x1004 GPB_DAT	 |
+|-----------------------| 0x1008 GPB_PUD	 |
+| 0x800 EINT_GPA_FLTCON	| 0x100c GPB_DRV	 |
+| 0x804 EINT_GPB_FLTCON	| 0x1018 EINT_GPB_CON	 |
+|-----------------------| 0x101c EINT_GPB_FLTCON0|
+| 0x900 EINT_GPA_MASK	| 0x1020 EINT_GPB_FLTCON1|
+| 0x904 EINT_GPB_MASK	| 0x1024 EINT_GPB_MASK	 |
+|-----------------------| 0x1028 EINT_GPB_PEND	 |
+| 0xa00 EINT_GPA_PEND	|------------------------|
+| 0xa04 EINT_GPB_PEND	|			 |
+|-----------------------|------------------------|
+| 0xb08 SVC		| 0xf008 SVC		 |
+-------------------------------------------------|
+
+
+The reason why I chose variable name 'combine' is that EINT registers was
+
+separated from gpio control address. However, in exynosautov920 EINT
+
+registers combined with GPx group. So I chose "combine" word.
+
+If there is more reasonable name, i will change it.
+
+And I will also change the description of the variable.
+
+
+EINT registers related to the entire group(e.g SVC) were at the end of
+
+the GPIO block 0xb00 and now it has been moved to 0xf000.
+
+
+>
+> Anyway first patch is to rework driver to support new register layout.
+> Second patch is to add new variant.
+
+Okay, I will divide the patch in the next version.
 
 >
 > Best regards,
