@@ -2,88 +2,119 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 756C37EDC4C
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Nov 2023 08:50:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 934237EDC6D
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Nov 2023 08:57:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjKPHuZ (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Thu, 16 Nov 2023 02:50:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46420 "EHLO
+        id S230147AbjKPH5D (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Thu, 16 Nov 2023 02:57:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbjKPHuY (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Nov 2023 02:50:24 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBC4120;
-        Wed, 15 Nov 2023 23:50:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1700121020; x=1731657020;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kjXlzMKI4SAh9l1+GsCDYTAjNE/uMze9MZXtOyCmaPM=;
-  b=HQLNp6OiqIDewTqK16FrYbVgOkqNFAEBumH+BqcJr1hkkkJT1NNZlale
-   7WFR3OvkYqRlvvW4t/R51TP2JX0Yn+vF3eQTlujw1iODESKjt0GNlj8sP
-   DmVMVTRU7Gm3ijhPWu+xv7ppBJzjgET9ujCishDMf+UFIMZ41y59fMyQo
-   OeTP4aahmFCBuAtBAqhxQUhHyXUOi5EfM/WUAmW0z0nT6vn/mQrFgzN7C
-   QeeFdpyUEwjYcF8IoquNEBSYaGP8Ho6fDnWLZyYecA093UWQv6ij1bjlX
-   asqXehEZH535cJaaf/S0KgFioL6XsN1z+CWN6LLTjbpJ4p7Rfc68xKBd/
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.03,307,1694728800"; 
-   d="scan'208";a="34010892"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 16 Nov 2023 08:50:18 +0100
-Received: from steina-w.tq-net.de (steina-w.tq-net.de [10.123.53.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 30CB928007F;
-        Thu, 16 Nov 2023 08:50:18 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH 1/1] backlight: pwm_bl: Use dev_err_probe
-Date:   Thu, 16 Nov 2023 08:50:17 +0100
-Message-Id: <20231116075017.939926-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229638AbjKPH5C (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Thu, 16 Nov 2023 02:57:02 -0500
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B21120
+        for <linux-pwm@vger.kernel.org>; Wed, 15 Nov 2023 23:56:59 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r3XEr-0008RG-Bx; Thu, 16 Nov 2023 08:56:37 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r3XEp-009P1M-Np; Thu, 16 Nov 2023 08:56:35 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1r3XEp-002Wrz-EO; Thu, 16 Nov 2023 08:56:35 +0100
+Date:   Thu, 16 Nov 2023 08:56:35 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jaewon Kim <jaewon02.kim@samsung.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Introduce ExynosAutov920 SoC and SADK board
+Message-ID: <20231116075635.onolshbu4waqsqag@pengutronix.de>
+References: <CGME20231115095852epcas2p21e067efe75275c6abd2aebf04c5c6166@epcas2p2.samsung.com>
+ <20231115095609.39883-1-jaewon02.kim@samsung.com>
+ <170005362858.21132.4200897251821879805.b4-ty@linaro.org>
+ <6e69df6c-10fa-404a-ac02-4880723b8c50@linaro.org>
+ <55a0f27c-ea46-40ae-b1e5-e650802b89a8@linaro.org>
+ <d6f3d451-6a53-46b6-2263-cc071a9dc44c@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="deso36yy7zj5rlry"
+Content-Disposition: inline
+In-Reply-To: <d6f3d451-6a53-46b6-2263-cc071a9dc44c@samsung.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Let dev_err_probe handle the -EPROBE_DEFER case and also add an entry to
-/sys/kernel/debug/devices_deferred when deferred.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- drivers/video/backlight/pwm_bl.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+--deso36yy7zj5rlry
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 289bd9ce4d36d..3825c2b67c53b 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -509,8 +509,7 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	pb->pwm = devm_pwm_get(&pdev->dev, NULL);
- 	if (IS_ERR(pb->pwm)) {
- 		ret = PTR_ERR(pb->pwm);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "unable to request PWM\n");
-+		dev_err_probe(&pdev->dev, ret, "unable to request PWM\n");
- 		goto err_alloc;
- 	}
- 
--- 
-2.34.1
+Hello,
 
+On Thu, Nov 16, 2023 at 12:32:30PM +0900, Jaewon Kim wrote:
+> I already checked and there were no warnings or errors as shown below.
+>=20
+> Did I miss something??
+>=20
+>=20
+> $ make CHECK_DTBS=3Dy ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu-=20
+> exynos/exynosautov920-sadk.dtb
+>  =A0 LINT=A0=A0=A0 Documentation/devicetree/bindings
+>  =A0 CHKDT Documentation/devicetree/bindings/processed-schema.json
+>  =A0 SCHEMA Documentation/devicetree/bindings/processed-schema.json
+>  =A0 UPD=A0=A0=A0=A0 include/config/kernel.release
+>  =A0 DTC_CHK arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb
+
+https://www.kernel.org/doc/html/latest/process/maintainer-soc-clean-dts.html
+also talks about W=3D1 that you didn't pass.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--deso36yy7zj5rlry
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVVyzIACgkQj4D7WH0S
+/k7Dsgf8CEfnfcBO+X5uEDgo3Y7Z8C4wi5ENcCF2QdbXIn8f3i/0j24kJy5bKnh1
+aYEK3ZPy0TCtE9dW8BCoRjv4XyDOhS4gQkvgUGEhz+Y31KZx54rNTK/vPimcVZ51
+ykiKjhtT9WSMf8qcEaTdimYtt8+e8iA8WaRmQyMyzxbSCDnTvTXoWzMga77bpqco
+uIm0DgPSeMEzVI3tSNzI1DcJHBsR5Vee65E88Wq6jTukkVGtAiS7/mT0BLwhiYWN
+mopKsb3BDL1WvwmuJlnf6wleGhZRKWKNChljiPG/N9o7Vtzt6zJht/WOVYx1dmyJ
+CjfcU9YKpKwjWMDJ18/Tas3lVVSvEQ==
+=qThe
+-----END PGP SIGNATURE-----
+
+--deso36yy7zj5rlry--
