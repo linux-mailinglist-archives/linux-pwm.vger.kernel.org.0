@@ -2,189 +2,168 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2C797EF150
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Nov 2023 12:01:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4929E7EF240
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Nov 2023 13:06:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345998AbjKQLBI (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Nov 2023 06:01:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47756 "EHLO
+        id S231301AbjKQMGb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Nov 2023 07:06:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345984AbjKQLBH (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Nov 2023 06:01:07 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E9C194
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Nov 2023 03:01:01 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-32fdd0774d9so1305317f8f.2
-        for <linux-pwm@vger.kernel.org>; Fri, 17 Nov 2023 03:01:01 -0800 (PST)
+        with ESMTP id S231286AbjKQMGa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Nov 2023 07:06:30 -0500
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F673129;
+        Fri, 17 Nov 2023 04:06:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700218860; x=1700823660; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=gBWkWs6StiOKfZQ+gAI/eCLlmHQRf4tCCrVpnJkf8qc=;
-        b=W0uNR290x1Ntnui7K7UmUFehZfs9YCbOHy08yjZeg6e3Rkh3piwN3o19Lzno8LaPMt
-         /YVCXnFxGPfdBrIrk6a2RuJuGVy7QXePRcNj2RnkGE/l7LI/2D+RA36WKNi2sVWV3THQ
-         fdSePkMBuPOztyQIZGUJQGotOVxSgBvdn1xpmEvuXeHY88f6UncLbUDmXoe+GMXHfpIJ
-         MtTwX07n2C50WriWjJ1J+RuZOiyfH2+9O8c6F8DfePU4Ddk/DaAyr8SPVb4yBGYctrJA
-         kpScAChJo7x/ee3mvCrikUkJgz1HCRf3b0Yissmy0Q+RIKo++j33LRWava+3pkyPsnBV
-         2owA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700218860; x=1700823660;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gBWkWs6StiOKfZQ+gAI/eCLlmHQRf4tCCrVpnJkf8qc=;
-        b=SWGuyim6NCe7WR4Ylht0QFV3adrfJvYo08JZuF8F49b+xxsiHqZW37C1rCq+HokgAi
-         b/O6uQZg5qZopKDuIgWgM4J/OZ9McFAt9NfIZ4Prp66CrRn4IjhQeUWuHPLXTeqQJ69g
-         BZpof2E4vj+ZbnD67lYhgzAJM5qWDV5CGsP8+vP4huqzQ0v/Y00h1wTW2xNHtKbIToJg
-         jC+mKT3sA0MCDAAG3W+pD6n4c/Rp7p+egyhqsEs9FbIuHiWbWcxIXiq3atlyfLiSfSIl
-         NYaCzn1o9FXf2YHSEBkcEhOAcZi6+uJROpF+riaS/4B/YQqwCbRp+Tqrsv8Lw89/xndU
-         0vIA==
-X-Gm-Message-State: AOJu0YyxCUdgftnzTsPLGXbjiOjD4Rj4GFsrKAdv+bGDmDhJw0ukwvgm
-        UaEj7PSX5zzPugRBlsCglQiCnw==
-X-Google-Smtp-Source: AGHT+IGd8YPlZqn1eCwDFIOssIZfG00UFoHhXUsgBkImO7mtVQMHzM/KiiylOUJ/af6wFmBcGBqOhw==
-X-Received: by 2002:a5d:6e01:0:b0:32f:d88b:2245 with SMTP id h1-20020a5d6e01000000b0032fd88b2245mr13415500wrz.19.1700218859958;
-        Fri, 17 Nov 2023 03:00:59 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.126])
-        by smtp.gmail.com with ESMTPSA id x11-20020a5d60cb000000b00331697bbcf5sm1770892wrt.94.2023.11.17.03.00.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Nov 2023 03:00:57 -0800 (PST)
-Message-ID: <d565624f-0cb2-4c42-bcfc-eebef3b7b26c@linaro.org>
-Date:   Fri, 17 Nov 2023 12:00:53 +0100
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1700222785; x=1731758785;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fszPbkw4fM5mBhJywhrzutmU+sqqCNz7Ic0DQMjdpzE=;
+  b=Q+A3OP+tr6v6sYCpMJH63fxBLqkNiNbvsSCHK9nWk9620NVrht45RK12
+   rZcqCootwV3dm1eUdn1ZAC0Jkf4juJNliF8BGktnCH/z3wGV3kt1EA379
+   +z7lXqm/FdzfJDGgIkPcSHEfm3Ij5V8buDsUNJR7Dnd687FnuOOeAxkWb
+   Y5FuyongNFRp6UboMxKKPBI0lfDTJ1+dAUZc67pDw+BPMDbOwmzfplIWo
+   x/OcTIibpEW8MIQWzTJeRAh6g38MGvvz+AUhQwqIbHImbSj5kPf+oHuS9
+   YdHTa9MgAXAFEJNyQT2Pxs6x8qjJxGcBiNGk/VQKqLlO0FXvo37LAn6pH
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.04,206,1695679200"; 
+   d="scan'208";a="34042468"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 17 Nov 2023 13:06:23 +0100
+Received: from steina-w.tq-net.de (steina-w.tq-net.de [10.123.53.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 2768728007F;
+        Fri, 17 Nov 2023 13:06:23 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org
+Subject: [PATCH v3 1/1] backlight: pwm_bl: Use dev_err_probe
+Date:   Fri, 17 Nov 2023 13:06:25 +0100
+Message-Id: <20231117120625.2398417-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/12] Introduce ExynosAutov920 SoC and SADK board
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Jaewon Kim <jaewon02.kim@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org
-References: <CGME20231115095852epcas2p21e067efe75275c6abd2aebf04c5c6166@epcas2p2.samsung.com>
- <20231115095609.39883-1-jaewon02.kim@samsung.com>
- <170005362858.21132.4200897251821879805.b4-ty@linaro.org>
- <6e69df6c-10fa-404a-ac02-4880723b8c50@linaro.org>
- <55a0f27c-ea46-40ae-b1e5-e650802b89a8@linaro.org>
- <d6f3d451-6a53-46b6-2263-cc071a9dc44c@samsung.com>
- <d8fbd100-2351-4dbe-ae7f-d98a84432589@linaro.org>
- <af102ef7-aa34-1b9d-c39c-228729fef015@samsung.com>
- <2febc62c-c763-42ae-b649-2ca284543cc0@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <2febc62c-c763-42ae-b649-2ca284543cc0@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-On 17/11/2023 11:57, Krzysztof Kozlowski wrote:
->>>>>> And dropped. You did not test it. Please read Samsung SoC maintainer
->>>>>> profile:
->>>>>> https://www.kernel.org/doc/html/latest/process/maintainers.html#arm-samsung-s3c-s5p-and-exynos-arm-architectures
->>>>>>
->>>>>> I also made announcements on the lists and on social.kernel.org. I don't
->>>>>> know where to announce it more...
->>>>>>
->>>>> To clarify, I dropped only DTS and kept bindings. Let me know if
->>>>> bindings are problematic here...
->>>>>
->>>>> I also repeated the announcement:
->>>>> https://social.kernel.org/notice/AbqJkj9gOZJ3sG8eCu
->>>>> Please share internally within Samsung, so there will be no surprises.
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>>
->>>>>
->>>> I already checked and there were no warnings or errors as shown below.
->>>>
->>>> Did I miss something??
->>> It's not what is written in maintainer profile. Where do you see the
->>> result of dtc W=1?
->>>
->>
->> Sorry, Krzysztof I miss W=1.
->>
->> I haven`t been active in mainline for a long time, so I`m missing out on 
->> a lot of things.
-> 
-> If you (plural you, Samsung) ever gave me an email address where I can
-> send notifications I would gladly forward them to you.
-> 
-> Over the time I sent few of them, like the one about deprecation of
-> platforms or changing some rules, feedback for common solution for
-> minidump (to remind: Samsung decided to skip it so we go with Qualcomm
-> idea and you will not be able to come with your own later) etc. I was
-> even contacting some addresses in Samsung LSI, but there was never a
-> response, except the one about minidump.
-> 
-> There was like never a chance to really get to Samsung, so sorry, now it
-> is Samsung's fault it does not follow announcements.
+Use dev_err_probe to simplify error paths. Also let dev_err_probe handle
+the -EPROBE_DEFER case and add an entry to
+/sys/kernel/debug/devices_deferred when deferred.
 
-Heh, my post on social.kernel.org is pinned (pinned!) for four months!
-Four months is still not enough...
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+Changes in v3:
+* Fix alignment on continuation
+* Small fixes to commit message
 
-Best regards,
-Krzysztof
+Changes in v2:
+* Use dev_err_probe in more places in probe function (as suggested by Uwe)
+* Adjusted commit message
+
+ drivers/video/backlight/pwm_bl.c | 34 +++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 289bd9ce4d36d..5bc9c6c075710 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -461,10 +461,9 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 
+ 	if (!data) {
+ 		ret = pwm_backlight_parse_dt(&pdev->dev, &defdata);
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "failed to find platform data\n");
+-			return ret;
+-		}
++		if (ret < 0)
++			return dev_err_probe(&pdev->dev, ret,
++					     "failed to find platform data\n");
+ 
+ 		data = &defdata;
+ 	}
+@@ -493,24 +492,27 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 	pb->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
+ 						  GPIOD_ASIS);
+ 	if (IS_ERR(pb->enable_gpio)) {
+-		ret = PTR_ERR(pb->enable_gpio);
++		ret = dev_err_probe(&pdev->dev, PTR_ERR(pb->enable_gpio),
++				    "failed to acquire enable GPIO\n");
+ 		goto err_alloc;
+ 	}
+ 
+ 	pb->power_supply = devm_regulator_get_optional(&pdev->dev, "power");
+ 	if (IS_ERR(pb->power_supply)) {
+ 		ret = PTR_ERR(pb->power_supply);
+-		if (ret == -ENODEV)
++		if (ret == -ENODEV) {
+ 			pb->power_supply = NULL;
+-		else
++		} else {
++			dev_err_probe(&pdev->dev, ret,
++				      "failed to acquire power regulator\n");
+ 			goto err_alloc;
++		}
+ 	}
+ 
+ 	pb->pwm = devm_pwm_get(&pdev->dev, NULL);
+ 	if (IS_ERR(pb->pwm)) {
+-		ret = PTR_ERR(pb->pwm);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "unable to request PWM\n");
++		ret = dev_err_probe(&pdev->dev, PTR_ERR(pb->pwm),
++				    "unable to request PWM\n");
+ 		goto err_alloc;
+ 	}
+ 
+@@ -530,8 +532,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 
+ 	ret = pwm_apply_state(pb->pwm, &state);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to apply initial PWM state: %d\n",
+-			ret);
++		dev_err_probe(&pdev->dev, ret,
++			      "failed to apply initial PWM state");
+ 		goto err_alloc;
+ 	}
+ 
+@@ -568,8 +570,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 		ret = pwm_backlight_brightness_default(&pdev->dev, data,
+ 						       state.period);
+ 		if (ret < 0) {
+-			dev_err(&pdev->dev,
+-				"failed to setup default brightness table\n");
++			dev_err_probe(&pdev->dev, ret,
++				      "failed to setup default brightness table\n");
+ 			goto err_alloc;
+ 		}
+ 
+@@ -597,8 +599,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 	bl = backlight_device_register(dev_name(&pdev->dev), &pdev->dev, pb,
+ 				       &pwm_backlight_ops, &props);
+ 	if (IS_ERR(bl)) {
+-		dev_err(&pdev->dev, "failed to register backlight\n");
+-		ret = PTR_ERR(bl);
++		ret = dev_err_probe(&pdev->dev, PTR_ERR(bl),
++				    "failed to register backlight\n");
+ 		goto err_alloc;
+ 	}
+ 
+-- 
+2.34.1
 
