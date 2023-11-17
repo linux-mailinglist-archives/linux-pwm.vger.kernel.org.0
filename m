@@ -2,168 +2,151 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4929E7EF240
-	for <lists+linux-pwm@lfdr.de>; Fri, 17 Nov 2023 13:06:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37BD77EF324
+	for <lists+linux-pwm@lfdr.de>; Fri, 17 Nov 2023 13:59:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231301AbjKQMGb (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Fri, 17 Nov 2023 07:06:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
+        id S231392AbjKQM7j (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Fri, 17 Nov 2023 07:59:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231286AbjKQMGa (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Nov 2023 07:06:30 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F673129;
-        Fri, 17 Nov 2023 04:06:24 -0800 (PST)
+        with ESMTP id S229543AbjKQM7i (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Fri, 17 Nov 2023 07:59:38 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AE1D4E
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Nov 2023 04:59:33 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-4079ed65471so15992125e9.1
+        for <linux-pwm@vger.kernel.org>; Fri, 17 Nov 2023 04:59:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1700222785; x=1731758785;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fszPbkw4fM5mBhJywhrzutmU+sqqCNz7Ic0DQMjdpzE=;
-  b=Q+A3OP+tr6v6sYCpMJH63fxBLqkNiNbvsSCHK9nWk9620NVrht45RK12
-   rZcqCootwV3dm1eUdn1ZAC0Jkf4juJNliF8BGktnCH/z3wGV3kt1EA379
-   +z7lXqm/FdzfJDGgIkPcSHEfm3Ij5V8buDsUNJR7Dnd687FnuOOeAxkWb
-   Y5FuyongNFRp6UboMxKKPBI0lfDTJ1+dAUZc67pDw+BPMDbOwmzfplIWo
-   x/OcTIibpEW8MIQWzTJeRAh6g38MGvvz+AUhQwqIbHImbSj5kPf+oHuS9
-   YdHTa9MgAXAFEJNyQT2Pxs6x8qjJxGcBiNGk/VQKqLlO0FXvo37LAn6pH
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.04,206,1695679200"; 
-   d="scan'208";a="34042468"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 17 Nov 2023 13:06:23 +0100
-Received: from steina-w.tq-net.de (steina-w.tq-net.de [10.123.53.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 2768728007F;
-        Fri, 17 Nov 2023 13:06:23 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1700225972; x=1700830772; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lbSFal9UZ0Rgq/J7gXvQGlHm4p2HKjc2Wn5KsakkeeE=;
+        b=V5xr/6E0+ApLDoEZ3maxDQ3XOTB/bxuWBtTM1LHBJOnbWRvX8+zqvNAhMNm5sQH1cH
+         ET4fnASGazT+S3c9hKrM2bUZnLpw99BqwQ1R+JAJaHfxkWCZGWXSldZZgR17zNV/K2NJ
+         lSwUFU+QRGHvdXoJRcfKo+hwM4vxqVpqQXKgylnlYry8H/Vui9PxSWwgqrgqTMqZ24dI
+         9D4tFGFcp59Mv83oI3q8k1Bdnldvb8Z99TP/kv1B1YieytxeLAnWyKPi/NyvqH9XLjjL
+         z1lLqNw9H9o+J7/mNMfoPXs4KJxAbnO6Fo7kwh7MfeDrG+sSe+dJcVsC8c721CTAdJvY
+         9UrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700225972; x=1700830772;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lbSFal9UZ0Rgq/J7gXvQGlHm4p2HKjc2Wn5KsakkeeE=;
+        b=GvPLdOfNHNzAi+l2qeDXv7ebq7hULEZFvexJcew1sUl6niJ14ZDxHvbARG5hTShKv8
+         bf1OfldbbEKtG5qhIl3sujqxDkbmJ3qfEFJaQUGKIobIapgvB2C/8FBCV4HKfcqb0uaP
+         vFwp5bhX9nbjre1yTTdqYJXj+hHNauT7nZl4/9j2APhMvJzZweEgGJAWvIhGD+Eghiyx
+         SgtaW0F7Q8spwS1c8QEYLYcGr4Wq0UMwjsaD89OHEFC+qTa1tnHm8eJP3QeSU/cDCBer
+         oIRFWpVxXMWdmCxhMUN6Shm/Ac5KBUb3WxQbT1YOn68zrCusnjmcxq8rTQm2obzj3uTs
+         aXNw==
+X-Gm-Message-State: AOJu0YypAa23B305vpQX7rCoGnathOr0AJMg+3LuNtZ19YEPdEwGNByv
+        OpntkOkjh0SLqjg3I+/WPoLNJA==
+X-Google-Smtp-Source: AGHT+IF/oa8IfhcTzw08f0oVTjE1AnhvNuYq+rNjiR8uWCTzO0+EsEaFucRhxohy7BVX9Nu7bNIHtw==
+X-Received: by 2002:a1c:790b:0:b0:409:7aa9:a903 with SMTP id l11-20020a1c790b000000b004097aa9a903mr4404700wme.19.1700225971858;
+        Fri, 17 Nov 2023 04:59:31 -0800 (PST)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:8196:e423:38cb:9a09])
+        by smtp.googlemail.com with ESMTPSA id k21-20020a05600c1c9500b0040a487758dcsm2671343wms.6.2023.11.17.04.59.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Nov 2023 04:59:30 -0800 (PST)
+From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee@kernel.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org
-Subject: [PATCH v3 1/1] backlight: pwm_bl: Use dev_err_probe
-Date:   Fri, 17 Nov 2023 13:06:25 +0100
-Message-Id: <20231117120625.2398417-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
+        JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: [PATCH v2 0/6] pwm: meson: dt-bindings fixup
+Date:   Fri, 17 Nov 2023 13:59:10 +0100
+Message-ID: <20231117125919.1696980-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-Use dev_err_probe to simplify error paths. Also let dev_err_probe handle
-the -EPROBE_DEFER case and add an entry to
-/sys/kernel/debug/devices_deferred when deferred.
+This patchset aims to:
+* Fix the incorrect bindings for the s4 type of pwm that was introduced
+  while converting the documentation from txt to yaml format.
+* Introduce a new compatible for the existing PWMs to better describe the
+  HW in DT, instead of describing settings.
+* Make the introduction of a new pwm variant (s4) slightly easier.
+* Migrate the supported SoCs to the new compatible.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Changes in v3:
-* Fix alignment on continuation
-* Small fixes to commit message
+Usually, I prefer to send to dts patches separately. This time it seemed
+important to illustrate the change. I don't mind splitting this out and
+re-spinning if this is annoying for the maintainers.
 
-Changes in v2:
-* Use dev_err_probe in more places in probe function (as suggested by Uwe)
-* Adjusted commit message
+Changes since v1 [1]:
+* Fix typo in the new binding compatible documentation
+* Disallow clock-names for the new compatibles in the schema documenation
 
- drivers/video/backlight/pwm_bl.c | 34 +++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 16 deletions(-)
+[1]: https://lore.kernel.org/linux-amlogic/20231106103259.703417-1-jbrunet@baylibre.com
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 289bd9ce4d36d..5bc9c6c075710 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -461,10 +461,9 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 
- 	if (!data) {
- 		ret = pwm_backlight_parse_dt(&pdev->dev, &defdata);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "failed to find platform data\n");
--			return ret;
--		}
-+		if (ret < 0)
-+			return dev_err_probe(&pdev->dev, ret,
-+					     "failed to find platform data\n");
- 
- 		data = &defdata;
- 	}
-@@ -493,24 +492,27 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	pb->enable_gpio = devm_gpiod_get_optional(&pdev->dev, "enable",
- 						  GPIOD_ASIS);
- 	if (IS_ERR(pb->enable_gpio)) {
--		ret = PTR_ERR(pb->enable_gpio);
-+		ret = dev_err_probe(&pdev->dev, PTR_ERR(pb->enable_gpio),
-+				    "failed to acquire enable GPIO\n");
- 		goto err_alloc;
- 	}
- 
- 	pb->power_supply = devm_regulator_get_optional(&pdev->dev, "power");
- 	if (IS_ERR(pb->power_supply)) {
- 		ret = PTR_ERR(pb->power_supply);
--		if (ret == -ENODEV)
-+		if (ret == -ENODEV) {
- 			pb->power_supply = NULL;
--		else
-+		} else {
-+			dev_err_probe(&pdev->dev, ret,
-+				      "failed to acquire power regulator\n");
- 			goto err_alloc;
-+		}
- 	}
- 
- 	pb->pwm = devm_pwm_get(&pdev->dev, NULL);
- 	if (IS_ERR(pb->pwm)) {
--		ret = PTR_ERR(pb->pwm);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "unable to request PWM\n");
-+		ret = dev_err_probe(&pdev->dev, PTR_ERR(pb->pwm),
-+				    "unable to request PWM\n");
- 		goto err_alloc;
- 	}
- 
-@@ -530,8 +532,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 
- 	ret = pwm_apply_state(pb->pwm, &state);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed to apply initial PWM state: %d\n",
--			ret);
-+		dev_err_probe(&pdev->dev, ret,
-+			      "failed to apply initial PWM state");
- 		goto err_alloc;
- 	}
- 
-@@ -568,8 +570,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 		ret = pwm_backlight_brightness_default(&pdev->dev, data,
- 						       state.period);
- 		if (ret < 0) {
--			dev_err(&pdev->dev,
--				"failed to setup default brightness table\n");
-+			dev_err_probe(&pdev->dev, ret,
-+				      "failed to setup default brightness table\n");
- 			goto err_alloc;
- 		}
- 
-@@ -597,8 +599,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
- 	bl = backlight_device_register(dev_name(&pdev->dev), &pdev->dev, pb,
- 				       &pwm_backlight_ops, &props);
- 	if (IS_ERR(bl)) {
--		dev_err(&pdev->dev, "failed to register backlight\n");
--		ret = PTR_ERR(bl);
-+		ret = dev_err_probe(&pdev->dev, PTR_ERR(bl),
-+				    "failed to register backlight\n");
- 		goto err_alloc;
- 	}
- 
+Jerome Brunet (6):
+  dt-bindings: pwm: amlogic: fix s4 bindings
+  dt-bindings: pwm: amlogic: add new compatible for meson8 pwm type
+  pwm: meson: prepare addition of new compatible types
+  pwm: meson: add generic compatible for meson8 to sm1
+  arm: dts: amlogic: migrate pwms to new meson8 v2 binding
+  arm64: dts: amlogic: migrate pwms to new meson8 v2 binding
+
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 103 +++++-
+ arch/arm/boot/dts/amlogic/meson.dtsi          |   4 +-
+ arch/arm/boot/dts/amlogic/meson8.dtsi         |  16 +-
+ arch/arm/boot/dts/amlogic/meson8b-ec100.dts   |   2 -
+ arch/arm/boot/dts/amlogic/meson8b-mxq.dts     |   2 -
+ .../arm/boot/dts/amlogic/meson8b-odroidc1.dts |   2 -
+ arch/arm/boot/dts/amlogic/meson8b.dtsi        |  16 +-
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  24 +-
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  28 +-
+ .../dts/amlogic/meson-g12a-radxa-zero.dts     |   4 -
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |   4 -
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |   2 -
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   4 -
+ .../amlogic/meson-g12b-a311d-libretech-cc.dts |   2 -
+ .../dts/amlogic/meson-g12b-bananapi-cm4.dtsi  |   7 -
+ .../boot/dts/amlogic/meson-g12b-bananapi.dtsi |   4 -
+ .../dts/amlogic/meson-g12b-khadas-vim3.dtsi   |   4 -
+ .../boot/dts/amlogic/meson-g12b-odroid.dtsi   |   4 -
+ .../dts/amlogic/meson-g12b-radxa-zero2.dts    |   8 -
+ .../boot/dts/amlogic/meson-g12b-w400.dtsi     |   6 -
+ .../dts/amlogic/meson-gx-libretech-pc.dtsi    |   6 -
+ .../boot/dts/amlogic/meson-gx-p23x-q20x.dtsi  |   2 -
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   8 +-
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |   2 -
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |   2 -
+ .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |   2 -
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi |   2 -
+ .../boot/dts/amlogic/meson-gxbb-wetek.dtsi    |   2 -
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |  26 ++
+ .../boot/dts/amlogic/meson-gxl-s805x-p241.dts |   2 -
+ .../meson-gxl-s905w-jethome-jethub-j80.dts    |   2 -
+ .../meson-gxl-s905x-hwacom-amazetv.dts        |   2 -
+ .../amlogic/meson-gxl-s905x-khadas-vim.dts    |   2 -
+ .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |   2 -
+ .../dts/amlogic/meson-gxl-s905x-p212.dtsi     |   2 -
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  26 ++
+ .../dts/amlogic/meson-gxm-khadas-vim2.dts     |   4 -
+ .../boot/dts/amlogic/meson-gxm-rbox-pro.dts   |   2 -
+ .../amlogic/meson-libretech-cottonwood.dtsi   |   6 -
+ .../boot/dts/amlogic/meson-sm1-ac2xx.dtsi     |   6 -
+ .../dts/amlogic/meson-sm1-khadas-vim3l.dts    |   2 -
+ .../boot/dts/amlogic/meson-sm1-odroid.dtsi    |   2 -
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     |   6 -
+ drivers/pwm/pwm-meson.c                       | 312 +++++++++++-------
+ 44 files changed, 409 insertions(+), 267 deletions(-)
+
 -- 
-2.34.1
+2.42.0
 
