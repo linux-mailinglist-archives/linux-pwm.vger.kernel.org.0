@@ -2,193 +2,108 @@ Return-Path: <linux-pwm-owner@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD9027F00E5
-	for <lists+linux-pwm@lfdr.de>; Sat, 18 Nov 2023 17:17:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 137487F074A
+	for <lists+linux-pwm@lfdr.de>; Sun, 19 Nov 2023 17:04:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbjKRQRY (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
-        Sat, 18 Nov 2023 11:17:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+        id S229508AbjKSQEa (ORCPT <rfc822;lists+linux-pwm@lfdr.de>);
+        Sun, 19 Nov 2023 11:04:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbjKRQRW (ORCPT
-        <rfc822;linux-pwm@vger.kernel.org>); Sat, 18 Nov 2023 11:17:22 -0500
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F54194;
-        Sat, 18 Nov 2023 08:17:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-        t=1700324238; bh=Sc+cZKZYUYODq7Oxpy2O0guVGUacU69a1vla/2Bix6Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNZaVnFAARGjhK5ftm01BKJGNTq9C+Qb8/pRfBZNbhdCiIgexuRdq3S1ko0AcQOBG
-         XfET85WQoxGHt7btpCUrRNfPuBRFk2VNkIKiPyH4zmirGTDgnktxVv3VMuPJQwG7mK
-         cerwY7xyZVTQbLvOidoQqpfydilm/plOgIk8Uxbwy56TvJfaI4AQieFKZCM6/W5Dvi
-         VTVkN8krCB2808/xOTSz1pSLWKoOCyQERf75SLRZavyws5I2f18FnxBAVJpHhZ6ac8
-         aNmj99ShiXG2zvYGktcB/pYBkMWX6XrIqj9POk2RyyvYFLSjCX/V04zXfB2TiYJEN4
-         5Bod9cuL2Rigw==
-Received: by gofer.mess.org (Postfix, from userid 501)
-        id 707531002A2; Sat, 18 Nov 2023 16:17:18 +0000 (GMT)
+        with ESMTP id S229441AbjKSQEa (ORCPT
+        <rfc822;linux-pwm@vger.kernel.org>); Sun, 19 Nov 2023 11:04:30 -0500
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47677115;
+        Sun, 19 Nov 2023 08:04:26 -0800 (PST)
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3b6c31e604cso2547763b6e.2;
+        Sun, 19 Nov 2023 08:04:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700409865; x=1701014665;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IhoBsgcYCPoMOyBClZKCjJFuGRHuuw4KSHpd/ceIW1o=;
+        b=rRCXRoBlxx3Gik3/RoUeghO8iBvus608AFa0azfAwBm1vWxKOeGPIilrdAHLLSUfVt
+         EKkvzQ0bQRBv4YdnabeHgtgZlDqAWf47YV4JIyN7tmcIN7Tf2bvzEk+ZNoep0tPP1E5i
+         tDe1+dvl3p3SftJaKjyhgDBdqBmmWuo3hN6Y8LRlQEDJ/oldtcXWIiqTfXCvusWNQkwr
+         SxATBEgfOlFtOVBT4MTLUSuCdnJ7HnlhzhjT1pcYvm9Ql9XCHvZKliotUk/Q9AKkv6Br
+         k1xuvBuSRK3B3SpYcVNem0hVvE0LtCdrU0X19ktc9cq8hlRnX/Cg0ZWUvbM1NqoKlBYS
+         yKTQ==
+X-Gm-Message-State: AOJu0YwMsmTz+qmHyfLXuKeqjQs83badY8yONg+CjoV2PsCLQRgmoWa4
+        oqgmGBkvPxVRCHGH1ksmAQ==
+X-Google-Smtp-Source: AGHT+IEPvxQPpSKlB8eS9XX5UGJPIu58cXdUceezJBLkAF6LxsC6V68SFxNoVg0VbT5dJDvCZMnbkg==
+X-Received: by 2002:a05:6808:bcc:b0:3b2:f431:e029 with SMTP id o12-20020a0568080bcc00b003b2f431e029mr8622231oik.26.1700409865587;
+        Sun, 19 Nov 2023 08:04:25 -0800 (PST)
+Received: from herring.priv ([2607:fb90:45e3:889f:15b4:1348:6d64:224b])
+        by smtp.gmail.com with ESMTPSA id i16-20020aca2b10000000b003af642cf646sm998621oik.37.2023.11.19.08.04.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Nov 2023 08:04:24 -0800 (PST)
+Received: (nullmailer pid 267899 invoked by uid 1000);
+        Sun, 19 Nov 2023 16:04:22 -0000
+Date:   Sun, 19 Nov 2023 10:04:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Conor Dooley <conor+dt@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: pwm: amlogic: fix s4 bindings
+Message-ID: <170040986161.267844.16868927442799371234.robh@kernel.org>
+References: <20231117125919.1696980-1-jbrunet@baylibre.com>
+ <20231117125919.1696980-2-jbrunet@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231117125919.1696980-2-jbrunet@baylibre.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-        t=1700324201; bh=Sc+cZKZYUYODq7Oxpy2O0guVGUacU69a1vla/2Bix6Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrXuVYW2qcBRpWmDgFEdK0qSJbBlMcLLTFlIIzGLgijzwdlmYsQ3xxrtp8uYxMPsV
-         n6gRzEwUj/2864SR3lK+LN/NrOwfptTZ1JpzKpeuWPctvqbv+UeTHoOyPqS4a96wwh
-         thLafx9wOf8R3W9JR0QFOo4fhLmmFbL8/iuSkHqGRAvt+hOZlR1ZWfrFTz7L4lAbDR
-         QXw1pi/MnLfivJvfPLjJlvP/8Y4OOQSECyt6GCTIxrx2ADQN7ib36LsPsYO6fMzOvN
-         GaTjISnoL0HSHeTeRvau9cG/B2ZTjlLS9ricXtXwWpOLcjq4WZGVixz38DVmt+fwYH
-         2BISks382N/5A==
-Received: from bigcore.mess.org (bigcore-239.local [IPv6:2a02:8011:d000:212:ca7f:54ff:fe51:14d6])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by gofer.mess.org (Postfix) with ESMTPSA id 5A301100064;
-        Sat, 18 Nov 2023 16:16:41 +0000 (GMT)
-From:   Sean Young <sean@mess.org>
-To:     linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/4] media: pwm-ir-tx: trigger edges from hrtimer interrupt context
-Date:   Sat, 18 Nov 2023 16:16:20 +0000
-Message-ID: <b49c4e2a8dccbd4a073fb22bab728d1cb2ec159c.1700323916.git.sean@mess.org>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <cover.1700323916.git.sean@mess.org>
-References: <cover.1700323916.git.sean@mess.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pwm.vger.kernel.org>
 X-Mailing-List: linux-pwm@vger.kernel.org
 
-This makes the generated IR much more precise. Before this change, the
-driver is unreliable and many users opted to use gpio-ir-tx instead.
 
-Signed-off-by: Sean Young <sean@mess.org>
----
- drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 76 insertions(+), 3 deletions(-)
+On Fri, 17 Nov 2023 13:59:11 +0100, Jerome Brunet wrote:
+> s4 has been added to the compatible list while converting the Amlogic PWM
+> binding documentation from txt to yaml.
+> 
+> However, on the s4, the clock bindings have different meaning compared to
+> the previous SoCs.
+> 
+> On the previous SoCs the clock bindings used to describe which input the
+> PWM channel multiplexer should pick among its possible parents.
+> 
+> This is very much tied to the driver implementation, instead of describing
+> the HW for what it is. When support for the Amlogic PWM was first added,
+> how to deal with clocks through DT was not as clear as it nowadays.
+> The Linux driver now ignores this DT setting, but still relies on the
+> hard-coded list of clock sources.
+> 
+> On the s4, the input multiplexer is gone. The clock bindings actually
+> describe the clock as it exists, not a setting. The property has a
+> different meaning, even if it is still 2 clocks and it would pass the check
+> when support is actually added.
+> 
+> Also the s4 cannot work if the clocks are not provided, so the property no
+> longer optional.
+> 
+> Finally, for once it makes sense to see the input as being numbered
+> somehow. No need to bother with clock-names on the s4 type of PWM.
+> 
+> Fixes: 43a1c4ff3977 ("dt-bindings: pwm: Convert Amlogic Meson PWM binding")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 69 ++++++++++++++++---
+>  1 file changed, 60 insertions(+), 9 deletions(-)
+> 
 
-diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-index ccb86890adcea..5465bd38d9412 100644
---- a/drivers/media/rc/pwm-ir-tx.c
-+++ b/drivers/media/rc/pwm-ir-tx.c
-@@ -10,6 +10,8 @@
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/hrtimer.h>
-+#include <linux/completion.h>
- #include <media/rc-core.h>
- 
- #define DRIVER_NAME	"pwm-ir-tx"
-@@ -17,8 +19,14 @@
- 
- struct pwm_ir {
- 	struct pwm_device *pwm;
--	unsigned int carrier;
--	unsigned int duty_cycle;
-+	struct hrtimer timer;
-+	struct completion tx_done;
-+	struct pwm_state *state;
-+	u32 carrier;
-+	u32 duty_cycle;
-+	uint *txbuf;
-+	uint txbuf_len;
-+	uint txbuf_index;
- };
- 
- static const struct of_device_id pwm_ir_of_match[] = {
-@@ -82,6 +90,62 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
- 	return count;
- }
- 
-+static int pwm_ir_tx_atomic(struct rc_dev *dev, unsigned int *txbuf,
-+			    unsigned int count)
-+{
-+	struct pwm_ir *pwm_ir = dev->priv;
-+	struct pwm_device *pwm = pwm_ir->pwm;
-+	struct pwm_state state;
-+
-+	pwm_init_state(pwm, &state);
-+
-+	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
-+	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
-+
-+	pwm_ir->txbuf = txbuf;
-+	pwm_ir->txbuf_len = count;
-+	pwm_ir->txbuf_index = 0;
-+	pwm_ir->state = &state;
-+
-+	hrtimer_start(&pwm_ir->timer, 0, HRTIMER_MODE_REL);
-+
-+	wait_for_completion(&pwm_ir->tx_done);
-+
-+	return count;
-+}
-+
-+static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
-+{
-+	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
-+	ktime_t now;
-+
-+	/*
-+	 * If we happen to hit an odd latency spike, loop through the
-+	 * pulses until we catch up.
-+	 */
-+	do {
-+		u64 ns;
-+
-+		pwm_ir->state->enabled = !(pwm_ir->txbuf_index % 2);
-+		pwm_apply_atomic(pwm_ir->pwm, pwm_ir->state);
-+
-+		if (pwm_ir->txbuf_index >= pwm_ir->txbuf_len) {
-+			complete(&pwm_ir->tx_done);
-+
-+			return HRTIMER_NORESTART;
-+		}
-+
-+		ns = US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
-+		hrtimer_add_expires_ns(timer, ns);
-+
-+		pwm_ir->txbuf_index++;
-+
-+		now = timer->base->get_time();
-+	} while (hrtimer_get_expires_tv64(timer) < now);
-+
-+	return HRTIMER_RESTART;
-+}
-+
- static int pwm_ir_probe(struct platform_device *pdev)
- {
- 	struct pwm_ir *pwm_ir;
-@@ -103,10 +167,19 @@ static int pwm_ir_probe(struct platform_device *pdev)
- 	if (!rcdev)
- 		return -ENOMEM;
- 
-+	if (pwm_is_atomic(pwm_ir->pwm)) {
-+		init_completion(&pwm_ir->tx_done);
-+		hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+		pwm_ir->timer.function = pwm_ir_timer;
-+		rcdev->tx_ir = pwm_ir_tx_atomic;
-+	} else {
-+		dev_info(&pdev->dev, "tx will not be accurate as pwm device does not support atomic mode");
-+		rcdev->tx_ir = pwm_ir_tx;
-+	}
-+
- 	rcdev->priv = pwm_ir;
- 	rcdev->driver_name = DRIVER_NAME;
- 	rcdev->device_name = DEVICE_NAME;
--	rcdev->tx_ir = pwm_ir_tx;
- 	rcdev->s_tx_duty_cycle = pwm_ir_set_duty_cycle;
- 	rcdev->s_tx_carrier = pwm_ir_set_carrier;
- 
--- 
-2.42.1
+Reviewed-by: Rob Herring <robh@kernel.org>
 
