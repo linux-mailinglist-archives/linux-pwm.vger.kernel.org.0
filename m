@@ -1,46 +1,46 @@
-Return-Path: <linux-pwm+bounces-39-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-46-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2801D7F2F6F
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 14:52:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D39F87F2F7C
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 14:52:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57C1E1C21832
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 13:52:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11ABC1C21171
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 13:52:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E655537F6;
-	Tue, 21 Nov 2023 13:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F48753814;
+	Tue, 21 Nov 2023 13:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D51D72
-	for <linux-pwm@vger.kernel.org>; Tue, 21 Nov 2023 05:51:56 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EA710E9
+	for <linux-pwm@vger.kernel.org>; Tue, 21 Nov 2023 05:51:57 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r5RAQ-0005Ri-3M; Tue, 21 Nov 2023 14:51:54 +0100
+	id 1r5RAQ-0005S3-Bv; Tue, 21 Nov 2023 14:51:54 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r5RAP-00AazD-LJ; Tue, 21 Nov 2023 14:51:53 +0100
+	id 1r5RAP-00AazH-RV; Tue, 21 Nov 2023 14:51:53 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r5RAP-004xdh-Bx; Tue, 21 Nov 2023 14:51:53 +0100
+	id 1r5RAP-004xdl-Ia; Tue, 21 Nov 2023 14:51:53 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thierry Reding <thierry.reding@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
 	Ray Jui <rjui@broadcom.com>,
 	Scott Branden <sbranden@broadcom.com>
 Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
 	linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
 	kernel@pengutronix.de
-Subject: [PATCH v3 044/108] pwm: bcm-iproc: Make use of devm_pwmchip_alloc() function
-Date: Tue, 21 Nov 2023 14:49:46 +0100
-Message-ID: <20231121134901.208535-45-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v3 045/108] pwm: bcm-kona: Make use of devm_pwmchip_alloc() function
+Date: Tue, 21 Nov 2023 14:49:47 +0100
+Message-ID: <20231121134901.208535-46-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0.586.gbc5204569f7d.dirty
 In-Reply-To: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
 References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
@@ -51,7 +51,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2335; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=sJ498qvoNivbkk0deEr4R5sEvVeiQw9QYJAIlTDYq+M=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlXLV9DnxIBSmh5IsDrNBdzQOT4MHI2EYFW8mYO py10IFAriyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZVy1fQAKCRCPgPtYfRL+ Tl1FCACCN4MeiAVwOgITtVpF1s2mQoI10twptpNdNqQIWnBP89Rj7Jp0Ow74ecut5jiHwlVVnWV UZoFIGcYXmoLCK1QMdPpn8HrCDm30Dum9a9uIcNzjhnLyz6bJdJMJ94r7qE7fz7xNQbn1ixZN2J 43OdUeTcAQQJuO90OCCPZc69t93PsFvPfmx4XfEJ9HWmo+RkpITIEcxtVxEZWFkjr7BMqsv3qkc T5aG4mbjZxYBJohJjxqrOe7Zx3IfyQzV4ywUigX+rIrcEVt8BYDS5BrZ4Kcheo5Kty9YpGOQMj4 V48tlZQal8poL32W/kDemfiDKKSqzLvo7MyJGnusIFhQNE5/
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2115; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=6uQ+gQRpp9b2E6GpmmxJDmApJQvDAxDJ/6PjecsbMsw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlXLV+sCY49v82+fjC2TzYYRPsh/j3v8wknSP5C /pft4XC+HeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZVy1fgAKCRCPgPtYfRL+ TshkCACo4H4wmZJT0jLRZObqj5dy2inP5vDAwEHRcnH33RwFG3YeKLRXyCme/dH8eM+v17c8vDC yFTLv+0NtHtnQFrUtjMLWzgQAga5B5IuIdwx2yL2wiN9xa85qT6fjph0U333PInWpAc2VmP9POP ZD03UWbvUtbLZ8PeUQR0/UTrPRrAP3UMQuiBCHqGS7TZQ1jtQ12XTECneOLLcLpO9DWDdUxvrOU lyIE/rPFgb7OjkwrRQEc9rLusSBAz/3AHj6gROahrirZL/QhUC5iqMB2+ozI24LTaHdP/OkDl3/ w0jZV+q8FmBkMMZi7Fkf6dF7CpnuwGESM/VSbnRUFpsCCLRY
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,79 +59,76 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-bcm-iproc driver to further changes of the pwm core
+This prepares the pwm-bcm-kona driver to further changes of the pwm core
 outlined in the commit introducing devm_pwmchip_alloc(). There is no
 intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-bcm-iproc.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/pwm/pwm-bcm-kona.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 758254025683..4c8d82de50a9 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -34,14 +34,13 @@
- #define IPROC_PWM_PRESCALE_MAX			0x3f
+diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
+index 53bb52c9da08..71bc999c576f 100644
+--- a/drivers/pwm/pwm-bcm-kona.c
++++ b/drivers/pwm/pwm-bcm-kona.c
+@@ -56,14 +56,13 @@
+ #define DUTY_CYCLE_HIGH_MAX			0x00ffffff
  
- struct iproc_pwmc {
+ struct kona_pwmc {
 -	struct pwm_chip chip;
  	void __iomem *base;
  	struct clk *clk;
  };
  
- static inline struct iproc_pwmc *to_iproc_pwmc(struct pwm_chip *chip)
+ static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *chip)
  {
--	return container_of(chip, struct iproc_pwmc, chip);
+-	return container_of(chip, struct kona_pwmc, chip);
 +	return pwmchip_priv(chip);
  }
  
- static void iproc_pwmc_enable(struct iproc_pwmc *ip, unsigned int channel)
-@@ -187,20 +186,20 @@ static const struct pwm_ops iproc_pwm_ops = {
+ /*
+@@ -273,18 +272,18 @@ static const struct pwm_ops kona_pwm_ops = {
  
- static int iproc_pwmc_probe(struct platform_device *pdev)
+ static int kona_pwmc_probe(struct platform_device *pdev)
  {
 +	struct pwm_chip *chip;
- 	struct iproc_pwmc *ip;
- 	unsigned int i;
- 	u32 value;
- 	int ret;
+ 	struct kona_pwmc *kp;
+ 	unsigned int chan;
+ 	unsigned int value = 0;
+ 	int ret = 0;
  
--	ip = devm_kzalloc(&pdev->dev, sizeof(*ip), GFP_KERNEL);
--	if (!ip)
--		return -ENOMEM;
-+	chip = devm_pwmchip_alloc(&pdev->dev, 4, sizeof(*ip));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	ip = to_iproc_pwmc(chip);
+-	kp = devm_kzalloc(&pdev->dev, sizeof(*kp), GFP_KERNEL);
+-	if (kp == NULL)
++	chip = devm_pwmchip_alloc(&pdev->dev, 6, sizeof(*kp));
++	if (chip == NULL)
+ 		return -ENOMEM;
++	kp = to_kona_pwmc(chip);
  
- 	platform_set_drvdata(pdev, ip);
+-	kp->chip.dev = &pdev->dev;
+-	kp->chip.ops = &kona_pwm_ops;
+-	kp->chip.npwm = 6;
++	chip->ops = &kona_pwm_ops;
  
--	ip->chip.dev = &pdev->dev;
--	ip->chip.ops = &iproc_pwm_ops;
--	ip->chip.npwm = 4;
-+	chip->ops = &iproc_pwm_ops;
- 
- 	ip->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ip->base))
-@@ -214,14 +213,14 @@ static int iproc_pwmc_probe(struct platform_device *pdev)
- 	/* Set full drive and normal polarity for all channels */
- 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
- 
--	for (i = 0; i < ip->chip.npwm; i++) {
-+	for (i = 0; i < chip->npwm; i++) {
- 		value &= ~(1 << IPROC_PWM_CTRL_TYPE_SHIFT(i));
- 		value |= 1 << IPROC_PWM_CTRL_POLARITY_SHIFT(i);
+ 	kp->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(kp->base))
+@@ -304,14 +303,14 @@ static int kona_pwmc_probe(struct platform_device *pdev)
  	}
  
- 	writel(value, ip->base + IPROC_PWM_CTRL_OFFSET);
+ 	/* Set push/pull for all channels */
+-	for (chan = 0; chan < kp->chip.npwm; chan++)
++	for (chan = 0; chan < chip->npwm; chan++)
+ 		value |= (1 << PWM_CONTROL_TYPE_SHIFT(chan));
  
--	ret = devm_pwmchip_add(&pdev->dev, &ip->chip);
+ 	writel(value, kp->base + PWM_CONTROL_OFFSET);
+ 
+ 	clk_disable_unprepare(kp->clk);
+ 
+-	ret = devm_pwmchip_add(&pdev->dev, &kp->chip);
 +	ret = devm_pwmchip_add(&pdev->dev, chip);
  	if (ret < 0)
- 		return dev_err_probe(&pdev->dev, ret,
- 				     "failed to add PWM chip\n");
+ 		dev_err(&pdev->dev, "failed to add PWM chip: %d\n", ret);
+ 
 -- 
 2.42.0
 
