@@ -1,47 +1,49 @@
-Return-Path: <linux-pwm+bounces-59-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-105-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D0D77F2F8A
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 14:52:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B193E7F2FC5
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 14:52:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EFE81C21953
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 13:52:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40D19B20FB0
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 13:52:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C488F537F5;
-	Tue, 21 Nov 2023 13:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99E133D3B8;
+	Tue, 21 Nov 2023 13:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6971310DD
-	for <linux-pwm@vger.kernel.org>; Tue, 21 Nov 2023 05:52:00 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F279F10C1
+	for <linux-pwm@vger.kernel.org>; Tue, 21 Nov 2023 05:52:15 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r5RAO-0005PL-CI; Tue, 21 Nov 2023 14:51:52 +0100
+	id 1r5RAP-0005Pa-11; Tue, 21 Nov 2023 14:51:53 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r5RAN-00Aayh-Tv; Tue, 21 Nov 2023 14:51:51 +0100
+	id 1r5RAO-00Aayl-3k; Tue, 21 Nov 2023 14:51:52 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r5RAN-004xd1-Ks; Tue, 21 Nov 2023 14:51:51 +0100
+	id 1r5RAN-004xdE-Qg; Tue, 21 Nov 2023 14:51:51 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
+To: Jonathan Corbet <corbet@lwn.net>,
+	Thierry Reding <thierry.reding@gmail.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Thierry Reding <thierry.reding@gmail.com>
-Cc: greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	James Clark <james.clark@arm.com>,
+	Yang Yingliang <yangyingliang@huawei.com>
+Cc: linux-doc@vger.kernel.org,
 	kernel@pengutronix.de,
 	linux-pwm@vger.kernel.org
-Subject: [PATCH v3 036/108] staging: greybus: pwm: Make use of pwmchip_parent() macro
-Date: Tue, 21 Nov 2023 14:49:38 +0100
-Message-ID: <20231121134901.208535-37-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v3 037/108] pwm: Provide devm_pwmchip_alloc() function
+Date: Tue, 21 Nov 2023 14:49:39 +0100
+Message-ID: <20231121134901.208535-38-u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0.586.gbc5204569f7d.dirty
 In-Reply-To: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
 References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
@@ -52,7 +54,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7260; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=jpdApB4VpVV6JyKzGy62ySXnPuypB5bG/1JU/y0CImA=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlXLV0Lyj9BOUz8VOflfgEti2rfiRFVXeKtxY4p BmDrawxZuCJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZVy1dAAKCRCPgPtYfRL+ ThaQB/9B9muXTVxgkECFZ4/FsZt27L4vQfumMIZQpySvOl9v3vS2x+Diz/loNDqB9+ImhDXcMyc qt3x7kiIWjrgenu2shQ9YoWqBiAl1qtPePrOZ4+wSEXBbasXMmGHebvek5+XthkvAKa95wxSTgD h0i7Of9vWMHmwC+JU8N+KqGC16kbbTYnSd9jCACYRIItYPZvHKsB11NXkXOa8ZxUjcakYqm9E/d Z0gLMkX4K0juug75g0RUmCeDismJdE3drkxHp798qrTzoYgfUTh5x9Wdmj6W51JgNGCnN1PL5aN 8za6BLzByDc96eXEqP4NVMJ2Q2s332CvUeo0aXJY2RaikBOD
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5470; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=33tk1ra3E7BD8UFlUXt1nlBlRpOf0+9wzBGIYwmD0w8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlXLV13JFQ2jSBSYxXpUv9d/Ktdh466khPgnySq O8g/eU3KjWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZVy1dQAKCRCPgPtYfRL+ TnRpB/9RbdQd2mUV1NTJmpfIIEkhlYHXvynu0S8CbE/SPRq+5dBWZvaHyjyz1mJmKJHemFS/pns AOHLunCN2ae8MYu0W69WqG8tMQ2jkQ68XrcuT2k+g2333qXloV7io9r4nyKUAEH3dN1J64NzIro LZr76SsX4gGYHLRzTOOBJJ/M/gWWPt8+/OfYNSCyGK9ul8NlhRAvxMwOfJ8qbQj1hP4H3QJ7/0q VA7ud+WWFImLYpJIxIa8dGVwhoAmzn03SO1W+VxZJ/i7l0hZIVBTJg8Dd5EcRnQFHnZH+U38/yp XVHh1w4iqED8L4yh2pMDt5X5lbG7Zs9s4CQdQc2iemDtmPmL
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -60,218 +62,151 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-struct pwm_chip::dev is about to change. To not have to touch this
-driver in the same commit as struct pwm_chip::dev, use the macro
-provided for exactly this purpose.
+This function allocates a struct pwm_chip and driver data. Compared to
+the status quo the split into pwm_chip and driver data is new, otherwise
+it doesn't change anything relevant (yet).
+
+The intention is that after all drivers are switched to use this
+allocation function, its possible to add a struct device to struct
+pwm_chip to properly track the latter's lifetime without touching all
+drivers again. Proper lifetime tracking is a necessary precondition to
+introduce character device support for PWMs (that implements atomic
+setting and doesn't suffer from the sysfs overhead of the /sys/class/pwm
+userspace support).
+
+The new function pwmchip_priv() (obviously?) only works for chips
+allocated with devm_pwmchip_alloc().
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/staging/greybus/pwm.c | 55 +++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 29 deletions(-)
+ .../driver-api/driver-model/devres.rst        |  1 +
+ Documentation/driver-api/pwm.rst              | 10 +++---
+ drivers/pwm/core.c                            | 32 ++++++++++++++++---
+ include/linux/pwm.h                           |  5 +++
+ 4 files changed, 38 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
-index a3cb68cfa0f9..75e0518791d8 100644
---- a/drivers/staging/greybus/pwm.c
-+++ b/drivers/staging/greybus/pwm.c
-@@ -17,7 +17,6 @@
- struct gb_pwm_chip {
- 	struct gb_connection	*connection;
- 	u8			pwm_max;	/* max pwm number */
--
- 	struct pwm_chip		chip;
- };
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index c5f99d834ec5..e4df72c408d2 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -420,6 +420,7 @@ POWER
+   devm_reboot_mode_unregister()
  
-@@ -39,9 +38,9 @@ static int gb_pwm_count_operation(struct gb_pwm_chip *pwmc)
- 	return 0;
+ PWM
++  devm_pwmchip_alloc()
+   devm_pwmchip_add()
+   devm_pwm_get()
+   devm_fwnode_pwm_get()
+diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
+index bb264490a87a..994ea5368805 100644
+--- a/Documentation/driver-api/pwm.rst
++++ b/Documentation/driver-api/pwm.rst
+@@ -134,11 +134,11 @@ to implement the pwm_*() functions itself. This means that it's impossible
+ to have multiple PWM drivers in the system. For this reason it's mandatory
+ for new drivers to use the generic PWM framework.
+ 
+-A new PWM controller/chip can be added using pwmchip_add() and removed
+-again with pwmchip_remove(). pwmchip_add() takes a filled in struct
+-pwm_chip as argument which provides a description of the PWM chip, the
+-number of PWM devices provided by the chip and the chip-specific
+-implementation of the supported PWM operations to the framework.
++A new PWM controller/chip can be allocated using devm_pwmchip_alloc, then added
++using pwmchip_add() and removed again with pwmchip_remove(). pwmchip_add()
++takes a filled in struct pwm_chip as argument which provides a description of
++the PWM chip, the number of PWM devices provided by the chip and the
++chip-specific implementation of the supported PWM operations to the framework.
+ 
+ When implementing polarity support in a PWM driver, make sure to respect the
+ signal conventions in the PWM framework. By definition, normal polarity
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 58a9d3df73a1..0346709b60d8 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -196,6 +196,30 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+ 	return true;
  }
  
--static int gb_pwm_activate_operation(struct gb_pwm_chip *pwmc,
--				     u8 which)
-+static int gb_pwm_activate_operation(struct pwm_chip *chip, u8 which)
++void *pwmchip_priv(struct pwm_chip *chip)
++{
++	return (void *)chip + sizeof(*chip);
++}
++EXPORT_SYMBOL_GPL(pwmchip_priv);
++
++struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv)
++{
++	struct pwm_chip *chip;
++	size_t alloc_size;
++
++	alloc_size = size_add(sizeof(*chip), sizeof_priv);
++
++	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
++	if (!chip)
++		return ERR_PTR(-ENOMEM);
++
++	chip->dev = parent;
++	chip->npwm = npwm;
++
++	return chip;
++}
++EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
++
+ /**
+  * __pwmchip_add() - register a new PWM chip
+  * @chip: the PWM chip to add
+@@ -208,9 +232,8 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+  */
+ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
  {
-+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 	struct gb_pwm_activate_request request;
- 	struct gbphy_device *gbphy_dev;
+-	struct pwm_device *pwm;
+-	unsigned int i;
  	int ret;
-@@ -51,7 +50,7 @@ static int gb_pwm_activate_operation(struct gb_pwm_chip *pwmc,
++	unsigned i;
  
- 	request.which = which;
+ 	if (!chip || !chip->dev || !chip->ops || !chip->npwm)
+ 		return -EINVAL;
+@@ -220,7 +243,7 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
  
--	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
-+	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
- 	ret = gbphy_runtime_get_sync(gbphy_dev);
- 	if (ret)
- 		return ret;
-@@ -64,9 +63,10 @@ static int gb_pwm_activate_operation(struct gb_pwm_chip *pwmc,
- 	return ret;
- }
+ 	chip->owner = owner;
  
--static int gb_pwm_deactivate_operation(struct gb_pwm_chip *pwmc,
-+static int gb_pwm_deactivate_operation(struct pwm_chip *chip,
- 				       u8 which)
- {
-+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 	struct gb_pwm_deactivate_request request;
- 	struct gbphy_device *gbphy_dev;
- 	int ret;
-@@ -76,7 +76,7 @@ static int gb_pwm_deactivate_operation(struct gb_pwm_chip *pwmc,
+-	chip->pwms = kcalloc(chip->npwm, sizeof(*pwm), GFP_KERNEL);
++	chip->pwms = kcalloc(chip->npwm, sizeof(*chip->pwms), GFP_KERNEL);
+ 	if (!chip->pwms)
+ 		return -ENOMEM;
  
- 	request.which = which;
- 
--	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
-+	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
- 	ret = gbphy_runtime_get_sync(gbphy_dev);
- 	if (ret)
- 		return ret;
-@@ -89,9 +89,10 @@ static int gb_pwm_deactivate_operation(struct gb_pwm_chip *pwmc,
- 	return ret;
- }
- 
--static int gb_pwm_config_operation(struct gb_pwm_chip *pwmc,
-+static int gb_pwm_config_operation(struct pwm_chip *chip,
- 				   u8 which, u32 duty, u32 period)
- {
-+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 	struct gb_pwm_config_request request;
- 	struct gbphy_device *gbphy_dev;
- 	int ret;
-@@ -103,7 +104,7 @@ static int gb_pwm_config_operation(struct gb_pwm_chip *pwmc,
- 	request.duty = cpu_to_le32(duty);
- 	request.period = cpu_to_le32(period);
- 
--	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
-+	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
- 	ret = gbphy_runtime_get_sync(gbphy_dev);
- 	if (ret)
- 		return ret;
-@@ -116,9 +117,10 @@ static int gb_pwm_config_operation(struct gb_pwm_chip *pwmc,
- 	return ret;
- }
- 
--static int gb_pwm_set_polarity_operation(struct gb_pwm_chip *pwmc,
-+static int gb_pwm_set_polarity_operation(struct pwm_chip *chip,
- 					 u8 which, u8 polarity)
- {
-+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 	struct gb_pwm_polarity_request request;
- 	struct gbphy_device *gbphy_dev;
- 	int ret;
-@@ -129,7 +131,7 @@ static int gb_pwm_set_polarity_operation(struct gb_pwm_chip *pwmc,
- 	request.which = which;
- 	request.polarity = polarity;
- 
--	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
-+	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
- 	ret = gbphy_runtime_get_sync(gbphy_dev);
- 	if (ret)
- 		return ret;
-@@ -142,9 +144,9 @@ static int gb_pwm_set_polarity_operation(struct gb_pwm_chip *pwmc,
- 	return ret;
- }
- 
--static int gb_pwm_enable_operation(struct gb_pwm_chip *pwmc,
--				   u8 which)
-+static int gb_pwm_enable_operation(struct pwm_chip *chip, u8 which)
- {
-+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 	struct gb_pwm_enable_request request;
- 	struct gbphy_device *gbphy_dev;
- 	int ret;
-@@ -154,7 +156,7 @@ static int gb_pwm_enable_operation(struct gb_pwm_chip *pwmc,
- 
- 	request.which = which;
- 
--	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
-+	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
- 	ret = gbphy_runtime_get_sync(gbphy_dev);
- 	if (ret)
- 		return ret;
-@@ -167,9 +169,9 @@ static int gb_pwm_enable_operation(struct gb_pwm_chip *pwmc,
- 	return ret;
- }
- 
--static int gb_pwm_disable_operation(struct gb_pwm_chip *pwmc,
--				    u8 which)
-+static int gb_pwm_disable_operation(struct pwm_chip *chip, u8 which)
- {
-+	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 	struct gb_pwm_disable_request request;
- 	struct gbphy_device *gbphy_dev;
- 	int ret;
-@@ -182,7 +184,7 @@ static int gb_pwm_disable_operation(struct gb_pwm_chip *pwmc,
- 	ret = gb_operation_sync(pwmc->connection, GB_PWM_TYPE_DISABLE,
- 				&request, sizeof(request), NULL, 0);
- 
--	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
-+	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
- 	gbphy_runtime_put_autosuspend(gbphy_dev);
- 
- 	return ret;
-@@ -190,19 +192,15 @@ static int gb_pwm_disable_operation(struct gb_pwm_chip *pwmc,
- 
- static int gb_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
--
--	return gb_pwm_activate_operation(pwmc, pwm->hwpwm);
-+	return gb_pwm_activate_operation(chip, pwm->hwpwm);
- };
- 
- static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
--
- 	if (pwm_is_enabled(pwm))
--		dev_warn(chip->dev, "freeing PWM device without disabling\n");
-+		dev_warn(pwmchip_parent(chip), "freeing PWM device without disabling\n");
- 
--	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
-+	gb_pwm_deactivate_operation(chip, pwm->hwpwm);
- }
- 
- static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-@@ -212,22 +210,21 @@ static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	bool enabled = pwm->state.enabled;
- 	u64 period = state->period;
- 	u64 duty_cycle = state->duty_cycle;
--	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
- 
- 	/* Set polarity */
- 	if (state->polarity != pwm->state.polarity) {
- 		if (enabled) {
--			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
-+			gb_pwm_disable_operation(chip, pwm->hwpwm);
- 			enabled = false;
- 		}
--		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
-+		err = gb_pwm_set_polarity_operation(chip, pwm->hwpwm, state->polarity);
- 		if (err)
- 			return err;
+@@ -234,9 +257,8 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
  	}
  
- 	if (!state->enabled) {
- 		if (enabled)
--			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
-+			gb_pwm_disable_operation(chip, pwm->hwpwm);
- 		return 0;
- 	}
+ 	chip->id = ret;
+-
+ 	for (i = 0; i < chip->npwm; i++) {
+-		pwm = &chip->pwms[i];
++		struct pwm_device *pwm = &chip->pwms[i];
  
-@@ -243,13 +240,13 @@ static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	if (duty_cycle > period)
- 		duty_cycle = period;
+ 		pwm->chip = chip;
+ 		pwm->hwpwm = i;
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index dda3a68e06dc..3c62cf329ee0 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -5,6 +5,7 @@
+ #include <linux/err.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
++#include <linux/compiler_attributes.h>
  
--	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_cycle, period);
-+	err = gb_pwm_config_operation(chip, pwm->hwpwm, duty_cycle, period);
- 	if (err)
- 		return err;
+ struct pwm_chip;
  
- 	/* enable/disable */
- 	if (!enabled)
--		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
-+		return gb_pwm_enable_operation(chip, pwm->hwpwm);
+@@ -385,6 +386,10 @@ static inline void pwm_disable(struct pwm_device *pwm)
+ int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
+ 		unsigned long timeout);
  
- 	return 0;
- }
++void *pwmchip_priv(struct pwm_chip *chip) __attribute_const__;
++
++struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv);
++
+ int __pwmchip_add(struct pwm_chip *chip, struct module *owner);
+ #define pwmchip_add(chip) __pwmchip_add(chip, THIS_MODULE)
+ void pwmchip_remove(struct pwm_chip *chip);
 -- 
 2.42.0
 
