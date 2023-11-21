@@ -1,146 +1,213 @@
-Return-Path: <linux-pwm+bounces-118-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-119-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D71787F32B6
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 16:52:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD6D67F32D3
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 16:54:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88F78282DDC
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 15:52:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34566B21FB8
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Nov 2023 15:54:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3575F56776;
-	Tue, 21 Nov 2023 15:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C8A5812B;
+	Tue, 21 Nov 2023 15:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MHr2G5PV"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393B9A0
-	for <linux-pwm@vger.kernel.org>; Tue, 21 Nov 2023 07:51:59 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r5T2b-0006Jz-7c; Tue, 21 Nov 2023 16:51:57 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r5T2a-00AcF7-KQ; Tue, 21 Nov 2023 16:51:56 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r5T2a-0052T6-BI; Tue, 21 Nov 2023 16:51:56 +0100
-Date: Tue, 21 Nov 2023 16:51:56 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org,
-	linux-mips@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 014/108] pwm: jz4740: Make use of pwmchip_parent()
- macro
-Message-ID: <20231121155156.pi6e4mlov2ke2rfx@pengutronix.de>
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-15-u.kleine-koenig@pengutronix.de>
- <ba21c20b20364a39d5ffff81dac8bd300a746dbb.camel@crapouillou.net>
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D0D185
+	for <linux-pwm@vger.kernel.org>; Tue, 21 Nov 2023 07:54:00 -0800 (PST)
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by cmsmtp with ESMTPS
+	id 5Sq8rrFjXWcCI5T4Zrep1F; Tue, 21 Nov 2023 15:53:59 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 5T4YrocqbhDny5T4Yrf2t2; Tue, 21 Nov 2023 15:53:58 +0000
+X-Authority-Analysis: v=2.4 cv=fda+dmcF c=1 sm=1 tr=0 ts=655cd296
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=VYRiMrDiN7h3fOvPrbAA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=n2o1uBXnp8cT9rrlINVcMDQE2oVTgADdskLt+ItqQP8=; b=MHr2G5PVD/2R2YbNbLWNAuPSIl
+	XQ+E7j39R9JkwjjWqypfTNU/lWzEPG2um97PTNcdG3n3AJQn/+2KrLy1BmC0D1cfjRP59KYZVXuiV
+	NtvjTL9fWvQ5H7FqZhXk+IfKzL4NFT9jxil2o4FvHaejMYuzaLb+qQjM9RU29sKJFXpA/HdQtlNgG
+	MNF+ZEq68Ff8EalaPmqCwhmaV8oiY+dBNqnGetf7SCUBEOIGIpn/5l4AChMGaSK2FhHONVOHOLbHz
+	i6h5WEG3+tafYCoSdG4c6KW+CCI5/Ba28vVp1dM2rQv0o2oOU/E05FfCBwQ1YtwqZa5mzsZkGVy13
+	b1q7YAnA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:46436 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r5T4X-002AxH-2D;
+	Tue, 21 Nov 2023 09:53:57 -0600
+Message-ID: <b44c4a7d-4f86-4d53-8f11-ffeef91e1407@embeddedor.com>
+Date: Tue, 21 Nov 2023 09:53:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ic7kkssgaahevrve"
-Content-Disposition: inline
-In-Reply-To: <ba21c20b20364a39d5ffff81dac8bd300a746dbb.camel@crapouillou.net>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 105/108] pwm: Ensure a struct pwm has the same lifetime
+ as its pwm_chip
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Thierry Reding <thierry.reding@gmail.com>, Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-pwm@vger.kernel.org,
+ kernel@pengutronix.de, linux-hardening@vger.kernel.org
+References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
+ <20231121134901.208535-106-u.kleine-koenig@pengutronix.de>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231121134901.208535-106-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1r5T4X-002AxH-2D
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:46436
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFBnuyh+tcH3WxbOfB6hOru92VQoSuV/ZVzB1WbKQVi6LmhQvp1TqG5ffKMnH8eWEw/JmYFGVCzklEeS+vDQGjUCFHiPqgBhz6AyO/4D9aLeEvnKAN96
+ q5PTqzs0VrsDezMelLxDq7+NRaRk26gCM/hPuu7hi2vN2LUO9uvjlmAPXrK6xxpry3z7Lh9MjQeeYPeQa5kmbgDvDanlSAMG+g8=
 
 
---ic7kkssgaahevrve
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Paul,
+On 11/21/23 07:50, Uwe Kleine-König wrote:
+> It's required to not free the memory underlying a requested PWM
+> while a consumer still has a reference to it. While currently a pwm_chip
+> doesn't life long enough in all cases, linking the struct pwm to the
+> pwm_chip results in the right lifetime as soon as the pwmchip is living
+> long enough. This happens with the following commits.
+> 
+> Note this is a breaking change for all pwm drivers that don't use
+> pwmchip_alloc().
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-On Tue, Nov 21, 2023 at 03:13:58PM +0100, Paul Cercueil wrote:
-> Le mardi 21 novembre 2023 =E0 14:49 +0100, Uwe Kleine-K=F6nig a =E9crit=
-=A0:
-> > struct pwm_chip::dev is about to change. To not have to touch this
-> > driver in the same commit as struct pwm_chip::dev, use the macro
-> > provided for exactly this purpose.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> > =A0drivers/pwm/pwm-jz4740.c | 17 ++++++++---------
-> > =A01 file changed, 8 insertions(+), 9 deletions(-)
-> >=20
-> > diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-> > index e9375de60ad6..555c2db3968d 100644
-> > --- a/drivers/pwm/pwm-jz4740.c
-> > +++ b/drivers/pwm/pwm-jz4740.c
-> > @@ -35,13 +35,12 @@ static inline struct jz4740_pwm_chip
-> > *to_jz4740(struct pwm_chip *chip)
-> > =A0	return container_of(chip, struct jz4740_pwm_chip, chip);
-> > =A0}
-> > =A0
-> > -static bool jz4740_pwm_can_use_chn(struct jz4740_pwm_chip *jz,
-> > -				=A0=A0 unsigned int channel)
-> > +static bool jz4740_pwm_can_use_chn(struct pwm_chip *chip, unsigned
-> > int channel)
-> > =A0{
-> > =A0	/* Enable all TCU channels for PWM use by default except
-> > channels 0/1 */
-> > -	u32 pwm_channels_mask =3D GENMASK(jz->chip.npwm - 1, 2);
-> > +	u32 pwm_channels_mask =3D GENMASK(chip->npwm - 1, 2);
-> > =A0
-> > -	device_property_read_u32(jz->chip.dev->parent,
-> > +	device_property_read_u32(pwmchip_parent(chip)->parent,
-> > =A0				 "ingenic,pwm-channels-mask",
-> > =A0				 &pwm_channels_mask);
->=20
-> You could have used pwmchip_parent(&jz->chip) and not change the
-> prototype.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org> # for struct_size() and __counted_by()
 
-Later in the series jz->chip goes away. So following your advice only
-makes me touch this code once more later.
+Thanks for including __counted_by(). :)
+--
+Gustavo
 
-> > @@ -149,7 +148,7 @@ static int jz4740_pwm_apply(struct pwm_chip
-> > *chip, struct pwm_device *pwm,
-> > =A0	 */
-> > =A0	rate =3D clk_round_rate(clk, tmp);
-> > =A0	if (rate < 0) {
-> > -		dev_err(chip->dev, "Unable to round rate: %ld",
-> > rate);
-> > +		dev_err(pwmchip_parent(chip), "Unable to round rate:
-> > %ld", rate);
->=20
-> While you're at it - and if you need a v4 - maybe sneak in a \n there?
-
-I'll try to remember :-)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ic7kkssgaahevrve
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVc0hsACgkQj4D7WH0S
-/k5x+wf/aMnntCuRfV1rG8EiIOlMpAvPqa8iJIJ/Rt8LLmTjtMir9i+/qzUJcy6M
-TqQN61e2vawrSa7PGJvFd5qlUWRKnzLtCHLS32xGcoL1oesAxWMUNH2/sE9Y8RXy
-SKL65r/S5fEDCwWIUwnJ91vlc3qHkof3YHLwHqnVf6GmRLJEH6py5PJYlY9yYllZ
-GyRRVaD5JeXrQ2+XK122ETY+VbuCdiY6FeP09anuQzwjOFK33mCAzmmIrLPikWq9
-nIJKEgax9dDCb5I2djhh8XG5jRMkwsVqVTDzxUZ0qcZqR/5dWrr68C7bTYK6lB0l
-/mDPXm9WUJU1ABuqCMCDkRnYU6djgA==
-=/I1Y
------END PGP SIGNATURE-----
-
---ic7kkssgaahevrve--
+> ---
+>   drivers/pwm/core.c  | 26 ++++++++++----------------
+>   include/linux/pwm.h |  2 +-
+>   2 files changed, 11 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 15942210aa08..029aa1c69591 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -198,7 +198,7 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
+>   
+>   void *pwmchip_priv(struct pwm_chip *chip)
+>   {
+> -	return (void *)chip + sizeof(*chip);
+> +	return (void *)chip + struct_size(chip, pwms, chip->npwm);
+>   }
+>   EXPORT_SYMBOL_GPL(pwmchip_priv);
+>   
+> @@ -206,8 +206,9 @@ struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, si
+>   {
+>   	struct pwm_chip *chip;
+>   	size_t alloc_size;
+> +	unsigned int i;
+>   
+> -	alloc_size = size_add(sizeof(*chip), sizeof_priv);
+> +	alloc_size = size_add(struct_size(chip, pwms, npwm), sizeof_priv);
+>   
+>   	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
+>   	if (!chip)
+> @@ -217,6 +218,13 @@ struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, si
+>   	chip->npwm = npwm;
+>   	chip->uses_pwmchip_alloc = true;
+>   
+> +	for (i = 0; i < chip->npwm; i++) {
+> +		struct pwm_device *pwm = &chip->pwms[i];
+> +
+> +		pwm->chip = chip;
+> +		pwm->hwpwm = i;
+> +	}
+> +
+>   	return chip;
+>   }
+>   EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
+> @@ -234,7 +242,6 @@ EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
+>   int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+>   {
+>   	int ret;
+> -	unsigned i;
+>   
+>   	if (!chip || !chip->dev || !chip->ops || !chip->npwm)
+>   		return -EINVAL;
+> @@ -253,26 +260,15 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
+>   
+>   	chip->owner = owner;
+>   
+> -	chip->pwms = kcalloc(chip->npwm, sizeof(*chip->pwms), GFP_KERNEL);
+> -	if (!chip->pwms)
+> -		return -ENOMEM;
+> -
+>   	mutex_lock(&pwm_lock);
+>   
+>   	ret = idr_alloc(&pwmchip_idr, chip, 0, 0, GFP_KERNEL);
+>   	if (ret < 0) {
+>   		mutex_unlock(&pwm_lock);
+> -		kfree(chip->pwms);
+>   		return ret;
+>   	}
+>   
+>   	chip->id = ret;
+> -	for (i = 0; i < chip->npwm; i++) {
+> -		struct pwm_device *pwm = &chip->pwms[i];
+> -
+> -		pwm->chip = chip;
+> -		pwm->hwpwm = i;
+> -	}
+>   
+>   	mutex_unlock(&pwm_lock);
+>   
+> @@ -303,8 +299,6 @@ void pwmchip_remove(struct pwm_chip *chip)
+>   	idr_remove(&pwmchip_idr, chip->id);
+>   
+>   	mutex_unlock(&pwm_lock);
+> -
+> -	kfree(chip->pwms);
+>   }
+>   EXPORT_SYMBOL_GPL(pwmchip_remove);
+>   
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index b8e70ee01d31..a7294ef1495d 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -302,7 +302,7 @@ struct pwm_chip {
+>   
+>   	/* only used internally by the PWM framework */
+>   	bool uses_pwmchip_alloc;
+> -	struct pwm_device *pwms;
+> +	struct pwm_device pwms[] __counted_by(npwm);
+>   };
+>   
+>   static inline struct device *pwmchip_parent(struct pwm_chip *chip)
 
