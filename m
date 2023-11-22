@@ -1,67 +1,63 @@
-Return-Path: <linux-pwm+bounces-150-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-151-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8B697F4E2E
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 18:19:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB0CF7F4E7D
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 18:36:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E8E281C20B77
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 17:19:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F70E1F219C4
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 17:36:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA8C57898;
-	Wed, 22 Nov 2023 17:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EBD94CDFA;
+	Wed, 22 Nov 2023 17:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRZ1LhjI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eu8lf+UQ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0C883
-	for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 09:19:31 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-32f737deedfso4383062f8f.3
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 09:19:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700673570; x=1701278370; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/f21OxEl7cDdyy0tEczoV80ahY1lbR5S6hlsHjkSse4=;
-        b=hRZ1LhjIQhVidpj+ApO0qhXUCq1wONmxUZgwwAd7mDrMVOt83u6doS4NtwPux3V2O2
-         mLq/uCuXmtPbNdlgeGFBndtXdvO+mc7MDQATzfhh/pn0XrKz/BbFGOjYwg1m389g53FJ
-         hfUf2iU66rK4ebLYPbGHlCW05Ro7qWSaC3HH/QRwynsYIB7SaZQWWZefTuHkBIWyZ3cT
-         ZNwEYlSCf5RLcBBbO67kGhkgpS5YAQ8M5spNrxED5WBt+0smImRiaY/uu4hm7ruAQwS1
-         jumADgimUlHGJA73DJnG7PZSfrL46+wsMaO+giHyWiakoJf1EfTGw+4B/FP9Wsv6nxY/
-         mfug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700673570; x=1701278370;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/f21OxEl7cDdyy0tEczoV80ahY1lbR5S6hlsHjkSse4=;
-        b=KylzbyXJdWcGU3z3ADBsVCyzdlzbIgqvC8PwVt40EdwiOe9kfvhebTeb9o0e7f/x01
-         xpEPomK/Hp1zQMsXIv5w8BfJZVHu7nacFGTnfHWMGCWJCwWggj2PmOMdPhSJ4V63NM6o
-         wx6U3gYmsM8/LHuVjZ4/oEvIVPdyWkdmBIUUgpbWU3FqXjUJlLD1pflyufQypBCeQhvG
-         ub9bSylk8ZIHjY20uDGubkIW0ZHKEa+QnxT4lP2W8dKc6l50a45fuLBYrM3n5aGjYJzy
-         ZNJv9Iy33v0HUZjnzHGSOLGLTfP6bTUAknnO+EPdO1FZvQE8MMpdQ0E4lXVTTdVy96ee
-         dn+w==
-X-Gm-Message-State: AOJu0Yzvc49WyosC+eLbp9j9RpnBeEmOInFqcmp1DvSRe0x9LkWyF4Zj
-	Vba67TigqdIzStf5WNKHblgMzfiglMc=
-X-Google-Smtp-Source: AGHT+IFaPnkqu+EQ0B7jH6YDoV3MNPOxAaR4RGxd9NpMeuiWEeAbb1GFWwp7CvEuO1A5vIKnEwyN8w==
-X-Received: by 2002:a5d:64a4:0:b0:32f:79e5:8119 with SMTP id m4-20020a5d64a4000000b0032f79e58119mr1030690wrp.1.1700673569429;
-        Wed, 22 Nov 2023 09:19:29 -0800 (PST)
-Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id x5-20020adfffc5000000b0032fb17c65desm17642377wrs.19.2023.11.22.09.19.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Nov 2023 09:19:29 -0800 (PST)
-Date: Wed, 22 Nov 2023 18:19:27 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v3 104/108] pwm: Ensure that pwm_chips are allocated
- using pwmchip_alloc()
-Message-ID: <ZV44H9ZQDuEA217B@orome.fritz.box>
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-105-u.kleine-koenig@pengutronix.de>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2995B5BC;
+	Wed, 22 Nov 2023 17:36:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4854DC433C8;
+	Wed, 22 Nov 2023 17:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700674598;
+	bh=Vza99+xtq+1wLQeh3rk7M9wfNhph6mzwpTZ+i29+N5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eu8lf+UQ8lxS78Mxw93tY9qK+MnxSy1BtNRiLd8+eS9R31GqQxBBks3Gzx0pFkbcy
+	 doqzjlz/x1XXXLbJmai3iZKJbx29szV2aJidObn4mHv49HHst47H0JReAaH6mCB3/r
+	 JpLXyIbeatYpCd1+ek6uZhbMXrvRsthb8ZkzRs/M1yte6Hutyh31Y6P7yoRPFYOzcL
+	 cM+/FVpaTqjjN3KLj3qqKS9JVO6MYw8fYDkXu3wJ2OBnXh2bg6nkmF8N4inruHZZvP
+	 BQQBaC+DUmDBc1t8nQ+inJZWemDM64XSFPhpM/klRR5Sq1o/wvzVEHJsepeXc6UJia
+	 aVkW3mkMMwNew==
+Date: Wed, 22 Nov 2023 17:36:32 +0000
+From: Conor Dooley <conor@kernel.org>
+To: William Qiu <william.qiu@starfivetech.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pwm: Add OpenCores PWM module
+Message-ID: <20231122-jokester-reapply-eb000d976d56@spud>
+References: <20231110062039.103339-1-william.qiu@starfivetech.com>
+ <20231110062039.103339-2-william.qiu@starfivetech.com>
+ <afce202d-6234-4c5f-9018-facd9a56b5eb@linaro.org>
+ <f4551a7a-61e6-4d97-94c2-da2e4e9e8cb3@starfivetech.com>
+ <824cee7b-e4d3-461a-8bfb-4ad095c240fd@linaro.org>
+ <20231113-sprung-tantrum-94659009b9d4@squawk>
+ <1ba3e8d1-ed89-4aab-ae27-d8d31ee2f150@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -69,59 +65,86 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yzn7diKWROL6MmvN"
+	protocol="application/pgp-signature"; boundary="9e0gDyQKikb1dEdb"
 Content-Disposition: inline
-In-Reply-To: <20231121134901.208535-105-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <1ba3e8d1-ed89-4aab-ae27-d8d31ee2f150@starfivetech.com>
 
 
---yzn7diKWROL6MmvN
-Content-Type: text/plain; charset=utf-8
+--9e0gDyQKikb1dEdb
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 21, 2023 at 02:50:46PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Memory holding a struct device must not be freed before the reference
-> count drops to zero. So a struct pwm_chip must not live in memory
-> freed by a driver on unbind. All in-tree drivers were fixed accordingly,
-> but as out-of-tree drivers, that were not adapted, still compile fine,
-> catch these in pwmchip_add().
+On Wed, Nov 22, 2023 at 03:03:36PM +0800, William Qiu wrote:
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pwm/core.c  | 10 ++++++++++
->  include/linux/pwm.h |  1 +
->  2 files changed, 11 insertions(+)
+>=20
+> On 2023/11/14 4:17, Conor Dooley wrote:
+> > On Mon, Nov 13, 2023 at 09:07:15PM +0100, Krzysztof Kozlowski wrote:
+> >> On 13/11/2023 10:42, William Qiu wrote:
+> >> > Will update.
+> >> >>> +
+> >> >>> +allOf:
+> >> >>> +  - $ref: pwm.yaml#
+> >> >>> +
+> >> >>> +properties:
+> >> >>> +  compatible:
+> >> >>> +    oneOf:
+> >> >>> +      - items:
+> >> >>> +          - enum:
+> >> >>> +              - starfive,jh7100-pwm
+> >> >>> +              - starfive,jh7110-pwm
+> >> >>> +          - const: opencores,pwm
+> >> >>
+> >> >> That's a very, very generic compatible. Are you sure, 100% sure, th=
+at
+> >> >> all designs from OpenCores from now till next 100 years will be 100%
+> >> >> compatible?
+> >> >>
+> >> > My description is not accurate enough, this is OpenCores PTC IP, and=
+ PWM
+> >> > is one of those modes, so it might be better to replace compatible w=
+ith
+> >> > "opencores, ptc-pwm"
+> >> >=20
+> >> > What do you think?
+> >>=20
+> >> Sorry, maybe this answers maybe doesn't. What is "PTC"?
+> >=20
+> > "pwm timer counter". AFAIU, the IP can be configured to provide all 3.
+> > I think that William pointed out on an earlier revision that they have
+> > only implemented the pwm on their hardware.
+> > I don't think putting in "ptc" is a sufficient differentiator though, as
+> > clearly there could be several different versions of "ptc-pwm" that have
+> > the same concern about "all designs from OpenCores for now till the next
+> > 100 years" being compatible.
 
-We don't usually care about out of tree drivers. But this also indicates
-to me that we're doing something wrong here. If we cared about out of
-tree drivers we should be implementing this in a way that doesn't break
-things immediately. If we don't care, we might as well make sure that
-compilation breaks for any drivers that haven't been adapted.
+Perhaps noting what "ptc" stands for in the description field would be a
+good idea.
 
-I don't see what this odd interim state would be good for.
+> After discussion and review of materials, we plan to use "opencores,ptc-p=
+wm-v1"
+> as this version of compatible, so that it can also be compatible in the f=
+uture.
+>=20
+> What do you think?
 
-Thierry
+Do we know that it is actually "v1" of the IP? I would suggest using the
+version that actually matches the version of the IP that you are using
+in your SoC.
 
---yzn7diKWROL6MmvN
+Thanks,
+Conor.
+
+--9e0gDyQKikb1dEdb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVeOB8ACgkQ3SOs138+
-s6GqYg//aWdIVq5QEqS4UqA4ZmpAyvTCBrpDzwzehsGhGrqDs9a7NKyONliNQO7Z
-+MBZlFSKtu/4NXTXPhKTTAOmy/32UJx1O30Mvz1Eb8XWpoqnkt1q62lF/3uJvVmY
-zRMKbw+8uU2EY+dxMAlDVypDdf0jKP//s2arC/VppoaI1MhCabVqKLy9BdXrhDFg
-CGkU0NOe2GjEUO4q//wAOOpjM77XiI6IXdNeVZXTdNE9hZImu5uZgHtqv0g3kM1C
-VMOzPQOKkftmKHwRhE9/yUm/03BhqXOAS14BtDJha50OyTOfWZnQWu3hDRYuPHWG
-L8LWW63n9O09tn1FyV2VXrDWRhuEUp8anKm2o3Bhg39jZTZPoydB7x8a6qm+hwjg
-+vI8yrrUzSmrPEnyw8aEPSqvxIzjXjEt2XK1AX9imOCdL4tx5CwYUNkV7dJaHDmK
-FIpg5mlctoripQ5Q3fZTBReQ+ev4NtJRsQx01lR9NJHLCF9le110JTmUOY6rMdWP
-NMinf7IWnqwjcn97kXS041sLqJzsP+VArRCi6aW6a3IEAlBQnP3UzFysqpuZZS5W
-o9buvPIKfo7ixScvTevLPPWug7XwVmhNMk0uuFj/RNnG8P7KyO15DTzmT1vC9tTO
-BIK/rTvtRVq43UtaFh5wihYs1JLX5LO7jLtCltlQhzjzZJBUUHE=
-=+rB0
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZV48IAAKCRB4tDGHoIJi
+0nnhAP0dO+HuU6VJxyhYQTYCOgtFy1M7siCtU/9xX8hHaon4MgEA3d9vorRE+CH8
+uSLzgEykIwm2UD5v+hkW0uBeHJrQ8wk=
+=AWCX
 -----END PGP SIGNATURE-----
 
---yzn7diKWROL6MmvN--
+--9e0gDyQKikb1dEdb--
 
