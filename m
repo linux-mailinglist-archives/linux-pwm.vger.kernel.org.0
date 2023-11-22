@@ -1,60 +1,60 @@
-Return-Path: <linux-pwm+bounces-154-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-155-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4151A7F4F27
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 19:18:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 984D67F4F84
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 19:27:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 640981C20AE4
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 18:18:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8B1D1C20336
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 18:27:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F5814F5EB;
-	Wed, 22 Nov 2023 18:18:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760B85ABAE;
+	Wed, 22 Nov 2023 18:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lpb9202u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bOjRkVoB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7384F110
-	for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 10:18:27 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-332c0c32d19so3130280f8f.3
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 10:18:27 -0800 (PST)
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599F544B7
+	for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 10:27:11 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a00d5b0ec44so5320566b.0
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 10:27:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700677106; x=1701281906; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700677630; x=1701282430; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cHYnD0Po/dYKPMMF8EH1EryMVyB3OKYjMgkkFLJ9EPQ=;
-        b=lpb9202uA5jT7c7XbKb63Na4MwxnZ3t8dXHNhEadlEW+YIclMyBLm2viUOG2hMhDGM
-         lgWUET544pvlT0iBrSiOlmSU6PfmDhFV2QyE/BRDucLmypA17+4gW3pmEmOJQMFdQLv5
-         UOOJSlZudx03F6AbQziqEi1tuCVPIgmSBzGI98v8jwvIO+izFbvwx663YjQBZRQtjX8h
-         IByTDT+7u9RQoKmiTemxznwCiUGrtIIDo3LMR/YjnLSZw/K1K0szNTPk63v4QUDc27kC
-         urg4Py+oGNCJz1Snpwg1jKyZPuRU2lxkL89dY4h6ctZ8iIWndB9Xv8ld2a89rQ0ldJP5
-         GXbw==
+        bh=oEsmM/7SS4+BUtYAvCzoeGDYLUi62QW3OPX+PEsVrG8=;
+        b=bOjRkVoBxTvHJgV+xfsz1DQmuLtwaUqU4QBDo3gxMgJwwP9YHRQlP5A7huKZq12NrH
+         Uoj0FGAije0HlZHVTK181f6F+EzYKRyKlJiCZkgUbi8+U087G3Qc3ULL6nsjmDr+gh5K
+         nmQLIm9hHbgWyh4VNMMfYNLl7ZtBpmqRIbYu4CIaXCrLzloBL8AHBIacpAUfxe6AOAWs
+         F6cYyz1q6PRUMvDfqYsSwZ7Xu6fc+wxxuA5VOV7xGah9PKnC4x3e5TFFqvSFpJldRurq
+         IPY73ppyc0ytr+F1wJkgQJoBFpGqWeKCba2lWwvP0QeHtLBtK1AzXgSnH4/MAK5ehvPW
+         zrnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700677106; x=1701281906;
+        d=1e100.net; s=20230601; t=1700677630; x=1701282430;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cHYnD0Po/dYKPMMF8EH1EryMVyB3OKYjMgkkFLJ9EPQ=;
-        b=Y8ByFpiPF/0XhK1Is7vzinvL+yOwXJs8Q2YL51RTZ6GvggKnTbJ1oLtQEbF+vYg77n
-         EJzKwQs7XumZknPSNnWZWY8AikC1KMxiDDGnYnYvJuHePcK/NdawJj+2ofPeB1gnjAZC
-         P/BJHJikMOPE7FSK5mrp4Pp4aIuLbtfs51uyUsicc9USjjvFFRDEcU2B7Ajgd+RpQdm3
-         /Gu5T1IalsZ5pfSWyjvnpZeFCGtpUTXz4kAxyFs/w3OEjZvBOcj5yHhSNOVFPTXZIlqw
-         Wcd2hAZhdh/rpJAcbb4NcMIDwWqKGjUG9qGOsYPSpWCZ6//m6CCDoDVjqjnHeDp3uDQS
-         sxqQ==
-X-Gm-Message-State: AOJu0YwvcO0w1jrW200F+GgcaknQOkFOUZ69vjE21BdJCPcH0eFZroJ7
-	J3KPmgCG/L5V0S6jBj7TzZwt5Q==
-X-Google-Smtp-Source: AGHT+IGPNGAtOAyMyTkybhU4HYxQ9iIarZYNk96gS0e95g7JSaZVC1yWxBkAafqoah00LLLxbio90w==
-X-Received: by 2002:a5d:6c69:0:b0:332:d33e:6584 with SMTP id r9-20020a5d6c69000000b00332d33e6584mr1939868wrz.45.1700677105921;
-        Wed, 22 Nov 2023 10:18:25 -0800 (PST)
+        bh=oEsmM/7SS4+BUtYAvCzoeGDYLUi62QW3OPX+PEsVrG8=;
+        b=PAaLrBiPb1V/dzmvrQIsFSx33czgp0xE7QppE1e+TFustiNLIeApvLzWPt7aAExSUt
+         lRShQtlW+u9qbq1hBXXgFIMOLCQSm+uI7mtQI+3Ik3KX32sHrfv+MZRDk8pNJeZTbeMT
+         rA1R6D8aNnd6rWhLK2WNBdRWNyO795+IpqjPDK7loRp8ZO2wi10HIhFldUdmLtGYxYty
+         bcdxE6+MHvtDn//+muZkZA9KH9mLD/uX7RYXcp+oMI7LsK0/uaznzFKu9K/JISNXOHVF
+         Y780zNni8Y2vqMf1Q+q7Gy5UozUUqIEwheTzwJ06teXWJgTwy+5QFUbd4haELqS7Aher
+         8pxA==
+X-Gm-Message-State: AOJu0YyIb26Y9thPO9s6ARlm4e/TOvitGxdwL6ESLJxXxWpM7/Sen/IK
+	3s9Fy1Q3TcjU52fQegMkupKr+Q==
+X-Google-Smtp-Source: AGHT+IF5l0K4sdu6LySO4mmqLm96VMqGJse3GZYDDjVjWN59behxw7Xkj1nQV4S6+3BCmtOhmjpdxg==
+X-Received: by 2002:a17:906:f259:b0:9fe:1681:22c7 with SMTP id gy25-20020a170906f25900b009fe168122c7mr2210636ejb.26.1700677630237;
+        Wed, 22 Nov 2023 10:27:10 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.100])
-        by smtp.gmail.com with ESMTPSA id q8-20020a05600000c800b00331698cb263sm7672wrx.103.2023.11.22.10.18.23
+        by smtp.gmail.com with ESMTPSA id v15-20020a1709064e8f00b009928b4e3b9fsm55929eju.114.2023.11.22.10.27.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 10:18:25 -0800 (PST)
-Message-ID: <26d9dcdf-d015-493e-b2b0-eeb538e7caf0@linaro.org>
-Date: Wed, 22 Nov 2023 19:18:23 +0100
+        Wed, 22 Nov 2023 10:27:09 -0800 (PST)
+Message-ID: <58c2197d-90d0-4307-a123-a1b100fcf5a0@linaro.org>
+Date: Wed, 22 Nov 2023 19:27:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,20 +62,18 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/7] dt-bindings: leds: leds-qcom-lpg: Add support for
- LPG PPG
+Subject: Re: [PATCH v5 12/39] dt-bindings: pwm: Add Cirrus EP93xx
 Content-Language: en-US
-To: Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
- lee@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, agross@kernel.org,
- andersson@kernel.org
-Cc: luca.weiss@fairphone.com, konrad.dybcio@linaro.org,
- u.kleine-koenig@pengutronix.de, quic_subbaram@quicinc.com,
- quic_gurus@quicinc.com, linux-leds@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
-References: <20231020182218.22217-1-quic_amelende@quicinc.com>
- <20231020182218.22217-3-quic_amelende@quicinc.com>
+To: nikita.shubin@maquefel.me, Thierry Reding <thierry.reding@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231122-ep93xx-v5-0-d59a76d5df29@maquefel.me>
+ <20231122-ep93xx-v5-12-d59a76d5df29@maquefel.me>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -121,23 +119,19 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231020182218.22217-3-quic_amelende@quicinc.com>
+In-Reply-To: <20231122-ep93xx-v5-12-d59a76d5df29@maquefel.me>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/10/2023 20:22, Anjelique Melendez wrote:
-> Update leds-qcom-lpg binding to support LPG PPG.
+On 22/11/2023 09:59, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
 > 
-> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/leds/leds-qcom-lpg.yaml          | 89 ++++++++++++++++++-
+> Add YAML bindings for ep93xx SoC PWM.
+> 
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-This causes new warnings, for which fixes were not included here, not
-linked in cover letter, not linked in changelog.
-
-Please test the patches before sending and be sure no new warnings are
-introduced. I should not test it, it's your job.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
