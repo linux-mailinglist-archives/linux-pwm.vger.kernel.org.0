@@ -1,60 +1,60 @@
-Return-Path: <linux-pwm+bounces-127-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-128-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A7E47F4059
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 09:39:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E2B77F4063
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 09:41:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F1201C20949
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 08:39:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F6CB1C20847
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 08:41:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB8D2BAEE;
-	Wed, 22 Nov 2023 08:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A238C11;
+	Wed, 22 Nov 2023 08:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T0U6T8uj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bBZ7M/Ic"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 302FD19D
-	for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 00:39:43 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-a013d22effcso254713966b.2
-        for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 00:39:43 -0800 (PST)
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3224110
+	for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 00:41:09 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-5401bab7525so9302526a12.2
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Nov 2023 00:41:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700642381; x=1701247181; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700642468; x=1701247268; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aS+XXhwuzroVSKVuFdZ7dXAQSJNNm0caeZbcLLCsivU=;
-        b=T0U6T8ujw0DLzCZGRMMTAgWZ9GrwaYqhFi7XK8ftDSi6ncTbQldX+8kQ0o6qXaTO4O
-         Sj+tFmj40aGY9aS2Aml1hLz0UdzReRrxw27VDmwthiYaujBcp06hKlxj6vKHSHHgKi1H
-         1TTU0DPUGm3RZM3Axixfl6vwXGmCFdMqO849k2lcqoiSBkiae3Lk5+XDlUclnCNb1Az/
-         7XMVrNR9zYz8BUTPKDU8K4Zp4tMf661WWI3xYzr9wso5qzB/6uXVQ0xihy3x/ECbdJ5N
-         ugoHlulXUkN6Kbr13hTy2hJja11RYxjCOhWCzF6jl2dzUhfJ4EadWVS8SznHrspQne3P
-         AsYw==
+        bh=7Wkcu8kmGItliZN0XfKbebEr2eOskFSIhLTVCyGFKXs=;
+        b=bBZ7M/IcwahMxIvIzLl3EHWe+wnJ9ZkR1B+E6HhFWxSY5JlmLFb5ETYApC3NjO9CvB
+         b/QppfF+z9nlf9sRUHu3pNaKcVmEi8aea8sDlAQb5EzbchRjfqsSMuWAG0OHGZodfPjh
+         4S6z0KeB3EnC0hlJfdr1qW4TlgnVTMeJFwHwAeRugoXij7K32KeT7YzINb3ha2fWm7Pt
+         SiKGEHXeXqqAZ2G/U0AvTuQxsVturtJdq0tKwv/5Q9bvs6pbYiJIfwdQtlaPP2IsfFg6
+         esiZsOobfSyETsEZZnNlQ63lhWJbaxZzTlDEReu3VycqQCpuNeLy0GI6hnhvSnD0pyin
+         2q+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700642381; x=1701247181;
+        d=1e100.net; s=20230601; t=1700642468; x=1701247268;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aS+XXhwuzroVSKVuFdZ7dXAQSJNNm0caeZbcLLCsivU=;
-        b=GnoYmOhFzedezaQibd5CgqJ50MLuP0/v9jA+gvb5MUEP9vhvQD4pSfqBlnaMFU8YIX
-         VrTr73WV65xnHTjifKrbobyNyuOp0jUgn5OIyoOHDGjY3Oi2ThugeSb0KsydOtx/08DL
-         E2RmHcKlDH0eIiUn/UqzkqhsbXtpcYOIBeebiPGudMzqobvOsIy0nc/YLO2ceuCsa05e
-         2XUVJktpeAVfUeK9u1Gj0Yz9aquCGYq8uiw4eeCKzW9hyn+Otvppf3Dj0dPdOch3HHRr
-         KRiPT/H8EKxrwz+5OGZDNUqQr56Da3cu0RFy1FIY6TVm79Eg9lYwhVgVtr9+mwsXZxkL
-         1j8w==
-X-Gm-Message-State: AOJu0YwWqpIILji7dhZm5ACQaCbONhx4YW58vXzsPNqRKji2bagP9yFi
-	qxzTLL21Dwpa0+bxNLCm7wG18A==
-X-Google-Smtp-Source: AGHT+IF2CSCjDTEXm1SkcZqwuxmoDKpLN1XjBfvcVi12yyNS4bJa/vqnjuwCRcnZsj7/ysSkGHEnvA==
-X-Received: by 2002:a17:906:7105:b0:9c6:8190:359f with SMTP id x5-20020a170906710500b009c68190359fmr935327ejj.33.1700642381688;
-        Wed, 22 Nov 2023 00:39:41 -0800 (PST)
+        bh=7Wkcu8kmGItliZN0XfKbebEr2eOskFSIhLTVCyGFKXs=;
+        b=SlKLpd1DPv0hRzQWVDVpbB8XIyMx8lxhtm2eq3x8/Vt96VQ4BPzUWuRLgqN2Fau12w
+         I8rM2+Zef7s0Mzj35ye6hWgSmMj1RwV3ytl4+lglopB6lDYxHmtOWL3Lr4zALjF4ev7I
+         aYSXuCFXBFZGjteVBHqXLM9tFdHWNWSi0s9z/2sb4b9man3atmyVSLvDYLhSyIV4pDzp
+         LFuBqENkW35PMDWOJ8vOM+bmigmF548BLuMzIcw0fsoCNAeh5aRpZykm31nAf93f6pkb
+         A2YEE/h3k6yLY1OE7GX6YZiL3vQCULGb0uavvJmWxuXuoEfDP7nkc5U6MfijvQSKuNSf
+         kuWw==
+X-Gm-Message-State: AOJu0Yw0ZOXv////SQkXJ3BmeMza8bW8Pn99U7C0VwjC79mtHTXZmFlx
+	TAXJK2w2ubMSJv41MnOKOKSTuw==
+X-Google-Smtp-Source: AGHT+IGUk93wahKeMaggyH/TSzYZWZsboWBFVYEO64EdO1zfK6oFvTeG2wwquJG85hUY0qOwA+gkpg==
+X-Received: by 2002:a17:906:e46:b0:9bd:bbc1:1c5f with SMTP id q6-20020a1709060e4600b009bdbbc11c5fmr1002158eji.35.1700642468424;
+        Wed, 22 Nov 2023 00:41:08 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.100])
-        by smtp.gmail.com with ESMTPSA id a1-20020a170906190100b009a19701e7b5sm6321163eje.96.2023.11.22.00.39.40
+        by smtp.gmail.com with ESMTPSA id a1-20020a170906190100b009a19701e7b5sm6321163eje.96.2023.11.22.00.41.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Nov 2023 00:39:41 -0800 (PST)
-Message-ID: <f04d8ad1-4411-4334-8d22-0aa757bf227c@linaro.org>
-Date: Wed, 22 Nov 2023 09:39:39 +0100
+        Wed, 22 Nov 2023 00:41:08 -0800 (PST)
+Message-ID: <eb95e27d-f408-4e25-bd53-37ff88474537@linaro.org>
+Date: Wed, 22 Nov 2023 09:41:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] arm: dts: amlogic: migrate pwms to new meson8 v2
+Subject: Re: [PATCH v2 6/6] arm64: dts: amlogic: migrate pwms to new meson8 v2
  binding
 Content-Language: en-US
 To: Jerome Brunet <jbrunet@baylibre.com>,
@@ -74,7 +74,7 @@ Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
  linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
 References: <20231117125919.1696980-1-jbrunet@baylibre.com>
- <20231117125919.1696980-6-jbrunet@baylibre.com>
+ <20231117125919.1696980-7-jbrunet@baylibre.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -120,43 +120,49 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231117125919.1696980-6-jbrunet@baylibre.com>
+In-Reply-To: <20231117125919.1696980-7-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 17/11/2023 13:59, Jerome Brunet wrote:
 > Update Amlogic based SoC PWMs to meson8-pwm-v2 compatible
 
-Why? Your commit msg must explain this. You break users of this DTS on
-older kernels and also this makes it impossible to apply via different
-branches in the same cycle. All this needs explanation and proper
-justification. Your message tells here nothing, because "what" is quite
-obvious.
+Please write proper commit msgs.
 
 > 
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm/boot/dts/amlogic/meson.dtsi           |  4 ++--
->  arch/arm/boot/dts/amlogic/meson8.dtsi          | 16 +++++++++++++---
->  arch/arm/boot/dts/amlogic/meson8b-ec100.dts    |  2 --
->  arch/arm/boot/dts/amlogic/meson8b-mxq.dts      |  2 --
->  arch/arm/boot/dts/amlogic/meson8b-odroidc1.dts |  2 --
->  arch/arm/boot/dts/amlogic/meson8b.dtsi         | 16 +++++++++++++---
->  6 files changed, 28 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/amlogic/meson.dtsi b/arch/arm/boot/dts/amlogic/meson.dtsi
-> index 8e3860d5d916..80cc004ad5fe 100644
-> --- a/arch/arm/boot/dts/amlogic/meson.dtsi
-> +++ b/arch/arm/boot/dts/amlogic/meson.dtsi
-> @@ -83,14 +83,14 @@ i2c_A: i2c@8500 {
+
+...
+
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> index 18f7b730289e..690552e5a104 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> @@ -237,8 +237,6 @@ &pwm_ef {
+>  	status = "okay";
+>  	pinctrl-0 = <&pwm_e_pins>;
+>  	pinctrl-names = "default";
+> -	clocks = <&clkc CLKID_FCLK_DIV4>;
+> -	clock-names = "clkin0";
+>  };
+>  
+>  &saradc {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> index 2673f0dbafe7..bf00672b9009 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -329,14 +329,14 @@ i2c_A: i2c@8500 {
 >  			};
 >  
 >  			pwm_ab: pwm@8550 {
-> -				compatible = "amlogic,meson-pwm";
+> -				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
 > +				compatible = "amlogic,meson8-pwm-v2";
 
-That's breaking users of this DTS (old kernel, out of tree, other
-projects) for no real reasons without explanation.
+This is just wrong. NAK.
+
+Replacing specific and correct (nothing in commit msg said these are
+incorrect!) compatibles with generic, unspecific one is a no-go. It does
+not make sense to replace correct code with incorrect...
 
 Best regards,
 Krzysztof
