@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-130-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-131-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A64717F4090
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 09:52:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F33F7F4091
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 09:52:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2AB62B20AE5
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 08:52:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07FB9B20996
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Nov 2023 08:52:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B655E20B06;
-	Wed, 22 Nov 2023 08:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F17B120B06;
+	Wed, 22 Nov 2023 08:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/KXIupC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FumuhebC"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945011CAB1;
-	Wed, 22 Nov 2023 08:52:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BD2C433C8;
-	Wed, 22 Nov 2023 08:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28741CAB1;
+	Wed, 22 Nov 2023 08:52:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368E5C433C8;
+	Wed, 22 Nov 2023 08:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700643140;
-	bh=dS6I5+GxVq+w6MA4po9T77FdjKq8FGe7RNC3UWLZPKs=;
+	s=k20201202; t=1700643153;
+	bh=IaDXazBFLgJLrCCZ5ZKPxuE8p+aXje9cOAE6DyMfjvs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D/KXIupCo+k/nM8BDmk3FWCm2tPkfyFeac4K4VIyJ7w0lGXgUWgr6xibMmV54LE8E
-	 t4JmT5q60y6txcAUL1hvJL+k6wHxtr9lQNWl53pRfVAnbe/xBEVpGOBL/d/aqmSvas
-	 yfnKS/qTjqprFH84RZ+8KrUXMOPAXh+gOiQ7KkRb4S8pZSs4s9nzVxDbv5bIm3DAmo
-	 rS6tm7e2jBmlOSF8e3eh7cAKERgsCpaVvaCy8BusvwNy+9H2BPs8BpreEKWjuhs+8y
-	 F+Lir63lDzU5DbsEdak2l/sJaxzTH7POsCkNTuW2n6gSeHCN+vye/fokd/eJ8qqbOM
-	 bpiUzsY00mySg==
-Date: Wed, 22 Nov 2023 16:52:16 +0800
+	b=FumuhebC0pIxSWvkdBcRS6gg8WnXhHAt1+f0qN71IHGokyZJK6RW5ndUk8ejYafvP
+	 IgBssGm0RFtUSgupEmKnY/FvDzQ0YN4k+hJh8Kf70I3G0ENiYbkc5tLfp3dRCj2KTn
+	 snUpzMXoo41NKmCOhsoiRXE/FtQsICjv8GppbQMoUZG+MOTDX/RL+ZjD79X19SDLe4
+	 EagHofU6pVdNZxVHPE0JleKic3uxERIl6CeOMLkd9a0Ph/WUXw5U9VPv0gm9swyFC5
+	 tRTsM6ZRFRJLYKiJPHQjyxPlq8D7jKy0noEDsqCRcdGoJ3d1hC6j2hwfd34VupzQ6T
+	 5C7aPQWviiJOA==
+Date: Wed, 22 Nov 2023 16:52:30 +0800
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
 Cc: Thierry Reding <thierry.reding@gmail.com>,
 	Benson Leung <bleung@chromium.org>,
 	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
 	chrome-platform@lists.linux.dev, kernel@pengutronix.de
-Subject: Re: [PATCH v3 001/108] pwm: cros-ec: Change prototype of helper to
- prepare further changes
-Message-ID: <ZV3BQMalgY7WZCVR@google.com>
+Subject: Re: [PATCH v3 008/108] pwm: cros-ec: Make use of pwmchip_parent()
+ macro
+Message-ID: <ZV3BTtR7i_g4Yj53@google.com>
 References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-2-u.kleine-koenig@pengutronix.de>
+ <20231121134901.208535-9-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,20 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231121134901.208535-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231121134901.208535-9-u.kleine-koenig@pengutronix.de>
 
-On Tue, Nov 21, 2023 at 02:49:03PM +0100, Uwe Kleine-König wrote:
-> @@ -233,7 +232,7 @@ static int cros_ec_num_pwms(struct cros_ec_pwm_device *ec_pwm)
->  
->  	/* The index field is only 8 bits */
->  	for (i = 0; i <= U8_MAX; i++) {
-> -		ret = cros_ec_pwm_get_duty(ec_pwm, i);
-> +		ret = cros_ec_pwm_get_duty(ec_pwm->ec, ec_pwm->use_pwm_type, i);
+On Tue, Nov 21, 2023 at 02:49:10PM +0100, Uwe Kleine-König wrote:
+> struct pwm_chip::dev is about to change. To not have to touch this
+> driver in the same commit as struct pwm_chip::dev, use the macro
+> provided for exactly this purpose.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Or just pass false for `use_pwm_type` because the path:
-cros_ec_pwm_probe()
--> !ec_pwm->use_pwm_type
--> cros_ec_num_pwms()
-
-`ec_pwm->use_pwm_type` is always false here.
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
