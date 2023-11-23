@@ -1,108 +1,99 @@
-Return-Path: <linux-pwm+bounces-175-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-176-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 628DA7F6493
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 17:59:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 017047F6511
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 18:17:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E575FB20F99
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 16:59:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 339391C20A7D
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 17:17:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32DA322319;
-	Thu, 23 Nov 2023 16:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 861A23FE2C;
+	Thu, 23 Nov 2023 17:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBuJmB01"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47444D48
-	for <linux-pwm@vger.kernel.org>; Thu, 23 Nov 2023 08:58:45 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r6D2J-0006H2-5h; Thu, 23 Nov 2023 17:58:43 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r6D2I-00B55v-NY; Thu, 23 Nov 2023 17:58:42 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r6D2I-006p3p-EP; Thu, 23 Nov 2023 17:58:42 +0100
-Date: Thu, 23 Nov 2023 17:58:42 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sean Young <sean@mess.org>
-Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 0/4] Improve pwm-ir-tx precision
-Message-ID: <20231123165842.ubmhifvtqd7g6jy6@pengutronix.de>
-References: <cover.1700323916.git.sean@mess.org>
- <ZV3BJ67_JCpTYEMl@gofer.mess.org>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A9646B2;
+	Thu, 23 Nov 2023 17:17:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B0FC433CC;
+	Thu, 23 Nov 2023 17:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700759859;
+	bh=ts+zqQc2FfD6+up8RHX6pODysbXRP+HNaBy6BBRqtZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hBuJmB01jH44PO6tf54BIK+xjnjyj3ttz7jh18Fw5eSzvA+g3tsgaP9iBWoIwKoc2
+	 iLBaPkyFpsGYABM9U4JyhfTWNIfzFd+l5Bij1mw/o8fIgpfEdas8TCWDBvsXx6YvER
+	 dL6R/W6u6Uc7ezFvnlfXhw8QGw9wsn54YvJMhzJKUIuTd9vlx0zzpV2Hp94mAL5GRL
+	 okq/jNr6mV/osPxj1VBv88LY2V8yOXXdzR8PZZ6GyvHgjdEiG/tB6TD7PJVFb/0BoS
+	 k4YELSUx9SewzfmMwizuz0fa8zdJzfCeuwwB7V0eL5ETqRQw3BbUETTBM+CptC/ShN
+	 Ap1rDH3Z3tjgQ==
+Date: Thu, 23 Nov 2023 17:17:34 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Michael Walle <mwalle@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jitao Shi <jitao.shi@mediatek.com>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: pwm: remove Xinlei's mail
+Message-ID: <20231123-swell-outlast-d09bee7f85fe@spud>
+References: <20231123134716.2033769-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2lhq35gjz426k7cq"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9vUpuWVFk7p9BYFj"
 Content-Disposition: inline
-In-Reply-To: <ZV3BJ67_JCpTYEMl@gofer.mess.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20231123134716.2033769-1-mwalle@kernel.org>
 
 
---2lhq35gjz426k7cq
-Content-Type: text/plain; charset=iso-8859-1
+--9vUpuWVFk7p9BYFj
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Wed, Nov 22, 2023 at 08:51:51AM +0000, Sean Young wrote:
-> On Sat, Nov 18, 2023 at 04:16:16PM +0000, Sean Young wrote:
-> > The pwm-ir-tx driver has to turn the pwm signal on and off, and suffers
-> > from delays as this is done in process context. Make this work in atomic
-> > context.
+On Thu, Nov 23, 2023 at 02:47:16PM +0100, Michael Walle wrote:
+> Xinlei Lee's mail is bouncing:
 >=20
-> Hi Uwe,
+> <xinlei.lee@mediatek.com>: host mailgw02.mediatek.com[216.200.240.185] sa=
+id:
+>     550 Relaying mail to xinlei.lee@mediatek.com is not allowed (in reply=
+ to
+>     RCPT TO command)
 >=20
-> Do you have any comments on this series?
+> Remove it.
 >=20
-> I hope you don't dislike the pwm_apply_atomic()/pwm_apply_cansleep(), I am
-> not wedded to this name, it's just me reading the room and thinking that
-> would be the most acceptable to everyone - I may have misread this.
->=20
-> Thank you for any feedback
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
 
-I didn't find much time to look into it. Skimming over it, I like it.
-I'll take a deeper look soon.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Best regards
-Uwe
+Cheers,
+Conor.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2lhq35gjz426k7cq
+--9vUpuWVFk7p9BYFj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVfhMEACgkQj4D7WH0S
-/k5VjQf/RXq2YwJVvkqbzmIbWkFY8/xy8v7UkG2WxHRig/EYkTRvU3jMLR5A2uU/
-B8me7fmfpocgDwGDcQjIQReckZs25ugows+NXe4xPyNwhS3OhTjOQ/yHOsrDr55Y
-OmMWF8ynfifLwS85okR7cittck6EYPF5wATXaNrBM53BWaaZKSWe2cuGeKTj0U0o
-dQAzySGhNEYzwwbmxqGpmLrNuG03AjLsjPw8w6zmydoGNkOYG0gNcel40mHrYCp1
-L305kwhc+r+S5eK8RykXKvgRes8zLx3tdhRAwK1cYAwWCVBrzk6TjFxpSYb2L6fy
-vM1kOKD/m2cpHYbWCzxo5hmlpKuQ7w==
-=YZwi
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZV+JLgAKCRB4tDGHoIJi
+0t5zAPoCpbE32A6RWoUyYWg7kdcQQ4hIkcinmEa+cuTb40dvFwD/RlVSJ1Dt2mC/
+1TVGlA4sr492Jn6Wm/7BbXm4QYIHhAM=
+=s9a9
 -----END PGP SIGNATURE-----
 
---2lhq35gjz426k7cq--
+--9vUpuWVFk7p9BYFj--
 
