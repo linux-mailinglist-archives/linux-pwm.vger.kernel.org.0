@@ -1,191 +1,149 @@
-Return-Path: <linux-pwm+bounces-168-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-169-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 627B17F5C2B
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 11:21:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87FC47F5CBB
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 11:45:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12E49281721
-	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 10:21:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 433382818EB
+	for <lists+linux-pwm@lfdr.de>; Thu, 23 Nov 2023 10:45:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA360224E7;
-	Thu, 23 Nov 2023 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YcUCA1OJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29FCB1C687;
+	Thu, 23 Nov 2023 10:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC71224C2;
-	Thu, 23 Nov 2023 10:21:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78CEC433C7;
-	Thu, 23 Nov 2023 10:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700734877;
-	bh=Mx8OxIizhyT66AtyfB908usr8wqSONtkBJqHyFIRXX8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YcUCA1OJWB1cgWnPzkxoWJEKEqF5KRwQsg4Zm/s2mNgzzORb4a7Kx43uUb53rudrd
-	 SNf06WO/iMQHO9U/wxb7Dazh6gW8vgeihSPnvpeaJauN8UgQfIYursZm19eO4okNVt
-	 SOGfnwDUSPtpGANoNVP2dj0Vkap3nOuAc15vNSQqe482pAHUkBdtcL3DHgCKx+//7a
-	 iy3MA5h6iTBxnJPeF1wNXo6/rObT2i5gAYXw8EXaJTFSE4rtZmRYvVtv6rHogrFN4i
-	 LXuQR0EmdyyOBWrLHOyraXFtsXyk5HywnC78OMrpj5GJbD4wB3dDeS89V3B/rwHzj/
-	 VCgouCmVNXvSw==
-Date: Thu, 23 Nov 2023 10:21:11 +0000
-From: Lee Jones <lee@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>,
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332FFD48
+	for <linux-pwm@vger.kernel.org>; Thu, 23 Nov 2023 02:45:10 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r67Ce-000478-G7; Thu, 23 Nov 2023 11:45:00 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r67Cc-00B1Ex-M3; Thu, 23 Nov 2023 11:44:58 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r67Cc-006Zfm-CM; Thu, 23 Nov 2023 11:44:58 +0100
+Date: Thu, 23 Nov 2023 11:44:58 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
 	Bjorn Andersson <quic_bjorande@quicinc.com>,
 	Kees Cook <keescook@chromium.org>, linux-pwm@vger.kernel.org,
 	Luca Weiss <luca@z3ntu.xyz>,
 	Conor Dooley <conor.dooley@microchip.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
 	linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
 	kernel@pengutronix.de,
-	Anjelique Melendez <quic_amelende@quicinc.com>
+	Anjelique Melendez <quic_amelende@quicinc.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [PATCH v3 102/108] leds: qcom-lpg: Make use of
  devm_pwmchip_alloc() function
-Message-ID: <20231123102111.GB1184245@google.com>
+Message-ID: <20231123104458.2pfaowqylmpnynhx@pengutronix.de>
 References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
  <20231121134901.208535-103-u.kleine-koenig@pengutronix.de>
  <20231122115621.GK173820@google.com>
- <20231122175413.5yxsdveausehkbgm@pengutronix.de>
+ <ZV43NHr1QN79lsaJ@orome.fritz.box>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ovysyocw44w2svsh"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231122175413.5yxsdveausehkbgm@pengutronix.de>
+In-Reply-To: <ZV43NHr1QN79lsaJ@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Wed, 22 Nov 2023, Uwe Kleine-König wrote:
 
-> Hello Lee,
-> 
+--ovysyocw44w2svsh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Thierry,
+
+[adding Bartosz to Cc]
+
+On Wed, Nov 22, 2023 at 06:15:32PM +0100, Thierry Reding wrote:
 > On Wed, Nov 22, 2023 at 11:56:21AM +0000, Lee Jones wrote:
-> > On Tue, 21 Nov 2023, Uwe Kleine-König wrote:
-> > 
-> > > This prepares the pwm sub-driver to further changes of the pwm core
-> > > outlined in the commit introducing devm_pwmchip_alloc(). There is no
-> > > intended semantical change and the driver should behave as before.
-> > > 
-> > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > >  drivers/leds/rgb/leds-qcom-lpg.c | 30 +++++++++++++++++++++---------
-> > >  1 file changed, 21 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-> > > index 68d82a682bf6..283227e02df6 100644
-> > > --- a/drivers/leds/rgb/leds-qcom-lpg.c
-> > > +++ b/drivers/leds/rgb/leds-qcom-lpg.c
-> > > @@ -77,7 +77,7 @@ struct lpg {
-> > >  
-> > >  	struct mutex lock;
-> > >  
-> > > -	struct pwm_chip pwm;
-> > > +	struct pwm_chip *pwm;
-> > >  
-> > >  	const struct lpg_data *data;
-> > >  
-> > > @@ -977,9 +977,15 @@ static int lpg_pattern_mc_clear(struct led_classdev *cdev)
-> > >  	return lpg_pattern_clear(led);
-> > >  }
-> > >  
-> > > +static inline struct lpg *lpg_pwm_from_chip(struct pwm_chip *chip)
-> > > +{
-> > > +	struct lpg **lpg = pwmchip_priv(chip);
-> > > +	return *lpg;
-> > > +}
-> > 
-> > I don't have easy-vis into the other patches, but if this is a common
-> > pattern, perhaps add a generic helper in <linux/pwm.h>?
-> > 
-> > >  static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> > >  {
-> > > -	struct lpg *lpg = container_of(chip, struct lpg, pwm);
-> > > +	struct lpg *lpg = lpg_pwm_from_chip(chip);
-> > >  	struct lpg_channel *chan = &lpg->channels[pwm->hwpwm];
-> > >  
-> > >  	return chan->in_use ? -EBUSY : 0;
-> > > [...]
-> > > @@ -1089,13 +1095,19 @@ static const struct pwm_ops lpg_pwm_ops = {
-> > >  
-> > >  static int lpg_add_pwm(struct lpg *lpg)
-> > >  {
-> > > +	struct pwm_chip *chip;
-> > >  	int ret;
-> > >  
-> > > -	lpg->pwm.dev = lpg->dev;
-> > > -	lpg->pwm.npwm = lpg->num_channels;
-> > > -	lpg->pwm.ops = &lpg_pwm_ops;
-> > > +	lpg->pwm = chip = devm_pwmchip_alloc(lpg->dev, lpg->num_channels,
-> > > +					     sizeof(&lpg));
-> > > +	if (IS_ERR(chip))
-> > > +		return PTR_ERR(chip);
-> > >  
-> > > -	ret = pwmchip_add(&lpg->pwm);
-> > > +	*(struct lpg **)pwmchip_priv(chip) = lpg;
-> > 
+> > On Tue, 21 Nov 2023, Uwe Kleine-K=F6nig wrote:
+> > > +	*(struct lpg **)pwmchip_priv(chip) =3D lpg;
+> >=20
 > > This is vile!
-> 
-> This is indeed one of the uglier conversions. It gets a bit prettier
-> with the following addon patch:
-> 
-> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-> index 283227e02df6..e09eba823057 100644
-> --- a/drivers/leds/rgb/leds-qcom-lpg.c
-> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
-> @@ -206,6 +206,10 @@ struct lpg_data {
->  	const struct lpg_channel_data *channels;
->  };
->  
-> +struct lpg_pwm_data {
-> +	struct lpg *lpg;
-> +};
-> +
->  static int triled_set(struct lpg *lpg, unsigned int mask, unsigned int enable)
->  {
->  	/* Skip if we don't have a triled block */
-> @@ -979,8 +983,9 @@ static int lpg_pattern_mc_clear(struct led_classdev *cdev)
->  
->  static inline struct lpg *lpg_pwm_from_chip(struct pwm_chip *chip)
->  {
-> -	struct lpg **lpg = pwmchip_priv(chip);
-> -	return *lpg;
-> +	struct lpg_pwm_data *lpg_pwm_data = pwmchip_priv(chip);
-> +
-> +	return lpg_pwm_data->lpg;
->  }
->  
->  static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-> @@ -1096,14 +1101,16 @@ static const struct pwm_ops lpg_pwm_ops = {
->  static int lpg_add_pwm(struct lpg *lpg)
->  {
->  	struct pwm_chip *chip;
-> +	struct lpg_pwm_data *lpg_pwm_data;
->  	int ret;
->  
->  	lpg->pwm = chip = devm_pwmchip_alloc(lpg->dev, lpg->num_channels,
-> -					     sizeof(&lpg));
-> +					     sizeof(*lpg_pwm_data));
->  	if (IS_ERR(chip))
->  		return PTR_ERR(chip);
->  
-> -	*(struct lpg **)pwmchip_priv(chip) = lpg;
-> +	lpg_pwm_data = pwmchip_priv(chip);
-> +	lpg_pwm_data->lpg = lpg;
->  
->  	chip->ops = &lpg_pwm_ops;
->  
-> Would you like it better then?
+>=20
+> Indeed. This highlights one of the weaker parts of this whole design and
+> I really don't like it. The whole chip_alloc() construct works fine if
+> you have everything isolated nicely in a single driver and subsystem
+> (like you usually have in network land), but for cases like this where
+> things are spread throughout and a device is actually more than just a
+> PWM controller, it looks like we now have to work around this design
+> because it doesn't fit.
 
-It's definitely nicer to read and more in-line with the style I expect,
-but the additional wrapper/abstraction layer is still bothersome.
+With the patch I suggested in reply to Lee's mail this is IMHO much
+nicer and with that squashed into the patch under discussion I'd not
+call this a work around.
 
--- 
-Lee Jones [李琼斯]
+Note that the thing you consider ugly here (I think) is that for
+handling a combined "PWM + something else" device a separate allocation
+is needed for stuff that embedded a struct pwm_chip before. With
+Bartosz's approach you have that second allocation for all PWM devices
+---and so the downsides hurt all PWM implementations and not only those
+combined devices.
+
+Also note that among the four external PWM drivers (i.e.
+
+	drivers/staging/greybus/pwm.c
+	drivers/leds/rgb/leds-qcom-lpg.c
+	drivers/gpu/drm/bridge/ti-sn65dsi86.c
+	drivers/gpio/gpio-mvebu.c
+
+) only two suffer from this complication, because the other two use a
+pwm specific private data structure already which seems natural to me.
+
+> In fact, this reminds me about the "midlayer mistake" in many ways and
+> combined with what Bartosz said, I'm not sure this is going to hold up
+> very well the more special cases we get.
+
+Where do you see a midlayer and how would that be better with what
+Bartosz suggests?
+
+The relevant difference between my approach and Bartosz's is that I put
+the driver specific private data in the same allocation as the struct
+pwm_chip and thus reducing the number of allocations and pointer
+traversals. This difference IMHO doesn't qualify my approach as a
+midlayer without Bartosz's qualifying, too.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ovysyocw44w2svsh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVfLSkACgkQj4D7WH0S
+/k5CNQf6Aw84GGRpZOW748iqW1Rde6VK/ve5cBswUtt0282MqNQlGsopWDgO4GHq
+KK8kPmyBn9tNFsj9vEqtUswgfG6iGBbjQnJNm8S4h4JQVUVYzFGWTQkvdxQ0I7az
+bi03l3dv6SntzYT0DC3B5Lwci0eKx6WexEfYN3OM2cF3/dyF0y9MhJZnPndtPNsC
+VRMyzetAAUq3TtTUaBaxfJSqES/5f2uXnqV/iUvaseZ36iN2DyAwlQgYpYkyGLUx
+SlX85p1xMLQcC2yhF7T99SlLbTaQigofKArEYxfb9w7CiLjGzxASOv3G2Tmzl6MF
+j0j8vkLH5eq7y/HOwqgktIHFu4WTqA==
+=41d4
+-----END PGP SIGNATURE-----
+
+--ovysyocw44w2svsh--
 
