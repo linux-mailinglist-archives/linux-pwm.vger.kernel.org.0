@@ -1,60 +1,60 @@
-Return-Path: <linux-pwm+bounces-182-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-183-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEE3E7F72D1
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 12:35:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB26C7F72D9
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 12:35:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78FE22817BA
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 11:34:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 27608B21359
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 11:35:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 323DD1DDD9;
-	Fri, 24 Nov 2023 11:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232A41DDD9;
+	Fri, 24 Nov 2023 11:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CuyAjz5n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1hbx9Yp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9F610E0
-	for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 03:34:51 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-a02c48a0420so254299766b.2
-        for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 03:34:51 -0800 (PST)
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908A310F3
+	for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 03:35:48 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-9ffef4b2741so244721066b.3
+        for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 03:35:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700825690; x=1701430490; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1700825747; x=1701430547; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yLGESbCFc50J+147aJNRVMMBSaHYgnNxVeCdiwumeiM=;
-        b=CuyAjz5nHi+uv5nCltgJwq2mrRrJmpoPTFOwUr/YSnQS9i8rE5cQmYqzkyOb/PKtC7
-         9KKkkvdmYAt0SwYTZ/84DSquu7nVPK1XQkPk/0QBgEBO4R2d0ydvPNQAmDpuCQz6zTtN
-         tAQmZ8d84UA4jKIjxbnyDFD/ftjKBczQaKdjJXJrwVdOi9UKpyqRxmvTnICc4PqAGm/T
-         xt2+8/cc/lgTlSZQ3E0XRfWRYP3rFbjA1D6sAGFFHsfrGMHrSuxOlJO+uHhhRsCOtOx1
-         okFmzvxx+E75nbV+UC3G3AhuDLnYH2OEMCJLzk9AKfSAvGquaQK4cOXpydjj7gFaV83P
-         +lOg==
+        bh=5zzTOgsssmSTby31cmMkv2xut8AtsXXDlysL2S5L92c=;
+        b=P1hbx9YpGmf8gmNdju1KHDmpnt04QpSZ2DLv5+zQPQRBsXStUT0/L3AmdWP8SckTDj
+         hwT8kTNmtag+3G0FL7LDx7zhAZVAWyBxbFPgvhMbPOGqHVFNzWMBUsK1hKOCydtRko3g
+         g8jok9EPtdaj3AF0pqLPJTMxtvviwne/YPoqvkHp3kd8QnSqAhDJAHK3HV0hLiTgdFzG
+         GdRxw9Xcon2I0/dtBLT/HEKEcp40IbASqyRytqcPklzGZkSeh2KHy4LjXulBFQk6pKSe
+         S2m2EI3c0LJ5WeO+H2W+uH8i75QDwmbO4u8v5Qsb1oGacPE1DN0NG0YTw6drxuzO22fA
+         xYjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700825690; x=1701430490;
+        d=1e100.net; s=20230601; t=1700825747; x=1701430547;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yLGESbCFc50J+147aJNRVMMBSaHYgnNxVeCdiwumeiM=;
-        b=lNNShcroYHa4Wli/CgpgwIJncYNfu4VwJJC7CH6lR9V6v4kQXxqKgn9PlmsXjiq09R
-         CrG1ibVl3Q8yrzD28U/4dvUMj/ieZUIDDDBZNSd6U4RDfabiP7i8PLr19MRakBAY+j5o
-         8+nwKp52Nx3bGsW/U1+NLSox4ZErERWx5G1/SUQ7/wphksBpG2vunTQ+we0y92vNKboe
-         cp7/3vEbwPcc3cGu01OPdIlIdNwuxo1Ruf0Os3g/tNqFmMUJvDzROQi7TYYzfCIxVmfK
-         ChFyC0vxp91+Mb2jZ2G9IL9qPhCeDOd693L3kVaRHx1vAuBtfUkKgGCV4RgtvOoJ6hf9
-         hTog==
-X-Gm-Message-State: AOJu0Yy/yCCTP7Sxpd8k7Q/LO4sp25t4Efh5grD/k6pWsWml7cP3qZOP
-	ZrW/jCzcl7fDwTpVR+hEY+0GTA==
-X-Google-Smtp-Source: AGHT+IHvkn9imfLXJr4obpg2rJD4Teu7AqvSqgkuYbZiQnmPDrN6wzAmp05SXIECdntD6XHt18LnUA==
-X-Received: by 2002:a17:906:fa90:b0:9b2:be5e:7545 with SMTP id lt16-20020a170906fa9000b009b2be5e7545mr1792162ejb.36.1700825690024;
-        Fri, 24 Nov 2023 03:34:50 -0800 (PST)
+        bh=5zzTOgsssmSTby31cmMkv2xut8AtsXXDlysL2S5L92c=;
+        b=BBIH7LQUa1zH5MrVfdrxPottqmDUVGZpaif95f1+LppVDWCPN2JACidToE4zqDlreo
+         F9eA16/MMbW0G4oWpJUZ5aBvMuSU7hT1f27vj7n4xRtk+fNl+UkRnLJZOxP3W4o1vENf
+         xE0WUGH30GICSA1OAUpw2IVWM5nVSpaA/n0RCvwWIYjsbfRczPlZavI6OpodYmHIUFA4
+         kdZP7Tkaw+VFWhUbFQMf9pxm31QzZk64u7w52hwYnj6mY9i9avM0noMuBbBexvfd3XlQ
+         jiZMo8DVTQ5T06vXpRyzvz3bNOlxAJGLJcz0X1viumTm6ZlTbdoPw8QRPjjnoq5mgpGE
+         pAYg==
+X-Gm-Message-State: AOJu0YwZ7LP2XOpkcl3THMYZEZ3S6If8QmwKXQlFX3qHmtkDU9JH6zq2
+	0FolEZEWLHsS7wKnoGDGaBKfww==
+X-Google-Smtp-Source: AGHT+IFjID4A3mtDT0B4pzun4CsbLl7voN49Zz8Xgmxlj017P20tBLM219itd6PeHtBnJIvpyW8+wQ==
+X-Received: by 2002:a17:906:389b:b0:a02:1e8d:b94f with SMTP id q27-20020a170906389b00b00a021e8db94fmr1698755ejd.57.1700825746988;
+        Fri, 24 Nov 2023 03:35:46 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.100])
-        by smtp.gmail.com with ESMTPSA id w24-20020a170906b19800b00992e14af9c3sm1985516ejy.143.2023.11.24.03.34.48
+        by smtp.gmail.com with ESMTPSA id w24-20020a170906b19800b00992e14af9c3sm1985516ejy.143.2023.11.24.03.35.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 03:34:49 -0800 (PST)
-Message-ID: <98044f53-7c9c-4e3b-a6f4-c65516e3738d@linaro.org>
-Date: Fri, 24 Nov 2023 12:34:47 +0100
+        Fri, 24 Nov 2023 03:35:46 -0800 (PST)
+Message-ID: <a701ba6e-ae4e-4c4d-9d93-c54e56c3348e@linaro.org>
+Date: Fri, 24 Nov 2023 12:35:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,17 +62,30 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [LINUX PATCH v2 3/3] pwm: pwm-cadence: Add support for TTC PWM
+Subject: Re: [LINUX PATCH v2 1/3] clocksource: timer-cadence-ttc: Do not probe
+ TTC device configured as PWM
 Content-Language: en-US
-To: Mubin Sayyed <mubin.sayyed@amd.com>, krzysztof.kozlowski+dt@linaro.org,
- u.kleine-koenig@pengutronix.de, thierry.reding@gmail.com,
- robh+dt@kernel.org, conor+dt@kernel.org, tglx@linutronix.de,
- daniel.lezcano@linaro.org, michal.simek@amd.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, git@amd.com,
- mubin10@gmail.com
+To: "Sayyed, Mubin" <mubin.sayyed@amd.com>
+Cc: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+ "git (AMD-Xilinx)" <git@amd.com>, "mubin10@gmail.com" <mubin10@gmail.com>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+ "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+ "Simek, Michal" <michal.simek@amd.com>
 References: <20231114124748.581850-1-mubin.sayyed@amd.com>
- <20231114124748.581850-4-mubin.sayyed@amd.com>
+ <20231114124748.581850-2-mubin.sayyed@amd.com>
+ <d37db10b-f9fa-49b0-8b1e-36e20acbcfd6@linaro.org>
+ <DM4PR12MB593888B73B65D25E42490EF29DB1A@DM4PR12MB5938.namprd12.prod.outlook.com>
+ <e0f28ec5-b980-490b-a857-5218fe521381@linaro.org>
+ <DM4PR12MB5938CB10059DF7E39A2A0E239DB8A@DM4PR12MB5938.namprd12.prod.outlook.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -118,28 +131,57 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231114124748.581850-4-mubin.sayyed@amd.com>
+In-Reply-To: <DM4PR12MB5938CB10059DF7E39A2A0E239DB8A@DM4PR12MB5938.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 14/11/2023 13:47, Mubin Sayyed wrote:
-> Cadence TTC timer can be configured as clocksource/clockevent
-> or PWM device. Specific TTC device would be configured as PWM
-> device, if pwm-cells property is present in the device tree
-> node.
+On 24/11/2023 12:03, Sayyed, Mubin wrote:
+> Hi Krzysztof,
 > 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Sent: Wednesday, November 15, 2023 5:41 PM
+>> To: Sayyed, Mubin <mubin.sayyed@amd.com>
+>> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org; linux-pwm@vger.kernel.org; git (AMD-Xilinx)
+>> <git@amd.com>; mubin10@gmail.com; krzysztof.kozlowski+dt@linaro.org;
+>> u.kleine-koenig@pengutronix.de; thierry.reding@gmail.com;
+>> robh+dt@kernel.org; conor+dt@kernel.org; tglx@linutronix.de;
+>> daniel.lezcano@linaro.org; Simek, Michal <michal.simek@amd.com>
+>> Subject: Re: [LINUX PATCH v2 1/3] clocksource: timer-cadence-ttc: Do not probe
+>> TTC device configured as PWM
+>>
+>> On 15/11/2023 06:55, Sayyed, Mubin wrote:
+>>>>> +	/*
+>>>>> +	 * If pwm-cells property is present in TTC node,
+>>>>> +	 * it would be treated as PWM device.
+>>>>> +	 */
+>>>>> +	if (of_property_read_bool(timer, "#pwm-cells"))
+>>>>> +		return -ENODEV;
+>>>>
+>>>> You will introduce dmesg errors, so regressions.
+>>>>
+>>> [Mubin]: I will change it to "return 0" to avoid dmesg errors.
+>>
+>> No, because solution is wrong.
+>>
+>>>
+>>>> This does not look right. What you want is to bind one device driver
+>>>> and choose different functionality based on properties.
+>>> [Mubin]:  I am doing it based on earlier discussion related to AXI Timer PWM
+>> driver.  It was suggested to use #pwm-cells property for identifying role of
+>> device(PWM/clocksource) https://lore.kernel.org/linux-
+>> devicetree/20210513021631.GA878860@robh.at.kernel.org/.
+>>
+>> You are mixing bindings with driver. I said here about driver and yes - you must
+>> use pwm-cells to differentiate that. It's obvious.
+>>
+>> So again, one driver binding.
+> [Mubin]: I will explore whether mfd framework can be used to handle this.
 
-...
-
-> +
-> +static struct platform_driver ttc_pwm_driver = {
-> +	.probe = ttc_pwm_probe,
-> +	.remove_new = ttc_pwm_remove,
-> +	.driver = {
-> +		.name = "ttc-pwm",
-> +		.of_match_table = of_match_ptr(ttc_pwm_of_match),
-
-Drop of_match_ptr(), you will have here warnings.
+You do not need MFD for this, because you do not have a really MFD. This
+is just one device, so I expect here one driver. Why do you need
+multiple drivers (which also would solve that problem but why?)?
 
 Best regards,
 Krzysztof
