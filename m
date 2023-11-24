@@ -1,135 +1,80 @@
-Return-Path: <linux-pwm+bounces-179-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-180-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1BF97F6CF9
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 08:39:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A6727F6E53
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 09:38:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BCC72811D8
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 07:39:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CB401C20D02
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 08:38:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 886575247;
-	Fri, 24 Nov 2023 07:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6C6A34;
+	Fri, 24 Nov 2023 08:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="bArYF0fm"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27394BC;
-	Thu, 23 Nov 2023 23:38:58 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id C8E1B24E309;
-	Fri, 24 Nov 2023 15:38:44 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 24 Nov
- 2023 15:38:44 +0800
-Received: from [192.168.120.47] (171.223.208.138) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 24 Nov
- 2023 15:38:43 +0800
-Message-ID: <701877bd-313f-4604-a398-76a143f009d6@starfivetech.com>
-Date: Fri, 24 Nov 2023 15:38:41 +0800
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072121BD;
+	Fri, 24 Nov 2023 00:37:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1700815072; bh=1Mwv2mZ4G1zj1lW5F8OtJV8zDYDCDU5W1iiA610TS+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bArYF0fmeSCcuvIHjsf+Evh/Hm1Kzv6ZSluQtPGq8m7E/HroOIxpfsKiphaoHS5zP
+	 pscsNp2UvjO+VRWWEJiKLiIWGF10OJokcKR5tMbK5z4/+aV5sXInIEq4q98Kv2JLbu
+	 t1xp3QdP8MdDvyf6mjeUwuW3lECd5s4cqFNuZVdCpZDYaTpEz3VNWuZSeHV0x5tQcx
+	 Dv0OOgfq1ez4uH+GDMeI4vrLpD1yZCyDfa/uMFr5ST8HsXZKiUCSczo/0gePhK/i+S
+	 ekvXm7tZIwwX73GdoFwoOQh5DlvlAtsBrtDSFPFWEgASRBulHkMqSMAbXmyyLJvmX7
+	 NUDpVb7EtCjxg==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id 985451000CD; Fri, 24 Nov 2023 08:37:52 +0000 (GMT)
+Date: Fri, 24 Nov 2023 08:37:52 +0000
+From: Sean Young <sean@mess.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+	Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 0/4] Improve pwm-ir-tx precision
+Message-ID: <ZWBg4OZL-pW4K-iv@gofer.mess.org>
+References: <cover.1700323916.git.sean@mess.org>
+ <ZV3BJ67_JCpTYEMl@gofer.mess.org>
+ <20231123165842.ubmhifvtqd7g6jy6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/4] dt-bindings: pwm: Add OpenCores PWM module
-To: Conor Dooley <conor@kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>, "Emil Renner
- Berthing" <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, Thierry Reding
-	<thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>, Hal Feng <hal.feng@starfivetech.com>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-References: <20231110062039.103339-1-william.qiu@starfivetech.com>
- <20231110062039.103339-2-william.qiu@starfivetech.com>
- <afce202d-6234-4c5f-9018-facd9a56b5eb@linaro.org>
- <f4551a7a-61e6-4d97-94c2-da2e4e9e8cb3@starfivetech.com>
- <824cee7b-e4d3-461a-8bfb-4ad095c240fd@linaro.org>
- <20231113-sprung-tantrum-94659009b9d4@squawk>
- <1ba3e8d1-ed89-4aab-ae27-d8d31ee2f150@starfivetech.com>
- <20231122-jokester-reapply-eb000d976d56@spud>
-Content-Language: en-US
-From: William Qiu <william.qiu@starfivetech.com>
-In-Reply-To: <20231122-jokester-reapply-eb000d976d56@spud>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231123165842.ubmhifvtqd7g6jy6@pengutronix.de>
 
+Hello,
 
-
-On 2023/11/23 1:36, Conor Dooley wrote:
-> On Wed, Nov 22, 2023 at 03:03:36PM +0800, William Qiu wrote:
->> 
->> 
->> On 2023/11/14 4:17, Conor Dooley wrote:
->> > On Mon, Nov 13, 2023 at 09:07:15PM +0100, Krzysztof Kozlowski wrote:
->> >> On 13/11/2023 10:42, William Qiu wrote:
->> >> > Will update.
->> >> >>> +
->> >> >>> +allOf:
->> >> >>> +  - $ref: pwm.yaml#
->> >> >>> +
->> >> >>> +properties:
->> >> >>> +  compatible:
->> >> >>> +    oneOf:
->> >> >>> +      - items:
->> >> >>> +          - enum:
->> >> >>> +              - starfive,jh7100-pwm
->> >> >>> +              - starfive,jh7110-pwm
->> >> >>> +          - const: opencores,pwm
->> >> >>
->> >> >> That's a very, very generic compatible. Are you sure, 100% sure, that
->> >> >> all designs from OpenCores from now till next 100 years will be 100%
->> >> >> compatible?
->> >> >>
->> >> > My description is not accurate enough, this is OpenCores PTC IP, and PWM
->> >> > is one of those modes, so it might be better to replace compatible with
->> >> > "opencores, ptc-pwm"
->> >> > 
->> >> > What do you think?
->> >> 
->> >> Sorry, maybe this answers maybe doesn't. What is "PTC"?
->> > 
->> > "pwm timer counter". AFAIU, the IP can be configured to provide all 3.
->> > I think that William pointed out on an earlier revision that they have
->> > only implemented the pwm on their hardware.
->> > I don't think putting in "ptc" is a sufficient differentiator though, as
->> > clearly there could be several different versions of "ptc-pwm" that have
->> > the same concern about "all designs from OpenCores for now till the next
->> > 100 years" being compatible.
+On Thu, Nov 23, 2023 at 05:58:42PM +0100, Uwe Kleine-König wrote:
+> On Wed, Nov 22, 2023 at 08:51:51AM +0000, Sean Young wrote:
+> > On Sat, Nov 18, 2023 at 04:16:16PM +0000, Sean Young wrote:
+> > > The pwm-ir-tx driver has to turn the pwm signal on and off, and suffers
+> > > from delays as this is done in process context. Make this work in atomic
+> > > context.
+> > 
+> > Hi Uwe,
+> > 
+> > Do you have any comments on this series?
+> > 
+> > I hope you don't dislike the pwm_apply_atomic()/pwm_apply_cansleep(), I am
+> > not wedded to this name, it's just me reading the room and thinking that
+> > would be the most acceptable to everyone - I may have misread this.
+> > 
+> > Thank you for any feedback
 > 
-> Perhaps noting what "ptc" stands for in the description field would be a
-> good idea.
-> 
-I will add.
->> After discussion and review of materials, we plan to use "opencores,ptc-pwm-v1"
->> as this version of compatible, so that it can also be compatible in the future.
->> 
->> What do you think?
-> 
-> Do we know that it is actually "v1" of the IP? I would suggest using the
-> version that actually matches the version of the IP that you are using
-> in your SoC.
-> 
-> Thanks,
-> Conor.
+> I didn't find much time to look into it. Skimming over it, I like it.
+> I'll take a deeper look soon.
 
-There is no version list on their official website, so it is not certain whether
-it is v1, but at least the driver is the first version.
+Great, thanks! No rush just wanted to make sure it wasn't forgotten.
 
-What do you think is the best way?
 
-Thanks,
-William
+Sean
 
