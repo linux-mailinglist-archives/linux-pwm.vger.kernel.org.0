@@ -1,60 +1,61 @@
-Return-Path: <linux-pwm+bounces-193-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-194-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 647A17F78D8
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 17:24:18 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923A47F78ED
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 17:29:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE5332812D4
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 16:24:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D36BB20D75
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Nov 2023 16:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F24A33CD8;
-	Fri, 24 Nov 2023 16:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1085341A6;
+	Fri, 24 Nov 2023 16:29:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ddB19PCG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LQdDPWki"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9AA19A4
-	for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 08:24:09 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a013d22effcso287777066b.2
-        for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 08:24:09 -0800 (PST)
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A441719BA
+	for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 08:29:05 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-54b0073d50fso886437a12.2
+        for <linux-pwm@vger.kernel.org>; Fri, 24 Nov 2023 08:29:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700843047; x=1701447847; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x4Ai1u86sLDHXuJmf3sDrBBCF8Xvj7MvGhsc5FZvOYY=;
-        b=ddB19PCG6LTXsDnyKJR9wLlyQ7aQcbWLtW42mWDx12BF8ygi6bTq+lY9Iu79oghKn4
-         NHKbLwGTrPHarBbbXWxpBCpid9+ZeUAlGMSqQzD8ysiJSmE8nT/H3UcQlKLKQoMZ33S8
-         1ksljaPLLbZm0KDBKeByWtIggIoGyL1nF/oG1az6yuasEPTVZ4yPtGITEQeqZAMTViVF
-         pu0kRRwG5ePZqsOstlqAy4hQET6ij59Y8xC9GR3VyB/tbzUUTtARek10bdx1Wv7YFqHH
-         i4gYrp9Z3xDAiwiy0lBNzssq9644WvJa+mhZ81047pBUwgKOhzhtPp0ZcSoHv/dTJ+zD
-         DGXA==
+        d=linaro.org; s=google; t=1700843344; x=1701448144; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=m59lGOjhmNFmUbmnXXYOyMU0r5AKqEjyJwepUZSyZQs=;
+        b=LQdDPWkisiaDFG9+ozXNaMU5eaJY5JJMKszxbOueRWIgfMDUliQMh42l6WiddSw98/
+         gLBTjL+YHpU2jz84qMak0+ksBg9UcR5S4GTPcxco9BJt7Xz3ze2VwMQ3sxOKbe7r5yPV
+         vQEA3VNcP1rwVgy3pDL8Fy0HR7r+tq7yaGoLxfk8wudR1v+bF7Nl0Gej23LaRGuaGV11
+         ZwQLyQfgwHyefU+ZR9egKhSuNI/BiI1/vH02qwzJEmRYKvqavyc+Ika2mKGZtjYE0FJt
+         FvkI5ul0LB63wgsEab8a59SXCO6IS8jiB5BrfLIHmjm7v5nqm4/wDlKW88gm/W95ewVw
+         D2eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700843047; x=1701447847;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x4Ai1u86sLDHXuJmf3sDrBBCF8Xvj7MvGhsc5FZvOYY=;
-        b=lawY3HdkFXr5DdfoandjlT0dDl+xe0O2Cqid9pBNfk0PgGKalQ9QEpjUDPPq62thhQ
-         Pnb6kiQ/8F/rxUxDvgibWFgJFWzzaQx+2bdtT8TJBbuN4h5EPfxsS2j4hwX/yoIPRbEF
-         Jp5btlVNKL25AMZr01NiAjw2Tez0lcsmsG13AZ79vwPF69W0m4nR2CZDe2Lt17r84v5T
-         szgJ/L+rlUm0uZNkSu/uU9S/e8caGanrI+Rf9P/DSkkUF6/rx/KiCDB3d2pLnmiCSg4a
-         ArtGDgjL5wF1/lfo7ZjEG6/0iRyqqmhSHePEwZuofqloHCnXFQTps0QlTv7I4Z+5hVP8
-         PrEA==
-X-Gm-Message-State: AOJu0YzosJEtsNFUlekTqt/AXAAmGDJen1lcODvLQzVCdohn1XLpDNJv
-	NqvidwM/UhYLbnX8TxKORY41Gw==
-X-Google-Smtp-Source: AGHT+IGpUrlqBCDFO/+in9UzwxMOck6elIWNtkLnslhRBLK/Fke0Z04KesDOFXDdUf8z09gcfH2Uuw==
-X-Received: by 2002:a17:906:7741:b0:a01:ae9a:d376 with SMTP id o1-20020a170906774100b00a01ae9ad376mr2609002ejn.64.1700843047351;
-        Fri, 24 Nov 2023 08:24:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700843344; x=1701448144;
+        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
+         :from:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m59lGOjhmNFmUbmnXXYOyMU0r5AKqEjyJwepUZSyZQs=;
+        b=H28QgwPCCkEMuvHEpbPuwBqoyoj/+PZtCdBvpwBZhZarwh2S6WDxJLrhgVIZUV2bQM
+         8K25U8i89S0Db3YxNX0txIsT5GFByFnhEKto2y3wjYSlumrzRiE69SILSn07DbNLfAhw
+         9ATEiPkRADCrW0WkNSrgtLzIps27fLuWA69uMTwgkKAtObIpzraOD2ndJ+V2BNkSyhq+
+         B9TATNz/38H0vd42iQfX6TSO6Nr8LGPV60QQjnZQnNU/hUXyNveB4dKnLtsFlTEchMBr
+         PG2yXD1GNG88w99sTV5Z2fGOOGx15hx/g2pgmZAFi5iCehbW2Rgz9IAAWQ2UVeOs4qYj
+         PHlg==
+X-Gm-Message-State: AOJu0YxetE4YYbm4C+v+ODmArnNvVpLw/ypBec1xFD/Fbw2OUZtNY/0r
+	dt4tZoym5svnHqMRcv/CfckaXg==
+X-Google-Smtp-Source: AGHT+IHmw2v9akiv8lLwobosBbnycWxS+mTHFNHjdgc73oGvRIXlhS7yygAOU243HPtOYOWLXofSgQ==
+X-Received: by 2002:a50:f699:0:b0:540:12fc:ed1d with SMTP id d25-20020a50f699000000b0054012fced1dmr2691693edn.12.1700843344125;
+        Fri, 24 Nov 2023 08:29:04 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.100])
-        by smtp.gmail.com with ESMTPSA id t24-20020a17090616d800b009ffb4af0505sm2238854ejd.104.2023.11.24.08.24.05
+        by smtp.gmail.com with ESMTPSA id n21-20020aa7c455000000b00548c945bac0sm1943343edr.45.2023.11.24.08.29.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Nov 2023 08:24:06 -0800 (PST)
-Message-ID: <9fb984b3-331b-45ce-8f82-03bc476acd3c@linaro.org>
-Date: Fri, 24 Nov 2023 17:24:04 +0100
+        Fri, 24 Nov 2023 08:29:03 -0800 (PST)
+Message-ID: <850b0eec-c991-40b6-92e1-2bc46eecdae5@linaro.org>
+Date: Fri, 24 Nov 2023 17:29:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,6 +66,7 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [LINUX PATCH v2 1/3] clocksource: timer-cadence-ttc: Do not probe
  TTC device configured as PWM
 Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: "Sayyed, Mubin" <mubin.sayyed@amd.com>
 Cc: "linux-arm-kernel@lists.infradead.org"
  <linux-arm-kernel@lists.infradead.org>,
@@ -88,7 +90,7 @@ References: <20231114124748.581850-1-mubin.sayyed@amd.com>
  <DM4PR12MB5938CB10059DF7E39A2A0E239DB8A@DM4PR12MB5938.namprd12.prod.outlook.com>
  <a701ba6e-ae4e-4c4d-9d93-c54e56c3348e@linaro.org>
  <DM4PR12MB5938256CC0E50256004ED6B19DB8A@DM4PR12MB5938.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ <9fb984b3-331b-45ce-8f82-03bc476acd3c@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -133,52 +135,46 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <DM4PR12MB5938256CC0E50256004ED6B19DB8A@DM4PR12MB5938.namprd12.prod.outlook.com>
+In-Reply-To: <9fb984b3-331b-45ce-8f82-03bc476acd3c@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 24/11/2023 13:07, Sayyed, Mubin wrote:
-
->>>>>> This does not look right. What you want is to bind one device
->>>>>> driver and choose different functionality based on properties.
->>>>> [Mubin]:  I am doing it based on earlier discussion related to AXI
->>>>> Timer PWM
->>>> driver.  It was suggested to use #pwm-cells property for identifying
->>>> role of
->>>> device(PWM/clocksource) https://lore.kernel.org/linux-
->>>> devicetree/20210513021631.GA878860@robh.at.kernel.org/.
->>>>
->>>> You are mixing bindings with driver. I said here about driver and yes
->>>> - you must use pwm-cells to differentiate that. It's obvious.
->>>>
->>>> So again, one driver binding.
->>> [Mubin]: I will explore whether mfd framework can be used to handle this.
+On 24/11/2023 17:24, Krzysztof Kozlowski wrote:
+>>>>> So again, one driver binding.
+>>>> [Mubin]: I will explore whether mfd framework can be used to handle this.
+>>>
+>>> You do not need MFD for this, because you do not have a really MFD. This is just
+>>> one device, so I expect here one driver. Why do you need multiple drivers (which
+>>> also would solve that problem but why?)?
+>> Cadence TTC IP can be used as timer(clocksource/clockevent) and PWM device.
+>> We have drivers/clocksource/timer-cadence-ttc.c for clocksource/clockevent functionality. 
+>> New driver for PWM functionality will be added to drivers/pwm/pwm-cadence.c (3/3 of this
+>> Series).  In given SoC,  multiple instances of TTC IP are possible(ZynqMP  Ultrscale SoC has 4
+>> Instances), few of them could be configured as clocksource/clockevent devices and others
+>> as PWM ones. So,  cloksource as well as PWM drivers for cadence TTC IP would be enabled in 
+>> the kernel. 
 >>
->> You do not need MFD for this, because you do not have a really MFD. This is just
->> one device, so I expect here one driver. Why do you need multiple drivers (which
->> also would solve that problem but why?)?
-> Cadence TTC IP can be used as timer(clocksource/clockevent) and PWM device.
-> We have drivers/clocksource/timer-cadence-ttc.c for clocksource/clockevent functionality. 
-> New driver for PWM functionality will be added to drivers/pwm/pwm-cadence.c (3/3 of this
-> Series).  In given SoC,  multiple instances of TTC IP are possible(ZynqMP  Ultrscale SoC has 4
-> Instances), few of them could be configured as clocksource/clockevent devices and others
-> as PWM ones. So,  cloksource as well as PWM drivers for cadence TTC IP would be enabled in 
-> the kernel. 
+>> Now in this scenario, each TTC device would be matching with 2 drivers, clocksource and PWM, since
+>> compatible string is same.  If I don’t add #pwm-cells checking in clocksource driver and return 
+>> -ENODEV based on that, each device would always bind with clocksource driver. PWM driver 
+>> would never probe since clocksource driver probes ahead of PWM one in probing order.
 > 
-> Now in this scenario, each TTC device would be matching with 2 drivers, clocksource and PWM, since
-> compatible string is same.  If I don’t add #pwm-cells checking in clocksource driver and return 
-> -ENODEV based on that, each device would always bind with clocksource driver. PWM driver 
-> would never probe since clocksource driver probes ahead of PWM one in probing order.
+> None of these above explain why you need two drivers.
 
-None of these above explain why you need two drivers.
+And please do not answer to this with again: "I have two drivers...".
 
 > 
-> I am exploring mfd to deal with said scenario. Do you see any better way to handle this? 
-
-You basically repeated previous sentence about MFD without answering.
-Yeah, better way could be to have one driver. Why you cannot have it
-that way?
-
+>>
+>> I am exploring mfd to deal with said scenario. Do you see any better way to handle this? 
+> 
+> You basically repeated previous sentence about MFD without answering.
+> Yeah, better way could be to have one driver. Why you cannot have it
+> that way?
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
 
 Best regards,
 Krzysztof
