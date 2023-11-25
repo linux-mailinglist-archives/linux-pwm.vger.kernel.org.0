@@ -1,125 +1,142 @@
-Return-Path: <linux-pwm+bounces-203-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-204-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F627F8D42
-	for <lists+linux-pwm@lfdr.de>; Sat, 25 Nov 2023 19:48:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E6437F8F1C
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Nov 2023 21:48:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFF961C20A48
-	for <lists+linux-pwm@lfdr.de>; Sat, 25 Nov 2023 18:48:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B1BB2B20F5C
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Nov 2023 20:48:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E121EB57;
-	Sat, 25 Nov 2023 18:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22AF30679;
+	Sat, 25 Nov 2023 20:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiI9/E92"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3H6UDq7"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4643DEA
-	for <linux-pwm@vger.kernel.org>; Sat, 25 Nov 2023 10:48:39 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40b2fa4ec5eso21296925e9.2
-        for <linux-pwm@vger.kernel.org>; Sat, 25 Nov 2023 10:48:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700938118; x=1701542918; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5SzMDeq8cuJF4iGMiJU+VHUL3rvnTgoje2vjhJHYf3M=;
-        b=HiI9/E9244wfga/pGMDeSlYaEaB+3pfGU+yIoCVyfMAykmx0j1fKzx80DFMKUeI/tI
-         G3KdN0M+lZdlDgaWyB62ZRoiwVgUPZkryz05FI75aARAj62p9rdxOs8GEoBhUuWAz4QU
-         DF0QZizjbT71owtUur8FskTKRVlDW10Zd7+txtVCmjhi+oekIqIv6OugzTZR9BTtzQYb
-         720WULiHSXK/Y4uN7c2YW47EUMGi3EJH1DaSudraluy5id3UyPZnbUitsx3PZpR0MX/B
-         9fTcQk0uKTiQPCgTdYvuUCVfAltzli2oQZKn6jEfsLbHW0GBibDA7A/BbeOjUE2U1DRP
-         /dDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700938118; x=1701542918;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5SzMDeq8cuJF4iGMiJU+VHUL3rvnTgoje2vjhJHYf3M=;
-        b=NuDFXrCSqVHejDkEY0w2inb/N1JxCpmxhSSDamcyinyhWymvGUDx9fWU2agsx2TReo
-         C4a7k9N5nBgKFwHAu4DR8kTRm4R8Z5Jr4sDEC/fDbnfgVoGp9W/kTCLrgSLKqMFs8/Mq
-         qJvAV6+dvd1ruqPe/zytXnk1oDpiWZx9ijLdFNgFmC0nKqgLA3ctn6Fa9HGSNBXL6wMJ
-         k9kdRDHhT2s8Anw38cCbUJ5FesfDs4qw4BqZKrTHsN6LMzeHP1riq/dcrhDtRqAFZ3ej
-         fTwy/J5EJoVbq5i17pP0KSf4wldgNqnRs3e1JndQCii0LbJbpxgLoItSRkbC2sPHvH8F
-         d1GQ==
-X-Gm-Message-State: AOJu0YyqNZyoDy44SDG4Ew71hIY+cdEymCpzkxW+cy/3oChZb2ygX970
-	M7zg13YmZ/xA0iHpy7HnoKs=
-X-Google-Smtp-Source: AGHT+IFeInfOx+70yaIqwk3UdjHO8KiZz0Ggp4tdjGhbYyZu1TqbbJipbhA1dexuK9jYndmtYvWdiA==
-X-Received: by 2002:a05:600c:b85:b0:40a:45ff:fd69 with SMTP id fl5-20020a05600c0b8500b0040a45fffd69mr5382276wmb.19.1700938117285;
-        Sat, 25 Nov 2023 10:48:37 -0800 (PST)
-Received: from jernej-laptop.localnet ([188.159.248.16])
-        by smtp.gmail.com with ESMTPSA id n8-20020a05600c3b8800b0040b398f0585sm6003890wms.9.2023.11.25.10.48.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Nov 2023 10:48:36 -0800 (PST)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Samuel Holland <samuel@sholland.org>,
- Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, kernel@pengutronix.de
-Subject: Re: [PATCH v3 030/108] pwm: sun4i: Make use of pwmchip_parent() macro
-Date: Sat, 25 Nov 2023 19:48:35 +0100
-Message-ID: <2706375.mvXUDI8C0e@jernej-laptop>
-In-Reply-To: <20231121134901.208535-31-u.kleine-koenig@pengutronix.de>
-References:
- <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-31-u.kleine-koenig@pengutronix.de>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660972D029;
+	Sat, 25 Nov 2023 20:48:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 487CBC433C8;
+	Sat, 25 Nov 2023 20:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700945313;
+	bh=MP615DG3faCXFei6ez6/qbJ2Qn+AxlK3zXjwrEKNgcs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=V3H6UDq7A3kCMLfHpZpSX7FXfzHuWMOtsplTH0sNtXsZgArz+P0U4eBCtxi3NSFFd
+	 /Qh78hVGqFA0WqXtaEMTLiv8fodY0nCNwQemnzy2nkPIc8A948DHrbP8ShAHXs9JEh
+	 DZSd65o2b/ffSmFfCaSmhQJlMgtpbBWoxv52RCHkCAWexYJeYwHrGLN9suMTTHOnuk
+	 DdSGqivh1nxdaSurglxzzB29rEdm+mzoC6D5xHsCr4gfSyRMDlvOZaKdKmw5u63wzf
+	 fjwHu1uh7qGvuEyyEExZqT+BueoGfafWluF3pHxDvInU7XHZpnYl45oF6XMQNbYQcP
+	 bHLD2kxsjKD7g==
+Date: Sat, 25 Nov 2023 20:48:14 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Andi Shyti <andi.shyti@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>,
+ Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaehoon
+ Chung <jh80.chung@samsung.com>, Sam Protsenko <semen.protsenko@linaro.org>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 10/17] dt-bindings: iio: samsung,exynos-adc: add
+ specific compatibles for existing SoC
+Message-ID: <20231125204814.10fe16fa@jic23-huawei>
+In-Reply-To: <20231108104343.24192-11-krzysztof.kozlowski@linaro.org>
+References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
+	<20231108104343.24192-11-krzysztof.kozlowski@linaro.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Dne torek, 21. november 2023 ob 14:49:32 CET je Uwe Kleine-K=F6nig napisal(=
-a):
-> struct pwm_chip::dev is about to change. To not have to touch this
-> driver in the same commit as struct pwm_chip::dev, use the macro
-> provided for exactly this purpose.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+On Wed,  8 Nov 2023 11:43:36 +0100
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-
-Best regards,
-Jernej
-
+> Samsung Exynos SoC reuses several devices from older designs, thus
+> historically we kept the old (block's) compatible only.  This works fine
+> and there is no bug here, however guidelines expressed in
+> Documentation/devicetree/bindings/writing-bindings.rst state that:
+> 1. Compatibles should be specific.
+> 2. We should add new compatibles in case of bugs or features.
+> 
+> Add compatibles specific to each SoC in front of all old-SoC-like
+> compatibles.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 > ---
->  drivers/pwm/pwm-sun4i.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 1a439025540d..44edf1ce5739 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -245,7 +245,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  	if (!cstate.enabled) {
->  		ret =3D clk_prepare_enable(sun4i_pwm->clk);
->  		if (ret) {
-> -			dev_err(chip->dev, "failed to enable PWM clock\n");
-> +			dev_err(pwmchip_parent(chip), "failed to enable PWM clock\n");
->  			return ret;
->  		}
->  	}
-> @@ -253,7 +253,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  	ret =3D sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescale=
-r,
->  				  &bypass);
->  	if (ret) {
-> -		dev_err(chip->dev, "period exceeds the maximum value\n");
-> +		dev_err(pwmchip_parent(chip), "period exceeds the maximum value\n");
->  		if (!cstate.enabled)
->  			clk_disable_unprepare(sun4i_pwm->clk);
->  		return ret;
->=20
-
-
-
+> 
+> I propose to take the patch through Samsung SoC (me). See cover letter
+> for explanation.
+> ---
+>  .../bindings/iio/adc/samsung,exynos-adc.yaml  | 29 +++++++++++--------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> index 582d0a03b814..4e40f6bed5db 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> @@ -11,18 +11,23 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - samsung,exynos-adc-v1                 # Exynos5250
+> -      - samsung,exynos-adc-v2
+> -      - samsung,exynos3250-adc
+> -      - samsung,exynos4212-adc                # Exynos4212 and Exynos4412
+> -      - samsung,exynos7-adc
+> -      - samsung,s3c2410-adc
+> -      - samsung,s3c2416-adc
+> -      - samsung,s3c2440-adc
+> -      - samsung,s3c2443-adc
+> -      - samsung,s3c6410-adc
+> -      - samsung,s5pv210-adc
+> +    oneOf:
+> +      - enum:
+> +          - samsung,exynos-adc-v1                 # Exynos5250
+> +          - samsung,exynos-adc-v2
+> +          - samsung,exynos3250-adc
+> +          - samsung,exynos4212-adc                # Exynos4212 and Exynos4412
+> +          - samsung,exynos7-adc
+> +          - samsung,s3c2410-adc
+> +          - samsung,s3c2416-adc
+> +          - samsung,s3c2440-adc
+> +          - samsung,s3c2443-adc
+> +          - samsung,s3c6410-adc
+> +          - samsung,s5pv210-adc
+> +      - items:
+> +          - enum:
+> +              - samsung,exynos5433-adc
+> +          - const: samsung,exynos7-adc
+>  
+>    reg:
+>      maxItems: 1
 
 
