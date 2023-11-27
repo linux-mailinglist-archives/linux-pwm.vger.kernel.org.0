@@ -1,62 +1,53 @@
-Return-Path: <linux-pwm+bounces-206-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-207-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0FB17F9CAD
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Nov 2023 10:33:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 32A527F9E03
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Nov 2023 11:58:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD9D11C20A97
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Nov 2023 09:33:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 630971C2048A
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Nov 2023 10:58:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6571715487;
-	Mon, 27 Nov 2023 09:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E33E818C19;
+	Mon, 27 Nov 2023 10:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E31D2
-	for <linux-pwm@vger.kernel.org>; Mon, 27 Nov 2023 01:33:13 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8701A10F
+	for <linux-pwm@vger.kernel.org>; Mon, 27 Nov 2023 02:58:48 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r7Xz6-0003V4-JK; Mon, 27 Nov 2023 10:32:56 +0100
+	id 1r7ZK9-0005pS-Ne; Mon, 27 Nov 2023 11:58:45 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r7Xz4-00BuSQ-CC; Mon, 27 Nov 2023 10:32:54 +0100
+	id 1r7ZK9-00BvCn-8H; Mon, 27 Nov 2023 11:58:45 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1r7Xz4-009BX7-2D; Mon, 27 Nov 2023 10:32:54 +0100
-Date: Mon, 27 Nov 2023 10:32:53 +0100
+	id 1r7ZK8-009HRJ-V0; Mon, 27 Nov 2023 11:58:44 +0100
+Date: Mon, 27 Nov 2023 11:58:44 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Doug Anderson <dianders@chromium.org>,
-	Bjorn Andersson <andersson@kernel.org>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	Thierry Reding <thierry.reding@gmail.com>,
-	linux-pwm@vger.kernel.org,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
-	kernel@pengutronix.de,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 101/108] drm/bridge: ti-sn65dsi86: Make use of
- devm_pwmchip_alloc() function
-Message-ID: <20231127093253.wz4kf7nmvkvgt3ow@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20231127105844.kpu5ori6o6umfynh@pengutronix.de>
 References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-102-u.kleine-koenig@pengutronix.de>
- <CAD=FV=Vz7TuUH=U8t0XVhj5rzoci9KBjSZXJruMQyXiARY+Z_Q@mail.gmail.com>
- <20231121160514.feveiq2cyemwvqni@pengutronix.de>
- <CAD=FV=VK9Lz9dMFDETHyGLQRG6bWkOcF20TdnTd_jWr1u81NFw@mail.gmail.com>
- <20231123091715.ywv6otvthlqagvny@pengutronix.de>
+ <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
+ <20231121161111.zphi7pn77ns7sgu2@pengutronix.de>
+ <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
+ <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+ <ZWCTtPVkTUQNLVoa@orome.fritz.box>
+ <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -64,130 +55,58 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iwj3hs2zxfpxbnhz"
+	protocol="application/pgp-signature"; boundary="kgngfnshdocqqbbp"
 Content-Disposition: inline
-In-Reply-To: <20231123091715.ywv6otvthlqagvny@pengutronix.de>
+In-Reply-To: <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---iwj3hs2zxfpxbnhz
-Content-Type: text/plain; charset=utf-8
+--kgngfnshdocqqbbp
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hello Bartosz,
 
-On Thu, Nov 23, 2023 at 10:17:15AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Nov 21, 2023 at 08:14:14AM -0800, Doug Anderson wrote:
-> > On Tue, Nov 21, 2023 at 8:05=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Tue, Nov 21, 2023 at 07:15:51AM -0800, Doug Anderson wrote:
-> > > > > @@ -1585,22 +1586,28 @@ static const struct pwm_ops ti_sn_pwm_ops=
- =3D {
-> > > > >  static int ti_sn_pwm_probe(struct auxiliary_device *adev,
-> > > > >                            const struct auxiliary_device_id *id)
-> > > > >  {
-> > > > > +       struct pwm_chip *chip;
-> > > > >         struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.=
-parent);
-> > > > >
-> > > > > -       pdata->pchip.dev =3D pdata->dev;
-> > > > > -       pdata->pchip.ops =3D &ti_sn_pwm_ops;
-> > > > > -       pdata->pchip.npwm =3D 1;
-> > > > > -       pdata->pchip.of_xlate =3D of_pwm_single_xlate;
-> > > > > -       pdata->pchip.of_pwm_n_cells =3D 1;
-> > > > > +       /* XXX: should this better use adev->dev instead of pdata=
-->dev? */
-> > > > > +       pdata->pchip =3D chip =3D devm_pwmchip_alloc(pdata->dev, =
-1, sizeof(&pdata));
-> > > >
-> > > > Yes, it should be "adev->dev". See recent commits like commit
-> > > > 7b821db95140 ("drm/bridge: ti-sn65dsi86: Associate DSI device lifet=
-ime
-> > > > with auxiliary device").
-> > >
-> > > I'd do that in a separate commit and not change that hidden in patch
-> > > like this one. Agree? Then I'd keep that as is and not address this in
-> > > this series. Maybe it will take another cycle until this patch goes in
-> > > anyhow ...
-> >=20
-> > You could do it in a commit _before_ this one, but not a commit after
-> > this one. Specifically before "${SUBJECT}" commit I think it was
-> > benign to set pdata->pchip.dev to pdata->dev. Now you're starting to
-> > use it for devm and the incorrect lifetime is worse, I think. Do you
-> > agree?
->=20
-> I considered suggesting:
->=20
-> ------>8------
-> From 35e5050084737070686fc3e293e88e50276f0eeb Mon Sep 17 00:00:00 2001
-> From: =3D?UTF-8?q?Uwe=3D20Kleine-K=3DC3=3DB6nig?=3D <u.kleine-koenig@peng=
-utronix.de>
-> Date: Thu, 23 Nov 2023 09:55:13 +0100
-> Subject: [PATCH] drm/bridge: ti-sn65dsi86: Associate PWM device to auxili=
-ary
->  device
->=20
-> It's the ti_sn65dsi86.pwm auxiliary driver that creates the pwmchip, so
-> let the auxiliary device be the parent of the pwm device.
-> ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index c45c07840f64..b5d4c30c28b7 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -1587,7 +1587,7 @@ static int ti_sn_pwm_probe(struct auxiliary_device =
-*adev,
->  {
->  	struct ti_sn65dsi86 *pdata =3D dev_get_drvdata(adev->dev.parent);
-> =20
-> -	pdata->pchip.dev =3D pdata->dev;
-> +	pdata->pchip.dev =3D &adev->dev;
->  	pdata->pchip.ops =3D &ti_sn_pwm_ops;
->  	pdata->pchip.npwm =3D 1;
->  	pdata->pchip.of_xlate =3D of_pwm_single_xlate;
->=20
-> base-commit: 815d8b0425ad1164e45953ac3d56a9f6f63792cc
-> ------>8------
->=20
-> But I wonder if pwm lookup (e.g. in
-> arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts for &backlight) still
-> works then?
+On Fri, Nov 24, 2023 at 10:16:40PM +0100, Bartosz Golaszewski wrote:
+> I admit I've been quite busy but I do plan on going through Uwe's
+> series next week and maybe running tests similar to what I have for
+> GPIO on it.
 
-I checked the source and I think it works fine because
-ti_sn65dsi86_add_aux_device() calls
-device_set_of_node_from_dev(&aux->dev, dev); and so the
-auxiliary_device's of_node points to the node with the #pwm-cells
-property. I'll send a proper patch.
+That's great. If you want to do that on my tree that already saw a few
+improvements compared to what I sent out, get it at
 
-Best regards
+	https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
+
+=2E The improvements are only on the driver level, so unless you're using
+one of the improved drivers, the difference wouldn't be that big I
+guess. For (maybe) quicker feedback loops, you can find me on irc (e.g.
+on libera's #linux-pwm) if that's a communication channel you like.
+
+I look forward to your findings,
 Uwe
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---iwj3hs2zxfpxbnhz
+--kgngfnshdocqqbbp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVkYkUACgkQj4D7WH0S
-/k5HOAgAiavlP6Cf0z9RNm6AMMC4AQrv14uK68V5AUS9u6hSFpQu0GXFQ3SCZT5v
-qCaV6sJ7oMZ6XxPMpnbd+jY1LPA9KV4xdPVziusr0lx+5VIPIAQ35dxsUQ5ksrxJ
-jUoaZKTzn93jUAvuJjaHDA5bnmjHPjO/MYh6d0BcA8SA55e1OCgsr7arvfpFLFjK
-iTJb8wsJgtUMaTJy0jG7QKa9LFvEgYqq0BvcUM+LxsgBCrbp5daltsv76QuWraG3
-TkQbMcYmt0H5TDKgNLaZtBLTVBELrFqLus2JCQs5UM3A8/wgm6cQ9DVIfMe2FPK3
-zJNhdgYq9aL11hijfgv6/pL0cWYa7Q==
-=aw2U
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVkdmQACgkQj4D7WH0S
+/k59QQf/ctQ226cNV+XiF5RcgVUjG41vpAVTl3OC5HhRm9JYfW2YxMTa1z8R7k0q
+cvLMD+OxkK8cNUP+67XP9nYFnMdC6wm2ONNfKUM43zyi8taFI9zkOoHvxPcR8t4D
+eXm7CAi1cS79JKrP88bR4+a7XMYolGHBznB0iWGvIeb7UnCguSypbZDGj4rapere
+wDTnuNmt74IZ0dP92qpXxJyPdCasp8z3a7TnmB4uhGKmY2MxBF8bBGHyL5I11jZW
+yEnwQVdCD0ZMi1f9lrq1taQClXvAxwsOroHx+ZGKYt5RyMyUOGyPes8Yuz0cmrCy
+8w/f4O0w1WmvPSi4Sxq8c4I9gts8KQ==
+=1wQu
 -----END PGP SIGNATURE-----
 
---iwj3hs2zxfpxbnhz--
+--kgngfnshdocqqbbp--
 
