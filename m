@@ -1,70 +1,85 @@
-Return-Path: <linux-pwm+bounces-214-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-215-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E0FC7FBFE9
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 18:02:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAD0A7FBFE8
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 18:02:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94BA0B20DE0
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 17:02:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91AA01F20EEA
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 17:02:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 383D04F61C;
-	Tue, 28 Nov 2023 17:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1687853817;
+	Tue, 28 Nov 2023 17:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0dSmB2t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4XoPCIL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68ACED5D;
-	Tue, 28 Nov 2023 09:01:57 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40b397793aaso27318025e9.0;
-        Tue, 28 Nov 2023 09:01:57 -0800 (PST)
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A64D4B;
+	Tue, 28 Nov 2023 09:01:59 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2c9b8aa4fc7so7149451fa.1;
+        Tue, 28 Nov 2023 09:01:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701190916; x=1701795716; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1701190917; x=1701795717; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VFbihvOvJFwZ+TLKehbVM5qaHn9LDZpQRGVz24GBN5w=;
-        b=W0dSmB2tKPjLLcEZzZMiiPOIwxML2ZExqt/ZOS1wyCvQJF36djv0VBepIqvHgtfVPU
-         cNxzizLVdjOEjOb3/SE3gybKfsUHP6FLrK8zAty965CNWbHI7wsL0wP6mufuUrlLpJ2W
-         YQ2WOdccxdRZ0XoLIDE03Nfz1EQabHX08Q76W0Hbu8a502y0zLFrSOE6uRz49U8gXgLT
-         3yIA/pBaNeYKvE5huEKOf9RXcQk1ueqw1eou/S4WdCRJ34fcYYl7O8qnTMtu+5VumGQQ
-         wVkhwR6Dw5fILdcZ4ryqfgCOov5Uuq1945fiYS1Na78gRuVmO6XmSaVW6586w43judX2
-         NLDQ==
+        bh=RGsTE+h92DnXeyvQhi72RUIHAES9rx7gcu8lPhY952A=;
+        b=V4XoPCILo16DifF0q/6hGt1IlsKIH+4sMW+XVz6g5P6VzyASpCA1ZXqxDDRclp3zsT
+         yP8EAjEoqejPh3dVTdJWwPsmev99kGtBTQjdAjzlUGS/qDKe8fJmqX0ZQoLZCMVkAUlN
+         Bn+pPt3Kf07RAROPZjY1cbP+7cEve5NTp6lv4UVeFA0DalF8rqWZoReInjFi/lE7FDal
+         HB4G8sop2HCfJVIGAg7Ssj4rwpNK2aAeVWZv1Bz6VENsdcAvV6zabV2PrDJXChVZ6qAI
+         WNx3Mi1sItgh08NLufd08wA1Dkz3LPdbpkiuIfaaYy8bZZiLG0hy/s8/Okwr9swLHFJ+
+         Il0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701190916; x=1701795716;
+        d=1e100.net; s=20230601; t=1701190917; x=1701795717;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VFbihvOvJFwZ+TLKehbVM5qaHn9LDZpQRGVz24GBN5w=;
-        b=trEpracvkXoSoNgS4kRZww87aQ9VodkPz0f3WnHAEqVa2/EZbQavTE/g1n7iE11+hF
-         VMM+o//gfMAxIQ7rJ56tACOuz5oCVR1p/CHX8ITyfQ0QeARXT3bAKm1llcBN59AT3Y9e
-         aqMuPs+TLyycvA9gSGy5dsxSLuNXR2SOs988n6mxolibgu/O+NkQ8lH7QS4+zD86ICEt
-         4PlUHmYv999/lNGLl7b4WBDsRMg6BhvgMDNpZYYs3hz5HKHps0fegUKezLe06eKAHEg7
-         nt/OBHHEBV4G1MI4EMdFY4M8t8y/rZGmP7tkgcYNjieA373hZBwoyY+aWLfldzD62u69
-         9Ejw==
-X-Gm-Message-State: AOJu0Ywm2XA3/oCgpSdhJscl8k3vZn/9FBCR8KoSbHtLvLZRTIb3KrOj
-	tGkiWnf+Vv7VuA5CKg80qe1z96vxzDs=
-X-Google-Smtp-Source: AGHT+IHUdf7LX+cvrmgeEt9reIcPS74OXrd4NwnYx7KIKLYmo8TI7Q7qGgWSL5Ft/uTpftLQEa5Tng==
-X-Received: by 2002:a05:600c:4746:b0:405:784a:d53e with SMTP id w6-20020a05600c474600b00405784ad53emr11011181wmo.20.1701190915705;
-        Tue, 28 Nov 2023 09:01:55 -0800 (PST)
+        bh=RGsTE+h92DnXeyvQhi72RUIHAES9rx7gcu8lPhY952A=;
+        b=XepOclek2Yw/iufF9ohDYB86m9l5I2OoaipJDLNYfr48Ts0RRIsNtGoCXPhZf4GnGd
+         RdJsvcWgDfFIQRCah3gSI04A2m6wGwRmZHAeo1n1+wKGkfTWrO2qCrrubt5jyGDwHQrx
+         MH1axJ5sAQf50OOhPFwVbWOQxS23OyR7G3QLCRzCZrIJ5Da/lWQfsRzT087GpT2egtOw
+         b0ismAxvS3HB4NGuq+Dy+ww5P2kd4+4KpExZDc1ReK0OmN1q0INv3F4gnRrcH5DYyQgQ
+         xFwcuY26VCR9ZGsZ7T+vpZqp5sfUI4WI0zj8Bl8dImP2uYR2jMcORZJuRJAbMI+ZY547
+         v2xQ==
+X-Gm-Message-State: AOJu0YwcJua1OtteWbfilgCxE187Lq5xkzRKlrIzj/AW+FgW808Xnm6W
+	xK84hfDSpmPekc4I4Ewzztw=
+X-Google-Smtp-Source: AGHT+IFAuEe6MZgvA+lTavbcl8TE8o7Pzs/YhJ/lRM8NRtuzYKZoNxgz0oR4YOKKydd71HKVsz64Jg==
+X-Received: by 2002:a2e:a58d:0:b0:2c9:99ca:1317 with SMTP id m13-20020a2ea58d000000b002c999ca1317mr6615762ljp.24.1701190917070;
+        Tue, 28 Nov 2023 09:01:57 -0800 (PST)
 Received: from localhost (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id bg11-20020a05600c3c8b00b0040b2c195523sm19106591wmb.31.2023.11.28.09.01.22
+        by smtp.gmail.com with ESMTPSA id fa8-20020a05600c518800b0040b478da760sm6785928wmb.48.2023.11.28.09.01.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Nov 2023 09:01:22 -0800 (PST)
+        Tue, 28 Nov 2023 09:01:56 -0800 (PST)
 From: Thierry Reding <thierry.reding@gmail.com>
-To: Paul Cercueil <paul@crapouillou.net>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-mips@vger.kernel.org,
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
 	linux-pwm@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: jz4740: Add trailing \n to error messages
-Date: Tue, 28 Nov 2023 17:59:59 +0100
-Message-ID: <170119076368.215216.7694649613821090752.b4-ty@gmail.com>
+	linux-arm-kernel@lists.infradead.org,
+	kernel@pengutronix.de,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-samsung-soc@vger.kernel.org,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v3 00/11] pwm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+Date: Tue, 28 Nov 2023 18:00:00 +0100
+Message-ID: <170119076367.215216.2570140207863942749.b4-ty@gmail.com>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231123083322.405390-1-u.kleine-koenig@pengutronix.de>
-References: <20231123083322.405390-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231023174616.2282067-13-u.kleine-koenig@pengutronix.de>
+References: <20231023174616.2282067-13-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -75,16 +90,42 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, 23 Nov 2023 09:33:23 +0100, Uwe Kleine-König wrote:
-> Error messages are supposed to end in \n. Add the line terminator to the
-> two error messages that lack this.
+On Mon, 23 Oct 2023 19:46:17 +0200, Uwe Kleine-König wrote:
+> this v3 was necessary because some lines in the commit log of a subset
+> of these patches were eaten. I think that happend during rebase -i where
+> git drops lines starting with # during git-commit. git-am isn't affected by
+> this "feature", so application should work fine. Still checking these
+> lines make it into the git commit is a good idea I think.
 > 
+> Other than the few additional lines in the commit logs, one Reviewed-by:
+> is added and the series is otherwise unchanged.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] pwm: jz4740: Add trailing \n to error messages
-      commit: 2d246fe011bbf5f17bcaa7e70484618aab0b975f
+[01/11] pwm: atmel-hlcdc: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 68bb27818889b085d3d700be69c483c0ea98f433
+[02/11] pwm: atmel-tcb: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 440e46389dda0aafdfade7fabfa5038f9544ada2
+[03/11] pwm: berlin: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: c462d3f8fd2fc80aa7430fa7a498cbc92f65c3b5
+[04/11] pwm: brcmstb: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 96f68f6f4932d6ade6878f13c1f644f6b469cf6c
+[05/11] pwm: dwc: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 9109a4a23509b1664e6479aaa7fd5e983f8387e1
+[06/11] pwm: imx-tpm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: a5b73204fd2e6a78a29cc4baea071ef715731ddc
+[07/11] pwm: samsung: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 1b12fa3894ea89fefe057f128a5fddc71e3e693c
+[08/11] pwm: stm32-lp: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: a692911fca53e41fdf5c8bc5d66f00e96511762b
+[09/11] pwm: stm32: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 7c885017ea5b0e8008b18ee175f2c4d0664a4ca1
+[10/11] pwm: tiecap: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: 3ecab1549fe44b25f58fb32eeaea152062513894
+[11/11] pwm: tiehrpwm: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+        commit: b372157f23ea8aa99a240c47a7ba1268656554d5
 
 Best regards,
 -- 
