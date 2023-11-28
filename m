@@ -1,195 +1,99 @@
-Return-Path: <linux-pwm+bounces-209-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-210-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC5257FB538
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 10:07:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7F657FBFDD
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 18:00:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1854D1C2103E
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 09:07:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 59B67B20A84
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Nov 2023 17:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C855219BA5;
-	Tue, 28 Nov 2023 09:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B982208B;
+	Tue, 28 Nov 2023 17:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMk/vDw/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE6B1BB
-	for <linux-pwm@vger.kernel.org>; Tue, 28 Nov 2023 01:07:36 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r7u45-0003gR-Iy; Tue, 28 Nov 2023 10:07:33 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r7u44-00C8fG-VE; Tue, 28 Nov 2023 10:07:32 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r7u44-00A46g-Lu; Tue, 28 Nov 2023 10:07:32 +0100
-Date: Tue, 28 Nov 2023 10:07:32 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
- function
-Message-ID: <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
- <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
- <20231121161111.zphi7pn77ns7sgu2@pengutronix.de>
- <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
- <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
- <ZWCTtPVkTUQNLVoa@orome.fritz.box>
- <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
- <20231127105844.kpu5ori6o6umfynh@pengutronix.de>
- <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235B7D4B;
+	Tue, 28 Nov 2023 09:00:12 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40b472f98b1so17447835e9.3;
+        Tue, 28 Nov 2023 09:00:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701190810; x=1701795610; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ELFRihX3CtF7RhjnQusbjB/B/hfaZV0Nbj4a0FnBTOw=;
+        b=nMk/vDw/bQ3U2MUGiawahLWPTghwX0cvsHV9mKDCqbLQK2j9iXuZ2V/kqBn0xObzB3
+         OL6defTnXWwPHJeyY+j0VYP7uUIEw4wxYjn5+I5FZHbtUV2X6+3qClbALgpODGRGRNiD
+         p2IeMI0fqT044oNYVx3XR+GvyZomxbosPUhQkeUwaIEHEUE9PpdgpDiXJCI8paVQ73VD
+         wxJz/v65+FuANiBrEqINsOfA4XZAoBE4M4343tho5l/txBGn/nlOJFoIvPmGdz0J8RPy
+         L3EehZJrSmjb82VHorftknQoGiOq9K8iFYm901Xs79jLhBnOc5Hq1jaBG6/T4Nk19e46
+         Oi2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701190810; x=1701795610;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ELFRihX3CtF7RhjnQusbjB/B/hfaZV0Nbj4a0FnBTOw=;
+        b=bDqVoQVof7y5hTERSpluAnWzgboAARlYi0UzkS+3xacQ+f46qHyJ6MD25UBjupXKdA
+         WSNR1H4w/5W2HTlYSyfl+Dnkg3D75q/X9q6aVyXmGIudogTGiIK8jY5pymFqtN/ojbyq
+         rNh5LmVFlqYEbD8iZeQYXGs+Bb1vT1M1FiUPJSR7Sg1VSMYzM4vQdY6fqNiOsbBXLbCo
+         uBbAwAUvt4pef90MGw+BhFwrkfYVkLuSW1Dj6bo+7oe/YMaiHBdJYGUNsuEiMOrzfPH+
+         1YJKT+rMARP/Yk8elFosf7LXfmU79SZZLlVG4eaxPsIzOdBXeKP01/gVal7E/cx2IhgJ
+         WkqA==
+X-Gm-Message-State: AOJu0YxrR4bvdCMgCjkqUIvXILJb4A/OoBkqZJZXx6DTcc3NvEx1GmNd
+	2qAk0YCiPgajX7fVYdJq2jA=
+X-Google-Smtp-Source: AGHT+IGgm/D1KmtQMgeCyY/5kKBhGpQJ2TpH2E/ZvVJuY46OvL1ykEusYln54WAR+F0TPMHS5lkZzQ==
+X-Received: by 2002:a05:600c:3b83:b0:40b:2a53:7913 with SMTP id n3-20020a05600c3b8300b0040b2a537913mr11464033wms.13.1701190810132;
+        Tue, 28 Nov 2023 09:00:10 -0800 (PST)
+Received: from localhost (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id z12-20020a5d640c000000b00332cc7c3aaasm15618353wru.21.2023.11.28.09.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 09:00:05 -0800 (PST)
+From: Thierry Reding <thierry.reding@gmail.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2] pwm: Use device_get_match_data()
+Date: Tue, 28 Nov 2023 17:59:55 +0100
+Message-ID: <170119076371.215216.199281430371759022.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231026195417.68090-2-robh@kernel.org>
+References: <20231026195417.68090-2-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bt6nvbkkqijug5ra"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
---bt6nvbkkqijug5ra
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 26 Oct 2023 14:54:17 -0500, Rob Herring wrote:
+> Use preferred device_get_match_data() instead of of_match_device() to
+> get the driver match data. With this, adjust the includes to explicitly
+> include the correct headers.
+> 
+> As these drivers only do DT based matching, of_match_device() will never
+> return NULL if we've gotten to probe(). Therefore, the NULL check and
+> error returns can be dropped.
+> 
+> [...]
 
-Hello Bart,
+Applied, thanks!
 
-On Mon, Nov 27, 2023 at 09:22:48PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Nov 27, 2023 at 11:58=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Fri, Nov 24, 2023 at 10:16:40PM +0100, Bartosz Golaszewski wrote:
-> > > I admit I've been quite busy but I do plan on going through Uwe's
-> > > series next week and maybe running tests similar to what I have for
-> > > GPIO on it.
-> >
-> > That's great. If you want to do that on my tree that already saw a few
-> > improvements compared to what I sent out, get it at
-> >
-> >         https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
-> >
-> > . The improvements are only on the driver level, so unless you're using
-> > one of the improved drivers, the difference wouldn't be that big I
-> > guess. For (maybe) quicker feedback loops, you can find me on irc (e.g.
-> > on libera's #linux-pwm) if that's a communication channel you like.
->=20
-> I don't see anything obviously wrong with the approach.
+[1/1] pwm: Use device_get_match_data()
+      commit: cf5a1a8c8e8875b3fe38835942b393cc1577da55
 
-Is this the result of "running tests similar to what I have for GPIO on
-it" or did you only find the time for some high-level code inspection?
-
-> I see the
-> chip->operational field that is set to false on release. In my
-> version, we just use a NULL-pointer to carry the same information.
-
-Yup, sounds obvious. Your usage of "just" sounds as if your variant was
-better. To give the alternative view where the suggested approach sounds
-better would be:
-
-You need a pointer and I "just" a bool that even has a name implying its
-function. You need to dereference the pointer in several places as the
-needed information is distributed over two structures while it's all
-together in a single struct for the usual foo_alloc() + foo_register()
-approach.
-
-> Interestingly you DO have a pwm_device and pwm_chip structures. I'd
-> say it would be more logical to have the pwm_device embed struct
-> device.
-
-A pwm_chip represents a piece of hardware that provides (possibly)
-several PWM lines. A pwm_device is the abstraction for a single PWM
-line. So that's two different concepts and I wonder why you find it
-interesting that we have two different structures for it.
-
-Today the pwm framework already has a struct device for the
-pwm_chip that appears in /sys/class/pwm/pwmchipX. If a PWM line is
-exported in sysfs, another struct containing a struct device is
-allocated (struct pwm_export) to manage /sys/class/pwm/pwmchipX/pwmY/.
-
-I think it's good to have a struct device in the gpio_chip. I'd be open
-to put a struct device into pwm_device (unconditionally, not only when
-it's exported), but that's a change that is out of scope for this
-series. Also note that this would change the behaviour of
-/sys/class/pwm/ which I'd like to prevent (at least today until the
-character support is established, available for some time and known to
-be in use).
-
-> My approach is more about maintaining the logical scope and not
-> changing the ownership of objects allocated in the driver. I also
-> don't see a reason to expose the internals of the subsystem (struct
-> device) to the provider drivers other than in callbacks where it is
-> relevant. Subsystems should handle as much as possible and any data
-> structures not relevant to what the driver does should be hidden from
-> it.
-
-Drivers see struct pwm_chip today and IMHO that's fine. I also feel
-little incentive to hide something from the driver in .probe() and then
-have to expose (more of) it in .apply() anyhow. Also I don't think the
-series would benefit from putting yet more changes into it.
-
-Struct pwm_chip currently contains the following members:
-
-        struct device dev;
-        struct cdev cdev;
-        const struct pwm_ops *ops;
-        struct module *owner;
-        unsigned int id;
-        unsigned int npwm;
-
-        struct pwm_device * (*of_xlate)(struct pwm_chip *chip,
-                                        const struct of_phandle_args *args);
-        unsigned int of_pwm_n_cells;
-
-        /* only used internally by the PWM framework */
-        struct mutex lock;
-        bool uses_pwmchip_alloc;
-        bool operational;
-        void *drvdata;
-        struct pwm_device pwms[] __counted_by(npwm);
-
-Some of them should be moved below the "only used internally" comment.
-(i.e. dev, cdev, owner, id). For me this is "hidden" good enough then.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bt6nvbkkqijug5ra
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVlrdMACgkQj4D7WH0S
-/k6c5wf9E2tdhwxXGvVzBTwP5Wg4xq/VjRfjNRrS8a3XVPZLQpkBZvdjOweJ9URS
-416ChSRdmw0rqB0FmvkSH6eGFEa4qE5dwB/JETObDLK6YEmrqdZkeC2DcDRciKIz
-gZWNEqfeAWLBTfc0qpuRaAfRD7rOq4mUEzBz4jJqH09vhrFRWDlhoa8wtqc1AzgS
-rcKqOVQjRZKGFacUJO7XOgiLkSB7V0c1/r7pVCt2pYuzHOFKV9lgKbKZHb/5GX2W
-JO6PPKShv1Dk6dRsRVBlKRuuOQIqy5FbMLegciBhkU/waQG86p/e5aSAzFVf6nlx
-jiE4PFAO9UHTqRsi1Z5Rb6LhfygIgQ==
-=OsxS
------END PGP SIGNATURE-----
-
---bt6nvbkkqijug5ra--
+Best regards,
+-- 
+Thierry Reding <thierry.reding@gmail.com>
 
