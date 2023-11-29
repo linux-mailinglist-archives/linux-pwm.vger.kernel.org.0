@@ -1,197 +1,142 @@
-Return-Path: <linux-pwm+bounces-228-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-232-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0737A7FD1EC
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 10:14:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CD517FD280
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 10:27:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A1B6282D13
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 09:14:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1ED4B20CD6
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 09:27:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2605F12E64;
-	Wed, 29 Nov 2023 09:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="sFslIrDj";
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="R8A9Ztle"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33FC314267;
+	Wed, 29 Nov 2023 09:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A0421BCC;
-	Wed, 29 Nov 2023 01:14:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1701249248; bh=86qGc+C1bzoMBqXYz1VUZShwwdjBHm4PTYqZtPorDr8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sFslIrDjvfJCb4xq3/T4HaSHgI9t55wNoziJAJYqxoR3/Hni0b4JfVemz/pNgInLZ
-	 V+ET98QqCmaJmgBqFnH+kuwYQBQafRArAGDWP4e4UHhrg9ULfyiiuPfQRoDsxVEwhr
-	 Cyo9Hzz+raiwciBrgZlNQ3pTaNPHDk5CzKXyNhfFKpAEt6vHlMm05648ktSLor4Dzr
-	 G72+xtM8RiGvRS1hqwWEkAuVDEq4dQCg5DtQcDEKbw3mY6V0mQ3Wmt6wgYJNIzFrbd
-	 0idxXbyyWErrPaNSy/xgst9cudrs39V/G3rd4br09/wzz969pjy05TqSco6siI6xMn
-	 gFbvemiaicF7Q==
-Received: by gofer.mess.org (Postfix, from userid 501)
-	id 2666F100101; Wed, 29 Nov 2023 09:14:08 +0000 (GMT)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1701249229; bh=86qGc+C1bzoMBqXYz1VUZShwwdjBHm4PTYqZtPorDr8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R8A9ZtleLSz6m0a+Q7czGK5fLN87caTL/IXjRTkhfUMhdFa2IHcFcp3bZLf8SibVn
-	 +po2ohdU7NHZjN6wIgbWn0gjy388oRYlZKQonlG9d4T8wcwIC32i2WlHXHEoZTW5Wi
-	 pHk1tWk2AZwzdnV/MziLXAKskciCQPT010oQVgJ3nlJab6RQTHwl3UuDmE3gAtqvoX
-	 mXpgKjX+ypGABaLMRO/0atPtiXe2EXj1ZTvR2SJeLTKKCZXe6E9ZBx+Jrkd6UEXUwD
-	 C1sBdy9zY2uanEBfLcTVLWCaxm0DiBZjaqQ/YMwe6SjkVR3AaTsmCUOA/iKm2f8Ezs
-	 TT81Agosi5kdQ==
-Received: from localhost.localdomain (bigcore-99.local [IPv6:2a02:8011:d000:212:ca7f:54ff:fe51:14d6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gofer.mess.org (Postfix) with ESMTPSA id 82A96100104;
-	Wed, 29 Nov 2023 09:13:49 +0000 (GMT)
-From: Sean Young <sean@mess.org>
-To: linux-media@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sean Young <sean@mess.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/4] media: pwm-ir-tx: trigger edges from hrtimer interrupt context
-Date: Wed, 29 Nov 2023 09:13:37 +0000
-Message-ID: <88fdb3a200989458c6f95c26fa9bb84c1e864798.1701248996.git.sean@mess.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1701248996.git.sean@mess.org>
-References: <cover.1701248996.git.sean@mess.org>
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1100F1BD4;
+	Wed, 29 Nov 2023 01:27:41 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id 18E1B24E2D4;
+	Wed, 29 Nov 2023 17:27:34 +0800 (CST)
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 29 Nov
+ 2023 17:27:34 +0800
+Received: from williamqiu-virtual-machine.starfivetech.com (171.223.208.138)
+ by EXMBX168.cuchost.com (172.16.6.78) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.42; Wed, 29 Nov 2023 17:27:32 +0800
+From: William Qiu <william.qiu@starfivetech.com>
+To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>
+CC: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "Hal
+ Feng" <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	William Qiu <william.qiu@starfivetech.com>
+Subject: [PATCH v8 0/4] StarFive's Pulse Width Modulation driver support
+Date: Wed, 29 Nov 2023 17:27:28 +0800
+Message-ID: <20231129092732.43387-1-william.qiu@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX168.cuchost.com
+ (172.16.6.78)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: quoted-printable
 
-This makes the generated IR much more precise. Before this change, the
-driver is unreliable and many users opted to use gpio-ir-tx instead.
+Hi,
 
-Signed-off-by: Sean Young <sean@mess.org>
----
- drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 76 insertions(+), 3 deletions(-)
+This patchset adds initial rudimentary support for the StarFive
+Pulse Width Modulation controller driver. And this driver will
+be used in StarFive's VisionFive 2 board.The first patch add
+Documentations for the device and Patch 2 adds device probe for
+the module.
 
-diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
-index cf51e2760975..8575c4596d7b 100644
---- a/drivers/media/rc/pwm-ir-tx.c
-+++ b/drivers/media/rc/pwm-ir-tx.c
-@@ -10,6 +10,8 @@
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/hrtimer.h>
-+#include <linux/completion.h>
- #include <media/rc-core.h>
- 
- #define DRIVER_NAME	"pwm-ir-tx"
-@@ -17,8 +19,14 @@
- 
- struct pwm_ir {
- 	struct pwm_device *pwm;
--	unsigned int carrier;
--	unsigned int duty_cycle;
-+	struct hrtimer timer;
-+	struct completion tx_done;
-+	struct pwm_state *state;
-+	u32 carrier;
-+	u32 duty_cycle;
-+	uint *txbuf;
-+	uint txbuf_len;
-+	uint txbuf_index;
- };
- 
- static const struct of_device_id pwm_ir_of_match[] = {
-@@ -82,6 +90,62 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
- 	return count;
- }
- 
-+static int pwm_ir_tx_atomic(struct rc_dev *dev, unsigned int *txbuf,
-+			    unsigned int count)
-+{
-+	struct pwm_ir *pwm_ir = dev->priv;
-+	struct pwm_device *pwm = pwm_ir->pwm;
-+	struct pwm_state state;
-+
-+	pwm_init_state(pwm, &state);
-+
-+	state.period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
-+	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
-+
-+	pwm_ir->txbuf = txbuf;
-+	pwm_ir->txbuf_len = count;
-+	pwm_ir->txbuf_index = 0;
-+	pwm_ir->state = &state;
-+
-+	hrtimer_start(&pwm_ir->timer, 0, HRTIMER_MODE_REL);
-+
-+	wait_for_completion(&pwm_ir->tx_done);
-+
-+	return count;
-+}
-+
-+static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
-+{
-+	struct pwm_ir *pwm_ir = container_of(timer, struct pwm_ir, timer);
-+	ktime_t now;
-+
-+	/*
-+	 * If we happen to hit an odd latency spike, loop through the
-+	 * pulses until we catch up.
-+	 */
-+	do {
-+		u64 ns;
-+
-+		pwm_ir->state->enabled = !(pwm_ir->txbuf_index % 2);
-+		pwm_apply_atomic(pwm_ir->pwm, pwm_ir->state);
-+
-+		if (pwm_ir->txbuf_index >= pwm_ir->txbuf_len) {
-+			complete(&pwm_ir->tx_done);
-+
-+			return HRTIMER_NORESTART;
-+		}
-+
-+		ns = US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
-+		hrtimer_add_expires_ns(timer, ns);
-+
-+		pwm_ir->txbuf_index++;
-+
-+		now = timer->base->get_time();
-+	} while (hrtimer_get_expires_tv64(timer) < now);
-+
-+	return HRTIMER_RESTART;
-+}
-+
- static int pwm_ir_probe(struct platform_device *pdev)
- {
- 	struct pwm_ir *pwm_ir;
-@@ -103,10 +167,19 @@ static int pwm_ir_probe(struct platform_device *pdev)
- 	if (!rcdev)
- 		return -ENOMEM;
- 
-+	if (pwm_is_atomic(pwm_ir->pwm)) {
-+		init_completion(&pwm_ir->tx_done);
-+		hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+		pwm_ir->timer.function = pwm_ir_timer;
-+		rcdev->tx_ir = pwm_ir_tx_atomic;
-+	} else {
-+		dev_info(&pdev->dev, "tx will not be accurate as pwm device does not support atomic mode");
-+		rcdev->tx_ir = pwm_ir_tx;
-+	}
-+
- 	rcdev->priv = pwm_ir;
- 	rcdev->driver_name = DRIVER_NAME;
- 	rcdev->device_name = DEVICE_NAME;
--	rcdev->tx_ir = pwm_ir_tx;
- 	rcdev->s_tx_duty_cycle = pwm_ir_set_duty_cycle;
- 	rcdev->s_tx_carrier = pwm_ir_set_carrier;
- 
--- 
-2.43.0
+Changes v7->v8:
+- Rebased to v6.7rc3.
+- Changed compatible to "opencores,pwm-v1"
+- Adjusted the clock unprepare order.
+- Followed dt-bindings Coding style.
+
+Changes v6->v7:
+- Rebased to v6.6.
+- Added dependency architecture.
+- Adopted new rounding algorithm.
+- Added limitation descripton.
+- Used function interfaces instead of macro definitions.
+- Followed the linux coding style.
+
+Changes v5->v6:
+- Rebased to v6.6rc5.
+- Changed driver into a generic OpenCores driver.
+- Modified dt-bindings description into OpenCores.
+- Uesd the StarFive compatible string to parameterize.
+
+Changes v4->v5:
+- Rebased to v6.6rc2.
+- Updated macro definition indent.
+- Replaced the clock initializes the interface.
+- Fixed patch description.
+
+Changes v3->v4:
+- Rebased to v6.5rc7.
+- Sorted the header files in alphabetic order.
+- Changed iowrite32() to writel().
+- Added a way to turn off.
+- Modified polarity inversion implementation.
+- Added 7100 support.
+- Added dts patches.
+- Used the various helpers in linux/math.h.
+- Corrected formatting problems.
+- Renamed dtbinding  to 'starfive,jh7100-pwm.yaml'.
+- Dropped the redundant code.
+
+Changes v2->v3:
+- Fixed some formatting issues.
+
+Changes v1->v2:
+- Renamed the dt-binding 'pwm-starfive.yaml' to 'starfive,jh7110-pwm.yaml=
+'.
+- Dropped the compatible's Items.
+- Dropped the unuse defines.
+- Modified the code to follow the Linux coding style.
+- Changed return value to dev_err_probe.
+- Dropped the unnecessary local variable.
+
+The patch series is based on v6.7rc3.
+
+William Qiu (4):
+  dt-bindings: pwm: Add bindings for OpenCores PWM Controller
+  pwm: opencores: Add PWM driver support
+  riscv: dts: starfive: jh7100: Add PWM node and pins configuration
+  riscv: dts: starfive: jh7110: Add PWM node and pins configuration
+
+ .../bindings/pwm/opencores,pwm.yaml           |  56 +++++
+ MAINTAINERS                                   |   7 +
+ .../boot/dts/starfive/jh7100-common.dtsi      |  24 ++
+ arch/riscv/boot/dts/starfive/jh7100.dtsi      |   9 +
+ .../jh7110-starfive-visionfive-2.dtsi         |  22 ++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      |   9 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-ocores.c                      | 232 ++++++++++++++++++
+ 9 files changed, 372 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/opencores,pwm.y=
+aml
+ create mode 100644 drivers/pwm/pwm-ocores.c
+
+--
+2.34.1
 
 
