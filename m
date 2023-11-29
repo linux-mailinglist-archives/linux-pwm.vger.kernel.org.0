@@ -1,62 +1,57 @@
-Return-Path: <linux-pwm+bounces-250-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-251-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 065F37FDD6B
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 17:41:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BCA07FDECB
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 18:48:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCBC928211E
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 16:41:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7EBE7B20E51
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Nov 2023 17:48:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64D0B1DFCC;
-	Wed, 29 Nov 2023 16:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B4BC58AD1;
+	Wed, 29 Nov 2023 17:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJp9zlI7"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="B8w4q7pP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CF4990
-	for <linux-pwm@vger.kernel.org>; Wed, 29 Nov 2023 08:41:11 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40b54261524so6673825e9.3
-        for <linux-pwm@vger.kernel.org>; Wed, 29 Nov 2023 08:41:11 -0800 (PST)
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1752103
+	for <linux-pwm@vger.kernel.org>; Wed, 29 Nov 2023 09:47:53 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1cf89df1eecso173915ad.3
+        for <linux-pwm@vger.kernel.org>; Wed, 29 Nov 2023 09:47:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701276069; x=1701880869; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
+        d=broadcom.com; s=google; t=1701280073; x=1701884873; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dfg7atQN/bLBzM7mE71PtSKnKRCE3/hamOjfFKvk+Ps=;
-        b=zJp9zlI7uQm4mXUqbMtGo1dFFiHpKrgDBpoOXVrxOpJhA3ztQ7lDT4Cwc+s/7pNH5+
-         4e1QOc0DRqU/ewe4uhjp+KsbfMXWFaYEDL+bjKaFXYk/e0WoDHM2WuE6qi3xq1C9QlrU
-         xypBylEB2IzHczcTpH8x2EcpKiMp/pJqjjGUjCQEIi8tDtbtbYCZbF+nuZFvfcqNYO3V
-         WfJhR/GfF7gXJNJtm5ag/Y+yCwFZTWjnLBDOPAqt47sy7ZPSdUbw/EVqcs4o1Uq/l1TK
-         RgYBoepYA618+oc1k3stmyVs7RMejnDwyWPFS2PLdJlIqouAJWR0ws0mz+cCciH486uV
-         Qceg==
+        bh=ZicmzxxEc98OTHib5CYsEPn0mMrqVDLfLxPfJeQB6jE=;
+        b=B8w4q7pPPnVyn8KNu1IGEpdTqudPm3hVmK7BfIHo5vAWNR+QladqSrrq6TeT87FQLU
+         jdTR/wABLsxSxOmFJKGItyEdjGKh9o1IG229BLFduhHBBt8wdP2jLDhyG9HDQZc6aK3h
+         0UHVSVqGf2DZu3epqaSnKWYGAOtmungIKPq9o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701276069; x=1701880869;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :references:cc:to:content-language:subject:reply-to:from:user-agent
+        d=1e100.net; s=20230601; t=1701280073; x=1701884873;
+        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=dfg7atQN/bLBzM7mE71PtSKnKRCE3/hamOjfFKvk+Ps=;
-        b=nzcC6ro4xvtO9MU3vwgQa/P5RSnmQ5gyjWEEaSytjEuy3qRO2JtQqtnYKY05OHDgji
-         ir2jTXzee5xqBkmcxzrGSU14oeXEMqsqf2boXxMfazPxmUbcGVGcauHrqLAYkKaKcYWC
-         mEM8mEdtxqwseEw7UVq5ng1Q7UaCOs/XqtOvQY039cmccmThXz/FJn+5FBn881Dd76h/
-         ep2cUY4PnnSqnNfYusEFXfPvFD0yk5Xkyz2wm0go/JpsDK5n3xzaH7n3ojq7PkCN2R7o
-         Z+YI9wT5WlnKvkFCocyaM2zzNoqQoO+Gt4gzZSs5vFUs3U0eb2rLbc7ECURs652DnWUG
-         ILFw==
-X-Gm-Message-State: AOJu0Yw1IPtdgQaRd+RIqz613ay4BMTtG2a43s6VE+UCvRbCmtzxlabA
-	++esX8F35ZrteXZdb3Rfu3K49w==
-X-Google-Smtp-Source: AGHT+IGojnc7iEBSKQz6F3GlFyEvUSOGmmp2QrAEdcHHEVFRSkWi1DK4rH79rgWmbOL/atepa5/2QQ==
-X-Received: by 2002:a05:600c:1384:b0:409:19a0:d247 with SMTP id u4-20020a05600c138400b0040919a0d247mr13959356wmf.18.1701276069537;
-        Wed, 29 Nov 2023 08:41:09 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:31d3:eea3:8f97:6a2c? ([2a01:e0a:982:cbb0:31d3:eea3:8f97:6a2c])
-        by smtp.gmail.com with ESMTPSA id g10-20020a05600c4eca00b0040596352951sm2783806wmq.5.2023.11.29.08.41.08
+        bh=ZicmzxxEc98OTHib5CYsEPn0mMrqVDLfLxPfJeQB6jE=;
+        b=jAHkqIAKTxDm/+hMfxG8hzAx52xqhPe4rqnQsHjxrPM+grGA4Jyk6gINUzEu8u54eR
+         YYAf716+4xmsNOrvtVTdJkZQysvbsRRh3DzESNqp7LoLs+0kBtUOwpx8w6/2qgv5SKae
+         /XKjB85NPqUmQ6r4FqqpED99yVrpCnsklBld5pBncvTc0sywQTzXiyS+SZ09SgtC7GU2
+         QlNygMC6hPENZKsD5sC1VkirrpYPWH74veOAXGpWzcqscjvEq0+LcTkQ+izjL4juBPrn
+         SaqszWKjVdkLyc4khKe6NVEyc39ausqztWnSwqp2B746WN04LzrN+SWdtKSGQc1uVGZP
+         6lng==
+X-Gm-Message-State: AOJu0YzP/bfdmmeGVNutkG2eDP81fQ0Bj09rUhWcXOq6VRaLgA334H23
+	tdQEwCohY9Qd2yVXeEXzNqp3tQ==
+X-Google-Smtp-Source: AGHT+IEoLAEsTsPQR9F0L4oilM7LNyoa2XTJ2Y1OvnGvGFWet8dmQh2Fz1eqJJQFNdovpjXY0I3efQ==
+X-Received: by 2002:a17:902:e88b:b0:1cf:d404:5e7c with SMTP id w11-20020a170902e88b00b001cfd4045e7cmr13529947plg.42.1701280072778;
+        Wed, 29 Nov 2023 09:47:52 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170902d90500b001c60c3f9508sm12566505plz.230.2023.11.29.09.47.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 08:41:09 -0800 (PST)
-Message-ID: <11f8d986-3e97-4191-b46c-ad3166ee6dc7@linaro.org>
-Date: Wed, 29 Nov 2023 17:41:07 +0100
+        Wed, 29 Nov 2023 09:47:52 -0800 (PST)
+Message-ID: <6244d4f0-fc1f-47ea-b1f7-4df361720d22@broadcom.com>
+Date: Wed, 29 Nov 2023 09:47:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -64,223 +59,152 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3 2/4] dt-bindings: pwm: amlogic: add new compatible for
- meson8 pwm type
-Content-Language: en-US, fr
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
- JunYi Zhao <junyi.zhao@amlogic.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-References: <20231129134004.3642121-1-jbrunet@baylibre.com>
- <20231129134004.3642121-3-jbrunet@baylibre.com>
- <8e78be99-3d4d-4f79-9791-404e60bcb67c@linaro.org>
- <1jfs0ojz1a.fsf@starbuckisacylon.baylibre.com>
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <1jfs0ojz1a.fsf@starbuckisacylon.baylibre.com>
+Subject: Re: [PATCH v6 3/4] pwm: bcm2835: allow pwm driver to be used in
+ atomic context
+To: Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+ linux-pwm@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
+ Scott Branden <sbranden@broadcom.com>
+Cc: linux-rpi-kernel@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1701248996.git.sean@mess.org>
+ <179dc1ce85702a8b64b43c0e0df656b0c5e3ce30.1701248996.git.sean@mess.org>
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ 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
+In-Reply-To: <179dc1ce85702a8b64b43c0e0df656b0c5e3ce30.1701248996.git.sean@mess.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000006c6865060b4e22da"
+
+--0000000000006c6865060b4e22da
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On 11/29/23 01:13, Sean Young wrote:
+> clk_get_rate() may do a mutex lock. Fetch the clock rate once, and prevent
+> rate changes using clk_rate_exclusive_get().
+> 
+> Signed-off-by: Sean Young <sean@mess.org>
 
-On 29/11/2023 17:26, Jerome Brunet wrote:
-> 
-> On Wed 29 Nov 2023 at 17:20, Neil Armstrong <neil.armstrong@linaro.org> wrote:
-> 
->> Hi,
->>
->> On 29/11/2023 14:39, Jerome Brunet wrote:
->>> Add a new compatible for the pwm found in the meson8 to sm1 Amlogic SoCs,
->>> dealing with clocks differently. This does not enable new HW. It is meant
->>> to fix a bad DT ABI for the currently supported HW.
->>> The original clock bindings describe which input the PWM channel
->>> multiplexer should pick among its possible parents, which are
->>> hard-coded in the driver. As such, it is a setting tied to the driver
->>> implementation and does not describe the HW.
->>> The new bindings introduce here describe the clocks input of the PWM
->>> block
->>> as they exist.
->>> The old compatible is deprecated but kept to maintain ABI compatibility.
->>> The SoC specific compatibles introduced match the SoC families supported
->>> by the original bindings.
->>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->>> ---
->>>    .../devicetree/bindings/pwm/pwm-amlogic.yaml  | 52 ++++++++++++++++---
->>>    1 file changed, 46 insertions(+), 6 deletions(-)
->>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->>> b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->>> index 387976ed36d5..eece390114a3 100644
->>> --- a/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->>> +++ b/Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->>> @@ -21,23 +21,35 @@ properties:
->>>              - amlogic,meson-g12a-ee-pwm
->>>              - amlogic,meson-g12a-ao-pwm-ab
->>>              - amlogic,meson-g12a-ao-pwm-cd
->>> -          - amlogic,meson-s4-pwm
->>> +        deprecated: true
->>>          - items:
->>>              - const: amlogic,meson-gx-pwm
->>>              - const: amlogic,meson-gxbb-pwm
->>> +        deprecated: true
->>>          - items:
->>>              - const: amlogic,meson-gx-ao-pwm
->>>              - const: amlogic,meson-gxbb-ao-pwm
->>> +        deprecated: true
->>>          - items:
->>>              - const: amlogic,meson8-pwm
->>>              - const: amlogic,meson8b-pwm
->>> +        deprecated: true
->>
->> I think deprecated should be moved in a third patch
-> 
-> The complain on v2 was that it was not clear the new binding was making
-> the old one obsolete. It looked to me that the deprecation old bindings
-> needed to go together with the introduction of the new.
-> 
-> I don't mind one way or the other
-> 
-> Is there a rule somewhere about this ?
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-Not sure about that, I don't think it's a problem to have both valid
-at the same time, setting them deprecated afterwards looks cleaner
-to avoid mixing too much changes at the same time.
 
-Neil
+--0000000000006c6865060b4e22da
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> 
->>
->>> +      - const: amlogic,meson8-pwm-v2
->>> +      - items:
->>> +          - enum:
->>> +              - amlogic,meson8b-pwm-v2
->>> +              - amlogic,meson-gxbb-pwm-v2
->>> +              - amlogic,meson-axg-pwm-v2
->>> +              - amlogic,meson-g12-pwm-v2
->>> +          - const: amlogic,meson8-pwm-v2
->>> +      - const: amlogic,meson-s4-pwm
->>>        reg:
->>>        maxItems: 1
->>>        clocks:
->>>        minItems: 1
->>> -    maxItems: 2
->>> +    maxItems: 4
->>>        clock-names:
->>>        minItems: 1
->>> @@ -58,7 +70,6 @@ allOf:
->>>            compatible:
->>>              contains:
->>>                enum:
->>> -              - amlogic,meson8-pwm
->>>                  - amlogic,meson8b-pwm
->>>                  - amlogic,meson-gxbb-pwm
->>>                  - amlogic,meson-gxbb-ao-pwm
->>> @@ -67,14 +78,15 @@ allOf:
->>>                  - amlogic,meson-g12a-ee-pwm
->>>                  - amlogic,meson-g12a-ao-pwm-ab
->>>                  - amlogic,meson-g12a-ao-pwm-cd
->>> -              - amlogic,meson-gx-pwm
->>> -              - amlogic,meson-gx-ao-pwm
->>
->> I don't understand why those entries are removed
-> 
-> It's a mistake. It should not have been added to begin with in
-> the first patch. "amlogic,meson-gx-*" must go along with
-> "amlogic,meson-gxbb-*" so it matches correctly without it.
-> 
-> I'll fix it
-> 
->>
->>>        then:
->>> -      # Historic bindings tied to the driver implementation
->>> +      # Obsolete historic bindings tied to the driver implementation
->>>          # The clocks provided here are meant to be matched with the input
->>>          # known (hard-coded) in the driver and used to select pwm clock
->>>          # source. Currently, the linux driver ignores this.
->>> +      # This is kept to maintain ABI backward compatibility.
->>
->> Same here, this should go in a third patch
->>
->>>          properties:
->>> +        clocks:
->>> +          maxItems: 2
->>>            clock-names:
->>>              oneOf:
->>>                - items:
->>> @@ -83,6 +95,27 @@ allOf:
->>>                    - const: clkin0
->>>                    - const: clkin1
->>>    +  # Newer binding where clock describe the actual clock inputs of the
->>> pwm
->>> +  # block. These are necessary but some inputs may be grounded.
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            enum:
->>> +              - amlogic,meson8-pwm-v2
->>> +    then:
->>> +      properties:
->>> +        clocks:
->>> +          minItems: 1
->>> +          items:
->>> +            - description: input clock 0 of the pwm block
->>> +            - description: input clock 1 of the pwm block
->>> +            - description: input clock 2 of the pwm block
->>> +            - description: input clock 3 of the pwm block
->>> +        clock-names: false
->>> +      required:
->>> +        - clocks
->>> +
->>>      # Newer IP block take a single input per channel, instead of 4 inputs
->>>      # for both channels
->>>      - if:
->>> @@ -112,6 +145,13 @@ examples:
->>>          clock-names = "clkin0", "clkin1";
->>>          #pwm-cells = <3>;
->>>        };
->>> +  - |
->>> +    pwm@2000 {
->>> +      compatible = "amlogic,meson8-pwm-v2";
->>> +      reg = <0x1000 0x10>;
->>> +      clocks = <&xtal>, <0>, <&fdiv4>, <&fdiv5>;
->>> +      #pwm-cells = <3>;
->>> +    };
->>>      - |
->>>        pwm@1000 {
->>>          compatible = "amlogic,meson-s4-pwm";
->>
->> Neil
-> 
-> 
-
+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
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIF0nU7G4S7WFp1L6
+AhuCkZSjCaErq7FgowvKAfhr+4nAMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTIzMTEyOTE3NDc1M1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBfhTpAiwObkw1aE/DXOAH4mN/EaXiFYaZH
+bodpLKKXDRfKU0epU+7T9s2EutV+khxPDBzoNYkQNAsRWNHisEjbwoRGYTzxPBZZ/duU71/Grpuw
+TE2E+CAzOJt2jMeKwt4iv+OPOwtXkCxYaZxZjND9JokExaZjDqi/WycxR/4yvoYLk1XQlHnsIRuM
+9SRMi0Ef0s/Vw3sL9HEDSE962oR8LInP5KlD8S/GJp69lavL/I3S1/tO5Lp3d223E3b4RKCfTzh0
+qJ/pOiiOjLvBlr0BndJenj+QEZef1XZO+HB8Rv13LdTA8TJ4U9G8L6+Enw8Qttx8rJMYGcIMWh+s
+WcjH
+--0000000000006c6865060b4e22da--
 
