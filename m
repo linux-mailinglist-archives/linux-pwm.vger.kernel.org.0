@@ -1,100 +1,139 @@
-Return-Path: <linux-pwm+bounces-271-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-272-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EB357FF2F0
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Nov 2023 15:53:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A35507FF3B1
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Nov 2023 16:37:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 800EC1C20431
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Nov 2023 14:53:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B012B20C3F
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Nov 2023 15:37:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1835141C65;
-	Thu, 30 Nov 2023 14:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceG8tyGs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D8A4524BD;
+	Thu, 30 Nov 2023 15:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBB83C6B6
-	for <linux-pwm@vger.kernel.org>; Thu, 30 Nov 2023 14:53:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82531C433C8;
-	Thu, 30 Nov 2023 14:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701355992;
-	bh=06UE3U4SFn4bgLtRE8IitgsXW8unu+tkFneXuPCGtK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ceG8tyGssf2ok839w+j1pfDo2Y1FovDMbq7Z250gzWv24Q7gI4OOuw9Pr/txKsurD
-	 7vO4BM/8KPnPyL8rItYMtexvfNcfE1gqhUsJP1rbGpC0p5jMWhe0aSEVgQEXECwEqe
-	 oLN9IFGfKd0kEv3VmhB+7fCmq1600lnjjSVV5UPRojH06n25gosq82gjyq3ULNM8gp
-	 ygbU/RKxHE090Wph04q5DmZmTGyIMIL5qQnRgMytoKLM2KFwOcv7/lZI5V1GsBiur7
-	 g0mvuF/YadUtc6qLWjhtmBZNrRPFuI6JvydNw3KTVH+EbIV3redZSz+WfohyRkz8ZQ
-	 34Dun9/qlSpjw==
-Date: Thu, 30 Nov 2023 14:53:08 +0000
-From: Lee Jones <lee@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH 0/3] pwm: Alternative way to convert leds-qcom-lpg to
- devm_pwmchip_alloc()
-Message-ID: <20231130145308.GB3259151@google.com>
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176AF10D5
+	for <linux-pwm@vger.kernel.org>; Thu, 30 Nov 2023 07:37:04 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r8j66-0007gd-Ip; Thu, 30 Nov 2023 16:37:02 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r8j65-00Cf9X-Mp; Thu, 30 Nov 2023 16:37:01 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r8j65-00BcjX-Df; Thu, 30 Nov 2023 16:37:01 +0100
+Date: Thu, 30 Nov 2023 16:37:01 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Lee Jones <lee@kernel.org>
+Cc: linux-pwm@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Subject: Re: [PATCH 1/3] pwm: Provide wrappers for storing and getting
+ private data
+Message-ID: <20231130153701.kawj2qy6pokbnsgl@pengutronix.de>
 References: <20231124215208.616551-1-u.kleine-koenig@pengutronix.de>
+ <20231124215208.616551-2-u.kleine-koenig@pengutronix.de>
+ <20231130145027.GA3259151@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="47doehy2vigesk7k"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231124215208.616551-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231130145027.GA3259151@google.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Fri, 24 Nov 2023, Uwe Kleine-König wrote:
 
-> Hello,
-> 
-> on my way home thinking about my pwm-lifetime series[1] it occurred to
-> me how the leds-qcom-lpg driver could be converted to use
-> pwmchip_alloc() much prettier. Instead of patch #102 it can just not use
-> the feature to allocate private data and use (a new)
-> pwmchip_{get,set}_drvdata() function pair.
-> 
-> The 2nd patch is just split out of the conversion. In my original series
-> the equivalent was contained in the converting patch.
-> 
-> I'd expect that this sorts out the concerns about the ugliness I added
-> in two of the "non-pure" PWM drivers. A similar approach can be used (with the
-> same changes in core.c and pwm.h) for adapting the ti-sn65dsi86 driver.
+--47doehy2vigesk7k
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is much better, thank you.
+On Thu, Nov 30, 2023 at 02:50:27PM +0000, Lee Jones wrote:
+> On Fri, 24 Nov 2023, Uwe Kleine-K=F6nig wrote:
+>=20
+> > Also call pwmchip_set_drvdata() in pwmchip_alloc() to have a sane
+> > default. Might replace pwmchip_priv()?!
+> >=20
+> > After struct pwm_chip got its own struct device, this can make use of
+> > dev_get_drvdata() and dev_set_drvdata() on that device.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/pwm/core.c  |  2 ++
+> >  include/linux/pwm.h | 19 +++++++++++++++++++
+> >  2 files changed, 21 insertions(+)
+> >=20
+> > diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> > index 17577a1c4efc..0cbce704cc0b 100644
+> > --- a/drivers/pwm/core.c
+> > +++ b/drivers/pwm/core.c
+> > @@ -216,6 +216,8 @@ struct pwm_chip *devm_pwmchip_alloc(struct device *=
+parent, unsigned int npwm, si
+> >  	chip->dev =3D parent;
+> >  	chip->npwm =3D npwm;
+> > =20
+> > +	pwmchip_set_drvdata(chip, pwmchip_priv(chip));
+> > +
+> >  	return chip;
+> >  }
+> >  EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
+> > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> > index 3c62cf329ee0..7a32ac687717 100644
+> > --- a/include/linux/pwm.h
+> > +++ b/include/linux/pwm.h
+> > @@ -302,6 +302,7 @@ struct pwm_chip {
+> > =20
+> >  	/* only used internally by the PWM framework */
+> >  	struct pwm_device *pwms;
+> > +	void *drvdata;
+>=20
+> I appreciate that this may be temporary, but why not use the precedent
+> already set by struct device?
+>=20
+>   void            *driver_data;
 
-How should this be merged?
+Not sure I understood your question right. You wonder why I named the
+struct member drvdata and not driver_data, right?
 
-> [1] https://lore.kernel.org/linux-pwm/20231121134901.208535-1-u.kleine-koenig@pengutronix.de
-> 
-> Uwe Kleine-König (3):
->   pwm: Provide wrappers for storing and getting private data
->   leds: qcom-lpg: Introduce a wrapper for getting driver data from a pwm
->     chip
->   leds: qcom-lpg: Make use of devm_pwmchip_alloc() function
-> 
->  drivers/leds/rgb/leds-qcom-lpg.c | 27 ++++++++++++++++++---------
->  drivers/pwm/core.c               |  2 ++
->  include/linux/pwm.h              | 19 +++++++++++++++++++
->  3 files changed, 39 insertions(+), 9 deletions(-)
-> 
-> (This base commit isn't published to not annoy the list with reports about
-> failed builds because of missing changes.)
-> 
-> base-commit: e40bd269dc0aa05aaf5390d66428601dc7433433
-> -- 
-> 2.42.0
-> 
+That's easy: I didn't look at struct device and just picked a name I
+considered suiteable. I'm fine with driver_data, too, and will use that
+for the next iteration.
 
--- 
-Lee Jones [李琼斯]
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--47doehy2vigesk7k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVorBwACgkQj4D7WH0S
+/k4sjAf9FVD/O2EvXRPJlRBtJmWVT3oQDzcFiJYCF+jAm5VszEdwlhNNkp4bd21C
+Ca8ClRMPflZVAtiAOZESzEaTULg8rYLiDIyUuju2H53/sTXaAYTbbPnkFfn78ZUW
+F/ocMzGx6FihIMo/vrqEUaM3G3C4hPeLkGNq8meA5xMqesGMmk1nHzZpOk4rGfMZ
+quRP1/GkMuOiTLRaMO+hMt6CIhYftK9y/ACL7vkNYt/LXqiDPaxPbW1ovPr+3pFZ
+ngfRIUPbD0K2d13vnzRS8JaeXvBtzhihB2fyBLzD+46wBAV/MVIopkG0SupZz4S1
+XX5w35AhexO1wqxH49n7AYBppi3gGQ==
+=S2bA
+-----END PGP SIGNATURE-----
+
+--47doehy2vigesk7k--
 
