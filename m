@@ -1,83 +1,103 @@
-Return-Path: <linux-pwm+bounces-300-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-301-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C930805460
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 13:37:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47BB080552E
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 13:50:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5B6E1F2147D
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 12:37:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60DC2B209BB
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 12:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C47F4B5AC;
-	Tue,  5 Dec 2023 12:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DO3mPSWv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F136341747;
+	Tue,  5 Dec 2023 12:50:32 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5895C8F6;
-	Tue,  5 Dec 2023 12:37:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2CE9C433CB;
-	Tue,  5 Dec 2023 12:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701779872;
-	bh=oaw5ajfNc2xwT+o50ss1Wvzbt1raBQsPnH4if9LcJiQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DO3mPSWvR9AfkhvFPQUJMDZiAbbv7/FklvHViKwmCJrMm8iMGzWpQZYzEcuQX/H0K
-	 a7A+nqBgJYuuNYt516nr5J8ZNqRJkB+oBH1fMUVHwVN3misVFombzEmGyvh14Oy5vN
-	 /JTjtPGbSg2E4dT3fOUDYta74IowSVSZl1s2jjofEcBy/MuHCx6Mt9h3qF4UzEI3TU
-	 DScxuOv7FgUIX+2jzME7ftmXdFhZ0X5Kon2JK/Jv7l1ReKpsQXKwy0KFK/Sw4qlEoP
-	 9E95Xs8kGpo7fDg5Yvbr3mxoxYx0+0w5o40ahdutyXh3sLxk15+yjnZzx5eg4uG486
-	 1P6U52mxhfUZg==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-54917ef6c05so6986761a12.1;
-        Tue, 05 Dec 2023 04:37:52 -0800 (PST)
-X-Gm-Message-State: AOJu0Ywqf6tJPwF+BuR1rt2aH7xnsNjfRk75/VaMWKd+cMoL0TGSCIhw
-	tLPt6vWTa8HLTQTji/8X3jp0YAw/Jq9h5/GNYpE=
-X-Google-Smtp-Source: AGHT+IGpvIfwRkg2wXFpJm8JBXaBCscMa9BEY0aBxmuZm1DHz1oIBKXFkU+8RDA5ynmWw7UWKf0unB01ocBdpwDjSAY=
-X-Received: by 2002:a50:999a:0:b0:54c:47cc:caef with SMTP id
- m26-20020a50999a000000b0054c47cccaefmr3042102edb.53.1701779871163; Tue, 05
- Dec 2023 04:37:51 -0800 (PST)
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDF3C6
+	for <linux-pwm@vger.kernel.org>; Tue,  5 Dec 2023 04:50:29 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rAUsd-0001eE-Uv; Tue, 05 Dec 2023 13:50:27 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rAUsd-00DkNW-5L; Tue, 05 Dec 2023 13:50:27 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rAUsd-0009ig-0J;
+	Tue, 05 Dec 2023 13:50:27 +0100
+Message-ID: <b501d70ce1bcfc7586d195f54a8fec73f9dcfcf0.camel@pengutronix.de>
+Subject: Re: [PATCH v3 058/108] pwm: imx27: Make use of devm_pwmchip_alloc()
+ function
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Shawn Guo
+ <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>,  linux-pwm@vger.kernel.org, Fabio
+ Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ linux-arm-kernel@lists.infradead.org
+Date: Tue, 05 Dec 2023 13:50:26 +0100
+In-Reply-To: <20231205121404.djhpn5t3gylebfyc@pengutronix.de>
+References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
+	 <20231121134901.208535-59-u.kleine-koenig@pengutronix.de>
+	 <95b1df79f6830eb7d886bcd7099354ad38218e31.camel@pengutronix.de>
+	 <20231205121404.djhpn5t3gylebfyc@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231106095205.231210-1-alexander.stein@ew.tq-group.com>
- <20231106095205.231210-2-alexander.stein@ew.tq-group.com> <20231205123617.GI236001@dragon>
-In-Reply-To: <20231205123617.GI236001@dragon>
-From: Shawn Guo <shawnguo@kernel.org>
-Date: Tue, 5 Dec 2023 20:37:39 +0800
-X-Gmail-Original-Message-ID: <CAJBJ56Jkc+iy4wCvY=jr3OwQ_nXdDSezkjfJaejmhWDoTDEyLQ@mail.gmail.com>
-Message-ID: <CAJBJ56Jkc+iy4wCvY=jr3OwQ_nXdDSezkjfJaejmhWDoTDEyLQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: imx-pwm: Add constraints for #pwm-cells
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, 
-	Philippe Schenker <philippe.schenker@toradex.com>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On Tue, Dec 5, 2023 at 8:36=E2=80=AFPM Shawn Guo <shawnguo@kernel.org> wrot=
-e:
->
-> On Mon, Nov 06, 2023 at 10:52:03AM +0100, Alexander Stein wrote:
-> > Only fsl,imx1-pwm comptabile devices use #pwm-cells =3D <2>. Newer SoCs
-> > supportinverted PWM output, thus #pwm-cells needs to be set to 3.
-> >
-> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
->
-> As suggested by Uwe, I picked this up too.
+On Di, 2023-12-05 at 13:14 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Philipp,
+>=20
+> On Tue, Dec 05, 2023 at 12:49:19PM +0100, Philipp Zabel wrote:
+> > On Di, 2023-11-21 at 14:50 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > @@ -306,13 +308,15 @@ MODULE_DEVICE_TABLE(of, pwm_imx27_dt_ids);
+> > > =20
+> > >  static int pwm_imx27_probe(struct platform_device *pdev)
+> > >  {
+> > > +	struct pwm_chip *chip;
+> > >  	struct pwm_imx27_chip *imx;
+> > >  	int ret;
+> > >  	u32 pwmcr;
+> > > =20
+> > > -	imx =3D devm_kzalloc(&pdev->dev, sizeof(*imx), GFP_KERNEL);
+> > > -	if (imx =3D=3D NULL)
+> > > -		return -ENOMEM;
+> > > +	chip =3D devm_pwmchip_alloc(&pdev->dev, 1, sizeof(*imx));
+> > > +	if (IS_ERR(chip))
+> > > +		return PTR_ERR(chip);
+> > > +	imx =3D pwmchip_priv(chip);
+> >=20
+> > Please use to_pwm_imx27_chip() here. Otherwise,
+> >=20
+> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>=20
+> Thanks. This is already fixed in my tree for this and a few other
+> drivers. Currently the patch looks as follows:
+>=20
+> 	https://git.pengutronix.de/cgit/ukl/linux/commit/?h=3Dpwm-lifetime-track=
+ing&id=3D4fa8c8a8661fa6d91de0368693d4a92907fb5359
+>=20
+> The only other changes since this v3 is the usage of
+> pwmchip_get_drvdata() instead of pwmchip_priv(). Can I keep your
+> Reviewed-by for this new variant?
 
-Sorry, I picked v2 up actually.
+Yes.
 
-Shawn
+regards
+Philipp
 
