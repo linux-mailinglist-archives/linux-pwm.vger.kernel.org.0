@@ -1,262 +1,239 @@
-Return-Path: <linux-pwm+bounces-290-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-291-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F04CC804DAF
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 10:23:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CDE5804DEA
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 10:31:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C0FF1F214AD
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 09:23:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29DA21F20FEB
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Dec 2023 09:31:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54B153C082;
-	Tue,  5 Dec 2023 09:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fkbZaldq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 099ED3E49E;
+	Tue,  5 Dec 2023 09:31:56 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E934BD40
-	for <linux-pwm@vger.kernel.org>; Tue,  5 Dec 2023 01:22:50 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-40c0fc1cf3dso8941045e9.0
-        for <linux-pwm@vger.kernel.org>; Tue, 05 Dec 2023 01:22:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701768169; x=1702372969; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ic+lMCTjLKoS5KBhhnqOhZn1klxqPT1vX3hBzFZYLC4=;
-        b=fkbZaldqKPC6zsr6QLYOouE3OP/CSXAcl9bQY6E5ccEpWK0p4Gfi3GlK6GINf/ypDG
-         411FNVwteZQLcwWAP5vB34Tl9pny6QmDrKxW0Y8teCGY4eA4+QFxHGwdlwfR3Bp2re6n
-         G3L+bAMl8kgDphrghyadrfXxeOYJR2f6w5JsSnm9sPYaEFTLbBWlEJrEyEIHInHXXRZr
-         K9PlLMAHBVyYUKGbcstODy8vtPpZxKHVA2sT+nId7MPWPRZNgygrCU2wJyuW8RIpUL2E
-         A0MOmS5OXZOZvx2MVDyTUe0RSLcUO71gU7Sdx+14JT0w7whF1lSC1a8r3gDQUu3tt31a
-         ZylA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701768169; x=1702372969;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ic+lMCTjLKoS5KBhhnqOhZn1klxqPT1vX3hBzFZYLC4=;
-        b=oE2hGkEo+ruOWsoWeRZhaT2J1v34/oycKTENeaGrz+eXMCTvrS2680MqiBbYyrRfdN
-         ER0ehpwChHFMcNv2Kxfmtsk02Fv6JN+3o4QuSqvhgn3Sb8rhmfgzqJd+Bdh5UNhc/nWG
-         EJj80BfyRlXvPyAZWA315p9tW0YBKIqQzUINZR0bCB+tYUke6DmO5NjaSRVCLZCmD5yi
-         wFQrrhWrbtvQ9MEiK0TrqB3jV59FUzIJ2NortaIt96Gq1OcPWYjWkMBCTrI5vwcup3Eh
-         1UI4VSLxCpM0vPYspcAzoNMZKEgZCeg8SSwwzaCAXqjV5ska7kSZoRXw1lw9Ep028566
-         x78A==
-X-Gm-Message-State: AOJu0YywJBIvp/0V1ZRrwtFxXlppzLu7yNXcOGPxL0/BrNARPsf7jfss
-	r0ncJNWeQ08llqKqeWt2eqIVEQ==
-X-Google-Smtp-Source: AGHT+IHfoP0ThFOjNsS+ibdhONyg8AlmPEXQCpblukDPZWzThPMdS6QotAP5FclOjbMTSVPpJ94S6w==
-X-Received: by 2002:a05:600c:a05:b0:40c:503:24de with SMTP id z5-20020a05600c0a0500b0040c050324demr254274wmp.88.1701768169249;
-        Tue, 05 Dec 2023 01:22:49 -0800 (PST)
-Received: from krzk-bin.. ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id g10-20020a05600c4eca00b0040596352951sm21692287wmq.5.2023.12.05.01.22.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 01:22:48 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-fsd@tesla.com,
-	linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 6/6] arm64: dts: fsd: add specific compatibles for Tesla FSD
-Date: Tue,  5 Dec 2023 10:22:29 +0100
-Message-Id: <20231205092229.19135-7-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
-References: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB50129
+	for <linux-pwm@vger.kernel.org>; Tue,  5 Dec 2023 01:31:49 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rARmM-0001GD-Ds; Tue, 05 Dec 2023 10:31:46 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rARmL-00DiB8-Uj; Tue, 05 Dec 2023 10:31:45 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rARmL-00Ed3C-Lb; Tue, 05 Dec 2023 10:31:45 +0100
+Date: Tue, 5 Dec 2023 10:31:45 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20231205093145.l7p52xtw2ak756ra@pengutronix.de>
+References: <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+ <ZWCTtPVkTUQNLVoa@orome.fritz.box>
+ <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
+ <20231127105844.kpu5ori6o6umfynh@pengutronix.de>
+ <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
+ <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
+ <CAMRc=McAYSpCY=E1Ze7xKuBom8xOzQ4+5f7vYm33ihVU90xM1w@mail.gmail.com>
+ <20231202004316.mxhrfsgcitupc6cc@pengutronix.de>
+ <CAMRc=Md9bRdk5ZaCVu5gmZ4r5JR7eVZDriap32FMrN05PyTENQ@mail.gmail.com>
+ <CAMRc=MeiL7omJhe_gb_UiL_bbJGoujp3Js4=Fe=qXKHv8TjM-Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7wf42ilwzebmm55z"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeiL7omJhe_gb_UiL_bbJGoujp3Js4=Fe=qXKHv8TjM-Q@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Tesla FSD is a derivative of Samsung Exynos SoC, thus just like the
-others it reuses several devices from older designs.  Historically we
-kept the old (block's) compatible only.  This works fine and there is no
-bug here, however guidelines expressed in
-Documentation/devicetree/bindings/writing-bindings.rst state that:
-1. Compatibles should be specific.
-2. We should add new compatibles in case of bugs or features.
 
-Add Tesla FSD compatible specific to be used with an existing fallback.
-This will also help reviews of new code using existing DTS as template.
-No functional impact on Linux drivers behavior.
+--7wf42ilwzebmm55z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hello,
 
----
+On Mon, Dec 04, 2023 at 10:28:15PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Dec 4, 2023 at 9:27=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> > On Sat, Dec 2, 2023 at 1:43=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > On Fri, Dec 01, 2023 at 11:14:32AM +0100, Bartosz Golaszewski wrote:
+> > > > On Tue, Nov 28, 2023 at 10:07=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > >
+> > > >
+> > > > [snip]
+> > > >
+> > > > >
+> > > > > > I see the
+> > > > > > chip->operational field that is set to false on release. In my
+> > > > > > version, we just use a NULL-pointer to carry the same informati=
+on.
+> > > > >
+> > > > > Yup, sounds obvious. Your usage of "just" sounds as if your varia=
+nt was
+> > > > > better. To give the alternative view where the suggested approach=
+ sounds
+> > > > > better would be:
+> > > > >
+> > > > > You need a pointer and I "just" a bool that even has a name imply=
+ing its
+> > > > > function. You need to dereference the pointer in several places a=
+s the
+> > > > > needed information is distributed over two structures while it's =
+all
+> > > > > together in a single struct for the usual foo_alloc() + foo_regis=
+ter()
+> > > > > approach.
+> > > > >
+> > > >
+> > > > There's another reason we do that. I'm no longer sure if I mentioned
+> > > > it in my talk (I meant to anyway).
+> > > >
+> > > > In GPIO we have API functions that may be called from any context -
+> > > > thus needing spinlocks for locking - but also driver callbacks that
+> > > > may use mutexes internally or otherwise sleep. I don't know if this=
+ is
+> > > > the case for PWM too but in GPIO we may end up in a situation where=
+ if
+> > > > we used a spinlock to protect some kind of an "is_operational" fiel=
+d,
+> > > > we'd end up sleeping with a spinlock taken and if we used a mutex, =
+we
+> > > > couldn't use API function from atomic contexts.
+> > > >
+> > > > This is the reason behind locking being so broken in GPIO at the
+> > > > moment and why I'm trying to fix it this release cycle.
+> > > >
+> > > > Splitting the implementation into two structures and protecting the
+> > > > pointer to the provider structure with SRCU has the benefit of not
+> > > > limiting us in what locks we use underneath.
+> > > >
+> > > > Every subsystem has its own issues and we need to find something
+> > > > generic enough to cover them all (or most of them anyway). I don't
+> > > > think having a single structure cuts it.
+> > >
+> > > I'm convinced it works. I introduced a wrapper pwmchip_lock() that for
+> > > now uses a mutex and once we have fast pwm_chips it uses a mutex for
+> > > sleeping pwm_chips and a spinlock for the fast ones.
+> > >
+> > > That's similar to how struct irq_chip::irq_bus_lock works. For sleepi=
+ng
+> > > chips that callback uses a mutex, for fast chips a spinlock.
+> > >
+> >
+> > Fair enough. I'd love to see a benchmark of what's faster one day
+> > though: two structures with dereferencing and SRCU or one structure
+> > with mutex/spinlock.
 
-I propose to take the patch through Samsung SoC (me). See cover letter
-for explanation.
----
- arch/arm64/boot/dts/tesla/fsd.dtsi | 32 +++++++++++++++---------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+I think until the day has come that we have a SRCU+two and
+mutex/spinlock+one implementation for one framework it's moot to discuss
+which one is the faster, so I suggest we stop here. (Note, you can
+already do mutex/spinlock+two already now. That's what I do for the
+non-pure PWM drivers in the next iteration. Preview at
+https://lore.kernel.org/linux-pwm/20231124215208.616551-4-u.kleine-koenig@p=
+engutronix.de/T/#u)
+For me it's not so clear that SRCU is the winner. Also the winner might
+vary depending on questions like:
 
-diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi b/arch/arm64/boot/dts/tesla/fsd.dtsi
-index bb50a9f7db4a..9db162afc834 100644
---- a/arch/arm64/boot/dts/tesla/fsd.dtsi
-+++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
-@@ -581,7 +581,7 @@ pdma1: dma-controller@14290000 {
- 		};
- 
- 		serial_0: serial@14180000 {
--			compatible = "samsung,exynos4210-uart";
-+			compatible = "tesla,fsd-uart", "samsung,exynos4210-uart";
- 			reg = <0x0 0x14180000 0x0 0x100>;
- 			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
- 			dmas = <&pdma1 1>, <&pdma1 0>;
-@@ -593,7 +593,7 @@ serial_0: serial@14180000 {
- 		};
- 
- 		serial_1: serial@14190000 {
--			compatible = "samsung,exynos4210-uart";
-+			compatible = "tesla,fsd-uart", "samsung,exynos4210-uart";
- 			reg = <0x0 0x14190000 0x0 0x100>;
- 			interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>;
- 			dmas = <&pdma1 3>, <&pdma1 2>;
-@@ -605,12 +605,12 @@ serial_1: serial@14190000 {
- 		};
- 
- 		pmu_system_controller: system-controller@11400000 {
--			compatible = "samsung,exynos7-pmu", "syscon";
-+			compatible = "tesla,fsd-pmu", "samsung,exynos7-pmu", "syscon";
- 			reg = <0x0 0x11400000 0x0 0x5000>;
- 		};
- 
- 		watchdog_0: watchdog@100a0000 {
--			compatible = "samsung,exynos7-wdt";
-+			compatible = "tesla,fsd-wdt", "samsung,exynos7-wdt";
- 			reg = <0x0 0x100a0000 0x0 0x100>;
- 			interrupts = <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>;
- 			samsung,syscon-phandle = <&pmu_system_controller>;
-@@ -619,7 +619,7 @@ watchdog_0: watchdog@100a0000 {
- 		};
- 
- 		watchdog_1: watchdog@100b0000 {
--			compatible = "samsung,exynos7-wdt";
-+			compatible = "tesla,fsd-wdt", "samsung,exynos7-wdt";
- 			reg = <0x0 0x100b0000 0x0 0x100>;
- 			interrupts = <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>;
- 			samsung,syscon-phandle = <&pmu_system_controller>;
-@@ -628,7 +628,7 @@ watchdog_1: watchdog@100b0000 {
- 		};
- 
- 		watchdog_2: watchdog@100c0000 {
--			compatible = "samsung,exynos7-wdt";
-+			compatible = "tesla,fsd-wdt", "samsung,exynos7-wdt";
- 			reg = <0x0 0x100c0000 0x0 0x100>;
- 			interrupts = <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>;
- 			samsung,syscon-phandle = <&pmu_system_controller>;
-@@ -637,7 +637,7 @@ watchdog_2: watchdog@100c0000 {
- 		};
- 
- 		pwm_0: pwm@14100000 {
--			compatible = "samsung,exynos4210-pwm";
-+			compatible = "tesla,fsd-pwm", "samsung,exynos4210-pwm";
- 			reg = <0x0 0x14100000 0x0 0x100>;
- 			samsung,pwm-outputs = <0>, <1>, <2>, <3>;
- 			#pwm-cells = <3>;
-@@ -647,7 +647,7 @@ pwm_0: pwm@14100000 {
- 		};
- 
- 		pwm_1: pwm@14110000 {
--			compatible = "samsung,exynos4210-pwm";
-+			compatible = "tesla,fsd-pwm", "samsung,exynos4210-pwm";
- 			reg = <0x0 0x14110000 0x0 0x100>;
- 			samsung,pwm-outputs = <0>, <1>, <2>, <3>;
- 			#pwm-cells = <3>;
-@@ -657,7 +657,7 @@ pwm_1: pwm@14110000 {
- 		};
- 
- 		hsi2c_0: i2c@14200000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14200000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -670,7 +670,7 @@ hsi2c_0: i2c@14200000 {
- 		};
- 
- 		hsi2c_1: i2c@14210000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14210000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -683,7 +683,7 @@ hsi2c_1: i2c@14210000 {
- 		};
- 
- 		hsi2c_2: i2c@14220000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14220000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -696,7 +696,7 @@ hsi2c_2: i2c@14220000 {
- 		};
- 
- 		hsi2c_3: i2c@14230000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14230000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -709,7 +709,7 @@ hsi2c_3: i2c@14230000 {
- 		};
- 
- 		hsi2c_4: i2c@14240000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14240000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -722,7 +722,7 @@ hsi2c_4: i2c@14240000 {
- 		};
- 
- 		hsi2c_5: i2c@14250000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14250000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -735,7 +735,7 @@ hsi2c_5: i2c@14250000 {
- 		};
- 
- 		hsi2c_6: i2c@14260000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14260000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -748,7 +748,7 @@ hsi2c_6: i2c@14260000 {
- 		};
- 
- 		hsi2c_7: i2c@14270000 {
--			compatible = "samsung,exynos7-hsi2c";
-+			compatible = "tesla,fsd-hsi2c", "samsung,exynos7-hsi2c";
- 			reg = <0x0 0x14270000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
--- 
-2.34.1
+ - How many PWM (or GPIO) lines does the chip in question expose?
+ - Does the implementation of the callbacks need serialisation (because
+   the bits for different lines are in common registers)?
+ - Usage pattern (influencing the contention of the locks)
 
+(But I adhere to my suggestion to stop now :-)
+
+> Actually there is one thing that - while not technically wrong - makes
+> the split solution better. In case of your abstracted lock, you find
+> yourself in a very all-or-nothing locking situation, where all of the
+> structure is locked or none is. With SRCU protecting just the pointer
+> to implementation, we can easily factor that part out and leave
+> whatever fine-grained locking is required to the subsystem.
+
+The fine-grainedness of the locking scheme isn't fixed with my approach.
+
+In fact you could just not use the offer to handle framework struct and
+driver private data in a single memory chunk (and/or stop using the
+knowledge that it is (or can be) a single chunk) and then the two
+approaches are not fundamentally different and you can use the same
+locking mechanisms.
+
+The biggest difference between our approaches is that I handle
+allocation of the framework struct and its registration in two steps in
+the drivers while you do that in a single one.
+
+My approach has the advantage that it allows to handle private data in
+the same allocation and that the driver can fill in the framework struct
+without the need for copying or pointer dereferencing if the framework
+needs the driver provided information. Yours has the advantage that
+drivers see less of the framework and so are better separated from the
+core.
+
+How you weight the different advantages is very subjective.
+
+So if we rule out the subjective metrics we're left with: Both
+approaches solve the technical challenge at hand (i.e. ensure unloading
+a driver doesn't make the kernel crash if a character device is still
+open) and my approach already exists for pwm.
+
+> Additionally: the pointer to implementation has many readers but only
+> one writer. I believe this to be the same for your "operational"
+> field. I don't know the PWM code very well but I can only guess that
+> the situation is similar, where subsystem data structures are read
+> more often than they are modified and multiple readers could access
+> the structure at the same time lowering latencies.
+
+The lock serves to serialize access to .operational and ensures that the
+driver doesn't go away until all callbacks have completed. Is this
+serialized in your approach, too?
+(If you don't, I wonder if you should. And if you do, I think this
+better matches the use case spinlocks and mutexes are optimized for
+compared to SRCU.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7wf42ilwzebmm55z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVu7gAACgkQj4D7WH0S
+/k5zJQgAnWzLDdMpPqjJZZYADCxbMOOj40HSDGnaLM7Mc5SoKMI2hi1DmYNdievd
+2SzA9V3TfOG0r8aA2bXVQcmGt5SF4JM7QVs/f+2yyqVdlZbhOwgbZQlnRCnHuVUj
+MfGJM7a7sbLdE1gseP888NCBuCe8AerygfrGxrMgTEJMEEsvbTasQSsYAQ5VdESH
+LY9fSRfihFjMLtHpfEnrl+UBcXhgbqeWR/1YlzbgBC6UXk24xwz1W0NeOtyf2v8c
++tgAPnTzqhYwmbIq25fP45Q8U+bWBExJNwtd8AuqjEGImLIPfbq6iuW/7OATHRfp
+ij4EFLGEF9jgOJdow4dCxBX/vFgyeQ==
+=xWE2
+-----END PGP SIGNATURE-----
+
+--7wf42ilwzebmm55z--
 
