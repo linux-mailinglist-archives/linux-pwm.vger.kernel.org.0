@@ -1,45 +1,46 @@
-Return-Path: <linux-pwm+bounces-379-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-386-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3D53806EB1
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 12:49:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C71AF806EBB
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 12:49:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E55B1F2161B
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 11:49:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E3011F215E0
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 11:49:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1824E3455A;
-	Wed,  6 Dec 2023 11:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953BF34573;
+	Wed,  6 Dec 2023 11:48:58 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A1810D0
-	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 03:48:39 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF0910E7
+	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 03:48:42 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOJ-00076x-GN; Wed, 06 Dec 2023 12:48:35 +0100
+	id 1rAqOK-00077o-IK; Wed, 06 Dec 2023 12:48:36 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOH-00Dww8-9N; Wed, 06 Dec 2023 12:48:33 +0100
+	id 1rAqOH-00DwwB-EL; Wed, 06 Dec 2023 12:48:33 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOH-00FR1Z-0J; Wed, 06 Dec 2023 12:48:33 +0100
+	id 1rAqOH-00FR1d-5L; Wed, 06 Dec 2023 12:48:33 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thierry Reding <thierry.reding@gmail.com>
 Cc: kernel@pengutronix.de,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
 	linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v4 077/115] pwm: mtk-disp: Make use of devm_pwmchip_alloc() function
-Date: Wed,  6 Dec 2023 12:44:31 +0100
-Message-ID:  <e5852ac7208917932f9e6bce96a40ecd1a2b5991.1701860672.git.u.kleine-koenig@pengutronix.de>
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 078/115] pwm: mxs: Make use of devm_pwmchip_alloc() function
+Date: Wed,  6 Dec 2023 12:44:32 +0100
+Message-ID:  <953de9fc4e4d34d32ce27b7ec6b301cd08c1fff2.1701860672.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
@@ -50,7 +51,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2065; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=3mAoZwowhY5Q8LCYbYjvGDo+okdiQ2FoVEfE9Yl1Q1g=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlcF7xh32gzhap3jjyjBbN3xzzHqKLN2B8d4VSv x40XBxRKimJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZXBe8QAKCRCPgPtYfRL+ Tn5qB/4jM5NCMPtVpE7/WT8nG1cdwNbVeL5IHXkTjMY3RcH0zqTyQrnkxNcJgk8B1lDuXZ+41oE pNbPJUAsu8g3Z9U+YiQE32GukVNXxUttZxMVm4fKsIiCRboZD9TrPURE13Lq5xCkjW+5JusZLAc njClh0Mg+XDBZ51RwUO9D74m54USiy+8bTyUD+4jZ0ig7t8+h9eYDImSP3YBpa8HVKzVFmgYAcr Mf2resUYHXr4FgFDvnbdJxzfPtUImqMsJAgiqBVQqP80GndKWQsuIpOzFu5DhO0voSwk9fwI1bq 1gOpCfYzKCoftO5sk6ganeKLuRraJZilfrxaXZ9rHWD6TbNf
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2587; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=3nUrfV60h5KmytKDcbHfZr4EO0tXGSDK6pbsReL2Kxs=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtSCuE9av9bKBroH1LjrafSsLtf5OE3OWLiJw75ZXFL23 OvelTKdjMYsDIxcDLJiiiz2jWsyrarkIjvX/rsMM4iVCWQKAxenAEzkTSH7/6By74zPaxm01lY4 Hdq7wjlM82vIldBtr6b8nDvtPK93rPA2iY+u7dvj1Dzz9uzO3n5594e93bna7IwfpRX/Hn5UU3y 2eZHyJuacwg1VJ7YY+G6Qi2S6EDXzSP1lCyevawoL9tutiggxkd/fmRrQUMTXE2Y2qeyHSYE7k3 TNrk6tINlgIfNv8zlLpMP2sj48kCLgwdedq38lrvRM869ER8m8DHEmhqzWbdubOVXmlDfxMCdMX 6jy7EDqa+vJXDs2ZG6UTjkkkanA+XrmYw9Ru4/zHbnZp935ecSn6LIbu5HM/y1fJBgZlbcVy6/W jmtUfNd9Re5u5R7tH1Vvq+2/Nq7o2Hrn8B73+hs/H9wDAA==
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -58,68 +59,85 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-mtk-disp driver to further changes of the pwm core
+This prepares the pwm-mxs driver to further changes of the pwm core
 outlined in the commit introducing devm_pwmchip_alloc(). There is no
 intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-mtk-disp.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/pwm/pwm-mxs.c | 32 ++++++++++++++++++--------------
+ 1 file changed, 18 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
-index 186aa5c04435..bafd6b6195f6 100644
---- a/drivers/pwm/pwm-mtk-disp.c
-+++ b/drivers/pwm/pwm-mtk-disp.c
-@@ -42,7 +42,6 @@ struct mtk_pwm_data {
+diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+index 1b5e787d78f1..8cad214b1c29 100644
+--- a/drivers/pwm/pwm-mxs.c
++++ b/drivers/pwm/pwm-mxs.c
+@@ -37,12 +37,14 @@ static const u8 cdiv_shift[PERIOD_CDIV_MAX] = {
  };
  
- struct mtk_disp_pwm {
+ struct mxs_pwm_chip {
 -	struct pwm_chip chip;
- 	const struct mtk_pwm_data *data;
- 	struct clk *clk_main;
- 	struct clk *clk_mm;
-@@ -52,7 +51,7 @@ struct mtk_disp_pwm {
+ 	struct clk *clk;
+ 	void __iomem *base;
+ };
  
- static inline struct mtk_disp_pwm *to_mtk_disp_pwm(struct pwm_chip *chip)
- {
--	return container_of(chip, struct mtk_disp_pwm, chip);
+-#define to_mxs_pwm_chip(_chip) container_of(_chip, struct mxs_pwm_chip, chip)
++static inline struct mxs_pwm_chip *to_mxs_pwm_chip(struct pwm_chip *chip)
++{
 +	return pwmchip_get_drvdata(chip);
- }
++}
  
- static void mtk_disp_pwm_update_bits(struct mtk_disp_pwm *mdp, u32 offset,
-@@ -231,12 +230,14 @@ static const struct pwm_ops mtk_disp_pwm_ops = {
- 
- static int mtk_disp_pwm_probe(struct platform_device *pdev)
+ static int mxs_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			 const struct pwm_state *state)
+@@ -120,12 +122,21 @@ static const struct pwm_ops mxs_pwm_ops = {
+ static int mxs_pwm_probe(struct platform_device *pdev)
  {
+ 	struct device_node *np = pdev->dev.of_node;
 +	struct pwm_chip *chip;
- 	struct mtk_disp_pwm *mdp;
+ 	struct mxs_pwm_chip *mxs;
++	u32 npwm;
  	int ret;
  
--	mdp = devm_kzalloc(&pdev->dev, sizeof(*mdp), GFP_KERNEL);
--	if (!mdp)
+-	mxs = devm_kzalloc(&pdev->dev, sizeof(*mxs), GFP_KERNEL);
+-	if (!mxs)
 -		return -ENOMEM;
-+	chip = devm_pwmchip_alloc(&pdev->dev, 1, sizeof(*mdp));
++	ret = of_property_read_u32(np, "fsl,pwm-number", &npwm);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to get pwm number: %d\n", ret);
++		return ret;
++	}
++
++	chip = devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*mxs));
 +	if (IS_ERR(chip))
 +		return PTR_ERR(chip);
-+	mdp = to_mtk_disp_pwm(chip);
++	mxs = to_mxs_pwm_chip(chip);
  
- 	mdp->data = of_device_get_match_data(&pdev->dev);
+ 	mxs->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mxs->base))
+@@ -135,21 +146,14 @@ static int mxs_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(mxs->clk))
+ 		return PTR_ERR(mxs->clk);
  
-@@ -254,11 +255,9 @@ static int mtk_disp_pwm_probe(struct platform_device *pdev)
- 		return dev_err_probe(&pdev->dev, PTR_ERR(mdp->clk_mm),
- 				     "Failed to get mm clock\n");
+-	mxs->chip.dev = &pdev->dev;
+-	mxs->chip.ops = &mxs_pwm_ops;
+-
+-	ret = of_property_read_u32(np, "fsl,pwm-number", &mxs->chip.npwm);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "failed to get pwm number: %d\n", ret);
+-		return ret;
+-	}
++	chip->ops = &mxs_pwm_ops;
  
--	mdp->chip.dev = &pdev->dev;
--	mdp->chip.ops = &mtk_disp_pwm_ops;
--	mdp->chip.npwm = 1;
-+	chip->ops = &mtk_disp_pwm_ops;
+ 	/* FIXME: Only do this if the PWM isn't already running */
+ 	ret = stmp_reset_block(mxs->base);
+ 	if (ret)
+ 		return dev_err_probe(&pdev->dev, ret, "failed to reset PWM\n");
  
--	ret = devm_pwmchip_add(&pdev->dev, &mdp->chip);
+-	ret = devm_pwmchip_add(&pdev->dev, &mxs->chip);
 +	ret = devm_pwmchip_add(&pdev->dev, chip);
- 	if (ret < 0)
- 		return dev_err_probe(&pdev->dev, ret, "pwmchip_add() failed\n");
- 
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
+ 		return ret;
 -- 
 2.42.0
 
