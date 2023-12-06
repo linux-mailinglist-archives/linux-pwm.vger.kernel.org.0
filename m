@@ -1,42 +1,43 @@
-Return-Path: <linux-pwm+bounces-390-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-397-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17EA3806EBC
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 12:49:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B18D806EC2
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 12:49:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 493F51C20C2E
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 11:49:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D04E1C20C7A
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 11:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC5433457C;
-	Wed,  6 Dec 2023 11:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2585334572;
+	Wed,  6 Dec 2023 11:49:02 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A2C10DC
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5BA210E3
 	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 03:48:43 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqON-0007aN-RK; Wed, 06 Dec 2023 12:48:39 +0100
+	id 1rAqOO-0007bP-FO; Wed, 06 Dec 2023 12:48:40 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOM-00Dwxb-3z; Wed, 06 Dec 2023 12:48:38 +0100
+	id 1rAqOM-00Dwxf-93; Wed, 06 Dec 2023 12:48:38 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOL-00FR30-RY; Wed, 06 Dec 2023 12:48:37 +0100
+	id 1rAqOM-00FR35-0G; Wed, 06 Dec 2023 12:48:38 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thierry Reding <thierry.reding@gmail.com>
 Cc: kernel@pengutronix.de,
-	Hammer Hsieh <hammerh0314@gmail.com>,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH v4 098/115] pwm: sunplus: Make use of devm_pwmchip_alloc() function
-Date: Wed,  6 Dec 2023 12:44:52 +0100
-Message-ID:  <f977fb2846e381105595817d464aa232d02aa711.1701860672.git.u.kleine-koenig@pengutronix.de>
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	linux-pwm@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Subject: [PATCH v4 099/115] pwm: tegra: Make use of devm_pwmchip_alloc() function
+Date: Wed,  6 Dec 2023 12:44:53 +0100
+Message-ID:  <b77ac0d6b6c145384e363341df83dd8352dd923f.1701860672.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
@@ -47,7 +48,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1960; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=fBL2tDTSYjsqG4cyOrWtYhkBcshW4D8eJBDE4AhWXvg=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlcF8yzAZWlNHMteQ/pNSon2iNpRhyFVzjT3nmO vkJ2fGG+5eJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZXBfMgAKCRCPgPtYfRL+ TiRtB/0YILbZ2tLQO8yKA9irO0+w/cLLkzODLSwfk713anPqXEq4M5RBIT9dtXi/hA3W2dAlGVm UDWes01wc3TfT4QIMt+P0e7sOqZTBt65wox88ba++a42fdJjoRmbdMXCXyXnyLokAG3XyMCKDZF YkdnQcaQHMwKa+WfUvZQ9rLzjvheCBX00w1gmnxAjBff/uhPQTs4j8WHPKa7VDFj0nh3cqtB7B0 gQvv4rlW7+jgeFiEA33CLB/SyXWwdm6G0YUjN4eNDwNDbStSa9rxNzpeRusaoeW7cY2lzUtOxXg ++I59kxk/toJDogLuRvc/4WlwPks7Vg34zFWX6pfwOtkKkUn
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2576; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=01ELkliR5CsdkXhfCNySQ9YLYwIepbE2qckDT6QAyO0=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtSCeOOPkRkLX0YduMjHJHrAhX3mP0aPSTN9VH9rxabLB i1b97Cpk9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJLLjDwTDJee+rYJPDPeVv nZREVoet6/DgW3rFu8Uyr18upOlW0qvbDl/vzp+kWVWxzt3e6P92j5t8/3iD33pmZmqy9Kw33Pr KwbeSSZSlaFdl4kKpyd8irv0OaDmWuroisMvXdZ19o3R6jjTTj4DK6UeOqxvzlx5dLJnJn1W34K R3q+yBit8SC6U/vph2PFBo6beOXabXQ0S+OvD9fyxzzTvh9JnH1cUfFT5I6E34EqDx93qFatBO/ 7IilU1avddKfmVrPe7/vDHjqo5xRcUmSRVZxySG1sr/1qxlm94en5LaPt84zffv7asRzO+WM/uk LD0nki5z9z+/adaVmzEW7lX730hs9Yub58n6OW2STVETAA==
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -55,66 +56,86 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-This prepares the pwm-sunplus driver to further changes of the pwm core
+This prepares the pwm-tegra driver to further changes of the pwm core
 outlined in the commit introducing devm_pwmchip_alloc(). There is no
 intended semantical change and the driver should behave as before.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-sunplus.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/pwm/pwm-tegra.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sunplus.c b/drivers/pwm/pwm-sunplus.c
-index 773e2f80526e..b342b843247b 100644
---- a/drivers/pwm/pwm-sunplus.c
-+++ b/drivers/pwm/pwm-sunplus.c
-@@ -43,14 +43,13 @@
- #define SP7021_PWM_NUM			4
- 
- struct sunplus_pwm {
--	struct pwm_chip chip;
- 	void __iomem *base;
- 	struct clk *clk;
+diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+index 82ee2f0754f9..5eb7bdfb84d8 100644
+--- a/drivers/pwm/pwm-tegra.c
++++ b/drivers/pwm/pwm-tegra.c
+@@ -65,7 +65,6 @@ struct tegra_pwm_soc {
  };
  
- static inline struct sunplus_pwm *to_sunplus_pwm(struct pwm_chip *chip)
+ struct tegra_pwm_chip {
+-	struct pwm_chip chip;
+ 	struct device *dev;
+ 
+ 	struct clk *clk;
+@@ -81,7 +80,7 @@ struct tegra_pwm_chip {
+ 
+ static inline struct tegra_pwm_chip *to_tegra_pwm_chip(struct pwm_chip *chip)
  {
--	return container_of(chip, struct sunplus_pwm, chip);
+-	return container_of(chip, struct tegra_pwm_chip, chip);
 +	return pwmchip_get_drvdata(chip);
  }
  
- static int sunplus_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-@@ -175,12 +174,14 @@ static void sunplus_pwm_clk_release(void *data)
- static int sunplus_pwm_probe(struct platform_device *pdev)
+ static inline u32 pwm_readl(struct tegra_pwm_chip *pc, unsigned int offset)
+@@ -272,14 +271,19 @@ static const struct pwm_ops tegra_pwm_ops = {
+ 
+ static int tegra_pwm_probe(struct platform_device *pdev)
  {
- 	struct device *dev = &pdev->dev;
 +	struct pwm_chip *chip;
- 	struct sunplus_pwm *priv;
+ 	struct tegra_pwm_chip *pc;
++	const struct tegra_pwm_soc *soc;
  	int ret;
  
--	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
--	if (!priv)
+-	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+-	if (!pc)
 -		return -ENOMEM;
-+	chip = devm_pwmchip_alloc(dev, SP7021_PWM_NUM, sizeof(*priv));
++	soc = of_device_get_match_data(&pdev->dev);
+ 
+-	pc->soc = of_device_get_match_data(&pdev->dev);
++	chip = devm_pwmchip_alloc(&pdev->dev, soc->num_channels, sizeof(*pc));
 +	if (IS_ERR(chip))
 +		return PTR_ERR(chip);
-+	priv = to_sunplus_pwm(chip);
++	pc = to_tegra_pwm_chip(chip);
++
++	pc->soc = soc;
+ 	pc->dev = &pdev->dev;
  
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base))
-@@ -203,11 +204,9 @@ static int sunplus_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ 	pc->regs = devm_platform_ioremap_resource(pdev, 0);
+@@ -328,11 +332,9 @@ static int tegra_pwm_probe(struct platform_device *pdev)
  
--	priv->chip.dev = dev;
--	priv->chip.ops = &sunplus_pwm_ops;
--	priv->chip.npwm = SP7021_PWM_NUM;
-+	chip->ops = &sunplus_pwm_ops;
+ 	reset_control_deassert(pc->rst);
  
--	ret = devm_pwmchip_add(dev, &priv->chip);
-+	ret = devm_pwmchip_add(dev, chip);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Cannot register sunplus PWM\n");
+-	pc->chip.dev = &pdev->dev;
+-	pc->chip.ops = &tegra_pwm_ops;
+-	pc->chip.npwm = pc->soc->num_channels;
++	chip->ops = &tegra_pwm_ops;
+ 
+-	ret = pwmchip_add(&pc->chip);
++	ret = pwmchip_add(chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+ 		reset_control_assert(pc->rst);
+@@ -350,9 +352,10 @@ static int tegra_pwm_probe(struct platform_device *pdev)
+ 
+ static void tegra_pwm_remove(struct platform_device *pdev)
+ {
+-	struct tegra_pwm_chip *pc = platform_get_drvdata(pdev);
++	struct pwm_chip *chip = platform_get_drvdata(pdev);
++	struct tegra_pwm_chip *pc = to_tegra_pwm_chip(chip);
+ 
+-	pwmchip_remove(&pc->chip);
++	pwmchip_remove(chip);
+ 
+ 	reset_control_assert(pc->rst);
  
 -- 
 2.42.0
