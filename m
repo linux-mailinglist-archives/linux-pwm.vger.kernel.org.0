@@ -1,162 +1,409 @@
-Return-Path: <linux-pwm+bounces-427-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-428-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5025B80771C
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 18:56:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C11C28077AD
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 19:38:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 000CF281B5E
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 17:56:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A56FC282138
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 18:38:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28F46DCF8;
-	Wed,  6 Dec 2023 17:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fm/2MJO3"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AE3B41868;
+	Wed,  6 Dec 2023 18:38:35 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429B3D4D
-	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 09:56:41 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-40c09ba723eso701425e9.2
-        for <linux-pwm@vger.kernel.org>; Wed, 06 Dec 2023 09:56:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701885400; x=1702490200; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TaIhvHz9yCo8CyoMAQ11L7EAilHwdFmwm4E4mbWRlrs=;
-        b=Fm/2MJO3eDR+G2SWeI+vi/UKeFbHzwSBSpPYEU+RF3Q9Z7PeWhzGp2lkJtbyug0ZbI
-         TFeXrMH9J7167bA/0DxlT/Zt43VMqMFJeqdlcYP63eME8hJjP9WwIohviBahbd4XXwKh
-         suca3aYmar1YQfPBsrnDp6Syp7vuSJHcIsrt7/1EA72V98Utifopk4Eot6w5QpC1Izvb
-         z/H49wU4x7Su8mZengTZ6V96NjtraWFj3f/v0zRvJLuLuUNulYnUUPppqzlPVkRhP29F
-         g23SDA5QL0b5Y1zdLPfwRH4OmqfFCoLYtVGQ70jca9ZkHlZmEOJNnESgC08UWJK29q+J
-         e40A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701885400; x=1702490200;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TaIhvHz9yCo8CyoMAQ11L7EAilHwdFmwm4E4mbWRlrs=;
-        b=CAv396S5X+eVR7ZR0XkNY0tv9G7Vp2Vyy472mHzdP6NVkjXM8etHV2nSyvq41Ihnpy
-         Q/cYFD1a+d9pyK9aTGhh345kj8NuLKy0Ba3aU9YvMsgpeT54A+lgjcJQghHfjDhn63B+
-         SytJ7g6s5mYDykgogmmQJkQA8YDoKWRqyPSI4hSnpaQtvNrLXRjS72hI7GIbnXipVw1h
-         wMtyLSYDUWMeTqpe1GVJmBy8JwVNzvPiEQ+XXWYaaFfGjiT4f3qGARflmg6gDIti/ZOS
-         5rWndaEIzFnrfYXQApjEEKAtM+L1wRC+TxcqwGfxuUxj2dpIedBTlH9jOy1l8tG95dB3
-         zuuw==
-X-Gm-Message-State: AOJu0YyE7/sm1aZUOcWWFhmesHZM2utsYD56F2ajeLzkv+qZa/lrZxjD
-	mMMbRUb3Kxhoh4UKvC0VyTSUrg==
-X-Google-Smtp-Source: AGHT+IGv6NYFQb9FHQR5aUi137tDn3sb+TKXGhvXnNfclmTDByVaf//DxhTizcfJR0pLjN6K7lcA9g==
-X-Received: by 2002:a05:600c:2986:b0:40b:5e4a:406c with SMTP id r6-20020a05600c298600b0040b5e4a406cmr802901wmd.140.1701885399676;
-        Wed, 06 Dec 2023 09:56:39 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id z20-20020a05600c0a1400b0040b34409d43sm327750wmp.11.2023.12.06.09.56.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Dec 2023 09:56:39 -0800 (PST)
-Message-ID: <ed9d28e0-f879-41f3-8679-7ed5e0eec7ce@linaro.org>
-Date: Wed, 6 Dec 2023 18:56:35 +0100
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700BA139
+	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 10:38:30 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rAwmw-0003nR-9X; Wed, 06 Dec 2023 19:38:26 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rAwmu-00E1KG-PN; Wed, 06 Dec 2023 19:38:24 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rAwmu-00Ff7p-Eg; Wed, 06 Dec 2023 19:38:24 +0100
+Date: Wed, 6 Dec 2023 19:38:24 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-pwm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
+Message-ID: <20231206183824.g6dc5ib2dfb7um7n@pengutronix.de>
+References: <20231120113307.80710-1-biju.das.jz@bp.renesas.com>
+ <20231120113307.80710-4-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v10 0/3] Support pwm/tach driver for aspeed ast26xx
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Guenter Roeck <linux@roeck-us.net>
-Cc: Billy Tsai <billy_tsai@aspeedtech.com>, jdelvare@suse.com,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au,
- andrew@aj.id.au, corbet@lwn.net, thierry.reding@gmail.com,
- p.zabel@pengutronix.de, naresh.solanki@9elements.com,
- linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-pwm@vger.kernel.org, BMC-SW@aspeedtech.com, patrick@stwcx.xyz
-References: <20231107105025.1480561-1-billy_tsai@aspeedtech.com>
- <3ea9ef0c-27c0-4304-8bf7-26710224c3b1@roeck-us.net>
- <20231206174823.ok6rrufhez33rte5@pengutronix.de>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231206174823.ok6rrufhez33rte5@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nbbrl6lrzovx3fyc"
+Content-Disposition: inline
+In-Reply-To: <20231120113307.80710-4-biju.das.jz@bp.renesas.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-On 06/12/2023 18:48, Uwe Kleine-König wrote:
-> On Tue, Nov 07, 2023 at 11:02:43AM -0800, Guenter Roeck wrote:
->> On 11/7/23 02:50, Billy Tsai wrote:
->>> Unlike the old design that the register setting of the TACH should based
->>> on the configure of the PWM. In ast26xx, the dependency between pwm and
->>> tach controller is eliminated and becomes a separate hardware block. One
->>> is used to provide pwm output and another is used to monitor the frequency
->>> of the input. This driver implements them by exposing two kernel
->>> subsystems: PWM and HWMON. The PWM subsystem can be utilized alongside
->>> existing drivers for controlling elements such as fans (pwm-fan.c),
->>> beepers (pwm-beeper.c) and so on. Through the HWMON subsystem, the driver
->>> provides sysfs interfaces for fan.
->>>
->>> Changes since v9:
->>> Change the type of fan-driving-mode to string
->>> Fix some typos and formatting issues.
->>>
->>
->> What is the resend about ?
-> 
-> And to the original v10 there is a reply by Krzysztof;
-> see https://lore.kernel.org/linux-pwm/3d9e50db-19f0-43b3-8042-2f80a1e7b79e@linaro.org/ .
-> 
-> I'll mark the original and this resend as "changes-requested" in our
-> patchwork. Probably the most cooperative way to object is to send a v11
-> and point out the changes compared to v10.
 
-The resend might be fixing issues from v10, but who knows which and how
-many. In any case it should be v11, not a resend.
+--nbbrl6lrzovx3fyc
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hello Biju,
 
+On Mon, Nov 20, 2023 at 11:33:06AM +0000, Biju Das wrote:
+> diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+> new file mode 100644
+> index 000000000000..428e6e577db6
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> @@ -0,0 +1,572 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas RZ/G2L General PWM Timer (GPT) driver
+> + *
+> + * Copyright (C) 2023 Renesas Electronics Corporation
+> + *
+> + * Hardware manual for this IP can be found here
+> + * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-u=
+sers-manual-hardware-0?language=3Den
+> + *
+> + * Limitations:
+> + * - Counter must be stopped before modifying Mode and Prescaler.
+> + * - When PWM is disabled, the output is driven to inactive.
+> + * - While the hardware supports both polarities, the driver (for now)
+> + *   only handles normal polarity.
+> + * - When both channels are used, disabling the channel on one stops the
+> + *   other.
+
+Just for my understanding: The combination of the first and the last
+item means you cannot update Moed and Prescaler for one channel without
+affecting the other one, right?
+
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/limits.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/pwm.h>
+> +#include <linux/reset.h>
+> +#include <linux/time.h>
+> +
+> +#define RZG2L_GTCR		0x2c
+> +#define RZG2L_GTUDDTYC		0x30
+> +#define RZG2L_GTIOR		0x34
+> +#define RZG2L_GTBER		0x40
+> +#define RZG2L_GTCNT		0x48
+> +#define RZG2L_GTCCRA		0x4c
+> +#define RZG2L_GTCCRB		0x50
+> +#define RZG2L_GTPR		0x64
+> +
+> +#define RZG2L_GTCR_CST		BIT(0)
+> +#define RZG2L_GTCR_MD		GENMASK(18, 16)
+> +#define RZG2L_GTCR_TPCS		GENMASK(26, 24)
+> +
+> +#define RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE	FIELD_PREP(RZG2L_GTCR_MD, 0)
+> +
+> +#define RZG2L_GTUDDTYC_UP	BIT(0)
+> +#define RZG2L_GTUDDTYC_UDF	BIT(1)
+> +#define RZG2L_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
+> +
+> +#define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
+> +#define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
+> +#define RZG2L_GTIOR_OAE		BIT(8)
+> +#define RZG2L_GTIOR_OBE		BIT(24)
+> +
+> +#define RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE	0x07
+> +#define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
+> +
+> +#define RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH \
+> +	(RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE | RZG2L_GTIOR_OAE)
+> +#define RZG2L_GTIOR_GTIOA_OUT_LO_END_TOGGLE_CMP_MATCH \
+> +	(RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE | RZG2L_GTIOR_OAE)
+> +#define RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH \
+> +	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE) | R=
+ZG2L_GTIOR_OBE)
+> +#define RZG2L_GTIOR_GTIOB_OUT_LO_END_TOGGLE_CMP_MATCH \
+> +	(FIELD_PREP(RZG2L_GTIOR_GTIOB, RZG2L_INIT_OUT_LO_OUT_LO_END_TOGGLE) | R=
+ZG2L_GTIOR_OBE)
+
+These are not all used. Is it sensible to still keep them?
+
+> +#define RZG2L_GTCCR(i) (0x4c + 4 * (i))
+
+For i =3D 0 this is RZG2L_GTCCRA, for i =3D 1 it's RZG2L_GTCCRB. Als
+RZG2L_GTCCRA and RZG2L_GTCCRB are unused. Maybe move the definition of
+RZG2L_GTCCR to the list of registers above?
+
+> +#define RZG2L_MAX_HW_CHANNELS	8
+> +#define RZG2L_CHANNELS_PER_IO	2
+> +#define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_P=
+ER_IO)
+> +#define RZG2L_MAX_SCALE_FACTOR	1024
+> +
+> +#define RZG2L_IS_IOB(a)	((a) & 0x1)
+> +#define RZG2L_GET_CH(a)	((a) / 2)
+> +
+> +#define RZG2L_GET_CH_OFFS(i) (0x100 * (i))
+> +
+> +struct rzg2l_gpt_chip {
+> +	struct pwm_chip chip;
+> +	void __iomem *mmio;
+> +	struct reset_control *rstc;
+> +	struct clk *clk;
+> +	struct mutex lock; /* lock to protect shared channel resources */
+> +	unsigned long rate;
+> +	u64 max_val;
+> +	u32 state_period[RZG2L_MAX_HW_CHANNELS];
+> +	u32 user_count[RZG2L_MAX_HW_CHANNELS];
+> +	u32 enable_count[RZG2L_MAX_HW_CHANNELS];
+> +	DECLARE_BITMAP(ch_en_bits, RZG2L_MAX_PWM_CHANNELS);
+> +};
+> +
+> [...]
+> +
+> +static bool rzg2l_gpt_is_ch_enabled(struct rzg2l_gpt_chip *rzg2l_gpt, u8=
+ hwpwm)
+> +{
+> +	u8 ch =3D RZG2L_GET_CH(hwpwm);
+> +	u32 offs =3D RZG2L_GET_CH_OFFS(ch);
+> +	bool is_counter_running, is_output_en;
+> +	u32 val;
+> +
+> +	val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTCR);
+> +	is_counter_running =3D val & RZG2L_GTCR_CST;
+> +
+> +	val =3D rzg2l_gpt_read(rzg2l_gpt, offs + RZG2L_GTIOR);
+> +	if (RZG2L_IS_IOB(hwpwm))
+> +		is_output_en =3D val & RZG2L_GTIOR_OBE;
+> +	else
+> +		is_output_en =3D val & RZG2L_GTIOR_OAE;
+
+IIUC the i in RZG2L_GTCCR(i) stands for either A (0) or B (1), right?
+Maybe define RZG2L_GTIOR_OxE(i) assuming this is about the same A and B
+here? Then this could be simplified to:
+
+	is_output_en =3D val & RZG2L_GTIOR_OxE(rzg2l_gpt_subchannel(hwpwm));
+
+(maybe modulo better names).
+
+> +	return (is_counter_running && is_output_en);
+
+You could return early after knowing that is_counter_running is false
+without determining is_output_en.
+
+> +}
+> +
+> +static int rzg2l_gpt_enable(struct rzg2l_gpt_chip *rzg2l_gpt,
+> +			    struct pwm_device *pwm)
+> +{
+> +	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+> +	u32 offs =3D RZG2L_GET_CH_OFFS(ch);
+> +
+> +	/* Enable pin output */
+> +	if (RZG2L_IS_IOB(pwm->hwpwm))
+> +		rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTIOR,
+> +				 RZG2L_GTIOR_GTIOB | RZG2L_GTIOR_OBE,
+> +				 RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH);
+> +	else
+> +		rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTIOR,
+> +				 RZG2L_GTIOR_GTIOA | RZG2L_GTIOR_OAE,
+> +				 RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH);
+
+Similar suggestion as above for A and B?!
+
+> +	mutex_lock(&rzg2l_gpt->lock);
+> +	if (!rzg2l_gpt->enable_count[ch])
+> +		rzg2l_gpt_modify(rzg2l_gpt, offs + RZG2L_GTCR, 0, RZG2L_GTCR_CST);
+> +
+> +	rzg2l_gpt->enable_count[ch]++;
+> +	mutex_unlock(&rzg2l_gpt->lock);
+> +
+> +	return 0;
+> +}
+> +
+> [...]
+> +
+> +static u64 calculate_period_or_duty(struct rzg2l_gpt_chip *rzg2l_gpt, u3=
+2 val, u8 prescale)
+> +{
+> +	u64 retval;
+> +	u64 tmp;
+> +
+> +	tmp =3D NSEC_PER_SEC * (u64)val;
+> +	/*
+> +	 * To avoid losing precision for smaller period/duty cycle values
+> +	 * ((2^32 * 10^9 << 2) < 2^64), do not process the rounded values.
+> +	 */
+> +	if (prescale < 2)
+> +		retval =3D DIV64_U64_ROUND_UP(tmp << (2 * prescale), rzg2l_gpt->rate);
+> +	else
+> +		retval =3D DIV64_U64_ROUND_UP(tmp, rzg2l_gpt->rate) << (2 * prescale);
+
+Maybe introduce a mul_u64_u64_div64_roundup (similar to
+mul_u64_u64_div64) to also be exact for prescale >=3D 2?
+
+With prescale <=3D 5 and rzg2l_gpt->rate >=3D 1024 this shouldn't work just
+fine.
+
+> +	return retval;
+> +}
+> +
+> [...]
+> +static u32 rzg2l_gpt_calculate_pv_or_dc(u64 period_or_duty_cycle, u8 pre=
+scale)
+> +{
+> +	return min_t(u64, DIV64_U64_ROUND_UP(period_or_duty_cycle, 1 << (2 * pr=
+escale)),
+> +		     (u64)U32_MAX);
+
+DIV64_U64_ROUND_UP(period_or_duty_cycle, 1 << (2 * prescale)) can be
+calculated a bit cheaper by using:
+
+	(period_or_duty_cycle + 1 << (2 * prescale) - 1) >> (2 * prescale)
+
+assuming the LHS doesn't overflow.
+
+When using min_t, you can drop the cast for U32_MAX.
+
+> +}
+> +
+> +/* Caller holds the lock while calling rzg2l_gpt_config() */
+> +static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> +	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+> +	u32 offs =3D RZG2L_GET_CH_OFFS(ch);
+> +	unsigned long pv, dc;
+> +	u64 period_cycles;
+> +	u64 duty_cycles;
+> +	u8 prescale;
+> +
+> +	/*
+> +	 * GPT counter is shared by multiple channels, so prescale and period
+> +	 * can NOT be modified when there are multiple channels in use with
+> +	 * different settings.
+> +	 */
+> +	if (state->period !=3D rzg2l_gpt->state_period[ch] && rzg2l_gpt->user_c=
+ount[ch] > 1)
+> +		return -EBUSY;
+
+if (state->period < rzg2l_gpt->state_period[ch] && rzg2l_gpt->user_count[ch=
+] > 1)
+
+would be more forgiving and still correct.
+
+> +	/* Limit period/duty cycle to max value supported by the HW */
+> +	if (state->period > rzg2l_gpt->max_val)
+> +		period_cycles =3D rzg2l_gpt->max_val;
+> +	else
+> +		period_cycles =3D state->period;
+> +
+> +	period_cycles =3D mul_u64_u32_div(period_cycles, rzg2l_gpt->rate, NSEC_=
+PER_SEC);
+> +	prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_cycles);
+> +
+> +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_cycles, prescale);
+> +
+> +	if (state->duty_cycle > rzg2l_gpt->max_val)
+> +		duty_cycles =3D rzg2l_gpt->max_val;
+> +	else
+> +		duty_cycles =3D state->duty_cycle;
+> +
+> +	duty_cycles =3D mul_u64_u32_div(duty_cycles, rzg2l_gpt->rate, NSEC_PER_=
+SEC);
+> +	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_cycles, prescale);
+> +
+> +	/*
+> +	 * GPT counter is shared by multiple channels, we cache the period value
+> +	 * from the first enabled channel and use the same value for both
+> +	 * channels.
+> +	 */
+> +	rzg2l_gpt->state_period[ch] =3D state->period;
+
+With the rounding that happens above, I think it would be more
+approriate to track period_cycles here instead of period.
+
+> [...]
+> +	rzg2l_gpt->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(rzg2l_gpt->clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(rzg2l_gpt->clk),
+> +				     "cannot get clock\n");
+> +
+> +	ret =3D reset_control_deassert(rzg2l_gpt->rstc);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret,
+> +				     "cannot deassert reset control\n");
+> +
+> +	ret =3D clk_prepare_enable(rzg2l_gpt->clk);
+> +	if (ret)
+> +		goto err_reset;
+
+devm_clk_get_enabled()?
+
+> [...]
+> +	/*
+> +	 * Refuse clk rates > 1 GHz to prevent overflow later for computing
+> +	 * period and duty cycle.
+> +	 */
+> +	if (rzg2l_gpt->rate > NSEC_PER_SEC) {
+> +		ret =3D -EINVAL;
+> +		goto err_clk_rate_put;
+> +	}
+> +
+> +	rzg2l_gpt->max_val =3D mul_u64_u64_div_u64(U32_MAX, NSEC_PER_SEC,
+> +						 rzg2l_gpt->rate) * RZG2L_MAX_SCALE_FACTOR;
+
+Is it clear that this won't overflow?
+
+> +	/*
+> +	 *  We need to keep the clock on, in case the bootloader has enabled the
+> +	 *  PWM and is running during probe().
+> +	 */
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--nbbrl6lrzovx3fyc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVwv58ACgkQj4D7WH0S
+/k489gf/Si/pInTnpkfaQ3cGFW8hcNMpfx2/Iy6LBxXUFf+m5yf6nhWmO9FDHbMT
+3C0ZTdHOz9gIWKj3NA85leHly5AXrN4bdaXXvWmSnQX30JBbjcDcTKFZcsMIVUsT
+OaMSognmCDzo5hVPpuCORIIDs8zRbv8/iMcF21/Wgrdq9IbykOYRUvB2tc6YL+eC
+h2W9EoJrnjSH7G8ZIgJV5SYBGNxzMoXyVr+KonSpiwNuApYQd65inrJ3ymWqoJFh
+cQ1NdGIrWChdGheN+CzHNB8G1OuSPJBbqjBonAJLZl9vEfWDzf1iv4SL/X6iDpa8
+P6QqwO+2ruH24FBjIvomlFKAGfoq2A==
+=5ib9
+-----END PGP SIGNATURE-----
+
+--nbbrl6lrzovx3fyc--
 
