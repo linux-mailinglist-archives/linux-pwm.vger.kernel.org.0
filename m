@@ -1,42 +1,46 @@
-Return-Path: <linux-pwm+bounces-334-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-371-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8710806E6D
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 12:48:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CBD40806EA4
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 12:49:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2F39281B34
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 11:48:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E185281B34
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 11:49:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E599D358A3;
-	Wed,  6 Dec 2023 11:48:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6AC335F03;
+	Wed,  6 Dec 2023 11:48:53 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECD318F
-	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 03:48:29 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E6910C6
+	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 03:48:35 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOB-0006OR-Ld; Wed, 06 Dec 2023 12:48:27 +0100
+	id 1rAqOB-0006Og-RK; Wed, 06 Dec 2023 12:48:27 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOB-00Dwtu-8e; Wed, 06 Dec 2023 12:48:27 +0100
+	id 1rAqOB-00Dwty-Dw; Wed, 06 Dec 2023 12:48:27 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rAqOA-00FQz7-Vw; Wed, 06 Dec 2023 12:48:27 +0100
+	id 1rAqOB-00FQzA-4t; Wed, 06 Dec 2023 12:48:27 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thierry Reding <thierry.reding@gmail.com>
 Cc: kernel@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org,
+	Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev,
 	linux-pwm@vger.kernel.org
-Subject: [PATCH v4 040/115] pwm: vt8500: Make use of pwmchip_parent() macro
-Date: Wed,  6 Dec 2023 12:43:54 +0100
-Message-ID:  <c4dcb84818b34d2b26c349e62f6ff2f1c1726c59.1701860672.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v4 041/115] staging: greybus: pwm: Make use of pwmchip_parent() macro
+Date: Wed,  6 Dec 2023 12:43:55 +0100
+Message-ID:  <357f5a44c5cf227c25ce554de94d662548b4e5d0.1701860672.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
@@ -47,7 +51,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3929; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=EPdrYQvK0k5AHgUVmNuWQ073JK8avMfANj8laXOXTbs=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlcF6PmHlxXsxfS1TSG5T8R1MKgFP0CpbddwAqW jGEiR0+OmeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZXBejwAKCRCPgPtYfRL+ TlppB/9xf91gBtlmSmcp3bOnGp9QnIx9Q5msEWs/+aloAnW5xpeHhFhYfy89HhmxZyq/7cvdoZ2 +NlckbYnYymjonr7h4iveTBiXLlrT9/rsH2NHXx6PfYmb/WfDb+hUxubk4p5pn3PK6IShAsb+k5 E66L3X2txByNJX4oACK82PdSczGNcPh7yVG4rdrQ7cxCupKeuCkuxqMbZBfw07gOYdAgYVBbOYU We0pg2wXyQB7BKIgES5EgusAQ35/Qdb7MzYt21SjzUT0VaXt/zLkrqAX0OPszh/kH1K2RNUDsVZ wqLJ2RKNP1UJSLcWCrUG/xMmmwL3IQz1Uuz3wb6dpMJ4UIxd
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7319; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=KXIeMZk1xhSFtkaU7U//Obbug4McXSvZcpw+xkiRoSc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlcF6QqMpfaCccYbOZXHc3KYiRv6vDwSlB2zYLu 3aP9EROJIeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZXBekAAKCRCPgPtYfRL+ TjOOCACQldKFF538aX5X1L67zP+gAx4u6gb1ceblFmFx6rQerTKu3hRK4X5DKitl/sLYM0j0NGB eC/rLWU5y6RG3DpzKn7Zp5VXhS9Qrpvp1WbrUOQdiK05dg6pr8jpxLixob/ToYWn6kRJ2ZvsgZk jQHdvR3BXP9v4pRgH7r9bcIPtGcinUjVbE7AVvGceEQGVveK3HS5sZGovXykaZmHdho4ZMZZezW 1KksTYM6eGh8A0QoVqEx6hrZx1qKH1pWmAtsILfaCX7v9uVIZSZC7aFvciv0ujqP6W02sO4yJaS V38UXRsHp85nljqFb3b7k5//HlMzkZ9GoGudz4Hk0YCQg90K
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,99 +63,212 @@ struct pwm_chip::dev is about to change. To not have to touch this
 driver in the same commit as struct pwm_chip::dev, use the macro
 provided for exactly this purpose.
 
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/pwm-vt8500.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/staging/greybus/pwm.c | 55 +++++++++++++++++------------------
+ 1 file changed, 26 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
-index bdea60389487..ff5e76afbddf 100644
---- a/drivers/pwm/pwm-vt8500.c
-+++ b/drivers/pwm/pwm-vt8500.c
-@@ -53,8 +53,9 @@ struct vt8500_chip {
- #define to_vt8500_chip(chip)	container_of(chip, struct vt8500_chip, chip)
+diff --git a/drivers/staging/greybus/pwm.c b/drivers/staging/greybus/pwm.c
+index a3cb68cfa0f9..75e0518791d8 100644
+--- a/drivers/staging/greybus/pwm.c
++++ b/drivers/staging/greybus/pwm.c
+@@ -17,7 +17,6 @@
+ struct gb_pwm_chip {
+ 	struct gb_connection	*connection;
+ 	u8			pwm_max;	/* max pwm number */
+-
+ 	struct pwm_chip		chip;
+ };
  
- #define msecs_to_loops(t) (loops_per_jiffy / 1000 * HZ * t)
--static inline void vt8500_pwm_busy_wait(struct vt8500_chip *vt8500, int nr, u8 bitmask)
-+static inline void vt8500_pwm_busy_wait(struct pwm_chip *chip, int nr, u8 bitmask)
+@@ -39,9 +38,9 @@ static int gb_pwm_count_operation(struct gb_pwm_chip *pwmc)
+ 	return 0;
+ }
+ 
+-static int gb_pwm_activate_operation(struct gb_pwm_chip *pwmc,
+-				     u8 which)
++static int gb_pwm_activate_operation(struct pwm_chip *chip, u8 which)
  {
-+	struct vt8500_chip *vt8500 = to_vt8500_chip(chip);
- 	int loops = msecs_to_loops(10);
- 	u32 mask = bitmask << (nr << 8);
++	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 	struct gb_pwm_activate_request request;
+ 	struct gbphy_device *gbphy_dev;
+ 	int ret;
+@@ -51,7 +50,7 @@ static int gb_pwm_activate_operation(struct gb_pwm_chip *pwmc,
  
-@@ -62,7 +63,7 @@ static inline void vt8500_pwm_busy_wait(struct vt8500_chip *vt8500, int nr, u8 b
- 		cpu_relax();
+ 	request.which = which;
  
- 	if (unlikely(!loops))
--		dev_warn(vt8500->chip.dev, "Waiting for status bits 0x%x to clear timed out\n",
-+		dev_warn(pwmchip_parent(chip), "Waiting for status bits 0x%x to clear timed out\n",
- 			 mask);
+-	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
++	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
+ 	ret = gbphy_runtime_get_sync(gbphy_dev);
+ 	if (ret)
+ 		return ret;
+@@ -64,9 +63,10 @@ static int gb_pwm_activate_operation(struct gb_pwm_chip *pwmc,
+ 	return ret;
  }
  
-@@ -77,7 +78,7 @@ static int vt8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+-static int gb_pwm_deactivate_operation(struct gb_pwm_chip *pwmc,
++static int gb_pwm_deactivate_operation(struct pwm_chip *chip,
+ 				       u8 which)
+ {
++	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 	struct gb_pwm_deactivate_request request;
+ 	struct gbphy_device *gbphy_dev;
+ 	int ret;
+@@ -76,7 +76,7 @@ static int gb_pwm_deactivate_operation(struct gb_pwm_chip *pwmc,
  
- 	err = clk_enable(vt8500->clk);
- 	if (err < 0) {
--		dev_err(chip->dev, "failed to enable clock\n");
-+		dev_err(pwmchip_parent(chip), "failed to enable clock\n");
- 		return err;
+ 	request.which = which;
+ 
+-	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
++	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
+ 	ret = gbphy_runtime_get_sync(gbphy_dev);
+ 	if (ret)
+ 		return ret;
+@@ -89,9 +89,10 @@ static int gb_pwm_deactivate_operation(struct gb_pwm_chip *pwmc,
+ 	return ret;
+ }
+ 
+-static int gb_pwm_config_operation(struct gb_pwm_chip *pwmc,
++static int gb_pwm_config_operation(struct pwm_chip *chip,
+ 				   u8 which, u32 duty, u32 period)
+ {
++	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 	struct gb_pwm_config_request request;
+ 	struct gbphy_device *gbphy_dev;
+ 	int ret;
+@@ -103,7 +104,7 @@ static int gb_pwm_config_operation(struct gb_pwm_chip *pwmc,
+ 	request.duty = cpu_to_le32(duty);
+ 	request.period = cpu_to_le32(period);
+ 
+-	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
++	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
+ 	ret = gbphy_runtime_get_sync(gbphy_dev);
+ 	if (ret)
+ 		return ret;
+@@ -116,9 +117,10 @@ static int gb_pwm_config_operation(struct gb_pwm_chip *pwmc,
+ 	return ret;
+ }
+ 
+-static int gb_pwm_set_polarity_operation(struct gb_pwm_chip *pwmc,
++static int gb_pwm_set_polarity_operation(struct pwm_chip *chip,
+ 					 u8 which, u8 polarity)
+ {
++	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 	struct gb_pwm_polarity_request request;
+ 	struct gbphy_device *gbphy_dev;
+ 	int ret;
+@@ -129,7 +131,7 @@ static int gb_pwm_set_polarity_operation(struct gb_pwm_chip *pwmc,
+ 	request.which = which;
+ 	request.polarity = polarity;
+ 
+-	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
++	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
+ 	ret = gbphy_runtime_get_sync(gbphy_dev);
+ 	if (ret)
+ 		return ret;
+@@ -142,9 +144,9 @@ static int gb_pwm_set_polarity_operation(struct gb_pwm_chip *pwmc,
+ 	return ret;
+ }
+ 
+-static int gb_pwm_enable_operation(struct gb_pwm_chip *pwmc,
+-				   u8 which)
++static int gb_pwm_enable_operation(struct pwm_chip *chip, u8 which)
+ {
++	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 	struct gb_pwm_enable_request request;
+ 	struct gbphy_device *gbphy_dev;
+ 	int ret;
+@@ -154,7 +156,7 @@ static int gb_pwm_enable_operation(struct gb_pwm_chip *pwmc,
+ 
+ 	request.which = which;
+ 
+-	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
++	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
+ 	ret = gbphy_runtime_get_sync(gbphy_dev);
+ 	if (ret)
+ 		return ret;
+@@ -167,9 +169,9 @@ static int gb_pwm_enable_operation(struct gb_pwm_chip *pwmc,
+ 	return ret;
+ }
+ 
+-static int gb_pwm_disable_operation(struct gb_pwm_chip *pwmc,
+-				    u8 which)
++static int gb_pwm_disable_operation(struct pwm_chip *chip, u8 which)
+ {
++	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 	struct gb_pwm_disable_request request;
+ 	struct gbphy_device *gbphy_dev;
+ 	int ret;
+@@ -182,7 +184,7 @@ static int gb_pwm_disable_operation(struct gb_pwm_chip *pwmc,
+ 	ret = gb_operation_sync(pwmc->connection, GB_PWM_TYPE_DISABLE,
+ 				&request, sizeof(request), NULL, 0);
+ 
+-	gbphy_dev = to_gbphy_dev(pwmc->chip.dev);
++	gbphy_dev = to_gbphy_dev(pwmchip_parent(chip));
+ 	gbphy_runtime_put_autosuspend(gbphy_dev);
+ 
+ 	return ret;
+@@ -190,19 +192,15 @@ static int gb_pwm_disable_operation(struct gb_pwm_chip *pwmc,
+ 
+ static int gb_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+-
+-	return gb_pwm_activate_operation(pwmc, pwm->hwpwm);
++	return gb_pwm_activate_operation(chip, pwm->hwpwm);
+ };
+ 
+ static void gb_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+-	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+-
+ 	if (pwm_is_enabled(pwm))
+-		dev_warn(chip->dev, "freeing PWM device without disabling\n");
++		dev_warn(pwmchip_parent(chip), "freeing PWM device without disabling\n");
+ 
+-	gb_pwm_deactivate_operation(pwmc, pwm->hwpwm);
++	gb_pwm_deactivate_operation(chip, pwm->hwpwm);
+ }
+ 
+ static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -212,22 +210,21 @@ static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	bool enabled = pwm->state.enabled;
+ 	u64 period = state->period;
+ 	u64 duty_cycle = state->duty_cycle;
+-	struct gb_pwm_chip *pwmc = pwm_chip_to_gb_pwm_chip(chip);
+ 
+ 	/* Set polarity */
+ 	if (state->polarity != pwm->state.polarity) {
+ 		if (enabled) {
+-			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
++			gb_pwm_disable_operation(chip, pwm->hwpwm);
+ 			enabled = false;
+ 		}
+-		err = gb_pwm_set_polarity_operation(pwmc, pwm->hwpwm, state->polarity);
++		err = gb_pwm_set_polarity_operation(chip, pwm->hwpwm, state->polarity);
+ 		if (err)
+ 			return err;
  	}
  
-@@ -103,18 +104,18 @@ static int vt8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	dc = div64_u64(c, period_ns);
- 
- 	writel(prescale, vt8500->base + REG_SCALAR(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_SCALAR_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_SCALAR_UPDATE);
- 
- 	writel(pv, vt8500->base + REG_PERIOD(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_PERIOD_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_PERIOD_UPDATE);
- 
- 	writel(dc, vt8500->base + REG_DUTY(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_DUTY_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_DUTY_UPDATE);
- 
- 	val = readl(vt8500->base + REG_CTRL(pwm->hwpwm));
- 	val |= CTRL_AUTOLOAD;
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_CTRL_UPDATE);
- 
- 	clk_disable(vt8500->clk);
- 	return 0;
-@@ -128,14 +129,14 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- 	err = clk_enable(vt8500->clk);
- 	if (err < 0) {
--		dev_err(chip->dev, "failed to enable clock\n");
-+		dev_err(pwmchip_parent(chip), "failed to enable clock\n");
- 		return err;
+ 	if (!state->enabled) {
+ 		if (enabled)
+-			gb_pwm_disable_operation(pwmc, pwm->hwpwm);
++			gb_pwm_disable_operation(chip, pwm->hwpwm);
+ 		return 0;
  	}
  
- 	val = readl(vt8500->base + REG_CTRL(pwm->hwpwm));
- 	val |= CTRL_ENABLE;
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_CTRL_UPDATE);
+@@ -243,13 +240,13 @@ static int gb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (duty_cycle > period)
+ 		duty_cycle = period;
  
- 	return 0;
- }
-@@ -148,7 +149,7 @@ static void vt8500_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	val = readl(vt8500->base + REG_CTRL(pwm->hwpwm));
- 	val &= ~CTRL_ENABLE;
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_CTRL_UPDATE);
+-	err = gb_pwm_config_operation(pwmc, pwm->hwpwm, duty_cycle, period);
++	err = gb_pwm_config_operation(chip, pwm->hwpwm, duty_cycle, period);
+ 	if (err)
+ 		return err;
  
- 	clk_disable(vt8500->clk);
- }
-@@ -168,7 +169,7 @@ static int vt8500_pwm_set_polarity(struct pwm_chip *chip,
- 		val &= ~CTRL_INVERT;
- 
- 	writel(val, vt8500->base + REG_CTRL(pwm->hwpwm));
--	vt8500_pwm_busy_wait(vt8500, pwm->hwpwm, STATUS_CTRL_UPDATE);
-+	vt8500_pwm_busy_wait(chip, pwm->hwpwm, STATUS_CTRL_UPDATE);
+ 	/* enable/disable */
+ 	if (!enabled)
+-		return gb_pwm_enable_operation(pwmc, pwm->hwpwm);
++		return gb_pwm_enable_operation(chip, pwm->hwpwm);
  
  	return 0;
  }
