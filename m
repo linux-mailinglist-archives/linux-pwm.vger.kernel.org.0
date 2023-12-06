@@ -1,143 +1,168 @@
-Return-Path: <linux-pwm+bounces-422-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-423-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55FD180769D
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 18:31:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B1B8076B4
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 18:36:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 100FD280F22
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 17:31:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 138011F21135
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 17:36:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE62697BE;
-	Wed,  6 Dec 2023 17:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2B56A037;
+	Wed,  6 Dec 2023 17:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="erFTzDZr"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C47122
-	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 09:30:54 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rAvjX-0000Ul-92; Wed, 06 Dec 2023 18:30:51 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rAvjW-00E0iy-B0; Wed, 06 Dec 2023 18:30:50 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rAvjW-00FdcZ-1R; Wed, 06 Dec 2023 18:30:50 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-pwm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@pengutronix.de
-Subject: [PATCH] pwm: stmpe: Silence duplicate error messages
-Date: Wed,  6 Dec 2023 18:30:43 +0100
-Message-ID: <20231206173042.1762233-2-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0235AD5A
+	for <linux-pwm@vger.kernel.org>; Wed,  6 Dec 2023 09:35:57 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-54c7744a93fso45008a12.2
+        for <linux-pwm@vger.kernel.org>; Wed, 06 Dec 2023 09:35:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701884156; x=1702488956; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5gdPFt8BdmSDXII3E32UP5ZmZMEA7jETxyKZk3XrFV8=;
+        b=erFTzDZrb5EDYjHe5m5pIvj61XP9WqJqeumqMSpvIL9KKdbN2seBoNzxQ7/1nWLPR8
+         5uwWknJSj3VGgF9QZbc4R7KyZCRRHuRepzLSAUha/efbAiHDDncKGUaZdlH287W6gEec
+         Bzhscb0yTz418SNcaxFApeJJ+vTPIP0Yjs60HUAiy6AJN7JO0ecsLBml3gIjhG/wYOcG
+         Nk+hc5jOWZdR2bzbwnpAGC2d2zBPyv2bh+TovKo+S5hJ7jGs7iTqutSn1jAgEDcuWCpP
+         5XAwqf660xcD7ed2I37HDXCeFweUZeqth7N5Wi5hA5VnUwyC7cPK4Eyev4N+U2k8romR
+         +0uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701884156; x=1702488956;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5gdPFt8BdmSDXII3E32UP5ZmZMEA7jETxyKZk3XrFV8=;
+        b=lDjWPBY5PfaHzMa6fTfuUkMTF7XAdlqYisx3CMm1T0Ezo+0gYDbBOifwRYgTzjuj6M
+         eKyataDXBKKheziW+Kmow6uIHmuTGGA2rGBP7s8YFXwi4qlTw6c8AnaaQj/ffEbzICIc
+         1H0i8bTKTgLuN+OEOAxHLxaFcHP1fgThTDQzJkjGnYGulFZl3H/7mzqKNH9DZho59Xde
+         juzMAE4WY/PLWFRHXiqIkDar0jIZmOxF+sSbce3M37ipPzP0f76JIkorPaV1UtqrWMAA
+         rbif+5Un1UW2YCYbryPj2forMbiz+m1HMwQuaz8Q1hwKqshfDlqLJAPUkE5vr/0XCKAv
+         IGWA==
+X-Gm-Message-State: AOJu0Yy3g1yPJDCc23fYT/CS00tnOgkE+MGhey7bnk6v8V+B1f0yTaMY
+	ADDUA4SkdHJ2gakySRJemT1hEQ==
+X-Google-Smtp-Source: AGHT+IErqATdwEIlZ3NSGTprM7HJykavuFniKFr5YhXv0PkeVLHBLZ+4qOrkqp3q7goWYCRNBFUdPw==
+X-Received: by 2002:a17:906:aac5:b0:a1c:6dfd:1480 with SMTP id kt5-20020a170906aac500b00a1c6dfd1480mr748849ejb.136.1701884156395;
+        Wed, 06 Dec 2023 09:35:56 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id le14-20020a170907170e00b009fc42f37970sm203581ejc.171.2023.12.06.09.35.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Dec 2023 09:35:55 -0800 (PST)
+Message-ID: <cfd9cbc6-5f66-4929-9afb-3a572e93e8ae@linaro.org>
+Date: Wed, 6 Dec 2023 18:35:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] dt-bindings: pwm: samsung: add specific compatible
+ for Tesla FSD
+Content-Language: en-US
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Wim Van Sebroeck
+ <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>,
+ linux-fsd@tesla.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
+ <20231205092229.19135-3-krzysztof.kozlowski@linaro.org>
+ <ZXCeWmEO3PJiK0m5@orome.fritz.box>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZXCeWmEO3PJiK0m5@orome.fritz.box>
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2911; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=vC1n9UqzjYgVwvtpQ0rpTKRf0oBlyHd84psPO2kGVTk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlcK/D0emr33wY8gr0c3fyro3jDAZFmdv96BWgl TNDQr8HafSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZXCvwwAKCRCPgPtYfRL+ Tq15B/9QFXtj60VmNUyFVM7whafg5aew9JZVK9JerSltr/zMHPfIKyTojZHE3Fu6QCbbsKKtYVR aebHIOj6j6rgI+sE6VgGnor8G5JaNd5+xkyvGWXgdWhJ9WuyTat4MKzz35/Nmx1S7BDbYeLVQwY VG7sF7FUJ1zS6Sn52qcHty51Vs6zpk5fSgIpJ7mORpb2PdXxrx1SEBLlzXQs+QJzZutMKJ64Jqi n41e+XE9dsNxNg+LJemSA1GSlKux9P2JqG0c4hoB6KA/tTMqKCWX0LpVc6iiS5qqwXlayQ6OUJI OzSndfXqCpB4gIYfcn7cdyQ+b+7bzbExaIDsMKtqEPci0T61
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 
-stmpe_reg_read() and stmpe_reg_write() already emit error messages when
-they fail. So the extra error messages in the pwm driver are only little
-useful. They are useful in some situation, as they give a bit of context
-to the failing register write. So don't remove them but degrade them to
-dev_dbg().
+On 06/12/2023 17:16, Thierry Reding wrote:
+> On Tue, Dec 05, 2023 at 10:22:25AM +0100, Krzysztof Kozlowski wrote:
+>> Tesla FSD is a derivative of Samsung Exynos SoC, thus just like the
+>> others it reuses several devices from older designs.  Historically we
+>> kept the old (block's) compatible only.  This works fine and there is no
+>> bug here, however guidelines expressed in
+>> Documentation/devicetree/bindings/writing-bindings.rst state that:
+>> 1. Compatibles should be specific.
+>> 2. We should add new compatibles in case of bugs or features.
+>>
+>> Add Tesla FSD compatible specific to be used with an existing fallback.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> ---
+>>
+>> I propose to take the patch through Samsung SoC (me). See cover letter
+>> for explanation.
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pwm-samsung.yaml | 1 +
+>>  1 file changed, 1 insertion(+)
+> 
+> You point to the guidelines that say we should have specific compatible> strings, but then the string that you add seems very generic. Now, I'm
+> obviously not an expert on Tesla hardware, but just FSD seems to be
+> quite generic according to the internet. It seems like the chip derived
+> from Samsung used to be known as AP3/HW3, but there's now also AP4/HW4,
+> so I wonder if those differ in some way and if these shouldn't include
+> some sort of version/generation number.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Hello,
+That's the compatible chosen that time for entire platform, as a
+consensus, for all SoC components. Thus the PWM compatible is as
+specific as it can get.
 
-some time ago I suggested to remove the error messages. Thierry
-suggested instead to turn them into dev_dbg instead.
-
-See
-https://lore.kernel.org/linux-pwm/20230728081803.aswbz4slvrqqi5hc@pengutronix.de
-for the thread where that happend.
-
-Best regards
-Uwe
-
- drivers/pwm/pwm-stmpe.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pwm/pwm-stmpe.c b/drivers/pwm/pwm-stmpe.c
-index d730631c6583..19c0c0f39675 100644
---- a/drivers/pwm/pwm-stmpe.c
-+++ b/drivers/pwm/pwm-stmpe.c
-@@ -44,7 +44,7 @@ static int stmpe_24xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- 	ret = stmpe_reg_read(stmpe_pwm->stmpe, STMPE24XX_PWMCS);
- 	if (ret < 0) {
--		dev_err(chip->dev, "error reading PWM#%u control\n",
-+		dev_dbg(chip->dev, "error reading PWM#%u control\n",
- 			pwm->hwpwm);
- 		return ret;
- 	}
-@@ -53,7 +53,7 @@ static int stmpe_24xx_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- 	ret = stmpe_reg_write(stmpe_pwm->stmpe, STMPE24XX_PWMCS, value);
- 	if (ret) {
--		dev_err(chip->dev, "error writing PWM#%u control\n",
-+		dev_dbg(chip->dev, "error writing PWM#%u control\n",
- 			pwm->hwpwm);
- 		return ret;
- 	}
-@@ -70,7 +70,7 @@ static int stmpe_24xx_pwm_disable(struct pwm_chip *chip,
- 
- 	ret = stmpe_reg_read(stmpe_pwm->stmpe, STMPE24XX_PWMCS);
- 	if (ret < 0) {
--		dev_err(chip->dev, "error reading PWM#%u control\n",
-+		dev_dbg(chip->dev, "error reading PWM#%u control\n",
- 			pwm->hwpwm);
- 		return ret;
- 	}
-@@ -79,7 +79,7 @@ static int stmpe_24xx_pwm_disable(struct pwm_chip *chip,
- 
- 	ret = stmpe_reg_write(stmpe_pwm->stmpe, STMPE24XX_PWMCS, value);
- 	if (ret)
--		dev_err(chip->dev, "error writing PWM#%u control\n",
-+		dev_dbg(chip->dev, "error writing PWM#%u control\n",
- 			pwm->hwpwm);
- 	return ret;
- }
-@@ -233,7 +233,7 @@ static int stmpe_24xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 		ret = stmpe_reg_write(stmpe_pwm->stmpe, offset, value);
- 		if (ret) {
--			dev_err(chip->dev, "error writing register %02x: %d\n",
-+			dev_dbg(chip->dev, "error writing register %02x: %d\n",
- 				offset, ret);
- 			return ret;
- 		}
-@@ -242,7 +242,7 @@ static int stmpe_24xx_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 		ret = stmpe_reg_write(stmpe_pwm->stmpe, offset, value);
- 		if (ret) {
--			dev_err(chip->dev, "error writing register %02x: %d\n",
-+			dev_dbg(chip->dev, "error writing register %02x: %d\n",
- 				offset, ret);
- 			return ret;
- 		}
--- 
-2.42.0
+Best regards,
+Krzysztof
 
 
