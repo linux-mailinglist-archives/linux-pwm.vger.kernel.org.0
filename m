@@ -1,56 +1,53 @@
-Return-Path: <linux-pwm+bounces-438-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-439-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 322B4808A74
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 15:26:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDA9C808E2C
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 18:05:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB3551F21229
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 14:26:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67DF81F2109F
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 17:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CCA641C9C;
-	Thu,  7 Dec 2023 14:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F28A481C2;
+	Thu,  7 Dec 2023 17:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6mSC/cj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObpWpnH8"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2240239AC5;
-	Thu,  7 Dec 2023 14:25:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D73C433C7;
-	Thu,  7 Dec 2023 14:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E062D481C0;
+	Thu,  7 Dec 2023 17:05:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3479C433C7;
+	Thu,  7 Dec 2023 17:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701959158;
-	bh=BB8B5e3lcX0yXeV5twd8WMzv2yRfLB0d40M15sMzN1U=;
+	s=k20201202; t=1701968715;
+	bh=h9KGISYyOVGefe6SYKaxV+4376SmODof03fEQ1b9yf8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m6mSC/cjKDFaqugND65JRTmW92mbljTgTTmg6CGaAWNF0WL82rxgt67mmfiMxerqK
-	 rJ4P489cZCnC7C3g2l5oP7kQ2XzO/AXyIRNsDzFY/Sj44qg6AfCgNI8qMpNpWvkdho
-	 rqqiksxl7IPdOkeJKAnFsIKaBo5BPRYalNd6/B6/N3Wd+oZM40WlVLf1S4+8eXvq4T
-	 pbJzP4yk44WEsLM8O6Kx2S123xf+VKdn9YNvZDyA89Rsa+d9MKgQmX9RazBaFt6HNp
-	 suPFRquwASN0RSww3bbJSYv1LpBkuG+objnLfTJWlYzwIGw7esFaBIx4YcQB4x9d7a
-	 7uEGlhVRRzmDg==
-Date: Thu, 7 Dec 2023 14:25:50 +0000
+	b=ObpWpnH8PPrbTJaoI12FrYVVQXYwD74oa0wbAhDG8gdHDp4J26njEEKUmWVo/Bz5d
+	 Mn5DjY/agVAEMjTk42o6q1nujhIRdhD9xLFfH0iEfcFJVLhRthd0dpwrXlUA+2sotv
+	 dcyWDr3FPSRcxp3lMHjGV5N9ojJrfbhIsTahP2TzkFHaSG4fH3xvXqdqgr6M1mW2sx
+	 lizCbEca7Oei3p6p4ERtxr4cJWoo9c7FxgQBzMFmiJxSibOPOlD9d0Q//lIvXoXDVY
+	 BUW8BuJBfH1B19mziVTqSTI+CSkudX7NxVTA64gxUoDuzBTTjeahcD9Y9VbBq4d5G5
+	 3e1Gjh9cYQcyw==
+Date: Thu, 7 Dec 2023 17:05:09 +0000
 From: Lee Jones <lee@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: oe-kbuild@lists.linux.dev,
-	Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
-	thierry.reding@gmail.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	agross@kernel.org, andersson@kernel.org, lkp@intel.com,
-	oe-kbuild-all@lists.linux.dev, luca.weiss@fairphone.com,
-	konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
-	quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v7 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG
- through single SDAM
-Message-ID: <20231207142550.GD8867@google.com>
-References: <20231130013615.14287-5-quic_amelende@quicinc.com>
- <17a8a637-3477-41fe-959f-7784cf6d6b2e@suswa.mountain>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de,
+	Pavel Machek <pavel@ucw.cz>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Anjelique Melendez <quic_amelende@quicinc.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Kees Cook <keescook@chromium.org>, Luca Weiss <luca@z3ntu.xyz>,
+	linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v4 108/115] leds: qcom-lpg: Make use of
+ devm_pwmchip_alloc() function
+Message-ID: <20231207170509.GC111411@google.com>
+References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
+ <60605623e9e41d6f4b25e9c0eaf09d99bbc825f2.1701860672.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,35 +57,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <17a8a637-3477-41fe-959f-7784cf6d6b2e@suswa.mountain>
+In-Reply-To: <60605623e9e41d6f4b25e9c0eaf09d99bbc825f2.1701860672.git.u.kleine-koenig@pengutronix.de>
 
-On Thu, 30 Nov 2023, Dan Carpenter wrote:
+On Wed, 06 Dec 2023, Uwe Kleine-König wrote:
 
-> Hi Anjelique,
+> This prepares the pwm sub-driver to further changes of the pwm core
+> outlined in the commit introducing devm_pwmchip_alloc(). There is no
+> intended semantical change and the driver should behave as before.
 > 
-> kernel test robot noticed the following build warnings:
-> 
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Anjelique-Melendez/dt-bindings-soc-qcom-Add-qcom-pbs-bindings/20231130-094701
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> patch link:    https://lore.kernel.org/r/20231130013615.14287-5-quic_amelende%40quicinc.com
-> patch subject: [PATCH v7 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
-> config: csky-randconfig-r071-20231130 (https://download.01.org/0day-ci/archive/20231130/202311302200.RcTP9m0Y-lkp@intel.com/config)
-> compiler: csky-linux-gcc (GCC) 13.2.0
-> reproduce: (https://download.01.org/0day-ci/archive/20231130/202311302200.RcTP9m0Y-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Reported-by: Dan Carpenter <error27@gmail.com>
-> | Closes: https://lore.kernel.org/r/202311302200.RcTP9m0Y-lkp@intel.com/
-> 
-> smatch warnings:
-> drivers/leds/rgb/leds-qcom-lpg.c:1055 lpg_pattern_set() error: uninitialized symbol 'lo_pause'.
-> drivers/leds/rgb/leds-qcom-lpg.c:1056 lpg_pattern_set() error: uninitialized symbol 'hi_pause'.
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/leds/rgb/leds-qcom-lpg.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
 
-FYI, I'll not review this set until these are fixed.
+Acked-by: Lee Jones <lee@kernel.org>
+
+> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+> index 156b73d1f4a2..0a7acf59a420 100644
+> --- a/drivers/leds/rgb/leds-qcom-lpg.c
+> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
+> @@ -77,7 +77,7 @@ struct lpg {
+>  
+>  	struct mutex lock;
+>  
+> -	struct pwm_chip pwm;
+> +	struct pwm_chip *pwm;
+>  
+>  	const struct lpg_data *data;
+>  
+> @@ -978,7 +978,7 @@ static int lpg_pattern_mc_clear(struct led_classdev *cdev)
+>  
+>  static inline struct lpg *lpg_pwm_from_chip(struct pwm_chip *chip)
+>  {
+> -	return container_of(chip, struct lpg, pwm);
+> +	return pwmchip_get_drvdata(chip);
+>  }
+>  
+>  static int lpg_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+> @@ -1093,13 +1093,17 @@ static const struct pwm_ops lpg_pwm_ops = {
+>  
+>  static int lpg_add_pwm(struct lpg *lpg)
+>  {
+> +	struct pwm_chip *chip;
+>  	int ret;
+>  
+> -	lpg->pwm.dev = lpg->dev;
+> -	lpg->pwm.npwm = lpg->num_channels;
+> -	lpg->pwm.ops = &lpg_pwm_ops;
+> +	lpg->pwm = chip = devm_pwmchip_alloc(lpg->dev, lpg->num_channels, 0);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+>  
+> -	ret = devm_pwmchip_add(lpg->dev, &lpg->pwm);
+> +	chip->ops = &lpg_pwm_ops;
+> +	pwmchip_set_drvdata(chip, lpg);
+> +
+> +	ret = devm_pwmchip_add(lpg->dev, chip);
+>  	if (ret)
+>  		dev_err_probe(lpg->dev, ret, "failed to add PWM chip\n");
+>  
+> -- 
+> 2.42.0
+> 
 
 -- 
 Lee Jones [李琼斯]
