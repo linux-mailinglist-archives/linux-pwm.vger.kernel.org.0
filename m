@@ -1,88 +1,67 @@
-Return-Path: <linux-pwm+bounces-434-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-435-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8715807B15
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 23:05:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 250FD807E30
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 03:06:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5696CB209B5
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Dec 2023 22:05:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB06C1C20BCC
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 02:06:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42CF556393;
-	Wed,  6 Dec 2023 22:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECD21841;
+	Thu,  7 Dec 2023 02:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIJZd/Us"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6BAD7D;
-	Wed,  6 Dec 2023 14:05:22 -0800 (PST)
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-58cf894544cso1285eaf.3;
-        Wed, 06 Dec 2023 14:05:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701900322; x=1702505122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vbd5B8BVVpRHLAAm9f1h8aNytsZytNMI1lzIKFManeQ=;
-        b=pMxC2nOv9Eu5z315m6/BLH3Tr7emveEAdtWuOH6hXD7TYe61Uy6N5Ipe1uCZSVRJkQ
-         it6h3Bgi9KuLmFBEa8hqjelaC4FdINkXGH4tuIV8xD6+F7YL+eQlYfDzho76uuwL6Jwm
-         +rMWEYdGnL9ElPP/6f9Fv5F3hn6SCLdzMXyZXYRFfIbBDpSJRxHct5MljgdvmbzfQW97
-         TyXGhbYJX2w4yZuQf5P25cC16/mvfVr9uQwVhb7eQuIGsgkmUUoZhBV80abHWmbGBul7
-         au3/TBR+2kYgIBlFNJrTMsT6tJfHLJnS7yQPIbGInhM2r2PMx2jkMgmPTZeNcHyeihOJ
-         8+gg==
-X-Gm-Message-State: AOJu0YyWo34P2QWrvp09VLfcjMP2++KdX1CWu1aClGwYSrYAPU+TJQrX
-	BlfpM0fSAwG6T/hYZ7rgBA==
-X-Google-Smtp-Source: AGHT+IGje1u2DNEW9pSR9hih68DS0uYGwmFBGf37482odpdjRd1Z0Zs32LrlmDgot+tSfKBspUxDvQ==
-X-Received: by 2002:a4a:251b:0:b0:58e:80e2:93b7 with SMTP id g27-20020a4a251b000000b0058e80e293b7mr1466627ooa.0.1701900322055;
-        Wed, 06 Dec 2023 14:05:22 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id d24-20020a4a9198000000b0057b6ac3922esm803ooh.18.2023.12.06.14.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 14:05:21 -0800 (PST)
-Received: (nullmailer pid 3423211 invoked by uid 1000);
-	Wed, 06 Dec 2023 22:05:20 -0000
-Date: Wed, 6 Dec 2023 16:05:20 -0600
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-serial@vger.kernel.org, Wim Van Sebroeck <wim@linux-watchdog.org>, Jiri Slaby <jirislaby@kernel.org>, linux-i2c@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>, linux-fsd@tesla.com, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Thierry Reding <thierry.reding@gmail.com>, linux-samsung-soc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: watchdog: samsung: add specific
- compatible for Tesla FSD
-Message-ID: <170190031995.3423149.13499134597119767259.robh@kernel.org>
-References: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
- <20231205092229.19135-6-krzysztof.kozlowski@linaro.org>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5B917F8;
+	Thu,  7 Dec 2023 02:06:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C2B7C433C7;
+	Thu,  7 Dec 2023 02:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701914788;
+	bh=QudyBCcyUGVMqpgzaWlXkbqLRvWGAeM0uhNwakY1NMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jIJZd/UswEP6oGmOQ2npG3k0QC2r7hBuALHtDDcOVDABfc5gIefZ2cfRJikD6AGaM
+	 +LqQnrXcFUzdTEZ2pteb7LmWITpz0c+RHlhLfXinbRmRD9s3SUdJeT/ofTvk0ldnuZ
+	 AEWJjI1/z37n+1m5EHh5ibQoL4MebmU26IgXiPzrQoc294maHbAnFVvjANAagkSQDO
+	 buyw1m/5n/fSEm1fe7vK/XWNyUEYKqBQeU2Q83mhnA3GY9VRERWLa6KhvonBM+PL1p
+	 SyaonGwCLPYZf40VRB9qe3tAFaInpzavsJ/vz7EqlcA9P1YDQzqKJzyPF30APEbt1F
+	 jshX15C98Nqwg==
+Date: Thu, 7 Dec 2023 10:06:25 +0800
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
+	chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v4 006/115] pwm: cros-ec: Change prototype of helpers to
+ prepare further changes
+Message-ID: <ZXEooV_6xZJpLbJg@google.com>
+References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
+ <c66007e1ef898940f115d2a71f57f153756b9b70.1701860672.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20231205092229.19135-6-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c66007e1ef898940f115d2a71f57f153756b9b70.1701860672.git.u.kleine-koenig@pengutronix.de>
 
+On Wed, Dec 06, 2023 at 12:43:20PM +0100, Uwe Kleine-König wrote:
+> pwm_chip allocation and registration is about to change. For that the
+> number of PWM devices must be known earlier in cros_ec_pwm_probe(). So
+> make cros_ec_pwm_get_duty() and cros_ec_num_pwms() independent of
+> struct cros_ec_pwm_device which is only available later.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-On Tue, 05 Dec 2023 10:22:28 +0100, Krzysztof Kozlowski wrote:
-> Tesla FSD is a derivative of Samsung Exynos SoC, thus just like the
-> others it reuses several devices from older designs.  Historically we
-> kept the old (block's) compatible only.  This works fine and there is no
-> bug here, however guidelines expressed in
-> Documentation/devicetree/bindings/writing-bindings.rst state that:
-> 1. Compatibles should be specific.
-> 2. We should add new compatibles in case of bugs or features.
-> 
-> Add Tesla FSD compatible specific to be used with an existing fallback.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> I propose to take the patch through Samsung SoC (me). See cover letter
-> for explanation.
-> ---
->  .../bindings/watchdog/samsung-wdt.yaml        | 21 ++++++++++++-------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-
-Acked-by: Rob Herring <robh@kernel.org>
-
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
