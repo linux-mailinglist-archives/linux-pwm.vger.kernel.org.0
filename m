@@ -1,122 +1,95 @@
-Return-Path: <linux-pwm+bounces-437-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-438-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8A2780893B
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 14:33:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 322B4808A74
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 15:26:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F18B1F212F9
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 13:33:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB3551F21229
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 14:26:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A22E40BEA;
-	Thu,  7 Dec 2023 13:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CCA641C9C;
+	Thu,  7 Dec 2023 14:26:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d29IBFFj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6mSC/cj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900B7123
-	for <linux-pwm@vger.kernel.org>; Thu,  7 Dec 2023 05:33:45 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-332d5c852a0so947805f8f.3
-        for <linux-pwm@vger.kernel.org>; Thu, 07 Dec 2023 05:33:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701956024; x=1702560824; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wOjuvQ1knDsOf99mi3hFggOSmu3Whc7MN8Fp35NQ1P8=;
-        b=d29IBFFja8GOlr7TD5iaQ1dAGpzoPVT7meFpiFFPx5MK6N0VwJIBYd7EB+PxJDc4pF
-         KqAW9oPgnS5BRlOTVP6BpR9rDYzETzBB3J3qJdKM82fGOqjTg6fX7zYraeUaT7GxCQUa
-         QK1y2zxxynWuBEXYANutgdLUoYXl/KudC4/RzdKEa0ogZcmlZgdVIoZxv4gfzunrl/8h
-         6vKlMYQbYEhjdtxzAOT2c/KPpQSCytYetG7RIMk51cs+t55oMXUl3zMh+sBgkh2RwbpU
-         tFxP3IuZ0GcxY8NvvPHpNzR1H60k1+enzOjvj7bpyz0E7P+SpI9fnZMxcE/1LMN/FFWD
-         0xZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701956024; x=1702560824;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wOjuvQ1knDsOf99mi3hFggOSmu3Whc7MN8Fp35NQ1P8=;
-        b=fWrXln9azSYg3pyKaLXCfILsxjRvqfV2E2sCivc4QnQTmNORCwunkq+dExfHPgo6qE
-         JjGytyxoPwLHYpAo9AuAWUAlNmp5HQj5kPHR9nSP+hRBJLe2+cvJEOZcDvoS3CDdNl0z
-         EAkF9qcndEtEyN2PKr51MA071PRY9YUlJg7U+mo58OpbfF+0P+C73k3jaqm3ls2UZM2+
-         znfB6WeiSqA8+cuLffLaCuS0dMp46tMIQO85BThIFlCMk6thfMHEbNnqauoUCT6cRLoq
-         rb6+d5IE+TKsFqoHwQcVmkjHM9cUJ7iecC5xFckjGpRVbxRyd5zZCIq8nkuDyPO3ffwR
-         hn8g==
-X-Gm-Message-State: AOJu0YzyjQIjoyaWNftRb5RYSZXi6c41nEFWaqg1Ry0qO8xOAQsQKY66
-	zoFUER6VpOr8JWxSLVZetyPz9g==
-X-Google-Smtp-Source: AGHT+IEl9KbxTbmb8n+WvISyxYm/HTeQm70dDUbz9cfV9RUKa1Wk27SjB9FMgD9xanu+1rN8Jo3LOw==
-X-Received: by 2002:adf:ec0c:0:b0:333:2fd2:5d30 with SMTP id x12-20020adfec0c000000b003332fd25d30mr1678939wrn.98.1701956024085;
-        Thu, 07 Dec 2023 05:33:44 -0800 (PST)
-Received: from [127.0.1.1] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id p6-20020adfcc86000000b00333371c7382sm1471548wrj.72.2023.12.07.05.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Dec 2023 05:33:43 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, linux-fsd@tesla.com, 
- linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
-References: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 0/6] dt-bindings: samsung: continued - add specific
- compatibles for Tesla FSD Hi,
-Message-Id: <170195602173.92721.14927713507913101589.b4-ty@linaro.org>
-Date: Thu, 07 Dec 2023 14:33:41 +0100
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2240239AC5;
+	Thu,  7 Dec 2023 14:25:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59D73C433C7;
+	Thu,  7 Dec 2023 14:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701959158;
+	bh=BB8B5e3lcX0yXeV5twd8WMzv2yRfLB0d40M15sMzN1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m6mSC/cjKDFaqugND65JRTmW92mbljTgTTmg6CGaAWNF0WL82rxgt67mmfiMxerqK
+	 rJ4P489cZCnC7C3g2l5oP7kQ2XzO/AXyIRNsDzFY/Sj44qg6AfCgNI8qMpNpWvkdho
+	 rqqiksxl7IPdOkeJKAnFsIKaBo5BPRYalNd6/B6/N3Wd+oZM40WlVLf1S4+8eXvq4T
+	 pbJzP4yk44WEsLM8O6Kx2S123xf+VKdn9YNvZDyA89Rsa+d9MKgQmX9RazBaFt6HNp
+	 suPFRquwASN0RSww3bbJSYv1LpBkuG+objnLfTJWlYzwIGw7esFaBIx4YcQB4x9d7a
+	 7uEGlhVRRzmDg==
+Date: Thu, 7 Dec 2023 14:25:50 +0000
+From: Lee Jones <lee@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: oe-kbuild@lists.linux.dev,
+	Anjelique Melendez <quic_amelende@quicinc.com>, pavel@ucw.cz,
+	thierry.reding@gmail.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	agross@kernel.org, andersson@kernel.org, lkp@intel.com,
+	oe-kbuild-all@lists.linux.dev, luca.weiss@fairphone.com,
+	konrad.dybcio@linaro.org, u.kleine-koenig@pengutronix.de,
+	quic_subbaram@quicinc.com, quic_gurus@quicinc.com,
+	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v7 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG
+ through single SDAM
+Message-ID: <20231207142550.GD8867@google.com>
+References: <20231130013615.14287-5-quic_amelende@quicinc.com>
+ <17a8a637-3477-41fe-959f-7784cf6d6b2e@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <17a8a637-3477-41fe-959f-7784cf6d6b2e@suswa.mountain>
 
+On Thu, 30 Nov 2023, Dan Carpenter wrote:
 
-On Tue, 05 Dec 2023 10:22:23 +0100, Krzysztof Kozlowski wrote:
-> Merging
-> =======
-> I propose to take entire patchset through my tree (Samsung SoC), because:
-> 1. I already took similar work this cycle:
->    https://lore.kernel.org/all/169997520487.6747.17671551558724027958.b4-ty@linaro.org/
-> 2. Two new SoCs are coming (Google GS101 and ExynosAutov920) and they might
->    touch the same lines.  It is reasonable for me to take the bindings for the new
->    SoCs, to have clean `make dtbs_check` on the new DTS.
-> 3. Having it together helps me to have clean `make dtbs_check` within my tree
->    on the existing DTS.
-> 4. No drivers are affected by this change.
+> Hi Anjelique,
 > 
-> [...]
+> kernel test robot noticed the following build warnings:
+> 
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Anjelique-Melendez/dt-bindings-soc-qcom-Add-qcom-pbs-bindings/20231130-094701
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> patch link:    https://lore.kernel.org/r/20231130013615.14287-5-quic_amelende%40quicinc.com
+> patch subject: [PATCH v7 4/7] leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
+> config: csky-randconfig-r071-20231130 (https://download.01.org/0day-ci/archive/20231130/202311302200.RcTP9m0Y-lkp@intel.com/config)
+> compiler: csky-linux-gcc (GCC) 13.2.0
+> reproduce: (https://download.01.org/0day-ci/archive/20231130/202311302200.RcTP9m0Y-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <error27@gmail.com>
+> | Closes: https://lore.kernel.org/r/202311302200.RcTP9m0Y-lkp@intel.com/
+> 
+> smatch warnings:
+> drivers/leds/rgb/leds-qcom-lpg.c:1055 lpg_pattern_set() error: uninitialized symbol 'lo_pause'.
+> drivers/leds/rgb/leds-qcom-lpg.c:1056 lpg_pattern_set() error: uninitialized symbol 'hi_pause'.
 
-Applied, thanks!
+FYI, I'll not review this set until these are fixed.
 
-[1/6] dt-bindings: i2c: exynos5: add specific compatible for Tesla FSD
-      https://git.kernel.org/krzk/linux/c/7677fdbc036b93a882f660ca2484a6807e72f0be
-[2/6] dt-bindings: pwm: samsung: add specific compatible for Tesla FSD
-      https://git.kernel.org/krzk/linux/c/edb32ec3cea79b518e6af841ecb01c839818f562
-[3/6] dt-bindings: serial: samsung: add specific compatible for Tesla FSD
-      https://git.kernel.org/krzk/linux/c/921f4f1db7f5bf6798349db8a4382c032f144b98
-[4/6] dt-bindings: samsung: exynos-pmu: add specific compatible for Tesla FSD
-      https://git.kernel.org/krzk/linux/c/54772f1d61cd99ea1ed0febd4187bf24ef63bccd
-[5/6] dt-bindings: watchdog: samsung: add specific compatible for Tesla FSD
-      https://git.kernel.org/krzk/linux/c/bf1e24c5330af06b2f7f1a166a1011d8d48e8651
-[6/6] arm64: dts: fsd: add specific compatibles for Tesla FSD
-      https://git.kernel.org/krzk/linux/c/5f257922c5948c58669346d5cda371632108f266
-
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+Lee Jones [李琼斯]
 
