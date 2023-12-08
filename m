@@ -1,112 +1,116 @@
-Return-Path: <linux-pwm+bounces-456-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-457-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BF2480A285
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 12:47:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A67B80A50A
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 15:03:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C53961F21461
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 11:47:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35F73281BC5
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 14:03:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CD241BDC0;
-	Fri,  8 Dec 2023 11:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026AE1DA20;
+	Fri,  8 Dec 2023 14:03:04 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D0611D
-	for <linux-pwm@vger.kernel.org>; Fri,  8 Dec 2023 03:47:14 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A87A9
+	for <linux-pwm@vger.kernel.org>; Fri,  8 Dec 2023 06:02:59 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rBZJz-0004XI-NA; Fri, 08 Dec 2023 12:47:07 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rBbRR-0006od-Hd; Fri, 08 Dec 2023 15:02:57 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rBZJw-00EPCy-74; Fri, 08 Dec 2023 12:47:04 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rBZJw-0006NC-0S;
-	Fri, 08 Dec 2023 12:47:04 +0100
-Message-ID: <92ac0bc4c43fa70ff4bcba44ba4382c0c8ebfb75.camel@pengutronix.de>
-Subject: Re: [PATCH v9 2/4] pwm: opencores: Add PWM driver support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring
- <robh+dt@kernel.org>,  Thierry Reding <thierry.reding@gmail.com>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>, Hal Feng <hal.feng@starfivetech.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Date: Fri, 08 Dec 2023 12:47:04 +0100
-In-Reply-To: <20231208094209.1910934-3-william.qiu@starfivetech.com>
-References: <20231208094209.1910934-1-william.qiu@starfivetech.com>
-	 <20231208094209.1910934-3-william.qiu@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rBbRQ-00ERCt-KT; Fri, 08 Dec 2023 15:02:56 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rBbRQ-00GRRD-B9; Fri, 08 Dec 2023 15:02:56 +0100
+Date: Fri, 8 Dec 2023 15:02:53 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	kernel@pengutronix.de
+Subject: [GIT PULL] pwm fixes for 6.7-rc5
+Message-ID: <20231208140253.m6lpundvnvtfsloh@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yz3s5ppew7lqb23h"
+Content-Disposition: inline
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-Hi William,
 
-On Fr, 2023-12-08 at 17:42 +0800, William Qiu wrote:
-> Add driver for OpenCores PWM Controller. And add compatibility code
-> which based on StarFive SoC.
->=20
-> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
-> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
-> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
-> ---
-[...]
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 4b956d661755..d87e1bb350ba 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -444,6 +444,18 @@ config PWM_NTXEC
->  	  controller found in certain e-book readers designed by the original
->  	  design manufacturer Netronix.
-> =20
-> +config PWM_OCORES
-> +	tristate "OpenCores PWM support"
-> +	depends on HAS_IOMEM && OF
-> +	depends on COMMON_CLK && RESET_CONTROLLER
+--yz3s5ppew7lqb23h
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is no need for reset consumers to depend on RESET_CONTROLLER.
+Hello Linus,
 
-[...]
-> diff --git a/drivers/pwm/pwm-ocores.c b/drivers/pwm/pwm-ocores.c
-> new file mode 100644
-> index 000000000000..996ca3805901
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-ocores.c
-> @@ -0,0 +1,229 @@
-[...]
-> +static int ocores_pwm_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	ddata->rst =3D devm_reset_control_get_optional_exclusive(dev, NULL);
+the following change since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
-Missing error handling.
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 
-> +	reset_control_deassert(ddata->rst);
+is available in the Git repository at:
 
-Missing error handling.
+  https://git.pengutronix.de/git/ukl/linux tags/pwm/for-6.7-rc5-fixes
 
+for you to fetch as commit 4e7a8dbd2bc0aec4605a5069df7a779bd9e64db1:
 
-regards
-Philipp
+  pwm: bcm2835: Fix NPD in suspend/resume (2023-11-21 11:09:32 +0100)
+
+Please pull this as a fix for the next -rc release.
+
+Best regards
+Uwe
+
+----------------------------------------------------------------
+
+pwm fixes for v6.7-rc5
+
+This fixes a null pointer exception in the bcm2835 pwm driver. The
+problem was introduced by a combination of two commits merged for
+v6.7-rc1 where each change alone would have been fine.
+
+Thanks to Florian Fainelli for noticing and fixing the issue.
+
+----------------------------------------------------------------
+Florian Fainelli (1):
+      pwm: bcm2835: Fix NPD in suspend/resume
+
+ drivers/pwm/pwm-bcm2835.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yz3s5ppew7lqb23h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVzIgwACgkQj4D7WH0S
+/k6KiAgAj5CA9osu5uiuKlf2D3nF3icznjYKC3QeM7/BoJm+u5zwrAVKGfgIQ1i2
+ezUH0dWN8CNLDaA6BQWt5jVIvE11C9BmbuNC1x9Arh4EKGWVftSRNRWAFcPWD11c
+wyiaSnj7oG+Yhh5iLGJN95X0c7DWTireeDuU1aeq/HUxz6PZ7uQnoIv/Hi69xtjD
+jAzR6mwyQcx9/ImuLxP6eYzCJ3zGd5kLow7U50L31/KTlp7MD4ewNq09o0x2YdVi
+WzLZRTt369eHx9cYv8Mjeq3iLnfMyVGK1r/kkMsbgAosKoM/+A/oAlSpVIJfuYTq
+3gnAPIkVwSSLbxPlqjBa74/Tc6LGqQ==
+=v/16
+-----END PGP SIGNATURE-----
+
+--yz3s5ppew7lqb23h--
 
