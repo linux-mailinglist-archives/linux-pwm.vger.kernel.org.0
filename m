@@ -1,74 +1,71 @@
-Return-Path: <linux-pwm+bounces-465-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-466-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74C4180A8A9
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 17:23:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4F2C80A8F0
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 17:30:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D9E81C208D8
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 16:23:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 20C47B20A5D
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 16:30:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C624374D6;
-	Fri,  8 Dec 2023 16:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 107101DFE9;
+	Fri,  8 Dec 2023 16:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1Maeo2o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPMDMsjN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A3D1987;
-	Fri,  8 Dec 2023 08:22:56 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-54f5469c211so937359a12.0;
-        Fri, 08 Dec 2023 08:22:56 -0800 (PST)
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CADE199D;
+	Fri,  8 Dec 2023 08:29:59 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-a1e7971db2aso257360566b.3;
+        Fri, 08 Dec 2023 08:29:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702052575; x=1702657375; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1702052997; x=1702657797; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=svN1Ndc4QwmNHTO/oqyCiy4PAweEtdwQk3CfZUa3eYo=;
-        b=W1Maeo2o795gYWbrsrMSx81cARvMmDKOgt+wEwXRdvGki2A8GY3wwpZzsGElpUqWuc
-         h8JtN2scX+o+7KFwRX4fT1foDFKOjuG7K/NW+ftLdY4HU+L6MKEW9lnos8mVMrsi5lyW
-         8tlnFMx9bJC44IWyAkhFYksPc3E0NLG3ixzoZyGV5GhzOaGhIk0UPFTDHgFAX0vtbWyC
-         yDrb/UwC1m2ZJvQnFjX4RkBapnRm/2USvWWdEA4PwoJTh99T7K/ukKLp4USGAG9N6sN/
-         M5acjtALmEf/hLDg7GuqZB8EdANxitVN/v3BigEoL0IcofwIJl0F3YkBurwE3L0x5BwY
-         yYSQ==
+        bh=RiBsF6D5ZYEUJwOeHckOEGR0L5lUF+YuBZzP+zur5mg=;
+        b=lPMDMsjNcTSdeIGtAER/fJm4b0PF/8S+ZE0jlHOR+60Fds/WynQlx2FYpqD/LU0CCC
+         HkRVTTiX3n+o4cI0UrrqlEYp/q2pxxwoFidzL9/Omr2HMymtrwzBaVjEnQcCymsgDspz
+         1uDSRR/BpcSbGsHx6TqTFJU/7JtXBxL0/B3SVyjI0kT/5t+t57wxv2OZ3+zG1FIi+a2p
+         ST3kX2o6OK8FEfajNZa9j2HD0CbDLDO0PW+qF/RaIOQPE9AjrSYmxJfw8zeSZknKUnE/
+         zhU6vfFVViL9WueJgqX4inOSZswN0+NZApMa2O4+WGEYM3ovJzuYbfsF2Z6HGf61qEwP
+         6npA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702052575; x=1702657375;
+        d=1e100.net; s=20230601; t=1702052997; x=1702657797;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=svN1Ndc4QwmNHTO/oqyCiy4PAweEtdwQk3CfZUa3eYo=;
-        b=LRaKfM0kiomLP2kpLspgFpGXj9BtmVjsrnowF9FFT6cM+Do67sG0fLo1SBDBwUmyg5
-         Ecq10PFJQAzrlFDNloMp0h5icJM1eGYQsu7wJUNrjOBzP/HgN/amHhSjVb9Mi3zSN1Dy
-         OlJSaVv5BZrOOiaNSGdwaL1YC2UpMbe7lj8uSNloEPu7mR8qi3xA0624lbvUiaoJW69g
-         1FWr0uNf1eaobaHhAvROV7S7v8t9yrw8uYcSa3zhkqK3st8NBbzAGAKbuNtQezMZluci
-         e8fNJVhuJrqBuO0M1nKCCl2RIN6G9FWm4rhNKZFf+rE4D9djvU6A5fFLILXT+WY6Kd4H
-         G66w==
-X-Gm-Message-State: AOJu0Yz8awtT4JGVG5xXLzPAJHEK8XR1Ry6PPL+M8SRFQvIDghAO2jVM
-	PZVCYpHho19GIJDlRlfy9Fg=
-X-Google-Smtp-Source: AGHT+IEqwxQJzb5eeyuxkgyTXIammuAXFxjBenJ1bmCkFNPrxhJJolH7wvgdlhFIJgOFnUSf+Q7z2g==
-X-Received: by 2002:a17:906:7951:b0:a19:a19b:c708 with SMTP id l17-20020a170906795100b00a19a19bc708mr149642ejo.88.1702052574810;
-        Fri, 08 Dec 2023 08:22:54 -0800 (PST)
+        bh=RiBsF6D5ZYEUJwOeHckOEGR0L5lUF+YuBZzP+zur5mg=;
+        b=PfYZtWQIJ31JLBa8o4XBOFb9YNO4BST4R+uyr+W0YEineWuDnzUEshmuYuCuUwpy1B
+         Wh3NWOGDdtKvi1rK2As9GeCV0zW3R3Ys2nwEHd5pfX1YdprFqsOEJzyU1MNXDQ7IJp9T
+         kY1EJ3b5co2nrADDewCif5+dQcysBEyIxG4R7T/OoC0PaUgUct89Vcw2rFONrUs6yAE9
+         kQ+JJM/0WJi6s3m+L2ZoEqOrWK1VYYqiVqHmiNh6VzosU33IPXS54wj1azGOneJONLkK
+         MWF8sgjIdxAUihiNHVf9RqjJy+y1gGDKWwdSvNBrXe3N26P6xGtfQGLZ8Ppzg08z4y+z
+         SaUw==
+X-Gm-Message-State: AOJu0Yyv2l6ScosUps+rDWlhs7v0ANNrr46FARlSmwRnakOqKxeimpb8
+	xPPzAWoBsS4wBArC7bn6RT8=
+X-Google-Smtp-Source: AGHT+IE+njVM1fF9X7EOT+apf46J2+vGmRje/1dygbwe7z0iC14XcXfA48VWpabUKLdviP1zXhn8Og==
+X-Received: by 2002:a17:906:7484:b0:9d4:2080:61dc with SMTP id e4-20020a170906748400b009d4208061dcmr97639ejl.22.1702052997275;
+        Fri, 08 Dec 2023 08:29:57 -0800 (PST)
 Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id vi8-20020a170907d40800b00a1c7b20e9e6sm1179290ejc.32.2023.12.08.08.22.54
+        by smtp.gmail.com with ESMTPSA id tm6-20020a170907c38600b00a1ca6f5f189sm1191269ejc.179.2023.12.08.08.29.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 08:22:54 -0800 (PST)
-Date: Fri, 8 Dec 2023 17:22:52 +0100
+        Fri, 08 Dec 2023 08:29:56 -0800 (PST)
+Date: Fri, 8 Dec 2023 17:29:55 +0100
 From: Thierry Reding <thierry.reding@gmail.com>
 To: Sean Young <sean@mess.org>
 Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
 	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] pwm: bcm2835: allow pwm driver to be used in
- atomic context
-Message-ID: <ZXNC3JYy7CTfYsyC@orome.fritz.box>
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/4] media: pwm-ir-tx: trigger edges from hrtimer
+ interrupt context
+Message-ID: <ZXNEg3ax4MChSJ5A@orome.fritz.box>
 References: <cover.1701248996.git.sean@mess.org>
- <179dc1ce85702a8b64b43c0e0df656b0c5e3ce30.1701248996.git.sean@mess.org>
+ <88fdb3a200989458c6f95c26fa9bb84c1e864798.1701248996.git.sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -76,51 +73,172 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ix9F9B72gOKa/1mD"
+	protocol="application/pgp-signature"; boundary="Yblp1b8ERDinDWmD"
 Content-Disposition: inline
-In-Reply-To: <179dc1ce85702a8b64b43c0e0df656b0c5e3ce30.1701248996.git.sean@mess.org>
+In-Reply-To: <88fdb3a200989458c6f95c26fa9bb84c1e864798.1701248996.git.sean@mess.org>
 User-Agent: Mutt/2.2.12 (2023-09-09)
 
 
---ix9F9B72gOKa/1mD
+--Yblp1b8ERDinDWmD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 09:13:36AM +0000, Sean Young wrote:
-> clk_get_rate() may do a mutex lock. Fetch the clock rate once, and prevent
-> rate changes using clk_rate_exclusive_get().
+On Wed, Nov 29, 2023 at 09:13:37AM +0000, Sean Young wrote:
+> This makes the generated IR much more precise. Before this change, the
+> driver is unreliable and many users opted to use gpio-ir-tx instead.
 >=20
 > Signed-off-by: Sean Young <sean@mess.org>
 > ---
->  drivers/pwm/pwm-bcm2835.c | 31 +++++++++++++++++++++----------
->  1 file changed, 21 insertions(+), 10 deletions(-)
+>  drivers/media/rc/pwm-ir-tx.c | 79 ++++++++++++++++++++++++++++++++++--
+>  1 file changed, 76 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
+> index cf51e2760975..8575c4596d7b 100644
+> --- a/drivers/media/rc/pwm-ir-tx.c
+> +++ b/drivers/media/rc/pwm-ir-tx.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/hrtimer.h>
+> +#include <linux/completion.h>
+>  #include <media/rc-core.h>
+> =20
+>  #define DRIVER_NAME	"pwm-ir-tx"
+> @@ -17,8 +19,14 @@
+> =20
+>  struct pwm_ir {
+>  	struct pwm_device *pwm;
+> -	unsigned int carrier;
+> -	unsigned int duty_cycle;
+> +	struct hrtimer timer;
+> +	struct completion tx_done;
+> +	struct pwm_state *state;
+> +	u32 carrier;
+> +	u32 duty_cycle;
+> +	uint *txbuf;
 
-s/pwm/PWM/ in the subject. Although, I guess you could just drop the
-"PWM" altogether because the subject prefix implies that this is for
-PWM. Also, please capitalize after the subject prefix.
+Maybe mark this as const to signal that it's not going to get modified?
+
+> +	uint txbuf_len;
+> +	uint txbuf_index;
+
+uint is rather rare. Or so I thought. There seem to be quite a few
+occurrences throughout the kernel. I'd still prefer unsigned int over
+this abbreviated form, but ultimately up to you and Mauro to decide.
+
+>  };
+> =20
+>  static const struct of_device_id pwm_ir_of_match[] =3D {
+> @@ -82,6 +90,62 @@ static int pwm_ir_tx(struct rc_dev *dev, unsigned int =
+*txbuf,
+>  	return count;
+>  }
+> =20
+> +static int pwm_ir_tx_atomic(struct rc_dev *dev, unsigned int *txbuf,
+> +			    unsigned int count)
+> +{
+> +	struct pwm_ir *pwm_ir =3D dev->priv;
+> +	struct pwm_device *pwm =3D pwm_ir->pwm;
+> +	struct pwm_state state;
+> +
+> +	pwm_init_state(pwm, &state);
+> +
+> +	state.period =3D DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
+> +	pwm_set_relative_duty_cycle(&state, pwm_ir->duty_cycle, 100);
+> +
+> +	pwm_ir->txbuf =3D txbuf;
+> +	pwm_ir->txbuf_len =3D count;
+> +	pwm_ir->txbuf_index =3D 0;
+> +	pwm_ir->state =3D &state;
+> +
+> +	hrtimer_start(&pwm_ir->timer, 0, HRTIMER_MODE_REL);
+> +
+> +	wait_for_completion(&pwm_ir->tx_done);
+> +
+> +	return count;
+> +}
+> +
+> +static enum hrtimer_restart pwm_ir_timer(struct hrtimer *timer)
+> +{
+> +	struct pwm_ir *pwm_ir =3D container_of(timer, struct pwm_ir, timer);
+> +	ktime_t now;
+> +
+> +	/*
+> +	 * If we happen to hit an odd latency spike, loop through the
+> +	 * pulses until we catch up.
+> +	 */
+> +	do {
+> +		u64 ns;
+> +
+> +		pwm_ir->state->enabled =3D !(pwm_ir->txbuf_index % 2);
+> +		pwm_apply_atomic(pwm_ir->pwm, pwm_ir->state);
+> +
+> +		if (pwm_ir->txbuf_index >=3D pwm_ir->txbuf_len) {
+> +			complete(&pwm_ir->tx_done);
+> +
+> +			return HRTIMER_NORESTART;
+> +		}
+> +
+> +		ns =3D US_TO_NS(pwm_ir->txbuf[pwm_ir->txbuf_index]);
+> +		hrtimer_add_expires_ns(timer, ns);
+> +
+> +		pwm_ir->txbuf_index++;
+> +
+> +		now =3D timer->base->get_time();
+> +	} while (hrtimer_get_expires_tv64(timer) < now);
+> +
+> +	return HRTIMER_RESTART;
+> +}
+> +
+>  static int pwm_ir_probe(struct platform_device *pdev)
+>  {
+>  	struct pwm_ir *pwm_ir;
+> @@ -103,10 +167,19 @@ static int pwm_ir_probe(struct platform_device *pde=
+v)
+>  	if (!rcdev)
+>  		return -ENOMEM;
+> =20
+> +	if (pwm_is_atomic(pwm_ir->pwm)) {
+> +		init_completion(&pwm_ir->tx_done);
+> +		hrtimer_init(&pwm_ir->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> +		pwm_ir->timer.function =3D pwm_ir_timer;
+> +		rcdev->tx_ir =3D pwm_ir_tx_atomic;
+> +	} else {
+> +		dev_info(&pdev->dev, "tx will not be accurate as pwm device does not s=
+upport atomic mode");
+
+s/tx/TX and s/pwm/PWM/? Also, I'm a bit unhappy about "atomic mode" here
+because the term is overloaded in PWM. If you call pwm_appy_*() then by
+definition it's going to be "atomic" in the "atomic state" sense. So
+maybe switch to something like:
+
+	"TX will not be accurate as PWM device might sleep"
+
+?
 
 Thierry
 
---ix9F9B72gOKa/1mD
+--Yblp1b8ERDinDWmD
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVzQtwACgkQ3SOs138+
-s6Gu+A//W4O0yDv+AftK43w4DyKG2lCSU+7O2mfysoZU6ycgaOLqxvfT6HYr4W/X
-Uleddmj5ZkyERd4gtLMC9Z5tIJbpjNEoMusUd96915jXWs4SRu8U2w4s+MMuysbN
-h8xJmZleGPOtJl/dI60jDJ+zogYUhmxuTQxvDbEmFPevHRChzEefwKz0DzvUKUz4
-3r7suWMDBq2Gb2wbST/Iz5JfPhZtxiKd0nkxc04JKXMdfH9UhdFW33ZaYTwUqlvA
-gT1SGIOBZ133KObMEQzptxVw47v2wxRRCJdTUfIjv7gKa+8xJhQkthL2hhdEHkoK
-3fN7FEUtYJE9L6GO9bXfTUwjk1PMHABmzxKjuxhkTKzjZsobN4SmLOa+dvh5F51J
-U1mtGYYjcZlVrIEIsi252XvRpcP8trGRI/1pb9NXuvgJTpbCfsC2FPpf+d/OCs/J
-hLsinFaorOrQcf9rTJfkwmMh+obDKlVik81riYAZC0wL9KWgAdhG1f3ZqlwHU+rE
-gEUtKWUad+QO6dg5wFk+olCDvR4SwRsirkjpR2JJW5XmEC01BGqw/f7SXIdeU6B9
-VKV9pc96952S7Ygrj5Ht3gWus5UwC+S6KFbcIJxWfbYby1lxMddZkoTWbMj2Lsth
-mqdNbKHB/kNADvHfcemFkxb+kWfu0bkMuhTRFT5dgLsc+hIyins=
-=BCvn
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVzRIMACgkQ3SOs138+
+s6Hm9A//Xk/Ax5Tr6GG4g93ovKwf9aILijyg9sraVXVqaJD55fZ0ObhBlY7xSvMv
+t0+DWflHIYFCgFIlsxtScqG0PrpGkoQI4valJzuyR+dKn3TSD8tCrLeVAP5pOTLL
+X88YQXo7Qu/J4F58/mSE5YPB5ut9cBtC2ViDpoNB3rPnfpvl1CQ5QnTKdr8iRnYB
+GiJCRKQkG8v0c69a0nNftVF9ujE0fMhysW+ULc8d7U8iSU7CMcQrr8nPKj+K2UR8
+3qvyLxd/0Irzkvn5Fu8ziWW2aFEsldfWZ9bYyBYGbpDJ2h4a6tRs4s7YJGWIOBM1
++DkOzkY5ZJnBjIUMHBQ6zyD31PklKxDAVNcvD1rpruRXooHDpWWh/wavvK7JInxa
+/bTcvjKl88+dQFrXzGM6Yt5cdB/iuvZ/QvN1dc1oyZEOPK2k0SaEX5S1X8QsrK4+
+f4q2BrkDViyK2PP6q/wCZTTQAOtNVwN/3nWRDEKd/FeJ7KzU75f5qzOFJTMHBio3
+v26mVcr4cx2woBxfW7pBL6wM+Vt86uRWvdGhQf6vQQcZw3G2DQLOg/QZM13bR41f
+gNH6FMeDKV4gPSMMLybID/60mGUC6movGKjaiHUfUDUiUlzHi7o7nJByiIw+GEQh
+t+DDJ3KmHMXJJFjxbJB6rqW4L9sj2ie+QuO3cyiJ294Hdbpu87c=
+=UtpU
 -----END PGP SIGNATURE-----
 
---ix9F9B72gOKa/1mD--
+--Yblp1b8ERDinDWmD--
 
