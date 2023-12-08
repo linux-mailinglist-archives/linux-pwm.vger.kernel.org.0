@@ -1,70 +1,71 @@
-Return-Path: <linux-pwm+bounces-463-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-464-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B069D80A7F2
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 16:53:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95C2880A8A1
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 17:20:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 651B51F20FFA
-	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 15:53:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E487AB20AB5
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 16:20:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE4E432C9F;
-	Fri,  8 Dec 2023 15:53:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC5EF3717A;
+	Fri,  8 Dec 2023 16:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK6jT85y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hiezoSPf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A7F11996
-	for <linux-pwm@vger.kernel.org>; Fri,  8 Dec 2023 07:53:01 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-548ce39b101so3169913a12.2
-        for <linux-pwm@vger.kernel.org>; Fri, 08 Dec 2023 07:53:01 -0800 (PST)
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6722719A8;
+	Fri,  8 Dec 2023 08:19:56 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a1e116f2072so483540966b.0;
+        Fri, 08 Dec 2023 08:19:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702050779; x=1702655579; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1702052395; x=1702657195; darn=vger.kernel.org;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zK8omqPLoVqiOsm4awtdyTo/Ew6UFIDOki73tZQJSz8=;
-        b=IK6jT85yErrilV6pKnmweyofVnnIKIVgobgo+8FS+fe7rX/Yj2rnYTN0BWMH3a+lwj
-         HpfwmTSO+RO9LAirfKFR3VEZkadAMo3eEcGfnleMqHK4kBZfLSA/EaUfTVEGvuvoVeFa
-         uBECLZcfiyOpnCIVj9SNrLHq6T8UhBalgz7m4G4iWFTV0kQSUWxAkVhwq7ICLu/auOy1
-         MVmJsOUYb+GD53n/xCnHbmue9eFzw6wbsDRKYiNsBNSKFwxBSsLMdoOLi9eOv3MoVS94
-         0dSwQn2xfWUcUdffz7RjVyq5YFJVRqA2OryWKBUzavNjq/lco8ccxB4E119ICj3qDTOe
-         YiDQ==
+        bh=F5gJtImNxlCwSGryhwwqe0ZjUJP3xRvdUrcpjzHsJYg=;
+        b=hiezoSPf0m2V91ZD89/gEND807+4IIhzdu/fBLzGNcwxbB2BCrKzQADdOERzRYReds
+         vVR6cRmkjReAFjgMYaiRm1HaHRnxhZfmSPqCgh02/k7svTi/knoQU/P57ZGxBu3T82HM
+         RvGR3d38lMUr9wHaO7nrs6hNwMdrXOuBg4hl1V8+jRc/Og4eksx1BbGSnI+aYC8fClMw
+         gz6KhTy4SI0yroyBPVI6JNcVwEA2/mFGzd82Zj3LJAlrmAq12i9c3S7ZG5MIsJ2xRgMb
+         BhQPXAD8gQEfZFU2ICGM81kyGBxNpB5ICccHvAs7HHOjTTOEVoHzWdwIuBRk8ZjUw7MT
+         g+Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702050779; x=1702655579;
+        d=1e100.net; s=20230601; t=1702052395; x=1702657195;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zK8omqPLoVqiOsm4awtdyTo/Ew6UFIDOki73tZQJSz8=;
-        b=NFvnNhJ0D2IJJHjABSh8P5tgtjzlD6mojXha/rCHz1iOIw4BS7VB6EocJ1y2v90BWQ
-         U69fveAlETpL/tN15wOxOjJbCgnLQABU9TZxy5Q0lLC7m3dsnLMb1MSaushQ6I73Hcc9
-         c1Hcjfa/ZMSc8VC3t6/xXw4vJIXs6uApGvoBvUwx4g3y4oJTGohZPvTB0C6foXfWYOJh
-         wj6xOeZvEY2dSNMWpvaH6dXDbDXwmApqVuCTMzQog0kn09iM8xIYr7CX25xWEeIGdD/v
-         saO/O8D/qthMcO6lofKjA36jq70s4SG5zT7X3LESDvN/zLhTcf8pHwdIpd1ZluFwG2my
-         KDng==
-X-Gm-Message-State: AOJu0Yxrq9oO1fYBxpL4QuS26NPRUD5oK5txfb1SdUHcBRp2l396tQPD
-	5JHSczrxJ4g4y5uqUZoPUIY=
-X-Google-Smtp-Source: AGHT+IHpMrVO3d6Ofvo2ML3ArtLwJwriv8zExcKT1eKTy3Od/ySm4fjfkpJKt9IuN5T1oFol/XLNvw==
-X-Received: by 2002:a50:a419:0:b0:54c:4837:7d28 with SMTP id u25-20020a50a419000000b0054c48377d28mr156936edb.103.1702050779370;
-        Fri, 08 Dec 2023 07:52:59 -0800 (PST)
+        bh=F5gJtImNxlCwSGryhwwqe0ZjUJP3xRvdUrcpjzHsJYg=;
+        b=IUNat4kKJ3xA0DBJNLrrGt1RfmNcp0Kzoc+JS6qJi4WzGEznzRpoO2mhm0tG5zlJWa
+         wwGZALeEaH3DZZPTFk/Avh29J4QxF5W441ZoN/rOBnS+kG4jBeg5A1eD5i5vOvBPrMnK
+         KyhMRFMNvjTQS/wO4/W6AJ+OiG5UJaeDd32UBw/NWl9JQbQKO3lV+p9PPPV9UcesMyiy
+         9PUpsZ3MUhEH4lDImmSF10QwPph59Zn/Y/4hwTq5CUI/dzfpmJ71PGt7a0eVkVYpK3y5
+         zW92TnBqP3HjGSQ6KMOTZjIEUnplIwaz8q9lbxQTe+tGXHycCFsZct8Q+6G1omaHqiWo
+         YI5A==
+X-Gm-Message-State: AOJu0YxyGt2MxlMc0Co99uB9nWmfSStyJSBlSgZvzqv5Lq61PIc9Ab2J
+	a3znecoKETomldHQ29iZmz4bexR+yEo=
+X-Google-Smtp-Source: AGHT+IH4ByXWeMk6eIo6kBHITU/eE6N8E3I1JNUhV78wHWbUntI6aTS2EHwbiqN3sUZ44sTj6dvHWA==
+X-Received: by 2002:a17:906:2209:b0:a00:ab1a:c81 with SMTP id s9-20020a170906220900b00a00ab1a0c81mr385767ejs.22.1702052394376;
+        Fri, 08 Dec 2023 08:19:54 -0800 (PST)
 Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id l28-20020a50d6dc000000b0054ca3df2257sm934412edj.36.2023.12.08.07.52.58
+        by smtp.gmail.com with ESMTPSA id ub14-20020a170907c80e00b00a1da5d9a602sm1160461ejc.138.2023.12.08.08.19.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 07:52:58 -0800 (PST)
-Date: Fri, 8 Dec 2023 16:52:57 +0100
+        Fri, 08 Dec 2023 08:19:53 -0800 (PST)
+Date: Fri, 8 Dec 2023 17:19:52 +0100
 From: Thierry Reding <thierry.reding@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pwm: meson: Simplify using dev_err_probe()
-Message-ID: <ZXM72QYBbb32Q_aL@orome.fritz.box>
-References: <20231206214817.1783227-2-u.kleine-koenig@pengutronix.de>
+To: Sean Young <sean@mess.org>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/4] pwm: make it possible to apply pwm changes in
+ atomic context
+Message-ID: <ZXNCKFZcjFznko89@orome.fritz.box>
+References: <cover.1701248996.git.sean@mess.org>
+ <734c9985a6f54d34d9ef20203ba7f962b572cb45.1701248996.git.sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -72,141 +73,293 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="immTF9VRZDK7uFRg"
+	protocol="application/pgp-signature"; boundary="JGi/lTkRFNO61mX8"
 Content-Disposition: inline
-In-Reply-To: <20231206214817.1783227-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <734c9985a6f54d34d9ef20203ba7f962b572cb45.1701248996.git.sean@mess.org>
 User-Agent: Mutt/2.2.12 (2023-09-09)
 
 
---immTF9VRZDK7uFRg
-Content-Type: text/plain; charset=utf-8
+--JGi/lTkRFNO61mX8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 06, 2023 at 10:48:18PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Using dev_err_probe() emitting an error message mentioning a return
-> value and returning that value can be done in a single statement. Make
-> use of that to simplify the probe part of the driver. This has the
-> additional advantage to emit the symbolic name for the error instead of
-> the integer error value.
+On Wed, Nov 29, 2023 at 09:13:35AM +0000, Sean Young wrote:
+> Some pwm devices require sleeping, for example if the pwm device is
+> connected over i2c. However, many pwm devices could be used from atomic
+> context, e.g. memmory mapped pwm. This is useful for, for example, the
+> pwm-ir-tx driver which requires precise timing. Sleeping causes havoc
+> with the generated IR signal.
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Since not all pmw devices can support atomic context, we also add a
+> pwm_is_atomic() function to check if it is supported.
+
+s/i2c/I2C/ and s/pwm/PWM/ in the above. Also, s/memmory/memory/
+
+>=20
+> Signed-off-by: Sean Young <sean@mess.org>
 > ---
-> Hello,
+>  Documentation/driver-api/pwm.rst |  9 +++++
+>  drivers/pwm/core.c               | 63 ++++++++++++++++++++++++++------
+>  drivers/pwm/pwm-renesas-tpu.c    |  1 -
+>  include/linux/pwm.h              | 29 ++++++++++++++-
+>  4 files changed, 87 insertions(+), 15 deletions(-)
 >=20
-> while trying to understand Jerome's series[1] I noticed this patch
-> opportunity.
->=20
-> Best regards
-> Uwe
->=20
-> [1] https://lore.kernel.org/linux-pwm/20231129134004.3642121-1-jbrunet@ba=
-ylibre.com
->=20
->  drivers/pwm/pwm-meson.c | 35 ++++++++++++++---------------------
->  1 file changed, 14 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 5bea53243ed2..2971bbf3b5e7 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -468,10 +468,9 @@ static int meson_pwm_init_channels(struct meson_pwm =
-*meson)
->  		channel->mux.hw.init =3D &init;
+> diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/=
+pwm.rst
+> index f1d8197c8c43..1d4536fdf47c 100644
+> --- a/Documentation/driver-api/pwm.rst
+> +++ b/Documentation/driver-api/pwm.rst
+> @@ -43,6 +43,15 @@ After being requested, a PWM has to be configured usin=
+g::
 > =20
->  		err =3D devm_clk_hw_register(dev, &channel->mux.hw);
-> -		if (err) {
-> -			dev_err(dev, "failed to register %s: %d\n", name, err);
-> -			return err;
-> -		}
-> +		if (err)
-> +			return dev_err_probe(dev, err,
-> +					     "failed to register %s\n", name);
+>  	int pwm_apply_might_sleep(struct pwm_device *pwm, struct pwm_state *sta=
+te);
 > =20
->  		snprintf(name, sizeof(name), "%s#div%u", dev_name(dev), i);
+> +Some PWM devices can be used from atomic context. You can check if this =
+is
+> +supported with::
+> +
+> +        bool pwm_is_atomic(struct pwm_device *pwm);
+
+This is now going to look a bit odd. I think it'd be best to change this
+to pwm_might_sleep() for consistency with the pwm_apply_might_sleep()
+function. Fine to keep the actual member variable as atomic, though, so
+we don't have to change the default for all drivers.
+
+> +
+> +If true, the PWM can be configured from atomic context with::
+> +
+> +	int pwm_apply_atomic(struct pwm_device *pwm, struct pwm_state *state);
+> +
+>  This API controls both the PWM period/duty_cycle config and the
+>  enable/disable state.
 > =20
-> @@ -491,10 +490,9 @@ static int meson_pwm_init_channels(struct meson_pwm =
-*meson)
->  		channel->div.lock =3D &meson->lock;
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index fc92ba622e56..63174e207400 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -463,24 +463,15 @@ static void pwm_apply_debug(struct pwm_device *pwm,
+>  }
 > =20
->  		err =3D devm_clk_hw_register(dev, &channel->div.hw);
-> -		if (err) {
-> -			dev_err(dev, "failed to register %s: %d\n", name, err);
-> -			return err;
-> -		}
-> +		if (err)
-> +			return dev_err_probe(dev, err,
-> +					     "failed to register %s\n", name);
+>  /**
+> - * pwm_apply_might_sleep() - atomically apply a new state to a PWM device
+> + * pwm_apply_unchecked() - atomically apply a new state to a PWM device
+>   * @pwm: PWM device
+>   * @state: new state to apply
+>   */
+> -int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state=
+ *state)
+> +static int pwm_apply_unchecked(struct pwm_device *pwm, const struct pwm_=
+state *state)
+>  {
+>  	struct pwm_chip *chip;
+>  	int err;
 > =20
->  		snprintf(name, sizeof(name), "%s#gate%u", dev_name(dev), i);
+> -	/*
+> -	 * Some lowlevel driver's implementations of .apply() make use of
+> -	 * mutexes, also with some drivers only returning when the new
+> -	 * configuration is active calling pwm_apply_might_sleep() from atomic =
+context
+> -	 * is a bad idea. So make it explicit that calling this function might
+> -	 * sleep.
+> -	 */
+> -	might_sleep();
+> -
+>  	if (!pwm || !state || !state->period ||
+>  	    state->duty_cycle > state->period)
+>  		return -EINVAL;
+> @@ -501,16 +492,64 @@ int pwm_apply_might_sleep(struct pwm_device *pwm, c=
+onst struct pwm_state *state)
 > =20
-> @@ -513,17 +511,13 @@ static int meson_pwm_init_channels(struct meson_pwm=
- *meson)
->  		channel->gate.lock =3D &meson->lock;
+>  	pwm->state =3D *state;
 > =20
->  		err =3D devm_clk_hw_register(dev, &channel->gate.hw);
-> -		if (err) {
-> -			dev_err(dev, "failed to register %s: %d\n", name, err);
-> -			return err;
-> -		}
-> +		if (err)
-> +			return dev_err_probe(dev, err, "failed to register %s\n", name);
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pwm_apply_might_sleep() - atomically apply a new state to a PWM device
+> + * Cannot be used in atomic context.
+> + * @pwm: PWM device
+> + * @state: new state to apply
+> + */
+> +int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state=
+ *state)
+> +{
+> +	int err;
+> +
+> +	/*
+> +	 * Some lowlevel driver's implementations of .apply() make use of
+> +	 * mutexes, also with some drivers only returning when the new
+> +	 * configuration is active calling pwm_apply_might_sleep() from atomic =
+context
+> +	 * is a bad idea. So make it explicit that calling this function might
+> +	 * sleep.
+> +	 */
+> +	might_sleep();
+> +
+> +	if (IS_ENABLED(CONFIG_PWM_DEBUG) && pwm->chip->atomic) {
+> +		/*
+> +		 * Catch any sleeping drivers when atomic is set.
+
+I think this is slightly confusing. What we're really trying to catch
+here is drivers that are marked as "atomic" but which still end up
+sleeping during ->apply(), right? So maybe something like this would be
+a bit more explicit:
+
+		/*
+		 * Catch any drivers that have been marked as atomic but
+		 * that will sleep anyway.
+		 */
+
+> +/**
+> + * pwm_apply_atomic() - apply a new state to a PWM device from atomic co=
+ntext
+> + * Not all pwm devices support this function, check with pwm_is_atomic().
+
+s/pwm/PWM/ here...
+
+> + * @pwm: PWM device
+> + * @state: new state to apply
+> + */
+> +int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *sta=
+te)
+> +{
+> +	WARN_ONCE(!pwm->chip->atomic,
+> +		  "sleeping pwm driver used in atomic context");
+
+=2E.. and in the warning message as well.
+
+> +
+> +	return pwm_apply_unchecked(pwm, state);
+> +}
+> +EXPORT_SYMBOL_GPL(pwm_apply_atomic);
+> +
+>  /**
+>   * pwm_capture() - capture and report a PWM signal
+>   * @pwm: PWM device
+> diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+> index 4239f2c3e8b2..47ea92cd8c67 100644
+> --- a/drivers/pwm/pwm-renesas-tpu.c
+> +++ b/drivers/pwm/pwm-renesas-tpu.c
+> @@ -11,7 +11,6 @@
+>  #include <linux/init.h>
+>  #include <linux/ioport.h>
+>  #include <linux/module.h>
+> -#include <linux/mutex.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index 5c5c456948a4..f1fa1243e95a 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -286,6 +286,7 @@ struct pwm_ops {
+>   * @npwm: number of PWMs controlled by this chip
+>   * @of_xlate: request a PWM device given a device tree PWM specifier
+>   * @of_pwm_n_cells: number of cells expected in the device tree PWM spec=
+ifier
+> + * @atomic: can the driver call pwm_apply_atomic in atomic context
+
+Maybe: "can the driver's ->apply() be called in atomic context"?
+
+>   * @list: list node for internal use
+>   * @pwms: array of PWM devices allocated by the framework
+>   */
+> @@ -299,6 +300,7 @@ struct pwm_chip {
+>  	struct pwm_device * (*of_xlate)(struct pwm_chip *chip,
+>  					const struct of_phandle_args *args);
+>  	unsigned int of_pwm_n_cells;
+> +	bool atomic;
 > =20
->  		channel->clk =3D devm_clk_hw_get_clk(dev, &channel->gate.hw, NULL);
-> -		if (IS_ERR(channel->clk)) {
-> -			err =3D PTR_ERR(channel->clk);
-> -			dev_err(dev, "failed to register %s: %d\n", name, err);
-> -			return err;
-> -		}
-> +		if (IS_ERR(channel->clk))
-> +			return dev_err_probe(dev, PTR_ERR(channel->clk),
-> +					     "failed to register %s\n", name);
->  	}
+>  	/* only used internally by the PWM framework */
+>  	struct list_head list;
+> @@ -308,6 +310,7 @@ struct pwm_chip {
+>  #if IS_ENABLED(CONFIG_PWM)
+>  /* PWM user APIs */
+>  int pwm_apply_might_sleep(struct pwm_device *pwm, const struct pwm_state=
+ *state);
+> +int pwm_apply_atomic(struct pwm_device *pwm, const struct pwm_state *sta=
+te);
+>  int pwm_adjust_config(struct pwm_device *pwm);
 > =20
->  	return 0;
-> @@ -554,10 +548,9 @@ static int meson_pwm_probe(struct platform_device *p=
-dev)
->  		return err;
+>  /**
+> @@ -378,6 +381,17 @@ static inline void pwm_disable(struct pwm_device *pw=
+m)
+>  	pwm_apply_might_sleep(pwm, &state);
+>  }
 > =20
->  	err =3D devm_pwmchip_add(&pdev->dev, &meson->chip);
-> -	if (err < 0) {
-> -		dev_err(&pdev->dev, "failed to register PWM chip: %d\n", err);
-> -		return err;
-> -	}
-> +	if (err < 0)
-> +		return dev_err_probe(&pdev->dev, err,
-> +				     "failed to register PWM chip\n");
+> +/**
+> + * pwm_is_atomic() - is pwm_apply_atomic() supported?
+> + * @pwm: PWM device
+> + *
+> + * Returns: true pwm_apply_atomic() can be called from atomic context.
+> + */
+> +static inline bool pwm_is_atomic(struct pwm_device *pwm)
+
+As I mentioned above, I think it'd be more consistent to call this
+pwm_might_sleep().
+
+> +{
+> +	return pwm->chip->atomic;
+> +}
+> +
+>  /* PWM provider APIs */
+>  int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
+>  		unsigned long timeout);
+> @@ -406,16 +420,27 @@ struct pwm_device *devm_fwnode_pwm_get(struct devic=
+e *dev,
+>  				       struct fwnode_handle *fwnode,
+>  				       const char *con_id);
+>  #else
+> +static inline bool pwm_is_atomic(struct pwm_device *pwm)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline int pwm_apply_might_sleep(struct pwm_device *pwm,
+>  					const struct pwm_state *state)
+>  {
+>  	might_sleep();
+> -	return -ENOTSUPP;
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int pwm_apply_atomic(struct pwm_device *pwm,
+> +				   const struct pwm_state *state)
+> +{
+> +	return -EOPNOTSUPP;
+>  }
 > =20
->  	return 0;
+>  static inline int pwm_adjust_config(struct pwm_device *pwm)
+>  {
+> -	return -ENOTSUPP;
+> +	return -EOPNOTSUPP;
 >  }
 
-This is a lot of churn for very little gain. None of these functions are
-ever going to return -EPROBE_DEFER. And yes, I know that function's doc
-says that it is "deemed acceptable to use" elsewhere. However, the
-existing error messages are just fine, no need to churn just for the
-sake of it.
+What's wrong with ENOTSUPP?
 
 Thierry
 
---immTF9VRZDK7uFRg
+--JGi/lTkRFNO61mX8
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVzO9kACgkQ3SOs138+
-s6GRTw//SbehEz+5xIvNN1xg+VE3T4JUCI/u64M/sLYpNyYgX4u/WRwvrENS6Qn+
-U21ZlVm7DvysGD18hbuvriT76y4hkvMwXHaGONCiMzuH+b8+fZLYoCAPUsX1oIfO
-daWOooKW2BGoYXXk3vC/5apPh6y/Ea1lTtFli8lfmoMsIw3vI7tJoPF2iaLXActd
-y4q9fujSNm2hL2HWHv0CkM/Sx9JJ2GwfXB6lqtguVDYTXDpECcUu/a7TqSUPK0hO
-dIPYfXEQLQW3XWMMuL9LnHqsK+CnzBpMzvFtOwrA7a8Kocq/zWUmJGM5Afp5g9lD
-FNInrmijDrZXgrr6CkygOYaxK3a/SzFNLI9RTlhMPGALf7VEUTi7PPL/WvvCRA9B
-Qp19gBGkFhRf1d6exWFleBuXAgmXPb31+USb6hXooR0T4VvlhMKKzVBLjcS2vJQg
-MqwQRLYYG4oDrKqCs7e3AFWBm0ZSjKz+kNhlqykUXIzB7Jsjeu5BTknn7xXMGqgT
-fOeSsP1UF3C19jUpyLXgZnQc2frm2ZIorFSzWNC2kaqpq2r6QU7oxzE/M3fZjwNu
-AMcELQlmkfb49YAi4cHqBn1e4YQGVokKu3XJ7oIhVu9fNcUOdeJkUN/OutBHxHO5
-lm7KNpVG+L7U95f5VRrIk9nt2ul0sDUzTXvbWq1xmlZ//hODsL8=
-=EgR/
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVzQiUACgkQ3SOs138+
+s6GA/Q//aHBp0JEL3g+xPxWc5/3iX0Y0IwFJ09ixF4DNZdZ1QWzSmx5Fu86ignHB
+kCZLrCXNDYfcOGulaH+hk4WyT008OE9MBuQabKhv598m0q9W57bsjBfWNKlcporK
+CcyO0jB49yAsxrNkbVG89jx710IrgjbuEGiFCw4kZ/PNtYVQGEntXTLVWI4xT26/
+Pbbb8nQTOtDmQ7LLDZLcYqyRssWBeC+fZUARWgNq1m4CN1n6Zeqy2Eua1MmzsYpg
+U/rPcJnTjegLLcPdSqDKgLDA9cIrYd3yCfAKP4PJ76FTq93i2xM4Je9MfaxbiqG/
+Gy+oUo6SCR6UIDZ73T+aiFrAvNTQzvqBUAB93/Na2MUsh7kJlcQi0740jgu8oXex
+aiwlsmJZi5Ud8l+dciLj+AOTihmdi4BswstPgA37LlwE9QaJJHYF77VROGnA8sjG
+q9kVVb3eDPoOE+I0a5bL1mwjvzSVvC1LyFDkzzmtyxEoMiQvIJVu8oj5t+9c1BlZ
+w0jrlkyL+1Her35FaSgTIkMmH5OwsvYW90fsTBzFJnoBPg/1aiDowjISmBtUqBqY
+Z5H4kxuu/K+B6gYdv+e30t8QLd9a9J5FUrvbjRaMq3TuBtuZwnKm9FFpd2/0jeSb
+T/rcthG7Ebid2h5Pxk7gb3vXYsF3BrpajLtPanDqln43vcM3z9Q=
+=rqdV
 -----END PGP SIGNATURE-----
 
---immTF9VRZDK7uFRg--
+--JGi/lTkRFNO61mX8--
 
