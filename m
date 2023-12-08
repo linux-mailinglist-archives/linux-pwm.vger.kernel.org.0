@@ -1,179 +1,173 @@
-Return-Path: <linux-pwm+bounces-441-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-444-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8F918094D4
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 22:42:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2650809D80
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 08:50:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 400B3B20A3C
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 Dec 2023 21:42:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2BA21C20899
+	for <lists+linux-pwm@lfdr.de>; Fri,  8 Dec 2023 07:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 008F7840C3;
-	Thu,  7 Dec 2023 21:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2C810A26;
+	Fri,  8 Dec 2023 07:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dc6qu+BI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16EFD199B
-	for <linux-pwm@vger.kernel.org>; Thu,  7 Dec 2023 13:42:06 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rBM8A-00016p-9Y; Thu, 07 Dec 2023 22:42:02 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rBM87-00EHBk-UV; Thu, 07 Dec 2023 22:41:59 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rBM87-00GEFH-Kz; Thu, 07 Dec 2023 22:41:59 +0100
-Date: Thu, 7 Dec 2023 22:41:59 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-Message-ID: <20231207214159.i5347ikpbt2ihznr@pengutronix.de>
-References: <20231120113307.80710-1-biju.das.jz@bp.renesas.com>
- <20231120113307.80710-4-biju.das.jz@bp.renesas.com>
- <20231206183824.g6dc5ib2dfb7um7n@pengutronix.de>
- <TYCPR01MB1126952E843AC08DB732C18A5868BA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3850D1720
+	for <linux-pwm@vger.kernel.org>; Thu,  7 Dec 2023 23:50:24 -0800 (PST)
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231208075022epoutp042fdb4552bce264612c22b1f267ef5f9e~ey9RVQCvd0961409614epoutp04i
+	for <linux-pwm@vger.kernel.org>; Fri,  8 Dec 2023 07:50:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231208075022epoutp042fdb4552bce264612c22b1f267ef5f9e~ey9RVQCvd0961409614epoutp04i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702021822;
+	bh=qjbIaClF8yopZN8015RmaLZ6gHoakv4UFGRQz8iXfWk=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=dc6qu+BIFDSuYlWgMTeXif2He57xTiksyulr0LHZWSY+Qx9uSLDYAkMDmzo786fCi
+	 ep2C/AzGEQx7i0tQQW994JM5SASveNGEF6269O5mLcaBOARz6jrykndC3suXUyc7n8
+	 9GKhHkVae4blSuosY41O81GlD14kn9GDS+K9w2I0=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+	20231208075021epcas2p17b86ea1164128f3701a9151fe832dc1d~ey9QnzfO70844008440epcas2p1W;
+	Fri,  8 Dec 2023 07:50:21 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.89]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Smjwr4Hzwz4x9Q0; Fri,  8 Dec
+	2023 07:50:20 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	34.D3.10006.CBAC2756; Fri,  8 Dec 2023 16:50:20 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20231208075019epcas2p4cef1190e41adeaaf47b7763cc86c3d26~ey9PZThlO1013010130epcas2p4p;
+	Fri,  8 Dec 2023 07:50:19 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231208075019epsmtrp25d9a523bfebdf6abd2feadc9931e8c3a~ey9PXkPcB0096800968epsmtrp2R;
+	Fri,  8 Dec 2023 07:50:19 +0000 (GMT)
+X-AuditID: b6c32a45-3ebfd70000002716-79-6572cabc38c2
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	52.00.07368.BBAC2756; Fri,  8 Dec 2023 16:50:19 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.229.9.55]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20231208075019epsmtip259e371d900c1f9bba436b2999f5c312e~ey9PFghTm1345613456epsmtip2f;
+	Fri,  8 Dec 2023 07:50:19 +0000 (GMT)
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester
+	Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
+	Thierry Reding <thierry.reding@gmail.com>, Uwe Kleine-K?nig
+	<u.kleine-koenig@pengutronix.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-serial@vger.kernel.org, Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH v3 0/4] Introduce ExynosAutov920 SoC and SADK board
+Date: Fri,  8 Dec 2023 16:45:23 +0900
+Message-ID: <20231208074527.50840-1-jaewon02.kim@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ekhwc4sfyeifnj5w"
-Content-Disposition: inline
-In-Reply-To: <TYCPR01MB1126952E843AC08DB732C18A5868BA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOJsWRmVeSWpSXmKPExsWy7bCmqe6eU0WpBjNuylk8mLeNzWLN3nNM
+	FvOPnGO1aF68ns1iR8MRVot3c2Us9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWd++uYrSY
+	cX4fk8WZxb3sFq17j7BbHH7Tzmrxc9c8FotVu4Dqbk+czOgg7LFz1l12j02rOtk87lzbw+ax
+	f+4ado/NS+o9+v8aePRtWcXo8XmTXABHVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZgaGu
+	oaWFuZJCXmJuqq2Si0+ArltmDtA7SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSClJwC
+	8wK94sTc4tK8dL281BIrQwMDI1OgwoTsjPWTF7EWfOaveHzlC0sDYxdvFyMnh4SAicS9TzPY
+	uxi5OIQEdjBKzFz6kwkkISTwiVHi810tiMQ3Rokdsw+ywHRMvLoNqmMvo8Sa3W+hnI+MEusf
+	rmEDqWIT0Jb4vn4xK4gtInCfWeJ1WzVIEbNAO5PEvG8vwUYJCzhLnF/cBGazCKhKzF16CGw3
+	r4CtxJdrJ5kh1slLLN6xnBkiLihxcuYTsHpmoHjz1tnMIEMlBPZwSFxs2gF1n4vEj7OH2SFs
+	YYlXx7dA2VISn9/tZYOw8yXarpyBitdIbFxwiRHCtpeY9XsL0NUcQAs0Jdbv0gcxJQSUJY7c
+	glrLJ9Fx+C87RJhXoqNNCKJRTeL+1HNQw2UkJh1ZyQRhe0hsfN7ADAnRWIm+NRdZJjDKz0Ly
+	zCwkz8xC2LuAkXkVo1hqQXFuemqxUYEhPFKT83M3MYJTtJbrDsbJbz/oHWJk4mA8xCjBwawk
+	wptzPj9ViDclsbIqtSg/vqg0J7X4EKMpMHgnMkuJJucDs0ReSbyhiaWBiZmZobmRqYG5kjjv
+	vda5KUIC6YklqdmpqQWpRTB9TBycUg1Mp5WqbszaZfN5kcAW9yQ28Y1Z6RpTSnd9U82STWiJ
+	lNw16cTLaa+/i6xLtm3e/+dVQWaQ3rG/K2uE08o3ujd9bPsnGHrt1mZVkSbfFxbfGbZUXHzi
+	ets2r1zy071tVvpLL80VOzPvYsvt8niuuaxXTZrrj++bWNxsvMrg+oZUh9vfL/79cdrMlFuL
+	9/29nWWpcy/+K9c8vE20v9+u4nuY5eXr9zav2K695pVh+ozdD72UO+O+B8oo67KsdHdiuHD7
+	+qL9M6c9yLUUW3ZZOlHonHjliWm7dBmTV0RXqMkvZLvUNPNfede0uayeEvYbZK6WvbtZ4Vnn
+	uqpm3vw9Cekfj1t1BNxhuHSs+06PyybeEiWW4oxEQy3mouJEAD5WIXFaBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsWy7bCSvO7uU0WpBne26Fk8mLeNzWLN3nNM
+	FvOPnGO1aF68ns1iR8MRVot3c2Us9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWd++uYrSY
+	cX4fk8WZxb3sFq17j7BbHH7Tzmrxc9c8FotVu4Dqbk+czOgg7LFz1l12j02rOtk87lzbw+ax
+	f+4ado/NS+o9+v8aePRtWcXo8XmTXABHFJdNSmpOZllqkb5dAlfG+smLWAs+81c8vvKFpYGx
+	i7eLkZNDQsBEYuLVbexdjFwcQgK7GSX+7lnDBJGQkVj+rI8NwhaWuN9yhBXEFhJ4zygxdYke
+	iM0moC3xff1iVpBmEYHnzBJn/zxiBkkwC/QzSVzflABiCws4S5xf3MQCYrMIqErMXXoIbAGv
+	gK3El2snmSEWyEss3rGcGSIuKHFy5hMWiDnyEs1bZzNPYOSbhSQ1C0lqASPTKkbJ1ILi3PTc
+	ZMMCw7zUcr3ixNzi0rx0veT83E2M4LjR0tjBeG/+P71DjEwcjIcYJTiYlUR4c87npwrxpiRW
+	VqUW5ccXleakFh9ilOZgURLnNZwxO0VIID2xJDU7NbUgtQgmy8TBKdXAJK+0pGhi8uP4AJGc
+	zhq51domG889eLmufK+z0z6xp/WSyQHFpxfZ2680lb52Wk3sYOzuW8bd3cEhE12u7dHJ4i/i
+	sRfXaqgymCR5M/Pp1NA7isLMWuI39OfofCsXuzB3BdeaXQGaP24k7TqykrNTi9N1h+p7MZuv
+	SjOP3o2PTs1tfMC+/Mm7oEPRJwUu+9gBvTh530zjlX7qdyYz9YaU/TzT9fD00Xmc+0LWam6v
+	ZY71XPRTn/OM+4EfG/Y/2NZwxq6+/OVBcZdnRlXfGX2EPn8MmeNZv/Pp8jJ+ftacWUoLKxIl
+	nJ7KP7opadf+0vZnbekOm0TJKbvdb99m//lRY+kfhquvWWWFS1zKfx9UYinOSDTUYi4qTgQA
+	rDUZbAoDAAA=
+X-CMS-MailID: 20231208075019epcas2p4cef1190e41adeaaf47b7763cc86c3d26
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231208075019epcas2p4cef1190e41adeaaf47b7763cc86c3d26
+References: <CGME20231208075019epcas2p4cef1190e41adeaaf47b7763cc86c3d26@epcas2p4.samsung.com>
+
+ExynosAutov920[1] is ARMv8-based automotive-oriented SoC.
+This SoC is the next generation of exynosautov9 and AE(Automotive Enhanced)
+IPs are used for safety.
+
+This patchset is the minimal set for ExynosAutov920 SoC and SADK board.
+Currently, ramdisk console is available and Clock, UFS, and USI will be
+added after this patchset.
+
+[1] : https://semiconductor.samsung.com/processor/automotive-processor/exynos-auto-v920
+
+---
+Changes in v3:
+ - Split pinctrl driver change patch  and v920 support patch
+ - Remove 'combine' variable and use offset variable
+ - Fix coding style warning in checkpatch with --strict option
+ - Fix CHECK_DTBS=y waring with W=1 option
+ - dt-binding document merged in v2
+
+Changes in v2:
+ - Rebase to git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git
+             branch : for-v6.8/samsung-bindings-compatibles
+ - Specific exynosautov920 compatible
+ - Add dt-binding patch for pmu, chipid
 
 
---ekhwc4sfyeifnj5w
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jaewon Kim (4):
+  arm64: dts: exynos: add initial support for exynosautov920 SoC
+  arm64: dts: exynos: add minimal support for exynosautov920 sadk board
+  pinctrl: samsung: support ExynosAuto GPIO structure
+  pinctrl: samsung: add exynosautov920 pinctrl
 
-Hello Biju,
+ arch/arm64/boot/dts/exynos/Makefile           |    3 +-
+ .../dts/exynos/exynosautov920-pinctrl.dtsi    | 1266 +++++++++++++++++
+ .../boot/dts/exynos/exynosautov920-sadk.dts   |   88 ++
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi |  314 ++++
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    |  140 ++
+ drivers/pinctrl/samsung/pinctrl-exynos.c      |   99 +-
+ drivers/pinctrl/samsung/pinctrl-exynos.h      |   25 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |    5 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h     |   13 +
+ 9 files changed, 1945 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynosautov920.dtsi
 
-On Thu, Dec 07, 2023 at 06:26:44PM +0000, Biju Das wrote:
-> > -----Original Message-----
-> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > Sent: Wednesday, December 6, 2023 6:38 PM
-> > Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
-> > On Mon, Nov 20, 2023 at 11:33:06AM +0000, Biju Das wrote:
-> > > +static u64 calculate_period_or_duty(struct rzg2l_gpt_chip *rzg2l_gpt,
-> > > +u32 val, u8 prescale) {
-> > > +	u64 retval;
-> > > +	u64 tmp;
-> > > +
-> > > +	tmp =3D NSEC_PER_SEC * (u64)val;
-> > > +	/*
-> > > +	 * To avoid losing precision for smaller period/duty cycle values
-> > > +	 * ((2^32 * 10^9 << 2) < 2^64), do not process the rounded values.
-> > > +	 */
-> > > +	if (prescale < 2)
-> > > +		retval =3D DIV64_U64_ROUND_UP(tmp << (2 * prescale), rzg2l_gpt-
-> > >rate);
-> > > +	else
-> > > +		retval =3D DIV64_U64_ROUND_UP(tmp, rzg2l_gpt->rate) << (2 *
-> > > +prescale);
-> >=20
-> > Maybe introduce a mul_u64_u64_div64_roundup (similar to
-> > mul_u64_u64_div64) to also be exact for prescale >=3D 2?
->=20
-> mul_u64_u64_div_u64()has a bug already and we are losing precision with v=
-ery high values.
-> See the output with CONFIG_PWM_DEBUG enabled[1]. So we cannot reuse mul_u=
-64_u64_div64()
-> for roundup operation.
->=20
-> Maybe we need to come with 128bit operations for mul_u64_u64_div64_roundu=
-p().
-> Do you have any specific algorithm in mind for doing mul_u64_u64_div64_ro=
-undup()?
->=20
-> Fabrizio already developed an algorithm for 128 bit operation, I could re=
-use once it
-> hits the mainline.
->=20
-> [1]
-> ######[  304.213944] pwm-rzg2l-gpt 10048000.pwm: .apply is not idempotent=
- (ena=3D1 pol=3D0 5500000000000/43980352512000) -> (ena=3D1 pol=3D0 5500000=
-000000/43980239923200)
-> 	 High setting##
-> 	[  304.230854] pwm-rzg2l-gpt 10048000.pwm: .apply is not idempotent (ena=
-=3D1 pol=3D0 23980465100800/43980352512000) -> (ena=3D1 pol=3D0 23980465100=
-800/43980239923200)
+-- 
+2.43.0
 
-Have you tried to understand that? What is the clk rate when this
-happens? You're not suggesting that mul_u64_u64_div_u64 is wrong, are
-you?
-
-> > With prescale <=3D 5 and rzg2l_gpt->rate >=3D 1024 this shouldn't work =
-just
-> > fine.
-
-I meant here "this should work just fine", I guess you understood that
-right.
-
-> Practically this is not possible. Yes, from theoretical point, rate=3D1kH=
-z=20
-> compared to the practical case, 100MHz won't work.
->=20
-> For the practical case, the current logic is fine. If we need to achieve
-> theoretical example like you mentioned then we need to have=20
-> mul_u64_u64_div64_roundup().
-
-That shouldn't be so hard to implement.
-
-> > > +	rzg2l_gpt->max_val =3D mul_u64_u64_div_u64(U32_MAX, NSEC_PER_SEC,
-> > > +						 rzg2l_gpt->rate) * RZG2L_MAX_SCALE_FACTOR;
-> >=20
-> > Is it clear that this won't overflow?
-
-U32_MAX * NSEC_PER_SEC doesn't even overflow an u64, so using a plain
-u64 division would be more efficient.
-
-You'd get a smaller rounding error with:
-
-	rzg2l_gpt->max_val =3D mul_u64_u64_div_u64((u64)U32_MAX * NSEC_PER_SEC, RZ=
-G2L_MAX_SCALE_FACTOR, rzg2l_gpt->rate);
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ekhwc4sfyeifnj5w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVyPCYACgkQj4D7WH0S
-/k5SEAf9FJQJGPRf6pVXHNRm7nyoiMjxWH7+X8Of6LjANoPBeK20X/3ttyA31dUI
-Q6OsRib0QxS9zH2khyPy1Fxigxc1QOmSBbUfXzlqdcIl2LkgntOkTKK3TIHBc1zd
-WfWwx+tv0h9XJ/m7DS1Puv9ihmUOSchAy6/lpM/JgM2ga4GSTQT4UDVWvC/tg3GY
-OQIDdF2C6/CPHHdzqHCLyjpPZoRr93SKBA9JjI7SO9foYk+rnryj7x5Ewh4DqVDC
-ftXVeKm63LpkxdcnbDstFgP0wa+rrw7vpdf6rYzSzoqXAl2JiPf3DT0XKRJTxp6j
-Fcw1bYcxs+iqDBQqf/Nuf0XimMMCxw==
-=sEx9
------END PGP SIGNATURE-----
-
---ekhwc4sfyeifnj5w--
 
