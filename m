@@ -1,134 +1,159 @@
-Return-Path: <linux-pwm+bounces-473-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-474-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2BC80B363
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Dec 2023 10:11:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 150A780B379
+	for <lists+linux-pwm@lfdr.de>; Sat,  9 Dec 2023 10:50:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 46AE2B20A9B
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Dec 2023 09:11:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3D0761C20997
+	for <lists+linux-pwm@lfdr.de>; Sat,  9 Dec 2023 09:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D33F9C8C6;
-	Sat,  9 Dec 2023 09:11:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E9911706;
+	Sat,  9 Dec 2023 09:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="IQ4YD9KN"
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="I1ET6nwY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E75DEED;
-	Sat,  9 Dec 2023 01:11:19 -0800 (PST)
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38B810C4;
+	Sat,  9 Dec 2023 01:49:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1702113077; bh=+XGfAN7SRR5RmhM3v1fKPVw4izD0tUsQBMr5UhPJlcA=;
+	t=1702115391; bh=K4v35Dp8Lp3NPnkhtZ9R6FJpo7oiN2Hzlx29IfU2Lq0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IQ4YD9KNsSANLvdPn5aGGomMN2S5W4iiwx9H84Spbi7xMscnGX+4S6caE6qlZxIDu
-	 QVbT50R/i3qVRPwhF9oh2qhn0ER6zdqWj1+9lIQa0o0LIu7eFoQj6Afc1trWwutp4T
-	 6DkHBxLTStFigS9Nc67eh8T24U1ec1N1bRfI3yzWKKq/tC0POyq3FwkG8Bk4z4ZAkg
-	 7pNEKdcG0tpoJsnOyBM+iwgshRCASJvhAojMW7Tld1jEfnHSAY51FOOPgC7kGBfLnw
-	 DPSmX7+TSavS76RPGPZy1cJCxneKwtvpGB0V1VrfVZNKr43BtYQlApyqrahm/yWIzS
-	 Lp+K255pbDxWw==
+	b=I1ET6nwYmIPj1dDOlJ36cuv6adMCSee+/l3bvMCLtEZVJ3gsKIvTkgWpvUyf4/ydw
+	 CGstHQFag5r1HK6Ftg6STvHYYVV2iTxngtTBcs5UDam5c9d53JE4Z5TzmbLJ5pyyA3
+	 mariSQplhWY+wSwgFCLalvfeRztZooSqtT2s5r0altoeoNl8tTgXkQ09atOVR7mLsm
+	 nZYM0UNi0mHCJ4iNfZBqMg0bpb67Qn22K0ZJJ4W09VbwU3fDZid9ynlvX2K6rPGB8A
+	 5yqzXwpbcGepDvmlvCc/F1FCV6G/xfzG8oGHxmesi7f6GKT4sekIMzJjC2kufb4kXw
+	 dCEcayhOICYsg==
 Received: by gofer.mess.org (Postfix, from userid 1000)
-	id 77422100091; Sat,  9 Dec 2023 09:11:17 +0000 (GMT)
-Date: Sat, 9 Dec 2023 09:11:17 +0000
+	id 9697B100091; Sat,  9 Dec 2023 09:49:51 +0000 (GMT)
+Date: Sat, 9 Dec 2023 09:49:51 +0000
 From: Sean Young <sean@mess.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, linux-media@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] pwm: bcm2835: allow pwm driver to be used in
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/4] pwm: make it possible to apply pwm changes in
  atomic context
-Message-ID: <ZXQvNfLy9mySdrfM@gofer.mess.org>
+Message-ID: <ZXQ4P39_sq10XD9u@gofer.mess.org>
 References: <cover.1701248996.git.sean@mess.org>
- <179dc1ce85702a8b64b43c0e0df656b0c5e3ce30.1701248996.git.sean@mess.org>
- <ZXNC3JYy7CTfYsyC@orome.fritz.box>
- <ZXNL5upeUPc4gC1R@gofer.mess.org>
- <20231208172040.mgw7aicmwlw6yjyb@pengutronix.de>
+ <734c9985a6f54d34d9ef20203ba7f962b572cb45.1701248996.git.sean@mess.org>
+ <ZXNCKFZcjFznko89@orome.fritz.box>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231208172040.mgw7aicmwlw6yjyb@pengutronix.de>
+In-Reply-To: <ZXNCKFZcjFznko89@orome.fritz.box>
 
-On Fri, Dec 08, 2023 at 06:20:40PM +0100, Uwe Kleine-König wrote:
-> On Fri, Dec 08, 2023 at 05:01:26PM +0000, Sean Young wrote:
-> > On Fri, Dec 08, 2023 at 05:22:52PM +0100, Thierry Reding wrote:
-> > > On Wed, Nov 29, 2023 at 09:13:36AM +0000, Sean Young wrote:
-> > > > clk_get_rate() may do a mutex lock. Fetch the clock rate once, and prevent
-> > > > rate changes using clk_rate_exclusive_get().
-> > > > 
-> > > > Signed-off-by: Sean Young <sean@mess.org>
-> > > > ---
-> > > >  drivers/pwm/pwm-bcm2835.c | 31 +++++++++++++++++++++----------
-> > > >  1 file changed, 21 insertions(+), 10 deletions(-)
-> > > 
-> > > s/pwm/PWM/ in the subject. Although, I guess you could just drop the
-> > > "PWM" altogether because the subject prefix implies that this is for
-> > > PWM.
-> > 
-> > $ git log --no-merges --oneline drivers/pwm/ | sed -r 's/^\w* ([^:]+): .*/\1/' | sort | uniq -c
-> >    1197 pwm
-> >       1 PWM
-> >   ...
-> > 
-> > The vast majority of the commits use pwm: as a prefix, only one uses PWM:. 
-> > In fact if you look across the tree almost everywhere lower case is used
-> > for the prefix.
-> 
-> Thierry doesn't want you to change the subject prefix, but only the
-> second "pwm" to make it read:
-> 
-> 	pwm: bcm2835: allow PWM driver to be used in atomic context
+Hi Thierry,
 
-Ah of course, my bad.
 
-> While I understand Thierry here, I'm fine with a lowercase pwm here,
-> too. In my book a PWM in all uppercase is the type of hardware and pwm
-> in all lowercase is the framework's name. If you use "PWM driver" or
-> "pwm driver" then doesn't matter much.
-> 
-> 	
+On Fri, Dec 08, 2023 at 05:19:52PM +0100, Thierry Reding wrote:
+> On Wed, Nov 29, 2023 at 09:13:35AM +0000, Sean Young wrote:
+> > Some pwm devices require sleeping, for example if the pwm device is
+> > connected over i2c. However, many pwm devices could be used from atomic
+> > context, e.g. memmory mapped pwm. This is useful for, for example, the
+> > pwm-ir-tx driver which requires precise timing. Sleeping causes havoc
+> > with the generated IR signal.
 > > 
-> > I'm just trying to follow convention.
-> > 
-> > Having said that, I think the prefix is totally redundant, it is clear from
-> > the commit files what they are affecting. I am not sure what it really adds.
-> > 
-> > > Also, please capitalize after the subject prefix.
-> > 
-> > $ git log --no-merges --oneline drivers/pwm/ | grep -E '^\w* ([^:]+): [A-Z]' | wc -l
-> > 217
-> > $ git log --no-merges --oneline drivers/pwm/ | grep -E '^\w* ([^:]+): [a-z]' | wc -l
-> > 1069
+> > Since not all pmw devices can support atomic context, we also add a
+> > pwm_is_atomic() function to check if it is supported.
 > 
-> Your matching things like:
-> 
-> 	pwm: pwm-tiehrpwm: Add support for configuring polarity of PWM
-> 
-> with the second command. These are perfectly fine as pwm-tiehrpwm is the
-> driver name and so shouldn't be capitalized. With a bit more care here,
-> we get:
-> 
-> 	$ git log --no-merges --oneline drivers/pwm/ | grep -E '^.+: [a-z][^:]*$' | wc -l
-> 	114
-> 	$ git log --no-merges --oneline drivers/pwm/ | grep -E '^.+: [A-Z][^:]*$' | wc -l
-> 	1167
-> 
-> And the newest of the 114 with a small letter is from 2013.
+> s/i2c/I2C/ and s/pwm/PWM/ in the above. Also, s/memmory/memory/
 
-Again, I stand corrected.
+Thanks for your detailed review. I agree with all your points, they are
+all nice improvements. Just a question at the bottom:
 
-Thanks for pointing it out, I will fix in the next version.
+> 
+> > 
+> > Signed-off-by: Sean Young <sean@mess.org>
+> > ---
+> >  Documentation/driver-api/pwm.rst |  9 +++++
+> >  drivers/pwm/core.c               | 63 ++++++++++++++++++++++++++------
+> >  drivers/pwm/pwm-renesas-tpu.c    |  1 -
+> >  include/linux/pwm.h              | 29 ++++++++++++++-
+> >  4 files changed, 87 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/Documentation/driver-api/pwm.rst b/Documentation/driver-api/pwm.rst
+> > index f1d8197c8c43..1d4536fdf47c 100644
+> > --- a/Documentation/driver-api/pwm.rst
+> > +++ b/Documentation/driver-api/pwm.rst
+> > @@ -43,6 +43,15 @@ After being requested, a PWM has to be configured using::
+> >  
+> >  	int pwm_apply_might_sleep(struct pwm_device *pwm, struct pwm_state *state);
+> >  
+> > +Some PWM devices can be used from atomic context. You can check if this is
+> > +supported with::
+> > +
+> > +        bool pwm_is_atomic(struct pwm_device *pwm);
+> 
+> This is now going to look a bit odd. I think it'd be best to change this
+> to pwm_might_sleep() for consistency with the pwm_apply_might_sleep()
+> function. Fine to keep the actual member variable as atomic, though, so
+> we don't have to change the default for all drivers.
 
+Agreed, I was struggling with finding good name and yours is much better,
+thanks.
+
+ > +{
+> > +	return pwm->chip->atomic;
+> > +}
+> > +
+> >  /* PWM provider APIs */
+> >  int pwm_capture(struct pwm_device *pwm, struct pwm_capture *result,
+> >  		unsigned long timeout);
+> > @@ -406,16 +420,27 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+> >  				       struct fwnode_handle *fwnode,
+> >  				       const char *con_id);
+> >  #else
+> > +static inline bool pwm_is_atomic(struct pwm_device *pwm)
+> > +{
+> > +	return false;
+> > +}
+> > +
+> >  static inline int pwm_apply_might_sleep(struct pwm_device *pwm,
+> >  					const struct pwm_state *state)
+> >  {
+> >  	might_sleep();
+> > -	return -ENOTSUPP;
+> > +	return -EOPNOTSUPP;
+> > +}
+> > +
+> > +static inline int pwm_apply_atomic(struct pwm_device *pwm,
+> > +				   const struct pwm_state *state)
+> > +{
+> > +	return -EOPNOTSUPP;
+> >  }
+> >  
+> >  static inline int pwm_adjust_config(struct pwm_device *pwm)
+> >  {
+> > -	return -ENOTSUPP;
+> > +	return -EOPNOTSUPP;
+> >  }
+> 
+> What's wrong with ENOTSUPP?
+
+This was found by checkpatch, see
+
+https://github.com/torvalds/linux/blob/master/scripts/checkpatch.pl#L4891-L4892
+
+# ENOTSUPP is not a standard error code and should be avoided in new patches.
+# Folks usually mean EOPNOTSUPP (also called ENOTSUP), when they type ENOTSUPP.
+
+ENOTSUPP is not really widely used in the tree.
+
+So it was really done to keep checkpatch happy, please let me know what you
+would like me to do here.
+
+Thanks,
 
 Sean
 
