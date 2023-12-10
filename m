@@ -1,98 +1,116 @@
-Return-Path: <linux-pwm+bounces-479-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-482-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71D1380B74F
-	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 00:01:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DF7880B8B1
+	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 04:59:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3C75B20A18
-	for <lists+linux-pwm@lfdr.de>; Sat,  9 Dec 2023 23:01:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A2321C2094C
+	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 03:59:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE8001CFA7;
-	Sat,  9 Dec 2023 23:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87A9917D9;
+	Sun, 10 Dec 2023 03:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dpqe82ix"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D30E115
-	for <linux-pwm@vger.kernel.org>; Sat,  9 Dec 2023 15:01:05 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rC6Jj-00068x-Lk; Sun, 10 Dec 2023 00:01:03 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rC6Jj-00EjgP-96; Sun, 10 Dec 2023 00:01:03 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rC6Jj-00HQE9-0E; Sun, 10 Dec 2023 00:01:03 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-pwm@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH 2/2] pwm: Drop two unused API functions
-Date: Sun, 10 Dec 2023 00:00:47 +0100
-Message-ID:  <a4c2f497eb79f621830ac041074439e109374070.1702162780.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1702162780.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1702162780.git.u.kleine-koenig@pengutronix.de>
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB29A9;
+	Sat,  9 Dec 2023 19:59:32 -0800 (PST)
+Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-35d725ac060so14996775ab.2;
+        Sat, 09 Dec 2023 19:59:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702180771; x=1702785571; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=84cInsubYIer0iSHh7fFONzX0zWNfmSdIBRyKoPJTkI=;
+        b=Dpqe82ixxSSlYbhIzV4rNaEDkOnIiiRPf7jpFsAcHgDwxCr4Ms2JSc0eRfQ7dXDu5d
+         bw32ai1gAryHH0ZG+d3fEp6CNoR9WwQArNNtkv3qTKMLFDTvXm0z6Hn7EihQrdKE/jR4
+         NU8b+Akh0wOOqzkT3vvftHIbvllFqQc7jOtGd2V1WhEtrZzQKJbHPuWXKN0srVrSHdaw
+         HcDjyMUHzmcTibFYvWtEVVKZVd+kGzfx7rmx6EwuqQdRBYywPXrlG/aXFsVfJGMLlfRL
+         Z2byYxb9H1kaz53izhAZv1INArcTOb00Or6jAwxWbGqt1+52pMsrLUjgD1if6kXGB/22
+         PYcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702180771; x=1702785571;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=84cInsubYIer0iSHh7fFONzX0zWNfmSdIBRyKoPJTkI=;
+        b=CE9U9prywbf4ws35fDREq5qeTXLrYc/s58IqiqRPRtnBiftMULtEsaNTUdlT9IN0mi
+         p0eTaV64nNpTjeqjXvH+yVy5/zJB+RX9A87P10wxmKDVSdye0iVzJviL0BG8RlnBZx8u
+         GSstTGkHFS3W3kWSW0qULyul9DcXxuSey7Q8J1kIe6h6wmvRRHm3MwgdfA8MFtHd0Cjl
+         Ix5bav6GfWwhX/ajw2JTcL/eqweW+CPyrvXbF77LCWLTZla1eXENbnyPWfbr4Mr87DWX
+         Izx/T5TKk2QBJLHc1O6CmCKZpFkSsvCMmdR1V63UXHevATWRVpDLw0fRLN0VCFvsm0OV
+         5m2g==
+X-Gm-Message-State: AOJu0YxYMWa48ePM9hNZJCYCfEbni4S4bOF/UBHa1fCesRuAlQIKO9YJ
+	sFa0JgRKtpKPXxtbJO15jbu6t3PAA2A=
+X-Google-Smtp-Source: AGHT+IH9F5XvBInEJBWDJV2re58BWPH91w8i++zb8S4UYFPdHM7W/4ZmjNF8Wa+XCmRN3R3hwoJNSg==
+X-Received: by 2002:a05:6e02:1845:b0:35d:5667:c42e with SMTP id b5-20020a056e02184500b0035d5667c42emr4576271ilv.2.1702180771158;
+        Sat, 09 Dec 2023 19:59:31 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:9082:8aa4:377c:de99])
+        by smtp.gmail.com with ESMTPSA id b6-20020a170902ed0600b001d060bb0582sm4129422pld.165.2023.12.09.19.59.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Dec 2023 19:59:30 -0800 (PST)
+Date: Sat, 9 Dec 2023 19:59:26 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Sean Young <sean@mess.org>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Support Opensource <support.opensource@diasemi.com>,
+	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mark Gross <markgross@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Daniel Thompson <daniel.thompson@linaro.org>,
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>,
+	Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] pwm: rename pwm_apply_state() to
+ pwm_apply_might_sleep()
+Message-ID: <ZXU3nsNoQxXKUF4F@google.com>
+References: <cover.1701248996.git.sean@mess.org>
+ <37090c1d8d8f42f1e12fa84942027d995189a99e.1701248996.git.sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1133; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=s2sebiidQQo8YSc4MyTvEk3c2Ea1znVR0Mr+i9c5tq4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBldPGk74OzGQ/pLX4xl7GICoSyOr0NO58O0YUxm g46zzDmWOqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZXTxpAAKCRCPgPtYfRL+ TjdTCACKYtD55ePcXGOrgl+gP2HVN+uahg90znWBVh/hPK6ifnVXuR8G8PjW3BaM/wMuyWhgUZC 6FQcM1qcfrEEL2G656D6kcnWMZnb4CwZAWw0ShPIHWD0PxuaTCOy3Fp7WyBtPCsunnjkKtm4bJR HcRlcRBCSFoIZk7GbJ2zHrz3FuCByRWNLvlaWue1A37F5y+8N0GJPaW+vlIAaDa63QTevqH49x/ uaTYfg7aYjikaAyZ5LchxfPL4s4jh5yV9WvD5aaYBpH1jgeAlAs4UtvVKfDnYCJHivL7EuTs+Lm jX0hbK7OSJbIbiYnSvOnBxbUIM626oHOUu+8QrlhydzGQo7R
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37090c1d8d8f42f1e12fa84942027d995189a99e.1701248996.git.sean@mess.org>
 
-These functions are unused. Also I think there is no valid use case
-where these are correct to be called. So drop them.
+On Wed, Nov 29, 2023 at 09:13:34AM +0000, Sean Young wrote:
+>  drivers/input/misc/da7280.c                   |  4 +--
+>  drivers/input/misc/pwm-beeper.c               |  4 +--
+>  drivers/input/misc/pwm-vibra.c                |  8 +++---
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- include/linux/pwm.h | 12 ------------
- 1 file changed, 12 deletions(-)
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com> # for input
 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index f87655c06c82..20363da3e6ef 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -111,12 +111,6 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
- 	return state.enabled;
- }
- 
--static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
--{
--	if (pwm)
--		pwm->state.period = period;
--}
--
- static inline u64 pwm_get_period(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
-@@ -126,12 +120,6 @@ static inline u64 pwm_get_period(const struct pwm_device *pwm)
- 	return state.period;
- }
- 
--static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
--{
--	if (pwm)
--		pwm->state.duty_cycle = duty;
--}
--
- static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
+Thanks.
+
 -- 
-2.42.0
-
+Dmitry
 
