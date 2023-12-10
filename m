@@ -1,60 +1,60 @@
-Return-Path: <linux-pwm+bounces-484-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-485-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7AEA80BADA
-	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 14:23:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 705E480BADF
+	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 14:24:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5413C1F20EF9
-	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 13:23:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27961280CAB
+	for <lists+linux-pwm@lfdr.de>; Sun, 10 Dec 2023 13:24:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E515C158;
-	Sun, 10 Dec 2023 13:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F087CC2C1;
+	Sun, 10 Dec 2023 13:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlc8w8ZY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rlMqV6R7"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E9ADB
-	for <linux-pwm@vger.kernel.org>; Sun, 10 Dec 2023 05:23:17 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40c32df9174so27591215e9.3
-        for <linux-pwm@vger.kernel.org>; Sun, 10 Dec 2023 05:23:17 -0800 (PST)
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A35100
+	for <linux-pwm@vger.kernel.org>; Sun, 10 Dec 2023 05:23:59 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-a1f8510883aso136506066b.3
+        for <linux-pwm@vger.kernel.org>; Sun, 10 Dec 2023 05:23:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702214595; x=1702819395; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702214638; x=1702819438; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ys6A2Bha0yXRtHll/HjqncAoUZWbU49gkCF565FWhL4=;
-        b=xlc8w8ZY0JO1ZQkG1n0GDDaOBWAxdOHDr/fYWPjsNoQg/7HufUKNqf/pmBiqWnMtOy
-         3NY6tZffAiU2V9aaLJxFKbU7mMov2ecCIN1xvIOvy953JLyCf4vHW31QaaJT3XhqQX5L
-         DGy4bGQTiCAm1VOZy8Xp0sMPDBoyQh/sc7iqfsZf8BucuOX1CMfYrYM4sunx4s8wlitW
-         Uuugb/YhJH6wIfuSygg6+55RczlFDXBik7mTn+yKpeBu8IAGNm1y+5wRYUpl/cum8Sne
-         tN6WmrO4P9GjtAcxZpiPNo+PhyYwkyGNxEg4oLAqs5buE8AMNkxVCdmf2TJ4BF2bP5fG
-         srBQ==
+        bh=feTBq8ea0MP1f0PJr+qcMtxTJzfWaPKszGCsMhkLcss=;
+        b=rlMqV6R7FYnD0Dx7hJjk5EAeJMCaJUdAPJfmQGP2ufpF4rCDbJEare2AaBX58uHaiV
+         6ZeF/Dy2LQui8eG7WTbRtDnZAZC7+b/p34zyRSM01NBlX6LPANe1GmyPd2CHff296K6I
+         nrPzfdyQP25ifpvNtXJxfseKLvi/0mT5ofwfDxxhUlH4g2QSUxbKIS0FrCtjLE+5Cbe7
+         zgQoq0b+sylM1ma+B/wfH2jXMtaRmH3GtHrILRRCtGlfRFI6+BIEge7PO5myXBvwA40D
+         pET5Q4IG+EHH0wJmCqjEsJlb5l+wWgTL7Rau2X3rqyONLtAs7u86vseq3IlaLG6D4f81
+         GNyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702214595; x=1702819395;
+        d=1e100.net; s=20230601; t=1702214638; x=1702819438;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ys6A2Bha0yXRtHll/HjqncAoUZWbU49gkCF565FWhL4=;
-        b=u84NVZvkxKUE9cMYnfNTAtLMC1czQeVtZOW94n+a7BVVh1lngh37oYCaYqYAEs0L15
-         rgaKFhHnKFFaU1YC113YjPnjiT5cH7vHUmjFkYWuttnpkGF5xjf6FlRuRbBUrlKkuv8Z
-         NQ53HOM1yMxWip6r48m3z16YW+Q+1j8g4qSIuc+4PbdCqvCs+xtzoAPOGx5lQuUmT3MP
-         6M09CI59kQsto9v1lxbG5BT2kWYEhWnaUrF/2rmTRtEjwm5uFjnm1MGKUrgY99TJHnuO
-         x0U6+b+8fQ9mMpawjGqD1rh3DpRYUIHzc3HpVzAkrf1/VW7zvT38oqxrZJYEj8KWbkI2
-         yQ4g==
-X-Gm-Message-State: AOJu0YxlCb9KYkjmUMSnQePy/LzLLfiKk5Yo0A7VrTJOUepZapz6GIKc
-	FHiegIMMMT2it2ew5aJ0SSyCDg==
-X-Google-Smtp-Source: AGHT+IHE+XN8qqfjxDFnbAFUBq0Iq6eZyQgnmvFnK1gHzcckGLMGEufL81rQf6ChstDr5+/uXcV2TA==
-X-Received: by 2002:a05:600c:12c6:b0:40c:293b:ad47 with SMTP id v6-20020a05600c12c600b0040c293bad47mr1055887wmd.234.1702214595553;
-        Sun, 10 Dec 2023 05:23:15 -0800 (PST)
+        bh=feTBq8ea0MP1f0PJr+qcMtxTJzfWaPKszGCsMhkLcss=;
+        b=Fcqp+88F6SVsvXAzuE9YcRXwHOEcwGOs53l2HXUhrvXaIqpMJpVlneMKdHrto8iFTn
+         hKiEisD4uIX7umxAt0d4v35IomGwjCF7SdpZkBLQxEA+3AGKpRv/8TqSPw/okuzGXfwD
+         cCeK6OU3ZbeYkpPwlR5tA2TWXuuV/ed875Eg8tMVvsmSxEqcsupIBK3RfH7W3mGNUY2j
+         It2SiMXs6OwQxSV6Sl76ZkgTEfVOCUf5w1EjvumJOOgJLUCcdgV7DFCc9+BlOkLUX+rW
+         a7Oz/MZf7Mn75P2BFMleNI6JklCTgfORawUj8XV6qp6zquouXLmHvPk5AT3oMzCfP8kb
+         JiJg==
+X-Gm-Message-State: AOJu0YyKPHrsXDcU5Qn9kr858yNrxlykvp+Si+y9w7OTS1qZyXfo7YqA
+	GFeQiDStfjkVsAXdceEvNtjzfQ==
+X-Google-Smtp-Source: AGHT+IGvchB3mT4gsXs6pxP47GOeNOg0vAlTs2z27yD6zP1XlUf0h0MzPBkcJpMKK8R/L+BlH5pxHA==
+X-Received: by 2002:a17:906:3289:b0:a1c:cd0d:67c with SMTP id 9-20020a170906328900b00a1ccd0d067cmr756959ejw.25.1702214638105;
+        Sun, 10 Dec 2023 05:23:58 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id n2-20020a05640205c200b0055122551f98sm167656edx.6.2023.12.10.05.23.13
+        by smtp.gmail.com with ESMTPSA id n2-20020a05640205c200b0055122551f98sm167656edx.6.2023.12.10.05.23.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Dec 2023 05:23:15 -0800 (PST)
-Message-ID: <9d496fb5-25b4-4f1a-9652-4c54cf2d59a1@linaro.org>
-Date: Sun, 10 Dec 2023 14:23:12 +0100
+        Sun, 10 Dec 2023 05:23:57 -0800 (PST)
+Message-ID: <a695f62f-5d08-49d6-a0b9-9f023ad7f586@linaro.org>
+Date: Sun, 10 Dec 2023 14:23:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,8 +62,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] pinctrl: samsung: support ExynosAuto GPIO
- structure
+Subject: Re: [PATCH v3 4/4] pinctrl: samsung: add exynosautov920 pinctrl
 Content-Language: en-US
 To: Jaewon Kim <jaewon02.kim@samsung.com>,
  Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
@@ -79,8 +78,8 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
  linux-serial@vger.kernel.org
 References: <20231208074527.50840-1-jaewon02.kim@samsung.com>
- <CGME20231208075020epcas2p260c65fa8d33e0cd97806f065bb8a044d@epcas2p2.samsung.com>
- <20231208074527.50840-4-jaewon02.kim@samsung.com>
+ <CGME20231208075020epcas2p414c85e03d18327665eeff54082314b56@epcas2p4.samsung.com>
+ <20231208074527.50840-5-jaewon02.kim@samsung.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -126,49 +125,42 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231208074527.50840-4-jaewon02.kim@samsung.com>
+In-Reply-To: <20231208074527.50840-5-jaewon02.kim@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/12/2023 08:45, Jaewon Kim wrote:
-> New ExynosAuto series GPIO have a different register structure.
-> In the existing Exynos series, EINT control register enumerated after
-
-Missing verb... or enumerated is past tense? I just don't get entire
-sentence.
-
-> a specific offset (e.g EXYNOS_GPIO_ECON_OFFSET, EXYNOS_GPIO_EMASK_OFFSET).
-> However, from ExynosAutov920 SoC, the register that controls EINT belongs
-> to each GPIO bank, and each GPIO bank has 0x1000 align.
+> Add pinctrl data for ExynosAutov920 SoC.
 > 
-> This is a structure to protect the GPIO bank using S2MPU in VM environment,
-> and will only be applied in ExynosAuto series SoCs.
+> Pinctrl data for ExynosAutoV920 SoC.
+>  - GPA0,GPA1 (10): External wake up interrupt
+>  - GPQ0 (2): SPMI (PMIC I/F)
+>  - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
+>  - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
+>  - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
+>  - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
 > 
-> -------------------------------------------------
-> | original		| ExynosAutov920	|
-> |-----------------------------------------------|
-> | 0x0	GPIO_CON	| 0x0	GPIO_CON	|
-> | 0x4	GPIO_DAT	| 0x4	GPIO_DAT	|
-> | 0x8	GPIO_PUD	| 0x8	GPIO_PUD	|
-> | 0xc	GPIO_DRV	| 0xc	GPIO_DRV	|
-> | 0x10	GPIO_CONPDN	| 0x10	GPIO_CONPDN	|
-> | 0x14	GPIO_PUDPDN	| 0x14	GPIO_PUDPDN	|
-> | 0x700	EINT_CON	| 0x18	EINT_CON	|
+> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> ---
 
-This suggests there is EINT_CON per bank in old and new register layout.
-I don't think it's true, so probably this could look like:
-
-| ---                           | 0x18	EINT_CON (per_bank) |
-| ---                           | 0x18	EINT_FLTCON0 (per_bank) |
-| ---                           | 0x18	EINT_FLTCON1 (per_bank) |
-| ---                           | 0x18	EINT_MASK (per_bank) |
-| 0x700	EINT_CON (global)       | 0x18	EINT_CON	|
-
-etc..
-
-Also, please use spaces for alignment in the table.
+...
 
 
+>  /**
+>   * struct exynos_weint_data: irq specific data for all the wakeup interrupts
+>   * generated by the external wakeup interrupt controller.
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> index 362e99566919..800a2f0a026a 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> @@ -1324,6 +1324,8 @@ static const struct of_device_id samsung_pinctrl_dt_match[] = {
+>  		.data = &exynosautov9_of_data },
+>  	{ .compatible = "tesla,fsd-pinctrl",
+>  		.data = &fsd_of_data },
+> +	{ .compatible = "samsung,exynosautov920-pinctrl",
+> +		.data = &exynosautov920_of_data },
+
+Please put it after autov9.
 
 Best regards,
 Krzysztof
