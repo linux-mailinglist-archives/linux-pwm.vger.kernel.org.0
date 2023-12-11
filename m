@@ -1,35 +1,35 @@
-Return-Path: <linux-pwm+bounces-516-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-517-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E285180DBDA
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Dec 2023 21:42:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 577AE80DBFF
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Dec 2023 21:49:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 832A5B2153F
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Dec 2023 20:42:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08FD91F21079
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Dec 2023 20:49:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31E3D53E3B;
-	Mon, 11 Dec 2023 20:42:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B36D353E34;
+	Mon, 11 Dec 2023 20:49:56 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E5F3E4
-	for <linux-pwm@vger.kernel.org>; Mon, 11 Dec 2023 12:42:13 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D720A6
+	for <linux-pwm@vger.kernel.org>; Mon, 11 Dec 2023 12:49:53 -0800 (PST)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rCn6S-0005UC-35; Mon, 11 Dec 2023 21:42:12 +0100
+	id 1rCnDs-0001wT-1G; Mon, 11 Dec 2023 21:49:52 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rCn6Q-00FBGh-SY; Mon, 11 Dec 2023 21:42:10 +0100
+	id 1rCnDr-00FBHA-DA; Mon, 11 Dec 2023 21:49:51 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rCn6Q-0018Fb-Iq; Mon, 11 Dec 2023 21:42:10 +0100
-Date: Mon, 11 Dec 2023 21:42:10 +0100
+	id 1rCnDr-0018OB-3U; Mon, 11 Dec 2023 21:49:51 +0100
+Date: Mon, 11 Dec 2023 21:49:50 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Nylon Chen <nylon.chen@sifive.com>
 Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -39,11 +39,10 @@ Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	aou@eecs.berkeley.edu, thierry.reding@gmail.com,
 	emil.renner.berthing@canonical.com, vincent.chen@sifive.com,
 	greentime.hu@sifive.com, zong.li@sifive.com, nylon7717@gmail.com
-Subject: Re: [v5 1/2] riscv: dts: sifive: unleashed/unmatched: Remove PWM
- controlled LED's active-low properties
-Message-ID: <20231211204210.ioeyyufiz646ht5j@pengutronix.de>
+Subject: Re: [v5 2/2] pwm: sifive: change the PWM controlled LED algorithm
+Message-ID: <20231211204950.fkaqsnpzb6kixqf2@pengutronix.de>
 References: <20231024101902.6689-1-nylon.chen@sifive.com>
- <20231024101902.6689-2-nylon.chen@sifive.com>
+ <20231024101902.6689-3-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -51,36 +50,108 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ii53zkpujb4nxf65"
+	protocol="application/pgp-signature"; boundary="u262zj72p5ucybub"
 Content-Disposition: inline
-In-Reply-To: <20231024101902.6689-2-nylon.chen@sifive.com>
+In-Reply-To: <20231024101902.6689-3-nylon.chen@sifive.com>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---ii53zkpujb4nxf65
+--u262zj72p5ucybub
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 24, 2023 at 06:19:01PM +0800, Nylon Chen wrote:
-> This removes the active-low properties of the PWM-controlled LEDs in
-> the HiFive Unmatched device tree.
->=20
-> The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schemat=
-ics-v3.pdf[1].
->=20
-> Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf845=
-3f8698_hifive-unleashed-a00-schematics-1.pdf [0]
-> Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce7=
-6f4192_hifive-unmatched-schematics-v3.pdf [1]
+Hello Nylon,
 
-IMHO the commit log should mention that the driver got inversion wrong
-and so both dts and driver need adaption.
+On Tue, Oct 24, 2023 at 06:19:02PM +0800, Nylon Chen wrote:
+> The `frac` variable represents the pulse inactive time, and the result
+> of this algorithm is the pulse active time. Therefore, we must reverse th=
+e result.
+>=20
+> The reference is SiFive FU740-C000 Manual[0]
+>=20
+> Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b=
+16acba_fu740-c000-manual-v1p6.pdf [0]
+>=20
+> Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+> ---
+>  drivers/pwm/pwm-sifive.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> index eabddb7c7820..353c2342fbf1 100644
+> --- a/drivers/pwm/pwm-sifive.c
+> +++ b/drivers/pwm/pwm-sifive.c
+> @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive=
+_ddata *ddata,
+> =20
+>  	/* As scale <=3D 15 the shift operation cannot overflow. */
+>  	num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scal=
+e);
+> -	ddata->real_period =3D div64_ul(num, rate);
+> +	ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
 
-Otherwise looks fine to me.
+It's unclear to me, why you changed that.
+
+>  	dev_dbg(ddata->chip.dev,
+>  		"New real_period =3D %u ns\n", ddata->real_period);
+>  }
+> @@ -121,13 +121,14 @@ static int pwm_sifive_get_state(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+>  		state->enabled =3D false;
+> =20
+>  	state->period =3D ddata->real_period;
+> +
+> +	duty =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - duty;
+
+I would have placed that directly after
+
+	duty =3D readl(...);
+
+which then also influences
+
+	state->enabled =3D duty > 0;
+
+(as it should?).
+
+>  	state->duty_cycle =3D
+>  		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
+> -	state->polarity =3D PWM_POLARITY_INVERSED;
+> +	state->polarity =3D PWM_POLARITY_NORMAL;
+> =20
+>  	return 0;
+>  }
+> -
+>  static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+>  			    const struct pwm_state *state)
+>  {
+> @@ -139,7 +140,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  	int ret =3D 0;
+>  	u32 frac;
+> =20
+> -	if (state->polarity !=3D PWM_POLARITY_INVERSED)
+> +	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+>  		return -EINVAL;
+> =20
+>  	cur_state =3D pwm->state;
+> @@ -158,6 +159,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  	num =3D (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+>  	frac =3D DIV64_U64_ROUND_CLOSEST(num, state->period);
+>  	/* The hardware cannot generate a 100% duty cycle */
+> +	frac =3D (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
+>  	frac =3D min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+
+frac can only be > (1U << PWM_SIFIVE_CMPWIDTH) - 1 if an overflow
+happend the line above. Is that what you want here?
+
+>  	mutex_lock(&ddata->lock);
 
 Best regards
 Uwe
@@ -89,20 +160,20 @@ Uwe
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---ii53zkpujb4nxf65
+--u262zj72p5ucybub
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV3dCEACgkQj4D7WH0S
-/k6tVAf7Bj1RKTbaCo6ITu+NYR1r155+J1T19OHpefrybgzQXZ2X+LaixXbycEk/
-bkGT88XTQVJSmNlu5Af1zKpOF/Uqs3XZovcEPiipnTGQFW/cuQfys/Yryxr1/9ei
-DssK8PavR+upBKmz2n0Amhh5gISU75gAGgExhTDMV4atIrlopAl0zGQUSphCFaLQ
-u+HfMiBhG18K6hfk/tsA1KYf8v/bzg2DZ9rArCSycr8/8BqSUO1R6SAWlrSUWRrU
-I+JfkIFJNWwP1sXz0i9+tAoOKYCgcLdtqLBbi9QT5vYcKSVig+m5h/3ofeJMu9Tw
-B9IcMycyPSaYA56AqG1k79Mv021yUg==
-=KPhB
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV3de4ACgkQj4D7WH0S
+/k5Qzwf+LxNerZNq1fsWhPxwliLRort8Hzk5VF2VeREIjSWu6hPHY5Uu2Jx/wumV
+bnRMjYJaLsgFWf6NS4NPrAUTKmsika76v2c6AcQdWtRpc/1xlEwsVrX4nZMruAzv
+mBmCPb5zqeDf4X4LhIR7Y1oAFejSg/uyVY1WDABJzbqt8Z/E4JHXIsxB4C6eqfl3
+bC+q7XOlWu6C6YO3/fsZ/A7W9o+S1/mFMkyggloi5YJyjhn75SqG6IYvE9wsOOQX
+LnRHy2LITZlrzGRIukkQvPIfPWgCaSESmsXIJR0mi0KyCMPd/p2ttcDM6o2y27JM
+4sCF7nZA15bQcx6WfqQyQwexbDoy+A==
+=WoBu
 -----END PGP SIGNATURE-----
 
---ii53zkpujb4nxf65--
+--u262zj72p5ucybub--
 
