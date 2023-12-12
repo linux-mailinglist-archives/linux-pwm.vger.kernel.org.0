@@ -1,78 +1,50 @@
-Return-Path: <linux-pwm+bounces-536-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-537-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C11F80F0E3
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Dec 2023 16:30:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDFAB80F1EA
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Dec 2023 17:08:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E05AFB219D0
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Dec 2023 15:30:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 727C51F21364
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Dec 2023 16:08:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B3DE78E8D;
-	Tue, 12 Dec 2023 15:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZE/1j13"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5114077652;
+	Tue, 12 Dec 2023 16:08:49 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008BD76DDF;
-	Tue, 12 Dec 2023 15:27:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C6CDC433CB;
-	Tue, 12 Dec 2023 15:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702394866;
-	bh=DWg3sQ9qxo14q4VzdIjndy7b2Wyci4KHHq5fC3tFwHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XZE/1j13EWy8z8pFkXqNRn6HYJzjFYN/10G8iu8cAoafoyKUIycSHgfsSyvCG2Teo
-	 WIYd8P+3bQWl5nIbbFYJJT9TxFvKa61BuG3l1DafVw0ekfJDR8qSKIxXKDzCInlZYV
-	 raUWL9oNnYA4SBKtgOH4ful8G+RZ+T/71QpgbHLJGeR0sVbnohOUMP3PCXgg3SfKK2
-	 I9ufZ93he66i2gRzet1ebLl1wH5amInfBW6CfiulcjcH7V2WDx4RmZaQ5GFC1P65zR
-	 XRdJhdv/ySQONhdGuJFe03izK1d+T/JtjpbEhiwAqjmZ4pejzLDtj95C/Gi2y5/LVG
-	 RVsC/UmRz27YA==
-Date: Tue, 12 Dec 2023 15:27:35 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sean Young <sean@mess.org>, Jean Delvare <jdelvare@suse.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Helge Deller <deller@gmx.de>,
-	linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EEB5E4
+	for <linux-pwm@vger.kernel.org>; Tue, 12 Dec 2023 08:08:46 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rD5JH-0004jR-QV; Tue, 12 Dec 2023 17:08:39 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rD5JH-00FNhj-2l; Tue, 12 Dec 2023 17:08:39 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rD5JG-001kiF-PY; Tue, 12 Dec 2023 17:08:38 +0100
+Date: Tue, 12 Dec 2023 17:08:38 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Sean Young <sean@mess.org>
+Cc: linux-media@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
 	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mark Gross <markgross@kernel.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v8 1/6] pwm: Rename pwm_apply_state() to
- pwm_apply_might_sleep()
-Message-ID: <7594ea09-a6f3-4dac-acb3-d5f899f9cf84@sirena.org.uk>
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 5/6] pwm: bcm2835: Allow PWM driver to be used in
+ atomic context
+Message-ID: <20231212160838.k4z4csy455a7qnje@pengutronix.de>
 References: <cover.1702369869.git.sean@mess.org>
- <9af7ba748fd2eb7e04208b6b183185f1daf78016.1702369869.git.sean@mess.org>
- <20231212114100.sn7nzntousql2ays@pengutronix.de>
- <f7be8d89-25ae-4d83-9577-12fcac41d0ab@roeck-us.net>
+ <e9e32c9789da3c90b5a2aa7d5a093120b76421fb.1702369869.git.sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -80,62 +52,54 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iRFgPhdLTHQFhazT"
+	protocol="application/pgp-signature"; boundary="wlqgufhnyonivmrn"
 Content-Disposition: inline
-In-Reply-To: <f7be8d89-25ae-4d83-9577-12fcac41d0ab@roeck-us.net>
-X-Cookie: If rash develops, discontinue use.
+In-Reply-To: <e9e32c9789da3c90b5a2aa7d5a093120b76421fb.1702369869.git.sean@mess.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---iRFgPhdLTHQFhazT
+--wlqgufhnyonivmrn
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 07:22:18AM -0800, Guenter Roeck wrote:
-> On 12/12/23 03:41, Uwe Kleine-K=F6nig wrote:
+Hello Sean,
 
-> > Several affected maintainers already acked, so I guess it's fine to take
-> > this via the pwm tree. An Ack from the remaining maintainers would be
-> > very welcome, an alternative would be to split the patch.
+On Tue, Dec 12, 2023 at 08:34:04AM +0000, Sean Young wrote:
+> @@ -169,6 +179,7 @@ static int bcm2835_pwm_suspend(struct device *dev)
+>  {
+>  	struct bcm2835_pwm *pc =3D dev_get_drvdata(dev);
+> =20
+> +	clk_rate_exclusive_put(pc->clk);
+>  	clk_disable_unprepare(pc->clk);
 
-> > Missing Acks so far:
+I thought this was the remove function, but that's suspend. Adding
+clk_rate_exclusive_put() there is wrong.
 
-> >   - Jean Delvare / Guenter Roeck for drivers/hwmon/pwm-fan.c
-> >   - Javier Martinez Canillas for drivers/gpu/drm/solomon/ssd130x.c
-> >   - Liam Girdwood / Mark Brown for drivers/regulator/pwm-regulator.c
-> >   - Helge Deller for drivers/video/fbdev/ssd1307fb.c
+Best regards
+Uwe
 
-> Personally I find the change unnecessary and pointless, which is why I
-> didn't ack it. Even if function names were deemed important enough, keepi=
-ng
-> pwm_apply_state() for the time being and just adding pwm_apply_might_slee=
-p()
-> as duplicate would have done it, all the changes could have gone in long
-> ago, and per-subsystem cleanup could have been orthogonal.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> I refrained from commenting because it might be considered bike shedding,
-> but I don't want to ack something I deem unnecessary and pointless without
-> comment. But then don't want to keep arguing either, so
-
-I haven't been reading this series because I couldn't tell why I was
-copied on it, it's only chance that made me open Guenter's mail here...
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---iRFgPhdLTHQFhazT
+--wlqgufhnyonivmrn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmV4e+YACgkQJNaLcl1U
-h9Aqewf/UALlUMgqzHC9oYZI+Kcf9eGgd7QO/+pxhbI5hMnT5tFRH9lkihV8NhkZ
-moY0GH6PcO8YFj0y+Hs89vmJCd3MRAJ7tZ3eEg5/Q7BJejmk7kB24R5TlqUHUcg7
-DcHugsUrGAmvt3afuF03VqA53HlJ6D43J0cIv5j5X8x18v9Z4s0/4z+/zuMEJ8qi
-05gpioqCsqqPxlKMuWv9qPxn6PDVO3JMk7OUodLi1Tdzfio/b7/81nRQX6DgpHm4
-odCEdmvJwIAukE1TlXxfpb7GZuHEe0z04rKSLfvDj6s90hRM9uHdJb3L7kp1Xf0n
-nsm4Twh4PnRdMJRKACafo9HyC8RvJw==
-=Wkx1
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV4hYUACgkQj4D7WH0S
+/k7CGwf8CNDJo8J8DGsUCNsNPFcJnPGhEI5nHgeeIHjn5tWVeMMh4VTcS5OPtH2b
+lVGGS2AKxudNdoodSJ/x50nT0o/PdjrcXmWX2V6WVx2P3kmHrPk7lvExuQlaWmhd
+LmdKyjfjUXEJ3Cr+TEZ2MwmVxyvrqhvEqqKHKE88hxeb+WU6pz3Jc9bivEEoQttV
+PbLO5ghpdc5JjT4TR/q0Tfm/bOfQpLx7fIodBvZ7pzqLWO7/ExmK9ektbG60oJXq
+sVSjGYJta2hqOzGxcfXZgBpBDtXvGB0fl5O/c7vyG59aLZkwcSQpp2y9L8NXe54r
+C/R7Dp4x1L/tF2BExdxbEZ7sXvOJWA==
+=Shxu
 -----END PGP SIGNATURE-----
 
---iRFgPhdLTHQFhazT--
+--wlqgufhnyonivmrn--
 
