@@ -1,182 +1,192 @@
-Return-Path: <linux-pwm+bounces-547-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-548-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7A05810BD6
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 08:52:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9467810C11
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 09:10:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4CA81B209E3
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 07:52:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A64F1281073
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 08:10:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CDA11A707;
-	Wed, 13 Dec 2023 07:52:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFF211C6B0;
+	Wed, 13 Dec 2023 08:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RElFpwns"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fRcovOwJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121DBDC
-	for <linux-pwm@vger.kernel.org>; Tue, 12 Dec 2023 23:52:07 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-336417c565eso77527f8f.3
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Dec 2023 23:52:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702453925; x=1703058725; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ql92QE11Pfcxbyxo2UbUycGoJKHMns1dhoo8IwBkLNY=;
-        b=RElFpwnsEM33nuWZ9vZKODyjar5v6FiJj6WPXlEDDyw5vzSRp8W6e/AymlbCigsSnJ
-         x6WvrEfosVqxfeUtkLh0vFnGasS5LKs9nQwZ8aCdyGKmKrVBkD+92NO4JUuKVKUE5QmK
-         LUxaGfcN1VLwO90use2altojqCN6gnt47F9EdXPTVDh4viLib/ACms8PvWeC7sr9JOAT
-         fQ3IVbC05UILYsTEqS+3kY6ohnOD02rVWYL9IMgFiNvcbv7dwQMiUN5zjihWlAzwM4ZJ
-         V/XE6g5jsB+lrpB7bxnA+m+Di/Wjvm8MVCmhTDGNQc8gQjhhmCIogqmbZQoPubW6tmq6
-         2U+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702453925; x=1703058725;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ql92QE11Pfcxbyxo2UbUycGoJKHMns1dhoo8IwBkLNY=;
-        b=vSkWL/F5hHnecdrWhIWy0+sSijEMpycPx5iWoGhCoL3KZNaKoVEHwM78XB4UOpBkRf
-         Ncl1v+smUJV8JHal0P6uxI/1qLRiTL9oWlc33Icowse7ZlpdOMjiZwvv6xBHK09jzZpO
-         1q57b3i2HZUOifCidxp2h+ojHCzwz58StaYj0KerMboDOzck9bT2U11meE5eU6LKxEeO
-         wGakyT3+v7VA3F+qqPasXpVCI6hSDwPp3/Ul+528T7tS693uljs4H//5dFpyGIK2uiXT
-         jdYkWGSgpxF+Avr7CSzv5u4CoTMR+0DqWSpPize6zcnbzAkmt9GhstF7DSO3AZlQVLnG
-         KjRg==
-X-Gm-Message-State: AOJu0YxMjDsdr3oCJ1uD3bpYf/qogpKFcZrHZ6WTWd8nsmclWJg/pRfk
-	uy3P67UtbLpR2A8gEY9vQAt2NA==
-X-Google-Smtp-Source: AGHT+IHO41iV6A/MyiLx8wmxwoSxX4d+wdAumnLCMstjy2sDK2aHe8UD9Agtk2NmskuQ70eGcjgfmQ==
-X-Received: by 2002:a5d:6891:0:b0:333:6338:f1ad with SMTP id h17-20020a5d6891000000b003336338f1admr2575214wru.53.1702453925491;
-        Tue, 12 Dec 2023 23:52:05 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id s15-20020a5d69cf000000b0033641783aeesm331628wrw.7.2023.12.12.23.52.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 23:52:05 -0800 (PST)
-Message-ID: <68a36910-e528-45ff-8b59-e7cd95aaef0b@linaro.org>
-Date: Wed, 13 Dec 2023 08:52:03 +0100
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E5F107
+	for <linux-pwm@vger.kernel.org>; Wed, 13 Dec 2023 00:10:42 -0800 (PST)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231213081040epoutp01f8ecad4e3068c46469dd8e8fe20f3721~gVdbxBD1N2252722527epoutp01h
+	for <linux-pwm@vger.kernel.org>; Wed, 13 Dec 2023 08:10:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231213081040epoutp01f8ecad4e3068c46469dd8e8fe20f3721~gVdbxBD1N2252722527epoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702455040;
+	bh=PdS2y8Co78/Fv1mYnqiLVsgstnUodpEglwoVK3SJid0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=fRcovOwJsTHZFRhLPuLh6R8WT98nYam3zbIb+PxQ2d2sA+28Ge+2bS7j6k0Ad2mE9
+	 mnXqr22bKUYgABa5R2LZaeif12N9c6OtExh1m937tzBWgnlgzxmjN0GqGZ4+IV7Zva
+	 up1Ry7/PBIXqQqWF/z3IJGk/cRH6Gs5rGVTr7QTU=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231213081040epcas2p493e0b33864a0d883c67bf2083174dec9~gVdbMt9mf2574525745epcas2p4G;
+	Wed, 13 Dec 2023 08:10:40 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.70]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Sqp7z4m1Lz4x9Q8; Wed, 13 Dec
+	2023 08:10:39 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	04.DE.10006.FF669756; Wed, 13 Dec 2023 17:10:39 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20231213081039epcas2p3cbe854e785e78a1a650b29fcb24ddc23~gVdaQApBI1435014350epcas2p3S;
+	Wed, 13 Dec 2023 08:10:39 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231213081039epsmtrp291dfabcc572bf9c164ecc3a49596b3cc~gVdaPCzTk2160121601epsmtrp2B;
+	Wed, 13 Dec 2023 08:10:39 +0000 (GMT)
+X-AuditID: b6c32a45-179ff70000002716-f3-657966fffc7f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	46.86.18939.EF669756; Wed, 13 Dec 2023 17:10:39 +0900 (KST)
+Received: from [10.229.8.168] (unknown [10.229.8.168]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20231213081038epsmtip20f8466aadc95bdb0b5a3cb4b7954ac2f~gVdZ5UpuW1538115381epsmtip2V;
+	Wed, 13 Dec 2023 08:10:38 +0000 (GMT)
+Message-ID: <2b72464e-d60a-6adc-0ef7-ed92ff495859@samsung.com>
+Date: Wed, 13 Dec 2023 17:10:38 +0900
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+	Thunderbird/102.11.0
 Subject: Re: [PATCH v4 2/2] pinctrl: samsung: add exynosautov920 pinctrl
 Content-Language: en-US
-To: Jaewon Kim <jaewon02.kim@samsung.com>,
- Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
+	<alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester
+	Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
+	Thierry Reding <thierry.reding@gmail.com>, Uwe Kleine-K?nig
+	<u.kleine-koenig@pengutronix.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-serial@vger.kernel.org
-References: <20231211114145.106255-1-jaewon02.kim@samsung.com>
- <CGME20231211114216epcas2p300bbf4c592d495991c6cc2d96e0b1f85@epcas2p3.samsung.com>
- <20231211114145.106255-3-jaewon02.kim@samsung.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231211114145.106255-3-jaewon02.kim@samsung.com>
-Content-Type: text/plain; charset=UTF-8
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-serial@vger.kernel.org
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+In-Reply-To: <68a36910-e528-45ff-8b59-e7cd95aaef0b@linaro.org>
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJsWRmVeSWpSXmKPExsWy7bCmme7/tMpUgxvPVCwezNvGZrFm7zkm
+	i/lHzrFaNC9ez2bxbq6Mxd7XW9ktpvxZzmSx6fE1VovN8/8wWlzeNYfN4u7dVYwWM87vY7I4
+	s7iX3aJ17xF2i8Nv2lktfu6ax2KxahdQ3e2JkxkdhDx2zrrL7rFpVSebx51re9g89s9dw+6x
+	eUm9R/9fA4++LasYPT5vkgvgiMq2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdS
+	yEvMTbVVcvEJ0HXLzAH6REmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYF6gV5yY
+	W1yal66Xl1piZWhgYGQKVJiQnfH24GLmgv3CFdtPsDQwdgp0MXJySAiYSDw73cfSxcjFISSw
+	g1HiUcccJgjnE6PE/Y1/WOGccz9vssC0/Jw6C6plJ6PEq0fzoZzXjBKnty9jA6niFbCTWHf+
+	KFgHi4CqxOqF51gg4oISJ2c+AbNFBaIlWpfdB6rn4BAW8JA4u98BJMwsIC5x68l8JhBbROA+
+	s8TrtmqQ+cwCDxgl5p77ygiSYBPQlvi+fjEriM0JtOvPoWUsEM3yEtvfzmEGaZAQeMEh8Xvl
+	f2aIs10kWh7vhXpBWOLV8S3sELaUxOd3e9kg7HyJtitnoOI1EhsXXGKEsO0lFp35yQ5yKLOA
+	psT6XfogpoSAssSRW1Br+SQ6Dv9lhwjzSnS0CUE0qkncn3oOariMxKQjK5kgbA+JXb13WSYw
+	Ks5CCpRZSL6fheSZWQh7FzCyrGIUSy0ozk1PLTYqMITHdXJ+7iZGcBrXct3BOPntB71DjEwc
+	jIcYJTiYlUR4T+4oTxXiTUmsrEotyo8vKs1JLT7EaAqMmonMUqLJ+cBMklcSb2hiaWBiZmZo
+	bmRqYK4kznuvdW6KkEB6YklqdmpqQWoRTB8TB6dUA5Oyegd72szj+w65rtdc/eWt/a/9Llck
+	nz2s3hm+Z48in2mw/T696hMGm+9vWiYkYnNpypL3xXMTG6ou31RKC39/9u66oKw8romT3wqI
+	LXxy/Vtzbd3CY3NqviZ+arRNMCgIWXVn79SLS9ec4bl7Td5vllrBym17Tpfdrl95zm/NkzzW
+	8kliZu82T1Le2bxIgde0qaaZwy3+2GymWt5Q/xzlpzN6TkiryPyLn1Pwodhyc4utSMnusPh/
+	K6UOcz0/+SGhm+99k6BSQ9TSoB2cZ7QU/x9xOSHNs3Tbovx98ueUHcJDYxo9189cJmg9zaZp
+	L79T1pnbt1R2Wi26H/uj7teVX7yHSnc7SzJ/7mMXm9yvxFKckWioxVxUnAgAQklvHmwEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsWy7bCSvO7/tMpUg88zmSwezNvGZrFm7zkm
+	i/lHzrFaNC9ez2bxbq6Mxd7XW9ktpvxZzmSx6fE1VovN8/8wWlzeNYfN4u7dVYwWM87vY7I4
+	s7iX3aJ17xF2i8Nv2lktfu6ax2KxahdQ3e2JkxkdhDx2zrrL7rFpVSebx51re9g89s9dw+6x
+	eUm9R/9fA4++LasYPT5vkgvgiOKySUnNySxLLdK3S+DKeHtwMXPBfuGK7SdYGhg7BboYOTkk
+	BEwkfk6dxdLFyMUhJLCdUWLKv3+sEAkZieXP+tggbGGJ+y1HWCGKXjJKbGvayAiS4BWwk1h3
+	/igLiM0ioCqxeuE5Foi4oMTJmU/AbFGBaInVny8ANXNwCAt4SJzd7wASZhYQl7j1ZD4TyEwR
+	gcfMEg+n/mcGcZgFHjBKLJ/0CGrbb0aJ481H2UFa2AS0Jb6vXwx2HifQ5j+HlrFAjDKT6Nra
+	xQhhy0tsfzuHeQKj0Cwkh8xCsnEWkpZZSFoWMLKsYhRNLSjOTc9NLjDUK07MLS7NS9dLzs/d
+	xAiOW62gHYzL1v/VO8TIxMF4iFGCg1lJhPfkjvJUId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rzK
+	OZ0pQgLpiSWp2ampBalFMFkmDk6pBiZBge+/Hj1foMcRqpLQdic58kvUp1oZ9ew9y59FzLg7
+	O+lPYpblwdtZC+1K6rz+ry5rfKHzefkG2cgUa0VD9QDVBeHRvNnaxc8DZoXd2lCx/OCjPZFH
+	p8llT78++XzpUmsZzTP8DZMYH86tY+R8c1z/UXPhzUyGzxw5v/cJnX72qoVTRIVxdjWr+gmZ
+	XdxHe6uDNTq/rG8snMJ4Od122kantjftpTcbVs9luVOWk9+S1MSu/u3f1HnhN/vn2SqvmMzJ
+	JnlznTO33f/ssxmXNEy38Cxunep7K3+qYZ3r0/THP18s8Qv/FvyrIPJesayD3hXBb3WK2zlc
+	HRSSVG8adlZ7THJ3itthkFj18elREyWW4oxEQy3mouJEAHwSZJBKAwAA
+X-CMS-MailID: 20231213081039epcas2p3cbe854e785e78a1a650b29fcb24ddc23
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231211114216epcas2p300bbf4c592d495991c6cc2d96e0b1f85
+References: <20231211114145.106255-1-jaewon02.kim@samsung.com>
+	<CGME20231211114216epcas2p300bbf4c592d495991c6cc2d96e0b1f85@epcas2p3.samsung.com>
+	<20231211114145.106255-3-jaewon02.kim@samsung.com>
+	<68a36910-e528-45ff-8b59-e7cd95aaef0b@linaro.org>
 
-On 11/12/2023 12:41, Jaewon Kim wrote:
-> Add pinctrl data for ExynosAutov920 SoC.
-> It has a newly applied pinctrl register layer for ExynosAuto series.
-> 
-> Pinctrl data for ExynosAutoV920 SoC.
->  - GPA0,GPA1 (10): External wake up interrupt
->  - GPQ0 (2): SPMI (PMIC I/F)
->  - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
->  - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
->  - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
->  - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
-> 
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> ---
->  .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 140 ++++++++++++++++++
->  drivers/pinctrl/samsung/pinctrl-exynos.c      |  23 ++-
->  drivers/pinctrl/samsung/pinctrl-exynos.h      |  25 ++++
->  drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
->  drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
->  5 files changed, 190 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> index cb965cf93705..a998c296dd05 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> @@ -796,3 +796,143 @@ const struct samsung_pinctrl_of_match_data fsd_of_data __initconst = {
->  	.ctrl		= fsd_pin_ctrl,
->  	.num_ctrl	= ARRAY_SIZE(fsd_pin_ctrl),
->  };
-> +
-> +/* pin banks of exynosautov920 pin-controller 0 (ALIVE) */
-> +static const struct samsung_pin_bank_data exynosautov920_pin_banks0[] = {
-> +	EXYNOSV920_PIN_BANK_EINTW(8, 0x0000, "gpa0", 0x18, 0x24, 0x28),
-> +	EXYNOSV920_PIN_BANK_EINTW(2, 0x1000, "gpa1", 0x18, 0x20, 0x24),
-> +	EXYNOS850_PIN_BANK_EINTN(2, 0x2000, "gpq0"),
-> +};
 
-Applied with re-ordering it, to keep it after ExynosAutov9. For the
-future: don't add entries to the end of lists because it causes exactly
-this issue we have here: unnecessary conflicts. Please keep this rule
-for entire development, not only pinctrl.
+On 23. 12. 13. 16:52, Krzysztof Kozlowski wrote:
+> On 11/12/2023 12:41, Jaewon Kim wrote:
+>> Add pinctrl data for ExynosAutov920 SoC.
+>> It has a newly applied pinctrl register layer for ExynosAuto series.
+>>
+>> Pinctrl data for ExynosAutoV920 SoC.
+>>   - GPA0,GPA1 (10): External wake up interrupt
+>>   - GPQ0 (2): SPMI (PMIC I/F)
+>>   - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
+>>   - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
+>>   - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
+>>   - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
+>>
+>> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+>> ---
+>>   .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 140 ++++++++++++++++++
+>>   drivers/pinctrl/samsung/pinctrl-exynos.c      |  23 ++-
+>>   drivers/pinctrl/samsung/pinctrl-exynos.h      |  25 ++++
+>>   drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
+>>   drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
+>>   5 files changed, 190 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
+>> index cb965cf93705..a998c296dd05 100644
+>> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
+>> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
+>> @@ -796,3 +796,143 @@ const struct samsung_pinctrl_of_match_data fsd_of_data __initconst = {
+>>   	.ctrl		= fsd_pin_ctrl,
+>>   	.num_ctrl	= ARRAY_SIZE(fsd_pin_ctrl),
+>>   };
+>> +
+>> +/* pin banks of exynosautov920 pin-controller 0 (ALIVE) */
+>> +static const struct samsung_pin_bank_data exynosautov920_pin_banks0[] = {
+>> +	EXYNOSV920_PIN_BANK_EINTW(8, 0x0000, "gpa0", 0x18, 0x24, 0x28),
+>> +	EXYNOSV920_PIN_BANK_EINTW(2, 0x1000, "gpa1", 0x18, 0x20, 0x24),
+>> +	EXYNOS850_PIN_BANK_EINTN(2, 0x2000, "gpq0"),
+>> +};e
+> Applied with re-ordering it, to keep it after ExynosAutov9. For the
+> future: don't add entries to the end of lists because it causes exactly
+> this issue we have here: unnecessary conflicts. Please keep this rule
+> for entire development, not only pinctrl.
+>
+> If both you and Peter were observing this basic rule, I would not have
+> work of reshuffling and fixing conflicts.
+>
+> Please check the result if I reshuffled/solved conflicts correctly.
+>
 
-If both you and Peter were observing this basic rule, I would not have
-work of reshuffling and fixing conflicts.
+I thought the new SoC should go to the end, but I was wrong.
 
-Please check the result if I reshuffled/solved conflicts correctly.
+I will follow your comments in alphabetical order.
 
-Best regards,
-Krzysztof
+Thanks you sincerely.
+
+
+Thanks
+
+Jaewon Kim
+
 
 
