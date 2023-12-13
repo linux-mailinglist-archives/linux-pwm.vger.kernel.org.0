@@ -1,180 +1,210 @@
-Return-Path: <linux-pwm+bounces-552-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-553-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7D61810D59
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 10:27:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 133C4811055
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 12:40:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7715EB20A83
-	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 09:27:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 69BB1B20F43
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 Dec 2023 11:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23A041EB5A;
-	Wed, 13 Dec 2023 09:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F864249F0;
+	Wed, 13 Dec 2023 11:40:14 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B29D0;
-	Wed, 13 Dec 2023 01:27:31 -0800 (PST)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id CE8A924E2A1;
-	Wed, 13 Dec 2023 17:27:29 +0800 (CST)
-Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 13 Dec
- 2023 17:27:29 +0800
-Received: from [192.168.120.47] (171.223.208.138) by EXMBX068.cuchost.com
- (172.16.6.68) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 13 Dec
- 2023 17:27:28 +0800
-Message-ID: <62bb91ad-5d4b-4ec6-80c8-6c3edf5d25cd@starfivetech.com>
-Date: Wed, 13 Dec 2023 17:27:26 +0800
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3EFB0
+	for <linux-pwm@vger.kernel.org>; Wed, 13 Dec 2023 03:40:10 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rDNav-0007rJ-Ru; Wed, 13 Dec 2023 12:40:05 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rDNau-00FYhS-MM; Wed, 13 Dec 2023 12:40:04 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rDNau-002GH7-Cq; Wed, 13 Dec 2023 12:40:04 +0100
+Date: Wed, 13 Dec 2023 12:40:04 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
+Message-ID: <20231213114004.cuei66hi3jmcpocj@pengutronix.de>
+References: <20231120113307.80710-1-biju.das.jz@bp.renesas.com>
+ <20231120113307.80710-4-biju.das.jz@bp.renesas.com>
+ <20231206183824.g6dc5ib2dfb7um7n@pengutronix.de>
+ <TYCPR01MB1126952E843AC08DB732C18A5868BA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+ <20231207214159.i5347ikpbt2ihznr@pengutronix.de>
+ <TYCPR01MB11269C233892B6E3002622C3B868AA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+ <20231208140718.laekt3jlsmwvzc7x@pengutronix.de>
+ <TYCPR01MB11269900EF62D8CA3E906DBAC868AA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+ <TYCPR01MB1126992DD51F714AEDADF0A4F868DA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/4] pwm: opencores: Add PWM driver support
-Content-Language: en-US
-To: Rob Herring <robh+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>, "Emil Renner
- Berthing" <kernel@esmil.dk>, Thierry Reding <thierry.reding@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Hal Feng
-	<hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>,
-	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-References: <20231208094209.1910934-1-william.qiu@starfivetech.com>
- <20231208094209.1910934-3-william.qiu@starfivetech.com>
- <CAL_JsqK8fsAocOu3OBdz1kzNiApf1J0Uc0spn8gfdJaVnomFHQ@mail.gmail.com>
-From: William Qiu <william.qiu@starfivetech.com>
-In-Reply-To: <CAL_JsqK8fsAocOu3OBdz1kzNiApf1J0Uc0spn8gfdJaVnomFHQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX068.cuchost.com
- (172.16.6.68)
-X-YovoleRuleAgent: yovoleflag
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5uzhohpjibqigktr"
+Content-Disposition: inline
+In-Reply-To: <TYCPR01MB1126992DD51F714AEDADF0A4F868DA@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+
+
+--5uzhohpjibqigktr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Wed, Dec 13, 2023 at 09:06:56AM +0000, Biju Das wrote:
+> Hi Uwe,
+>=20
+> > -----Original Message-----
+> > From: Biju Das
+> > Sent: Friday, December 8, 2023 2:12 PM
+> > Subject: RE: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
+> >=20
+> > Hi Uwe Kleine-K=F6nig,
+> >=20
+> > > -----Original Message-----
+> > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > Sent: Friday, December 8, 2023 2:07 PM
+> > > Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
+> > >
+> > > Hello Biju,
+> > >
+> > > On Fri, Dec 08, 2023 at 10:34:55AM +0000, Biju Das wrote:
+> > > > > -----Original Message-----
+> > > > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > > > Sent: Thursday, December 7, 2023 9:42 PM
+> > > > > Subject: Re: [PATCH v17 3/4] pwm: Add support for RZ/G2L GPT
+> > > > >
+> > > > > Hello Biju,
+> > > > >
+> > > > > On Thu, Dec 07, 2023 at 06:26:44PM +0000, Biju Das wrote:
+> > > > > > ######[  304.213944] pwm-rzg2l-gpt 10048000.pwm: .apply is not
+> > > > > > idempotent (ena=3D1 pol=3D0 5500000000000/43980352512000) -> (e=
+na=3D1
+> > > > > > pol=3D0
+> > > > > > 5500000000000/43980239923200)
+> > > > > > 	 High setting##
+> > > > > > 	[  304.230854] pwm-rzg2l-gpt 10048000.pwm: .apply is not
+> > > > > > idempotent
+> > > > > > (ena=3D1 pol=3D0 23980465100800/43980352512000) -> (ena=3D1 pol=
+=3D0
+> > > > > > 23980465100800/43980239923200)
+> > > > >
+> > > > > Have you tried to understand that? What is the clk rate when this
+> > > happens?
+> > > > > You're not suggesting that mul_u64_u64_div_u64 is wrong, are you?
+> > > >
+> > > > mul_u64_u64_div_u64() works for certain values. But for very high
+> > > > values we are losing precision and is giving unexpected values.
+> > >
+> > > Can you reduce the problem to a bogus result of mul_u64_u64_div_u64()?
+> > > I'd be very surprised if the problem was mul_u64_u64_div_u64() and not
+> > > how it's used in your pwm driver.
+> >=20
+> > When I looked last time, it drops precision here[1]. I will recheck aga=
+in.
+> > On RZ/G2L family devices, the PWM rate is 100MHz.
+> >=20
+>  [1]
+> https://elixir.bootlin.com/linux/v6.7-rc4/source/lib/math/div64.c#L214
+>=20
+>=20
+> Please find the bug details in mul_u64_u64_div_u64() compared to mul_u64_=
+u32_div()
+>=20
+> Theoretical calculation:
+>=20
+> Period =3D 43980465100800 nsec
+> Duty_cycle =3D 23980465100800 nsec
+> PWM rate =3D 100MHz
+>=20
+> period_cycles(tmp) =3D 43980465100800 * (100 * 10 ^ 6) / (10 ^ 9) =3D 439=
+8046510080
+> prescale =3D ((43980465100800 >> 32) >=3D 256) =3D 5
+> period_cycles =3D min (round_up(4398046510080,( 1 << (2 * 5 )), U32_MAX) =
+=3D min (4295162607, U32_MAX) =3D U32_MAX =3D 0xFFFFFFFF
+> duty_cycles =3D min (2398046510080, ,( 1 << (2 * 5 )), U32_MAX) =3D  min =
+(2341842295, U32_MAX) =3D 0x8B95AD77
+>=20
+>=20
+> with mul_u64_u64_div_u64 (ARM64):
+> [   54.551612] ##### period_cycles_norm=3D43980465100800
+> [   54.305923] ##### period_cycles_tmp=3D4398035251080 ---> This is the b=
+ug.
 
+It took me a while to read from your mail that=20
 
-On 2023/12/12 1:41, Rob Herring wrote:
-> On Fri, Dec 8, 2023 at 3:42=E2=80=AFAM William Qiu <william.qiu@starfiv=
-etech.com> wrote:
->>
->> Add driver for OpenCores PWM Controller. And add compatibility code
->> which based on StarFive SoC.
->>
->> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
->> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
->> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
->> ---
->>  MAINTAINERS              |   7 ++
->>  drivers/pwm/Kconfig      |  12 ++
->>  drivers/pwm/Makefile     |   1 +
->>  drivers/pwm/pwm-ocores.c | 229 ++++++++++++++++++++++++++++++++++++++=
+	mul_u64_u64_div_u64(43980465100800, 100000000, 1000000000)
+
+yields 4398035251080 on your machine (which isn't the exact result).
+
+I came to the same conclusion, damn, I thought mul_u64_u64_div_u64() was
+exact. I wonder if it's worth to improve that. One fun fact is that
+while mul_u64_u64_div_u64(43980465100800, 100000000, 1000000000) yields
+4398035251080 (which is off by 11259000), swapping the parameters (and
+thus using mul_u64_u64_div_u64(100000000, 43980465100800, 1000000000))
+yields 4398046510080 which is the exact result.
+
+So this exact issue can be improved by:
+
+diff --git a/lib/math/div64.c b/lib/math/div64.c
+index 55a81782e271..9523c3cd37f7 100644
+--- a/lib/math/div64.c
++++ b/lib/math/div64.c
+@@ -188,6 +188,9 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
+ 	u64 res =3D 0, div, rem;
+ 	int shift;
+=20
++	if (a > b)
++		return mul_u64_u64_div_u64(b, a, c);
 +
->>  4 files changed, 249 insertions(+)
->>  create mode 100644 drivers/pwm/pwm-ocores.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 788be9ab5b73..7a11a22da09e 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -16204,6 +16204,13 @@ F:     Documentation/i2c/busses/i2c-ocores.rs=
-t
->>  F:     drivers/i2c/busses/i2c-ocores.c
->>  F:     include/linux/platform_data/i2c-ocores.h
->>
->> +OPENCORES PWM DRIVER
->> +M:     William Qiu <william.qiu@starfivetech.com>
->> +M:     Hal Feng <hal.feng@starfivetech.com>
->> +S:     Supported
->> +F:     Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
->> +F:     drivers/pwm/pwm-ocores.c
->> +
->>  OPENRISC ARCHITECTURE
->>  M:     Jonas Bonn <jonas@southpole.se>
->>  M:     Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
->> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
->> index 4b956d661755..d87e1bb350ba 100644
->> --- a/drivers/pwm/Kconfig
->> +++ b/drivers/pwm/Kconfig
->> @@ -444,6 +444,18 @@ config PWM_NTXEC
->>           controller found in certain e-book readers designed by the o=
-riginal
->>           design manufacturer Netronix.
->>
->> +config PWM_OCORES
->> +       tristate "OpenCores PWM support"
->> +       depends on HAS_IOMEM && OF
->> +       depends on COMMON_CLK && RESET_CONTROLLER
->> +       depends on ARCH_STARFIVE || COMPILE_TEST
->> +       help
->> +         If you say yes to this option, support will be included for =
-the
->> +         OpenCores PWM. For details see https://opencores.org/project=
-s/ptc.
->> +
->> +         To compile this driver as a module, choose M here: the modul=
-e
->> +         will be called pwm-ocores.
->> +
->>  config PWM_OMAP_DMTIMER
->>         tristate "OMAP Dual-Mode Timer PWM support"
->>         depends on OF
->> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
->> index c5ec9e168ee7..517c4f643058 100644
->> --- a/drivers/pwm/Makefile
->> +++ b/drivers/pwm/Makefile
->> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_MICROCHIP_CORE)      +=3D pwm-micro=
-chip-core.o
->>  obj-$(CONFIG_PWM_MTK_DISP)     +=3D pwm-mtk-disp.o
->>  obj-$(CONFIG_PWM_MXS)          +=3D pwm-mxs.o
->>  obj-$(CONFIG_PWM_NTXEC)                +=3D pwm-ntxec.o
->> +obj-$(CONFIG_PWM_OCORES)       +=3D pwm-ocores.o
->>  obj-$(CONFIG_PWM_OMAP_DMTIMER) +=3D pwm-omap-dmtimer.o
->>  obj-$(CONFIG_PWM_PCA9685)      +=3D pwm-pca9685.o
->>  obj-$(CONFIG_PWM_PXA)          +=3D pwm-pxa.o
->> diff --git a/drivers/pwm/pwm-ocores.c b/drivers/pwm/pwm-ocores.c
->> new file mode 100644
->> index 000000000000..996ca3805901
->> --- /dev/null
->> +++ b/drivers/pwm/pwm-ocores.c
->> @@ -0,0 +1,229 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * OpenCores PWM Driver
->> + *
->> + * https://opencores.org/projects/ptc
->> + *
->> + * Copyright (C) 2018-2023 StarFive Technology Co., Ltd.
->> + *
->> + * Limitations:
->> + * - The hardware only do inverted polarity.
->> + * - The hardware minimum period / duty_cycle is (1 / pwm_apb clock f=
-requency) ns.
->> + * - The hardware maximum period / duty_cycle is (U32_MAX / pwm_apb c=
-lock frequency) ns.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->=20
-> You probably don't need this header and the implicit includes it makes
-> are dropped now in linux-next. Please check what you actually need and
-> make them explicit.
->=20
-> Rob
-Will drop.
+ 	/* can a * b overflow ? */
+ 	if (ilog2(a) + ilog2(b) > 62) {
+ 		/*
 
-Thank you for spending time on this patchset.
+but the issue stays in principle. I'll think about that for a while.
 
-Best Regards
-William
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--5uzhohpjibqigktr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV5mBMACgkQj4D7WH0S
+/k5SWwgAlNpH9hagxJJx+RW1bu0KU4KuHqUxRZpodeQVjF1LAmNKjzMPALMdgZOu
+CPirhdW2pgCywK0q3ReytWUwRuIn7sKGNDn9YepobkINE72k8gPzdLivqzjuDNzj
+591baq3WFWzTVRbYqlEqb6Xuo2TbNZ4Qhv7SysrtMAxDJvkJyqAFg2QBKsVSrx/+
+rSlpGERDN9BFfi808BzZ30hmaYqZgCIAX86krQVO/SZjgp6md2fKLmZvJnXmoHCb
+KCwNjBbr63c5InRN5egQfBag3LO3PQUMpD+/bcpzGLBK/UJtaRQA4drG9AnViJoN
+2jS/mluc8YI+d2/l1e+nRPuH1aBTHQ==
+=vF5I
+-----END PGP SIGNATURE-----
+
+--5uzhohpjibqigktr--
 
