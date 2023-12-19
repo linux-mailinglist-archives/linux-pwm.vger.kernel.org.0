@@ -1,69 +1,130 @@
-Return-Path: <linux-pwm+bounces-574-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-575-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 944B981834A
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 09:26:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5FA0818533
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 11:21:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6C3F1C23894
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 08:26:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 300421F2262D
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 10:21:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DCF912B6D;
-	Tue, 19 Dec 2023 08:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BF4414A87;
+	Tue, 19 Dec 2023 10:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAgyGFav"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvponOVs"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C00412B69;
-	Tue, 19 Dec 2023 08:26:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E70BC433C8;
-	Tue, 19 Dec 2023 08:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BBE1429B;
+	Tue, 19 Dec 2023 10:21:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF72C433C7;
+	Tue, 19 Dec 2023 10:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702974402;
-	bh=RXS2+8wrVZn1cgNBgmJ9bhqenDhrBEvY/SJyQRX+so4=;
+	s=k20201202; t=1702981280;
+	bh=gZeK5clkD/uu2z40FQVqIntH9HPz1O4KCvUi/zNGLMQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vAgyGFavYPKYx8aEZelEFOgs9QsVWVyFeThCQa33plPSsm7YnONT5BTXGXcm4XWf9
-	 u/PbDO5aPyJD0lV3oUoY/7RebLbJ7z/Yts4v8PWJARO9BECPXlJIHpzhBDAmWzf8tp
-	 15qkcrZSVKMBaD276t/wvexLctnWI3Q4nnuKa2Qtg4GfnDZZhFDhD//sB2248Cj0Bb
-	 qBBdpEEgQgnEN6TXQFCxyQvHIIt2DElrk+tb3neD9Sb7D86TZTTne02Mh/KEP/ejK5
-	 zlFJnxInYj8UFd5g3M2+dwdd1kO7jhcS/tddhdiKzToywOGnvAO9NpVfDVplgt8aZL
-	 NZdfZ2aSPiXSQ==
-Date: Tue, 19 Dec 2023 16:26:39 +0800
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
-	chrome-platform@lists.linux.dev, kernel@pengutronix.de,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] pwm: cros-ec: Drop documentation for dropped struct
- member
-Message-ID: <ZYFTvzsw1-z_MAZ_@google.com>
-References: <20231219063316.167905-2-u.kleine-koenig@pengutronix.de>
+	b=bvponOVsqh9GkVQ/7+K8rhxhBFN7YG7FKUsOyD2XR/y41ysT0uBpcakdessirTzvg
+	 iKrjv4Xc01Wuz6C3Hfl8JcSG4RdaskhvxX6ia5UKrotuHCyKORNv7jdZCeWirD9Ca7
+	 Wg+gej2zwMBXtSDRdEdPM+BKqS/n4o8LFICXT4Mr7XNeIRtuTpkDy3/P6D+AvNBKla
+	 XiUW6vUmv2jZhQ5/LQE1pmiLxfTnu8tMz9f4Xchqug2oyZEC6d72eDNTNSQw23U8Uc
+	 iSOvH6TT97yGaIpF5CO06ecnhgbBZCzkt8su5mBEMSukRNF+hKAMHwc6Vpjaa710wA
+	 m8hjDsd10DIkA==
+Date: Tue, 19 Dec 2023 11:21:16 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-fsd@tesla.com,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: i2c: exynos5: add specific compatible
+ for Tesla FSD
+Message-ID: <ZYFunIR3WTWEQZ27@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-fsd@tesla.com,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+References: <20231205092229.19135-1-krzysztof.kozlowski@linaro.org>
+ <20231205092229.19135-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e0jaSCCZf1PJUyzj"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231219063316.167905-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20231205092229.19135-2-krzysztof.kozlowski@linaro.org>
 
-On Tue, Dec 19, 2023 at 07:33:17AM +0100, Uwe Kleine-König wrote:
-> Recently an unused member was removed from struct cros_ec_pwm_device,
-> but the kernel doc wasn't adapted accordingly. Catch up and drop the
-> documentation, too.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202312190757.O4M9dsln-lkp@intel.com/
-> Fixes: ffb150737fee ("pwm: cros-ec: Drop unused member from driver private data")
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
+--e0jaSCCZf1PJUyzj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Dec 05, 2023 at 10:22:24AM +0100, Krzysztof Kozlowski wrote:
+> Tesla FSD is a derivative of Samsung Exynos SoC, thus just like the
+> others it reuses several devices from older designs.  Historically we
+> kept the old (block's) compatible only.  This works fine and there is no
+> bug here, however guidelines expressed in
+> Documentation/devicetree/bindings/writing-bindings.rst state that:
+> 1. Compatibles should be specific.
+> 2. We should add new compatibles in case of bugs or features.
+>=20
+> Add Tesla FSD compatible specific to be used with an existing fallback.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Acked-by: Wolfram Sang <wsa@kernel.org>
+
+
+--e0jaSCCZf1PJUyzj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmWBbpgACgkQFA3kzBSg
+Kbay8BAAl6hb97thKirgRbgydIp3RV6plHUmPsCCvb1syX83MRmXvfuFpK0q3XHM
+Q2LO216TmVPqOtoX9njmTJBgQevTK3UhRCiQ/sY6o08iq0zMLUPdWAVvnQZbZJzm
+I8cTKXU23K/nxWnccup5WbVcJIyklvDIK/+U8RsLD9+Rgzj/feynWuh7dMTTBdQf
+LXmxSiw3e0EKQlov6CYi+cGrRthDSZ1cC0g2aQ909cNz4/jAZMFrn2MAW1X5xrRc
+VNUlqK09MfNSSpH8RmBC1K8bxYrMiX5VElOZvE+9iFvjfvb2kfuoHK/TiWAv/HTM
+z9ATejmPxB15c7MY5hJIjE4W0SWQvWqTG38n2AXNVydat0ZNWYs+2aSgMlu8L2R+
+pI+35+Weehn18Zl0ajcXEfjTfVmx9s+7CA80S4b2ieRWXbS0IGFdCT55plW2ojWQ
+kQe/wql3+EPmih8QW32laDFVguvrfIUgRFEBpf9XeORSygcQuquN3m5Lt1KVFdUW
+k/EZ+rN9ecZ3h8g6zGaCOVUdWRjTW2hU9RrW0fJpZjGAiwyXqbdQK+yDDgAXIh4e
+o5XrhxtySQmVSmR06WGkUwPVBxYUWiwST5ImOEJlMaJcobX8ldTCwhpcgOr6iJiO
+pY9lpfcicVqh6SZLv/Vqh/Ph0EQcdY/5/i4jBhOr6pTuHFKLMBY=
+=0p7B
+-----END PGP SIGNATURE-----
+
+--e0jaSCCZf1PJUyzj--
 
