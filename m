@@ -1,199 +1,69 @@
-Return-Path: <linux-pwm+bounces-572-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-574-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC1A48181A7
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 07:45:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 944B981834A
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 09:26:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 770AB286158
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 06:45:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6C3F1C23894
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Dec 2023 08:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF0501171C;
-	Tue, 19 Dec 2023 06:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DCF912B6D;
+	Tue, 19 Dec 2023 08:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAgyGFav"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27BCC130
-	for <linux-pwm@vger.kernel.org>; Tue, 19 Dec 2023 06:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rFTq9-0008Bn-5x; Tue, 19 Dec 2023 07:44:29 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rFTq8-00Gs4s-0I; Tue, 19 Dec 2023 07:44:28 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rFTq7-005oH4-NJ; Tue, 19 Dec 2023 07:44:27 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: kernel@pengutronix.de,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH 2/2] bus: ts-nbus: Improve error reporting
-Date: Tue, 19 Dec 2023 07:44:15 +0100
-Message-ID:  <08f13bf08385784814d7250066b31a735cae3d3d.1702967898.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To:  <6ae9784dfb98ff63b44735b903e7f4d4e3980222.1702967898.git.u.kleine-koenig@pengutronix.de>
-References:  <6ae9784dfb98ff63b44735b903e7f4d4e3980222.1702967898.git.u.kleine-koenig@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C00412B69;
+	Tue, 19 Dec 2023 08:26:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E70BC433C8;
+	Tue, 19 Dec 2023 08:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702974402;
+	bh=RXS2+8wrVZn1cgNBgmJ9bhqenDhrBEvY/SJyQRX+so4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vAgyGFavYPKYx8aEZelEFOgs9QsVWVyFeThCQa33plPSsm7YnONT5BTXGXcm4XWf9
+	 u/PbDO5aPyJD0lV3oUoY/7RebLbJ7z/Yts4v8PWJARO9BECPXlJIHpzhBDAmWzf8tp
+	 15qkcrZSVKMBaD276t/wvexLctnWI3Q4nnuKa2Qtg4GfnDZZhFDhD//sB2248Cj0Bb
+	 qBBdpEEgQgnEN6TXQFCxyQvHIIt2DElrk+tb3neD9Sb7D86TZTTne02Mh/KEP/ejK5
+	 zlFJnxInYj8UFd5g3M2+dwdd1kO7jhcS/tddhdiKzToywOGnvAO9NpVfDVplgt8aZL
+	 NZdfZ2aSPiXSQ==
+Date: Tue, 19 Dec 2023 16:26:39 +0800
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org,
+	chrome-platform@lists.linux.dev, kernel@pengutronix.de,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] pwm: cros-ec: Drop documentation for dropped struct
+ member
+Message-ID: <ZYFTvzsw1-z_MAZ_@google.com>
+References: <20231219063316.167905-2-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4587; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=e7IKKIepL5PZrMx4Tu9V+DsjoB/iOlb4YfTz/Yi9L8I=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlgTu/+0ae8AfzHvbZ+jZNPQelAi/ZpxF1lPaeb BOlBFewrUOJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYE7vwAKCRCPgPtYfRL+ Tu0MB/0bJUyYRIGF7ZqmNgg62UNAGhU7B7JuTipYpTFGpwkgzIma1+j6wfs+vN3rVu7ALfL5kJh NwX4RMHpkzb7z5oAA4OFVj41GrwxGH9z1kDgjXNquZnLKGhzdhawkH0aciuP/WwWHiQ+nNKVdCo R7WmRCWhf6URwP/Wzgbs3+zLKntwSZZ8sORdjJnn1fGVCwcCFnB6S/vZlKsHHW8x9Ccx8qRSl/0 pV38kHy0Zz0sRE9uiEJNLAkWp0i1VEypVPgQwmnJZCny7YDX9BkDJ8La0Hq+ZU3yN2cj7TBlG+V eEghNMn7vrXRJW2INU7WpSNaq28lEBpan0UXF4tOyvUBPQdh
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <20231219063316.167905-2-u.kleine-koenig@pengutronix.de>
 
-Using dev_err_probe() brings several improvements:
+On Tue, Dec 19, 2023 at 07:33:17AM +0100, Uwe Kleine-König wrote:
+> Recently an unused member was removed from struct cros_ec_pwm_device,
+> but the kernel doc wasn't adapted accordingly. Catch up and drop the
+> documentation, too.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202312190757.O4M9dsln-lkp@intel.com/
+> Fixes: ffb150737fee ("pwm: cros-ec: Drop unused member from driver private data")
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
- - emits the symbolic error code
- - properly handles EPROBE_DEFER
- - combines error message generation and return value handling
-
-While at it add error messages to two error paths that were silent
-before.
-
-Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
----
-Changes since (implicit) v1
-(https://lore.kernel.org/linux-kernel/20702efe8ab96add9773e97ceed1a6cf91a065ee.1702160838.git.u.kleine-koenig@pengutronix.de):
-
-- Fix return value in one error path (Christophe JAILLET)
-- Rebase to today's next (trivial)
-
- drivers/bus/ts-nbus.c | 66 ++++++++++++++++++-------------------------
- 1 file changed, 28 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
-index 19c5d1f4e4d7..baf22a82c47a 100644
---- a/drivers/bus/ts-nbus.c
-+++ b/drivers/bus/ts-nbus.c
-@@ -39,45 +39,39 @@ struct ts_nbus {
- /*
-  * request all gpios required by the bus.
-  */
--static int ts_nbus_init_pdata(struct platform_device *pdev, struct ts_nbus
--		*ts_nbus)
-+static int ts_nbus_init_pdata(struct platform_device *pdev,
-+			      struct ts_nbus *ts_nbus)
- {
- 	ts_nbus->data = devm_gpiod_get_array(&pdev->dev, "ts,data",
- 			GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->data)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,data-gpio from dts\n");
--		return PTR_ERR(ts_nbus->data);
--	}
-+	if (IS_ERR(ts_nbus->data))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->data),
-+				     "failed to retrieve ts,data-gpio from dts\n");
- 
- 	ts_nbus->csn = devm_gpiod_get(&pdev->dev, "ts,csn", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->csn)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,csn-gpio from dts\n");
--		return PTR_ERR(ts_nbus->csn);
--	}
-+	if (IS_ERR(ts_nbus->csn))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->csn),
-+			      "failed to retrieve ts,csn-gpio from dts\n");
- 
- 	ts_nbus->txrx = devm_gpiod_get(&pdev->dev, "ts,txrx", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->txrx)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,txrx-gpio from dts\n");
--		return PTR_ERR(ts_nbus->txrx);
--	}
-+	if (IS_ERR(ts_nbus->txrx))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->txrx),
-+				     "failed to retrieve ts,txrx-gpio from dts\n");
- 
- 	ts_nbus->strobe = devm_gpiod_get(&pdev->dev, "ts,strobe", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->strobe)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,strobe-gpio from dts\n");
--		return PTR_ERR(ts_nbus->strobe);
--	}
-+	if (IS_ERR(ts_nbus->strobe))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->strobe),
-+				     "failed to retrieve ts,strobe-gpio from dts\n");
- 
- 	ts_nbus->ale = devm_gpiod_get(&pdev->dev, "ts,ale", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts_nbus->ale)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,ale-gpio from dts\n");
--		return PTR_ERR(ts_nbus->ale);
--	}
-+	if (IS_ERR(ts_nbus->ale))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->ale),
-+				     "failed to retrieve ts,ale-gpio from dts\n");
- 
- 	ts_nbus->rdy = devm_gpiod_get(&pdev->dev, "ts,rdy", GPIOD_IN);
--	if (IS_ERR(ts_nbus->rdy)) {
--		dev_err(&pdev->dev, "failed to retrieve ts,rdy-gpio from dts\n");
--		return PTR_ERR(ts_nbus->rdy);
--	}
-+	if (IS_ERR(ts_nbus->rdy))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->rdy),
-+				     "failed to retrieve ts,rdy-gpio from dts\n");
- 
- 	return 0;
- }
-@@ -289,25 +283,20 @@ static int ts_nbus_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	pwm = devm_pwm_get(dev, NULL);
--	if (IS_ERR(pwm)) {
--		ret = PTR_ERR(pwm);
--		if (ret != -EPROBE_DEFER)
--			dev_err(dev, "unable to request PWM\n");
--		return ret;
--	}
-+	if (IS_ERR(pwm))
-+		return dev_err_probe(dev, PTR_ERR(pwm),
-+				     "unable to request PWM\n");
- 
- 	pwm_init_state(pwm, &state);
--	if (!state.period) {
--		dev_err(&pdev->dev, "invalid PWM period\n");
--		return -EINVAL;
--	}
-+	if (!state.period)
-+		return dev_err_probe(dev, -EINVAL, "invalid PWM period\n");
- 
- 	state.duty_cycle = state.period;
- 	state.enabled = true;
- 
- 	ret = pwm_apply_state(pwm, &state);
- 	if (ret < 0)
--		return ret;
-+		return dev_err_probe(dev, ret, "failed to configure PWM\n");
- 
- 	/*
- 	 * we can now start the FPGA and populate the peripherals.
-@@ -321,7 +310,8 @@ static int ts_nbus_probe(struct platform_device *pdev)
- 
- 	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
- 	if (ret < 0)
--		return ret;
-+		return dev_err_probe(dev, ret,
-+				     "failed to populate platform devices on bus\n");
- 
- 	dev_info(dev, "initialized\n");
- 
--- 
-2.42.0
-
+Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
