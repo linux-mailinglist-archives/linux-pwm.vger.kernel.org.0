@@ -1,108 +1,185 @@
-Return-Path: <linux-pwm+bounces-597-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-599-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D118A81B4BC
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 12:17:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD58E81BE9B
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 19:59:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 632EFB223B1
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 11:17:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CCE628641B
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 18:59:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF226ABB3;
-	Thu, 21 Dec 2023 11:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 791B0651A2;
+	Thu, 21 Dec 2023 18:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JjtQylcU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9386AB9F
-	for <linux-pwm@vger.kernel.org>; Thu, 21 Dec 2023 11:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rGH3U-00059L-Jp; Thu, 21 Dec 2023 12:17:32 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rGH3S-000Vit-Sp; Thu, 21 Dec 2023 12:17:31 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rGH3T-001POd-MZ; Thu, 21 Dec 2023 12:17:31 +0100
-Date: Thu, 21 Dec 2023 12:17:31 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-pwm@vger.kernel.org, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, kernel@pengutronix.de, 
-	linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH] MAINTAINERS: pwm: Thierry steps down, Uwe takes over
-Message-ID: <bgydjom2y32ahs7y5o5xel67ybpifydmeokc7ew7ocm66gway2@v76vqgxrw3ho>
-References: <20231206214817.1783227-2-u.kleine-koenig@pengutronix.de>
- <ZXM72QYBbb32Q_aL@orome.fritz.box>
- <20231208190620.5qobgtyii2wt7tfa@pengutronix.de>
- <ZXbsDRslZNKCeJF9@orome.fritz.box>
- <20231211141900.x6tpyctch5fv3uqf@pengutronix.de>
- <ZXcpswXxb1oQldp5@orome.fritz.box>
- <20231212203352.wl3rzob75fct4lov@pengutronix.de>
- <ZYMPc50eBi6oBClu@orome.fritz.box>
- <6nj7rmq36hj5m26b7yhlbmpfps5wuxkx4zwyvttg4cpgocimj7@xtqm4qleo3s6>
- <ZYQMA-tM-zl5IJyC@orome.fritz.box>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190B565195;
+	Thu, 21 Dec 2023 18:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL6u9Im023368;
+	Thu, 21 Dec 2023 18:58:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=hpHPtZW
+	aw3gLN2+ydRk1QiUGlappUp3Wu5lFIFS1vhQ=; b=JjtQylcUf+iqihlf1CZdkRX
+	TgkTCDPPEHMQ5yEs9moVTMDp9nPB6XTEcg2N8k605FRU3RKSuKDHw2+Y2SCHggd6
+	L0O/ppokeDacV2h9D3GyQVsEpUg0pdhiVLC+CByvBGdbr/GJka0rpqXa7lVHsUmf
+	AhPyGJVUtxWemBAxoucqmz2QUE88Bqha/W2PL8xHhOAn57DPiRGKUtl9P9BG1kU2
+	xY0jRGIuYDL2OsieS7WR+lh12AUhGAcgSIP3JgKo22GA7leg7dy/XEx3qqi2Djqh
+	YzXmQe8mjH0F54T+dgBWTD8VKdqXif7fE47DGlrgCQDnYTbJn7n3C0XoViiXmCA=
+	=
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4d89k19u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 18:58:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BLIwuqn008603
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 18:58:56 GMT
+Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 21 Dec 2023 10:58:56 -0800
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+To: <pavel@ucw.cz>, <lee@kernel.org>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>
+CC: <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
+        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
+        <quic_gurus@quicinc.com>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        "Anjelique
+ Melendez" <quic_amelende@quicinc.com>
+Subject: [PATCH v8 0/7] Add support for LUT PPG
+Date: Thu, 21 Dec 2023 10:58:30 -0800
+Message-ID: <20231221185838.28440-1-quic_amelende@quicinc.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="i3hpii6aoqhh5mej"
-Content-Disposition: inline
-In-Reply-To: <ZYQMA-tM-zl5IJyC@orome.fritz.box>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: gQ3n5OTmzJQImalnt7ef-tEsESk8A8te
+X-Proofpoint-ORIG-GUID: gQ3n5OTmzJQImalnt7ef-tEsESk8A8te
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
+ suspectscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312210144
 
+In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+modules instead of LUT peripheral. This feature is called PPG.
 
---i3hpii6aoqhh5mej
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This change series adds support for PPG. Thanks!
+Changes since v7:
+  - Patch 4/7
+    - Initialize hi/lo_pause variables in lpg_pattern_set()
+Changes since v6:
+  - Patch 2/7
+    - Removed required by constraint on PPG dt properties
+Changes since v5:
+  - Patch 4/7
+    - Update logic so that multicolor led device triggers pattern
+      on all LEDs at the same time
+    - Update nitpicks from Lee
+  - Patch 5/7
+    - Update nitpicks from Lee
+Changes since v4:
+  - Patch 3/7
+    - Get rid of r/w helpers
+    - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
+    - Update error path in qcom_pbs_trigger_event()
+    - Fix reverse christmas tree
+  - Patch 4/7
+    - Get rid of r/w helpers
+    - Update variables to use "sdam" instead of "nvmem"
+    - Fix comments
+    - Fix reverse christmas tree
+    - Update lpg_pattern_set() logic
+  - Patch 5/7
+    - Removed sdam_lut_base from lpg_data
+Changes since v3:
+  - Patch 4/7
+    - Fix function returns
+    - Move register definition to top of file
+    - Revert max_brightness and probe accidental changes
+    - Combine init_sdam() and parse_sdam()
+    - Change error prints in probe to use dev_err_probe
+    - Remove ppg_en variable
+    - Update when pbs triggers are set/cleared
+  - Patch 6/7
+    - Remove use of nvmem_count
+    - Move register definition to top of file
+    - Remove lpg_get_sdam_lut_idx()
+Changes since v2:
+  - Patch 1/7
+    - Fix dt_binding_check error
+    - Rename binding file to match compatible
+    - Iclude SoC specific comptaibles
+  - Patch 2/7
+    - Update nvmem-names list
+  - Patch 3/7
+    - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+    - Fix return/break logic in qcom_pbs_wait_for_ack()
+    - Update iterators to be int
+    - Add constants
+    - Fix function calls in qcom_pbs_trigger_event()
+    - Remove unnessary comments
+    - Return -EPROBE_DEFER from get_pbs_client_device()
+Changes since v1:
+  - Patch 1/7
+    - Fix dt_binding_check errors
+    - Update binding description
+  - Path 2/7
+    - Fix dt_binding_check errors
+    - Update per variant constraints
+    - Update nvmem description
+  - Patch 3/7
+    - Update get_pbs_client_device()
+    - Drop use of printk
+    - Remove unused function
 
-Hello Thierry,
+Anjelique Melendez (7):
+  dt-bindings: soc: qcom: Add qcom,pbs bindings
+  dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
+  soc: qcom: add QCOM PBS driver
+  leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
+  leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
+  leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT
+    SDAM
+  leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
 
-On Thu, Dec 21, 2023 at 10:57:23AM +0100, Thierry Reding wrote:
-> Looks all good to me. I'll keep things going until the next merge window
-> and will then send out my last PWM pull request and let Linus know to
-> expect future requests to come from you.
+ .../bindings/leds/leds-qcom-lpg.yaml          |  82 ++++-
+ .../bindings/soc/qcom/qcom,pbs.yaml           |  46 +++
+ drivers/leds/rgb/leds-qcom-lpg.c              | 348 ++++++++++++++++--
+ drivers/soc/qcom/Kconfig                      |   9 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/qcom-pbs.c                   | 243 ++++++++++++
+ include/linux/soc/qcom/qcom-pbs.h             |  30 ++
+ 7 files changed, 728 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,pbs.yaml
+ create mode 100644 drivers/soc/qcom/qcom-pbs.c
+ create mode 100644 include/linux/soc/qcom/qcom-pbs.h
 
-Sounds good.
+-- 
+2.41.0
 
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---i3hpii6aoqhh5mej
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWEHsoACgkQj4D7WH0S
-/k6XeggAolfcwyJ6/eHa78Mwclwm/k8z28O6swoIpBNWbgoSO0Zr97YOtHDzmRrn
-DE2m1Wu4CbQDVE03wRkDcTP0zbgqzj8f9MzFoONQLczlFf/jIgsR7DhyIV8IyxuR
-WJ0tvVWBsrWG2dYDEgyuD84d8xLcMWOIHRL3P5KDsuy5p0Oae0CER58u4wnlHP9P
-iBk5Vp8tDsBZp2EL6TE2ggc7pQLwbusyvC/0bgd3mWmGslmpYjWl6GkW/PgxhQKi
-4Zj2aW+eXeBen1ZvVBhr+k/+t+ZapWLcYiymaEKw2I0mD4OlKOkV6/BMz2PW7yCc
-hU/SnqoH0eJ+V0+WBLG1bDx5Oyq8TA==
-=0/BY
------END PGP SIGNATURE-----
-
---i3hpii6aoqhh5mej--
 
