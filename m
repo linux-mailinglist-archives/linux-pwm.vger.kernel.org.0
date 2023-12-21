@@ -1,73 +1,47 @@
-Return-Path: <linux-pwm+bounces-596-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-597-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDA1081B2FD
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 10:57:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D118A81B4BC
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 12:17:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 838981F23294
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 09:57:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 632EFB223B1
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 11:17:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE204D124;
-	Thu, 21 Dec 2023 09:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lB+PhNIA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF226ABB3;
+	Thu, 21 Dec 2023 11:17:39 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3254D137
-	for <linux-pwm@vger.kernel.org>; Thu, 21 Dec 2023 09:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50e51a7545dso721132e87.2
-        for <linux-pwm@vger.kernel.org>; Thu, 21 Dec 2023 01:57:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703152645; x=1703757445; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=czNdiwtjM+Bf3wxnWNI65fEHbodGPjXoLCSns14aIQM=;
-        b=lB+PhNIAW4zeRY4fU6OoGmG50KeoQL+jrdAIhT76qESK2KZPcgKop199W3b3EJZ7II
-         N2CDMf1yNLxd9w87yFH8pvGwiPIomCmoXD/5J+4qWIfbnjMte7OoFbVCOMv0rsZ9vIVv
-         d48ftyINM5QiqbTWWjZSuyXdF6/f33F781GJzAm6DdZVmdkMoW/O1lHXBguzwod43HrG
-         JL83Wz9hnjyxOGolb4djZOjEgbYxrgJHnQDZ1gzrN/emboEWPt/BhFm35DxxAIkroRDe
-         YxOoUffkluM76Ow9ckb74x5KnxaQ2ev6WMCwUa8al3CL8D503N4AaI1r0nitDm7A+Juu
-         xbFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703152645; x=1703757445;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=czNdiwtjM+Bf3wxnWNI65fEHbodGPjXoLCSns14aIQM=;
-        b=dPTCRpb3qluAaodNpRA9uThAMuIkq16hOAINRpO+NF0Q3hsnr7JiHGyPAoC+Nuof7n
-         UxJ+EBk/xo+dj7qEuukNJVeMYWX766KnAP2d9CWn90/g9GQBeSHa6Etq1sGAuvUeJ8vG
-         cTny0wFnYooddM/a7IYkLzdecNhWuQealNpglqFX4UlOc3yd5H5ZykbAx2QLO0YGpjMI
-         houIvyGP4+mPp7bQHl9yA4R3llOPhcyB56FpM9V2Ji8uzvOZItY3S9KVgACAn4SfcD1M
-         EoOSLdY3pZl8bDLwr/PGUaCaj1XERb8xiVXpPP05OPUHDTGdvkAL/WEU30+dZdRCyCvh
-         CXvQ==
-X-Gm-Message-State: AOJu0Ywrfbqm2TfkbpZ1e6lEhy4XOW5IEYnHhno8I7n++Yttpu0xICZL
-	KW/6Mzzzta7zAOXdlRnJa9A=
-X-Google-Smtp-Source: AGHT+IEBLTiON+N2o0ZM18qKYqb279iJAAAWZJb3MkxNoSZ4VkOf1WKVYg2cLN90TjeVduOvKF/VNw==
-X-Received: by 2002:ac2:4119:0:b0:50e:3ca0:d695 with SMTP id b25-20020ac24119000000b0050e3ca0d695mr2618973lfi.89.1703152645110;
-        Thu, 21 Dec 2023 01:57:25 -0800 (PST)
-Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id gq14-20020a170906e24e00b00a26ac39ed4dsm134040ejb.11.2023.12.21.01.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 01:57:24 -0800 (PST)
-Date: Thu, 21 Dec 2023 10:57:23 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-pwm@vger.kernel.org,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Kevin Hilman <khilman@baylibre.com>, kernel@pengutronix.de,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9386AB9F
+	for <linux-pwm@vger.kernel.org>; Thu, 21 Dec 2023 11:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rGH3U-00059L-Jp; Thu, 21 Dec 2023 12:17:32 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rGH3S-000Vit-Sp; Thu, 21 Dec 2023 12:17:31 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rGH3T-001POd-MZ; Thu, 21 Dec 2023 12:17:31 +0100
+Date: Thu, 21 Dec 2023 12:17:31 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-pwm@vger.kernel.org, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, kernel@pengutronix.de, 
+	linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
 	Jerome Brunet <jbrunet@baylibre.com>
 Subject: Re: [PATCH] MAINTAINERS: pwm: Thierry steps down, Uwe takes over
-Message-ID: <ZYQMA-tM-zl5IJyC@orome.fritz.box>
+Message-ID: <bgydjom2y32ahs7y5o5xel67ybpifydmeokc7ew7ocm66gway2@v76vqgxrw3ho>
 References: <20231206214817.1783227-2-u.kleine-koenig@pengutronix.de>
  <ZXM72QYBbb32Q_aL@orome.fritz.box>
  <20231208190620.5qobgtyii2wt7tfa@pengutronix.de>
@@ -77,88 +51,58 @@ References: <20231206214817.1783227-2-u.kleine-koenig@pengutronix.de>
  <20231212203352.wl3rzob75fct4lov@pengutronix.de>
  <ZYMPc50eBi6oBClu@orome.fritz.box>
  <6nj7rmq36hj5m26b7yhlbmpfps5wuxkx4zwyvttg4cpgocimj7@xtqm4qleo3s6>
+ <ZYQMA-tM-zl5IJyC@orome.fritz.box>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Bpadk4LYFr5KK+oq"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i3hpii6aoqhh5mej"
 Content-Disposition: inline
-In-Reply-To: <6nj7rmq36hj5m26b7yhlbmpfps5wuxkx4zwyvttg4cpgocimj7@xtqm4qleo3s6>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <ZYQMA-tM-zl5IJyC@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---Bpadk4LYFr5KK+oq
-Content-Type: text/plain; charset=utf-8
+--i3hpii6aoqhh5mej
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 10:21:36AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> It's not easy to let go responsibility for a subsystem that one cared
-> for for a long time, but Thierry realized that his heart isn't in the
-> pwm framework any more.
->=20
-> Thierry cared for the pwm subsystem (commit 200efedd8766 ("pwm: Take
-> over maintainership of the PWM subsystem")) as a maintainer during
-> nearly 12 years. A big thanks for the time, effort and dedication spend
-> during that time.
->=20
-> Uwe takes over maintenance.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello Thierry,
->=20
-> On Wed, Dec 20, 2023 at 04:59:47PM +0100, Thierry Reding wrote:
-> > On Tue, Dec 12, 2023 at 09:33:52PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > On Mon, Dec 11, 2023 at 04:24:35PM +0100, Thierry Reding wrote:
-> > > > It all adds up in the end and keeps me from doing other things.
-> > >=20
-> > > If that means you'd be glad to give up the PWM maintainer job, I'd
-> > > happily take over this post.
-> >=20
-> > "Glad" is not the word that I would choose. After all I've looked after
-> > this subsystem for almost 12 years, and letting it go isn't something
-> > that is particularly easy. However, I do realize that my heart isn't in
-> > it anymore and I don't want to be in the way of anyone.
-> >=20
-> > So I'll take you up on that offer. Do you want to send a patch?
->=20
-> Sure, here it comes.
->=20
-> I hesitated to remove you completely, but I guess you intended a clean
-> cut? Or would you prefer to stay as a reviewer?
->=20
-> Usually I would have added you to CREDITS, but as you will continue to
-> fill your various other responsibilities (I expect), this felt wrong.=20
+Hello Thierry,
 
-Looks all good to me. I'll keep things going until the next merge window
-and will then send out my last PWM pull request and let Linus know to
-expect future requests to come from you.
+On Thu, Dec 21, 2023 at 10:57:23AM +0100, Thierry Reding wrote:
+> Looks all good to me. I'll keep things going until the next merge window
+> and will then send out my last PWM pull request and let Linus know to
+> expect future requests to come from you.
 
-Thierry
+Sounds good.
 
---Bpadk4LYFr5KK+oq
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--i3hpii6aoqhh5mej
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmWEDAMACgkQ3SOs138+
-s6GNYg//XoJfUeZxCmfz6spN7CsYd9q987+bqWzWKwEmrBjBHLO7YOY55ZhDeOQt
-5mj73V2HPXnOcEUk+0nxlioXrnmhw6J8ruHoUvK43yoQp/WizV48KEOszKwLF3Lo
-pixM3gbLj3t9h8EAhlcWy96sFZJIBTqSpL1sQcKIRNVx9e0GvswKvxqCUjfb7KZn
-b6RF6ueiuzQWRic3NLWZSvoxh4dWg3fYB2h18DVkq9b+K632a0SsETBmMFry7+1P
-yPmLb6wci2Aw2aK2lmXFzO31MD0/lCYC3BLGMTnsXI+Hrl6eASe7WXJ5PVjsrhM7
-9B0Si87xDQRKnxHFekuXJSG2+Mw00TBwQN0g+uJt7xaC/47DUO3mWrV9SaK97ksu
-CRiH+h22t0wnyWQiqyhsQ1DbLj/c8+WNLYX3gssoSTj9T7trT8/yt5xjU3Td1Xb1
-ZA6x0D62WLtz0P44aAxUY5L2nVi7xMXi2v9EBCge9omujFxj98mhWNSFcVNku3fn
-8eX5SghdUusYjjl53JzAvqfhFmcHVcRl0dR/O/ro0D+lZ4OZI6i1LhERo9s0IM3z
-zZNZQ+HyK46/ZYDWA6G5TZ+Io7thbhY32C5+jneriiEB/B5yFwUzJQU5zXD+A8EW
-nmv3sCgW9QibvwpKuryVPPUGBS/l+sJajHsEUJ2OD4JT12rXgpY=
-=MIpe
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWEHsoACgkQj4D7WH0S
+/k6XeggAolfcwyJ6/eHa78Mwclwm/k8z28O6swoIpBNWbgoSO0Zr97YOtHDzmRrn
+DE2m1Wu4CbQDVE03wRkDcTP0zbgqzj8f9MzFoONQLczlFf/jIgsR7DhyIV8IyxuR
+WJ0tvVWBsrWG2dYDEgyuD84d8xLcMWOIHRL3P5KDsuy5p0Oae0CER58u4wnlHP9P
+iBk5Vp8tDsBZp2EL6TE2ggc7pQLwbusyvC/0bgd3mWmGslmpYjWl6GkW/PgxhQKi
+4Zj2aW+eXeBen1ZvVBhr+k/+t+ZapWLcYiymaEKw2I0mD4OlKOkV6/BMz2PW7yCc
+hU/SnqoH0eJ+V0+WBLG1bDx5Oyq8TA==
+=0/BY
 -----END PGP SIGNATURE-----
 
---Bpadk4LYFr5KK+oq--
+--i3hpii6aoqhh5mej--
 
