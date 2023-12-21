@@ -1,69 +1,76 @@
-Return-Path: <linux-pwm+bounces-605-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-606-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B07581BEBA
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 20:00:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C459C81BFEC
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 22:12:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB32028945A
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 19:00:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BEEE2867FE
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 21:12:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA5A877658;
-	Thu, 21 Dec 2023 18:59:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8486576DA0;
+	Thu, 21 Dec 2023 21:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fc9rJilt"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="WB0oxVna"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5796C76DBC;
-	Thu, 21 Dec 2023 18:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BLDROhK014686;
-	Thu, 21 Dec 2023 18:59:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=vI4fOUwFK0VcXmgY7qzLx++zI2cGUEqjilCQmaxzv+M=; b=fc
-	9rJiltheFyDySJSL3STt65DjWXI4NA3rt/CeSHuhCrSnDLQ8aBzt+y+qIsDbglxC
-	tydq+EeZp64nt1BjKJBabdjpdLUgsJ95ZYbWXvXYLzCiD7mbJ+dDQGcTltv4TG3b
-	6i1vl58xPjUuoqq5VBJH4og2XJ1H3jo1u6FF4zXYNTw/qkSNH1+up/tzHSjwz4rV
-	+P6fJkBZ6aGQyuH3IpG1Ry8dudPAHfCSo47LB2rU2m2BsYqHm6WvCnUZ4KqoNDDT
-	+ec2r9UVsayTlcmaSeW1S+jNx/sSiRk95kve86cQ36G3nkT50IWjhl17ni5qHoDs
-	VWlzvyHpJOf11LZNbTXA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4g8ej9y8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 18:59:06 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BLIx5IZ006465
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 18:59:05 GMT
-Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 21 Dec 2023 10:59:05 -0800
-From: Anjelique Melendez <quic_amelende@quicinc.com>
-To: <pavel@ucw.cz>, <lee@kernel.org>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>
-CC: <luca.weiss@fairphone.com>, <konrad.dybcio@linaro.org>,
-        <u.kleine-koenig@pengutronix.de>, <quic_subbaram@quicinc.com>,
-        <quic_gurus@quicinc.com>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        "Anjelique
- Melendez" <quic_amelende@quicinc.com>
-Subject: [PATCH v8 7/7] leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
-Date: Thu, 21 Dec 2023 10:58:37 -0800
-Message-ID: <20231221185838.28440-8-quic_amelende@quicinc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231221185838.28440-1-quic_amelende@quicinc.com>
-References: <20231221185838.28440-1-quic_amelende@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA44C6280F;
+	Thu, 21 Dec 2023 21:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d3c4bfe45so12595285e9.1;
+        Thu, 21 Dec 2023 13:12:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1703193160; x=1703797960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q4Cbsukg0G3muNGOdfceGuCWeyDTmVu8AAhb+DgFIkI=;
+        b=WB0oxVna3wSylCA8jCD15INYJLvftWNViGIlL+D93XCa6iL3JIT1IrXtmk9j+37gaw
+         Vut++3Xe4muxExe7PI+jabgkXm+ymvsiEFoVQudOCQIbx6lEbI45qkjq/cxWUQbBjcwc
+         0NhxPpHzOKT1YZX/jsazWPp/FAhk9JS+6G2E+LSHi9a0yZ/JQgsyX+N8IICZau7KwJix
+         nqoALmgbkdfFTUR02RWwUYeoBl2BNXvp1niyl7soB2IDAwCL86CVFGitTrQv/ssSa+a5
+         /v/hjxzUNh41/Dau7r4E1kEd4aDn+Begps3J6xKYSuER4Dnu7QHxEgmcFl7mILrPMn0K
+         vZMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703193160; x=1703797960;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q4Cbsukg0G3muNGOdfceGuCWeyDTmVu8AAhb+DgFIkI=;
+        b=fg33kqsuEcGQJkBTN2ZyG0CCk0gd37eFKA/zXYaqpCeGf7BDU9tkw4BfoSFK8g6p8h
+         bghXhHc+7WpOkdKgsyBPqz54FDDeUwdqym9Cez4QlBqk5gFdufIWV/hwhS3p9hDAiSGG
+         L5lQqjszPRO++bmAP7SBrnSyzGo64DLfjj69avWBIT2YU1Up2CwKuSp0uav2o7xIMpIS
+         08EPMfAoxWC3xf3mOpaCK5swv63yuUWrAk7MbdgpnmYYyrKWvWuOV56A9GjNsqZatNCf
+         rbX5JVs5aaWlLSfPsdjVYtrwzHAE/MHolfUN2X+hqr3XzTwZZN85tckkirArpvXyCFCp
+         Y83A==
+X-Gm-Message-State: AOJu0YwtD69KoSVqDSk7fAGXl/f70dQxelxiCgJDAIbSt5xdqFqRhZlE
+	+A8/u646spzvNcW5YQNRdauIAw2CNzg=
+X-Google-Smtp-Source: AGHT+IHmELJUnkQDo5KJjUSCQrDQziZzRPhiuycQ2ms54XOnISGI1jfghQbrIMYzE02RPLo8s0fN8w==
+X-Received: by 2002:a05:600c:ccf:b0:40d:3d57:eaf5 with SMTP id fk15-20020a05600c0ccf00b0040d3d57eaf5mr105640wmb.164.1703193159410;
+        Thu, 21 Dec 2023 13:12:39 -0800 (PST)
+Received: from localhost.localdomain (dynamic-2a01-0c23-b96c-7a00-0000-0000-0000-0e63.c23.pool.telefonica.de. [2a01:c23:b96c:7a00::e63])
+        by smtp.googlemail.com with ESMTPSA id uz16-20020a170907119000b00a2685eca385sm1341669ejb.195.2023.12.21.13.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 13:12:38 -0800 (PST)
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-pwm@vger.kernel.org,
+	linux-amlogic@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Dmitry Rokosov <ddrokosov@sberdevices.ru>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [RFC PATCH v1] regulator: pwm-regulator: Fix continuous get_voltage for disabled PWM
+Date: Thu, 21 Dec 2023 22:12:22 +0100
+Message-ID: <20231221211222.1380658-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -71,53 +78,90 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: m1WRqX9o65bP2RfPKYT0YyxFOAaEsp36
-X-Proofpoint-ORIG-GUID: m1WRqX9o65bP2RfPKYT0YyxFOAaEsp36
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 malwarescore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312210144
 
-Update the pm8350c lpg_data struct so that pm8350c devices are treated as
-PWM devices that support two-nvmem PPG scheme.
+Odroid-C1 uses a Monolithic Power Systems MP2161 controlled via PWM for
+the VDDEE voltage supply of the Meson8b SoC. Commit 6b9352f3f8a1 ("pwm:
+meson: modify and simplify calculation in meson_pwm_get_state") results
+in my Odroid-C1 crashing with memory corruption in many different places
+(seemingly at random). It turns out that this is due to a currently not
+supported corner case.
 
-Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
-Reviewed-by: Lee Jones <lee@kernel.org>
+The VDDEE regulator can generate between 860mV (duty cycle of ~91%) and
+1140mV (duty cycle of 0%). We consider it to be enabled by the bootloader
+(which is why it has the regulator-boot-on flag in .dts) as well as
+being always-on (which is why it has the regulator-always-on flag in
+.dts) because the VDDEE voltage is required for the Meson8b SoC to work.
+The public S805 datasheet [0] states on page 17 (where "A5" refers to the
+Cortex-A5 CPU cores):
+  [...] So if EE domains is shut off, A5 memory is also shut off. That
+  does not matter. Before EE power domain is shut off, A5 should be shut
+  off at first.
+
+It turns out that at least some bootloader versions are keeping the PWM
+output disabled. This is not a problem due to the specific design of the
+regulator: when the PWM output is disabled the output pin is pulled LOW,
+effectively achieving a 0% duty cycle (which in return means that VDDEE
+voltage is at 1140mV).
+
+The problem comes when the pwm-regulator driver tries to initialize the
+PWM output. To do so it reads the current state from the hardware, which
+is:
+  period: 3666ns
+  duty cycle: 3333ns (= ~91%)
+  enabled: false
+Then those values are translated using the continuous voltage range to
+860mV.
+Later, when the regulator is being enabled (either by the regulator core
+due to the always-on flag or first consumer - in this case the lima
+driver for the Mali-450 GPU) the pwm-regulator driver tries to keep the
+voltage (at 860mV) and just enable the PWM output. This is when things
+start to go wrong as the typical voltage used for VDDEE is 1100mV.
+
+Commit 6b9352f3f8a1 ("pwm: meson: modify and simplify calculation in
+meson_pwm_get_state") triggers above condition as before that change
+period and duty cycle were both at 0. Since the change to the pwm-meson
+driver is considered correct the solution is to be found in the
+pwm-regulator driver which now considers the voltage to be at the
+minimum or maximum (depending on whether the polarity is inverted) if
+the PWM output is disabled. This makes the VDDEE regulator on Odroid-C1
+read 1140mV while the PWM output is disabled, so all following steps try
+to keep the 1140mV until any regulator consumer (such as the lima
+driver's devfreq implementation) tries to set a different voltage
+(1100mV is the target voltage).
+
+[0] https://dn.odroid.com/S805/Datasheet/S805_Datasheet%20V0.8%2020150126.pdf
+
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- drivers/leds/rgb/leds-qcom-lpg.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Sending this as RFC as I'm not 100% sure if this is the correct way to
+solve my problem. Reverting commit 6b9352f3f8a1 (which I found via git
+bisect) also works, but it seems hacky.
 
-diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
-index eec49027ccf1..b11412af860e 100644
---- a/drivers/leds/rgb/leds-qcom-lpg.c
-+++ b/drivers/leds/rgb/leds-qcom-lpg.c
-@@ -1780,11 +1780,13 @@ static const struct lpg_data pm8150l_lpg_data = {
- static const struct lpg_data pm8350c_pwm_data = {
- 	.triled_base = 0xef00,
+Once we agreed on the "correct" solution I will add Fixes tags as needed
+
+
+ drivers/regulator/pwm-regulator.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index 2aff6db748e2..30402ee18392 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -157,7 +157,12 @@ static int pwm_regulator_get_voltage(struct regulator_dev *rdev)
  
-+	.lut_size = 122,
-+
- 	.num_channels = 4,
- 	.channels = (const struct lpg_channel_data[]) {
--		{ .base = 0xe800, .triled_mask = BIT(7) },
--		{ .base = 0xe900, .triled_mask = BIT(6) },
--		{ .base = 0xea00, .triled_mask = BIT(5) },
-+		{ .base = 0xe800, .triled_mask = BIT(7), .sdam_offset = 0x48 },
-+		{ .base = 0xe900, .triled_mask = BIT(6), .sdam_offset = 0x56 },
-+		{ .base = 0xea00, .triled_mask = BIT(5), .sdam_offset = 0x64 },
- 		{ .base = 0xeb00 },
- 	},
- };
+ 	pwm_get_state(drvdata->pwm, &pstate);
+ 
+-	voltage = pwm_get_relative_duty_cycle(&pstate, duty_unit);
++	if (pstate.enabled)
++		voltage = pwm_get_relative_duty_cycle(&pstate, duty_unit);
++	else if (max_uV_duty < min_uV_duty)
++		voltage = max_uV_duty;
++	else
++		voltage = min_uV_duty;
+ 
+ 	/*
+ 	 * The dutycycle for min_uV might be greater than the one for max_uV.
 -- 
-2.41.0
+2.43.0
 
 
