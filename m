@@ -1,91 +1,106 @@
-Return-Path: <linux-pwm+bounces-623-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-624-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6658B81C83A
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Dec 2023 11:37:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A65B81C882
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Dec 2023 11:47:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 98DF91C2161A
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Dec 2023 10:37:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF59F1F21345
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Dec 2023 10:47:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC2511CB5;
-	Fri, 22 Dec 2023 10:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 606D0156C6;
+	Fri, 22 Dec 2023 10:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="n48t/rWx"
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="llKWctkZ";
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="fo8v5dvS"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C97111727;
-	Fri, 22 Dec 2023 10:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BA5156C4;
+	Fri, 22 Dec 2023 10:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1703241422; bh=cWqAUpWjhIOY5kW4clTqhVJSzMYq+y12OfFP6xGF06s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n48t/rWxle/8Ss7ZXz2Y/rmPUsOtQ/gcbgfbYCDE8IyGIJFMLOCrsRmW9bqqRERH4
-	 PoUct/FsAPmVOE8VbKbJvyTIwtFYuSRbW5DUxPAnDLVd505OtwuvF3BhOgsGthX4N8
-	 oLPi4ar/DP5eDffZTsR0cGQWdQ3gVEGqzCN3DWmCtvGNPUFXpM65865jQ+7GCUb6H/
-	 yCeeb6GVzliT8qJFuaFhhv8hSJLA+6d7aQfSCGsR9sDG0AfVkzKDqBmSWG215aq1sT
-	 eZbsgxU+UixcrJlcTCNscAqpV2zO5tspC3QNpSJRdj91rJJd6n3arZyYsGI1ggDv7Z
-	 GcBUQRQHYrzZw==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id 2B1F31000FD; Fri, 22 Dec 2023 10:37:02 +0000 (GMT)
-Date: Fri, 22 Dec 2023 10:37:02 +0000
+	t=1703242021; bh=S3TdkYP2WghBFHy35jL/ROGvth6643mc86CxxDgb1U8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=llKWctkZv4YXmaxVOF9OKSKxzPicte/5tLmA3UC+X1dm+y4jaf4hqqUOYgpeLb+Cf
+	 8F/6mX7rcEqJbiFxwn8hBKr6XfbOatNC9Nvgjn469N1E/hDI6e+O+/XsQ0jOVAfbo/
+	 HpJphrAmKk0xtTPRY6FhzZlzoy7MPzGNVVIWlyNCUt8dy854xoeAFHQnRS9B9Eun9h
+	 /Ckc2R9ELoCqZNB0bL8J4I4V1ItuREUYYhaRL0xwOJb6SR/PammSO+wVSYh+yNfFqL
+	 8BMMQvbRz7jzh5Qijo87HbFdKLG3x7nV9g3EDq1wp4wbHPFIl+5vWSKe3zPZibAgkb
+	 2tRMZrsr2l4tQ==
+Received: by gofer.mess.org (Postfix, from userid 501)
+	id C424B1009FC; Fri, 22 Dec 2023 10:47:01 +0000 (GMT)
+X-Spam-Level: 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1703242019; bh=S3TdkYP2WghBFHy35jL/ROGvth6643mc86CxxDgb1U8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fo8v5dvSUCgr8MIUEOxgdZZeY146rwQuo9A8VEI4kkJCThHrjjsN/3OROrZnDrsEz
+	 jxqjs8Tmc1fcYma2x+rAAKUmvMQowixuUVuQoUEC4nL+95fVw5jyMvabXmji1mUtqn
+	 Z6ENDQUsCF7XGNZXaVKNzHKcjCoXflFdR5nzywpo4zB9T0PUka+6SB0hLi2KvtAE6h
+	 GhS8hmA9Iy28/tDj8nM3ivCyLgjW9Z2hLOqIxn3SMccgWnmQSz07VgUQSZo2hE6O3K
+	 i/entkExxaVWEP60GtBZK+pYRiTxU0QK9gcMCxAQOl/fjpnkiDJrOK/qj0jTBneegu
+	 mfzJxGUDy4/gg==
+Received: from localhost.localdomain (bigcore.local [IPv6:2a02:8011:d000:212:ca7f:54ff:fe51:14d6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gofer.mess.org (Postfix) with ESMTPSA id CDA5C1000CC;
+	Fri, 22 Dec 2023 10:46:59 +0000 (GMT)
 From: Sean Young <sean@mess.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
+To: Thierry Reding <thierry.reding@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11] pwm: bcm2835: Allow PWM driver to be used in atomic
- context
-Message-ID: <ZYVmzrRwgVOGinmy@gofer.mess.org>
-References: <20231220142426.1275052-1-sean@mess.org>
- <fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w>
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>
+Cc: Sean Young <sean@mess.org>,
+	linux-pwm@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pwm: bcm2835: Duplicate call to clk_rate_exclusive_put in error path
+Date: Fri, 22 Dec 2023 10:46:51 +0000
+Message-ID: <20231222104651.167821-1-sean@mess.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w>
 
-On Fri, Dec 22, 2023 at 11:30:47AM +0100, Uwe Kleine-König wrote:
-> Hello Sean,
-> 
-> On Wed, Dec 20, 2023 at 02:24:25PM +0000, Sean Young wrote:
-> > @@ -151,8 +153,26 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
-> >  		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk),
-> >  				     "clock not found\n");
-> >  
-> > +	ret = clk_rate_exclusive_get(pc->clk);
-> > +	if (ret)
-> > +		return dev_err_probe(&pdev->dev, ret,
-> > +				     "fail to get exclusive rate\n");
-> > +
-> > +	ret = devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_put,
-> > +				       pc->clk);
-> > +	if (ret) {
-> > +		clk_rate_exclusive_put(pc->clk);
-> 
-> That clk_rate_exclusive_put() is wrong. If devm_add_action_or_reset()
-> fails that is already cared for.
+devm_add_action_or_reset() already calls the action in the error case.
 
-Yes, you're right. I missed that - should've checked.
+Reported-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+Closes: https://lore.kernel.org/linux-pwm/fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w/
+Signed-off-by: Sean Young <sean@mess.org>
+---
+ drivers/pwm/pwm-bcm2835.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> Given that Thierry already applied this patch, getting this fixed in a
-> timely manner would be good.
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index 307c0bd5f885..283cf27f25ba 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -160,10 +160,8 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_put,
+ 				       pc->clk);
+-	if (ret) {
+-		clk_rate_exclusive_put(pc->clk);
++	if (ret)
+ 		return ret;
+-	}
+ 
+ 	pc->rate = clk_get_rate(pc->clk);
+ 	if (!pc->rate)
+-- 
+2.43.0
 
-I'll send out a patch shortly, thanks for catching.
-
-
-Sean
 
