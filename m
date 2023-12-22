@@ -1,137 +1,159 @@
-Return-Path: <linux-pwm+bounces-610-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-611-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83CFF81C126
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 23:42:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1547281C241
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Dec 2023 01:18:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40B4C287CBF
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 Dec 2023 22:42:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DA6C1F25A56
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Dec 2023 00:18:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE65539E0;
-	Thu, 21 Dec 2023 22:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1BF018E;
+	Fri, 22 Dec 2023 00:17:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="V9OQJ3re"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UqPZ2ZQm"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42319171B3;
-	Thu, 21 Dec 2023 22:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6149B630;
+	Fri, 22 Dec 2023 00:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso752495a12.3;
-        Thu, 21 Dec 2023 14:42:41 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d4006b2566so9857475ad.0;
+        Thu, 21 Dec 2023 16:17:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1703198560; x=1703803360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tTQxlQCO+Gf4xIjXRg1HmFnmLBOGQYr6tXPcOA6WFzY=;
-        b=V9OQJ3re3DqiIsjQ+5hLvKh4opDB4rUQlM6ZA29D5PswtsgDejZZ++B5tLHNYaFbVu
-         xWG2kPntJ28gm7HgjL+5VHa7cCoDkWznuw5eA6kvrjsftKOLnIf71Hz2hlBYeGiC3VIz
-         ncr9wRg/nU8MBosbPDZOiU/FnTiGJzgDXc0yEx7olsk567BtEPwt5hAU1sJcQPUk99G0
-         Fn358Cp0UbeMC+ROklJtW8JA15Si6+wLPUJVJxxWit2HbCGxCG/1lLMTVADYiUhZoF7f
-         StYLBRq/6t1O3cIx8p8SpOynxQeWoJi6PQcizcAypUW6XEGhjrxMdEoWsRseRbcuISqN
-         zleg==
+        d=googlemail.com; s=20230601; t=1703204276; x=1703809076; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K4eLtecU1AzkZ6v0yoRfkSekFdqon4FA+IB17UNyBZc=;
+        b=UqPZ2ZQmNCL7ZS4xZgP5L7goYg9YUKeaTcxo+tCmo7AcIDPR7iFrcMkBHu9Gnf+4JW
+         Qi9lQmCQgwMMl1l7m3LSVSuFT2i+wf9oIVgMFtib6JgjE0jcVCFOLd9dxEZOVnUvsRfV
+         OdZjC2n77x5AlfGAhi95Vr9nBfwjCBbrV4DxbxbHKfZRK445ZJ5NiYf0LTtQXc7E5z4Z
+         APplq4oF0mx762eB4uBQ007BZXJxgVCtZ0UCxmZ0yZr3XOq0MTsOJme3fSTJKEg/xlwE
+         1vPUnK3TS5caV1CR5XBd/9euT6R4UQzQCZ7S44clYewLxPIyvNYS9ZUZ7tpgtyXlAVGN
+         JGLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703198560; x=1703803360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tTQxlQCO+Gf4xIjXRg1HmFnmLBOGQYr6tXPcOA6WFzY=;
-        b=n6fD9cmMoQtkYkl2mf1TrpsEwjmjveb5je3F05oN2/4ceAiEJXhQeoTAzReB76z318
-         o5wmpu2Huog0CFOl73LqJlOtCprnaU5Jp/DXEzZj3LRN99M4ya16BjIiZWG6K/6k7hRK
-         auV0GWD9nEgCMqp3QITVstNQyOpvN2igDiAvyLX3ytJuuacInntsmt/OmbT5vXaQIcO3
-         PN38Bh9tzFchWo2zbl6P51otxdkPQtjwXUrL4tUjJUf84XUbT3ePRV/b/g9rPoB80+N3
-         W4HhAWZb5CoWVoNoSbCxdbPGhPPPMfP1a8XgAWd6CP5GGeKxUeHIR3TVCq8vO/e5taCJ
-         W/Gg==
-X-Gm-Message-State: AOJu0Yz0sKrsfUeajiqama168l0bjO3bP1HIcsYbk1rfg5cDMdGxjKun
-	Z67bgYNSQPP9hnaSJKykqQPXKKQx7R59Qh5H/68=
-X-Google-Smtp-Source: AGHT+IFs18DvgzMKPzBRIvgnZpu8I+QVnR7YPq+Vnesd+qyDskEada4/byLmH1j6vYxxxmhT3SvY3lJ3atYoHbL7e/8=
-X-Received: by 2002:a05:6a20:8b04:b0:18f:97c:8261 with SMTP id
- l4-20020a056a208b0400b0018f097c8261mr338231pzh.107.1703198560349; Thu, 21 Dec
- 2023 14:42:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703204276; x=1703809076;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K4eLtecU1AzkZ6v0yoRfkSekFdqon4FA+IB17UNyBZc=;
+        b=OKHo2cXPKBUGRxd5fLC2d2Flf4oA0VB5aRYABGyX3IQ7rC1sb+KXSETQD1zVa4WrL7
+         RVCQrdlK2MUdjTULsvnvbLHmjcczQPmRxyHJSWDonsfa603gLVuraX/0LVPqt44BNr+s
+         zIppS4wEJW/cJfzjYF7Nv3zcRVeGfWBkcB9UVZdfnC1DxfjCEPxYB+9Maduti2Yc4v5h
+         D/FGAuoz5sG/U3Glu6LY3RRKM1ugi9gcAV2t+TrxL4f/5n4hSYxZ0gXlomKcDOqv+zot
+         YkGCBzpBphBNthFC3zMABYlf90hJTHPiT807GCXzoByHSXF1Iaru3Msp9gaSh7O+4/Pe
+         /nUA==
+X-Gm-Message-State: AOJu0YxZKn2Qy0ubalJJwuZEzuhCzGkjk3/Nfkik5vBZvBBgj3sPej5F
+	ZITb1Uv3kkLnT/Lq+/hKuuPrlI8mMoieK5EyuNCnSr2XYlQ=
+X-Google-Smtp-Source: AGHT+IHogtZ5maciBE+Gv1/Y3tNb1CAhSD7rJLIduNEIGjOjhD1j6XdGgzYPCtZ3MPpkJXKPikbhw9V3CGgvQTtBDqc=
+X-Received: by 2002:a17:902:7c95:b0:1d0:9609:382e with SMTP id
+ y21-20020a1709027c9500b001d09609382emr300415pll.21.1703204275514; Thu, 21 Dec
+ 2023 16:17:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221211222.1380658-1-martin.blumenstingl@googlemail.com> <0c99b575-5cf2-4bd6-8cfd-af19f5fd58da@sirena.org.uk>
-In-Reply-To: <0c99b575-5cf2-4bd6-8cfd-af19f5fd58da@sirena.org.uk>
+References: <20231221211222.1380658-1-martin.blumenstingl@googlemail.com> <tek6c6symqgm6x6ujh4m67q32en24pzrkjbchffir7qljo4gor@7qpu4zmgyzpq>
+In-Reply-To: <tek6c6symqgm6x6ujh4m67q32en24pzrkjbchffir7qljo4gor@7qpu4zmgyzpq>
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Thu, 21 Dec 2023 23:42:29 +0100
-Message-ID: <CAFBinCDJnVzE2sMwu52MQGTKW7dtCuUoj63ZZHhJPJO0+dZDkg@mail.gmail.com>
+Date: Fri, 22 Dec 2023 01:17:44 +0100
+Message-ID: <CAFBinCAxh0xU2mDRX3t42j6oJ534p9RPUV+dYoRe0oacTw_7iA@mail.gmail.com>
 Subject: Re: [RFC PATCH v1] regulator: pwm-regulator: Fix continuous
  get_voltage for disabled PWM
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Dmitry Rokosov <ddrokosov@sberdevices.ru>
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, linux-pwm@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Thierry Reding <thierry.reding@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Dmitry Rokosov <ddrokosov@sberdevices.ru>
+Content-Type: multipart/mixed; boundary="000000000000d28aac060d0e2533"
+
+--000000000000d28aac060d0e2533
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
+Hi Uwe,
 
-On Thu, Dec 21, 2023 at 10:45=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
-ote:
->
-> On Thu, Dec 21, 2023 at 10:12:22PM +0100, Martin Blumenstingl wrote:
->
-> > It turns out that at least some bootloader versions are keeping the PWM
-> > output disabled. This is not a problem due to the specific design of th=
-e
-> > regulator: when the PWM output is disabled the output pin is pulled LOW=
-,
-> > effectively achieving a 0% duty cycle (which in return means that VDDEE
-> > voltage is at 1140mV).
->
-> Hrm.  Perhaps the regulator should figure out that it's on with a
-> minimum voltage of 1.14V in this case - AIUI that broadly corresponds to
-> your change except for the fact that it doesn't recognise that there's
-> actually an output in this case since it assumes that disabling the PWM
-> disables the output which isn't the case with this hardware.  We'd need
-> to know more about the PWM in that case though I think.
-If you have any specific questions then feel free to ask.
-Generally it's a very simple PWM controller:
-- when disabled the output is LOW
-- when enabled the output matches the requested period and duty cycle
-as best as possible (depending on the available input clocks)
+On Thu, Dec 21, 2023 at 11:03=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+[...]
+> Note this isn't save in general. You're implicitly assuming that a
+> disabled PWM runs with the minimal supported duty_cycle. Most disabled
+> PWMs yield the inactive level (which corresponds to a 0% relative duty
+> cycle). But there are exceptions.
+Good catch - thank you!
 
-> > The problem comes when the pwm-regulator driver tries to initialize the
-> > PWM output. To do so it reads the current state from the hardware, whic=
-h
-> > is:
-> >   period: 3666ns
-> >   duty cycle: 3333ns (=3D ~91%)
-> >   enabled: false
-> > Then those values are translated using the continuous voltage range to
-> > 860mV.
->
-> > Later, when the regulator is being enabled (either by the regulator cor=
-e
-> > due to the always-on flag or first consumer - in this case the lima
-> > driver for the Mali-450 GPU) the pwm-regulator driver tries to keep the
-> > voltage (at 860mV) and just enable the PWM output. This is when things
-> > start to go wrong as the typical voltage used for VDDEE is 1100mV.
->
-> So, the constraints say that the 860mV voltage is within range.  Where
-> does the requirement for 1.1V come from in this situation?  Is it just
-> that lima hasn't started yet and requires the 1.1V for hardware init
-> (and presumably power on) even if it can use a lower voltage at runtime?
-The vendor BSP includes a custom u-boot with lots of relevant
-information for which there's seemingly no documentation.
-It seems that 1.1V is what should be used during normal operation.
-0.86V is what can be used during system suspend (when power to the
-Cortex-A5 cores is turned off and an integrated ARC core is taking
-over for wakeup purposes).
-Hence the supported voltage range of 0.86..1.1V
+[...]
+> Without claiming to understand all implications, I'd say
+> pwm_regulator_get_voltage should signal to the caller when the
+> duty_cycle isn't contained in [min(max_uV_duty, min_uV_duty),
+> max(max_uV_duty, min_uV_duty)].
+It seems like there's -ENOTRECOVERABLE that we can signal to the caller.
+This makes the following message appear in my kernel log:
+  VDDEE: Setting 1100000-1140000uV
+Which means that pwm_regulator_set_voltage() is called which will then
+pick the minimum voltage.
+
+To make this work I will need to update meson8b-odroidc1.dts (which
+isn't a problem, I just want to point it out as it's mandatory for
+that solution. also I will send that in a separate patch).
+
+See my attached patch (which replaces the initial patch I sent, it's
+not meant to be applied on top).
+One question that I still have is whether we are allowed to just
+enable the PWM output within pwm_regulator_set_voltage().
+Doing so is actually mandatory, otherwise we end up in an infinite
+loop of not being able to read the voltage, then sets the minimum
+voltage (but leaves the PWM output disabled) which then means that it
+can't read back the voltage which means it tries to set the minimum
+voltage ....
 
 
 Best regards,
 Martin
+
+--000000000000d28aac060d0e2533
+Content-Type: text/x-patch; charset="US-ASCII"; name="odroidc1-vddee-fix-to-discuss.diff"
+Content-Disposition: attachment; 
+	filename="odroidc1-vddee-fix-to-discuss.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lqfvouez0>
+X-Attachment-Id: f_lqfvouez0
+
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FtbG9naWMvbWVzb244Yi1vZHJvaWRjMS5k
+dHMgYi9hcmNoL2FybS9ib290L2R0cy9hbWxvZ2ljL21lc29uOGItb2Ryb2lkYzEuZHRzCmluZGV4
+IGIwMzI3M2Q5MGFkOC4uZGYzNDhlMTE5NjQzIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0
+cy9hbWxvZ2ljL21lc29uOGItb2Ryb2lkYzEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Ft
+bG9naWMvbWVzb244Yi1vZHJvaWRjMS5kdHMKQEAgLTIxNywxMyArMjE3LDEzIEBAIHZkZGVlOiBy
+ZWd1bGF0b3ItdmRkZWUgewogCQljb21wYXRpYmxlID0gInB3bS1yZWd1bGF0b3IiOwogCiAJCXJl
+Z3VsYXRvci1uYW1lID0gIlZEREVFIjsKLQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8ODYw
+MDAwPjsKKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTEwMDAwMD47CiAJCXJlZ3VsYXRv
+ci1tYXgtbWljcm92b2x0ID0gPDExNDAwMDA+OwogCiAJCXB3bS1zdXBwbHkgPSA8JnA1djA+Owog
+CiAJCXB3bXMgPSA8JnB3bV9jZCAxIDEyMjE4IDA+OwotCQlwd20tZHV0eWN5Y2xlLXJhbmdlID0g
+PDkxIDA+OworCQlwd20tZHV0eWN5Y2xlLXJhbmdlID0gPDE0IDA+OwogCiAJCXJlZ3VsYXRvci1i
+b290LW9uOwogCQlyZWd1bGF0b3ItYWx3YXlzLW9uOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZWd1
+bGF0b3IvcHdtLXJlZ3VsYXRvci5jIGIvZHJpdmVycy9yZWd1bGF0b3IvcHdtLXJlZ3VsYXRvci5j
+CmluZGV4IDMwNDAyZWUxODM5Mi4uY2I0ZTVmYWQ1NzAyIDEwMDY0NAotLS0gYS9kcml2ZXJzL3Jl
+Z3VsYXRvci9wd20tcmVndWxhdG9yLmMKKysrIGIvZHJpdmVycy9yZWd1bGF0b3IvcHdtLXJlZ3Vs
+YXRvci5jCkBAIC0xNTYsMTMgKzE1NiwxMCBAQCBzdGF0aWMgaW50IHB3bV9yZWd1bGF0b3JfZ2V0
+X3ZvbHRhZ2Uoc3RydWN0IHJlZ3VsYXRvcl9kZXYgKnJkZXYpCiAJdW5zaWduZWQgaW50IHZvbHRh
+Z2U7CiAKIAlwd21fZ2V0X3N0YXRlKGRydmRhdGEtPnB3bSwgJnBzdGF0ZSk7CisJaWYgKCFwc3Rh
+dGUuZW5hYmxlZCkKKwkJcmV0dXJuIC1FTk9UUkVDT1ZFUkFCTEU7CiAKLQlpZiAocHN0YXRlLmVu
+YWJsZWQpCi0JCXZvbHRhZ2UgPSBwd21fZ2V0X3JlbGF0aXZlX2R1dHlfY3ljbGUoJnBzdGF0ZSwg
+ZHV0eV91bml0KTsKLQllbHNlIGlmIChtYXhfdVZfZHV0eSA8IG1pbl91Vl9kdXR5KQotCQl2b2x0
+YWdlID0gbWF4X3VWX2R1dHk7Ci0JZWxzZQotCQl2b2x0YWdlID0gbWluX3VWX2R1dHk7CisJdm9s
+dGFnZSA9IHB3bV9nZXRfcmVsYXRpdmVfZHV0eV9jeWNsZSgmcHN0YXRlLCBkdXR5X3VuaXQpOwog
+CiAJLyoKIAkgKiBUaGUgZHV0eWN5Y2xlIGZvciBtaW5fdVYgbWlnaHQgYmUgZ3JlYXRlciB0aGFu
+IHRoZSBvbmUgZm9yIG1heF91Vi4KQEAgLTIyMSw2ICsyMTgsNyBAQCBzdGF0aWMgaW50IHB3bV9y
+ZWd1bGF0b3Jfc2V0X3ZvbHRhZ2Uoc3RydWN0IHJlZ3VsYXRvcl9kZXYgKnJkZXYsCiAKIAlwd21f
+c2V0X3JlbGF0aXZlX2R1dHlfY3ljbGUoJnBzdGF0ZSwgZHV0eWN5Y2xlLCBkdXR5X3VuaXQpOwog
+CisJcHN0YXRlLmVuYWJsZWQgPSB0cnVlOwogCXJldCA9IHB3bV9hcHBseV9zdGF0ZShkcnZkYXRh
+LT5wd20sICZwc3RhdGUpOwogCWlmIChyZXQpIHsKIAkJZGV2X2VycigmcmRldi0+ZGV2LCAiRmFp
+bGVkIHRvIGNvbmZpZ3VyZSBQV006ICVkXG4iLCByZXQpOwo=
+--000000000000d28aac060d0e2533--
 
