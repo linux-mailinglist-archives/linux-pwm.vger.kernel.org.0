@@ -1,108 +1,170 @@
-Return-Path: <linux-pwm+bounces-641-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-642-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4758781D73B
-	for <lists+linux-pwm@lfdr.de>; Sun, 24 Dec 2023 00:30:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F50981D8C5
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Dec 2023 11:49:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D2E8B21E71
-	for <lists+linux-pwm@lfdr.de>; Sat, 23 Dec 2023 23:30:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEF9328245F
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Dec 2023 10:49:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17F3220325;
-	Sat, 23 Dec 2023 23:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE63520F8;
+	Sun, 24 Dec 2023 10:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="s/fRoIh8"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE831D527
-	for <linux-pwm@vger.kernel.org>; Sat, 23 Dec 2023 23:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rHBRL-0007nz-LQ; Sun, 24 Dec 2023 00:29:55 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rHBRJ-0015Dk-SM; Sun, 24 Dec 2023 00:29:54 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rHBRK-000W3f-2q;
-	Sun, 24 Dec 2023 00:29:54 +0100
-Date: Sun, 24 Dec 2023 00:29:54 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: linux/pwm.h: fix Excess kernel-doc description
- warning
-Message-ID: <6t33645cqum3ocuojfzr3n7vcj7c63hz6plo7677r6527hwime@3r6tqotja5bk>
-References: <20231223050621.13994-1-rdunlap@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE46B23A8
+	for <linux-pwm@vger.kernel.org>; Sun, 24 Dec 2023 10:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id BC7A73F741
+	for <linux-pwm@vger.kernel.org>; Sun, 24 Dec 2023 10:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1703414976;
+	bh=T6CV/w/Oj4/yKhfarK+UEYWwoSl7TNmHch082+K72XA=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=s/fRoIh8SY0TKT7w5PsksY/lcSI8UApq2MHVl8DyiQFRguc04FhM2gmwAcF2L2Wqr
+	 maVTFHaZ8WlhYPCnsTHJSzSkKAk6M/mF/6qbwS8udCB69dW+ysX20SaQaBi7KlF/V+
+	 7/2rK3KJSsZ0UH7Vh03wqWQh4PV3LGpf6Yatn9er5sHGnZ+tgaqDd8giffpzbdpnWu
+	 dJyQ910RIv9vzqM4GWKoz9bGIRFi8EQTxzzGOf8dH2UuQv76aCnC4GcKviDr+B5X74
+	 UeJexQqFxIX14gYoVZYSYd7A0NNakCaxgveR9p0uUkiiiQHA4qdqyP2SEBBpJH10t7
+	 fcOxCrUkZ7Gsw==
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-427cf4a843cso3929371cf.2
+        for <linux-pwm@vger.kernel.org>; Sun, 24 Dec 2023 02:49:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703414975; x=1704019775;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T6CV/w/Oj4/yKhfarK+UEYWwoSl7TNmHch082+K72XA=;
+        b=Ta5KY7USmfJseHbjEvodo4GnYSVk4aumnPasuhaW+1rZLahBtdDrxZBGUyNlt+695K
+         e7kYo9aWLhcp8AVn5jXJoxuDVzMTbvYTX8XOPbzANQoJ7nq/bzpc7VllHNvt0apAL3hh
+         V4NDlXC9cTATPkY22XLQ6MrPPY6CF2BwggP//hSQoGdut7PUNyjmiq3ghlBSAzUGsH+m
+         5VYijM5z7FkLDuW2zd439r3NJySbs7vdpVuEdqAs8tC0V3Gq1ZlsBIwJGff5A5JqiOZg
+         O2GoAfba/U21EJxjMiOD2TyfsvmYHiJcrSopxWGiIzM8iB/4bSqNMW1bSDkdEs9Zly1O
+         ojrQ==
+X-Gm-Message-State: AOJu0YzIPCMw17LgWX3dFe5YpmtObVtIvfiu7SfI//eeY1tBjcyOMqyX
+	s5PChUHoKWonVP+kJGYkE71sNRvpDxvbCuXiEudQygIgfPZ9AaH2HVgc1Z9VUNT1CoGa6diYnCs
+	5pp7f4jZgVKaB2tk9m8xVeFFRsQsAf77GH5Dbai82OUWkhBZ1JVBMsFjmx0zZ
+X-Received: by 2002:a05:622a:590:b0:425:4043:8d55 with SMTP id c16-20020a05622a059000b0042540438d55mr4267072qtb.112.1703414975521;
+        Sun, 24 Dec 2023 02:49:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHqn8DRlJOSAfcEfKAUiBJCl7hAhOpHxzVr7CqiVH5tkrER/1XMKIqe4ro6dC36GAEU2oObR93Kusddr00jIj4=
+X-Received: by 2002:a05:622a:590:b0:425:4043:8d55 with SMTP id
+ c16-20020a05622a059000b0042540438d55mr4267060qtb.112.1703414975298; Sun, 24
+ Dec 2023 02:49:35 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Sun, 24 Dec 2023 02:49:34 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20231222094548.54103-4-william.qiu@starfivetech.com>
+References: <20231222094548.54103-1-william.qiu@starfivetech.com> <20231222094548.54103-4-william.qiu@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="klonewd2iqhya2tb"
-Content-Disposition: inline
-In-Reply-To: <20231223050621.13994-1-rdunlap@infradead.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+Mime-Version: 1.0
+Date: Sun, 24 Dec 2023 02:49:34 -0800
+Message-ID: <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
+Subject: Re: [PATCH v10 3/4] riscv: dts: starfive: jh7100: Add PWM node and
+ pins configuration
+To: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-pwm@vger.kernel.org
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Hal Feng <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
 
+William Qiu wrote:
+> Add OpenCores PWM controller node and add PWM pins configuration
+> on VisionFive 1 board.
+>
+> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
 
---klonewd2iqhya2tb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry, I thought I already sent my review. This looks good.
 
-Hello Randy,
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-On Fri, Dec 22, 2023 at 09:06:20PM -0800, Randy Dunlap wrote:
-> Remove the @pwm: line to prevent the kernel-doc warning:
->=20
-> include/linux/pwm.h:87: warning: Excess struct member 'pwm' description i=
-n 'pwm_device'
->=20
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Cc: linux-pwm@vger.kernel.org
-
-Oh indeed.
-
-Fixes: f3e25e68ceb2 ("pwm: Drop unused member "pwm" from struct pwm_device")
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---klonewd2iqhya2tb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWHbXEACgkQj4D7WH0S
-/k6d3gf/YnniEa/fLJqV2cAgyKgSQ85twNO6kXiMVKCVEAA+Z6rjwMm55Pm1EXDw
-+1NSQloew0KvpV8oIp0DjCcGCZXVWRuobiMVEd4yY9M4Wo279+TIG66975OUz1nv
-hOtSy+6rzy5SBwzeyayGbHHLTqngWAkgEJ3+o2WvSEqtIX6K2okGFWI1ane6wQub
-0o//hgV1rE9jUmOIQtB0bvY1l2PBZd+GX179Mtc57Y5F42k0ES+D45jeawSi26nX
-HlQtdR199oBC0DAqJ4ohMSprWtCP38icycrR15Vk1TebNda/IN9UqaGstqVl043i
-1dIrQfBbK22CaV0jS9FQw4eol5YzpQ==
-=Sngb
------END PGP SIGNATURE-----
-
---klonewd2iqhya2tb--
+> ---
+>  .../boot/dts/starfive/jh7100-common.dtsi      | 24 +++++++++++++++++++
+>  arch/riscv/boot/dts/starfive/jh7100.dtsi      |  9 +++++++
+>  2 files changed, 33 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/starfive/jh7100-common.dtsi b/arch/riscv/boot/dts/starfive/jh7100-common.dtsi
+> index b93ce351a90f..11876906cc05 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7100-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7100-common.dtsi
+> @@ -84,6 +84,24 @@ GPO_I2C2_PAD_SDA_OEN,
+>  		};
+>  	};
+>
+> +	pwm_pins: pwm-0 {
+> +		pwm-pins {
+> +			pinmux = <GPIOMUX(7,
+> +				  GPO_PWM_PAD_OUT_BIT0,
+> +				  GPO_PWM_PAD_OE_N_BIT0,
+> +				  GPI_NONE)>,
+> +				 <GPIOMUX(5,
+> +				  GPO_PWM_PAD_OUT_BIT1,
+> +				  GPO_PWM_PAD_OE_N_BIT1,
+> +				  GPI_NONE)>;
+> +			bias-disable;
+> +			drive-strength = <35>;
+> +			input-disable;
+> +			input-schmitt-disable;
+> +			slew-rate = <0>;
+> +		};
+> +	};
+> +
+>  	uart3_pins: uart3-0 {
+>  		rx-pins {
+>  			pinmux = <GPIOMUX(13, GPO_LOW, GPO_DISABLE,
+> @@ -154,6 +172,12 @@ &osc_aud {
+>  	clock-frequency = <27000000>;
+>  };
+>
+> +&pwm {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm_pins>;
+> +	status = "okay";
+> +};
+> +
+>  &uart3 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart3_pins>;
+> diff --git a/arch/riscv/boot/dts/starfive/jh7100.dtsi b/arch/riscv/boot/dts/starfive/jh7100.dtsi
+> index e68cafe7545f..4f5eb2f60856 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7100.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7100.dtsi
+> @@ -280,6 +280,15 @@ watchdog@12480000 {
+>  				 <&rstgen JH7100_RSTN_WDT>;
+>  		};
+>
+> +		pwm: pwm@12490000 {
+> +			compatible = "starfive,jh7100-pwm", "opencores,pwm-v1";
+> +			reg = <0x0 0x12490000 0x0 0x10000>;
+> +			clocks = <&clkgen JH7100_CLK_PWM_APB>;
+> +			resets = <&rstgen JH7100_RSTN_PWM_APB>;
+> +			#pwm-cells = <3>;
+> +			status = "disabled";
+> +		};
+> +
+>  		sfctemp: temperature-sensor@124a0000 {
+>  			compatible = "starfive,jh7100-temp";
+>  			reg = <0x0 0x124a0000 0x0 0x10000>;
+> --
+> 2.34.1
+>
 
