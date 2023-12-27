@@ -1,214 +1,120 @@
-Return-Path: <linux-pwm+bounces-649-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-650-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7080581E6EE
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Dec 2023 11:44:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AD4181EEC7
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 Dec 2023 13:20:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CACCF282F51
-	for <lists+linux-pwm@lfdr.de>; Tue, 26 Dec 2023 10:44:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD2621F22067
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 Dec 2023 12:20:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5C64E1B8;
-	Tue, 26 Dec 2023 10:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16342446C1;
+	Wed, 27 Dec 2023 12:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QASXCZqh"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="c6D88c7r"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FDB4CE1F
-	for <linux-pwm@vger.kernel.org>; Tue, 26 Dec 2023 10:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5cd8667c59eso3227389a12.2
-        for <linux-pwm@vger.kernel.org>; Tue, 26 Dec 2023 02:44:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1703587448; x=1704192248; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8vmCvOmI5vwNQl1Hy/4CK16yE/1HvjUIIdIUDW9j+74=;
-        b=QASXCZqhuNKLVM5PPRUd6IyMUHGCajlltBw6HySMiLsgwpQZ0i7TyN07sLQRlDUfSm
-         qpNCF93ZK2Z4WCe6EVZtM/NUMrWbjQXllkhwRPT43AIDNjCyv+TvNmEAhqw3pDyM0e+A
-         8J8UYCusgShl7EKmPG4imnp7IncPCwe1QcB4I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703587448; x=1704192248;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8vmCvOmI5vwNQl1Hy/4CK16yE/1HvjUIIdIUDW9j+74=;
-        b=pSmg/xTC8+/FMPAzo34zIjLV+jUZhFxN8DovPftYgUAceWMGpL+++VtJUDyS34JsbC
-         hVBods/6gxITw4prunyzsYQ+Innswi227I7M5cZpxQpFRYhS49q412aPnGpPX4K3gBF2
-         RjSR+IQlGn5zemlpHU3dFLgDhgPBm4088iRqlTzvvwpDts0MaKeuDw8mmWBtfRCpqq/Z
-         KJv0zp/kEM9/CS86p2NVVZs9YOPiRUPeRRsh7A8gojJRwy2vDpfajrHzsxJT6GfUZdJ0
-         kQ2ZwqTpF7ftPsnht/rcB8ZkizrfKm4AxYpqTWi+WQRmeIKNmzaIoFAiLFkoALqhu9aQ
-         5OzQ==
-X-Gm-Message-State: AOJu0YxlMKi3DU/4xKYcOK/cq+TejBAsCyQKmw7pyELhHHye4HPjrXgK
-	E1B3yjeDyWleMZkhcQH7A1oM+QucRW4y
-X-Google-Smtp-Source: AGHT+IG1aFPDF5B2q3NGO2b3d2/0f9OT4VCVwgErz/0MOKwQL0ISAqwFPifmM77owo6LSw996/M77w==
-X-Received: by 2002:a17:902:d38c:b0:1d0:6ffe:a22 with SMTP id e12-20020a170902d38c00b001d06ffe0a22mr7417997pld.128.1703587448469;
-        Tue, 26 Dec 2023 02:44:08 -0800 (PST)
-Received: from [192.168.159.133] ([37.175.114.63])
-        by smtp.gmail.com with ESMTPSA id l18-20020a170903245200b001d473361e6dsm934724pls.208.2023.12.26.02.44.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Dec 2023 02:44:06 -0800 (PST)
-Message-ID: <fe891b5a-cacb-4ea7-9f95-53bfe252a525@broadcom.com>
-Date: Tue, 26 Dec 2023 11:44:02 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6257E446BE
+	for <linux-pwm@vger.kernel.org>; Wed, 27 Dec 2023 12:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 6CCDB240029
+	for <linux-pwm@vger.kernel.org>; Wed, 27 Dec 2023 13:20:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1703679617; bh=4WymL+679CZE5r/fhQuVDvBDfKE0M7tgF+zDLQ1/jUk=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Autocrypt:OpenPGP:
+	 From;
+	b=c6D88c7rjVqVaA9hw5035sLe21CLmnapX3fw/j3C3TCkJ9o3E0Hv4p7RHwMBfg4vp
+	 MNCS0gFOo1a2+BfVakxaRCx0uw/9N3I/IG0GWML+3QQC/Ra2Xio2Yh/jXvDeyos4z8
+	 /4Abz3dXo9oSuzRnG1ivNr8UohbWBU1X3FQYYy+UbZRx5bBCzM2PGj6Y438mhZfKpk
+	 YuwgGZe39zBR23LHkZ2gx5Pq5BcTzBCZOtakmUvGIrqLa37+IW31ZKGoUP1Hhx92DU
+	 q1J72o1e0XNrGvPIWcbdqhh7YBdNEKls8CGaaDzFPTBqFz0+d4wq5oBasKV3EsMwcA
+	 RbiHqckoQ0R4w==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4T0W1Y0mVrz9rxB
+	for <linux-pwm@vger.kernel.org>; Wed, 27 Dec 2023 13:20:16 +0100 (CET)
+Message-ID: <e91c4495-c32f-9de1-6f48-af16239bc3b6@posteo.de>
+Date: Wed, 27 Dec 2023 12:20:16 +0000
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pwm: bcm2835: Remove duplicate call to
- clk_rate_exclusive_put()
-To: Sean Young <sean@mess.org>, Thierry Reding <thierry.reding@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20231222131312.174491-1-sean@mess.org>
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- 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
-In-Reply-To: <20231222131312.174491-1-sean@mess.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000bbf8b9060d675c2c"
+Content-Language: de-DE
+To: linux-pwm <linux-pwm@vger.kernel.org>
+From: Patrick Menschel <menschel.p@posteo.de>
+Subject: [PCA9685] Possible bug in PCA9685 driver
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------sHgSmd7VydvZ0eTEA79xqieK"
+Autocrypt: addr=menschel.p@posteo.de; prefer-encrypt=mutual;
+  keydata=xjMEZWoDbRYJKwYBBAHaRw8BAQdAPnitZJKgRkA5F6Wn0CDr6DKJu33iFUFd5UofbM6vExTNICAo
+  cG9zdGVvKSA8bWVuc2NoZWwucEBwb3N0ZW8uZGU+wpYEExYIAD4WIQQO6LhiIelOcmTibl1UVEfM
+  9nzU+gUCZWoDbQIbAwUJBaOagAULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRBUVEfM9nzU+sNA
+  AQDc9USeUpTlQJLNbBv+6w9r6p3DvH/3MqtyvwhV8vNgyQEAvXnWykqofrPbE3Rhtb14sZfP1BQC
+  6957ILBBrXmCLwTOOARlagNtEgorBgEEAZdVAQUBAQdA/0A1N2M4AgK4+MQEiM3SIm23NOzRMepv
+  xLTN8nX2AD0DAQgHwn4EGBYIACYWIQQO6LhiIelOcmTibl1UVEfM9nzU+gUCZWoDbQIbDAUJBaOa
+  gAAKCRBUVEfM9nzU+gt+AP9UC/gBqsbdOFf3eCt/ayBX91SoisFqYYw6LVILENEYmgEApXCtCQK4
+  iGvszIRZCyEtqYXyfHrotRS+aZZE6yxzGgc=
+OpenPGP: url=https://posteo.de/keys/menschel.p@posteo.de.asc; preference=encrypt
 
---000000000000bbf8b9060d675c2c
-Content-Language: en-US
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------sHgSmd7VydvZ0eTEA79xqieK
+Content-Type: multipart/mixed; boundary="------------ae0uDLW1S5a1HoMkqEqaYw4f";
+ protected-headers="v1"
+From: Patrick Menschel <menschel.p@posteo.de>
+To: linux-pwm <linux-pwm@vger.kernel.org>
+Message-ID: <e91c4495-c32f-9de1-6f48-af16239bc3b6@posteo.de>
+Subject: [PCA9685] Possible bug in PCA9685 driver
+
+--------------ae0uDLW1S5a1HoMkqEqaYw4f
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-
-
-On 12/22/2023 2:13 PM, Sean Young wrote:
-> devm_add_action_or_reset() already calls the action in the error case.
-> 
-> Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Closes: https://lore.kernel.org/linux-pwm/fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w/
-> Fixes: fcc760729359 ("pwm: bcm2835: Allow PWM driver to be used in atomic context")
-> Signed-off-by: Sean Young <sean@mess.org>
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
-
---000000000000bbf8b9060d675c2c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
 
-MIIQeQYJKoZIhvcNAQcCoIIQajCCEGYCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3QMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIDz240akDBKXGu1c
-3C+eOjmr3hYP30JxejXk2NoS9cDTMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMTIyNjEwNDQwOFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQA3VFZHdL1G7GL/3mPCLybqkMOOTPHT6E4g
-g/JDy1fRp7haEOysvpr3DDv/r9zJwM2H7ZKbwV6BfoD7vrya9Sq6YUux5gzCmPfN/L2bZy2X8owr
-rLLOnMuQBBZZyxNN79h6Z783A1DhOmGXz4yOpeBMaWcDvl5R+wxVf9W2EiXsVdez0B+NZa+GLZr3
-a70+vwejKSr4OpuH59CGe6N9szP9Nul5nmZTE+hH1ShtPem1PWKRAhVUTKlubHaWKq49TfVTOnTv
-pe37mv7vtJefI7gEHP7dT2vkr2YSw7i3FhQGe62Dar1FK1ifcqBuXyBE5/IqK1qkcz6NrVula/Fr
-UwjD
---000000000000bbf8b9060d675c2c--
+SGVsbG8sDQoNCkknZCBsaWtlIHRvIHJlcG9ydCBhIHBvc3NpYmxlIGJ1ZyBpbiB0aGUgcGNh
+OTg2NSBkcml2ZXIuDQoNCmh0dHBzOi8vZ2l0aHViLmNvbS9yYXNwYmVycnlwaS9saW51eC9i
+bG9iL3JwaS02LjEueS9kcml2ZXJzL3B3bS9wd20tcGNhOTY4NS5jDQoNClRoZSByZXN1bHRp
+bmcgZnJlcXVlbmN5IGlzIDEwJSBvZmYuDQoNCkknbSBjdXJyZW50bHkgdXNpbmcgYW4gYWRh
+ZnJ1aXQgcGNhOTY4NSBib2FyZCB0byB6ZXJvLWluIHNvbWUgc2Vydm9zIHZpYSANClNZU0ZT
+Lg0KDQpBcyBhbHdheXMsIGZpcnN0IGF0dGVtcHQgd2FzIGEgZGlzYXN0ZXIgYnV0IGFmdGVy
+IHRoYXQsIEkgc3RhcnRlZCB0byANCm1lYXN1cmUgdGhpbmdzIHdpdGggYSBCZW5uaW5nIE1N
+IDctMSBhbmQgd2hlbiBJIHNldCB0aGUgcGVyaW9kIHRvIDIwbXMgDQp2aWEgU3lzRnMsIEkg
+cmVhZCA1NUh6IG9uIHRoZSBtdWx0aW1ldGVyLg0KDQpJIGhhZCB0byBzZXQgdGhlIHBlcmlv
+ZCB0byAyMm1zIHRvIGdldCA0OSw4OEh6Lg0KDQpgYGANCiQgY2QgL3N5cy9jbGFzcy9wd20v
+cHdtY2hpcDAvDQokIGVjaG8gMCA+IGV4cG9ydA0KJCBjZCBwd20wLw0KDQokIGVjaG8gMjAw
+MDAwMDAgPiBwZXJpb2QNCiQgZWNobyAxMTAwMDAwMCA+IGR1dHlfY3ljbGUNCiQgZWNobyAx
+ID4gZW5hYmxlDQojIHJlc3VsdHMgaW4gfjU1SHoNCg0KJCBlY2hvIDAgPiBlbmFibGUNCiQg
+ZWNobyAyMjAwMDAwMCA+IHBlcmlvZA0KJCBlY2hvIDExMDAwMDAwID4gZHV0eV9jeWNsZQ0K
+JCBlY2hvIDEgPiBlbmFibGUNCiMgcmVzdWx0cyBpbiB+NTBIeiwgYW5kIGl0J3MgNTAlIGR1
+dHkgY3ljbGUgdG8gZ2V0IGEgc3ltZXRyaWMgc2lnbmFsDQoNCg0KJCBlY2hvIDAgPiBlbmFi
+bGUNCiMgYWZ0ZXIgY29ubmVjdGluZyBhIHNlcnZvIGFuZCBzZXR0aW5nIGR1dHkgdG8gMS0y
+bXMgZXZlcnl0aGluZyB3b3JrcyBhcyANCmV4cGVjdGVkLg0KJCBlY2hvIDEgPiBlbmFibGUN
+CiQgZWNobyAxMDAwMDAwID4gZHV0eV9jeWNsZQ0KJCBlY2hvIDE1MDAwMDAgPiBkdXR5X2N5
+Y2xlDQokIGVjaG8gMjAwMDAwMCA+IGR1dHlfY3ljbGUNCmBgYA0KSW4gdGhlIGVuZCBpdCBk
+b2VzIG5vdCBtYXR0ZXIgdG8gdGhlIHNlcnZvIG9yIHRoZSBhcHBsaWNhdGlvbiBhbmQgSSdt
+IA0Kbm90IHN1cmUgaWYgSSBtZWFzdXJlZCBjb3JyZWN0bHkuDQoNCkJSDQpQYXRyaWNrIE1l
+bnNjaGVsDQo=
+
+--------------ae0uDLW1S5a1HoMkqEqaYw4f--
+
+--------------sHgSmd7VydvZ0eTEA79xqieK
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQQO6LhiIelOcmTibl1UVEfM9nzU+gUCZYwWgAUDAAAAAAAKCRBUVEfM9nzU+ivD
+AP4w55oDMNAXjy/l+vxy3eZ972o4GHVsySNisNYFPlNhFwEA8Wv6LqubiOugDqAuPSt23P6TH3ZK
+w4wvk40eqN0YfAc=
+=eklh
+-----END PGP SIGNATURE-----
+
+--------------sHgSmd7VydvZ0eTEA79xqieK--
 
