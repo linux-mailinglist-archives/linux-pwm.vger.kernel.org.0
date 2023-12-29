@@ -1,120 +1,242 @@
-Return-Path: <linux-pwm+bounces-650-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-651-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AD4181EEC7
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 Dec 2023 13:20:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66F4A81FD3D
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Dec 2023 07:31:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD2621F22067
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 Dec 2023 12:20:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5DE6B219BD
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 Dec 2023 06:31:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16342446C1;
-	Wed, 27 Dec 2023 12:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0002279C2;
+	Fri, 29 Dec 2023 06:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="c6D88c7r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwxcJagB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6257E446BE
-	for <linux-pwm@vger.kernel.org>; Wed, 27 Dec 2023 12:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 6CCDB240029
-	for <linux-pwm@vger.kernel.org>; Wed, 27 Dec 2023 13:20:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1703679617; bh=4WymL+679CZE5r/fhQuVDvBDfKE0M7tgF+zDLQ1/jUk=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Autocrypt:OpenPGP:
-	 From;
-	b=c6D88c7rjVqVaA9hw5035sLe21CLmnapX3fw/j3C3TCkJ9o3E0Hv4p7RHwMBfg4vp
-	 MNCS0gFOo1a2+BfVakxaRCx0uw/9N3I/IG0GWML+3QQC/Ra2Xio2Yh/jXvDeyos4z8
-	 /4Abz3dXo9oSuzRnG1ivNr8UohbWBU1X3FQYYy+UbZRx5bBCzM2PGj6Y438mhZfKpk
-	 YuwgGZe39zBR23LHkZ2gx5Pq5BcTzBCZOtakmUvGIrqLa37+IW31ZKGoUP1Hhx92DU
-	 q1J72o1e0XNrGvPIWcbdqhh7YBdNEKls8CGaaDzFPTBqFz0+d4wq5oBasKV3EsMwcA
-	 RbiHqckoQ0R4w==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4T0W1Y0mVrz9rxB
-	for <linux-pwm@vger.kernel.org>; Wed, 27 Dec 2023 13:20:16 +0100 (CET)
-Message-ID: <e91c4495-c32f-9de1-6f48-af16239bc3b6@posteo.de>
-Date: Wed, 27 Dec 2023 12:20:16 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862AE79CD;
+	Fri, 29 Dec 2023 06:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d422c9f894so41365515ad.3;
+        Thu, 28 Dec 2023 22:31:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703831482; x=1704436282; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ls3yrjrYy9eVz9esBcykVo8gEjuUhZ/hfePG/jTt1JE=;
+        b=CwxcJagB2M3miJISiF2mB9aJSYZLUAIxq49eu5c4HAmWdglhbuU+f6eneR6hfU/5TA
+         0QCip0szM8wL1xTrdzrhxLCLGDcDi8VmCwgjKeZ/xtbXZHBD2oJFRyD+HnF9aKHBbv2a
+         HeCogeHDB9KzA1D+qe6LUnAw/L5+WJrNxPkUwLf+4HBvfNydUQkgPMmFrRBnLDDP3vub
+         +yXRPnFesFfKT8siXEDlW4+6fMd78SOTKfRqpZABAWEz3gtbzj46zAfa5SzSZTVT7429
+         nzPsXaMdYg9b5PFt0Xc9E6jCrCCiezW4UhAxnQMEJ7hMldZ34NEicGnWU9gGLkWo6XoR
+         RrRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703831482; x=1704436282;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ls3yrjrYy9eVz9esBcykVo8gEjuUhZ/hfePG/jTt1JE=;
+        b=ZemiogVU2Yvi6TVULXM/kFoTdGjRupobdePRxJb3NrxDUqLiL7NnHOP6R/hMiKILpj
+         dan2zBnuDRWcmlAwQgYWrgcx/21roddN5EzQjy2FqvIp2IK2yqutbh5i/uDnFZMA6O5p
+         LbrlED2GudN3jNFMS0rT1IeGFR25E0ArFqoIlVG+f81FudFtw+ByeiMjoQlVvde62Uxh
+         yecS6gjB9nj4AVX1nsdh70trTZ6L63ITsY8h/ZehcZRGQ4D2tnh2W6BrVQezRaYzUvS7
+         RJvfmhB0LfJfjjIRwKHKpHgJGg2isB/Myp9Ab+SkKV7LfHweBLwuY152Q6IhPBTJUw+K
+         dPVQ==
+X-Gm-Message-State: AOJu0YwzALinNYwvH+2F2UQhyPAMoHIgLIUEwSVaJS8esx7Pv8u8q5rD
+	h6fP1YzQWqusLSudlGjAvZc=
+X-Google-Smtp-Source: AGHT+IHR73hXbo8VTreL7pUXsGoZkNaRlHW8GJU+rM6EglxVXZbDVGKRLQrbU0OUMfWwx6xoLXaL4Q==
+X-Received: by 2002:a17:902:ce91:b0:1cf:f506:c98e with SMTP id f17-20020a170902ce9100b001cff506c98emr13315749plg.16.1703831481535;
+        Thu, 28 Dec 2023 22:31:21 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:87c:f9e1:4c4c:39e1:4807:8b2c])
+        by smtp.gmail.com with ESMTPSA id jc14-20020a17090325ce00b001d07d83fdd0sm15009499plb.238.2023.12.28.22.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 22:31:21 -0800 (PST)
+From: pratikmanvar09@gmail.com
+To: thierry.reding@gmail.com,
+	u.kleine-koenig@pengutronix.de,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	linux-pwm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Clark Wang <xiaoning.wang@nxp.com>,
+	Jun Li <jun.li@nxp.com>,
+	Pratik Manvar <pratik.manvar@ifm.com>
+Subject: [PATCH] pwm: imx27: workaround of the pwm output bug
+Date: Fri, 29 Dec 2023 12:00:07 +0530
+Message-ID: <20231229063013.1786-1-pratikmanvar09@gmail.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Language: de-DE
-To: linux-pwm <linux-pwm@vger.kernel.org>
-From: Patrick Menschel <menschel.p@posteo.de>
-Subject: [PCA9685] Possible bug in PCA9685 driver
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------sHgSmd7VydvZ0eTEA79xqieK"
-Autocrypt: addr=menschel.p@posteo.de; prefer-encrypt=mutual;
-  keydata=xjMEZWoDbRYJKwYBBAHaRw8BAQdAPnitZJKgRkA5F6Wn0CDr6DKJu33iFUFd5UofbM6vExTNICAo
-  cG9zdGVvKSA8bWVuc2NoZWwucEBwb3N0ZW8uZGU+wpYEExYIAD4WIQQO6LhiIelOcmTibl1UVEfM
-  9nzU+gUCZWoDbQIbAwUJBaOagAULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRBUVEfM9nzU+sNA
-  AQDc9USeUpTlQJLNbBv+6w9r6p3DvH/3MqtyvwhV8vNgyQEAvXnWykqofrPbE3Rhtb14sZfP1BQC
-  6957ILBBrXmCLwTOOARlagNtEgorBgEEAZdVAQUBAQdA/0A1N2M4AgK4+MQEiM3SIm23NOzRMepv
-  xLTN8nX2AD0DAQgHwn4EGBYIACYWIQQO6LhiIelOcmTibl1UVEfM9nzU+gUCZWoDbQIbDAUJBaOa
-  gAAKCRBUVEfM9nzU+gt+AP9UC/gBqsbdOFf3eCt/ayBX91SoisFqYYw6LVILENEYmgEApXCtCQK4
-  iGvszIRZCyEtqYXyfHrotRS+aZZE6yxzGgc=
-OpenPGP: url=https://posteo.de/keys/menschel.p@posteo.de.asc; preference=encrypt
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------sHgSmd7VydvZ0eTEA79xqieK
-Content-Type: multipart/mixed; boundary="------------ae0uDLW1S5a1HoMkqEqaYw4f";
- protected-headers="v1"
-From: Patrick Menschel <menschel.p@posteo.de>
-To: linux-pwm <linux-pwm@vger.kernel.org>
-Message-ID: <e91c4495-c32f-9de1-6f48-af16239bc3b6@posteo.de>
-Subject: [PCA9685] Possible bug in PCA9685 driver
+From: Clark Wang <xiaoning.wang@nxp.com>
 
---------------ae0uDLW1S5a1HoMkqEqaYw4f
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+This fixes the pwm output bug when decrease the duty cycle.
+This is a limited workaround for the PWM IP issue TKT0577206.
 
-SGVsbG8sDQoNCkknZCBsaWtlIHRvIHJlcG9ydCBhIHBvc3NpYmxlIGJ1ZyBpbiB0aGUgcGNh
-OTg2NSBkcml2ZXIuDQoNCmh0dHBzOi8vZ2l0aHViLmNvbS9yYXNwYmVycnlwaS9saW51eC9i
-bG9iL3JwaS02LjEueS9kcml2ZXJzL3B3bS9wd20tcGNhOTY4NS5jDQoNClRoZSByZXN1bHRp
-bmcgZnJlcXVlbmN5IGlzIDEwJSBvZmYuDQoNCkknbSBjdXJyZW50bHkgdXNpbmcgYW4gYWRh
-ZnJ1aXQgcGNhOTY4NSBib2FyZCB0byB6ZXJvLWluIHNvbWUgc2Vydm9zIHZpYSANClNZU0ZT
-Lg0KDQpBcyBhbHdheXMsIGZpcnN0IGF0dGVtcHQgd2FzIGEgZGlzYXN0ZXIgYnV0IGFmdGVy
-IHRoYXQsIEkgc3RhcnRlZCB0byANCm1lYXN1cmUgdGhpbmdzIHdpdGggYSBCZW5uaW5nIE1N
-IDctMSBhbmQgd2hlbiBJIHNldCB0aGUgcGVyaW9kIHRvIDIwbXMgDQp2aWEgU3lzRnMsIEkg
-cmVhZCA1NUh6IG9uIHRoZSBtdWx0aW1ldGVyLg0KDQpJIGhhZCB0byBzZXQgdGhlIHBlcmlv
-ZCB0byAyMm1zIHRvIGdldCA0OSw4OEh6Lg0KDQpgYGANCiQgY2QgL3N5cy9jbGFzcy9wd20v
-cHdtY2hpcDAvDQokIGVjaG8gMCA+IGV4cG9ydA0KJCBjZCBwd20wLw0KDQokIGVjaG8gMjAw
-MDAwMDAgPiBwZXJpb2QNCiQgZWNobyAxMTAwMDAwMCA+IGR1dHlfY3ljbGUNCiQgZWNobyAx
-ID4gZW5hYmxlDQojIHJlc3VsdHMgaW4gfjU1SHoNCg0KJCBlY2hvIDAgPiBlbmFibGUNCiQg
-ZWNobyAyMjAwMDAwMCA+IHBlcmlvZA0KJCBlY2hvIDExMDAwMDAwID4gZHV0eV9jeWNsZQ0K
-JCBlY2hvIDEgPiBlbmFibGUNCiMgcmVzdWx0cyBpbiB+NTBIeiwgYW5kIGl0J3MgNTAlIGR1
-dHkgY3ljbGUgdG8gZ2V0IGEgc3ltZXRyaWMgc2lnbmFsDQoNCg0KJCBlY2hvIDAgPiBlbmFi
-bGUNCiMgYWZ0ZXIgY29ubmVjdGluZyBhIHNlcnZvIGFuZCBzZXR0aW5nIGR1dHkgdG8gMS0y
-bXMgZXZlcnl0aGluZyB3b3JrcyBhcyANCmV4cGVjdGVkLg0KJCBlY2hvIDEgPiBlbmFibGUN
-CiQgZWNobyAxMDAwMDAwID4gZHV0eV9jeWNsZQ0KJCBlY2hvIDE1MDAwMDAgPiBkdXR5X2N5
-Y2xlDQokIGVjaG8gMjAwMDAwMCA+IGR1dHlfY3ljbGUNCmBgYA0KSW4gdGhlIGVuZCBpdCBk
-b2VzIG5vdCBtYXR0ZXIgdG8gdGhlIHNlcnZvIG9yIHRoZSBhcHBsaWNhdGlvbiBhbmQgSSdt
-IA0Kbm90IHN1cmUgaWYgSSBtZWFzdXJlZCBjb3JyZWN0bHkuDQoNCkJSDQpQYXRyaWNrIE1l
-bnNjaGVsDQo=
+Root cause:
+When the SAR FIFO is empty, the new write value will be directly applied
+to SAR even the current period is not over.
+If the new SAR value is less than the old one, and the counter is
+greater than the new SAR value, the current period will not filp the
+level. This will result in a pulse with a duty cycle of 100%.
 
---------------ae0uDLW1S5a1HoMkqEqaYw4f--
+Workaround:
+Add an old value SAR write before updating the new duty cycle to SAR.
+This will keep the new value is always in a not empty fifo, and can be
+wait to update after a period finished.
 
---------------sHgSmd7VydvZ0eTEA79xqieK
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+Limitation:
+This workaround can only solve this issue when the PWM period is longer
+than 2us(or <500KHz).
 
------BEGIN PGP SIGNATURE-----
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0e5a479990507816317
+Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
+---
+ drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 62 insertions(+), 5 deletions(-)
 
-wnsEABYIACMWIQQO6LhiIelOcmTibl1UVEfM9nzU+gUCZYwWgAUDAAAAAAAKCRBUVEfM9nzU+ivD
-AP4w55oDMNAXjy/l+vxy3eZ972o4GHVsySNisNYFPlNhFwEA8Wv6LqubiOugDqAuPSt23P6TH3ZK
-w4wvk40eqN0YfAc=
-=eklh
------END PGP SIGNATURE-----
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 29a3089c534c..c21b2a9f02ae 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -21,11 +21,13 @@
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
++#include <linux/spinlock.h>
+ 
+ #define MX3_PWMCR			0x00    /* PWM Control Register */
+ #define MX3_PWMSR			0x04    /* PWM Status Register */
+ #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
+ #define MX3_PWMPR			0x10    /* PWM Period Register */
++#define MX3_PWMCNR			0x14    /* PWM Counter Register */
+ 
+ #define MX3_PWMCR_FWM			GENMASK(27, 26)
+ #define MX3_PWMCR_STOPEN		BIT(25)
+@@ -91,6 +93,7 @@ struct pwm_imx27_chip {
+ 	 * value to return in that case.
+ 	 */
+ 	unsigned int duty_cycle;
++	spinlock_t lock;
+ };
+ 
+ #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
+@@ -203,10 +206,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 
+ 	sr = readl(imx->mmio_base + MX3_PWMSR);
+ 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+-	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
++	if (fifoav >= MX3_PWMSR_FIFOAV_3WORDS) {
+ 		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+ 					 NSEC_PER_MSEC);
+-		msleep(period_ms);
++		msleep(period_ms * (fifoav - 2));
+ 
+ 		sr = readl(imx->mmio_base + MX3_PWMSR);
+ 		if (fifoav == FIELD_GET(MX3_PWMSR_FIFOAV, sr))
+@@ -217,13 +220,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			   const struct pwm_state *state)
+ {
+-	unsigned long period_cycles, duty_cycles, prescale;
++	unsigned long period_cycles, duty_cycles, prescale, counter_check, flags;
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
++	void __iomem *reg_sar = imx->mmio_base + MX3_PWMSAR;
++	__force u32 sar_last, sar_current;
+ 	struct pwm_state cstate;
+ 	unsigned long long c;
+ 	unsigned long long clkrate;
+ 	int ret;
+-	u32 cr;
++	u32 cr, timeout = 1000;
+ 
+ 	pwm_get_state(pwm, &cstate);
+ 
+@@ -264,7 +269,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		pwm_imx27_sw_reset(chip);
+ 	}
+ 
+-	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
++	/*
++	 * This is a limited workaround. When the SAR FIFO is empty, the new
++	 * write value will be directly applied to SAR even the current period
++	 * is not over.
++	 * If the new SAR value is less than the old one, and the counter is
++	 * greater than the new SAR value, the current period will not filp
++	 * the level. This will result in a pulse with a duty cycle of 100%.
++	 * So, writing the current value of the SAR to SAR here before updating
++	 * the new SAR value can avoid this issue.
++	 *
++	 * Add a spin lock and turn off the interrupt to ensure that the
++	 * real-time performance can be guaranteed as much as possible when
++	 * operating the following operations.
++	 *
++	 * 1. Add a threshold of 1.5us. If the time T between the read current
++	 * count value CNR and the end of the cycle is less than 1.5us, wait
++	 * for T to be longer than 1.5us before updating the SAR register.
++	 * This is to avoid the situation that when the first SAR is written,
++	 * the current cycle just ends and the SAR FIFO that just be written
++	 * is emptied again.
++	 *
++	 * 2. Use __raw_writel() to minimize the interval between two writes to
++	 * the SAR register to increase the fastest pwm frequency supported.
++	 *
++	 * When the PWM period is longer than 2us(or <500KHz), this workaround
++	 * can solve this problem.
++	 */
++	if (duty_cycles < imx->duty_cycle) {
++		c = clkrate * 1500;
++		do_div(c, NSEC_PER_SEC);
++		counter_check = c;
++		sar_last = cpu_to_le32(imx->duty_cycle);
++		sar_current = cpu_to_le32(duty_cycles);
++
++		spin_lock_irqsave(&imx->lock, flags);
++		if (state->period >= 2000) {
++			while ((period_cycles -
++				readl_relaxed(imx->mmio_base + MX3_PWMCNR))
++				< counter_check) {
++				if (!--timeout)
++					break;
++			};
++		}
++		if (!(MX3_PWMSR_FIFOAV &
++		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
++			__raw_writel(sar_last, reg_sar);
++		__raw_writel(sar_current, reg_sar);
++		spin_unlock_irqrestore(&imx->lock, flags);
++	} else
++		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
++
+ 	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+ 
+ 	/*
+@@ -325,6 +380,8 @@ static int pwm_imx27_probe(struct platform_device *pdev)
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
+ 				     "failed to get peripheral clock\n");
+ 
++	spin_lock_init(&imx->lock);
++	imx->duty_cycle = 0;
+ 	imx->chip.ops = &pwm_imx27_ops;
+ 	imx->chip.dev = &pdev->dev;
+ 	imx->chip.npwm = 1;
+-- 
+2.25.1
 
---------------sHgSmd7VydvZ0eTEA79xqieK--
 
