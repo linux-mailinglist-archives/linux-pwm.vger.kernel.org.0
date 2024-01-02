@@ -1,244 +1,118 @@
-Return-Path: <linux-pwm+bounces-652-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-653-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C889820347
-	for <lists+linux-pwm@lfdr.de>; Sat, 30 Dec 2023 03:03:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50708821B3D
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jan 2024 12:53:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCF5AB21151
-	for <lists+linux-pwm@lfdr.de>; Sat, 30 Dec 2023 02:03:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1C74282EB8
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jan 2024 11:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FE2801;
-	Sat, 30 Dec 2023 02:03:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0346CF9DA;
+	Tue,  2 Jan 2024 11:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dIn4snje"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="U6rECvbH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SZ+2iCxb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0A02567;
-	Sat, 30 Dec 2023 02:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703901782; x=1735437782;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PjWOdBCh5ax+EUHVlpPRAdDsa+muedSFTVmblk+8jpo=;
-  b=dIn4snjea44sCQFK1TUBgvKXcrj5qDUh+CD6x3KX7FV/ZkMmBNrA/YG5
-   DNmqR9TuA1BWd/BWycrx7VOfy5Bi3u1i0EQOaMjwjn5zoii9qK1vF7dlf
-   p9HkNgWH0GyEV+duBI4DA+FtoGMU503Wt5bxhfUvhnvbUZoAvGf3+A1dX
-   Q1pSOX61U2KZlHFY5LbGXielXR6Xg56NKv7sU7cSPK7/OumKKW3eg0doy
-   ceLJaqJeg4BfylC2zjYHBmAW7K8mdIJjElY/gSM6YjtzQWODLVFA9JRwG
-   xa3q9bIL/PAhNrxJc0yJGAQefZkfYoR9XLtOuY5RIz9W8Q1/yLvmdiUeu
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="10086255"
-X-IronPort-AV: E=Sophos;i="6.04,316,1695711600"; 
-   d="scan'208";a="10086255"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 18:03:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="807805725"
-X-IronPort-AV: E=Sophos;i="6.04,316,1695711600"; 
-   d="scan'208";a="807805725"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 29 Dec 2023 18:02:57 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rJOgg-000HyT-2H;
-	Sat, 30 Dec 2023 02:02:54 +0000
-Date: Sat, 30 Dec 2023 10:01:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: pratikmanvar09@gmail.com, thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	linux-imx@nxp.com, linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Clark Wang <xiaoning.wang@nxp.com>,
-	Jun Li <jun.li@nxp.com>, Pratik Manvar <pratik.manvar@ifm.com>
-Subject: Re: [PATCH] pwm: imx27: workaround of the pwm output bug
-Message-ID: <202312300907.RGtYsKxb-lkp@intel.com>
-References: <20231229063013.1786-1-pratikmanvar09@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1D8F9C3;
+	Tue,  2 Jan 2024 11:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 3DFD53200AB5;
+	Tue,  2 Jan 2024 06:53:22 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 02 Jan 2024 06:53:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1704196401;
+	 x=1704282801; bh=78GfTO7R2KAqCaUTBElHrc44apEjYHc36FVjq5911Xg=; b=
+	U6rECvbH2toS0b0UpeBZZv4K7IAw7Ecn5LxGVIqu5d5x1FnNvR92LKTi9whWHKSY
+	1jvGSv72tMjM3yfZzl8OhlP6upxv833uGXXE5sNRTwFD0xfCvpTE3R1zyz/5KqUl
+	PuAVtL8ZjsCze4G6UrHZXX7a2DTDkwN4yzls6kh1Yes1B387+dnV3XIfKS46usRy
+	MFk9yhmCF8ZsZZiVyevp38QKqORDNLCUZXt1FuCYrXSYRxMkIXKN7qrHdkOp/RB3
+	/Y4fFMfmWVaGUExmK/L+RnJ/fqoYyHpWGnKWi/MnhO/rI0g0sFPdMwplJdNUwE6/
+	ZlWxR3S7dEZ8AKrbnmT4Ow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704196401; x=
+	1704282801; bh=78GfTO7R2KAqCaUTBElHrc44apEjYHc36FVjq5911Xg=; b=S
+	Z+2iCxbn55HOYCciQITpOct/bkhChuTAijeMEcS6Ym3vIqNJCpx6NWbvL/6Gu0No
+	fIsAoE4bLB5B9IiImf7IW1bQoi1EgWb4V5miJzoqRbyhGj7hEbepYLTDJkWeFU4c
+	1POo2gZtPOon3I3WJbj+Z7EEjYVXcKJggo756cvoeSpdDzrRq4y4Yc8RLNjHCDAx
+	iPnwQtzv134BiyhI/lVjY5macUeGvN7NF+6y2S6NcIDgx1PR9yQVDYEIhnhgiDK8
+	9wtx8s2GYLgb/TnmKiYPB/bABdFvHDKLqo3Bo2cL9mOeNYwSv2grCkeM+d4ceXaf
+	v8aH0fBJzjAkeNBw5ZqEQ==
+X-ME-Sender: <xms:MfmTZe7UKV7m538qO__Lm7XwAndWT5G-LtGxwlWJ44WOU4Dh8sluCg>
+    <xme:MfmTZX6Ze6QrIdjKyS6fnlyomgJ5CkIwMJxUlmILAtdk-_Z5ASB2VpuACNCoO7b86
+    FApk7-TmL4Se2onnuA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegvddgfeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
+    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:MfmTZdfmD9ATIlfyfIcAW_jcKdW02ri-KA_kN6SMZS1FzxHK5DTHGg>
+    <xmx:MfmTZbLfQWVswYQK9coBbIWg8kFzOqd6tIgcUKn2nqsmpT0ej6JCzw>
+    <xmx:MfmTZSLvYRx3KdpusCsgMUdMvoensT-hj_0NoE37TV7DdDNdOegc7w>
+    <xmx:MfmTZZX-2ua0PNgWbmJqGnWi3hXinemJtriwnXrbt0_bQBB0Uy71Bw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 9E622B6008D; Tue,  2 Jan 2024 06:53:21 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1364-ga51d5fd3b7-fm-20231219.001-ga51d5fd3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231229063013.1786-1-pratikmanvar09@gmail.com>
+Message-Id: <165b800f-42bb-4578-8191-7fbddc7e106c@app.fastmail.com>
+In-Reply-To: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
+Date: Tue, 02 Jan 2024 12:52:59 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>, linux-pwm@vger.kernel.org,
+ "Sebastien Bourdelin" <sebastien.bourdelin@gmail.com>
+Subject: Re: [PATCH v2 0/2] bus: ts-nbus: Two improvements
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Dec 25, 2023, at 19:12, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Arnd,
+>
+> the last changes for drivers/bus/ts-nbus.c went in via arm-soc. Would
+> you pick up these two, too? Tell me if a PR would simplify things for
+> you. I'd base it on top of fc540426f7baa0c7d4b477e80435d075659092a2
+> then.
+>
+> Changes since (implicit) v1 of this series
+> (https://lore.kernel.org/linux-kernel/cover.1702160838.git.u.kleine-ko=
+enig@pengutronix.de):
 
-kernel test robot noticed the following build warnings:
+Hi Uwe,
 
-[auto build test WARNING on thierry-reding-pwm/for-next]
-[also build test WARNING on linus/master v6.7-rc7 next-20231222]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I can take these, but it's a little late for the 6.8 merge
+window now. I've added Sebastien to Cc in case he as any
+comments as the original author, I think you had a stale
+email address from him in v1 and hopefully this one is still
+active.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/pratikmanvar09-gmail-com/pwm-imx27-workaround-of-the-pwm-output-bug/20231229-143435
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-patch link:    https://lore.kernel.org/r/20231229063013.1786-1-pratikmanvar09%40gmail.com
-patch subject: [PATCH] pwm: imx27: workaround of the pwm output bug
-config: arm-randconfig-r133-20231230 (https://download.01.org/0day-ci/archive/20231230/202312300907.RGtYsKxb-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 8a4266a626914765c0c69839e8a51be383013c1a)
-reproduce: (https://download.01.org/0day-ci/archive/20231230/202312300907.RGtYsKxb-lkp@intel.com/reproduce)
+If there are no other comments, please send a pull request
+or the two patches to soc@kernel.org after the merge window.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312300907.RGtYsKxb-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pwm/pwm-imx27.c:303:26: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] sar_last @@     got restricted __le32 [usertype] @@
-   drivers/pwm/pwm-imx27.c:303:26: sparse:     expected unsigned int [usertype] sar_last
-   drivers/pwm/pwm-imx27.c:303:26: sparse:     got restricted __le32 [usertype]
->> drivers/pwm/pwm-imx27.c:304:29: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] sar_current @@     got restricted __le32 [usertype] @@
-   drivers/pwm/pwm-imx27.c:304:29: sparse:     expected unsigned int [usertype] sar_current
-   drivers/pwm/pwm-imx27.c:304:29: sparse:     got restricted __le32 [usertype]
-
-vim +303 drivers/pwm/pwm-imx27.c
-
-   219	
-   220	static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-   221				   const struct pwm_state *state)
-   222	{
-   223		unsigned long period_cycles, duty_cycles, prescale, counter_check, flags;
-   224		struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
-   225		void __iomem *reg_sar = imx->mmio_base + MX3_PWMSAR;
-   226		__force u32 sar_last, sar_current;
-   227		struct pwm_state cstate;
-   228		unsigned long long c;
-   229		unsigned long long clkrate;
-   230		int ret;
-   231		u32 cr, timeout = 1000;
-   232	
-   233		pwm_get_state(pwm, &cstate);
-   234	
-   235		clkrate = clk_get_rate(imx->clk_per);
-   236		c = clkrate * state->period;
-   237	
-   238		do_div(c, NSEC_PER_SEC);
-   239		period_cycles = c;
-   240	
-   241		prescale = period_cycles / 0x10000 + 1;
-   242	
-   243		period_cycles /= prescale;
-   244		c = clkrate * state->duty_cycle;
-   245		do_div(c, NSEC_PER_SEC);
-   246		duty_cycles = c;
-   247		duty_cycles /= prescale;
-   248	
-   249		/*
-   250		 * according to imx pwm RM, the real period value should be PERIOD
-   251		 * value in PWMPR plus 2.
-   252		 */
-   253		if (period_cycles > 2)
-   254			period_cycles -= 2;
-   255		else
-   256			period_cycles = 0;
-   257	
-   258		/*
-   259		 * Wait for a free FIFO slot if the PWM is already enabled, and flush
-   260		 * the FIFO if the PWM was disabled and is about to be enabled.
-   261		 */
-   262		if (cstate.enabled) {
-   263			pwm_imx27_wait_fifo_slot(chip, pwm);
-   264		} else {
-   265			ret = pwm_imx27_clk_prepare_enable(imx);
-   266			if (ret)
-   267				return ret;
-   268	
-   269			pwm_imx27_sw_reset(chip);
-   270		}
-   271	
-   272		/*
-   273		 * This is a limited workaround. When the SAR FIFO is empty, the new
-   274		 * write value will be directly applied to SAR even the current period
-   275		 * is not over.
-   276		 * If the new SAR value is less than the old one, and the counter is
-   277		 * greater than the new SAR value, the current period will not filp
-   278		 * the level. This will result in a pulse with a duty cycle of 100%.
-   279		 * So, writing the current value of the SAR to SAR here before updating
-   280		 * the new SAR value can avoid this issue.
-   281		 *
-   282		 * Add a spin lock and turn off the interrupt to ensure that the
-   283		 * real-time performance can be guaranteed as much as possible when
-   284		 * operating the following operations.
-   285		 *
-   286		 * 1. Add a threshold of 1.5us. If the time T between the read current
-   287		 * count value CNR and the end of the cycle is less than 1.5us, wait
-   288		 * for T to be longer than 1.5us before updating the SAR register.
-   289		 * This is to avoid the situation that when the first SAR is written,
-   290		 * the current cycle just ends and the SAR FIFO that just be written
-   291		 * is emptied again.
-   292		 *
-   293		 * 2. Use __raw_writel() to minimize the interval between two writes to
-   294		 * the SAR register to increase the fastest pwm frequency supported.
-   295		 *
-   296		 * When the PWM period is longer than 2us(or <500KHz), this workaround
-   297		 * can solve this problem.
-   298		 */
-   299		if (duty_cycles < imx->duty_cycle) {
-   300			c = clkrate * 1500;
-   301			do_div(c, NSEC_PER_SEC);
-   302			counter_check = c;
- > 303			sar_last = cpu_to_le32(imx->duty_cycle);
- > 304			sar_current = cpu_to_le32(duty_cycles);
-   305	
-   306			spin_lock_irqsave(&imx->lock, flags);
-   307			if (state->period >= 2000) {
-   308				while ((period_cycles -
-   309					readl_relaxed(imx->mmio_base + MX3_PWMCNR))
-   310					< counter_check) {
-   311					if (!--timeout)
-   312						break;
-   313				};
-   314			}
-   315			if (!(MX3_PWMSR_FIFOAV &
-   316			      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
-   317				__raw_writel(sar_last, reg_sar);
-   318			__raw_writel(sar_current, reg_sar);
-   319			spin_unlock_irqrestore(&imx->lock, flags);
-   320		} else
-   321			writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-   322	
-   323		writel(period_cycles, imx->mmio_base + MX3_PWMPR);
-   324	
-   325		/*
-   326		 * Store the duty cycle for future reference in cases where the
-   327		 * MX3_PWMSAR register can't be read (i.e. when the PWM is disabled).
-   328		 */
-   329		imx->duty_cycle = duty_cycles;
-   330	
-   331		cr = MX3_PWMCR_PRESCALER_SET(prescale) |
-   332		     MX3_PWMCR_STOPEN | MX3_PWMCR_DOZEN | MX3_PWMCR_WAITEN |
-   333		     FIELD_PREP(MX3_PWMCR_CLKSRC, MX3_PWMCR_CLKSRC_IPG_HIGH) |
-   334		     MX3_PWMCR_DBGEN;
-   335	
-   336		if (state->polarity == PWM_POLARITY_INVERSED)
-   337			cr |= FIELD_PREP(MX3_PWMCR_POUTC,
-   338					MX3_PWMCR_POUTC_INVERTED);
-   339	
-   340		if (state->enabled)
-   341			cr |= MX3_PWMCR_EN;
-   342	
-   343		writel(cr, imx->mmio_base + MX3_PWMCR);
-   344	
-   345		if (!state->enabled)
-   346			pwm_imx27_clk_disable_unprepare(imx);
-   347	
-   348		return 0;
-   349	}
-   350	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+    Arnd
 
