@@ -1,251 +1,387 @@
-Return-Path: <linux-pwm+bounces-654-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-655-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30D7082286D
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jan 2024 07:36:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29C128228CD
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jan 2024 08:16:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3253D1C22FCB
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jan 2024 06:36:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9AC981F22C7E
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jan 2024 07:16:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72DA412E63;
-	Wed,  3 Jan 2024 06:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkNHOTlU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D89AE179AF;
+	Wed,  3 Jan 2024 07:16:22 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91FD14F82;
-	Wed,  3 Jan 2024 06:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d3ef33e68dso1139365ad.1;
-        Tue, 02 Jan 2024 22:36:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704263769; x=1704868569; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E+MBTamTfaPyaYjpkNQL2PokE1w8PaRTeTsUSGY4kEI=;
-        b=CkNHOTlUhjD3rGEXTBOsmvg6qARh4YTOyWBxnBVQ42mUPPp2KJIutwAFS1A4Dws8XZ
-         lZ6lF0uKrqkLUCKcm9iU5i9FkvBWTrlejVkqqItn2kkFcD70y49ajpL/QaQLWliEPT0y
-         DoieMmT6vfx78ofIHKperataMa8FCI1xIXwzIZW1jyB1Zy79V09eHgEyee4lpLRdaRiz
-         hjHWjIBW8QccLP9j+8j2rMpQh8IoAMjZvXF8XjZK7/6fr/YYYhaziWGB6+7Q73X2mOJo
-         c/ZRcrBP3C8elJbR1GEv0sNET+0MyjHl/pQpcK3G5RmuyXHUGXnpSHUNKqA8hqbZybVz
-         DUbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704263769; x=1704868569;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E+MBTamTfaPyaYjpkNQL2PokE1w8PaRTeTsUSGY4kEI=;
-        b=NS16enrOylZwSSFJAQtTtIwvgNOjuGHZLZKZMcWBucHkiMI9ZFVRXVUT+6hpxqLfRo
-         oJdYYKzjKudZak4t3ucpZXpovufB7v0NswXXHhFVL4OGupUBNSbFZnYrTTWs9YyXWQef
-         uFtKrq0ooUzTWPCqlUnYMJ8fcR9KNhfTo4XzuIukgSn2WXdqlr5bvAkQUiHZtWms1Gpd
-         SAIfLU1EBjespbYgZFZ4xv42NFPj9TjC+WWtUOW10LQypodXmSjdp/FGVzaJL99mroN+
-         eXj1yNgQmg7HaCZD0V4iykOvzUjHIaM9nT14DUj67VRLVqTg92dCU1hDScssRFRWQQId
-         JYjQ==
-X-Gm-Message-State: AOJu0Ywxe0giYwpbkoCz3kdtdgRn1RCg79wEckqBI3R+24AkAnSLbSzK
-	4QhnVqdP3FVb7Rtg5Mkl/Ps=
-X-Google-Smtp-Source: AGHT+IE16RtP6WmR3PaaMPQV00189k/7cj0kBIoj2tv9dqPIsrRgKQmTtUA9Hj9MeKkatHiU3/R2Yw==
-X-Received: by 2002:a17:902:d4cb:b0:1d4:7381:dc31 with SMTP id o11-20020a170902d4cb00b001d47381dc31mr591283plg.6.1704263769097;
-        Tue, 02 Jan 2024 22:36:09 -0800 (PST)
-Received: from localhost.localdomain ([2409:4042:4d3f:759f:e49e:2d4c:d3c7:71c])
-        by smtp.gmail.com with ESMTPSA id bh10-20020a170902a98a00b001d4160c4f97sm21168987plb.188.2024.01.02.22.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 22:36:08 -0800 (PST)
-From: pratikmanvar09@gmail.com
-To: lkp@intel.com
-Cc: festevam@gmail.com,
-	jun.li@nxp.com,
-	kernel@pengutronix.de,
-	linux-arm-kernel@lists.infradead.org,
-	linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev,
-	pratik.manvar@ifm.com,
-	pratikmanvar09@gmail.com,
-	s.hauer@pengutronix.de,
-	shawnguo@kernel.org,
-	thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de,
-	xiaoning.wang@nxp.com
-Subject: [PATCH v2] pwm: imx27: workaround of the pwm output bug
-Date: Wed,  3 Jan 2024 12:04:54 +0530
-Message-Id: <20240103063454.1795-1-pratikmanvar09@gmail.com>
-X-Mailer: git-send-email 2.39.1.windows.1
-In-Reply-To: <202312300907.RGtYsKxb-lkp@intel.com>
-References: <202312300907.RGtYsKxb-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068EF18021;
+	Wed,  3 Jan 2024 07:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=starfivetech.com
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id 7F5F224E276;
+	Wed,  3 Jan 2024 15:15:33 +0800 (CST)
+Received: from EXMBX068.cuchost.com (172.16.6.68) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 3 Jan
+ 2024 15:15:33 +0800
+Received: from [192.168.120.47] (171.223.208.138) by EXMBX068.cuchost.com
+ (172.16.6.68) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 3 Jan
+ 2024 15:15:32 +0800
+Message-ID: <b1a44192-4e7d-46c2-b9cf-969795208839@starfivetech.com>
+Date: Wed, 3 Jan 2024 15:15:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 2/4] pwm: opencores: Add PWM driver support
+Content-Language: en-US
+To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <linux-pwm@vger.kernel.org>
+CC: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Hal Feng
+	<hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <20231222094548.54103-1-william.qiu@starfivetech.com>
+ <20231222094548.54103-3-william.qiu@starfivetech.com>
+From: William Qiu <william.qiu@starfivetech.com>
+In-Reply-To: <20231222094548.54103-3-william.qiu@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX068.cuchost.com
+ (172.16.6.68)
+X-YovoleRuleAgent: yovoleflag
 
-From: Clark Wang <xiaoning.wang@nxp.com>
 
-This fixes the pwm output bug when decrease the duty cycle.
-This is a limited workaround for the PWM IP issue TKT0577206.
 
-Root cause:
-When the SAR FIFO is empty, the new write value will be directly applied
-to SAR even the current period is not over.
-If the new SAR value is less than the old one, and the counter is
-greater than the new SAR value, the current period will not filp the
-level. This will result in a pulse with a duty cycle of 100%.
+On 2023/12/22 17:45, William Qiu wrote:
+> Add driver for OpenCores PWM Controller. And add compatibility code
+> which based on StarFive SoC.
+> 
+> Co-developed-by: Hal Feng <hal.feng@starfivetech.com>
+> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> ---
+>  MAINTAINERS              |   7 ++
+>  drivers/pwm/Kconfig      |  12 ++
+>  drivers/pwm/Makefile     |   1 +
+>  drivers/pwm/pwm-ocores.c | 233 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 253 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-ocores.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9104430e148e..6a6c355150e7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16145,6 +16145,13 @@ F:	Documentation/i2c/busses/i2c-ocores.rst
+>  F:	drivers/i2c/busses/i2c-ocores.c
+>  F:	include/linux/platform_data/i2c-ocores.h
+> 
+> +OPENCORES PWM DRIVER
+> +M:	William Qiu <william.qiu@starfivetech.com>
+> +M:	Hal Feng <hal.feng@starfivetech.com>
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+> +F:	drivers/pwm/pwm-ocores.c
+> +
+>  OPENRISC ARCHITECTURE
+>  M:	Jonas Bonn <jonas@southpole.se>
+>  M:	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 4b956d661755..d87e1bb350ba 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -444,6 +444,18 @@ config PWM_NTXEC
+>  	  controller found in certain e-book readers designed by the original
+>  	  design manufacturer Netronix.
+> 
+> +config PWM_OCORES
+> +	tristate "OpenCores PWM support"
+> +	depends on HAS_IOMEM && OF
+> +	depends on COMMON_CLK
+> +	depends on ARCH_STARFIVE || COMPILE_TEST
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  OpenCores PWM. For details see https://opencores.org/projects/ptc.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-ocores.
+> +
+>  config PWM_OMAP_DMTIMER
+>  	tristate "OMAP Dual-Mode Timer PWM support"
+>  	depends on OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index c5ec9e168ee7..517c4f643058 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_MICROCHIP_CORE)	+= pwm-microchip-core.o
+>  obj-$(CONFIG_PWM_MTK_DISP)	+= pwm-mtk-disp.o
+>  obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
+>  obj-$(CONFIG_PWM_NTXEC)		+= pwm-ntxec.o
+> +obj-$(CONFIG_PWM_OCORES)	+= pwm-ocores.o
+>  obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
+>  obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
+>  obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
+> diff --git a/drivers/pwm/pwm-ocores.c b/drivers/pwm/pwm-ocores.c
+> new file mode 100644
+> index 000000000000..dfb5a186da71
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-ocores.c
+> @@ -0,0 +1,233 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * OpenCores PWM Driver
+> + *
+> + * https://opencores.org/projects/ptc
+> + *
+> + * Copyright (C) 2018-2023 StarFive Technology Co., Ltd.
+> + *
+> + * Limitations:
+> + * - The hardware only do inverted polarity.
+> + * - The hardware minimum period / duty_cycle is (1 / pwm_apb clock frequency) ns.
+> + * - The hardware maximum period / duty_cycle is (U32_MAX / pwm_apb clock frequency) ns.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +
+> +/* OCPWM_CTRL register bits*/
+> +#define REG_OCPWM_EN      BIT(0)
+> +#define REG_OCPWM_ECLK    BIT(1)
+> +#define REG_OCPWM_NEC     BIT(2)
+> +#define REG_OCPWM_OE      BIT(3)
+> +#define REG_OCPWM_SIGNLE  BIT(4)
+> +#define REG_OCPWM_INTE    BIT(5)
+> +#define REG_OCPWM_INT     BIT(6)
+> +#define REG_OCPWM_CNTRRST BIT(7)
+> +#define REG_OCPWM_CAPTE   BIT(8)
+> +
+> +struct ocores_pwm_device {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	struct reset_control *rst;
+> +	const struct ocores_pwm_data *data;
+> +	void __iomem *regs;
+> +	u32 clk_rate; /* PWM APB clock frequency */
+> +};
+> +
+> +struct ocores_pwm_data {
+> +	void __iomem *(*get_ch_base)(void __iomem *base, unsigned int channel);
+> +};
+> +
+> +static inline u32 ocores_readl(struct ocores_pwm_device *ddata,
+> +			       unsigned int channel,
+> +			       unsigned int offset)
+> +{
+> +	void __iomem *base = ddata->data->get_ch_base ?
+> +			     ddata->data->get_ch_base(ddata->regs, channel) : ddata->regs;
+> +
+> +	return readl(base + offset);
+> +}
+> +
+> +static inline void ocores_writel(struct ocores_pwm_device *ddata,
+> +				 unsigned int channel,
+> +				 unsigned int offset, u32 val)
+> +{
+> +	void __iomem *base = ddata->data->get_ch_base ?
+> +			     ddata->data->get_ch_base(ddata->regs, channel) : ddata->regs;
+> +
+> +	writel(val, base + offset);
+> +}
+> +
+> +static inline struct ocores_pwm_device *chip_to_ocores(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct ocores_pwm_device, chip);
+> +}
+> +
+> +static void __iomem *starfive_jh71x0_get_ch_base(void __iomem *base,
+> +						 unsigned int channel)
+> +{
+> +	unsigned int offset = (channel > 3 ? 1 << 15 : 0) + (channel & 3) * 0x10;
+> +
+> +	return base + offset;
+> +}
+> +
+> +static int ocores_pwm_get_state(struct pwm_chip *chip,
+> +				struct pwm_device *pwm,
+> +				struct pwm_state *state)
+> +{
+> +	struct ocores_pwm_device *ddata = chip_to_ocores(chip);
+> +	u32 period_data, duty_data, ctrl_data;
+> +
+> +	period_data = ocores_readl(ddata, pwm->hwpwm, 0x8);
+> +	duty_data = ocores_readl(ddata, pwm->hwpwm, 0x4);
+> +	ctrl_data = ocores_readl(ddata, pwm->hwpwm, 0xC);
+> +
+> +	state->period = DIV_ROUND_UP_ULL((u64)period_data * NSEC_PER_SEC, ddata->clk_rate);
+> +	state->duty_cycle = DIV_ROUND_UP_ULL((u64)duty_data * NSEC_PER_SEC, ddata->clk_rate);
+> +	state->polarity = PWM_POLARITY_INVERSED;
+> +	state->enabled = (ctrl_data & REG_OCPWM_EN) ? true : false;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ocores_pwm_apply(struct pwm_chip *chip,
+> +			    struct pwm_device *pwm,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct ocores_pwm_device *ddata = chip_to_ocores(chip);
+> +	u32 ctrl_data = 0;
+> +	u64 period_data, duty_data;
+> +
+> +	if (state->polarity != PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	ctrl_data = ocores_readl(ddata, pwm->hwpwm, 0xC);
+> +	ocores_writel(ddata, pwm->hwpwm, 0xC, 0);
+> +
+> +	period_data = DIV_ROUND_DOWN_ULL(state->period * ddata->clk_rate, NSEC_PER_SEC);
+> +	if (period_data <= U32_MAX)
+> +		ocores_writel(ddata, pwm->hwpwm, 0x8, (u32)period_data);
+> +	else
+> +		return -EINVAL;
+> +
+> +	duty_data = DIV_ROUND_DOWN_ULL(state->duty_cycle * ddata->clk_rate, NSEC_PER_SEC);
+> +	if (duty_data <= U32_MAX)
+> +		ocores_writel(ddata, pwm->hwpwm, 0x4, (u32)duty_data);
+> +	else
+> +		return -EINVAL;
+> +
+> +	ocores_writel(ddata, pwm->hwpwm, 0xC, 0);
+> +
+> +	if (state->enabled) {
+> +		ctrl_data = ocores_readl(ddata, pwm->hwpwm, 0xC);
+> +		ocores_writel(ddata, pwm->hwpwm, 0xC, ctrl_data | REG_OCPWM_EN | REG_OCPWM_OE);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pwm_ops ocores_pwm_ops = {
+> +	.get_state	= ocores_pwm_get_state,
+> +	.apply		= ocores_pwm_apply,
+> +};
+> +
+> +static const struct ocores_pwm_data jh7100_pwm_data = {
+> +	.get_ch_base = starfive_jh71x0_get_ch_base,
+> +};
+> +
+> +static const struct ocores_pwm_data jh7110_pwm_data = {
+> +	.get_ch_base = starfive_jh71x0_get_ch_base,
+> +};
+> +
+> +static const struct of_device_id ocores_pwm_of_match[] = {
+> +	{ .compatible = "opencores,pwm-v1" },
+> +	{ .compatible = "starfive,jh7100-pwm", .data = &jh7100_pwm_data},
+> +	{ .compatible = "starfive,jh7110-pwm", .data = &jh7110_pwm_data},
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ocores_pwm_of_match);
+> +
+> +static void ocores_reset_control_assert(void *data)
+> +{
+> +	reset_control_assert(data);
+> +}
+> +
+> +static int ocores_pwm_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *id;
+> +	struct device *dev = &pdev->dev;
+> +	struct ocores_pwm_device *ddata;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	id = of_match_device(ocores_pwm_of_match, dev);
+> +	if (!id)
+> +		return -EINVAL;
+> +
+> +	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+> +	if (!ddata)
+> +		return -ENOMEM;
+> +
+> +	ddata->data = id->data;
+> +	chip = &ddata->chip;
+> +	chip->dev = dev;
+> +	chip->ops = &ocores_pwm_ops;
+> +	chip->npwm = 8;
+> +	chip->of_pwm_n_cells = 3;
+> +
+> +	ddata->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(ddata->regs))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->regs),
+> +				     "Unable to map IO resources\n");
+> +
+> +	ddata->clk = devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(ddata->clk))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->clk),
+> +				     "Unable to get pwm's clock\n");
+> +
+> +	ddata->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+> +	if (IS_ERR(ddata->rst))
+> +		return dev_err_probe(dev, PTR_ERR(ddata->rst),
+> +				     "Unable to get pwm's reset\n");
+> +
+> +	reset_control_deassert(ddata->rst);
+> +
+> +	ret = devm_add_action_or_reset(dev, ocores_reset_control_assert, ddata->rst);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ddata->clk_rate = clk_get_rate(ddata->clk);
+> +	if (ddata->clk_rate <= 0)
+> +		return dev_err_probe(dev, ddata->clk_rate,
+> +				     "Unable to get clock's rate\n");
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Could not register PWM chip\n");
+> +
+> +	platform_set_drvdata(pdev, ddata);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver ocores_pwm_driver = {
+> +	.probe = ocores_pwm_probe,
+> +	.driver = {
+> +		.name = "ocores-pwm",
+> +		.of_match_table = ocores_pwm_of_match,
+> +	},
+> +};
+> +module_platform_driver(ocores_pwm_driver);
+> +
+> +MODULE_AUTHOR("Jieqin Chen");
+> +MODULE_AUTHOR("Hal Feng <hal.feng@starfivetech.com>");
+> +MODULE_DESCRIPTION("OpenCores PWM PTC driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.34.1
+> 
 
-Workaround:
-Add an old value SAR write before updating the new duty cycle to SAR.
-This will keep the new value is always in a not empty fifo, and can be
-wait to update after a period finished.
 
-Limitation:
-This workaround can only solve this issue when the PWM period is longer
-than 2us(or <500KHz).
+Hi Thierry Reding,
 
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0e5a479990507816317
-Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
----
- V1 -> V2: fix sparse warnings reported-by: kernel test robot <lkp@intel.com>
-           Closes: https://lore.kernel.org/oe-kbuild-all/202312300907.RGtYsKxb-lkp@intel.com/
-
- drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 62 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 7d9bc43f12b0..1e500a5bf564 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -21,11 +21,13 @@
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
+Could you please help me review this patch series to see if there is
+anything that needs to be modified? If not, could you help me integrate
+this patch into the main line? Thanks.
+Thanks for taking time to review this patch series.
  
- #define MX3_PWMCR			0x00    /* PWM Control Register */
- #define MX3_PWMSR			0x04    /* PWM Status Register */
- #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
- #define MX3_PWMPR			0x10    /* PWM Period Register */
-+#define MX3_PWMCNR			0x14    /* PWM Counter Register */
- 
- #define MX3_PWMCR_FWM			GENMASK(27, 26)
- #define MX3_PWMCR_STOPEN		BIT(25)
-@@ -91,6 +93,7 @@ struct pwm_imx27_chip {
- 	 * value to return in that case.
- 	 */
- 	unsigned int duty_cycle;
-+	spinlock_t lock;
- };
- 
- #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
-@@ -203,10 +206,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
--	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
-+	if (fifoav >= MX3_PWMSR_FIFOAV_3WORDS) {
- 		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
--		msleep(period_ms);
-+		msleep(period_ms * (fifoav - 2));
- 
- 		sr = readl(imx->mmio_base + MX3_PWMSR);
- 		if (fifoav == FIELD_GET(MX3_PWMSR_FIFOAV, sr))
-@@ -217,13 +220,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
--	unsigned long period_cycles, duty_cycles, prescale;
-+	unsigned long period_cycles, duty_cycles, prescale, counter_check, flags;
- 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
-+	void __iomem *reg_sar = imx->mmio_base + MX3_PWMSAR;
-+	__force u32 sar_last, sar_current;
- 	struct pwm_state cstate;
- 	unsigned long long c;
- 	unsigned long long clkrate;
- 	int ret;
--	u32 cr;
-+	u32 cr, timeout = 1000;
- 
- 	pwm_get_state(pwm, &cstate);
- 
-@@ -264,7 +269,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		pwm_imx27_sw_reset(chip);
- 	}
- 
--	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+	/*
-+	 * This is a limited workaround. When the SAR FIFO is empty, the new
-+	 * write value will be directly applied to SAR even the current period
-+	 * is not over.
-+	 * If the new SAR value is less than the old one, and the counter is
-+	 * greater than the new SAR value, the current period will not filp
-+	 * the level. This will result in a pulse with a duty cycle of 100%.
-+	 * So, writing the current value of the SAR to SAR here before updating
-+	 * the new SAR value can avoid this issue.
-+	 *
-+	 * Add a spin lock and turn off the interrupt to ensure that the
-+	 * real-time performance can be guaranteed as much as possible when
-+	 * operating the following operations.
-+	 *
-+	 * 1. Add a threshold of 1.5us. If the time T between the read current
-+	 * count value CNR and the end of the cycle is less than 1.5us, wait
-+	 * for T to be longer than 1.5us before updating the SAR register.
-+	 * This is to avoid the situation that when the first SAR is written,
-+	 * the current cycle just ends and the SAR FIFO that just be written
-+	 * is emptied again.
-+	 *
-+	 * 2. Use __raw_writel() to minimize the interval between two writes to
-+	 * the SAR register to increase the fastest pwm frequency supported.
-+	 *
-+	 * When the PWM period is longer than 2us(or <500KHz), this workaround
-+	 * can solve this problem.
-+	 */
-+	if (duty_cycles < imx->duty_cycle) {
-+		c = clkrate * 1500;
-+		do_div(c, NSEC_PER_SEC);
-+		counter_check = c;
-+		sar_last = (__force u32) cpu_to_le32(imx->duty_cycle);
-+		sar_current = (__force u32) cpu_to_le32(duty_cycles);
-+
-+		spin_lock_irqsave(&imx->lock, flags);
-+		if (state->period >= 2000) {
-+			while ((period_cycles -
-+				readl_relaxed(imx->mmio_base + MX3_PWMCNR))
-+				< counter_check) {
-+				if (!--timeout)
-+					break;
-+			};
-+		}
-+		if (!(MX3_PWMSR_FIFOAV &
-+		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
-+			__raw_writel(sar_last, reg_sar);
-+		__raw_writel(sar_current, reg_sar);
-+		spin_unlock_irqrestore(&imx->lock, flags);
-+	} else
-+		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+
- 	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
- 
- 	/*
-@@ -324,6 +379,8 @@ static int pwm_imx27_probe(struct platform_device *pdev)
- 		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
- 				     "failed to get peripheral clock\n");
- 
-+	spin_lock_init(&imx->lock);
-+	imx->duty_cycle = 0;
- 	imx->chip.ops = &pwm_imx27_ops;
- 	imx->chip.dev = &pdev->dev;
- 	imx->chip.npwm = 1;
--- 
-2.25.1
-
+Best Regards,
+William
 
