@@ -1,118 +1,251 @@
-Return-Path: <linux-pwm+bounces-653-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-654-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50708821B3D
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jan 2024 12:53:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30D7082286D
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jan 2024 07:36:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1C74282EB8
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jan 2024 11:53:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3253D1C22FCB
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jan 2024 06:36:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0346CF9DA;
-	Tue,  2 Jan 2024 11:53:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72DA412E63;
+	Wed,  3 Jan 2024 06:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="U6rECvbH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SZ+2iCxb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkNHOTlU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1D8F9C3;
-	Tue,  2 Jan 2024 11:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 3DFD53200AB5;
-	Tue,  2 Jan 2024 06:53:22 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 02 Jan 2024 06:53:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1704196401;
-	 x=1704282801; bh=78GfTO7R2KAqCaUTBElHrc44apEjYHc36FVjq5911Xg=; b=
-	U6rECvbH2toS0b0UpeBZZv4K7IAw7Ecn5LxGVIqu5d5x1FnNvR92LKTi9whWHKSY
-	1jvGSv72tMjM3yfZzl8OhlP6upxv833uGXXE5sNRTwFD0xfCvpTE3R1zyz/5KqUl
-	PuAVtL8ZjsCze4G6UrHZXX7a2DTDkwN4yzls6kh1Yes1B387+dnV3XIfKS46usRy
-	MFk9yhmCF8ZsZZiVyevp38QKqORDNLCUZXt1FuCYrXSYRxMkIXKN7qrHdkOp/RB3
-	/Y4fFMfmWVaGUExmK/L+RnJ/fqoYyHpWGnKWi/MnhO/rI0g0sFPdMwplJdNUwE6/
-	ZlWxR3S7dEZ8AKrbnmT4Ow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704196401; x=
-	1704282801; bh=78GfTO7R2KAqCaUTBElHrc44apEjYHc36FVjq5911Xg=; b=S
-	Z+2iCxbn55HOYCciQITpOct/bkhChuTAijeMEcS6Ym3vIqNJCpx6NWbvL/6Gu0No
-	fIsAoE4bLB5B9IiImf7IW1bQoi1EgWb4V5miJzoqRbyhGj7hEbepYLTDJkWeFU4c
-	1POo2gZtPOon3I3WJbj+Z7EEjYVXcKJggo756cvoeSpdDzrRq4y4Yc8RLNjHCDAx
-	iPnwQtzv134BiyhI/lVjY5macUeGvN7NF+6y2S6NcIDgx1PR9yQVDYEIhnhgiDK8
-	9wtx8s2GYLgb/TnmKiYPB/bABdFvHDKLqo3Bo2cL9mOeNYwSv2grCkeM+d4ceXaf
-	v8aH0fBJzjAkeNBw5ZqEQ==
-X-ME-Sender: <xms:MfmTZe7UKV7m538qO__Lm7XwAndWT5G-LtGxwlWJ44WOU4Dh8sluCg>
-    <xme:MfmTZX6Ze6QrIdjKyS6fnlyomgJ5CkIwMJxUlmILAtdk-_Z5ASB2VpuACNCoO7b86
-    FApk7-TmL4Se2onnuA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegvddgfeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
-    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:MfmTZdfmD9ATIlfyfIcAW_jcKdW02ri-KA_kN6SMZS1FzxHK5DTHGg>
-    <xmx:MfmTZbLfQWVswYQK9coBbIWg8kFzOqd6tIgcUKn2nqsmpT0ej6JCzw>
-    <xmx:MfmTZSLvYRx3KdpusCsgMUdMvoensT-hj_0NoE37TV7DdDNdOegc7w>
-    <xmx:MfmTZZX-2ua0PNgWbmJqGnWi3hXinemJtriwnXrbt0_bQBB0Uy71Bw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 9E622B6008D; Tue,  2 Jan 2024 06:53:21 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1364-ga51d5fd3b7-fm-20231219.001-ga51d5fd3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91FD14F82;
+	Wed,  3 Jan 2024 06:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d3ef33e68dso1139365ad.1;
+        Tue, 02 Jan 2024 22:36:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704263769; x=1704868569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E+MBTamTfaPyaYjpkNQL2PokE1w8PaRTeTsUSGY4kEI=;
+        b=CkNHOTlUhjD3rGEXTBOsmvg6qARh4YTOyWBxnBVQ42mUPPp2KJIutwAFS1A4Dws8XZ
+         lZ6lF0uKrqkLUCKcm9iU5i9FkvBWTrlejVkqqItn2kkFcD70y49ajpL/QaQLWliEPT0y
+         DoieMmT6vfx78ofIHKperataMa8FCI1xIXwzIZW1jyB1Zy79V09eHgEyee4lpLRdaRiz
+         hjHWjIBW8QccLP9j+8j2rMpQh8IoAMjZvXF8XjZK7/6fr/YYYhaziWGB6+7Q73X2mOJo
+         c/ZRcrBP3C8elJbR1GEv0sNET+0MyjHl/pQpcK3G5RmuyXHUGXnpSHUNKqA8hqbZybVz
+         DUbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704263769; x=1704868569;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E+MBTamTfaPyaYjpkNQL2PokE1w8PaRTeTsUSGY4kEI=;
+        b=NS16enrOylZwSSFJAQtTtIwvgNOjuGHZLZKZMcWBucHkiMI9ZFVRXVUT+6hpxqLfRo
+         oJdYYKzjKudZak4t3ucpZXpovufB7v0NswXXHhFVL4OGupUBNSbFZnYrTTWs9YyXWQef
+         uFtKrq0ooUzTWPCqlUnYMJ8fcR9KNhfTo4XzuIukgSn2WXdqlr5bvAkQUiHZtWms1Gpd
+         SAIfLU1EBjespbYgZFZ4xv42NFPj9TjC+WWtUOW10LQypodXmSjdp/FGVzaJL99mroN+
+         eXj1yNgQmg7HaCZD0V4iykOvzUjHIaM9nT14DUj67VRLVqTg92dCU1hDScssRFRWQQId
+         JYjQ==
+X-Gm-Message-State: AOJu0Ywxe0giYwpbkoCz3kdtdgRn1RCg79wEckqBI3R+24AkAnSLbSzK
+	4QhnVqdP3FVb7Rtg5Mkl/Ps=
+X-Google-Smtp-Source: AGHT+IE16RtP6WmR3PaaMPQV00189k/7cj0kBIoj2tv9dqPIsrRgKQmTtUA9Hj9MeKkatHiU3/R2Yw==
+X-Received: by 2002:a17:902:d4cb:b0:1d4:7381:dc31 with SMTP id o11-20020a170902d4cb00b001d47381dc31mr591283plg.6.1704263769097;
+        Tue, 02 Jan 2024 22:36:09 -0800 (PST)
+Received: from localhost.localdomain ([2409:4042:4d3f:759f:e49e:2d4c:d3c7:71c])
+        by smtp.gmail.com with ESMTPSA id bh10-20020a170902a98a00b001d4160c4f97sm21168987plb.188.2024.01.02.22.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 22:36:08 -0800 (PST)
+From: pratikmanvar09@gmail.com
+To: lkp@intel.com
+Cc: festevam@gmail.com,
+	jun.li@nxp.com,
+	kernel@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev,
+	pratik.manvar@ifm.com,
+	pratikmanvar09@gmail.com,
+	s.hauer@pengutronix.de,
+	shawnguo@kernel.org,
+	thierry.reding@gmail.com,
+	u.kleine-koenig@pengutronix.de,
+	xiaoning.wang@nxp.com
+Subject: [PATCH v2] pwm: imx27: workaround of the pwm output bug
+Date: Wed,  3 Jan 2024 12:04:54 +0530
+Message-Id: <20240103063454.1795-1-pratikmanvar09@gmail.com>
+X-Mailer: git-send-email 2.39.1.windows.1
+In-Reply-To: <202312300907.RGtYsKxb-lkp@intel.com>
+References: <202312300907.RGtYsKxb-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <165b800f-42bb-4578-8191-7fbddc7e106c@app.fastmail.com>
-In-Reply-To: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
-Date: Tue, 02 Jan 2024 12:52:59 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>, linux-pwm@vger.kernel.org,
- "Sebastien Bourdelin" <sebastien.bourdelin@gmail.com>
-Subject: Re: [PATCH v2 0/2] bus: ts-nbus: Two improvements
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 25, 2023, at 19:12, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Arnd,
->
-> the last changes for drivers/bus/ts-nbus.c went in via arm-soc. Would
-> you pick up these two, too? Tell me if a PR would simplify things for
-> you. I'd base it on top of fc540426f7baa0c7d4b477e80435d075659092a2
-> then.
->
-> Changes since (implicit) v1 of this series
-> (https://lore.kernel.org/linux-kernel/cover.1702160838.git.u.kleine-ko=
-enig@pengutronix.de):
+From: Clark Wang <xiaoning.wang@nxp.com>
 
-Hi Uwe,
+This fixes the pwm output bug when decrease the duty cycle.
+This is a limited workaround for the PWM IP issue TKT0577206.
 
-I can take these, but it's a little late for the 6.8 merge
-window now. I've added Sebastien to Cc in case he as any
-comments as the original author, I think you had a stale
-email address from him in v1 and hopefully this one is still
-active.
+Root cause:
+When the SAR FIFO is empty, the new write value will be directly applied
+to SAR even the current period is not over.
+If the new SAR value is less than the old one, and the counter is
+greater than the new SAR value, the current period will not filp the
+level. This will result in a pulse with a duty cycle of 100%.
 
-If there are no other comments, please send a pull request
-or the two patches to soc@kernel.org after the merge window.
+Workaround:
+Add an old value SAR write before updating the new duty cycle to SAR.
+This will keep the new value is always in a not empty fifo, and can be
+wait to update after a period finished.
 
-    Arnd
+Limitation:
+This workaround can only solve this issue when the PWM period is longer
+than 2us(or <500KHz).
+
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0e5a479990507816317
+Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
+---
+ V1 -> V2: fix sparse warnings reported-by: kernel test robot <lkp@intel.com>
+           Closes: https://lore.kernel.org/oe-kbuild-all/202312300907.RGtYsKxb-lkp@intel.com/
+
+ drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 62 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 7d9bc43f12b0..1e500a5bf564 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -21,11 +21,13 @@
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
++#include <linux/spinlock.h>
+ 
+ #define MX3_PWMCR			0x00    /* PWM Control Register */
+ #define MX3_PWMSR			0x04    /* PWM Status Register */
+ #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
+ #define MX3_PWMPR			0x10    /* PWM Period Register */
++#define MX3_PWMCNR			0x14    /* PWM Counter Register */
+ 
+ #define MX3_PWMCR_FWM			GENMASK(27, 26)
+ #define MX3_PWMCR_STOPEN		BIT(25)
+@@ -91,6 +93,7 @@ struct pwm_imx27_chip {
+ 	 * value to return in that case.
+ 	 */
+ 	unsigned int duty_cycle;
++	spinlock_t lock;
+ };
+ 
+ #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
+@@ -203,10 +206,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 
+ 	sr = readl(imx->mmio_base + MX3_PWMSR);
+ 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+-	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
++	if (fifoav >= MX3_PWMSR_FIFOAV_3WORDS) {
+ 		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+ 					 NSEC_PER_MSEC);
+-		msleep(period_ms);
++		msleep(period_ms * (fifoav - 2));
+ 
+ 		sr = readl(imx->mmio_base + MX3_PWMSR);
+ 		if (fifoav == FIELD_GET(MX3_PWMSR_FIFOAV, sr))
+@@ -217,13 +220,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			   const struct pwm_state *state)
+ {
+-	unsigned long period_cycles, duty_cycles, prescale;
++	unsigned long period_cycles, duty_cycles, prescale, counter_check, flags;
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
++	void __iomem *reg_sar = imx->mmio_base + MX3_PWMSAR;
++	__force u32 sar_last, sar_current;
+ 	struct pwm_state cstate;
+ 	unsigned long long c;
+ 	unsigned long long clkrate;
+ 	int ret;
+-	u32 cr;
++	u32 cr, timeout = 1000;
+ 
+ 	pwm_get_state(pwm, &cstate);
+ 
+@@ -264,7 +269,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		pwm_imx27_sw_reset(chip);
+ 	}
+ 
+-	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
++	/*
++	 * This is a limited workaround. When the SAR FIFO is empty, the new
++	 * write value will be directly applied to SAR even the current period
++	 * is not over.
++	 * If the new SAR value is less than the old one, and the counter is
++	 * greater than the new SAR value, the current period will not filp
++	 * the level. This will result in a pulse with a duty cycle of 100%.
++	 * So, writing the current value of the SAR to SAR here before updating
++	 * the new SAR value can avoid this issue.
++	 *
++	 * Add a spin lock and turn off the interrupt to ensure that the
++	 * real-time performance can be guaranteed as much as possible when
++	 * operating the following operations.
++	 *
++	 * 1. Add a threshold of 1.5us. If the time T between the read current
++	 * count value CNR and the end of the cycle is less than 1.5us, wait
++	 * for T to be longer than 1.5us before updating the SAR register.
++	 * This is to avoid the situation that when the first SAR is written,
++	 * the current cycle just ends and the SAR FIFO that just be written
++	 * is emptied again.
++	 *
++	 * 2. Use __raw_writel() to minimize the interval between two writes to
++	 * the SAR register to increase the fastest pwm frequency supported.
++	 *
++	 * When the PWM period is longer than 2us(or <500KHz), this workaround
++	 * can solve this problem.
++	 */
++	if (duty_cycles < imx->duty_cycle) {
++		c = clkrate * 1500;
++		do_div(c, NSEC_PER_SEC);
++		counter_check = c;
++		sar_last = (__force u32) cpu_to_le32(imx->duty_cycle);
++		sar_current = (__force u32) cpu_to_le32(duty_cycles);
++
++		spin_lock_irqsave(&imx->lock, flags);
++		if (state->period >= 2000) {
++			while ((period_cycles -
++				readl_relaxed(imx->mmio_base + MX3_PWMCNR))
++				< counter_check) {
++				if (!--timeout)
++					break;
++			};
++		}
++		if (!(MX3_PWMSR_FIFOAV &
++		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
++			__raw_writel(sar_last, reg_sar);
++		__raw_writel(sar_current, reg_sar);
++		spin_unlock_irqrestore(&imx->lock, flags);
++	} else
++		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
++
+ 	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+ 
+ 	/*
+@@ -324,6 +379,8 @@ static int pwm_imx27_probe(struct platform_device *pdev)
+ 		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
+ 				     "failed to get peripheral clock\n");
+ 
++	spin_lock_init(&imx->lock);
++	imx->duty_cycle = 0;
+ 	imx->chip.ops = &pwm_imx27_ops;
+ 	imx->chip.dev = &pdev->dev;
+ 	imx->chip.npwm = 1;
+-- 
+2.25.1
+
 
