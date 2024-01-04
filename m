@@ -1,55 +1,54 @@
-Return-Path: <linux-pwm+bounces-672-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-673-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 043D6824B27
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 23:47:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 218FE824B99
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jan 2024 00:01:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7EEBDB24495
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 22:46:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5026283CD8
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 23:01:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E01CD2D047;
-	Thu,  4 Jan 2024 22:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E7132D035;
+	Thu,  4 Jan 2024 23:01:27 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B182D022
-	for <linux-pwm@vger.kernel.org>; Thu,  4 Jan 2024 22:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBC22CCBC
+	for <linux-pwm@vger.kernel.org>; Thu,  4 Jan 2024 23:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rLWTt-0003LX-RS; Thu, 04 Jan 2024 23:46:29 +0100
+	id 1rLWiF-0006xK-G9; Fri, 05 Jan 2024 00:01:19 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rLWTs-000SXg-6R; Thu, 04 Jan 2024 23:46:28 +0100
+	id 1rLWiE-000SZB-BW; Fri, 05 Jan 2024 00:01:18 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rLWTs-003ePm-0J;
-	Thu, 04 Jan 2024 23:46:28 +0100
-Date: Thu, 4 Jan 2024 23:46:27 +0100
+	id 1rLWiE-003elX-0o;
+	Fri, 05 Jan 2024 00:01:18 +0100
+Date: Fri, 5 Jan 2024 00:01:18 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hal Feng <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH v10 3/4] riscv: dts: starfive: jh7100: Add PWM node and
- pins configuration
-Message-ID: <xd2ryic6mr6d6cbljjbhmr56mfpchfzkmc3lnznhmoiwyzip2a@6bhbho267e7c>
-References: <20231222094548.54103-1-william.qiu@starfivetech.com>
- <20231222094548.54103-4-william.qiu@starfivetech.com>
- <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-pwm@vger.kernel.org, Sean Anderson <sean.anderson@seco.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, 
+	Maxime Ripard <mripard@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de, 
+	Michal Simek <michal.simek@amd.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] clk: Add a devm variant of clk_rate_exclusive_get()
+Message-ID: <5l6flihq3uqt26f3ewnfu73nmochf6333xlmjrcaah5bihwiv7@742tycpiszno>
+References: <cover.1702403904.git.u.kleine-koenig@pengutronix.de>
+ <744a6371f94fe96f527eea6e52a600914e6fb6b5.1702403904.git.u.kleine-koenig@pengutronix.de>
+ <5391068cdc86b6117920d31a524d934b.sboyd@kernel.org>
+ <3fhgutm42b6sy6gdydcvflnsjuc2ozjetjbeyoxjvnl2t5q7za@4og2x6gqz5y2>
+ <g5ahts576gcub7iwn3xsaky3yu7cqdh3szu67ovixmrrci7zq6@t5fjhj6as5vk>
+ <c1effbda6f323aa58935e1990ba3aed8.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -57,59 +56,76 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t6vmolgghsdowiew"
+	protocol="application/pgp-signature"; boundary="ww4jhyvonlgndukx"
 Content-Disposition: inline
-In-Reply-To: <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
+In-Reply-To: <c1effbda6f323aa58935e1990ba3aed8.sboyd@kernel.org>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
 
---t6vmolgghsdowiew
-Content-Type: text/plain; charset=iso-8859-1
+--ww4jhyvonlgndukx
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Emil,
+Hello Stephen,
 
-On Sun, Dec 24, 2023 at 02:49:34AM -0800, Emil Renner Berthing wrote:
-> William Qiu wrote:
-> > Add OpenCores PWM controller node and add PWM pins configuration
-> > on VisionFive 1 board.
-> >
-> > Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+On Thu, Jan 04, 2024 at 01:38:27PM -0800, Stephen Boyd wrote:
+> Quoting Uwe Kleine-K=C3=B6nig (2024-01-04 10:06:29)
+> > On Mon, Dec 18, 2023 at 02:01:41PM +0100, Uwe Kleine-K=EF=BF=BDnig wrot=
+e:
+> > > If you don't require to add something like:
+> > >=20
+> > >       ret =3D clk_rate_exclusive_get(clk);
+> > >       if (ret)
+> > >               return ret;
+> > >=20
+> > > where we currently have just
+> > >=20
+> > >       clk_rate_exclusive_get(clk);
+> > >=20
+> > > the patch can just be applied (using git am -3) not even hitting a me=
+rge
+> > > conflict without that other series.
+> >=20
+> > I wonder what you think about this. This devm_clk_rate_exclusive_get()
+> > would be very useful and simplify a few more drivers.
+> >=20
+> > Do you intend to take the patch as is, or should I rework it to check
+> > for the zero it returns?
 >=20
-> Sorry, I thought I already sent my review. This looks good.
->=20
-> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> Please check the return value even if it is always zero. The discussion
+> about handling the return value can continue in parallel.
 
-Is this also an implicit Ack to take this patch via the pwm tree once
-the earlier patches are ready? Or do you want to take it via your tree?
-(Maybe already now together with the binding? If so, you can assume my
-Reviewed-by to be an implicit Ack for that.)
+The discussion in the other thread died, but maybe that's because of the
+holidays. Anyhow, I sent a v2 that checks the return value and intend to
+rebase and resend my series making clk_rate_exclusive_get() return void
+if there is no further contribution by Maxime in a few months.
 
 Best regards
 Uwe
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---t6vmolgghsdowiew
+--ww4jhyvonlgndukx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWXNUMACgkQj4D7WH0S
-/k5yJwf8DhWKIA7w5Efn+CTxdLq+56oqG3ETi+SoNHAw6aIw5EMpC/VJwzn87CjW
-rFbc+3JtR/MZvQtlQeEaKu8+IuYRUW0iOFQ2FjVJXI2219g9PsTgMdx9fQmlZFqp
-iFg3DTWerqhqGu258walJUgojVdC6plX2sjlVWvf9UIIaYv9yR4IYMffeFWw0MM/
-dThWdIdYfx4BtxMJWxkiw3QQr7s1tpJ55weroLPO5CAMqXrjiC6YGmcelTF8mRCJ
-6pFloQ1MTC6kT5gERkxBlnO1V+WocrNXPamPFavh5UtGL0PmsZqQzUT49MWwb2si
-sXuOgYjeLG8VgEj8X0+2I+x7k90eDg==
-=xoqr
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWXOL0ACgkQj4D7WH0S
+/k6ppAgAgqY5MVpjJG8UWx2qsWtypJ2JKkiPaY3aSfN8mvFVxX0pOkQP3FKMZFzQ
+sDtzkCVoubkRtIOy3AqJh5xOK9sTRvq3SutC4HEpJyRFXfKKKLq9L4+MaUfA1bza
+Ozw+EqxMGyQDB93r5jqU1scO0WeWMCBFCXmaG7MCtqrq1Uwq3rvC93EAYB+83KSw
+dSP5gpzjjPHom66FuxYJHK16zGPEZKQ0Zi7+I2ZMQj4towGedWOtb+cOD42MWsIJ
+7RwZ8HkOWuGNcM6ywLOjHcNY+pkKCPaIyyFHUW++kQ2/ulhO10qcYbLizr6NR23+
+WLf5tG2EYPofs3gm2TsGt/yc6JaS/A==
+=5oGM
 -----END PGP SIGNATURE-----
 
---t6vmolgghsdowiew--
+--ww4jhyvonlgndukx--
 
