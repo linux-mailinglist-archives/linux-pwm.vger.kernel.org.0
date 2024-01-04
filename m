@@ -1,112 +1,120 @@
-Return-Path: <linux-pwm+bounces-669-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-670-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C3F824A69
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 22:38:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B52BD824B0F
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 23:41:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3CB12860C8
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 21:38:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 683D81F2309C
+	for <lists+linux-pwm@lfdr.de>; Thu,  4 Jan 2024 22:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 148C42C843;
-	Thu,  4 Jan 2024 21:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuOeNjzs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5EF52CCB4;
+	Thu,  4 Jan 2024 22:41:01 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF4D2C6B4;
-	Thu,  4 Jan 2024 21:38:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A171BC433C8;
-	Thu,  4 Jan 2024 21:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704404309;
-	bh=C6yj4tbn318pdlPF1SHSET3ntYVv+Yq1nuht+eVikeI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=GuOeNjzs7+jgEt/pSJNL8/o+eEmnqEjgSzbeDRPDlU7FLeASwA+SiFBaysdcbiZJ2
-	 oIs1QY1xa6xwzCiZvoDpPPNrQAZiIF78RafagJ0OaM2wSk1l0EMMm18E+dwxtlN5PF
-	 KN5rububvg9JxwK/ZI+MjS2km+QxoA4aVLObgF4oMHTVC0k2PEtFZIZ3wnAddIrhbP
-	 u2tkAZgpXu/JhSdZOPxGO7p8BCGozWbnvTM3WmiFzJFoqj/iZjVQfvtE4hyW0EghRn
-	 rnZ9UBXxysu8fyq1HAgTvzqJOaJYByyUQuJNvBymlSKv/+3UA72iDXhXHT93R1Kucu
-	 4YR4FwLcQHNVQ==
-Message-ID: <c1effbda6f323aa58935e1990ba3aed8.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4C92CCB8
+	for <linux-pwm@vger.kernel.org>; Thu,  4 Jan 2024 22:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLWOR-0001yE-9T; Thu, 04 Jan 2024 23:40:51 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLWOO-000SX9-Bn; Thu, 04 Jan 2024 23:40:48 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLWOO-003eP0-0q;
+	Thu, 04 Jan 2024 23:40:48 +0100
+Date: Thu, 4 Jan 2024 23:40:48 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: William Qiu <william.qiu@starfivetech.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hal Feng <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v10 2/4] pwm: opencores: Add PWM driver support
+Message-ID: <mtqzl3hdfivkty2gdwabfxpshz276fjke477eql3nua4west63@u53ruikv5hz2>
+References: <20231222094548.54103-1-william.qiu@starfivetech.com>
+ <20231222094548.54103-3-william.qiu@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e6p2envurvrpju5r"
+Content-Disposition: inline
+In-Reply-To: <20231222094548.54103-3-william.qiu@starfivetech.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+
+
+--e6p2envurvrpju5r
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <g5ahts576gcub7iwn3xsaky3yu7cqdh3szu67ovixmrrci7zq6@t5fjhj6as5vk>
-References: <cover.1702403904.git.u.kleine-koenig@pengutronix.de> <744a6371f94fe96f527eea6e52a600914e6fb6b5.1702403904.git.u.kleine-koenig@pengutronix.de> <5391068cdc86b6117920d31a524d934b.sboyd@kernel.org> <3fhgutm42b6sy6gdydcvflnsjuc2ozjetjbeyoxjvnl2t5q7za@4og2x6gqz5y2> <g5ahts576gcub7iwn3xsaky3yu7cqdh3szu67ovixmrrci7zq6@t5fjhj6as5vk>
-Subject: Re: [PATCH 1/2] clk: Add a devm variant of clk_rate_exclusive_get()
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-pwm@vger.kernel.org, Sean Anderson <sean.anderson@seco.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <mripard@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de, Michal Simek <michal.simek@amd.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-To: Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Date: Thu, 04 Jan 2024 13:38:27 -0800
-User-Agent: alot/0.10
 
-Quoting Uwe Kleine-K=C3=B6nig (2024-01-04 10:06:29)
-> Hello Stephen,
->=20
-> On Mon, Dec 18, 2023 at 02:01:41PM +0100, Uwe Kleine-K=EF=BF=BDnig wrote:
-> > [Cc +=3D Maxime]
-> >=20
-> > Hello Stephen,
-> >=20
-> > On Sun, Dec 17, 2023 at 04:17:41PM -0800, Stephen Boyd wrote:
-> > > Quoting Uwe Kleine-K=EF=BF=BDnig (2023-12-12 10:09:42)
-> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > > > index af2011c2a93b..78249ca2341c 100644
-> > > > --- a/drivers/clk/clk.c
-> > > > +++ b/drivers/clk/clk.c
-> > > > @@ -937,6 +937,21 @@ void clk_rate_exclusive_get(struct clk *clk)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(clk_rate_exclusive_get);
-> > > > =20
-> > > > +static void devm_clk_rate_exclusive_put(void *data)
-> > > > +{
-> > > > +       struct clk *clk =3D data;
-> > > > +
-> > > > +       clk_rate_exclusive_put(clk);
-> > > > +}
-> > > > +
-> > > > +int devm_clk_rate_exclusive_get(struct device *dev, struct clk *cl=
-k)
-> > > > +{
-> > > > +       clk_rate_exclusive_get(clk);
-> > >=20
-> > > It seems the other thread wants this to return an error value.
-> >=20
-> > The status quo is that clk_rate_exclusive_get() always returns zero.
-> > Some users do error handling (which is dead code until Maxime reworks
-> > the call that it might return something non-zero), others just call it
-> > without checking.
-> >=20
-> > If you don't require to add something like:
-> >=20
-> >       ret =3D clk_rate_exclusive_get(clk);
-> >       if (ret)
-> >               return ret;
-> >=20
-> > where we currently have just
-> >=20
-> >       clk_rate_exclusive_get(clk);
-> >=20
-> > the patch can just be applied (using git am -3) not even hitting a merge
-> > conflict without that other series.
->=20
-> I wonder what you think about this. This devm_clk_rate_exclusive_get()
-> would be very useful and simplify a few more drivers.
->=20
-> Do you intend to take the patch as is, or should I rework it to check
-> for the zero it returns?
->=20
+Hello again,
 
-Please check the return value even if it is always zero. The discussion
-about handling the return value can continue in parallel.
+On Fri, Dec 22, 2023 at 05:45:46PM +0800, William Qiu wrote:
+> +static const struct ocores_pwm_data jh7100_pwm_data =3D {
+> +	.get_ch_base =3D starfive_jh71x0_get_ch_base,
+> +};
+> +
+> +static const struct ocores_pwm_data jh7110_pwm_data =3D {
+> +	.get_ch_base =3D starfive_jh71x0_get_ch_base,
+> +};
+> +
+> +static const struct of_device_id ocores_pwm_of_match[] =3D {
+> +	{ .compatible =3D "opencores,pwm-v1" },
+> +	{ .compatible =3D "starfive,jh7100-pwm", .data =3D &jh7100_pwm_data},
+> +	{ .compatible =3D "starfive,jh7110-pwm", .data =3D &jh7110_pwm_data},
+> +	{ /* sentinel */ }
+
+Looking at the binding
+
+	compatible =3D "opencores,pwm-v1";
+
+isn't a valid configuration. If that is indeed the case and you always
+have either starfive,jh7100-pwm or starfive,jh7110-pwm, you can drop the
+logic to only use starfive_jh71x0_get_ch_base conditionally.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--e6p2envurvrpju5r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWXM+8ACgkQj4D7WH0S
+/k5eqwf7BKGgncVgVmHDNmQfHHTNNfkRf4UToW1IVJgCDbsLtDvbBFJbN5tzdhb+
+cL/gFmPxhwJBZ2rRDGTa0/5EBBkCfwVdIQ8jj1wqJEyx0bQuvxUKdNIVCjYtmvFJ
+B0dSDdrYqvSQK3v5gHEYGfi1TOXWJ0P9LdIZxiIRAyF8eDfPVAHnvM3JhPxnkoX9
+d0jC11XgWfuS/7PWg17j45Kr25+6WQD0gXxHTR+jFH3srzZPsgTjzoN1pUrMUUvU
+9zfN8xZtRy9EZOQCDV5s9eP3PdaTJc3hNkkD4MzdD9ObrxGbfvqvzMtAOG2aEmMm
+BtgpzOX0+0zOrVcwSvAO5Tp7FW3mJg==
+=hIsf
+-----END PGP SIGNATURE-----
+
+--e6p2envurvrpju5r--
 
