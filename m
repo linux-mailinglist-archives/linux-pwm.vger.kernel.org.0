@@ -1,189 +1,110 @@
-Return-Path: <linux-pwm+bounces-685-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-686-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77A5A826181
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 21:46:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA7958261B6
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 22:29:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E086A28301C
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 20:46:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71D872830B8
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 21:29:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A52DDAF;
-	Sat,  6 Jan 2024 20:46:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5BAF51E;
+	Sat,  6 Jan 2024 21:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.com header.i=@yandex.com header.b="U5FCXBzs"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+Received: from forward502c.mail.yandex.net (forward502c.mail.yandex.net [178.154.239.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93841F9C2;
-	Sat,  6 Jan 2024 20:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 4FF1A85794;
-	Sat,  6 Jan 2024 21:46:11 +0100 (CET)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Sat, 06 Jan 2024 21:45:46 +0100
-Subject: [PATCH v2] dt-bindings: pxa-pwm: Convert to YAML
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51900F9C7;
+	Sat,  6 Jan 2024 21:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.com
+Received: from mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:1580:0:640:de7b:0])
+	by forward502c.mail.yandex.net (Yandex) with ESMTP id F07F660C8A;
+	Sun,  7 Jan 2024 00:25:13 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id BPmPnMOr9iE0-yopHyjDh;
+	Sun, 07 Jan 2024 00:25:13 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.com; s=mail;
+	t=1704576313; bh=aOO8K1kRwYNcAd+V6oNlanooC+SLRLZcpv5ZyxlV6v4=;
+	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+	b=U5FCXBzs+6/1MnWeYpNMk1BZUW7fx9e5L7a+PS9D9vlrOqHIk6oXEIC2jpEqdmXn7
+	 KBdh4vkHaB+y38iNU6ONbTqf6Y0bisN+9Ik9t2wuoWH6eeBKMljE1alvDE+Nwqs0xq
+	 0BMcYg8yRF6wU3dqaIRX6/KLqy9rfgmfUHqyWzQU=
+Authentication-Results: mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.com
+Message-ID: <94ad0f59-4095-40ee-963d-4ac379fc8852@yandex.com>
+Date: Sat, 6 Jan 2024 22:25:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pwm: rockchip: Allow "interrupts" prooperty
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, kernel@pengutronix.de
+References: <20240106142654.1262758-2-u.kleine-koenig@pengutronix.de>
+ <7dea73a6-d733-4cd2-b2d5-02f09e2a6dd9@linaro.org>
+Content-Language: en-US
+From: Johan Jonker <jbx6244@yandex.com>
+In-Reply-To: <7dea73a6-d733-4cd2-b2d5-02f09e2a6dd9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240106-pxa-pwm-yaml-v2-1-9578ff5f2d7f@skole.hr>
-X-B4-Tracking: v=1; b=H4sIAPm7mWUC/3XMyw6CMBCF4Vchs3bMFFGRle9hWEA7tRO5NK1BC
- OHdrexd/ic53wqRg3CEKlsh8CRRxiFFfshAu2Z4MopJDTnlBSk6o58b9J8el6bvsDRtS2QsX/U
- F0sUHtjLv3KNO7SS+x7Ds+qR+6x9oUqiwMGxuhkifSnuPr7HjowtQb9v2BatjkD2nAAAA
-To: Thierry Reding <thierry.reding@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3332;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=KY4CNJMb5bu/b1IMZAKf3rxFy79ecGdfzqi7aByQaSA=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlmbv9kPQbYS/Zry38ioyNv2pV5E/TQ70/QmEWf
- uM9LUHqdKGJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZZm7/QAKCRCaEZ6wQi2W
- 4cDTD/9/orFpJLwg3vHE2JbDVLSYwM2/kqB0p4fN8meLwVyhuiha4eihm/6LX4TRdi5DliqR5H1
- IK0GiE3G+BI8WYfNyKp4rMchIUSCjQWgGFUkkdcXek6YjM9gzii7IL+UcPYpzWW/g99izT6PVub
- 7He16tvmCDRY0YgwXUWOUBPtGV9GTH52qglMoI0pP9i/3bsqUyTEUydoMqyyEdecSDGjVkB7Emi
- EoBhywmo6Zz7/q3FtBYS2Sybk82kDUfid/nkHHN7oj8f2IOr4oX+0Rmf0umX5kivo7C0N0az8pY
- BgWOlUnjfs/5qzb+I46k+tLDn4HjYdVXQa59FMgcD9BizbR7FAJLzWkRxHjQ8aIb/g1UBWqQp0y
- pkbsreqVbzRQJBhgmFXSMGDU0sT8F7HWERFDJk+mIl/a9kFmV+OzuQf3aX2Byj6cM+cStYjXFDc
- oAj1ZnJx8Twl5liQHnlwBH3E6dRBW0menAUmmkqKGFGUQAZtxwaBCs5DrCt6uNppZycBHvFit4V
- KYUznjQZTaIHkx0Sb5ICOLtpxfaCHASGClZzwAxI7NDz0+qWg67AZ/IryrLgXj65yNSMUdIxgdx
- zDdJIHdxmoAV2wOYNazfIV3bbOJWbTDp16Vc+T2jo0Xmi0UYs6CndJTC87Bu6SRhmhy4arMQh4v
- PG71gxJzScjAXVQ==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 
-Convert the PXA PWM binding file from TXT to YAML.
+Hi,
 
-The original binding does not mention any clocks, but the PWM controller
-will not probe without a clock.
+On 1/6/24 18:10, Krzysztof Kozlowski wrote:
+> On 06/01/2024 15:26, Uwe Kleine-König wrote:
+>> This fixes the dtbs_check error
+>>
+>> 	arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dtb: pwm@10280030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+>> 	from schema $id: http://devicetree.org/schemas/pwm/pwm-rockchip.yaml#
+>>
+>> in several device trees.
+>>
+>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
----
-Changes in v2:
-- Rename to marvell,pxa-pwm.yaml
-- Note addition of clock property
-- Update trailers
-- Link to v1: https://lore.kernel.org/r/20240105-pxa-pwm-yaml-v1-1-4ded9d00c38f@skole.hr
----
- .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml   | 51 ++++++++++++++++++++++
- Documentation/devicetree/bindings/pwm/pxa-pwm.txt  | 30 -------------
- 2 files changed, 51 insertions(+), 30 deletions(-)
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-new file mode 100644
-index 000000000000..fb20e4e1daa8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-pxa.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell PXA PWM
-+
-+maintainers:
-+  - Duje Mihanović <duje.mihanovic@skole.hr>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - marvell,pxa250-pwm
-+      - marvell,pxa270-pwm
-+      - marvell,pxa168-pwm
-+      - marvell,pxa910-pwm
-+
-+  reg:
-+    # Length should be 0x10
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    # Used for specifying the period length in nanoseconds
-+    const: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#pwm-cells"
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/pxa-clock.h>
-+
-+    pwm0: pwm@40b00000 {
-+      compatible = "marvell,pxa250-pwm";
-+      reg = <0x40b00000 0x10>;
-+      #pwm-cells = <1>;
-+      clocks = <&clks CLK_PWM0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt b/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-deleted file mode 100644
-index 5ae9f1e3c338..000000000000
---- a/Documentation/devicetree/bindings/pwm/pxa-pwm.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--Marvell PWM controller
--
--Required properties:
--- compatible: should be one or more of:
--  - "marvell,pxa250-pwm"
--  - "marvell,pxa270-pwm"
--  - "marvell,pxa168-pwm"
--  - "marvell,pxa910-pwm"
--- reg: Physical base address and length of the registers used by the PWM channel
--  Note that one device instance must be created for each PWM that is used, so the
--  length covers only the register window for one PWM output, not that of the
--  entire PWM controller.  Currently length is 0x10 for all supported devices.
--- #pwm-cells: Should be 1.  This cell is used to specify the period in
--  nanoseconds.
--
--Example PWM device node:
--
--pwm0: pwm@40b00000 {
--	compatible = "marvell,pxa250-pwm";
--	reg = <0x40b00000 0x10>;
--	#pwm-cells = <1>;
--};
--
--Example PWM client node:
--
--backlight {
--	compatible = "pwm-backlight";
--	pwms = <&pwm0 5000000>;
--	...
--}
+NAK
 
----
-base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
-change-id: 20240105-pxa-pwm-yaml-8dbb00dfe7c6
+There's a reason why this isn't implemented before:
 
-Best regards,
--- 
-Duje Mihanović <duje.mihanovic@skole.hr>
+[RFC PATCH v1 1/2] dt-bindings: pwm: rockchip: add interrupts property <https://lore.kernel.org/linux-rockchip/ed3df2c8-ffb5-1723-0ed7-3a2721972852@gmail.com/#r>
+
+https://lore.kernel.org/linux-rockchip/ed3df2c8-ffb5-1723-0ed7-3a2721972852@gmail.com/
+
+[PATCH 1/1] dt-bindings: pwm: rockchip: Add description for rk3588 <https://lore.kernel.org/linux-rockchip/20220901135523.52151-1-sebastian.reichel@collabora.com/#r>
+
+https://lore.kernel.org/linux-rockchip/66b5b616-ae9f-a1aa-e2b5-450f570cfcdd@gmail.com/
+
+[PATCH v1 03/11] dt-bindings: pwm: rockchip: add rockchip,rk3128-pwm <https://lore.kernel.org/linux-rockchip/f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmail.com/>
+
+https://lore.kernel.org/linux-rockchip/946d8ac2-6ff2-093a-ad3c-aa755e00d1dd@arm.com/
 
 
+On how to correctly model the DT with common interrupts , PWM and one shot as a sort of MFD etc there's no consensus yet.
+
+Leaf it as it is till someone made a working driver demo, so that the coder is free to model a DT solution that fits to him/her.
+
+
+Johan
+
+> Best regards,
+> Krzysztof
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
 
