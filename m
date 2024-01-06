@@ -1,64 +1,64 @@
-Return-Path: <linux-pwm+bounces-682-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-683-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C67C8260CF
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 18:02:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B1EF8260D7
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 18:10:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8F9231C20FE1
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 17:02:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92BB51F220B1
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Jan 2024 17:10:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6839E8495;
-	Sat,  6 Jan 2024 17:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A72C135;
+	Sat,  6 Jan 2024 17:10:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xnt7OpnT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IXj7M6/h"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF34C13E
-	for <linux-pwm@vger.kernel.org>; Sat,  6 Jan 2024 17:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0C8C12F
+	for <linux-pwm@vger.kernel.org>; Sat,  6 Jan 2024 17:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-556aa7fe765so541917a12.2
-        for <linux-pwm@vger.kernel.org>; Sat, 06 Jan 2024 09:02:01 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a28bd9ca247so47518166b.1
+        for <linux-pwm@vger.kernel.org>; Sat, 06 Jan 2024 09:10:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704560520; x=1705165320; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704561021; x=1705165821; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JCMJes3uYKkCryxEbGM2VUkg48F43meYed1FV/C3aXc=;
-        b=Xnt7OpnT4rjoEWVvCJlFCHkZ75q2qyumvBalysLnF3wRA+ZG7d9NzYBt+XxUbCRnov
-         C2YSNj1p2hpCO2rb0Df+dL7I+YCvBDRtQ5DZsKfUGCu/SvnSN95X67W/NpAKsJnsrEs4
-         Cd+lRWqwozz5lDoyysSqxgAt5SsLlN4wY0UP2HXxjyJT9Bt1etKtupCnBDUJMui86sz3
-         8HsxBHvY1MjF5SiSM4AvRIfoiUzlJ0A5Gop84TLZidxt0iGTKUjAkrmlHZMKirj7EPzw
-         xj+rpuF6aahUxfjOTm6oAgUdaSwW8lIdR1L7t6FIUoUCmrWn6jQ41Ooo4fCEP1cAiUwJ
-         YDuw==
+        bh=IID6xf1hgiaV0Wr0FuYf5r7zkW6w2chj9AsMF1/CnJk=;
+        b=IXj7M6/hpMXvWrcqbMZQ1qaqtG7pOG1S6eOqIGRbdwTXaKi02OirSJqAxkGI5YnuyM
+         /IJZ0wIPBUuqUrzFHZv5qX4tAppX5QvXRzTOx4sNUrJyKajVB8leuamWLjQa0GfKaDBY
+         XyV8J+yK2d3OEMzDjanvfR7JC8HZ4lyXNyqMz6oF4yLx7FbLxNACfpHHYrtQhA/B3mX3
+         CVvKQWgY6RrlYgZzk82MGAmp3F4bmG1TEScrouU5mNAnyclRyN2xEqcosM3a9FGyBURt
+         MvvHW7AT357jb7SrlpcHBSA/MkVAQK7ygFKTrm3jtAr5yiAQme4NF4hbzARxWY9IFMDM
+         /M8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704560520; x=1705165320;
+        d=1e100.net; s=20230601; t=1704561021; x=1705165821;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JCMJes3uYKkCryxEbGM2VUkg48F43meYed1FV/C3aXc=;
-        b=F9iLbPN6hSgSkfAmC3Goc2aL9456tr9GJrgUc0TqxeZ7laxo/bE1C4Vu438geIoBge
-         vXil1aKTpGpm9YX8Sk2z/aH7t4NoOLeLRD1qw4obOTAbPRqckhDFEnSU4XEFfxBlyYCB
-         vL9Udb1SkqRO9zSAbMbqLIsqkRpEsP0JHaPuzu4iahpyE481R9lfppbiXKzYSeX8qr5I
-         FB+qBLIDtWFwbK9Fsl3rbX9oa9rA1X8SIBAd7h3gDqCtNiBAH94M2U9GkB92M0XWFJnA
-         4uAvvjo9qCNt7YSyFUGi9szazsGLiBWoTuTW7ecwWQuvqynyhq/489iuCCel+hKatthE
-         bYiA==
-X-Gm-Message-State: AOJu0Yz5GtwyJ8Nx10HmW72YaEv/958iZoBv605CwQSIX6FmnNkGVW1E
-	So/bWBeNDkCmn8TihsGF51u8D0qGj6jDjA==
-X-Google-Smtp-Source: AGHT+IG90m61uakoUltG7UrE6s04sqSPOvyQ7N8JIrrLW/IwXri52BZ0NEg/9cMXRmcx0vnSErJG7A==
-X-Received: by 2002:a05:6402:14c8:b0:554:d4f4:7f78 with SMTP id f8-20020a05640214c800b00554d4f47f78mr628862edx.45.1704560519965;
-        Sat, 06 Jan 2024 09:01:59 -0800 (PST)
+        bh=IID6xf1hgiaV0Wr0FuYf5r7zkW6w2chj9AsMF1/CnJk=;
+        b=xVKwos88cEQDusWTWESW58F7ZEL2maoZAnEjF36eGFeCx4a+oY3/WpUgTlo7d0S42b
+         7q9BBqYSgF1v1r6bUgGCpApVBIj1o8vRW9jbSFh7fE+ZBF/5STsca7/k2LrCU3mSy8tU
+         o+piGcfHLXtXD0FAdcmV+rg6utgbacLXzcF0/5Rm8uYOhPC1QXnn0CDuhvW1c3Jmha6U
+         nb7cPGV+/CPpvDcYZ8HdECGH2ld8SDEefiJdxffGshkgd2s3TdGAdVsy11Ki11EoxZzP
+         H4302ZcLUPsg8ocKbsLGCfgZ7tCZB566+gY26RGszLRpCdtqBJHcILUGy78kLpQvCa9Q
+         0HFA==
+X-Gm-Message-State: AOJu0YwRZ58kIi5gWwpGrFu0pcXd+Dr2ADdB29eZemO4bJG7XTwyWQH3
+	Z3+y6V3pNDwJrQg8Sa/nCodzDTJhXJimTg==
+X-Google-Smtp-Source: AGHT+IHTVt97ddDmjQ893Y1BgeGDp8+ymdOx7+mMV6an4LSwi+ujX6fpSj9mazs3XTXPt4On+9I7+A==
+X-Received: by 2002:a17:907:764c:b0:a28:fb5b:fd3 with SMTP id kj12-20020a170907764c00b00a28fb5b0fd3mr475110ejc.31.1704561021329;
+        Sat, 06 Jan 2024 09:10:21 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id x2-20020a50d602000000b0055298b38768sm2357835edi.80.2024.01.06.09.01.58
+        by smtp.gmail.com with ESMTPSA id i13-20020a1709061ccd00b00a27a6d59045sm2138016ejh.217.2024.01.06.09.10.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jan 2024 09:01:59 -0800 (PST)
-Message-ID: <2f886744-e6da-4412-8876-306ba4210da0@linaro.org>
-Date: Sat, 6 Jan 2024 18:01:58 +0100
+        Sat, 06 Jan 2024 09:10:20 -0800 (PST)
+Message-ID: <7dea73a6-d733-4cd2-b2d5-02f09e2a6dd9@linaro.org>
+Date: Sat, 6 Jan 2024 18:10:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -66,17 +66,15 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: pxa-pwm: Convert to YAML
+Subject: Re: [PATCH] dt-bindings: pwm: rockchip: Allow "interrupts" prooperty
 Content-Language: en-US
-To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
- Thierry Reding <thierry.reding@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Rob Herring <robh+dt@kernel.org>,
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
 Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240105-pxa-pwm-yaml-v1-1-4ded9d00c38f@skole.hr>
+ linux-rockchip@lists.infradead.org, kernel@pengutronix.de
+References: <20240106142654.1262758-2-u.kleine-koenig@pengutronix.de>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -122,65 +120,21 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240105-pxa-pwm-yaml-v1-1-4ded9d00c38f@skole.hr>
+In-Reply-To: <20240106142654.1262758-2-u.kleine-koenig@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 05/01/2024 23:50, Duje Mihanović wrote:
-> Convert the PXA PWM binding file from TXT to YAML.
+On 06/01/2024 15:26, Uwe Kleine-König wrote:
+> This fixes the dtbs_check error
 > 
-> Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-pxa.yaml | 51 ++++++++++++++++++++++
->  Documentation/devicetree/bindings/pwm/pxa-pwm.txt  | 30 -------------
->  2 files changed, 51 insertions(+), 30 deletions(-)
+> 	arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dtb: pwm@10280030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 	from schema $id: http://devicetree.org/schemas/pwm/pwm-rockchip.yaml#
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-pxa.yaml b/Documentation/devicetree/bindings/pwm/pwm-pxa.yaml
-> new file mode 100644
-> index 000000000000..fb20e4e1daa8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-pxa.yaml
+> in several device trees.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Please keep new style of naming, so:
-marvell,pxa-pwm.yaml
-
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-pxa.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell PXA PWM
-> +
-> +maintainers:
-> +  - Duje Mihanović <duje.mihanovic@skole.hr>
-> +
-> +allOf:
-> +  - $ref: pwm.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - marvell,pxa250-pwm
-> +      - marvell,pxa270-pwm
-> +      - marvell,pxa168-pwm
-> +      - marvell,pxa910-pwm
-> +
-> +  reg:
-> +    # Length should be 0x10
-> +    maxItems: 1
-> +
-> +  "#pwm-cells":
-> +    # Used for specifying the period length in nanoseconds
-> +    const: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-
-These were not in the original binding. Please mention briefly such
-change in commit msg.
-
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
