@@ -1,64 +1,64 @@
-Return-Path: <linux-pwm+bounces-689-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-690-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBE618263C2
-	for <lists+linux-pwm@lfdr.de>; Sun,  7 Jan 2024 11:30:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B56468263C9
+	for <lists+linux-pwm@lfdr.de>; Sun,  7 Jan 2024 11:37:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26516282183
-	for <lists+linux-pwm@lfdr.de>; Sun,  7 Jan 2024 10:30:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47445282597
+	for <lists+linux-pwm@lfdr.de>; Sun,  7 Jan 2024 10:37:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26E612B92;
-	Sun,  7 Jan 2024 10:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF3CF12B8A;
+	Sun,  7 Jan 2024 10:37:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5zJxXaU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nsKBTuuo"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE6C2CA5
-	for <linux-pwm@vger.kernel.org>; Sun,  7 Jan 2024 10:30:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EEB12B8D
+	for <linux-pwm@vger.kernel.org>; Sun,  7 Jan 2024 10:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d8e7a50c1so12905095e9.2
-        for <linux-pwm@vger.kernel.org>; Sun, 07 Jan 2024 02:30:18 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-557a318123bso150216a12.2
+        for <linux-pwm@vger.kernel.org>; Sun, 07 Jan 2024 02:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704623417; x=1705228217; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704623829; x=1705228629; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=n6FcraxlGE1/DMmhL0QqfoIXdq5XuF0l5shF76vlze0=;
-        b=B5zJxXaUNnMM58P/gKXyvZK5I1kqK/D70SfXFq2MdXIHp9viHySxODcCELxSwioc3+
-         ooPocT1GrrD+/CKv6g0Qrf4Y3TsgVbZDYtPUmNXJz1ZN9Z3qr/Oe+g21z4lCN1TshrLq
-         BGH5Xo214HWPrMZSdj17YderosXIN3sXoBgEHxCedObajVjcrjaTooaNlSP1uJX7lQxC
-         e6CgOvEazUOD2fdubp/y2G8zNADQ0cy425haxeF+oODR2OkFc0nhU3RM+7Z6XoJN3j+f
-         gg5cEvEKL23dowJ0/IGwwcQjB0GTKZoq/9Y21EyCENjP82GTp7vjmUuTOVZ12CHcJgMM
-         BDCg==
+        bh=kIgemb2Rdi0WBRHK4fsngj11Jgi64KqO0CWcIupsp64=;
+        b=nsKBTuuoYqWrYtMvr7LPW7y9zGGjFtEwqQlgZPKB7su0WaCXkqJJv5N+YLVKoa16FZ
+         AO0rjGljmjXuHvhNJZV2qVj5ZzOGH2CA5GQzJ0kiBc2K0f4dCbIWYz58p/365tQRDv16
+         eXo5i+hd8THLSIokFX5ITw/oCfDXdlwvJbKGfPx5c4EvCrN0nbJZx6GDXRmZUoyx70gn
+         PdzwIQrgdkR6PV6Yd1v1n4dGySRL/JBTHiwRIYXOmfdB58+/ceAL6L0PO/DTows6uFxm
+         r2tkj7BFA0hkVBii5u4OTomffOqIhU66HBdEedgU4S3Ic0Lb44LepFOd7OYhjGn7HtlL
+         gg3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704623417; x=1705228217;
+        d=1e100.net; s=20230601; t=1704623829; x=1705228629;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n6FcraxlGE1/DMmhL0QqfoIXdq5XuF0l5shF76vlze0=;
-        b=C++Fek/lAHaTAAJDa2IeJV8Owrdu6uYxDA7/kV7S3D+kw2E8NYDVJwsrNzGeqVkfkP
-         7/mNIhbCZ9AoJogYc6y0ATTCZoMnyDLJbZb2dfM8LHYCcOCno7wDynFnY0Bk38tBc3zG
-         IHVhiuU6r0+eh8cAo1NrKWGH7pdQ4XXvff1o4t4wfn0VKCwPcYysji1joyoc/O2BJsXe
-         I6kLZ3CR40+kBOxZ+zR3JgSp/dm/g4g4FM0gEj1BoYPtJrGXxvlhHnBAlF5IVBPuApq3
-         j/li+FI50AV7MssYzmud6CbrxaiDdRNB20HCDjTnE6RMEJWH4o8bNO5+AGTPbQrWVKVV
-         V2YQ==
-X-Gm-Message-State: AOJu0YyA8zvhUVIgjXccyk/QSaNQ3AE9PMod1Q60hrI+0qrIlGn6EaGz
-	BUTRtMNaQdoVE8VJFiYvPsBmJc+vyr4L51iHI1P4mXWi5GQr2w==
-X-Google-Smtp-Source: AGHT+IH6RM5E1nwg/foTgnT2LoBhhDt/Lz5BV6jgjqYVzskptkwkhVI2cX2dwIC0HCiRt3QB/gWadA==
-X-Received: by 2002:a7b:cc99:0:b0:40d:88ba:130a with SMTP id p25-20020a7bcc99000000b0040d88ba130amr881874wma.206.1704623416863;
-        Sun, 07 Jan 2024 02:30:16 -0800 (PST)
+        bh=kIgemb2Rdi0WBRHK4fsngj11Jgi64KqO0CWcIupsp64=;
+        b=K3npv4OwKtqJNT5caq3Dt2myeRQ4d93IBEsLLvgjfydQiauMvlMwaURkvrT7NwYTwB
+         /GSrX1EPgq8CqlNYp54VwDG5SZ7qocmospaZnOGF++OHeCv8HzwSAZOZ/SP/uj6R3Y3l
+         jVo6iYPp9GTdvUmEe13t6zp4GJdomWO99nLw66VXyi0sVtkp/RlmQjyCzl78E0gqIiE4
+         K59XCQvACRohVicYUgnW0F7U9LUw3iiwkh5YamqbSqOM7Urtq3uGZvWaPy2ZBRLUxw/O
+         GOiCUiFauDG3+hPsB4/wljVCtFfN8vkRTUsgSGiczYefVd72es7mqURGicC2s3Q+tBiP
+         viFg==
+X-Gm-Message-State: AOJu0YxbORI0rI1GXbDEfuEbeQ+o104mFyCVnm2U07mCXRSbym+KDaFy
+	bOJOYFx5SE6cmjdhDht4qqD3QJvLzsKjZQ==
+X-Google-Smtp-Source: AGHT+IGorJnH6R3ByF4X62/vqH+zk3IilAur1DbvmTZfyZqHt3hy7TnQFx0EcOYZhbCeW1WTAJF+OQ==
+X-Received: by 2002:a50:955a:0:b0:557:2c3e:206a with SMTP id v26-20020a50955a000000b005572c3e206amr986573eda.0.1704623829353;
+        Sun, 07 Jan 2024 02:37:09 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id p18-20020a170906615200b00a28ec89674bsm2918334ejl.173.2024.01.07.02.30.15
+        by smtp.gmail.com with ESMTPSA id d35-20020a056402402300b005572a1159b9sm2998935eda.22.2024.01.07.02.37.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 02:30:16 -0800 (PST)
-Message-ID: <210132de-a46b-4f9f-8546-0c36d8a34665@linaro.org>
-Date: Sun, 7 Jan 2024 11:30:14 +0100
+        Sun, 07 Jan 2024 02:37:08 -0800 (PST)
+Message-ID: <b7c17e8b-ad21-487d-869f-0f12ad11315e@linaro.org>
+Date: Sun, 7 Jan 2024 11:37:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -66,20 +66,17 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: pwm: rockchip: Allow "interrupts" prooperty
+Subject: Re: [PATCH v2] dt-bindings: pxa-pwm: Convert to YAML
 Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Johan Jonker <jbx6244@yandex.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
+To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
  Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- linux-pwm@vger.kernel.org, linux-rockchip@lists.infradead.org,
- kernel@pengutronix.de, devicetree@vger.kernel.org
-References: <20240106142654.1262758-2-u.kleine-koenig@pengutronix.de>
- <7dea73a6-d733-4cd2-b2d5-02f09e2a6dd9@linaro.org>
- <94ad0f59-4095-40ee-963d-4ac379fc8852@yandex.com>
- <cvvifoctmgdsgqfadqbhgywfw2ff57fz33w26hghf5kyo5j5sw@mj75xtvczr2h>
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240106-pxa-pwm-yaml-v2-1-9578ff5f2d7f@skole.hr>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -125,58 +122,44 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <cvvifoctmgdsgqfadqbhgywfw2ff57fz33w26hghf5kyo5j5sw@mj75xtvczr2h>
+In-Reply-To: <20240106-pxa-pwm-yaml-v2-1-9578ff5f2d7f@skole.hr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 07/01/2024 00:25, Uwe Kleine-König wrote:
-> Hello,
+On 06/01/2024 21:45, Duje Mihanović wrote:
+> Convert the PXA PWM binding file from TXT to YAML.
 > 
-> On Sat, Jan 06, 2024 at 10:25:10PM +0100, Johan Jonker wrote:
->> On 1/6/24 18:10, Krzysztof Kozlowski wrote:
->>> On 06/01/2024 15:26, Uwe Kleine-König wrote:
->>>> This fixes the dtbs_check error
->>>>
->>>> 	arch/arm/boot/dts/rockchip/rv1108-elgin-r1.dtb: pwm@10280030: 'interrupts' does not match any of the regexes: 'pinctrl-[0-9]+'
->>>> 	from schema $id: http://devicetree.org/schemas/pwm/pwm-rockchip.yaml#
->>>>
->>>> in several device trees.
->>>>
->>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->>
->>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> NAK
->>
->> There's a reason why this isn't implemented before:
->>
->> [RFC PATCH v1 1/2] dt-bindings: pwm: rockchip: add interrupts property <https://lore.kernel.org/linux-rockchip/ed3df2c8-ffb5-1723-0ed7-3a2721972852@gmail.com/#r>
->>
->> https://lore.kernel.org/linux-rockchip/ed3df2c8-ffb5-1723-0ed7-3a2721972852@gmail.com/
->>
->> [PATCH 1/1] dt-bindings: pwm: rockchip: Add description for rk3588 <https://lore.kernel.org/linux-rockchip/20220901135523.52151-1-sebastian.reichel@collabora.com/#r>
->>
->> https://lore.kernel.org/linux-rockchip/66b5b616-ae9f-a1aa-e2b5-450f570cfcdd@gmail.com/
->>
->> [PATCH v1 03/11] dt-bindings: pwm: rockchip: add rockchip,rk3128-pwm <https://lore.kernel.org/linux-rockchip/f5dd0ee4-d97e-d878-ffde-c06e9b233e38@gmail.com/>
->>
->> https://lore.kernel.org/linux-rockchip/946d8ac2-6ff2-093a-ad3c-aa755e00d1dd@arm.com/
->>
->>
->> On how to correctly model the DT with common interrupts , PWM and one shot as a sort of MFD etc there's no consensus yet.
->>
->> Leaf it as it is till someone made a working driver demo, so that the coder is free to model a DT solution that fits to him/her.
+> The original binding does not mention any clocks, but the PWM controller
+> will not probe without a clock.
 > 
-> Having the warnings until this happens is bad though. If describing the
-> irqs in the schema is considered wrong, we should remove the interrupts
-> properties from the device tree sources.
+> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+> ---
+> Changes in v2:
+> - Rename to marvell,pxa-pwm.yaml
+> - Note addition of clock property
+> - Update trailers
+> - Link to v1: https://lore.kernel.org/r/20240105-pxa-pwm-yaml-v1-1-4ded9d00c38f@skole.hr
+> ---
+>  .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml   | 51 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/pwm/pxa-pwm.txt  | 30 -------------
+>  2 files changed, 51 insertions(+), 30 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> new file mode 100644
+> index 000000000000..fb20e4e1daa8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-pxa.yaml#
 
-I think the previous thread mixes bindings with driver. Does the
-hardware have interrupt? Yes? Add it to the bindings. No? Don't add it.
-
-However Johan's reply is saying something about driver, so how is it
-related?
-
+It does not look like you tested the bindings, at least after quick
+look. Please run `make dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
+Maybe you need to update your dtschema and yamllint.
 
 Best regards,
 Krzysztof
