@@ -1,139 +1,126 @@
-Return-Path: <linux-pwm+bounces-698-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-699-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0B7D826B03
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jan 2024 10:44:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE1DC82765A
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jan 2024 18:31:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 644191F20FC0
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jan 2024 09:44:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70EDBB223BE
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jan 2024 17:31:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC87112B6B;
-	Mon,  8 Jan 2024 09:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A7654675;
+	Mon,  8 Jan 2024 17:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="un01cIWs"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFE712B6F
-	for <linux-pwm@vger.kernel.org>; Mon,  8 Jan 2024 09:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMlt0-000418-SC; Mon, 08 Jan 2024 10:25:34 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMlsz-001DHQ-BP; Mon, 08 Jan 2024 10:25:33 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMlsz-004jki-0p;
-	Mon, 08 Jan 2024 10:25:33 +0100
-Date: Mon, 8 Jan 2024 10:25:33 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Nylon Chen <nylon.chen@sifive.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, thierry.reding@gmail.com, 
-	emil.renner.berthing@canonical.com, vincent.chen@sifive.com, greentime.hu@sifive.com, 
-	zong.li@sifive.com, nylon7717@gmail.com
-Subject: Re: [v5 2/2] pwm: sifive: change the PWM controlled LED algorithm
-Message-ID: <djdio3t54er4vqnjp4yjeoghopd5gdkybktvojzzvhs5ijxmwg@4db2hsmtoh6e>
-References: <20231024101902.6689-1-nylon.chen@sifive.com>
- <20231024101902.6689-3-nylon.chen@sifive.com>
- <20231211204950.fkaqsnpzb6kixqf2@pengutronix.de>
- <CAHh=Yk-9-M2G_cfdxLig2d0g1DucEytXhfFO5dp5HcDn+egWBw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C385466F;
+	Mon,  8 Jan 2024 17:31:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB9E7C433C8;
+	Mon,  8 Jan 2024 17:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704735083;
+	bh=TpcI3dIuWNjlKbiZdSsWqC4HAoWP9zhHwULpZ+JjExE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=un01cIWsY2l7ec12fbUWfb1qr8tZmvTjPeOHQAZJDN7e8roSZWeXC8LHNqMgPmpt/
+	 OSJq5FkZWjL4xVuyHSbSu7PnsXNvasjfv2Fewr2IM4Kn9JwVTcO+e8Atyi9TiwW0TE
+	 2xCNujZTg4R/G6UpksnYomw7qHgAQ+vTmtoLzh4k+sBUjltbXgHCuwUabRygiYJh63
+	 ZgkmEgfsZIbiXJaHkMiwJxqdY1kSPBHIcaKcQb5VU33KHe7SQSHhGtUqHxXc9VX8dI
+	 V4xdKwwTFgLcd5t635lQSRPyblLOgmp1KqPriyffLCc/wFGfI/YcwXKFK+C8BhEkxH
+	 BRzEyAvcqb7XQ==
+Date: Mon, 8 Jan 2024 17:31:17 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	William Qiu <william.qiu@starfivetech.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v10 3/4] riscv: dts: starfive: jh7100: Add PWM node and
+ pins configuration
+Message-ID: <20240108-hubcap-stubble-ecf6ea34afb9@spud>
+References: <20231222094548.54103-1-william.qiu@starfivetech.com>
+ <20231222094548.54103-4-william.qiu@starfivetech.com>
+ <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
+ <xd2ryic6mr6d6cbljjbhmr56mfpchfzkmc3lnznhmoiwyzip2a@6bhbho267e7c>
+ <CAJM55Z9DgFCwXjQGhe+urnOg-AkJMbQUR+biXKONQsRcup1GXw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2uooa2ltsa4cbfhk"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uwSZRLPC3LWeYwWV"
 Content-Disposition: inline
-In-Reply-To: <CAHh=Yk-9-M2G_cfdxLig2d0g1DucEytXhfFO5dp5HcDn+egWBw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <CAJM55Z9DgFCwXjQGhe+urnOg-AkJMbQUR+biXKONQsRcup1GXw@mail.gmail.com>
 
 
---2uooa2ltsa4cbfhk
-Content-Type: text/plain; charset=utf-8
+--uwSZRLPC3LWeYwWV
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Nylon,
-
-On Mon, Jan 08, 2024 at 04:27:40PM +0800, Nylon Chen wrote:
-> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=E5=
-=B9=B412=E6=9C=8812=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:50=E5=
-=AF=AB=E9=81=93=EF=BC=9A
-> > On Tue, Oct 24, 2023 at 06:19:02PM +0800, Nylon Chen wrote:
-> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > > index eabddb7c7820..353c2342fbf1 100644
-> > > --- a/drivers/pwm/pwm-sifive.c
-> > > +++ b/drivers/pwm/pwm-sifive.c
-> > > @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_si=
-five_ddata *ddata,
-> > >
-> > >       /* As scale <=3D 15 the shift operation cannot overflow. */
-> > >       num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDT=
-H + scale);
-> > > -     ddata->real_period =3D div64_ul(num, rate);
-> > > +     ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
+On Fri, Jan 05, 2024 at 05:18:45AM -0800, Emil Renner Berthing wrote:
+> Uwe Kleine-K=F6nig wrote:
+> > Hello Emil,
 > >
-> > It's unclear to me, why you changed that.
-> Because there is a gap in idempotent tests.
-> e.g.
-> root@unmatched:~# echo 110 >
-> /sys/devices/platform/led-controller-1/leds/d12/brightness
-> [  706.987712] .apply is not idempotent (ena=3D1 pol=3D0 1739692/4032985)
-> -> (ena=3D1 pol=3D0 1739630/4032985)
-> root@unmatched:~# echo 120 >
-> /sys/devices/platform/led-controller-1/leds/d12/brightness
-> [  709.817554] .apply is not idempotent (ena=3D1 pol=3D0 1897846/4032985)
-> -> (ena=3D1 pol=3D0 1897784/4032985)
+> > On Sun, Dec 24, 2023 at 02:49:34AM -0800, Emil Renner Berthing wrote:
+> > > William Qiu wrote:
+> > > > Add OpenCores PWM controller node and add PWM pins configuration
+> > > > on VisionFive 1 board.
+> > > >
+> > > > Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> > >
+> > > Sorry, I thought I already sent my review. This looks good.
+> > >
+> > > Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> >
+> > Is this also an implicit Ack to take this patch via the pwm tree once
+> > the earlier patches are ready? Or do you want to take it via your tree?
+> > (Maybe already now together with the binding? If so, you can assume my
+> > Reviewed-by to be an implicit Ack for that.)
 >=20
-> Round the result to the nearest whole number. This ensures that
-> real_period is always a reasonable integer that is not lower than the
-> actual value.
+> Yes, sorry. This is also meant to be an Ack from me.
 >=20
-> After modification, idempotent errors can be avoided.
+> I imagined the dt patches would go through Conor's riscv-dt-for-next bran=
+ch,
+> but the pwm tree is certainly also fine by.
 
-That's very welcome, however I think this should be a separate change.
+idk, I prefer things to go as MAINTAINERS indicates, in case something
+is determined to be wrong in the cycle where the patch is in the "wrong"
+tree.
 
-I'll think about the rest of your changes when you send a new patch.
+I suppose I could take the binding though, since I am CCed on every
+binding patch under the sun... I'd rather an explicit ack in that case
+though.
 
-Best regards
-Uwe
+Cheers,
+Conor.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---2uooa2ltsa4cbfhk
+--uwSZRLPC3LWeYwWV
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWbv4wACgkQj4D7WH0S
-/k7eMAgAiRy8wWagjbQMdQFD8bdFQ8EgRz0wMMyWy44lAb0p+sC7KeIaefzAl9je
-8cSVn2Lo82Ow0FZoWuF0cfYjYCWqVfXJ4oONYedhbs4AEW0dRvk79FSG4AUdyGpY
-msD3CfrGSSEcfGilhKj1IO894popC2K9VbviBlfssNo39tpksIFhBZuW0OMKY8VF
-fgezepSwzXsrBbHMWstvwtDH7hvQkgtfgzID+GM1pgdKuQ/kPbE1Zqt0crbkhP9O
-p6kCCUDRFHecYHJUN69Io0k//+eE6789vFmvBVkRkdy8XoxIdj7XpxWLEOvHtnIU
-C+D/5IyP9Uh8fm46qcCD/n7BLjzI5g==
-=eV/P
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZwxZQAKCRB4tDGHoIJi
+0nUqAP9yJe3WrgYMWXpHjBz60+ar3t/qeJkOfk0Jf5wV3nSGKQEA/+BcCFymlJ3W
+7iVCVwtlZAqIdUtOXuLEG5keZjo0kwI=
+=7uiV
 -----END PGP SIGNATURE-----
 
---2uooa2ltsa4cbfhk--
+--uwSZRLPC3LWeYwWV--
 
