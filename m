@@ -1,48 +1,64 @@
-Return-Path: <linux-pwm+bounces-706-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-707-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCD59828EF0
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jan 2024 22:35:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98C92828EF3
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jan 2024 22:35:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BADD1F25C73
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jan 2024 21:35:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0ECAEB23718
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jan 2024 21:35:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FBD3DB81;
-	Tue,  9 Jan 2024 21:34:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0B33DB86;
+	Tue,  9 Jan 2024 21:35:53 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A6A3DBA8
-	for <linux-pwm@vger.kernel.org>; Tue,  9 Jan 2024 21:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6A13DB81
+	for <linux-pwm@vger.kernel.org>; Tue,  9 Jan 2024 21:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNJkB-0006co-R2; Tue, 09 Jan 2024 22:34:43 +0100
+	id 1rNJkD-0006cp-6D; Tue, 09 Jan 2024 22:34:45 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNJkB-001Z29-2w; Tue, 09 Jan 2024 22:34:43 +0100
+	id 1rNJkB-001Z2C-GH; Tue, 09 Jan 2024 22:34:43 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rNJkB-00667s-01;
+	id 1rNJkB-00667w-1H;
 	Tue, 09 Jan 2024 22:34:43 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Robert Foss <rfoss@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
+Cc: Douglas Anderson <dianders@chromium.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Alexander Shiyan <shc_work@mail.ru>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	dri-devel@lists.freedesktop.org,
+	kernel@pengutronix.de,
 	linux-pwm@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH 1/5] pwm: Fix out-of-bounds access in of_pwm_single_xlate()
-Date: Tue,  9 Jan 2024 22:34:31 +0100
-Message-ID:  <243908750d306e018a3d4bf2eb745d53ab50f663.1704835845.git.u.kleine-koenig@pengutronix.de>
+	linux-arm-kernel@lists.infradead.org,
+	chrome-platform@lists.linux.dev
+Subject: [PATCH 2/5] pwm: Drop useless member .of_pwm_n_cells of struct pwm_chip
+Date: Tue,  9 Jan 2024 22:34:32 +0100
+Message-ID:  <53d8c545aa8f79a920358be9e72e382b3981bdc4.1704835845.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1704835845.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1704835845.git.u.kleine-koenig@pengutronix.de>
@@ -53,7 +69,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=884; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=4ZYE4l67ASdyUFwT+NrxBsn0JJkwlJxIMxVpeih96FI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlnbvpzMxu0sK+hAGiHzjvnoFb4iQRi8FFyRE2I LoXFiSe6OSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZZ276QAKCRCPgPtYfRL+ TgzvB/9fosz6sMqrHSsKRRcnQ7zCXvWzi+LsGmE6u7HrUfdg+7i0mGW9UNA6kVTqbX0zGf1o5nA aoKepPmD1iw2V72MUOBdO5p1hOZ43OMxGeGjoRfJ/zzjaQwIZ3BQgublAFYVhvrwMdU4ZzgOSJY HSSITvBaY5HZOHfwz6GufOKwly1tos/MVI115xsTrfkKyp+NKWacKYgJKiKhYXQA1d6ueXuKzf3 FLOVqmL4733KoV370LV4gVD56jOgwmq076XXrAMbA4px1n5eiTg78vZULDXkRJ12QXngnRz+6GG +5sT86NukrbhCBaYAilUKyYUYkLwywMh5dIXZ4wMkwtbqnpE
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5203; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=GJ0QtTqjWHKutYbvp2zQTs/Phsuql2QUxQ8yJz35gAI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlnbvrhTT7y69ES64JrD+RrccwPuJTtkKJygiSm Ib3qp9QMJ6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZZ276wAKCRCPgPtYfRL+ Tr3HCACFpOQpAlmiIB6gDwhfqub+Og4pnYAbOzF4PJ2YCxccK/gZciaqUudnsp5w0RRaOeU+ff+ WeBIldrVZ5lRQocQKX9qtV835zLJb9JXBRrFQuf0EWgQuBVUE5Rg6o2Gi5JYgAZeNsQMdv9krS5 kD6J/hQe11lAcHqtTkNrsJo8VQUZlaAwkvym+M7C5Etu3wL0f1HljxFTk3fOX2rrv74rIQuSDe2 5q56LeQ2/n2c/5mdHh83xUYTyCQ90yaJuVCpyRuppNBUoEWVahX95fVi11/MqIohHSLQKXd69O+ L89MtSMdfG0C/ghykbapH2IcDu+wlwjhgJ8fW+Jq7BL4p3rF
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -61,28 +77,148 @@ X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
 
-With args->args_count == 2 args->args[2] is not defined. Actually the
-flags are contained in args->args[1].
+Apart from the two of_xlate implementations this member is write-only.
+In the of_xlate functions of_pwm_xlate_with_flags() and
+of_pwm_single_xlate() it's more sensible to check for args->args_count
+because this is what is actually used in the device tree.
 
-Fixes: 3ab7b6ac5d82 ("pwm: Introduce single-PWM of_xlate function")
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/pwm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c |  1 -
+ drivers/pwm/core.c                    | 22 +++-------------------
+ drivers/pwm/pwm-clps711x.c            |  1 -
+ drivers/pwm/pwm-cros-ec.c             |  1 -
+ drivers/pwm/pwm-pxa.c                 |  4 +---
+ include/linux/pwm.h                   |  2 --
+ 6 files changed, 4 insertions(+), 27 deletions(-)
 
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index c45c07840f64..02d9449956e5 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -1591,7 +1591,6 @@ static int ti_sn_pwm_probe(struct auxiliary_device *adev,
+ 	pdata->pchip.ops = &ti_sn_pwm_ops;
+ 	pdata->pchip.npwm = 1;
+ 	pdata->pchip.of_xlate = of_pwm_single_xlate;
+-	pdata->pchip.of_pwm_n_cells = 1;
+ 
+ 	return pwmchip_add(&pdata->pchip);
+ }
 diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 9a4c720c88aa..f2728ee787d7 100644
+index f2728ee787d7..31f210872a07 100644
 --- a/drivers/pwm/core.c
 +++ b/drivers/pwm/core.c
-@@ -152,7 +152,7 @@ of_pwm_single_xlate(struct pwm_chip *chip, const struct of_phandle_args *args)
- 	pwm->args.period = args->args[0];
+@@ -107,9 +107,6 @@ of_pwm_xlate_with_flags(struct pwm_chip *chip, const struct of_phandle_args *arg
+ {
+ 	struct pwm_device *pwm;
+ 
+-	if (chip->of_pwm_n_cells < 2)
+-		return ERR_PTR(-EINVAL);
+-
+ 	/* flags in the third cell are optional */
+ 	if (args->args_count < 2)
+ 		return ERR_PTR(-EINVAL);
+@@ -124,10 +121,8 @@ of_pwm_xlate_with_flags(struct pwm_chip *chip, const struct of_phandle_args *arg
+ 	pwm->args.period = args->args[1];
  	pwm->args.polarity = PWM_POLARITY_NORMAL;
  
--	if (args->args_count == 2 && args->args[2] & PWM_POLARITY_INVERTED)
-+	if (args->args_count == 2 && args->args[1] & PWM_POLARITY_INVERTED)
- 		pwm->args.polarity = PWM_POLARITY_INVERSED;
+-	if (chip->of_pwm_n_cells >= 3) {
+-		if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
+-			pwm->args.polarity = PWM_POLARITY_INVERSED;
+-	}
++	if (args->args_count > 2 && args->args[2] & PWM_POLARITY_INVERTED)
++		pwm->args.polarity = PWM_POLARITY_INVERSED;
  
  	return pwm;
+ }
+@@ -138,9 +133,6 @@ of_pwm_single_xlate(struct pwm_chip *chip, const struct of_phandle_args *args)
+ {
+ 	struct pwm_device *pwm;
+ 
+-	if (chip->of_pwm_n_cells < 1)
+-		return ERR_PTR(-EINVAL);
+-
+ 	/* validate that one cell is specified, optionally with flags */
+ 	if (args->args_count != 1 && args->args_count != 2)
+ 		return ERR_PTR(-EINVAL);
+@@ -164,16 +156,8 @@ static void of_pwmchip_add(struct pwm_chip *chip)
+ 	if (!chip->dev || !chip->dev->of_node)
+ 		return;
+ 
+-	if (!chip->of_xlate) {
+-		u32 pwm_cells;
+-
+-		if (of_property_read_u32(chip->dev->of_node, "#pwm-cells",
+-					 &pwm_cells))
+-			pwm_cells = 2;
+-
++	if (!chip->of_xlate)
+ 		chip->of_xlate = of_pwm_xlate_with_flags;
+-		chip->of_pwm_n_cells = pwm_cells;
+-	}
+ 
+ 	of_node_get(chip->dev->of_node);
+ }
+diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+index 42179b3f7ec3..06562d4bb963 100644
+--- a/drivers/pwm/pwm-clps711x.c
++++ b/drivers/pwm/pwm-clps711x.c
+@@ -103,7 +103,6 @@ static int clps711x_pwm_probe(struct platform_device *pdev)
+ 	priv->chip.dev = &pdev->dev;
+ 	priv->chip.npwm = 2;
+ 	priv->chip.of_xlate = clps711x_pwm_xlate;
+-	priv->chip.of_pwm_n_cells = 1;
+ 
+ 	spin_lock_init(&priv->lock);
+ 
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index 5fe303b8656d..339cedf3a7b1 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -279,7 +279,6 @@ static int cros_ec_pwm_probe(struct platform_device *pdev)
+ 	chip->dev = dev;
+ 	chip->ops = &cros_ec_pwm_ops;
+ 	chip->of_xlate = cros_ec_pwm_xlate;
+-	chip->of_pwm_n_cells = 1;
+ 
+ 	if (ec_pwm->use_pwm_type) {
+ 		chip->npwm = CROS_EC_PWM_DT_COUNT;
+diff --git a/drivers/pwm/pwm-pxa.c b/drivers/pwm/pwm-pxa.c
+index 76685f926c75..61b74fa1d348 100644
+--- a/drivers/pwm/pwm-pxa.c
++++ b/drivers/pwm/pwm-pxa.c
+@@ -180,10 +180,8 @@ static int pwm_probe(struct platform_device *pdev)
+ 	pc->chip.ops = &pxa_pwm_ops;
+ 	pc->chip.npwm = (id->driver_data & HAS_SECONDARY_PWM) ? 2 : 1;
+ 
+-	if (IS_ENABLED(CONFIG_OF)) {
++	if (IS_ENABLED(CONFIG_OF))
+ 		pc->chip.of_xlate = of_pwm_single_xlate;
+-		pc->chip.of_pwm_n_cells = 1;
+-	}
+ 
+ 	pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pc->mmio_base))
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index fcc2c4496f73..8ffe9ae7a23a 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -271,7 +271,6 @@ struct pwm_ops {
+  * @id: unique number of this PWM chip
+  * @npwm: number of PWMs controlled by this chip
+  * @of_xlate: request a PWM device given a device tree PWM specifier
+- * @of_pwm_n_cells: number of cells expected in the device tree PWM specifier
+  * @atomic: can the driver's ->apply() be called in atomic context
+  * @pwms: array of PWM devices allocated by the framework
+  */
+@@ -284,7 +283,6 @@ struct pwm_chip {
+ 
+ 	struct pwm_device * (*of_xlate)(struct pwm_chip *chip,
+ 					const struct of_phandle_args *args);
+-	unsigned int of_pwm_n_cells;
+ 	bool atomic;
+ 
+ 	/* only used internally by the PWM framework */
 -- 
 2.43.0
 
