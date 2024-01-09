@@ -1,118 +1,113 @@
-Return-Path: <linux-pwm+bounces-700-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-701-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70B3A8279EB
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jan 2024 22:04:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 343F1828AD2
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jan 2024 18:16:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 263761F23C76
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jan 2024 21:04:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCE3A1F219CB
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jan 2024 17:16:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 099EC56456;
-	Mon,  8 Jan 2024 21:04:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 755DF3A8C7;
+	Tue,  9 Jan 2024 17:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iASeUiit"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7964B55E50
-	for <linux-pwm@vger.kernel.org>; Mon,  8 Jan 2024 21:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMwmn-0007Sw-0g; Mon, 08 Jan 2024 22:03:53 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMwmj-001KoV-Ei; Mon, 08 Jan 2024 22:03:49 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMwmj-005EcE-0e;
-	Mon, 08 Jan 2024 22:03:49 +0100
-Date: Mon, 8 Jan 2024 22:03:49 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Conor Dooley <conor+dt@kernel.org>
-Cc: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AD83A1B7;
+	Tue,  9 Jan 2024 17:16:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF81C433F1;
+	Tue,  9 Jan 2024 17:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704820562;
+	bh=8vHH4TA7YAbmHU9PwkkVzfxY8bEZBUphiHO0pMprnow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iASeUiit0WvZcOUa1bS5XKWgTQQLqrKQdIP+Fl0Uwmma7hSan2dyQOvG6RPeY8O94
+	 gcsXiR9Hafm3TDy7AZgDQGiOioEFsx0JIbHtVjWjlhD8+FZscQoz38LVm/B9Xi1DR0
+	 ZGIjqdJpa7vgCmz2wqjDailt7hDiA1/3h9+lb3Pf+nU3amxvDNb49nWi61He8WS7kB
+	 uXW9LI9cjgROFBnwocWC+sbcFLSk5r2TUkUvL+UpeewafF1nn4oYq/0JFHXLf9afBB
+	 r3tEY2SfIlTWQkvzXSAnByrdIxOzDFQBBucG1KX6Gm7pTe/hjD4SYBmVaKxzzOBU/A
+	 xx8yx6Uom6vwg==
+Date: Tue, 9 Jan 2024 17:15:57 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Conor Dooley <conor+dt@kernel.org>,
+	William Qiu <william.qiu@starfivetech.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>
 Subject: Re: [PATCH v10 1/4] dt-bindings: pwm: Add bindings for OpenCores PWM
  Controller
-Message-ID: <p22vjdwk35yc66mb4pkntnst6kjyhhmnv3eb2n25c3dhi5bdeo@bj7amwepprab>
+Message-ID: <20240109-sleeve-squatted-e0943e659b2e@spud>
 References: <20231222094548.54103-1-william.qiu@starfivetech.com>
  <20231222094548.54103-2-william.qiu@starfivetech.com>
  <t3w2p765fs633nanqsx5yqres7taqpk6juwyl4iex5v4jpobo2@rqw6r4myjmv3>
+ <p22vjdwk35yc66mb4pkntnst6kjyhhmnv3eb2n25c3dhi5bdeo@bj7amwepprab>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qdsxa55awznoyul6"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l1ROEXz9Iy/Ywcok"
 Content-Disposition: inline
-In-Reply-To: <t3w2p765fs633nanqsx5yqres7taqpk6juwyl4iex5v4jpobo2@rqw6r4myjmv3>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pwm@vger.kernel.org
+In-Reply-To: <p22vjdwk35yc66mb4pkntnst6kjyhhmnv3eb2n25c3dhi5bdeo@bj7amwepprab>
 
 
---qdsxa55awznoyul6
+--l1ROEXz9Iy/Ywcok
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello Conor,
-
-On Thu, Jan 04, 2024 at 11:43:13PM +0100, Uwe Kleine-K=F6nig wrote:
-> On Fri, Dec 22, 2023 at 05:45:45PM +0800, William Qiu wrote:
-> > Add bindings for OpenCores PWM Controller.
+On Mon, Jan 08, 2024 at 10:03:49PM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello Conor,
+>=20
+> On Thu, Jan 04, 2024 at 11:43:13PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Fri, Dec 22, 2023 at 05:45:45PM +0800, William Qiu wrote:
+> > > Add bindings for OpenCores PWM Controller.
+> > >=20
+> > > Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> > > Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+> > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 > >=20
-> > Signed-off-by: William Qiu <william.qiu@starfivetech.com>
-> > Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
-> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > Looks fine to me. I'll assume you reiterate the series for patch #2 and
+> > so I will mark this patch as deferred in patchwork.
+> >=20
+> > Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 >=20
-> Looks fine to me. I'll assume you reiterate the series for patch #2 and
-> so I will mark this patch as deferred in patchwork.
+> If you want, pick this patch up that it goes along with the dts changes.
 >=20
-> Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> To make this formal:
+>=20
+> Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-If you want, pick this patch up that it goes along with the dts changes.
+Cool. I'll do that after the merge window closes :)
 
-To make this formal:
+Thanks!
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qdsxa55awznoyul6
+--l1ROEXz9Iy/Ywcok
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWcYy8ACgkQj4D7WH0S
-/k5Cxgf/QI/V+M0FjuVw/kgYUfVX9XsL67vIUwYey8CNZjcTRYrd1pch6cjV4Uxa
-Oq7ZKp7LpMxt6yLwKcI9vZHav86KPKPI+CaZtMpC2OuYqEo4ltygCMOUJrXoJnDU
-epVaCEiIS5e3vsOZ35EWGQeOpXUV/xHHNA4VIKfI1F4arIpPvlS6J3t8h/8nICpQ
-jk8Fk0X2HRqdy+kX0P6kSaQFBDBIFS/zRYI0ahlgLWEOGPj7dfpYa6Oqj7sXiZZP
-Mta2dmEwn4C10rTk7Pa7Y/RtpsYU2EVPiqaaHqgbTKrzpFPIPldMS4+f7CTYiKWD
-/s4YD833V/0aPhWZHYCGEQmTv4NlBw==
-=5dXp
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ1/TQAKCRB4tDGHoIJi
+0v7HAQCyHgwcpyb9uqwBTi+Ww/Qblt+7MpgHC270lUcxAYkU4QEA3DWB4bXtpFA1
+qblPMvrOJPbChkjkwy2FCF9finMrhAI=
+=ZZGb
 -----END PGP SIGNATURE-----
 
---qdsxa55awznoyul6--
+--l1ROEXz9Iy/Ywcok--
 
