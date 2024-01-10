@@ -1,242 +1,143 @@
-Return-Path: <linux-pwm+bounces-730-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-731-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C377982A184
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 20:53:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 384BF82A33C
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 22:25:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5643B288724
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 19:53:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3769B24430
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 21:25:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1339552F8F;
-	Wed, 10 Jan 2024 19:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58C3D4F60D;
+	Wed, 10 Jan 2024 21:25:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="w7f2pkFZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c82lIG0a"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1720850276
-	for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 19:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5989add5511so500161eaf.3
-        for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 11:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916281; x=1705521081; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PEIVZQBdPUNnjAlN4uqFphv/2LrUKMCMcEQYLMsoqo8=;
-        b=w7f2pkFZfTgn8a/UxuzC9V+sUXfy70U27Cq2Grf+5kwldDIsXZFMt+s7LLZ5UNBXXs
-         B9TTqh0z6HVewLwvFBUduFTSc96+anVUQG+iB2cWmHunGVL+U952IlQqau7eguDlKa5Y
-         bNXgiaGecmNdxX8LqsQ312wPxqm58niFPlJuBAFY+rwTxpI/3XwPeLqoS+PoAPX7NsMb
-         vvEUFFaMU0qu3v5xF9YLGKZflRTEFuK2zXN4mjHy0Jv4OmjhXNXAuEDgi8ZXrDuDNqJH
-         ftAQ5x1NhbuQdgYvrIsgc4Iy2NHF0nWQiDBnRT8C+qVNKTkhGe0+2XLFKZb5L/mxfR38
-         Lyzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704916281; x=1705521081;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PEIVZQBdPUNnjAlN4uqFphv/2LrUKMCMcEQYLMsoqo8=;
-        b=vh4nxUaZrN8bPBljIvq7M6BhSAo6cR0/ym6qcHjaNIwo+z2yqF1WzMeMivwNuZAWF+
-         OmhSaim1UsblVdSQGwVY21WrekdfGObPHR6CORAAPXZ3IBFMc+tMP+8cOhLVsNS04DOP
-         B72yuPR5wRrjTh1qFLCXvdo35lx6aMo0I6S+NdlB0fRxxHRH3JBH/4wUnOW3Oay4km7D
-         2C3BpOqcLlJdbK9OcHp3nNbP4Alz1lcwgPoYdgZIknwOYqVjTp/74NkXlJ4F1FRoiXk0
-         DZiRXf8X4DCd5xAUwOpdveBQspzv+kJ0Sdgvnrc7GW0ZHxwV2TBDHij5UncBP4Z6U60b
-         xzOQ==
-X-Gm-Message-State: AOJu0Yw7dhJ8x0gEoiEt4VfH6U+6fv/8P5yUV1qcLXPSnjnCRLGYo0J8
-	ntKDrydm9jeg56XnJZNtjubPUj9q//YGeg==
-X-Google-Smtp-Source: AGHT+IGVUnlE5QFB5qOf5dH/lNuXEUJWtpYSg/QjEdM8LJ0UAk97dhRGFSNb5W/kbU8O5dA7eDesFA==
-X-Received: by 2002:a05:6820:1ac3:b0:596:31c6:c13c with SMTP id bu3-20020a0568201ac300b0059631c6c13cmr119862oob.12.1704916281170;
-        Wed, 10 Jan 2024 11:51:21 -0800 (PST)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 11:51:20 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-To: Mark Brown <broonie@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Frank Rowand <frowand.list@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	=?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-spi@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 13/13] iio: adc: ad7380: add SPI offload support
-Date: Wed, 10 Jan 2024 13:49:54 -0600
-Message-ID: <20240109-axi-spi-engine-series-3-v1-13-e42c6a986580@baylibre.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
-References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253274F5FA;
+	Wed, 10 Jan 2024 21:25:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06175C433C7;
+	Wed, 10 Jan 2024 21:25:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704921931;
+	bh=3C5WR76W5kbSoAjJb2xbYfw3mBaMSnsnkbKc1nq/il0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=c82lIG0ast6+R/k3mcOb81ehqGD5ghGGAUET00ZwgfXIoKt5DIbDRUsiW9YNIQba3
+	 e74LXV+mJZBFqtcp/syKfcMHoy7P2ZJXOtGjs6jQ4AGfCCYJkVwGdukJkqWu/q1yg4
+	 54Tov4w87pe+sXdJYHBnV470VTwznFf+aI2xUmQcJiaTwTdE7RumUNqSANJBYcfiAw
+	 90759UGovYTB9FsZMb3fjaTP72qCPEd4e6b0dOJl3YxpKPOXZHU6j9XaifSVjbBbrM
+	 AaIfWHeCdv96ejdZcz8GOD33LI2tvG97XukxgJfCePRQYbEoHuBLvhVgVXnEcyadDG
+	 vbBFYvkHpkVfQ==
+Received: (nullmailer pid 2648565 invoked by uid 1000);
+	Wed, 10 Jan 2024 21:25:28 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Michael Hennerich <michael.hennerich@analog.com>, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, Thierry Reding <thierry.reding@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240109-axi-spi-engine-series-3-v1-11-e42c6a986580@baylibre.com>
+References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+ <20240109-axi-spi-engine-series-3-v1-11-e42c6a986580@baylibre.com>
+Message-Id: <170492192827.2648172.5496531414858882853.robh@kernel.org>
+Subject: Re: [PATCH 11/13] dt-bindings: iio: offload: add binding for
+ PWM/DMA triggered buffer
+Date: Wed, 10 Jan 2024 15:25:28 -0600
 
-This extends the ad7380 ADC driver to use the offload capabilities of
-capable SPI controllers. When offload support is available, a hardware
-triggered buffer is used to allow sampling a high rates without CPU
-intervention.
 
-To keep things simple, when this feature is present in hardware we
-disable the usual IIO triggered buffer and software timestamp rather
-than trying to support multiple buffers.
+On Wed, 10 Jan 2024 13:49:52 -0600, David Lechner wrote:
+> This adds a new binding for a PWM trigger and DMA data output connected
+> to an SPI controller offload instance.
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  .../adi,spi-offload-pwm-trigger-dma-buffer.yaml    | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/adc/Kconfig  |  1 +
- drivers/iio/adc/ad7380.c | 84 +++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 80 insertions(+), 5 deletions(-)
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index cbfd626712e3..da44b585ea46 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -128,6 +128,7 @@ config AD7380
- 	select IIO_BUFFER
- 	select IIO_TRIGGER
- 	select IIO_TRIGGERED_BUFFER
-+	select IIO_HW_TRIGGERED_BUFFER
- 	help
- 	  AD7380 is a family of simultaneous sampling ADCs that share the same
- 	  SPI register map and have similar pinouts.
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index 80712aaa9548..a71e8b81950b 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -20,6 +20,7 @@
- #include <linux/sysfs.h>
- 
- #include <linux/iio/buffer.h>
-+#include <linux/iio/hw_triggered_buffer.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- #include <linux/iio/trigger_consumer.h>
-@@ -133,6 +134,7 @@ struct ad7380_state {
- 	struct spi_device *spi;
- 	struct regulator *vref;
- 	struct regmap *regmap;
-+	struct spi_offload *spi_offload;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the
- 	 * transfer buffers to live in their own cache lines.
-@@ -335,6 +337,50 @@ static const struct iio_info ad7380_info = {
- 	.debugfs_reg_access = &ad7380_debugfs_reg_access,
- };
- 
-+static int ad7380_buffer_preenable(struct iio_dev *indio_dev)
-+{
-+	struct ad7380_state *st = iio_priv(indio_dev);
-+	struct spi_transfer xfer = {
-+		.bits_per_word = st->chip_info->channels[0].scan_type.realbits,
-+		.len = 4,
-+		.rx_buf = SPI_OFFLOAD_RX_SENTINEL,
-+	};
-+
-+	return spi_offload_prepare(st->spi_offload, st->spi, &xfer, 1);
-+}
-+
-+static int ad7380_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	struct ad7380_state *st = iio_priv(indio_dev);
-+
-+	return spi_offload_enable(st->spi_offload);
-+}
-+
-+static int ad7380_buffer_predisable(struct iio_dev *indio_dev)
-+{
-+	struct ad7380_state *st = iio_priv(indio_dev);
-+
-+	spi_offload_disable(st->spi_offload);
-+
-+	return 0;
-+}
-+
-+static int ad7380_buffer_postdisable(struct iio_dev *indio_dev)
-+{
-+	struct ad7380_state *st = iio_priv(indio_dev);
-+
-+	spi_offload_unprepare(st->spi_offload);
-+
-+	return 0;
-+}
-+
-+static const struct iio_buffer_setup_ops ad7380_buffer_ops = {
-+	.preenable = &ad7380_buffer_preenable,
-+	.postenable = &ad7380_buffer_postenable,
-+	.predisable = &ad7380_buffer_predisable,
-+	.postdisable = &ad7380_buffer_postdisable,
-+};
-+
- static int ad7380_init(struct ad7380_state *st)
- {
- 	int ret;
-@@ -417,11 +463,39 @@ static int ad7380_probe(struct spi_device *spi)
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->available_scan_masks = ad7380_2_channel_scan_masks;
- 
--	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
--					      iio_pollfunc_store_time,
--					      ad7380_trigger_handler, NULL);
--	if (ret)
--		return ret;
-+	st->spi_offload = spi_offload_get(spi, 0);
-+	if (IS_ERR(st->spi_offload)) {
-+		ret = PTR_ERR(st->spi_offload);
-+
-+		if (ret == -EOPNOTSUPP)
-+			st->spi_offload = NULL;
-+		else
-+			return dev_err_probe(&spi->dev, ret,
-+					     "failed to get SPI offload\n");
-+	}
-+
-+	if (st->spi_offload) {
-+		/*
-+		 * We can't have a soft timestamp (always last channel) when
-+		 * using a hardware triggered buffer.
-+		 */
-+		indio_dev->num_channels -= 1;
-+
-+		ret = devm_iio_hw_triggered_buffer_setup(&spi->dev,
-+							 indio_dev,
-+							 st->spi_offload->dev,
-+							 &ad7380_buffer_ops);
-+		if (ret)
-+			return dev_err_probe(&spi->dev, ret,
-+					     "failed to setup offload\n");
-+	} else {
-+		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-+						      iio_pollfunc_store_time,
-+						      ad7380_trigger_handler,
-+						      NULL);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	ret = ad7380_init(st);
- 	if (ret)
+yamllint warnings/errors:
 
--- 
-2.43.0
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/offload/adi,spi-offload-pwm-trigger-dma-buffer.yaml:
+Error in referenced schema matching $id: http://devicetree.org/schemas/spi/adi,axi-spi-engine.yaml
+Documentation/devicetree/bindings/iio/offload/adi,spi-offload-pwm-trigger-dma-buffer.example.dts:22.22-32.15: Warning (spi_bus_reg): /example-0/spi/offloads: missing or empty reg property
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 966, in resolve_fragment
+    document = document[part]
+               ~~~~~~~~^^^^^^
+TypeError: 'bool' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-validate", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 144, in main
+    sg.check_dtb(filename)
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 89, in check_dtb
+    self.check_subtree(dt, subtree, False, "/", "/", filename)
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 82, in check_subtree
+    self.check_subtree(tree, value, disabled, name, fullname + name, filename)
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 82, in check_subtree
+    self.check_subtree(tree, value, disabled, name, fullname + name, filename)
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 82, in check_subtree
+    self.check_subtree(tree, value, disabled, name, fullname + name, filename)
+  [Previous line repeated 1 more time]
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 77, in check_subtree
+    self.check_node(tree, subtree, disabled, nodename, fullname, filename)
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/dtb_validate.py", line 33, in check_node
+    for error in self.validator.iter_errors(node, filter=match_schema_file):
+  File "/usr/local/lib/python3.11/dist-packages/dtschema/validator.py", line 405, in iter_errors
+    for error in self.DtValidator(sch,
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 288, in iter_errors
+    for error in errors:
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/_validators.py", line 414, in if_
+    yield from validator.descend(instance, then, schema_path="then")
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 305, in descend
+    for error in self.evolve(schema=schema).iter_errors(instance):
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 288, in iter_errors
+    for error in errors:
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/_validators.py", line 294, in ref
+    scope, resolved = validator.resolver.resolve(ref)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 898, in resolve
+    return url, self._remote_cache(url)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 916, in resolve_from_url
+    return self.resolve_fragment(document, fragment)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/dist-packages/jsonschema/validators.py", line 968, in resolve_fragment
+    raise exceptions.RefResolutionError(
+jsonschema.exceptions.RefResolutionError: Unresolvable JSON pointer: '$defs/offload'
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240109-axi-spi-engine-series-3-v1-11-e42c6a986580@baylibre.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
