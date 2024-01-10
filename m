@@ -1,62 +1,62 @@
-Return-Path: <linux-pwm+bounces-724-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-725-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AB7682A15A
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 20:52:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B6E082A161
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 20:52:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C62C1C22C77
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 19:52:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D89AD285D6A
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 19:52:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2BF4F8AD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0BC750244;
 	Wed, 10 Jan 2024 19:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="O9k1ATy+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="t5cFwVVr"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C384F214
-	for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 19:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7674EB2E
+	for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 19:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-59505514213so2048991eaf.0
-        for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 11:51:16 -0800 (PST)
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-598a3a5bd36so280749eaf.0
+        for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 11:51:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916275; x=1705521075; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916277; x=1705521077; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jqqZ1xFBo82n6w1dVaiJcbo432Ln6B24n8maUrb2mjE=;
-        b=O9k1ATy+T89/CZvFYID+81bz5WDTQh/+XvcBDMsj8tdNpV1z0rqQu57uYQRlIO6wJK
-         YXDzg37ZwMMbC9fEudVU27qkgDQ5oRJw/hrGEyqafUT//j1eTc7MjCPjFafmSqYjbJGN
-         8taVXuHsKE5BCwPqydf2bLmxnAy7kgSgADSCKAjCcvOMZNoAbeWz7adTbYIzLxtxnOjd
-         BT+nA0QK+2x1wyWvxwKgudoEHwQ7hIZk+aY/I+snjpSWb+XvzyTBHICU4qsCpPD+EPEf
-         u2PJ2N+00gE9sZ9MTbY8wY43bR3oTzgkpxajp7Q7t8y2vxb0Rjx6JsWC966MaQsLmHmu
-         qBoA==
+        bh=Y7PWqKKUmIJfOHhEo7bhsOSHT+T28MHjs59pcUd3qYA=;
+        b=t5cFwVVrDBIe40U3IAx7Z1O+47Lx54RlcTqA3y0fMFCB64JCJhuuZpRxk00nUy1m7h
+         KfKCp9HBFNuikxuFJ4nyxFfQEZNvZn+V8lsornUMDLTtrxya/FWDNToWAt55IcK3w4AF
+         WBI+oMOCWY7OKRuKaRecyMQONOop4mfIenpX34EUFWprGnUrml0Gw3x42DtrDjy0wvGE
+         zLuvtEiWo3ctyWLpkMd4zwjnBaO9TuxBTKRXbDPnMgyfVcCXJ4LLd+664kIGTKYxcsfc
+         in/BI5UiCACx+64qcV4ID97rqUzxl3BBFR1E/DuO6xQTeX7xU9nzOH5pmekUBjxZ/f5b
+         Izpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704916275; x=1705521075;
+        d=1e100.net; s=20230601; t=1704916277; x=1705521077;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jqqZ1xFBo82n6w1dVaiJcbo432Ln6B24n8maUrb2mjE=;
-        b=OHJMh2Q1XXkrxgll7d08E2FQhWS957NLSdfqJnX4jUy7vjDwX0FkD0eRx8vj6z+LcD
-         25Xlfj6rRohos+UTjBJN5eK67fqHPVDpkjv/PQ+zOtW0goDmgjUUaONcrr0/TdkZs1RD
-         qi0nqlhfHsk9NIOJL0sbDh5VSRG+O4OJJQrpK2DlAmtuk0r7nV9OTsrt816g5tLqqzyu
-         Z1B3Fi+vwvjvhSAra66Re1ig8Hg2ypIQnT830awVwUAKXkfhJMHM5OW0hjTYVGsxbvZ+
-         435XDBMXFbrZK82yz6dNJ4KYKS1DhKbN6/3ON/ClVdRNhzrZlQcFJabzEEedEgYBQqVV
-         2q7Q==
-X-Gm-Message-State: AOJu0YyTZiQHbvp/RRV/2qJ6QoDnmgTL1LvDrReklpWFp+jcyuaz5ZHK
-	hzGv0fQQJJr9xpIz8ZsJGHs/eLFquOwjgg==
-X-Google-Smtp-Source: AGHT+IGpvpbNrgicdFH6SZalFJARifgnOCGpguDFxh622L8t3QzMdc8P1+4NLpt69DdVpeiIu3LAlA==
-X-Received: by 2002:a4a:c385:0:b0:598:9871:2800 with SMTP id u5-20020a4ac385000000b0059898712800mr400192oop.3.1704916275707;
-        Wed, 10 Jan 2024 11:51:15 -0800 (PST)
+        bh=Y7PWqKKUmIJfOHhEo7bhsOSHT+T28MHjs59pcUd3qYA=;
+        b=OH+KyFW6pCxL4H1Ptxr8O6NXyVCCPhh4pTeOjqJbeXwJE80zBbAGCI51xnkVufRpXh
+         KAk+llOLWyHwOn6x1i+W0RMJGjA5wNmaia8NXGXoC+ET+CYrPYCO+uC5HX85WFTVtYWX
+         flH+kZYZe+ITIg6/ydc0GieUoipzNJWP8Gx05GwiYe1JTIcl2dzf+sHIJyUl4J3Ts7+J
+         Q65joQ1agbl/z51FQOdQIwm65xVeGbtxFmN40tsiO5Xh8HW/qv5jIylLGwiEEB6VZnAR
+         h98zb1wxxROgdZ099g9/SOvdx+CqicZhw2ToVdkZiktihlXUCJgnQfu2FoHlh8x2SDgI
+         w6lw==
+X-Gm-Message-State: AOJu0YxZkC59887Sn0mU9c1vYKC8z+ovlj38wPt6RWv3pVj6/47e68Zz
+	4+0hM5Np9+l9H2pwuv/of4ovUBrBxmnyow==
+X-Google-Smtp-Source: AGHT+IG/pQstA269+Q9le7ThaVf0owpqSI3RhN8sLNCjdHTp/Q1xvhsyx76vcyZGXAyczFLDe5FZbA==
+X-Received: by 2002:a4a:9b17:0:b0:591:c16b:eb29 with SMTP id a23-20020a4a9b17000000b00591c16beb29mr92673ook.13.1704916276715;
+        Wed, 10 Jan 2024 11:51:16 -0800 (PST)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.14
+        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 11:51:15 -0800 (PST)
+        Wed, 10 Jan 2024 11:51:16 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -76,9 +76,9 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	linux-doc@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/13] iio: buffer: dmaengine: add INDIO_HW_BUFFER_TRIGGERED flag
-Date: Wed, 10 Jan 2024 13:49:48 -0600
-Message-ID: <20240109-axi-spi-engine-series-3-v1-7-e42c6a986580@baylibre.com>
+Subject: [PATCH 08/13] iio: buffer: add new hardware triggered buffer driver
+Date: Wed, 10 Jan 2024 13:49:49 -0600
+Message-ID: <20240109-axi-spi-engine-series-3-v1-8-e42c6a986580@baylibre.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
 References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
@@ -92,28 +92,216 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-This adds the new INDIO_HW_BUFFER_TRIGGERED flag to the available modes
-of the dmaengine buffer. This allows it to be used as the buffer of
-devices that use the INDIO_HW_BUFFER_TRIGGERED flag.
+This adds a new hardware triggered buffer driver for the IIO subsystem.
+This driver is intended to be used by IIO device drivers that have
+a hardware buffer that is triggered by a hardware signal.
+
+It is expected that components such as those providing a backend via the
+IIO backend framework will provide the actual implementation of this
+functionality by registering a matching device on the auxiliary bus.
+The auxiliary bus was chosen since it allows us to make use of existing
+kernel infrastructure instead of implementing our own registration and
+lookup system.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/driver-api/driver-model/devres.rst   |   1 +
+ drivers/iio/buffer/Kconfig                         |   7 ++
+ drivers/iio/buffer/Makefile                        |   1 +
+ .../iio/buffer/industrialio-hw-triggered-buffer.c  | 104 +++++++++++++++++++++
+ include/linux/iio/hw_triggered_buffer.h            |  14 +++
+ include/linux/iio/hw_triggered_buffer_impl.h       |  16 ++++
+ 6 files changed, 143 insertions(+)
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index 5f85ba38e6f6..c67ddf963bfb 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -120,7 +120,7 @@ static const struct iio_buffer_access_funcs iio_dmaengine_buffer_ops = {
- 	.data_available = iio_dma_buffer_data_available,
- 	.release = iio_dmaengine_buffer_release,
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index c5f99d834ec5..b23d4a2b68a6 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -296,6 +296,7 @@ IIO
+   devm_iio_channel_get()
+   devm_iio_channel_get_all()
+   devm_iio_hw_consumer_alloc()
++  devm_iio_hw_triggered_buffer_setup()
+   devm_fwnode_iio_channel_get_by_name()
  
--	.modes = INDIO_BUFFER_HARDWARE,
-+	.modes = INDIO_BUFFER_HARDWARE | INDIO_HW_BUFFER_TRIGGERED,
- 	.flags = INDIO_BUFFER_FLAG_FIXED_WATERMARK,
- };
- 
+ INPUT
+diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
+index 047b931591a9..925c5bf074bc 100644
+--- a/drivers/iio/buffer/Kconfig
++++ b/drivers/iio/buffer/Kconfig
+@@ -53,3 +53,10 @@ config IIO_TRIGGERED_BUFFER
+ 	select IIO_KFIFO_BUF
+ 	help
+ 	  Provides helper functions for setting up triggered buffers.
++
++config IIO_HW_TRIGGERED_BUFFER
++	tristate "Industrial I/O hardware triggered buffer support"
++	select AUXILIARY_BUS
++	select IIO_TRIGGER
++	help
++	  Provides helper functions for setting up hardware triggered buffers.
+diff --git a/drivers/iio/buffer/Makefile b/drivers/iio/buffer/Makefile
+index 1403eb2f9409..d1142bb20f61 100644
+--- a/drivers/iio/buffer/Makefile
++++ b/drivers/iio/buffer/Makefile
+@@ -9,4 +9,5 @@ obj-$(CONFIG_IIO_BUFFER_DMA) += industrialio-buffer-dma.o
+ obj-$(CONFIG_IIO_BUFFER_DMAENGINE) += industrialio-buffer-dmaengine.o
+ obj-$(CONFIG_IIO_BUFFER_HW_CONSUMER) += industrialio-hw-consumer.o
+ obj-$(CONFIG_IIO_TRIGGERED_BUFFER) += industrialio-triggered-buffer.o
++obj-$(CONFIG_IIO_HW_TRIGGERED_BUFFER) += industrialio-hw-triggered-buffer.o
+ obj-$(CONFIG_IIO_KFIFO_BUF) += kfifo_buf.o
+diff --git a/drivers/iio/buffer/industrialio-hw-triggered-buffer.c b/drivers/iio/buffer/industrialio-hw-triggered-buffer.c
+new file mode 100644
+index 000000000000..7a8a71066b0e
+--- /dev/null
++++ b/drivers/iio/buffer/industrialio-hw-triggered-buffer.c
+@@ -0,0 +1,104 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2024 Analog Devices, Inc.
++ * Copyright (c) 2024 BayLibre, SAS
++ */
++
++#include <linux/auxiliary_bus.h>
++#include <linux/container_of.h>
++#include <linux/export.h>
++#include <linux/module.h>
++#include <linux/iio/hw_triggered_buffer_impl.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/buffer.h>
++#include <linux/iio/trigger.h>
++
++static int iio_hw_triggered_buffer_match(struct device *dev, const void *match)
++{
++	return dev->parent == match;
++}
++
++static struct iio_hw_triggered_buffer_device
++*iio_hw_trigger_buffer_get(struct device *match)
++{
++	struct auxiliary_device *adev;
++
++	adev = auxiliary_find_device(NULL, match, iio_hw_triggered_buffer_match);
++	if (!adev)
++		return ERR_PTR(-ENOENT);
++
++	return container_of(adev, struct iio_hw_triggered_buffer_device, adev);
++}
++
++static void iio_hw_trigger_buffer_put(void *dev)
++{
++	put_device(dev);
++}
++
++/**
++ * devm_iio_hw_triggered_buffer_setup - Setup a hardware triggered buffer
++ * @dev:	Device for devm management
++ * @indio_dev:	An unconfigured/partially configured IIO device struct
++ * @match:	Device for matching the auxiliary bus device that provides the
++ *		interface to the hardware triggered buffer
++ * @ops:	Buffer setup functions to use for this IIO device
++ *
++ * Return: 0 on success, negative error code on failure.
++ *
++ * This function will search all registered hardware triggered buffers for one
++ * that matches the given indio_dev. If found, it will be used to setup both
++ * the trigger and the buffer on the indio_dev.
++ */
++int devm_iio_hw_triggered_buffer_setup(struct device *dev,
++				       struct iio_dev *indio_dev,
++				       struct device *match,
++				       const struct iio_buffer_setup_ops *ops)
++{
++	struct iio_hw_triggered_buffer_device *hw;
++	int ret;
++
++	hw = iio_hw_trigger_buffer_get(match);
++	if (IS_ERR(hw))
++		return PTR_ERR(hw);
++
++	ret = devm_add_action_or_reset(dev, iio_hw_trigger_buffer_put, &hw->adev.dev);
++	if (ret)
++		return ret;
++
++	indio_dev->modes |= INDIO_HW_BUFFER_TRIGGERED;
++	indio_dev->trig = iio_trigger_get(hw->trig);
++	indio_dev->setup_ops = ops;
++
++	return iio_device_attach_buffer(indio_dev, hw->buffer);
++}
++EXPORT_SYMBOL_GPL(devm_iio_hw_triggered_buffer_setup);
++
++static int iio_hw_trigger_buffer_probe(struct auxiliary_device *adev,
++				       const struct auxiliary_device_id *id)
++{
++	struct iio_hw_triggered_buffer_device *hw =
++		container_of(adev, struct iio_hw_triggered_buffer_device, adev);
++
++	if (!hw->buffer || !hw->trig)
++		return -EINVAL;
++
++	return 0;
++}
++
++static const struct auxiliary_device_id iio_hw_trigger_buffer_id_table[] = {
++	{ }
++};
++MODULE_DEVICE_TABLE(auxiliary, iio_hw_trigger_buffer_id_table);
++
++static struct auxiliary_driver iio_hw_trigger_buffer_driver = {
++	.driver = {
++		.name = "iio-hw-triggered-buffer",
++	},
++	.probe = iio_hw_trigger_buffer_probe,
++	.id_table = iio_hw_trigger_buffer_id_table,
++};
++module_auxiliary_driver(iio_hw_trigger_buffer_driver);
++
++MODULE_AUTHOR("David Lechner <dlechner@baylibre.com>");
++MODULE_DESCRIPTION("IIO helper functions for setting up hardware triggered buffers");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/iio/hw_triggered_buffer.h b/include/linux/iio/hw_triggered_buffer.h
+new file mode 100644
+index 000000000000..6bd8035f1b92
+--- /dev/null
++++ b/include/linux/iio/hw_triggered_buffer.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_IIO_HW_TRIGGEREDED_BUFFER_H_
++#define _LINUX_IIO_HW_TRIGGEREDED_BUFFER_H_
++
++struct device;
++struct iio_dev;
++struct iio_buffer_setup_ops;
++
++int devm_iio_hw_triggered_buffer_setup(struct device *dev,
++				       struct iio_dev *indio_dev,
++				       struct device *match,
++				       const struct iio_buffer_setup_ops *ops);
++
++#endif /* _LINUX_IIO_HW_TRIGGEREDED_BUFFER_H_ */
+diff --git a/include/linux/iio/hw_triggered_buffer_impl.h b/include/linux/iio/hw_triggered_buffer_impl.h
+new file mode 100644
+index 000000000000..d9a3ad2c8c24
+--- /dev/null
++++ b/include/linux/iio/hw_triggered_buffer_impl.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_IIO_HW_TRIGGEREDED_BUFFER_IMPL_H_
++#define _LINUX_IIO_HW_TRIGGEREDED_BUFFER_IMPL_H_
++
++#include <linux/auxiliary_bus.h>
++
++struct iio_buffer;
++struct iio_trigger;
++
++struct iio_hw_triggered_buffer_device {
++	struct auxiliary_device adev;
++	struct iio_buffer *buffer;
++	struct iio_trigger *trig;
++};
++
++#endif /* _LINUX_IIO_HW_TRIGGEREDED_BUFFER_IMPL_H_ */
 
 -- 
 2.43.0
