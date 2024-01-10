@@ -1,292 +1,270 @@
-Return-Path: <linux-pwm+bounces-716-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-717-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E42082A002
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 19:01:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA74D82A139
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 20:51:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DE371F21CE1
-	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 18:01:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 25AF72832EE
+	for <lists+linux-pwm@lfdr.de>; Wed, 10 Jan 2024 19:51:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0124D114;
-	Wed, 10 Jan 2024 18:01:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B57704EB35;
+	Wed, 10 Jan 2024 19:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AJu19aeh"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rlV+Lv/2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D5E4C3C1
-	for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 18:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e5508ecb9so16350045e9.3
-        for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 10:01:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76104E1C7
+	for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 19:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5962381efc4so2462937eaf.1
+        for <linux-pwm@vger.kernel.org>; Wed, 10 Jan 2024 11:51:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704909673; x=1705514473; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JKl+uvl5ebHrMAACO3BPzytuK014zDcivJlJrIxKaX8=;
-        b=AJu19aeh7FQN4v7ZdJVhrWxDbsSjpqe/WctCPdIVVkuxIHqaGNpltejlfrBt1w/MsZ
-         t1SWkXP2ZaQN3Uy8mbTBHiaJVpXF2Y06deS1Kbxd9LW8KGHG+M2s3tE9kmzn736f/haz
-         uCGPl2nI0lZxdlwCMtbaK08Fis1n9zICpU1Vjx4OjIP5009pkqCkvFznPIPOYCW5XxMb
-         SJf11I2qvS7n6VuMU7Gn0ZpmMOb5iR15NwEnjtP1Au8i2vyRyrCEGR5LVADT47bP6yPG
-         RdRG9/xln143GFw2K8H85p1otF9UHHB6P2nzCOLbXXnfObTiFoFcF3JVIpH2ZNLu/9wF
-         55ww==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1704916268; x=1705521068; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YMKckuP8XGsuDmaIXHNVROp60ZPbWd85oO+z2O6Q+eU=;
+        b=rlV+Lv/2M46E5d57/s7svXRFPO1G/yjLF1CGfoZ9zySL6EyZTS62oCxYdCPqWGFQGe
+         pwnoGlP67EdxJUtmX1OWNeFkku/W8km3nhLUFQGWkWlJjWRPonuTm8r8E+NUgTd9j+SH
+         M7mnrdu6obv0fI8Qw5VN9mDZa44rrjrxsg6BspL8BhtD2iZC5RjqyWJQBFHJUKFXOlg9
+         +DRCLCfNE6av2Jk0WheJa5Aj8Lmef6uGLnkTGi4qCUt69UF4+Qq/t4at5yUAbTtnbrCo
+         tmQf3vMwecQEhjpVaCieOxKjLCAZs8c6TDUxEW/AY5SQLp/gLOcCNFw6s5C57ehij/9P
+         wyCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704909673; x=1705514473;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JKl+uvl5ebHrMAACO3BPzytuK014zDcivJlJrIxKaX8=;
-        b=PRbgOZ0AcUslbL/Avf/i4y6MJoEvQ9E3l1ciafkz9Rm8m4Z0BjBnQPf4kFwllxc05f
-         Av9AOcDolHXbHyOX1+q10qEuguFOzplYJjfEwQMVv7mml1/vFxR4XtsugKkh4b1q8IvJ
-         OpzYJFG9mOK45IPKDc/BvZ1xZARyhW8mlr2Q6dO4/Z8Bm1HO4ZJ1fhme2tVpbLy1nmxA
-         mUJ9sfttvnC6i04f6CC9rqBCQMt9fhTSlNX/RoUHSQqRbel5ktUQWF4ykKSaSegiD2/w
-         POR+f32udRkM8z/ut7k82TMm5WkpseNAyKMrmzTc01kXHI3pcNtrr3AdWAHcvJYUGlXx
-         6TIw==
-X-Gm-Message-State: AOJu0YxXzq5mUdD2es5uvTm857JruXfwpuJSHlI/ZvRxarXnLadjfgfy
-	yUG2rDkZiwYnaI6frESMuNek4TGYsqAO1Q==
-X-Google-Smtp-Source: AGHT+IFqpewdPmcUQNc9uP85eIFeyX1h8g4AUvMAcoUwItuN6Q4S6g6gTcWymsEs03vjBrPIHMy+pw==
-X-Received: by 2002:a05:600c:a019:b0:40e:3fa2:213 with SMTP id jg25-20020a05600ca01900b0040e3fa20213mr859553wmb.147.1704909673185;
-        Wed, 10 Jan 2024 10:01:13 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id v21-20020a05600c445500b0040e3bdff98asm2913526wmn.23.2024.01.10.10.01.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 10:01:10 -0800 (PST)
-Message-ID: <683b7838-9c19-4a51-8ec4-90ac8a8a94ce@linaro.org>
-Date: Wed, 10 Jan 2024 19:01:07 +0100
+        d=1e100.net; s=20230601; t=1704916268; x=1705521068;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YMKckuP8XGsuDmaIXHNVROp60ZPbWd85oO+z2O6Q+eU=;
+        b=cqZJIryZlwTzh7T6d8eD7CuxA0kQOm/xqQCFECSYCqWxXwbFJPoq8N1MU/yYlpVLEm
+         S1DEfnfr8DLeBEgslUDHyU2GCoGYizCFhQ3tGqffvFlKPaOqx4iwOlctTQdo1sjjWoh1
+         RwDigC8Q9/y0Bx9uKpxJPl9nWaGdkzzs8/aD497YxIGLAf21RBAIrrAJlD9hUqxDRqAm
+         N9LiXpvxOdpDEvFJbuZWQHgmG5Es3paIi3JXe8TvX7zhawz3glyJRV7QgxjcFWFR1NFA
+         Pc8VWaQ8ujr843vdv67U6vJWQ+1sJJmXcyMdXRIqKLCXGHE0xK5GkFu8cCIZDrQ1sA+i
+         csdQ==
+X-Gm-Message-State: AOJu0Yw1XKS+QsUHpuh+x6G8xc1m0jnYH3Hz2TTtvIUC9eQlAPnWcF03
+	9GdOAzXUWcleKMoiNnjMvWumQYLhEjurmQ==
+X-Google-Smtp-Source: AGHT+IFoWmtz9bWO7VnnQScDOXIo/P6RzNPrDSxSQhS3I9XZeWyQUSus9HfRsN+aQncWLIqgoG29dA==
+X-Received: by 2002:a05:6820:22a1:b0:596:1270:cb9 with SMTP id ck33-20020a05682022a100b0059612700cb9mr115534oob.12.1704916268482;
+        Wed, 10 Jan 2024 11:51:08 -0800 (PST)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 187-20020a4a0dc4000000b00595b35927a3sm938513oob.39.2024.01.10.11.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 11:51:08 -0800 (PST)
+From: David Lechner <dlechner@baylibre.com>
+To: Mark Brown <broonie@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Frank Rowand <frowand.list@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	=?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-spi@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH 00/13] spi: axi-spi-engine: add offload support
+Date: Wed, 10 Jan 2024 13:49:41 -0600
+Message-ID: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT schema
- format
-Content-Language: en-US
-To: Dharma Balasubiramani <dharma.b@microchip.com>, sam@ravnborg.org,
- bbrezillon@kernel.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
- claudiu.beznea@tuxon.dev, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, lee@kernel.org, thierry.reding@gmail.com,
- u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-References: <20240110102535.246177-1-dharma.b@microchip.com>
- <20240110102535.246177-3-dharma.b@microchip.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240110102535.246177-3-dharma.b@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-On 10/01/2024 11:25, Dharma Balasubiramani wrote:
-> Convert the atmel,hlcdc binding to DT schema format.
-> 
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
->  .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 106 ++++++++++++++++++
->  .../devicetree/bindings/mfd/atmel-hlcdc.txt   |  56 ---------
->  2 files changed, 106 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
-> new file mode 100644
-> index 000000000000..555d6faa9104
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+This is the culmination of the previous AXI SPI Engine improvement
+series [1] and [2] where we made fixes and improvements to prepare
+for adding offload support.
 
-This looks not tested, so limited review follows:
+Simply put, "offload" support is defined as a capability of advanced
+SPI controllers to record a series of SPI transactions and then play
+them back using a hardware trigger. This allows operations to be
+performed, possibly repeating many times, without any CPU intervention.
 
-> @@ -0,0 +1,106 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (C) 2024 Microchip Technology, Inc. and its subsidiaries
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel's HLCDC (High LCD Controller) MFD driver
+The offload hardware interface consists of a trigger input and a data
+output for the RX data. These are connected to other hardware external
+to the SPI controller.
 
-Drop "MFD driver" and rather describe/name the hardware. MFD is Linux
-term, so I really doubt that's how this was called.
+To record one or more transactions, commands and TX data are written
+to FIFOs on the controller (RX buffer is not used since RX data gets
+piped to external hardware). This sequence of transactions can then be
+played back when the trigger input is asserted.
 
-> +
-> +maintainers:
-> +  - Nicolas Ferre <nicolas.ferre@microchip.com>
-> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
-> +  - Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> +
-> +description: |
-> +  Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver.
+This series includes core SPI support along with the first SPI
+controller (AXI SPI Engine) and SPI peripheral (AD7380 ADC) that use
+them. This enables capturing analog data at 2 million samples per second
+with virtually no jitter.
 
-Drop
+The hardware setup looks like this:
 
-> +  The HLCDC IP exposes two subdevices:
-> +  # a PWM chip: see ../pwm/atmel,hlcdc-pwm.yaml
-> +  # a Display Controller: see ../display/atmel/atmel,hlcdc-dc.yaml
++-------------------------------+   +------------------+
+|                               |   |                  |
+|  SOC/FPGA                     |   |  AD7380 ADC      |
+|  +---------------------+      |   |                  |
+|  | AXI SPI Engine      |      |   |                  |
+|  |      SDO/SDI/SCK/CS ============ SDI/SDO/SCK/CS   |
+|  |                     |      |   |                  |
+|  |  +---------------+  |      |   |                  |
+|  |  | Offload 0     |  |      |   +------------------+
+|  |  |   RX DATA OUT > > > >   |
+|  |  |    TRIGGER IN < < <  v  |
+|  |  +---------------+  | ^ v  |
+|  +---------------------+ ^ v  |
+|  | AXI PWM             | ^ v  |
+|  |                 CH0 > ^ v  |
+|  +---------------------+   v  |
+|  | AXI DMA             |   v  |
+|  |                 CH0 < < <  |
+|  +---------------------+      |
+|                               |
++-------------------------------+
 
-Rephrase to describe hardware. Drop redundant paths.
+This series adds support in three phases.
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at91sam9n12-hlcdc
-> +      - atmel,at91sam9x5-hlcdc
-> +      - atmel,sama5d2-hlcdc
-> +      - atmel,sama5d3-hlcdc
-> +      - atmel,sama5d4-hlcdc
-> +      - microchip,sam9x60-hlcdc
-> +      - microchip,sam9x75-xlcdc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    anyOf:
-> +      - items:
-> +          - enum:
-> +              - sys_clk
-> +              - lvds_pll_clk
+1. Adding support in the SPI subsystem.
 
-Old binding was not mentioning this and you did not describe differences
-against pure conversion. You have entire commit msg for this...
+    This is broken down into two parts.
 
-> +      - contains:
-> +          const: periph_clk
-> +      - contains:
-> +          const: slow_clk
-> +        maxItems: 3
+    1. Adding offload support to the SPI core.
 
-Why it has to be so complicated? I doubt that same devices have
-different inputs.
+        * "spi: add core support for controllers with offload capabilities"
 
-> +
-> +  hlcdc-display-controller:
+    2. Implementing the new offload interface in the AXI SPI Engine
+       controller driver.
 
-Does anything depend on the name? If not, then just display-controller
+        Prerequisites to avoid errors with new DT bindings:
+        * "scripts: dtc: checks: don't warn on SPI non-peripheral child
+          nodes"
+        * "spi: do not attempt to register DT nodes without @ in name"
 
-> +    $ref: /schemas/display/atmel/atmel,hlcdc-dc.yaml
-> +
-> +  hlcdc-pwm:
+        DT bindings and corresponding driver changes:
+        * "spi: dt-bindings: adi,axi-spi-engine: add offload bindings"
+        * "spi: axi-spi-engine: add SPI offload support"
 
-Same comment.
+    RFC question for this part: I have made the device tree bindings
+    specific to the controller. Would it be better to make them generic
+    SPI bindings since offload is intended to be a generic SPI feature?
+    Or should we require each controller to have its own bindings?
 
-> +    $ref: /schemas/pwm/atmel,hlcdc-pwm.yaml
+2. Adding a new offload hardware trigger buffer driver in the IIO
+   subsystem.
 
-There is no such file.
+    Since offloads are generic, we need to specify what is attached to
+    the trigger input and the data output. This is modeled as a platform
+    device that uses a compatible string to specify what is connected.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/dma/at91.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    hlcdc: hlcdc@f0030000 {
+    In this case, we have a PWM that is used to periodically trigger
+    the offload to read a sample from the ADC. The received data is then
+    piped to a DMA channel that transfers it to an IIO buffer.
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+    This is broken down into two parts.
 
+    1. Adding a generic interface/helper functions for hardware
+       triggered hardware buffers.
 
-> +      compatible = "atmel,sama5d3-hlcdc";
-> +      reg = <0xf0030000 0x2000>;
-> +      clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-> +      clock-names = "periph_clk","sys_clk", "slow_clk";
+        * "iio: buffer: add hardware triggered buffer support"
+        * "iio: buffer: dmaengine: add INDIO_HW_BUFFER_TRIGGERED flag"
+        * "iio: buffer: add new hardware triggered buffer driver"
 
-Missing space after ,
+    2. Adding a specific implementation of this interface for this
+       particular hardware configuration.
 
-> +      interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-> +
-> +      hlcdc-display-controller {
-> +        compatible = "atmel,hlcdc-display-controller";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0>;
-> +
-> +          hlcdc_panel_output: endpoint@0 {
-> +            reg = <0>;
-> +            remote-endpoint = <&panel_input>;
-> +          };
-> +        };
-> +      };
-> +
+        Prerequisites for new driver:
+        * "bus: auxiliary: increase AUXILIARY_NAME_SIZE"
+        * "iio: buffer: dmaengine: export devm_iio_dmaengine_buffer_alloc()"
 
+        DT bindings and corresponding new driver:
+        * "dt-bindings: iio: offload: add binding for PWM/DMA triggered
+          buffer"
+        * "iio: offload: add new PWM triggered DMA buffer driver"
 
-Best regards,
-Krzysztof
+3. Adding offload support to the AD7380 ADC driver.
+
+    Once the two components above are in place, we can add offload
+    support to the AD7380 ADC driver.
+
+    * "iio: adc: ad7380: add SPI offload support"
+
+Build and runtime dependencies:
+* The "spi: axi-spi-engine:" patch depends on the previous to series
+  [1] and [2] to apply cleanly (these have been applied to spi/for-6.8).
+* The "iio: adc: ad7380:" patch depends on the driver introduced in [3]
+  (accepted but not applied yet).
+* The "iio: buffer:" patches have a runtime dependency on [4] to
+  function properly.
+* A branch with all dependencies and additional patches for a full
+  working system can be found at [5].
+
+[1]: https://lore.kernel.org/linux-spi/20231117-axi-spi-engine-series-1-v1-0-cc59db999b87@baylibre.com
+[2]: https://lore.kernel.org/linux-spi/20231204-axi-spi-engine-series-2-v1-0-063672323fce@baylibre.com
+[3]: https://lore.kernel.org/linux-iio/20231215-ad7380-mainline-v3-0-7a11ebf642b9@baylibre.com
+[4]: https://lore.kernel.org/linux-iio/20240108200647.3916681-1-dlechner@baylibre.com
+[5]: https://github.com/analogdevicesinc/linux/tree/dlech/spi-engine-offload-ad7980
+
+---
+David Lechner (13):
+      spi: add core support for controllers with offload capabilities
+      scripts: dtc: checks: don't warn on SPI non-peripheral child nodes
+      spi: do not attempt to register DT nodes without @ in name
+      spi: dt-bindings: adi,axi-spi-engine: add offload bindings
+      spi: axi-spi-engine: add SPI offload support
+      iio: buffer: add hardware triggered buffer support
+      iio: buffer: dmaengine: add INDIO_HW_BUFFER_TRIGGERED flag
+      iio: buffer: add new hardware triggered buffer driver
+      bus: auxiliary: increase AUXILIARY_NAME_SIZE
+      iio: buffer: dmaengine: export devm_iio_dmaengine_buffer_alloc()
+      dt-bindings: iio: offload: add binding for PWM/DMA triggered buffer
+      iio: offload: add new PWM triggered DMA buffer driver
+      iio: adc: ad7380: add SPI offload support
+
+ .../adi,spi-offload-pwm-trigger-dma-buffer.yaml    |  59 +++++
+ .../spi/adi,axi-spi-engine-peripheral-props.yaml   |  24 ++
+ .../bindings/spi/adi,axi-spi-engine.yaml           |  49 +++-
+ .../bindings/spi/spi-peripheral-props.yaml         |   1 +
+ Documentation/driver-api/driver-model/devres.rst   |   2 +
+ drivers/iio/Kconfig                                |   1 +
+ drivers/iio/Makefile                               |   1 +
+ drivers/iio/adc/Kconfig                            |   1 +
+ drivers/iio/adc/ad7380.c                           |  84 ++++++-
+ drivers/iio/buffer/Kconfig                         |   7 +
+ drivers/iio/buffer/Makefile                        |   1 +
+ drivers/iio/buffer/industrialio-buffer-dmaengine.c |   5 +-
+ .../iio/buffer/industrialio-hw-triggered-buffer.c  | 105 ++++++++
+ drivers/iio/industrialio-buffer.c                  |  43 +++-
+ drivers/iio/offload/Kconfig                        |  21 ++
+ drivers/iio/offload/Makefile                       |   2 +
+ drivers/iio/offload/iio-pwm-triggered-dma-buffer.c | 212 ++++++++++++++++
+ drivers/spi/spi-axi-spi-engine.c                   | 270 +++++++++++++++++++++
+ drivers/spi/spi.c                                  |  43 +++-
+ include/linux/iio/buffer-dmaengine.h               |   2 +
+ include/linux/iio/hw_triggered_buffer.h            |  14 ++
+ include/linux/iio/hw_triggered_buffer_impl.h       |  16 ++
+ include/linux/iio/iio.h                            |  16 +-
+ include/linux/mod_devicetable.h                    |   2 +-
+ include/linux/spi/spi.h                            | 123 ++++++++++
+ scripts/dtc/checks.c                               |   4 +
+ 26 files changed, 1092 insertions(+), 16 deletions(-)
+---
+base-commit: 036589475658287626a9bb78bcb8538a33d3ed34
+prerequisite-patch-id: a57defd70c3f6e806bdff12d940a1c1d3f1ec78f
+change-id: 20231215-axi-spi-engine-series-3-1c6a584d408d
 
 
