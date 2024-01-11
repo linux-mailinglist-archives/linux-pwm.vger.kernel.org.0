@@ -1,41 +1,43 @@
-Return-Path: <linux-pwm+bounces-747-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-748-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36F5D82AF10
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 14:01:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 970D182AFB8
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 14:33:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 415331C231B2
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 13:00:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC3EE1C23CD4
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 13:33:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16D4815E8E;
-	Thu, 11 Jan 2024 13:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 957EF17991;
+	Thu, 11 Jan 2024 13:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/hWEI5E"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAKS2I68"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE52915AFD;
-	Thu, 11 Jan 2024 13:00:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A51C433C7;
-	Thu, 11 Jan 2024 13:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BB01775B;
+	Thu, 11 Jan 2024 13:33:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAD1FC433F1;
+	Thu, 11 Jan 2024 13:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704978049;
-	bh=PPK6b4HMONAjOLQhJy+dcD8B/FlzQW7e7QMEXCQPqAY=;
+	s=k20201202; t=1704979990;
+	bh=EmGMiLyuF8McNaUk0A0meCoizVF29JUoSFDudOh+384=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p/hWEI5EyL2at+hrBZ2ezeBb4JDwY5hc0eaiyuNYU1pX7lRUtqhzgLoMbCwvXZf4Y
-	 1QAXhXrgYkbAlB/jTyNBGjJqM6DoblonT3pMN8NYVhXeAQASD7J/X4Yb0W5H77IXok
-	 6uuOYDDDkO8eJxju/nvNeKFMp9R2teZVf6a4/AX/IDHjoqzZVQ4lMMrDWZjuzFR/ho
-	 uwuoFl644z2MCnUH5yjJRxNnIGs7VAYHLl33XuvMAYTNSMXnIxoNFXZcZGktjLFU8t
-	 jGaXmBPA3J6PU5GpWL+Y5HrfudXReXHNUQArlOXan4vnZNefvz1nchk7ujJjMP+Tn9
-	 kKg4U/QjeLZvA==
-Date: Thu, 11 Jan 2024 13:00:42 +0000
+	b=vAKS2I68D2Sywf9Up0nX2OS+frd2mQKF+NZhSTyYbSAkeUsHJgC1v2Z3O9LRnA5rP
+	 NywmcrehgOdG56cF6YvStXcz6b2UMebmcH9qy3Peq8QFtDdEAUgHTGZVlC4YjA+xnp
+	 y+X1Yo8GDpm946G9D2hWbAYqLHlE3EIn/QsnFuCnL0OLnGIUuer/ch2UG5eMpXwcbI
+	 ZwwEVQrO9/v13SyXP6iqgEQN6WqHDYxt1iwybwqHBnw3Dhi1Mlh33ZLTJozOzFNaJI
+	 jGFY0pG3k947J9c1Kma4Q30dc5DQ2/HAnmTp5fIGJEn4Vezd06/Z1TOlqFeujbpeMk
+	 XU2XiElvVSvtw==
+Date: Thu, 11 Jan 2024 13:33:03 +0000
 From: Mark Brown <broonie@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Michael Hennerich <michael.hennerich@analog.com>,
@@ -46,13 +48,13 @@ Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>, linux-spi@vger.kernel.org,
 	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 05/13] spi: axi-spi-engine: add SPI offload support
-Message-ID: <d19dac5c-eef6-4543-9eee-787262c0f52c@sirena.org.uk>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/13] spi: add core support for controllers with offload
+ capabilities
+Message-ID: <aae36622-4e05-4f16-9460-d7614fd599aa@sirena.org.uk>
 References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
- <20240109-axi-spi-engine-series-3-v1-5-e42c6a986580@baylibre.com>
- <a94d7aae-3d5c-4204-83f6-5374c3166f58@sirena.org.uk>
- <CAMknhBEEC4F2_hpJ_405bfrb3KNkAYpjDoJbnmOFXodp8yLACg@mail.gmail.com>
+ <20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
+ <0c0b1954825dc174cab48060e96ddadadc18aefd.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,53 +62,54 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="48Qe3jNucI2DGcEY"
+	protocol="application/pgp-signature"; boundary="F30ei0E0aX6bxcQF"
 Content-Disposition: inline
-In-Reply-To: <CAMknhBEEC4F2_hpJ_405bfrb3KNkAYpjDoJbnmOFXodp8yLACg@mail.gmail.com>
+In-Reply-To: <0c0b1954825dc174cab48060e96ddadadc18aefd.camel@gmail.com>
 X-Cookie: Does the name Pavlov ring a bell?
 
 
---48Qe3jNucI2DGcEY
-Content-Type: text/plain; charset=utf-8
+--F30ei0E0aX6bxcQF
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 10, 2024 at 04:31:25PM -0600, David Lechner wrote:
-> On Wed, Jan 10, 2024 at 3:39=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
-rote:
+On Thu, Jan 11, 2024 at 09:49:08AM +0100, Nuno S=E1 wrote:
+> On Wed, 2024-01-10 at 13:49 -0600, David Lechner wrote:
 
-> > Glancing through here I'm not seeing anything here that handles DMA
-> > mapping, given that the controller will clearly be doing DMA here that
-> > seems surprising.
+> > =A0=A0=A0 /* in probe() */
+> > =A0=A0=A0 offload =3D spi_offload_get(spi, 0);
 
-> In the use case implemented in this series, the RX data is going to
-> DMA, but in general, that doesn't have to be the case. In theory, it
-> could get piped directly to a DSP or something like that. So I left
-> the RX DMA part out of the SPI controller and implemented as a
-> separate device in "iio: offload: add new PWM triggered DMA buffer
-> driver". The SPI controller itself isn't aware that it is connected to
-> DMA (i.e. there are no registers that have to be poked to enable DMA
-> or anything like that).
+> On top of what Mark already stated, and as we already discussed offline, I
+> personally don't like this provider - consumer interface for the offload.=
+ The
+> first thing is that this is taking into account the possibility of having
+> multiple offload cores. While the FGPA core was designed with that in min=
+d, we
+> don't really have any design using multiple offloads in one spi engine (a=
+lways
+> one). Hence this is all pretty much untested.
 
-If there's a buffer being assigned to the device (or removed from the
-device) it needs mapping, this will ensure the device is allowed to
-access it if there's IOMMUs involved, and that there's no pending cache
-operations which could corrupt data.
+I tend to agree that we shouldn't be exposing this to SPI device drivers
+however we will want to keep track of if the unit is busy, and designing
+it to cope with multiple offloads does seem like sensible future
+proofing.  There's also the possibility that one engine might be able to
+cope with multiple scripts being active at once (eg, triggering a
+different action depending on the trigger).
 
---48Qe3jNucI2DGcEY
+--F30ei0E0aX6bxcQF
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWf5noACgkQJNaLcl1U
-h9CuKAf/RDosGN2d/f46OnxM+Ws4AH7ATVJNv3+gKUg32xfJT7BjuqncA+1bQ/hS
-cPrZ9A2vf4/n4/+HpsHS1X6REC/rSB0o5u67E7NLYOnJANnmHlATYELNc825KSbc
-ZQTP2fS3CvilSRdIpZWUJv4eaJb++n5tCdiLDvdkPn9kb4If0iBdPCL4rqSOJ+1s
-8QXhb479acdwTTC/CtW+ozWaMASBy9p+UGpyqJ5QWOur0HjJzcdWk2LJnwhupRb/
-4KM9S+a9xXm2zhvSt2OZw+4gE/BDqqdLbGEr+Oyxpkz/kPkXEUEyDemoIuG5qpbK
-snNWOyM2Gd+VVlwlvJCdeQGfxyL/OA==
-=ufYN
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWf7g4ACgkQJNaLcl1U
+h9CpZAf/Tlp3sl12nfPE/B+KPrvvSbOwgr6rp8IbKgLqDiflBuVfRC7hUNK8eeVk
+O8hS/4cYUSZzi/UKEIS1n36hrWz8pVFsmMGnaY1oceEISrS6pQNl7KKxhtHzbv6I
+xAWftKist6PFor7KiWJk8XRn7ClDn4OWOl9KRzsQuov9tWC1iEthAfXtzsF8vwjO
+LHfGOfe0d4RGXW/UJqZ89NYlLv4ndfhmXpVt6+KI6L99xNDfqu7+zmhRuxiCZDIA
+t9jbE9gQoPPQAZqr3rPyF3Lgry+a3M/yJksJCzMmbwg6RV7oTw2suHFy3euOjMKx
+4qZHFLGZYXHnsO6k3idEnYTN2EAEFA==
+=qyXJ
 -----END PGP SIGNATURE-----
 
---48Qe3jNucI2DGcEY--
+--F30ei0E0aX6bxcQF--
 
