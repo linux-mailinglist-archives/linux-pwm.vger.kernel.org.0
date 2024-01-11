@@ -1,146 +1,151 @@
-Return-Path: <linux-pwm+bounces-743-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-744-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2854482AAE2
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 10:28:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 154FD82AB87
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 11:05:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C677A1F286D9
-	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 09:28:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2717D1C21C90
+	for <lists+linux-pwm@lfdr.de>; Thu, 11 Jan 2024 10:05:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79ED610979;
-	Thu, 11 Jan 2024 09:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB1712E47;
+	Thu, 11 Jan 2024 10:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGZloLFT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtbLBQ1s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C407411C85;
-	Thu, 11 Jan 2024 09:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cd17a979bcso57344311fa.0;
-        Thu, 11 Jan 2024 01:28:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704965284; x=1705570084; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sf6VBUtsDqW13HEBWxXrEjwH5/MBLlUs1U/ZJvZMatA=;
-        b=lGZloLFTZDUV36+2mYEzCVaZ4B4yw1DyyxgJ7LEVVsFLUOSaT+dCn9zRqCOycv+oGk
-         ZyFouRV/l5dRdTraCEemijlkybhiKjMJJUf0fJ9ylzvwadJhHPDcynDL4F9yyl/qYHLR
-         8J54uV3zzrGPHHSwV6Ft8VlqwXvWMIUwaiHR8FlAiPr3czU6X5wtAKXI00RMPajV2Rz/
-         8mZA2EDzIwrS9UbQL/W66b9iVZrQe5Bu1p1JaNygOuspu+xHjUhju1narayNa8CJhDHL
-         qlhk3kVqxXaEKXS9gN2lxOfadprgvy/cfwAEN3kqg41drb03Zr64xPozNwxC96UJQLsx
-         76QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704965284; x=1705570084;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sf6VBUtsDqW13HEBWxXrEjwH5/MBLlUs1U/ZJvZMatA=;
-        b=grSiZ7J1eFyFK4CdBWjUoWYUvBevUV469ibvjEK0cq1NdHr02AaIByVO3G/730qUYO
-         GUlpQsp2jtGq+L+z1fFXbQCBwcCqIWld7dgHsG9YJ2WWJSIZBUz/52pqHkXCGtb3jIIu
-         wv404RWKUkPdMaTjKGHJBwBowg4n330HUCGesd9uHGk0v91nfzojHG0MJLkT0HhCaS7f
-         Davcbl2uWV+8o7XaC9k5I5QZSd1AJsO7K0+hGZIeFIV+XOWfnl+jtTH0NtwjRxFX07nG
-         ZxLmxwzImUS08cttRhrAKrG8RLuMvdWRMXUGYqtiqlo/I0+xs4bRZZQ5cVPsZFeYetZ9
-         6Eeg==
-X-Gm-Message-State: AOJu0Yxi9giT48TsMWpGOPpidOW1NQp4R4hLBNpbOhl230Oam91isBZC
-	1mAsWWz5sSXyS2/3i2p4WbQ=
-X-Google-Smtp-Source: AGHT+IGHqmiX56xgaRdznksFbY34dhZM1Wo+zbmAdkiJ4fw2/vjUMX0b5qweYiWo+2S3241dOg+0cA==
-X-Received: by 2002:a2e:9848:0:b0:2cc:3e6d:8dcb with SMTP id e8-20020a2e9848000000b002cc3e6d8dcbmr106629ljj.104.1704965283355;
-        Thu, 11 Jan 2024 01:28:03 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47? (p200300f6ef1b2000944ccbc71e1c2c47.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:944c:cbc7:1e1c:2c47])
-        by smtp.gmail.com with ESMTPSA id c1-20020a5d4f01000000b003377be178a5sm699950wru.78.2024.01.11.01.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 01:28:03 -0800 (PST)
-Message-ID: <00c5f84a4bc5a4e3423f401af7b4f374c930407d.camel@gmail.com>
-Subject: Re: [PATCH 12/13] iio: offload: add new PWM triggered DMA buffer
- driver
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Mark Brown <broonie@kernel.org>, 
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>,  Michael Hennerich <michael.hennerich@analog.com>,
- Nuno =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand
- <frowand.list@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
- Corbet <corbet@lwn.net>,  linux-spi@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Thu, 11 Jan 2024 10:31:15 +0100
-In-Reply-To: <20240109-axi-spi-engine-series-3-v1-12-e42c6a986580@baylibre.com>
-References: 
-	<20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
-	 <20240109-axi-spi-engine-series-3-v1-12-e42c6a986580@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0139210A14;
+	Thu, 11 Jan 2024 10:05:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB533C433C7;
+	Thu, 11 Jan 2024 10:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704967505;
+	bh=ejfpJMtejqF7iTeQRs32sW6QKpxHOspsw5qIUc8L8L8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=XtbLBQ1sODZpr5AfAtsfLyJzKL3XQWdfRKIsgkgBSZp09KkeoRNzlrIcM/WgtZoXJ
+	 oRnZDzg5/TCEsUhfb+DrpYbQS8hgxN7A1iAn//Xku9n9cveXIsJ06obOQRrJNdGaP8
+	 21uBqf+mcX3O9CU816UfMiRg/1EbFkaJ/LcuFUMaSJ1adBTpI2h0lQks5B871hgXaB
+	 kRHutNWGg67nnXUWIDLfxgla1gb0ooonyS/g+V7BqAhMCddnZoziY290N/I9Yf6Fw3
+	 +swu0mV1GZMLouevulYmukZK7XJ5jAvRwbiVvTvL5VByU+GtepSzciHQXuN0NcbXQD
+	 rFBG1Nbf7zL+w==
+From: Lee Jones <lee@kernel.org>
+To: pavel@ucw.cz, lee@kernel.org, thierry.reding@gmail.com, 
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ agross@kernel.org, andersson@kernel.org, 
+ Anjelique Melendez <quic_amelende@quicinc.com>
+Cc: luca.weiss@fairphone.com, konrad.dybcio@linaro.org, 
+ u.kleine-koenig@pengutronix.de, quic_subbaram@quicinc.com, 
+ quic_gurus@quicinc.com, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org
+In-Reply-To: <20231221185838.28440-1-quic_amelende@quicinc.com>
+References: <20231221185838.28440-1-quic_amelende@quicinc.com>
+Subject: Re: (subset) [PATCH v8 0/7] Add support for LUT PPG
+Message-Id: <170496750168.1654525.11132648331912183091.b4-ty@kernel.org>
+Date: Thu, 11 Jan 2024 10:05:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.3
 
-On Wed, 2024-01-10 at 13:49 -0600, David Lechner wrote:
-> This adds a new driver for handling SPI offloading using a PWM as the
-> trigger and DMA for the received data. This will be used by ADCs in
-> conjunction with SPI controllers with offloading support to be able
-> to sample at high rates without CPU intervention.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
-> =C2=A0drivers/iio/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 1 +
-> =C2=A0drivers/iio/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-1 +
-> =C2=A0.../iio/buffer/industrialio-hw-triggered-buffer.c=C2=A0 |=C2=A0=C2=
-=A0 1 +
-> =C2=A0drivers/iio/offload/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 21 ++
-> =C2=A0drivers/iio/offload/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
-> =C2=A0drivers/iio/offload/iio-pwm-triggered-dma-buffer.c | 212
-> +++++++++++++++++++++
-> =C2=A06 files changed, 238 insertions(+)
->=20
-> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-> index 52eb46ef84c1..56738282d82f 100644
-> --- a/drivers/iio/Kconfig
-> +++ b/drivers/iio/Kconfig
-> @@ -90,6 +90,7 @@ source "drivers/iio/imu/Kconfig"
-> =C2=A0source "drivers/iio/light/Kconfig"
-> =C2=A0source "drivers/iio/magnetometer/Kconfig"
-> =C2=A0source "drivers/iio/multiplexer/Kconfig"
-> +source "drivers/iio/offload/Kconfig"
+On Thu, 21 Dec 2023 10:58:30 -0800, Anjelique Melendez wrote:
+> In certain PMICs, LUT pattern and LPG configuration is stored in SDAM
+> modules instead of LUT peripheral. This feature is called PPG.
+> 
+> This change series adds support for PPG. Thanks!
+> Changes since v7:
+>   - Patch 4/7
+>     - Initialize hi/lo_pause variables in lpg_pattern_set()
+> Changes since v6:
+>   - Patch 2/7
+>     - Removed required by constraint on PPG dt properties
+> Changes since v5:
+>   - Patch 4/7
+>     - Update logic so that multicolor led device triggers pattern
+>       on all LEDs at the same time
+>     - Update nitpicks from Lee
+>   - Patch 5/7
+>     - Update nitpicks from Lee
+> Changes since v4:
+>   - Patch 3/7
+>     - Get rid of r/w helpers
+>     - Use regmap_read_poll_timeout() in qcom_pbs_wait_for_ack()
+>     - Update error path in qcom_pbs_trigger_event()
+>     - Fix reverse christmas tree
+>   - Patch 4/7
+>     - Get rid of r/w helpers
+>     - Update variables to use "sdam" instead of "nvmem"
+>     - Fix comments
+>     - Fix reverse christmas tree
+>     - Update lpg_pattern_set() logic
+>   - Patch 5/7
+>     - Removed sdam_lut_base from lpg_data
+> Changes since v3:
+>   - Patch 4/7
+>     - Fix function returns
+>     - Move register definition to top of file
+>     - Revert max_brightness and probe accidental changes
+>     - Combine init_sdam() and parse_sdam()
+>     - Change error prints in probe to use dev_err_probe
+>     - Remove ppg_en variable
+>     - Update when pbs triggers are set/cleared
+>   - Patch 6/7
+>     - Remove use of nvmem_count
+>     - Move register definition to top of file
+>     - Remove lpg_get_sdam_lut_idx()
+> Changes since v2:
+>   - Patch 1/7
+>     - Fix dt_binding_check error
+>     - Rename binding file to match compatible
+>     - Iclude SoC specific comptaibles
+>   - Patch 2/7
+>     - Update nvmem-names list
+>   - Patch 3/7
+>     - Update EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+>     - Fix return/break logic in qcom_pbs_wait_for_ack()
+>     - Update iterators to be int
+>     - Add constants
+>     - Fix function calls in qcom_pbs_trigger_event()
+>     - Remove unnessary comments
+>     - Return -EPROBE_DEFER from get_pbs_client_device()
+> Changes since v1:
+>   - Patch 1/7
+>     - Fix dt_binding_check errors
+>     - Update binding description
+>   - Path 2/7
+>     - Fix dt_binding_check errors
+>     - Update per variant constraints
+>     - Update nvmem description
+>   - Patch 3/7
+>     - Update get_pbs_client_device()
+>     - Drop use of printk
+>     - Remove unused function
+> 
+> [...]
 
-The offload stuff is something very particular to a spi controller feature.=
- Not
-sure if having this as a generic thing makes sense at this point.
+Applied, thanks!
 
-IMO, the IIO way of looking at the offload engine is as an HW triggered cor=
-e for
-capturing data. Hence, I would support the whole thing as an HW triggered
-buffer. And, if we are really going the path of having the offload core as =
-a
-platform device, we could have different compatibles for each pair of trigg=
-er +
-data_capture (or explicit dt properties).
+[2/7] dt-bindings: leds: leds-qcom-lpg: Add support for LPG PPG
+      commit: 2fdd08fec742e0c94a2a06a0c9ee0912b6f7ac39
+[4/7] leds: rgb: leds-qcom-lpg: Add support for PPG through single SDAM
+      commit: 07a1afc8fbb77cc893e2285112482902ac88a295
+[5/7] leds: rgb: leds-qcom-lpg: Update PMI632 lpg_data to support PPG
+      commit: f4f5f6a6f8d7bcc8efd0eee6751def22c9a38fd0
+[6/7] leds: rgb: leds-qcom-lpg: Include support for PPG with dedicated LUT SDAM
+      commit: 7399a927272de1fc42f4da8af1d8d60b65a15b84
+[7/7] leds: rgb: Update PM8350C lpg_data to support two-nvmem PPG Scheme
+      commit: 7b4066868689b1f341e61957611d252b6fa8cafc
 
-Just my 2 cents...
-
-- Nuno S=C3=A1
+--
+Lee Jones [李琼斯]
 
 
