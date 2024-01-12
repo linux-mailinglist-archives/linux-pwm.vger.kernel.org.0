@@ -1,135 +1,132 @@
-Return-Path: <linux-pwm+bounces-757-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-758-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 770EB82BBBD
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 08:26:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCD1D82BCA8
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 10:05:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CB3B1C22D99
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 07:26:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5AD591F23DAE
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 09:05:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BBDC5C916;
-	Fri, 12 Jan 2024 07:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4739054FB1;
+	Fri, 12 Jan 2024 09:05:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwxYMJe2"
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="RWiNGh+S"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp28.bhosted.nl (smtp28.bhosted.nl [94.124.121.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56C6381B7;
-	Fri, 12 Jan 2024 07:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50ea98440a7so6375929e87.1;
-        Thu, 11 Jan 2024 23:26:43 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AE256B60
+	for <linux-pwm@vger.kernel.org>; Fri, 12 Jan 2024 09:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705044402; x=1705649202; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gneEqmMOyK7inkwh49BJcAK3SqDSE1D3WmwtdjW5DGM=;
-        b=FwxYMJe2jvIjT5v2l40f5TAFUG8U+Ri2TSy/cryOS24jFtb5fWEBh7HIw4KbWbO75M
-         a1rxMaDG5MIAlinMxO5JInRjSch4HZiOn15IsuwWEZUGem45zLiq2krRRY9F9nCT7m+A
-         HIS3hg/qckJRH/lLm4iNgxi6jyM7vNDIEL9nVSesRzSVBQw9+NpCS4NLY5oBDSVRD6cj
-         cmpF/ZQpVDpWEN2rO04GuFPlgpRMGWj6+CZpw/odL7TFgjSoYnGZM2kWE5BHu/bYcK/T
-         kBZJ8Qgdcp7Zn6cXecYqx7ebybCwqLQX2sNQe4W0RZC0hASMkMqlH5vHEDvJ6Lbflo8a
-         2DOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705044402; x=1705649202;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gneEqmMOyK7inkwh49BJcAK3SqDSE1D3WmwtdjW5DGM=;
-        b=YHEluoI3kM9QAe8NqKPWcMXYhqivhY4BYhLu5bG5H05h3sXIKQZpDdMK3+socHtaOy
-         n2Ja72aJZs5Obc1JpWVF+D49rXi7pza+i726oxUXPWyoMb2BhCL4bmzm71WmhIuTbOFE
-         Fs84ftdw34Vt2Efhpk4Ead1aYugrdoI0XmRAJDH1xZGqrIm8LFaHbIPiwIgyoEbszEFO
-         ynbuOA4toJaQnF2fS1k/MRw9wyxWIuNdGmqvrTRXDpYXnYzKysB/tjJVHdYmU98nVNe2
-         qBlL3fdtH1YZ4ldLlMoL6xeom3d3DI9WdNihbptNd4IV2Bz+uzvQwPTNnGpQJYXdVSkx
-         yM5g==
-X-Gm-Message-State: AOJu0YwxxeN19Goxtubylf/cGL8k0h/rEpwDFxCOxsoaOVmRCn3Aql3p
-	DuT0wdunKGACiFXtb+MjpSU=
-X-Google-Smtp-Source: AGHT+IGy+3PkDT9BlN+tYjnahAUimYtM7/rxEeJyqJ+bvuIygrRVut+yaLiioJGco4zZFrsehQqsLw==
-X-Received: by 2002:ac2:5921:0:b0:50e:a9f0:4a88 with SMTP id v1-20020ac25921000000b0050ea9f04a88mr204155lfi.91.1705044401301;
-        Thu, 11 Jan 2024 23:26:41 -0800 (PST)
-Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
-        by smtp.gmail.com with ESMTPSA id cd6-20020a170906b34600b00a2c8e9918casm924387ejb.198.2024.01.11.23.26.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 23:26:40 -0800 (PST)
-Message-ID: <fbe07c5f1d37febe0b89bf73816bc2e5d219547f.camel@gmail.com>
-Subject: Re: [PATCH 01/13] spi: add core support for controllers with
- offload capabilities
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
+	 message-id:subject:cc:to:from:date:from;
+	bh=xxLKZfR9ym3NvYaTuybR8pXKjRLGsluBabcSdUsoEsA=;
+	b=RWiNGh+SiP6oLepQrpQjzq3eyHcLtAafx5MtVsKMs41YlrxI7ZDYzsTEha7a/lscDptg/p8X4EdNG
+	 9hQHbb2LuE7Uk1+KOJb52iF4rkGv8v+U7irlFstAzWwblSFHHr2kpCLv5LttCQbC8I/DuV8lypwLrh
+	 ukPzt5VNY2e2ta05CYqQUJAH0lh4v4mRXfhbqHUzUwUEsaL5xOd6FZht0tZo7804cM4GnZ8H4fkHME
+	 9tjzvQNDu11r7Dk167wVVYPb2lT9z6zget+3lO/HDjuihwGjq7rM4uTW1V/4ij56Th+HnhrF5tgdI+
+	 3RE2mITMqmCDX8kcE8XPiaFC3Rp4+mw==
+X-MSG-ID: 7eeba78f-b129-11ee-ba53-0050568164d1
+Date: Fri, 12 Jan 2024 10:03:47 +0100
+From: David Jander <david@protonic.nl>
 To: Mark Brown <broonie@kernel.org>
 Cc: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>,  Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
  <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Michael Hennerich <michael.hennerich@analog.com>,  Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand
- <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
- Corbet <corbet@lwn.net>,  linux-spi@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Fri, 12 Jan 2024 08:26:40 +0100
-In-Reply-To: <ee19aa9e-cb51-41fb-a980-e3df579b5d35@sirena.org.uk>
-References: 
-	<20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
-	 <20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
-	 <0c0b1954825dc174cab48060e96ddadadc18aefd.camel@gmail.com>
-	 <aae36622-4e05-4f16-9460-d7614fd599aa@sirena.org.uk>
-	 <5b62d742fa789e9860781b6f5f1fda4f583b0e5b.camel@gmail.com>
-	 <ee19aa9e-cb51-41fb-a980-e3df579b5d35@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+ Michael Hennerich <michael.hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Frank Rowand <frowand.list@gmail.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
+ <u.kleine-koenig@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
+ linux-spi@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/13] spi: add core support for controllers with
+ offload capabilities
+Message-ID: <20240112100347.548298e9@erd003.prtnl>
+In-Reply-To: <829ac770-1955-45b7-9033-6ed60ffdf77e@sirena.org.uk>
+References: <20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
+	<20240109-axi-spi-engine-series-3-v1-1-e42c6a986580@baylibre.com>
+	<2c74aad9-3cb9-4222-8072-e72120c2658e@sirena.org.uk>
+	<CAMknhBGMRed9vDrDAuPJ5DnEe6MyHzd0VBebp5OaLX2Q+AyhMQ@mail.gmail.com>
+	<CAMknhBE-1Khe9J-n5WQnH=mFnN0ukiq7=F-SEOU6J-2_u-R0bw@mail.gmail.com>
+	<829ac770-1955-45b7-9033-6ed60ffdf77e@sirena.org.uk>
+Organization: Protonic Holland
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-01-11 at 15:41 +0000, Mark Brown wrote:
-> On Thu, Jan 11, 2024 at 03:11:32PM +0100, Nuno S=C3=A1 wrote:
-> > On Thu, 2024-01-11 at 13:33 +0000, Mark Brown wrote:
->=20
-> > > I tend to agree that we shouldn't be exposing this to SPI device driv=
-ers
-> > > however we will want to keep track of if the unit is busy, and design=
-ing
-> > > it to cope with multiple offloads does seem like sensible future
-> > > proofing.=C2=A0 There's also the possibility that one engine might be=
- able to
->=20
-> > Fair enough. But wouldn't a simple DT integer property (handled by the =
-spi core)
-> > to identify the offload index be easier for SPI device drivers? We coul=
-d still
-> > have dedicated interfaces for checking if the unit is busy or not... Th=
-e point
-> > is that we would not need an explicit get() from SPI drivers.
->=20
-> It feels like we'd need a get/release operation of some kind for mutual
-> exclusion, it's not just the discovery it's also figuring out if the
-> hardware is in use at a given moment.
->=20
 
-Hmm did not thought about the busy case. Still, I could see this being easi=
-ly done on
-the controller driver (at least until we have a clear idea if this is usefu=
-l or if it
-will attract more users) or even at the spi core on the prepare + unprepare
-interfaces. A flag could be enough to return EBUSY if someone is already in=
- the
-process of preparing + enabling the engine.=C2=A0
+Hi Mark, David,
 
-Bah, anyways, it's just I'm really not thrilled about that kind of interfac=
-e in here
-but yeah, as long as you think it's worth it...
+Thanks for CC'ing me. Been reading the discussion so far.
+
+On Thu, 11 Jan 2024 21:49:53 +0000
+Mark Brown <broonie@kernel.org> wrote:
+
+> On Thu, Jan 11, 2024 at 03:32:54PM -0600, David Lechner wrote:
+> > On Thu, Jan 11, 2024 at 2:54=E2=80=AFPM David Lechner <dlechner@baylibr=
+e.com> wrote: =20
 >=20
+> > > > (CCed) a while back when he was doing all the work he did on optimi=
+sing
+> > > > the core for uncontended uses, the thinking there was to have a
+> > > > spi_prepare_message() (or similar) API that drivers could call and =
+then
+> > > > reuse the same transfer repeatedly, and even without any interface =
+for
+> > > > client drivers it's likely that we'd be able to take advantage of i=
+t in
+> > > > the core for multi-transfer messages.  I'd be surprised if there we=
+ren't
+> > > > wins when the message goes over the DMA copybreak size.  A much wid=
+er
+> > > > range of hardware would be able to do this bit, for example David's=
+ case
+> > > > was a Raspberry Pi using the DMA controller to write into the SPI =
+=20
+>=20
+> > For those, following along, it looks like the RPi business was
+> > actually a 2013 discussion with Martin Sperl [2]. Both this and [1]
+> > discuss proposed spi_prepare_message() APIs. =20
+>=20
+> > [2]: https://lore.kernel.org/linux-spi/CACRpkdb4mn_Hxg=3D3tuBu89n6eyJ08=
+2EETkwtNbzZDFZYTHbVVg@mail.gmail.com/T/#u =20
+>=20
+> Oh, yes - sorry, I'd misremembered which optimisation effort it was
+> associated with.  Apologies.
 
-- Nuno S=C3=A1
+Yes. It was Martin Sperl who proposed this on a Rpi. I mentioned something
+similar toward the end of my 2nd email reply in that thread [1]. That might
+have triggered the confusion.
+As for my interests, I am all for devising ways to make the SPI subsystem m=
+ore
+suitable for optimized high-performance use-cases. In that regard, I think
+re-usable messages (spi_prepare_message()) can be useful. More capable
+hardware can enable very powerful use-cases for SPI, and it would be cool if
+the spi subsystem had the needed infrastructure to support those. As for
+hardware-triggers, I still need to wrap my head around how to have a
+universally usable API that works nice for the first use-case that comes al=
+ong
+and also doesn't screw up the next use-case that might follow. Keep me post=
+ed.
+
+[1] https://lore.kernel.org/linux-spi/20220513144645.2d16475c@erd992/
+
+Best regards,
+
+--=20
+David Jander
+Protonic Holland.
 
