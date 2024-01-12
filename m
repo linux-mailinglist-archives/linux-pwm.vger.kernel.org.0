@@ -1,155 +1,102 @@
-Return-Path: <linux-pwm+bounces-768-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-769-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EE7182C3FB
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 17:51:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C56982C578
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 19:32:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA19728643B
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 16:51:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E00A71F22B1F
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Jan 2024 18:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 030577763A;
-	Fri, 12 Jan 2024 16:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF0D313FFE;
+	Fri, 12 Jan 2024 18:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWm2pAhQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mx/hJXNP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EC777628;
-	Fri, 12 Jan 2024 16:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A79F156CD;
+	Fri, 12 Jan 2024 18:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50eaaf2c7deso7473146e87.2;
-        Fri, 12 Jan 2024 08:50:53 -0800 (PST)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6813ab2078dso7658846d6.2;
+        Fri, 12 Jan 2024 10:32:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705078252; x=1705683052; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KQHS5uhAPLXX77N7c+DiAec7npytpUQMPbZLsyEtnW0=;
-        b=RWm2pAhQWPj/qnCrDXtw7d/zwgvE5W2KAV/UuUz/FSKYr0ObJDTJ5fr1PrkEUzyTYZ
-         XPNULY7SuOSi4vNZ/5jzGtupY0H7/gph2DuHuTE7sYaLQgpgCVjsW1CzSMMf1F8opuIZ
-         +RbsqbR7jywIeT2ZiipKk4Oz6rChLYFrDHzqoEInH/NasEh40Cg2VDMkJIIPtKgUh6uo
-         h67REB0Szv8UR2vZ3vEK7m3Utg9ZeA8olWCqimMg2L4XiMJojYkX8nx2h1bBZj6wmgAO
-         4CcQBafAHSA7rIZSfKwtjiR1/AUiGxbhU9su/HMdMBE3qIjRVcQCgInBEC35iJlbWmSs
-         5T5A==
+        d=gmail.com; s=20230601; t=1705084371; x=1705689171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pDG9zL5uHP+qxuKtBYP8VMQW2U8d4h07q38mx4gVMyA=;
+        b=mx/hJXNP2kuZaJjDh4dKQcqzY3uCIlgCqNvSUEzhe2ZBQNZsOV0o6c/+5hV8upOC7t
+         NZIkzhOQmbHYN3HEF8xB1TIxcuwSWS5axrevlY66J8IgOkmA+p68o+2v8r5Q3mmTa/Tr
+         QrbZJeevxUQWxLoguh6TFssT8x0X2I0r9ARyU2HOTQmuER4dTxYqCcD6ncloehZdYmZd
+         EnI2R+JsCFKkUKFXZIrBHipxvwJCoc/KR1Nb7SWW5CboGiFPwsqGtK74I7SLHLgBBs+Q
+         KmipFSn6U8aksogJf2zMJOfLKpb5PaZs7cujHrf8guCvzo3MaLjc9K2L8EcYAHJPfNLa
+         TzxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705078252; x=1705683052;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KQHS5uhAPLXX77N7c+DiAec7npytpUQMPbZLsyEtnW0=;
-        b=AoV5w5A5hM/wRWRARHJ6Fdq5wO00bI+80n/9Hm7SnnNT4Eh8R7LJVXcDlupptwhhD4
-         YqcjoQJyxfEmcjzyztNfMKYRC8MOUDNMiUWgG+PC+eQh65Ll3xD4W/fHNo4VMy08cQNj
-         nXmEKFtBjdrnRNO61QmgtU7oQbL4vj0jkyQ5oD5ehv6JHCJp2zyAqX6vU9YHccBiHfsL
-         dvCZg27qRvBfHbvEDhJln5Go2LRiMN9rcCpNhPs6xDqwZEYlUGPe+dlRiHeAgnPxzoMm
-         SgTUfi5zl2Js5UXK0vt1fbSGnWbGuvO5du/RVVoPweFjuaBtI9m2M9fzS1zuxL/ThFRH
-         Pw1A==
-X-Gm-Message-State: AOJu0YwVBr7xJdUnwQiAjMd+1U8kKs+5hrScLw3rSdIT7r/JwW6HWDSs
-	ckGk+XIAT/br+l5YJZmFkVE=
-X-Google-Smtp-Source: AGHT+IG0JbLjMh66GE8r+eKEihDIGqjY2VovbrYwRbs1HfxFnWNa1ypfo+/6YnqpnC+UosIzXqBdJg==
-X-Received: by 2002:a19:6502:0:b0:50e:3084:4ac7 with SMTP id z2-20020a196502000000b0050e30844ac7mr722222lfb.53.1705078251324;
-        Fri, 12 Jan 2024 08:50:51 -0800 (PST)
-Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
-        by smtp.gmail.com with ESMTPSA id u11-20020a056402110b00b00558aa40f914sm1709327edv.40.2024.01.12.08.50.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jan 2024 08:50:51 -0800 (PST)
-Message-ID: <96e211915fbc2cfb245a377e3ea6ddf3ef55d8f7.camel@gmail.com>
-Subject: Re: [PATCH 06/13] iio: buffer: add hardware triggered buffer support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
-	 <Jonathan.Cameron@huawei.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
- Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Michael Hennerich <michael.hennerich@analog.com>,  Nuno
- =?ISO-8859-1?Q?S=E1?= <nuno.sa@analog.com>, Frank Rowand
- <frowand.list@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jonathan
- Corbet <corbet@lwn.net>,  linux-spi@vger.kernel.org,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-pwm@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Fri, 12 Jan 2024 17:50:50 +0100
-In-Reply-To: <CAMknhBHs32nHH8o-m3ByFfiKGAY=U7is18LMM2tGhH-v4v+8EQ@mail.gmail.com>
-References: 
-	<20240109-axi-spi-engine-series-3-v1-0-e42c6a986580@baylibre.com>
-	 <20240109-axi-spi-engine-series-3-v1-6-e42c6a986580@baylibre.com>
-	 <20240112123711.0000422a@Huawei.com>
-	 <CAMknhBHs32nHH8o-m3ByFfiKGAY=U7is18LMM2tGhH-v4v+8EQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+        d=1e100.net; s=20230601; t=1705084371; x=1705689171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pDG9zL5uHP+qxuKtBYP8VMQW2U8d4h07q38mx4gVMyA=;
+        b=MA00IymMuVCxMxTthpZnoNqnvSPEy2cGNykR1E8NrDspoMcgGkfvxFbbAeSXrpfhGV
+         jZHWixw8rXkDsSC7o/b3voJ53RE/wN2sTwqC1AAHaHkvtkkBdwr5NBf5C9pgldrn8f5F
+         9OACMSxHJUzTnC7RT3Qc0FOw3ozf/lXlkmX1fm9463QBya+PPuP+nGHpM6SLMzP6zfQp
+         xnxBWq0ebkDMzkW2CjWTpktaIKCeklDcrIQik7dI4x6avvlMD2nTXLqAAF+b9a4Zc1+a
+         aK4KtA9GV8ap3lLZu69hNTcj3u+eeYhpHQouJW4/82Git+QDO4RcLasF3cavTL1q47rZ
+         3yjw==
+X-Gm-Message-State: AOJu0YxUiCqKfLbprXj6XJOhXLd9vxrvVhkVIEDc8qk0gtGkww4aD0jJ
+	/OH75Qr6uYIdiPeoKCzuDPYi6VtOg55nS1qNoXc=
+X-Google-Smtp-Source: AGHT+IGcjJmgPbhZK2Zy34kmVbaP66gQyt1HmHDFqA68J0bgldA/v/QnQgYA0UC4+L6FOY/lGisRK0XL1Zk3uXebdAo=
+X-Received: by 2002:a05:6214:2463:b0:681:2fe6:6dcd with SMTP id
+ im3-20020a056214246300b006812fe66dcdmr1253567qvb.120.1705084371486; Fri, 12
+ Jan 2024 10:32:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
+ <20201211170432.6113-1-nicola.dilieto@gmail.com> <20201211170432.6113-2-nicola.dilieto@gmail.com>
+ <20210117130434.663qpp6noujptdyt@pengutronix.de> <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
+ <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
+ <Y/YPtJK8nVBthCML@surfacebook> <Y/YuJoxkz+o0Omie@einstein.dilieto.eu> <5521796b-d51e-42a3-831a-7fbf75247726@gadgetoid.com>
+In-Reply-To: <5521796b-d51e-42a3-831a-7fbf75247726@gadgetoid.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 12 Jan 2024 20:32:15 +0200
+Message-ID: <CAHp75VfLEBw=ypFiLpd8ken5JPkW5DJey_UroV+3B6ZSaK3Jyw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
+To: Philip Howard <phil@gadgetoid.com>
+Cc: Nicola Di Lieto <nicola.dilieto@gmail.com>, 
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, 
+	Lee Jones <lee.jones@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bartosz Golaszewski <bgolaszewski@baylibre.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2024-01-12 at 09:42 -0600, David Lechner wrote:
-> On Fri, Jan 12, 2024 at 6:37=E2=80=AFAM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >=20
-> > On Wed, 10 Jan 2024 13:49:47 -0600
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >=20
-> > > This adds a new mode INDIO_HW_BUFFER_TRIGGERED to the IIO subsystem.
-> > >=20
-> > > This mode is essentially the hardware version of INDIO_BUFFER_TRIGGER=
-ED
-> > > where the trigger has the semantics of INDIO_HARDWARE_TRIGGERED and t=
-he
-> > > buffer has the semantics of INDIO_BUFFER_HARDWARE.
-> > >=20
-> > > So basically INDIO_HW_BUFFER_TRIGGERED is the same as
-> > > INDIO_BUFFER_HARDWARE except that it also enables the trigger when th=
-e
-> > > buffer is enabled.
-> >=20
-> > If the trigger isn't routeable to multiple devices we normally don't
-> > make it visible at all.
-> >=20
-> > I'm not yet understanding what a trigger actually means in this case.
-> > Why do you need it to be userspace configurable?
-> >=20
-> > J
-> >=20
->=20
-> It looks like this question was answered in another thread (we need to
-> configure the sampling frequency from userspace). But there you
-> mentioned that adding a trigger for that seemed overkill. So you would
-> you suggest to add the sampling_frequency sysfs attribute to the
-> iio:deviceX instead and just forget about the trigger part? It seems a
-> bit odd to me to have an attribute that may or may not be there
-> depending other hardware external to the ADC chip. But if that is a
-> normal acceptable thing to do, then it does seem like the simpler
-> thing to do.
+On Fri, Jan 12, 2024 at 3:38=E2=80=AFPM Philip Howard <phil@gadgetoid.com> =
+wrote:
+> On 22/02/2023 15:00, Nicola Di Lieto wrote:
+> > On Wed, Feb 22, 2023 at 02:51:00PM +0200, andy.shevchenko@gmail.com wro=
+te:
 
-Well, for these converters you usually always need some sort of trigger to =
-tell the
-engine to fetch the data. But if not, you could make it optional in the dri=
-ver (I
-guess a trigger will always be a pwm, gpio, clk, etc...) and only expose th=
-e
-interface if needed. Yes, if we start having tons of devices with optional =
-triggers
-(which is not the case so far) I agree we would be duplicating logic all ov=
-er the
-place.
+...
 
-But let's see where all this discussion leads us. AFAIU, having the trigger=
-s somehow
-directly in the spi framework is also an option. If we can make that generi=
-c enough
-and with a nice interface I think that would make the most sense as this tr=
-igger
-affects the offload engine which is a spi controller thing. Let's see where=
- we end up
-:)
+> I'd love to know if you're still likely to look into this.
 
-- Nuno S=C3=A1
+If you are asking me as well (since To refers to me), Cc for the new
+version and I might look at it. Currently I am OoO till the end of
+month and after that I probably will have more tasks to do, so no
+guarantee for this cycle, but just in case Cc and we will see.
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
